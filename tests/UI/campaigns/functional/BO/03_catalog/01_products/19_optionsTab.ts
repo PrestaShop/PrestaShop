@@ -11,7 +11,6 @@ import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
 // Import FO pages
 import {productPage as foProductPage} from '@pages/FO/classic/product';
-import {searchResultsPage} from '@pages/FO/classic/searchResults';
 import {categoryPage as categoryPageFO} from '@pages/FO/classic/category';
 import {homePage} from '@pages/FO/classic/home';
 import {quickViewModal} from '@pages/FO/classic/modal/quickView';
@@ -21,6 +20,7 @@ import {expect} from 'chai';
 import {
   boDashboardPage,
   FakerProduct,
+  foClassicSearchResultsPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -218,7 +218,7 @@ describe('BO - Catalog - Products : Options tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'searchProduct', baseContext);
 
       await categoryPageFO.searchProduct(page, newProductData.name);
-      await searchResultsPage.goToProductPage(page, 1);
+      await foClassicSearchResultsPage.goToProductPage(page, 1);
 
       const pageTitle = await foProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
@@ -274,10 +274,10 @@ describe('BO - Catalog - Products : Options tab', async () => {
 
       await homePage.searchProduct(page, newProductData.name);
 
-      const pageTitle = await searchResultsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+      const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
 
-      const hasResults = await searchResultsPage.hasResults(page);
+      const hasResults = await foClassicSearchResultsPage.hasResults(page);
       expect(hasResults, 'There are results!').to.eq(false);
     });
 

@@ -10,7 +10,6 @@ import {homePage} from '@pages/FO/classic/home';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
-import {searchResultsPage} from '@pages/FO/classic/searchResults';
 import {loginPage} from '@pages/FO/classic/login';
 
 import {expect} from 'chai';
@@ -20,6 +19,7 @@ import {
   dataCustomers,
   dataProducts,
   FakerCartRule,
+  foClassicSearchResultsPage,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -106,14 +106,14 @@ describe('FO - Checkout : Display of totals', async () => {
 
       await homePage.searchProduct(page, dataProducts.demo_12.name);
 
-      const pageTitle = await searchResultsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+      const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
     });
 
     it('should add the product to cart by quick view', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await searchResultsPage.quickViewProduct(page, 1);
+      await foClassicSearchResultsPage.quickViewProduct(page, 1);
 
       await quickViewModal.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);

@@ -6,7 +6,6 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {homePage} from '@pages/FO/classic/home';
 import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
-import {searchResultsPage} from '@pages/FO/classic/searchResults';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
 // Import commonTests
@@ -18,6 +17,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
   FakerCartRule,
+  foClassicSearchResultsPage,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -86,14 +86,14 @@ describe('FO - cart : Display discount', async () => {
 
       await homePage.searchProduct(page, dataProducts.demo_8.name);
 
-      const pageTitle = await searchResultsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+      const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
     });
 
     it(`should quick view the product '${dataProducts.demo_8.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewProduct', baseContext);
 
-      await searchResultsPage.quickViewProduct(page, 1);
+      await foClassicSearchResultsPage.quickViewProduct(page, 1);
 
       const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.equal(true);
@@ -113,14 +113,14 @@ describe('FO - cart : Display discount', async () => {
 
       await homePage.searchProduct(page, dataProducts.demo_9.name);
 
-      const pageTitle = await searchResultsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+      const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
     });
 
     it(`should quick view the product '${dataProducts.demo_9.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewProduct2', baseContext);
 
-      await searchResultsPage.quickViewProduct(page, 1);
+      await foClassicSearchResultsPage.quickViewProduct(page, 1);
 
       const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.equal(true);

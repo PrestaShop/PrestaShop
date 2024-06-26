@@ -15,7 +15,6 @@ import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 
 // Import FO pages
 import homePage from '@pages/FO/hummingbird/home';
-import searchResultsPage from '@pages/FO/hummingbird/searchResults';
 import productPage from '@pages/FO/hummingbird/product';
 
 import {expect} from 'chai';
@@ -24,6 +23,7 @@ import {
   boDashboardPage,
   dataProducts,
   FakerProduct,
+  foHummingbirdSearchResultsPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -126,14 +126,14 @@ describe('FO - Navigation and display : Display tags', async () => {
 
       await homePage.searchProduct(page, dataProducts.demo_6.name);
 
-      const pageTitle = await searchResultsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+      const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
     });
 
     it('should go to the product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductPageDemo6', baseContext);
 
-      await searchResultsPage.goToProductPage(page, 1);
+      await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_6.name);
@@ -188,14 +188,14 @@ describe('FO - Navigation and display : Display tags', async () => {
 
       await homePage.searchProduct(page, dataProducts.demo_6.name);
 
-      const pageTitle = await searchResultsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+      const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
     });
 
     it('should go to the product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductPageDemo6_2', baseContext);
 
-      await searchResultsPage.goToProductPage(page, 1);
+      await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_6.name);

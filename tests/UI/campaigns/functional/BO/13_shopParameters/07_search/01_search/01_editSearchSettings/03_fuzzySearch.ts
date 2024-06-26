@@ -7,13 +7,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boSearchPage,
+  foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -81,20 +81,20 @@ describe('BO - Shop Parameters - Search : Fuzzy search', async () => {
 
     await homePage.searchProduct(page, 'test');
 
-    const pageTitle = await searchResultsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+    const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
 
-    const hasResults = await searchResultsPage.hasResults(page);
+    const hasResults = await foClassicSearchResultsPage.hasResults(page);
     expect(hasResults).to.eq(false);
 
-    const searchInputValue = await searchResultsPage.getSearchValue(page);
+    const searchInputValue = await foClassicSearchResultsPage.getSearchValue(page);
     expect(searchInputValue).to.be.equal('test');
   });
 
   it('should go to BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToBo', baseContext);
 
-    await searchResultsPage.goToBO(page);
+    await foClassicSearchResultsPage.goToBO(page);
 
     const pageTitle = await boDashboardPage.getPageTitle(page);
     expect(pageTitle).to.contains(boDashboardPage.pageTitle);
@@ -147,16 +147,16 @@ describe('BO - Shop Parameters - Search : Fuzzy search', async () => {
 
     await homePage.searchProduct(page, 'test');
 
-    const pageTitle = await searchResultsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+    const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
 
-    const hasResults = await searchResultsPage.hasResults(page);
+    const hasResults = await foClassicSearchResultsPage.hasResults(page);
     expect(hasResults).to.eq(true);
 
-    const countResults = await searchResultsPage.getSearchResultsNumber(page);
+    const countResults = await foClassicSearchResultsPage.getSearchResultsNumber(page);
     expect(countResults).to.be.eq(7);
 
-    const searchInputValue = await searchResultsPage.getSearchValue(page);
+    const searchInputValue = await foClassicSearchResultsPage.getSearchValue(page);
     expect(searchInputValue).to.be.equal('test');
   });
 });

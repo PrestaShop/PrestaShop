@@ -14,7 +14,6 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage} from '@pages/FO/classic/login';
 import {productPage} from '@pages/FO/classic/product';
-import {searchResultsPage} from '@pages/FO/classic/searchResults';
 import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
@@ -23,6 +22,7 @@ import {
   dataCustomers,
   dataProducts,
   FakerCartRule,
+  foClassicSearchResultsPage,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -134,7 +134,7 @@ describe('BO - Catalog - Cart rules : Apply discount to specific product', async
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
 
       await homePage.searchProduct(page, dataProducts.demo_8.name);
-      await searchResultsPage.goToProductPage(page, 1);
+      await foClassicSearchResultsPage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_8.name);

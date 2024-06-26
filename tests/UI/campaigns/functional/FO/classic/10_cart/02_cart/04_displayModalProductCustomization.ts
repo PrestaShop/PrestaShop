@@ -6,12 +6,12 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
-import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -46,14 +46,14 @@ describe('FO - cart : Display modal of product customization', async () => {
 
     await homePage.searchProduct(page, dataProducts.demo_14.name);
 
-    const pageTitle = await searchResultsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+    const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
   });
 
   it('should go to the product page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
 
-    await searchResultsPage.goToProductPage(page, 1);
+    await foClassicSearchResultsPage.goToProductPage(page, 1);
 
     const pageTitle = await productPage.getPageTitle(page);
     expect(pageTitle).to.contains(dataProducts.demo_14.name);

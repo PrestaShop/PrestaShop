@@ -15,7 +15,6 @@ import checkoutPage from '@pages/FO/hummingbird/checkout';
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
 import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
-import searchResultsPage from '@pages/FO/hummingbird/searchResults';
 
 import {
   boDashboardPage,
@@ -23,6 +22,7 @@ import {
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
+  foHummingbirdSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -84,7 +84,7 @@ describe('FO - Order confirmation : List of ordered products', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addDemo3ByQuickView', baseContext);
 
       await homePage.searchProduct(page, dataProducts.demo_3.name);
-      await searchResultsPage.quickViewProduct(page, 1);
+      await foHummingbirdSearchResultsPage.quickViewProduct(page, 1);
 
       await quickViewModal.addToCartByQuickView(page);
       await blockCartModal.closeBlockCartModal(page);
@@ -94,7 +94,7 @@ describe('FO - Order confirmation : List of ordered products', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addDemo5ByQuickView', baseContext);
 
       await homePage.searchProduct(page, dataProducts.demo_5.name);
-      await searchResultsPage.quickViewProduct(page, 1);
+      await foHummingbirdSearchResultsPage.quickViewProduct(page, 1);
 
       await quickViewModal.addToCartByQuickView(page);
       await blockCartModal.closeBlockCartModal(page);
@@ -104,7 +104,7 @@ describe('FO - Order confirmation : List of ordered products', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addDemo12ByQuickView', baseContext);
 
       await homePage.searchProduct(page, dataProducts.demo_12.name);
-      await searchResultsPage.quickViewProduct(page, 1);
+      await foHummingbirdSearchResultsPage.quickViewProduct(page, 1);
 
       await quickViewModal.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);

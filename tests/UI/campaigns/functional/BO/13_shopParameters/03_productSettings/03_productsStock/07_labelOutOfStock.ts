@@ -12,13 +12,13 @@ import addProductPage from '@pages/BO/catalog/products/add';
 // Import FO pages
 import {productPage} from '@pages/FO/classic/product';
 import {homePage} from '@pages/FO/classic/home';
-import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerProduct,
+  foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -186,7 +186,7 @@ describe('BO - Shop Parameters - product Settings : Set label out-of-stock with 
 
         // Search and go to product page
         await homePage.searchProduct(page, productData.name);
-        await searchResultsPage.goToProductPage(page, 1);
+        await foClassicSearchResultsPage.goToProductPage(page, 1);
 
         const pageTitle = await productPage.getPageTitle(page);
         expect(pageTitle).to.contains(productData.name);

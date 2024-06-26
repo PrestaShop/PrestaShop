@@ -6,13 +6,13 @@ import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/h
 
 // Import FO pages
 import homePage from '@pages/FO/hummingbird/home';
-import searchResultsPage from '@pages/FO/hummingbird/searchResults';
 import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foHummingbirdSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -63,21 +63,21 @@ describe('FO - Search Page : Consult product quick view', async () => {
 
       await homePage.searchProduct(page, 'mug');
 
-      const pageTitle = await searchResultsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+      const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
     });
 
     it('should check the search result page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'countResult', baseContext);
 
-      const countResults = await searchResultsPage.getSearchResultsNumber(page);
+      const countResults = await foHummingbirdSearchResultsPage.getSearchResultsNumber(page);
       expect(countResults).to.equal(5);
     });
 
     it('should quick view the first product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewProduct1', baseContext);
 
-      await searchResultsPage.quickViewProduct(page, 1);
+      await foHummingbirdSearchResultsPage.quickViewProduct(page, 1);
 
       const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.eq(true);

@@ -7,13 +7,13 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {productPage} from '@pages/FO/classic/product';
-import {searchResultsPage} from '@pages/FO/classic/searchResults';
 import {categoryPage} from '@pages/FO/classic/category';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -50,14 +50,14 @@ describe('FO - Product page - Product page : Add to cart', async () => {
 
     await homePage.searchProduct(page, dataProducts.demo_12.name);
 
-    const pageTitle = await searchResultsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+    const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
   });
 
   it('should go to the product page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductPageDemo12', baseContext);
 
-    await searchResultsPage.goToProductPage(page, 1);
+    await foClassicSearchResultsPage.goToProductPage(page, 1);
 
     const pageTitle = await productPage.getPageTitle(page);
     expect(pageTitle).to.contains(dataProducts.demo_12.name);

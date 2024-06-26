@@ -10,7 +10,6 @@ import boProductsPage from '@pages/BO/catalog/products';
 import boProductsCreatePage from '@pages/BO/catalog/products/add';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -18,6 +17,7 @@ import {
   boDashboardPage,
   boSearchPage,
   dataLanguages,
+  foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -116,20 +116,20 @@ describe('BO - Shop Parameters - Search : Blacklisted words', async () => {
 
     await homePage.searchProduct(page, searchWord);
 
-    const pageTitle = await searchResultsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+    const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
 
-    const hasResults = await searchResultsPage.hasResults(page);
+    const hasResults = await foClassicSearchResultsPage.hasResults(page);
     expect(hasResults).to.eq(false);
 
-    const searchInputValue = await searchResultsPage.getSearchValue(page);
+    const searchInputValue = await foClassicSearchResultsPage.getSearchValue(page);
     expect(searchInputValue).to.be.equal(searchWord);
   });
 
   it('should return to \'Shop Parameters > Search\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'returnToSearchPage', baseContext);
 
-    page = await searchResultsPage.changePage(browserContext, 0);
+    page = await foClassicSearchResultsPage.changePage(browserContext, 0);
     await boDashboardPage.goToSubMenu(
       page,
       boDashboardPage.shopParametersParentLink,
@@ -154,23 +154,23 @@ describe('BO - Shop Parameters - Search : Blacklisted words', async () => {
   it(`should search the word "${searchWord}"`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchWordWithSuccess', baseContext);
 
-    page = await searchResultsPage.changePage(browserContext, 1);
+    page = await foClassicSearchResultsPage.changePage(browserContext, 1);
     await page.reload();
 
-    const pageTitle = await searchResultsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+    const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
 
-    const hasResults = await searchResultsPage.hasResults(page);
+    const hasResults = await foClassicSearchResultsPage.hasResults(page);
     expect(hasResults).to.eq(true);
 
-    const searchInputValue = await searchResultsPage.getSearchValue(page);
+    const searchInputValue = await foClassicSearchResultsPage.getSearchValue(page);
     expect(searchInputValue).to.be.equal(searchWord);
   });
 
   it('should reset the list', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetList', baseContext);
 
-    page = await searchResultsPage.changePage(browserContext, 0);
+    page = await foClassicSearchResultsPage.changePage(browserContext, 0);
 
     const textResult = await boSearchPage.setBlacklistedWords(page, dataLanguages.english.id, blacklistedWordsListEN);
     expect(textResult).to.be.eq(boSearchPage.settingsUpdateMessage);

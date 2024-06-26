@@ -7,13 +7,13 @@ import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/h
 // Import pages
 import homePage from '@pages/FO/hummingbird/home';
 import cartPage from '@pages/FO/hummingbird/cart';
-import searchResultsPage from '@pages/FO/hummingbird/searchResults';
 import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {
   type CartProductDetails,
   dataProducts,
+  foHummingbirdSearchResultsPage,
   type ProductAttribute,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -165,14 +165,14 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
 
       await homePage.searchProduct(page, dataProducts.demo_14.name);
 
-      const pageTitle = await searchResultsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+      const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
     });
 
     it('should quick view the product and check that Add to cart button is disabled', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAddToCartButton', baseContext);
 
-      await searchResultsPage.quickViewProduct(page, 1);
+      await foHummingbirdSearchResultsPage.quickViewProduct(page, 1);
 
       const isDisabled = await quickViewModal.isAddToCartButtonDisabled(page);
       expect(isDisabled).to.eq(true);

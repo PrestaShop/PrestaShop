@@ -6,11 +6,11 @@ import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/h
 
 // Import FO pages
 import homePage from '@pages/FO/hummingbird/home';
-import searchResultsPage from '@pages/FO/hummingbird/searchResults';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  foHummingbirdSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -62,13 +62,13 @@ describe('FO - Search Page : Search no result', async () => {
 
       await homePage.searchProduct(page, 'te');
 
-      const pageTitle = await searchResultsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+      const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
 
-      const hasResults = await searchResultsPage.hasResults(page);
+      const hasResults = await foHummingbirdSearchResultsPage.hasResults(page);
       expect(hasResults, 'There are results!').to.equal(false);
 
-      const searchInputValue = await searchResultsPage.getSearchValue(page);
+      const searchInputValue = await foHummingbirdSearchResultsPage.getSearchValue(page);
       expect(searchInputValue, 'A search value exists').to.equal('te');
     });
 
@@ -77,13 +77,13 @@ describe('FO - Search Page : Search no result', async () => {
 
       await homePage.searchProduct(page, '');
 
-      const pageTitle = await searchResultsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+      const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
 
-      const hasResults = await searchResultsPage.hasResults(page);
+      const hasResults = await foHummingbirdSearchResultsPage.hasResults(page);
       expect(hasResults, 'There are results!').to.equal(false);
 
-      const searchInputValue = await searchResultsPage.getSearchValue(page);
+      const searchInputValue = await foHummingbirdSearchResultsPage.getSearchValue(page);
       expect(searchInputValue, 'A search value exists').to.equal('');
     });
   });

@@ -10,13 +10,13 @@ import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
-import {searchResultsPage} from '@pages/FO/classic/searchResults';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataProducts,
+  foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -86,7 +86,7 @@ describe('BO - Shop Parameters - Product Settings : Update separator of attribut
       await testContext.addContextItem(this, 'testIdentifier', `goToProductPage${index}`, baseContext);
 
       await homePage.searchProduct(page, dataProducts.demo_1.name);
-      await searchResultsPage.goToProductPage(page, 1);
+      await foClassicSearchResultsPage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_1.name);

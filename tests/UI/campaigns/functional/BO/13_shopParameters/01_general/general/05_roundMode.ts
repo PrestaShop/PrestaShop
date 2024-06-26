@@ -13,7 +13,6 @@ import createProductsPage from '@pages/BO/catalog/products/add';
 
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {searchResultsPage} from '@pages/FO/classic/searchResults';
 import {productPage} from '@pages/FO/classic/product';
 
 import {expect} from 'chai';
@@ -21,6 +20,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerProduct,
+  foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -109,14 +109,14 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
 
           await homePage.searchProduct(page, productData.name);
 
-          const pageTitle = await searchResultsPage.getPageTitle(page);
-          expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+          const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+          expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
         });
 
         it('should go to the product page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToProductPage${index}`, baseContext);
 
-          await searchResultsPage.goToProductPage(page, 1);
+          await foClassicSearchResultsPage.goToProductPage(page, 1);
 
           const pageTitle = await productPage.getPageTitle(page);
           expect(pageTitle).to.contains(productData.name);
@@ -228,14 +228,14 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
 
           await homePage.searchProduct(page, productData.name);
 
-          const pageTitle = await searchResultsPage.getPageTitle(page);
-          expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+          const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+          expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
         });
 
         it('should go to the product page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToProductPage2${index}`, baseContext);
 
-          await searchResultsPage.goToProductPage(page, 1);
+          await foClassicSearchResultsPage.goToProductPage(page, 1);
 
           const pageTitle = await productPage.getPageTitle(page);
           expect(pageTitle).to.contains(productData.name);
@@ -347,14 +347,14 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
 
           await homePage.searchProduct(page, productData.name);
 
-          const pageTitle = await searchResultsPage.getPageTitle(page);
-          expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+          const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+          expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
         });
 
         it('should go to the product page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToProductPage3${index}`, baseContext);
 
-          await searchResultsPage.goToProductPage(page, 1);
+          await foClassicSearchResultsPage.goToProductPage(page, 1);
 
           const pageTitle = await productPage.getPageTitle(page);
           expect(pageTitle).to.contains(productData.name);

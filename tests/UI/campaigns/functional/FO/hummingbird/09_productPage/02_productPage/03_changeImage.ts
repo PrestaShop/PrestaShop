@@ -14,13 +14,13 @@ import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 // Import FO pages
 import homePage from '@pages/FO/hummingbird/home';
 import productPage from '@pages/FO/hummingbird/product';
-import searchResultsPage from '@pages/FO/hummingbird/searchResults';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerProduct,
+  foHummingbirdSearchResultsPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -150,14 +150,14 @@ describe('FO - Product page - Quick view : Change image', async () => {
 
       await homePage.searchProduct(page, newProductData.name);
 
-      const productsNumber = await searchResultsPage.getSearchResultsNumber(page);
+      const productsNumber = await foHummingbirdSearchResultsPage.getSearchResultsNumber(page);
       expect(productsNumber).to.equal(1);
     });
 
     it('should go to the created product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreatedProductPage', baseContext);
 
-      await searchResultsPage.goToProductPage(page, 1);
+      await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
       expect(pageTitle).to.equal(newProductData.name);
