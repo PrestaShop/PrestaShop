@@ -224,7 +224,7 @@ class CartLazyArray extends AbstractLazyArray
     public function getProductsCount(): int
     {
         // If product list is already available, no need to execute a new sql query
-        if (!isset($this->products)) {
+        if (isset($this->products)) {
             $this->productsCount = array_reduce($this->products, function ($count, $product) {
                 return $count + $product['quantity'];
             }, 0);
