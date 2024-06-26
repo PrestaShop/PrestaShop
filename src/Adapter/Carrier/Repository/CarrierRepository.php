@@ -39,6 +39,8 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopGroupId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
 use RuntimeException;
@@ -83,76 +85,118 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
             CannotAddCarrierException::class
         );
 
-        return new CarrierId($carrierId);
+        return new CarrierId((int) $carrierId);
     }
 
-    public function updateInNewVersion(CarrierId $carrierId, Carrier $carrier): Carrier
+    public function update(Carrier $carrier, ShopConstraint $shopConstraint, int $errorCode): void
     {
-        // Get old carrier to softly delete it
-        /** @var Carrier $oldCarrier */
-        $oldCarrier = $this->get($carrierId);
+        $this->updateObjectModelForShops(
+            $carrier,
+            $this->getShopIdsByConstraint(new CarrierId((int) $carrier->id), $shopConstraint),
+            CannotUpdateCarrierException::class,
+            $errorCode
+        );
+    }
+
+    /**
+     * Returns a single shop ID when the constraint is a single shop, and the list of shops associated to the carrier
+     * when the constraint is for all shops
+     *
+     * @param CarrierId $carrierId
+     * @param ShopConstraint $shopConstraint
+     *
+     * @return ShopId[]
+     */
+    public function getShopIdsByConstraint(CarrierId $carrierId, ShopConstraint $shopConstraint): array
+    {
+        if ($shopConstraint->getShopGroupId()) {
+            return $this->getAssociatedShopIdsFromGroup($carrierId, $shopConstraint->getShopGroupId());
+        }
+
+        if ($shopConstraint->forAllShops()) {
+            return $this->getAssociatedShopIds($carrierId);
+        }
+
+        return [$shopConstraint->getShopId()];
+    }
+
+    /**
+     * @param CarrierId $carrierId
+     *
+     * @return ShopId[]
+     */
+    public function getAssociatedShopIds(CarrierId $carrierId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('id_shop')
+            ->from($this->prefix . 'carrier_shop')
+            ->where('id_carrier = :carrierId')
+            ->setParameter('carrierId', $carrierId->getValue())
+        ;
+
+        return array_map(static function (array $shop) {
+            return new ShopId((int) $shop['id_shop']);
+        }, $qb->executeQuery()->fetchAllAssociative());
+    }
+
+    /**
+     * @param CarrierId $carrierId
+     * @param ShopGroupId $shopGroupId
+     *
+     * @return ShopId[]
+     */
+    public function getAssociatedShopIdsFromGroup(CarrierId $carrierId, ShopGroupId $shopGroupId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('ps.id_shop')
+            ->from($this->prefix . 'carrier_shop', 'ps')
+            ->innerJoin(
+                'ps',
+                $this->prefix . 'shop',
+                's',
+                's.id_shop = ps.id_shop'
+            )
+            ->where('ps.id_carrier = :carrierId')
+            ->andWhere('s.id_shop_group = :shopGroupId')
+            ->setParameter('shopGroupId', $shopGroupId->getValue())
+            ->setParameter('carrierId', $carrierId->getValue())
+        ;
+
+        return array_map(static function (array $shop) {
+            return new ShopId((int) $shop['id_shop']);
+        }, $qb->executeQuery()->fetchAllAssociative());
+    }
+
+    /**
+     * Create a new version of the carrier, or return the carrier as is if it don't have order linked.
+     *
+     * @param Carrier $carrier
+     *
+     * @return Carrier
+     */
+    public function createNewVersion(Carrier $carrier): Carrier
+    {
+        $carrierId = new CarrierId((int) $carrier->id);
+
+        // If the carrier don't have orders linked, we can return it as is
+        if (!$this->carrierHasOrders($carrierId)) {
+            return $carrier;
+        }
+
+        // Otherwise, we need to create a new version of the carrier
         /** @var Carrier $newCarrier */
-        $newCarrier = $oldCarrier->duplicateObject();
-        $oldCarrier->deleted = true;
-        $this->partiallyUpdateObjectModel($oldCarrier, ['deleted'], CannotUpdateCarrierException::class);
-
-        // Then create a new carrier with a new id reference
-        /* @var Carrier $newCarrier */
-        if (null !== $carrier->name) {
-            $newCarrier->name = $carrier->name;
-        }
-        if (null !== $carrier->grade) {
-            $newCarrier->grade = $carrier->grade;
-        }
-        if (null !== $carrier->url) {
-            $newCarrier->url = $carrier->url;
-        }
-        if (null !== $carrier->position) {
-            $newCarrier->position = $carrier->position;
-        }
-        if (null !== $carrier->active) {
-            $newCarrier->active = $carrier->active;
-        }
-        if (null !== $carrier->delay) {
-            $newCarrier->delay = $carrier->delay;
-        }
-        if (null !== $carrier->max_width) {
-            $newCarrier->max_width = $carrier->max_width;
-        }
-        if (null !== $carrier->max_height) {
-            $newCarrier->max_height = $carrier->max_height;
-        }
-        if (null !== $carrier->max_depth) {
-            $newCarrier->max_depth = $carrier->max_depth;
-        }
-        if (null !== $carrier->max_weight) {
-            $newCarrier->max_weight = $carrier->max_weight;
-        }
-        if (null !== $carrier->shipping_handling) {
-            $newCarrier->shipping_handling = $carrier->shipping_handling;
-        }
-        if (null !== $carrier->is_free) {
-            $newCarrier->is_free = $carrier->is_free;
-        }
-        if (null !== $carrier->shipping_method) {
-            $newCarrier->shipping_method = $carrier->shipping_method;
-        }
-        if (null !== $carrier->range_behavior) {
-            $newCarrier->range_behavior = $carrier->range_behavior;
-        }
-        if (null !== $carrier->id_shop_list) {
-            $newCarrier->id_shop_list = $carrier->id_shop_list;
-        }
-
-        $newCarrier->deleted = false; // just to be sure...
+        $newCarrier = $carrier->duplicateObject();
+        $carrier->deleted = true;
+        $this->partiallyUpdateObjectModel($carrier, ['deleted'], CannotUpdateCarrierException::class);
 
         // Copy all others information like ranges, shops associated, ...
         $newCarrier->copyCarrierData($carrierId->getValue());
-
         $this->updateObjectModel($newCarrier, CannotUpdateCarrierException::class);
+        $newCarrier->setGroups($carrier->getAssociatedGroupIds());
 
-        $newCarrier->setGroups($oldCarrier->getAssociatedGroupIds());
-
+        // Return the new duplicated carrier
         return $newCarrier;
     }
 
@@ -239,5 +283,19 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
         ;
 
         $qb->executeStatement();
+    }
+
+    public function carrierHasOrders(CarrierId $carrierId): bool
+    {
+        $qb = $this->connection->createQueryBuilder();
+
+        $count = $qb->select('COUNT(*)')
+            ->from($this->prefix . 'order_carrier', 'oc')
+            ->where('oc.id_carrier = :carrierId')
+            ->setParameter('carrierId', $carrierId->getValue())
+            ->executeQuery()
+            ->fetchOne();
+
+        return (bool) $count;
     }
 }
