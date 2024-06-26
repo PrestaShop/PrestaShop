@@ -29,7 +29,7 @@
     <p>{{ 'For security reasons, you cannot connect to the back office until you have:'|trans({}, 'Admin.Login.Notification') }}</p>
     <ul class="alert-text">
       {% for requiredAction in requiredActions %}
-        <li>{{ requiredAction }}</li>
+        <li>{{ requiredAction|raw }}</li>
       {% endfor %}
     </ul>
   </div>

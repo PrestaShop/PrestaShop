@@ -72,6 +72,7 @@ import AjaxBulkActionExtension from '@components/grid/extension/ajax-bulk-action
 import SubmitGridActionExtension from '@components/grid/extension/submit-grid-action-extension';
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import FormFieldToggler from '@components/form/form-field-toggler';
+import EmailInput from '@components/email-input';
 
 const GridExtensions = {
   AjaxBulkActionExtension,
@@ -162,6 +163,7 @@ const initPrestashopComponents = (): void => {
     TranslatableField,
     TranslatableInput,
     EntitySearchInput,
+    EmailInput,
   };
 };
 export default initPrestashopComponents;

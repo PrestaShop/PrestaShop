@@ -36,6 +36,8 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Command\EditEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ResetEmployeePasswordCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\SendEmployeePasswordResetEmailCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ToggleEmployeeStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\EditableEmployee;
@@ -44,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProfileChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TabChoiceProvider;
 use PrestaShopBundle\Entity\Repository\EmployeeRepository;
+use RuntimeException;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
@@ -72,24 +75,28 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
 
         $data = $this->mapDataWithSelectedValues($testCaseData, $shopReference);
 
-        /** @var EmployeeId $employeeIdObject */
-        $employeeIdObject = $this->getCommandBus()->handle(new AddEmployeeCommand(
-            $data['firstName'],
-            $data['lastName'],
-            $data['email'],
-            $data['plainPassword'],
-            $data['defaultPageId'],
-            $data['languageId'],
-            $data['active'],
-            $data['profileId'],
-            $data['shopAssociation'],
-            false, // has enable gravatar
-            self::MIN_PASSWORD_LENGTH,
-            self::MAX_PASSWORD_LENGTH,
-            self::MIN_PASSWORD_SCORE
-        ));
+        try {
+            /** @var EmployeeId $employeeIdObject */
+            $employeeIdObject = $this->getCommandBus()->handle(new AddEmployeeCommand(
+                $data['firstName'],
+                $data['lastName'],
+                $data['email'],
+                $data['plainPassword'],
+                $data['defaultPageId'],
+                $data['languageId'],
+                $data['active'],
+                $data['profileId'],
+                $data['shopAssociation'],
+                false, // has enable gravatar
+                self::MIN_PASSWORD_LENGTH,
+                self::MAX_PASSWORD_LENGTH,
+                self::MIN_PASSWORD_SCORE
+            ));
 
-        SharedStorage::getStorage()->set($employeeReference, $employeeIdObject->getValue());
+            SharedStorage::getStorage()->set($employeeReference, $employeeIdObject->getValue());
+        } catch (EmployeeException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
@@ -134,7 +141,23 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
             $command->setActive($data['active']);
         }
 
-        $this->getCommandBus()->handle($command);
+        try {
+            $this->getCommandBus()->handle($command);
+        } catch (EmployeeException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then I should get an error indicating that employee field :employeeField is invalid
+     */
+    public function assertEmployeeConstraint(string $employeeField): void
+    {
+        $errorCode = match ($employeeField) {
+            'homepage' => EmployeeConstraintException::INVALID_HOMEPAGE,
+            default => throw new RuntimeException('Field not handled'),
+        };
+        $this->assertLastErrorIs(EmployeeConstraintException::class, $errorCode);
     }
 
     /**

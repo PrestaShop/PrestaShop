@@ -27,6 +27,7 @@ import 'jquery-ui-dist/jquery-ui';
 
 import LoginFormMap from '@pages/login/login-map';
 import onReady from '@components/on-ready';
+import EmailInput from '@components/email-input';
 
 onReady(() => {
   const loginForm = document.querySelector<HTMLFormElement>(LoginFormMap.loginForm);
@@ -37,6 +38,10 @@ onReady(() => {
     event.stopImmediatePropagation();
     loginForm?.classList.add('d-none');
     forgotPasswordForm?.classList.remove('d-none');
+    // Hide all alert messages
+    document.querySelectorAll<HTMLElement>(LoginFormMap.alertMessages).forEach((alert) => {
+      alert.remove();
+    });
   });
 
   document.querySelector(LoginFormMap.cancelResetPasswordButton)?.addEventListener('click', (event) => {
@@ -45,4 +50,6 @@ onReady(() => {
     loginForm?.classList.remove('d-none');
     forgotPasswordForm?.classList.add('d-none');
   });
+
+  new EmailInput();
 });

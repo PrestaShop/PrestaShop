@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Core\Context;
 use Doctrine\ORM\NoResultException;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Util\Inflector;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -54,23 +53,21 @@ class LegacyControllerContextBuilder implements LegacyContextBuilderInterface
 
     public function build(): LegacyControllerContext
     {
-        $this->assertArguments();
-
-        $multiShopContext = $this->getMultiShopContext($this->controllerName);
-        $id = $this->getTabId($this->controllerName);
+        $multiShopContext = $this->getMultiShopContext($this->getControllerName());
+        $id = $this->getTabId($this->getControllerName());
         $employeeId = '';
         if ($this->employeeContext->getEmployee()) {
             $employeeId = $this->employeeContext->getEmployee()->getId();
         }
-        $token = Tools::getAdminToken($this->controllerName . $id . $employeeId);
-        $overrideFolder = Tools::toUnderscoreCase(substr($this->controllerName, 5)) . '/';
+        $token = Tools::getAdminToken($this->getControllerName() . $id . $employeeId);
+        $overrideFolder = Tools::toUnderscoreCase(substr($this->getControllerName(), 5)) . '/';
         $controllerType = 'admin';
-        $className = $this->getClassName($this->controllerName);
-        $table = $this->getTableFromClassName($this->controllerName);
+        $className = $this->getClassName($this->getControllerName());
+        $table = $this->getTableFromClassName($this->getControllerName());
 
         $legacyControllerContext = new LegacyControllerContext(
             $this->container,
-            $this->controllerName,
+            $this->getControllerName(),
             $controllerType,
             $multiShopContext,
             $className,
@@ -93,8 +90,6 @@ class LegacyControllerContextBuilder implements LegacyContextBuilderInterface
         if ($this->contextStateManager->getContext()->controller) {
             return;
         }
-
-        $this->assertArguments();
 
         if (null === $this->_legacyControllerContext) {
             $this->_legacyControllerContext = $this->build();
@@ -124,14 +119,9 @@ class LegacyControllerContextBuilder implements LegacyContextBuilderInterface
         return $this;
     }
 
-    private function assertArguments(): void
+    private function getControllerName(): string
     {
-        if (null === $this->controllerName) {
-            throw new InvalidArgumentException(sprintf(
-                'Cannot build Controller context as no controllerName has been defined you need to call %s::setControllerName to define it before building the Controller context',
-                self::class
-            ));
-        }
+        return $this->controllerName ?? 'AdminNotFound';
     }
 
     /**

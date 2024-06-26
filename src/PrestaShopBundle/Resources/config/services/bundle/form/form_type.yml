@@ -68,6 +68,7 @@ services:
       - '@PrestaShopBundle\Form\DataTransformer\ArabicToLatinDigitDataTransformer'
 
   PrestaShopBundle\Form\Admin\Type\EmailType:
+    autowire: true
     arguments:
       - '@prestashop.bundle.form.data_transformer.idn_converter'
 
@@ -282,7 +283,6 @@ services:
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee\EmployeeType:
     arguments:
       $languagesChoices: '@=service("prestashop.core.form.choice_provider.all_languages").getChoices()'
-      $tabChoices: '@=service("prestashop.core.form.choice_provider.accessible_tab").getChoices()'
       $profilesChoices: '@=service("prestashop.core.form.choice_provider.profile").getChoices()'
       $superAdminProfileId: !php/const _PS_ADMIN_PROFILE_
 

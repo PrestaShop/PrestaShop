@@ -68,7 +68,7 @@ export default [
     urls: [
       {
         name: 'BO_login',
-        url: 'index.php?controller=AdminLogin',
+        url: 'index.php/login',
         async customAction(page: Page): Promise<void> {
           await loginBO(page);
         },

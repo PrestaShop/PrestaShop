@@ -886,41 +886,6 @@
       <title>Perform actions before controller initialization</title>
       <description>This hook is launched before the initialization of all controllers</description>
     </hook>
-    <hook id="actionAdminLoginControllerBefore">
-      <name>actionAdminLoginControllerBefore</name>
-      <title>Perform actions before admin login controller initialization</title>
-      <description>This hook is launched before the initialization of the login controller</description>
-    </hook>
-    <hook id="actionAdminLoginControllerLoginBefore">
-      <name>actionAdminLoginControllerLoginBefore</name>
-      <title>Perform actions before admin login controller login action initialization</title>
-      <description>This hook is launched before the initialization of the login action in login controller</description>
-    </hook>
-    <hook id="actionAdminLoginControllerLoginAfter">
-      <name>actionAdminLoginControllerLoginAfter</name>
-      <title>Perform actions after admin login controller login action initialization</title>
-      <description>This hook is launched after the initialization of the login action in login controller</description>
-    </hook>
-    <hook id="actionAdminLoginControllerForgotBefore">
-      <name>actionAdminLoginControllerForgotBefore</name>
-      <title>Perform actions before admin login controller forgot action initialization</title>
-      <description>This hook is launched before the initialization of the forgot action in login controller</description>
-    </hook>
-    <hook id="actionAdminLoginControllerForgotAfter">
-      <name>actionAdminLoginControllerForgotAfter</name>
-      <title>Perform actions after admin login controller forgot action initialization</title>
-      <description>This hook is launched after the initialization of the forgot action in login controller</description>
-    </hook>
-    <hook id="actionAdminLoginControllerResetBefore">
-      <name>actionAdminLoginControllerResetBefore</name>
-      <title>Perform actions before admin login controller reset action initialization</title>
-      <description>This hook is launched before the initialization of the reset action in login controller</description>
-    </hook>
-    <hook id="actionAdminLoginControllerResetAfter">
-      <name>actionAdminLoginControllerResetAfter</name>
-      <title>Perform actions after admin login controller reset action initialization</title>
-      <description>This hook is launched after the initialization of the reset action in login controller</description>
-    </hook>
     <hook id="actionAdministrationPageForm">
       <name>actionAdministrationPageForm</name>
       <title>Manage Administration Page form fields</title>

@@ -55,7 +55,7 @@
         {% endif %}
       {% endfor %}
 
-      <li class="signout text-center" data-mobile="true" data-from="employee_links" data-target="menu" data-after="true"><a id="header_logout" href="{{ legacy_path('AdminLogin', {'logout' : 1})|escape('html_attr') }}"><i class="material-icons visible-xs">power_settings_new</i> {{ 'Sign out'|trans({}, 'Admin.Navigation.Header') }}</a></li>
+      <li class="signout text-center" data-mobile="true" data-from="employee_links" data-target="menu" data-after="true"><a id="header_logout" href="{{ path('admin_logout') }}"><i class="material-icons visible-xs">power_settings_new</i> {{ 'Sign out'|trans({}, 'Admin.Navigation.Header') }}</a></li>
     </ul>
   </li>
 </ul>

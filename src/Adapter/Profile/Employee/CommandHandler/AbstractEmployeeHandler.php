@@ -29,10 +29,13 @@ namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler;
 use Context;
 use Employee;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\AdminEmployeeException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeCannotChangeItselfException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
+use Profile;
 
 /**
  * Class AbstractEmployeeStatusHandler.
@@ -74,5 +77,22 @@ abstract class AbstractEmployeeHandler extends AbstractObjectModelHandler
         if (Context::getContext()->employee->id === $employee->id) {
             throw new EmployeeCannotChangeItselfException('Employee cannot change status of itself.', EmployeeCannotChangeItselfException::CANNOT_CHANGE_STATUS);
         }
+    }
+
+    /**
+     * @throws EmployeeConstraintException
+     */
+    protected function assertHomepageIsAccessible(int $tabId, int $profileId): void
+    {
+        if (empty($tabId) || empty($profileId) || $profileId === EmployeeContext::SUPER_ADMIN_PROFILE_ID) {
+            return;
+        }
+
+        $tabAccess = Profile::getProfileAccesses($profileId);
+        if ($tabAccess[$tabId]['view'] === '1') {
+            return;
+        }
+
+        throw new EmployeeConstraintException('Selected homepage is not accessible for this profile', EmployeeConstraintException::INVALID_HOMEPAGE);
     }
 }

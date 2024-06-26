@@ -91,6 +91,9 @@ class ShopCore extends ObjectModel
     /** @var array|null List of shops cached */
     protected static $shops;
 
+    /** @var array|null List of shop group IDs cached */
+    protected static $shopGroupIds = null;
+
     protected static $asso_tables = [];
     protected static $id_shop_default_tables = [];
     protected static $initialized = false;
@@ -904,6 +907,32 @@ class ShopCore extends ObjectModel
     }
 
     /**
+     * Dedicated method to get the shop group ID based on a shop ID, because getGroupFromShop is based on a cache dependent
+     * of the Context->employee which can cause unexpected behaviour.
+     *
+     * @param int $shopId
+     *
+     * @return int|null
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    public static function getGroupIdFromShopId(int $shopId): ?int
+    {
+        if (null === self::$shopGroupIds) {
+            self::$shopGroupIds = [];
+            $sql = 'SELECT s.id_shop, s.id_shop_group FROM ' . _DB_PREFIX_ . 'shop s';
+            if ($results = Db::getInstance()->executeS($sql)) {
+                foreach ($results as $shop) {
+                    self::$shopGroupIds[(int) $shop['id_shop']] = (int) $shop['id_shop_group'];
+                }
+            }
+        }
+
+        return self::$shopGroupIds[(int) $shopId] ?? null;
+    }
+
+    /**
      * If the shop group has the option $type activated, get all shops ID of this group, else get current shop ID.
      *
      * @param int $shop_id
@@ -986,7 +1015,7 @@ class ShopCore extends ObjectModel
                 break;
             case self::CONTEXT_SHOP:
                 self::$context_id_shop = (int) $id;
-                self::$context_id_shop_group = Shop::getGroupFromShop($id);
+                self::$context_id_shop_group = Shop::getGroupIdFromShopId($id);
 
                 break;
             default:
@@ -1010,6 +1039,7 @@ class ShopCore extends ObjectModel
     {
         parent::resetStaticCache();
         static::$shops = null;
+        static::$shopGroupIds = null;
         static::$feature_active = null;
         static::$context_shop_group = null;
         Cache::clean('Shop::*');

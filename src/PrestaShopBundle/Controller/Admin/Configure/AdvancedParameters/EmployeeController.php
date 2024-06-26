@@ -67,6 +67,13 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class EmployeeController extends FrameworkBundleAdminController
 {
+    public static function getSubscribedServices(): array
+    {
+        return parent::getSubscribedServices() + [
+            TabDataProvider::class => TabDataProvider::class,
+        ];
+    }
+
     /**
      * Show employees list & options page.
      *
@@ -548,6 +555,10 @@ class EmployeeController extends FrameworkBundleAdminController
                 ),
                 EmployeeConstraintException::INVALID_PASSWORD => $this->trans(
                     'The password doesn\'t meet the password policy requirements.',
+                    'Admin.Notifications.Error'
+                ),
+                EmployeeConstraintException::INVALID_HOMEPAGE => $this->trans(
+                    'The selected default page is not accessible by the selected profile.',
                     'Admin.Notifications.Error'
                 ),
             ],

@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Security\PasswordGenerator;
 use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Security\Admin\EmployeeHomepageProvider;
 use PrestaShopBundle\Security\Admin\Exception\InvalidResetPasswordTokenException;
-use PrestaShopBundle\Security\Admin\Exception\PendingPasswordResetExistingException;
+use PrestaShopBundle\Security\Admin\Exception\PasswordResetTemporarilyBlockedException;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\FormInterface;
@@ -68,6 +68,7 @@ class LoginController extends PrestaShopAdminController
      * @return Response
      */
     public function loginAction(
+        Request $request,
         Security $security,
         AuthenticationUtils $authenticationUtils,
         #[Autowire(service: 'prestashop.admin.login.form_handler')]
@@ -75,7 +76,7 @@ class LoginController extends PrestaShopAdminController
         #[Autowire(service: 'prestashop.admin.request_password_reset.form_handler')]
         FormHandlerInterface $requestResetPasswordFormHandler,
     ): Response {
-        $securityResponse = $this->checkRequiredActions();
+        $securityResponse = $this->checkRequiredActions($request);
         if ($securityResponse) {
             return $securityResponse;
         }
@@ -145,13 +146,17 @@ class LoginController extends PrestaShopAdminController
                 $infoMessage = $errorMessage = null;
                 try {
                     $requestResetPasswordFormHandler->save($requestPasswordResetForm->getData());
-                    $infoMessage = $this->trans('Please, check your mailbox. A link to reset your password has been sent to you.', [], 'Admin.Login.Notification');
+                    $infoMessage = $this->trans('Please, check your mailbox.', [], 'Admin.Login.Notification') . '<br/>' .
+                        $this->trans('If this email address has been registered in our store, you will receive a link to reset your password.', [], 'Admin.Login.Notification')
+                    ;
                 } catch (UserNotFoundException) {
-                    // If the email doesn't match a known employee we still display a generic error message to avoid any hacker using this
+                    // If the email doesn't match a known employee we still display a generic success message to avoid any hacker using this
                     // to find out the employee's emails via brute force.
-                    $infoMessage = $this->trans('Please, check your mailbox. A link to reset your password has been sent to you.', [], 'Admin.Login.Notification');
-                } catch (PendingPasswordResetExistingException) {
-                    $validityDuration = (int) ($this->getConfiguration()->get('PS_PASSWD_RESET_VALIDITY') ?: 1440);
+                    $infoMessage = $this->trans('Please, check your mailbox.', [], 'Admin.Login.Notification') . '<br/>' .
+                        $this->trans('If this email address has been registered in our store, you will receive a link to reset your password.', [], 'Admin.Login.Notification')
+                    ;
+                } catch (PasswordResetTemporarilyBlockedException) {
+                    $validityDuration = (int) ($this->getConfiguration()->get('PS_PASSWD_TIME_BACK') ?: 360);
                     $errorMessage = $this->trans('You can reset your password every %interval% minute(s) only. Please try again later.', ['%interval%' => $validityDuration], 'Admin.Login.Notification');
                 } catch (Throwable) {
                     $errorMessage = $this->trans('An error occurred while attempting to reset your password.', [], 'Admin.Login.Notification');
@@ -182,7 +187,6 @@ class LoginController extends PrestaShopAdminController
         $resetPasswordForm->handleRequest($request);
 
         if ($resetPasswordForm->isSubmitted() && $resetPasswordForm->isValid()) {
-            $newPassword = $resetPasswordForm->get('new_password')->getData();
             try {
                 $resetPasswordFormHandler->save(array_merge([
                     'resetToken' => $resetToken,
@@ -218,9 +222,10 @@ class LoginController extends PrestaShopAdminController
         ]);
     }
 
-    protected function checkRequiredActions(): ?Response
+    protected function checkRequiredActions(Request $request): ?Response
     {
         $requiredActions = [];
+        $warningActions = [];
 
         // If install folder is still present display a warning to remove it
         if (is_dir($this->projectDir . '/install')) {
@@ -237,12 +242,49 @@ class LoginController extends PrestaShopAdminController
             $requiredActions[] = $this->trans('renamed the /admin folder (e.g. %s)', [$randomName], 'Admin.Login.Notification');
         }
 
+        $sslEnabled = (bool) $this->getConfiguration()->get('PS_SSL_ENABLED');
+        if ($sslEnabled && !$request->isSecure()) {
+            $maintenanceIpConfiguration = $this->getConfiguration()->get('PS_MAINTENANCE_IP');
+            if (empty($maintenanceIpConfiguration)) {
+                $maintenanceIps = [];
+            } else {
+                $maintenanceIps = explode(',', $maintenanceIpConfiguration);
+            }
+
+            $maintenanceIps = array_merge(['127.0.0.1', '::1'], $maintenanceIps);
+            $isMaintainer = false;
+            foreach ($request->getClientIps() as $clientIp) {
+                if (in_array($clientIp, $maintenanceIps)) {
+                    $isMaintainer = true;
+                    break;
+                }
+            }
+
+            if (!$isMaintainer) {
+                $securedUrl = rtrim(str_replace('http://', 'https://', $this->shopContext->getBaseURL()), '/') . '/' . trim($this->generateUrl('admin_login'), '/');
+                $requiredActions[] = $this->trans(
+                    'SSL is activated. Please connect using the following link to [1]log in to secure mode (https://)[/1]',
+                    ['[1]' => '<a href="' . $securedUrl . '">', '[/1]' => '</a>'],
+                    'Admin.Login.Notification'
+                );
+            } else {
+                $warningActions[] = $this->trans('SSL is activated. However, your IP is allowed to enter unsecure mode for maintenance or local IP issues.', [], 'Admin.Login.Notification');
+            }
+        }
+
         if (!empty($requiredActions)) {
             return $this->render('@PrestaShop/Admin/Login/required_actions.html.twig', [
                 'requiredActions' => $requiredActions,
                 'imgDir' => $this->shopContext->getBaseURI() . 'img/',
                 'shopName' => $this->getConfiguration()->get('PS_SHOP_NAME'),
             ]);
+        }
+
+        // Warning actions are not blocking but should still be indicated to the user
+        if (!empty($warningActions)) {
+            foreach ($warningActions as $warningAction) {
+                $this->addFlash('warning', $warningAction);
+            }
         }
 
         return null;

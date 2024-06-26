@@ -103,6 +103,7 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
         $employee = new Employee($command->getEmployeeId()->getValue());
 
         $this->assertEmailIsNotAlreadyUsed($employee, $command->getEmail()->getValue());
+        $this->assertHomepageIsAccessible($command->getDefaultPageId() ?: ((int) $employee->default_tab), $command->getProfileId() ?: ((int) $employee->id_profile));
 
         $this->updateEmployeeWithCommandData($employee, $command);
 

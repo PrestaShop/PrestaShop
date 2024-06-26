@@ -34,11 +34,10 @@ use Mail;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
-use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
 use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Entity\Repository\EmployeeRepository;
-use PrestaShopBundle\Security\Admin\Exception\PendingPasswordResetExistingException;
+use PrestaShopBundle\Security\Admin\Exception\PasswordResetTemporarilyBlockedException;
 use RuntimeException;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
@@ -63,7 +62,7 @@ class EmployeePasswordResetter
      *
      * @return string
      *
-     * @throws PendingPasswordResetExistingException
+     * @throws PasswordResetTemporarilyBlockedException
      * @throws UserNotFoundException
      * @throws RuntimeException
      */
@@ -76,7 +75,11 @@ class EmployeePasswordResetter
             throw new UserNotFoundException(sprintf('Employee with email "%s" does not exist.', $email));
         }
 
-        $this->checkLastSentMail($employee, $email);
+        if (empty($employee)) {
+            throw new UserNotFoundException(sprintf('Employee with email "%s" does not exist.', $email));
+        }
+
+        $this->checkLastPasswordGeneration($employee);
         $this->updateEmployeeResetData($employee);
 
         return $this->doSendResetEmail($employee);
@@ -130,28 +133,12 @@ class EmployeePasswordResetter
         );
     }
 
-    private function checkLastSentMail(?Employee $employee, string $email): void
+    private function checkLastPasswordGeneration(Employee $employee): void
     {
-        // We don't want to give a hint to any hacker by handling the error messages differently when the employee is not known,
-        // so we keep track of mail sent even to unknown emails so that we can check if they were asked too recently.
-        if (empty($employee)) {
-            $unknownResetEmails = $this->getUnknownResetEmails();
-
-            // Email not known, store the fake generation date and trigger a user not found exception
-            if (!isset($unknownResetEmails[$email])) {
-                $this->fakeSendEmail($unknownResetEmails, $email);
-            } else {
-                $lastResetEmail = new DateTime($unknownResetEmails[$email]);
-                $validityDuration = (int) ($this->configuration->get('PS_PASSWD_RESET_VALIDITY') ?: 1440);
-                if ($lastResetEmail->add(DateInterval::createFromDateString($validityDuration . 'min'))->getTimestamp() > time()) {
-                    throw new PendingPasswordResetExistingException();
-                } else {
-                    // The mail was sent long ago enough, we update the saved date
-                    $this->fakeSendEmail($unknownResetEmails, $email);
-                }
-            }
-        } elseif ($employee->getResetPasswordValidity() && $employee->getResetPasswordValidity()->getTimestamp() > time()) {
-            throw new PendingPasswordResetExistingException();
+        // If the employee reset his password recently he needs to wait a minimum of time
+        $passwordResetInterval = (int) ($this->configuration->get('PS_PASSWD_TIME_BACK') ?: 360);
+        if ($employee->getPasswordLastGeneration()->add(DateInterval::createFromDateString($passwordResetInterval . 'minutes'))->getTimestamp() > time()) {
+            throw new PasswordResetTemporarilyBlockedException();
         }
     }
 
@@ -188,13 +175,6 @@ class EmployeePasswordResetter
         return $resetUrl;
     }
 
-    private function fakeSendEmail(array $unknownResetEmails, string $email): void
-    {
-        $unknownResetEmails[$email] = (new DateTime())->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
-        $this->updateUnknownResetEmails($unknownResetEmails);
-        throw new UserNotFoundException(sprintf('Employee with email "%s" does not exist.', $email));
-    }
-
     private function updateEmployeeResetData(Employee $employee): void
     {
         $validityDuration = (int) ($this->configuration->get('PS_PASSWD_RESET_VALIDITY') ?: 1440);
@@ -202,27 +182,7 @@ class EmployeePasswordResetter
         $employee
             ->setResetPasswordToken(sha1(time() . $salt))
             ->setResetPasswordValidity((new DateTime())->add(DateInterval::createFromDateString($validityDuration . 'min')))
-            ->setPasswordLastGeneration(new DateTime())
         ;
         $this->entityManager->flush();
-    }
-
-    private function updateUnknownResetEmails(array $unknownEmails): void
-    {
-        if (empty($unknownEmails)) {
-            $this->configuration->set('PS_UNKNOWN_RESET_EMAILS', null);
-        } else {
-            $this->configuration->set('PS_UNKNOWN_RESET_EMAILS', json_encode($unknownEmails));
-        }
-    }
-
-    private function getUnknownResetEmails(): array
-    {
-        $unknownResetEmail = $this->configuration->get('PS_UNKNOWN_RESET_EMAILS');
-        if (empty($unknownResetEmail)) {
-            return [];
-        }
-
-        return json_decode($unknownResetEmail, true);
     }
 }

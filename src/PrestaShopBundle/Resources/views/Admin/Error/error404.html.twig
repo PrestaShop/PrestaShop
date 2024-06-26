@@ -22,6 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
+{# Error 404 page is rendered very early in the process as soon as no route is found, the user is not loaded yet so we cannot display the regular layout, this page is very simple on purpose #}
 {% extends '@PrestaShop/base.html.twig' %}
 
 {% block stylesheets %}
