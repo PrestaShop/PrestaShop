@@ -2,7 +2,7 @@
 import testContext from '@utils/testContext';
 
 // Import common tests
-import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
 import cartPage from '@pages/FO/hummingbird/cart';
@@ -42,7 +42,7 @@ describe('FO - cart : Add promo code', async () => {
   createCartRuleTest(newCartRuleData, `${baseContext}_PreTest_1`);
 
   // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}_preTest_2`);
+  enableHummingbird(`${baseContext}_preTest_2`);
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -136,5 +136,5 @@ describe('FO - cart : Add promo code', async () => {
   deleteCartRuleTest(newCartRuleData.name, `${baseContext}_PostTest_1`);
 
   // Post-condition : Uninstall Hummingbird
-  uninstallHummingbird(`${baseContext}_postTest_2`);
+  disableHummingbird(`${baseContext}_postTest_2`);
 });

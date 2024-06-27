@@ -69,6 +69,7 @@
         "prestashop/graphnvd3": "^2",
         "prestashop/gridhtml": "^2",
         "prestashop/gsitemap": "^4",
+        "prestashop/hummingbird": "dev-remove-env-config",
         "prestashop/pagesnotfound": "^2",
         "prestashop/productcomments": "^7.0",
         "prestashop/ps_apiresources": "dev-dev",
@@ -257,6 +258,10 @@
         "ps_apiresources": {
             "type": "vcs",
             "url": "https://github.com/PrestaShop/ps_apiresources.git"
+        },
+        "hummingbird": {
+          "type": "vcs",
+          "url": "https://github.com/nicosomb/hummingbird.git"
         }
     },
     "minimum-stability": "dev",

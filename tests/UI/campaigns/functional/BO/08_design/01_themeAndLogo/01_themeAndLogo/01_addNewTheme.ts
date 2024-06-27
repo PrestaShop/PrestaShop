@@ -22,7 +22,7 @@ describe('BO - Design - Theme & Logo : Add new theme', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const urlTheme: string = 'https://github.com/PrestaShop/hummingbird/releases/download/v0.1.6/hummingbird.zip';
+  const urlTheme: string = 'https://github.com/prestarocket-agence/classic-rocket/releases/download/3.1.0/classic-rocket.zip';
 
   // before and after functions
   before(async function () {
@@ -36,7 +36,7 @@ describe('BO - Design - Theme & Logo : Add new theme', async () => {
     await Promise.all([
       utilsFile.deleteFile('theme.zip'),
       utilsFile.deleteFile('../../themes/theme.zip'),
-      utilsFile.deleteFile('../../admin-dev/hummingbird.zip'),
+      utilsFile.deleteFile('../../admin-dev/classic-rocket.zip'),
     ]);
   });
 
@@ -86,17 +86,17 @@ describe('BO - Design - Theme & Logo : Add new theme', async () => {
       expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
 
       const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
-      expect(numThemes).to.eq(2);
+      expect(numThemes).to.eq(3);
     });
 
-    it('should remove the theme Hummingbird', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'removeThemeHummingbird1', baseContext);
+    it('should remove the theme classic-rocket', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'removeThemeClassicrocket1', baseContext);
 
-      const result = await themeAndLogoPage.removeTheme(page, 'hummingbird');
+      const result = await themeAndLogoPage.removeTheme(page, 'classic-rocket');
       expect(result).to.eq(themeAndLogoPage.successfulDeleteMessage);
 
       const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
-      expect(numThemes).to.eq(1);
+      expect(numThemes).to.eq(2);
     });
   });
 
@@ -110,7 +110,7 @@ describe('BO - Design - Theme & Logo : Add new theme', async () => {
       expect(pageTitle).to.contains(themeImportPage.pageTitle);
     });
 
-    it('should import from the web the Hummingbird theme', async function () {
+    it('should import from the web the classic-rocket theme', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'importThemeFromWeb', baseContext);
 
       await themeImportPage.importFromWeb(page, urlTheme);
@@ -119,17 +119,17 @@ describe('BO - Design - Theme & Logo : Add new theme', async () => {
       expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
 
       const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
-      expect(numThemes).to.eq(2);
+      expect(numThemes).to.eq(3);
     });
 
-    it('should remove the theme Hummingbird', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'removeThemeHummingbird2', baseContext);
+    it('should remove the theme classic-rocket', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'removeThemeClassicrocket2', baseContext);
 
-      const result = await themeAndLogoPage.removeTheme(page, 'hummingbird');
+      const result = await themeAndLogoPage.removeTheme(page, 'classic-rocket');
       expect(result).to.eq(themeAndLogoPage.successfulDeleteMessage);
 
       const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
-      expect(numThemes).to.eq(1);
+      expect(numThemes).to.eq(2);
     });
   });
 
@@ -154,17 +154,17 @@ describe('BO - Design - Theme & Logo : Add new theme', async () => {
       expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
 
       const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
-      expect(numThemes).to.eq(2);
+      expect(numThemes).to.eq(3);
     });
 
-    it('should remove the theme Hummingbird', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'removeThemeHummingbird3', baseContext);
+    it('should remove the theme classic-rocket', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'removeThemeClassicrocket3', baseContext);
 
-      const result = await themeAndLogoPage.removeTheme(page, 'hummingbird');
+      const result = await themeAndLogoPage.removeTheme(page, 'classic-rocket');
       expect(result).to.eq(themeAndLogoPage.successfulDeleteMessage);
 
       const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
-      expect(numThemes).to.eq(1);
+      expect(numThemes).to.eq(2);
     });
   });
 });

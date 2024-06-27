@@ -3,7 +3,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
 // Import BO pages
@@ -188,7 +188,7 @@ describe('BO - International - Translation : Modify translation', async () => {
   });
 
   // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}_preTest_2`);
+  enableHummingbird(`${baseContext}_preTest_2`);
 
   describe('Case 3 - Front office translations with hummingbird theme', async () => {
     it('should go back to BO', async function () {
@@ -270,7 +270,7 @@ describe('BO - International - Translation : Modify translation', async () => {
   });
 
   // Post-condition : Uninstall Hummingbird
-  uninstallHummingbird(`${baseContext}_postTest_1`);
+  disableHummingbird(`${baseContext}_postTest_1`);
 
   describe('Case 4 - Installed modules translations', async () => {
     it('should go back to BO', async function () {

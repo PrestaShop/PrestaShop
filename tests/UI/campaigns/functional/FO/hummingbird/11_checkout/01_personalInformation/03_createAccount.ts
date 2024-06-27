@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 // Import common tests
 import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
 import homePage from '@pages/FO/hummingbird/home';
@@ -78,7 +78,7 @@ describe('FO - Checkout - Personal information : Create account', async () => {
   setupSmtpConfigTest(`${baseContext}_preTest_0`);
 
   // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}_preTest_1`);
+  enableHummingbird(`${baseContext}_preTest_1`);
 
   describe('Create account', async () => {
     it('should open FO page', async function () {
@@ -165,5 +165,5 @@ describe('FO - Checkout - Personal information : Create account', async () => {
   resetSmtpConfigTest(`${baseContext}_postTest_2`);
 
   // Post-condition : Uninstall Hummingbird
-  uninstallHummingbird(`${baseContext}_postTest_3`);
+  disableHummingbird(`${baseContext}_postTest_3`);
 });

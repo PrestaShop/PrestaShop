@@ -5,7 +5,7 @@ import testContext from '@utils/testContext';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import createAccountTest from '@commonTests/FO/hummingbird/account';
-import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
 import homePage from '@pages/FO/hummingbird/home';
@@ -56,7 +56,7 @@ describe('FO - Login : Password reminder', async () => {
   setupSmtpConfigTest(`${baseContext}_preTest_1`);
 
   // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}_preTest_2`);
+  enableHummingbird(`${baseContext}_preTest_2`);
 
   // Pre-condition : Create new customer on FO
   createAccountTest(customerData, `${baseContext}_preTest_3`);
@@ -208,5 +208,5 @@ describe('FO - Login : Password reminder', async () => {
   resetSmtpConfigTest(`${baseContext}_postTest_2`);
 
   // Post-condition : Uninstall Hummingbird
-  uninstallHummingbird(`${baseContext}_postTest_3`);
+  disableHummingbird(`${baseContext}_postTest_3`);
 });

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3706913a9be26450066951db485e7a75",
+    "content-hash": "fb3a8bb21667a52691ea3c01e3f8490f",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5443,6 +5443,44 @@
                 "source": "https://github.com/PrestaShop/gsitemap/tree/v4.4.0"
             },
             "time": "2024-01-10T17:10:01+00:00"
+        },
+        {
+            "name": "prestashop/hummingbird",
+            "version": "dev-remove-env-config",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nicosomb/hummingbird.git",
+                "reference": "35ac6b6ba1de43b2ffceb8ff6761261ce6c70aa7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nicosomb/hummingbird/zipball/35ac6b6ba1de43b2ffceb8ff6761261ce6c70aa7",
+                "reference": "35ac6b6ba1de43b2ffceb8ff6761261ce6c70aa7",
+                "shasum": ""
+            },
+            "require-dev": {
+                "symfony/console": "~4.4 || ^5.0 || ^6.4",
+                "symfony/yaml": "~4.4 || ^5.0 || ^6.4"
+            },
+            "type": "prestashop-theme",
+            "license": [
+                "AFL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                },
+                {
+                    "name": "PrestaShop Community",
+                    "homepage": "https://contributors.prestashop-project.org/"
+                }
+            ],
+            "description": "Hummingbird theme for develop PrestaShop version",
+            "support": {
+                "source": "https://github.com/nicosomb/hummingbird/tree/remove-env-config"
+            },
+            "time": "2024-06-13T09:46:54+00:00"
         },
         {
             "name": "prestashop/laminas-code-lts",
@@ -18075,6 +18113,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "prestashop/classic": 20,
+        "prestashop/hummingbird": 20,
         "prestashop/ps_apiresources": 20
     },
     "prefer-stable": true,

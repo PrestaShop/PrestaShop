@@ -3,7 +3,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
 // Import BO pages
@@ -25,7 +25,7 @@ describe('BO - Shop Parameters - Product Settings : Display add to cart button w
   let page: Page;
 
   // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}-preTest`);
+  enableHummingbird(`${baseContext}-preTest`);
 
   // before and after functions
   before(async function () {
@@ -104,5 +104,5 @@ describe('BO - Shop Parameters - Product Settings : Display add to cart button w
   });
 
   // Post-condition : Uninstall Hummingbird
-  uninstallHummingbird(`${baseContext}-postTest`);
+  disableHummingbird(`${baseContext}-postTest`);
 });

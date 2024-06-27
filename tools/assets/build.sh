@@ -54,8 +54,12 @@ build_asset() {
       echo ">>> Building classic theme assets..."
       build "$PROJECT_PATH/themes/classic/_dev"
     ;;
+    front-hummingbird)
+      echo ">>> Building hummingbird theme assets..."
+      build "$PROJECT_PATH/themes/hummingbird"
+    ;;
     all)
-      build_asset admin-default & build_asset admin-new-theme & build_asset front-core & build_asset front-classic
+      build_asset admin-default & build_asset admin-new-theme & build_asset front-core & build_asset front-classic & build_asset front-hummingbird
     ;;
     *)
       echo "Unknown asset to build $1"

@@ -2,7 +2,7 @@
 import testContext from '@utils/testContext';
 
 // Import common tests
-import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
 
 // Import BO pages
@@ -47,7 +47,7 @@ describe('FO - Product page - Product page : Add customization', async () => {
   });
 
   // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}_preTest`);
+  enableHummingbird(`${baseContext}_preTest`);
 
   describe('Create product with 2 customizations and check it in FO', async () => {
     // before and after functions
@@ -159,7 +159,7 @@ describe('FO - Product page - Product page : Add customization', async () => {
   });
 
   // Post-condition : Uninstall Hummingbird
-  uninstallHummingbird(`${baseContext}_postTest_1`);
+  disableHummingbird(`${baseContext}_postTest_1`);
 
   // Post-condition: Delete specific price
   deleteProductTest(newProductData, `${baseContext}_postTest_2`);
