@@ -12,17 +12,12 @@ import {
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
-const baseContext: string = 'functional_BO_advancedParameters_performance_debugMode';
+const baseContext: string = 'functional_BO_advancedParameters_performance_clearCache';
 
-/*
-Enable/Disable debug mode
-Check the existence debug toolbar
- */
-describe('BO - Advanced Parameters - Performance : Enable/Disable debug mode', async () => {
+describe('BO - Advanced Parameters - Performance : Clear cache', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -49,24 +44,10 @@ describe('BO - Advanced Parameters - Performance : Enable/Disable debug mode', a
     expect(pageTitle).to.contains(boPerformancePage.pageTitle);
   });
 
-  const tests = [
-    {args: {action: 'enable', exist: true}},
-    {args: {action: 'disable', exist: false}},
-  ];
+  it('should clear cache', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'clearCache', baseContext);
 
-  tests.forEach((test, index: number) => {
-    it(`should ${test.args.action} debug mode`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}DebugMode`, baseContext);
-
-      const result = await boPerformancePage.setDebugMode(page, test.args.exist);
-      expect(result).to.contains(boPerformancePage.successUpdateMessage);
-    });
-
-    it('should check the debug toolbar', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `checkDebugMode${index}`, baseContext);
-
-      const isVisible = await boPerformancePage.isDebugModeToggleVisible(page);
-      expect(isVisible).to.eq(test.args.exist);
-    });
+    const successMessage = await boPerformancePage.clearCache(page);
+    expect(successMessage).to.equal(boPerformancePage.clearCacheSuccessMessage);
   });
 });

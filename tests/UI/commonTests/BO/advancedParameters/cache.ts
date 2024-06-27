@@ -4,13 +4,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import BO pages
-import performancePage from '@pages/BO/advancedParameters/performance';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boPerformancePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -45,17 +43,17 @@ function deleteCacheTest(baseContext: string = 'commonTests-deleteCache'): void 
         boDashboardPage.advancedParametersLink,
         boDashboardPage.performanceLink,
       );
-      await performancePage.closeSfToolBar(page);
+      await boPerformancePage.closeSfToolBar(page);
 
-      const pageTitle = await performancePage.getPageTitle(page);
-      expect(pageTitle).to.contains(performancePage.pageTitle);
+      const pageTitle = await boPerformancePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boPerformancePage.pageTitle);
     });
 
     it('should clear cache', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clearCache', baseContext);
 
-      const successMessage = await performancePage.clearCache(page);
-      expect(successMessage).to.equal(performancePage.clearCacheSuccessMessage);
+      const successMessage = await boPerformancePage.clearCache(page);
+      expect(successMessage).to.equal(boPerformancePage.clearCacheSuccessMessage);
     });
   });
 }
