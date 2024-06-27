@@ -4,13 +4,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import performancePage from '@pages/BO/advancedParameters/performance';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boPerformancePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -47,8 +45,8 @@ describe('BO - Advanced Parameters - Performance : Enable/Disable debug mode', a
       boDashboardPage.performanceLink,
     );
 
-    const pageTitle = await performancePage.getPageTitle(page);
-    expect(pageTitle).to.contains(performancePage.pageTitle);
+    const pageTitle = await boPerformancePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boPerformancePage.pageTitle);
   });
 
   const tests = [
@@ -60,14 +58,14 @@ describe('BO - Advanced Parameters - Performance : Enable/Disable debug mode', a
     it(`should ${test.args.action} debug mode`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}DebugMode`, baseContext);
 
-      const result = await performancePage.setDebugMode(page, test.args.exist);
-      expect(result).to.contains(performancePage.successUpdateMessage);
+      const result = await boPerformancePage.setDebugMode(page, test.args.exist);
+      expect(result).to.contains(boPerformancePage.successUpdateMessage);
     });
 
     it('should check the debug toolbar', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkDebugMode${index}`, baseContext);
 
-      const isVisible = await performancePage.isDebugModeToggleVisible(page);
+      const isVisible = await boPerformancePage.isDebugModeToggleVisible(page);
       expect(isVisible).to.eq(test.args.exist);
     });
   });
