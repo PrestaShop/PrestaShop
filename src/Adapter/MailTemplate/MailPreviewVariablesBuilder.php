@@ -31,6 +31,8 @@ use AddressFormat;
 use Carrier;
 use Cart;
 use Context;
+use Hook;
+use Module;
 use Order;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
