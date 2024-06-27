@@ -8,7 +8,6 @@ import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advanced
 // Import pages
 // Import BO pages
 import emailSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
-import {moduleManager} from '@pages/BO/modules/moduleManager';
 // Import FO pages
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 
@@ -16,6 +15,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boModuleManagerPage,
   dataModules,
   type MailDev,
   type MailDevEmail,
@@ -84,23 +84,23 @@ describe('Mail alerts module - Enable/Disable send a verification email after su
         boDashboardPage.modulesParentLink,
         boDashboardPage.moduleManagerLink,
       );
-      await moduleManager.closeSfToolBar(page);
+      await boModuleManagerPage.closeSfToolBar(page);
 
-      const pageTitle = await moduleManager.getPageTitle(page);
-      expect(pageTitle).to.contains(moduleManager.pageTitle);
+      const pageTitle = await boModuleManagerPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
     });
 
     it(`should search the module ${dataModules.psEmailSubscription.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-      const isModuleVisible = await moduleManager.searchModule(page, dataModules.psEmailSubscription);
+      const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.psEmailSubscription);
       expect(isModuleVisible).to.equal(true);
     });
 
     it(`should go to the configuration page of the module '${dataModules.psEmailSubscription.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage', baseContext);
 
-      await moduleManager.goToConfigurationPage(page, dataModules.psEmailSubscription.tag);
+      await boModuleManagerPage.goToConfigurationPage(page, dataModules.psEmailSubscription.tag);
 
       const pageTitle = await emailSubscriptionPage.getPageSubtitle(page);
       expect(pageTitle).to.equal(emailSubscriptionPage.pageTitle);

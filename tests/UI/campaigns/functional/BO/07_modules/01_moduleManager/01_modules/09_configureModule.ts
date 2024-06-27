@@ -6,12 +6,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import {moduleConfigurationPage} from '@pages/BO/modules/moduleConfiguration';
-import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boModuleManagerPage,
   dataModules,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -44,23 +44,23 @@ describe('BO - Modules - Module Manager : Configure module', async () => {
       boDashboardPage.modulesParentLink,
       boDashboardPage.moduleManagerLink,
     );
-    await moduleManagerPage.closeSfToolBar(page);
+    await boModuleManagerPage.closeSfToolBar(page);
 
-    const pageTitle = await moduleManagerPage.getPageTitle(page);
-    expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+    const pageTitle = await boModuleManagerPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
   });
 
   it(`should search for module ${dataModules.contactForm.name}`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchForModule', baseContext);
 
-    const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.contactForm);
+    const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.contactForm);
     expect(isModuleVisible, 'Module is not visible!').to.eq(true);
   });
 
   it('should go to module configuration page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'configureModule', baseContext);
 
-    await moduleManagerPage.goToConfigurationPage(page, dataModules.contactForm.tag);
+    await boModuleManagerPage.goToConfigurationPage(page, dataModules.contactForm.tag);
 
     const pageSubtitle = await moduleConfigurationPage.getPageSubtitle(page);
     expect(pageSubtitle).to.contains(dataModules.contactForm.name);

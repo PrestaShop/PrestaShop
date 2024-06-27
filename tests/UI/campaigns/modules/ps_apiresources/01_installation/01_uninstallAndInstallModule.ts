@@ -8,12 +8,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
-import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boModuleManagerPage,
   dataModules,
   utilsFile,
   utilsPlaywright,
@@ -51,29 +51,29 @@ describe('PrestaShop API Resources module - Uninstall and install module', async
         boDashboardPage.modulesParentLink,
         boDashboardPage.moduleManagerLink,
       );
-      await moduleManagerPage.closeSfToolBar(page);
+      await boModuleManagerPage.closeSfToolBar(page);
 
-      const pageTitle = await moduleManagerPage.getPageTitle(page);
-      expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+      const pageTitle = await boModuleManagerPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
     });
 
     it(`should search the module ${dataModules.psApiResources.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psApiResources);
+      const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.psApiResources);
       expect(isModuleVisible).to.eq(true);
     });
 
     it('should display the uninstall modal and cancel it', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'uninstallModuleAndCancel', baseContext);
 
-      const textResult = await moduleManagerPage.setActionInModule(page, dataModules.psApiResources, 'uninstall', true);
+      const textResult = await boModuleManagerPage.setActionInModule(page, dataModules.psApiResources, 'uninstall', true);
       expect(textResult).to.eq('');
 
-      const isModuleVisible = await moduleManagerPage.isModuleVisible(page, dataModules.psApiResources);
+      const isModuleVisible = await boModuleManagerPage.isModuleVisible(page, dataModules.psApiResources);
       expect(isModuleVisible).to.eq(true);
 
-      const isModalVisible = await moduleManagerPage.isModalActionVisible(page, dataModules.psApiResources, 'uninstall');
+      const isModalVisible = await boModuleManagerPage.isModalActionVisible(page, dataModules.psApiResources, 'uninstall');
       expect(isModalVisible).to.eq(false);
 
       const dirExists = await utilsFile.doesFileExist(`${utilsFile.getRootPath()}/modules/${dataModules.psApiResources.tag}/`);
@@ -83,8 +83,8 @@ describe('PrestaShop API Resources module - Uninstall and install module', async
     it('should uninstall the module', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'uninstallModule', baseContext);
 
-      const successMessage = await moduleManagerPage.setActionInModule(page, dataModules.psApiResources, 'uninstall', false);
-      expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(dataModules.psApiResources.tag));
+      const successMessage = await boModuleManagerPage.setActionInModule(page, dataModules.psApiResources, 'uninstall', false);
+      expect(successMessage).to.eq(boModuleManagerPage.uninstallModuleSuccessMessage(dataModules.psApiResources.tag));
 
       // Check the directory `modules/dataModules.psApiResources.tag`
       const dirExists = await utilsFile.doesFileExist(`${utilsFile.getRootPath()}/modules/${dataModules.psApiResources.tag}/`);
@@ -146,24 +146,24 @@ describe('PrestaShop API Resources module - Uninstall and install module', async
         boDashboardPage.modulesParentLink,
         boDashboardPage.moduleManagerLink,
       );
-      await moduleManagerPage.closeSfToolBar(page);
+      await boModuleManagerPage.closeSfToolBar(page);
 
-      const pageTitle = await moduleManagerPage.getPageTitle(page);
-      expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+      const pageTitle = await boModuleManagerPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
     });
 
     it(`should search the module ${dataModules.psApiResources.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModuleInstall', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psApiResources);
+      const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.psApiResources);
       expect(isModuleVisible).to.eq(true);
     });
 
     it('should install the module', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'installModule', baseContext);
 
-      const successMessage = await moduleManagerPage.setActionInModule(page, dataModules.psApiResources, 'install', false);
-      expect(successMessage).to.eq(moduleManagerPage.installModuleSuccessMessage(dataModules.psApiResources.tag));
+      const successMessage = await boModuleManagerPage.setActionInModule(page, dataModules.psApiResources, 'install', false);
+      expect(successMessage).to.eq(boModuleManagerPage.installModuleSuccessMessage(dataModules.psApiResources.tag));
 
       // Check the directory `modules/dataModules.psEmailAlerts.tag`
       const dirExists = await utilsFile.doesFileExist(`${utilsFile.getRootPath()}/modules/${dataModules.psApiResources.tag}/`);

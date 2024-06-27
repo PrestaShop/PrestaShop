@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
-import {moduleManager as moduleManagerPage, moduleManager} from '@pages/BO/modules/moduleManager';
 
 import {
   boDashboardPage,
@@ -136,7 +135,7 @@ describe('API : PUT /modules/toggle-status', async () => {
 
       await boDashboardPage.goToSubMenu(page, boDashboardPage.modulesParentLink, boDashboardPage.modulesParentLink);
       await boModuleManagerPage.closeSfToolBar(page);
-      await moduleManager.filterByStatus(page, 'installed');
+      await boModuleManagerPage.filterByStatus(page, 'installed');
 
       const pageTitle = await boModuleManagerPage.getPageTitle(page);
       expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
@@ -145,13 +144,13 @@ describe('API : PUT /modules/toggle-status', async () => {
     it('should fetch modules', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'fetchModules', baseContext);
 
-      const isModule1Visible = await moduleManager.searchModule(page, {tag: 'statscarrier'} as FakerModule);
+      const isModule1Visible = await boModuleManagerPage.searchModule(page, {tag: 'statscarrier'} as FakerModule);
       expect(isModule1Visible).to.be.equal(true);
-      moduleInfo1 = await moduleManager.getModuleInformationNth(page, 1);
+      moduleInfo1 = await boModuleManagerPage.getModuleInformationNth(page, 1);
 
-      const isModule2Visible = await moduleManager.searchModule(page, {tag: 'pagesnotfound'} as FakerModule);
+      const isModule2Visible = await boModuleManagerPage.searchModule(page, {tag: 'pagesnotfound'} as FakerModule);
       expect(isModule2Visible).to.be.equal(true);
-      moduleInfo2 = await moduleManager.getModuleInformationNth(page, 1);
+      moduleInfo2 = await boModuleManagerPage.getModuleInformationNth(page, 1);
     });
   });
 
@@ -205,7 +204,7 @@ describe('API : PUT /modules/toggle-status', async () => {
         ];
 
         for (let idxModule = 0; idxModule < modules.length; idxModule++) {
-          const isModuleEnabled = await moduleManagerPage.isModuleStatus(page, modules[idxModule].technicalName, 'enable');
+          const isModuleEnabled = await boModuleManagerPage.isModuleStatus(page, modules[idxModule].technicalName, 'enable');
           expect(isModuleEnabled).to.eq(arg.status);
         }
       });

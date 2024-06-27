@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
-import {moduleManager} from '@pages/BO/modules/moduleManager';
 
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
@@ -142,10 +141,10 @@ describe('API : GET /module/{moduleId}', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-      const isModuleVisible = await moduleManager.searchModule(page, dataModules.psApiResources);
+      const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.psApiResources);
       expect(isModuleVisible).to.be.equal(true);
 
-      moduleInfo = await moduleManager.getModuleInformationNth(page, 1);
+      moduleInfo = await boModuleManagerPage.getModuleInformationNth(page, 1);
     });
   });
 

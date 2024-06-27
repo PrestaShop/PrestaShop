@@ -5,8 +5,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-// Import BO pages
-import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
 
@@ -14,6 +12,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boModuleManagerPage,
   dataModules,
   foClassicCategoryPage,
   modPsFacetedsearchBoFilterTemplate,
@@ -51,23 +50,23 @@ describe('Faceted search module - Edit template - Product brand filter', async (
       boDashboardPage.modulesParentLink,
       boDashboardPage.moduleManagerLink,
     );
-    await moduleManagerPage.closeSfToolBar(page);
+    await boModuleManagerPage.closeSfToolBar(page);
 
-    const pageTitle = await moduleManagerPage.getPageTitle(page);
-    expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+    const pageTitle = await boModuleManagerPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
   });
 
   it(`should search the module ${dataModules.psFacetedSearch.name}`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-    const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psFacetedSearch);
+    const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.psFacetedSearch);
     expect(isModuleVisible).to.be.eq(true);
   });
 
   it(`should go to the configuration page of the module '${dataModules.psFacetedSearch.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage', baseContext);
 
-    await moduleManagerPage.goToConfigurationPage(page, dataModules.psFacetedSearch.tag);
+    await boModuleManagerPage.goToConfigurationPage(page, dataModules.psFacetedSearch.tag);
 
     const pageTitle = await modPsFacetedsearchBoMain.getPageSubtitle(page);
     expect(pageTitle).to.eq(modPsFacetedsearchBoMain.pageSubTitle);

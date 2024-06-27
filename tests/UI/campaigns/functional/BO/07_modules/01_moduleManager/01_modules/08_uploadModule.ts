@@ -4,13 +4,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boModuleManagerPage,
   dataModules,
   utilsFile,
   utilsPlaywright,
@@ -54,37 +52,37 @@ describe('BO - Modules - Module Manager : Upload module', async () => {
       boDashboardPage.modulesParentLink,
       boDashboardPage.moduleManagerLink,
     );
-    await moduleManagerPage.closeSfToolBar(page);
+    await boModuleManagerPage.closeSfToolBar(page);
 
-    const pageTitle = await moduleManagerPage.getPageTitle(page);
-    expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+    const pageTitle = await boModuleManagerPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
   });
 
   it(`should upload the module '${dataModules.keycloak.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'uploadModule', baseContext);
 
-    const successMessage = await moduleManagerPage.uploadModule(page, 'module.zip');
-    expect(successMessage).to.eq(moduleManagerPage.uploadModuleSuccessMessage);
+    const successMessage = await boModuleManagerPage.uploadModule(page, 'module.zip');
+    expect(successMessage).to.eq(boModuleManagerPage.uploadModuleSuccessMessage);
   });
 
   it('should close upload module modal', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeModal', baseContext);
 
-    const isModalVisible = await moduleManagerPage.closeUploadModuleModal(page);
+    const isModalVisible = await boModuleManagerPage.closeUploadModuleModal(page);
     expect(isModalVisible).to.eq(true);
   });
 
   it(`should search the module '${dataModules.keycloak.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-    const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.keycloak);
+    const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.keycloak);
     expect(isModuleVisible, 'Module is not visible!').to.eq(true);
   });
 
   it(`should uninstall the module '${dataModules.keycloak.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'uninstallModule', baseContext);
 
-    const successMessage = await moduleManagerPage.setActionInModule(page, dataModules.keycloak, 'uninstall');
-    expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(dataModules.keycloak.tag));
+    const successMessage = await boModuleManagerPage.setActionInModule(page, dataModules.keycloak, 'uninstall');
+    expect(successMessage).to.eq(boModuleManagerPage.uninstallModuleSuccessMessage(dataModules.keycloak.tag));
   });
 });

@@ -7,13 +7,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-// Import BO pages
-import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boModuleManagerPage,
   dataModules,
   modPsNewProductsBoMain,
   utilsPlaywright,
@@ -49,36 +48,36 @@ describe('New products block module - Reset module', async () => {
       boDashboardPage.modulesParentLink,
       boDashboardPage.moduleManagerLink,
     );
-    await moduleManagerPage.closeSfToolBar(page);
+    await boModuleManagerPage.closeSfToolBar(page);
 
-    const pageTitle = await moduleManagerPage.getPageTitle(page);
-    expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+    const pageTitle = await boModuleManagerPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
   });
 
   it(`should search the module ${dataModules.psNewProducts.name}`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-    const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psNewProducts);
+    const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.psNewProducts);
     expect(isModuleVisible).to.eq(true);
   });
 
   it('should display the reset modal and cancel it', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetModuleAndCancel', baseContext);
 
-    const textResult = await moduleManagerPage.setActionInModule(page, dataModules.psNewProducts, 'reset', true);
+    const textResult = await boModuleManagerPage.setActionInModule(page, dataModules.psNewProducts, 'reset', true);
     expect(textResult).to.eq('');
 
-    const isModuleVisible = await moduleManagerPage.isModuleVisible(page, dataModules.psNewProducts);
+    const isModuleVisible = await boModuleManagerPage.isModuleVisible(page, dataModules.psNewProducts);
     expect(isModuleVisible).to.eq(true);
 
-    const isModalVisible = await moduleManagerPage.isModalActionVisible(page, dataModules.psNewProducts, 'reset');
+    const isModalVisible = await boModuleManagerPage.isModalActionVisible(page, dataModules.psNewProducts, 'reset');
     expect(isModalVisible).to.eq(false);
   });
 
   it(`should go to the configuration page of the module '${dataModules.psNewProducts.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage', baseContext);
 
-    await moduleManagerPage.goToConfigurationPage(page, dataModules.psNewProducts.tag);
+    await boModuleManagerPage.goToConfigurationPage(page, dataModules.psNewProducts.tag);
 
     const pageTitle = await modPsNewProductsBoMain.getPageSubtitle(page);
     expect(pageTitle).to.eq(modPsNewProductsBoMain.pageSubTitle);
@@ -128,30 +127,30 @@ describe('New products block module - Reset module', async () => {
       boDashboardPage.modulesParentLink,
       boDashboardPage.moduleManagerLink,
     );
-    await moduleManagerPage.closeSfToolBar(page);
+    await boModuleManagerPage.closeSfToolBar(page);
 
-    const pageTitle = await moduleManagerPage.getPageTitle(page);
-    expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+    const pageTitle = await boModuleManagerPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
   });
 
   it(`should search the module ${dataModules.psNewProducts.name}`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchModuleForReset', baseContext);
 
-    const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psNewProducts);
+    const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.psNewProducts);
     expect(isModuleVisible).to.eq(true);
   });
 
   it('should reset the module', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetModule', baseContext);
 
-    const successMessage = await moduleManagerPage.setActionInModule(page, dataModules.psNewProducts, 'reset');
-    expect(successMessage).to.eq(moduleManagerPage.resetModuleSuccessMessage(dataModules.psNewProducts.tag));
+    const successMessage = await boModuleManagerPage.setActionInModule(page, dataModules.psNewProducts, 'reset');
+    expect(successMessage).to.eq(boModuleManagerPage.resetModuleSuccessMessage(dataModules.psNewProducts.tag));
   });
 
   it(`should go to the configuration page of the module '${dataModules.psNewProducts.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPageAfterReset', baseContext);
 
-    await moduleManagerPage.goToConfigurationPage(page, dataModules.psNewProducts.tag);
+    await boModuleManagerPage.goToConfigurationPage(page, dataModules.psNewProducts.tag);
 
     const pageTitle = await modPsNewProductsBoMain.getPageSubtitle(page);
     expect(pageTitle).to.eq(modPsNewProductsBoMain.pageSubTitle);

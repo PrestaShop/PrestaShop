@@ -7,13 +7,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import boDesignPositionsPage from '@pages/BO/design/positions';
-import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 import psEmailAlerts from '@pages/BO/modules/psEmailAlerts';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boModuleManagerPage,
   dataModules,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -47,23 +47,23 @@ describe('Mail alerts module - BO Header Buttons', async () => {
         boDashboardPage.modulesParentLink,
         boDashboardPage.moduleManagerLink,
       );
-      await moduleManagerPage.closeSfToolBar(page);
+      await boModuleManagerPage.closeSfToolBar(page);
 
-      const pageTitle = await moduleManagerPage.getPageTitle(page);
-      expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+      const pageTitle = await boModuleManagerPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
     });
 
     it(`should search the module ${dataModules.psEmailAlerts.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psEmailAlerts);
+      const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.psEmailAlerts);
       expect(isModuleVisible).to.eq(true);
     });
 
     it(`should go to the configuration page of the module '${dataModules.psEmailAlerts.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage', baseContext);
 
-      await moduleManagerPage.goToConfigurationPage(page, dataModules.psEmailAlerts.tag);
+      await boModuleManagerPage.goToConfigurationPage(page, dataModules.psEmailAlerts.tag);
 
       const pageTitle = await psEmailAlerts.getPageSubtitle(page);
       expect(pageTitle).to.eq(psEmailAlerts.pageTitle);
@@ -74,17 +74,17 @@ describe('Mail alerts module - BO Header Buttons', async () => {
 
       await psEmailAlerts.clickHeaderBack(page);
 
-      const pageTitle = await moduleManagerPage.getPageTitle(page);
-      expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+      const pageTitle = await boModuleManagerPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
     });
 
     it('should return to the configure page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnConfigureAfterBack', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psEmailAlerts);
+      const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.psEmailAlerts);
       expect(isModuleVisible).to.eq(true);
 
-      await moduleManagerPage.goToConfigurationPage(page, dataModules.psEmailAlerts.tag);
+      await boModuleManagerPage.goToConfigurationPage(page, dataModules.psEmailAlerts.tag);
 
       const pageTitle = await psEmailAlerts.getPageSubtitle(page);
       expect(pageTitle).to.eq(psEmailAlerts.pageTitle);

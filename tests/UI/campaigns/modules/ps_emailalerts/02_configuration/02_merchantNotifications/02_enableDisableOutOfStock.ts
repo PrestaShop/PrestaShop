@@ -10,12 +10,12 @@ import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/prod
 // Import BO pages
 import emailAlertsPage from '@pages/BO/modules/psEmailAlerts';
 import stocksPage from '@pages/BO/catalog/stocks';
-import {moduleManager} from '@pages/BO/modules/moduleManager';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boModuleManagerPage,
   dataModules,
   FakerProduct,
   type MailDev,
@@ -112,23 +112,23 @@ describe('Mail alerts module - Enable/Disable out of stock', async () => {
         boDashboardPage.modulesParentLink,
         boDashboardPage.moduleManagerLink,
       );
-      await moduleManager.closeSfToolBar(page);
+      await boModuleManagerPage.closeSfToolBar(page);
 
-      const pageTitle = await moduleManager.getPageTitle(page);
-      expect(pageTitle).to.contains(moduleManager.pageTitle);
+      const pageTitle = await boModuleManagerPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
     });
 
     it(`should search the module ${dataModules.psEmailAlerts.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-      const isModuleVisible = await moduleManager.searchModule(page, dataModules.psEmailAlerts);
+      const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.psEmailAlerts);
       expect(isModuleVisible).to.equal(true);
     });
 
     it(`should go to the configuration page of the module '${dataModules.psEmailAlerts.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage', baseContext);
 
-      await moduleManager.goToConfigurationPage(page, dataModules.psEmailAlerts.tag);
+      await boModuleManagerPage.goToConfigurationPage(page, dataModules.psEmailAlerts.tag);
 
       const pageTitle = await emailAlertsPage.getPageSubtitle(page);
       expect(pageTitle).to.equal(emailAlertsPage.pageTitle);
@@ -191,23 +191,23 @@ describe('Mail alerts module - Enable/Disable out of stock', async () => {
         boDashboardPage.modulesParentLink,
         boDashboardPage.moduleManagerLink,
       );
-      await moduleManager.closeSfToolBar(page);
+      await boModuleManagerPage.closeSfToolBar(page);
 
-      const pageTitle = await moduleManager.getPageTitle(page);
-      expect(pageTitle).to.contains(moduleManager.pageTitle);
+      const pageTitle = await boModuleManagerPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
     });
 
     it(`should search the module ${dataModules.psEmailAlerts.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule2', baseContext);
 
-      const isModuleVisible = await moduleManager.searchModule(page, dataModules.psEmailAlerts);
+      const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.psEmailAlerts);
       expect(isModuleVisible).to.equal(true);
     });
 
     it(`should go to the configuration page of the module '${dataModules.psEmailAlerts.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage2', baseContext);
 
-      await moduleManager.goToConfigurationPage(page, dataModules.psEmailAlerts.tag);
+      await boModuleManagerPage.goToConfigurationPage(page, dataModules.psEmailAlerts.tag);
 
       const pageTitle = await emailAlertsPage.getPageSubtitle(page);
       expect(pageTitle).to.equal(emailAlertsPage.pageTitle);

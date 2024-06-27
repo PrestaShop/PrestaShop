@@ -7,13 +7,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-// Import BO pages
-import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boModuleManagerPage,
   dataCategories,
   dataModules,
   foClassicCategoryPage,
@@ -50,33 +49,33 @@ describe('Faceted search module - Disable/Enable module', async () => {
         boDashboardPage.modulesParentLink,
         boDashboardPage.moduleManagerLink,
       );
-      await moduleManagerPage.closeSfToolBar(page);
+      await boModuleManagerPage.closeSfToolBar(page);
 
-      const pageTitle = await moduleManagerPage.getPageTitle(page);
-      expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+      const pageTitle = await boModuleManagerPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
     });
 
     it(`should search the module ${dataModules.psFacetedSearch.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModuleForDisable', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psFacetedSearch);
+      const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.psFacetedSearch);
       expect(isModuleVisible).to.eq(true);
     });
 
     it('should disable and cancel the module', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableCancelModule', baseContext);
 
-      await moduleManagerPage.setActionInModule(page, dataModules.psFacetedSearch, 'disable', true);
+      await boModuleManagerPage.setActionInModule(page, dataModules.psFacetedSearch, 'disable', true);
 
-      const isModuleVisible = await moduleManagerPage.isModuleVisible(page, dataModules.psFacetedSearch);
+      const isModuleVisible = await boModuleManagerPage.isModuleVisible(page, dataModules.psFacetedSearch);
       expect(isModuleVisible).to.eq(true);
     });
 
     it('should disable the module', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableModule', baseContext);
 
-      const successMessage = await moduleManagerPage.setActionInModule(page, dataModules.psFacetedSearch, 'disable');
-      expect(successMessage).to.eq(moduleManagerPage.disableModuleSuccessMessage(dataModules.psFacetedSearch.tag));
+      const successMessage = await boModuleManagerPage.setActionInModule(page, dataModules.psFacetedSearch, 'disable');
+      expect(successMessage).to.eq(boModuleManagerPage.disableModuleSuccessMessage(dataModules.psFacetedSearch.tag));
     });
 
     it('should go to the front office', async function () {
@@ -110,22 +109,22 @@ describe('Faceted search module - Disable/Enable module', async () => {
 
       page = await foClassicCategoryPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await moduleManagerPage.getPageTitle(page);
-      expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+      const pageTitle = await boModuleManagerPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
     });
 
     it(`should search the module ${dataModules.psFacetedSearch.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModuleForEnsable', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psFacetedSearch);
+      const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.psFacetedSearch);
       expect(isModuleVisible).to.eq(true);
     });
 
     it('should enable the module', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableModule', baseContext);
 
-      const successMessage = await moduleManagerPage.setActionInModule(page, dataModules.psFacetedSearch, 'enable');
-      expect(successMessage).to.eq(moduleManagerPage.enableModuleSuccessMessage(dataModules.psFacetedSearch.tag));
+      const successMessage = await boModuleManagerPage.setActionInModule(page, dataModules.psFacetedSearch, 'enable');
+      expect(successMessage).to.eq(boModuleManagerPage.enableModuleSuccessMessage(dataModules.psFacetedSearch.tag));
     });
 
     it('should go to the front office', async function () {

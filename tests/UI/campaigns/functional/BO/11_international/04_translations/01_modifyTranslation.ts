@@ -11,7 +11,6 @@ import translationsPage from '@pages/BO/international/translations';
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import storesPage from '@pages/BO/shopParameters/stores';
-import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
 // Import FO pages classic theme
 import {homePage} from '@pages/FO/classic/home';
@@ -24,6 +23,7 @@ import loginPageHummingbird from '@pages/FO/hummingbird/login';
 
 import {
   boDashboardPage,
+  boModuleManagerPage,
   dataCustomers,
   dataLanguages,
   dataModules,
@@ -328,23 +328,23 @@ describe('BO - International - Translation : Modify translation', async () => {
         boDashboardPage.modulesParentLink,
         boDashboardPage.moduleManagerLink,
       );
-      await moduleManagerPage.closeSfToolBar(page);
+      await boModuleManagerPage.closeSfToolBar(page);
 
-      const pageTitle = await moduleManagerPage.getPageTitle(page);
-      expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+      const pageTitle = await boModuleManagerPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
     });
 
     it(`should search the module ${dataModules.contactForm.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.contactForm);
+      const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.contactForm);
       expect(isModuleVisible, 'Module is not visible!').to.eq(true);
     });
 
     it('should check the module name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkModuleName', baseContext);
 
-      const moduleName = await moduleManagerPage.getModuleName(page, dataModules.contactForm);
+      const moduleName = await boModuleManagerPage.getModuleName(page, dataModules.contactForm);
       expect(moduleName).to.eq('Contact form Module Edited');
     });
   });

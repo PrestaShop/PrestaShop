@@ -8,12 +8,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
-import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boModuleManagerPage,
   dataModules,
   utilsCore,
   utilsPlaywright,
@@ -60,28 +60,28 @@ describe('PrestaShop API Resources module - Disable/Enable module', async () => 
           boDashboardPage.modulesParentLink,
           boDashboardPage.moduleManagerLink,
         );
-        await moduleManagerPage.closeSfToolBar(page);
+        await boModuleManagerPage.closeSfToolBar(page);
 
-        const pageTitle = await moduleManagerPage.getPageTitle(page);
-        expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+        const pageTitle = await boModuleManagerPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
       });
 
       it(`should search the module ${dataModules.psApiResources.name}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `searchModule${index}`, baseContext);
 
-        const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psApiResources);
+        const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.psApiResources);
         expect(isModuleVisible).to.eq(true);
       });
 
       it(`should ${test.action} the module`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.action}Module`, baseContext);
 
-        const successMessage = await moduleManagerPage.setActionInModule(page, dataModules.psApiResources, test.action);
+        const successMessage = await boModuleManagerPage.setActionInModule(page, dataModules.psApiResources, test.action);
 
         if (test.state) {
-          expect(successMessage).to.eq(moduleManagerPage.enableModuleSuccessMessage(dataModules.psApiResources.tag));
+          expect(successMessage).to.eq(boModuleManagerPage.enableModuleSuccessMessage(dataModules.psApiResources.tag));
         } else {
-          expect(successMessage).to.eq(moduleManagerPage.disableModuleSuccessMessage(dataModules.psApiResources.tag));
+          expect(successMessage).to.eq(boModuleManagerPage.disableModuleSuccessMessage(dataModules.psApiResources.tag));
         }
       });
 

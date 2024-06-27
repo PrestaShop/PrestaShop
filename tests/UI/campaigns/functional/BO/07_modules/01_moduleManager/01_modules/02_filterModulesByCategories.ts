@@ -4,13 +4,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boModuleManagerPage,
   dataModuleCategories,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -43,10 +41,10 @@ describe('BO - Modules - Module Manager : Filter modules by Categories', async (
       boDashboardPage.modulesParentLink,
       boDashboardPage.moduleManagerLink,
     );
-    await moduleManagerPage.closeSfToolBar(page);
+    await boModuleManagerPage.closeSfToolBar(page);
 
-    const pageTitle = await moduleManagerPage.getPageTitle(page);
-    expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+    const pageTitle = await boModuleManagerPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
   });
 
   describe('Filter modules by categories', async () => {
@@ -55,9 +53,9 @@ describe('BO - Modules - Module Manager : Filter modules by Categories', async (
         await testContext.addContextItem(this, 'testIdentifier', `filterByCategory${category}`, baseContext);
 
         // Filter modules by categories
-        await moduleManagerPage.filterByCategory(page, category);
+        await boModuleManagerPage.filterByCategory(page, category);
 
-        const firstBlockTitle = await moduleManagerPage.getBlockModuleTitle(page, 1);
+        const firstBlockTitle = await boModuleManagerPage.getBlockModuleTitle(page, 1);
         expect(firstBlockTitle).to.equal(category);
       });
     });

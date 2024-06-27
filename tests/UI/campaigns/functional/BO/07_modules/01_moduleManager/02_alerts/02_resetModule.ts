@@ -4,14 +4,12 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
-import moduleAlertsPage from '@pages/BO/modules/moduleAlerts';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boModuleManagerPage,
+  boModuleManagerAlertsPage,
   dataModules,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -44,25 +42,25 @@ describe('BO - Modules - Alerts tab : Reset module', async () => {
       boDashboardPage.modulesParentLink,
       boDashboardPage.moduleManagerLink,
     );
-    await moduleManagerPage.closeSfToolBar(page);
+    await boModuleManagerPage.closeSfToolBar(page);
 
-    const pageTitle = await moduleManagerPage.getPageTitle(page);
-    expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+    const pageTitle = await boModuleManagerPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
   });
 
   it('should go to \'Alerts\' tab', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAlertsTab', baseContext);
 
-    await moduleManagerPage.goToAlertsTab(page);
+    await boModuleManagerPage.goToAlertsTab(page);
 
-    const pageTitle = await moduleAlertsPage.getPageTitle(page);
-    expect(pageTitle).to.eq(moduleAlertsPage.pageTitle);
+    const pageTitle = await boModuleManagerAlertsPage.getPageTitle(page);
+    expect(pageTitle).to.eq(boModuleManagerAlertsPage.pageTitle);
   });
 
   it(`should reset the module '${dataModules.psCheckPayment.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetModule', baseContext);
 
-    const successMessage = await moduleAlertsPage.setActionInModule(page, dataModules.psCheckPayment, 'reset');
-    expect(successMessage).to.eq(moduleAlertsPage.resetModuleSuccessMessage(dataModules.psCheckPayment.tag));
+    const successMessage = await boModuleManagerAlertsPage.setActionInModule(page, dataModules.psCheckPayment, 'reset');
+    expect(successMessage).to.eq(boModuleManagerAlertsPage.resetModuleSuccessMessage(dataModules.psCheckPayment.tag));
   });
 });

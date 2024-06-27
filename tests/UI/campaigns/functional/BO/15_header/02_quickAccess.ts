@@ -6,7 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import statsPage from '@pages/BO/stats';
-import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 import newCategoryPage from '@pages/BO/catalog/categories/add';
 import newVoucherPage from '@pages/BO/catalog/discounts/add';
 import productsPage from '@pages/BO/catalog/products/';
@@ -19,6 +18,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boModuleManagerPage,
   FakerQuickAccess,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -52,7 +52,7 @@ describe('BO - Header : Quick access links', async () => {
 
     [
       {args: {pageName: 'Catalog evaluation', pageTitle: statsPage.pageTitle}},
-      {args: {pageName: 'Installed modules', pageTitle: moduleManagerPage.pageTitle}},
+      {args: {pageName: 'Installed modules', pageTitle: boModuleManagerPage.pageTitle}},
       {args: {pageName: 'New category', pageTitle: newCategoryPage.pageTitleCreate}},
       {args: {pageName: 'New product', pageTitle: productsPage.pageTitle}},
       {args: {pageName: 'Orders', pageTitle: ordersPage.pageTitle}},

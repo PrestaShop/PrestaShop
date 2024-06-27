@@ -6,11 +6,11 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
 import customersPage from '@pages/BO/customers';
-import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 import psEmailSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
 
 import {
   boDashboardPage,
+  boModuleManagerPage,
   dataCustomers,
   dataModules,
   utilsPlaywright,
@@ -92,16 +92,16 @@ describe('BO - Customers - Customers : Check customer subscription to newsletter
         customersPage.moduleManagerLink,
       );
 
-      const pageTitle = await moduleManagerPage.getPageTitle(page);
-      expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+      const pageTitle = await boModuleManagerPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
     });
 
     it(`should go to '${dataModules.psEmailSubscription.name}' module`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToEmailSubscriptionModule${index}`, baseContext);
 
       // Search and go to configure module page
-      await moduleManagerPage.searchModule(page, dataModules.psEmailSubscription);
-      await moduleManagerPage.goToConfigurationPage(page, dataModules.psEmailSubscription.tag);
+      await boModuleManagerPage.searchModule(page, dataModules.psEmailSubscription);
+      await boModuleManagerPage.goToConfigurationPage(page, dataModules.psEmailSubscription.tag);
 
       const pageTitle = await psEmailSubscriptionPage.getPageSubtitle(page);
       expect(pageTitle).to.contains(dataModules.psEmailSubscription.name);

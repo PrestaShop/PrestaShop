@@ -7,7 +7,6 @@ import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/h
 
 // Import pages
 // Import BO pages
-import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 import {moduleConfigurationPage} from '@pages/BO/modules/moduleConfiguration';
 import psEmailSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
 // Import FO pages
@@ -18,6 +17,7 @@ import accountIdentityPage from '@pages/FO/hummingbird/myAccount/identity';
 
 import {
   boDashboardPage,
+  boModuleManagerPage,
   dataCustomers,
   FakerModule,
   utilsPlaywright,
@@ -133,24 +133,24 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
         boDashboardPage.modulesParentLink,
         boDashboardPage.moduleManagerLink,
       );
-      await moduleManagerPage.closeSfToolBar(page);
+      await boModuleManagerPage.closeSfToolBar(page);
 
-      const pageTitle = await moduleManagerPage.getPageTitle(page);
-      expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+      const pageTitle = await boModuleManagerPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
     });
 
     it(`should search for module ${moduleInformation.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchForModule', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, moduleInformation);
+      const isModuleVisible = await boModuleManagerPage.searchModule(page, moduleInformation);
       expect(isModuleVisible).to.eq(true);
     });
 
     it('should go to newsletter subscription module configuration page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewsletterModuleConfigPage', baseContext);
 
-      await moduleManagerPage.searchModule(page, moduleInformation);
-      await moduleManagerPage.goToConfigurationPage(page, moduleInformation.tag);
+      await boModuleManagerPage.searchModule(page, moduleInformation);
+      await boModuleManagerPage.goToConfigurationPage(page, moduleInformation.tag);
 
       const moduleConfigurationPageSubtitle = await moduleConfigurationPage.getPageSubtitle(page);
       expect(moduleConfigurationPageSubtitle).to.contains(moduleInformation.name);
@@ -199,17 +199,17 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
         boDashboardPage.modulesParentLink,
         boDashboardPage.moduleManagerLink,
       );
-      await moduleManagerPage.closeSfToolBar(page);
+      await boModuleManagerPage.closeSfToolBar(page);
 
-      const pageTitle = await moduleManagerPage.getPageTitle(page);
-      expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+      const pageTitle = await boModuleManagerPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
     });
 
     it('should go to newsletter subscription module configuration page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToNewsletterModuleConfig', baseContext);
 
-      await moduleManagerPage.searchModule(page, moduleInformation);
-      await moduleManagerPage.goToConfigurationPage(page, moduleInformation.tag);
+      await boModuleManagerPage.searchModule(page, moduleInformation);
+      await boModuleManagerPage.goToConfigurationPage(page, moduleInformation.tag);
 
       const moduleConfigurationPageSubtitle = await moduleConfigurationPage.getPageSubtitle(page);
       expect(moduleConfigurationPageSubtitle).to.contains(moduleInformation.name);

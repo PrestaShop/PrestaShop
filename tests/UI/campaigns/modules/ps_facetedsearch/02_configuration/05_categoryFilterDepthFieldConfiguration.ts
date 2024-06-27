@@ -5,8 +5,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-// Import BO pages
-import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
 
@@ -14,6 +12,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boModuleManagerPage,
   dataModules,
   foClassicCategoryPage,
   modPsFacetedsearchBoMain,
@@ -49,23 +48,23 @@ describe('Faceted search module - Category filter depth field configuration', as
       boDashboardPage.modulesParentLink,
       boDashboardPage.moduleManagerLink,
     );
-    await moduleManagerPage.closeSfToolBar(page);
+    await boModuleManagerPage.closeSfToolBar(page);
 
-    const pageTitle = await moduleManagerPage.getPageTitle(page);
-    expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+    const pageTitle = await boModuleManagerPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
   });
 
   it(`should search the module ${dataModules.psFacetedSearch.name}`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-    const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psFacetedSearch);
+    const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.psFacetedSearch);
     expect(isModuleVisible).to.be.eq(true);
   });
 
   it(`should go to the configuration page of the module '${dataModules.psFacetedSearch.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage', baseContext);
 
-    await moduleManagerPage.goToConfigurationPage(page, dataModules.psFacetedSearch.tag);
+    await boModuleManagerPage.goToConfigurationPage(page, dataModules.psFacetedSearch.tag);
 
     const pageTitle = await modPsFacetedsearchBoMain.getPageSubtitle(page);
     expect(pageTitle).to.eq(modPsFacetedsearchBoMain.pageSubTitle);
@@ -87,7 +86,10 @@ describe('Faceted search module - Category filter depth field configuration', as
     it(`should set the Category filter depth value : "${test.categoryFilterDepthValue}"`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `setCategoryFilterDepthValue_${index}`, baseContext);
 
-      const textResult = await modPsFacetedsearchBoMain.setCategoryFilterDepthValue(page, test.categoryFilterDepthValue.toString());
+      const textResult = await modPsFacetedsearchBoMain.setCategoryFilterDepthValue(
+        page,
+        test.categoryFilterDepthValue.toString(),
+      );
       expect(textResult).to.equal(modPsFacetedsearchBoMain.settingsSavedMessage);
     });
 
@@ -136,7 +138,7 @@ describe('Faceted search module - Category filter depth field configuration', as
     // @todo : https://github.com/PrestaShop/PrestaShop/issues/36438
     it(`should set the Category filter depth value : "${value}"`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `setCategoryFilterDepthValueError_${index}`, baseContext);
-      
+
       this.skip();
 
       const textResult = await modPsFacetedsearchBoMain.setCategoryFilterDepthValue(page, value);
@@ -144,7 +146,7 @@ describe('Faceted search module - Category filter depth field configuration', as
     });
   });
 
-  it(`should set the Category filter depth value : "1L`, async function () {
+  it('should set the Category filter depth value : "1L"', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setCategoryFilterDepthValue_1L', baseContext);
 
     const textResult = await modPsFacetedsearchBoMain.setCategoryFilterDepthValue(page, '1L');

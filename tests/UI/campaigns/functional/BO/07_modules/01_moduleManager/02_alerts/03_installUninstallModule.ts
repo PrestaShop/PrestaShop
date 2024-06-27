@@ -4,14 +4,12 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
-import moduleAlertsPage from '@pages/BO/modules/moduleAlerts';
-
 import {expect} from 'chai';
 import {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boModuleManagerPage,
+  boModuleManagerAlertsPage,
   dataModules,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -44,32 +42,32 @@ describe('BO - Modules - Alerts : Install/Uninstall module', async () => {
       boDashboardPage.modulesParentLink,
       boDashboardPage.moduleManagerLink,
     );
-    await moduleManagerPage.closeSfToolBar(page);
+    await boModuleManagerPage.closeSfToolBar(page);
 
-    const pageTitle = await moduleManagerPage.getPageTitle(page);
-    expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+    const pageTitle = await boModuleManagerPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
   });
 
   it('should go to \'Alerts\' tab', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAlertsTab', baseContext);
 
-    await moduleManagerPage.goToAlertsTab(page);
+    await boModuleManagerPage.goToAlertsTab(page);
 
-    const pageTitle = await moduleAlertsPage.getPageTitle(page);
-    expect(pageTitle).to.eq(moduleAlertsPage.pageTitle);
+    const pageTitle = await boModuleManagerAlertsPage.getPageTitle(page);
+    expect(pageTitle).to.eq(boModuleManagerAlertsPage.pageTitle);
   });
 
   it(`should uninstall the module '${dataModules.psCheckPayment.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'uninstallModule', baseContext);
 
-    const successMessage = await moduleAlertsPage.setActionInModule(page, dataModules.psCheckPayment, 'uninstall');
-    expect(successMessage).to.eq(moduleAlertsPage.uninstallModuleSuccessMessage(dataModules.psCheckPayment.tag));
+    const successMessage = await boModuleManagerAlertsPage.setActionInModule(page, dataModules.psCheckPayment, 'uninstall');
+    expect(successMessage).to.eq(boModuleManagerAlertsPage.uninstallModuleSuccessMessage(dataModules.psCheckPayment.tag));
   });
 
   it(`should install the module '${dataModules.psCheckPayment.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'installModule', baseContext);
 
-    const successMessage = await moduleAlertsPage.setActionInModule(page, dataModules.psCheckPayment, 'install');
-    expect(successMessage).to.eq(moduleAlertsPage.installModuleSuccessMessage(dataModules.psCheckPayment.tag));
+    const successMessage = await boModuleManagerAlertsPage.setActionInModule(page, dataModules.psCheckPayment, 'install');
+    expect(successMessage).to.eq(boModuleManagerAlertsPage.installModuleSuccessMessage(dataModules.psCheckPayment.tag));
   });
 });

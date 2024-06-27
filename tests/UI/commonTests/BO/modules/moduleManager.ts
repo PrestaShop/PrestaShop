@@ -2,10 +2,9 @@ import testContext from '@utils/testContext';
 
 import loginCommon from '@commonTests/BO/loginBO';
 
-import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
-
 import {
   boDashboardPage,
+  boModuleManagerPage,
   type FakerModule,
   utilsFile,
   utilsPlaywright,
@@ -51,30 +50,30 @@ function installModule(module: FakerModule, baseContext: string = 'commonTests-i
         boDashboardPage.modulesParentLink,
         boDashboardPage.moduleManagerLink,
       );
-      await moduleManagerPage.closeSfToolBar(page);
+      await boModuleManagerPage.closeSfToolBar(page);
 
-      const pageTitle = await moduleManagerPage.getPageTitle(page);
-      expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+      const pageTitle = await boModuleManagerPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
     });
 
     it(`should upload the module '${module.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'uploadModule', baseContext);
 
-      const successMessage = await moduleManagerPage.uploadModule(page, 'module.zip');
-      expect(successMessage).to.eq(moduleManagerPage.uploadModuleSuccessMessage);
+      const successMessage = await boModuleManagerPage.uploadModule(page, 'module.zip');
+      expect(successMessage).to.eq(boModuleManagerPage.uploadModuleSuccessMessage);
     });
 
     it('should close upload module modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeModal', baseContext);
 
-      const isModalVisible = await moduleManagerPage.closeUploadModuleModal(page);
+      const isModalVisible = await boModuleManagerPage.closeUploadModuleModal(page);
       expect(isModalVisible).to.eq(true);
     });
 
     it(`should search the module '${module.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, module);
+      const isModuleVisible = await boModuleManagerPage.searchModule(page, module);
       expect(isModuleVisible, 'Module is not visible!').to.eq(true);
     });
   });
@@ -107,24 +106,24 @@ function uninstallModule(module: FakerModule, baseContext: string = 'commonTests
         boDashboardPage.modulesParentLink,
         boDashboardPage.moduleManagerLink,
       );
-      await moduleManagerPage.closeSfToolBar(page);
+      await boModuleManagerPage.closeSfToolBar(page);
 
-      const pageTitle = await moduleManagerPage.getPageTitle(page);
-      expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+      const pageTitle = await boModuleManagerPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
     });
 
     it(`should search the module '${module.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, module);
+      const isModuleVisible = await boModuleManagerPage.searchModule(page, module);
       expect(isModuleVisible, 'Module is not visible!').to.eq(true);
     });
 
     it(`should uninstall the module '${module.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'uninstallModule', baseContext);
 
-      const successMessage = await moduleManagerPage.setActionInModule(page, module, 'uninstall', false, true);
-      expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(module.tag));
+      const successMessage = await boModuleManagerPage.setActionInModule(page, module, 'uninstall', false, true);
+      expect(successMessage).to.eq(boModuleManagerPage.uninstallModuleSuccessMessage(module.tag));
     });
   });
 }
@@ -156,24 +155,24 @@ function resetModule(module: FakerModule, baseContext: string = 'commonTests-res
         boDashboardPage.modulesParentLink,
         boDashboardPage.moduleManagerLink,
       );
-      await moduleManagerPage.closeSfToolBar(page);
+      await boModuleManagerPage.closeSfToolBar(page);
 
-      const pageTitle = await moduleManagerPage.getPageTitle(page);
-      expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+      const pageTitle = await boModuleManagerPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
     });
 
     it(`should search the module '${module.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, module);
+      const isModuleVisible = await boModuleManagerPage.searchModule(page, module);
       expect(isModuleVisible, 'Module is not visible!').to.eq(true);
     });
 
     it(`should reset the module '${module.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'uninstallModule', baseContext);
 
-      const successMessage = await moduleManagerPage.setActionInModule(page, module, 'reset');
-      expect(successMessage).to.eq(moduleManagerPage.resetModuleSuccessMessage(module.tag));
+      const successMessage = await boModuleManagerPage.setActionInModule(page, module, 'reset');
+      expect(successMessage).to.eq(boModuleManagerPage.resetModuleSuccessMessage(module.tag));
     });
   });
 }
