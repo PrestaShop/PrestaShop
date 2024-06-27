@@ -36,7 +36,7 @@ class Home extends HomePage {
     this.productArticle = (number: number) => `#content section.featured-products div.container div article:nth-child(${number})`;
     this.addToCartIcon = (number: number) => `${this.productArticle(number)} button[data-button-action='add-to-cart']`;
     this.productAddToWishlist = (number: number) => `${this.productArticle(number)} button.wishlist-button-add`;
-    this.productColor = (number: number, color: string) => `${this.productArticle(number)} div.product-miniature-variants`
+    this.productColor = (number: number, color: string) => `${this.productArticle(number)} div.product-miniature__variants`
       + ` a[title='${color}']`;
 
     // Wishlist modal
