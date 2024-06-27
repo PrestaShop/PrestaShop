@@ -12,13 +12,13 @@ import createProductPage from '@pages/BO/catalog/products/add';
 // Import FO pages
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {homePage} from '@pages/FO/classic/home';
-import {categoryPage} from '@pages/FO/classic/category';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerProduct,
+  foClassicCategoryPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -138,23 +138,23 @@ describe('FO - Product page - Product page : Display on sale label', async () =>
 
       await homePage.goToAllProductsPage(page);
 
-      const isCategoryPageVisible = await categoryPage.isCategoryPage(page);
+      const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
     });
 
     it('should go to the second product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToSecondProductsPage', baseContext);
 
-      await categoryPage.goToNextPage(page);
+      await foClassicCategoryPage.goToNextPage(page);
 
-      productsNumber = await categoryPage.getProductsNumber(page);
+      productsNumber = await foClassicCategoryPage.getProductsNumber(page);
       expect(productsNumber).to.not.equal(19);
     });
 
     it('should check the tag \'New, pack, out-of-stock and Online only\' for the created product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTagsInAllProductPage', baseContext);
 
-      const flagText = await categoryPage.getProductTag(page, productsNumber - 12);
+      const flagText = await foClassicCategoryPage.getProductTag(page, productsNumber - 12);
       expect(flagText).to.contains('On sale!')
         .and.to.contain('New')
         .and.to.contain('Out-of-Stock');
@@ -163,7 +163,7 @@ describe('FO - Product page - Product page : Display on sale label', async () =>
     it('should go to the created product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreatedProductPage', baseContext);
 
-      await categoryPage.goToProductPage(page, productsNumber - 12);
+      await foClassicCategoryPage.goToProductPage(page, productsNumber - 12);
 
       const pageTitle = await foProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);

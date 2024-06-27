@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 // Import FO pages
-import {categoryPage as categoryPageFO} from '@pages/FO/classic/category';
 import {homePage} from '@pages/FO/classic/home';
 
 import {expect} from 'chai';
@@ -16,6 +15,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataModules,
+  foClassicCategoryPage,
   modPsFacetedsearchBoFilterTemplate,
   modPsFacetedsearchBoMain,
   utilsFile,
@@ -154,26 +154,26 @@ describe('Faceted search module - Edit template - Product brand filter', async (
 
       await homePage.goToAllProductsBlockPage(page, 1);
 
-      const isCategoryPageVisible = await categoryPageFO.isCategoryPage(page);
+      const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible).to.be.eq(true);
 
-      const hasSearchFilters = await categoryPageFO.hasSearchFilters(page);
+      const hasSearchFilters = await foClassicCategoryPage.hasSearchFilters(page);
       expect(hasSearchFilters).to.be.eq(test.expectedHasSearchFilters);
 
-      const isSearchFilterRadio = await categoryPageFO.isSearchFilterRadio(page, 'manufacturer');
+      const isSearchFilterRadio = await foClassicCategoryPage.isSearchFilterRadio(page, 'manufacturer');
       expect(isSearchFilterRadio).to.be.eq(test.expectedIsSearchFilterRadio);
 
-      const isSearchFilterDropdown = await categoryPageFO.isSearchFilterDropdown(page, 'manufacturer');
+      const isSearchFilterDropdown = await foClassicCategoryPage.isSearchFilterDropdown(page, 'manufacturer');
       expect(isSearchFilterDropdown).to.be.eq(test.expectedIsSearchFilterDropdown);
 
-      const isSearchFiltersCheckbox = await categoryPageFO.isSearchFiltersCheckbox(page, 'manufacturer');
+      const isSearchFiltersCheckbox = await foClassicCategoryPage.isSearchFiltersCheckbox(page, 'manufacturer');
       expect(isSearchFiltersCheckbox).to.be.eq(test.expectedIsSearchFilterCheckbox);
     });
 
     it('should close the page and return to the backOffice', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `closePageFo_${index}`, baseContext);
 
-      page = await categoryPageFO.closePage(browserContext, page, 0);
+      page = await foClassicCategoryPage.closePage(browserContext, page, 0);
 
       const pageTitle = await modPsFacetedsearchBoMain.getPageSubtitle(page);
       expect(pageTitle).to.eq(modPsFacetedsearchBoMain.pageSubTitle);

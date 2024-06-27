@@ -9,7 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import categoriesPage from '@pages/BO/catalog/categories';
 import editCategoryPage from '@pages/BO/catalog/categories/add';
 // Import FO pages
-import {categoryPage} from '@pages/FO/classic/category';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {siteMapPage} from '@pages/FO/classic/siteMap';
 
@@ -19,6 +18,7 @@ import {
   boDashboardPage,
   dataCategories,
   FakerCategory,
+  foClassicCategoryPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -110,11 +110,11 @@ describe('BO - Catalog - Categories : Edit home category', async () => {
     await siteMapPage.viewCreatedCategory(page, categoryID);
 
     // Check category name
-    const pageTitle = await categoryPage.getHeaderPageName(page);
+    const pageTitle = await foClassicCategoryPage.getHeaderPageName(page);
     expect(pageTitle).to.contains(editCategoryData.name.toUpperCase());
 
     // Check category description
-    const categoryDescription = await categoryPage.getCategoryDescription(page);
+    const categoryDescription = await foClassicCategoryPage.getCategoryDescription(page);
     expect(categoryDescription).to.equal(editCategoryData.description);
   });
 
@@ -122,7 +122,7 @@ describe('BO - Catalog - Categories : Edit home category', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo', baseContext);
 
     // Close tab and init other page objects with new current tab
-    page = await categoryPage.closePage(browserContext, page, 0);
+    page = await foClassicCategoryPage.closePage(browserContext, page, 0);
 
     const pageTitle = await categoriesPage.getPageTitle(page);
     expect(pageTitle).to.contains(categoriesPage.pageRootTitle);

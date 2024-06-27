@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 // Import FO pages
 import {homePage as homePageFO} from '@pages/FO/classic/home';
-import {categoryPage as categoryPageFO} from '@pages/FO/classic/category';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  foClassicCategoryPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -130,7 +130,7 @@ describe('BO - Shop Parameters - Product Settings : Update default product order
         await homePageFO.changeLanguage(page, 'en');
         await homePageFO.goToAllProductsPage(page);
 
-        const isCategoryPage = await categoryPageFO.isCategoryPage(page);
+        const isCategoryPage = await foClassicCategoryPage.isCategoryPage(page);
         expect(isCategoryPage, 'Home category page was not opened');
       });
 
@@ -139,7 +139,7 @@ describe('BO - Shop Parameters - Product Settings : Update default product order
         async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkProductsOrder${index + 1}`, baseContext);
 
-          const defaultProductOrder = await categoryPageFO.getSortByValue(page);
+          const defaultProductOrder = await foClassicCategoryPage.getSortByValue(page);
           expect(defaultProductOrder, 'Default products order is incorrect').to.contains(test.args.textOnSelect);
         },
       );

@@ -3,12 +3,12 @@ import testContext from '@utils/testContext';
 
 // Import pages
 import {homePage} from '@pages/FO/classic/home';
-import {categoryPage} from '@pages/FO/classic/category';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataCategories,
+  foClassicCategoryPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -42,14 +42,14 @@ describe('FO - Menu and Navigation : Breadcrumb', async () => {
 
     await homePage.goToCategory(page, dataCategories.clothes.id);
 
-    const pageTitle = await categoryPage.getPageTitle(page);
+    const pageTitle = await foClassicCategoryPage.getPageTitle(page);
     expect(pageTitle).to.equal(dataCategories.clothes.name);
   });
 
   it('should check breadcrumb', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkBreadcrumb1', baseContext);
 
-    const breadcrumbText = await categoryPage.getBreadcrumbText(page);
+    const breadcrumbText = await foClassicCategoryPage.getBreadcrumbText(page);
     expect(breadcrumbText).to.eq('Home Clothes');
   });
 
@@ -65,30 +65,30 @@ describe('FO - Menu and Navigation : Breadcrumb', async () => {
   it('should check breadcrumb', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkBreadcrumb2', baseContext);
 
-    const breadcrumbText = await categoryPage.getBreadcrumbText(page);
+    const breadcrumbText = await foClassicCategoryPage.getBreadcrumbText(page);
     expect(breadcrumbText).to.eq('Home Clothes Men');
   });
 
   it('should click on clothes link from the breadcrumb', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'clickOnClothesLink', baseContext);
 
-    await categoryPage.clickOnBreadCrumbLink(page, 'clothes');
+    await foClassicCategoryPage.clickOnBreadCrumbLink(page, 'clothes');
 
-    const pageTitle = await categoryPage.getPageTitle(page);
+    const pageTitle = await foClassicCategoryPage.getPageTitle(page);
     expect(pageTitle).to.equal(dataCategories.clothes.name);
   });
 
   it('should check breadcrumb', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkBreadcrumb3', baseContext);
 
-    const breadcrumbText = await categoryPage.getBreadcrumbText(page);
+    const breadcrumbText = await foClassicCategoryPage.getBreadcrumbText(page);
     expect(breadcrumbText).to.eq('Home Clothes');
   });
 
   it('should click on Home link from the breadcrumb', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'clickOnHomeLink', baseContext);
 
-    await categoryPage.clickOnBreadCrumbLink(page, 'en');
+    await foClassicCategoryPage.clickOnBreadCrumbLink(page, 'en');
 
     const isHomePage = await homePage.isHomePage(page);
     expect(isHomePage).to.eq(true);
@@ -99,37 +99,37 @@ describe('FO - Menu and Navigation : Breadcrumb', async () => {
 
     await homePage.goToSubCategory(page, dataCategories.accessories.id, dataCategories.stationery.id);
 
-    const pageTitle = await categoryPage.getPageTitle(page);
+    const pageTitle = await foClassicCategoryPage.getPageTitle(page);
     expect(pageTitle).to.equal(dataCategories.stationery.name);
   });
 
   it('should check breadcrumb', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkBreadcrumb4', baseContext);
 
-    const breadcrumbText = await categoryPage.getBreadcrumbText(page);
+    const breadcrumbText = await foClassicCategoryPage.getBreadcrumbText(page);
     expect(breadcrumbText).to.eq('Home Accessories Stationery');
   });
 
   it('should click on accessories link from the breadcrumb', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'clickOnAccessoriesLink', baseContext);
 
-    await categoryPage.clickOnBreadCrumbLink(page, 'accessories');
+    await foClassicCategoryPage.clickOnBreadCrumbLink(page, 'accessories');
 
-    const pageTitle = await categoryPage.getPageTitle(page);
+    const pageTitle = await foClassicCategoryPage.getPageTitle(page);
     expect(pageTitle).to.equal(dataCategories.accessories.name);
   });
 
   it('should check breadcrumb', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkBreadcrumb5', baseContext);
 
-    const breadcrumbText = await categoryPage.getBreadcrumbText(page);
+    const breadcrumbText = await foClassicCategoryPage.getBreadcrumbText(page);
     expect(breadcrumbText).to.eq('Home Accessories');
   });
 
   it('should click on Home link from the breadcrumb', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'clickOnHomeLink2', baseContext);
 
-    await categoryPage.clickOnBreadCrumbLink(page, 'en');
+    await foClassicCategoryPage.clickOnBreadCrumbLink(page, 'en');
 
     const isHomePage = await homePage.isHomePage(page);
     expect(isHomePage).to.eq(true);

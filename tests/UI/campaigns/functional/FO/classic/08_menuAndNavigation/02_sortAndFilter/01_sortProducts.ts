@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import {categoryPage as categoryPageFO} from '@pages/FO/classic/category';
 import {homePage} from '@pages/FO/classic/home';
 import productsPage from '@pages/BO/catalog/products';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
@@ -14,6 +13,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  foClassicCategoryPage,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -119,14 +119,14 @@ describe('FO - Menu and navigation : Sort products', async () => {
       await homePage.changeLanguage(page, 'en');
       await homePage.goToAllProductsPage(page);
 
-      const isCategoryPageVisible = await categoryPageFO.isCategoryPage(page);
+      const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
     });
 
     it('should check that the products as sorted by relevance', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDefaultSort', baseContext);
 
-      const isSortingLinkVisible = await categoryPageFO.getSortByValue(page);
+      const isSortingLinkVisible = await foClassicCategoryPage.getSortByValue(page);
       expect(isSortingLinkVisible).to.contain('Relevance');
     });
 
@@ -173,9 +173,9 @@ describe('FO - Menu and navigation : Sort products', async () => {
       it(`should sort by '${test.args.sortName}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await categoryPageFO.getAllProductsAttribute(page, test.args.attribute);
-        await categoryPageFO.sortProductsList(page, test.args.sortBy);
-        const sortedTable = await categoryPageFO.getAllProductsAttribute(page, test.args.attribute);
+        const nonSortedTable = await foClassicCategoryPage.getAllProductsAttribute(page, test.args.attribute);
+        await foClassicCategoryPage.sortProductsList(page, test.args.sortBy);
+        const sortedTable = await foClassicCategoryPage.getAllProductsAttribute(page, test.args.attribute);
 
         const expectedResult: string[] = await utilsCore.sortArray(nonSortedTable);
 
@@ -193,7 +193,7 @@ describe('FO - Menu and navigation : Sort products', async () => {
     it('should close the FO page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeFo', baseContext);
 
-      page = await categoryPageFO.closePage(browserContext, page, 0);
+      page = await foClassicCategoryPage.closePage(browserContext, page, 0);
 
       const pageTitle = await productSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(productSettingsPage.pageTitle);

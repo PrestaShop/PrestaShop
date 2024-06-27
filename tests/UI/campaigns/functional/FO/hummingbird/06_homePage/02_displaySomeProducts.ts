@@ -5,13 +5,13 @@ import testContext from '@utils/testContext';
 import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
-import categoryPageFO from '@pages/FO/hummingbird/category';
 import homePage from '@pages/FO/hummingbird/home';
 import newProductsPage from '@pages/FO/hummingbird/newProducts';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  foHummingbirdCategoryPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -76,7 +76,7 @@ describe('FO - Home Page : Display some products', async () => {
 
       await homePage.goToAllProductsPage(page, 'featured-products');
 
-      const isCategoryPageVisible = await categoryPageFO.isCategoryPage(page);
+      const isCategoryPageVisible = await foHummingbirdCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
     });
 

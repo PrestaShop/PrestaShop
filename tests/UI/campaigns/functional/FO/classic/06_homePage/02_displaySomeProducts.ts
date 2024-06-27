@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import pages
-import {categoryPage as categoryPageFO} from '@pages/FO/classic/category';
 import {homePage} from '@pages/FO/classic/home';
 import {pricesDropPage} from '@pages/FO/classic/pricesDrop';
 import {newProductsPage} from '@pages/FO/classic/newProducts';
@@ -10,6 +9,7 @@ import {newProductsPage} from '@pages/FO/classic/newProducts';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  foClassicCategoryPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -67,7 +67,7 @@ describe('FO - Home Page : Display some products', async () => {
 
       await homePage.goToAllProductsBlockPage(page, 1);
 
-      const isCategoryPageVisible = await categoryPageFO.isCategoryPage(page);
+      const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
     });
 

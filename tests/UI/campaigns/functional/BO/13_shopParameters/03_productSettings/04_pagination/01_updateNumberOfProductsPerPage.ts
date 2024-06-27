@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 // Import FO pages
 import {homePage as homePageFO} from '@pages/FO/classic/home';
-import {categoryPage as categoryPageFO} from '@pages/FO/classic/category';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  foClassicCategoryPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -98,14 +98,14 @@ describe('BO - Shop Parameters - Product Settings : Update number of product dis
         await homePageFO.changeLanguage(page, 'en');
         await homePageFO.goToAllProductsPage(page);
 
-        const isCategoryPage = await categoryPageFO.isCategoryPage(page);
+        const isCategoryPage = await foClassicCategoryPage.isCategoryPage(page);
         expect(isCategoryPage, 'Home category page was not opened');
       });
 
       it(`should check that number of products is equal to '${test.args.numberOfProductsPerPage}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkNumberOfProduct${index + 1}`, baseContext);
 
-        const numberOfProducts = await categoryPageFO.getNumberOfProductsDisplayed(page);
+        const numberOfProducts = await foClassicCategoryPage.getNumberOfProductsDisplayed(page);
 
         expect(
           numberOfProducts,

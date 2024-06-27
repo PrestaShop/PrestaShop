@@ -7,12 +7,12 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {productPage} from '@pages/FO/classic/product';
-import {categoryPage} from '@pages/FO/classic/category';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foClassicCategoryPage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -94,14 +94,14 @@ describe('FO - Product page - Product page : Add to cart', async () => {
 
     await homePage.goToAllProductsPage(page);
 
-    const isCategoryPageVisible = await categoryPage.isCategoryPage(page);
+    const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
     expect(isCategoryPageVisible, 'Home category page was not opened').to.equal(true);
   });
 
   it('should quick view the first product', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'quickViewProduct', baseContext);
 
-    await categoryPage.quickViewProduct(page, 1);
+    await foClassicCategoryPage.quickViewProduct(page, 1);
 
     const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
     expect(isModalVisible).to.equal(true);

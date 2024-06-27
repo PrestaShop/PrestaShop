@@ -10,13 +10,13 @@ import productsPage from '@pages/BO/catalog/products';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 
 // Import FO pages
-import categoryPage from '@pages/FO/hummingbird/category';
 import homePage from '@pages/FO/hummingbird/home';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  foHummingbirdCategoryPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -125,21 +125,21 @@ describe('FO - Menu and navigation : Filter products', async () => {
       await homePage.changeLanguage(page, 'en');
       await homePage.goToAllProductsPage(page);
 
-      const isCategoryPageVisible = await categoryPage.isCategoryPage(page);
+      const isCategoryPageVisible = await foHummingbirdCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
     });
 
     it('should filter products by category \'Accessories - Art\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByCategory', baseContext);
 
-      await categoryPage.filterByCheckbox(page, 'Categories', 'Accessories');
-      await categoryPage.filterByCheckbox(page, 'Categories', 'Art');
+      await foHummingbirdCategoryPage.filterByCheckbox(page, 'Categories', 'Accessories', true);
+      await foHummingbirdCategoryPage.filterByCheckbox(page, 'Categories', 'Art', true);
     });
 
     it('should check the active filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getActiveFilters', baseContext);
 
-      const activeFilters = await categoryPage.getActiveFilters(page);
+      const activeFilters = await foHummingbirdCategoryPage.getActiveFilters(page);
       expect(activeFilters).to.contains('Categories: Accessories')
         .and.to.contains('Categories: Art');
     });
@@ -147,7 +147,7 @@ describe('FO - Menu and navigation : Filter products', async () => {
     it('should get the number of products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProducts', baseContext);
 
-      productsNumber = await categoryPage.getNumberOfProducts(page);
+      productsNumber = await foHummingbirdCategoryPage.getNumberOfProducts(page);
       expect(productsNumber).to.be.above(1);
     });
 
@@ -155,7 +155,7 @@ describe('FO - Menu and navigation : Filter products', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductsList', baseContext);
 
       for (let i = 1; i <= productsNumber; i++) {
-        const productURL = await categoryPage.getProductHref(page, i);
+        const productURL = await foHummingbirdCategoryPage.getProductHref(page, i);
         expect(productURL).to.contain.oneOf(['accessories', 'art', 'stationery']);
       }
     });
@@ -163,14 +163,14 @@ describe('FO - Menu and navigation : Filter products', async () => {
     it('should clear all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clearAllFilters', baseContext);
 
-      const isActiveFilterNotVisible = await categoryPage.clearAllFilters(page);
+      const isActiveFilterNotVisible = await foHummingbirdCategoryPage.clearAllFilters(page);
       expect(isActiveFilterNotVisible).to.eq(true);
     });
 
     it('should check the number of the displayed products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDisplayedProducts', baseContext);
 
-      const numberOfProducts = await categoryPage.getNumberOfProducts(page);
+      const numberOfProducts = await foHummingbirdCategoryPage.getNumberOfProducts(page);
       expect(numberOfProducts).to.equal(numberOfActiveProducts);
     });
   });
@@ -179,15 +179,15 @@ describe('FO - Menu and navigation : Filter products', async () => {
     it('should filter products by size \'S-L-XL\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterBySize', baseContext);
 
-      await categoryPage.filterByCheckbox(page, 'Size', 'Size-S');
-      await categoryPage.filterByCheckbox(page, 'Size', 'Size-S-L');
-      await categoryPage.filterByCheckbox(page, 'Size', 'Size-S-L-XL');
+      await foHummingbirdCategoryPage.filterByCheckbox(page, 'Size', 'Size-S', true);
+      await foHummingbirdCategoryPage.filterByCheckbox(page, 'Size', 'Size-S-L', true);
+      await foHummingbirdCategoryPage.filterByCheckbox(page, 'Size', 'Size-S-L-XL', true);
     });
 
     it('should check the active filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getActiveFilters2', baseContext);
 
-      const activeFilters = await categoryPage.getActiveFilters(page);
+      const activeFilters = await foHummingbirdCategoryPage.getActiveFilters(page);
       expect(activeFilters).to.contains('Size: S')
         .and.to.contains('Size: L')
         .and.to.contains('Size: XL');
@@ -196,7 +196,7 @@ describe('FO - Menu and navigation : Filter products', async () => {
     it('should get the number of products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProducts2', baseContext);
 
-      productsNumber = await categoryPage.getNumberOfProducts(page);
+      productsNumber = await foHummingbirdCategoryPage.getNumberOfProducts(page);
       expect(productsNumber).to.be.above(1);
     });
 
@@ -204,7 +204,7 @@ describe('FO - Menu and navigation : Filter products', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductsList2', baseContext);
 
       for (let i = 1; i <= productsNumber; i++) {
-        const productURL = await categoryPage.getProductHref(page, i);
+        const productURL = await foHummingbirdCategoryPage.getProductHref(page, i);
         expect(productURL).to.contain.oneOf(['size-s', 'size-l', 'size-xl']);
       }
     });
@@ -214,13 +214,13 @@ describe('FO - Menu and navigation : Filter products', async () => {
     it('should filter products by Color \'Black\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByColor', baseContext);
 
-      await categoryPage.filterByCheckbox(page, 'Color', '#434A54');
+      await foHummingbirdCategoryPage.filterByCheckbox(page, 'Color', '#434A54', true);
     });
 
     it('should check the active filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getActiveFilters3', baseContext);
 
-      const activeFilters = await categoryPage.getActiveFilters(page);
+      const activeFilters = await foHummingbirdCategoryPage.getActiveFilters(page);
       expect(activeFilters).to.contains('Size: S')
         .and.to.contains('Size: L')
         .and.to.contains('Size: XL')
@@ -230,7 +230,7 @@ describe('FO - Menu and navigation : Filter products', async () => {
     it('should get the number of products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProducts3', baseContext);
 
-      productsNumber = await categoryPage.getNumberOfProducts(page);
+      productsNumber = await foHummingbirdCategoryPage.getNumberOfProducts(page);
       expect(productsNumber).to.be.above(0);
     });
 
@@ -238,7 +238,7 @@ describe('FO - Menu and navigation : Filter products', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductsList3', baseContext);
 
       for (let i = 1; i <= productsNumber; i++) {
-        const productURL = await categoryPage.getProductHref(page, i);
+        const productURL = await foHummingbirdCategoryPage.getProductHref(page, i);
         expect(productURL).to.contain.oneOf(['size-s', 'size-l', 'size-xl', 'color-black']);
       }
     });
@@ -246,14 +246,14 @@ describe('FO - Menu and navigation : Filter products', async () => {
     it('should clear all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clearAllFilters2', baseContext);
 
-      const isActiveFilterNotVisible = await categoryPage.clearAllFilters(page);
+      const isActiveFilterNotVisible = await foHummingbirdCategoryPage.clearAllFilters(page);
       expect(isActiveFilterNotVisible).to.eq(true);
     });
 
     it('should check the number of the displayed products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDisplayedProducts2', baseContext);
 
-      const numberOfProducts = await categoryPage.getNumberOfProducts(page);
+      const numberOfProducts = await foHummingbirdCategoryPage.getNumberOfProducts(page);
       expect(numberOfProducts).to.equal(numberOfActiveProducts);
     });
   });
@@ -262,15 +262,20 @@ describe('FO - Menu and navigation : Filter products', async () => {
     it('should filter products by composition \'Ceramic - Cotton - Recycled cardboard\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByComposition', baseContext);
 
-      await categoryPage.filterByCheckbox(page, 'Composition', 'Composition-Ceramic');
-      await categoryPage.filterByCheckbox(page, 'Composition', 'Composition-Ceramic-Cotton');
-      await categoryPage.filterByCheckbox(page, 'Composition', 'Composition-Ceramic-Cotton-Recycled+cardboard');
+      await foHummingbirdCategoryPage.filterByCheckbox(page, 'Composition', 'Composition-Ceramic', true);
+      await foHummingbirdCategoryPage.filterByCheckbox(page, 'Composition', 'Composition-Ceramic-Cotton', true);
+      await foHummingbirdCategoryPage.filterByCheckbox(
+        page,
+        'Composition',
+        'Composition-Ceramic-Cotton-Recycled+cardboard',
+        true,
+      );
     });
 
     it('should check the active filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getActiveFilters4', baseContext);
 
-      const activeFilters = await categoryPage.getActiveFilters(page);
+      const activeFilters = await foHummingbirdCategoryPage.getActiveFilters(page);
       expect(activeFilters).to.contains('Composition: Ceramic')
         .and.to.contains('Composition: Cotton')
         .and.to.contains('Composition: Recycled cardboard');
@@ -279,7 +284,7 @@ describe('FO - Menu and navigation : Filter products', async () => {
     it('should get the number of products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProducts4', baseContext);
 
-      productsNumber = await categoryPage.getNumberOfProducts(page);
+      productsNumber = await foHummingbirdCategoryPage.getNumberOfProducts(page);
       expect(productsNumber).to.be.above(1);
     });
   });
@@ -288,16 +293,16 @@ describe('FO - Menu and navigation : Filter products', async () => {
     it('should filter products by price \'€14.00 - €30.00\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByPrice', baseContext);
 
-      const maxPrice = await categoryPage.getMaximumPrice(page);
-      const minPrice = await categoryPage.getMinimumPrice(page);
+      const maxPrice = await foHummingbirdCategoryPage.getMaximumPrice(page);
+      const minPrice = await foHummingbirdCategoryPage.getMinimumPrice(page);
 
-      await categoryPage.filterByPrice(page, minPrice, maxPrice, 14, 30);
+      await foHummingbirdCategoryPage.filterByPrice(page, minPrice, maxPrice, 14, 30);
     });
 
     it('should check the active filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getActiveFilters5', baseContext);
 
-      const activeFilters = await categoryPage.getActiveFilters(page);
+      const activeFilters = await foHummingbirdCategoryPage.getActiveFilters(page);
       expect(activeFilters).to.contains('Price: €14.00')
         .and.to.contains('Composition: Ceramic')
         .and.to.contains('Composition: Cotton')
@@ -307,10 +312,10 @@ describe('FO - Menu and navigation : Filter products', async () => {
     it('should check filter products by price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPrices', baseContext);
 
-      productsNumber = await categoryPage.getNumberOfProducts(page);
+      productsNumber = await foHummingbirdCategoryPage.getNumberOfProducts(page);
 
       for (let i = 1; i <= productsNumber; i++) {
-        const price = await categoryPage.getProductPrice(page, i);
+        const price = await foHummingbirdCategoryPage.getProductPrice(page, i);
         expect(price).to.within(14, 30);
       }
     });
@@ -320,13 +325,13 @@ describe('FO - Menu and navigation : Filter products', async () => {
     it('should filter products by brand \'Graphic Corner\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByBrand', baseContext);
 
-      await categoryPage.filterByCheckbox(page, 'Brand', 'Graphic+Corner');
+      await foHummingbirdCategoryPage.filterByCheckbox(page, 'Brand', 'Graphic+Corner', true);
     });
 
     it('should check the active filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getActiveFilters6', baseContext);
 
-      const activeFilters = await categoryPage.getActiveFilters(page);
+      const activeFilters = await foHummingbirdCategoryPage.getActiveFilters(page);
       expect(activeFilters).to.contains('Composition: Recycled cardboard')
         .and.to.contains('Price: €14.00 -')
         .and.to.contains('Brand: Graphic Corner');
@@ -335,11 +340,11 @@ describe('FO - Menu and navigation : Filter products', async () => {
     it('should check filter products by brand', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkBrands', baseContext);
 
-      const numberOfProductsAfterFilter = await categoryPage.getNumberOfProducts(page);
+      const numberOfProductsAfterFilter = await foHummingbirdCategoryPage.getNumberOfProducts(page);
       expect(productsNumber).to.be.greaterThan(numberOfProductsAfterFilter);
 
       for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
-        const price = await categoryPage.getProductPrice(page, i);
+        const price = await foHummingbirdCategoryPage.getProductPrice(page, i);
         expect(price).to.within(14, 39);
       }
     });
@@ -349,28 +354,28 @@ describe('FO - Menu and navigation : Filter products', async () => {
     it('should clear all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clearAllFilters3', baseContext);
 
-      const isActiveFilterNotVisible = await categoryPage.clearAllFilters(page);
+      const isActiveFilterNotVisible = await foHummingbirdCategoryPage.clearAllFilters(page);
       expect(isActiveFilterNotVisible).to.eq(true);
     });
 
     it('should check the number of products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProducts5', baseContext);
 
-      const productsNumberAfterClearFilter = await categoryPage.getNumberOfProducts(page);
+      const productsNumberAfterClearFilter = await foHummingbirdCategoryPage.getNumberOfProducts(page);
       expect(productsNumberAfterClearFilter).to.be.equal(numberOfActiveProducts);
     });
 
     it('should filter products by Dimension \'40x60cm -  60x90cm\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByDimension', baseContext);
 
-      await categoryPage.filterByCheckbox(page, 'Dimension', 'Dimension-40x60cm');
-      await categoryPage.filterByCheckbox(page, 'Dimension', 'Dimension-40x60cm-60x90cm');
+      await foHummingbirdCategoryPage.filterByCheckbox(page, 'Dimension', 'Dimension-40x60cm', true);
+      await foHummingbirdCategoryPage.filterByCheckbox(page, 'Dimension', 'Dimension-40x60cm-60x90cm', true);
     });
 
     it('should check the active filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getActiveFilters7', baseContext);
 
-      const activeFilters = await categoryPage.getActiveFilters(page);
+      const activeFilters = await foHummingbirdCategoryPage.getActiveFilters(page);
       expect(activeFilters).to.contains('Dimension: 40x60cm')
         .and.to.contains('Dimension: 60x90cm');
     });
@@ -378,10 +383,10 @@ describe('FO - Menu and navigation : Filter products', async () => {
     it('should check the products list', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductsList4', baseContext);
 
-      productsNumber = await categoryPage.getNumberOfProducts(page);
+      productsNumber = await foHummingbirdCategoryPage.getNumberOfProducts(page);
 
       for (let i = 1; i <= productsNumber; i++) {
-        const productURL = await categoryPage.getProductHref(page, i);
+        const productURL = await foHummingbirdCategoryPage.getProductHref(page, i);
         expect(productURL).to.contain.oneOf(['dimension-40x60cm', 'dimension-60x90cm']);
       }
     });
@@ -391,27 +396,27 @@ describe('FO - Menu and navigation : Filter products', async () => {
     it('should clear all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clearAllFilters6', baseContext);
 
-      const isActiveFilterNotVisible = await categoryPage.clearAllFilters(page);
+      const isActiveFilterNotVisible = await foHummingbirdCategoryPage.clearAllFilters(page);
       expect(isActiveFilterNotVisible).to.eq(true);
     });
 
     it('should check the number of products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProducts6', baseContext);
 
-      const productsNumberAfterClearFilter = await categoryPage.getNumberOfProducts(page);
+      const productsNumberAfterClearFilter = await foHummingbirdCategoryPage.getNumberOfProducts(page);
       expect(productsNumberAfterClearFilter).to.be.equal(numberOfActiveProducts);
     });
 
     it('should filter products by availability \'In Stock\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByAvailability', baseContext);
 
-      await categoryPage.filterByCheckbox(page, 'Availability', 'Availability-In+stock');
+      await foHummingbirdCategoryPage.filterByCheckbox(page, 'Availability', 'Availability-In+stock', true);
     });
 
     it('should check the active filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getActiveFilters8', baseContext);
 
-      const activeFilters = await categoryPage.getActiveFilters(page);
+      const activeFilters = await foHummingbirdCategoryPage.getActiveFilters(page);
       expect(activeFilters).to.contains('Availability: In stock');
     });
   });
@@ -420,29 +425,29 @@ describe('FO - Menu and navigation : Filter products', async () => {
     it('should clear all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clearAllFilters4', baseContext);
 
-      const isActiveFilterNotVisible = await categoryPage.clearAllFilters(page);
+      const isActiveFilterNotVisible = await foHummingbirdCategoryPage.clearAllFilters(page);
       expect(isActiveFilterNotVisible).to.eq(true);
     });
 
     it('should check the number of products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProducts7', baseContext);
 
-      const productsNumberAfterClearFilter = await categoryPage.getNumberOfProducts(page);
+      const productsNumberAfterClearFilter = await foHummingbirdCategoryPage.getNumberOfProducts(page);
       expect(productsNumberAfterClearFilter).to.be.equal(numberOfActiveProducts);
     });
 
     it('should filter products by paper type \'Ruled - Plain - Squared\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByPaperType', baseContext);
 
-      await categoryPage.filterByCheckbox(page, 'Paper Type', 'Paper+Type-Ruled');
-      await categoryPage.filterByCheckbox(page, 'Paper Type', 'Paper+Type-Ruled-Plain');
-      await categoryPage.filterByCheckbox(page, 'Paper Type', 'Paper+Type-Ruled-Plain-Squared');
+      await foHummingbirdCategoryPage.filterByCheckbox(page, 'Paper Type', 'Paper+Type-Ruled', true);
+      await foHummingbirdCategoryPage.filterByCheckbox(page, 'Paper Type', 'Paper+Type-Ruled-Plain', true);
+      await foHummingbirdCategoryPage.filterByCheckbox(page, 'Paper Type', 'Paper+Type-Ruled-Plain-Squared', true);
     });
 
     it('should check the active filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getActiveFilters9', baseContext);
 
-      const activeFilters = await categoryPage.getActiveFilters(page);
+      const activeFilters = await foHummingbirdCategoryPage.getActiveFilters(page);
       expect(activeFilters).to.contains('Paper Type: Ruled')
         .and.to.contains('Paper Type: Plain')
         .and.to.contains('Paper Type: Squared');
@@ -451,10 +456,10 @@ describe('FO - Menu and navigation : Filter products', async () => {
     it('should check the products list', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductsList5', baseContext);
 
-      productsNumber = await categoryPage.getNumberOfProducts(page);
+      productsNumber = await foHummingbirdCategoryPage.getNumberOfProducts(page);
 
       for (let i = 1; i <= productsNumber; i++) {
-        const productURL = await categoryPage.getProductHref(page, i);
+        const productURL = await foHummingbirdCategoryPage.getProductHref(page, i);
         expect(productURL).to.contain.oneOf(['paper_type-ruled', 'paper_type-plain', 'paper_type-squared']);
       }
     });
@@ -462,14 +467,14 @@ describe('FO - Menu and navigation : Filter products', async () => {
     it('should clear all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clearAllFilters5', baseContext);
 
-      const isActiveFilterNotVisible = await categoryPage.clearAllFilters(page);
+      const isActiveFilterNotVisible = await foHummingbirdCategoryPage.clearAllFilters(page);
       expect(isActiveFilterNotVisible).to.eq(true);
     });
 
     it('should check the number of products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProducts8', baseContext);
 
-      const productsNumberAfterClearFilter = await categoryPage.getNumberOfProducts(page);
+      const productsNumberAfterClearFilter = await foHummingbirdCategoryPage.getNumberOfProducts(page);
       expect(productsNumberAfterClearFilter).to.be.equal(numberOfActiveProducts);
     });
   });
@@ -479,7 +484,7 @@ describe('FO - Menu and navigation : Filter products', async () => {
     it('should close the FO page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeFo', baseContext);
 
-      page = await categoryPage.closePage(browserContext, page, 0);
+      page = await foHummingbirdCategoryPage.closePage(browserContext, page, 0);
 
       const pageTitle = await productSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(productSettingsPage.pageTitle);

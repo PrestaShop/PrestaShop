@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 // Import FO pages
-import {categoryPage as categoryPageFO} from '@pages/FO/classic/category';
 import {homePage} from '@pages/FO/classic/home';
 
 import {expect} from 'chai';
@@ -16,6 +15,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataModules,
+  foClassicCategoryPage,
   modPsFacetedsearchBoFilterTemplate,
   modPsFacetedsearchBoMain,
   utilsFile,
@@ -186,23 +186,35 @@ describe('Faceted search module - Edit template - Paper type filter', async () =
 
       await homePage.goToAllProductsBlockPage(page, 1);
 
-      const isCategoryPageVisible = await categoryPageFO.isCategoryPage(page);
+      const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible).to.be.eq(true);
 
-      const hasSearchFilters = await categoryPageFO.hasSearchFilters(page);
+      const hasSearchFilters = await foClassicCategoryPage.hasSearchFilters(page);
       expect(hasSearchFilters).to.be.eq(test.expectedHasSearchFilters);
 
-      const isSearchFilterRadio = await categoryPageFO.isSearchFilterRadio(page, 'attribute_group', 'Paper Type');
+      const isSearchFilterRadio = await foClassicCategoryPage.isSearchFilterRadio(
+        page,
+        'attribute_group',
+        'Paper Type',
+      );
       expect(isSearchFilterRadio).to.be.eq(test.expectedIsSearchFilterRadio);
 
-      const isSearchFilterDropdown = await categoryPageFO.isSearchFilterDropdown(page, 'attribute_group', 'Paper Type');
+      const isSearchFilterDropdown = await foClassicCategoryPage.isSearchFilterDropdown(
+        page,
+        'attribute_group',
+        'Paper Type',
+      );
       expect(isSearchFilterDropdown).to.be.eq(test.expectedIsSearchFilterDropdown);
 
-      const isSearchFiltersCheckbox = await categoryPageFO.isSearchFiltersCheckbox(page, 'attribute_group', 'Paper Type');
+      const isSearchFiltersCheckbox = await foClassicCategoryPage.isSearchFiltersCheckbox(page, 'attribute_group', 'Paper Type');
       expect(isSearchFiltersCheckbox).to.be.eq(test.expectedIsSearchFilterCheckbox);
 
       if (test.filterLimit !== '') {
-        const numSearchFiltersCheckbox = await categoryPageFO.getNumSearchFiltersCheckbox(page, 'attribute_group', 'Paper Type');
+        const numSearchFiltersCheckbox = await foClassicCategoryPage.getNumSearchFiltersCheckbox(
+          page,
+          'attribute_group',
+          'Paper Type',
+        );
 
         if (test.expectedNumSearchFilterCheckbox === null) {
           expect(numSearchFiltersCheckbox).to.be.gt(0);
@@ -215,7 +227,7 @@ describe('Faceted search module - Edit template - Paper type filter', async () =
     it('should close the page and return to the backOffice', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `closePageFo_${index}`, baseContext);
 
-      page = await categoryPageFO.closePage(browserContext, page, 0);
+      page = await foClassicCategoryPage.closePage(browserContext, page, 0);
 
       const pageTitle = await modPsFacetedsearchBoMain.getPageSubtitle(page);
       expect(pageTitle).to.eq(modPsFacetedsearchBoMain.pageSubTitle);

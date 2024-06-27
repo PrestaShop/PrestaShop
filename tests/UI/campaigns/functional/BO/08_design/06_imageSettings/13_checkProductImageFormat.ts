@@ -12,7 +12,6 @@ import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 import imageSettingsPage from '@pages/BO/design/imageSettings';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {categoryPage} from '@pages/FO/classic/category';
 import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 
 import {expect} from 'chai';
@@ -20,6 +19,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerProduct,
+  foClassicCategoryPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -146,8 +146,8 @@ describe('BO - Design - Image Settings - Check product image format', async () =
         it('should go to BO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToBoProducts${arg.extOriginal}`, baseContext);
 
-          page = await categoryPage.closePage(browserContext, page, 0);
-          await categoryPage.goToBO(page);
+          page = await foClassicCategoryPage.closePage(browserContext, page, 0);
+          await foClassicCategoryPage.goToBO(page);
 
           const pageTitle = await boDashboardPage.getPageTitle(page);
           expect(pageTitle).to.contains(boDashboardPage.pageTitle);
@@ -279,19 +279,19 @@ describe('BO - Design - Image Settings - Check product image format', async () =
 
         await homePage.goToAllProductsPage(page);
 
-        const isCategoryPageVisible = await categoryPage.isCategoryPage(page);
+        const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
         expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
       });
 
       it(`should go to the second page and quick view the product '${arg.product.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `quickViewCustomizedProduct${arg.extOriginal}`, baseContext);
 
-        await categoryPage.goToNextPage(page);
+        await foClassicCategoryPage.goToNextPage(page);
 
-        const nthProduct: number|null = await categoryPage.getNThChildFromIDProduct(page, idProduct);
+        const nthProduct: number|null = await foClassicCategoryPage.getNThChildFromIDProduct(page, idProduct);
         expect(nthProduct).to.not.eq(null);
 
-        await categoryPage.quickViewProduct(page, nthProduct as number);
+        await foClassicCategoryPage.quickViewProduct(page, nthProduct as number);
 
         const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
         expect(isModalVisible).to.eq(true);

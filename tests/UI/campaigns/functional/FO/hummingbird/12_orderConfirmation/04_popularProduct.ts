@@ -11,13 +11,12 @@ import checkoutPage from '@pages/FO/hummingbird/checkout';
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
 import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
-import categoryPage from '@pages/FO/hummingbird/category';
-
 import {
   dataCarriers,
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
+  foHummingbirdCategoryPage,
   foHummingbirdSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -197,7 +196,7 @@ describe('FO - Order confirmation : Popular product', async () => {
 
       await orderConfirmationPage.goToAllProductsPage(page);
 
-      const isCategoryPageVisible = await categoryPage.isCategoryPage(page);
+      const isCategoryPageVisible = await foHummingbirdCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
     });
   });
