@@ -182,7 +182,7 @@ function updateProduct(event, eventType, updateUrl) {
         + preview,
       method: 'POST',
       data: {
-        quickview: $('.modal.quickview.in').length,
+        quickview: $('.modal.quickview.in, .modal.quickview.show').length,
         ajax: 1,
         action: 'refresh',
         quantity_wanted:
