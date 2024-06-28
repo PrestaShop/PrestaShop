@@ -98,6 +98,8 @@ class CheckoutPage extends FOBasePage {
 
   private readonly checkoutGuestEmailInput: string;
 
+  private readonly createAccountCheckbox: string;
+
   private readonly checkoutGuestPasswordInput: string;
 
   private readonly checkoutGuestBirthdayInput: string;
@@ -269,6 +271,7 @@ class CheckoutPage extends FOBasePage {
     this.checkoutGuestFirstnameInput = `${this.checkoutGuestForm} input[name='firstname']`;
     this.checkoutGuestLastnameInput = `${this.checkoutGuestForm} input[name='lastname']`;
     this.checkoutGuestEmailInput = `${this.checkoutGuestForm} input[name='email']`;
+    this.createAccountCheckbox = '#password-form__check';
     this.checkoutGuestPasswordInput = `${this.checkoutGuestForm} input[name='password']`;
     this.checkoutGuestBirthdayInput = `${this.checkoutGuestForm} input[name='birthday']`;
     this.checkoutGuestOptinCheckbox = `${this.checkoutGuestForm} input[name='optin']`;
@@ -589,6 +592,10 @@ class CheckoutPage extends FOBasePage {
     await this.setValue(page, this.checkoutGuestFirstnameInput, customerData.firstName);
     await this.setValue(page, this.checkoutGuestLastnameInput, customerData.lastName);
     await this.setValue(page, this.checkoutGuestEmailInput, customerData.email);
+    if (this.theme === 'hummingbird') {
+      await this.setChecked(page, '#password-form__check', true);
+    }
+    await this.setValue(page, this.checkoutGuestPasswordInput, customerData.password);
 
     // Fill birthday input
     await this.setValue(
