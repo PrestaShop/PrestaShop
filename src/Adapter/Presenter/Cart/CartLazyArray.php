@@ -342,6 +342,8 @@ class CartLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
+     * @indexName "minimalPurchase"
      */
     public function getMinimalPurchase(): float
     {
@@ -357,6 +359,8 @@ class CartLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
+     * @indexName "minimalPurchaseRequired"
      */
     public function getMinimalPurchaseRequired(): string
     {

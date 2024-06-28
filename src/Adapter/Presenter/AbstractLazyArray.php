@@ -68,6 +68,8 @@ use RuntimeException;
  */
 abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, JsonSerializable
 {
+    private const INDEX_NAME_PATTERN = '/@indexName\s+"([^"]+)"/';
+
     /**
      * @var ArrayObject
      */
@@ -96,8 +98,13 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
         foreach ($methods as $method) {
             $methodDoc = $method->getDocComment();
             if (str_contains($methodDoc, '@arrayAccess')) {
+                if (preg_match(self::INDEX_NAME_PATTERN, $methodDoc, $matches)) {
+                    $indexName = $matches[1];
+                } else {
+                    $indexName = $this->convertMethodNameToIndex($method->getName());
+                }
                 $this->arrayAccessList->offsetSet(
-                    $this->convertMethodNameToIndex($method->getName()),
+                    $indexName,
                     [
                         'type' => 'method',
                         'value' => $method->getName(),
