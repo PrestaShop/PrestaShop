@@ -41,7 +41,9 @@ services:
     factory: [ '@PrestaShop\PrestaShop\Core\Context\CountryContextBuilder', 'build' ]
 
   PrestaShop\PrestaShop\Core\Context\LegacyControllerContextBuilder: ~
+  PrestaShop\PrestaShop\Core\Context\LegacyControllerContextInjector: ~
   PrestaShop\PrestaShop\Core\Context\LegacyControllerContext:
+    public: true
     lazy: true
     factory: [ '@PrestaShop\PrestaShop\Core\Context\LegacyControllerContextBuilder', 'build' ]
 

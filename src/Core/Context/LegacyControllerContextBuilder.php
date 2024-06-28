@@ -29,22 +29,19 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Context;
 
 use Doctrine\ORM\NoResultException;
-use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\Inflector;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Tools;
 
-class LegacyControllerContextBuilder implements LegacyContextBuilderInterface
+class LegacyControllerContextBuilder
 {
     private ?string $controllerName = null;
     private ?string $redirectionUrl = null;
-    private ?LegacyControllerContext $_legacyControllerContext = null;
 
     public function __construct(
         private readonly EmployeeContext $employeeContext,
-        private readonly ContextStateManager $contextStateManager,
         private readonly array $controllersLockedToAllShopContext,
         private readonly TabRepository $tabRepository,
         private readonly ContainerInterface $container,
@@ -65,7 +62,7 @@ class LegacyControllerContextBuilder implements LegacyContextBuilderInterface
         $className = $this->getClassName($this->getControllerName());
         $table = $this->getTableFromClassName($this->getControllerName());
 
-        $legacyControllerContext = new LegacyControllerContext(
+        return new LegacyControllerContext(
             $this->container,
             $this->getControllerName(),
             $controllerType,
@@ -77,25 +74,6 @@ class LegacyControllerContextBuilder implements LegacyContextBuilderInterface
             $this->getCurrentIndex(),
             $table,
         );
-
-        $this->_legacyControllerContext = $legacyControllerContext;
-
-        return $legacyControllerContext;
-    }
-
-    public function buildLegacyContext(): void
-    {
-        // In legacy pages the AdminController class already sets the context's controller, which is a more accurate
-        // candidate than our facade meant for backward compatibility, so we leave it untouched
-        if ($this->contextStateManager->getContext()->controller) {
-            return;
-        }
-
-        if (null === $this->_legacyControllerContext) {
-            $this->_legacyControllerContext = $this->build();
-        }
-
-        $this->contextStateManager->setController($this->_legacyControllerContext);
     }
 
     public function setControllerName(string $controllerName): self
