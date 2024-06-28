@@ -92,24 +92,23 @@ describe('FO - cart : Delete product', async () => {
       expect(pageTitle).to.equal(cartPage.pageTitle);
     });
 
-    // @todo https://github.com/PrestaShop/hummingbird/pull/541
     it('should set the quantity 0 by the touchSpin', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setQuantity0ByTouchSpin', baseContext);
 
       await cartPage.setProductQuantity(page, 1, 0);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      expect(notificationsNumber).to.equal(1);
+      expect(notificationsNumber).to.equal(0);
     });
 
-    it.skip('should check the message "There are no more items in your cart"', async function () {
+    it('should check the message "There are no more items in your cart"', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoItemMessage2', baseContext);
 
       const message = await cartPage.getNoItemsInYourCartMessage(page);
       expect(message).to.equal(cartPage.noItemsInYourCartMessage);
     });
 
-    it.skip('should go to home page', async function () {
+    it('should go to home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage', baseContext);
 
       await cartPage.goToHomePage(page);
@@ -118,8 +117,8 @@ describe('FO - cart : Delete product', async () => {
       expect(result).to.equal(true);
     });
 
-    it.skip('should add the first product to cart and proceed to checkout', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'addFirstProductToCart1', baseContext);
+    it('should add the first product to cart and proceed to checkout', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addFirstProductToCart3', baseContext);
 
       await homePage.quickViewProduct(page, 1);
       await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
@@ -135,7 +134,7 @@ describe('FO - cart : Delete product', async () => {
       await cartPage.editProductQuantity(page, 1, 0);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      expect(notificationsNumber).to.equal(1);
+      expect(notificationsNumber).to.equal(0);
     });
 
     it.skip('should check the message "There are no more items in your cart"', async function () {

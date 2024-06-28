@@ -348,7 +348,9 @@ class CartPage extends FOBasePage {
       }
     }
 
-    return parseInt(await this.getAttributeContent(page, this.productQuantity(productRow), 'value'), 10);
+    if (quantity > 0) {
+      return parseInt(await this.getAttributeContent(page, this.productQuantity(productRow), 'value'), 10);
+    } return 0;
   }
 
   /**

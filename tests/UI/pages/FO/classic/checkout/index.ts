@@ -589,7 +589,6 @@ class CheckoutPage extends FOBasePage {
     await this.setValue(page, this.checkoutGuestFirstnameInput, customerData.firstName);
     await this.setValue(page, this.checkoutGuestLastnameInput, customerData.lastName);
     await this.setValue(page, this.checkoutGuestEmailInput, customerData.email);
-    await this.setValue(page, this.checkoutGuestPasswordInput, customerData.password);
 
     // Fill birthday input
     await this.setValue(

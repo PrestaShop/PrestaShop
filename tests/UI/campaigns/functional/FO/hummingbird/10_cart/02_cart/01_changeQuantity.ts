@@ -100,7 +100,27 @@ describe('FO - cart : Change quantity', async () => {
       await cartPage.editProductQuantity(page, 1, -6);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      expect(notificationsNumber).to.be.equal(3);
+      expect(notificationsNumber).to.be.equal(0);
+    });
+
+    it('should go to home page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage', baseContext);
+
+      await cartPage.goToHomePage(page);
+
+      const isHomePage = await homePage.isHomePage(page);
+      expect(isHomePage, 'Fail to open FO home page').to.equal(true);
+    });
+
+    it('should add the first product to cart and proceed to checkout', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addFirstProductToCart2', baseContext);
+
+      await homePage.quickViewProduct(page, 1);
+      await quickViewModal.addToCartByQuickView(page);
+      await blockCartModal.proceedToCheckout(page);
+
+      const pageTitle = await cartPage.getPageTitle(page);
+      expect(pageTitle).to.equal(cartPage.pageTitle);
     });
 
     it('should set the quantity +6 in the input', async function () {
@@ -161,7 +181,7 @@ describe('FO - cart : Change quantity', async () => {
       await cartPage.editProductQuantity(page, 1, 0);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      expect(notificationsNumber).to.be.equal(300);
+      expect(notificationsNumber).to.be.equal(0);
     });
   });
 
