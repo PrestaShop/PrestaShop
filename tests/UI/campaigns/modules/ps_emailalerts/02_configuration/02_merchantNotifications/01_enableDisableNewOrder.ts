@@ -17,10 +17,10 @@ import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
-import {moduleManager} from '@pages/BO/modules/moduleManager';
 
 import {
   boDashboardPage,
+  boModuleManagerPage,
   dataCustomers,
   dataModules,
   dataPaymentMethods,
@@ -110,23 +110,23 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
         boDashboardPage.modulesParentLink,
         boDashboardPage.moduleManagerLink,
       );
-      await moduleManager.closeSfToolBar(page);
+      await boModuleManagerPage.closeSfToolBar(page);
 
-      const pageTitle = await moduleManager.getPageTitle(page);
-      expect(pageTitle).to.contains(moduleManager.pageTitle);
+      const pageTitle = await boModuleManagerPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
     });
 
     it(`should search the module ${dataModules.psEmailAlerts.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModuleEnableNewOrder', baseContext);
 
-      const isModuleVisible = await moduleManager.searchModule(page, dataModules.psEmailAlerts);
+      const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.psEmailAlerts);
       expect(isModuleVisible).to.equal(true);
     });
 
     it(`should go to the configuration page of the module '${dataModules.psEmailAlerts.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPageEnableNewOrder', baseContext);
 
-      await moduleManager.goToConfigurationPage(page, dataModules.psEmailAlerts.tag);
+      await boModuleManagerPage.goToConfigurationPage(page, dataModules.psEmailAlerts.tag);
 
       const pageTitle = await emailAlertsPage.getPageSubtitle(page);
       expect(pageTitle).to.equal(emailAlertsPage.pageTitle);
@@ -279,23 +279,23 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
         boDashboardPage.modulesParentLink,
         boDashboardPage.moduleManagerLink,
       );
-      await moduleManager.closeSfToolBar(page);
+      await boModuleManagerPage.closeSfToolBar(page);
 
-      const pageTitle = await moduleManager.getPageTitle(page);
-      expect(pageTitle).to.contains(moduleManager.pageTitle);
+      const pageTitle = await boModuleManagerPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
     });
 
     it(`should search the module ${dataModules.psEmailAlerts.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-      const isModuleVisible = await moduleManager.searchModule(page, dataModules.psEmailAlerts);
+      const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.psEmailAlerts);
       expect(isModuleVisible).to.equal(true);
     });
 
     it(`should go to the configuration page of the module '${dataModules.psEmailAlerts.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage', baseContext);
 
-      await moduleManager.goToConfigurationPage(page, dataModules.psEmailAlerts.tag);
+      await boModuleManagerPage.goToConfigurationPage(page, dataModules.psEmailAlerts.tag);
 
       const pageTitle = await emailAlertsPage.getPageSubtitle(page);
       expect(pageTitle).to.equal(emailAlertsPage.pageTitle);

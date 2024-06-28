@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import advancedCustomizationPage from '@pages/BO/design/themeAndLogo/advancedCustomization';
 import themeAndLogoPage from '@pages/BO/design/themeAndLogo/themeAndLogo';
-import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
 
@@ -15,6 +14,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boModuleManagerPage,
   dataModules,
   utilsFile,
   utilsPlaywright,
@@ -72,14 +72,14 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
     it(`should search for module ${dataModules.themeCustomization.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchForModule', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.themeCustomization);
+      const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.themeCustomization);
       expect(isModuleVisible, `The module ${dataModules.themeCustomization.name} is not installed`).to.eq(true);
     });
 
     it(`should check the status of the module ${dataModules.themeCustomization.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkStatusModule', baseContext);
 
-      const isModuleEnabled = await moduleManagerPage.isModuleStatus(page, dataModules.themeCustomization.name, 'enable');
+      const isModuleEnabled = await boModuleManagerPage.isModuleStatus(page, dataModules.themeCustomization.name, 'enable');
       expect(isModuleEnabled, `The module ${dataModules.themeCustomization.name} is disabled`).to.eq(true);
     });
   });

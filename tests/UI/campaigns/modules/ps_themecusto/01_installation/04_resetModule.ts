@@ -9,12 +9,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import advancedCustomizationPage from '@pages/BO/design/themeAndLogo/advancedCustomization';
 import pagesConfigurationPage from '@pages/BO/design/themeAndLogo/pagesConfiguration';
 import themeAndLogoPage from '@pages/BO/design/themeAndLogo/themeAndLogo';
-import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boModuleManagerPage,
   dataModules,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -47,37 +47,37 @@ describe('Theme Customization module - Reset module', async () => {
       boDashboardPage.modulesParentLink,
       boDashboardPage.moduleManagerLink,
     );
-    await moduleManagerPage.closeSfToolBar(page);
+    await boModuleManagerPage.closeSfToolBar(page);
 
-    const pageTitle = await moduleManagerPage.getPageTitle(page);
-    expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+    const pageTitle = await boModuleManagerPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
   });
 
   it(`should search the module ${dataModules.psThemeCusto.name}`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-    const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psThemeCusto);
+    const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.psThemeCusto);
     expect(isModuleVisible).to.eq(true);
   });
 
   it('should display the reset modal and cancel it', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetModuleAndCancel', baseContext);
 
-    const textResult = await moduleManagerPage.setActionInModule(page, dataModules.psThemeCusto, 'reset', true);
+    const textResult = await boModuleManagerPage.setActionInModule(page, dataModules.psThemeCusto, 'reset', true);
     expect(textResult).to.eq('');
 
-    const isModuleVisible = await moduleManagerPage.isModuleVisible(page, dataModules.psThemeCusto);
+    const isModuleVisible = await boModuleManagerPage.isModuleVisible(page, dataModules.psThemeCusto);
     expect(isModuleVisible).to.eq(true);
 
-    const isModalVisible = await moduleManagerPage.isModalActionVisible(page, dataModules.psThemeCusto, 'reset');
+    const isModalVisible = await boModuleManagerPage.isModalActionVisible(page, dataModules.psThemeCusto, 'reset');
     expect(isModalVisible).to.eq(false);
   });
 
   it('should reset the module', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetModule', baseContext);
 
-    const successMessage = await moduleManagerPage.setActionInModule(page, dataModules.psThemeCusto, 'reset');
-    expect(successMessage).to.eq(moduleManagerPage.resetModuleSuccessMessage(dataModules.psThemeCusto.tag));
+    const successMessage = await boModuleManagerPage.setActionInModule(page, dataModules.psThemeCusto, 'reset');
+    expect(successMessage).to.eq(boModuleManagerPage.resetModuleSuccessMessage(dataModules.psThemeCusto.tag));
   });
 
   it('should go to \'Design > Theme & Logo\' page', async function () {

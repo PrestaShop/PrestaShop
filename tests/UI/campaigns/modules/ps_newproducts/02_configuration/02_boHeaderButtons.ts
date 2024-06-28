@@ -7,12 +7,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import boDesignPositionsPage from '@pages/BO/design/positions';
-import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boModuleManagerPage,
   dataModules,
   modPsNewProductsBoMain,
   utilsPlaywright,
@@ -47,23 +47,23 @@ describe('New products block module - BO Header Buttons', async () => {
         boDashboardPage.modulesParentLink,
         boDashboardPage.moduleManagerLink,
       );
-      await moduleManagerPage.closeSfToolBar(page);
+      await boModuleManagerPage.closeSfToolBar(page);
 
-      const pageTitle = await moduleManagerPage.getPageTitle(page);
-      expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+      const pageTitle = await boModuleManagerPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
     });
 
     it(`should search the module ${dataModules.psNewProducts.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psNewProducts);
+      const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.psNewProducts);
       expect(isModuleVisible).to.eq(true);
     });
 
     it(`should go to the configuration page of the module '${dataModules.psNewProducts.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage', baseContext);
 
-      await moduleManagerPage.goToConfigurationPage(page, dataModules.psNewProducts.tag);
+      await boModuleManagerPage.goToConfigurationPage(page, dataModules.psNewProducts.tag);
 
       const pageTitle = await modPsNewProductsBoMain.getPageSubtitle(page);
       expect(pageTitle).to.eq(modPsNewProductsBoMain.pageSubTitle);
@@ -74,17 +74,17 @@ describe('New products block module - BO Header Buttons', async () => {
 
       await modPsNewProductsBoMain.clickHeaderBack(page);
 
-      const pageTitle = await moduleManagerPage.getPageTitle(page);
-      expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+      const pageTitle = await boModuleManagerPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
     });
 
     it('should return to the configure page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnConfigureAfterBack', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psNewProducts);
+      const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.psNewProducts);
       expect(isModuleVisible).to.eq(true);
 
-      await moduleManagerPage.goToConfigurationPage(page, dataModules.psNewProducts.tag);
+      await boModuleManagerPage.goToConfigurationPage(page, dataModules.psNewProducts.tag);
 
       const pageTitle = await modPsNewProductsBoMain.getPageSubtitle(page);
       expect(pageTitle).to.eq(modPsNewProductsBoMain.pageSubTitle);

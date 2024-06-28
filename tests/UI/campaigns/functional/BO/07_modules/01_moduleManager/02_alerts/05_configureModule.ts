@@ -5,14 +5,14 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
-import moduleAlertsPage from '@pages/BO/modules/moduleAlerts';
 import {moduleConfigurationPage} from '@pages/BO/modules/moduleConfiguration';
 
 import {expect} from 'chai';
 import {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boModuleManagerPage,
+  boModuleManagerAlertsPage,
   dataModules,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -45,25 +45,25 @@ describe('BO - Modules - Alerts : Configure module', async () => {
       boDashboardPage.modulesParentLink,
       boDashboardPage.moduleManagerLink,
     );
-    await moduleManagerPage.closeSfToolBar(page);
+    await boModuleManagerPage.closeSfToolBar(page);
 
-    const pageTitle = await moduleManagerPage.getPageTitle(page);
-    expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+    const pageTitle = await boModuleManagerPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
   });
 
   it('should go to \'Alerts\' tab', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAlertsTab', baseContext);
 
-    await moduleManagerPage.goToAlertsTab(page);
+    await boModuleManagerPage.goToAlertsTab(page);
 
-    const pageTitle = await moduleAlertsPage.getPageTitle(page);
-    expect(pageTitle).to.eq(moduleAlertsPage.pageTitle);
+    const pageTitle = await boModuleManagerAlertsPage.getPageTitle(page);
+    expect(pageTitle).to.eq(boModuleManagerAlertsPage.pageTitle);
   });
 
   it('should go to module configuration page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'configureModule', baseContext);
 
-    await moduleAlertsPage.goToConfigurationPage(page, dataModules.psCheckPayment.tag);
+    await boModuleManagerAlertsPage.goToConfigurationPage(page, dataModules.psCheckPayment.tag);
 
     const pageSubtitle = await moduleConfigurationPage.getPageSubtitle(page);
     expect(pageSubtitle).to.contains(dataModules.psCheckPayment.name);

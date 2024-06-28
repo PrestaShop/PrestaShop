@@ -15,19 +15,17 @@ import {
   boModuleManagerPage,
   dataModules,
   foClassicCategoryPage,
-  modPsFacetedsearchBoFilterTemplate,
   modPsFacetedsearchBoMain,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
-const baseContext: string = 'modules_ps_facetedsearch_configuration_editTemplateProductStockFilter';
+const baseContext: string = 'modules_ps_facetedsearch_configuration_categoryFilterDepthFieldConfiguration';
 
-describe('Faceted search module - Edit template - Product stock filter', async () => {
+describe('Faceted search module - Category filter depth field configuration', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -74,70 +72,26 @@ describe('Faceted search module - Edit template - Product stock filter', async (
 
   [
     {
-      filterStatus: false,
-      filterType: '',
-      expectedHasSearchFilters: true,
-      expectedIsSearchFilterRadio: false,
-      expectedIsSearchFilterDropdown: false,
-      expectedIsSearchFilterCheckbox: false,
+      categoryFilterDepthValue: 1,
+      numCheckboxCategories: 3,
     },
     {
-      filterStatus: true,
-      filterType: 'radio',
-      expectedHasSearchFilters: true,
-      expectedIsSearchFilterRadio: true,
-      expectedIsSearchFilterDropdown: false,
-      expectedIsSearchFilterCheckbox: false,
-    },
-    {
-      filterStatus: true,
-      filterType: 'dropdown',
-      expectedHasSearchFilters: true,
-      expectedIsSearchFilterRadio: false,
-      expectedIsSearchFilterDropdown: true,
-      expectedIsSearchFilterCheckbox: false,
-    },
-    {
-      filterStatus: true,
-      filterType: 'checkbox',
-      expectedHasSearchFilters: true,
-      expectedIsSearchFilterRadio: false,
-      expectedIsSearchFilterDropdown: false,
-      expectedIsSearchFilterCheckbox: true,
+      categoryFilterDepthValue: 0,
+      numCheckboxCategories: 7,
     },
   ].forEach((test: {
-    filterStatus: boolean,
-    filterType: string,
-    expectedHasSearchFilters: boolean,
-    expectedIsSearchFilterRadio: boolean,
-    expectedIsSearchFilterDropdown: boolean,
-    expectedIsSearchFilterCheckbox: boolean,
+    categoryFilterDepthValue: number,
+    numCheckboxCategories: number,
   }, index: number) => {
-    it('should edit the filter template', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `editFilterTemplate_${index}`, baseContext);
+    it(`should set the Category filter depth value : "${test.categoryFilterDepthValue}"`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `setCategoryFilterDepthValue_${index}`, baseContext);
 
-      await modPsFacetedsearchBoMain.editFilterTemplate(page, 1);
-
-      const pageTitle = await modPsFacetedsearchBoFilterTemplate.getPanelTitle(page);
-      expect(pageTitle).to.eq(modPsFacetedsearchBoFilterTemplate.title);
+      const textResult = await modPsFacetedsearchBoMain.setCategoryFilterDepthValue(
+        page,
+        test.categoryFilterDepthValue.toString(),
+      );
+      expect(textResult).to.equal(modPsFacetedsearchBoMain.settingsSavedMessage);
     });
-
-    it(
-      `should ${test.filterStatus ? 'enable' : 'disable'} the filter "Product stock filter" `
-      + `${test.filterType ? `with filter mode "${test.filterType}"` : ''}`,
-      async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `setProductStockFilter_${index}`, baseContext);
-
-        await modPsFacetedsearchBoFilterTemplate.setTemplateFilterForm(
-          page,
-          'Product stock filter',
-          test.filterStatus,
-          test.filterType,
-        );
-
-        const textResult = await modPsFacetedsearchBoFilterTemplate.saveTemplate(page);
-        expect(textResult).to.match(/× Your filter "[-A-Za-z0-9\s]+" was updated successfully./);
-      });
 
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `viewMyShop_${index}`, baseContext);
@@ -157,16 +111,10 @@ describe('Faceted search module - Edit template - Product stock filter', async (
       expect(isCategoryPageVisible).to.be.eq(true);
 
       const hasSearchFilters = await foClassicCategoryPage.hasSearchFilters(page);
-      expect(hasSearchFilters).to.be.eq(test.expectedHasSearchFilters);
+      expect(hasSearchFilters).to.be.eq(true);
 
-      const isSearchFilterRadio = await foClassicCategoryPage.isSearchFilterRadio(page, 'availability');
-      expect(isSearchFilterRadio).to.be.eq(test.expectedIsSearchFilterRadio);
-
-      const isSearchFilterDropdown = await foClassicCategoryPage.isSearchFilterDropdown(page, 'availability');
-      expect(isSearchFilterDropdown).to.be.eq(test.expectedIsSearchFilterDropdown);
-
-      const isSearchFiltersCheckbox = await foClassicCategoryPage.isSearchFiltersCheckbox(page, 'availability');
-      expect(isSearchFiltersCheckbox).to.be.eq(test.expectedIsSearchFilterCheckbox);
+      const numSearchFiltersCheckbox = await foClassicCategoryPage.getNumSearchFiltersCheckbox(page, 'category');
+      expect(numSearchFiltersCheckbox).to.be.eq(test.numCheckboxCategories);
     });
 
     it('should close the page and return to the backOffice', async function () {
@@ -177,5 +125,34 @@ describe('Faceted search module - Edit template - Product stock filter', async (
       const pageTitle = await modPsFacetedsearchBoMain.getPageSubtitle(page);
       expect(pageTitle).to.eq(modPsFacetedsearchBoMain.pageSubTitle);
     });
+  });
+
+  [
+    '-2',
+    '2',
+    'LLOI',
+    '9223372036854775807',
+    '1,5',
+    '1 500',
+  ].forEach((value: string, index: number) => {
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/36438
+    it(`should set the Category filter depth value : "${value}"`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `setCategoryFilterDepthValueError_${index}`, baseContext);
+
+      this.skip();
+
+      const textResult = await modPsFacetedsearchBoMain.setCategoryFilterDepthValue(page, value);
+      expect(textResult).to.equal(modPsFacetedsearchBoMain.settingsErrorMessage);
+    });
+  });
+
+  it('should set the Category filter depth value : "1L"', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'setCategoryFilterDepthValue_1L', baseContext);
+
+    const textResult = await modPsFacetedsearchBoMain.setCategoryFilterDepthValue(page, '1L');
+    expect(textResult).to.equal(modPsFacetedsearchBoMain.settingsSavedMessage);
+
+    const value = await modPsFacetedsearchBoMain.getCategoryFilterDepthValue(page);
+    expect(value).to.equal(1);
   });
 });

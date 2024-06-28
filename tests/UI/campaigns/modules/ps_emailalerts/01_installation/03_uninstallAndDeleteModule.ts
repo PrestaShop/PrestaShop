@@ -9,7 +9,6 @@ import {installModule} from '@commonTests/BO/modules/moduleManager';
 // Import pages
 // Import BO pages
 import productsPage from '@pages/BO/catalog/products';
-import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
@@ -18,6 +17,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boModuleManagerPage,
   dataModules,
   FakerProduct,
   foClassicCategoryPage,
@@ -94,29 +94,29 @@ describe('Mail alerts module - Uninstall and delete module', async () => {
         boDashboardPage.modulesParentLink,
         boDashboardPage.moduleManagerLink,
       );
-      await moduleManagerPage.closeSfToolBar(page);
+      await boModuleManagerPage.closeSfToolBar(page);
 
-      const pageTitle = await moduleManagerPage.getPageTitle(page);
-      expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+      const pageTitle = await boModuleManagerPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
     });
 
     it(`should search the module ${dataModules.psEmailAlerts.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psEmailAlerts);
+      const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.psEmailAlerts);
       expect(isModuleVisible).to.eq(true);
     });
 
     it('should display the uninstall modal and cancel it', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetModuleAndCancel', baseContext);
 
-      const textResult = await moduleManagerPage.setActionInModule(page, dataModules.psEmailAlerts, 'uninstall', true);
+      const textResult = await boModuleManagerPage.setActionInModule(page, dataModules.psEmailAlerts, 'uninstall', true);
       expect(textResult).to.eq('');
 
-      const isModuleVisible = await moduleManagerPage.isModuleVisible(page, dataModules.psEmailAlerts);
+      const isModuleVisible = await boModuleManagerPage.isModuleVisible(page, dataModules.psEmailAlerts);
       expect(isModuleVisible).to.eq(true);
 
-      const isModalVisible = await moduleManagerPage.isModalActionVisible(page, dataModules.psEmailAlerts, 'uninstall');
+      const isModalVisible = await boModuleManagerPage.isModalActionVisible(page, dataModules.psEmailAlerts, 'uninstall');
       expect(isModalVisible).to.eq(false);
 
       const dirExists = await utilsFile.doesFileExist(`${utilsFile.getRootPath()}/modules/${dataModules.psEmailAlerts.tag}/`);
@@ -126,8 +126,14 @@ describe('Mail alerts module - Uninstall and delete module', async () => {
     it('should uninstall the module', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetModule', baseContext);
 
-      const successMessage = await moduleManagerPage.setActionInModule(page, dataModules.psEmailAlerts, 'uninstall', false, true);
-      expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(dataModules.psEmailAlerts.tag));
+      const successMessage = await boModuleManagerPage.setActionInModule(
+        page,
+        dataModules.psEmailAlerts,
+        'uninstall',
+        false,
+        true,
+      );
+      expect(successMessage).to.eq(boModuleManagerPage.uninstallModuleSuccessMessage(dataModules.psEmailAlerts.tag));
 
       // Check the directory `modules/dataModules.psEmailAlerts.tag`
       const dirExists = await utilsFile.doesFileExist(`${utilsFile.getRootPath()}/modules/${dataModules.psEmailAlerts.tag}/`);
@@ -137,7 +143,7 @@ describe('Mail alerts module - Uninstall and delete module', async () => {
     it('should go to Front Office', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
-      page = await moduleManagerPage.viewMyShop(page);
+      page = await boModuleManagerPage.viewMyShop(page);
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);

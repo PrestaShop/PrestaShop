@@ -17,7 +17,6 @@ import {accountIdentityPage} from '@pages/FO/classic/myAccount/identity';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 // Import BO pages
 import boDesignPositionsPage from '@pages/BO/design/positions';
-import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 import psGdpr from '@pages/BO/modules/psGdpr';
 import psGdprTabDataConsent from '@pages/BO/modules/psGdpr/tabDataConsent';
 
@@ -27,6 +26,7 @@ import {faker, fakerFR} from '@faker-js/faker';
 import {
   boDashboardPage,
   boDesignPositionsHookModulePage,
+  boModuleManagerPage,
   dataLanguages,
   dataModules,
   dataProducts,
@@ -80,23 +80,23 @@ describe('GDPR : Consent checkbox customization', async () => {
         boDashboardPage.modulesParentLink,
         boDashboardPage.moduleManagerLink,
       );
-      await moduleManagerPage.closeSfToolBar(page);
+      await boModuleManagerPage.closeSfToolBar(page);
 
-      const pageTitle = await moduleManagerPage.getPageTitle(page);
-      expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+      const pageTitle = await boModuleManagerPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
     });
 
     it(`should search the module ${dataModules.psGdpr.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psGdpr);
+      const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.psGdpr);
       expect(isModuleVisible).to.eq(true);
     });
 
     it(`should go to the configuration page of the module '${dataModules.psGdpr.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage', baseContext);
 
-      await moduleManagerPage.goToConfigurationPage(page, dataModules.psGdpr.tag);
+      await boModuleManagerPage.goToConfigurationPage(page, dataModules.psGdpr.tag);
 
       const pageTitle = await psGdpr.getPageSubtitle(page);
       expect(pageTitle).to.eq(psGdpr.pageSubTitle);
@@ -307,23 +307,23 @@ describe('GDPR : Consent checkbox customization', async () => {
         boDashboardPage.modulesParentLink,
         boDashboardPage.moduleManagerLink,
       );
-      await moduleManagerPage.closeSfToolBar(page);
+      await boModuleManagerPage.closeSfToolBar(page);
 
-      const pageTitle = await moduleManagerPage.getPageTitle(page);
-      expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+      const pageTitle = await boModuleManagerPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
     });
 
     it(`should search the module ${dataModules.psGdpr.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule2', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.psGdpr);
+      const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.psGdpr);
       expect(isModuleVisible).to.eq(true);
     });
 
     it(`should go to the configuration page of the module '${dataModules.psGdpr.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage2', baseContext);
 
-      await moduleManagerPage.goToConfigurationPage(page, dataModules.psGdpr.tag);
+      await boModuleManagerPage.goToConfigurationPage(page, dataModules.psGdpr.tag);
 
       const pageTitle = await psGdpr.getPageSubtitle(page);
       expect(pageTitle).to.eq(psGdpr.pageSubTitle);

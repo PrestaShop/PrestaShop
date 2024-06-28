@@ -5,7 +5,6 @@ import {deleteAPIClientTest} from '@commonTests/BO/advancedParameters/authServer
 import {installModule, uninstallModule} from '@commonTests/BO/modules/moduleManager';
 
 import keycloakConnectorDemo from '@pages/BO/modules/keycloakConnectorDemo';
-import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
 import {expect} from 'chai';
 import {
@@ -13,6 +12,7 @@ import {
 } from 'playwright';
 import {
   boDashboardPage,
+  boModuleManagerPage,
   dataModules,
   utilsAPI,
   utilsPlaywright,
@@ -82,21 +82,21 @@ describe('API : External Auth Server - Resource Endpoint', async () => {
         boDashboardPage.modulesParentLink,
         boDashboardPage.moduleManagerLink,
       );
-      await moduleManagerPage.closeSfToolBar(page);
+      await boModuleManagerPage.closeSfToolBar(page);
 
-      const pageTitle = await moduleManagerPage.getPageTitle(page);
-      expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+      const pageTitle = await boModuleManagerPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
     });
 
     it(`should search the module '${dataModules.keycloak.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
-      const isModuleVisible = await moduleManagerPage.searchModule(page, dataModules.keycloak);
+      const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.keycloak);
       expect(isModuleVisible, 'Module is not visible!').to.eq(true);
     });
 
     it(`should go to the configuration page of the module '${dataModules.keycloak.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage', baseContext);
-      await moduleManagerPage.goToConfigurationPage(page, dataModules.keycloak.tag);
+      await boModuleManagerPage.goToConfigurationPage(page, dataModules.keycloak.tag);
 
       const pageTitle = await keycloakConnectorDemo.getPageTitle(page);
       expect(pageTitle).to.eq(keycloakConnectorDemo.pageTitle);

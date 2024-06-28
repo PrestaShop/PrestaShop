@@ -4,13 +4,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
-
 import {expect} from 'chai';
 import {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boModuleManagerPage,
   dataModules,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -43,27 +41,27 @@ describe('BO - Modules - Module Manager : Filter modules by status', async () =>
       boDashboardPage.modulesParentLink,
       boDashboardPage.moduleManagerLink,
     );
-    await moduleManagerPage.closeSfToolBar(page);
+    await boModuleManagerPage.closeSfToolBar(page);
 
-    const pageTitle = await moduleManagerPage.getPageTitle(page);
-    expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+    const pageTitle = await boModuleManagerPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
   });
 
   describe('Filter modules by status', async () => {
     it(`should uninstall the module '${dataModules.contactForm.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'uninstallModule', baseContext);
 
-      const successMessage = await moduleManagerPage.setActionInModule(page, dataModules.contactForm, 'uninstall');
-      expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(dataModules.contactForm.tag));
+      const successMessage = await boModuleManagerPage.setActionInModule(page, dataModules.contactForm, 'uninstall');
+      expect(successMessage).to.eq(boModuleManagerPage.uninstallModuleSuccessMessage(dataModules.contactForm.tag));
     });
 
     ['enabled', 'disabled', 'installed', 'uninstalled'].forEach((status: string, index: number) => {
       it(`should filter by status : '${status}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterByStatus${index}`, baseContext);
 
-        await moduleManagerPage.filterByStatus(page, status);
+        await boModuleManagerPage.filterByStatus(page, status);
 
-        const modules = await moduleManagerPage.getAllModulesStatus(page, status);
+        const modules = await boModuleManagerPage.getAllModulesStatus(page, status);
         modules.map(
           (module) => expect(module.status, `'${module.name}' is not ${status}`).to.eq(true),
         );
@@ -73,16 +71,16 @@ describe('BO - Modules - Module Manager : Filter modules by status', async () =>
     it(`should install the module '${dataModules.contactForm.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'installModule', baseContext);
 
-      const successMessage = await moduleManagerPage.setActionInModule(page, dataModules.contactForm, 'install');
-      expect(successMessage).to.eq(moduleManagerPage.installModuleSuccessMessage(dataModules.contactForm.tag));
+      const successMessage = await boModuleManagerPage.setActionInModule(page, dataModules.contactForm, 'install');
+      expect(successMessage).to.eq(boModuleManagerPage.installModuleSuccessMessage(dataModules.contactForm.tag));
     });
 
     it('should show all modules and check the different blocks', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'showAllModules', baseContext);
 
-      await moduleManagerPage.filterByStatus(page, 'all-Modules');
+      await boModuleManagerPage.filterByStatus(page, 'all-Modules');
 
-      const blocksNumber = await moduleManagerPage.getNumberOfBlocks(page);
+      const blocksNumber = await boModuleManagerPage.getNumberOfBlocks(page);
       expect(blocksNumber).greaterThan(2);
     });
   });

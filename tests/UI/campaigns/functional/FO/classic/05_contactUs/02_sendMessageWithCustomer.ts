@@ -8,7 +8,6 @@ import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advanced
 // Import pages
 // Import BO pages
 import customerServicePage from '@pages/BO/customerService/customerService';
-import {moduleManager} from '@pages/BO/modules/moduleManager';
 import contactFormPage from '@pages/BO/modules/contactForm';
 // Import FO pages
 import {contactUsPage} from '@pages/FO/classic/contactUs';
@@ -17,6 +16,7 @@ import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 
 import {
   boDashboardPage,
+  boModuleManagerPage,
   dataCustomers,
   dataModules,
   dataOrders,
@@ -103,23 +103,23 @@ describe('FO - Contact us : Send message from contact us page with customer logg
         boDashboardPage.modulesParentLink,
         boDashboardPage.moduleManagerLink,
       );
-      await moduleManager.closeSfToolBar(page);
+      await boModuleManagerPage.closeSfToolBar(page);
 
-      const pageTitle = await moduleManager.getPageTitle(page);
-      expect(pageTitle).to.contains(moduleManager.pageTitle);
+      const pageTitle = await boModuleManagerPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
     });
 
     it(`should search the module ${dataModules.contactForm.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-      const isModuleVisible = await moduleManager.searchModule(page, dataModules.contactForm);
+      const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.contactForm);
       expect(isModuleVisible).to.equal(true);
     });
 
     it(`should go to the configuration page of the module '${dataModules.contactForm.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage', baseContext);
 
-      await moduleManager.goToConfigurationPage(page, dataModules.contactForm.tag);
+      await boModuleManagerPage.goToConfigurationPage(page, dataModules.contactForm.tag);
 
       const pageTitle = await contactFormPage.getPageSubtitle(page);
       expect(pageTitle).to.equal(contactFormPage.pageTitle);
@@ -267,23 +267,23 @@ describe('FO - Contact us : Send message from contact us page with customer logg
         boDashboardPage.modulesParentLink,
         boDashboardPage.moduleManagerLink,
       );
-      await moduleManager.closeSfToolBar(page);
+      await boModuleManagerPage.closeSfToolBar(page);
 
-      const pageTitle = await moduleManager.getPageTitle(page);
-      expect(pageTitle).to.contains(moduleManager.pageTitle);
+      const pageTitle = await boModuleManagerPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
     });
 
     it(`should search the module ${dataModules.contactForm.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchModule2', baseContext);
 
-      const isModuleVisible = await moduleManager.searchModule(page, dataModules.contactForm);
+      const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.contactForm);
       expect(isModuleVisible).to.equal(true);
     });
 
     it(`should go to the configuration page of the module '${dataModules.contactForm.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage2', baseContext);
 
-      await moduleManager.goToConfigurationPage(page, dataModules.contactForm.tag);
+      await boModuleManagerPage.goToConfigurationPage(page, dataModules.contactForm.tag);
 
       const pageTitle = await contactFormPage.getPageSubtitle(page);
       expect(pageTitle).to.equal(contactFormPage.pageTitle);

@@ -8,8 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import apiClientPage from '@pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
-import {moduleManager} from '@pages/BO/modules/moduleManager';
-
 import {
   boDashboardPage,
   boModuleManagerPage,
@@ -194,12 +192,12 @@ describe('API : GET /modules', async () => {
 
       await boDashboardPage.goToSubMenu(page, boDashboardPage.modulesParentLink, boDashboardPage.modulesParentLink);
       await boModuleManagerPage.closeSfToolBar(page);
-      await moduleManager.filterByStatus(page, 'installed');
+      await boModuleManagerPage.filterByStatus(page, 'installed');
 
       const pageTitle = await boModuleManagerPage.getPageTitle(page);
       expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
 
-      const numModules = await moduleManager.getNumberOfModules(page);
+      const numModules = await boModuleManagerPage.getNumberOfModules(page);
       expect(numModules).to.eq(jsonResponseItems.length);
     });
 
@@ -208,13 +206,13 @@ describe('API : GET /modules', async () => {
 
       for (let idxItem: number = 0; idxItem < jsonResponseItems.length; idxItem++) {
         // eslint-disable-next-line no-loop-func
-        const isModuleVisible = await moduleManager.searchModule(
+        const isModuleVisible = await boModuleManagerPage.searchModule(
           page,
           {tag: jsonResponseItems[idxItem].technicalName} as FakerModule,
         );
         expect(isModuleVisible).to.be.equal(true);
 
-        const moduleInfos = await moduleManager.getModuleInformationNth(page, 1);
+        const moduleInfos = await boModuleManagerPage.getModuleInformationNth(page, 1);
         expect(moduleInfos.moduleId).to.equal(jsonResponseItems[idxItem].moduleId);
         expect(moduleInfos.technicalName).to.equal(jsonResponseItems[idxItem].technicalName);
         expect(moduleInfos.version).to.equal(jsonResponseItems[idxItem].version);
