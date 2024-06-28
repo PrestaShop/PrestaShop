@@ -421,6 +421,7 @@ class AdminProductWrapper
      */
     public function getSpecificPricesList($product, $defaultCurrency, $shops, $currencies, $countries, $groups)
     {
+        $context = Context::getContext();
         $content = [];
         $specific_prices = array_merge(
             SpecificPrice::getByProductId((int) $product->id),
@@ -478,7 +479,7 @@ class AdminProductWrapper
                 }
                 if ($specific_price['id_product_attribute']) {
                     $combination = new Combination((int) $specific_price['id_product_attribute']);
-                    $attributes = $combination->getAttributesName(1);
+                    $attributes = $combination->getAttributesName($context->language->id);
                     $attributes_name = '';
                     foreach ($attributes as $attribute) {
                         $attributes_name .= $attribute['name'] . ' - ';
