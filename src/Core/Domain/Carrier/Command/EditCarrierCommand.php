@@ -31,6 +31,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\Carrier\Command;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 /**
  * Command aim to edit carrier
@@ -55,6 +57,8 @@ class EditCarrierCommand
     private ?ShippingMethod $shippingMethod;
     private ?int $idTaxRuleGroup;
     private ?OutOfRangeBehavior $rangeBehavior;
+
+    private ?array $associatedShopIds;
 
     public function __construct(int $carrierId)
     {
@@ -274,5 +278,22 @@ class EditCarrierCommand
         $this->rangeBehavior = new OutOfRangeBehavior($rangeBehavior);
 
         return $this;
+    }
+
+    public function getAssociatedShopIds(): ?array
+    {
+        return $this->associatedShopIds ?? null;
+    }
+
+    /**
+     * @param int[] $associatedShopIds
+     *
+     * @return void
+     *
+     * @throws ShopException
+     */
+    public function setAssociatedShopIds(array $associatedShopIds): void
+    {
+        $this->associatedShopIds = array_map(fn (int $shopId) => new ShopId($shopId), $associatedShopIds);
     }
 }

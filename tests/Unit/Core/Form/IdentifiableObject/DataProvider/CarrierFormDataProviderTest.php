@@ -28,6 +28,7 @@ namespace Core\Form\IdentifiableObject\DataProvider;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetCarrierForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult\EditableCarrier;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
@@ -62,11 +63,12 @@ class CarrierFormDataProviderTest extends TestCase
                 1,
                 1,
                 OutOfRangeBehavior::USE_HIGHEST_RANGE,
+                [1, 3],
                 '/img/c/45.jkg',
             ))
         ;
 
-        $formDataProvider = new CarrierFormDataProvider($queryBus);
+        $formDataProvider = new CarrierFormDataProvider($queryBus, $this->createMock(ShopContext::class));
         $formData = $formDataProvider->getData(42);
         $this->assertEquals([
             'general_settings' => [
@@ -80,6 +82,7 @@ class CarrierFormDataProviderTest extends TestCase
                 'group_access' => [1, 2, 3],
                 'logo_preview' => '/img/c/45.jkg',
                 'tracking_url' => 'http://track.to',
+                'associated_shops' => [1, 3],
             ],
             'shipping_settings' => [
                 'has_additional_handling_fee' => false,
@@ -99,10 +102,13 @@ class CarrierFormDataProviderTest extends TestCase
 
     public function testGetDefaultData(): void
     {
-        $formDataProvider = new CarrierFormDataProvider($this->createMock(CommandBusInterface::class));
+        $shopContext = $this->createMock(ShopContext::class);
+        $shopContext->method('getAssociatedShopIds')->willReturn([2, 4]);
+        $formDataProvider = new CarrierFormDataProvider($this->createMock(CommandBusInterface::class), $shopContext);
         $this->assertEquals([
             'general_settings' => [
                 'grade' => 0,
+                'associated_shops' => [2, 4],
             ],
         ], $formDataProvider->getDefaultData());
     }

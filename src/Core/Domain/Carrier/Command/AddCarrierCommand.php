@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Carrier\Command;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 /**
  * Command aim to add carrier
@@ -39,6 +40,11 @@ class AddCarrierCommand
 {
     private ShippingMethod $shippingMethod;
     private OutOfRangeBehavior $rangeBehavior;
+
+    /**
+     * @var ShopId[]
+     */
+    private array $associatedShopIds;
 
     /**
      * @throws CarrierConstraintException
@@ -55,8 +61,8 @@ class AddCarrierCommand
         private bool $hasAdditionalHandlingFee,
         private bool $isFree,
         int $shippingMethod,
-        private int $idTaxRuleGroup,
         int $rangeBehavior,
+        array $associatedShopIds,
         private int $max_width = 0,
         private int $max_height = 0,
         private int $max_depth = 0,
@@ -65,6 +71,7 @@ class AddCarrierCommand
     ) {
         $this->shippingMethod = new ShippingMethod($shippingMethod);
         $this->rangeBehavior = new OutOfRangeBehavior($rangeBehavior);
+        $this->associatedShopIds = array_map(fn (int $shopId) => new ShopId($shopId), $associatedShopIds);
     }
 
     public function getName(): string
@@ -143,13 +150,16 @@ class AddCarrierCommand
         return $this->shippingMethod;
     }
 
-    public function getTaxRuleGroupId(): int
-    {
-        return $this->idTaxRuleGroup;
-    }
-
     public function getRangeBehavior(): OutOfRangeBehavior
     {
         return $this->rangeBehavior;
+    }
+
+    /**
+     * @return ShopId[]
+     */
+    public function getAssociatedShopIds(): array
+    {
+        return $this->associatedShopIds;
     }
 }

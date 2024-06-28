@@ -27,20 +27,23 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetCarrierForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult\EditableCarrier;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class CarrierFormDataProvider implements FormDataProviderInterface
 {
     public function __construct(
-        private readonly CommandBusInterface $queryBus
+        private readonly CommandBusInterface $queryBus,
+        private readonly ShopContext $shopContext,
     ) {
     }
 
     public function getData($id)
     {
         /** @var EditableCarrier $carrier */
-        $carrier = $this->queryBus->handle(new GetCarrierForEditing((int) $id));
+        $carrier = $this->queryBus->handle(new GetCarrierForEditing((int) $id, ShopConstraint::allShops()));
 
         return [
             'general_settings' => [
@@ -49,6 +52,7 @@ class CarrierFormDataProvider implements FormDataProviderInterface
                 'active' => $carrier->isActive(),
                 'grade' => $carrier->getGrade(),
                 'group_access' => $carrier->getAssociatedGroupIds(),
+                'associated_shops' => $carrier->getAssociatedShopIds(),
                 'logo_preview' => $carrier->getLogoPath(),
                 'tracking_url' => $carrier->getTrackingUrl(),
             ],
@@ -73,6 +77,7 @@ class CarrierFormDataProvider implements FormDataProviderInterface
         return [
             'general_settings' => [
                 'grade' => 0,
+                'associated_shops' => $this->shopContext->getAssociatedShopIds(),
             ],
         ];
     }

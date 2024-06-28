@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Carrier\AbstractCarrierHandler;
 use PrestaShop\PrestaShop\Adapter\Carrier\Repository\CarrierRepository;
 use PrestaShop\PrestaShop\Adapter\Carrier\Validate\CarrierValidator;
 use PrestaShop\PrestaShop\Adapter\File\Uploader\CarrierLogoFileUploader;
+use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\AddCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\CommandHandler\AddCarrierHandlerInterface;
@@ -47,7 +48,8 @@ class AddCarrierHandler extends AbstractCarrierHandler implements AddCarrierHand
     public function __construct(
         private readonly CarrierRepository $carrierRepository,
         private readonly CarrierLogoFileUploader $carrierLogoFileUploader,
-        private readonly CarrierValidator $carrierValidator
+        private readonly CarrierValidator $carrierValidator,
+        private readonly ShopRepository $shopRepository,
     ) {
     }
 
@@ -82,11 +84,12 @@ class AddCarrierHandler extends AbstractCarrierHandler implements AddCarrierHand
             $command->getAssociatedGroupIds()
         );
 
-        $carrierId = $this->carrierRepository->add($carrier);
-        $carrier->setGroups($command->getAssociatedGroupIds());
+        foreach ($command->getAssociatedShopIds() as $shopId) {
+            $this->shopRepository->assertShopExists($shopId);
+        }
 
-        // Set tax rules group
-        $carrier->setTaxRulesGroup($command->getTaxRuleGroupId());
+        $carrierId = $this->carrierRepository->add($carrier, $command->getAssociatedShopIds());
+        $carrier->setGroups($command->getAssociatedGroupIds());
 
         if ($command->getLogoPathName() !== null) {
             $this->carrierValidator->validateLogoUpload(

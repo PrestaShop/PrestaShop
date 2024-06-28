@@ -24,40 +24,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Carrier\CommandHandler;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Carrier\Query;
-
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\SetCarrierTaxRuleGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
-/**
- * Retrieves carrier data
- */
-class GetCarrierForEditing
+interface SetCarrierTaxRuleGroupHandlerInterface
 {
-    private CarrierId $carrierId;
-
-    /**
-     * @param int $carrierId
-     */
-    public function __construct(
-        int $carrierId,
-        private readonly ShopConstraint $shopConstraint,
-    ) {
-        $this->carrierId = new CarrierId($carrierId);
-    }
-
-    /**
-     * @return CarrierId
-     */
-    public function getCarrierId(): CarrierId
-    {
-        return $this->carrierId;
-    }
-
-    public function getShopConstraint(): ShopConstraint
-    {
-        return $this->shopConstraint;
-    }
+    public function handle(SetCarrierTaxRuleGroupCommand $command): CarrierId;
 }
