@@ -88,11 +88,10 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
         return new CarrierId((int) $carrierId);
     }
 
-    public function update(Carrier $carrier, ShopConstraint $shopConstraint, int $errorCode): void
+    public function update(Carrier $carrier, int $errorCode): void
     {
-        $this->updateObjectModelForShops(
+        $this->updateObjectModel(
             $carrier,
-            $this->getShopIdsByConstraint(new CarrierId((int) $carrier->id), $shopConstraint),
             CannotUpdateCarrierException::class,
             $errorCode
         );
@@ -127,17 +126,11 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
      */
     public function getAssociatedShopIds(CarrierId $carrierId): array
     {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('id_shop')
-            ->from($this->prefix . 'carrier_shop')
-            ->where('id_carrier = :carrierId')
-            ->setParameter('carrierId', $carrierId->getValue())
-        ;
+        $shops = parent::getObjectModelAssociatedShopIds($carrierId->getValue(), 'carrier');
 
-        return array_map(static function (array $shop) {
-            return new ShopId((int) $shop['id_shop']);
-        }, $qb->executeQuery()->fetchAllAssociative());
+        return array_map(static function (int $shopId) {
+            return new ShopId((int) $shopId);
+        }, $shops);
     }
 
     /**
@@ -172,20 +165,20 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
     /**
      * Create a new version of the carrier, or return the carrier as is if it don't have order linked.
      *
-     * @param Carrier $carrier
+     * @param CarrierId $carrierId
      *
      * @return Carrier
      */
-    public function createNewVersion(Carrier $carrier): Carrier
+    public function getEditableOrNewVersion(CarrierId $carrierId): Carrier
     {
-        $carrierId = new CarrierId((int) $carrier->id);
-
         // If the carrier don't have orders linked, we can return it as is
         if (!$this->carrierHasOrders($carrierId)) {
-            return $carrier;
+            return $this->get($carrierId);
         }
 
         // Otherwise, we need to create a new version of the carrier
+        // Get the carrier to duplicate
+        $carrier = $this->get($carrierId);
         /** @var Carrier $newCarrier */
         $newCarrier = $carrier->duplicateObject();
         $carrier->deleted = true;
@@ -193,7 +186,7 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
 
         // Copy all others information like ranges, shops associated, ...
         $newCarrier->copyCarrierData($carrierId->getValue());
-        $this->updateObjectModel($newCarrier, CannotUpdateCarrierException::class);
+        $this->update($newCarrier, CannotUpdateCarrierException::FAILED_UPDATE_CARRIER);
         $newCarrier->setGroups($carrier->getAssociatedGroupIds());
 
         // Return the new duplicated carrier
@@ -285,7 +278,7 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
         $qb->executeStatement();
     }
 
-    public function carrierHasOrders(CarrierId $carrierId): bool
+    protected function carrierHasOrders(CarrierId $carrierId): bool
     {
         $qb = $this->connection->createQueryBuilder();
 

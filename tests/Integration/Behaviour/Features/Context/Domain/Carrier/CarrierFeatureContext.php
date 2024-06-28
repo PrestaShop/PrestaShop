@@ -143,9 +143,24 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I edit carrier :reference called :newReference with specified properties:
+     * @When I edit carrier :reference with specified properties:
      */
-    public function editCarrier(string $reference, string $newReference, TableNode $node): void
+    public function editCarrierWithoutUpdate(string $reference, string $newReference, TableNode $node): void
+    {
+        $carrierId = $this->editCarrier($reference, $newReference, $node);
+        Assert::assertEquals($this->getSharedStorage()->get($reference), $carrierId->getValue());
+    }
+
+    /**
+     * @When I edit carrier :reference with specified properties I get a new carrier called :newReference:
+     */
+    public function editCarrierWithUpdate(string $reference, string $newReference, TableNode $node): void
+    {
+        $carrierId = $this->editCarrier($reference, $newReference, $node);
+        Assert::assertNotEquals($this->getSharedStorage()->get($reference), $carrierId->getValue());
+    }
+
+    private function editCarrier(string $reference, string $newReference, TableNode $node): ?CarrierId
     {
         $properties = $this->localizeByRows($node);
         $carrierId = $this->referenceToId($reference);
@@ -221,9 +236,13 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
                 $this->fakeUploadLogo($tmpLogo, $newCarrierId->getValue());
             }
             $this->getSharedStorage()->set($newReference, $newCarrierId->getValue());
+
+            return $newCarrierId;
         } catch (Exception $e) {
             $this->setLastException($e);
         }
+
+        return null;
     }
 
     /**

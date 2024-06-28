@@ -63,7 +63,7 @@ class EditCarrierHandler extends AbstractCarrierHandler implements EditCarrierHa
     {
         // Get new version of carrier if needed
         $carrier = $this->carrierRepository->get($command->getCarrierId());
-        $newCarrier = $this->carrierRepository->createNewVersion($carrier);
+        $newCarrier = $this->carrierRepository->getEditableOrNewVersion($command->getCarrierId());
         $newCarrierId = new CarrierId($newCarrier->id);
 
         // General information
@@ -138,13 +138,17 @@ class EditCarrierHandler extends AbstractCarrierHandler implements EditCarrierHa
             }
         }
 
+        $this->carrierRepository->update(
+            $newCarrier,
+            CannotUpdateCarrierException::FAILED_UPDATE_CARRIER
+        );
+
         if ($command->getAssociatedGroupIds()) {
             $newCarrier->setGroups($command->getAssociatedGroupIds());
         }
 
         $this->carrierRepository->update(
             $newCarrier,
-            ShopConstraint::allShops(),
             CannotUpdateCarrierException::FAILED_UPDATE_CARRIER
         );
 
