@@ -13,6 +13,8 @@ class PsGdprPage extends ModuleConfiguration {
 
   private readonly tabDataConsent: string;
 
+  private readonly tabCustomerActivity: string;
+
   /**
    * @constructs
    * Setting up titles and selectors to use on GDPR module configuration page
@@ -25,6 +27,8 @@ class PsGdprPage extends ModuleConfiguration {
     this.menuTab = (nth: number) => `#psgdpr-menu .list-group:nth-child(1) a.list-group-item:nth-child(${nth})`;
 
     this.tabDataConsent = '#dataConsent .panel';
+
+    this.tabCustomerActivity = '#customerActivity .panel';
   }
 
   /**
@@ -41,6 +45,9 @@ class PsGdprPage extends ModuleConfiguration {
     switch (nth) {
       case 3:
         selectorBlock = this.tabDataConsent;
+        break;
+      case 4:
+        selectorBlock = this.tabCustomerActivity;
         break;
       default:
         throw new Error(`The block #${nth} has not defined a defined selector.`);
