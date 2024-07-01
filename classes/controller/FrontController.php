@@ -1744,6 +1744,7 @@ class FrontControllerCore extends Controller
 
         $shop = [
             'id' => $this->context->shop->id,
+            'group_id' => $this->context->shop->id_shop_group,
             'name' => Configuration::get('PS_SHOP_NAME'),
             'email' => Configuration::get('PS_SHOP_EMAIL'),
             'registration_number' => Configuration::get('PS_SHOP_DETAILS'),
