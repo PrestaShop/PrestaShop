@@ -12,7 +12,6 @@ import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 import imageSettingsPage from '@pages/BO/design/imageSettings';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -20,6 +19,7 @@ import {
   boDashboardPage,
   FakerProduct,
   foClassicCategoryPage,
+  foClassicModalQuickViewPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -293,14 +293,14 @@ describe('BO - Design - Image Settings - Check product image format', async () =
 
         await foClassicCategoryPage.quickViewProduct(page, nthProduct as number);
 
-        const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+        const isModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
         expect(isModalVisible).to.eq(true);
       });
 
       it('should check that the main image of the quick view is a WebP', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkMainImageQuickView${arg.extOriginal}`, baseContext);
 
-        const quickViewImageMain = await quickViewModal.getQuickViewImageMain(page);
+        const quickViewImageMain = await foClassicModalQuickViewPage.getQuickViewImageMain(page);
         expect(quickViewImageMain).to.not.eq(null);
 
         await utilsFile.downloadFile(quickViewImageMain as string, 'image.img');

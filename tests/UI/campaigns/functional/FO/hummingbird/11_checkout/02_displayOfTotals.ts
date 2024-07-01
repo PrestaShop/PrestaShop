@@ -9,7 +9,6 @@ import {createCartRuleTest, deleteCartRuleTest} from '@commonTests/BO/catalog/ca
 import cartPage from '@pages/FO/hummingbird/cart';
 import homePage from '@pages/FO/hummingbird/home';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
-import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 import foLoginPage from '@pages/FO/hummingbird/login';
 
@@ -18,6 +17,7 @@ import {
   dataCustomers,
   dataProducts,
   FakerCartRule,
+  foHummingbirdModalQuickViewPage,
   foHummingbirdSearchResultsPage,
   utilsDate,
   utilsPlaywright,
@@ -122,7 +122,7 @@ describe('FO - Checkout : Display of totals', async () => {
 
       await foHummingbirdSearchResultsPage.quickViewProduct(page, 1);
 
-      await quickViewModal.addToCartByQuickView(page);
+      await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);

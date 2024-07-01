@@ -9,7 +9,6 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {homePage} from '@pages/FO/classic/home';
 import {checkoutPage} from '@pages/FO/classic/checkout';
-import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
@@ -17,6 +16,7 @@ import {
   dataCustomers,
   dataPaymentMethods,
   type FakerPaymentMethod,
+  foClassicModalQuickViewPage,
   type MailDev,
   type MailDevEmail,
   utilsMail,
@@ -79,14 +79,14 @@ describe('FO - Checkout - Payment : Choose a payment method', async () => {
 
         await homePage.quickViewProduct(page, 1);
 
-        const isQuickViewModal = await quickViewModal.isQuickViewProductModalVisible(page);
+        const isQuickViewModal = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
         expect(isQuickViewModal).to.equal(true);
       });
 
       it('should add the first product to cart', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `addProductToCart${index}`, baseContext);
 
-        await quickViewModal.addToCartByQuickView(page);
+        await foClassicModalQuickViewPage.addToCartByQuickView(page);
         await blockCartModal.proceedToCheckout(page);
 
         const pageTitle = await cartPage.getPageTitle(page);

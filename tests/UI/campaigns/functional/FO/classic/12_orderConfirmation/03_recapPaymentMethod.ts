@@ -12,7 +12,6 @@ import {homePage} from '@pages/FO/classic/home';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
-import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 import {
   boDashboardPage,
@@ -20,6 +19,7 @@ import {
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
+  foClassicModalQuickViewPage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -77,7 +77,7 @@ describe('FO - Order confirmation : Order details and totals - Recap of payment 
       await homePage.searchProduct(page, dataProducts.demo_6.name);
       await foClassicSearchResultsPage.quickViewProduct(page, 1);
 
-      await quickViewModal.addToCartByQuickView(page);
+      await foClassicModalQuickViewPage.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);

@@ -10,13 +10,13 @@ import cartPage from '@pages/FO/hummingbird/cart';
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
 import homePage from '@pages/FO/hummingbird/home';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
-import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {
   dataCustomers,
   dataPaymentMethods,
   type FakerPaymentMethod,
+  foHummingbirdModalQuickViewPage,
   type MailDev,
   type MailDevEmail,
   utilsMail,
@@ -82,14 +82,14 @@ describe('FO - Checkout - Payment : Choose a payment method', async () => {
 
         await homePage.quickViewProduct(page, 1);
 
-        const isQuickViewModal = await quickViewModal.isQuickViewProductModalVisible(page);
+        const isQuickViewModal = await foHummingbirdModalQuickViewPage.isQuickViewProductModalVisible(page);
         expect(isQuickViewModal).to.equal(true);
       });
 
       it('should add the first product to cart', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `addProductToCart${index}`, baseContext);
 
-        await quickViewModal.addToCartByQuickView(page);
+        await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
         await blockCartModal.proceedToCheckout(page);
 
         const pageTitle = await cartPage.getPageTitle(page);

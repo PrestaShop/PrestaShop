@@ -6,7 +6,6 @@ import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/prod
 
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {expect} from 'chai';
@@ -16,6 +15,7 @@ import {
   dataProducts,
   FakerProduct,
   foClassicCategoryPage,
+  foClassicModalQuickViewPage,
   type ProductAttribute,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -86,14 +86,14 @@ describe('FO - Home Page : Product quick view', async () => {
 
       await homePage.quickViewProduct(page, 3);
 
-      const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+      const isModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.equal(true);
     });
 
     it('should check product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation', baseContext);
 
-      const result = await quickViewModal.getProductDetailsFromQuickViewModal(page);
+      const result = await foClassicModalQuickViewPage.getProductDetailsFromQuickViewModal(page);
       await Promise.all([
         expect(result.name).to.equal(dataProducts.demo_6.name),
         expect(result.price).to.equal(dataProducts.demo_6.combinations[0].price),
@@ -103,7 +103,7 @@ describe('FO - Home Page : Product quick view', async () => {
         expect(result.thumbImage).to.contains(dataProducts.demo_6.thumbImage),
       ]);
 
-      const resultAttributes = await quickViewModal.getSelectedAttributesFromQuickViewModal(page, defaultAttributes);
+      const resultAttributes = await foClassicModalQuickViewPage.getSelectedAttributesFromQuickViewModal(page, defaultAttributes);
       expect(resultAttributes.length).to.be.equal(1);
       expect(resultAttributes[0].name).to.be.equal(defaultAttributes.name);
       expect(resultAttributes[0].value).to.be.equal(defaultAttributes.value);
@@ -112,9 +112,9 @@ describe('FO - Home Page : Product quick view', async () => {
     it('should change combination and check product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeCombination', baseContext);
 
-      await quickViewModal.setAttribute(page, attributes);
+      await foClassicModalQuickViewPage.setAttribute(page, attributes);
 
-      const result = await quickViewModal.getProductDetailsFromQuickViewModal(page);
+      const result = await foClassicModalQuickViewPage.getProductDetailsFromQuickViewModal(page);
       await Promise.all([
         expect(result.name).to.equal(dataProducts.demo_6.name),
         expect(result.price).to.equal(dataProducts.demo_6.combinations[1].price),
@@ -123,7 +123,7 @@ describe('FO - Home Page : Product quick view', async () => {
         expect(result.thumbImage).to.contains(dataProducts.demo_6.thumbImage),
       ]);
 
-      const resultAttributes = await quickViewModal.getSelectedAttributesFromQuickViewModal(page, attributes);
+      const resultAttributes = await foClassicModalQuickViewPage.getSelectedAttributesFromQuickViewModal(page, attributes);
       expect(resultAttributes.length).to.be.equal(1);
       expect(resultAttributes[0].name).to.be.equal(attributes.name);
       expect(resultAttributes[0].value).to.be.equal(attributes.value);
@@ -132,7 +132,7 @@ describe('FO - Home Page : Product quick view', async () => {
     it('should change the product quantity and click on add to cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await quickViewModal.setQuantityAndAddToCart(page, attributesQty);
+      await foClassicModalQuickViewPage.setQuantityAndAddToCart(page, attributesQty);
 
       const isVisible = await blockCartModal.isBlockCartModalVisible(page);
       expect(isVisible).to.equal(true);
@@ -152,14 +152,14 @@ describe('FO - Home Page : Product quick view', async () => {
 
       await homePage.quickViewProduct(page, 6);
 
-      const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+      const isModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.equal(true);
     });
 
     it('should check product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSimpleProductInformation', baseContext);
 
-      const result = await quickViewModal.getProductDetailsFromQuickViewModal(page);
+      const result = await foClassicModalQuickViewPage.getProductDetailsFromQuickViewModal(page);
       await Promise.all([
         expect(result.name).to.equal(dataProducts.demo_11.name),
         expect(result.price).to.equal(dataProducts.demo_11.finalPrice),
@@ -173,8 +173,8 @@ describe('FO - Home Page : Product quick view', async () => {
     it('should change the product quantity and click on add to cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart2', baseContext);
 
-      await quickViewModal.setQuantity(page, attributesQty);
-      await quickViewModal.addToCartByQuickView(page);
+      await foClassicModalQuickViewPage.setQuantity(page, attributesQty);
+      await foClassicModalQuickViewPage.addToCartByQuickView(page);
 
       const isVisible = await blockCartModal.isBlockCartModalVisible(page);
       expect(isVisible).to.equal(true);
@@ -204,14 +204,14 @@ describe('FO - Home Page : Product quick view', async () => {
       await foClassicCategoryPage.goToNextPage(page);
       await foClassicCategoryPage.quickViewProduct(page, 7);
 
-      const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+      const isModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.equal(true);
     });
 
     it('should check product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCustomizedProductInformation', baseContext);
 
-      const result = await quickViewModal.getProductDetailsFromQuickViewModal(page);
+      const result = await foClassicModalQuickViewPage.getProductDetailsFromQuickViewModal(page);
       await Promise.all([
         expect(result.name).to.equal(dataProducts.demo_14.name),
         expect(result.price).to.equal(dataProducts.demo_14.price),
@@ -225,14 +225,14 @@ describe('FO - Home Page : Product quick view', async () => {
     it('should check that \'Add to cart\' button is disabled', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAddToCartButton', baseContext);
 
-      const isEnabled = await quickViewModal.isAddToCartButtonEnabled(page);
+      const isEnabled = await foClassicModalQuickViewPage.isAddToCartButtonEnabled(page);
       expect(isEnabled, 'Add to cart button is not disabled').to.equal(false);
     });
 
     it('should close the quick view modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeQuickOptionModal', baseContext);
 
-      const isQuickViewModalClosed = await quickViewModal.closeQuickViewModal(page);
+      const isQuickViewModalClosed = await foClassicModalQuickViewPage.closeQuickViewModal(page);
       expect(isQuickViewModalClosed).to.equal(true);
     });
   });
@@ -243,28 +243,28 @@ describe('FO - Home Page : Product quick view', async () => {
 
       await foClassicCategoryPage.quickViewProduct(page, 8);
 
-      const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+      const isModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.equal(true);
     });
 
     it('should check that \'Add to cart\' button is disabled', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAddToCartButton2', baseContext);
 
-      const isEnabled = await quickViewModal.isAddToCartButtonEnabled(page);
+      const isEnabled = await foClassicModalQuickViewPage.isAddToCartButtonEnabled(page);
       expect(isEnabled, 'Add to cart button is not disabled').to.equal(false);
     });
 
     it('should check the product availability', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductAvailability', baseContext);
 
-      const availability = await quickViewModal.getProductAvailabilityText(page);
+      const availability = await foClassicModalQuickViewPage.getProductAvailabilityText(page);
       expect(availability).to.contains('Out-of-Stock');
     });
 
     it('should close the quick view modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeQuickOptionModal2', baseContext);
 
-      const isQuickViewModalClosed = await quickViewModal.closeQuickViewModal(page);
+      const isQuickViewModalClosed = await foClassicModalQuickViewPage.closeQuickViewModal(page);
       expect(isQuickViewModalClosed).to.equal(true);
     });
   });

@@ -3,11 +3,11 @@ import testContext from '@utils/testContext';
 
 // Import pages
 import {homePage} from '@pages/FO/classic/home';
-import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  foClassicModalQuickViewPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -47,14 +47,14 @@ describe('FO - Product page - Quick view : Close quick view modal', async () => 
 
     await homePage.quickViewProduct(page, 3);
 
-    const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+    const isModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
     expect(isModalVisible).to.equal(true);
   });
 
   it('should click outside the modal and check that the modal is closed', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'clickOutSideModal', baseContext);
 
-    const isQuickViewModalClosed = await quickViewModal.closeQuickViewModal(page, true);
+    const isQuickViewModalClosed = await foClassicModalQuickViewPage.closeQuickViewModal(page, true);
     expect(isQuickViewModalClosed).to.equal(true);
   });
 
@@ -63,14 +63,14 @@ describe('FO - Product page - Quick view : Close quick view modal', async () => 
 
     await homePage.quickViewProduct(page, 3);
 
-    const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+    const isModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
     expect(isModalVisible).to.equal(true);
   });
 
   it('should click on the cross link and check that the modal is closed', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'clickOnCrossLink', baseContext);
 
-    const isQuickViewModalClosed = await quickViewModal.closeQuickViewModal(page);
+    const isQuickViewModalClosed = await foClassicModalQuickViewPage.closeQuickViewModal(page);
     expect(isQuickViewModalClosed).to.equal(true);
   });
 });

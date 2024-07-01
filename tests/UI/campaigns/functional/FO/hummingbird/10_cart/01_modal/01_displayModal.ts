@@ -8,12 +8,12 @@ import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/h
 import cartPage from '@pages/FO/hummingbird/cart';
 import homePage from '@pages/FO/hummingbird/home';
 import productPage from '@pages/FO/hummingbird/product';
-import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  foHummingbirdModalQuickViewPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -50,7 +50,7 @@ describe('FO - cart : Display modal when adding a product to cart', async () => 
       await testContext.addContextItem(this, 'testIdentifier', 'addFirstProductToCart', baseContext);
 
       await homePage.quickViewProduct(page, 1);
-      await quickViewModal.setQuantityAndAddToCart(page, 2);
+      await foHummingbirdModalQuickViewPage.setQuantityAndAddToCart(page, 2);
 
       const isBlockCartModal = await blockCartModal.isBlockCartModalVisible(page);
       expect(isBlockCartModal).to.equal(true);

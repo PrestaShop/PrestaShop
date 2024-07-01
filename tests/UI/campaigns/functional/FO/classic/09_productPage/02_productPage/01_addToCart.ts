@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import {homePage} from '@pages/FO/classic/home';
 import {cartPage} from '@pages/FO/classic/cart';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
-import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {productPage} from '@pages/FO/classic/product';
 
 import {expect} from 'chai';
@@ -13,6 +12,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
   foClassicCategoryPage,
+  foClassicModalQuickViewPage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -103,15 +103,15 @@ describe('FO - Product page - Product page : Add to cart', async () => {
 
     await foClassicCategoryPage.quickViewProduct(page, 1);
 
-    const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+    const isModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
     expect(isModalVisible).to.equal(true);
   });
 
   it('should add product to cart by quick view', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'addProductToCartByQuickView', baseContext);
 
-    await quickViewModal.setQuantity(page, qtyQuickView);
-    await quickViewModal.addToCartByQuickView(page);
+    await foClassicModalQuickViewPage.setQuantity(page, qtyQuickView);
+    await foClassicModalQuickViewPage.addToCartByQuickView(page);
 
     const productDetails = await blockCartModal.getProductDetailsFromBlockCartModal(page);
     expect(productDetails.quantity).to.equal(qtyQuickView);

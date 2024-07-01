@@ -6,11 +6,11 @@ import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/h
 
 // Import pages
 import homePage from '@pages/FO/hummingbird/home';
-import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  foHummingbirdModalQuickViewPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -58,7 +58,7 @@ describe('FO - Product page - Quick view : Share links', async () => {
 
       await homePage.quickViewProduct(page, 3);
 
-      const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+      const isModalVisible = await foHummingbirdModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.eq(true);
     });
 
@@ -99,7 +99,7 @@ describe('FO - Product page - Quick view : Share links', async () => {
       it(`should check the share link '${test.args.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkLink${index}`, baseContext);
 
-        const url = await quickViewModal.getSocialSharingLink(page, test.args.name);
+        const url = await foHummingbirdModalQuickViewPage.getSocialSharingLink(page, test.args.name);
         expect(url).to.contain(test.result.url);
       });
     });

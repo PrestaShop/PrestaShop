@@ -7,12 +7,12 @@ import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/h
 // Import FO pages
 import cartPage from '@pages/FO/hummingbird/cart';
 import homePage from '@pages/FO/hummingbird/home';
-import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  foHummingbirdModalQuickViewPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -49,7 +49,7 @@ describe('FO - cart : Delete product', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addFirstProductToCart', baseContext);
 
       await homePage.quickViewProduct(page, 1);
-      await quickViewModal.addToCartByQuickView(page);
+      await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);
@@ -85,7 +85,7 @@ describe('FO - cart : Delete product', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addFirstProductToCart1', baseContext);
 
       await homePage.quickViewProduct(page, 1);
-      await quickViewModal.addToCartByQuickView(page);
+      await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);
@@ -122,7 +122,7 @@ describe('FO - cart : Delete product', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addFirstProductToCart1', baseContext);
 
       await homePage.quickViewProduct(page, 1);
-      await quickViewModal.addToCartByQuickView(page);
+      await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);

@@ -3,12 +3,12 @@ import testContext from '@utils/testContext';
 
 // Import pages
 import {homePage} from '@pages/FO/classic/home';
-import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foClassicModalQuickViewPage,
   type ProductAttribute,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -53,14 +53,14 @@ describe('FO - Product page - Quick view : Display of the product', async () => 
 
     await homePage.quickViewProduct(page, 3);
 
-    const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+    const isModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
     expect(isModalVisible).to.equal(true);
   });
 
   it('should check product details', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkProductDetails', baseContext);
 
-    const result = await quickViewModal.getProductDetailsFromQuickViewModal(page);
+    const result = await foClassicModalQuickViewPage.getProductDetailsFromQuickViewModal(page);
     await Promise.all([
       expect(result.name).to.equal(dataProducts.demo_6.name),
       expect(result.price).to.equal(dataProducts.demo_6.combinations[0].price),
@@ -70,7 +70,7 @@ describe('FO - Product page - Quick view : Display of the product', async () => 
       expect(result.thumbImage).to.contains(dataProducts.demo_6.thumbImage),
     ]);
 
-    const resultAttributes = await quickViewModal.getSelectedAttributesFromQuickViewModal(page, attributes);
+    const resultAttributes = await foClassicModalQuickViewPage.getSelectedAttributesFromQuickViewModal(page, attributes);
     expect(resultAttributes.length).to.equal(1);
     expect(resultAttributes[0].name).to.equal('dimension');
     expect(resultAttributes[0].value).to.equal('40x60cm');
@@ -79,14 +79,14 @@ describe('FO - Product page - Quick view : Display of the product', async () => 
   it('should check the product cover image', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkProductImage', baseContext);
 
-    const quickViewImageMain = await quickViewModal.getQuickViewCoverImage(page);
+    const quickViewImageMain = await foClassicModalQuickViewPage.getQuickViewCoverImage(page);
     expect(quickViewImageMain).to.contains(dataProducts.demo_6.coverImage);
   });
 
   it('should check that \'Add to cart\' button is enabled', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkAddToCartButton', baseContext);
 
-    const isEnabled = await quickViewModal.isAddToCartButtonEnabled(page);
+    const isEnabled = await foClassicModalQuickViewPage.isAddToCartButtonEnabled(page);
     expect(isEnabled, 'Add to cart button is disabled').to.equal(true);
   });
 });

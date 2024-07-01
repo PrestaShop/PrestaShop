@@ -14,7 +14,6 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage} from '@pages/FO/classic/login';
 import {productPage} from '@pages/FO/classic/product';
-import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
@@ -22,6 +21,7 @@ import {
   dataCustomers,
   dataProducts,
   FakerCartRule,
+  foClassicModalQuickViewPage,
   foClassicSearchResultsPage,
   utilsCore,
   utilsPlaywright,
@@ -156,14 +156,14 @@ describe('BO - Catalog - Cart rules : Product selection', async () => {
 
       await homePage.quickViewProduct(page, 1);
 
-      const isQuickViewModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+      const isQuickViewModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isQuickViewModalVisible).to.equal(true);
     });
 
     it('should add the product to cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addFirstProductToCart', baseContext);
 
-      await quickViewModal.addToCartByQuickView(page);
+      await foClassicModalQuickViewPage.addToCartByQuickView(page);
 
       const isNotVisible = await blockCartModal.continueShopping(page);
       expect(isNotVisible).to.eq(true);
@@ -173,7 +173,7 @@ describe('BO - Catalog - Cart rules : Product selection', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addSecondProductToCart', baseContext);
 
       await homePage.quickViewProduct(page, 2);
-      await quickViewModal.addToCartByQuickView(page);
+      await foClassicModalQuickViewPage.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);
 
       // Check number of products in cart

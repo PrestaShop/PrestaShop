@@ -6,12 +6,12 @@ import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/h
 
 // Import pages
 import homePage from '@pages/FO/hummingbird/home';
-import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foHummingbirdModalQuickViewPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -59,14 +59,14 @@ describe('FO - Product page - Quick view : Close quick view modal', async () => 
 
       await homePage.quickViewProduct(page, 3);
 
-      const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+      const isModalVisible = await foHummingbirdModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.equal(true);
     });
 
     it('should click outside the modal and check that the modal is closed', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOutSideModal', baseContext);
 
-      const isQuickViewModalClosed = await quickViewModal.closeQuickViewModal(page, true);
+      const isQuickViewModalClosed = await foHummingbirdModalQuickViewPage.closeQuickViewModal(page, true);
       expect(isQuickViewModalClosed).to.equal(true);
     });
 
@@ -75,14 +75,14 @@ describe('FO - Product page - Quick view : Close quick view modal', async () => 
 
       await homePage.quickViewProduct(page, 3);
 
-      const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+      const isModalVisible = await foHummingbirdModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.equal(true);
     });
 
     it('should click on the cross link and check that the modal is closed', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnCrossLink', baseContext);
 
-      const isQuickViewModalClosed = await quickViewModal.closeQuickViewModal(page);
+      const isQuickViewModalClosed = await foHummingbirdModalQuickViewPage.closeQuickViewModal(page);
       expect(isQuickViewModalClosed).to.equal(true);
     });
   });

@@ -5,12 +5,12 @@ import testContext from '@utils/testContext';
 import {cartPage} from '@pages/FO/classic/cart';
 import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
-import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  foClassicModalQuickViewPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -43,7 +43,7 @@ describe('FO - cart : Continue shopping / Proceed to checkout / Close', async ()
     await testContext.addContextItem(this, 'testIdentifier', 'addFirstProductToCart', baseContext);
 
     await homePage.quickViewProduct(page, 1);
-    await quickViewModal.setQuantityAndAddToCart(page, 2);
+    await foClassicModalQuickViewPage.setQuantityAndAddToCart(page, 2);
 
     const isBlockCartModal = await blockCartModal.isBlockCartModalVisible(page);
     expect(isBlockCartModal).to.equal(true);

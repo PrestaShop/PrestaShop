@@ -9,11 +9,11 @@ import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/h
 import foHomePage from '@pages/FO/hummingbird/home';
 import cartPage from '@pages/FO/hummingbird/cart';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
-import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {
   dataCustomers,
+  foHummingbirdModalQuickViewPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -57,7 +57,7 @@ describe('FO - Guest checkout: Billing address when logged in', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCartAndCheckout', baseContext);
 
       await foHomePage.quickViewProduct(page, 3);
-      await quickViewModal.addToCartByQuickView(page);
+      await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);
