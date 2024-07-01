@@ -1228,7 +1228,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product['out_of_stock'] = (int) $this->product->out_of_stock;
         $product['id_product_attribute'] = $this->getIdProductAttributeByGroupOrRequestOrDefault();
         $product['minimal_quantity'] = $this->getProductMinimalQuantity($product);
-        $product['cart_quantity'] = $this->context->cart->getProductQuantity($product['id_product'], $product['id_product_attribute'])['quantity'];
+        $product['cart_quantity'] = $this->context->cart->getProductQuantity((int) $this->product->id, $product['id_product_attribute'])['quantity'];
         $product['quantity_wanted'] = $this->getRequiredQuantity($product);
         $product['extraContent'] = $extraContentFinder->addParams(['product' => $this->product])->present();
         $product['ecotax_tax_inc'] = $this->product->getEcotax(null, true, true);
