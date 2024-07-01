@@ -11,11 +11,11 @@ import addCustomerPage from '@pages/BO/customers/add';
 import viewCustomerPage from '@pages/BO/customers/view';
 // Import FO pages
 import {homePage as foHomePage} from '@pages/FO/classic/home';
-import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 
 import {
   boDashboardPage,
   FakerCustomer,
+  foClassicLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -111,9 +111,9 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'signInWithNewCustomer', baseContext);
 
       await foHomePage.goToLoginPage(page);
-      await foLoginPage.customerLogin(page, createCustomerData);
+      await foClassicLoginPage.customerLogin(page, createCustomerData);
 
-      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected).to.eq(true);
     });
 
@@ -239,13 +239,13 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
 
       // Try to log in
       await foHomePage.goToLoginPage(page);
-      await foLoginPage.customerLogin(page, editCustomerData);
+      await foClassicLoginPage.customerLogin(page, editCustomerData);
 
-      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected).to.eq(false);
 
-      const loginError = await foLoginPage.getLoginError(page);
-      expect(loginError).to.contains(foLoginPage.disabledAccountErrorText);
+      const loginError = await foClassicLoginPage.getLoginError(page);
+      expect(loginError).to.contains(foClassicLoginPage.disabledAccountErrorText);
     });
 
     it('should go back to BO', async function () {

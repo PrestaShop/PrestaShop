@@ -6,8 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import FO pages
-import {homePage as foHomePage} from '@pages/FO/classic/home';
-import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {createAccountPage as foCreateAccountPage} from '@pages/FO/classic/myAccount/add';
 // Import BO pages
@@ -28,7 +26,7 @@ import {
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-import { gdprPersonalDataPage } from '@pages/FO/classic/myAccount/gdprPersonalData';
+import {gdprPersonalDataPage} from '@pages/FO/classic/myAccount/gdprPersonalData';
 
 const baseContext: string = 'modules_psgdpr_configuration_consentCheckboxCustomization';
 
@@ -89,10 +87,10 @@ describe('BO - Modules - GDPR: Customer activity tracking', async () => {
     });
 
     it('should check the Customer Activity list', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerActivityList', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerActivityList', baseContext);
 
-        const numRows = await psGdprTabCustomerActivity.getNumberOfElementInGrid(page);
-        expect(numRows).to.equal(1);
+      const numRows = await psGdprTabCustomerActivity.getNumberOfElementInGrid(page);
+      expect(numRows).to.equal(1);
     });
 
     it('should go to FO', async function () {
@@ -101,7 +99,7 @@ describe('BO - Modules - GDPR: Customer activity tracking', async () => {
       // View my shop and get the new tab
       page = await psGdprTabCustomerActivity.viewMyShop(page);
 
-      const isHomePage = await foHomePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage).to.equal(true);
     });
 
@@ -109,7 +107,7 @@ describe('BO - Modules - GDPR: Customer activity tracking', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnSignInLink', baseContext);
 
       // Check sign in link
-      await foHomePage.clickOnHeaderLink(page, 'Sign in');
+      await foClassicHomePage.clickOnHeaderLink(page, 'Sign in');
 
       const pageTitle = await foClassicLoginPage.getPageTitle(page);
       expect(pageTitle).to.equal(foClassicLoginPage.pageTitle);
@@ -172,32 +170,32 @@ describe('BO - Modules - GDPR: Customer activity tracking', async () => {
     });
 
     it('should check the Customer Activity list', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerActivityListAfterRequest', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerActivityListAfterRequest', baseContext);
 
-        page = await foClassicHomePage.changePage(browserContext, 0);
-        await psGdprTabCustomerActivity.reloadPage(page);
+      page = await foClassicHomePage.changePage(browserContext, 0);
+      await psGdprTabCustomerActivity.reloadPage(page);
 
-        const numRows = await psGdprTabCustomerActivity.getNumberOfElementInGrid(page);
-        expect(numRows).to.equal(3);
+      const numRows = await psGdprTabCustomerActivity.getNumberOfElementInGrid(page);
+      expect(numRows).to.equal(3);
 
-        const row1Name = await psGdprTabCustomerActivity.getTextColumnFromTable(page, 1, 1);
-        expect(row1Name).to.equal(`${dataCustomers.johnDoe.firstName} ${dataCustomers.johnDoe.lastName}`);
+      const row1Name = await psGdprTabCustomerActivity.getTextColumnFromTable(page, 1, 1);
+      expect(row1Name).to.equal(`${dataCustomers.johnDoe.firstName} ${dataCustomers.johnDoe.lastName}`);
 
-        const row1Type = await psGdprTabCustomerActivity.getTextColumnFromTable(page, 1, 2);
-        expect(row1Type).to.equal('Accessibility (pdf)');
+      const row1Type = await psGdprTabCustomerActivity.getTextColumnFromTable(page, 1, 2);
+      expect(row1Type).to.equal('Accessibility (pdf)');
 
-        const row2Name = await psGdprTabCustomerActivity.getTextColumnFromTable(page, 2, 1);
-        expect(row2Name).to.equal(`${dataCustomers.johnDoe.firstName} ${dataCustomers.johnDoe.lastName}`);
+      const row2Name = await psGdprTabCustomerActivity.getTextColumnFromTable(page, 2, 1);
+      expect(row2Name).to.equal(`${dataCustomers.johnDoe.firstName} ${dataCustomers.johnDoe.lastName}`);
 
-        const row2Type = await psGdprTabCustomerActivity.getTextColumnFromTable(page, 2, 2);
-        expect(row2Type).to.equal('Accessibility (csv)');
+      const row2Type = await psGdprTabCustomerActivity.getTextColumnFromTable(page, 2, 2);
+      expect(row2Type).to.equal('Accessibility (csv)');
     });
 
     it('should click on the \'Sign in\' link', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnSignInLink', baseContext);
 
       page = await foClassicHomePage.changePage(browserContext, 1);
-      await foHomePage.clickOnHeaderLink(page, 'Sign in');
+      await foClassicHomePage.clickOnHeaderLink(page, 'Sign in');
 
       const pageTitle = await foClassicLoginPage.getPageTitle(page);
       expect(pageTitle).to.equal(foClassicLoginPage.pageTitle);
@@ -206,7 +204,7 @@ describe('BO - Modules - GDPR: Customer activity tracking', async () => {
     it('should go to create account page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreateAccountPage', baseContext);
 
-      await foLoginPage.goToCreateAccountPage(page);
+      await foClassicLoginPage.goToCreateAccountPage(page);
 
       const pageHeaderTitle = await foCreateAccountPage.getHeaderTitle(page);
       expect(pageHeaderTitle).to.equal(foCreateAccountPage.formTitle);
@@ -222,102 +220,104 @@ describe('BO - Modules - GDPR: Customer activity tracking', async () => {
     });
 
     it('should check the Customer Activity list', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerActivityListAfterRegistration', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerActivityListAfterRegistration', baseContext);
 
-        page = await foClassicHomePage.changePage(browserContext, 0);
-        await psGdprTabCustomerActivity.reloadPage(page);
+      page = await foClassicHomePage.changePage(browserContext, 0);
+      await psGdprTabCustomerActivity.reloadPage(page);
 
-        const numRows = await psGdprTabCustomerActivity.getNumberOfElementInGrid(page);
-        expect(numRows).to.equal(4);
+      const numRows = await psGdprTabCustomerActivity.getNumberOfElementInGrid(page);
+      expect(numRows).to.equal(4);
 
-        const row1Name = await psGdprTabCustomerActivity.getTextColumnFromTable(page, 1, 1);
-        expect(row1Name).to.equal(`${customerData.firstName} ${customerData.lastName}`);
+      const row1Name = await psGdprTabCustomerActivity.getTextColumnFromTable(page, 1, 1);
+      expect(row1Name).to.equal(`${customerData.firstName} ${customerData.lastName}`);
 
-        const row1Type = await psGdprTabCustomerActivity.getTextColumnFromTable(page, 1, 2);
-        expect(row1Type).to.equal('Consent confirmation');
+      const row1Type = await psGdprTabCustomerActivity.getTextColumnFromTable(page, 1, 2);
+      expect(row1Type).to.equal('Consent confirmation');
     });
 
     [
       {
         sortColNth: 1,
         sortName: 'Client Name/ID',
-        sortOrder: 'asc'
+        sortOrder: 'asc',
       },
       {
         sortColNth: 1,
         sortName: 'Client Name/ID',
-        sortOrder: 'desc'
+        sortOrder: 'desc',
       },
       {
         sortColNth: 2,
         sortName: 'Type of request',
-        sortOrder: 'asc'
+        sortOrder: 'asc',
       },
       {
         sortColNth: 2,
         sortName: 'Type of request',
-        sortOrder: 'desc'
+        sortOrder: 'desc',
       },
       {
         sortColNth: 3,
         sortName: 'Submission date',
-        sortOrder: 'asc'
+        sortOrder: 'asc',
       },
       {
         sortColNth: 3,
         sortName: 'Submission date',
-        sortOrder: 'desc'
+        sortOrder: 'desc',
       },
     ].forEach((arg: {sortColNth: number, sortName: string, sortOrder: string}) => {
       it(`should sort by ${arg.sortName} ${arg.sortOrder.toUpperCase()}`, async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `sort_${arg.sortColNth}_${arg.sortOrder}`, baseContext);
-          
-          const nonSortedTable = await psGdprTabCustomerActivity.getAllRowsColumnContent(page, arg.sortColNth);
-          await psGdprTabCustomerActivity.sortTable(page, arg.sortColNth, arg.sortOrder);
-          const sortedTable = await psGdprTabCustomerActivity.getAllRowsColumnContent(page, arg.sortColNth);
-          
-          const expectedResult: string[] = await utilsCore.sortArray(nonSortedTable);
+        await testContext.addContextItem(this, 'testIdentifier', `sort_${arg.sortColNth}_${arg.sortOrder}`, baseContext);
 
-          if (arg.sortOrder === 'asc') {
-            expect(sortedTable).to.deep.equal(expectedResult);
-          } else {
-            expect(sortedTable).to.deep.equal(expectedResult.reverse());
-          }
+        const nonSortedTable = await psGdprTabCustomerActivity.getAllRowsColumnContent(page, arg.sortColNth);
+        await psGdprTabCustomerActivity.sortTable(page, arg.sortColNth, arg.sortOrder);
+        const sortedTable = await psGdprTabCustomerActivity.getAllRowsColumnContent(page, arg.sortColNth);
+
+        const expectedResult: string[] = await utilsCore.sortArray(nonSortedTable);
+
+        if (arg.sortOrder === 'asc') {
+          expect(sortedTable).to.deep.equal(expectedResult);
+        } else {
+          expect(sortedTable).to.deep.equal(expectedResult.reverse());
+        }
       });
     });
 
     it('should click on the "Copy" button', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'checkCopyButton', baseContext);
-        
-        let clipboardExpected: string = `Module Manager • ${global.INSTALL.SHOP_NAME}\n`
-          + `\n`
-          + `Client name/ID	Type of request	Submission date\n`;
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCopyButton', baseContext);
 
-        const rowsNumber: number = await psGdprTabCustomerActivity.getNumberOfElementInGrid(page);
-        for (let i = 1; i <= rowsNumber; i++) {
-          clipboardExpected += await psGdprTabCustomerActivity.getTextColumnFromTable(page, i, 1);
-          clipboardExpected += `\t`;
-          clipboardExpected += await psGdprTabCustomerActivity.getTextColumnFromTable(page, i, 2);
-          clipboardExpected += `\t`;
-          clipboardExpected += await psGdprTabCustomerActivity.getTextColumnFromTable(page, i, 3);
-          if (i < rowsNumber) {
-            clipboardExpected += `\n`;
-          }
+      let clipboardExpected: string = `Module Manager • ${global.INSTALL.SHOP_NAME}\n`
+          + '\n'
+          + 'Client name/ID\tType of request\tSubmission date\n';
+
+      const rowsNumber: number = await psGdprTabCustomerActivity.getNumberOfElementInGrid(page);
+
+      for (let i = 1; i <= rowsNumber; i++) {
+        clipboardExpected += await psGdprTabCustomerActivity.getTextColumnFromTable(page, i, 1);
+        clipboardExpected += '\t';
+        clipboardExpected += await psGdprTabCustomerActivity.getTextColumnFromTable(page, i, 2);
+        clipboardExpected += '\t';
+        clipboardExpected += await psGdprTabCustomerActivity.getTextColumnFromTable(page, i, 3);
+        if (i < rowsNumber) {
+          clipboardExpected += '\n';
         }
-        
-        const result = await psGdprTabCustomerActivity.copyTable(page);
-        expect(result).to.be.equal(clipboardExpected);
+      }
+
+      const result = await psGdprTabCustomerActivity.copyTable(page);
+      expect(result).to.be.equal(clipboardExpected);
     });
 
-    it(`should click on the "Excel" button`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `checkExcelButton`, baseContext);
+    it('should click on the "Excel" button', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkExcelButton', baseContext);
 
       const filePath = await psGdprTabCustomerActivity.exportTable(page, 'excel');
-      
+
       const hasFoundFile = await utilsFile.doesFileExist(filePath);
       expect(hasFoundFile).to.equals(true);
 
       const rowsNumber: number = await psGdprTabCustomerActivity.getNumberOfElementInGrid(page);
+
       for (let iRow = 1; iRow <= rowsNumber; iRow++) {
         for (let iCol = 1; iCol <= 3; iCol++) {
           const colContent = await psGdprTabCustomerActivity.getTextColumnFromTable(page, iRow, iCol);
@@ -327,17 +327,16 @@ describe('BO - Modules - GDPR: Customer activity tracking', async () => {
       }
     });
 
-
-    it(`should click on the "CSV" button`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `checkCSVButton`, baseContext);
+    it('should click on the "CSV" button', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCSVButton', baseContext);
 
       const filePath = await psGdprTabCustomerActivity.exportTable(page, 'csv');
-      
+
       const hasFoundFile = await utilsFile.doesFileExist(filePath);
       expect(hasFoundFile).to.equals(true);
 
       const rowsNumber: number = await psGdprTabCustomerActivity.getNumberOfElementInGrid(page);
-      
+
       const hasHeaders = await utilsFile.isTextInFile(filePath, '"Client name/ID","Type of request","Submission date"');
       expect(hasHeaders).to.equal(true);
 
@@ -352,18 +351,17 @@ describe('BO - Modules - GDPR: Customer activity tracking', async () => {
       }
     });
 
-
-    it(`should click on the "PDF" button`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `checkPDFButton`, baseContext);
+    it('should click on the "PDF" button', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkPDFButton', baseContext);
 
       const filePath = await psGdprTabCustomerActivity.exportTable(page, 'pdf');
-      
+
       const hasFoundFile = await utilsFile.doesFileExist(filePath);
       expect(hasFoundFile).to.equals(true);
 
       const rowsNumber: number = await psGdprTabCustomerActivity.getNumberOfElementInGrid(page);
-      
-      const hasHeaders = await utilsFile.isTextInPDF(filePath, "Client, ,name/,ID, ,Type, ,of, ,request, ,Submission, ,date");
+
+      const hasHeaders = await utilsFile.isTextInPDF(filePath, 'Client, ,name/,ID, ,Type, ,of, ,request, ,Submission, ,date');
       expect(hasHeaders).to.equal(true);
 
       for (let i = 1; i <= rowsNumber; i++) {

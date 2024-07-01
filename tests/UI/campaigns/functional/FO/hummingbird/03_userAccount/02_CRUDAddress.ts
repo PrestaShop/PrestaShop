@@ -10,7 +10,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 import cartPage from '@pages/FO/hummingbird/cart';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 import homePage from '@pages/FO/hummingbird/home';
-import loginPage from '@pages/FO/hummingbird/login';
 import myAccountPage from '@pages/FO/hummingbird/myAccount';
 import addAddressPage from '@pages/FO/hummingbird/myAccount/addAddress';
 import addressesPage from '@pages/FO/hummingbird/myAccount/addresses';
@@ -20,6 +19,7 @@ import {
   dataProducts,
   FakerAddress,
   FakerCustomer,
+  foHummingbirdLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -86,14 +86,14 @@ describe('FO - Account : CRUD address', async () => {
 
       await homePage.goToLoginPage(page);
 
-      const pageHeaderTitle = await loginPage.getPageTitle(page);
-      expect(pageHeaderTitle).to.equal(loginPage.pageTitle);
+      const pageHeaderTitle = await foHummingbirdLoginPage.getPageTitle(page);
+      expect(pageHeaderTitle).to.equal(foHummingbirdLoginPage.pageTitle);
     });
 
     it('Should sign in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-      await loginPage.customerLogin(page, newCustomerData);
+      await foHummingbirdLoginPage.customerLogin(page, newCustomerData);
 
       const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);

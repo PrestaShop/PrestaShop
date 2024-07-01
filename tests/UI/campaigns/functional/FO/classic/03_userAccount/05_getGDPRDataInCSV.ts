@@ -14,7 +14,6 @@ import customersPage from '@pages/BO/customers';
 import viewCustomerPage from '@pages/BO/customers/view';
 import customerServicePage from '@pages/BO/customerService/customerService';
 import {homePage} from '@pages/FO/classic/home';
-import {loginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {createAccountPage} from '@pages/FO/classic/myAccount/add';
 import {gdprPersonalDataPage} from '@pages/FO/classic/myAccount/gdprPersonalData';
@@ -29,6 +28,7 @@ import {
   FakerAddress,
   FakerContactMessage,
   FakerCustomer,
+  foClassicLoginPage,
   utilsCore,
   utilsFile,
   utilsPlaywright,
@@ -120,7 +120,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'goToCreateAccountPage', baseContext);
 
         await homePage.goToLoginPage(page);
-        await loginPage.goToCreateAccountPage(page);
+        await foClassicLoginPage.goToCreateAccountPage(page);
 
         const pageHeaderTitle = await createAccountPage.getHeaderTitle(page);
         expect(pageHeaderTitle).to.equal(createAccountPage.formTitle);
@@ -408,7 +408,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should open the BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'openBoPage1', baseContext);
 
-        await loginPage.goTo(page, global.BO.URL);
+        await foClassicLoginPage.goTo(page, global.BO.URL);
 
         const pageTitle = await boDashboardPage.getPageTitle(page);
         expect(pageTitle).to.contains(boDashboardPage.pageTitle);
@@ -557,7 +557,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should open the BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'openBoPage2', baseContext);
 
-        await loginPage.goTo(page, global.BO.URL);
+        await foClassicLoginPage.goTo(page, global.BO.URL);
 
         const pageTitle = await boDashboardPage.getPageTitle(page);
         expect(pageTitle).to.contains(boDashboardPage.pageTitle);
@@ -667,7 +667,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'goOnContactPage', baseContext);
 
         // Go to contact us page
-        await loginPage.goToFooterLink(page, 'Contact us');
+        await foClassicLoginPage.goToFooterLink(page, 'Contact us');
 
         const pageTitle = await contactUsPage.getPageTitle(page);
         expect(pageTitle).to.equal(contactUsPage.pageTitle);
@@ -714,7 +714,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should open the BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'openBoPage3', baseContext);
 
-        await loginPage.goTo(page, global.BO.URL);
+        await foClassicLoginPage.goTo(page, global.BO.URL);
 
         const pageTitle = await boDashboardPage.getPageTitle(page);
         expect(pageTitle).to.contains(boDashboardPage.pageTitle);
@@ -830,9 +830,9 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'signInFO2', baseContext);
 
         await homePage.goToLoginPage(page);
-        await loginPage.customerLogin(page, customerData);
+        await foClassicLoginPage.customerLogin(page, customerData);
 
-        const isCustomerConnected = await loginPage.isCustomerConnected(page);
+        const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
         expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
       });
 
@@ -868,7 +868,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should open the BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'openBoPage4', baseContext);
 
-        await loginPage.goTo(page, global.BO.URL);
+        await foClassicLoginPage.goTo(page, global.BO.URL);
 
         const pageTitle = await boDashboardPage.getPageTitle(page);
         expect(pageTitle).to.contains(boDashboardPage.pageTitle);

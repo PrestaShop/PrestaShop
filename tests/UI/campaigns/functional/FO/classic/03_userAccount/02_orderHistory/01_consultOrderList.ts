@@ -9,7 +9,6 @@ import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import FO pages
 import {homePage as foHomePage} from '@pages/FO/classic/home';
-import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 
@@ -20,6 +19,7 @@ import {
   FakerAddress,
   FakerCustomer,
   FakerOrder,
+  foClassicLoginPage,
   type OrderHistory,
   utilsDate,
   utilsPlaywright,
@@ -97,14 +97,14 @@ describe('FO - Account - Order history : Consult order list', async () => {
 
       await foHomePage.goToLoginPage(page);
 
-      const pageHeaderTitle = await foLoginPage.getPageTitle(page);
-      expect(pageHeaderTitle).to.equal(foLoginPage.pageTitle);
+      const pageHeaderTitle = await foClassicLoginPage.getPageTitle(page);
+      expect(pageHeaderTitle).to.equal(foClassicLoginPage.pageTitle);
     });
 
     it('should sign in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-      await foLoginPage.customerLogin(page, customerData);
+      await foClassicLoginPage.customerLogin(page, customerData);
 
       const isCustomerConnected: boolean = await myAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);

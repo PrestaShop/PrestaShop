@@ -11,7 +11,6 @@ import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advanced
 import ordersPage from '@pages/BO/orders';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
@@ -22,6 +21,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
+  foClassicLoginPage,
   type MailDev,
   type MailDevEmail,
   utilsFile,
@@ -252,16 +252,16 @@ describe('BO - orders : Update order status', async () => {
 
             await homePage.goToLoginPage(page);
 
-            const pageTitle = await foLoginPage.getPageTitle(page);
-            expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+            const pageTitle = await foClassicLoginPage.getPageTitle(page);
+            expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
           });
 
           it('should sign in with default customer', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `sighInFoToCheckStatus${index}`, baseContext);
 
-            await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
+            await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-            const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+            const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
             expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
           });
         }

@@ -15,7 +15,6 @@ import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
-import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
@@ -23,6 +22,7 @@ import {
   dataCustomers,
   dataPaymentMethods,
   dataTaxes,
+  foClassicLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -157,23 +157,23 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
 
           await homePage.goToLoginPage(page);
 
-          const pageTitle = await foLoginPage.getPageTitle(page);
-          expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+          const pageTitle = await foClassicLoginPage.getPageTitle(page);
+          expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
         });
 
         it('should sign in with default customer', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `sighInFO${index}`, baseContext);
 
-          await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
+          await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-          const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+          const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
           expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
         });
 
         it('should go to home page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToHomePage${index}`, baseContext);
 
-          await foLoginPage.goToHomePage(page);
+          await foClassicLoginPage.goToHomePage(page);
 
           const isHomePage = await homePage.isHomePage(page);
           expect(isHomePage, 'Fail to open home page!').to.eq(true);

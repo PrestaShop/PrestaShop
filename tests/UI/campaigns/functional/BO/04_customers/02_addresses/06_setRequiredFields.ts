@@ -9,7 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import addressesPage from '@pages/BO/customers/addresses';
 // Import FO pages
 import {homePage as foHomePage} from '@pages/FO/classic/home';
-import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {addressesPage as foAddressesPage} from '@pages/FO/classic/myAccount/addresses';
 import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
@@ -18,6 +17,7 @@ import {
   boDashboardPage,
   dataCustomers,
   FakerAddress,
+  foClassicLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -95,7 +95,7 @@ describe('BO - Customers - Addresses : Set required fields for addresses', async
 
       // Go to create account page
       await foHomePage.goToLoginPage(page);
-      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const connected = await foHomePage.isCustomerConnected(page);
       expect(connected, 'Customer is not connected in FO').to.eq(true);

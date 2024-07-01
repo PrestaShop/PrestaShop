@@ -11,7 +11,6 @@ import customerServiceMainPage from '@pages/BO/customerService/customerService';
 import customerServiceMessageViewPage from '@pages/BO/customerService/customerService/view';
 // FO pages
 import foHomePage from '@pages/FO/hummingbird/home';
-import foLoginPage from '@pages/FO/hummingbird/login';
 import myAccountPage from '@pages/FO/hummingbird/myAccount';
 import cartPage from '@pages/FO/hummingbird/cart';
 import contactUsPage from '@pages/FO/hummingbird/contactUs';
@@ -25,6 +24,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerContactMessage,
+  foHummingbirdLoginPage,
   foHummingbirdModalQuickViewPage,
   utilsFile,
   utilsPlaywright,
@@ -96,14 +96,14 @@ describe('FO - Order confirmation : Contact us', async () => {
 
       await foHomePage.goToLoginPage(page);
 
-      const pageHeaderTitle = await foLoginPage.getPageTitle(page);
-      expect(pageHeaderTitle).to.equal(foLoginPage.pageTitle);
+      const pageHeaderTitle = await foHummingbirdLoginPage.getPageTitle(page);
+      expect(pageHeaderTitle).to.equal(foHummingbirdLoginPage.pageTitle);
     });
 
     it('should sign in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
       const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });

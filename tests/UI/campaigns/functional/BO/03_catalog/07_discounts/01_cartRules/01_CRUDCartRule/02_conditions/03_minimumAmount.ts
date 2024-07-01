@@ -11,7 +11,6 @@ import addCartRulePage from '@pages/BO/catalog/discounts/add';
 
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {cartPage} from '@pages/FO/classic/cart';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
@@ -21,6 +20,7 @@ import {
   boDashboardPage,
   dataProducts,
   FakerCartRule,
+  foClassicLoginPage,
   foClassicModalQuickViewPage,
   utilsCore,
   utilsPlaywright,
@@ -114,7 +114,7 @@ describe('BO - Catalog - Cart rules : Minimum amount', async () => {
     it('should quick view the third product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewProduct', baseContext);
 
-      await foLoginPage.goToHomePage(page);
+      await foClassicLoginPage.goToHomePage(page);
       await homePage.quickViewProduct(page, 3);
 
       const isQuickViewModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);

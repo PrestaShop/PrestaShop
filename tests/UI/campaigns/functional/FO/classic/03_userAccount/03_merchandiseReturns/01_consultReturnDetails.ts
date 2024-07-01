@@ -14,7 +14,6 @@ import ordersPage from '@pages/BO/orders';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {loginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {merchandiseReturnsPage as foMerchandiseReturnsPage} from '@pages/FO/classic/myAccount/merchandiseReturns';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
@@ -29,6 +28,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
+  foClassicLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -188,9 +188,9 @@ describe('FO - Account : Consult return details', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'logonFO', baseContext);
 
         await homePage.goToLoginPage(page);
-        await loginPage.customerLogin(page, dataCustomers.johnDoe);
+        await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-        const isCustomerConnected = await loginPage.isCustomerConnected(page);
+        const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
         expect(isCustomerConnected).to.eq(true);
       });
 

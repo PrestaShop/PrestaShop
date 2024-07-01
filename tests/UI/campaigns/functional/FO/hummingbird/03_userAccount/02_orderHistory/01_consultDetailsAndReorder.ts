@@ -10,7 +10,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 
 // Import FO pages
 import homePage from '@pages/FO/hummingbird/home';
-import loginPage from '@pages/FO/hummingbird/login';
 import orderHistoryPage from '@pages/FO/hummingbird/myAccount/orderHistory';
 import myAccountPage from '@pages/FO/hummingbird/myAccount';
 import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
@@ -24,6 +23,7 @@ import {
   FakerAddress,
   FakerCustomer,
   FakerOrder,
+  foHummingbirdLoginPage,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -105,14 +105,14 @@ describe('FO - Account - Order history : Consult details and reorder', async () 
 
       await homePage.goToLoginPage(page);
 
-      const pageHeaderTitle = await loginPage.getPageTitle(page);
-      expect(pageHeaderTitle).to.equal(loginPage.pageTitle);
+      const pageHeaderTitle = await foHummingbirdLoginPage.getPageTitle(page);
+      expect(pageHeaderTitle).to.equal(foHummingbirdLoginPage.pageTitle);
     });
 
     it('should sign in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-      await loginPage.customerLogin(page, customerData);
+      await foHummingbirdLoginPage.customerLogin(page, customerData);
 
       const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);

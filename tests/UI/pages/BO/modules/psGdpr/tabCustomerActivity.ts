@@ -1,8 +1,5 @@
 import type {Page} from 'playwright';
 import {ModuleConfiguration} from '@pages/BO/modules/moduleConfiguration';
-import {
-  dataLanguages,
-} from '@prestashop-core/ui-testing';
 
 /**
  * Module configuration page for module : psgdpr, contains selectors and functions for the page
@@ -23,6 +20,7 @@ class PsGdprTabCustomerActivityPage extends ModuleConfiguration {
   private tableCustomerLogRowNth: (nthRow: number) => string;
 
   private tableCustomerLogRowColumnNth: (nthRow: number, nthColumn: number) => string;
+
   /**
    * @constructs
    */
@@ -71,7 +69,7 @@ class PsGdprTabCustomerActivityPage extends ModuleConfiguration {
 
     for (let i = 1; i <= rowsNumber; i++) {
       allRowsContentTable.push(
-        await this.getTextColumnFromTable(page, i, columnNth)
+        await this.getTextColumnFromTable(page, i, columnNth),
       );
     }
 
@@ -115,7 +113,7 @@ class PsGdprTabCustomerActivityPage extends ModuleConfiguration {
    * @return {Promise<string>}
    */
   async exportTable(page: Page, exportType: 'csv' | 'excel' | 'pdf'): Promise<string | null> {
-    return this.clickAndWaitForDownload(page, this.tableAction(exportType)); 
+    return this.clickAndWaitForDownload(page, this.tableAction(exportType));
   }
 }
 

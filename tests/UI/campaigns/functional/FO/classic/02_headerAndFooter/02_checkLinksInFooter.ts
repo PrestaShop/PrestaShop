@@ -15,7 +15,6 @@ import {contactUsPage} from '@pages/FO/classic/contactUs';
 import {deliveryPage} from '@pages/FO/classic/delivery';
 import {homePage} from '@pages/FO/classic/home';
 import {legalNoticePage} from '@pages/FO/classic/legalNotice';
-import {loginPage} from '@pages/FO/classic/login';
 import {createAccountPage} from '@pages/FO/classic/myAccount/add';
 import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
 import {addressesPage} from '@pages/FO/classic/myAccount/addresses';
@@ -34,6 +33,7 @@ import {termsAndConditionsOfUsePage} from '@pages/FO/classic/termsAndConditionsO
 import {
   dataCustomers,
   FakerCustomer,
+  foClassicLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -135,7 +135,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
   describe('Check \'Your Account\' footer links before login', async () => {
     [
       {linkSelector: 'Order tracking', pageTitle: guestOrderTrackingPage.pageTitle},
-      {linkSelector: 'Sign in', pageTitle: loginPage.pageTitle},
+      {linkSelector: 'Sign in', pageTitle: foClassicLoginPage.pageTitle},
       {linkSelector: 'Create account', pageTitle: createAccountPage.formTitle},
     ].forEach((args, index: number) => {
       it(`should check '${args.linkSelector}' footer links`, async function () {
@@ -159,9 +159,9 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'loginFO', baseContext);
 
       await homePage.goToLoginPage(page);
-      await loginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await loginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
@@ -171,7 +171,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
       {linkSelector: 'Orders', pageTitle: orderHistoryPage.pageTitle},
       {linkSelector: 'Credit slips', pageTitle: creditSlipPage.pageTitle},
       {linkSelector: 'Wishlist', pageTitle: myWishlistsPage.pageTitle},
-      {linkSelector: 'Sign out', pageTitle: loginPage.pageTitle},
+      {linkSelector: 'Sign out', pageTitle: foClassicLoginPage.pageTitle},
     ].forEach((args, index: number) => {
       it(`should check '${args.linkSelector}' footer links`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkYourAccountFooterLinks2${index}`, baseContext);
@@ -197,9 +197,9 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'loginFONewCustomer', baseContext);
 
       await homePage.goToLoginPage(page);
-      await loginPage.customerLogin(page, createCustomerData);
+      await foClassicLoginPage.customerLogin(page, createCustomerData);
 
-      const isCustomerConnected = await loginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
@@ -209,7 +209,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
       {linkSelector: 'Orders', pageTitle: orderHistoryPage.pageTitle},
       {linkSelector: 'Credit slips', pageTitle: creditSlipPage.pageTitle},
       {linkSelector: 'Wishlist', pageTitle: myWishlistsPage.pageTitle},
-      {linkSelector: 'Sign out', pageTitle: loginPage.pageTitle},
+      {linkSelector: 'Sign out', pageTitle: foClassicLoginPage.pageTitle},
     ].forEach((args, index: number) => {
       it(`should check '${args.linkSelector}' footer links`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkYourAccountFooterLinks3${index}`, baseContext);

@@ -3,11 +3,11 @@ import testContext from '@utils/testContext';
 
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {loginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 
 import {
   dataCustomers,
+  foClassicLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -44,16 +44,16 @@ describe('FO - Login : Logout from FO', async () => {
 
     await homePage.goToLoginPage(page);
 
-    const pageTitle = await loginPage.getPageTitle(page);
-    expect(pageTitle).to.equal(loginPage.pageTitle);
+    const pageTitle = await foClassicLoginPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicLoginPage.pageTitle);
   });
 
   it('should sign in with default customer', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'signInFO1', baseContext);
 
-    await loginPage.customerLogin(page, dataCustomers.johnDoe);
+    await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-    const isCustomerConnected = await loginPage.isCustomerConnected(page);
+    const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
     expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
   });
 
@@ -70,9 +70,9 @@ describe('FO - Login : Logout from FO', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'signInFO2', baseContext);
 
     await homePage.goToLoginPage(page);
-    await loginPage.customerLogin(page, dataCustomers.johnDoe);
+    await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-    const isCustomerConnected = await loginPage.isCustomerConnected(page);
+    const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
     expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
   });
 

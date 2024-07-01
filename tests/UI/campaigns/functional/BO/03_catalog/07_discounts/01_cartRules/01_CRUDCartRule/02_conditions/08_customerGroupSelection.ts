@@ -11,7 +11,6 @@ import addCartRulePage from '@pages/BO/catalog/discounts/add';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
-import {loginPage} from '@pages/FO/classic/login';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 import {
@@ -19,6 +18,7 @@ import {
   dataCustomers,
   dataProducts,
   FakerCartRule,
+  foClassicLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -114,16 +114,16 @@ describe('BO - Catalog - Cart rules : Customer Group selection', async () => {
 
       await foHomePage.goToLoginPage(page);
 
-      const pageTitle = await loginPage.getPageTitle(page);
-      expect(pageTitle).to.equal(loginPage.pageTitle);
+      const pageTitle = await foClassicLoginPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicLoginPage.pageTitle);
     });
 
     it('should sign in by default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enterValidCredentials', baseContext);
 
-      await loginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await loginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
 
       const isHomePage = await foHomePage.isHomePage(page);

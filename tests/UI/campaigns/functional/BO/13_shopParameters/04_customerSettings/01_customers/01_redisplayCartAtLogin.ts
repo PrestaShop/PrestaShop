@@ -11,12 +11,12 @@ import CustomerSettingsOptions from '@pages/BO/shopParameters/customerSettings/o
 
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {loginPage as loginFOPage} from '@pages/FO/classic/login';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
   boDashboardPage,
   dataCustomers,
+  foClassicLoginPage,
   foClassicModalQuickViewPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -104,7 +104,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
 
       // Login FO
       await homePage.goToLoginPage(page);
-      await loginFOPage.customerLogin(page, dataCustomers.johnDoe);
+      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const connected = await homePage.isCustomerConnected(page);
       expect(connected, 'Customer is not connected in FO').to.eq(true);
@@ -144,7 +144,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
 
       // Login FO
       await homePage.goToLoginPage(page);
-      await loginFOPage.customerLogin(page, dataCustomers.johnDoe);
+      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const connected = await homePage.isCustomerConnected(page);
       expect(connected, 'Customer is not connected in FO').to.eq(true);

@@ -9,13 +9,13 @@ import {createCartRuleTest, deleteCartRuleTest} from '@commonTests/BO/catalog/ca
 import cartPage from '@pages/FO/hummingbird/cart';
 import homePage from '@pages/FO/hummingbird/home';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
-import foLoginPage from '@pages/FO/hummingbird/login';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
   FakerCartRule,
+  foHummingbirdLoginPage,
   foHummingbirdModalQuickViewPage,
   foHummingbirdSearchResultsPage,
   utilsDate,
@@ -89,8 +89,8 @@ describe('FO - Checkout : Display of highlighted cart rule', async () => {
 
       await homePage.goToLoginPage(page);
 
-      const pageTitle = await foLoginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foHummingbirdLoginPage.pageTitle);
     });
 
     it(`should search for the product ${dataProducts.demo_6.name}`, async function () {

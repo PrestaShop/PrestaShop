@@ -9,13 +9,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 import customersPage from '@pages/BO/customers';
 // Import FO pages
 import {homePage as foHomePage} from '@pages/FO/classic/home';
-import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {createAccountPage as foCreateAccountPage} from '@pages/FO/classic/myAccount/add';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  foClassicLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -81,7 +81,7 @@ describe('BO - Customers - Customers : Set required fields', async () => {
 
       // Go to create account page
       await foHomePage.goToLoginPage(page);
-      await foLoginPage.goToCreateAccountPage(page);
+      await foClassicLoginPage.goToCreateAccountPage(page);
 
       const pageTitle = await foCreateAccountPage.getHeaderTitle(page);
       expect(pageTitle).to.contains(foCreateAccountPage.formTitle);

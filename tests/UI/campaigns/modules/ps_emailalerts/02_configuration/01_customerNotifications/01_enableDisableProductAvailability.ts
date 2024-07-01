@@ -19,7 +19,6 @@ import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import stocksPage from '@pages/BO/catalog/stocks';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
@@ -33,6 +32,7 @@ import {
   dataOrderStatuses,
   dataPaymentMethods,
   FakerProduct,
+  foClassicLoginPage,
   foClassicSearchResultsPage,
   type MailDev,
   type MailDevEmail,
@@ -256,14 +256,14 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
       page = await foProductPage.changePage(browserContext, 1);
       await foProductPage.goToLoginPage(page);
 
-      const pageTitle = await foLoginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      const pageTitle = await foClassicLoginPage.getPageTitle(page);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
     });
 
     it('should login on the Front Office', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'loginFrontOffice', baseContext);
 
-      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await foProductPage.isCustomerConnected(page);
       expect(isCustomerConnected).to.eq(true);

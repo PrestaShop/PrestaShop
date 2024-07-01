@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 // Import FO pages
-import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {homePage} from '@pages/FO/classic/home';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
@@ -16,6 +15,7 @@ import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {
   boDashboardPage,
   dataCustomers,
+  foClassicLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -90,9 +90,9 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable reordering opti
 
       // Login FO
       await homePage.goToLoginPage(page);
-      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected).to.eq(true);
 
       // Go to order history page

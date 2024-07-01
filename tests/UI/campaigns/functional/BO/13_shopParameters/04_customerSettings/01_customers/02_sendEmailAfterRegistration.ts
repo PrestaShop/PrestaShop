@@ -14,12 +14,12 @@ import customersPage from '@pages/BO/customers';
 
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {loginPage as loginFOPage} from '@pages/FO/classic/login';
 import {createAccountPage} from '@pages/FO/classic/myAccount/add';
 
 import {
   boDashboardPage,
   FakerCustomer,
+  foClassicLoginPage,
   type MailDev,
   type MailDevEmail,
   utilsMail,
@@ -134,7 +134,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
 
         // Create account
         await homePage.goToLoginPage(page);
-        await loginFOPage.goToCreateAccountPage(page);
+        await foClassicLoginPage.goToCreateAccountPage(page);
         await createAccountPage.createAccount(page, test.args.customer);
 
         const connected = await createAccountPage.isCustomerConnected(page);

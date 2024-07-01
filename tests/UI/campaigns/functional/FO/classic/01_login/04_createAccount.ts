@@ -7,11 +7,11 @@ import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {loginPage} from '@pages/FO/classic/login';
 import {createAccountPage} from '@pages/FO/classic/myAccount/add';
 
 import {
   FakerCustomer,
+  foClassicLoginPage,
   type MailDev,
   type MailDevEmail,
   utilsMail,
@@ -68,14 +68,14 @@ describe('FO - Login : Create account', async () => {
 
       await homePage.goToLoginPage(page);
 
-      const pageTitle = await loginPage.getPageTitle(page);
-      expect(pageTitle).to.equal(loginPage.pageTitle);
+      const pageTitle = await foClassicLoginPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicLoginPage.pageTitle);
     });
 
     it('should go to create account page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreateAccountPage', baseContext);
 
-      await loginPage.goToCreateAccountPage(page);
+      await foClassicLoginPage.goToCreateAccountPage(page);
 
       const pageHeaderTitle = await createAccountPage.getHeaderTitle(page);
       expect(pageHeaderTitle).to.equal(createAccountPage.formTitle);

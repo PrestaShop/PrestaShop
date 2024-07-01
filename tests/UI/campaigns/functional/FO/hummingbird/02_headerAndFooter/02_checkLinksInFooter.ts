@@ -16,7 +16,6 @@ import contactUsPage from '@pages/FO/hummingbird/contactUs';
 import deliveryPage from '@pages/FO/hummingbird/delivery';
 import homePage from '@pages/FO/hummingbird/home';
 import legalNoticePage from '@pages/FO/hummingbird/legalNotice';
-import loginPage from '@pages/FO/hummingbird/login';
 import createAccountPage from '@pages/FO/hummingbird/myAccount/add';
 import addAddressPage from '@pages/FO/hummingbird/myAccount/addAddress';
 import addressesPage from '@pages/FO/hummingbird/myAccount/addresses';
@@ -35,6 +34,7 @@ import termsAndConditionsOfUsePage from '@pages/FO/hummingbird/termsAndCondition
 import {
   dataCustomers,
   FakerCustomer,
+  foHummingbirdLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -139,7 +139,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
   describe('Check \'Your Account\' footer links before login', async () => {
     [
       {linkSelector: 'Order tracking', pageTitle: guestOrderTrackingPage.pageTitle},
-      {linkSelector: 'Sign in', pageTitle: loginPage.pageTitle},
+      {linkSelector: 'Sign in', pageTitle: foHummingbirdLoginPage.pageTitle},
       {linkSelector: 'Create account', pageTitle: createAccountPage.formTitle},
     ].forEach((args, index: number) => {
       it(`should check '${args.linkSelector}' footer links`, async function () {
@@ -163,9 +163,9 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'loginFO', baseContext);
 
       await homePage.goToLoginPage(page);
-      await loginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await loginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.equal(true);
     });
 
@@ -175,7 +175,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
       {linkSelector: 'Orders', pageTitle: ordersPage.pageTitle},
       {linkSelector: 'Credit slips', pageTitle: creditSlipsPage.pageTitle},
       {linkSelector: 'Wishlist', pageTitle: myWishlistPage.pageTitle},
-      {linkSelector: 'Sign out', pageTitle: loginPage.pageTitle},
+      {linkSelector: 'Sign out', pageTitle: foHummingbirdLoginPage.pageTitle},
     ].forEach((args, index: number) => {
       it(`should check '${args.linkSelector}' footer links`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkYourAccountFooterLinks2${index}`, baseContext);
@@ -201,9 +201,9 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'loginFONewCustomer', baseContext);
 
       await homePage.goToLoginPage(page);
-      await loginPage.customerLogin(page, createCustomerData);
+      await foHummingbirdLoginPage.customerLogin(page, createCustomerData);
 
-      const isCustomerConnected = await loginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.equal(true);
     });
 
@@ -213,7 +213,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
       {linkSelector: 'Orders', pageTitle: ordersPage.pageTitle},
       {linkSelector: 'Credit slips', pageTitle: creditSlipsPage.pageTitle},
       {linkSelector: 'Wishlist', pageTitle: myWishlistPage.pageTitle},
-      {linkSelector: 'Sign out', pageTitle: loginPage.pageTitle},
+      {linkSelector: 'Sign out', pageTitle: foHummingbirdLoginPage.pageTitle},
     ].forEach((args, index: number) => {
       it(`should check '${args.linkSelector}' footer links`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkYourAccountFooterLinks3${index}`, baseContext);

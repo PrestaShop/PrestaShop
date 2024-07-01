@@ -5,12 +5,12 @@ import testContext from '@utils/testContext';
 import {cartPage} from '@pages/FO/classic/cart';
 import {contactUsPage} from '@pages/FO/classic/contactUs';
 import {homePage} from '@pages/FO/classic/home';
-import {loginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
   dataCustomers,
+  foClassicLoginPage,
   foClassicModalQuickViewPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -69,24 +69,24 @@ describe('FO - Header and Footer : Check links in header page', async () => {
     // Check sign in link
     await homePage.clickOnHeaderLink(page, 'Sign in');
 
-    const pageTitle = await loginPage.getPageTitle(page);
-    expect(pageTitle).to.equal(loginPage.pageTitle);
+    const pageTitle = await foClassicLoginPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicLoginPage.pageTitle);
   });
 
   it('should sign in by default customer', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
     // Sign in
-    await loginPage.customerLogin(page, dataCustomers.johnDoe);
+    await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-    const isCustomerConnected = await loginPage.isCustomerConnected(page);
+    const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
     expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
   });
 
   it('should check my account link', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkMyAccountLink', baseContext);
 
-    await loginPage.goToMyAccountPage(page);
+    await foClassicLoginPage.goToMyAccountPage(page);
 
     const pageTitle = await myAccountPage.getPageTitle(page);
     expect(pageTitle).to.equal(myAccountPage.pageTitle);
@@ -95,7 +95,7 @@ describe('FO - Header and Footer : Check links in header page', async () => {
   it('should add a product to cart by quick view', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-    await loginPage.goToHomePage(page);
+    await foClassicLoginPage.goToHomePage(page);
     // Add product to cart by quick view
     await homePage.quickViewProduct(page, 1);
     await foClassicModalQuickViewPage.setQuantityAndAddToCart(page, 3);
@@ -118,7 +118,7 @@ describe('FO - Header and Footer : Check links in header page', async () => {
   it('should go to home page and check the notification number', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkNotificationNumber1', baseContext);
 
-    await loginPage.goToHomePage(page);
+    await foClassicLoginPage.goToHomePage(page);
 
     const notificationsNumber = await homePage.getCartNotificationsNumber(page);
     expect(notificationsNumber, 'Notification number is not equal to 3!').to.be.equal(3);

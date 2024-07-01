@@ -14,7 +14,6 @@ import contactFormPage from '@pages/BO/modules/contactForm';
 // Import FO pages
 import contactUsPage from '@pages/FO/hummingbird/contactUs';
 import homePage from '@pages/FO/hummingbird/home';
-import loginPage from '@pages/FO/hummingbird/login';
 
 import {
   boDashboardPage,
@@ -22,6 +21,7 @@ import {
   dataCustomers,
   dataModules,
   FakerContactMessage,
+  foHummingbirdLoginPage,
   type MailDev,
   type MailDevEmail,
   utilsFile,
@@ -190,7 +190,7 @@ describe('FO - Contact us : Send message from contact us page with customer not 
       await testContext.addContextItem(this, 'testIdentifier', 'goOnContactPage', baseContext);
 
       // Go to contact us page
-      await loginPage.goToFooterLink(page, 'Contact us');
+      await foHummingbirdLoginPage.goToFooterLink(page, 'Contact us');
 
       const pageTitle = await contactUsPage.getPageTitle(page);
       expect(pageTitle).to.equal(contactUsPage.pageTitle);

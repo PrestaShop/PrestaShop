@@ -13,7 +13,6 @@ import addOrderPage from '@pages/BO/orders/add';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
@@ -25,6 +24,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerAddress,
+  foClassicLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -331,16 +331,16 @@ describe('BO - Orders - Create order : Choose address', async () => {
 
         await homePage.goToLoginPage(page);
 
-        const pageTitle = await foLoginPage.getPageTitle(page);
-        expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+        const pageTitle = await foClassicLoginPage.getPageTitle(page);
+        expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
       });
 
       it('should sign in with customer credentials', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
-        await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
+        await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-        const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+        const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
         expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
       });
 

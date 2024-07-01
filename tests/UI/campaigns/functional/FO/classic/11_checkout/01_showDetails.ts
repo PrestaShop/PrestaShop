@@ -4,7 +4,6 @@ import testContext from '@utils/testContext';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
 import {homePage} from '@pages/FO/classic/home';
-import {loginPage} from '@pages/FO/classic/login';
 import {productPage} from '@pages/FO/classic/product';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
@@ -13,6 +12,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foClassicLoginPage,
   foClassicModalQuickViewPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -65,7 +65,7 @@ describe('FO - Checkout : Show details', async () => {
   it('should add the third product to cart', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart2', baseContext);
 
-    await loginPage.goToHomePage(page);
+    await foClassicLoginPage.goToHomePage(page);
     await homePage.quickViewProduct(page, 3);
     await foClassicModalQuickViewPage.setQuantityAndAddToCart(page, 2);
     await blockCartModal.proceedToCheckout(page);

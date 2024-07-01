@@ -3,7 +3,6 @@ import testContext from '@utils/testContext';
 
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {createAccountPage as foCreateAccountPage} from '@pages/FO/classic/myAccount/add';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {addressesPage} from '@pages/FO/classic/myAccount/addresses';
@@ -12,6 +11,7 @@ import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
 import {
   FakerAddress,
   FakerCustomer,
+  foClassicLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -54,7 +54,7 @@ function createAccountTest(customerData: FakerCustomer, baseContext: string = 'c
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreateAccountPage', baseContext);
 
       await homePage.goToLoginPage(page);
-      await foLoginPage.goToCreateAccountPage(page);
+      await foClassicLoginPage.goToCreateAccountPage(page);
 
       const pageHeaderTitle = await foCreateAccountPage.getHeaderTitle(page);
       expect(pageHeaderTitle).to.equal(foCreateAccountPage.formTitle);
@@ -114,15 +114,15 @@ function createAddressTest(
 
       await homePage.goToLoginPage(page);
 
-      const pageTitle = await foLoginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      const pageTitle = await foClassicLoginPage.getPageTitle(page);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
-      await foLoginPage.customerLogin(page, customerLoginData);
-      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+      await foClassicLoginPage.customerLogin(page, customerLoginData);
+      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
