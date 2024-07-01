@@ -1,6 +1,9 @@
 // Import FO Pages
 import FOBasePage from '@pages/FO/FObasePage';
-import {quickViewModal} from '@pages/FO/classic/modal/quickView';
+
+import {
+  foClassicModalQuickViewPage,
+} from '@prestashop-core/ui-testing';
 
 import type {Page} from 'playwright';
 
@@ -358,7 +361,7 @@ class HomePage extends FOBasePage {
     }
     /* eslint-enable no-await-in-loop */
     await Promise.all([
-      this.waitForVisibleSelector(page, quickViewModal.quickViewModalDiv),
+      this.waitForVisibleSelector(page, foClassicModalQuickViewPage.quickViewModalDiv),
       page.locator(this.productQuickViewLink(row)).evaluate((el: HTMLElement) => el.click()),
     ]);
   }

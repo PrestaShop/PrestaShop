@@ -6,11 +6,11 @@ import testContext from '@utils/testContext';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
-import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
   dataCustomers,
+  foClassicModalQuickViewPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -51,7 +51,7 @@ describe('FO - Guest checkout: Billing address when logged in', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCartAndCheckout', baseContext);
 
       await foHomePage.quickViewProduct(page, 3);
-      await quickViewModal.addToCartByQuickView(page);
+      await foClassicModalQuickViewPage.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);

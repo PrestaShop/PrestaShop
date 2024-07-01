@@ -7,12 +7,12 @@ import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/h
 // Import pages
 import homePage from '@pages/FO/hummingbird/home';
 import cartPage from '@pages/FO/hummingbird/cart';
-import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {
   type CartProductDetails,
   dataProducts,
+  foHummingbirdModalQuickViewPage,
   foHummingbirdSearchResultsPage,
   type ProductAttribute,
   utilsPlaywright,
@@ -88,7 +88,7 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
 
       await homePage.quickViewProduct(page, 1);
 
-      await quickViewModal.addToCartByQuickView(page);
+      await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
 
       const successMessage = await blockCartModal.getBlockCartModalTitle(page);
       expect(successMessage).to.contains(homePage.successAddToCartMessage);
@@ -174,7 +174,7 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
 
       await foHummingbirdSearchResultsPage.quickViewProduct(page, 1);
 
-      const isDisabled = await quickViewModal.isAddToCartButtonDisabled(page);
+      const isDisabled = await foHummingbirdModalQuickViewPage.isAddToCartButtonDisabled(page);
       expect(isDisabled).to.eq(true);
     });
   });

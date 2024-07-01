@@ -9,7 +9,6 @@ import homePage from '@pages/FO/hummingbird/home';
 import cartPage from '@pages/FO/hummingbird/cart';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
-import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 import {
   dataCarriers,
@@ -17,6 +16,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   foHummingbirdCategoryPage,
+  foHummingbirdModalQuickViewPage,
   foHummingbirdSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -70,7 +70,7 @@ describe('FO - Order confirmation : Popular product', async () => {
       await homePage.searchProduct(page, dataProducts.demo_6.name);
       await foHummingbirdSearchResultsPage.quickViewProduct(page, 1);
 
-      await quickViewModal.addToCartByQuickView(page);
+      await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);
@@ -143,14 +143,14 @@ describe('FO - Order confirmation : Popular product', async () => {
 
       await orderConfirmationPage.quickViewProduct(page, 1);
 
-      const isQuickViewModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+      const isQuickViewModalVisible = await foHummingbirdModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isQuickViewModalVisible).to.equal(true);
     });
 
     it('should add the product to cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await quickViewModal.addToCartByQuickView(page);
+      await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);

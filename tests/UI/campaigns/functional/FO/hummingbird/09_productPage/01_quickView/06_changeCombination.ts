@@ -6,11 +6,11 @@ import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/h
 
 // Import pages
 import homePage from '@pages/FO/hummingbird/home';
-import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  foHummingbirdModalQuickViewPage,
   type ProductAttribute,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -81,14 +81,14 @@ describe('FO - Product page - Quick view : Change combination', async () => {
 
       await homePage.quickViewProduct(page, 1);
 
-      const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+      const isModalVisible = await foHummingbirdModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.equal(true);
     });
 
     it('should check all displayed attributes', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkALlDisplayedAttributes', baseContext);
 
-      const productAttributesFromQuickView = await quickViewModal.getProductAttributesFromQuickViewModal(page);
+      const productAttributesFromQuickView = await foHummingbirdModalQuickViewPage.getProductAttributesFromQuickViewModal(page);
       await Promise.all([
         expect(productAttributesFromQuickView.length).to.equal(2),
         expect(productAttributesFromQuickView[0].name).to.equal('size'),
@@ -101,9 +101,9 @@ describe('FO - Product page - Quick view : Change combination', async () => {
     it('should select the size XL', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectSize', baseContext);
 
-      await quickViewModal.setAttribute(page, firstAttributes[0]);
+      await foHummingbirdModalQuickViewPage.setAttribute(page, firstAttributes[0]);
 
-      const resultAttributes = await quickViewModal.getSelectedAttributes(page);
+      const resultAttributes = await foHummingbirdModalQuickViewPage.getSelectedAttributes(page);
       expect(resultAttributes[0].name).to.be.equal(firstAttributes[0].name);
       expect(resultAttributes[0].value).to.be.equal(firstAttributes[0].value);
     });
@@ -111,25 +111,25 @@ describe('FO - Product page - Quick view : Change combination', async () => {
     it('should select the color black and check the cover image', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectBlackColor', baseContext);
 
-      await quickViewModal.setAttribute(page, secondAttributes[1]);
+      await foHummingbirdModalQuickViewPage.setAttribute(page, secondAttributes[1]);
 
-      const quickViewImageMain = await quickViewModal.getQuickViewImageMain(page);
+      const quickViewImageMain = await foHummingbirdModalQuickViewPage.getQuickViewImageMain(page);
       expect(quickViewImageMain).to.contains('1-home_default');
     });
 
     it('should select the color white and check the cover image', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectWhiteColor', baseContext);
 
-      await quickViewModal.setAttribute(page, firstAttributes[1]);
+      await foHummingbirdModalQuickViewPage.setAttribute(page, firstAttributes[1]);
 
-      const quickViewImageMain = await quickViewModal.getQuickViewImageMain(page);
+      const quickViewImageMain = await foHummingbirdModalQuickViewPage.getQuickViewImageMain(page);
       expect(quickViewImageMain).to.contains('2-home_default');
     });
 
     it('should close the quick view modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeQuickViewModal', baseContext);
 
-      const isQuickViewModalClosed = await quickViewModal.closeQuickViewModal(page);
+      const isQuickViewModalClosed = await foHummingbirdModalQuickViewPage.closeQuickViewModal(page);
       expect(isQuickViewModalClosed).to.equal(true);
     });
 
@@ -138,14 +138,14 @@ describe('FO - Product page - Quick view : Change combination', async () => {
 
       await homePage.quickViewProduct(page, 3);
 
-      const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+      const isModalVisible = await foHummingbirdModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.equal(true);
     });
 
     it('should check all displayed dimension', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkALlDisplayedDimension', baseContext);
 
-      const productAttributesFromQuickView = await quickViewModal.getProductAttributesFromQuickViewModal(page);
+      const productAttributesFromQuickView = await foHummingbirdModalQuickViewPage.getProductAttributesFromQuickViewModal(page);
       await Promise.all([
         expect(productAttributesFromQuickView.length).to.equal(1),
         expect(productAttributesFromQuickView[0].name).to.equal('dimension'),
@@ -156,7 +156,10 @@ describe('FO - Product page - Quick view : Change combination', async () => {
     it('should check selected dimension', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSelectedDimension', baseContext);
 
-      const productAttributesFromQuickView = await quickViewModal.getSelectedAttributesFromQuickViewModal(page, thirdAttributes);
+      const productAttributesFromQuickView = await foHummingbirdModalQuickViewPage.getSelectedAttributesFromQuickViewModal(
+        page,
+        thirdAttributes,
+      );
       await Promise.all([
         expect(productAttributesFromQuickView.length).to.equal(1),
         expect(productAttributesFromQuickView[0].name).to.equal('dimension'),

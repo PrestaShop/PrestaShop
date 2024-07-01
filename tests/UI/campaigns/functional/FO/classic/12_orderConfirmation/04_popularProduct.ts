@@ -6,7 +6,6 @@ import {homePage} from '@pages/FO/classic/home';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
-import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
@@ -15,6 +14,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   foClassicCategoryPage,
+  foClassicModalQuickViewPage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -64,7 +64,7 @@ describe('FO - Order confirmation : Popular product', async () => {
     await homePage.searchProduct(page, dataProducts.demo_6.name);
     await foClassicSearchResultsPage.quickViewProduct(page, 1);
 
-    await quickViewModal.addToCartByQuickView(page);
+    await foClassicModalQuickViewPage.addToCartByQuickView(page);
     await blockCartModal.proceedToCheckout(page);
 
     const pageTitle = await cartPage.getPageTitle(page);
@@ -137,14 +137,14 @@ describe('FO - Order confirmation : Popular product', async () => {
 
     await orderConfirmationPage.quickViewProduct(page, 1);
 
-    const isQuickViewModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+    const isQuickViewModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
     expect(isQuickViewModalVisible).to.equal(true);
   });
 
   it('should add the product to cart', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-    await quickViewModal.addToCartByQuickView(page);
+    await foClassicModalQuickViewPage.addToCartByQuickView(page);
     await blockCartModal.proceedToCheckout(page);
 
     const pageTitle = await cartPage.getPageTitle(page);

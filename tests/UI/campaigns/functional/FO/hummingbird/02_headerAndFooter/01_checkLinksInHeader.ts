@@ -10,11 +10,11 @@ import contactUsPage from '@pages/FO/hummingbird/contactUs';
 import homePage from '@pages/FO/hummingbird/home';
 import loginPage from '@pages/FO/hummingbird/login';
 import myAccountPage from '@pages/FO/hummingbird/myAccount';
-import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {
   dataCustomers,
+  foHummingbirdModalQuickViewPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -105,7 +105,7 @@ describe('FO - Header and Footer : Check links in header page', async () => {
       await loginPage.goToHomePage(page);
       // Add product to cart by quick view
       await homePage.quickViewProduct(page, 1);
-      await quickViewModal.setQuantityAndAddToCart(page, 3);
+      await foHummingbirdModalQuickViewPage.setQuantityAndAddToCart(page, 3);
 
       // Close block cart modal
       const isQuickViewModalClosed = await blockCartModal.closeBlockCartModal(page);

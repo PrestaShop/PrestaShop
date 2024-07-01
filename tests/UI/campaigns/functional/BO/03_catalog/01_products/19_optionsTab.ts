@@ -12,7 +12,6 @@ import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 // Import FO pages
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {homePage} from '@pages/FO/classic/home';
-import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
@@ -20,6 +19,7 @@ import {
   boDashboardPage,
   FakerProduct,
   foClassicCategoryPage,
+  foClassicModalQuickViewPage,
   foClassicSearchResultsPage,
   utilsFile,
   utilsPlaywright,
@@ -162,10 +162,10 @@ describe('BO - Catalog - Products : Options tab', async () => {
       productsNumber = await foClassicCategoryPage.getProductsNumber(page);
       await foClassicCategoryPage.quickViewProduct(page, productsNumber);
 
-      const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+      const isModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.eq(true);
 
-      const result = await quickViewModal.getProductDetailsFromQuickViewModal(page);
+      const result = await foClassicModalQuickViewPage.getProductDetailsFromQuickViewModal(page);
       expect(result.name).to.equal(newProductData.name);
     });
 

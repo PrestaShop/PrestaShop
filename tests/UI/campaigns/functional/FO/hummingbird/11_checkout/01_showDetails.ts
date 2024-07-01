@@ -10,13 +10,13 @@ import homePage from '@pages/FO/hummingbird/home';
 import loginPage from '@pages/FO/hummingbird/login';
 import productPage from '@pages/FO/hummingbird/product';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
-import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foHummingbirdModalQuickViewPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -67,7 +67,7 @@ describe('FO - Checkout : Show details', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart1', baseContext);
 
       await homePage.quickViewProduct(page, 1);
-      await quickViewModal.addToCartByQuickView(page);
+      await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
 
       const isModalClosed = await blockCartModal.closeBlockCartModal(page);
       expect(isModalClosed).to.eq(true);
@@ -78,7 +78,7 @@ describe('FO - Checkout : Show details', async () => {
 
       await loginPage.goToHomePage(page);
       await homePage.quickViewProduct(page, 3);
-      await quickViewModal.setQuantityAndAddToCart(page, 2);
+      await foHummingbirdModalQuickViewPage.setQuantityAndAddToCart(page, 2);
       await blockCartModal.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);

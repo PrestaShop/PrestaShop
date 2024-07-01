@@ -3,12 +3,12 @@ import testContext from '@utils/testContext';
 
 // Import pages
 import {homePage} from '@pages/FO/classic/home';
-import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  foClassicModalQuickViewPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -49,32 +49,32 @@ describe('FO - Product page - Quick view : Change quantity', async () => {
 
     await homePage.quickViewProduct(page, 3);
 
-    const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+    const isModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
     expect(isModalVisible).to.equal(true);
   });
 
   it('should change the quantity by using the arrow \'UP\' button', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'incrementQuantity', baseContext);
 
-    await quickViewModal.setQuantityByArrowUpDown(page, 5, 'up');
+    await foClassicModalQuickViewPage.setQuantityByArrowUpDown(page, 5, 'up');
 
-    const productQuantity = await quickViewModal.getProductQuantityFromQuickViewModal(page);
+    const productQuantity = await foClassicModalQuickViewPage.getProductQuantityFromQuickViewModal(page);
     expect(productQuantity).to.equal(5);
   });
 
   it('should change the quantity by using the arrow \'Down\' button', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'incrementQuantity2', baseContext);
 
-    await quickViewModal.setQuantityByArrowUpDown(page, 1, 'down');
+    await foClassicModalQuickViewPage.setQuantityByArrowUpDown(page, 1, 'down');
 
-    const productQuantity = await quickViewModal.getProductQuantityFromQuickViewModal(page);
+    const productQuantity = await foClassicModalQuickViewPage.getProductQuantityFromQuickViewModal(page);
     expect(productQuantity).to.equal(1);
   });
 
   it('should add quantity of the product by setting input value', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityByInput', baseContext);
 
-    await quickViewModal.setQuantityAndAddToCart(page, 12);
+    await foClassicModalQuickViewPage.setQuantityAndAddToCart(page, 12);
 
     const isVisible = await blockCartModal.isBlockCartModalVisible(page);
     expect(isVisible).to.equal(true);
@@ -99,15 +99,15 @@ describe('FO - Product page - Quick view : Change quantity', async () => {
 
     await homePage.quickViewProduct(page, 3);
 
-    const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+    const isModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
     expect(isModalVisible).to.equal(true);
   });
 
   it('should set \'-24\' in the quantity input', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityByInput2', baseContext);
 
-    await quickViewModal.setQuantity(page, '-24');
-    await quickViewModal.addToCartByQuickView(page);
+    await foClassicModalQuickViewPage.setQuantity(page, '-24');
+    await foClassicModalQuickViewPage.addToCartByQuickView(page);
 
     const isVisible = await blockCartModal.isBlockCartModalVisible(page);
     expect(isVisible).to.equal(true);
@@ -132,16 +132,16 @@ describe('FO - Product page - Quick view : Change quantity', async () => {
 
     await homePage.quickViewProduct(page, 3);
 
-    const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+    const isModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
     expect(isModalVisible).to.equal(true);
   });
 
   it('should set \'Prestashop\' in the quantity input and check that add to cart button is disabled', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityByInput3', baseContext);
 
-    await quickViewModal.setQuantityAndAddToCart(page, 'Prestashop');
+    await foClassicModalQuickViewPage.setQuantityAndAddToCart(page, 'Prestashop');
 
-    const isEnabled = await quickViewModal.isAddToCartButtonEnabled(page);
+    const isEnabled = await foClassicModalQuickViewPage.isAddToCartButtonEnabled(page);
     expect(isEnabled, 'Add to cart button is not disabled').to.equal(false);
   });
 });

@@ -8,13 +8,13 @@ import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/h
 import homePage from '@pages/FO/hummingbird/home';
 import cartPage from '@pages/FO/hummingbird/cart';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
-import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 import productPage from '@pages/FO/hummingbird/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foHummingbirdModalQuickViewPage,
   foHummingbirdSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -100,8 +100,8 @@ describe('FO - Product page - Product page : Add to cart', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCartByQuickView', baseContext);
 
       await homePage.quickViewProduct(page, 1);
-      await quickViewModal.setQuantity(page, qtyQuickView);
-      await quickViewModal.addToCartByQuickView(page);
+      await foHummingbirdModalQuickViewPage.setQuantity(page, qtyQuickView);
+      await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
 
       const productDetails = await blockCartModal.getProductDetailsFromBlockCartModal(page);
       expect(productDetails.quantity).to.be.equal(qtyQuickView);

@@ -20,7 +20,6 @@ import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {merchandiseReturnsPage as foMerchandiseReturnsPage} from '@pages/FO/classic/myAccount/merchandiseReturns';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
-import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
@@ -28,6 +27,7 @@ import {
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
+  foClassicModalQuickViewPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -100,17 +100,17 @@ describe('BO - Customer Service - Merchandise Returns : Delete product', async (
 
       // Add first product to cart by quick view
       await homePage.quickViewProduct(page, 1);
-      await quickViewModal.setQuantityAndAddToCart(page, 2);
+      await foClassicModalQuickViewPage.setQuantityAndAddToCart(page, 2);
       await blockCartModal.continueShopping(page);
 
       // Add second product to cart by quick view
       await homePage.quickViewProduct(page, 2);
-      await quickViewModal.setQuantityAndAddToCart(page, 2);
+      await foClassicModalQuickViewPage.setQuantityAndAddToCart(page, 2);
       await blockCartModal.continueShopping(page);
 
       // Add third product to cart by quick view
       await homePage.quickViewProduct(page, 3);
-      await quickViewModal.setQuantityAndAddToCart(page, 2);
+      await foClassicModalQuickViewPage.setQuantityAndAddToCart(page, 2);
       await blockCartModal.proceedToCheckout(page);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);

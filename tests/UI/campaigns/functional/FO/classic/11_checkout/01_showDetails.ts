@@ -7,13 +7,13 @@ import {homePage} from '@pages/FO/classic/home';
 import {loginPage} from '@pages/FO/classic/login';
 import {productPage} from '@pages/FO/classic/product';
 import {checkoutPage} from '@pages/FO/classic/checkout';
-import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foClassicModalQuickViewPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -56,7 +56,7 @@ describe('FO - Checkout : Show details', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart1', baseContext);
 
     await homePage.quickViewProduct(page, 1);
-    await quickViewModal.addToCartByQuickView(page);
+    await foClassicModalQuickViewPage.addToCartByQuickView(page);
 
     const isModalClosed = await blockCartModal.closeBlockCartModal(page);
     expect(isModalClosed).to.eq(true);
@@ -67,7 +67,7 @@ describe('FO - Checkout : Show details', async () => {
 
     await loginPage.goToHomePage(page);
     await homePage.quickViewProduct(page, 3);
-    await quickViewModal.setQuantityAndAddToCart(page, 2);
+    await foClassicModalQuickViewPage.setQuantityAndAddToCart(page, 2);
     await blockCartModal.proceedToCheckout(page);
 
     const pageTitle = await cartPage.getPageTitle(page);

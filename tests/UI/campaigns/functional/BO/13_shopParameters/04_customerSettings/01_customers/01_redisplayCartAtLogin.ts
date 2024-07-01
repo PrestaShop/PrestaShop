@@ -12,12 +12,12 @@ import CustomerSettingsOptions from '@pages/BO/shopParameters/customerSettings/o
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage as loginFOPage} from '@pages/FO/classic/login';
-import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
   boDashboardPage,
   dataCustomers,
+  foClassicModalQuickViewPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -121,7 +121,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
     it('should add the first product to the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `addProductToTheCart_${index}`, baseContext);
 
-      await quickViewModal.addToCartByQuickView(page);
+      await foClassicModalQuickViewPage.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);
 
       // Check number of product in cart

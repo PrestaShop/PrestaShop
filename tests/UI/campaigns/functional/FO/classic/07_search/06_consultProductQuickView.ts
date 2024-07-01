@@ -3,12 +3,12 @@ import testContext from '@utils/testContext';
 
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foClassicModalQuickViewPage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -68,14 +68,14 @@ describe('FO - Search Page : Consult product quick view', async () => {
 
     await foClassicSearchResultsPage.quickViewProduct(page, 1);
 
-    const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+    const isModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
     expect(isModalVisible).to.eq(true);
   });
 
   it('should check product information', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation1', baseContext);
 
-    const result = await quickViewModal.getProductDetailsFromQuickViewModal(page);
+    const result = await foClassicModalQuickViewPage.getProductDetailsFromQuickViewModal(page);
     await Promise.all([
       expect(result.name).to.equal(dataProducts.demo_14.name),
       expect(result.price).to.equal(dataProducts.demo_14.finalPrice),
@@ -89,7 +89,7 @@ describe('FO - Search Page : Consult product quick view', async () => {
   it('should close the quick view modal', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeQuickOptionModal', baseContext);
 
-    const isQuickViewModalClosed = await quickViewModal.closeQuickViewModal(page);
+    const isQuickViewModalClosed = await foClassicModalQuickViewPage.closeQuickViewModal(page);
     expect(isQuickViewModalClosed).to.equal(true);
   });
 });

@@ -18,7 +18,6 @@ import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {cartPage} from '@pages/FO/classic/cart';
-import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
@@ -28,6 +27,7 @@ import {
   dataProducts,
   FakerContactMessage,
   FakerEmployee,
+  foClassicModalQuickViewPage,
   type MailDev,
   type MailDevEmail,
   utilsFile,
@@ -136,14 +136,14 @@ describe('BO - Customer Service : Forward message', async () => {
 
       await homePage.quickViewProduct(page, 1);
 
-      const isCartModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+      const isCartModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isCartModalVisible).to.equal(true);
     });
 
     it('should add first product to cart and Proceed to checkout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await quickViewModal.addToCartByQuickView(page);
+      await foClassicModalQuickViewPage.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);

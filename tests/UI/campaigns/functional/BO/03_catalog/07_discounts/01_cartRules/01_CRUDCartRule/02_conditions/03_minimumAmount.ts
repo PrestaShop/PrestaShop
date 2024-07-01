@@ -13,7 +13,6 @@ import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import {homePage} from '@pages/FO/classic/home';
 import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {cartPage} from '@pages/FO/classic/cart';
-import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {expect} from 'chai';
@@ -22,6 +21,7 @@ import {
   boDashboardPage,
   dataProducts,
   FakerCartRule,
+  foClassicModalQuickViewPage,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -117,14 +117,14 @@ describe('BO - Catalog - Cart rules : Minimum amount', async () => {
       await foLoginPage.goToHomePage(page);
       await homePage.quickViewProduct(page, 3);
 
-      const isQuickViewModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+      const isQuickViewModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isQuickViewModalVisible).to.equal(true);
     });
 
     it('should add the product to cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await quickViewModal.addToCartByQuickView(page);
+      await foClassicModalQuickViewPage.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);

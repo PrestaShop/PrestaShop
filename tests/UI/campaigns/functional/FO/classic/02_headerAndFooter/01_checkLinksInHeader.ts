@@ -8,10 +8,10 @@ import {homePage} from '@pages/FO/classic/home';
 import {loginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
-import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 
 import {
   dataCustomers,
+  foClassicModalQuickViewPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -98,7 +98,7 @@ describe('FO - Header and Footer : Check links in header page', async () => {
     await loginPage.goToHomePage(page);
     // Add product to cart by quick view
     await homePage.quickViewProduct(page, 1);
-    await quickViewModal.setQuantityAndAddToCart(page, 3);
+    await foClassicModalQuickViewPage.setQuantityAndAddToCart(page, 3);
 
     // Close block cart modal
     const isQuickViewModalClosed = await blockCartModal.closeBlockCartModal(page);

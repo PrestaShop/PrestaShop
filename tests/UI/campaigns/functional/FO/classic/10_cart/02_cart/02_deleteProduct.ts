@@ -4,12 +4,12 @@ import testContext from '@utils/testContext';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
 import {homePage as foHomePage, homePage} from '@pages/FO/classic/home';
-import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  foClassicModalQuickViewPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -42,7 +42,7 @@ describe('FO - cart : Delete product', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'addFirstProductToCart', baseContext);
 
     await homePage.quickViewProduct(page, 1);
-    await quickViewModal.addToCartByQuickView(page);
+    await foClassicModalQuickViewPage.addToCartByQuickView(page);
     await blockCartModal.proceedToCheckout(page);
 
     const pageTitle = await cartPage.getPageTitle(page);
@@ -71,7 +71,7 @@ describe('FO - cart : Delete product', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'addFirstProductToCart1', baseContext);
 
     await homePage.quickViewProduct(page, 1);
-    await quickViewModal.addToCartByQuickView(page);
+    await foClassicModalQuickViewPage.addToCartByQuickView(page);
     await blockCartModal.proceedToCheckout(page);
 
     const pageTitle = await cartPage.getPageTitle(page);

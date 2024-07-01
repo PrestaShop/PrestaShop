@@ -96,9 +96,9 @@ describe('BO - Shop Parameters - Search : Maximum approximate words allowed by f
 
     const titleTable = await foClassicSearchResultsPage.getAllProductsAttribute(page, 'title');
     expect(titleTable).to.deep.equal([
-        dataProducts.demo_8.name,
-        dataProducts.demo_9.name,
-        dataProducts.demo_10.name,
+      dataProducts.demo_8.name,
+      dataProducts.demo_9.name,
+      dataProducts.demo_10.name,
     ]);
   });
 
@@ -121,9 +121,9 @@ describe('BO - Shop Parameters - Search : Maximum approximate words allowed by f
 
     const titleTable = await foClassicSearchResultsPage.getAllProductsAttribute(page, 'title');
     expect(titleTable).to.deep.equal([
-        dataProducts.demo_16.name,
-        dataProducts.demo_19.name,
-        dataProducts.demo_9.name,
+      dataProducts.demo_16.name,
+      dataProducts.demo_19.name,
+      dataProducts.demo_9.name,
     ]);
   });
 

@@ -4,12 +4,12 @@ import testContext from '@utils/testContext';
 // Import pages
 import {homePage} from '@pages/FO/classic/home';
 import {cartPage} from '@pages/FO/classic/cart';
-import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
   type CartProductDetails,
   dataProducts,
+  foClassicModalQuickViewPage,
   foClassicSearchResultsPage,
   type ProductAttribute,
   utilsPlaywright,
@@ -76,7 +76,7 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'addToCartByQuickView', baseContext);
 
     await homePage.quickViewProduct(page, 1);
-    await quickViewModal.addToCartByQuickView(page);
+    await foClassicModalQuickViewPage.addToCartByQuickView(page);
 
     const successMessage = await blockCartModal.getBlockCartModalTitle(page);
     expect(successMessage).to.contains(homePage.successAddToCartMessage);
@@ -162,7 +162,7 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
 
     await foClassicSearchResultsPage.quickViewProduct(page, 1);
 
-    const isDisabled = await quickViewModal.isAddToCartButtonDisabled(page);
+    const isDisabled = await foClassicModalQuickViewPage.isAddToCartButtonDisabled(page);
     expect(isDisabled).to.eq(true);
   });
 });

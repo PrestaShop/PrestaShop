@@ -17,7 +17,6 @@ import cartPage from '@pages/FO/hummingbird/cart';
 import contactUsPage from '@pages/FO/hummingbird/contactUs';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
-import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {
@@ -26,6 +25,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerContactMessage,
+  foHummingbirdModalQuickViewPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -120,7 +120,7 @@ describe('FO - Order confirmation : Contact us', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       await foHomePage.quickViewProduct(page, 1);
-      await quickViewModal.addToCartByQuickView(page);
+      await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);

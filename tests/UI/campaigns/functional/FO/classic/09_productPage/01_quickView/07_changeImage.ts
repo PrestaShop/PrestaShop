@@ -6,12 +6,12 @@ import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/prod
 
 // Import pages
 import {homePage} from '@pages/FO/classic/home';
-import {quickViewModal} from '@pages/FO/classic/modal/quickView';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   FakerProduct,
+  foClassicModalQuickViewPage,
   foClassicSearchResultsPage,
   utilsFile,
   utilsPlaywright,
@@ -82,25 +82,25 @@ describe('FO - Product page - Quick view : Change image', async () => {
 
       await foClassicSearchResultsPage.quickViewProduct(page, 1);
 
-      const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+      const isModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.equal(true);
     });
 
     it('should display the second image', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'displaySecondImage', baseContext);
 
-      const firstCoverImageURL = await quickViewModal.getQuickViewCoverImage(page);
-      await quickViewModal.selectThumbImage(page, 2);
-      const secondCoverImageURL = await quickViewModal.getQuickViewCoverImage(page);
+      const firstCoverImageURL = await foClassicModalQuickViewPage.getQuickViewCoverImage(page);
+      await foClassicModalQuickViewPage.selectThumbImage(page, 2);
+      const secondCoverImageURL = await foClassicModalQuickViewPage.getQuickViewCoverImage(page);
       expect(firstCoverImageURL).to.not.equal(secondCoverImageURL);
     });
 
     it('should display the first image', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'displayFirstImage', baseContext);
 
-      const firstCoverImageURL = await quickViewModal.getQuickViewCoverImage(page);
-      await quickViewModal.selectThumbImage(page, 1);
-      const secondCoverImageURL = await quickViewModal.getQuickViewCoverImage(page);
+      const firstCoverImageURL = await foClassicModalQuickViewPage.getQuickViewCoverImage(page);
+      await foClassicModalQuickViewPage.selectThumbImage(page, 1);
+      const secondCoverImageURL = await foClassicModalQuickViewPage.getQuickViewCoverImage(page);
       expect(firstCoverImageURL).to.not.equal(secondCoverImageURL);
     });
   });

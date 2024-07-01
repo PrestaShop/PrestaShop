@@ -6,13 +6,13 @@ import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/h
 
 // Import pages
 import homePage from '@pages/FO/hummingbird/home';
-import quickViewModal from '@pages/FO/hummingbird/modal/quickView';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foHummingbirdModalQuickViewPage,
   foHummingbirdSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -70,14 +70,14 @@ describe('FO - Navigation and display : Quick view products', async () => {
 
       await foHummingbirdSearchResultsPage.quickViewProduct(page, 1);
 
-      const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+      const isModalVisible = await foHummingbirdModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.equal(true);
     });
 
     it('should check product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation1', baseContext);
 
-      const result = await quickViewModal.getProductDetailsFromQuickViewModal(page);
+      const result = await foHummingbirdModalQuickViewPage.getProductDetailsFromQuickViewModal(page);
       await Promise.all([
         expect(result.name).to.equal(dataProducts.demo_3.name),
         expect(result.price).to.equal(dataProducts.demo_3.finalPrice),
@@ -91,7 +91,7 @@ describe('FO - Navigation and display : Quick view products', async () => {
     it('should add product to cart and check that the block cart modal is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnContinueShopping', baseContext);
 
-      await quickViewModal.addToCartByQuickView(page);
+      await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
 
       const isVisible = await blockCartModal.isBlockCartModalVisible(page);
       expect(isVisible).to.equal(true);
@@ -120,14 +120,14 @@ describe('FO - Navigation and display : Quick view products', async () => {
 
       await foHummingbirdSearchResultsPage.quickViewProduct(page, 1);
 
-      const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+      const isModalVisible = await foHummingbirdModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.equal(true);
     });
 
     it('should check product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation2', baseContext);
 
-      const result = await quickViewModal.getProductDetailsFromQuickViewModal(page);
+      const result = await foHummingbirdModalQuickViewPage.getProductDetailsFromQuickViewModal(page);
       await Promise.all([
         expect(result.name).to.equal(dataProducts.demo_12.name),
         expect(result.price).to.equal(dataProducts.demo_12.price),
@@ -141,7 +141,7 @@ describe('FO - Navigation and display : Quick view products', async () => {
     it('should close the modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeModal1', baseContext);
 
-      const isQuickViewModalClosed = await quickViewModal.closeQuickViewModal(page);
+      const isQuickViewModalClosed = await foHummingbirdModalQuickViewPage.closeQuickViewModal(page);
       expect(isQuickViewModalClosed).to.equal(true);
     });
   });
@@ -161,14 +161,14 @@ describe('FO - Navigation and display : Quick view products', async () => {
 
       await foHummingbirdSearchResultsPage.quickViewProduct(page, 1);
 
-      const isModalVisible = await quickViewModal.isQuickViewProductModalVisible(page);
+      const isModalVisible = await foHummingbirdModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.equal(true);
     });
 
     it('should check product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation3', baseContext);
 
-      const result = await quickViewModal.getProductDetailsFromQuickViewModal(page);
+      const result = await foHummingbirdModalQuickViewPage.getProductDetailsFromQuickViewModal(page);
       await Promise.all([
         expect(result.name).to.equal(dataProducts.demo_14.name),
         expect(result.price).to.equal(dataProducts.demo_14.price),
@@ -182,14 +182,14 @@ describe('FO - Navigation and display : Quick view products', async () => {
     it('should check that \'Add to cart\' button is disabled', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAddToCartButton', baseContext);
 
-      const isEnabled = await quickViewModal.isAddToCartButtonEnabled(page);
+      const isEnabled = await foHummingbirdModalQuickViewPage.isAddToCartButtonEnabled(page);
       expect(isEnabled, 'Add to cart button is not disabled').to.equal(false);
     });
 
     it('should close the modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeModal2', baseContext);
 
-      const isQuickViewModalClosed = await quickViewModal.closeQuickViewModal(page, true);
+      const isQuickViewModalClosed = await foHummingbirdModalQuickViewPage.closeQuickViewModal(page, true);
       expect(isQuickViewModalClosed).to.equal(true);
     });
   });
