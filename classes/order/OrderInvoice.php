@@ -141,29 +141,29 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * Returns OrderInvoice for a specific invoice number and order ID. It's highly recommended to also provide an order ID, because you may end up with a different invoice than you wanted.
      *
-     * @param string|int $id_invoice
+     * @param string|int $invoiceNumber
      * @param int $id_order
      *
      * @return OrderInvoice|false
      */
-    public static function getInvoiceByNumber($id_invoice, $id_order = null)
+    public static function getInvoiceByNumber($invoiceNumber, $id_order = null)
     {
-        if (is_numeric($id_invoice)) {
-            $id_invoice = (int) $id_invoice;
-        } elseif (is_string($id_invoice)) {
+        if (is_numeric($invoiceNumber)) {
+            $invoiceNumber = (int) $invoiceNumber;
+        } elseif (is_string($invoiceNumber)) {
             $matches = [];
-            if (preg_match('/^(?:' . Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id) . ')\s*([0-9]+)$/i', $id_invoice, $matches)) {
-                $id_invoice = $matches[1];
+            if (preg_match('/^(?:' . Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id) . ')\s*([0-9]+)$/i', $invoiceNumber, $matches)) {
+                $invoiceNumber = $matches[1];
             }
         }
-        if (!$id_invoice) {
+        if (!$invoiceNumber) {
             return false;
         }
 
         $id_order_invoice = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             'SELECT `id_order_invoice`
             FROM `' . _DB_PREFIX_ . 'order_invoice`
-            WHERE `number` = ' . (int) $id_invoice . (!empty($id_order) ? ' && `id_order` = ' . (int) $id_order : '')
+            WHERE `number` = ' . (int) $invoiceNumber . (!empty($id_order) ? ' && `id_order` = ' . (int) $id_order : '')
         );
 
         return $id_order_invoice ? new OrderInvoice((int) $id_order_invoice) : false;
