@@ -37,9 +37,9 @@ use Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureCont
 class CarrierTaxRuleGroupFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @When I set tax rule for carrier :reference called :newReference with specified properties:
+     * @When I set tax rule for carrier :reference with specified properties:
      */
-    public function editTaxRule(string $reference, string $newReference, TableNode $node): void
+    public function editTaxRule(string $reference, TableNode $node): void
     {
         $properties = $this->localizeByRows($node);
         $carrierId = $this->referenceToId($reference);
@@ -53,7 +53,7 @@ class CarrierTaxRuleGroupFeatureContext extends AbstractDomainFeatureContext
                 );
 
                 $newCarrierId = $this->getCommandBus()->handle($command);
-                $this->getSharedStorage()->set($newReference, $newCarrierId->getValue());
+                $this->getSharedStorage()->set($reference, $newCarrierId->getValue());
             }
         } catch (Exception $e) {
             $this->setLastException($e);

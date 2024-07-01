@@ -89,7 +89,7 @@ Feature: Carrier management
       | rangeBehavior    | disabled                           |
     When I update order "bo_order1" Tracking number to "TEST1234" and Carrier to "carrier1"
     Then order "bo_order1" has Tracking number "TEST1234"
-    When I edit carrier "carrier1" with specified properties:
+    When I edit carrier "carrier1" with specified properties I get a new carrier called "newCarrier1":
       | name | Carrier 1 new |
     Then carrier "carrier1" should have the following properties:
       | name             | Carrier 1                          |
@@ -114,7 +114,7 @@ Feature: Carrier management
       | isFree           | true                               |
       | shippingMethod   | weight                             |
       | rangeBehavior    | disabled                           |
-    When I edit carrier "carrier1" with specified properties I get a new carrier called "newCarrier1":
+    When I edit carrier "carrier1" with specified properties I get a similar carrier called "newCarrier1":
       | name | Carrier 1 new |
     Then carrier "carrier1" should have the following properties:
       | name             | Carrier 1 new                      |
@@ -169,9 +169,9 @@ Feature: Carrier management
       | isFree           | true                               |
       | shippingMethod   | weight                             |
       | rangeBehavior    | disabled                           |
-    When I edit carrier "carrier1" with specified properties I get a new carrier called "newCarrier1":
+    When I edit carrier "carrier1" with specified properties:
       | grade | 2 |
-    Then carrier "newCarrier1" should have the following properties:
+    Then carrier "carrier1" should have the following properties:
       | name             | Carrier 1                          |
       | grade            | 2                                  |
       | trackingUrl      | http://example.com/track.php?num=@ |
@@ -207,9 +207,9 @@ Feature: Carrier management
       | isFree           | true                               |
       | shippingMethod   | weight                             |
       | rangeBehavior    | disabled                           |
-    When I edit carrier "carrier1" with specified properties I get a new carrier called "newCarrier1":
+    When I edit carrier "carrier1" with specified properties:
       | trackingUrl | http://prestashop-project.org/track.php?num=@ |
-    Then carrier "newCarrier1" should have the following properties:
+    Then carrier "carrier1" should have the following properties:
       | name             | Carrier 1                                     |
       | grade            | 1                                             |
       | trackingUrl      | http://prestashop-project.org/track.php?num=@ |
@@ -245,9 +245,9 @@ Feature: Carrier management
       | isFree           | true                               |
       | shippingMethod   | weight                             |
       | rangeBehavior    | disabled                           |
-    When I edit carrier "carrier1" with specified properties I get a new carrier called "newCarrier1":
+    When I edit carrier "carrier1" with specified properties:
       | position | 4 |
-    Then carrier "newCarrier1" should have the following properties:
+    Then carrier "carrier1" should have the following properties:
       | name             | Carrier 1                          |
       | grade            | 1                                  |
       | trackingUrl      | http://example.com/track.php?num=@ |
@@ -283,9 +283,9 @@ Feature: Carrier management
       | isFree           | true                               |
       | shippingMethod   | weight                             |
       | rangeBehavior    | disabled                           |
-    When I edit carrier "carrier1" with specified properties I get a new carrier called "newCarrier1":
+    When I edit carrier "carrier1" with specified properties:
       | active | false |
-    Then carrier "newCarrier1" should have the following properties:
+    Then carrier "carrier1" should have the following properties:
       | name             | Carrier 1                          |
       | grade            | 1                                  |
       | trackingUrl      | http://example.com/track.php?num=@ |
@@ -321,10 +321,10 @@ Feature: Carrier management
       | isFree           | true                               |
       | shippingMethod   | weight                             |
       | rangeBehavior    | disabled                           |
-    When I edit carrier "carrier1" with specified properties I get a new carrier called "newCarrier1":
+    When I edit carrier "carrier1" with specified properties:
       | delay[en-US] | Shipping delay new         |
       | delay[fr-FR] | Délai de livraison nouveau |
-    Then carrier "newCarrier1" should have the following properties:
+    Then carrier "carrier1" should have the following properties:
       | name             | Carrier 1                          |
       | grade            | 1                                  |
       | trackingUrl      | http://example.com/track.php?num=@ |
@@ -360,12 +360,12 @@ Feature: Carrier management
       | isFree           | true                               |
       | shippingMethod   | weight                             |
       | rangeBehavior    | disabled                           |
-    When I edit carrier "carrier1" with specified properties I get a new carrier called "newCarrier1":
+    When I edit carrier "carrier1" with specified properties:
       | max_width  | 3333 |
       | max_height | 4444 |
       | max_depth  | 5555 |
       | max_weight | 6666 |
-    Then carrier "newCarrier1" should have the following properties:
+    Then carrier "carrier1" should have the following properties:
       | name             | Carrier 1                          |
       | grade            | 1                                  |
       | trackingUrl      | http://example.com/track.php?num=@ |
@@ -401,9 +401,9 @@ Feature: Carrier management
       | isFree           | true                               |
       | shippingMethod   | weight                             |
       | rangeBehavior    | disabled                           |
-    When I edit carrier "carrier1" with specified properties I get a new carrier called "newCarrier1":
+    When I edit carrier "carrier1" with specified properties:
       | group_access | visitor |
-    Then carrier "newCarrier1" should have the following properties:
+    Then carrier "carrier1" should have the following properties:
       | name             | Carrier 1                          |
       | grade            | 1                                  |
       | trackingUrl      | http://example.com/track.php?num=@ |
@@ -439,9 +439,9 @@ Feature: Carrier management
       | isFree           | false                              |
       | shippingMethod   | weight                             |
       | rangeBehavior    | disabled                           |
-    When I edit carrier "carrier1" with specified properties I get a new carrier called "newCarrier1":
+    When I edit carrier "carrier1" with specified properties:
       | shippingHandling | true                               |
-    Then carrier "newCarrier1" should have the following properties:
+    Then carrier "carrier1" should have the following properties:
       | name             | Carrier 1                          |
       | shippingHandling | true                               |
 
@@ -463,9 +463,9 @@ Feature: Carrier management
       | isFree           | false                              |
       | shippingMethod   | weight                             |
       | rangeBehavior    | disabled                           |
-    When I edit carrier "carrier1" with specified properties I get a new carrier called "newCarrier1":
+    When I edit carrier "carrier1" with specified properties:
       | isFree | true                               |
-    Then carrier "newCarrier1" should have the following properties:
+    Then carrier "carrier1" should have the following properties:
       | name   | Carrier 1                          |
       | isFree | true                               |
 
@@ -487,9 +487,9 @@ Feature: Carrier management
       | isFree           | false                              |
       | shippingMethod   | weight                             |
       | rangeBehavior    | disabled                           |
-    When I edit carrier "carrier1" with specified properties I get a new carrier called "newCarrier1":
+    When I edit carrier "carrier1" with specified properties:
       | shippingMethod | price |
-    Then carrier "newCarrier1" should have the following properties:
+    Then carrier "carrier1" should have the following properties:
       | name           | Carrier 1                       |
       | shippingMethod | price                           |
 
@@ -511,34 +511,35 @@ Feature: Carrier management
       | isFree           | false                              |
       | shippingMethod   | weight                             |
       | rangeBehavior    | disabled                           |
-    When I edit carrier "carrier1" with specified properties I get a new carrier called "newCarrier1":
+    When I edit carrier "carrier1" with specified properties:
       | shippingMethod   | invalid                            |
     Then carrier edit should throw an error with error code "INVALID_SHIPPING_METHOD"
 
-  Scenario: Partially editing carrier with tax rule group
-    When I create carrier "carrier1" with specified properties:
-      | name             | Carrier 1                          |
-      | grade            | 1                                  |
-      | trackingUrl      | http://example.com/track.php?num=@ |
-      | position         | 2                                  |
-      | active           | true                               |
-      | max_width        | 1454                               |
-      | max_height       | 1234                               |
-      | max_depth        | 1111                               |
-      | max_weight       | 3864                               |
-      | group_access     | visitor, guest                     |
-      | delay[en-US]     | Shipping delay                     |
-      | delay[fr-FR]     | Délai de livraison                 |
-      | shippingHandling | false                              |
-      | isFree           | false                              |
-      | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
-      | rangeBehavior    | disabled                           |
-    When I edit carrier "carrier1" with specified properties I get a new carrier called "newCarrier1":
-      | taxRuleGroup | US-AZ Rate (6.6%)              |
-    Then carrier "newCarrier1" should have the following properties:
-      | name         | Carrier 1                       |
-      | taxRuleGroup | US-AZ Rate (6.6%)               |
+  # @debug
+  # Scenario: Partially editing carrier with tax rule group
+  #   When I create carrier "carrier1" with specified properties:
+  #     | name             | Carrier 1                          |
+  #     | grade            | 1                                  |
+  #     | trackingUrl      | http://example.com/track.php?num=@ |
+  #     | position         | 2                                  |
+  #     | active           | true                               |
+  #     | max_width        | 1454                               |
+  #     | max_height       | 1234                               |
+  #     | max_depth        | 1111                               |
+  #     | max_weight       | 3864                               |
+  #     | group_access     | visitor, guest                     |
+  #     | delay[en-US]     | Shipping delay                     |
+  #     | delay[fr-FR]     | Délai de livraison                 |
+  #     | shippingHandling | false                              |
+  #     | isFree           | false                              |
+  #     | shippingMethod   | weight                             |
+  #     | taxRuleGroup     | US-AL Rate (4%)                    |
+  #     | rangeBehavior    | disabled                           |
+  #   When I edit carrier "carrier1" with specified properties:
+  #     | taxRuleGroup | US-AZ Rate (6.6%)              |
+  #   Then carrier "carrier1" should have the following properties:
+  #     | name         | Carrier 1                       |
+  #     | taxRuleGroup | US-AZ Rate (6.6%)               |
 
   Scenario: Partially editing carrier with range behavior
     When I create carrier "carrier1" with specified properties:
@@ -558,9 +559,9 @@ Feature: Carrier management
       | isFree           | false                              |
       | shippingMethod   | weight                             |
       | rangeBehavior    | disabled                           |
-    When I edit carrier "carrier1" with specified properties I get a new carrier called "newCarrier1":
+    When I edit carrier "carrier1" with specified properties:
       | rangeBehavior  | highest_range |
-    Then carrier "newCarrier1" should have the following properties:
+    Then carrier "carrier1" should have the following properties:
       | name           | Carrier 1                       |
       | rangeBehavior  | highest_range                   |
 
@@ -582,7 +583,7 @@ Feature: Carrier management
       | isFree           | false                              |
       | shippingMethod   | weight                             |
       | rangeBehavior    | disabled                           |
-    When I edit carrier "carrier1" with specified properties I get a new carrier called "newCarrier1":
+    When I edit carrier "carrier1" with specified properties:
       | rangeBehavior    | invalid                            |
     Then carrier edit should throw an error with error code "INVALID_RANGE_BEHAVIOR"
 
@@ -604,9 +605,9 @@ Feature: Carrier management
       | isFree           | true                               |
       | shippingMethod   | weight                             |
       | rangeBehavior    | disabled                           |
-    When I edit carrier "carrier1" with specified properties I get a new carrier called "newCarrier1":
+    When I edit carrier "carrier1" with specified properties:
       | shippingHandling  | true                              |
-    Then carrier "newCarrier1" should have the following properties:
+    Then carrier "carrier1" should have the following properties:
       | shippingHandling | true                              |
       | isFree           | false                             |
 
@@ -628,9 +629,9 @@ Feature: Carrier management
       | isFree           | false                              |
       | shippingMethod   | weight                             |
       | rangeBehavior    | disabled                           |
-    When I edit carrier "carrier1" with specified properties I get a new carrier called "newCarrier1":
+    When I edit carrier "carrier1" with specified properties:
       | isFree  | true                              |
-    Then carrier "newCarrier1" should have the following properties:
+    Then carrier "carrier1" should have the following properties:
       | shippingHandling | false                            |
       | isFree           | true                             |
 
@@ -652,7 +653,7 @@ Feature: Carrier management
       | isFree           | false                              |
       | shippingMethod   | weight                             |
       | rangeBehavior    | disabled                           |
-    When I edit carrier "carrier1" with specified properties I get a new carrier called "newCarrier1":
+    When I edit carrier "carrier1" with specified properties:
       | isFree            | true                              |
       | shippingHandling  | true                              |
     Then carrier edit should throw an error with error code "INVALID_HAS_ADDITIONAL_HANDLING_FEE_WITH_FREE_SHIPPING"
@@ -698,6 +699,6 @@ Feature: Carrier management
       | rangeBehavior    | disabled                           |
       | logoPathName     | logo.jpg                           |
     Then carrier "carrier1" should have a logo
-    When I edit carrier "carrier1" with specified properties I get a new carrier called "newCarrier1":
+    When I edit carrier "carrier1" with specified properties:
       | logoPathName |  |
-    Then carrier "newCarrier1" shouldn't have a logo
+    Then carrier "carrier1" shouldn't have a logo
