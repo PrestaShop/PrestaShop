@@ -63,27 +63,9 @@ Feature: Carrier management
       | rangeBehavior    | disabled                           |
       | associatedShops  | shop1, shop3                       |
     Then carrier "carrier1" shouldn't have a logo
-    When I edit carrier "carrier1" called "newCarrier1" with specified properties:
+    When I edit carrier "carrier1" with specified properties:
       | associatedShops | shop2, shop4 |
-    Then carrier "carrier1" should have the following properties:
-      | name             | Carrier 1                          |
-      | grade            | 1                                  |
-      | trackingUrl      | http://example.com/track.php?num=@ |
-      | position         | 2                                  |
-      | active           | true                               |
-      | max_width        | 1454                               |
-      | max_height       | 1234                               |
-      | max_depth        | 1111                               |
-      | max_weight       | 3864                               |
-      | group_access     | visitor, guest                     |
-      | delay[en-US]     | Shipping delay                     |
-      | delay[fr-FR]     | Délai de livraison                 |
-      | shippingHandling | false                              |
-      | isFree           | true                               |
-      | shippingMethod   | weight                             |
-      | rangeBehavior    | disabled                           |
-      | associatedShops  | shop1, shop3                       |
-    And carrier "newCarrier1" should have the following properties:
+    And carrier "carrier1" should have the following properties:
       | name             | Carrier 1                          |
       | grade            | 1                                  |
       | trackingUrl      | http://example.com/track.php?num=@ |

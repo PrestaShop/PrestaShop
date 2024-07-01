@@ -143,87 +143,121 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I edit carrier :reference called :newReference with specified properties:
+     * @When I edit carrier :reference with specified properties:
      */
-    public function editCarrier(string $reference, string $newReference, TableNode $node): void
+    public function editCarrierWithoutUpdate(string $reference, TableNode $node): void
+    {
+        try {
+            $carrierId = $this->editCarrier($reference, null, $node);
+            Assert::assertEquals($this->getSharedStorage()->get($reference), $carrierId->getValue());
+        } catch (CarrierConstraintException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I edit carrier :reference with specified properties I get a new carrier called :newReference:
+     */
+    public function editCarrierWithUpdate(string $reference, string $newReference, TableNode $node): void
+    {
+        try {
+            $carrierId = $this->editCarrier($reference, $newReference, $node);
+            Assert::assertNotEquals($this->getSharedStorage()->get($reference), $carrierId->getValue());
+        } catch (CarrierConstraintException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I edit carrier :reference with specified properties I get a similar carrier called :newReference:
+     */
+    public function editCarrierWithUpdateButSimilar(string $reference, string $newReference, TableNode $node): void
+    {
+        try {
+            $carrierId = $this->editCarrier($reference, $newReference, $node);
+            Assert::assertEquals($this->getSharedStorage()->get($reference), $carrierId->getValue());
+        } catch (CarrierConstraintException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    private function editCarrier(string $reference, ?string $newReference, TableNode $node): ?CarrierId
     {
         $properties = $this->localizeByRows($node);
         $carrierId = $this->referenceToId($reference);
 
-        try {
-            $command = new EditCarrierCommand($carrierId);
+        $command = new EditCarrierCommand($carrierId);
 
-            // General information
-            if (isset($properties['name'])) {
-                $command->setName($properties['name']);
-            }
-            if (isset($properties['delay'])) {
-                $command->setLocalizedDelay($properties['delay']);
-            }
-            if (isset($properties['grade'])) {
-                $command->setGrade((int) $properties['grade']);
-            }
-            if (isset($properties['trackingUrl'])) {
-                $command->setTrackingUrl($properties['trackingUrl']);
-            }
-            if (isset($properties['position'])) {
-                $command->setPosition((int) $properties['position']);
-            }
-            if (isset($properties['active'])) {
-                $command->setActive(filter_var($properties['active'], FILTER_VALIDATE_BOOLEAN));
-            }
-            if (isset($properties['max_width'])) {
-                $command->setMaxWidth((int) $properties['max_width']);
-            }
-            if (isset($properties['max_height'])) {
-                $command->setMaxHeight((int) $properties['max_height']);
-            }
-            if (isset($properties['max_depth'])) {
-                $command->setMaxDepth((int) $properties['max_depth']);
-            }
-            if (isset($properties['max_weight'])) {
-                $command->setMaxWeight((int) $properties['max_weight']);
-            }
-            if (isset($properties['group_access'])) {
-                $command->setAssociatedGroupIds($this->referencesToIds($properties['group_access']));
-            }
-            if (isset($properties['associatedShops'])) {
-                $command->setAssociatedShopIds($this->referencesToIds($properties['associatedShops']));
-            }
-
-            if (isset($properties['logoPathName']) && 'null' !== $properties['logoPathName']) {
-                if ('' !== $properties['logoPathName']) {
-                    $tmpLogo = DummyFileUploader::upload($properties['logoPathName']);
-                }
-                $command->setLogoPathName($tmpLogo ?? '');
-            }
-
-            // Shipping information
-            if (isset($properties['shippingHandling'])) {
-                $command->setAdditionalHandlingFee(filter_var($properties['shippingHandling'], FILTER_VALIDATE_BOOLEAN));
-            }
-
-            if (isset($properties['isFree'])) {
-                $command->setIsFree(filter_var($properties['isFree'], FILTER_VALIDATE_BOOLEAN));
-            }
-
-            if (isset($properties['shippingMethod'])) {
-                $command->setShippingMethod($this->convertShippingMethodToInt($properties['shippingMethod']));
-            }
-
-            if (isset($properties['rangeBehavior'])) {
-                $command->setRangeBehavior($this->convertOutOfRangeBehaviorToInt($properties['rangeBehavior']));
-            }
-
-            $newCarrierId = $this->getCommandBus()->handle($command);
-
-            if (isset($tmpLogo)) {
-                $this->fakeUploadLogo($tmpLogo, $newCarrierId->getValue());
-            }
-            $this->getSharedStorage()->set($newReference, $newCarrierId->getValue());
-        } catch (Exception $e) {
-            $this->setLastException($e);
+        // General information
+        if (isset($properties['name'])) {
+            $command->setName($properties['name']);
         }
+        if (isset($properties['delay'])) {
+            $command->setLocalizedDelay($properties['delay']);
+        }
+        if (isset($properties['grade'])) {
+            $command->setGrade((int) $properties['grade']);
+        }
+        if (isset($properties['trackingUrl'])) {
+            $command->setTrackingUrl($properties['trackingUrl']);
+        }
+        if (isset($properties['position'])) {
+            $command->setPosition((int) $properties['position']);
+        }
+        if (isset($properties['active'])) {
+            $command->setActive(filter_var($properties['active'], FILTER_VALIDATE_BOOLEAN));
+        }
+        if (isset($properties['max_width'])) {
+            $command->setMaxWidth((int) $properties['max_width']);
+        }
+        if (isset($properties['max_height'])) {
+            $command->setMaxHeight((int) $properties['max_height']);
+        }
+        if (isset($properties['max_depth'])) {
+            $command->setMaxDepth((int) $properties['max_depth']);
+        }
+        if (isset($properties['max_weight'])) {
+            $command->setMaxWeight((int) $properties['max_weight']);
+        }
+        if (isset($properties['group_access'])) {
+            $command->setAssociatedGroupIds($this->referencesToIds($properties['group_access']));
+        }
+        if (isset($properties['associatedShops'])) {
+            $command->setAssociatedShopIds($this->referencesToIds($properties['associatedShops']));
+        }
+
+        if (isset($properties['logoPathName']) && 'null' !== $properties['logoPathName']) {
+            if ('' !== $properties['logoPathName']) {
+                $tmpLogo = DummyFileUploader::upload($properties['logoPathName']);
+            }
+            $command->setLogoPathName($tmpLogo ?? '');
+        }
+
+        // Shipping information
+        if (isset($properties['shippingHandling'])) {
+            $command->setAdditionalHandlingFee(filter_var($properties['shippingHandling'], FILTER_VALIDATE_BOOLEAN));
+        }
+
+        if (isset($properties['isFree'])) {
+            $command->setIsFree(filter_var($properties['isFree'], FILTER_VALIDATE_BOOLEAN));
+        }
+
+        if (isset($properties['shippingMethod'])) {
+            $command->setShippingMethod($this->convertShippingMethodToInt($properties['shippingMethod']));
+        }
+
+        if (isset($properties['rangeBehavior'])) {
+            $command->setRangeBehavior($this->convertOutOfRangeBehaviorToInt($properties['rangeBehavior']));
+        }
+
+        $newCarrierId = $this->getCommandBus()->handle($command);
+
+        if (isset($tmpLogo)) {
+            $this->fakeUploadLogo($tmpLogo, $newCarrierId->getValue());
+        }
+        $this->getSharedStorage()->set($newReference, $newCarrierId->getValue());
+
+        return $newCarrierId;
     }
 
     /**

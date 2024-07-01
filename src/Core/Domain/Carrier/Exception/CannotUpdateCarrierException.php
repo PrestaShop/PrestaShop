@@ -30,4 +30,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\Carrier\Exception;
 
 class CannotUpdateCarrierException extends CarrierException
 {
+    /**
+     * When generic carrier update fails
+     */
+    public const FAILED_UPDATE_CARRIER = 1;
 }
