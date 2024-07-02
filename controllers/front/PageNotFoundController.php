@@ -25,19 +25,16 @@
  */
 class PageNotFoundControllerCore extends FrontController
 {
-    /** @var string */
-    public $php_self = 'pagenotfound';
-    /** @var string */
-    public $page_name = 'pagenotfound';
-    /** @var bool */
-    public $ssl = true;
+    public string $php_self = 'pagenotfound';
+    public string $page_name = 'pagenotfound';
+    public bool $ssl = true;
 
     /**
      * Assign template vars related to page content.
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         header('HTTP/1.1 404 Not Found');
         header('Status: 404 Not Found');
@@ -59,10 +56,8 @@ class PageNotFoundControllerCore extends FrontController
     /**
      * Initializes a set of commonly used variables related to the current page, available for use
      * in the template. @see FrontController::assignGeneralPurposeVariables for more information.
-     *
-     * @return array
      */
-    public function getTemplateVarPage()
+    public function getTemplateVarPage(): array
     {
         $page = parent::getTemplateVarPage();
         $page['title'] = $this->trans('The page you are looking for was not found.', [], 'Shop.Theme.Global');
