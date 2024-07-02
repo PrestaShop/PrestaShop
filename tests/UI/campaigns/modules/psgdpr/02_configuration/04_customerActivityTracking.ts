@@ -28,7 +28,7 @@ import {
 } from '@prestashop-core/ui-testing';
 import {gdprPersonalDataPage} from '@pages/FO/classic/myAccount/gdprPersonalData';
 
-const baseContext: string = 'modules_psgdpr_configuration_consentCheckboxCustomization';
+const baseContext: string = 'modules_psgdpr_configuration_customerActivityTracking';
 
 describe('BO - Modules - GDPR: Customer activity tracking', async () => {
   let browserContext: BrowserContext;
@@ -182,17 +182,17 @@ describe('BO - Modules - GDPR: Customer activity tracking', async () => {
       expect(row1Name).to.equal(`${dataCustomers.johnDoe.firstName} ${dataCustomers.johnDoe.lastName}`);
 
       const row1Type = await psGdprTabCustomerActivity.getTextColumnFromTable(page, 1, 2);
-      expect(row1Type).to.equal('Accessibility (pdf)');
+      expect(row1Type).to.equal('Accessibility (csv)');
 
       const row2Name = await psGdprTabCustomerActivity.getTextColumnFromTable(page, 2, 1);
       expect(row2Name).to.equal(`${dataCustomers.johnDoe.firstName} ${dataCustomers.johnDoe.lastName}`);
 
       const row2Type = await psGdprTabCustomerActivity.getTextColumnFromTable(page, 2, 2);
-      expect(row2Type).to.equal('Accessibility (csv)');
+      expect(row2Type).to.equal('Accessibility (pdf)');
     });
 
     it('should click on the \'Sign in\' link', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickOnSignInLink', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnSignInLinkForRegister', baseContext);
 
       page = await foClassicHomePage.changePage(browserContext, 1);
       await foClassicHomePage.clickOnHeaderLink(page, 'Sign in');
