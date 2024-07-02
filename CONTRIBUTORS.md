@@ -163,6 +163,7 @@ GitHub contributors:
 - Christophe Rouille
 - Christophe Zarebski
 - ChristopheBoucaut
+- ChronoBrake
 - CINS
 - cippest
 - cirykpopeye
@@ -172,6 +173,7 @@ GitHub contributors:
 - cocoweb
 - Code Utopia
 - Codencode
+- CodeOlympus
 - codvir
 - Comkwatt
 - ComonSoft
@@ -249,7 +251,10 @@ GitHub contributors:
 - DogSports
 - Dominic Taylor
 - Dominik Shaim Ulrich
+<<<<<<< HEAD
 - dparis
+=======
+>>>>>>> 8.1.x
 - Dragan Skrbic
 - DRC
 - Dream me up
@@ -803,6 +808,7 @@ GitHub contributors:
 - Rúben Martins
 - Rudolf Kastl
 - Rudra Sarkar
+- Rudolf Kastl
 - runningz
 - s-duval
 - Sacha
@@ -909,6 +915,7 @@ GitHub contributors:
 - Thomas Baccelli
 - Thomas Blanc
 - Thomas Delorenzi
+- Thomas Delaporte
 - Thomas Ferney
 - Thomas L'huillier
 - Thomas Leguillant
