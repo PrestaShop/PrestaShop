@@ -8,6 +8,9 @@ use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
+/**
+ * Listener dedicated to set up Currency context for the Back-Office/Admin application.
+ */
 class CurrencyContextListener
 {
     public function __construct(
