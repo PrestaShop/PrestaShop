@@ -251,14 +251,11 @@ GitHub contributors:
 - DogSports
 - Dominic Taylor
 - Dominik Shaim Ulrich
-<<<<<<< HEAD
-- dparis
-=======
->>>>>>> 8.1.x
 - Dragan Skrbic
 - DRC
 - Dream me up
 - DrySs
+- Dylan Paris
 - dSevere
 - Dustin
 - Dvir Julius
