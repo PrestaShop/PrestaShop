@@ -307,7 +307,7 @@ class ImageManagerCore
         // If the output is PNG, fill with transparency. Else fill with white background.
         if (in_array($destinationFileType, ['png', 'webp', 'avif'])) {
             // if png color type is 3, the file is paletted (256 colors or less). Change palette to reduce file size
-            if ($destinationFileType == 'png' && self::getPNGColorType($sourceFile) == 3) {
+            if ($destinationFileType == 'png' && $sourceFileType == IMAGETYPE_PNG && self::getPNGColorType($sourceFile) == 3) {
                 imagetruecolortopalette($destImage, false, 255);
             } else {
                 imagealphablending($destImage, false);
