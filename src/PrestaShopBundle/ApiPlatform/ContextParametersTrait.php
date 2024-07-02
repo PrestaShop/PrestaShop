@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\ApiPlatform;
 
 use PrestaShop\PrestaShop\Core\Context\ApiClientContext;
+use PrestaShop\PrestaShop\Core\Context\CurrencyContext;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 
@@ -36,6 +37,7 @@ trait ContextParametersTrait
 {
     protected readonly ShopContext $shopContext;
     protected readonly LanguageContext $languageContext;
+    protected readonly CurrencyContext $currencyContext;
     protected readonly ApiClientContext $apiClientContext;
 
     protected function getContextParameters(): array
@@ -52,6 +54,7 @@ trait ContextParametersTrait
                 'shopId' => $this->shopContext->getId(),
                 'shopIds' => $this->shopContext->getAssociatedShopIds(),
                 'langId' => $this->languageContext->getId(),
+                'currencyId' => $this->currencyContext->getId(),
                 'apiClientId' => $this->apiClientContext->getApiClient()?->getId(),
             ],
         ];
