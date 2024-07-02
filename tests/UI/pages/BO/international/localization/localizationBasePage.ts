@@ -14,6 +14,8 @@ export default class LocalizationBasePage extends BOBasePage {
 
   private readonly currenciesNavItemLink: string;
 
+  private readonly geolocationNavItemLink: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on localization page
@@ -24,6 +26,7 @@ export default class LocalizationBasePage extends BOBasePage {
     this.localizationNavItemLink = '#subtab-AdminLocalization';
     this.languagesNavItemLink = '#subtab-AdminLanguages';
     this.currenciesNavItemLink = '#subtab-AdminCurrencies';
+    this.geolocationNavItemLink = '#subtab-AdminGeolocation';
   }
 
   /* Header Methods */
@@ -52,5 +55,14 @@ export default class LocalizationBasePage extends BOBasePage {
    */
   async goToSubTabCurrencies(page: Page): Promise<void> {
     await this.clickAndWaitForURL(page, this.currenciesNavItemLink);
+  }
+
+  /**
+   * Go to Geolocation tab
+   * @param page {Page} Browser tab
+   * @return {Promise<void>}
+   */
+  async goToSubTabGeolocation(page: Page): Promise<void> {
+    await this.clickAndWaitForURL(page, this.geolocationNavItemLink);
   }
 }
