@@ -28,7 +28,7 @@
   {% if paymentModules|length > 0 %}
   <div class="module-item-list">
   {% for module in paymentModules %}
-    <div class="row module-item-wrapper-list border-bottom mb-sm-3">
+    <div class="row module-item-wrapper-list border-bottom mb-sm-3" data-name="{{ module.attributes.name }}">
       <div class="col-sm-2 col-md-1 col-lg-1">
         <div class="module-logo-thumb-list text-center">
           <img src="{{ module.attributes.img }}" alt="{{ module.attributes.displayName }}"/>
