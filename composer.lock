@@ -5450,12 +5450,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nicosomb/hummingbird.git",
-                "reference": "35ac6b6ba1de43b2ffceb8ff6761261ce6c70aa7"
+                "reference": "103cddebc94e1e0a8cd42b3e1a6f08f50db015c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nicosomb/hummingbird/zipball/35ac6b6ba1de43b2ffceb8ff6761261ce6c70aa7",
-                "reference": "35ac6b6ba1de43b2ffceb8ff6761261ce6c70aa7",
+                "url": "https://api.github.com/repos/nicosomb/hummingbird/zipball/103cddebc94e1e0a8cd42b3e1a6f08f50db015c8",
+                "reference": "103cddebc94e1e0a8cd42b3e1a6f08f50db015c8",
                 "shasum": ""
             },
             "require-dev": {
@@ -5480,7 +5480,7 @@
             "support": {
                 "source": "https://github.com/nicosomb/hummingbird/tree/remove-env-config"
             },
-            "time": "2024-06-13T09:46:54+00:00"
+            "time": "2024-07-02T08:56:47+00:00"
         },
         {
             "name": "prestashop/laminas-code-lts",
