@@ -307,8 +307,13 @@ class ImageManagerCore
         $destImage = imagecreatetruecolor($destinationWidth, $destinationHeight);
 
         // If the output is PNG, fill with transparency. Else fill with white background.
-        if ($destinationFileType == 'png' || $destinationFileType == 'webp' || $destinationFileType == 'avif') {
-            imagealphablending($destImage, false);
+        if (in_array($destinationFileType, ['png', 'webp', 'avif'])) {
+            // if png color type is 3, the file is paletted (256 colors or less). Change palette to reduce file size
+            if ($destinationFileType == 'png' && $sourceFileType == IMAGETYPE_PNG && self::getPNGColorType($sourceFile) == 3) {
+                imagetruecolortopalette($destImage, false, 255);
+            } else {
+                imagealphablending($destImage, false);
+            }
             imagesavealpha($destImage, true);
             $transparent = imagecolorallocatealpha($destImage, 255, 255, 255, 127);
             imagefilledrectangle($destImage, 0, 0, $destinationWidth, $destinationHeight, $transparent);
@@ -895,5 +900,21 @@ class ImageManagerCore
         }
 
         return $path;
+    }
+
+    /**
+     * The function `getPNGColorType` returns the color type byte from a PNG file
+     *
+     * @param string $fileName
+     *
+     * @return int|bool
+     */
+    public static function getPNGColorType($fileName)
+    {
+        if (!is_readable($fileName)) {
+            return false;
+        }
+
+        return ord(@file_get_contents($fileName, false, null, 25, 1));
     }
 }
