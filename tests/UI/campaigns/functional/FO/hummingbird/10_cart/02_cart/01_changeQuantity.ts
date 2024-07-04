@@ -104,7 +104,7 @@ describe('FO - cart : Change quantity', async () => {
     });
 
     it('should go to home page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage2', baseContext);
 
       await cartPage.goToHomePage(page);
 
@@ -116,7 +116,7 @@ describe('FO - cart : Change quantity', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addFirstProductToCart2', baseContext);
 
       await homePage.quickViewProduct(page, 1);
-      await quickViewModal.addToCartByQuickView(page);
+      await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);

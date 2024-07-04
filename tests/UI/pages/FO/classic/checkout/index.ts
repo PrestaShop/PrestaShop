@@ -593,7 +593,7 @@ class CheckoutPage extends FOBasePage {
     await this.setValue(page, this.checkoutGuestLastnameInput, customerData.lastName);
     await this.setValue(page, this.checkoutGuestEmailInput, customerData.email);
     if (this.theme === 'hummingbird') {
-      await this.setChecked(page, '#password-form__check', true);
+      await this.setChecked(page, this.createAccountCheckbox, true);
     }
     await this.setValue(page, this.checkoutGuestPasswordInput, customerData.password);
 
