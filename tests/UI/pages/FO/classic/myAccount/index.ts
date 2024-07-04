@@ -30,6 +30,8 @@ class MyAccountPage extends FOBasePage {
 
   protected logoutFooterLink: string;
 
+  private readonly myWishlistsLink: string;
+
   private readonly psgdprLink: string;
 
   /**
@@ -53,6 +55,7 @@ class MyAccountPage extends FOBasePage {
     this.orderSlipsLink = '#order-slips-link';
     this.successMessageAlert = '#notifications article.alert-success';
     this.logoutFooterLink = '#main footer a[href*="mylogout"]';
+    this.myWishlistsLink = '#wishlist-link';
     this.psgdprLink = '#psgdpr-link';
   }
 
@@ -64,7 +67,7 @@ class MyAccountPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getSuccessMessageAlert(page: Page): Promise<string> {
+  async getSuccessMessageAlert(page: Page): Promise<string> {
     return this.getTextContent(page, this.successMessageAlert);
   }
 
@@ -151,6 +154,15 @@ class MyAccountPage extends FOBasePage {
    */
   async goToMyGDPRPersonalDataPage(page: Page): Promise<void> {
     await this.clickAndWaitForURL(page, this.psgdprLink);
+  }
+
+  /**
+   * Go to "My wishlists" page
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async goToMyWishlistsPage(page: Page): Promise<void> {
+    await this.clickAndWaitForURL(page, this.myWishlistsLink);
   }
 }
 
