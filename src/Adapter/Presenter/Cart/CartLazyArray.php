@@ -35,6 +35,7 @@ use Hook;
 use Link;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
+use PrestaShop\PrestaShop\Adapter\Presenter\LazyArrayAttribute;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
@@ -43,6 +44,7 @@ use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tools;
 
+#[LazyArrayAttribute(isRewritable: true)]
 class CartLazyArray extends AbstractLazyArray
 {
     private bool $shouldSeparateGifts;
@@ -98,9 +100,7 @@ class CartLazyArray extends AbstractLazyArray
         parent::__construct();
     }
 
-    /**
-     * @arrayAccess
-     */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getProducts(): array
     {
         if ($this->shouldSeparateGifts) {
@@ -115,9 +115,7 @@ class CartLazyArray extends AbstractLazyArray
         return $this->products;
     }
 
-    /**
-     * @arrayAccess
-     */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getTotals(): array
     {
         $total_excluding_tax = $this->cart->getOrderTotal(false);
@@ -149,9 +147,7 @@ class CartLazyArray extends AbstractLazyArray
         return $this->totals;
     }
 
-    /**
-     * @arrayAccess
-     */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getSubtotals(): array
     {
         $subtotals = [];
@@ -218,9 +214,7 @@ class CartLazyArray extends AbstractLazyArray
         return $this->subTotals;
     }
 
-    /**
-     * @arrayAccess
-     */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getProductsCount(): int
     {
         // If product list is already available, no need to execute a new sql query
@@ -238,9 +232,7 @@ class CartLazyArray extends AbstractLazyArray
         return $this->productsCount;
     }
 
-    /**
-     * @arrayAccess
-     */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getSummaryString(): string
     {
         $productsCount = $this->getProductsCount();
@@ -252,9 +244,7 @@ class CartLazyArray extends AbstractLazyArray
         return $this->summaryString;
     }
 
-    /**
-     * @arrayAccess
-     */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getLabels(): array
     {
         $this->labels = [
@@ -269,9 +259,7 @@ class CartLazyArray extends AbstractLazyArray
         return $this->labels;
     }
 
-    /**
-     * @arrayAccess
-     */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getIdAddressDelivery(): ?int
     {
         $this->idAddressDelivery = $this->cart->id_address_delivery;
@@ -279,9 +267,7 @@ class CartLazyArray extends AbstractLazyArray
         return $this->idAddressDelivery;
     }
 
-    /**
-     * @arrayAccess
-     */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getIdAddressInvoice(): ?int
     {
         $this->idAddressInvoice = $this->cart->id_address_invoice;
@@ -289,9 +275,7 @@ class CartLazyArray extends AbstractLazyArray
         return $this->idAddressInvoice;
     }
 
-    /**
-     * @arrayAccess
-     */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getIsVirtual(): bool
     {
         $this->isVirtual = $this->cart->isVirtualCart();
@@ -299,9 +283,7 @@ class CartLazyArray extends AbstractLazyArray
         return $this->isVirtual;
     }
 
-    /**
-     * @arrayAccess
-     */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getVouchers(): array
     {
         $this->vouchers = $this->getTemplateVarVouchers();
@@ -309,9 +291,7 @@ class CartLazyArray extends AbstractLazyArray
         return $this->vouchers;
     }
 
-    /**
-     * @arrayAccess
-     */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getDiscounts(): array
     {
         $vouchers = $this->getVouchers();
@@ -340,11 +320,7 @@ class CartLazyArray extends AbstractLazyArray
         return $this->discounts;
     }
 
-    /**
-     * @arrayAccess
-     *
-     * @indexName "minimalPurchase"
-     */
+    #[LazyArrayAttribute(arrayAccess: true, indexName: 'minimalPurchase')]
     public function getMinimalPurchase(): float
     {
         $minimalPurchase = $this->priceFormatter->convertAmount((float) Configuration::get('PS_PURCHASE_MINIMUM'));
@@ -357,11 +333,7 @@ class CartLazyArray extends AbstractLazyArray
         return $this->minimalPurchase;
     }
 
-    /**
-     * @arrayAccess
-     *
-     * @indexName "minimalPurchaseRequired"
-     */
+    #[LazyArrayAttribute(arrayAccess: true, indexName: 'minimalPurchaseRequired')]
     public function getMinimalPurchaseRequired(): string
     {
         $minimalPurchase = $this->getMinimalPurchase();
