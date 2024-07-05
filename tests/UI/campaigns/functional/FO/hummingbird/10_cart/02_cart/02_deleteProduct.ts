@@ -109,7 +109,7 @@ describe('FO - cart : Delete product', async () => {
     });
 
     it('should go to home page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage2', baseContext);
 
       await cartPage.goToHomePage(page);
 
