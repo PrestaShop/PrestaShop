@@ -30,6 +30,7 @@ use Language;
 use Link;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
+use PrestaShop\PrestaShop\Adapter\Presenter\LazyArrayAttribute;
 use Supplier;
 
 class SupplierLazyArray extends AbstractLazyArray
@@ -70,20 +71,18 @@ class SupplierLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return string
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getUrl()
     {
         return $this->link->getSupplierLink($this->supplier['id']);
     }
 
     /**
-     * @arrayAccess
-     *
      * @return array|null
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getImage()
     {
         return $this->imageRetriever->getImage(
@@ -93,10 +92,9 @@ class SupplierLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return int
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getNbProducts()
     {
         if (!isset($this->supplier['nb_products'])) {

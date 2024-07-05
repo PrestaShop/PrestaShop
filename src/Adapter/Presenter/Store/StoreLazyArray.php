@@ -31,6 +31,7 @@ use AddressFormat;
 use Language;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
+use PrestaShop\PrestaShop\Adapter\Presenter\LazyArrayAttribute;
 use Store;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -72,10 +73,9 @@ class StoreLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return array|null
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getImage()
     {
         return $this->imageRetriever->getImage(
@@ -85,10 +85,9 @@ class StoreLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return array
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getAddress()
     {
         // If we already have processed address, let's return it directly
@@ -111,10 +110,9 @@ class StoreLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return array
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getBusinessHours()
     {
         if (isset($this->store['business_hours'])) {

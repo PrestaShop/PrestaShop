@@ -32,6 +32,7 @@ use Context;
 use Currency;
 use Order;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
+use PrestaShop\PrestaShop\Adapter\Presenter\LazyArrayAttribute;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShopBundle\Translation\TranslatorComponent;
 use TaxConfiguration;
@@ -69,10 +70,9 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return array
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getProducts()
     {
         $totalProducts = ($this->includeTaxes) ? $this->order->total_products_wt : $this->order->total_products;
@@ -89,10 +89,9 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return array
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getDiscounts()
     {
         $discountAmount = ($this->includeTaxes)
@@ -119,10 +118,9 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return array
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getShipping()
     {
         $cart = new Cart($this->order->id_cart);
@@ -151,10 +149,9 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return array
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getTax()
     {
         if (!Configuration::get('PS_TAX_DISPLAY')) {
@@ -180,10 +177,9 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return array
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getGiftWrapping()
     {
         if ($this->order->gift) {
