@@ -5,7 +5,7 @@ import testContext from '@utils/testContext';
 import {createCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import createAccountTest from '@commonTests/FO/hummingbird/account';
-import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
 import homePage from '@pages/FO/hummingbird/home';
@@ -63,7 +63,7 @@ describe('FO - Account : View vouchers', async () => {
   });
 
   // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}_preTest_0`);
+  enableHummingbird(`${baseContext}_preTest_0`);
 
   // Pre-condition: Create new account on FO
   createAccountTest(customerData, `${baseContext}_preTest_1`);
@@ -154,5 +154,5 @@ describe('FO - Account : View vouchers', async () => {
   deleteCustomerTest(customerData, `${baseContext}_postTest_0`);
 
   // Post-condition : Uninstall Hummingbird
-  uninstallHummingbird(`${baseContext}_postTest_1`);
+  disableHummingbird(`${baseContext}_postTest_1`);
 });

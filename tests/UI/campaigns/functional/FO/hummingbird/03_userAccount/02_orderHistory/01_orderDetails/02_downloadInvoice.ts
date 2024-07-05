@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByCustomerTest} from '@commonTests/FO/hummingbird/order';
-import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import BO pages
 import invoicesPage from '@pages/BO/orders/invoices';
@@ -62,7 +62,7 @@ describe('FO - Account - Order details : Download invoice', async () => {
   });
 
   // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}_preTest_0`);
+  enableHummingbird(`${baseContext}_preTest_0`);
 
   // Pre-condition: Create order
   createOrderByCustomerTest(orderData, `${baseContext}_preTest_1`);
@@ -227,5 +227,5 @@ describe('FO - Account - Order details : Download invoice', async () => {
   });
 
   // Post-condition : Uninstall Hummingbird
-  uninstallHummingbird(`${baseContext}_postTest`);
+  disableHummingbird(`${baseContext}_postTest`);
 });

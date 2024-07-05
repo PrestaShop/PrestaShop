@@ -2,7 +2,7 @@
 import testContext from '@utils/testContext';
 
 // Import common tests
-import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
 import homePage from '@pages/FO/hummingbird/home';
@@ -41,7 +41,7 @@ describe('FO - Checkout - Personal information : Sign in', async () => {
   const credentialsData: FakerCustomer = new FakerCustomer();
 
   // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}_preTest`);
+  enableHummingbird(`${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -134,5 +134,5 @@ describe('FO - Checkout - Personal information : Sign in', async () => {
   });
 
   // Post-condition : Uninstall Hummingbird
-  uninstallHummingbird(`${baseContext}_postTest`);
+  disableHummingbird(`${baseContext}_postTest`);
 });

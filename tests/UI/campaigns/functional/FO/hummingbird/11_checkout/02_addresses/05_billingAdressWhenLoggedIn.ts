@@ -2,7 +2,7 @@
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
 // Import FO pages
@@ -27,7 +27,7 @@ describe('FO - Guest checkout: Billing address when logged in', async () => {
   let page: Page;
 
   // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}_preTest_0`);
+  enableHummingbird(`${baseContext}_preTest_0`);
 
   // before and after functions
   before(async function () {
@@ -126,5 +126,5 @@ describe('FO - Guest checkout: Billing address when logged in', async () => {
   });
 
   // Post-condition : Uninstall Hummingbird
-  uninstallHummingbird(`${baseContext}_postTest_1`);
+  disableHummingbird(`${baseContext}_postTest_1`);
 });

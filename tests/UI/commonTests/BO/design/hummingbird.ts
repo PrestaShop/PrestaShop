@@ -1,7 +1,6 @@
 import loginCommon from '@commonTests/BO/loginBO';
 
 import themeAndLogoPage from '@pages/BO/design/themeAndLogo/themeAndLogo';
-import themeImportPage from '@pages/BO/design/themeAndLogo/themeAndLogo/import';
 
 import testContext from '@utils/testContext';
 
@@ -9,16 +8,13 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
-  utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
-function installHummingbird(baseContext: string = 'commonTests-installHummingbird'): void {
-  describe('Install Hummingbird theme', async () => {
+function enableHummingbird(baseContext: string = 'commonTests-enableHummingbird'): void {
+  describe('Enable Hummingbird theme', async () => {
     let browserContext: BrowserContext;
     let page: Page;
-
-    const urlTheme: string = 'https://github.com/PrestaShop/hummingbird/releases/download/v0.1.6/hummingbird.zip';
 
     // before and after functions
     before(async function () {
@@ -28,9 +24,6 @@ function installHummingbird(baseContext: string = 'commonTests-installHummingbir
 
     after(async () => {
       await utilsPlaywright.closeBrowserContext(browserContext);
-      if (await utilsFile.doesFileExist('../../admin-dev/hummingbird.zip')) {
-        await utilsFile.deleteFile('../../admin-dev/hummingbird.zip');
-      }
     });
 
     it('should login in BO', async function () {
@@ -51,27 +44,6 @@ function installHummingbird(baseContext: string = 'commonTests-installHummingbir
       expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
 
       const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
-      expect(numThemes).to.eq(1);
-    });
-
-    it('should go to \'Add new theme\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewTheme', baseContext);
-
-      await themeAndLogoPage.goToNewThemePage(page);
-
-      const pageTitle = await themeImportPage.getPageTitle(page);
-      expect(pageTitle).to.contains(themeImportPage.pageTitle);
-    });
-
-    it('should import from the web the Hummingbird theme', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'importTheme', baseContext);
-
-      await themeImportPage.importFromWeb(page, urlTheme);
-
-      const pageTitle = await themeAndLogoPage.getPageTitle(page);
-      expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
-
-      const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
       expect(numThemes).to.eq(2);
     });
 
@@ -84,8 +56,8 @@ function installHummingbird(baseContext: string = 'commonTests-installHummingbir
   });
 }
 
-function uninstallHummingbird(baseContext: string = 'commonTests-uninstallHummingbird'): void {
-  describe('Uninstall Hummingbird theme', async () => {
+function disableHummingbird(baseContext: string = 'commonTests-disableHummingbird'): void {
+  describe('Disable Hummingbird theme', async () => {
     let browserContext: BrowserContext;
     let page: Page;
 
@@ -126,20 +98,10 @@ function uninstallHummingbird(baseContext: string = 'commonTests-uninstallHummin
       const result = await themeAndLogoPage.enableTheme(page, 'classic');
       expect(result).to.eq(themeAndLogoPage.successfulUpdateMessage);
     });
-
-    it('should remove the theme Hummingbird', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'removeThemeHummingbird', baseContext);
-
-      const result = await themeAndLogoPage.removeTheme(page, 'hummingbird');
-      expect(result).to.eq(themeAndLogoPage.successfulDeleteMessage);
-
-      const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
-      expect(numThemes).to.eq(1);
-    });
   });
 }
 
 export {
-  installHummingbird,
-  uninstallHummingbird,
+  enableHummingbird,
+  disableHummingbird,
 };

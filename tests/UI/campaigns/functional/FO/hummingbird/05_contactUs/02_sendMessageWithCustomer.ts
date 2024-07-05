@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
-import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
 // Import BO pages
@@ -69,7 +69,7 @@ describe('FO - Contact us : Send message from contact us page with customer logg
   setupSmtpConfigTest(`${baseContext}_preTest_1`);
 
   // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}_preTest_2`);
+  enableHummingbird(`${baseContext}_preTest_2`);
 
   // before and after functions
   before(async function () {
@@ -315,5 +315,5 @@ describe('FO - Contact us : Send message from contact us page with customer logg
   resetSmtpConfigTest(`${baseContext}_postTest_1`);
 
   // Post-condition : Uninstall Hummingbird
-  uninstallHummingbird(`${baseContext}_postTest_2`);
+  disableHummingbird(`${baseContext}_postTest_2`);
 });

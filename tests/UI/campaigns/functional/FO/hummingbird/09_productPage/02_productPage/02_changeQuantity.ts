@@ -2,7 +2,7 @@
 import testContext from '@utils/testContext';
 
 // Import common tests
-import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
 import homePage from '@pages/FO/hummingbird/home';
@@ -35,7 +35,7 @@ describe('FO - Product page : Change quantity', async () => {
   let page: Page;
 
   // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}_preTest`);
+  enableHummingbird(`${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -93,22 +93,25 @@ describe('FO - Product page : Change quantity', async () => {
       expect(isNotVisible).to.equal(true);
     });
 
-    // @todo : https://github.com/PrestaShop/hummingbird/pull/600
-    it('should set the quantity 0 and check that the add to cart button is disabled', async function () {
+    it('should set the quantity 0 and add to cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAddToCartButtonIsDisabled', baseContext);
 
-      this.skip();
       await productPage.setQuantity(page, 0);
+      await productPage.clickOnAddToCartButton(page);
 
-      const isButtonDisabled = await productPage.isAddToCartButtonEnabled(page);
-      expect(isButtonDisabled).to.equal(false);
+      const isNotVisible = await blockCartModal.continueShopping(page);
+      expect(isNotVisible).to.equal(true);
+    });
+
+    it('should check the cart notifications number', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkNotificationsNumber1', baseContext);
+
+      const notificationsNumber = await productPage.getCartNotificationsNumber(page);
+      expect(notificationsNumber).to.equal(3);
     });
 
     it('should add quantity of the product by setting input value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityByInput', baseContext);
-
-      // @todo : https://github.com/PrestaShop/hummingbird/issues/615
-      await productPage.reloadPage(page);
 
       await productPage.setQuantity(page, 12);
       await productPage.clickOnAddToCartButton(page);
@@ -117,8 +120,8 @@ describe('FO - Product page : Change quantity', async () => {
       expect(isVisible).to.equal(true);
     });
 
-    it('should click on continue shopping and check that the modal is not visible', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickOnContinueShopping', baseContext);
+    it('should click on continue shopping', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnContinueShopping2', baseContext);
 
       const isNotVisible = await blockCartModal.continueShopping(page);
       expect(isNotVisible).to.equal(true);
@@ -128,37 +131,48 @@ describe('FO - Product page : Change quantity', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNotificationsNumber', baseContext);
 
       const notificationsNumber = await productPage.getCartNotificationsNumber(page);
-      expect(notificationsNumber).to.equal(14);
+      expect(notificationsNumber).to.equal(15);
     });
 
-    // @todo : https://github.com/PrestaShop/hummingbird/pull/600
-    it('should set \'-24\' in the quantity input', async function () {
+    it('should set \'-24\' in the quantity input and check the quantity in the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityByInput2', baseContext);
 
-      this.skip();
       await productPage.setQuantity(page, '-24');
+      await productPage.clickOnAddToCartButton(page);
 
-      const isButtonDisabled = await productPage.isAddToCartButtonEnabled(page);
-      expect(isButtonDisabled).to.equal(false);
+      const notificationsNumber = await productPage.getCartNotificationsNumber(page);
+      expect(notificationsNumber).to.equal(16);
+    });
+
+    it('should click on continue shopping', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnContinueShopping3', baseContext);
+
+      const isNotVisible = await blockCartModal.continueShopping(page);
+      expect(isNotVisible).to.equal(true);
     });
 
     it('should set \'Prestashop\' in the quantity input and proceed to checkout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityByInput3', baseContext);
 
-      // @todo : https://github.com/PrestaShop/hummingbird/issues/615
-      await productPage.reloadPage(page);
-
       await productPage.setQuantity(page, 'Prestashop');
       await productPage.clickOnAddToCartButton(page);
 
-      const errorAlert = await productPage.getWarningMessage(page);
-      expect(errorAlert).to.equal('Null quantity.');
+      const notificationsNumber = await productPage.getCartNotificationsNumber(page);
+      expect(notificationsNumber).to.equal(17);
+    });
+
+    it('should proceed to checkout', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckout', baseContext);
+
+      await blockCartModal.proceedToCheckout(page);
+
+      const pageTitle = await cartPage.getPageTitle(page);
+      expect(pageTitle).to.equal(cartPage.pageTitle);
     });
 
     it('should remove product from shopping cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removeProduct', baseContext);
 
-      await productPage.goToCartPage(page);
       await cartPage.deleteProduct(page, 1);
 
       const notificationNumber = await cartPage.getCartNotificationsNumber(page);
@@ -167,5 +181,5 @@ describe('FO - Product page : Change quantity', async () => {
   });
 
   // Post-condition : Uninstall Hummingbird
-  uninstallHummingbird(`${baseContext}_postTest`);
+  disableHummingbird(`${baseContext}_postTest`);
 });

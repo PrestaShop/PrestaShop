@@ -2,7 +2,7 @@
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
 import cartPage from '@pages/FO/hummingbird/cart';
@@ -38,7 +38,7 @@ describe('FO - Header and Footer : Check links in header page', async () => {
   let page: Page;
 
   // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}_preTest_1`);
+  enableHummingbird(`${baseContext}_preTest_1`);
 
   describe('Check links in header page', async () => {
     // before and after functions
@@ -159,5 +159,5 @@ describe('FO - Header and Footer : Check links in header page', async () => {
   });
 
   // Post-condition : Uninstall Hummingbird
-  uninstallHummingbird(`${baseContext}_postTest_1`);
+  disableHummingbird(`${baseContext}_postTest_1`);
 });

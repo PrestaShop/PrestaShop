@@ -15,15 +15,15 @@ export default class themeAndLogoBasePage extends BOBasePage {
 
   private readonly themeShopCard: string;
 
-  private readonly cardInactiveTheme: string;
+  private readonly cardTheme: (themeName: string) => string;
 
-  private readonly useThemeButton: string;
+  private readonly useThemeButton: (themeName: string) => string;
 
   private readonly useThemeModalDialog: string;
 
   protected readonly useThemeModalDialogYesButton: string;
 
-  private readonly deleteThemeButton: string;
+  private readonly deleteThemeButton: (themeName: string) => string;
 
   private readonly deleteThemeModalDialog: string;
 
@@ -44,11 +44,11 @@ export default class themeAndLogoBasePage extends BOBasePage {
     this.pagesConfigurationNavItemLink = '#subtab-AdminPsThemeCustoConfiguration';
     this.advancedCustomizationNavItemLink = '#subtab-AdminPsThemeCustoAdvanced';
     this.themeShopCard = '.card-header[data-role="theme-shop"]';
-    this.cardInactiveTheme = '.card-body :nth-child(2) .theme-card[data-role="theme-card-container"]';
-    this.useThemeButton = '.action-button.js-display-use-theme-modal';
+    this.cardTheme = (themeName: string) => `.card-body div[data-role=${themeName}]`;
+    this.useThemeButton = (themeName: string) => `form[action*=${themeName}] .action-button.js-display-use-theme-modal`;
     this.useThemeModalDialog = '#use_theme_modal .modal-dialog';
     this.useThemeModalDialogYesButton = `${this.useThemeModalDialog} .js-submit-use-theme`;
-    this.deleteThemeButton = '.delete-button';
+    this.deleteThemeButton = (themeName: string) => `form[action*=${themeName}] .delete-button`;
     this.deleteThemeModalDialog = '#delete_theme_modal .modal-dialog';
     this.deleteThemeModalDialogYesButton = `${this.deleteThemeModalDialog} .js-submit-delete-theme`;
 
@@ -129,12 +129,13 @@ export default class themeAndLogoBasePage extends BOBasePage {
   /**
    * Use the Theme
    * @param page {Page} Browser tab
+   * @param themeName {string} The theme name
    * @returns {Promise<String>}
    */
-  async useTheme(page: Page): Promise<string> {
+  async useTheme(page: Page, themeName: string): Promise<string> {
     await this.scrollTo(page, this.themeShopCard);
-    await page.hover(this.cardInactiveTheme);
-    await this.waitForSelectorAndClick(page, this.useThemeButton);
+    await page.hover(this.cardTheme(themeName));
+    await this.waitForSelectorAndClick(page, this.useThemeButton(themeName));
     await this.waitForSelectorAndClick(page, this.useThemeModalDialogYesButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -143,12 +144,13 @@ export default class themeAndLogoBasePage extends BOBasePage {
   /**
    * Delete the not used Theme
    * @param page {Page} Browser tab
+   * @param themeName {string} The theme name
    * @returns {Promise<String>}
    */
-  async deleteTheme(page: Page): Promise<string> {
+  async deleteTheme(page: Page, themeName: string): Promise<string> {
     await this.scrollTo(page, this.themeShopCard);
-    await page.hover(this.cardInactiveTheme);
-    await this.waitForSelectorAndClick(page, this.deleteThemeButton);
+    await page.hover(this.cardTheme(themeName));
+    await this.waitForSelectorAndClick(page, this.deleteThemeButton(themeName));
     await this.waitForSelectorAndClick(page, this.deleteThemeModalDialogYesButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);

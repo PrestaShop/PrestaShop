@@ -19,6 +19,9 @@ front-core: ## Building core theme assets
 front-classic: ## Building classic theme assets
 	./tools/assets/build.sh front-classic
 
+front-hummingbird: ## Building hummingbird theme assets
+	./tools/assets/build.sh front-hummingbird
+
 admin-default: ## Building admin default theme assets
 	./tools/assets/build.sh admin-default
 

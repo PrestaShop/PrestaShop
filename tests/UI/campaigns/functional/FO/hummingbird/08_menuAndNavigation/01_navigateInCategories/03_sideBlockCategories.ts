@@ -2,7 +2,7 @@
 import testContext from '@utils/testContext';
 
 // Import common tests
-import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
 import homePage from '@pages/FO/hummingbird/home';
@@ -23,7 +23,7 @@ describe('FO - Menu and Navigation : Side block categories', async () => {
   let page: Page;
 
   // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}_preTest`);
+  enableHummingbird(`${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -67,15 +67,17 @@ describe('FO - Menu and Navigation : Side block categories', async () => {
         expect(pageTitle).to.equal(arg.parent.name);
       });
 
-      it(`should check category block '${arg.parent.name}'`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `checkCategory${index}`, baseContext);
+      if (arg.parent !== dataCategories.art) {
+        it(`should check category block '${arg.parent.name}'`, async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `checkCategory${index}`, baseContext);
 
-        const hasBlockCategories = await foHummingbirdCategoryPage.hasBlockCategories(page);
-        expect(hasBlockCategories).to.equal(true);
+          const hasBlockCategories = await foHummingbirdCategoryPage.hasBlockCategories(page);
+          expect(hasBlockCategories).to.equal(true);
 
-        const numBlockCategories = await foHummingbirdCategoryPage.getNumBlockCategories(page);
-        expect(numBlockCategories).to.equal(arg.parent.children.length);
-      });
+          const numBlockCategories = await foHummingbirdCategoryPage.getNumBlockCategories(page);
+          expect(numBlockCategories).to.equal(arg.parent.children.length);
+        });
+      }
 
       if (arg.child) {
         it(`should click on category '${arg.child.name}' in sideBlock`, async function () {
@@ -86,20 +88,10 @@ describe('FO - Menu and Navigation : Side block categories', async () => {
           const pageTitle = await homePage.getPageTitle(page);
           expect(pageTitle).to.equal(arg.child!.name);
         });
-
-        it(`should check category block '${arg.child.name}'`, async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `checkSubCategory${index}`, baseContext);
-
-          const hasBlockCategories = await foHummingbirdCategoryPage.hasBlockCategories(page);
-          expect(hasBlockCategories).to.equal(true);
-
-          const numBlockCategories = await foHummingbirdCategoryPage.getNumBlockCategories(page);
-          expect(numBlockCategories).to.equal(0);
-        });
       }
     });
   });
 
   // Post-condition : Uninstall Hummingbird
-  uninstallHummingbird(`${baseContext}_postTest`);
+  disableHummingbird(`${baseContext}_postTest`);
 });

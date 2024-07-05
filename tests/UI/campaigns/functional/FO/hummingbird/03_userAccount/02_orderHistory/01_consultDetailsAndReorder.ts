@@ -6,7 +6,7 @@ import {createAddressTest} from '@commonTests/BO/customers/address';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import createAccountTest from '@commonTests/FO/hummingbird/account';
 import {createOrderByCustomerTest} from '@commonTests/FO/hummingbird/order';
-import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
 import homePage from '@pages/FO/hummingbird/home';
@@ -72,7 +72,7 @@ describe('FO - Account - Order history : Consult details and reorder', async () 
   const today: string = utilsDate.getDateFormat('mm/dd/yyyy');
 
   // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}_preTest_1`);
+  enableHummingbird(`${baseContext}_preTest_1`);
 
   // Pre-condition: Create new account
   createAccountTest(customerData, `${baseContext}_enableNewProduct`);
@@ -229,5 +229,5 @@ describe('FO - Account - Order history : Consult details and reorder', async () 
   deleteCustomerTest(customerData, `${baseContext}_postText_1`);
 
   // Post-condition : Uninstall Hummingbird
-  uninstallHummingbird(`${baseContext}_postTest_2`);
+  disableHummingbird(`${baseContext}_postTest_2`);
 });

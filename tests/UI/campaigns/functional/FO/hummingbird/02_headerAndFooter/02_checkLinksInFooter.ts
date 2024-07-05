@@ -5,7 +5,7 @@ import testContext from '@utils/testContext';
 import deleteCacheTest from '@commonTests/BO/advancedParameters/cache';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {createAccountTest} from '@commonTests/FO/classic/account';
-import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
 // Import BO pages
@@ -71,7 +71,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
   createAccountTest(createCustomerData, `${baseContext}_preTest_1`);
 
   // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}_preTest_2`);
+  enableHummingbird(`${baseContext}_preTest_2`);
 
   // Pre-condition: Delete cache
   deleteCacheTest(`${baseContext}_preTest_3`);
@@ -252,7 +252,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
   });
 
   // Post-condition : Uninstall Hummingbird
-  uninstallHummingbird(`${baseContext}_postTest_1`);
+  disableHummingbird(`${baseContext}_postTest_1`);
 
   // Post-condition: Delete the created customer account
   deleteCustomerTest(createCustomerData, `${baseContext}_postTest_2`);

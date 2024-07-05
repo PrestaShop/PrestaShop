@@ -2,7 +2,7 @@
 import testContext from '@utils/testContext';
 
 // Import common tests
-import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 import {createCartRuleTest, deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 
 // Import FO pages
@@ -68,7 +68,7 @@ describe('FO - Checkout : Display of totals', async () => {
   createCartRuleTest(cartRuleWithCodeData, `${baseContext}_preTest_1`);
 
   // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}_preTest_2`);
+  enableHummingbird(`${baseContext}_preTest_2`);
 
   describe('Display total', async () => {
     before(async function () {
@@ -209,7 +209,7 @@ describe('FO - Checkout : Display of totals', async () => {
   });
 
   // Post-condition : Uninstall Hummingbird
-  uninstallHummingbird(`${baseContext}_postTest_1`);
+  disableHummingbird(`${baseContext}_postTest_1`);
 
   // Post-condition: Delete created cart rule
   deleteCartRuleTest(cartRuleWithCodeData.name, `${baseContext}_postTest_2`);

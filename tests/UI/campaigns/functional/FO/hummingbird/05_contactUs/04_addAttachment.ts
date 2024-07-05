@@ -3,7 +3,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
 // Import BO pages
@@ -56,7 +56,7 @@ describe('FO - Contact us : Add attachment', async () => {
   });
 
   // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}_preTest`);
+  enableHummingbird(`${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -220,5 +220,5 @@ describe('FO - Contact us : Add attachment', async () => {
   });
 
   // Post-condition : Uninstall Hummingbird
-  uninstallHummingbird(`${baseContext}_postTest`);
+  disableHummingbird(`${baseContext}_postTest`);
 });

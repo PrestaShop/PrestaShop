@@ -3,7 +3,7 @@ import testContext from '@utils/testContext';
 
 // Import common tests
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
-import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import BO pages
 import loginCommon from '@commonTests/BO/loginBO';
@@ -54,7 +54,7 @@ describe('FO - Product page - Quick view : Change image', async () => {
   });
 
   // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}_preTest`);
+  enableHummingbird(`${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -238,5 +238,5 @@ describe('FO - Product page - Quick view : Change image', async () => {
   deleteProductTest(newProductData, `${baseContext}_postTest`);
 
   // Post-condition : Uninstall Hummingbird
-  uninstallHummingbird(`${baseContext}_postTest2`);
+  disableHummingbird(`${baseContext}_postTest2`);
 });

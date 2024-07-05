@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {createAccountTest} from '@commonTests/FO/classic/account';
-import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
 import homePage from '@pages/FO/hummingbird/home';
@@ -67,7 +67,7 @@ describe('FO - Account : Edit information', async () => {
   createAccountTest(createCustomerData, `${baseContext}_preTest_0`);
 
   // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}_preTest_1`);
+  enableHummingbird(`${baseContext}_preTest_1`);
 
   describe('Edit the created account in FO', async () => {
     // before and after functions
@@ -290,5 +290,5 @@ describe('FO - Account : Edit information', async () => {
   deleteCustomerTest(editCustomerData9, `${baseContext}_postTest_0`);
 
   // Post-condition : Uninstall Hummingbird
-  uninstallHummingbird(`${baseContext}_postTest_1`);
+  disableHummingbird(`${baseContext}_postTest_1`);
 });

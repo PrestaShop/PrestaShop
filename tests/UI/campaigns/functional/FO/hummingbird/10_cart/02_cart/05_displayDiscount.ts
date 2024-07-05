@@ -9,7 +9,7 @@ import checkoutPage from '@pages/FO/hummingbird/checkout';
 
 // Import commonTests
 import {createCartRuleTest, deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
-import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -63,7 +63,7 @@ describe('FO - cart : Display discount', async () => {
   createCartRuleTest(secondCartRuleData, `${baseContext}_PreTest_2`);
 
   // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}_preTest_3`);
+  enableHummingbird(`${baseContext}_preTest_3`);
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -257,5 +257,5 @@ describe('FO - cart : Display discount', async () => {
   deleteCartRuleTest(secondCartRuleData.name, `${baseContext}_PostTest_2`);
 
   // Post-condition : Uninstall Hummingbird
-  uninstallHummingbird(`${baseContext}_postTest_3`);
+  disableHummingbird(`${baseContext}_postTest_3`);
 });

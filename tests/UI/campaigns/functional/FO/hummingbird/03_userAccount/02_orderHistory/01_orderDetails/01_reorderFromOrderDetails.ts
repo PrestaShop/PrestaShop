@@ -3,7 +3,7 @@ import testContext from '@utils/testContext';
 
 // Import common tests
 import {createOrderByCustomerTest} from '@commonTests/FO/hummingbird/order';
-import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
 import checkoutPage from '@pages/FO/hummingbird/checkout';
@@ -59,7 +59,7 @@ describe('FO - Account - Order details : Reorder from order detail', async () =>
   });
 
   // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}_preTest_1`);
+  enableHummingbird(`${baseContext}_preTest_1`);
 
   // Pre-condition: Create order
   createOrderByCustomerTest(orderData, `${baseContext}_preTest_1`);
@@ -211,5 +211,5 @@ describe('FO - Account - Order details : Reorder from order detail', async () =>
   });
 
   // Post-condition : Uninstall Hummingbird
-  uninstallHummingbird(`${baseContext}_postTest`);
+  disableHummingbird(`${baseContext}_postTest`);
 });

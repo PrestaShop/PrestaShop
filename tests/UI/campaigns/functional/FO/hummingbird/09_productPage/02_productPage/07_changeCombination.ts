@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 // import common tests
 import loginCommon from '@commonTests/BO/loginBO';
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
-import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import BO pages
 import attributesPage from '@pages/BO/catalog/attributes';
@@ -90,7 +90,7 @@ describe('FO - Product page - Product page : Change combination', async () => {
   });
 
   // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}_preTest`);
+  enableHummingbird(`${baseContext}_preTest`);
 
   describe('Create new attribute and values', async () => {
     it('should login in BO', async function () {
@@ -363,5 +363,5 @@ describe('FO - Product page - Product page : Change combination', async () => {
   deleteProductTest(newProductData, `${baseContext}_postTest_1`);
 
   // Post-condition : Uninstall Hummingbird
-  uninstallHummingbird(`${baseContext}_postTest_2`);
+  disableHummingbird(`${baseContext}_postTest_2`);
 });

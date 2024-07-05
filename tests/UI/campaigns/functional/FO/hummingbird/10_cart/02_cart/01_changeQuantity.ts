@@ -2,7 +2,7 @@
 import testContext from '@utils/testContext';
 
 // Import common tests
-import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
 import cartPage from '@pages/FO/hummingbird/cart';
@@ -32,7 +32,7 @@ describe('FO - cart : Change quantity', async () => {
   let page: Page;
 
   // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}_preTest`);
+  enableHummingbird(`${baseContext}_preTest`);
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -100,7 +100,27 @@ describe('FO - cart : Change quantity', async () => {
       await cartPage.editProductQuantity(page, 1, -6);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      expect(notificationsNumber).to.be.equal(3);
+      expect(notificationsNumber).to.be.equal(0);
+    });
+
+    it('should go to home page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage2', baseContext);
+
+      await cartPage.goToHomePage(page);
+
+      const isHomePage = await homePage.isHomePage(page);
+      expect(isHomePage, 'Fail to open FO home page').to.equal(true);
+    });
+
+    it('should add the first product to cart and proceed to checkout', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addFirstProductToCart2', baseContext);
+
+      await homePage.quickViewProduct(page, 1);
+      await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
+      await blockCartModal.proceedToCheckout(page);
+
+      const pageTitle = await cartPage.getPageTitle(page);
+      expect(pageTitle).to.equal(cartPage.pageTitle);
     });
 
     it('should set the quantity +6 in the input', async function () {
@@ -161,10 +181,10 @@ describe('FO - cart : Change quantity', async () => {
       await cartPage.editProductQuantity(page, 1, 0);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      expect(notificationsNumber).to.be.equal(300);
+      expect(notificationsNumber).to.be.equal(0);
     });
   });
 
   // Post-condition : Uninstall Hummingbird
-  uninstallHummingbird(`${baseContext}_postTest`);
+  disableHummingbird(`${baseContext}_postTest`);
 });

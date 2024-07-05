@@ -2,7 +2,7 @@
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
 import homePage from '@pages/FO/hummingbird/home';
@@ -27,7 +27,7 @@ describe('FO - Menu and Navigation : Check categories and subcategories links in
   let page: Page;
 
   // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}_preTest`);
+  enableHummingbird(`${baseContext}_preTest`);
 
   describe('Check categories and subcategories links in header', async () => {
     // before and after functions
@@ -78,5 +78,5 @@ describe('FO - Menu and Navigation : Check categories and subcategories links in
   });
 
   // Post-condition : Uninstall Hummingbird
-  uninstallHummingbird(`${baseContext}_postTest`);
+  disableHummingbird(`${baseContext}_postTest`);
 });

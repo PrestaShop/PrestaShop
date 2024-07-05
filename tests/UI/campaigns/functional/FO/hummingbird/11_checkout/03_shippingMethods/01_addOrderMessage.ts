@@ -2,7 +2,7 @@
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {installHummingbird, uninstallHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
 import cartPage from '@pages/FO/hummingbird/cart';
@@ -49,7 +49,7 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
   const editMessage: string = 'Test message';
 
   // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}_preTest_0`);
+  enableHummingbird(`${baseContext}_preTest_0`);
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -177,5 +177,5 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
   });
 
   // Pre-condition : Install Hummingbird
-  uninstallHummingbird(`${baseContext}_postTest_0`);
+  disableHummingbird(`${baseContext}_postTest_0`);
 });
