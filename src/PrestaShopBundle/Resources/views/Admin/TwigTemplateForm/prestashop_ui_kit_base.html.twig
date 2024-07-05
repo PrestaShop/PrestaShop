@@ -768,9 +768,14 @@
       </div>
       <div class="d-inline-block">
         {% for error in errors %}
+          {% if error.cause.plural %}
+            {% set messageParameters = error.messageParameters|merge({'%count%': error.cause.plural}) %}
+          {% else %}
+            {% set messageParameters = error.messageParameters %}
+          {% endif %}
+
           <div class="text-danger">
-            <p> {{ error.messageTemplate|trans(error.messageParameters, 'form_error') }}
-            </p>
+            <p>{{ error.messageTemplate|trans(messageParameters, 'form_error') }}</p>
           </div>
         {%- endfor -%}
       </div>
@@ -786,8 +791,13 @@
       </button>
       <div class="alert-text">
         {% for error in errors %}
-            <p> {{ error.messageTemplate|trans(error.messageParameters, 'form_error') }}
-            </p>
+          {% if error.cause.plural %}
+            {% set messageParameters = error.messageParameters|merge({'%count%': error.cause.plural}) %}
+          {% else %}
+            {% set messageParameters = error.messageParameters %}
+          {% endif %}
+
+          <p>{{ error.messageTemplate|trans(messageParameters, 'form_error') }}</p>
         {%- endfor -%}
       </div>
     </div>
