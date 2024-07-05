@@ -1210,6 +1210,11 @@ class CustomerCore extends ObjectModel
             return false;
         }
 
+        // If a customer with the same email already exists, wrong call
+        if (Customer::customerExists($this->email)) {
+            return false;
+        }
+
         $this->is_guest = false;
 
         /*

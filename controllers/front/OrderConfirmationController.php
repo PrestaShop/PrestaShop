@@ -181,9 +181,19 @@ class OrderConfirmationControllerCore extends FrontController
                 return;
             }
 
+            // Prevent error
+            // A) either on page refresh
+            // B) if we already transformed him in other window or through backoffice
             if ($this->customer->is_guest == 0) {
                 $this->errors[] = $this->trans(
                     'A customer account has already been created from this guest account. Please sign in.',
+                    [],
+                    'Shop.Notifications.Error'
+                );
+            // Check if a different customer with the same email was not already created in a different window or through backoffice
+            } elseif (Customer::customerExists($this->customer->email)) {
+                $this->errors[] = $this->trans(
+                    'You can\'t transform your account into a customer account, because a registered customer with the same email already exists.',
                     [],
                     'Shop.Notifications.Error'
                 );
