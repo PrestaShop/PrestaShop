@@ -10,7 +10,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 // Import pages
 // Import BO pages
 // Import FO pages
-import aboutUsPage from '@pages/FO/hummingbird/aboutUs';
 import bestSalesPage from '@pages/FO/hummingbird/bestSales';
 import contactUsPage from '@pages/FO/hummingbird/contactUs';
 import deliveryPage from '@pages/FO/hummingbird/delivery';
@@ -34,6 +33,7 @@ import termsAndConditionsOfUsePage from '@pages/FO/hummingbird/termsAndCondition
 import {
   dataCustomers,
   FakerCustomer,
+  foHummingbirdAboutUsPage,
   foHummingbirdLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -118,7 +118,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
       {linkSelector: 'Delivery', pageTitle: deliveryPage.pageTitle},
       {linkSelector: 'Legal Notice', pageTitle: legalNoticePage.pageTitle},
       {linkSelector: 'Terms and conditions of use', pageTitle: termsAndConditionsOfUsePage.pageTitle},
-      {linkSelector: 'About us', pageTitle: aboutUsPage.pageTitle},
+      {linkSelector: 'About us', pageTitle: foHummingbirdAboutUsPage.pageTitle},
       {linkSelector: 'Secure payment', pageTitle: securePaymentPage.pageTitle},
       {linkSelector: 'Contact us', pageTitle: contactUsPage.pageTitle},
       {linkSelector: 'Sitemap', pageTitle: siteMapPage.pageTitle},
