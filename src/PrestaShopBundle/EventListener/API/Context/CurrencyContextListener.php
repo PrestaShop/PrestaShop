@@ -17,8 +17,7 @@ class CurrencyContextListener
         private readonly CurrencyContextBuilder $currencyContextBuilder,
         private readonly ShopConfigurationInterface $configuration,
         private readonly ShopContext $shopContext
-    )
-    {
+    ) {
     }
 
     public function onKernelRequest(RequestEvent $event): void
