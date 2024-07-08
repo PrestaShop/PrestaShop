@@ -14,7 +14,7 @@ class GDPRPersonalDataPage extends FOBasePage {
 
   private readonly exportDataToPDFButton: string;
 
-  private readonly contactUsHyperLink: string;
+  protected contactUsHyperLink: string;
 
   private readonly exportDataToCSVButton: string;
 

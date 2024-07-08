@@ -198,31 +198,25 @@ describe('FO - Product page - Product page : Display discount', async () => {
       expect(productQuantity).to.equal(3);
     });
 
-    // @todo : https://github.com/PrestaShop/hummingbird/issues/616
     it('should check the tag \'New, -€2.00\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkFlag', baseContext);
-
-      this.skip();
 
       const flagText = await foProductPage.getProductTag(page);
       expect(flagText).to.contains('-€2.00')
         .and.to.contain('New');
     });
 
-    // @todo : https://github.com/PrestaShop/hummingbird/issues/616
     it('should check the product price before and after the discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductPrice', baseContext);
-
-      this.skip();
 
       const discountValue = await foProductPage.getDiscountAmount(page);
       expect(discountValue).to.equal('(Save €2.00)');
 
       const finalPrice = await foProductPage.getProductPrice(page);
-      expect(finalPrice).to.equal('€22.00');
+      expect(finalPrice).to.equal('€18.00');
 
       const regularPrice = await foProductPage.getRegularPrice(page);
-      expect(regularPrice).to.equal('€24.00');
+      expect(regularPrice).to.equal('€20.00');
     });
 
     it('should add the product to cart and check the block cart modal', async function () {

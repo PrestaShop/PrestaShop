@@ -12,6 +12,9 @@ class GDPRPersonalData extends GDPRPersonalDataPage {
    */
   constructor() {
     super('hummingbird');
+
+    // Selectors
+    this.contactUsHyperLink = 'section.page-content a[href*=\'contact-us\']';
   }
 }
 

@@ -154,8 +154,7 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
         expect(pageTitle).to.equal(myAccountPage.pageTitle);
       });
 
-      // @todo https://github.com/PrestaShop/hummingbird/pull/600
-      it.skip('should go to \'GDPR - Personal data\' page', async function () {
+      it('should go to \'GDPR - Personal data\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToGDPRPage1', baseContext);
 
         await myAccountPage.goToMyGDPRPersonalDataPage(page);
@@ -164,7 +163,7 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
         expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
       });
 
-      it.skip('should click on \'Get my data to PDF file\'', async function () {
+      it('should click on \'Get my data to PDF file\'', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnGetMyDataToPDF1', baseContext);
 
         filePath = await gdprPersonalDataPage.exportDataToPDF(page);
@@ -248,7 +247,7 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
         expect(imageNumber).to.be.equal(1);
       });
 
-      it.skip('should check the date and the customer name', async function () {
+      it('should check the date and the customer name', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkDateAndCustomerName', baseContext);
 
         const isVisible = await utilsFile.isTextInPDF(
@@ -259,7 +258,7 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
         expect(isVisible, 'The date and the customer name are not correct!').to.eq(true);
       });
 
-      it.skip('should check general info', async function () {
+      it('should check general info', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkGeneralInfo', baseContext);
 
         const age = await utilsCore.age(customerData.birthDate);
@@ -272,14 +271,14 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
         expect(isVisible, 'General info is not correct!').to.eq(true);
       });
 
-      it.skip('should check that Addresses table is empty', async function () {
+      it('should check that Addresses table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkThatAddressesTableIsEmpty', baseContext);
 
         const isVisible = await utilsFile.isTextInPDF(filePath, 'No addresses ', true);
         expect(isVisible, 'Addresses table is not empty!').to.eq(true);
       });
 
-      it.skip('should check that Orders table is empty', async function () {
+      it('should check that Orders table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkThatOrdersTableIsEmpty', baseContext);
 
         const isVisible = await utilsFile.isTextInPDF(filePath, 'Orders Reference Payment Order state '
@@ -287,21 +286,21 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
         expect(isVisible, 'Orders table is not empty!').to.eq(true);
       });
 
-      it.skip('should check that Carts table is empty', async function () {
+      it('should check that Carts table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkThatCartsTableIsEmpty1', baseContext);
 
         const isVisible = await utilsFile.isTextInPDF(filePath, 'Carts Id Total products Date No carts', true);
         expect(isVisible, 'Carts table is not empty!').to.eq(true);
       });
 
-      it.skip('should check that Messages table is empty', async function () {
+      it('should check that Messages table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkThatMessagesTableIsEmpty', baseContext);
 
         const isVisible = await utilsFile.isTextInPDF(filePath, 'Messages IP Message Date No messages', true);
         expect(isVisible, 'Messages table is not empty!').to.eq(true);
       });
 
-      it.skip('should check Last connections table', async function () {
+      it('should check Last connections table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkLastConnectionsTable1', baseContext);
 
         const isVisible = await utilsFile.isTextInPDF(filePath, 'Last connections Origin request Page viewed '
@@ -310,7 +309,7 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
         expect(isVisible, 'The data in Last connections table is not correct!').to.eq(true);
       });
 
-      it.skip('should check that Newsletter subscription table is empty', async function () {
+      it('should check that Newsletter subscription table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkNewsletterSubscriptionTable', baseContext);
 
         const isVisible = await utilsFile.isTextInPDF(filePath, 'Module : Newsletter subscription 0 Newsletter '
@@ -318,14 +317,14 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
         expect(isVisible, 'Newsletter subscription table is not empty!').to.eq(true);
       });
 
-      it.skip('should check that Module product comments is empty', async function () {
+      it('should check that Module product comments is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkModuleProductComments', baseContext);
 
         const isVisible = await utilsFile.isTextInPDF(filePath, 'Module : Product Comments ', true);
         expect(isVisible, 'Products comments is not empty!').to.eq(true);
       });
 
-      it.skip('should check that mail alerts table is empty', async function () {
+      it('should check that mail alerts table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkModuleMailAlerts', baseContext);
 
         const isVisible = await utilsFile.isTextInPDF(filePath, 'Module : Mail alerts 0 Mail alert: Unable to export '
@@ -335,7 +334,7 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
     });
   });
 
-  describe.skip('Check GDPR PDF file after create a cart', async () => {
+  describe('Check GDPR PDF file after create a cart', async () => {
     describe('Add a product to the cart and download PDF file', async () => {
       it('should go to FO home page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount2', baseContext);
@@ -453,7 +452,7 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
     });
   });
 
-  describe.skip('Check GDPR PDF file after create an order and an address', async () => {
+  describe('Check GDPR PDF file after create an order and an address', async () => {
     describe('Create an order and download PDF file', async () => {
       it('should go to FO home page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount3', baseContext);
@@ -615,7 +614,7 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
     });
   });
 
-  describe.skip('Check GDPR PDF file after send a message', async () => {
+  describe('Check GDPR PDF file after send a message', async () => {
     describe('Send message and download PDF file', async () => {
       it('should go to FO home page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount4', baseContext);
@@ -754,7 +753,7 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
     });
   });
 
-  describe.skip('Check GDPR PDF file after logout and login in FO', async () => {
+  describe('Check GDPR PDF file after logout and login in FO', async () => {
     describe('Logout then login and download PDF file', async () => {
       it('should go to FO home page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount5', baseContext);

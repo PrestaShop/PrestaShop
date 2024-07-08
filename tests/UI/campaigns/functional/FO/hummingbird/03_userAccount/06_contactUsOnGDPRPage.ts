@@ -94,8 +94,7 @@ describe('FO - Account : Contact us on GDPR page', async () => {
       expect(pageTitle).to.equal(myAccountPage.pageTitle);
     });
 
-    // @todo https://github.com/PrestaShop/hummingbird/pull/600
-    it.skip('should go to \'GDPR - Personal data\' page', async function () {
+    it('should go to \'GDPR - Personal data\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToGDPRPage', baseContext);
 
       await myAccountPage.goToMyGDPRPersonalDataPage(page);
@@ -104,7 +103,7 @@ describe('FO - Account : Contact us on GDPR page', async () => {
       expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
     });
 
-    it.skip('should click on \'Contact page\' link from Rectification & Erasure requests block', async function () {
+    it('should click on \'Contact page\' link from Rectification & Erasure requests block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToContactUsPage', baseContext);
 
       await gdprPersonalDataPage.goToContactUsPage(page);
@@ -113,7 +112,7 @@ describe('FO - Account : Contact us on GDPR page', async () => {
       expect(pageTitle).to.equal(contactUsPage.pageTitle);
     });
 
-    it.skip('should send message to customer service', async function () {
+    it('should send message to customer service', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
 
       await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.txt`);
@@ -122,11 +121,11 @@ describe('FO - Account : Contact us on GDPR page', async () => {
       expect(validationMessage).to.equal(contactUsPage.validationMessage);
     });
 
-    it.skip('should login in BO', async function () {
+    it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
 
-    it.skip('should go to customer service page', async function () {
+    it('should go to customer service page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderMessagesPage', baseContext);
 
       await boDashboardPage.goToSubMenu(
@@ -139,14 +138,14 @@ describe('FO - Account : Contact us on GDPR page', async () => {
       expect(pageTitle).to.contains(customerServicePage.pageTitle);
     });
 
-    it.skip('should check message', async function () {
+    it('should check message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkMessage', baseContext);
 
       const message = await customerServicePage.getTextColumn(page, 1, 'message');
       expect(message).to.contain(contactUsData.message);
     });
 
-    it.skip('should delete the message', async function () {
+    it('should delete the message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteMessage', baseContext);
 
       const textResult = await customerServicePage.deleteMessage(page, 1);
