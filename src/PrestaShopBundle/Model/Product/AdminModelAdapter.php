@@ -305,9 +305,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         // Otherwise, we fallback to category permament redirect
         if (RedirectType::TYPE_PRODUCT_PERMANENT == $form_data['redirect_type'] ||
             RedirectType::TYPE_PRODUCT_TEMPORARY == $form_data['redirect_type']) {
-            if (!empty($form_data['id_type_redirected']['data'][0])) {
-                $form_data['id_type_redirected'] = $form_data['id_type_redirected']['data'][0];
-            } else {
+            // Currently, $form_data['id_type_redirected'] already has the product ID
+            if (!is_numeric($form_data['id_type_redirected']) || $form_data['id_type_redirected'] <= 0) {
                 $form_data['redirect_type'] = RedirectType::TYPE_CATEGORY_PERMANENT;
             }
         }
