@@ -79,7 +79,7 @@ class CategoryTreeSelectorType extends CollectionType
             ->add('apply_btn', ButtonType::class, [
                 'label' => $this->translator->trans('Apply', [], 'Admin.Actions'),
                 'attr' => [
-                    'class' => 'js-apply-categories-btn btn-outline-primary',
+                    'class' => 'js-apply-categories-btn btn-primary',
                 ],
             ])
             ->add('cancel_btn', ButtonType::class, [
