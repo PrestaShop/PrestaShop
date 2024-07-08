@@ -23,6 +23,14 @@ $header-text-color: var(--#{$cdk}white) !default;
   color: var(--#{$cdk}header-text-color);
   background: var(--#{$cdk}header-bg);
 
+  /* stylelint-disable */
+  .btn,
+  a {
+    outline: 0 !important;
+    box-shadow: none !important;
+  }
+  /* stylelint-enable */
+
   .header-right {
     display: flex;
     gap: var(--#{$cdk}size-4);
