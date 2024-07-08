@@ -32,32 +32,34 @@
             {{ 'Sources'|trans({}, 'Admin.Orderscustomers.Feature') }}
             <span class="badge badge-primary rounded">{{ orderForViewing.sources.sources|length }}</span>
           </div>
-
-          <ul id="order-sources-list">
-            {% for source in orderForViewing.sources.sources %}
-              <li>
-                {{ source.addedAt|date_format_full }}
-                <br/>
-                <b>{{ 'From'|trans({}, 'Admin.Orderscustomers.Feature') }}</b>
-                {% if source.httpReferer != '' %}
-                  <a href="{{ source.httpReferer }}">{{ source.httpReferer }}</a>
-                {% else %}
-                  -
-                {% endif %}
-                <br/>
-                <b>{{ 'To'|trans({}, 'Admin.Orderscustomers.Feature') }}</b>
-                <a href="http://{{ source.requestUri }}">{{ source.requestUri | slice(0,100) }}</a>
-                <br/>
-                {% if source.keywords != '' %}
-                  <b>{{ 'Keywords'|trans({}, 'Admin.Global') }}</b>
-                  <br/>
-                  {{ source.keywords }}
-                {% endif %}
-                <br/>
-              </li>
-            {% endfor %}
-          </ul>
         </div>
+      </div>
+
+      <div class="card-body">
+        <ul id="order-sources-list">
+          {% for source in orderForViewing.sources.sources %}
+            <li>
+              {{ source.addedAt|date_format_full }}
+              <br/>
+              <b>{{ 'From'|trans({}, 'Admin.Orderscustomers.Feature') }}</b>
+              {% if source.httpReferer != '' %}
+                <a href="{{ source.httpReferer }}">{{ source.httpReferer }}</a>
+              {% else %}
+                -
+              {% endif %}
+              <br/>
+              <b>{{ 'To'|trans({}, 'Admin.Orderscustomers.Feature') }}</b>
+              <a href="http://{{ source.requestUri }}">{{ source.requestUri | slice(0,100) }}</a>
+              <br/>
+              {% if source.keywords != '' %}
+                <b>{{ 'Keywords'|trans({}, 'Admin.Global') }}</b>
+                <br/>
+                {{ source.keywords }}
+              {% endif %}
+              <br/>
+            </li>
+          {% endfor %}
+        </ul>
       </div>
     </div>
   {% endif %}

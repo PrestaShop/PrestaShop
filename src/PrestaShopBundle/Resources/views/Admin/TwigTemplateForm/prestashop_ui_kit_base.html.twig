@@ -552,7 +552,7 @@
 {% block search_and_reset_widget %}
   {% apply spaceless %}
     <button type="submit"
-            class="btn btn-primary grid-search-button d-block"
+            class="btn btn-primary grid-search-button"
             title="{{ 'Search'|trans({}, 'Admin.Actions') }}"
             name="{{ full_name }}[search]"
     >
@@ -1460,8 +1460,7 @@
       {% if not child.rendered and child.vars.name != '_footer_buttons' and child.vars.name != '_token' %}
       <div role="tabpanel" class="form-contenttab tab-pane container-fluid{% if firstRenderedChild %} active{% endif %}" id="{{ child.vars.id }}-tab">
         {% if child.vars.label_tab is defined %}
-          {# We force required false here so that the required asterix is never shown on the tab title #}
-          {{ form_label(child, child.vars.label_tab, { required: false }) }}
+          {{ form_label(child, child.vars.label_tab) }}
         {% endif %}
         {{ form_errors(child) }}
         {{ form_widget(child) }}

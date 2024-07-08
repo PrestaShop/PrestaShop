@@ -28,14 +28,14 @@
     {% include '@PrestaShop/Admin/Module/Includes/action_button.html.twig' with {
         'name': module.attributes.name,
         'classes_form': 'btn-group form-action-button',
-        'classes' : 'btn btn-primary-reverse btn-outline-primary',
+        'classes' : 'btn btn-primary-reverse btn-outline-secondary',
         'url': module.attributes.urls[module.attributes.url_active],
         'action': module.attributes.url_active,
         'label': module.attributes.urls_labels[module.attributes.url_active]}
     %}
     {% if (module.attributes.urls|length > 1) %}
         <input type="hidden" class="btn" />
-        <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <span class="caret"></span>
         </button>
         <span class="sr-only">{{ 'Toggle dropdown'|trans({}, 'Admin.Modules.Feature') }}</span>

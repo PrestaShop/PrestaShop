@@ -39,16 +39,20 @@
     <div id="content">
       <div id="login-panel">
         <div id="login-header">
-          <h1 class="text-center">
-            <img id="logo" src="{{ ps.baseImgUrl }}prestashop@2x.png" width="123px" height="24px" alt="PrestaShop" />
+          <h1 class="text-center mb-0">
+            <img id="logo" src="{{ ps.baseImgUrl }}prestashop@2x.png" width="128" height="auto" alt="PrestaShop" loading="lazy" />
           </h1>
+          <div class="login__version text-center">
+            {{ ps.version }}
+          </div>
         </div>
 
-        <div id="shop-img">
-          <img src="{{ ps.baseImgUrl }}preston-login@2x.png" alt="{$shop_name}" width="69.5px" height="118.5px" />
-        </div>
 
         <div id="login-content-card" class="card">
+          <div id="shop-img">
+            <img src="{{ ps.baseImgUrl }}prestashop@2x.png" alt="{$shop_name}" width="200" height="22" loading="lazy" />
+          </div>
+
           <div class="card-body">
             {% block session_alert %}
               {% macro alert(type, flashbagContent) %}
@@ -99,15 +103,14 @@
           <span class="login-back-shop">{{ shopName }}</span>
         </a>
 
-        {{ renderhook('displayAdminLogin') }}
-
         <div id="login-footer">
-          <p class="text-center text-muted">
+          <div class="login__copy text-center text-muted">
             <a href="https://www.prestashop-project.org" onclick="return !window.open(this.href);">
               &copy; PrestaShop&#8482; 2007-{{ "now"|date("Y") }} - All rights reserved
             </a>
-          </p>
-          <p class="login-footer-social text-center">
+          </div>
+
+          <div class="login__social text-center">
             <a class="link-social link-twitter _blank" target="_blank" href="https://x.com/PrestaShop" title="X">
               <twig:ux:icon name="bi:twitter-x" height="16" width="16" aria-hidden="true"/>
             </a>
@@ -117,7 +120,7 @@
             <a class="link-social link-github _blank" target="_blank" href="https://github.com/PrestaShop/PrestaShop" title="Github">
               <twig:ux:icon name="bi:github" height="16" width="16" aria-hidden="true"/>
             </a>
-          </p>
+          </div>
         </div>
       </div>
     </div>

@@ -112,9 +112,7 @@
              title="{{ maintenanceTitle|e('html') }}"
              href="{{ url('admin_maintenance') }}"
           >
-            <i class="material-icons"
-               style="{% if ps.frontOfficeAccessibleForAdmins|default(false) %}color: var(--green);{% endif %}"
-            >build</i>
+            <i class="material-icons">build</i>
             <span>{{ 'Maintenance mode'|trans({}, 'Admin.Navigation.Header') }}</span>
           </a>
         </div>
