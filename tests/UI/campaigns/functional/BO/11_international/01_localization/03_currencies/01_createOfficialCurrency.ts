@@ -6,7 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import localizationPage from '@pages/BO/international/localization';
 import currenciesPage from '@pages/BO/international/currencies';
 import addCurrencyPage from '@pages/BO/international/currencies/add';
 // Import FO pages
@@ -14,6 +13,7 @@ import {homePage as foHomePage} from '@pages/FO/classic/home';
 
 import {
   boDashboardPage,
+  boLocalizationPage,
   dataCurrencies,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -56,16 +56,16 @@ describe('BO - International - Currencies : Create official currency and check i
       boDashboardPage.internationalParentLink,
       boDashboardPage.localizationLink,
     );
-    await localizationPage.closeSfToolBar(page);
+    await boLocalizationPage.closeSfToolBar(page);
 
-    const pageTitle = await localizationPage.getPageTitle(page);
-    expect(pageTitle).to.contains(localizationPage.pageTitle);
+    const pageTitle = await boLocalizationPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boLocalizationPage.pageTitle);
   });
 
   it('should go to \'Currencies\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesPage', baseContext);
 
-    await localizationPage.goToSubTabCurrencies(page);
+    await boLocalizationPage.goToSubTabCurrencies(page);
 
     const pageTitle = await currenciesPage.getPageTitle(page);
     expect(pageTitle).to.contains(currenciesPage.pageTitle);

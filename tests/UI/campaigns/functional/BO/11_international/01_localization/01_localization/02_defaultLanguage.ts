@@ -5,8 +5,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-// Import BO pages
-import localizationPage from '@pages/BO/international/localization';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
 
@@ -14,6 +12,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boLocalizationPage,
   dataLanguages,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -53,16 +52,16 @@ describe('BO - International - Localization : Update default language', async ()
           boDashboardPage.internationalParentLink,
           boDashboardPage.localizationLink,
         );
-        await localizationPage.closeSfToolBar(page);
+        await boLocalizationPage.closeSfToolBar(page);
 
-        const pageTitle = await localizationPage.getPageTitle(page);
-        expect(pageTitle).to.contains(localizationPage.pageTitle);
+        const pageTitle = await boLocalizationPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boLocalizationPage.pageTitle);
       });
 
       it('should set \'Default language\' and \'Set language from browser\'', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `setDEfaultLanguage_${index}`, baseContext);
 
-        const textResult = await localizationPage.setDefaultLanguage(
+        const textResult = await boLocalizationPage.setDefaultLanguage(
           page,
           test.args.language,
           test.args.defaultBrowserLanguage,

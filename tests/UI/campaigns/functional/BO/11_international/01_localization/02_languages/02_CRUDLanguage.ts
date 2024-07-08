@@ -6,7 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import localizationPage from '@pages/BO/international/localization';
 import languagesPage from '@pages/BO/international/languages';
 import addLanguagePage from '@pages/BO/international/languages/add';
 // Import FO pages
@@ -16,6 +15,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boLocalizationPage,
   FakerLanguage,
   utilsFile,
   utilsPlaywright,
@@ -74,16 +74,16 @@ describe('BO - International - Languages : CRUD language', async () => {
       boDashboardPage.internationalParentLink,
       boDashboardPage.localizationLink,
     );
-    await localizationPage.closeSfToolBar(page);
+    await boLocalizationPage.closeSfToolBar(page);
 
-    const pageTitle = await localizationPage.getPageTitle(page);
-    expect(pageTitle).to.contains(localizationPage.pageTitle);
+    const pageTitle = await boLocalizationPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boLocalizationPage.pageTitle);
   });
 
   it('should go to \'Languages\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLanguagesPage', baseContext);
 
-    await localizationPage.goToSubTabLanguages(page);
+    await boLocalizationPage.goToSubTabLanguages(page);
 
     const pageTitle = await languagesPage.getPageTitle(page);
     expect(pageTitle).to.contains(languagesPage.pageTitle);

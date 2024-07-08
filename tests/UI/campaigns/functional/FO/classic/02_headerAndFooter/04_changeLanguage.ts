@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import languagesPage from '@pages/BO/international/languages';
-import localizationPage from '@pages/BO/international/localization';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
 
@@ -15,6 +14,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boLocalizationPage,
   dataLanguages,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -56,16 +56,16 @@ describe('FO - Header and Footer : Change language', async () => {
         boDashboardPage.internationalParentLink,
         boDashboardPage.localizationLink,
       );
-      await localizationPage.closeSfToolBar(page);
+      await boLocalizationPage.closeSfToolBar(page);
 
-      const pageTitle = await localizationPage.getPageTitle(page);
-      expect(pageTitle).to.contains(localizationPage.pageTitle);
+      const pageTitle = await boLocalizationPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boLocalizationPage.pageTitle);
     });
 
     it('should go to \'Languages\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLanguagesPage1', baseContext);
 
-      await localizationPage.goToSubTabLanguages(page);
+      await boLocalizationPage.goToSubTabLanguages(page);
 
       const pageTitle = await languagesPage.getPageTitle(page);
       expect(pageTitle).to.contains(languagesPage.pageTitle);
@@ -158,16 +158,16 @@ describe('FO - Header and Footer : Change language', async () => {
         boDashboardPage.internationalParentLink,
         boDashboardPage.localizationLink,
       );
-      await localizationPage.closeSfToolBar(page);
+      await boLocalizationPage.closeSfToolBar(page);
 
-      const pageTitle = await localizationPage.getPageTitle(page);
-      expect(pageTitle).to.contains(localizationPage.pageTitle);
+      const pageTitle = await boLocalizationPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boLocalizationPage.pageTitle);
     });
 
     it('should go to \'Languages\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLanguagesPage2', baseContext);
 
-      await localizationPage.goToSubTabLanguages(page);
+      await boLocalizationPage.goToSubTabLanguages(page);
 
       const pageTitle = await languagesPage.getPageTitle(page);
       expect(pageTitle).to.contains(languagesPage.pageTitle);

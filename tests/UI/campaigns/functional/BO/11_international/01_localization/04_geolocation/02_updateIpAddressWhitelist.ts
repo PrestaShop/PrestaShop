@@ -6,13 +6,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import localizationPage from '@pages/BO/international/localization';
 import geolocationPage from '@pages/BO/international/localization/geolocation';
 
 import {expect} from 'chai';
 import {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boLocalizationPage,
   foClassicHomePage,
   utilsFile,
   utilsPlaywright,
@@ -49,16 +49,16 @@ describe('BO - International - Localization - Geolocation: Update IP address whi
       boDashboardPage.internationalParentLink,
       boDashboardPage.localizationLink,
     );
-    await localizationPage.closeSfToolBar(page);
+    await boLocalizationPage.closeSfToolBar(page);
 
-    const pageTitle = await localizationPage.getPageTitle(page);
-    expect(pageTitle).to.equal(localizationPage.pageTitle);
+    const pageTitle = await boLocalizationPage.getPageTitle(page);
+    expect(pageTitle).to.equal(boLocalizationPage.pageTitle);
   });
 
   it('should go to \'Geolocation\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToGeolocationPage', baseContext);
 
-    await localizationPage.goToSubTabGeolocation(page);
+    await boLocalizationPage.goToSubTabGeolocation(page);
 
     const pageTitle = await geolocationPage.getPageTitle(page);
     expect(pageTitle).to.equal(geolocationPage.pageTitle);

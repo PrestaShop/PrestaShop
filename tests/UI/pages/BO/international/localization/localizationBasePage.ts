@@ -6,6 +6,7 @@ import type {Page} from 'playwright';
  * Localization base page, contains functions that can be used on the page
  * @class
  * @extends BOBasePage
+ * MOVED in the LIBRARY
  */
 export default class LocalizationBasePage extends BOBasePage {
   private readonly localizationNavItemLink: string;

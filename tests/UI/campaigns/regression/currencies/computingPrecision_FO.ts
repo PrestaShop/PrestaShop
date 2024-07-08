@@ -13,7 +13,6 @@ import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import currenciesPage from '@pages/BO/international/currencies';
 import addCurrencyPage from '@pages/BO/international/currencies/add';
-import localizationPage from '@pages/BO/international/localization';
 import ordersPage from '@pages/BO/orders';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
@@ -24,6 +23,7 @@ import {productPage} from '@pages/FO/classic/product';
 
 import {
   boDashboardPage,
+  boLocalizationPage,
   dataCurrencies,
   dataCustomers,
   dataPaymentMethods,
@@ -169,16 +169,16 @@ describe(
           boDashboardPage.internationalParentLink,
           boDashboardPage.localizationLink,
         );
-        await localizationPage.closeSfToolBar(page);
+        await boLocalizationPage.closeSfToolBar(page);
 
-        const pageTitle = await localizationPage.getPageTitle(page);
-        expect(pageTitle).to.contains(localizationPage.pageTitle);
+        const pageTitle = await boLocalizationPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boLocalizationPage.pageTitle);
       });
 
       it('should go to currencies page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesPageToChangePrecision', baseContext);
 
-        await localizationPage.goToSubTabCurrencies(page);
+        await boLocalizationPage.goToSubTabCurrencies(page);
 
         const pageTitle = await currenciesPage.getPageTitle(page);
         expect(pageTitle).to.contains(currenciesPage.pageTitle);
@@ -434,14 +434,14 @@ describe(
             sqlManagerPage.localizationLink,
           );
 
-          const pageTitle = await localizationPage.getPageTitle(page);
-          expect(pageTitle).to.contains(localizationPage.pageTitle);
+          const pageTitle = await boLocalizationPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boLocalizationPage.pageTitle);
         });
 
         it('should go to currencies page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesPageToReset', baseContext);
 
-          await localizationPage.goToSubTabCurrencies(page);
+          await boLocalizationPage.goToSubTabCurrencies(page);
 
           const pageTitle = await currenciesPage.getPageTitle(page);
           expect(pageTitle).to.contains(currenciesPage.pageTitle);

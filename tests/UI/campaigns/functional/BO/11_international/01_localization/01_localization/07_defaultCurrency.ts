@@ -6,7 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import localizationPage from '@pages/BO/international/localization';
 import currenciesPage from '@pages/BO/international/currencies';
 import languagesPage from '@pages/BO/international/languages';
 // Import FO pages
@@ -14,6 +13,7 @@ import {homePage as foHomePage} from '@pages/FO/classic/home';
 
 import {
   boDashboardPage,
+  boLocalizationPage,
   dataCurrencies,
   dataLanguages,
   type ImportContent,
@@ -62,17 +62,17 @@ describe('BO - International - Localization : Update default currency', async ()
         boDashboardPage.internationalParentLink,
         boDashboardPage.localizationLink,
       );
-      await localizationPage.closeSfToolBar(page);
+      await boLocalizationPage.closeSfToolBar(page);
 
-      const pageTitle = await localizationPage.getPageTitle(page);
-      expect(pageTitle).to.contains(localizationPage.pageTitle);
+      const pageTitle = await boLocalizationPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boLocalizationPage.pageTitle);
     });
 
     it('should import localization pack', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'importLocalizationPack', baseContext);
 
-      const textResult = await localizationPage.importLocalizationPack(page, 'Chile', contentToImport);
-      expect(textResult).to.equal(localizationPage.importLocalizationPackSuccessfulMessage);
+      const textResult = await boLocalizationPage.importLocalizationPack(page, 'Chile', contentToImport);
+      expect(textResult).to.equal(boLocalizationPage.importLocalizationPackSuccessfulMessage);
     });
   });
 
@@ -119,24 +119,24 @@ describe('BO - International - Localization : Update default currency', async ()
           boDashboardPage.internationalParentLink,
           boDashboardPage.localizationLink,
         );
-        await localizationPage.closeSfToolBar(page);
+        await boLocalizationPage.closeSfToolBar(page);
 
-        const pageTitle = await localizationPage.getPageTitle(page);
-        expect(pageTitle).to.contains(localizationPage.pageTitle);
+        const pageTitle = await boLocalizationPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boLocalizationPage.pageTitle);
       });
 
       it('should choose default currency', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `setDefaultCurrency${index}`, baseContext);
 
-        const textResult = await localizationPage.setDefaultCurrency(page, test.args.defaultCurrency);
-        expect(textResult).to.contain(localizationPage.successfulSettingsUpdateMessage);
+        const textResult = await boLocalizationPage.setDefaultCurrency(page, test.args.defaultCurrency);
+        expect(textResult).to.contain(boLocalizationPage.successfulSettingsUpdateMessage);
       });
 
       it('should go to FO and check the existence of currency', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkCurrencyInFO${index}`, baseContext);
 
         // View my shop and init pages
-        page = await localizationPage.viewMyShop(page);
+        page = await boLocalizationPage.viewMyShop(page);
 
         const defaultCurrency = await foHomePage.getDefaultCurrency(page);
         expect(defaultCurrency).to.equal(test.args.currency);
@@ -147,8 +147,8 @@ describe('BO - International - Localization : Update default currency', async ()
 
         page = await foHomePage.closePage(browserContext, page, 0);
 
-        const pageTitle = await localizationPage.getPageTitle(page);
-        expect(pageTitle).to.contains(localizationPage.pageTitle);
+        const pageTitle = await boLocalizationPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boLocalizationPage.pageTitle);
       });
 
       if (index === (currenciesToTest.length - 1)) {
@@ -156,7 +156,7 @@ describe('BO - International - Localization : Update default currency', async ()
           it('should go to currencies page', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesPage', baseContext);
 
-            await localizationPage.goToSubTabCurrencies(page);
+            await boLocalizationPage.goToSubTabCurrencies(page);
 
             const pageTitle = await currenciesPage.getPageTitle(page);
             expect(pageTitle).to.contains(currenciesPage.pageTitle);
@@ -190,7 +190,7 @@ describe('BO - International - Localization : Update default currency', async ()
           it('should go to languages page', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'goToLanguagesPage', baseContext);
 
-            await localizationPage.goToSubTabLanguages(page);
+            await boLocalizationPage.goToSubTabLanguages(page);
 
             const pageTitle = await languagesPage.getPageTitle(page);
             expect(pageTitle).to.contains(languagesPage.pageTitle);

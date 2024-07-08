@@ -5,12 +5,12 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import localizationPage from '@pages/BO/international/localization';
 import currenciesPage from '@pages/BO/international/currencies';
 import addCurrencyPage from '@pages/BO/international/currencies/add';
 
 import {
   boDashboardPage,
+  boLocalizationPage,
   dataCurrencies,
   FakerCurrency,
   utilsPlaywright,
@@ -53,16 +53,16 @@ describe('CLDR : Enable/Disable a currency', async () => {
       boDashboardPage.internationalParentLink,
       boDashboardPage.localizationLink,
     );
-    await localizationPage.closeSfToolBar(page);
+    await boLocalizationPage.closeSfToolBar(page);
 
-    const pageTitle = await localizationPage.getPageTitle(page);
-    expect(pageTitle).to.contains(localizationPage.pageTitle);
+    const pageTitle = await boLocalizationPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boLocalizationPage.pageTitle);
   });
 
   it('should go to Currencies Tab', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesTab0', baseContext);
 
-    await localizationPage.goToSubTabCurrencies(page);
+    await boLocalizationPage.goToSubTabCurrencies(page);
 
     const pageTitle = await currenciesPage.getPageTitle(page);
     expect(pageTitle).to.contains(currenciesPage.pageTitle);
@@ -162,23 +162,23 @@ describe('CLDR : Enable/Disable a currency', async () => {
   it('should go to Localization Tab', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationTab0', baseContext);
 
-    await localizationPage.goToSubTabLocalizations(page);
+    await boLocalizationPage.goToSubTabLocalizations(page);
 
-    const pageTitle = await localizationPage.getPageTitle(page);
-    expect(pageTitle).to.contains(localizationPage.pageTitle);
+    const pageTitle = await boLocalizationPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boLocalizationPage.pageTitle);
   });
 
   it(`should choose '${currencyDollar.isoCode}' as default currency`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setDollarAsDefaultCurrency', baseContext);
 
-    const textResult = await localizationPage.setDefaultCurrency(page, `${currencyDollar.name} (${currencyDollar.isoCode})`);
-    expect(textResult).to.contain(localizationPage.successfulSettingsUpdateMessage);
+    const textResult = await boLocalizationPage.setDefaultCurrency(page, `${currencyDollar.name} (${currencyDollar.isoCode})`);
+    expect(textResult).to.contain(boLocalizationPage.successfulSettingsUpdateMessage);
   });
 
   it('should go to Currencies Tab', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesTab1', baseContext);
 
-    await localizationPage.goToSubTabCurrencies(page);
+    await boLocalizationPage.goToSubTabCurrencies(page);
 
     const pageTitle = await currenciesPage.getPageTitle(page);
     expect(pageTitle).to.contains(currenciesPage.pageTitle);
@@ -228,26 +228,26 @@ describe('CLDR : Enable/Disable a currency', async () => {
   it('should go to Localization Tab', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationTab1', baseContext);
 
-    await localizationPage.goToSubTabLocalizations(page);
+    await boLocalizationPage.goToSubTabLocalizations(page);
 
-    const pageTitle = await localizationPage.getPageTitle(page);
-    expect(pageTitle).to.contains(localizationPage.pageTitle);
+    const pageTitle = await boLocalizationPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boLocalizationPage.pageTitle);
   });
 
   it(`should choose '${dataCurrencies.euro.isoCode}' as default currency`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setEuroAsDefaultCurrency', baseContext);
 
-    const textResult = await localizationPage.setDefaultCurrency(
+    const textResult = await boLocalizationPage.setDefaultCurrency(
       page,
       `${dataCurrencies.euro.name} (${dataCurrencies.euro.isoCode})`,
     );
-    expect(textResult).to.contain(localizationPage.successfulSettingsUpdateMessage);
+    expect(textResult).to.contain(boLocalizationPage.successfulSettingsUpdateMessage);
   });
 
   it('should go to Currencies Tab', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesTab2', baseContext);
 
-    await localizationPage.goToSubTabCurrencies(page);
+    await boLocalizationPage.goToSubTabCurrencies(page);
 
     const pageTitle = await currenciesPage.getPageTitle(page);
     expect(pageTitle).to.contains(currenciesPage.pageTitle);

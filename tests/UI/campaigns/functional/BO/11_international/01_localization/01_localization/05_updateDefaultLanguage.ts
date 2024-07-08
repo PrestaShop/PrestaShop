@@ -4,13 +4,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import localizationPage from '@pages/BO/international/localization';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boLocalizationPage,
   dataLanguages,
   type ImportContent,
   utilsPlaywright,
@@ -54,28 +52,28 @@ describe('BO - International - Localization : Update default language', async ()
       boDashboardPage.localizationLink,
     );
 
-    const pageTitle = await localizationPage.getPageTitle(page);
-    expect(pageTitle).to.contains(localizationPage.pageTitle);
+    const pageTitle = await boLocalizationPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boLocalizationPage.pageTitle);
   });
 
   it('should import localization pack', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'importLocalizationPack', baseContext);
 
-    const textResult = await localizationPage.importLocalizationPack(page, 'Chile', contentToImport);
-    expect(textResult).to.equal(localizationPage.importLocalizationPackSuccessfulMessage);
+    const textResult = await boLocalizationPage.importLocalizationPack(page, 'Chile', contentToImport);
+    expect(textResult).to.equal(boLocalizationPage.importLocalizationPackSuccessfulMessage);
   });
 
   it('should set "Spanish" as \'Default language\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setSpanishAsDefaultLanguage', baseContext);
 
-    const textResult = await localizationPage.setDefaultLanguage(page, dataLanguages.spanish.name, true);
-    expect(textResult).to.equal(localizationPage.successfulSettingsUpdateMessage);
+    const textResult = await boLocalizationPage.setDefaultLanguage(page, dataLanguages.spanish.name, true);
+    expect(textResult).to.equal(boLocalizationPage.successfulSettingsUpdateMessage);
   });
 
   it('should set "English" as \'Default language\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setEnglishAsDefaultLanguage', baseContext);
 
-    const textResult = await localizationPage.setDefaultLanguage(page, dataLanguages.english.name, true);
-    expect(textResult).to.equal(localizationPage.successfulSettingsUpdateMessage);
+    const textResult = await boLocalizationPage.setDefaultLanguage(page, dataLanguages.english.name, true);
+    expect(textResult).to.equal(boLocalizationPage.successfulSettingsUpdateMessage);
   });
 });

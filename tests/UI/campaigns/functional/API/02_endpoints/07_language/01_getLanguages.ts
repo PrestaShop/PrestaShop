@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
-import localizationPage from '@pages/BO/international/localization';
 import languagesPage from '@pages/BO/international/languages';
 import addLanguagePage from '@pages/BO/international/languages/add';
 
@@ -16,6 +15,7 @@ import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boLocalizationPage,
   FakerAPIClient,
   utilsAPI,
   utilsPlaywright,
@@ -176,16 +176,16 @@ describe('API : GET /languages', async () => {
         boDashboardPage.internationalParentLink,
         boDashboardPage.localizationLink,
       );
-      await localizationPage.closeSfToolBar(page);
+      await boLocalizationPage.closeSfToolBar(page);
 
-      const pageTitle = await localizationPage.getPageTitle(page);
-      expect(pageTitle).to.contains(localizationPage.pageTitle);
+      const pageTitle = await boLocalizationPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boLocalizationPage.pageTitle);
     });
 
     it('should go to \'Languages\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLanguagesPage', baseContext);
 
-      await localizationPage.goToSubTabLanguages(page);
+      await boLocalizationPage.goToSubTabLanguages(page);
 
       const pageTitle = await languagesPage.getPageTitle(page);
       expect(pageTitle).to.contains(languagesPage.pageTitle);
@@ -242,7 +242,7 @@ describe('API : GET /languages', async () => {
         expect(langIsRTL).to.equal(jsonResponse.items[idxItem].isRtl);
 
         // Return languages tab
-        await localizationPage.goToSubTabLanguages(page);
+        await boLocalizationPage.goToSubTabLanguages(page);
 
         const pageTitle = await languagesPage.getPageTitle(page);
         expect(pageTitle).to.contains(languagesPage.pageTitle);

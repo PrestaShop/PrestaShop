@@ -6,7 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import localizationPage from '@pages/BO/international/localization';
 import translationsPage from '@pages/BO/international/translations';
 import languagesPage from '@pages/BO/international/languages';
 // Import FO pages
@@ -16,6 +15,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boLocalizationPage,
   dataLanguages,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -107,14 +107,14 @@ describe('BO - International - Translation : Add update a language', async () =>
         boDashboardPage.localizationLink,
       );
 
-      const pageTitle = await localizationPage.getPageTitle(page);
-      expect(pageTitle).to.contains(localizationPage.pageTitle);
+      const pageTitle = await boLocalizationPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boLocalizationPage.pageTitle);
     });
 
     it('should go to languages page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLanguagesPage', baseContext);
 
-      await localizationPage.goToSubTabLanguages(page);
+      await boLocalizationPage.goToSubTabLanguages(page);
 
       const pageTitle = await languagesPage.getPageTitle(page);
       expect(pageTitle).to.contains(languagesPage.pageTitle);
