@@ -1,0 +1,6 @@
+.tooltip {
+  &-inner {
+    padding: var(--#{$cdk}size-8);
+    box-shadow: var(--#{$cdk}shadow-xl);
+  }
+}

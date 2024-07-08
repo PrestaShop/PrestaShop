@@ -262,9 +262,7 @@
              data-html="true"
              title="{$smarty.capture.title|htmlspecialchars}"
           >
-            <i class="material-icons"
-               style="{if isset($maintenance_allow_admins)}color: #72c279;{/if}"
-            >build</i>
+            <i class="material-icons">build</i>
             <span>{l|escape s='Maintenance mode' d='Admin.Navigation.Header'}</span>
           </a>
         </div>
@@ -282,7 +280,6 @@
             )}
               <ul id="header_shop" class="shop-state">
                 <li class="dropdown">
-                  <i class="material-icons">visibility</i>
                   <span>{$shop_list}</span>
                 </li>
               </ul>

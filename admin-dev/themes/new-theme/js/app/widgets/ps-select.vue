@@ -96,12 +96,12 @@
     }
     &::after {
       content: "\E313";
-      font-family: 'Material Icons';
-      color: $gray-medium;
-      font-size: 20px;
+      font-family: var(--#{$cdk}font-family-material-icons);
+      color: var(--#{$cdk}primary-400);
+      font-size: var(--#{$cdk}size-20);
       position: absolute;
-      right: 5px;
-      top: 5px;
+      right: var(--#{$cdk}size-5);
+      top: var(--#{$cdk}size-5);
     }
   }
 </style>

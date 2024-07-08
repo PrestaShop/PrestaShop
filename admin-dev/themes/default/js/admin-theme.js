@@ -510,4 +510,41 @@ $(() => {
 
     $('#modal-shipping').modal();
   });
+
+  // Function to debounce
+  function debounce(func, wait) {
+    let timeout;
+
+    return function (...args) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+  }
+
+  // Function to update page head CSS properties
+  const prefixName = 'cdk';
+
+  function updatePadding() {
+    const offset = 16;
+    const targetElement = document.querySelector('#content.bootstrap');
+    const referenceElement = document.querySelector('#content.bootstrap .page-head');
+
+    if (!targetElement || !referenceElement) return;
+
+    const referenceHeight = referenceElement.offsetHeight + offset;
+
+    const pageHead = `--${prefixName}-page-head-height`;
+    const pageHeadWithTabs = `--${prefixName}-page-head-with-tabs-height`;
+    document.documentElement.style.setProperty(pageHead, `${referenceHeight}px`);
+    document.documentElement.style.setProperty(pageHeadWithTabs, `${referenceHeight}px`);
+  }
+
+  // Initial padding update
+  updatePadding();
+
+  // Create a debounced version of the updatePadding function
+  const debouncedUpdatePadding = debounce(updatePadding, 100);
+
+  // Update padding when the window is resized
+  window.addEventListener('resize', debouncedUpdatePadding);
 });

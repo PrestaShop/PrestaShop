@@ -28,8 +28,9 @@
     position: absolute;
     top: 1px;
     right: 0;
+    bottom: 1px;
     flex-direction: column;
-    line-height: 17px;
+    line-height: 1;
     cursor: pointer;
   }
 
@@ -45,19 +46,29 @@
     }
   }
 
+  .ps-number-up,
+  .ps-number-down {
+    height: 50%;
+  }
+
   .ps-number-up::before {
     position: relative;
-    font-family: "Material Icons", Arial, Helvetica, sans-serif;
-    font-size: 20px;
+    display: block;
+    height: 100%;
+    font-family: var(--#{$cdk}font-family-material-icons);
+    font-size: var(--#{$cdk}size-20);
+    line-height: 100%;
     color: $gray-dark;
     content: "\E5C7";
   }
 
   .ps-number-down::before {
     position: relative;
-    bottom: 6px;
-    font-family: "Material Icons", Arial, Helvetica, sans-serif;
-    font-size: 20px;
+    display: block;
+    height: 100%;
+    font-family: var(--#{$cdk}font-family-material-icons);
+    font-size: var(--#{$cdk}size-20);
+    line-height: 100%;
     color: $gray-dark;
     content: "\E5C5";
   }

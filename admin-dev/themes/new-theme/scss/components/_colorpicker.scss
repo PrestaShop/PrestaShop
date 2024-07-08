@@ -8,6 +8,10 @@
   }
 
   .form-control {
+    cursor: pointer;
+    border: 1px solid var(--#{$cdk}primary-400);
+    box-shadow: inset 0 0 0 var(--#{$cdk}size-4) var(--#{$cdk}white);
+
     &,
     &:focus-visible,
     &:focus {

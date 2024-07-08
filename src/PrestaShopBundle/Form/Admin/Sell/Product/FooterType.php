@@ -129,7 +129,7 @@ class FooterType extends TranslatorAwareType
                             'type' => 'link',
                             'icon' => 'arrow_back_ios',
                             'attr' => [
-                                'class' => 'btn-outline-secondary border-white go-to-catalog-button',
+                                'class' => 'btn-outline-secondary go-to-catalog-button',
                                 'href' => $this->router->generate('admin_products_index', ['offset' => 'last', 'limit' => 'last']),
                             ],
                         ],
@@ -200,7 +200,7 @@ class FooterType extends TranslatorAwareType
                 'icon' => 'close',
                 'attr' => [
                     'href' => $editUrl,
-                    'class' => 'btn-secondary cancel-button',
+                    'class' => 'btn-outline-secondary cancel-button',
                     'disabled' => true,
                 ],
             ])

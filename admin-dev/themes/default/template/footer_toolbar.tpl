@@ -42,7 +42,7 @@
     {if isset($toolbar_btn['save-and-stay'])}
       <a
         id="desc-{$table}-{if isset($toolbar_btn['save-and-stay'].imgclass)}{$toolbar_btn['save-and-stay'].imgclass}{else}save-and-stay{/if}"
-        class="btn btn-info{if isset($toolbar_btn['save-and-stay'].target) && $toolbar_btn['save-and-stay'].target} _blank{/if} desc-{$table}-{if isset($toolbar_btn['save-and-stay'].imgclass)}{$toolbar_btn['save-and-stay'].imgclass}{else}save-and-stay{/if}"
+        class="btn btn-primary{if isset($toolbar_btn['save-and-stay'].target) && $toolbar_btn['save-and-stay'].target} _blank{/if} desc-{$table}-{if isset($toolbar_btn['save-and-stay'].imgclass)}{$toolbar_btn['save-and-stay'].imgclass}{else}save-and-stay{/if}"
         href="{if isset($toolbar_btn['save-and-stay'].href)}{$toolbar_btn['save-and-stay'].href|escape:'html':'UTF-8'}{else}#{/if}"
         {if isset($toolbar_btn['save-and-stay'].js) && $btn.js} onclick="{$toolbar_btn['save-and-stay'].js}"{/if}
       >
@@ -51,7 +51,7 @@
     {/if}
     <a
       id="desc-{$table}-{if isset($toolbar_btn['save'].imgclass)}{$toolbar_btn['save'].imgclass}{else}save{/if}"
-      class="btn btn-info{if isset($toolbar_btn['save'].target) && $toolbar_btn['save'].target} _blank{/if} desc-{$table}-{if isset($toolbar_btn['save'].imgclass)}{$toolbar_btn['save'].imgclass}{else}save{/if}"
+      class="btn btn-primary{if isset($toolbar_btn['save'].target) && $toolbar_btn['save'].target} _blank{/if} desc-{$table}-{if isset($toolbar_btn['save'].imgclass)}{$toolbar_btn['save'].imgclass}{else}save{/if}"
       href="{if isset($toolbar_btn['save'].href)}{$toolbar_btn['save'].href|escape:'html':'UTF-8'}{else}#{/if}"
       {if isset($toolbar_btn['save'].js) && $btn.js} onclick="{$toolbar_btn['save'].js}"{/if}
     >
@@ -62,14 +62,14 @@
   <div class="btn-group dropup pull-right visible-xs mobile-buttons">
     <a
       id="desc-{$table}-{if isset($toolbar_btn['save'].imgclass)}{$toolbar_btn['save'].imgclass}{else}save{/if}"
-      class="btn btn-info{if isset($toolbar_btn['save'].target) && $toolbar_btn['save'].target} _blank{/if} desc-{$table}-{if isset($toolbar_btn['save'].imgclass)}{$toolbar_btn['save'].imgclass}{else}save{/if}"
+      class="btn btn-primary{if isset($toolbar_btn['save'].target) && $toolbar_btn['save'].target} _blank{/if} desc-{$table}-{if isset($toolbar_btn['save'].imgclass)}{$toolbar_btn['save'].imgclass}{else}save{/if}"
       href="{if isset($toolbar_btn['save'].href)}{$toolbar_btn['save'].href|escape:'html':'UTF-8'}{else}#{/if}"
       {if isset($toolbar_btn['save'].js) && $btn.js} onclick="{$toolbar_btn['save'].js}"{/if}
     >
       <span {if isset($toolbar_btn['save'].force_desc) && $toolbar_btn['save'].force_desc == true } class="locked" {/if}>{$toolbar_btn['save'].desc}</span>
     </a>
     {if isset($toolbar_btn['save-and-stay'])}
-    <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       <span class="caret"></span>
       <span class="sr-only">{l s='Toggle dropdown' d='Admin.Modules.Feature'}</span>
     </button>

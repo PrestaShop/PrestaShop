@@ -24,13 +24,12 @@
  *}
 <nav class="nav-bar d-none d-print-none d-md-block">
   <span class="menu-collapse" data-toggle-url="{$toggle_navigation_url}">
-    <i class="material-icons rtl-flip">chevron_left</i>
-    <i class="material-icons rtl-flip">chevron_left</i>
+    <i class="material-icons rtl-flip">first_page</i>
   </span>
 
   <div class="nav-bar-overflow">
     <div class="logo-container">
-      <div class="d-flex align-items-center">
+      <div class="logo-container__header">
         <a id="header_logo" class="logo float-left" href="{$default_tab_link|escape:'html':'UTF-8'}"></a>
         <span id="shop_version" class="header-version">{$ps_version}</span>
       </div>

@@ -183,24 +183,26 @@
   });
 </script>
 
-<style lang="scss">
-  .js-permissions-table {
-    .permission-row {
-      padding: 4px 0;
-      border-bottom: 1px solid #bbcdd2;
-    }
+<style lang="scss" type="text/scss">
+@import "~@scss/config/_settings.scss";
 
-    .bulk-row {
-      padding-bottom: 10px;
-      border-bottom: .125rem solid #25b9d7;
-      strong {
-        display: block;
-        font-size: 12px;
-        font-weight: 600;
-        font-family: Open-sans, sans-serif;
-        white-space: nowrap;
-        padding-bottom: 5px;
-      }
+.js-permissions-table {
+  .permission-row {
+    padding: var(--#{$cdk}size-4) 0;
+    border-bottom: 1px solid var(--#{$cdk}primary-500);
+  }
+
+  .bulk-row {
+    padding-bottom: var(--#{$cdk}size-10);
+    border-bottom: var(--#{$cdk}size-2) solid var(--#{$cdk}primary-800);
+    strong {
+      display: block;
+      font-size: var(--#{$cdk}size-12);
+      font-weight: 600;
+      font-family: var(--#{$cdk}font-family-primary);
+      white-space: nowrap;
+      padding-bottom: var(--#{$cdk}size-5);
     }
   }
+}
 </style>

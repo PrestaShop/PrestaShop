@@ -79,9 +79,7 @@
              title="{$smarty.capture.title|htmlspecialchars}"
              href="{$link->getAdminLink('AdminMaintenance')|escape:'html':'UTF-8'}"
           >
-            <i class="material-icons"
-              style="{if isset($maintenance_allow_admins) && $maintenance_allow_admins}color: var(--green);{/if}"
-            >build</i>
+            <i class="material-icons">build</i>
             <span>{l|escape s='Maintenance mode' d='Admin.Navigation.Header'}</span>
           </a>
         </div>

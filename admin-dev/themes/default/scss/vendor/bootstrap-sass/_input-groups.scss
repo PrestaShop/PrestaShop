@@ -126,9 +126,6 @@
 .input-group-btn:first-child > .btn-group:not(:first-child) > .btn {
   @include border-left-radius(0);
 }
-.input-group-addon:last-child {
-  border-left: 0;
-}
 
 // Button input groups
 // -------------------------
