@@ -15,7 +15,6 @@ import ordersPage from '@pages/BO/orders';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
 import homePage from '@pages/FO/hummingbird/home';
-import loginPage from '@pages/FO/hummingbird/login';
 import myAccountPage from '@pages/FO/hummingbird/myAccount';
 import foMerchandiseReturnsPage from '@pages/FO/hummingbird/myAccount/merchandiseReturns';
 import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
@@ -30,6 +29,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
+  foHummingbirdLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -194,9 +194,9 @@ describe('FO - Account : Consult return details', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'logonFO', baseContext);
 
         await homePage.goToLoginPage(page);
-        await loginPage.customerLogin(page, dataCustomers.johnDoe);
+        await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-        const isCustomerConnected = await loginPage.isCustomerConnected(page);
+        const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
         expect(isCustomerConnected).to.eq(true);
       });
 

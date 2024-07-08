@@ -14,7 +14,6 @@ import contactFormPage from '@pages/BO/modules/contactForm';
 // Import FO pages
 import contactUsPage from '@pages/FO/hummingbird/contactUs';
 import homePage from '@pages/FO/hummingbird/home';
-import loginPage from '@pages/FO/hummingbird/login';
 
 import {
   boDashboardPage,
@@ -23,6 +22,7 @@ import {
   dataModules,
   dataOrders,
   FakerContactMessage,
+  foHummingbirdLoginPage,
   type MailDev,
   type MailDevEmail,
   utilsFile,
@@ -168,16 +168,16 @@ describe('FO - Contact us : Send message from contact us page with customer logg
 
       await homePage.goToLoginPage(page);
 
-      const pageTitle = await loginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(loginPage.pageTitle);
+      const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foHummingbirdLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFo', baseContext);
 
-      await loginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await loginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
@@ -185,7 +185,7 @@ describe('FO - Contact us : Send message from contact us page with customer logg
       await testContext.addContextItem(this, 'testIdentifier', 'goOnContactPage', baseContext);
 
       // Go to contact us page
-      await loginPage.goToFooterLink(page, 'Contact us');
+      await foHummingbirdLoginPage.goToFooterLink(page, 'Contact us');
 
       const pageTitle = await contactUsPage.getPageTitle(page);
       expect(pageTitle).to.equal(contactUsPage.pageTitle);

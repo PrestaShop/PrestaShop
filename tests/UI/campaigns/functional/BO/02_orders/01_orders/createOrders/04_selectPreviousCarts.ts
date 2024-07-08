@@ -15,7 +15,6 @@ import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {homePage} from '@pages/FO/classic/home';
-import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {productPage} from '@pages/FO/classic/product';
 
 import {
@@ -25,6 +24,7 @@ import {
   dataOrderStatuses,
   dataPaymentMethods,
   dataProducts,
+  foClassicLoginPage,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -276,16 +276,16 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
 
       await homePage.goToLoginPage(page);
 
-      const pageTitle = await foLoginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      const pageTitle = await foClassicLoginPage.getPageTitle(page);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
     });
 
     it('should sign in with customer credentials', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
-      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
@@ -293,7 +293,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       // Go to home page
-      await foLoginPage.goToHomePage(page);
+      await foClassicLoginPage.goToHomePage(page);
       // Go to the first product page
       await homePage.goToProductPage(page, 1);
       // Add the product to the cart

@@ -11,7 +11,6 @@ import countriesPage from '@pages/BO/international/locations/countries';
 import addCountryPage from '@pages/BO/international/locations/countries/add';
 // Import FO pages
 import {homePage as foHomePage} from '@pages/FO/classic/home';
-import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {addressesPage} from '@pages/FO/classic/myAccount/addresses';
 import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
@@ -20,6 +19,7 @@ import {
   boDashboardPage,
   dataCustomers,
   FakerCountry,
+  foClassicLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -154,16 +154,16 @@ describe('BO - International - Countries : CRUD country', async () => {
 
       await foHomePage.goToLoginPage(page);
 
-      const pageTitle = await foLoginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      const pageTitle = await foClassicLoginPage.getPageTitle(page);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFO_1', baseContext);
 
-      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
@@ -257,16 +257,16 @@ describe('BO - International - Countries : CRUD country', async () => {
 
       await foHomePage.goToLoginPage(page);
 
-      const pageTitle = await foLoginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      const pageTitle = await foClassicLoginPage.getPageTitle(page);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFO_2', baseContext);
 
-      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 

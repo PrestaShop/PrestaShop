@@ -15,7 +15,6 @@ import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 import editMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns/edit';
 // Import FO pages
 import homePage from '@pages/FO/hummingbird/home';
-import loginPage from '@pages/FO/hummingbird/login';
 import myAccountPage from '@pages/FO/hummingbird/myAccount';
 import foMerchandiseReturnsPage from '@pages/FO/hummingbird/myAccount/merchandiseReturns';
 import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
@@ -31,6 +30,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
+  foHummingbirdLoginPage,
   utilsDate,
   utilsFile,
   utilsPlaywright,
@@ -199,9 +199,9 @@ describe('FO - Account : Check order return PDF', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'logonFO', baseContext);
 
       await homePage.goToLoginPage(page);
-      await loginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await loginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected).to.eq(true);
     });
 

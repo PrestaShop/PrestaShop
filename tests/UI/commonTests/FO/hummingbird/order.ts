@@ -4,7 +4,6 @@ import testContext from '@utils/testContext';
 // Import FO pages
 import cartPage from '@pages/FO/hummingbird/cart';
 import homePage from '@pages/FO/hummingbird/home';
-import loginPage from '@pages/FO/hummingbird/login';
 import productPage from '@pages/FO/hummingbird/product';
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
@@ -13,6 +12,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   FakerOrder,
+  foHummingbirdLoginPage,
   foHummingbirdSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -54,16 +54,16 @@ function createOrderByCustomerTest(orderData: FakerOrder, baseContext: string = 
 
       await homePage.goToLoginPage(page);
 
-      const pageTitle = await loginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(loginPage.pageTitle);
+      const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foHummingbirdLoginPage.pageTitle);
     });
 
     it('should sign in with customer credentials', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
-      await loginPage.customerLogin(page, orderData.customer);
+      await foHummingbirdLoginPage.customerLogin(page, orderData.customer);
 
-      const isCustomerConnected = await loginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
@@ -71,7 +71,7 @@ function createOrderByCustomerTest(orderData: FakerOrder, baseContext: string = 
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       // Go to home page
-      await loginPage.goToHomePage(page);
+      await foHummingbirdLoginPage.goToHomePage(page);
       // Go to the first product page
       await homePage.goToProductPage(page, orderData.products[0].product.id);
       // Add the product to the cart
@@ -149,16 +149,16 @@ function createOrderSpecificProductTest(
 
       await homePage.goToLoginPage(page);
 
-      const pageTitle = await loginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(loginPage.pageTitle);
+      const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foHummingbirdLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
-      await loginPage.customerLogin(page, orderData.customer);
+      await foHummingbirdLoginPage.customerLogin(page, orderData.customer);
 
-      const isCustomerConnected = await loginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 

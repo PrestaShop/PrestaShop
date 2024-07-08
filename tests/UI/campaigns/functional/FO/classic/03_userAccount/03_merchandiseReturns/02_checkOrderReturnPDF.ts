@@ -14,7 +14,6 @@ import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 import editMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns/edit';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {loginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {merchandiseReturnsPage as foMerchandiseReturnsPage} from '@pages/FO/classic/myAccount/merchandiseReturns';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
@@ -30,6 +29,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
+  foClassicLoginPage,
   utilsDate,
   utilsFile,
   utilsPlaywright,
@@ -193,9 +193,9 @@ describe('FO - Account : Check order return PDF', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'logonFO', baseContext);
 
       await homePage.goToLoginPage(page);
-      await loginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await loginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected).to.eq(true);
     });
 

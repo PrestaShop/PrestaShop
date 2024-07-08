@@ -15,7 +15,6 @@ import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
-import {loginPage} from '@pages/FO/classic/login';
 
 import {
   boDashboardPage,
@@ -23,6 +22,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerCartRule,
+  foClassicLoginPage,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -217,7 +217,7 @@ describe('BO - Catalog - Cart rules : Check Total available for each user', asyn
           await testContext.addContextItem(this, 'testIdentifier', 'signOut', baseContext);
 
           await cartPage.logout(page);
-          await loginPage.clickOnHeaderLink(page, 'Logo');
+          await foClassicLoginPage.clickOnHeaderLink(page, 'Logo');
 
           const isCustomerConnected = await homePage.isCustomerConnected(page);
           expect(isCustomerConnected, 'Customer is connected!').to.eq(false);

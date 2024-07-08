@@ -8,7 +8,6 @@ import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
-import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
@@ -18,6 +17,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
+  foClassicLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -82,14 +82,14 @@ describe('FO - Account - Order history : Reorder from order list', async () => {
 
       await foHomePage.goToLoginPage(page);
 
-      const pageHeaderTitle = await foLoginPage.getPageTitle(page);
-      expect(pageHeaderTitle).to.equal(foLoginPage.pageTitle);
+      const pageHeaderTitle = await foClassicLoginPage.getPageTitle(page);
+      expect(pageHeaderTitle).to.equal(foClassicLoginPage.pageTitle);
     });
 
     it('should sign in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected: boolean = await myAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);

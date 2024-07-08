@@ -10,13 +10,13 @@ import cartPage from '@pages/FO/hummingbird/cart';
 import homePage from '@pages/FO/hummingbird/home';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
-import foLoginPage from '@pages/FO/hummingbird/login';
 
 import {
   dataCarriers,
   dataCustomers,
   dataProducts,
   FakerCartRule,
+  foHummingbirdLoginPage,
   foHummingbirdModalQuickViewPage,
   foHummingbirdSearchResultsPage,
   utilsDate,
@@ -95,16 +95,16 @@ describe('FO - Checkout : Display of totals', async () => {
 
       await homePage.goToLoginPage(page);
 
-      const pageTitle = await foLoginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foHummingbirdLoginPage.pageTitle);
     });
 
     it('should sign in with created customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
 
-      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 

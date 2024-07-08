@@ -12,7 +12,6 @@ import contactFormPage from '@pages/BO/modules/contactForm';
 // Import FO pages
 import {contactUsPage} from '@pages/FO/classic/contactUs';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
-import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 
 import {
   boDashboardPage,
@@ -20,6 +19,7 @@ import {
   dataCustomers,
   dataModules,
   FakerContactMessage,
+  foClassicLoginPage,
   type MailDev,
   type MailDevEmail,
   utilsFile,
@@ -185,7 +185,7 @@ describe('FO - Contact us : Send message from contact us page with customer not 
       await testContext.addContextItem(this, 'testIdentifier', 'goOnContactPage', baseContext);
 
       // Go to contact us page
-      await foLoginPage.goToFooterLink(page, 'Contact us');
+      await foClassicLoginPage.goToFooterLink(page, 'Contact us');
 
       const pageTitle = await contactUsPage.getPageTitle(page);
       expect(pageTitle).to.equal(contactUsPage.pageTitle);

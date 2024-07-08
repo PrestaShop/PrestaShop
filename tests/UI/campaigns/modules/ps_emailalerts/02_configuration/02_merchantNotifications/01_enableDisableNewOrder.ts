@@ -12,7 +12,6 @@ import emailAlertsPage from '@pages/BO/modules/psEmailAlerts';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {loginPage as foLoginPage, loginPage} from '@pages/FO/classic/login';
 import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
@@ -26,6 +25,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
+  foClassicLoginPage,
   type MailDev,
   type MailDevEmail,
   utilsMail,
@@ -155,16 +155,16 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'loginFO', baseContext);
 
       await homePage.goToLoginPage(page);
-      await loginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await loginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected).to.eq(true);
     });
 
     it('should add product to cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await foLoginPage.goToHomePage(page);
+      await foClassicLoginPage.goToHomePage(page);
       await homePage.goToProductPage(page, orderData.products[0].product.id);
       // Add the product to the cart
       await productPage.addProductToTheCart(page, orderData.products[0].quantity);
@@ -324,7 +324,7 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart2', baseContext);
 
       // Go to home page
-      await foLoginPage.goToHomePage(page);
+      await foClassicLoginPage.goToHomePage(page);
       // Go to the first product page
       await homePage.goToProductPage(page, orderData.products[0].product.id);
       // Add the product to the cart

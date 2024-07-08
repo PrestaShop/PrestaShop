@@ -17,7 +17,6 @@ import customersPage from '@pages/BO/customers';
 
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
@@ -44,6 +43,7 @@ import {
   FakerContactMessage,
   FakerCustomer,
   FakerProduct,
+  foClassicLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -135,16 +135,16 @@ describe('BO - Dashboard : Activity overview', async () => {
 
         await homePage.goToLoginPage(page);
 
-        const pageTitle = await foLoginPage.getPageTitle(page);
-        expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+        const pageTitle = await foClassicLoginPage.getPageTitle(page);
+        expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
       });
 
       it('should sign in with default customer', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'sighInFO2', baseContext);
 
-        await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
+        await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-        const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+        const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
         expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
       });
 
@@ -152,7 +152,7 @@ describe('BO - Dashboard : Activity overview', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
         // Go to home page
-        await foLoginPage.goToHomePage(page);
+        await foClassicLoginPage.goToHomePage(page);
         // Go to the first product page
         await homePage.goToProductPage(page, 1);
         // Add the product to the cart

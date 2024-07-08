@@ -7,7 +7,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 // Import FO pages
 import cartPage from '@pages/FO/hummingbird/cart';
 import homePage from '@pages/FO/hummingbird/home';
-import loginPage from '@pages/FO/hummingbird/login';
 import productPage from '@pages/FO/hummingbird/product';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
@@ -16,6 +15,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foHummingbirdLoginPage,
   foHummingbirdModalQuickViewPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -76,7 +76,7 @@ describe('FO - Checkout : Show details', async () => {
     it('should add the third product to cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart2', baseContext);
 
-      await loginPage.goToHomePage(page);
+      await foHummingbirdLoginPage.goToHomePage(page);
       await homePage.quickViewProduct(page, 3);
       await foHummingbirdModalQuickViewPage.setQuantityAndAddToCart(page, 2);
       await blockCartModal.proceedToCheckout(page);

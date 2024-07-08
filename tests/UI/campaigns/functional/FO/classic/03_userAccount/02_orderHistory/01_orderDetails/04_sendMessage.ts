@@ -14,7 +14,6 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
-import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
@@ -26,6 +25,7 @@ import {
   dataOrderStatuses,
   dataPaymentMethods,
   dataProducts,
+  foClassicLoginPage,
   type MailDev,
   type MailDevEmail,
   utilsMail,
@@ -107,16 +107,16 @@ describe('FO - Account : Send a message with an ordered product', async () => {
 
       await foHomePage.goToLoginPage(page);
 
-      const pageTitle = await foLoginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      const pageTitle = await foClassicLoginPage.getPageTitle(page);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFoToOrder', baseContext);
 
-      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
@@ -124,7 +124,7 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'createOrder', baseContext);
 
       // Go to home page
-      await foLoginPage.goToHomePage(page);
+      await foClassicLoginPage.goToHomePage(page);
       // Go to the first product page
       await foHomePage.goToProductPage(page, 1);
       // Add the created product to the cart
@@ -213,14 +213,14 @@ describe('FO - Account : Send a message with an ordered product', async () => {
 
       await foHomePage.goToLoginPage(page);
 
-      const pageHeaderTitle = await foLoginPage.getPageTitle(page);
-      expect(pageHeaderTitle).to.equal(foLoginPage.pageTitle);
+      const pageHeaderTitle = await foClassicLoginPage.getPageTitle(page);
+      expect(pageHeaderTitle).to.equal(foClassicLoginPage.pageTitle);
     });
 
     it('Should sign in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);

@@ -8,12 +8,12 @@ import {createAccountTest} from '@commonTests/FO/classic/account';
 
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {loginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {passwordReminderPage} from '@pages/FO/classic/passwordReminder';
 
 import {
   FakerCustomer,
+  foClassicLoginPage,
   type MailDev,
   type MailDevEmail,
   utilsMail,
@@ -90,14 +90,14 @@ describe('FO - Login : Password reminder', async () => {
 
       await homePage.goToLoginPage(page);
 
-      const pageTitle = await loginPage.getPageTitle(page);
-      expect(pageTitle).to.equal(loginPage.pageTitle);
+      const pageTitle = await foClassicLoginPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicLoginPage.pageTitle);
     });
 
     it('should click on \'Forgot your password?\' link', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToPasswordReminderPage', baseContext);
 
-      await loginPage.goToPasswordReminderPage(page);
+      await foClassicLoginPage.goToPasswordReminderPage(page);
 
       const pageTitle = await passwordReminderPage.getPageTitle(page);
       expect(pageTitle).to.equal(passwordReminderPage.pageTitle);
@@ -154,16 +154,16 @@ describe('FO - Login : Password reminder', async () => {
     it('should try to login with old password and check the error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFOWithOldPassword', baseContext);
 
-      await loginPage.customerLogin(page, customerData, false);
+      await foClassicLoginPage.customerLogin(page, customerData, false);
 
-      const loginError = await loginPage.getLoginError(page);
-      expect(loginError).to.contains(loginPage.loginErrorText);
+      const loginError = await foClassicLoginPage.getLoginError(page);
+      expect(loginError).to.contains(foClassicLoginPage.loginErrorText);
     });
 
     it('should sign in with new password', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
-      await loginPage.customerLogin(page, customerNewPassword);
+      await foClassicLoginPage.customerLogin(page, customerNewPassword);
 
       const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
@@ -181,7 +181,7 @@ describe('FO - Login : Password reminder', async () => {
     it('should click on \'Forgot your password?\' link', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnForgetPassword2', baseContext);
 
-      await loginPage.goToPasswordReminderPage(page);
+      await foClassicLoginPage.goToPasswordReminderPage(page);
 
       const pageTitle = await passwordReminderPage.getPageTitle(page);
       expect(pageTitle).to.equal(passwordReminderPage.pageTitle);

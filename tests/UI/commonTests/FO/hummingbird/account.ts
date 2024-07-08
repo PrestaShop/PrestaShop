@@ -3,11 +3,11 @@ import testContext from '@utils/testContext';
 
 // Import FO pages
 import homePage from '@pages/FO/hummingbird/home';
-import foLoginPage from '@pages/FO/hummingbird/login';
 import foCreateAccountPage from '@pages/FO/hummingbird/myAccount/add';
 
 import {
   FakerCustomer,
+  foHummingbirdLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -49,7 +49,7 @@ function createAccountTest(customerData: FakerCustomer, baseContext: string = 'c
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreateAccountPage', baseContext);
 
       await homePage.goToLoginPage(page);
-      await foLoginPage.goToCreateAccountPage(page);
+      await foHummingbirdLoginPage.goToCreateAccountPage(page);
 
       const pageHeaderTitle = await foCreateAccountPage.getHeaderTitle(page);
       expect(pageHeaderTitle).to.equal(foCreateAccountPage.formTitle);

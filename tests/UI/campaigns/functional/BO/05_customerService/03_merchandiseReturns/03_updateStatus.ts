@@ -15,7 +15,6 @@ import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 import editMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns/edit';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {merchandiseReturnsPage as foMerchandiseReturnsPage} from '@pages/FO/classic/myAccount/merchandiseReturns';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
@@ -30,6 +29,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
+  foClassicLoginPage,
   type MailDev,
   type MailDevEmail,
   utilsDate,
@@ -167,9 +167,9 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
       await testContext.addContextItem(this, 'testIdentifier', 'loginFO', baseContext);
 
       await homePage.goToLoginPage(page);
-      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 

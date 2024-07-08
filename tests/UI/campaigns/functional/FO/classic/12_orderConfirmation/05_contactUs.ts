@@ -10,7 +10,6 @@ import customerServiceMainPage from '@pages/BO/customerService/customerService';
 import customerServiceMessageViewPage from '@pages/BO/customerService/customerService/view';
 // FO pages
 import {homePage as foHomePage} from '@pages/FO/classic/home';
-import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {cartPage} from '@pages/FO/classic/cart';
 import {contactUsPage} from '@pages/FO/classic/contactUs';
@@ -24,6 +23,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerContactMessage,
+  foClassicLoginPage,
   foClassicModalQuickViewPage,
   utilsFile,
   utilsPlaywright,
@@ -92,14 +92,14 @@ describe('FO - Order confirmation : Contact us', async () => {
 
       await foHomePage.goToLoginPage(page);
 
-      const pageHeaderTitle = await foLoginPage.getPageTitle(page);
-      expect(pageHeaderTitle).to.equal(foLoginPage.pageTitle);
+      const pageHeaderTitle = await foClassicLoginPage.getPageTitle(page);
+      expect(pageHeaderTitle).to.equal(foClassicLoginPage.pageTitle);
     });
 
     it('should sign in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
       const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });

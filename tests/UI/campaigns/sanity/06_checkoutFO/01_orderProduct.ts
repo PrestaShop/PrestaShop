@@ -6,13 +6,13 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {homePage} from '@pages/FO/classic/home';
-import {loginPage} from '@pages/FO/classic/login';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
+  foClassicLoginPage,
   foClassicModalQuickViewPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -54,14 +54,14 @@ describe('BO - Checkout : Order a product and check order confirmation', async (
 
     await homePage.goToLoginPage(page);
 
-    const pageTitle = await loginPage.getPageTitle(page);
-    expect(pageTitle).to.equal(loginPage.pageTitle);
+    const pageTitle = await foClassicLoginPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicLoginPage.pageTitle);
   });
 
   it('should sign In in FO with default account', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'loginFO', baseContext);
 
-    await loginPage.customerLogin(page, dataCustomers.johnDoe);
+    await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
     const connected = await homePage.isCustomerConnected(page);
     expect(connected, 'Customer is not connected in FO').to.eq(true);

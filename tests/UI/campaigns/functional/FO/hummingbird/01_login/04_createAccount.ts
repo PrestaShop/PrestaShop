@@ -7,11 +7,11 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 
 // Import FO pages
 import homePage from '@pages/FO/hummingbird/home';
-import loginPage from '@pages/FO/hummingbird/login';
 import createAccountPage from '@pages/FO/hummingbird/myAccount/add';
 
 import {
   FakerCustomer,
+  foHummingbirdLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -54,14 +54,14 @@ describe('FO - Login : Create account', async () => {
 
       await homePage.goToLoginPage(page);
 
-      const pageTitle = await loginPage.getPageTitle(page);
-      expect(pageTitle).to.equal(loginPage.pageTitle);
+      const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdLoginPage.pageTitle);
     });
 
     it('should go to create account page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreateAccountPage', baseContext);
 
-      await loginPage.goToCreateAccountPage(page);
+      await foHummingbirdLoginPage.goToCreateAccountPage(page);
 
       const pageHeaderTitle = await createAccountPage.getHeaderTitle(page);
       expect(pageHeaderTitle).to.equal(createAccountPage.formTitle);

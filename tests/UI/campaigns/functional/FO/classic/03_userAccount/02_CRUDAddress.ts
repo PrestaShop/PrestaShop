@@ -10,7 +10,6 @@ import {createAccountTest} from '@commonTests/FO/classic/account';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {homePage} from '@pages/FO/classic/home';
-import {loginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
 import {addressesPage} from '@pages/FO/classic/myAccount/addresses';
@@ -20,6 +19,7 @@ import {
   dataProducts,
   FakerAddress,
   FakerCustomer,
+  foClassicLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -85,14 +85,14 @@ describe('FO - Account : CRUD address', async () => {
 
       await homePage.goToLoginPage(page);
 
-      const pageHeaderTitle = await loginPage.getPageTitle(page);
-      expect(pageHeaderTitle).to.equal(loginPage.pageTitle);
+      const pageHeaderTitle = await foClassicLoginPage.getPageTitle(page);
+      expect(pageHeaderTitle).to.equal(foClassicLoginPage.pageTitle);
     });
 
     it('Should sign in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-      await loginPage.customerLogin(page, newCustomerData);
+      await foClassicLoginPage.customerLogin(page, newCustomerData);
 
       const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);

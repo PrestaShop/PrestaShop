@@ -9,7 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import emailPage from '@pages/BO/advancedParameters/email';
 
 // Import FO pages
-import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
@@ -20,6 +19,7 @@ import {
   boDashboardPage,
   dataCustomers,
   dataPaymentMethods,
+  foClassicLoginPage,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -100,16 +100,16 @@ describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async
 
       await homePage.goToLoginPage(page);
 
-      const pageTitle = await foLoginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      const pageTitle = await foClassicLoginPage.getPageTitle(page);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
-      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
@@ -120,7 +120,7 @@ describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async
         await testContext.addContextItem(this, 'testIdentifier', `createOrder${index}`, baseContext);
 
         // Go to home page
-        await foLoginPage.goToHomePage(page);
+        await foClassicLoginPage.goToHomePage(page);
 
         // Go to the first product page
         await homePage.goToProductPage(page, 1);

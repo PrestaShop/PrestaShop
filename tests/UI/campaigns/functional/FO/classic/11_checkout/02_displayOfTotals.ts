@@ -9,7 +9,6 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {homePage} from '@pages/FO/classic/home';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
-import {loginPage} from '@pages/FO/classic/login';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -18,6 +17,7 @@ import {
   dataCustomers,
   dataProducts,
   FakerCartRule,
+  foClassicLoginPage,
   foClassicModalQuickViewPage,
   foClassicSearchResultsPage,
   utilsDate,
@@ -88,16 +88,16 @@ describe('FO - Checkout : Display of totals', async () => {
 
       await homePage.goToLoginPage(page);
 
-      const pageTitle = await loginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(loginPage.pageTitle);
+      const pageTitle = await foClassicLoginPage.getPageTitle(page);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
     });
 
     it('should sign in with created customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
 
-      await loginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await loginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 

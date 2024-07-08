@@ -3,11 +3,11 @@ import testContext from '@utils/testContext';
 
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {loginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 
 import {
   dataCustomers,
+  foClassicLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -43,9 +43,9 @@ describe('FO - User Account : LogOut', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'enterValidCredentials', baseContext);
 
     await homePage.goToLoginPage(page);
-    await loginPage.customerLogin(page, dataCustomers.johnDoe);
+    await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-    const isCustomerConnected = await loginPage.isCustomerConnected(page);
+    const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
     expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
 
     const result = await homePage.isHomePage(page);

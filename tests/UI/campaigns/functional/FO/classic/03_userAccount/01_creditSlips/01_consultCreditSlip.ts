@@ -17,7 +17,6 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {loginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {creditSlipPage} from '@pages/FO/classic/myAccount/creditSlips';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
@@ -30,6 +29,7 @@ import {
   FakerAddress,
   FakerCustomer,
   FakerOrder,
+  foClassicLoginPage,
   type MailDev,
   type MailDevEmail,
   utilsFile,
@@ -128,16 +128,16 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
 
         await homePage.goToLoginPage(page);
 
-        const pageTitle = await loginPage.getPageTitle(page);
-        expect(pageTitle).to.equal(loginPage.pageTitle);
+        const pageTitle = await foClassicLoginPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foClassicLoginPage.pageTitle);
       });
 
       it('should login', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'loginFO', baseContext);
 
-        await loginPage.customerLogin(page, customerData);
+        await foClassicLoginPage.customerLogin(page, customerData);
 
-        const isCustomerConnected = await loginPage.isCustomerConnected(page);
+        const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
         expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
       });
 

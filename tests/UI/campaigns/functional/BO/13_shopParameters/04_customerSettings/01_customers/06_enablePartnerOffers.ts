@@ -11,13 +11,13 @@ import CustomerSettingsOptions from '@pages/BO/shopParameters/customerSettings/o
 
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {loginPage as loginFOPage} from '@pages/FO/classic/login';
 import {createAccountPage} from '@pages/FO/classic/myAccount/add';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  foClassicLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -94,7 +94,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable partner offe
 
       // Go to create account page
       await homePage.goToLoginPage(page);
-      await loginFOPage.goToCreateAccountPage(page);
+      await foClassicLoginPage.goToCreateAccountPage(page);
 
       // Check partner offer
       const isPartnerOfferVisible = await createAccountPage.isPartnerOfferVisible(page);

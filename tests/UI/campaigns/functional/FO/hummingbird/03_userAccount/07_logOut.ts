@@ -6,11 +6,11 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 
 // Import FO pages
 import homePage from '@pages/FO/hummingbird/home';
-import loginPage from '@pages/FO/hummingbird/login';
 import myAccountPage from '@pages/FO/hummingbird/myAccount';
 
 import {
   dataCustomers,
+  foHummingbirdLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -50,9 +50,9 @@ describe('FO - User Account : LogOut', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'enterValidCredentials', baseContext);
 
       await homePage.goToLoginPage(page);
-      await loginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await loginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
 
       const result = await homePage.isHomePage(page);

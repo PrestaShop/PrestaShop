@@ -11,7 +11,6 @@ import addCartRulePage from '@pages/BO/catalog/discounts/add';
 
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {cartPage} from '@pages/FO/classic/cart';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
@@ -20,6 +19,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerCartRule,
+  foClassicLoginPage,
   foClassicModalQuickViewPage,
   utilsDate,
   utilsPlaywright,
@@ -108,7 +108,7 @@ describe('BO - Catalog - Cart rules : Invalid date time', async () => {
     it('should quick view the first product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewTheFirstProduct', baseContext);
 
-      await foLoginPage.goToHomePage(page);
+      await foClassicLoginPage.goToHomePage(page);
       await homePage.quickViewProduct(page, 1);
 
       const isQuickViewModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);

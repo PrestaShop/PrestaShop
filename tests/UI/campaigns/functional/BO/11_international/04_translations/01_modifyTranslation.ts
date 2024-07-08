@@ -14,12 +14,10 @@ import storesPage from '@pages/BO/shopParameters/stores';
 
 // Import FO pages classic theme
 import {homePage} from '@pages/FO/classic/home';
-import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {createAccountPage as foCreateAccountPage} from '@pages/FO/classic/myAccount/add';
 
 // Import FO pages hummingbird theme
 import homePageHummingbird from '@pages/FO/hummingbird/home';
-import loginPageHummingbird from '@pages/FO/hummingbird/login';
 
 import {
   boDashboardPage,
@@ -28,6 +26,8 @@ import {
   dataLanguages,
   dataModules,
   FakerCustomer,
+  foClassicLoginPage,
+  foHummingbirdLoginPage,
   type MailDev,
   type MailDevEmail,
   utilsMail,
@@ -248,16 +248,16 @@ describe('BO - International - Translation : Modify translation', async () => {
 
       await homePage.goToLoginPage(page);
 
-      const pageTitle = await loginPageHummingbird.getPageTitle(page);
-      expect(pageTitle).to.equal(loginPageHummingbird.pageTitle);
+      const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdLoginPage.pageTitle);
     });
 
     it('should login by default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'login', baseContext);
 
-      await loginPageHummingbird.customerLogin(page, dataCustomers.johnDoe);
+      await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await loginPageHummingbird.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
     });
 
@@ -411,7 +411,7 @@ describe('BO - International - Translation : Modify translation', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreateAccountPage', baseContext);
 
       await homePage.goToLoginPage(page);
-      await foLoginPage.goToCreateAccountPage(page);
+      await foClassicLoginPage.goToCreateAccountPage(page);
 
       const pageHeaderTitle = await foCreateAccountPage.getHeaderTitle(page);
       expect(pageHeaderTitle).to.equal(foCreateAccountPage.formTitle);

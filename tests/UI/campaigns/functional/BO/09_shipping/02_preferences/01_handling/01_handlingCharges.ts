@@ -16,7 +16,6 @@ import addGroupPage from '@pages/BO/shopParameters/customerSettings/groups/add';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {homePage} from '@pages/FO/classic/home';
-import {loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {productPage} from '@pages/FO/classic/product';
 
 import {
@@ -24,6 +23,7 @@ import {
   dataCustomers,
   dataGroups,
   FakerCarrier,
+  foClassicLoginPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -208,16 +208,16 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
 
       await homePage.goToLoginPage(page);
 
-      const pageTitle = await foLoginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      const pageTitle = await foClassicLoginPage.getPageTitle(page);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'firstSighInFO1', baseContext);
 
-      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
@@ -225,7 +225,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
       await testContext.addContextItem(this, 'testIdentifier', 'firstCreateOrder', baseContext);
 
       // Go to home page
-      await foLoginPage.goToHomePage(page);
+      await foClassicLoginPage.goToHomePage(page);
       // Go to the first product page
       await homePage.goToProductPage(page, 1);
       // Add the created product to the cart
@@ -305,16 +305,16 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
 
       await homePage.goToLoginPage(page);
 
-      const pageTitle = await foLoginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      const pageTitle = await foClassicLoginPage.getPageTitle(page);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'firstSighInFO2', baseContext);
 
-      await foLoginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
@@ -322,7 +322,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
       await testContext.addContextItem(this, 'testIdentifier', 'secondCreateOrder', baseContext);
 
       // Go to home page
-      await foLoginPage.goToHomePage(page);
+      await foClassicLoginPage.goToHomePage(page);
       // Go to the first product page
       await homePage.goToProductPage(page, 1);
       // Add the created product to the cart

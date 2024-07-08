@@ -10,7 +10,6 @@ import {resetModule} from '@commonTests/BO/modules/moduleManager';
 // Import FO pages
 import {contactUsPage} from '@pages/FO/classic/contactUs';
 import {homePage, homePage as foHomePage} from '@pages/FO/classic/home';
-import {loginPage, loginPage as foLoginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {createAccountPage as foCreateAccountPage} from '@pages/FO/classic/myAccount/add';
 import {accountIdentityPage} from '@pages/FO/classic/myAccount/identity';
@@ -141,7 +140,7 @@ describe('GDPR : Consent checkbox customization', async () => {
     it('should go to create account page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreateAccountPage', baseContext);
 
-      await foLoginPage.goToCreateAccountPage(page);
+      await foClassicLoginPage.goToCreateAccountPage(page);
 
       const pageHeaderTitle = await foCreateAccountPage.getHeaderTitle(page);
       expect(pageHeaderTitle).to.equal(foCreateAccountPage.formTitle);
@@ -219,7 +218,7 @@ describe('GDPR : Consent checkbox customization', async () => {
     it('should return to the "Create account" page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnToCreateAccountPage', baseContext);
 
-      await foLoginPage.goToCreateAccountPage(page);
+      await foClassicLoginPage.goToCreateAccountPage(page);
 
       const pageHeaderTitle = await foCreateAccountPage.getHeaderTitle(page);
       expect(pageHeaderTitle).to.equal(foCreateAccountPage.formTitle);
@@ -381,7 +380,7 @@ describe('GDPR : Consent checkbox customization', async () => {
 
       await foClassicLoginPage.customerLogin(page, customerData);
 
-      const isCustomerConnected = await loginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
 
       const isHomePage = await foHomePage.isHomePage(page);

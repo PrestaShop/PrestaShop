@@ -18,7 +18,6 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
 import homePage from '@pages/FO/hummingbird/home';
-import loginPage from '@pages/FO/hummingbird/login';
 import myAccountPage from '@pages/FO/hummingbird/myAccount';
 import creditSlipPage from '@pages/FO/hummingbird/myAccount/creditSlips';
 import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
@@ -31,6 +30,7 @@ import {
   FakerAddress,
   FakerCustomer,
   FakerOrder,
+  foHummingbirdLoginPage,
   type MailDev,
   type MailDevEmail,
   utilsFile,
@@ -131,16 +131,16 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
 
         await homePage.goToLoginPage(page);
 
-        const pageTitle = await loginPage.getPageTitle(page);
-        expect(pageTitle).to.equal(loginPage.pageTitle);
+        const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foHummingbirdLoginPage.pageTitle);
       });
 
       it('should login', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'loginFO', baseContext);
 
-        await loginPage.customerLogin(page, customerData);
+        await foHummingbirdLoginPage.customerLogin(page, customerData);
 
-        const isCustomerConnected = await loginPage.isCustomerConnected(page);
+        const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
         expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
       });
 

@@ -10,7 +10,6 @@ import customerServicePage from '@pages/BO/customerService/customerService';
 // Import FO pages
 import {contactUsPage} from '@pages/FO/classic/contactUs';
 import {homePage} from '@pages/FO/classic/home';
-import {loginPage} from '@pages/FO/classic/login';
 import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {gdprPersonalDataPage} from '@pages/FO/classic/myAccount/gdprPersonalData';
 
@@ -19,6 +18,7 @@ import {
   dataCustomers,
   dataOrders,
   FakerContactMessage,
+  foClassicLoginPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -68,14 +68,14 @@ describe('FO - Account : Contact us on GDPR page', async () => {
 
     await homePage.goToLoginPage(page);
 
-    const pageHeaderTitle = await loginPage.getPageTitle(page);
-    expect(pageHeaderTitle).to.equal(loginPage.pageTitle);
+    const pageHeaderTitle = await foClassicLoginPage.getPageTitle(page);
+    expect(pageHeaderTitle).to.equal(foClassicLoginPage.pageTitle);
   });
 
   it('should sign in FO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-    await loginPage.customerLogin(page, dataCustomers.johnDoe);
+    await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
     const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
     expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
