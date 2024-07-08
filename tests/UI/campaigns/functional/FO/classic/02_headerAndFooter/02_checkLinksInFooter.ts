@@ -9,7 +9,6 @@ import {createAccountTest} from '@commonTests/FO/classic/account';
 // Import pages
 // Import BO pages
 // Import FO pages
-import {aboutUsPage} from '@pages/FO/classic/aboutUs';
 import {bestSalesPage} from '@pages/FO/classic/bestSales';
 import {contactUsPage} from '@pages/FO/classic/contactUs';
 import {deliveryPage} from '@pages/FO/classic/delivery';
@@ -33,6 +32,7 @@ import {termsAndConditionsOfUsePage} from '@pages/FO/classic/termsAndConditionsO
 import {
   dataCustomers,
   FakerCustomer,
+  foClassicAboutUsPage,
   foClassicLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -114,7 +114,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
       {linkSelector: 'Delivery', pageTitle: deliveryPage.pageTitle},
       {linkSelector: 'Legal Notice', pageTitle: legalNoticePage.pageTitle},
       {linkSelector: 'Terms and conditions of use', pageTitle: termsAndConditionsOfUsePage.pageTitle},
-      {linkSelector: 'About us', pageTitle: aboutUsPage.pageTitle},
+      {linkSelector: 'About us', pageTitle: foClassicAboutUsPage.pageTitle},
       {linkSelector: 'Secure payment', pageTitle: securePaymentPage.pageTitle},
       {linkSelector: 'Contact us', pageTitle: contactUsPage.pageTitle},
       {linkSelector: 'Sitemap', pageTitle: siteMapPage.pageTitle},
