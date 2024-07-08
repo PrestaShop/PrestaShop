@@ -1,0 +1,386 @@
+<h2 class="custom">Complex panels</h2>
+
+<div class="panel col-lg-12">
+  <div class="panel-heading">
+     Règles de taxes
+     <span class="badge">5</span>
+     <span class="panel-heading-action">
+     <a id="desc-tax_rules_group-new" class="list-toolbar-btn" href="index.php?controller=AdminTaxRulesGroup&amp;addtax_rules_group&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA">
+     <span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="Ajouter" data-html="true" data-placement="top">
+     <i class="process-icon-new"></i>
+     </span>
+     </a>
+     <a class="list-toolbar-btn" href="javascript:location.reload();">
+     <span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="Rafraîchir la liste" data-html="true" data-placement="top">
+     <i class="process-icon-refresh"></i>
+     </span>
+     </a>
+     <a class="list-toolbar-btn" href="javascript:void(0);" onclick="$('.leadin').first().append('<div class=\'alert alert-info\'>' + $('#sql_query_tax_rules_group').val() + '</div>'); $(this).attr('onclick', '');">
+     <span class="label-tooltip" data-toggle="tooltip" data-original-title="Voir la requête SQL" data-html="true" data-placement="top">
+     <i class="process-icon-terminal"></i>
+     </span>
+     </a>
+     <a class="list-toolbar-btn" href="javascript:void(0);" onclick="$('#sql_name_tax_rules_group').val(createSqlQueryName()); $('#sql_query_tax_rules_group').val($('#sql_query_tax_rules_group').val().replace(/\s+limit\s+[0-9,\s]+$/ig, '').trim()); $('#sql_form_tax_rules_group').submit();">
+     <span class="label-tooltip" data-toggle="tooltip" data-original-title="Exporter vers le gestionnaire SQL" data-html="true" data-placement="top">
+     <i class="process-icon-database"></i>
+     </span>
+     </a>
+     </span>
+  </div>
+  <script type="text/javascript">
+     //<![CDATA[
+     var submited = false;
+     $(function() {
+       //get reference on save link
+       btn_save = $('i[class~="process-icon-save"]').parent();
+       //get reference on form submit button
+       btn_submit = $('#tax_rules_group_form_submit_btn');
+       if (btn_save.length > 0 && btn_submit.length > 0) {
+         //get reference on save and stay link
+         btn_save_and_stay = $('i[class~="process-icon-save-and-stay"]').parent();
+         //get reference on current save link label
+         lbl_save = $('#desc-tax_rules_group-save div');
+         //override save link label with submit button value
+         if (btn_submit.val().length > 0) {
+           lbl_save.html(btn_submit.attr("value"));
+         }
+         if (btn_save_and_stay.length > 0) {
+           //get reference on current save link label
+           lbl_save_and_stay = $('#desc-tax_rules_group-save-and-stay div');
+           //override save and stay link label with submit button value
+           if (btn_submit.val().length > 0 && lbl_save_and_stay && !lbl_save_and_stay.hasClass('locked')) {
+             lbl_save_and_stay.html(btn_submit.val() + " et rester ");
+           }
+         }
+         //hide standard submit button
+         btn_submit.hide();
+         //bind enter key press to validate form
+         $('#tax_rules_group_form').on('keypress', function (e) {
+           if (e.which == 13 && e.target.localName != 'textarea') {
+             $('#desc-tax_rules_group-save').click();
+           }
+         });
+         //submit the form
+         
+           btn_save.on('click', function() {
+             // Avoid double click
+             if (submited) {
+               return false;
+             }
+             submited = true;
+             //add hidden input to emulate submit button click when posting the form -> field name posted
+             btn_submit.before('<input type="hidden" name="'+btn_submit.attr("name")+'" value="1" />');
+             $('#tax_rules_group_form').submit();
+             return false;
+           });
+           if (btn_save_and_stay) {
+             btn_save_and_stay.on('click', function() {
+               //add hidden input to emulate submit button click when posting the form -> field name posted
+               btn_submit.before('<input type="hidden" name="'+btn_submit.attr("name")+'AndStay" value="1" />');
+               $('#tax_rules_group_form').submit();
+               return false;
+             });
+           }
+         
+       }
+     });
+     //]]>
+  </script>
+  <style>
+     @media (max-width: 992px) {
+     .table-responsive-row td:nth-of-type(2):before {
+     content: "ID";
+     }
+     .table-responsive-row td:nth-of-type(3):before {
+     content: "Nom";
+     }
+     .table-responsive-row td:nth-of-type(4):before {
+     content: "Activé";
+     }
+     }
+  </style>
+  <div class="table-responsive-row clearfix">
+     <table id="table-tax_rules_group" class="table tax_rules_group">
+        <thead>
+           <tr class="nodrag nodrop">
+              <th class="center fixed-width-xs"></th>
+              <th class="fixed-width-xs center">
+                 <span class="title_box active">
+                 ID
+                 <a class="desc-sort-column-id_tax_rules_group-link" href="index.php?controller=AdminTaxRulesGroup&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA&amp;tax_rules_groupOrderby=id_tax_rules_group&amp;tax_rules_groupOrderway=desc">
+                 <i class="icon-caret-down"></i>
+                 </a>
+                 <a class="asc-sort-column-id_tax_rules_group-link active" href="index.php?controller=AdminTaxRulesGroup&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA&amp;tax_rules_groupOrderby=id_tax_rules_group&amp;tax_rules_groupOrderway=asc">
+                 <i class="icon-caret-up"></i>
+                 </a>
+                 </span>
+              </th>
+              <th class="">
+                 <span class="title_box">
+                 Nom
+                 <a class="desc-sort-column-name-link" href="index.php?controller=AdminTaxRulesGroup&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA&amp;tax_rules_groupOrderby=name&amp;tax_rules_groupOrderway=desc">
+                 <i class="icon-caret-down"></i>
+                 </a>
+                 <a class="asc-sort-column-name-link" href="index.php?controller=AdminTaxRulesGroup&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA&amp;tax_rules_groupOrderby=name&amp;tax_rules_groupOrderway=asc">
+                 <i class="icon-caret-up"></i>
+                 </a>
+                 </span>
+              </th>
+              <th class="fixed-width-sm center">
+                 <span class="title_box">
+                 Activé
+                 </span>
+              </th>
+              <th></th>
+           </tr>
+           <tr class="nodrag nodrop filter row_hover">
+              <th class="text-center">
+                 --
+              </th>
+              <th class="center">
+                 <input type="text" class="filter" name="tax_rules_groupFilter_id_tax_rules_group" value="">
+              </th>
+              <th>
+                 <input type="text" class="filter" name="tax_rules_groupFilter_name" value="">
+              </th>
+              <th class="center">
+                 <select class="filter fixed-width-sm center" onchange="$('#submitFilterButtontax_rules_group').focus();$('#submitFilterButtontax_rules_group').click();" name="tax_rules_groupFilter_active">
+                    <option value="">-</option>
+                    <option value="1">Oui</option>
+                    <option value="0">Non</option>
+                 </select>
+              </th>
+              <th class="actions">
+                 <span class="pull-right">
+                 <button type="submit" id="submitFilterButtontax_rules_group" name="submitFilter" class="btn btn-default" data-list-id="tax_rules_group">
+                 <i class="icon-search"></i> Rechercher
+                 </button>
+                 </span>
+              </th>
+           </tr>
+        </thead>
+        <tbody>
+           <tr class=" odd">
+              <td class="row-selector text-center">
+                 <input type="checkbox" name="tax_rules_groupBox[]" value="1" class="noborder">
+              </td>
+              <td class="pointer column-id_tax_rules_group fixed-width-xs center" onclick="document.location = 'index.php?controller=AdminTaxRulesGroup&amp;updatetax_rules_group=&amp;id_tax_rules_group=1&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA'">
+                 1
+              </td>
+              <td class="pointer column-name" onclick="document.location = 'index.php?controller=AdminTaxRulesGroup&amp;updatetax_rules_group=&amp;id_tax_rules_group=1&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA'">
+                 FR Taux standard (20%)
+              </td>
+              <td class="pointer column-active fixed-width-sm center" onclick="document.location = 'index.php?controller=AdminTaxRulesGroup&amp;updatetax_rules_group=&amp;id_tax_rules_group=1&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA'">
+                 <a class="list-action-enable action-enabled" href="index.php?controller=AdminTaxRulesGroup&amp;id_tax_rules_group=1&amp;statustax_rules_group&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA" title="Activé">
+                 <i class="icon-check"></i>
+                 <i class="icon-remove hidden"></i>
+                 </a>
+              </td>
+              <td class="text-right">
+                 <div class="btn-group-action">
+                    <div class="btn-group pull-right">
+                       <a href="index.php?controller=AdminTaxRulesGroup&amp;updatetax_rules_group=&amp;id_tax_rules_group=1&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA" title="Modifier" class="edit btn btn-default">
+                       <i class="icon-pencil"></i> Modifier
+                       </a>
+                       <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                       <i class="icon-caret-down"></i>
+                       </button>
+                       <ul class="dropdown-menu">
+                          <li>
+                             <a href="#" title="Supprimer" class="delete" onclick="confirm_link('', 'Supprimer cet &amp;eacute;l&amp;eacute;ment ?\n\nNom : FR Taux standard (20%)', 'Oui', 'Non', 'index.php?controller=AdminTaxRulesGroup&amp;id_tax_rules_group=1&amp;deletetax_rules_group&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA', '#')">
+                             <i class="icon-trash"></i> Supprimer
+                             </a>
+                          </li>
+                       </ul>
+                    </div>
+                 </div>
+              </td>
+           </tr>
+           <tr class=" ">
+              <td class="row-selector text-center">
+                 <input type="checkbox" name="tax_rules_groupBox[]" value="2" class="noborder">
+              </td>
+              <td class="pointer column-id_tax_rules_group fixed-width-xs center" onclick="document.location = 'index.php?controller=AdminTaxRulesGroup&amp;updatetax_rules_group=&amp;id_tax_rules_group=2&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA'">
+                 2
+              </td>
+              <td class="pointer column-name" onclick="document.location = 'index.php?controller=AdminTaxRulesGroup&amp;updatetax_rules_group=&amp;id_tax_rules_group=2&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA'">
+                 FR Taux réduit (10%)
+              </td>
+              <td class="pointer column-active fixed-width-sm center" onclick="document.location = 'index.php?controller=AdminTaxRulesGroup&amp;updatetax_rules_group=&amp;id_tax_rules_group=2&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA'">
+                 <a class="list-action-enable action-enabled" href="index.php?controller=AdminTaxRulesGroup&amp;id_tax_rules_group=2&amp;statustax_rules_group&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA" title="Activé">
+                 <i class="icon-check"></i>
+                 <i class="icon-remove hidden"></i>
+                 </a>
+              </td>
+              <td class="text-right">
+                 <div class="btn-group-action">
+                    <div class="btn-group pull-right">
+                       <a href="index.php?controller=AdminTaxRulesGroup&amp;updatetax_rules_group=&amp;id_tax_rules_group=2&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA" title="Modifier" class="edit btn btn-default">
+                       <i class="icon-pencil"></i> Modifier
+                       </a>
+                       <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                       <i class="icon-caret-down"></i>
+                       </button>
+                       <ul class="dropdown-menu">
+                          <li>
+                             <a href="#" title="Supprimer" class="delete" onclick="confirm_link('', 'Supprimer cet &amp;eacute;l&amp;eacute;ment ?\n\nNom : FR Taux r&amp;eacute;duit (10%)', 'Oui', 'Non', 'index.php?controller=AdminTaxRulesGroup&amp;id_tax_rules_group=2&amp;deletetax_rules_group&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA', '#')">
+                             <i class="icon-trash"></i> Supprimer
+                             </a>
+                          </li>
+                       </ul>
+                    </div>
+                 </div>
+              </td>
+           </tr>
+           <tr class=" odd">
+              <td class="row-selector text-center">
+                 <input type="checkbox" name="tax_rules_groupBox[]" value="3" class="noborder">
+              </td>
+              <td class="pointer column-id_tax_rules_group fixed-width-xs center" onclick="document.location = 'index.php?controller=AdminTaxRulesGroup&amp;updatetax_rules_group=&amp;id_tax_rules_group=3&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA'">
+                 3
+              </td>
+              <td class="pointer column-name" onclick="document.location = 'index.php?controller=AdminTaxRulesGroup&amp;updatetax_rules_group=&amp;id_tax_rules_group=3&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA'">
+                 FR Taux réduit (5.5%)
+              </td>
+              <td class="pointer column-active fixed-width-sm center" onclick="document.location = 'index.php?controller=AdminTaxRulesGroup&amp;updatetax_rules_group=&amp;id_tax_rules_group=3&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA'">
+                 <a class="list-action-enable action-enabled" href="index.php?controller=AdminTaxRulesGroup&amp;id_tax_rules_group=3&amp;statustax_rules_group&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA" title="Activé">
+                 <i class="icon-check"></i>
+                 <i class="icon-remove hidden"></i>
+                 </a>
+              </td>
+              <td class="text-right">
+                 <div class="btn-group-action">
+                    <div class="btn-group pull-right">
+                       <a href="index.php?controller=AdminTaxRulesGroup&amp;updatetax_rules_group=&amp;id_tax_rules_group=3&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA" title="Modifier" class="edit btn btn-default">
+                       <i class="icon-pencil"></i> Modifier
+                       </a>
+                       <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                       <i class="icon-caret-down"></i>
+                       </button>
+                       <ul class="dropdown-menu">
+                          <li>
+                             <a href="#" title="Supprimer" class="delete" onclick="confirm_link('', 'Supprimer cet &amp;eacute;l&amp;eacute;ment ?\n\nNom : FR Taux r&amp;eacute;duit (5.5%)', 'Oui', 'Non', 'index.php?controller=AdminTaxRulesGroup&amp;id_tax_rules_group=3&amp;deletetax_rules_group&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA', '#')">
+                             <i class="icon-trash"></i> Supprimer
+                             </a>
+                          </li>
+                       </ul>
+                    </div>
+                 </div>
+              </td>
+           </tr>
+           <tr class=" ">
+              <td class="row-selector text-center">
+                 <input type="checkbox" name="tax_rules_groupBox[]" value="4" class="noborder">
+              </td>
+              <td class="pointer column-id_tax_rules_group fixed-width-xs center" onclick="document.location = 'index.php?controller=AdminTaxRulesGroup&amp;updatetax_rules_group=&amp;id_tax_rules_group=4&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA'">
+                 4
+              </td>
+              <td class="pointer column-name" onclick="document.location = 'index.php?controller=AdminTaxRulesGroup&amp;updatetax_rules_group=&amp;id_tax_rules_group=4&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA'">
+                 FR Taux super réduit (2.1%)
+              </td>
+              <td class="pointer column-active fixed-width-sm center" onclick="document.location = 'index.php?controller=AdminTaxRulesGroup&amp;updatetax_rules_group=&amp;id_tax_rules_group=4&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA'">
+                 <a class="list-action-enable action-enabled" href="index.php?controller=AdminTaxRulesGroup&amp;id_tax_rules_group=4&amp;statustax_rules_group&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA" title="Activé">
+                 <i class="icon-check"></i>
+                 <i class="icon-remove hidden"></i>
+                 </a>
+              </td>
+              <td class="text-right">
+                 <div class="btn-group-action">
+                    <div class="btn-group pull-right">
+                       <a href="index.php?controller=AdminTaxRulesGroup&amp;updatetax_rules_group=&amp;id_tax_rules_group=4&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA" title="Modifier" class="edit btn btn-default">
+                       <i class="icon-pencil"></i> Modifier
+                       </a>
+                       <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                       <i class="icon-caret-down"></i>
+                       </button>
+                       <ul class="dropdown-menu">
+                          <li>
+                             <a href="#" title="Supprimer" class="delete" onclick="confirm_link('', 'Supprimer cet &amp;eacute;l&amp;eacute;ment ?\n\nNom : FR Taux super r&amp;eacute;duit (2.1%)', 'Oui', 'Non', 'index.php?controller=AdminTaxRulesGroup&amp;id_tax_rules_group=4&amp;deletetax_rules_group&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA', '#')">
+                             <i class="icon-trash"></i> Supprimer
+                             </a>
+                          </li>
+                       </ul>
+                    </div>
+                 </div>
+              </td>
+           </tr>
+           <tr class=" odd">
+              <td class="row-selector text-center">
+                 <input type="checkbox" name="tax_rules_groupBox[]" value="5" class="noborder">
+              </td>
+              <td class="pointer column-id_tax_rules_group fixed-width-xs center" onclick="document.location = 'index.php?controller=AdminTaxRulesGroup&amp;updatetax_rules_group=&amp;id_tax_rules_group=5&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA'">
+                 5
+              </td>
+              <td class="pointer column-name" onclick="document.location = 'index.php?controller=AdminTaxRulesGroup&amp;updatetax_rules_group=&amp;id_tax_rules_group=5&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA'">
+                 EU VAT For Virtual Products
+              </td>
+              <td class="pointer column-active fixed-width-sm center" onclick="document.location = 'index.php?controller=AdminTaxRulesGroup&amp;updatetax_rules_group=&amp;id_tax_rules_group=5&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA'">
+                 <a class="list-action-enable action-enabled" href="index.php?controller=AdminTaxRulesGroup&amp;id_tax_rules_group=5&amp;statustax_rules_group&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA" title="Activé">
+                 <i class="icon-check"></i>
+                 <i class="icon-remove hidden"></i>
+                 </a>
+              </td>
+              <td class="text-right">
+                 <div class="btn-group-action">
+                    <div class="btn-group pull-right">
+                       <a href="index.php?controller=AdminTaxRulesGroup&amp;updatetax_rules_group=&amp;id_tax_rules_group=5&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA" title="Modifier" class="edit btn btn-default">
+                       <i class="icon-pencil"></i> Modifier
+                       </a>
+                       <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                       <i class="icon-caret-down"></i>
+                       </button>
+                       <ul class="dropdown-menu">
+                          <li>
+                             <a href="#" title="Supprimer" class="delete" onclick="confirm_link('', 'Supprimer cet &amp;eacute;l&amp;eacute;ment ?\n\nNom : EU VAT For Virtual Products', 'Oui', 'Non', 'index.php?controller=AdminTaxRulesGroup&amp;id_tax_rules_group=5&amp;deletetax_rules_group&amp;token=e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA', '#')">
+                             <i class="icon-trash"></i> Supprimer
+                             </a>
+                          </li>
+                       </ul>
+                    </div>
+                 </div>
+              </td>
+           </tr>
+        </tbody>
+     </table>
+  </div>
+  <div class="row">
+     <div class="col-lg-6">
+        <div class="btn-group bulk-actions dropup">
+           <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="bulk_action_menu_tax_rules_group">
+           Actions groupées <span class="caret"></span>
+           </button>
+           <ul class="dropdown-menu">
+              <li>
+                 <a href="#" onclick="javascript:checkDelBoxes($(this).closest('form').get(0), 'tax_rules_groupBox[]', true);return false;">
+                 <i class="icon-check-sign"></i>&nbsp;Tout sélectionner
+                 </a>
+              </li>
+              <li>
+                 <a href="#" onclick="javascript:checkDelBoxes($(this).closest('form').get(0), 'tax_rules_groupBox[]', false);return false;">
+                 <i class="icon-check-empty"></i>&nbsp;Tout désélectionner
+                 </a>
+              </li>
+              <li class="divider"></li>
+              <li>
+                 <a href="#" onclick="sendBulkAction($(this).closest('form').get(0), 'submitBulkenableSelectiontax_rules_group');">
+                 <i class="icon-power-off text-success"></i>&nbsp;Activer la sélection
+                 </a>
+              </li>
+              <li>
+                 <a href="#" onclick="sendBulkAction($(this).closest('form').get(0), 'submitBulkdisableSelectiontax_rules_group');">
+                 <i class="icon-power-off text-danger"></i>&nbsp;Désactiver la sélection
+                 </a>
+              </li>
+              <li class="divider">
+              </li>
+              <li>
+                 <a href="#" onclick="if (confirm('Supprimer les éléments sélectionnés ?'))sendBulkAction($(this).closest('form').get(0), 'submitBulkdeletetax_rules_group');">
+                 <i class="icon-trash"></i>&nbsp;Supprimer la sélection
+                 </a>
+              </li>
+           </ul>
+        </div>
+     </div>
+  </div>
+  <input type="hidden" name="token" value="e3bf90f23be5.K82xeY-LKsiG9YjtrWMAhZV19EdOmsL5Xwmn4kCd-do.HKaFL8LMb42_zena6y416dMtzSMK95Sba37F0nisyL5T_8M3_e5Qg-2muA">
+</div>

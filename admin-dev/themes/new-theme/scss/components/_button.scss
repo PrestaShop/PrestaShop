@@ -2,16 +2,17 @@
   white-space: normal;
 
   &.btn-action {
-    color: #576c72;
-    background-color: $white;
-    @include border-radius(4px);
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    background-color: var(--#{$cdk}white);
+    @extend .btn-outline-secondary;
+  }
 
-    &:disabled,
-    &.disabled {
-      color: $white;
-      background-color: #ddd;
-      box-shadow: none;
+  &.btn-outline-secondary {
+    &:not(:disabled):not(.disabled):active,
+    &:not(:disabled):not(.disabled).active,
+    .show > &.dropdown-toggle {
+      color: var(--#{$cdk}primary-800);
+      background-color: var(--#{$cdk}primary-300);
+      border-color: var(--#{$cdk}primary-800);
     }
   }
 }

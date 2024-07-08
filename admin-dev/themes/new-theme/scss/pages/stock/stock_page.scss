@@ -29,16 +29,16 @@
     display: block;
     padding-right: 0;
     padding-left: 0;
-    margin: -($grid-gutter-width / 2);
-    margin-top: -1rem;
-    margin-bottom: 1rem;
-    border-bottom: 0.0625rem solid $color-separator;
+    margin: calc(-1 * var(--#{$cdk}size-16));
+    margin-top: calc(-1 * var(--#{$cdk}size-16));
+    margin-bottom: var(--#{$cdk}size-16);
+    border-bottom: 1px solid var(--#{$cdk}primary-400);
 
-    @at-root .multishop-enabled & {
-      top: 4.95rem;
-
-      @include media-breakpoint-down(md) {
-        top: 6.2rem;
+    @at-root .multishop-enabled {
+      &.adminstockmanagement .stock-app {
+        .header-toolbar {
+          top: calc(var(--#{$cdk}header-height) + var(--#{$cdk}multishop-bar-height));
+        }
       }
     }
   }
@@ -54,29 +54,24 @@
 
   #search {
     .search-input {
-      min-height: 35px;
-      background-color: $white;
-      border: $gray-light 1px solid;
-      @include border-radius(4px);
+      min-height: var(--#{$cdk}size-36);
+      background-color: var(--#{$cdk}white);
+      border: 1px solid var(--#{$cdk}primary-400);
       outline: none;
       box-shadow: none;
-
-      &.tags-input:not(.search-with-icon) {
-        @include border-right-radius(0);
-      }
     }
 
     .alert-box {
       position: fixed;
-      top: 4rem;
-      right: 5px;
+      top: var(--#{$cdk}size-64);
+      right: var(--#{$cdk}size-5);
       z-index: 1000; // above header toolbar
-      padding-top: 28px;
+      padding-top: var(--#{$cdk}size-28);
     }
 
     .fade-enter-active,
     .fade-leave-active {
-      @include transition(opacity 0.5s);
+      transition: var(--#{$cdk}default-transition);
     }
 
     .fade-enter,
@@ -91,20 +86,19 @@
       text-align: left;
 
       .material-icons {
-        font-size: 20px;
-        color: $gray-medium;
+        font-size: var(--#{$cdk}size-20);
+        color: var(--#{$cdk}primary-500);
         vertical-align: bottom;
       }
     }
 
     .filter-container {
-      padding: 10px;
-      border: $gray-light 1px solid;
-      @include border-radius(4px);
+      padding: var(--#{$cdk}size-10);
+      border: 1px solid var(--#{$cdk}primary-400);
 
       &.filter-suppliers {
         .item {
-          margin-bottom: 5px;
+          margin-bottom: var(--#{$cdk}size-5);
         }
 
         ul {
@@ -121,22 +115,12 @@
   }
 
   #filters {
-    width: 150%;
-    background: $white;
-    border: solid 1px #b9cdd2;
-    box-shadow: 1px 2px 3px 0 rgba(108, 134, 142, 0.3);
-    @include border-radius(4px);
-
-    @include media-breakpoint-down(sm) {
-      width: 100%;
-    }
-
-    select.form-control {
-      @include border-radius(4px);
-    }
+    width: 100%;
+    background: var(--#{$cdk}white);
+    border: solid 1px var(--#{$cdk}primary-400);
 
     .row {
-      padding: 0.625rem; // 10px
+      padding: var(--#{$cdk}size-10);
     }
   }
 
@@ -160,18 +144,17 @@
 
     .check-button {
       position: absolute;
-      top: 0;
+      top: 1px;
       right: 1px;
       z-index: 2;
       width: 33px;
-      height: 100%;
+      height: calc(100% - 2px);
       padding: 0;
       cursor: pointer;
       background: $brand-primary;
       border: none;
       outline: none;
       opacity: 0;
-      @include border-right-radius(4px);
 
       .material-icons {
         color: $white;
@@ -244,7 +227,7 @@
       }
 
       .qty-update {
-        color: $brand-primary;
+        color: var(--#{$cdk}blue-300);
 
         .material-icons {
           vertical-align: middle;
@@ -260,7 +243,7 @@
       }
 
       .low-stock {
-        background: $danger-hover;
+        background: var(--#{$cdk}red-50);
 
         .stock-warning {
           font-weight: 700;

@@ -181,10 +181,9 @@
   }
 
   .module-list-empty {
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.4);
-    border: dashed 1px #696969;
-    @include border-radius(3px);
+    padding: var(--#{$cdk}size-16);
+    background: var(--#{$cdk}primary-100);
+    border: 1px dashed var(--#{$cdk}primary-500);
 
     p {
       padding: 0;
@@ -199,17 +198,19 @@
 
 .module-item-list {
   .container-fluid {
+    margin-top: -1px;
+
+    background-color: $white;
+    border: 1px solid var(--#{$cdk}primary-400);
     padding: {
       top: $grid-gutter-width / 2;
       bottom: $grid-gutter-width / 2;
     }
-
-    background-color: $white;
   }
 
   + :nth-child(even) {
     .container-fluid {
-      background-color: #f5f8f9 !important;
+      background-color: var(--#{$cdk}primary-100) !important;
     }
   }
 
@@ -515,7 +516,7 @@
 
 .module-import-success-icon {
   font-size: 70px;
-  color: #1c8ca3;
+  color: var(--#{$cdk}green-500);
 }
 
 .module-import-failure {
@@ -550,25 +551,28 @@
 
 .module-import-start-icon {
   font-size: 70px;
-  color: #cecccc;
+  color: var(--#{$cdk}primary-400);
 }
 
 .module-import-start-select-manual {
+  text-decoration: underline;
+  text-underline-offset: var(--#{$cdk}size-2);
   cursor: pointer !important;
+  transition: var(--#{$cdk}default-transition);
 }
 
 .module-import-start-select-manual:hover {
-  text-decoration: none;
+  text-underline-offset: var(--#{$cdk}size-4);
 }
 
 .module-import-start-footer-text {
-  font-size: smaller;
+  font-size: var(--#{$cdk}size-12);
   font-style: italic;
-  color: #cecccc;
+  color: var(--#{$cdk}primary-500);
 }
 
 form#importDropzone {
-  border: 2px dashed #6c868e;
+  border: 2px dashed var(--#{$cdk}primary-400);
 }
 
 .dropzone.dz-clickable {
@@ -720,22 +724,6 @@ form#importDropzone {
   }
 }
 
-.modules-list {
-  .module-item {
-    &:first-of-type {
-      .container-fluid {
-        @include border-top-radius(5px);
-      }
-    }
-
-    &:last-of-type {
-      .container-fluid {
-        @include border-bottom-radius(5px);
-      }
-    }
-  }
-}
-
 .module-list {
   &-disabled {
     @extend .module-list;
@@ -876,10 +864,6 @@ form#importDropzone {
         color: $medium-gray;
         border: none;
       }
-    }
-
-    .dropdown-toggle.dropdown-toggle-dots:hover::after {
-      color: #25b9d7;
     }
   }
 

@@ -1,36 +1,67 @@
-@import "../../config/settings";
+/* stylelint-disable */
+// Config
+@import "@scss/config/_settings";
+@import "@scss/config/_keyframes";
+@import "@scss/config/_bootstrap";
+/* stylelint-enable */
 
-body {
-  font-size: 12px;
+body,
+html {
+  height: 100%;
+  min-height: 100%;
+  font-size: var(--#{$cdk}size-16);
 }
 
 label {
-  font-size: 14px;
+  font-size: var(--#{$cdk}size-14);
+  font-weight: 500;
 }
 
 #login-panel {
-  position: relative;
-  max-width: 500px;
+  width: 460px;
   margin: 0 auto;
 
+  @include media-breakpoint-down(sm) {
+    width: 90%;
+  }
+
   #login-header {
-    padding-top: 4.5rem;
-    margin-bottom: 30px;
-    color: #6d6d6d;
+    padding-top: var(--#{$cdk}size-64);
+    margin-bottom: var(--#{$cdk}size-40);
+    color: var(--#{$cdk}primary-600);
+
+    #logo {
+      opacity: 0.2;
+    }
+
+    .login__version {
+      font-size: var(--#{$cdk}size-14);
+    }
+
+    @include media-breakpoint-down(xs) {
+      padding-top: var(--#{$cdk}size-40);
+      margin-bottom: var(--#{$cdk}size-32);
+    }
   }
 
   #shop-img {
-    position: absolute;
-    right: 0;
-    left: 0;
-    z-index: 1;
-    width: 69.5px;
-    margin: 0 auto;
+    margin-bottom: var(--#{$cdk}size-16);
+    text-align: center;
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
   }
 
   #login-content-card {
-    padding: 40px;
-    margin-top: 115px;
+    padding: var(--#{$cdk}size-40) var(--#{$cdk}size-40) var(--#{$cdk}size-20) var(--#{$cdk}size-40);
+    margin-top: var(--#{$cdk}size-40);
+    box-shadow: var(--#{$cdk}box-shadow-md);
+
+    .card-body {
+      padding: var(--#{$cdk}size-0);
+    }
 
     .submit-widget button {
       width: 100%;
@@ -42,22 +73,23 @@ label {
         position: relative;
         display: flex;
         flex-wrap: wrap;
+        gap: var(--#{$cdk}size-8);
         align-items: center;
+        justify-content: space-between;
 
-        .form-external-link {
-          padding: 0.5rem 0;
-
-          a.btn {
-            padding: 0;
-            font-size: 12px;
-            font-weight: 400;
-          }
+        .form-checkbox {
+          margin: 0;
         }
 
-        .form-check-radio {
-          flex-grow: 1;
-          margin-right: auto;
-          margin-bottom: 0;
+        #forgot-password-link {
+          padding: var(--#{$cdk}size-0) var(--#{$cdk}size-0) var(--#{$cdk}size-2) var(--#{$cdk}size-0);
+          font-size: var(--#{$cdk}size-14);
+          font-weight: 400;
+        }
+
+        label {
+          font-weight: 400;
+          vertical-align: top;
         }
       }
     }
@@ -72,47 +104,60 @@ label {
         display: none;
       }
     }
+
+    @include media-breakpoint-down(xs) {
+      padding: var(--#{$cdk}size-24) var(--#{$cdk}size-16) var(--#{$cdk}size-8) var(--#{$cdk}size-16);
+      margin-top: var(--#{$cdk}size-32);
+    }
   }
 
   #login-footer {
+    font-size: var(--#{$cdk}size-14);
+
     a {
-      color: #a0aab5;
+      color: var(--#{$cdk}primary-500);
     }
 
-    .login-footer-social {
+    .login__copy {
+      margin-bottom: var(--#{$cdk}size-16);
+      font-size: var(--#{$cdk}size-14);
+    }
+
+    .login__social {
       display: flex;
-      gap: 1rem;
+      gap: var(--#{$cdk}size-8);
       align-items: center;
       justify-content: center;
+      font-size: var(--#{$cdk}size-16);
     }
   }
 
-  a.login-back {
+  .login-back {
     position: fixed;
-    top: 1rem;
-    left: 1rem;
-    z-index: 100;
+    top: var(--#{$cdk}size-16);
+    left: var(--#{$cdk}size-16);
     display: flex;
+    gap: var(--#{$cdk}size-4);
     align-items: center;
-    width: fit-content;
-    font-size: 1rem;
-    font-weight: 400;
-    color: inherit;
-    text-decoration: none;
-    background-color: $background-grey;
+    font-size: var(--#{$cdk}size-16);
+    color: var(--#{$cdk}primary-800);
 
-    i {
-      margin-right: 0.5rem;
+    &-shop {
+      font-weight: 600;
     }
 
-    .login-back-shop {
-      margin-left: 0.25rem;
-      color: #25b9d7;
-    }
+    &:hover,
+    &:focus {
+      text-decoration: none;
 
-    &:hover {
       .login-back-shop {
         text-decoration: underline;
+      }
+    }
+
+    @include media-breakpoint-down(sm) {
+      span {
+        display: none;
       }
     }
   }

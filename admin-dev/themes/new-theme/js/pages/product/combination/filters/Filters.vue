@@ -171,15 +171,15 @@
 .combinations-filters {
   .control-label {
     font-weight: 600;
-    color: #000;
-    margin-bottom: 1rem;
+    color: var(--#{$cdk}primary-800);
+    margin-bottom: var(--#{$cdk}size-16);
   }
 
   &-line {
     display: flex;
     align-items: flex-start;
     flex-wrap: wrap;
-    margin: 0 -0.35rem;
+    margin: 0 calc(-1 * var(--#{$cdk}size-6));
   }
 }
 </style>

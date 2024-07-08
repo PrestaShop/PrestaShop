@@ -5,14 +5,14 @@
  */
 
 $namespace: "growl";
-$duration: 0.4s;
+$duration: 0.3s;
 
 #growls {
   position: fixed;
   z-index: 50000;
 
   &.default {
-    top: 100px;
+    top: 10px;
     @include right(10px);
   }
 
@@ -39,8 +39,8 @@ $duration: 0.4s;
 
 .growl {
   position: relative;
+  box-shadow: var(--#{$cdk}box-shadow-lg);
   opacity: 1;
-  @include border-radius(4px);
   @include transition(all $duration ease-in-out);
 
   &.#{$namespace}-incoming {
@@ -53,49 +53,59 @@ $duration: 0.4s;
 
   &.#{$namespace}-small {
     width: 200px;
-    padding: 5px;
-    margin: 5px;
+    padding: 10px;
+    padding-right: 3rem;
+    margin: 10px;
   }
 
   &.#{$namespace}-medium {
     width: 250px;
-    padding: 10px;
+    padding: 15px;
+    padding-right: 3rem;
     margin: 10px;
   }
 
   &.#{$namespace}-large {
     width: 300px;
     padding: 15px;
-    margin: 15px;
+    padding-right: 3rem;
+    margin: 10px;
   }
 
   &.#{$namespace}-default {
-    color: #fff;
-    background: #808080;
+    color: var(--#{$cdk}primary-800);
+    background: var(--#{$cdk}blue-50);
+    border: 1px solid var(--#{$cdk}blue-500);
   }
 
   &.#{$namespace}-error {
-    color: #fff;
-    background: rgba($brand-danger, 0.8);
+    color: var(--#{$cdk}primary-800);
+    background: var(--#{$cdk}red-50);
+    border: 1px solid var(--#{$cdk}red-500);
   }
 
   &.#{$namespace}-notice {
-    color: #fff;
-    background: rgba($brand-success, 0.8);
+    color: var(--#{$cdk}primary-800);
+    background: var(--#{$cdk}green-50);
+    border: 1px solid var(--#{$cdk}green-500);
   }
 
   &.#{$namespace}-warning {
-    color: #fff;
-    background: rgba($brand-warning, 0.8);
+    color: var(--#{$cdk}primary-800);
+    background: var(--#{$cdk}yellow-50);
+    border: 1px solid var(--#{$cdk}yellow-500);
   }
 
   .#{$namespace}-close {
+    position: absolute;
+    top: 50%;
+    right: 1.125rem;
     font-family: helvetica, verdana, sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 18px;
+    font-size: 1.6rem;
+    font-weight: 300;
+    line-height: 1;
     cursor: pointer;
-    @include float(right);
+    transform: translateY(-50%);
   }
 
   .#{$namespace}-title {

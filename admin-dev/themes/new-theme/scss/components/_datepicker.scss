@@ -5,7 +5,7 @@
   .down::before,
   .date::before,
   .time::before {
-    font-family: "Material Icons", Arial, Helvetica, sans-serif;
+    font-family: var(--#{$cdk}font-family-material-icons);
   }
 
   .prev span::before {

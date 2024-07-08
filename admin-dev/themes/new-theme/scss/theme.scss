@@ -1,9 +1,11 @@
+// Load PrestaShop UI Kit
+@import "~prestakit/scss/application";
+
 // Settings
 @import "config/settings";
 @import "config/keyframes";
 
 // Tools
-@import "~prestakit/scss/application";
 @import "~dropzone/dist/min/dropzone.min.css";
 @import "~magnific-popup/dist/magnific-popup.css";
 @import "bourbon";
@@ -40,7 +42,6 @@
 @import "components/form";
 @import "components/form_popover_error";
 @import "components/grid";
-@import "components/hint_box";
 @import "components/layout/content_div";
 @import "components/layout/header-multistore";
 @import "components/layout/header-search";
@@ -67,6 +68,7 @@
 @import "components/submittable_input";
 @import "components/timeline";
 @import "components/toggable_field";
+@import "components/tooltip";
 @import "components/translatable_input";
 @import "components/unavailable-feature";
 @import "components/typeahead_product_collection_type";
@@ -103,7 +105,7 @@
 // Main Layout
 body {
   direction: ltr;
-  background: $background-grey;
+  background: var(--#{$cdk}primary-200);
 }
 
 // To put into the PrestaKit
@@ -151,8 +153,8 @@ span.twitter-typeahead {
 // setting dropdown button
 .dropdown-toggle.tool-button {
   &::after {
-    font-size: 1.375rem;
-    color: $medium-gray;
+    font-size: var(--#{$cdk}size-24);
+    color: var(--#{$cdk}primary-800);
     content: "settings";
   }
 }

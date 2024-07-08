@@ -49,15 +49,18 @@
       animation-iteration-count: infinite;
       animation-name: loading;
       animation-timing-function: linear;
-      background: $gray-soft;
-      background: linear-gradient(to right, $gray-soft 8%, #ccc 18%, $gray-soft 33%);
+      background: var(--#{$cdk}primary-200);
+      background:
+        linear-gradient(to right, var(--#{$cdk}primary-200) 10%,
+        var(--#{$cdk}primary-500) 20%,
+        var(--#{$cdk}primary-200) 30%);
       background-size: 100%;
-      height: 40px;
+      height: var(--#{$cdk}size-40);
       position: relative;
     }
 
     .background-masker {
-      background: white;
+      background: var(--#{$cdk}white);
       position: absolute;
     }
   }

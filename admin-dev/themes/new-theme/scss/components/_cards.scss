@@ -9,7 +9,6 @@
   background-color: $card-bg;
   border: $card-border-width solid $card-border-color;
   @include border-radius($card-border-radius);
-  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.06);
 }
 
 .card-block {
@@ -47,23 +46,6 @@
   }
 }
 
-@if $enable-rounded {
-  .card {
-    > .list-group:first-child {
-      .list-group-item:first-child {
-        @include border-radius($card-border-radius $card-border-radius 0 0);
-      }
-    }
-
-    > .list-group:last-child {
-      .list-group-item:last-child {
-        @include border-radius(0 0 $card-border-radius $card-border-radius);
-      }
-    }
-  }
-}
-
-
 //
 // Optional textual caps
 //
@@ -71,23 +53,24 @@
 .card-header {
   padding: $card-spacer-y $card-spacer-x;
   font-weight: 600;
-  line-height: 1.5rem; // same as material icons
+  line-height: 1.5rem;
   background-color: $card-cap-bg;
-  border-bottom: $card-border-width solid $card-border-color;
+
+  .badge {
+    vertical-align: middle;
+  }
 
   .card-header-title {
     font-weight: 600;
     line-height: 1.5rem;
   }
 
-  &:first-child {
-    @include border-radius($card-border-radius-inner $card-border-radius-inner 0 0);
-  }
-
-  .material-icons {
-    margin-right: 5px;
-    color: $medium-gray;
-    vertical-align: text-bottom;
+  &:not(:has(.dropdown-item)) {
+    .material-icons {
+      margin-right: var(--#{$cdk}size-6);
+      color: var(--#{$cdk}primary-500);
+      vertical-align: calc(-1 * var(--#{$cdk}size-4));
+    }
   }
 
   h3 {

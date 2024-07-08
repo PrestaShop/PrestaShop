@@ -18,7 +18,7 @@
   }
 
   &::before {
-    font-family: "Material Icons", Arial, Verdana, Tahoma, sans-serif;
+    font-family: var(--#{$cdk}font-family-material-icons);
     content: "expand_more";
   }
 }

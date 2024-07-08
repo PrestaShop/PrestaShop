@@ -1,11 +1,12 @@
 @charset "UTF-8";
 
+// New set of variables from Core Design Kit
+@import "~prestakit/scss/root";
+
 //Compass is required to pre-compile this stylesheets to .css
 @import "~bourbon/app/assets/stylesheets/bourbon";
 
-@import "modules/colors";
 @import "modules/variables";
-@import "modules/mixins";
 
 @import "vendor/bi-app/bi-app-ltr";
 
@@ -15,12 +16,15 @@
 //Bootstrap Core : Variables + Mixins + Reset + Print
 @import "vendor/bootstrap-sass/variables";
 @import "vendor/bootstrap-sass/mixins";
+// Mixin and mixin override
+@import "modules/mixins";
 @import "vendor/bootstrap-sass/normalize";
 
 //import fonts
 @import "~open-sans-fonts/open-sans-regular";
 @import "~open-sans-fonts/open-sans-semibold";
 @import "~open-sans-fonts/open-sans-bold";
+@import "font";
 
 //Bootstrap's rules applied only on div#content.bootstrap, nav.bootstrap, header.bootstrap, footer.bootstrap
 .bootstrap {	//Core CSS
@@ -71,7 +75,19 @@
 
 // stylelint-disable-next-line
 .bootstrap {	//Partials
+  @import "partials/helpers";
   @import "partials/commons";
+  @import "partials/alerts";
+  @import "partials/badges";
+  @import "partials/dropdowns";
+  @import "partials/tooltips";
+  @import "partials/popovers";
+  @import "partials/pagination";
+  @import "partials/navs";
+  @import "partials/panels";
+  @import "partials/input-groups";
+  @import "partials/labels";
+  @import "partials/progress-bars";
   @import "partials/tables";
   @import "partials/tree";
   @import "partials/forms";
@@ -94,6 +110,7 @@
   @import "controllers/themes";
   @import "controllers/order";
   @import "controllers/products";
+  @import "controllers/stats";
 
 }
 @import "controllers/cartrules";

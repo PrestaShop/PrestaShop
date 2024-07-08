@@ -15,8 +15,8 @@ $chosen-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 $chosen-drop-border: $gray-light;
 $chosen-drop-box-shadow: 0 8px 8px rgba(0, 0, 0, 0.25);
 $chosen-drop-zindex: 1060;
-$chosen-focus-border: rgba(82, 168, 236, 0.8);
-$chosen-focus-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(82, 168, 236, 0.6);
+$chosen-focus-border: var(--#{$cdk}blue-500);
+$chosen-focus-box-shadow: none;
 $chosen-focus-transition: border linear 0.2s, box-shadow linear 0.2s;
 $chosen-height: $input-height-base;
 $chosen-multi-height: $input-height-base + 6px;
@@ -322,8 +322,6 @@ $chosen-sprite-path: "../img/chosen-sprite.png";
       @include padding(3px, 20px, 3px, 5px);
       @include border-top-radius($chosen-border-radius);
       @include border-bottom-radius($chosen-border-radius);
-      @include gradient-vertical(#ffffff, $gray-lighter);
-      @include box-shadow($chosen-box-shadow);
 
       .search-choice-close {
         position: absolute;
@@ -364,14 +362,16 @@ $chosen-sprite-path: "../img/chosen-sprite.png";
 
 .chosen-container-active {
   .chosen-single {
-    border: 1px solid $chosen-focus-border;
+    border: 1px solid var(--#{$cdk}primary-800);
+    outline: 2px solid $chosen-focus-border;
     @include box-shadow($chosen-focus-box-shadow);
     @include transition($chosen-focus-transition);
   }
 
   &.chosen-with-drop .chosen-single {
     background-color: $gray-lighter;
-    border: 1px solid $chosen-focus-border;
+    border: 1px solid var(--#{$cdk}primary-800);
+    outline: 2px solid $chosen-focus-border;
     @include box-shadow($chosen-focus-box-shadow);
     @include transition($chosen-focus-transition);
 
@@ -386,13 +386,14 @@ $chosen-sprite-path: "../img/chosen-sprite.png";
   }
 
   .chosen-choices {
-    border: 1px solid $chosen-focus-border;
+    border: 1px solid var(--#{$cdk}primary-800);
+    outline: 2px solid $chosen-focus-border;
     @include border-bottom-radius(0);
     @include box-shadow($chosen-focus-box-shadow);
     @include transition($chosen-focus-transition);
 
     .search-field input {
-      color: #111 !important;
+      color: var(--#{$cdk}primary-800) !important;
     }
   }
 }

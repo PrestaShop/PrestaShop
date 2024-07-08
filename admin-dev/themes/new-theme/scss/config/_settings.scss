@@ -18,19 +18,20 @@ $background-info: #dcf4f9;
 $purple: #34219e;
 $bright-status-text: #383838;
 $local-font: true;
-$info-block-background: #f3f3f3;
+$info-block-background: var(--#{$cdk}primary-200);
 $widget-border-color: #e7e7e7;
 $alert-warning-bg: #fffbd3;
 
-$light-blue: #e9f8fb;
-$light-gray: #fafbfc;
+$light-blue: var(--#{$cdk}blue-50);
+$light-gray: var(--#{$cdk}primary-100);
 
 // Multishop
-$multishop-header-default-color: #383c43;
-$multishop-header-default-background: #ebebeb;
-$multishop-header-allshop-color: $white;
-$multishop-header-allshop-background: #25b9d7;
-$multishop-selector-selected-background: #e2f5f9;
+$multishop-header-default-color: var(--#{$cdk}primary-800);
+$multishop-header-default-color-hover: var(--#{$cdk}primary-700);
+$multishop-header-default-background: var(--#{$cdk}primary-300);
+$multishop-header-allshop-color: var(--#{$cdk}white);
+$multishop-header-allshop-background: var(--#{$cdk}blue-500);
+$multishop-selector-selected-background: var(--#{$cdk}blue-50);
 
 // Sizes
 $size-navbar-width: 13.13rem;
@@ -42,7 +43,7 @@ $header-mobile-padding-y: 0.525rem;
 $module-logo-size: 45px;
 
 // Serp
-$serp-url-light-color: #5f6368;
+$serp-url-light-color: #4d5156;
 $serp-url-dark-color: #202124;
 $serp-title-color: #1a0dab;
 $serp-description-color: #4d5156;
@@ -55,3 +56,23 @@ $sidebar-primary-link-color: $white;
 $sidebar-secondary-link-color: #b6c3c7;
 $sidebar-title-color: #98aab0;
 $sidebar-logout-color: #ff7a7a;
+
+// Menu
+$gray-dark-menu: map-get($map: $cdk-common, $key: "white");
+$sidebar-menu-bg: map-get($map: $cdk-common, $key: "white");
+$width-sidebar-nav: 210px;
+$padding-left-page-closed: 4.0625rem;
+$padding-left-mobile: 0.625rem;
+$width-sidebar-submenu: 200px;
+$menu-item-size: 34px;
+$min-height: 950px;
+$gray-dark-link: map-get($map: $cdk-primary, $key: "primary-800");
+$gray-dark-link-hover: map-get($map: $cdk-primary, $key: "primary-700");
+$size-navbar-width: map-get($map: $cdk-size, $key: "size-208");
+$size-navbar-width-mini: map-get($map: $cdk-size, $key: "size-52");
+$size-header-height: map-get($map: $cdk-size, $key: "size-52");
+$header-mobile-padding-y: map-get($map: $cdk-size, $key: "size-10");
+$medium-gray: map-get($map: $cdk-primary, $key: "primary-400");
+$gray-medium: map-get($map: $cdk-primary, $key: "primary-400");
+$gray-dark-active-menu:  map-get($map: $cdk-primary, $key: "primary-200");
+$gray-dark-title: map-get($map: $cdk-blue, $key: "blue-500");

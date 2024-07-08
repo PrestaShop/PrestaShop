@@ -71,3 +71,58 @@
     }
   }
 }
+
+// Theme Configuration Page
+@at-root {
+  #main {
+    #content {
+      #psthemecusto {
+        .panel {
+          &:first-child {
+            border: 1px solid var(--#{$cdk}primary-400);
+          }
+
+          &-heading {
+            width: auto;
+            padding: var(--#{$cdk}size-8) !important;
+            margin: calc(-1 * var(--#{$cdk}size-24)) calc(-1 * var(--#{$cdk}size-24)) var(--#{$cdk}size-24) calc(-1 * var(--#{$cdk}size-24));
+            background-color: var(--#{$cdk}primary-200);
+
+            .btn {
+              margin: 0;
+              color: var(--#{$cdk}primary-800);
+              background-color: transparent;
+              border-radius: 0;
+
+              &.btn-primary {
+                &:hover {
+                  background-color: var(--#{$cdk}white) !important;
+                }
+
+                &.selected {
+                  color: var(--#{$cdk}white);
+                  background-color: var(--#{$cdk}primary-800) !important;
+                  border-color: var(--#{$cdk}primary-800) !important;
+                  border-radius: 0 !important;
+                }
+              }
+            }
+          }
+        }
+
+        .form-action-button-container {
+          display: flex;
+          align-items: stretch;
+
+          .dropdown-action {
+            height: auto;
+
+            i {
+              padding: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+}
