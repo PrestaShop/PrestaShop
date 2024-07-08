@@ -71,8 +71,8 @@ class LegacyContextLoader
         ?int $shopGroupId = null
     ): self {
         $this->loadCurrencyContext($currencyId);
-        $this->loadControllerContext($controllerClassName);
         $this->loadEmployeeContext($employeeId);
+        $this->loadControllerContext($controllerClassName);
 
         if (null !== $shopId) {
             $this->loadShopContext($shopId);
@@ -118,9 +118,11 @@ class LegacyContextLoader
      */
     public function loadCurrencyContext(?int $currencyId = null): self
     {
-        $currency = new Currency($currencyId);
         if (null === $currencyId) {
+            $currency = new Currency(Currency::getDefaultCurrencyId());
             $currency->precision = Precision::DEFAULT_PRECISION;
+        } else {
+            $currency = new Currency($currencyId);
         }
 
         $this->context->currency = $currency;
