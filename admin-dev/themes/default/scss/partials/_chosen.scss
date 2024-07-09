@@ -270,17 +270,16 @@ $chosen-sprite-path: "../img/chosen-sprite.png";
 .chosen-container-multi {
   .chosen-choices {
     position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--#{$cdk}size-8);
     height: auto !important;
-    height: 1%;
-    padding: 0;
+    padding: var(--#{$cdk}size-8);
     margin: 0;
     overflow: hidden;
     cursor: text;
     background-color: $chosen-background;
     border: 1px solid $chosen-border;
-    @include border-top-radius($chosen-multi-border-radius);
-    @include border-bottom-radius($chosen-multi-border-radius);
-    @include box-shadow($chosen-box-shadow);
 
     li {
       list-style: none;
@@ -293,9 +292,9 @@ $chosen-sprite-path: "../img/chosen-sprite.png";
       white-space: nowrap;
 
       input {
-        height: $chosen-multi-height - 8px;
-        padding: 4px;
-        margin: 0;
+        height: var(--#{$cdk}size-24);
+        padding: var(--#{$cdk}size-4);
+        margin: 0 !important;
         color: $gray;
         background: transparent !important;
         border: 0 !important;
@@ -310,28 +309,44 @@ $chosen-sprite-path: "../img/chosen-sprite.png";
 
     .search-choice {
       position: relative;
-      line-height: 13px;
+      padding: var(--#{$cdk}size-2) var(--#{$cdk}size-24) var(--#{$cdk}size-2) var(--#{$cdk}size-8);
+      margin: 0;
+      font-size: var(--#{$cdk}size-12);
+      font-weight: 700;
+      line-height: var(--#{$cdk}size-18);
       color: $gray-dark;
       cursor: default;
-      background-color: $gray-lighter;
+      background-color: var(--#{$cdk}primary-300);
       -webkit-background-clip: padding-box;
       -moz-background-clip: padding;
       background-clip: padding-box;
-      border: 1px solid $chosen-border;
-      @include margin(6px, 0, 3px, 5px);
-      @include padding(3px, 20px, 3px, 5px);
+      border: none;
       @include border-top-radius($chosen-border-radius);
       @include border-bottom-radius($chosen-border-radius);
 
+      &:first-child {
+        margin-left: 0;
+      }
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      span {
+        display: inline-block;
+        vertical-align: middle;
+      }
+
       .search-choice-close {
         position: absolute;
-        top: 5px;
+        top: 50%;
+        right: var(--#{$cdk}size-8);
         display: block;
-        width: 12px;
-        height: 10px;
-        font-size: 1px;
+        width: var(--#{$cdk}size-10);
+        height: var(--#{$cdk}size-10);
+        font-size: 0;
         background: url($chosen-sprite-path) right top no-repeat;
-        @include right(4px);
+        transform: translateY(-50%);
 
         &:hover {
           background-position: right -11px;

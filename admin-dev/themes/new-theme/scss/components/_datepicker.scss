@@ -31,4 +31,28 @@
   .time::before {
     content: "\E192";
   }
+
+  table {
+    td {
+      &.today {
+        &::before {
+          border-bottom-color: var(--#{$cdk}blue-500);
+        }
+      }
+
+      &.active {
+        background-color: var(--#{$cdk}blue-500);
+
+        &:hover {
+          background-color: var(--#{$cdk}blue-500);
+        }
+      }
+
+      span {
+        &.active {
+          background-color: var(--#{$cdk}blue-300);
+        }
+      }
+    }
+  }
 }
