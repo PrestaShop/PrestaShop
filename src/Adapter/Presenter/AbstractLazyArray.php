@@ -411,6 +411,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
         $this->arrayAccessList->offsetSet($offset, [
             'type' => 'variable',
             'value' => $value,
+            'isRewritable' => $offsetData['isRewritable'] ?? false
         ]);
     }
 
