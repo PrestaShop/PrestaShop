@@ -152,8 +152,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         expect(pageTitle).to.equal(myAccountPage.pageTitle);
       });
 
-      // @todo https://github.com/PrestaShop/hummingbird/pull/600
-      it.skip('should go to \'GDPR - Personal data\' page', async function () {
+      it('should go to \'GDPR - Personal data\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToGDPRPage1', baseContext);
 
         await myAccountPage.goToMyGDPRPersonalDataPage(page);
@@ -162,7 +161,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
       });
 
-      it.skip('should click on \'Get my data to CSV\'', async function () {
+      it('should click on \'Get my data to CSV\'', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnGetMyDataToCSV1', baseContext);
 
         filePath = await gdprPersonalDataPage.exportDataToCSV(page);
@@ -172,7 +171,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       });
     });
 
-    describe.skip('Get personal information from BO', async () => {
+    describe('Get personal information from BO', async () => {
       it('should login in BO', async function () {
         await loginCommon.loginBO(this, page);
       });
@@ -236,7 +235,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       });
     });
 
-    describe.skip('Check GDPR data in CSV', async () => {
+    describe('Check GDPR data in CSV', async () => {
       it('should check general info', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkGeneralInfo', baseContext);
 
@@ -362,7 +361,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
     });
   });
 
-  describe.skip('Check GDPR CSV file after create a cart', async () => {
+  describe('Check GDPR CSV file after create a cart', async () => {
     describe('Add a product to the cart and download CSV file', async () => {
       it('should go to FO home page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount2', baseContext);
@@ -485,7 +484,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
     });
   });
 
-  describe.skip('Check GDPR CSV file after create an order and an address', async () => {
+  describe('Check GDPR CSV file after create an order and an address', async () => {
     describe('Create an order and download CSV file', async () => {
       it('should go to FO home page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount3', baseContext);
@@ -661,7 +660,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
     });
   });
 
-  describe.skip('Check GDPR CSV file after send a message', async () => {
+  describe('Check GDPR CSV file after send a message', async () => {
     describe('Send message and download CSV file', async () => {
       it('should go to FO home page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount4', baseContext);
@@ -815,7 +814,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
     });
   });
 
-  describe.skip('Check GDPR CSV file after logout and login in FO', async () => {
+  describe('Check GDPR CSV file after logout and login in FO', async () => {
     describe('Logout then login and download CSV file', async () => {
       it('should go to FO home page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount5', baseContext);

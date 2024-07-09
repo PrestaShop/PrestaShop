@@ -104,6 +104,8 @@ class ProductPage extends Product {
    */
   async setQuantity(page: Page, quantity: number | string): Promise<void> {
     await this.setValue(page, this.productQuantity, quantity);
+    await page.locator(this.productQuantity).dispatchEvent('change');
+    await page.waitForTimeout(4000);
   }
 }
 
