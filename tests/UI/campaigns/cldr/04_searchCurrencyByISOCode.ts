@@ -6,12 +6,12 @@ import {deleteCurrencyTest} from '@commonTests/BO/international/currency';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import localizationPage from '@pages/BO/international/localization';
 import currenciesPage from '@pages/BO/international/currencies';
 import addCurrencyPage from '@pages/BO/international/currencies/add';
 
 import {
   boDashboardPage,
+  boLocalizationPage,
   dataCurrencies,
   type FakerCurrency,
   utilsPlaywright,
@@ -58,16 +58,16 @@ describe('CLDR : Search a currency by ISO code', async () => {
       boDashboardPage.internationalParentLink,
       boDashboardPage.localizationLink,
     );
-    await localizationPage.closeSfToolBar(page);
+    await boLocalizationPage.closeSfToolBar(page);
 
-    const pageTitle = await localizationPage.getPageTitle(page);
-    expect(pageTitle).to.contains(localizationPage.pageTitle);
+    const pageTitle = await boLocalizationPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boLocalizationPage.pageTitle);
   });
 
   it('should go to Currencies Tab', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesTab0', baseContext);
 
-    await localizationPage.goToSubTabCurrencies(page);
+    await boLocalizationPage.goToSubTabCurrencies(page);
 
     const pageTitle = await currenciesPage.getPageTitle(page);
     expect(pageTitle).to.contains(currenciesPage.pageTitle);

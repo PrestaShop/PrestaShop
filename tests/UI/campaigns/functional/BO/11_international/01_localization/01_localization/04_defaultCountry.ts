@@ -5,12 +5,12 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import localizationPage from '@pages/BO/international/localization';
 import addressesPage from '@pages/BO/customers/addresses';
 import addAddressPage from '@pages/BO/customers/addresses/add';
 
 import {
   boDashboardPage,
+  boLocalizationPage,
   dataCountries,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -61,24 +61,24 @@ describe('BO - International - Localization : Update default country', async () 
           boDashboardPage.localizationLink,
         );
 
-        const pageTitle = await localizationPage.getPageTitle(page);
-        expect(pageTitle).to.contains(localizationPage.pageTitle);
+        const pageTitle = await boLocalizationPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boLocalizationPage.pageTitle);
       });
 
       it(`should set default country to '${country}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `setDefaultCountry${index}`, baseContext);
 
-        const textResult = await localizationPage.setDefaultCountry(page, country);
-        expect(textResult).to.contain(localizationPage.successfulSettingsUpdateMessage);
+        const textResult = await boLocalizationPage.setDefaultCountry(page, country);
+        expect(textResult).to.contain(boLocalizationPage.successfulSettingsUpdateMessage);
       });
 
       it('should go to addresses page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddressesPage${index}`, baseContext);
 
-        await localizationPage.goToSubMenu(
+        await boLocalizationPage.goToSubMenu(
           page,
-          localizationPage.customersParentLink,
-          localizationPage.addressesLink,
+          boLocalizationPage.customersParentLink,
+          boLocalizationPage.addressesLink,
         );
 
         const pageTitle = await addressesPage.getPageTitle(page);

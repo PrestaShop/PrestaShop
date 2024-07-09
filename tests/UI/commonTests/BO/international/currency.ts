@@ -7,10 +7,10 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import currenciesPage from '@pages/BO/international/currencies';
 import addCurrencyPage from '@pages/BO/international/currencies/add';
-import localizationPage from '@pages/BO/international/localization';
 
 import {
   boDashboardPage,
+  boLocalizationPage,
   type FakerCurrency,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -51,16 +51,16 @@ function createCurrencyTest(currencyData: FakerCurrency, baseContext: string = '
         boDashboardPage.localizationLink,
       );
 
-      await localizationPage.closeSfToolBar(page);
+      await boLocalizationPage.closeSfToolBar(page);
 
-      const pageTitle = await localizationPage.getPageTitle(page);
-      expect(pageTitle).to.contains(localizationPage.pageTitle);
+      const pageTitle = await boLocalizationPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boLocalizationPage.pageTitle);
     });
 
     it('should go to \'Currencies\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesPage', baseContext);
 
-      await localizationPage.goToSubTabCurrencies(page);
+      await boLocalizationPage.goToSubTabCurrencies(page);
 
       const pageTitle = await currenciesPage.getPageTitle(page);
       expect(pageTitle).to.contains(currenciesPage.pageTitle);
@@ -114,16 +114,16 @@ function deleteCurrencyTest(currencyData: FakerCurrency, baseContext: string = '
         boDashboardPage.internationalParentLink,
         boDashboardPage.localizationLink,
       );
-      await localizationPage.closeSfToolBar(page);
+      await boLocalizationPage.closeSfToolBar(page);
 
-      const pageTitle = await localizationPage.getPageTitle(page);
-      expect(pageTitle).to.contains(localizationPage.pageTitle);
+      const pageTitle = await boLocalizationPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boLocalizationPage.pageTitle);
     });
 
     it('should go to \'Currencies\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesPage2', baseContext);
 
-      await localizationPage.goToSubTabCurrencies(page);
+      await boLocalizationPage.goToSubTabCurrencies(page);
 
       const pageTitle = await currenciesPage.getPageTitle(page);
       expect(pageTitle).to.contains(currenciesPage.pageTitle);

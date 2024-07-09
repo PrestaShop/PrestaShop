@@ -136,15 +136,24 @@ export default class CommonPage {
    * @param page {Page} Browser tab
    * @param selector{string} From where to get text
    * @param waitForSelector {boolean} True to wait for selector to be visible before getting text
+   * @param withTrim {boolean} True to trim the text
    * @return {Promise<string>}
    */
-  async getTextContent(page: Page | Frame, selector: string, waitForSelector: boolean = true): Promise<string> {
+  async getTextContent(
+    page: Page | Frame,
+    selector: string,
+    waitForSelector: boolean = true,
+    withTrim: boolean = true,
+  ): Promise<string> {
     if (waitForSelector) {
       await this.waitForVisibleSelector(page, selector);
     }
     const textContent = await page.locator(selector).first().textContent();
 
-    return (textContent ?? '').replace(/\s+/g, ' ').trim();
+    if (withTrim) {
+      return (textContent ?? '').replace(/\s+/g, ' ').trim();
+    }
+    return textContent ?? '';
   }
 
   /**
