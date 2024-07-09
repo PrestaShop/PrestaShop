@@ -23,6 +23,7 @@ const baseContext: string = 'functional_BO_international_localization_geolocatio
 
 describe('BO - International - Localization - Geolocation: Update IP address whitelist', async () => {
   const urlGeolocationDB: string = 'https://github.com/wp-statistics/GeoLite2-City/raw/master/GeoLite2-City.mmdb.gz';
+  const ipDocker: string = '172.18.0.1';
 
   let browserContext: BrowserContext;
   let page: Page;
@@ -105,14 +106,24 @@ describe('BO - International - Localization - Geolocation: Update IP address whi
 
     await geolocationPage.setGeolocationByIPAddressStatus(page, true);
 
-    const result = await geolocationPage.saveFormGeolocationByIPAddress(page);
-    expect(result).to.equal(geolocationPage.successfulUpdateMessage);
+    const resultForm1 = await geolocationPage.saveFormGeolocationByIPAddress(page);
+    expect(resultForm1).to.equal(geolocationPage.successfulUpdateMessage);
   });
 
   it('should disable the check on front office and go to the FO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'disableCheckFO', baseContext);
 
+    // In local
     setGeolocationCheckCommented(true);
+
+    // In docker
+    ipAddressWhiteList = await geolocationPage.getWhiteListedIPAddresses(page);
+    expect(ipAddressWhiteList.length).to.be.gt(0);
+
+    await geolocationPage.setWhiteListedIPAddresses(page, ipAddressWhiteList.replace('127.0.0.1', ipDocker).trim());
+
+    const resultForm2 = await geolocationPage.saveFormIPAddressesWhitelist(page);
+    expect(resultForm2).to.equal(geolocationPage.successfulUpdateMessage);
 
     page = await geolocationPage.viewMyShop(page);
     await foClassicHomePage.changeLanguage(page, 'en');
@@ -126,10 +137,7 @@ describe('BO - International - Localization - Geolocation: Update IP address whi
 
     page = await foClassicHomePage.changePage(browserContext, 0);
 
-    ipAddressWhiteList = await geolocationPage.getWhiteListedIPAddresses(page);
-    expect(ipAddressWhiteList.length).to.be.gt(0);
-
-    await geolocationPage.setWhiteListedIPAddresses(page, ipAddressWhiteList.replace('127.0.0.1', '').trim());
+    await geolocationPage.setWhiteListedIPAddresses(page, ipAddressWhiteList.replace(ipDocker, '').trim());
 
     const result = await geolocationPage.saveFormIPAddressesWhitelist(page);
     expect(result).to.equal(geolocationPage.successfulUpdateMessage);

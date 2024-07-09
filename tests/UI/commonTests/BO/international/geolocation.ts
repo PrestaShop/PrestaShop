@@ -9,26 +9,26 @@ import fs from 'fs';
    * @return {void}
  */
 function setGeolocationCheckCommented(status: boolean): void {
+  let output: string;
+
   const file: string = `${utilsFile.getRootPath()}/classes/controller/FrontController.php`;
   const commentLine: string = "!in_array(Tools::getRemoteAddr(), ['127.0.0.1', '::1']) && ";
 
-  fs.readFile(file, 'utf8', (err, data) => {
-    let output: string;
+  const data = fs.readFileSync(file, 'utf8');
 
-    if (status) {
-      output = data.replace(
-        commentLine,
-        `/* ${commentLine} */`,
-      );
-    } else {
-      output = data.replace(
-        `/* ${commentLine} */`,
-        commentLine,
-      );
-    }
+  if (status) {
+    output = data.replace(
+      commentLine,
+      `/* ${commentLine} */`,
+    );
+  } else {
+    output = data.replace(
+      `/* ${commentLine} */`,
+      commentLine,
+    );
+  }
 
-    fs.writeFile(file, output, 'utf8', (err) => (err ? console.log(err) : null));
-  });
+  fs.writeFileSync(file, output, 'utf8');
 }
 
 export default setGeolocationCheckCommented;
