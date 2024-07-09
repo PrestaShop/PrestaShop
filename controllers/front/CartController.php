@@ -135,13 +135,19 @@ class CartControllerCore extends FrontController
         $productQuantity = $updatedProduct['quantity'] ?? 0;
 
         if (!$this->errors) {
+            $presentedCart = $this->cart_presenter->present($this->context->cart, true);
+
+            // filter product output
+            $presentedCart['products'] = $this->get('prestashop.core.filter.front_end_object.product_collection')
+                ->filter($presentedCart['products']);
+
             $this->ajaxRender(json_encode([
                 'success' => true,
                 'id_product' => $this->id_product,
                 'id_product_attribute' => $this->id_product_attribute,
                 'id_customization' => $this->customization_id,
                 'quantity' => $productQuantity,
-                'cart' => $this->cart_presenter->present($this->context->cart, true),
+                'cart' => $presentedCart,
                 'errors' => empty($this->updateOperationError) ? '' : reset($this->updateOperationError),
             ]));
 
