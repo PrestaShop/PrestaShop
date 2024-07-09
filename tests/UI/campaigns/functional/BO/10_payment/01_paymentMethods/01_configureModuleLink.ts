@@ -7,12 +7,12 @@ import {resetModule} from '@commonTests/BO/modules/moduleManager';
 
 // Import pages
 // Import BO pages
-import boPaymentMethodsPage from '@pages/BO/payment/paymentMethods';
 import psCheckPayment from '@pages/BO/modules/psCheckPayment';
 import psWirePayment from '@pages/BO/modules/psWirePayment';
 
 import {
   boDashboardPage,
+  boPaymentMethodsPage,
   dataModules,
   dataPaymentMethods,
   utilsPlaywright,
