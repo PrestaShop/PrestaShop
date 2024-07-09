@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\HookManager;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
+use PrestaShop\PrestaShop\Adapter\Presenter\LazyArrayAttribute;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
@@ -157,20 +158,18 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return mixed
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getId()
     {
         return $this->product['id_product'];
     }
 
     /**
-     * @arrayAccess
-     *
      * @return array|mixed
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getAttributes()
     {
         if (isset($this->product['attributes'])) {
@@ -181,60 +180,54 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return bool
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getShowPrice()
     {
         return $this->shouldShowPrice($this->settings, $this->product);
     }
 
     /**
-     * @arrayAccess
-     *
      * @return string
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getWeightUnit()
     {
         return $this->configuration->get('PS_WEIGHT_UNIT');
     }
 
     /**
-     * @arrayAccess
-     *
      * @return string
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getUrl()
     {
         return $this->getProductURL($this->product, $this->language);
     }
 
     /**
-     * @arrayAccess
-     *
      * @return string
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getLink()
     {
         return $this->getProductURL($this->product, $this->language);
     }
 
     /**
-     * @arrayAccess
-     *
      * @return string
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getCanonicalUrl()
     {
         return $this->getProductURL($this->product, $this->language, true);
     }
 
     /**
-     * @arrayAccess
-     *
      * @return string|null
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getAddToCartUrl()
     {
         if ($this->shouldEnableAddToCartButton($this->product, $this->settings)) {
@@ -248,12 +241,11 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return array|bool
      *
      * @throws InvalidArgumentException
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getCondition()
     {
         if (empty($this->product['show_condition'])) {
@@ -285,10 +277,9 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return string|null
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getDeliveryInformation()
     {
         $productQuantity = $this->product['stock_quantity'] ?? $this->product['quantity'];
@@ -307,10 +298,9 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return array
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getEmbeddedAttributes()
     {
         $whitelist = $this->getProductAttributeWhitelist();
@@ -325,10 +315,9 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return string|null
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getFileSizeFormatted()
     {
         if (!isset($this->product['attachments'])) {
@@ -342,12 +331,11 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return array
      *
      * @throws ReflectionException
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getAttachments()
     {
         // If this is a first call to this property
@@ -378,20 +366,18 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return array|mixed
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getQuantityDiscounts()
     {
         return (isset($this->product['quantity_discounts'])) ? $this->product['quantity_discounts'] : [];
     }
 
     /**
-     * @arrayAccess
-     *
      * @return mixed|null
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getReferenceToDisplay()
     {
         $combinationData = $this->getCombinationSpecificData();
@@ -409,10 +395,9 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * Returns all product features, not grouped yet for performance reasons.
      *
-     * @arrayAccess
-     *
      * @return array
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getFeatures()
     {
         /*
@@ -430,10 +415,9 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * Returns all product feature values nicely grouped by feature name.
      *
-     * @arrayAccess
-     *
      * @return array
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getGroupedFeatures()
     {
         return $this->buildGroupedFeatures($this->getFeatures());
@@ -444,10 +428,9 @@ class ProductLazyArray extends AbstractLazyArray
      * https://support.google.com/merchants/answer/6324448
      * https://schema.org/ItemAvailability
      *
-     * @arrayAccess
-     *
      * @return string
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getSeoAvailability()
     {
         // Availability for displaying discontinued products, if enabled
@@ -466,12 +449,11 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return array
      *
      * @throws InvalidArgumentException
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getLabels()
     {
         return [
@@ -485,10 +467,9 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return array|null
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getEcotax()
     {
         if (isset($this->product['ecotax'])) {
@@ -503,10 +484,9 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return string|null
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getManufacturerName()
     {
         if (!isset($this->product['manufacturer_name'])) {
@@ -526,10 +506,9 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return string|null
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getCategory()
     {
         if (!isset($this->product['category'])) {
@@ -543,10 +522,9 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return string|null
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getCategoryName()
     {
         if (!isset($this->product['category_name'])) {
@@ -563,20 +541,18 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return bool
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getVirtual()
     {
         return !empty($this->product['is_virtual'] || !empty($this->product['virtual']));
     }
 
     /**
-     * @arrayAccess
-     *
      * @return int
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getNew()
     {
         if (!isset($this->product['new'])) {
@@ -587,12 +563,11 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return array
      *
      * @throws InvalidArgumentException
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getFlags()
     {
         $flags = [];
@@ -663,10 +638,9 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return array
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getMainVariants()
     {
         $colors = $this->productColorsRetriever->getColoredVariants($this->product['id_product']);
@@ -696,10 +670,9 @@ class ProductLazyArray extends AbstractLazyArray
      * Also, on product page, $this->product['attributes'] contains a list of combinations, while in cart
      * it contains only attribute pairs like Color-Black etc.
      *
-     * @arrayAccess
-     *
      * @return array|null
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getCombinationSpecificData()
     {
         if (!isset($this->product['attributes']) || !is_array($this->product['attributes']) || empty($this->product['attributes'])) {
@@ -713,10 +686,9 @@ class ProductLazyArray extends AbstractLazyArray
      * This function returns current combination references, if set.
      * Otherwise, it returns the base product references.
      *
-     * @arrayAccess
-     *
      * @return array|null
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getSpecificReferences()
     {
         if (isset($this->product['cart_quantity'])) {
@@ -1184,10 +1156,9 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * Returns extra price associated with current combination, if provided
      *
-     * @arrayAccess
-     *
      * @return float
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getAttributePrice()
     {
         if (!isset($this->product['attribute_price'])) {

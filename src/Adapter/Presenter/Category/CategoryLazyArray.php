@@ -33,6 +33,7 @@ use Language;
 use Link;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
+use PrestaShop\PrestaShop\Adapter\Presenter\LazyArrayAttribute;
 
 class CategoryLazyArray extends AbstractLazyArray
 {
@@ -72,10 +73,9 @@ class CategoryLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return string
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getUrl()
     {
         return $this->link->getCategoryLink(
@@ -85,14 +85,13 @@ class CategoryLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * This method returns standardized category image array created from CATEGORYID.jpg, with one exception.
      * One thumbnail size - CATEGORYID-small_default.jpg is generated from CATEGORYID_thumb.jpg instead.
      * This must be resolved in the future.
      *
      * @return array|null
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getImage()
     {
         /*
@@ -111,10 +110,9 @@ class CategoryLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return array|null
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getCover()
     {
         return $this->getImage();
@@ -124,10 +122,9 @@ class CategoryLazyArray extends AbstractLazyArray
      * @todo This should return category thumbnail image (miniatures of CATEGORYID_thumb.jpg) instead,
      * after support in ImageRetriever is implemented.
      *
-     * @arrayAccess
-     *
      * @return array|null
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getThumbnail()
     {
         return $this->getImage();

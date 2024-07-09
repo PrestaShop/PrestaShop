@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
 
 use Link;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
+use PrestaShop\PrestaShop\Adapter\Presenter\LazyArrayAttribute;
 use PrestaShopException;
 use ReflectionException;
 use Tools;
@@ -66,20 +67,18 @@ class OrderReturnLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return mixed
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getId()
     {
         return $this->orderReturn['id_order_return'];
     }
 
     /**
-     * @arrayAccess
-     *
      * @return string
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getDetailsUrl()
     {
         return $this->link->getPageLink(
@@ -91,10 +90,9 @@ class OrderReturnLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return string
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getReturnUrl()
     {
         return $this->link->getPageLink(
@@ -106,32 +104,29 @@ class OrderReturnLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return string
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getReturnNumber()
     {
         return $this->prefix . sprintf('%06d', $this->orderReturn['id_order_return']);
     }
 
     /**
-     * @arrayAccess
-     *
      * @return string
      *
      * @throws PrestaShopException
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getReturnDate()
     {
         return Tools::displayDate($this->orderReturn['date_add'], false);
     }
 
     /**
-     * @arrayAccess
-     *
      * @return string
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getPrintUrl()
     {
         return ($this->orderReturn['state'] == 2)
