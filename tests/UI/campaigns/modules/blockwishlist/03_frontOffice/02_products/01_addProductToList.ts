@@ -6,8 +6,6 @@ import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/prod
 
 // Import pages
 import {myAccountPage as foClassicMyAccountPage} from '@pages/FO/classic/myAccount';
-import {myWishlistsPage as foClassicMyWishlistsPage} from '@pages/FO/classic/myAccount/myWishlists';
-import foClassicMyWishlistsViewPage from '@pages/FO/classic/myAccount/myWishlists/view';
 
 import {
   dataCustomers,
@@ -16,6 +14,8 @@ import {
   foClassicHomePage,
   foClassicLoginPage,
   foClassicModalWishlistPage,
+  foClassicMyWishlistsPage,
+  foClassicMyWishlistsViewPage,
   foClassicProductPage,
   foClassicSearchResultsPage,
   utilsPlaywright,

@@ -19,7 +19,6 @@ import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
 import {addressesPage} from '@pages/FO/classic/myAccount/addresses';
 import {creditSlipPage} from '@pages/FO/classic/myAccount/creditSlips';
 import {accountIdentityPage} from '@pages/FO/classic/myAccount/identity';
-import {myWishlistsPage} from '@pages/FO/classic/myAccount/myWishlists';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {guestOrderTrackingPage} from '@pages/FO/classic/orderTracking/guestOrderTracking';
 import {newProductsPage} from '@pages/FO/classic/newProducts';
@@ -34,6 +33,7 @@ import {
   FakerCustomer,
   foClassicAboutUsPage,
   foClassicLoginPage,
+  foClassicMyWishlistsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -170,7 +170,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
       {linkSelector: 'Addresses', pageTitle: addressesPage.pageTitle},
       {linkSelector: 'Orders', pageTitle: orderHistoryPage.pageTitle},
       {linkSelector: 'Credit slips', pageTitle: creditSlipPage.pageTitle},
-      {linkSelector: 'Wishlist', pageTitle: myWishlistsPage.pageTitle},
+      {linkSelector: 'Wishlist', pageTitle: foClassicMyWishlistsPage.pageTitle},
       {linkSelector: 'Sign out', pageTitle: foClassicLoginPage.pageTitle},
     ].forEach((args, index: number) => {
       it(`should check '${args.linkSelector}' footer links`, async function () {
@@ -180,7 +180,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
         await homePage.goToFooterLink(page, args.linkSelector);
 
         if (args.linkSelector === 'Wishlist') {
-          pageTitle = await myWishlistsPage.getPageTitle(page);
+          pageTitle = await foClassicMyWishlistsPage.getPageTitle(page);
         } else {
           pageTitle = await homePage.getPageTitle(page);
         }
@@ -208,7 +208,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
       {linkSelector: 'Add first address', pageTitle: addAddressPage.pageTitle},
       {linkSelector: 'Orders', pageTitle: orderHistoryPage.pageTitle},
       {linkSelector: 'Credit slips', pageTitle: creditSlipPage.pageTitle},
-      {linkSelector: 'Wishlist', pageTitle: myWishlistsPage.pageTitle},
+      {linkSelector: 'Wishlist', pageTitle: foClassicMyWishlistsPage.pageTitle},
       {linkSelector: 'Sign out', pageTitle: foClassicLoginPage.pageTitle},
     ].forEach((args, index: number) => {
       it(`should check '${args.linkSelector}' footer links`, async function () {
@@ -218,7 +218,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
         await homePage.goToFooterLink(page, args.linkSelector);
 
         if (args.linkSelector === 'Wishlist') {
-          pageTitle = await myWishlistsPage.getPageTitle(page);
+          pageTitle = await foClassicMyWishlistsPage.getPageTitle(page);
         } else {
           pageTitle = await homePage.getPageTitle(page);
         }
