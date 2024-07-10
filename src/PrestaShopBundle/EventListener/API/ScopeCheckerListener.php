@@ -85,7 +85,7 @@ class ScopeCheckerListener
         foreach ($operationsScopes as $key => $scope) {
             $scopesSecurityRule .= 'is_granted("ROLE_' . strtoupper($scope) . '")';
             if ($key !== $arrayLength - 1) {
-                $scopesSecurityRule .= ' OR ';
+                $scopesSecurityRule .= ' or ';
             }
         }
 
