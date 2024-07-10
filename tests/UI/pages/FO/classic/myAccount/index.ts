@@ -1,4 +1,7 @@
 import FOBasePage from '@pages/FO/FObasePage';
+import {
+  foClassicMyWishlistsPage,
+} from '@prestashop-core/ui-testing';
 
 import type {Page} from 'playwright';
 
@@ -162,7 +165,8 @@ class MyAccountPage extends FOBasePage {
    * @returns {Promise<void>}
    */
   async goToMyWishlistsPage(page: Page): Promise<void> {
-    await this.clickAndWaitForURL(page, this.myWishlistsLink);
+    await this.clickAndWaitForURL(page, this.myWishlistsLink, 'networkidle');
+    await this.elementVisible(page, foClassicMyWishlistsPage.wishlistListItemNthTitle(1), 5000);
   }
 }
 

@@ -354,22 +354,17 @@ describe('Wishlist module - Add a product to a list', async () => {
       expect(pageTitle).to.equal(dataProducts.demo_1.name);
     });
 
-    it('should select the size \'M\' and check it', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'selectSize', baseContext);
+    it('should select the size \'M\' / color "Black" and check it', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'selectSizeColor', baseContext);
 
       await foClassicProductPage.selectAttributes(page, 'select', [{name: 'size', value: 'M'}]);
-
-      const selectedAttribute = await foClassicProductPage.getSelectedAttribute(page, 1, 'select');
-      expect(selectedAttribute).to.equal('M');
-    });
-
-    it('should change the color "Black" and check it', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'selectColor', baseContext);
-
       await foClassicProductPage.selectAttributes(page, 'radio', [{name: 'Color', value: 'Black'}], 2);
 
-      const selectedAttribute = await foClassicProductPage.getSelectedAttribute(page, 2, 'radio');
-      expect(selectedAttribute).to.equal('Black');
+      const selectedAttributeSize = await foClassicProductPage.getSelectedAttribute(page, 1, 'select');
+      expect(selectedAttributeSize).to.equal('M');
+
+      const selectedAttributeColor = await foClassicProductPage.getSelectedAttribute(page, 2, 'radio');
+      expect(selectedAttributeColor).to.equal('Black');
     });
 
     it('should add to the wishlist and select the first wishlist', async function () {
