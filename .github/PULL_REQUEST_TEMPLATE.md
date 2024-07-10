@@ -19,7 +19,7 @@ https://devdocs.prestashop-project.org/9/contribute/contribution-guidelines/pull
 | BC breaks?        | yes / no
 | Deprecations?     | yes / no
 | How to test?      | Indicate how to verify that this change works as expected.
-| UI Tests          | Please run UI tests and paste here the link to the run. As we support MySQL and MariaDB in our tests, you have to launch 2 campaigns (by choosing both). [Read this page to know why and how to use this tool](https://devdocs.prestashop-project.org/9/contribute/contribution-guidelines/ui-tests/).
+| UI Tests          | Please run UI tests and paste here the link to the run. As we support MySQL and MariaDB in our tests, you have to launch 2 campaigns (by choosing both). [Visit the UI Tests repo and follow instructions](https://github.com/PrestaShop/ga.tests.ui.pr/).
 | Fixed issue or discussion?     | Fixes #{issue number here}, Fixes #{another issue number here}, Fixes https://github.com/PrestaShop/PrestaShop/discussions/ {discussion number here}
 | Related PRs       | If theme, autoupgrade or other module change is needed to make this change work, provide a link to related PRs here.
 | Sponsor company   | Your company or customer's name goes here (if applicable).
