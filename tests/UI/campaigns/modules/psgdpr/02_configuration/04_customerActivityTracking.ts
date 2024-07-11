@@ -183,13 +183,13 @@ describe('BO - Modules - GDPR: Customer activity tracking', async () => {
       expect(row1Name).to.equal(`${dataCustomers.johnDoe.firstName} ${dataCustomers.johnDoe.lastName}`);
 
       const row1Type = await psGdprTabCustomerActivity.getTextColumnFromTable(page, 1, 2);
-      expect(row1Type).to.equal('Accessibility (csv)');
+      expect(row1Type).to.equal('Accessibility (pdf)');
 
       const row2Name = await psGdprTabCustomerActivity.getTextColumnFromTable(page, 2, 1);
       expect(row2Name).to.equal(`${dataCustomers.johnDoe.firstName} ${dataCustomers.johnDoe.lastName}`);
 
       const row2Type = await psGdprTabCustomerActivity.getTextColumnFromTable(page, 2, 2);
-      expect(row2Type).to.equal('Accessibility (pdf)');
+      expect(row2Type).to.equal('Accessibility (csv)');
     });
 
     it('should click on the \'Sign in\' link', async function () {
