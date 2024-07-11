@@ -15,8 +15,6 @@
     "check:step-identifiers": "ts-node tools/stepIdentifiersChecker.ts",
     "// Check suites": "Script to check if suites are well all executed",
     "check:suites": "ts-node tools/suites.ts",
-    "// Check data modules": "Script to check if data modules are updated",
-    "check:data:modules": "ts-mocha --file utils/globals.ts --file utils/setup.ts tools/bumpModules.ts",
     "// Linkchecker": "Script to run link checker",
     "check:links": "ts-mocha tools/linkchecker.ts",
     "check:links:fast-fail": "ts-mocha --bail tools/linkchecker.ts",

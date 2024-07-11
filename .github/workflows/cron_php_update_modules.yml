@@ -31,12 +31,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 16
-        if: env.GH_BRANCH == 'develop'
-
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -48,18 +42,8 @@ jobs:
           composer self-update --stable
           COMPOSER_PROCESS_TIMEOUT=600 composer install --ansi --prefer-dist --no-interaction --no-progress
 
-      - name: Install NPM dependencies
-        working-directory: ./tests/UI
-        run: npm ci
-        if: env.GH_BRANCH == 'develop'
-
       - name: Execute script for updating modules
         run: php .github/workflows/cron_update_modules/script.php ${{ env.GH_BRANCH }}
-
-      - name: Execute script for updating modules
-        working-directory: ./tests/UI
-        run: npm run check:data:modules
-        if: env.GH_BRANCH == 'develop'
 
       - name: Update PrestaShop packages
         id: updated-packages
