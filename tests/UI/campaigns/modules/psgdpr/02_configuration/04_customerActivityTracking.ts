@@ -154,6 +154,7 @@ describe('BO - Modules - GDPR: Customer activity tracking', async () => {
     it('should click on \'Get my data to PDF file\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnGetMyDataToPDF', baseContext);
 
+      await page.waitForTimeout(3000);
       const filePath = await gdprPersonalDataPage.exportDataToPDF(page);
 
       const found = await utilsFile.doesFileExist(filePath);
