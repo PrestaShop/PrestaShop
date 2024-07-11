@@ -55,7 +55,7 @@ class ImportTheme extends themeAndLogoBasePage {
    */
   async importFromYourComputer(page: Page, path: string): Promise<void> {
     await this.uploadFile(page, this.zipFileUploadButton, path);
-    await page.locator(this.importFromYourComputerSubmit).click();
+    await this.clickAndWaitForURL(page, this.importFromYourComputerSubmit);
   }
 
   /**
