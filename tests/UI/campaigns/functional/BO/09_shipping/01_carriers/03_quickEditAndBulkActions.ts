@@ -37,7 +37,7 @@ describe('BO - Shipping - Carriers : Bulk actions', async () => {
     ranges: [
       {
         weightMin: 0,
-        weightMax: 10,
+        weightMax: 100,
         zones: [
           {
             zone: 'all',
@@ -207,7 +207,9 @@ describe('BO - Shipping - Carriers : Bulk actions', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersAfterCreate', baseContext);
 
     page = await carriersPage.changePage(browserContext, 1);
-    await page.reload();
+    await page.reload({
+      waitUntil: 'networkidle',
+    });
 
     const carrierNames = await foClassicCheckoutPage.getAllCarriersNames(page);
     expect(carrierNames.length).to.equals(numberOfCarriers + 1);
