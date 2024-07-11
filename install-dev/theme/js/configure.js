@@ -200,12 +200,12 @@ function getPasswordStrengthFeedback(
   switch (strength) {
   case 0:
     return {
-      color: '#D5343C',
+      color: '#BA151A',
     };
 
   case 1:
     return {
-      color: '#D5343C',
+      color: '#BA151A',
     };
 
   case 2:
@@ -215,12 +215,12 @@ function getPasswordStrengthFeedback(
 
   case 3:
     return {
-      color: '#21834D',
+      color: '#207F4B',
     };
 
   case 4:
     return {
-      color: '#21834D',
+      color: '#207F4B',
     };
 
   default:
