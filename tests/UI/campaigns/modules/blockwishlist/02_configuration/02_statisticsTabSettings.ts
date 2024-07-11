@@ -3,6 +3,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+import {resetModule} from '@commonTests/BO/modules/moduleManager';
 
 import {
   boDashboardPage,
@@ -171,4 +172,6 @@ describe('Wishlist module - Statistics tab settings', async () => {
       expect(pageTitle).to.contains(modBlockwishlistBoStatistics.pageTitle);
     });
   });
+
+  resetModule(dataModules.blockwishlist, `${baseContext}_postTest_0`);
 });
