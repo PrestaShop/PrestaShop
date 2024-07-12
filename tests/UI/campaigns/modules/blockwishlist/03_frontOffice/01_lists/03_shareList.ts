@@ -15,7 +15,7 @@ import {
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import { resetModule } from '@commonTests/BO/modules/moduleManager';
+import {resetModule} from '@commonTests/BO/modules/moduleManager';
 
 const baseContext: string = 'modules_blockwishlist_frontOffice_lists_shareList';
 

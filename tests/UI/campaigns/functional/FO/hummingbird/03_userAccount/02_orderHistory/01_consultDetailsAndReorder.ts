@@ -182,6 +182,7 @@ describe('FO - Account - Order history : Consult details and reorder', async () 
     it('should go to order history page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage2', baseContext);
 
+      await homePage.goToMyAccountPage(page);
       await foHummingbirdMyAccountPage.goToHistoryAndDetailsPage(page);
 
       const pageHeaderTitle = await orderHistoryPage.getPageTitle(page);
