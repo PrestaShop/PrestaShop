@@ -23,11 +23,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-$(() => {
-  window.prestashop.component.initComponents([
-    'TranslatableInput',
-    'EventEmitter',
-    'CarrierRanges',
-    'MultipleZoneChoice',
-  ]);
-});
+export default class MultipleZoneChoice {
+  constructor() {
+    this.initZoneChoice();
+  }
+
+  initZoneChoice(): void
+  {
+    $('.js-multiple-zone-choice').select2();
+  }
+}

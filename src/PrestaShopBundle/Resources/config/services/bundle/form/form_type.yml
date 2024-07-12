@@ -559,6 +559,14 @@ services:
     arguments:
       $zonesChoiceProvider: '@prestashop.core.form.choice_provider.zone_by_id'
 
+  PrestaShopBundle\Form\Admin\Type\ZoneMultipleChoicesType:
+    arguments:
+      $zonesChoiceProvider: '@prestashop.core.form.choice_provider.zone_by_id'
+
+  PrestaShopBundle\Form\Admin\Type\TaxGroupChoiceType:
+    arguments:
+      $taxGroupChoiceProvider: '@PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\TaxRuleGroupChoiceProvider'
+
   PrestaShopBundle\Form\Admin\Type\ConfigurableCountryChoiceType:
     arguments:
       - '@prestashop.core.form.choice_provider.configurable_country_by_id'
