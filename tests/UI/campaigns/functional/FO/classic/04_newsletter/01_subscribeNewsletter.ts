@@ -10,7 +10,6 @@ import {moduleConfigurationPage} from '@pages/BO/modules/moduleConfiguration';
 import psEmailSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
 // Import FO pages
 import {homePage as foHomePage} from '@pages/FO/classic/home';
-import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {accountIdentityPage} from '@pages/FO/classic/myAccount/identity';
 
 import {
@@ -18,6 +17,7 @@ import {
   boModuleManagerPage,
   dataCustomers,
   foClassicLoginPage,
+  foClassicMyAccountPage,
   FakerModule,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -89,7 +89,7 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
 
       await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicMyAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
@@ -97,7 +97,7 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAccountInformationPage', baseContext);
 
       await foHomePage.goToMyAccountPage(page);
-      await myAccountPage.goToInformationPage(page);
+      await foClassicMyAccountPage.goToInformationPage(page);
 
       const pageTitle = await accountIdentityPage.getPageTitle(page);
       expect(pageTitle).to.equal(accountIdentityPage.pageTitle);

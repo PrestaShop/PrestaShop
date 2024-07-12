@@ -9,13 +9,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
 import {
   boDashboardPage,
   dataCustomers,
   foClassicLoginPage,
+  foClassicMyAccountPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -97,7 +97,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable reordering opti
 
       // Go to order history page
       await homePage.goToMyAccountPage(page);
-      await myAccountPage.goToHistoryAndDetailsPage(page);
+      await foClassicMyAccountPage.goToHistoryAndDetailsPage(page);
 
       // Check reorder link
       const isReorderLinkVisible = await orderHistoryPage.isReorderLinkVisible(page);

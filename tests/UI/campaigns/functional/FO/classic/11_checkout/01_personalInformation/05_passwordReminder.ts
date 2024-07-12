@@ -12,10 +12,10 @@ import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {passwordReminderPage} from '@pages/FO/classic/passwordReminder';
-import {myAccountPage} from '@pages/FO/classic/myAccount';
 
 import {
   FakerCustomer,
+  foClassicMyAccountPage,
   type MailDev,
   type MailDevEmail,
   utilsMail,
@@ -156,15 +156,15 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
 
       await passwordReminderPage.setNewPassword(page, newPassword);
 
-      const successMessage = await myAccountPage.getSuccessMessageAlert(page);
-      expect(successMessage).to.equal(`${myAccountPage.resetPasswordSuccessMessage} ${customerData.email}`);
+      const successMessage = await foClassicMyAccountPage.getSuccessMessageAlert(page);
+      expect(successMessage).to.equal(`${foClassicMyAccountPage.resetPasswordSuccessMessage} ${customerData.email}`);
     });
 
     it('should logout from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFO', baseContext);
 
-      await myAccountPage.logout(page);
-      const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
+      await foClassicMyAccountPage.logout(page);
+      const isCustomerConnected = await foClassicMyAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
   });
@@ -173,7 +173,7 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
     it('should go to home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage', baseContext);
 
-      await myAccountPage.goToHomePage(page);
+      await foClassicMyAccountPage.goToHomePage(page);
       const result = await homePage.isHomePage(page);
       expect(result).to.eq(true);
     });

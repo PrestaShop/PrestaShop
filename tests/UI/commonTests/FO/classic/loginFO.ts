@@ -1,12 +1,10 @@
 // Import test context
 import testContext from '@utils/testContext';
 
-// Import FO pages
-import {myAccountPage} from '@pages/FO/classic/myAccount';
-
 import {
   FakerCustomer,
   foClassicLoginPage,
+  foClassicMyAccountPage,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -18,14 +16,14 @@ export default {
     await testContext.addContextItem(mochaContext, 'testIdentifier', 'loginFO');
 
     await foClassicLoginPage.goTo(page, global.FO.URL);
-    await myAccountPage.goToLoginPage(page);
+    await foClassicMyAccountPage.goToLoginPage(page);
     await foClassicLoginPage.customerLogin(page, customer);
 
-    const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
+    const isCustomerConnected = await foClassicMyAccountPage.isCustomerConnected(page);
     expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
 
-    const pageTitle = await myAccountPage.getPageTitle(page);
-    expect(pageTitle).to.contains(myAccountPage.pageTitle);
+    const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
+    expect(pageTitle).to.contains(foClassicMyAccountPage.pageTitle);
   },
 
   async logoutFO(mochaContext: Context, page: Page): Promise<void> {
@@ -34,7 +32,7 @@ export default {
     await foClassicLoginPage.goToMyAccountPage(page);
     await foClassicLoginPage.logout(page);
 
-    const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
+    const isCustomerConnected = await foClassicMyAccountPage.isCustomerConnected(page);
     expect(isCustomerConnected, 'Customer is still connected').to.eq(false);
   },
 };

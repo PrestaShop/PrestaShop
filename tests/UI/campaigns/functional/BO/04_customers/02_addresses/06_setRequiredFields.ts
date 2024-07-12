@@ -9,7 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import addressesPage from '@pages/BO/customers/addresses';
 // Import FO pages
 import {homePage as foHomePage} from '@pages/FO/classic/home';
-import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {addressesPage as foAddressesPage} from '@pages/FO/classic/myAccount/addresses';
 import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
 
@@ -18,6 +17,7 @@ import {
   dataCustomers,
   FakerAddress,
   foClassicLoginPage,
+  foClassicMyAccountPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -105,7 +105,7 @@ describe('BO - Customers - Addresses : Set required fields for addresses', async
       await testContext.addContextItem(this, 'testIdentifier', `goToFOAddressesPage${index}`, baseContext);
 
       await foHomePage.goToMyAccountPage(page);
-      await myAccountPage.goToAddressesPage(page);
+      await foClassicMyAccountPage.goToAddressesPage(page);
 
       const pageHeaderTitle = await foAddressesPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(foAddressesPage.pageTitle);

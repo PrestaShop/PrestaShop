@@ -1,15 +1,13 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import pages
-import {myAccountPage as foClassicMyAccountPage} from '@pages/FO/classic/myAccount';
-
 import {
   dataCustomers,
   dataModules,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicModalWishlistPage,
+  foClassicMyAccountPage,
   foClassicMyWishlistsPage,
   foClassicMyWishlistsViewPage,
   utilsPlaywright,

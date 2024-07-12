@@ -15,7 +15,6 @@ import ordersPage from '@pages/BO/orders';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
 import homePage from '@pages/FO/hummingbird/home';
-import myAccountPage from '@pages/FO/hummingbird/myAccount';
 import foMerchandiseReturnsPage from '@pages/FO/hummingbird/myAccount/merchandiseReturns';
 import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
 import orderHistoryPage from '@pages/FO/hummingbird/myAccount/orderHistory';
@@ -30,6 +29,7 @@ import {
   dataProducts,
   FakerOrder,
   foHummingbirdLoginPage,
+  foHummingbirdMyAccountPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -205,14 +205,14 @@ describe('FO - Account : Consult return details', async () => {
 
         await homePage.goToMyAccountPage(page);
 
-        const pageTitle = await myAccountPage.getPageTitle(page);
-        expect(pageTitle).to.contains(myAccountPage.pageTitle);
+        const pageTitle = await foHummingbirdMyAccountPage.getPageTitle(page);
+        expect(pageTitle).to.contains(foHummingbirdMyAccountPage.pageTitle);
       });
 
       it('should go to \'Order history and details\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
-        await myAccountPage.goToHistoryAndDetailsPage(page);
+        await foHummingbirdMyAccountPage.goToHistoryAndDetailsPage(page);
 
         const pageTitle = await orderHistoryPage.getPageTitle(page);
         expect(pageTitle).to.contains(orderHistoryPage.pageTitle);
@@ -386,14 +386,14 @@ describe('FO - Account : Consult return details', async () => {
 
           await homePage.goToMyAccountPage(page);
 
-          const pageTitle = await myAccountPage.getPageTitle(page);
-          expect(pageTitle).to.contains(myAccountPage.pageTitle);
+          const pageTitle = await foHummingbirdMyAccountPage.getPageTitle(page);
+          expect(pageTitle).to.contains(foHummingbirdMyAccountPage.pageTitle);
         });
 
         it('should go to \'Merchandise Returns\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToMerchandiseReturnPage${index}`, baseContext);
 
-          await myAccountPage.goToMerchandiseReturnsPage(page);
+          await foHummingbirdMyAccountPage.goToMerchandiseReturnsPage(page);
 
           const pageTitle = await foMerchandiseReturnsPage.getPageTitle(page);
           expect(pageTitle).to.contains(foMerchandiseReturnsPage.pageTitle);

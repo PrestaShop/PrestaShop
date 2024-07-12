@@ -10,7 +10,6 @@ import {resetModule} from '@commonTests/BO/modules/moduleManager';
 // Import FO pages
 import {contactUsPage} from '@pages/FO/classic/contactUs';
 import {homePage, homePage as foHomePage} from '@pages/FO/classic/home';
-import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {createAccountPage as foCreateAccountPage} from '@pages/FO/classic/myAccount/add';
 import {accountIdentityPage} from '@pages/FO/classic/myAccount/identity';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
@@ -33,6 +32,7 @@ import {
   FakerProduct,
   foClassicHomePage,
   foClassicLoginPage,
+  foClassicMyAccountPage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -173,7 +173,7 @@ describe('GDPR : Consent checkbox customization', async () => {
 
       page = await psGdprTabDataConsent.changePage(browserContext, 1);
       await homePage.goToMyAccountPage(page);
-      await myAccountPage.goToInformationPage(page);
+      await foClassicMyAccountPage.goToInformationPage(page);
 
       const pageTitle = await accountIdentityPage.getPageTitle(page);
       expect(pageTitle).to.equal(accountIdentityPage.pageTitle);

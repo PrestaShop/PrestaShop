@@ -4,9 +4,6 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
 
-// Import pages
-import {myAccountPage as foClassicMyAccountPage} from '@pages/FO/classic/myAccount';
-
 import {
   dataCustomers,
   dataProducts,
@@ -14,6 +11,7 @@ import {
   foClassicHomePage,
   foClassicLoginPage,
   foClassicModalWishlistPage,
+  foClassicMyAccountPage,
   foClassicMyWishlistsPage,
   foClassicMyWishlistsViewPage,
   foClassicProductPage,

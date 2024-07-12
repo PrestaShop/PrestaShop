@@ -13,7 +13,6 @@ import orderPageMessagesBlock from '@pages/BO/orders/view/messagesBlock';
 // Import FO pages
 import {orderConfirmationPage as foOrderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {homePage as foHomePage} from '@pages/FO/classic/home';
-import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
 import {
@@ -24,6 +23,7 @@ import {
   dataProducts,
   FakerOrder,
   foClassicLoginPage,
+  foClassicMyAccountPage,
   type OrderHistoryMessage,
   type OrderMessage,
   utilsDate,
@@ -202,7 +202,7 @@ describe('BO - Orders - View and edit order : Check messages block', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage1', baseContext);
 
       await foHomePage.goToMyAccountPage(page);
-      await myAccountPage.goToHistoryAndDetailsPage(page);
+      await foClassicMyAccountPage.goToHistoryAndDetailsPage(page);
 
       const pageTitle = await orderHistoryPage.getPageTitle(page);
       expect(pageTitle, 'Fail to open order history page').to.contains(orderHistoryPage.pageTitle);
@@ -324,7 +324,7 @@ describe('BO - Orders - View and edit order : Check messages block', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage2', baseContext);
 
       await foHomePage.goToMyAccountPage(page);
-      await myAccountPage.goToHistoryAndDetailsPage(page);
+      await foClassicMyAccountPage.goToHistoryAndDetailsPage(page);
 
       const pageTitle = await orderHistoryPage.getPageTitle(page);
       expect(pageTitle, 'Fail to open order history page').to.contains(orderHistoryPage.pageTitle);

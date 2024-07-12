@@ -3,11 +3,11 @@ import testContext from '@utils/testContext';
 
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {myAccountPage} from '@pages/FO/classic/myAccount';
 
 import {
   dataCustomers,
   foClassicLoginPage,
+  foClassicMyAccountPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -81,16 +81,16 @@ describe('FO - Login : Logout from FO', async () => {
 
     await homePage.goToMyAccountPage(page);
 
-    const pageTitle = await myAccountPage.getPageTitle(page);
-    expect(pageTitle).to.equal(myAccountPage.pageTitle);
+    const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);
   });
 
   it('should logout by the link in the footer of account page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'signOutFOByFooterLink', baseContext);
 
-    await myAccountPage.logout(page);
+    await foClassicMyAccountPage.logout(page);
 
-    const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
+    const isCustomerConnected = await foClassicMyAccountPage.isCustomerConnected(page);
     expect(isCustomerConnected, 'Customer is connected!').to.eq(false);
   });
 });

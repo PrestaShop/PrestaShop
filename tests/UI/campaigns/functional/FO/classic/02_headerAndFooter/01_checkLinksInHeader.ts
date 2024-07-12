@@ -5,13 +5,13 @@ import testContext from '@utils/testContext';
 import {cartPage} from '@pages/FO/classic/cart';
 import {contactUsPage} from '@pages/FO/classic/contactUs';
 import {homePage} from '@pages/FO/classic/home';
-import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
   dataCustomers,
   foClassicLoginPage,
   foClassicModalQuickViewPage,
+  foClassicMyAccountPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -88,8 +88,8 @@ describe('FO - Header and Footer : Check links in header page', async () => {
 
     await foClassicLoginPage.goToMyAccountPage(page);
 
-    const pageTitle = await myAccountPage.getPageTitle(page);
-    expect(pageTitle).to.equal(myAccountPage.pageTitle);
+    const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);
   });
 
   it('should add a product to cart by quick view', async function () {

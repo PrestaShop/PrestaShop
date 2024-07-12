@@ -6,7 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import FO pages
-import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {createAccountPage as foCreateAccountPage} from '@pages/FO/classic/myAccount/add';
 // Import BO pages
 import psGdpr from '@pages/BO/modules/psGdpr';
@@ -22,6 +21,7 @@ import {
   FakerCustomer,
   foClassicHomePage,
   foClassicLoginPage,
+  foClassicMyAccountPage,
   utilsCore,
   utilsFile,
   utilsPlaywright,
@@ -127,14 +127,14 @@ describe('BO - Modules - GDPR: Customer activity tracking', async () => {
 
       await foClassicHomePage.goToMyAccountPage(page);
 
-      const pageTitle = await myAccountPage.getPageTitle(page);
-      expect(pageTitle).to.contains(myAccountPage.pageTitle);
+      const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foClassicMyAccountPage.pageTitle);
     });
 
     it('should go to \'GDPR - Personal data\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToGDPRPage1', baseContext);
 
-      await myAccountPage.goToMyGDPRPersonalDataPage(page);
+      await foClassicMyAccountPage.goToMyGDPRPersonalDataPage(page);
 
       const pageTitle = await gdprPersonalDataPage.getPageTitle(page);
       expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);

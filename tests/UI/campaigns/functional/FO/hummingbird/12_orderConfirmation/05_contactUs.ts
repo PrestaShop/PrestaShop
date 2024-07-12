@@ -11,7 +11,6 @@ import customerServiceMainPage from '@pages/BO/customerService/customerService';
 import customerServiceMessageViewPage from '@pages/BO/customerService/customerService/view';
 // FO pages
 import foHomePage from '@pages/FO/hummingbird/home';
-import myAccountPage from '@pages/FO/hummingbird/myAccount';
 import cartPage from '@pages/FO/hummingbird/cart';
 import contactUsPage from '@pages/FO/hummingbird/contactUs';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
@@ -26,6 +25,7 @@ import {
   FakerContactMessage,
   foHummingbirdLoginPage,
   foHummingbirdModalQuickViewPage,
+  foHummingbirdMyAccountPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -104,7 +104,7 @@ describe('FO - Order confirmation : Contact us', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
       await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
-      const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdMyAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 

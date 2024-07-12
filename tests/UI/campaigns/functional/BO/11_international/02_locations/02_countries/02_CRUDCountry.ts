@@ -11,7 +11,6 @@ import countriesPage from '@pages/BO/international/locations/countries';
 import addCountryPage from '@pages/BO/international/locations/countries/add';
 // Import FO pages
 import {homePage as foHomePage} from '@pages/FO/classic/home';
-import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {addressesPage} from '@pages/FO/classic/myAccount/addresses';
 import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
 
@@ -20,6 +19,7 @@ import {
   dataCustomers,
   FakerCountry,
   foClassicLoginPage,
+  foClassicMyAccountPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -171,7 +171,7 @@ describe('BO - International - Countries : CRUD country', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage_1', baseContext);
 
       await foHomePage.goToMyAccountPage(page);
-      await myAccountPage.goToAddressesPage(page);
+      await foClassicMyAccountPage.goToAddressesPage(page);
 
       const pageTitle = await addressesPage.getPageTitle(page);
       expect(pageTitle, 'Fail to open addresses page').to.contains(addressesPage.pageTitle);
@@ -274,7 +274,7 @@ describe('BO - International - Countries : CRUD country', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage_2', baseContext);
 
       await foHomePage.goToMyAccountPage(page);
-      await myAccountPage.goToAddressesPage(page);
+      await foClassicMyAccountPage.goToAddressesPage(page);
 
       const pageTitle = await addressesPage.getPageTitle(page);
       expect(pageTitle, 'Fail to open addresses page').to.contains(addressesPage.pageTitle);

@@ -13,7 +13,6 @@ import addOrderPage from '@pages/BO/orders/add';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
@@ -25,6 +24,7 @@ import {
   dataProducts,
   FakerAddress,
   foClassicLoginPage,
+  foClassicMyAccountPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -349,14 +349,14 @@ describe('BO - Orders - Create order : Choose address', async () => {
 
         await homePage.goToMyAccountPage(page);
 
-        const pageTitle = await myAccountPage.getPageTitle(page);
-        expect(pageTitle).to.contains(myAccountPage.pageTitle);
+        const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
+        expect(pageTitle).to.contains(foClassicMyAccountPage.pageTitle);
       });
 
       it('should go to \'Order history and details\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
-        await myAccountPage.goToHistoryAndDetailsPage(page);
+        await foClassicMyAccountPage.goToHistoryAndDetailsPage(page);
 
         const pageTitle = await orderHistoryPage.getPageTitle(page);
         expect(pageTitle).to.contains(orderHistoryPage.pageTitle);
