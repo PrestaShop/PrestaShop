@@ -13,6 +13,12 @@ services:
     environment:
       MARIADB_ROOT_PASSWORD: ${DB_PASSWD:-prestashop}
       MARIADB_DATABASE: ${DB_NAME:-prestashop}
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 10s
+      interval: 5s
+      timeout: 1s
+      retries: 3
     restart: unless-stopped
     networks:
       - prestashop-network
@@ -49,12 +55,13 @@ services:
       BLACKFIRE_ENABLE: ${BLACKFIRE_ENABLE:-0}
       BLACKFIRE_SERVER_ID: ${BLACKFIRE_SERVER_ID:-0}
       BLACKFIRE_SERVER_TOKEN: ${BLACKFIRE_SERVER_TOKEN:-0}
-    command: /tmp/wait-for-it.sh --timeout=60 --strict mariadb:3306 -- /tmp/docker_run_git.sh
+    command: /tmp/docker_run_git.sh
     ports:
       - "8001:80"
       - "8002:443"
     depends_on:
-      - mariadb
+      mariadb:
+        condition: service_healthy
     volumes:
       - ./:/var/www/html:delegated
     networks:
