@@ -1,0 +1,6 @@
+services:
+  prestashop-git:
+    environment:
+      #BLACKFIRE_ENABLE: 1
+      #BLACKFIRE_SERVER_ID: "your_server_id"
+      #BLACKFIRE_SERVER_TOKEN: "your_server_token"
