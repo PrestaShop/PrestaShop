@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Carrier\AbstractCarrierHandler;
+use PrestaShop\PrestaShop\Adapter\Carrier\Repository\CarrierRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\BulkToggleCarrierStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\CommandHandler\BulkToggleCarrierStatusHandlerInterface;
@@ -40,15 +40,20 @@ use PrestaShopException;
  * Bulk toggles carriers status
  */
 #[AsCommandHandler]
-class BulkToggleCarrierStatusHandler extends AbstractCarrierHandler implements BulkToggleCarrierStatusHandlerInterface
+class BulkToggleCarrierStatusHandler implements BulkToggleCarrierStatusHandlerInterface
 {
+    public function __construct(
+        private readonly CarrierRepository $carrierRepository
+    ) {
+    }
+
     /**
      * {@inheritdoc}
      */
     public function handle(BulkToggleCarrierStatusCommand $command)
     {
         foreach ($command->getCarrierIds() as $carrierId) {
-            $carrier = $this->getCarrier($carrierId);
+            $carrier = $this->carrierRepository->get($carrierId);
             $carrier->active = $command->getExpectedStatus();
 
             try {

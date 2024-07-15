@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler;
 
 use Carrier;
-use PrestaShop\PrestaShop\Adapter\Carrier\AbstractCarrierHandler;
 use PrestaShop\PrestaShop\Adapter\Carrier\Repository\CarrierRepository;
 use PrestaShop\PrestaShop\Adapter\Carrier\Validate\CarrierValidator;
 use PrestaShop\PrestaShop\Adapter\File\Uploader\CarrierLogoFileUploader;
@@ -43,7 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
  * Add new Carrier
  */
 #[AsCommandHandler]
-class AddCarrierHandler extends AbstractCarrierHandler implements AddCarrierHandlerInterface
+class AddCarrierHandler implements AddCarrierHandlerInterface
 {
     public function __construct(
         private readonly CarrierRepository $carrierRepository,
