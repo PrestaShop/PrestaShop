@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import ordersPage from '@pages/BO/orders';
 import {homePage} from '@pages/FO/classic/home';
-import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import customerServicePage from '@pages/BO/customerService/customerService';
@@ -25,6 +24,7 @@ import {
   FakerCustomer,
   FakerOrder,
   foClassicLoginPage,
+  foClassicMyAccountPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -158,7 +158,7 @@ describe('BO - Header : Check notifications', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
       await homePage.goToMyAccountPage(page);
-      await myAccountPage.goToHistoryAndDetailsPage(page);
+      await foClassicMyAccountPage.goToHistoryAndDetailsPage(page);
 
       const pageHeaderTitle = await orderHistoryPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);

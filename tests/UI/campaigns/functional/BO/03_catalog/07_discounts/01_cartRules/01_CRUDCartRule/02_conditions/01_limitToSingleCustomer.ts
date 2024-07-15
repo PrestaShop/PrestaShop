@@ -11,7 +11,6 @@ import addCartRulePage from '@pages/BO/catalog/discounts/add';
 
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {vouchersPage as foVouchersPage} from '@pages/FO/classic/myAccount/vouchers';
 import {cartPage} from '@pages/FO/classic/cart';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
@@ -22,6 +21,7 @@ import {
   FakerCartRule,
   foClassicLoginPage,
   foClassicModalQuickViewPage,
+  foClassicMyAccountPage,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -136,7 +136,7 @@ describe('BO - Catalog - Cart rules : Limit to single customer', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOVouchersPage', baseContext);
 
       await homePage.goToMyAccountPage(page);
-      await myAccountPage.goToVouchersPage(page);
+      await foClassicMyAccountPage.goToVouchersPage(page);
 
       const pageHeaderTitle = await foVouchersPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(foVouchersPage.pageTitle);

@@ -11,7 +11,6 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {homePage} from '@pages/FO/classic/home';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
-import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {vouchersPage as foVouchersPage} from '@pages/FO/classic/myAccount/vouchers';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
@@ -21,6 +20,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerCartRule,
+  foClassicMyAccountPage,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -198,7 +198,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await testContext.addContextItem(this, 'testIdentifier', 'goToFOVouchersPage', baseContext);
 
         await homePage.goToMyAccountPage(page);
-        await myAccountPage.goToVouchersPage(page);
+        await foClassicMyAccountPage.goToVouchersPage(page);
 
         const pageHeaderTitle = await foVouchersPage.getPageTitle(page);
         expect(pageHeaderTitle).to.equal(foVouchersPage.pageTitle);
@@ -397,7 +397,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await testContext.addContextItem(this, 'testIdentifier', 'goToFOVouchersPage2', baseContext);
 
         await homePage.goToMyAccountPage(page);
-        await myAccountPage.goToVouchersPage(page);
+        await foClassicMyAccountPage.goToVouchersPage(page);
 
         const pageHeaderTitle = await foVouchersPage.getPageTitle(page);
         expect(pageHeaderTitle).to.equal(foVouchersPage.pageTitle);

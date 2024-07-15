@@ -10,7 +10,6 @@ import {createAccountTest} from '@commonTests/FO/classic/account';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {homePage} from '@pages/FO/classic/home';
-import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
 import {addressesPage} from '@pages/FO/classic/myAccount/addresses';
 import {productPage} from '@pages/FO/classic/product';
@@ -20,6 +19,7 @@ import {
   FakerAddress,
   FakerCustomer,
   foClassicLoginPage,
+  foClassicMyAccountPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -94,7 +94,7 @@ describe('FO - Account : CRUD address', async () => {
 
       await foClassicLoginPage.customerLogin(page, newCustomerData);
 
-      const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicMyAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
@@ -103,14 +103,14 @@ describe('FO - Account : CRUD address', async () => {
 
       await homePage.goToMyAccountPage(page);
 
-      const pageHeaderTitle = await myAccountPage.getPageTitle(page);
-      expect(pageHeaderTitle).to.equal(myAccountPage.pageTitle);
+      const pageHeaderTitle = await foClassicMyAccountPage.getPageTitle(page);
+      expect(pageHeaderTitle).to.equal(foClassicMyAccountPage.pageTitle);
     });
 
     it('should go to \'Add first address\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddFirstAddressPage', baseContext);
 
-      await myAccountPage.goToAddressesPage(page);
+      await foClassicMyAccountPage.goToAddressesPage(page);
 
       const pageHeaderTitle = await addressesPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(addressesPage.addressPageTitle);
@@ -147,14 +147,14 @@ describe('FO - Account : CRUD address', async () => {
 
       await addAddressPage.clickOnBreadCrumbLink(page, 'my-account');
 
-      const pageHeaderTitle = await myAccountPage.getPageTitle(page);
-      expect(pageHeaderTitle).to.equal(myAccountPage.pageTitle);
+      const pageHeaderTitle = await foClassicMyAccountPage.getPageTitle(page);
+      expect(pageHeaderTitle).to.equal(foClassicMyAccountPage.pageTitle);
     });
 
     it('should check that \'Add first address\' is changed to \'Addresses\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAddFirstAddress', baseContext);
 
-      const isAddFirstAddressLinkVisible = await myAccountPage.isAddFirstAddressLinkVisible(page);
+      const isAddFirstAddressLinkVisible = await foClassicMyAccountPage.isAddFirstAddressLinkVisible(page);
       expect(isAddFirstAddressLinkVisible, 'Add first address link is still visible!').to.eq(false);
     });
   });
@@ -163,7 +163,7 @@ describe('FO - Account : CRUD address', async () => {
     it('should go to \'Addresses\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage', baseContext);
 
-      await myAccountPage.goToAddressesPage(page);
+      await foClassicMyAccountPage.goToAddressesPage(page);
 
       const pageHeaderTitle = await addressesPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(addressesPage.pageTitle);
@@ -240,14 +240,14 @@ describe('FO - Account : CRUD address', async () => {
 
       await homePage.goToMyAccountPage(page);
 
-      const pageHeaderTitle = await myAccountPage.getPageTitle(page);
-      expect(pageHeaderTitle).to.equal(myAccountPage.pageTitle);
+      const pageHeaderTitle = await foClassicMyAccountPage.getPageTitle(page);
+      expect(pageHeaderTitle).to.equal(foClassicMyAccountPage.pageTitle);
     });
 
     it('should go to addresses page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPageToDeleteAddress', baseContext);
 
-      await myAccountPage.goToAddressesPage(page);
+      await foClassicMyAccountPage.goToAddressesPage(page);
 
       const pageHeaderTitle = await addressesPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(addressesPage.pageTitle);
@@ -299,14 +299,14 @@ describe('FO - Account : CRUD address', async () => {
 
       await homePage.goToMyAccountPage(page);
 
-      const pageHeaderTitle = await myAccountPage.getPageTitle(page);
-      expect(pageHeaderTitle).to.equal(myAccountPage.pageTitle);
+      const pageHeaderTitle = await foClassicMyAccountPage.getPageTitle(page);
+      expect(pageHeaderTitle).to.equal(foClassicMyAccountPage.pageTitle);
     });
 
     it('should go to addresses page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPageToDeleteAddress2', baseContext);
 
-      await myAccountPage.goToAddressesPage(page);
+      await foClassicMyAccountPage.goToAddressesPage(page);
 
       const pageHeaderTitle = await addressesPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(addressesPage.pageTitle);

@@ -10,7 +10,6 @@ import customerServicePage from '@pages/BO/customerService/customerService';
 // Import FO pages
 import {contactUsPage} from '@pages/FO/classic/contactUs';
 import {homePage} from '@pages/FO/classic/home';
-import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {gdprPersonalDataPage} from '@pages/FO/classic/myAccount/gdprPersonalData';
 
 import {
@@ -19,6 +18,7 @@ import {
   dataOrders,
   FakerContactMessage,
   foClassicLoginPage,
+  foClassicMyAccountPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -77,7 +77,7 @@ describe('FO - Account : Contact us on GDPR page', async () => {
 
     await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-    const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
+    const isCustomerConnected = await foClassicMyAccountPage.isCustomerConnected(page);
     expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
   });
 
@@ -86,14 +86,14 @@ describe('FO - Account : Contact us on GDPR page', async () => {
 
     await homePage.goToMyAccountPage(page);
 
-    const pageTitle = await myAccountPage.getPageTitle(page);
-    expect(pageTitle).to.equal(myAccountPage.pageTitle);
+    const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);
   });
 
   it('should go to \'GDPR - Personal data\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToGDPRPage', baseContext);
 
-    await myAccountPage.goToMyGDPRPersonalDataPage(page);
+    await foClassicMyAccountPage.goToMyGDPRPersonalDataPage(page);
 
     const pageTitle = await gdprPersonalDataPage.getPageTitle(page);
     expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);

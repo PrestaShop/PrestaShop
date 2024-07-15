@@ -19,7 +19,6 @@ import checkoutPage from '@pages/FO/hummingbird/checkout';
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
 import contactUsPage from '@pages/FO/hummingbird/contactUs';
 import homePage from '@pages/FO/hummingbird/home';
-import myAccountPage from '@pages/FO/hummingbird/myAccount';
 import createAccountPage from '@pages/FO/hummingbird/myAccount/add';
 import gdprPersonalDataPage from '@pages/FO/hummingbird/myAccount/gdprPersonalData';
 import productPage from '@pages/FO/hummingbird/product';
@@ -32,6 +31,7 @@ import {
   FakerContactMessage,
   FakerCustomer,
   foHummingbirdLoginPage,
+  foHummingbirdMyAccountPage,
   utilsCore,
   utilsFile,
   utilsPlaywright,
@@ -148,14 +148,14 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         await homePage.goToMyAccountPage(page);
 
-        const pageTitle = await myAccountPage.getPageTitle(page);
-        expect(pageTitle).to.equal(myAccountPage.pageTitle);
+        const pageTitle = await foHummingbirdMyAccountPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foHummingbirdMyAccountPage.pageTitle);
       });
 
       it('should go to \'GDPR - Personal data\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToGDPRPage1', baseContext);
 
-        await myAccountPage.goToMyGDPRPersonalDataPage(page);
+        await foHummingbirdMyAccountPage.goToMyGDPRPersonalDataPage(page);
 
         const pageTitle = await gdprPersonalDataPage.getPageTitle(page);
         expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
@@ -389,14 +389,14 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         await homePage.goToMyAccountPage(page);
 
-        const pageTitle = await myAccountPage.getPageTitle(page);
-        expect(pageTitle).to.equal(myAccountPage.pageTitle);
+        const pageTitle = await foHummingbirdMyAccountPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foHummingbirdMyAccountPage.pageTitle);
       });
 
       it('should go to \'GDPR - Personal data\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToGDPRPage2', baseContext);
 
-        await myAccountPage.goToMyGDPRPersonalDataPage(page);
+        await foHummingbirdMyAccountPage.goToMyGDPRPersonalDataPage(page);
 
         const pageTitle = await gdprPersonalDataPage.getPageTitle(page);
         expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
@@ -538,14 +538,14 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         await homePage.goToMyAccountPage(page);
 
-        const pageTitle = await myAccountPage.getPageTitle(page);
-        expect(pageTitle).to.equal(myAccountPage.pageTitle);
+        const pageTitle = await foHummingbirdMyAccountPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foHummingbirdMyAccountPage.pageTitle);
       });
 
       it('should go to \'GDPR - Personal data\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToGDPRPage3', baseContext);
 
-        await myAccountPage.goToMyGDPRPersonalDataPage(page);
+        await foHummingbirdMyAccountPage.goToMyGDPRPersonalDataPage(page);
 
         const pageTitle = await gdprPersonalDataPage.getPageTitle(page);
         expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
@@ -695,14 +695,14 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         await homePage.goToMyAccountPage(page);
 
-        const pageTitle = await myAccountPage.getPageTitle(page);
-        expect(pageTitle).to.equal(myAccountPage.pageTitle);
+        const pageTitle = await foHummingbirdMyAccountPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foHummingbirdMyAccountPage.pageTitle);
       });
 
       it('should go to \'GDPR - Personal data\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToGDPRPage4', baseContext);
 
-        await myAccountPage.goToMyGDPRPersonalDataPage(page);
+        await foHummingbirdMyAccountPage.goToMyGDPRPersonalDataPage(page);
 
         const pageTitle = await gdprPersonalDataPage.getPageTitle(page);
         expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
@@ -849,14 +849,14 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         await homePage.goToMyAccountPage(page);
 
-        const pageTitle = await myAccountPage.getPageTitle(page);
-        expect(pageTitle).to.equal(myAccountPage.pageTitle);
+        const pageTitle = await foHummingbirdMyAccountPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foHummingbirdMyAccountPage.pageTitle);
       });
 
       it('should go to \'GDPR - Personal data\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToGDPRPage5', baseContext);
 
-        await myAccountPage.goToMyGDPRPersonalDataPage(page);
+        await foHummingbirdMyAccountPage.goToMyGDPRPersonalDataPage(page);
 
         const pageTitle = await gdprPersonalDataPage.getPageTitle(page);
         expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);

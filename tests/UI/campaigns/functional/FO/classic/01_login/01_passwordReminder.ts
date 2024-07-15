@@ -8,12 +8,12 @@ import {createAccountTest} from '@commonTests/FO/classic/account';
 
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {passwordReminderPage} from '@pages/FO/classic/passwordReminder';
 
 import {
   FakerCustomer,
   foClassicLoginPage,
+  foClassicMyAccountPage,
   type MailDev,
   type MailDevEmail,
   utilsMail,
@@ -139,15 +139,15 @@ describe('FO - Login : Password reminder', async () => {
 
       await passwordReminderPage.setNewPassword(page, newPassword);
 
-      const successMessage = await myAccountPage.getSuccessMessageAlert(page);
-      expect(successMessage).to.equal(`${myAccountPage.resetPasswordSuccessMessage} ${customerData.email}`);
+      const successMessage = await foClassicMyAccountPage.getSuccessMessageAlert(page);
+      expect(successMessage).to.equal(`${foClassicMyAccountPage.resetPasswordSuccessMessage} ${customerData.email}`);
     });
 
     it('should logout from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFO', baseContext);
 
-      await myAccountPage.logout(page);
-      const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
+      await foClassicMyAccountPage.logout(page);
+      const isCustomerConnected = await foClassicMyAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
 
@@ -165,16 +165,16 @@ describe('FO - Login : Password reminder', async () => {
 
       await foClassicLoginPage.customerLogin(page, customerNewPassword);
 
-      const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicMyAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should logout from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFO2', baseContext);
 
-      await myAccountPage.logout(page);
+      await foClassicMyAccountPage.logout(page);
 
-      const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicMyAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
 

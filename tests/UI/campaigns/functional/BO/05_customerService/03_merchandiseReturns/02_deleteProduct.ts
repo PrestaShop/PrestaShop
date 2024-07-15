@@ -15,7 +15,6 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {homePage} from '@pages/FO/classic/home';
-import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {merchandiseReturnsPage as foMerchandiseReturnsPage} from '@pages/FO/classic/myAccount/merchandiseReturns';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
@@ -28,6 +27,7 @@ import {
   dataPaymentMethods,
   foClassicLoginPage,
   foClassicModalQuickViewPage,
+  foClassicMyAccountPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -224,14 +224,14 @@ describe('BO - Customer Service - Merchandise Returns : Delete product', async (
 
       await homePage.goToMyAccountPage(page);
 
-      const pageTitle = await myAccountPage.getPageTitle(page);
-      expect(pageTitle).to.contains(myAccountPage.pageTitle);
+      const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foClassicMyAccountPage.pageTitle);
     });
 
     it('should go to \'Order history and details\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
-      await myAccountPage.goToHistoryAndDetailsPage(page);
+      await foClassicMyAccountPage.goToHistoryAndDetailsPage(page);
 
       const pageTitle = await orderHistoryPage.getPageTitle(page);
       expect(pageTitle).to.contains(orderHistoryPage.pageTitle);

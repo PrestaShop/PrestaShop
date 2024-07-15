@@ -15,7 +15,6 @@ import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
-import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {cartPage} from '@pages/FO/classic/cart';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
@@ -28,6 +27,7 @@ import {
   FakerEmployee,
   foClassicLoginPage,
   foClassicModalQuickViewPage,
+  foClassicMyAccountPage,
   type MailDev,
   type MailDevEmail,
   utilsFile,
@@ -119,7 +119,7 @@ describe('BO - Customer Service : Forward message', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
       await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
-      const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicMyAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
@@ -189,7 +189,7 @@ describe('BO - Customer Service : Forward message', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
       await homePage.goToMyAccountPage(page);
-      await myAccountPage.goToHistoryAndDetailsPage(page);
+      await foClassicMyAccountPage.goToHistoryAndDetailsPage(page);
 
       const pageHeaderTitle = await orderHistoryPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);

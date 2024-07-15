@@ -15,7 +15,6 @@ import cartPage from '@pages/FO/hummingbird/cart';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
 import foHomePage from '@pages/FO/hummingbird/home';
-import myAccountPage from '@pages/FO/hummingbird/myAccount';
 import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
 import orderHistoryPage from '@pages/FO/hummingbird/myAccount/orderHistory';
 import productPage from '@pages/FO/hummingbird/product';
@@ -27,6 +26,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   foHummingbirdLoginPage,
+  foHummingbirdMyAccountPage,
   type MailDev,
   type MailDevEmail,
   utilsMail,
@@ -226,7 +226,7 @@ describe('FO - Account : Send a message with an ordered product', async () => {
 
       await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdMyAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
@@ -234,7 +234,7 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
       await foHomePage.goToMyAccountPage(page);
-      await myAccountPage.goToHistoryAndDetailsPage(page);
+      await foHummingbirdMyAccountPage.goToHistoryAndDetailsPage(page);
 
       const pageHeaderTitle = await orderHistoryPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);

@@ -17,7 +17,6 @@ import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {contactUsPage} from '@pages/FO/classic/contactUs';
 import {homePage} from '@pages/FO/classic/home';
-import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {createAccountPage} from '@pages/FO/classic/myAccount/add';
 import {gdprPersonalDataPage} from '@pages/FO/classic/myAccount/gdprPersonalData';
 import {productPage} from '@pages/FO/classic/product';
@@ -30,6 +29,7 @@ import {
   FakerContactMessage,
   FakerCustomer,
   foClassicLoginPage,
+  foClassicMyAccountPage,
   utilsCore,
   utilsDate,
   utilsFile,
@@ -144,14 +144,14 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
 
         await homePage.goToMyAccountPage(page);
 
-        const pageTitle = await myAccountPage.getPageTitle(page);
-        expect(pageTitle).to.equal(myAccountPage.pageTitle);
+        const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);
       });
 
       it('should go to \'GDPR - Personal data\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToGDPRPage1', baseContext);
 
-        await myAccountPage.goToMyGDPRPersonalDataPage(page);
+        await foClassicMyAccountPage.goToMyGDPRPersonalDataPage(page);
 
         const pageTitle = await gdprPersonalDataPage.getPageTitle(page);
         expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
@@ -356,14 +356,14 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
 
         await homePage.goToMyAccountPage(page);
 
-        const pageTitle = await myAccountPage.getPageTitle(page);
-        expect(pageTitle).to.equal(myAccountPage.pageTitle);
+        const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);
       });
 
       it('should go to \'GDPR - Personal data\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToGDPRPage2', baseContext);
 
-        await myAccountPage.goToMyGDPRPersonalDataPage(page);
+        await foClassicMyAccountPage.goToMyGDPRPersonalDataPage(page);
 
         const pageTitle = await gdprPersonalDataPage.getPageTitle(page);
         expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
@@ -500,14 +500,14 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
 
         await homePage.goToMyAccountPage(page);
 
-        const pageTitle = await myAccountPage.getPageTitle(page);
-        expect(pageTitle).to.equal(myAccountPage.pageTitle);
+        const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);
       });
 
       it('should go to \'GDPR - Personal data\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToGDPRPage3', baseContext);
 
-        await myAccountPage.goToMyGDPRPersonalDataPage(page);
+        await foClassicMyAccountPage.goToMyGDPRPersonalDataPage(page);
 
         const pageTitle = await gdprPersonalDataPage.getPageTitle(page);
         expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
@@ -643,14 +643,14 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
 
         await homePage.goToMyAccountPage(page);
 
-        const pageTitle = await myAccountPage.getPageTitle(page);
-        expect(pageTitle).to.equal(myAccountPage.pageTitle);
+        const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);
       });
 
       it('should go to \'GDPR - Personal data\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToGDPRPage4', baseContext);
 
-        await myAccountPage.goToMyGDPRPersonalDataPage(page);
+        await foClassicMyAccountPage.goToMyGDPRPersonalDataPage(page);
 
         const pageTitle = await gdprPersonalDataPage.getPageTitle(page);
         expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
@@ -782,14 +782,14 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
 
         await homePage.goToMyAccountPage(page);
 
-        const pageTitle = await myAccountPage.getPageTitle(page);
-        expect(pageTitle).to.equal(myAccountPage.pageTitle);
+        const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);
       });
 
       it('should go to \'GDPR - Personal data\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToGDPRPage5', baseContext);
 
-        await myAccountPage.goToMyGDPRPersonalDataPage(page);
+        await foClassicMyAccountPage.goToMyGDPRPersonalDataPage(page);
 
         const pageTitle = await gdprPersonalDataPage.getPageTitle(page);
         expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);

@@ -58,19 +58,28 @@ function createProductTest(productData: FakerProduct, baseContext: string = 'com
       expect(isModalVisible).to.be.eq(true);
     });
 
-    it(`should choose '${productData.type} product' and go to new product page`, async function () {
+    it(`should choose '${productData.type} product'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseTypeOfProduct', baseContext);
 
       await productsPage.selectProductType(page, productData.type);
+
+      const pageTitle = await addProductPage.getPageTitle(page);
+      expect(pageTitle).to.contains(addProductPage.pageTitle);
+    });
+
+    it('should go to new product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewProductPage', baseContext);
+
       await productsPage.clickOnAddNewProduct(page);
-      await addProductPage.closeSfToolBar(page);
 
       const pageTitle = await addProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(addProductPage.pageTitle);
     });
 
     it('should create product', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createStandardProduct', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'setProduct', baseContext);
+
+      await addProductPage.closeSfToolBar(page);
 
       const createProductMessage = await addProductPage.setProduct(page, productData);
       expect(createProductMessage).to.equal(addProductPage.successfulUpdateMessage);

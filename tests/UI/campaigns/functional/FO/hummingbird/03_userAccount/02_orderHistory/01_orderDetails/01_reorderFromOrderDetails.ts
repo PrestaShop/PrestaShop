@@ -9,7 +9,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
 import homePage from '@pages/FO/hummingbird/home';
-import myAccountPage from '@pages/FO/hummingbird/myAccount';
 import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
 import orderHistoryPage from '@pages/FO/hummingbird/myAccount/orderHistory';
 
@@ -19,6 +18,7 @@ import {
   dataProducts,
   FakerOrder,
   foHummingbirdLoginPage,
+  foHummingbirdMyAccountPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -98,7 +98,7 @@ describe('FO - Account - Order details : Reorder from order detail', async () =>
 
       await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdMyAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
@@ -107,14 +107,14 @@ describe('FO - Account - Order details : Reorder from order detail', async () =>
 
       await homePage.goToMyAccountPage(page);
 
-      const pageTitle = await myAccountPage.getPageTitle(page);
-      expect(pageTitle).to.equal(myAccountPage.pageTitle);
+      const pageTitle = await foHummingbirdMyAccountPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdMyAccountPage.pageTitle);
     });
 
     it('should go to order history page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
-      await myAccountPage.goToHistoryAndDetailsPage(page);
+      await foHummingbirdMyAccountPage.goToHistoryAndDetailsPage(page);
 
       const pageHeaderTitle = await orderHistoryPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);
@@ -171,14 +171,14 @@ describe('FO - Account - Order details : Reorder from order detail', async () =>
 
       await homePage.goToMyAccountPage(page);
 
-      const pageTitle = await myAccountPage.getPageTitle(page);
-      expect(pageTitle).to.equal(myAccountPage.pageTitle);
+      const pageTitle = await foHummingbirdMyAccountPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdMyAccountPage.pageTitle);
     });
 
     it('should go back to order history page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToOrderHistoryPage', baseContext);
 
-      await myAccountPage.goToHistoryAndDetailsPage(page);
+      await foHummingbirdMyAccountPage.goToHistoryAndDetailsPage(page);
 
       const pageHeaderTitle = await orderHistoryPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);

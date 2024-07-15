@@ -11,7 +11,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import {homePage as foHomePage} from '@pages/FO/classic/home';
-import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import invoicesPage from '@pages/BO/orders/invoices';
 import ordersPage from '@pages/BO/orders';
@@ -26,6 +25,7 @@ import {
   dataProducts,
   FakerOrder,
   foClassicLoginPage,
+  foClassicMyAccountPage,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -148,7 +148,7 @@ describe('FO - Account - Order details : Request merchandise return', async () =
 
       await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected: boolean = await myAccountPage.isCustomerConnected(page);
+      const isCustomerConnected: boolean = await foClassicMyAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
@@ -157,14 +157,14 @@ describe('FO - Account - Order details : Request merchandise return', async () =
 
       await foHomePage.goToMyAccountPage(page);
 
-      const pageTitle = await myAccountPage.getPageTitle(page);
-      expect(pageTitle).to.equal(myAccountPage.pageTitle);
+      const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);
     });
 
     it('should go to order history page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
-      await myAccountPage.goToHistoryAndDetailsPage(page);
+      await foClassicMyAccountPage.goToHistoryAndDetailsPage(page);
 
       const pageHeaderTitle = await orderHistoryPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);

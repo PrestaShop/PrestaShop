@@ -11,7 +11,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 // Import FO pages
 import homePage from '@pages/FO/hummingbird/home';
 import orderHistoryPage from '@pages/FO/hummingbird/myAccount/orderHistory';
-import myAccountPage from '@pages/FO/hummingbird/myAccount';
 import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
@@ -24,6 +23,7 @@ import {
   FakerCustomer,
   FakerOrder,
   foHummingbirdLoginPage,
+  foHummingbirdMyAccountPage,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -114,7 +114,7 @@ describe('FO - Account - Order history : Consult details and reorder', async () 
 
       await foHummingbirdLoginPage.customerLogin(page, customerData);
 
-      const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdMyAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
@@ -122,7 +122,7 @@ describe('FO - Account - Order history : Consult details and reorder', async () 
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
       await homePage.goToMyAccountPage(page);
-      await myAccountPage.goToHistoryAndDetailsPage(page);
+      await foHummingbirdMyAccountPage.goToHistoryAndDetailsPage(page);
 
       const pageHeaderTitle = await orderHistoryPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);
@@ -182,7 +182,8 @@ describe('FO - Account - Order history : Consult details and reorder', async () 
     it('should go to order history page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage2', baseContext);
 
-      await myAccountPage.clickOnOrderHistoryAndDetailsLeftMenu(page);
+      await homePage.goToMyAccountPage(page);
+      await foHummingbirdMyAccountPage.goToHistoryAndDetailsPage(page);
 
       const pageHeaderTitle = await orderHistoryPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);

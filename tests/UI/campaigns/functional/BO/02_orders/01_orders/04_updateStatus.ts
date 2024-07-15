@@ -11,7 +11,6 @@ import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advanced
 import ordersPage from '@pages/BO/orders';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
 import {
@@ -22,6 +21,7 @@ import {
   dataProducts,
   FakerOrder,
   foClassicLoginPage,
+  foClassicMyAccountPage,
   type MailDev,
   type MailDevEmail,
   utilsFile,
@@ -269,7 +269,7 @@ describe('BO - orders : Update order status', async () => {
           await testContext.addContextItem(this, 'testIdentifier', `goToOrderHistoryPage${index}`, baseContext);
 
           await homePage.goToMyAccountPage(page);
-          await myAccountPage.goToHistoryAndDetailsPage(page);
+          await foClassicMyAccountPage.goToHistoryAndDetailsPage(page);
 
           const pageTitle = await orderHistoryPage.getPageTitle(page);
           expect(pageTitle, 'Fail to open order history page').to.contains(orderHistoryPage.pageTitle);

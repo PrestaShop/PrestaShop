@@ -8,13 +8,13 @@ import {createAccountTest} from '@commonTests/FO/classic/account';
 
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {vouchersPage as foVouchersPage} from '@pages/FO/classic/myAccount/vouchers';
 
 import {
   FakerCartRule,
   FakerCustomer,
   foClassicLoginPage,
+  foClassicMyAccountPage,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -109,7 +109,7 @@ describe('FO - Account : View vouchers', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOVouchersPage', baseContext);
 
       await homePage.goToMyAccountPage(page);
-      await myAccountPage.goToVouchersPage(page);
+      await foClassicMyAccountPage.goToVouchersPage(page);
 
       const pageHeaderTitle = await foVouchersPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(foVouchersPage.pageTitle);

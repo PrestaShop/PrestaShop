@@ -13,7 +13,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 // Import pages
 // Import FO pages
 import foHomePage from '@pages/FO/hummingbird/home';
-import myAccountPage from '@pages/FO/hummingbird/myAccount';
 import {merchandiseReturnsPage as foMerchandiseReturnsPage} from '@pages/FO/classic/myAccount/merchandiseReturns';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import orderHistoryPage from '@pages/FO/hummingbird/myAccount/orderHistory';
@@ -29,6 +28,7 @@ import {
   dataProducts,
   FakerOrder,
   foHummingbirdLoginPage,
+  foHummingbirdMyAccountPage,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -154,7 +154,7 @@ describe('FO - Account - Order details : Request merchandise return', async () =
 
       await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected: boolean = await myAccountPage.isCustomerConnected(page);
+      const isCustomerConnected: boolean = await foHummingbirdMyAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
@@ -163,14 +163,14 @@ describe('FO - Account - Order details : Request merchandise return', async () =
 
       await foHomePage.goToMyAccountPage(page);
 
-      const pageTitle = await myAccountPage.getPageTitle(page);
-      expect(pageTitle).to.equal(myAccountPage.pageTitle);
+      const pageTitle = await foHummingbirdMyAccountPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdMyAccountPage.pageTitle);
     });
 
     it('should go to order history page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
-      await myAccountPage.goToHistoryAndDetailsPage(page);
+      await foHummingbirdMyAccountPage.goToHistoryAndDetailsPage(page);
 
       const pageHeaderTitle = await orderHistoryPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);

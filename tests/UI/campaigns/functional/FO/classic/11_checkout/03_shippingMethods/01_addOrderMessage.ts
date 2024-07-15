@@ -7,7 +7,6 @@ import {checkoutPage} from '@pages/FO/classic/checkout';
 import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
-import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 
@@ -16,6 +15,7 @@ import {
   dataCustomers,
   dataPaymentMethods,
   foClassicLoginPage,
+  foClassicMyAccountPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -153,7 +153,7 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
     await homePage.goToMyAccountPage(page);
-    await myAccountPage.goToHistoryAndDetailsPage(page);
+    await foClassicMyAccountPage.goToHistoryAndDetailsPage(page);
 
     const pageHeaderTitle = await orderHistoryPage.getPageTitle(page);
     expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);

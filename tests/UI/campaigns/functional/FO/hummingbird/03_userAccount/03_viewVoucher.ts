@@ -9,13 +9,13 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 
 // Import FO pages
 import homePage from '@pages/FO/hummingbird/home';
-import myAccountPage from '@pages/FO/hummingbird/myAccount';
 import foVouchersPage from '@pages/FO/hummingbird/myAccount/vouchers';
 
 import {
   FakerCartRule,
   FakerCustomer,
   foHummingbirdLoginPage,
+  foHummingbirdMyAccountPage,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -115,7 +115,7 @@ describe('FO - Account : View vouchers', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOVouchersPage', baseContext);
 
       await homePage.goToMyAccountPage(page);
-      await myAccountPage.goToVouchersPage(page);
+      await foHummingbirdMyAccountPage.goToVouchersPage(page);
 
       const pageHeaderTitle = await foVouchersPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(foVouchersPage.pageTitle);

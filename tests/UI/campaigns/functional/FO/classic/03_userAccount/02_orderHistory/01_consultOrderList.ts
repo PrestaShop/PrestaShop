@@ -10,7 +10,6 @@ import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 // Import FO pages
 import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
-import {myAccountPage} from '@pages/FO/classic/myAccount';
 
 import {
   dataOrderStatuses,
@@ -20,6 +19,7 @@ import {
   FakerCustomer,
   FakerOrder,
   foClassicLoginPage,
+  foClassicMyAccountPage,
   type OrderHistory,
   utilsDate,
   utilsPlaywright,
@@ -106,7 +106,7 @@ describe('FO - Account - Order history : Consult order list', async () => {
 
       await foClassicLoginPage.customerLogin(page, customerData);
 
-      const isCustomerConnected: boolean = await myAccountPage.isCustomerConnected(page);
+      const isCustomerConnected: boolean = await foClassicMyAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
@@ -114,7 +114,7 @@ describe('FO - Account - Order history : Consult order list', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
       await foHomePage.goToMyAccountPage(page);
-      await myAccountPage.goToHistoryAndDetailsPage(page);
+      await foClassicMyAccountPage.goToHistoryAndDetailsPage(page);
 
       const pageHeaderTitle: string = await orderHistoryPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);
@@ -167,14 +167,14 @@ describe('FO - Account - Order history : Consult order list', async () => {
 
       await orderHistoryPage.clickOnBackToYourAccountLink(page);
 
-      const pageTitle: string = await myAccountPage.getPageTitle(page);
-      expect(pageTitle).to.equal(myAccountPage.pageTitle);
+      const pageTitle: string = await foClassicMyAccountPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);
     });
 
     it('should go back to order history page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage2', baseContext);
 
-      await myAccountPage.goToHistoryAndDetailsPage(page);
+      await foClassicMyAccountPage.goToHistoryAndDetailsPage(page);
 
       const pageHeaderTitle: string = await orderHistoryPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);

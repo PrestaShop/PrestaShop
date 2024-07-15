@@ -14,7 +14,6 @@ import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
-import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 
@@ -24,6 +23,7 @@ import {
   dataOrderStatuses,
   dataPaymentMethods,
   FakerProduct,
+  foClassicMyAccountPage,
   type MailDev,
   type MailDevEmail,
   utilsCore,
@@ -305,14 +305,14 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
 
         await homePage.goToMyAccountPage(page);
 
-        const pageTitle = await myAccountPage.getPageTitle(page);
-        expect(pageTitle).to.equal(myAccountPage.pageTitle);
+        const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);
       });
 
       it('should go to order history page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
-        await myAccountPage.goToHistoryAndDetailsPage(page);
+        await foClassicMyAccountPage.goToHistoryAndDetailsPage(page);
 
         const pageHeaderTitle = await orderHistoryPage.getPageTitle(page);
         expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);

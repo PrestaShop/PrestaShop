@@ -6,11 +6,11 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 
 // Import FO pages
 import homePage from '@pages/FO/hummingbird/home';
-import myAccountPage from '@pages/FO/hummingbird/myAccount';
 
 import {
   dataCustomers,
   foHummingbirdLoginPage,
+  foHummingbirdMyAccountPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -88,16 +88,16 @@ describe('FO - Login : Logout from FO', async () => {
 
       await homePage.goToMyAccountPage(page);
 
-      const pageTitle = await myAccountPage.getPageTitle(page);
-      expect(pageTitle).to.equal(myAccountPage.pageTitle);
+      const pageTitle = await foHummingbirdMyAccountPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdMyAccountPage.pageTitle);
     });
 
     it('should logout by the link in the footer of account page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFOByFooterLink', baseContext);
 
-      await myAccountPage.logout(page);
+      await foHummingbirdMyAccountPage.logout(page);
 
-      const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdMyAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected!').to.eq(false);
     });
   });

@@ -8,13 +8,13 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 import cartPage from '@pages/FO/hummingbird/cart';
 import contactUsPage from '@pages/FO/hummingbird/contactUs';
 import homePage from '@pages/FO/hummingbird/home';
-import myAccountPage from '@pages/FO/hummingbird/myAccount';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {
   dataCustomers,
   foHummingbirdLoginPage,
   foHummingbirdModalQuickViewPage,
+  foHummingbirdMyAccountPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -95,8 +95,8 @@ describe('FO - Header and Footer : Check links in header page', async () => {
 
       await foHummingbirdLoginPage.goToMyAccountPage(page);
 
-      const pageTitle = await myAccountPage.getPageTitle(page);
-      expect(pageTitle).to.equal(myAccountPage.pageTitle);
+      const pageTitle = await foHummingbirdMyAccountPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdMyAccountPage.pageTitle);
     });
 
     it('should add a product to cart by quick view', async function () {

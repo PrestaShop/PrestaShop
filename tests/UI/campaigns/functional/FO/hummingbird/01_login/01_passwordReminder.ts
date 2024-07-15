@@ -9,12 +9,12 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 
 // Import FO pages
 import homePage from '@pages/FO/hummingbird/home';
-import myAccountPage from '@pages/FO/hummingbird/myAccount';
 import passwordReminderPage from '@pages/FO/hummingbird/passwordReminder';
 
 import {
   FakerCustomer,
   foHummingbirdLoginPage,
+  foHummingbirdMyAccountPage,
   type MailDev,
   type MailDevEmail,
   utilsMail,
@@ -143,15 +143,15 @@ describe('FO - Login : Password reminder', async () => {
 
       await passwordReminderPage.setNewPassword(page, newPassword);
 
-      const successMessage = await myAccountPage.getSuccessMessageAlert(page);
-      expect(successMessage).to.equal(`${myAccountPage.resetPasswordSuccessMessage} ${customerData.email}`);
+      const successMessage = await foHummingbirdMyAccountPage.getSuccessMessageAlert(page);
+      expect(successMessage).to.equal(`${foHummingbirdMyAccountPage.resetPasswordSuccessMessage} ${customerData.email}`);
     });
 
     it('should logout from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFO', baseContext);
 
-      await myAccountPage.logout(page);
-      const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
+      await foHummingbirdMyAccountPage.logout(page);
+      const isCustomerConnected = await foHummingbirdMyAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
 
@@ -169,16 +169,16 @@ describe('FO - Login : Password reminder', async () => {
 
       await foHummingbirdLoginPage.customerLogin(page, customerNewPassword);
 
-      const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdMyAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should logout from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFO2', baseContext);
 
-      await myAccountPage.logout(page);
+      await foHummingbirdMyAccountPage.logout(page);
 
-      const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdMyAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
 

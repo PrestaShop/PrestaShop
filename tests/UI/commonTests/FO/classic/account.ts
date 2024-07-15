@@ -4,7 +4,6 @@ import testContext from '@utils/testContext';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
 import {createAccountPage as foCreateAccountPage} from '@pages/FO/classic/myAccount/add';
-import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {addressesPage} from '@pages/FO/classic/myAccount/addresses';
 import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
 
@@ -12,6 +11,7 @@ import {
   FakerAddress,
   FakerCustomer,
   foClassicLoginPage,
+  foClassicMyAccountPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -131,14 +131,14 @@ function createAddressTest(
 
       await homePage.goToMyAccountPage(page);
 
-      const pageTitle = await myAccountPage.getPageTitle(page);
-      expect(pageTitle).to.equal(myAccountPage.pageTitle);
+      const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);
     });
 
     it('should go to \'Addresses\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToaddressesPage', baseContext);
 
-      await myAccountPage.goToAddressesPage(page);
+      await foClassicMyAccountPage.goToAddressesPage(page);
 
       const pageHeaderTitle = await addressesPage.getPageTitle(page);
       expect(pageHeaderTitle).to.include(addressesPage.addressPageTitle);

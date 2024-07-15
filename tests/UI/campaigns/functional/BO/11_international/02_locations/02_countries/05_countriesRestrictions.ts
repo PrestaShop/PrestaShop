@@ -10,7 +10,6 @@ import zonesPage from '@pages/BO/international/locations';
 import countriesPage from '@pages/BO/international/locations/countries';
 // Import FO pages
 import {homePage} from '@pages/FO/classic/home';
-import {myAccountPage} from '@pages/FO/classic/myAccount';
 import {addressesPage} from '@pages/FO/classic/myAccount/addresses';
 import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
 
@@ -19,6 +18,7 @@ import {
   dataCountries,
   dataCustomers,
   foClassicLoginPage,
+  foClassicMyAccountPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -139,14 +139,14 @@ describe('BO - International - Countries : Restrict country selections in front 
 
       await homePage.goToMyAccountPage(page);
 
-      const pageTitle = await myAccountPage.getPageTitle(page);
-      expect(pageTitle).to.contains(myAccountPage.pageTitle);
+      const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foClassicMyAccountPage.pageTitle);
     });
 
     it('should go to addresses page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToAddressesPage${index}`, baseContext);
 
-      await myAccountPage.goToAddressesPage(page);
+      await foClassicMyAccountPage.goToAddressesPage(page);
 
       const pageTitle = await addressesPage.getPageTitle(page);
       expect(pageTitle, 'Fail to open addresses page').to.contains(addressesPage.pageTitle);
@@ -173,7 +173,7 @@ describe('BO - International - Countries : Restrict country selections in front 
     it('should close the FO page and go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `closeFoAndGoBackToBO${index}`, baseContext);
 
-      page = await myAccountPage.closePage(browserContext, page, 0);
+      page = await foClassicMyAccountPage.closePage(browserContext, page, 0);
 
       const pageTitle = await countriesPage.getPageTitle(page);
       expect(pageTitle).to.contains(countriesPage.pageTitle);
