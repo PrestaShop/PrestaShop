@@ -330,7 +330,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
             throw new RuntimeException(sprintf(
                 'Following customization fields were not found for product %s: %s',
                 $productReference,
-                var_export($notFoundExpectedFields)
+                var_export($notFoundExpectedFields, true)
             ));
         }
 
@@ -338,7 +338,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
             throw new RuntimeException(sprintf(
                 'Product "%s" contains unexpected customization fields: %s',
                 $productReference,
-                var_export($actualFields)
+                var_export($actualFields, true)
             ));
         }
     }
