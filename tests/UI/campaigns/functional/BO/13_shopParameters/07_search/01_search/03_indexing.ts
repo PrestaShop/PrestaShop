@@ -14,7 +14,7 @@ import {
   FakerProduct,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-import { deleteProductTest } from '@commonTests/BO/catalog/product';
+import {deleteProductTest} from '@commonTests/BO/catalog/product';
 
 const baseContext: string = 'functional_BO_shopParameters_search_search_indexing';
 
@@ -52,8 +52,8 @@ describe('BO - Shop Parameters - Search : Indexing', async () => {
       const pageTitle = await boSearchPage.getPageTitle(page);
       expect(pageTitle).to.contains(boSearchPage.pageTitle);
     });
-    
-    it('should check Indexed products', async function (){
+
+    it('should check Indexed products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkIndexedProducts', baseContext);
 
       numIndexedProducts = await boSearchPage.getNumIndexedProducts(page);
@@ -74,12 +74,12 @@ describe('BO - Shop Parameters - Search : Indexing', async () => {
         product: product1,
         numProductsIndexed: 1,
         numProductsTotal: 2,
-      }
+      },
     ].forEach((
       arg: {status: string, product: FakerProduct, numProductsIndexed: number, numProductsTotal: number},
       index: number,
     ) => {
-      it(`should ${arg.status} Indexing`, async function (){
+      it(`should ${arg.status} Indexing`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${arg.status}${index}`, baseContext);
 
         const textResult = await boSearchPage.setIndexing(page, arg.status === 'enable');
@@ -132,37 +132,37 @@ describe('BO - Shop Parameters - Search : Indexing', async () => {
 
       it('should go to \'Shop Parameters > Search\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `returnToSearchPage${index}`, baseContext);
-  
+
         await boDashboardPage.goToSubMenu(
           page,
           boDashboardPage.shopParametersParentLink,
           boDashboardPage.searchLink,
         );
-  
+
         const pageTitle = await boSearchPage.getPageTitle(page);
         expect(pageTitle).to.contains(boSearchPage.pageTitle);
       });
-      
-      it('should check Indexed products', async function (){
+
+      it('should check Indexed products', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkIndexedProductsAfterAddProduct${index}`, baseContext);
 
         const numIndexedProductsAfterAdd = await boSearchPage.getNumIndexedProducts(page);
         expect(numIndexedProductsAfterAdd).to.be.gt(0);
         expect(numIndexedProductsAfterAdd).to.equal(numIndexedProducts + arg.numProductsIndexed);
-  
+
         const numTotalProducts = await boSearchPage.getNumTotalProducts(page);
         expect(numTotalProducts).to.equal(numIndexedProducts + arg.numProductsTotal);
       });
     });
-      
-    it('should click on "Add missing products to the index"', async function (){
+
+    it('should click on "Add missing products to the index"', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickAddMissingProductsIndex', baseContext);
 
       const result = await boSearchPage.clickAddMissingProductsToIndex(page);
-      expect(result).to.contains(boSearchPage.successfulUpdateMessage)
+      expect(result).to.contains(boSearchPage.successfulUpdateMessage);
     });
-      
-    it('should check Indexed products', async function (){
+
+    it('should check Indexed products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkIndexedProductsAfterReindexing', baseContext);
 
       const numIndexedProductsAfterAdd = await boSearchPage.getNumIndexedProducts(page);
@@ -175,8 +175,8 @@ describe('BO - Shop Parameters - Search : Indexing', async () => {
     });
 
     // Reset
-    it(`should enable Indexing`, async function (){
-      await testContext.addContextItem(this, 'testIdentifier', `resetIndexing`, baseContext);
+    it('should enable Indexing', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetIndexing', baseContext);
 
       const textResult = await boSearchPage.setIndexing(page, true);
       expect(textResult).to.be.eq(boSearchPage.settingsUpdateMessage);
