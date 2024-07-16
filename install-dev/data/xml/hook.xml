@@ -4919,5 +4919,10 @@
       <title>Modify customer groups grid template data</title>
       <description>This hook allows to modify data which is about to be used in template for customer groups grid</description>
     </hook>
+    <hook id="actionSendMessageBefore">
+      <name>actionSendMessageBefore</name>
+      <title>Modify contactform message before sending</title>
+      <description>This hook is called before the contactform message is sent</description>
+    </hook>
   </entities>
 </entity_hook>
