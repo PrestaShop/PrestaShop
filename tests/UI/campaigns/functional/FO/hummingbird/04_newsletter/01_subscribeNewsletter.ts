@@ -78,7 +78,10 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
     it('should subscribe to newsletter with already used email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'subscribeWithAlreadyUsedEmail', baseContext);
 
-      const newsletterSubscribeAlertMessage = await foHummingbirdHomePage.subscribeToNewsletter(page, dataCustomers.johnDoe.email);
+      const newsletterSubscribeAlertMessage = await foHummingbirdHomePage.subscribeToNewsletter(
+        page,
+        dataCustomers.johnDoe.email,
+      );
       expect(newsletterSubscribeAlertMessage).to.contains(foHummingbirdHomePage.alreadyUsedEmailMessage);
     });
   });
@@ -181,7 +184,10 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
     it('should subscribe to newsletter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'subscribeToNewsletter', baseContext);
 
-      const newsletterSubscribeAlertMessage = await foHummingbirdHomePage.subscribeToNewsletter(page, dataCustomers.johnDoe.email);
+      const newsletterSubscribeAlertMessage = await foHummingbirdHomePage.subscribeToNewsletter(
+        page,
+        dataCustomers.johnDoe.email,
+      );
       expect(newsletterSubscribeAlertMessage).to.contains(foHummingbirdHomePage.successSubscriptionMessage);
     });
   });

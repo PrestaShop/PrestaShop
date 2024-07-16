@@ -24,6 +24,7 @@ import {
   FakerCustomer,
   foClassicHomePage,
   foClassicLoginPage,
+  foClassicModalWishlistPage,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   type MailDev,
@@ -262,7 +263,10 @@ describe('BO - International - Translation : Modify translation', async () => {
     it('should click on add product to wishlist icon', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnAddToWishlist', baseContext);
 
-      const wishlistModalTitle = await foHummingbirdHomePage.addToWishList(page, 1);
+      await foHummingbirdHomePage.clickAddWishListProduct(page, 1);
+
+      //@todo : Move to foHummingbirdModalWishlistPage
+      const wishlistModalTitle = await foClassicModalWishlistPage.getModalAddToTitle(page);
       expect(wishlistModalTitle).to.equal('Add to wishlist now');
     });
   });
