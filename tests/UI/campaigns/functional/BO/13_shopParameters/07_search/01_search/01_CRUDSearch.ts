@@ -112,7 +112,7 @@ describe('BO - Shop Parameters - Search : Create, update and delete search in BO
       await testContext.addContextItem(this, 'testIdentifier', 'updateAlias', baseContext);
 
       const textResult = await addSearchPage.setAlias(page, editSearchData);
-      expect(textResult).to.contains(boSearchPage.successfulUpdateMessage);
+      expect(textResult).to.contains(boSearchPage.updateSuccessMessage);
 
       const numberOfSearchAfterUpdate = await boSearchPage.resetAndGetNumberOfLines(page);
       expect(numberOfSearchAfterUpdate).to.be.equal(numberOfSearch + 1);
