@@ -4,14 +4,12 @@ import testContext from '@utils/testContext';
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import addSearchPage from '@pages/BO/shopParameters/search/add';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boSearchPage,
+  boSearchAliasCreatePage,
   FakerSearchAlias,
   utilsCore,
   utilsPlaywright,
@@ -78,14 +76,14 @@ describe('BO - Shop Parameters - Search : Filter, sort, pagination and bulk acti
 
         await boSearchPage.goToAddNewAliasPage(page);
 
-        const pageTitle = await addSearchPage.getPageTitle(page);
-        expect(pageTitle).to.contains(addSearchPage.pageTitleCreate);
+        const pageTitle = await boSearchAliasCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boSearchAliasCreatePage.pageTitleCreate);
       });
 
       it(`should create alias n°${index + 1} and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createAlias${index}`, baseContext);
 
-        const textResult = await addSearchPage.setAlias(page, aliasData);
+        const textResult = await boSearchAliasCreatePage.setAlias(page, aliasData);
         expect(textResult).to.contains(boSearchPage.successfulCreationMessage);
 
         const numberOfElementAfterCreation = await boSearchPage.getNumberOfElementInGrid(page);
