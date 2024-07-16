@@ -8,13 +8,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 // Import FO pages
-import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -68,16 +68,16 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time in stoc
       await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
       page = await productSettingsPage.viewMyShop(page);
-      await foHomePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foHomePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should check delivery time block visibility', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `deliveryTimeBlockVisible${index}`, baseContext);
 
-      await foHomePage.goToProductPage(page, 4);
+      await foClassicHomePage.goToProductPage(page, 4);
 
       const isDeliveryTimeBlockVisible = await foProductPage.isDeliveryInformationVisible(page);
       expect(isDeliveryTimeBlockVisible).to.equal(test.args.enable);

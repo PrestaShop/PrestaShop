@@ -10,7 +10,6 @@ import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advanced
 import customerServicePage from '@pages/BO/customerService/customerService';
 import viewPage from '@pages/BO/customerService/customerService/view';
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
@@ -25,6 +24,7 @@ import {
   dataProducts,
   FakerContactMessage,
   FakerEmployee,
+  foClassicHomePage,
   foClassicLoginPage,
   foClassicModalQuickViewPage,
   foClassicMyAccountPage,
@@ -100,16 +100,16 @@ describe('BO - Customer Service : Forward message', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'openShop', baseContext);
 
-      await homePage.goTo(page, global.FO.URL);
+      await foClassicHomePage.goTo(page, global.FO.URL);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOLoginPage', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
 
       const pageHeaderTitle = await foClassicLoginPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(foClassicLoginPage.pageTitle);
@@ -126,15 +126,15 @@ describe('BO - Customer Service : Forward message', async () => {
     it('should go to home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage', baseContext);
 
-      await homePage.goToHomePage(page);
-      const result = await homePage.isHomePage(page);
+      await foClassicHomePage.goToHomePage(page);
+      const result = await foClassicHomePage.isHomePage(page);
       expect(result).to.eq(true);
     });
 
     it('should quick view the first product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewFirstProduct', baseContext);
 
-      await homePage.quickViewProduct(page, 1);
+      await foClassicHomePage.quickViewProduct(page, 1);
 
       const isCartModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isCartModalVisible).to.equal(true);
@@ -188,7 +188,7 @@ describe('BO - Customer Service : Forward message', async () => {
     it('should go to order history page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
-      await homePage.goToMyAccountPage(page);
+      await foClassicHomePage.goToMyAccountPage(page);
       await foClassicMyAccountPage.goToHistoryAndDetailsPage(page);
 
       const pageHeaderTitle = await orderHistoryPage.getPageTitle(page);

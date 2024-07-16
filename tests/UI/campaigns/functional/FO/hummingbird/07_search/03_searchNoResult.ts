@@ -4,12 +4,10 @@ import testContext from '@utils/testContext';
 // Import common tests
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
-// Import FO pages
-import homePage from '@pages/FO/hummingbird/home';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  foHummingbirdHomePage,
   foHummingbirdSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -48,19 +46,19 @@ describe('FO - Search Page : Search no result', async () => {
     it('should go to FO home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
-      await homePage.goToFo(page);
+      await foHummingbirdHomePage.goToFo(page);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should search a string with less than 3 characters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchSmallString', baseContext);
 
-      const hasSearchResult = await homePage.hasAutocompleteSearchResult(page, 'te');
+      const hasSearchResult = await foHummingbirdHomePage.hasAutocompleteSearchResult(page, 'te');
       expect(hasSearchResult, 'There are results in autocomplete search').to.eq(false);
 
-      await homePage.searchProduct(page, 'te');
+      await foHummingbirdHomePage.searchProduct(page, 'te');
 
       const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
       expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
@@ -75,7 +73,7 @@ describe('FO - Search Page : Search no result', async () => {
     it('should search an empty string', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchEmptyString', baseContext);
 
-      await homePage.searchProduct(page, '');
+      await foHummingbirdHomePage.searchProduct(page, '');
 
       const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
       expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);

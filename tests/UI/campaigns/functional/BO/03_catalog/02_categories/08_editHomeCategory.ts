@@ -9,7 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import categoriesPage from '@pages/BO/catalog/categories';
 import editCategoryPage from '@pages/BO/catalog/categories/add';
 // Import FO pages
-import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {siteMapPage} from '@pages/FO/classic/siteMap';
 
 import {expect} from 'chai';
@@ -18,6 +17,7 @@ import {
   boDashboardPage,
   dataCategories,
   FakerCategory,
+  foClassicHomePage,
   foClassicCategoryPage,
   utilsFile,
   utilsPlaywright,
@@ -88,13 +88,13 @@ describe('BO - Catalog - Categories : Edit home category', async () => {
     // View Shop
     page = await categoriesPage.viewMyShop(page);
     // Change FO language
-    await foHomePage.changeLanguage(page, 'en');
+    await foClassicHomePage.changeLanguage(page, 'en');
 
-    const isHomePage = await foHomePage.isHomePage(page);
+    const isHomePage = await foClassicHomePage.isHomePage(page);
     expect(isHomePage, 'Fail to open FO home page').to.eq(true);
 
     // Go to sitemap page
-    await foHomePage.goToFooterLink(page, 'Sitemap');
+    await foClassicHomePage.goToFooterLink(page, 'Sitemap');
 
     const pageTitle = await siteMapPage.getPageTitle(page);
     expect(pageTitle).to.equal(siteMapPage.pageTitle);

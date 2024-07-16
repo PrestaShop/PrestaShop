@@ -5,13 +5,13 @@ import testContext from '@utils/testContext';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
-import homePage from '@pages/FO/hummingbird/home';
 import newProductsPage from '@pages/FO/hummingbird/newProducts';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   foHummingbirdCategoryPage,
+  foHummingbirdHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -49,32 +49,32 @@ describe('FO - Home Page : Display some products', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-      await homePage.goTo(page, global.FO.URL);
+      await foHummingbirdHomePage.goTo(page, global.FO.URL);
 
-      const result = await homePage.isHomePage(page);
+      const result = await foHummingbirdHomePage.isHomePage(page);
       expect(result).to.eq(true);
     });
 
     it('should check popular product title', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPopularProducts', baseContext);
 
-      await homePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const popularProductTitle = await homePage.getBlockTitle(page, 'featured-products');
+      const popularProductTitle = await foHummingbirdHomePage.getBlockTitle(page, 'featured-products');
       expect(popularProductTitle).to.equal('Popular Products');
     });
 
     it('should check the number of popular products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPopularProductsNumber', baseContext);
 
-      const productsNumber = await homePage.getProductsBlockNumber(page, 'featured-products');
+      const productsNumber = await foHummingbirdHomePage.getProductsBlockNumber(page, 'featured-products');
       expect(productsNumber).to.equal(8);
     });
 
     it('should check All products link', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAllPopularProductsLink', baseContext);
 
-      await homePage.goToAllProductsPage(page, 'featured-products');
+      await foHummingbirdHomePage.goToAllProductsPage(page, 'featured-products');
 
       const isCategoryPageVisible = await foHummingbirdCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
@@ -83,9 +83,9 @@ describe('FO - Home Page : Display some products', async () => {
     it('should go to home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage1', baseContext);
 
-      await homePage.goToHomePage(page);
+      await foHummingbirdHomePage.goToHomePage(page);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
   });
@@ -94,14 +94,14 @@ describe('FO - Home Page : Display some products', async () => {
     it('should check that the banner is displayed', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkBanner', baseContext);
 
-      const isVisible = await homePage.isBannerVisible(page);
+      const isVisible = await foHummingbirdHomePage.isBannerVisible(page);
       expect(isVisible).to.eq(true);
     });
 
     it('should check that the custom text block is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCustomTextBlock', baseContext);
 
-      const isVisible = await homePage.isCustomTextBlockVisible(page);
+      const isVisible = await foHummingbirdHomePage.isCustomTextBlockVisible(page);
       expect(isVisible).to.eq(true);
     });
   });
@@ -110,21 +110,21 @@ describe('FO - Home Page : Display some products', async () => {
     it('should check new products title', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNewProductsBlock', baseContext);
 
-      const popularProductTitle = await homePage.getBlockTitle(page, 'new-products');
+      const popularProductTitle = await foHummingbirdHomePage.getBlockTitle(page, 'new-products');
       expect(popularProductTitle).to.equal('New products');
     });
 
     it('should check the number of new products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNewProductsNumber', baseContext);
 
-      const productsNumber = await homePage.getProductsBlockNumber(page, 'new-products');
+      const productsNumber = await foHummingbirdHomePage.getProductsBlockNumber(page, 'new-products');
       expect(productsNumber).to.equal(8);
     });
 
     it('should check All new products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAllNewProductsLink', baseContext);
 
-      await homePage.goToAllProductsPage(page, 'new-products');
+      await foHummingbirdHomePage.goToAllProductsPage(page, 'new-products');
 
       const pageTitle = await newProductsPage.getPageTitle(page);
       expect(pageTitle).to.equal(newProductsPage.pageTitle);

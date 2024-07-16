@@ -17,7 +17,6 @@ import viewOrderProductsBlockPage from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
-import homePage from '@pages/FO/hummingbird/home';
 import creditSlipPage from '@pages/FO/hummingbird/myAccount/creditSlips';
 import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
 
@@ -29,6 +28,7 @@ import {
   FakerAddress,
   FakerCustomer,
   FakerOrder,
+  foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
   type MailDev,
@@ -120,16 +120,16 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
       it('should go to FO home page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-        await homePage.goTo(page, global.FO.URL);
+        await foHummingbirdHomePage.goTo(page, global.FO.URL);
 
-        const result = await homePage.isHomePage(page);
+        const result = await foHummingbirdHomePage.isHomePage(page);
         expect(result).to.eq(true);
       });
 
       it('should go to login page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPage', baseContext);
 
-        await homePage.goToLoginPage(page);
+        await foHummingbirdHomePage.goToLoginPage(page);
 
         const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
         expect(pageTitle).to.equal(foHummingbirdLoginPage.pageTitle);
@@ -147,7 +147,7 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
       it('should go to my account page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccountPage1', baseContext);
 
-        await homePage.goToMyAccountPage(page);
+        await foHummingbirdHomePage.goToMyAccountPage(page);
 
         const pageTitle = await foHummingbirdMyAccountPage.getPageTitle(page);
         expect(pageTitle).to.equal(foHummingbirdMyAccountPage.pageTitle);
@@ -263,16 +263,16 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
 
         // View my shop and init pages
         page = await viewOrderBasePage.viewMyShop(page);
-        await homePage.changeLanguage(page, 'en');
+        await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-        const isHomePage = await homePage.isHomePage(page);
+        const isHomePage = await foHummingbirdHomePage.isHomePage(page);
         expect(isHomePage, 'Fail to open FO home page').to.eq(true);
       });
 
       it('should go to my account page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccountPage2', baseContext);
 
-        await homePage.goToMyAccountPage(page);
+        await foHummingbirdHomePage.goToMyAccountPage(page);
 
         const pageTitle = await foHummingbirdMyAccountPage.getPageTitle(page);
         expect(pageTitle).to.equal(foHummingbirdMyAccountPage.pageTitle);
@@ -370,8 +370,8 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
 
         await creditSlipPage.clickHomeLink(page);
 
-        const homePageTitle = await homePage.getPageTitle(page);
-        expect(homePageTitle).to.equal(homePage.pageTitle);
+        const homePageTitle = await foHummingbirdHomePage.getPageTitle(page);
+        expect(homePageTitle).to.equal(foHummingbirdHomePage.pageTitle);
       });
     });
   });

@@ -11,7 +11,6 @@ import ordersPage from '@pages/BO/orders';
 import emailAlertsPage from '@pages/BO/modules/psEmailAlerts';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
@@ -25,6 +24,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
+  foClassicHomePage,
   foClassicLoginPage,
   type MailDev,
   type MailDevEmail,
@@ -145,16 +145,16 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
       page = await viewOrderBasePage.viewMyShop(page);
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
     it('should login', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'loginFO', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
       await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
@@ -165,7 +165,7 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       await foClassicLoginPage.goToHomePage(page);
-      await homePage.goToProductPage(page, orderData.products[0].product.id);
+      await foClassicHomePage.goToProductPage(page, orderData.products[0].product.id);
       // Add the product to the cart
       await productPage.addProductToTheCart(page, orderData.products[0].quantity);
 
@@ -314,9 +314,9 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop2', baseContext);
 
       page = await viewOrderBasePage.viewMyShop(page);
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
@@ -326,7 +326,7 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
       // Go to home page
       await foClassicLoginPage.goToHomePage(page);
       // Go to the first product page
-      await homePage.goToProductPage(page, orderData.products[0].product.id);
+      await foClassicHomePage.goToProductPage(page, orderData.products[0].product.id);
       // Add the product to the cart
       await productPage.addProductToTheCart(page, orderData.products[0].quantity);
 

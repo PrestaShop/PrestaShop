@@ -14,7 +14,6 @@ import ordersPage from '@pages/BO/orders';
 import cartPage from '@pages/FO/hummingbird/cart';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
-import foHomePage from '@pages/FO/hummingbird/home';
 import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
 import orderHistoryPage from '@pages/FO/hummingbird/myAccount/orderHistory';
 import productPage from '@pages/FO/hummingbird/product';
@@ -25,6 +24,7 @@ import {
   dataOrderStatuses,
   dataPaymentMethods,
   dataProducts,
+  foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
   type MailDev,
@@ -99,17 +99,17 @@ describe('FO - Account : Send a message with an ordered product', async () => {
     it('should go to FO page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoToOrder', baseContext);
 
-      await foHomePage.goToFo(page);
-      await foHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.goToFo(page);
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foHomePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFoToOrder', baseContext);
 
-      await foHomePage.goToLoginPage(page);
+      await foHummingbirdHomePage.goToLoginPage(page);
 
       const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
       expect(pageTitle, 'Fail to open FO login page').to.contains(foHummingbirdLoginPage.pageTitle);
@@ -130,7 +130,7 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       // Go to home page
       await foHummingbirdLoginPage.goToHomePage(page);
       // Go to the first product page
-      await foHomePage.goToProductPage(page, 1);
+      await foHummingbirdHomePage.goToProductPage(page, 1);
       // Add the created product to the cart
       await productPage.addProductToTheCart(page);
       // Proceed to checkout the shopping cart
@@ -206,16 +206,16 @@ describe('FO - Account : Send a message with an ordered product', async () => {
     it('should go to FO home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount', baseContext);
 
-      await foHomePage.goToFo(page);
+      await foHummingbirdHomePage.goToFo(page);
 
-      const isHomePage = await foHomePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginFoPage', baseContext);
 
-      await foHomePage.goToLoginPage(page);
+      await foHummingbirdHomePage.goToLoginPage(page);
 
       const pageHeaderTitle = await foHummingbirdLoginPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(foHummingbirdLoginPage.pageTitle);
@@ -233,7 +233,7 @@ describe('FO - Account : Send a message with an ordered product', async () => {
     it('should go to order history page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
-      await foHomePage.goToMyAccountPage(page);
+      await foHummingbirdHomePage.goToMyAccountPage(page);
       await foHummingbirdMyAccountPage.goToHistoryAndDetailsPage(page);
 
       const pageHeaderTitle = await orderHistoryPage.getPageTitle(page);

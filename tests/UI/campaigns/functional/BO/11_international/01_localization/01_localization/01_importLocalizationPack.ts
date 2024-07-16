@@ -8,14 +8,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import currenciesPage from '@pages/BO/international/currencies';
 import languagesPage from '@pages/BO/international/languages';
-// Import FO pages
-import {homePage as foHomePage} from '@pages/FO/classic/home';
 
 import {
   boDashboardPage,
   boLocalizationPage,
   dataCurrencies,
   dataLanguages,
+  foClassicHomePage,
   type ImportContent,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -86,7 +85,7 @@ describe('BO - International - Localization : Import a localization pack', async
       // View my shop and int pages
       page = await currenciesPage.viewMyShop(page);
 
-      const isHomePage = await foHomePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
@@ -94,25 +93,25 @@ describe('BO - International - Localization : Import a localization pack', async
       await testContext.addContextItem(this, 'testIdentifier', 'changeFoCurrency', baseContext);
 
       // Check currency
-      await foHomePage.changeCurrency(page, dataCurrencies.chileanPeso.isoCode, dataCurrencies.chileanPeso.symbol);
+      await foClassicHomePage.changeCurrency(page, dataCurrencies.chileanPeso.isoCode, dataCurrencies.chileanPeso.symbol);
 
-      const shopCurrency = await foHomePage.getDefaultCurrency(page);
+      const shopCurrency = await foClassicHomePage.getDefaultCurrency(page);
       expect(shopCurrency).to.contain(dataCurrencies.chileanPeso.isoCode);
     });
 
     it('should change FO language', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeFoLanguage', baseContext);
 
-      await foHomePage.changeLanguage(page, dataLanguages.spanish.isoCode);
+      await foClassicHomePage.changeLanguage(page, dataLanguages.spanish.isoCode);
 
-      const shopLanguage = await foHomePage.getDefaultShopLanguage(page);
+      const shopLanguage = await foClassicHomePage.getDefaultShopLanguage(page);
       expect(dataLanguages.spanish.name).to.contain(shopLanguage);
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo1', baseContext);
 
-      page = await foHomePage.closePage(browserContext, page, 0);
+      page = await foClassicHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await boLocalizationPage.getPageTitle(page);
       expect(pageTitle).to.contains(boLocalizationPage.pageTitle);

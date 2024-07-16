@@ -15,7 +15,6 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
-import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 
 import {
@@ -26,6 +25,7 @@ import {
   FakerAddress,
   FakerCustomer,
   FakerOrderShipping,
+  foClassicHomePage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -76,10 +76,10 @@ describe('BO - Orders : Preview order', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'openFO', baseContext);
 
       // Go to FO and change language
-      await homePage.goToFo(page);
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.goToFo(page);
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
@@ -99,7 +99,7 @@ describe('BO - Orders : Preview order', async () => {
       it(`should search for the product '${test.args.productName}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `searchForProduct_${index}`, baseContext);
 
-        await homePage.searchProduct(page, test.args.productName);
+        await foClassicHomePage.searchProduct(page, test.args.productName);
 
         const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
         expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);

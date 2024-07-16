@@ -14,7 +14,6 @@ import countriesPage from '@pages/BO/international/locations/countries';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
-import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 import {
@@ -24,6 +23,7 @@ import {
   dataCustomers,
   dataProducts,
   FakerCartRule,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -175,16 +175,16 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop1', baseContext);
 
       page = await addCartRulePage.viewMyShop(page);
-      await foHomePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foHomePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to the third product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFirstProductPage', baseContext);
 
-      await foHomePage.goToProductPage(page, 3);
+      await foClassicHomePage.goToProductPage(page, 3);
 
       const pageTitle = await foProductPage.getPageTitle(page);
       expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_6.name.toUpperCase());
@@ -262,16 +262,16 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
     it('should go to Home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkLogoLink', baseContext);
 
-      await foHomePage.clickOnHeaderLink(page, 'Logo');
+      await foClassicHomePage.clickOnHeaderLink(page, 'Logo');
 
-      const pageTitle = await foHomePage.getPageTitle(page);
-      expect(pageTitle).to.equal(foHomePage.pageTitle);
+      const pageTitle = await foClassicHomePage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicHomePage.pageTitle);
     });
 
     it('should go to cart page and remove product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removeProduct1', baseContext);
 
-      await foHomePage.goToCartPage(page);
+      await foClassicHomePage.goToCartPage(page);
       await cartPage.deleteProduct(page, 1);
 
       const notificationNumber = await cartPage.getCartNotificationsNumber(page);

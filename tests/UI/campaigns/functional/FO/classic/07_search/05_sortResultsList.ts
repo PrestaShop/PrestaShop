@@ -1,12 +1,10 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import FO pages
-import {homePage} from '@pages/FO/classic/home';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  foClassicHomePage,
   foClassicSearchResultsPage,
   utilsCore,
   utilsPlaywright,
@@ -40,16 +38,16 @@ describe('FO - Search Page : Sort results list', async () => {
   it('should go to FO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
-    await homePage.goToFo(page);
+    await foClassicHomePage.goToFo(page);
 
-    const isHomePage = await homePage.isHomePage(page);
+    const isHomePage = await foClassicHomePage.isHomePage(page);
     expect(isHomePage).to.eq(true);
   });
 
   it('should put \'Mug\' in the search input and check result', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchProduct1', baseContext);
 
-    await homePage.searchProduct(page, 'mug');
+    await foClassicHomePage.searchProduct(page, 'mug');
 
     const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
     expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);

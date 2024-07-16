@@ -8,8 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import linkWidgetsPage from '@pages/BO/design/linkWidgets';
 import addLinkWidgetPage from '@pages/BO/design/linkWidgets/add';
-// Import FO pages
-import {homePage as foHomePage} from '@pages/FO/classic/home';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -17,6 +15,7 @@ import {
   boDashboardPage,
   dataHooks,
   dataLinkWidgets,
+  foClassicHomePage,
   type LinkWidgetPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -96,19 +95,19 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
       // View shop
       page = await linkWidgetsPage.viewMyShop(page);
       // Change FO language
-      await foHomePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const pageTitle = await foHomePage.getPageTitle(page);
-      expect(pageTitle).to.contains(foHomePage.pageTitle);
+      const pageTitle = await foClassicHomePage.getPageTitle(page);
+      expect(pageTitle).to.contains(foClassicHomePage.pageTitle);
     });
 
     it('should check link widget in the footer of home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkLinkWidgetInFO', baseContext);
 
-      const title = await foHomePage.getFooterLinksBlockTitle(page, numberOfLinkWidgetInFooter + 1);
+      const title = await foClassicHomePage.getFooterLinksBlockTitle(page, numberOfLinkWidgetInFooter + 1);
       expect(title).to.contains(dataLinkWidgets.demo_1.name);
 
-      const linksTextContent = await foHomePage.getFooterLinksTextContent(page, numberOfLinkWidgetInFooter + 1);
+      const linksTextContent = await foClassicHomePage.getFooterLinksTextContent(page, numberOfLinkWidgetInFooter + 1);
       await Promise.all([
         expect(linksTextContent).to.include.members(dataLinkWidgets.demo_1.contentPages),
         expect(linksTextContent).to.include.members(dataLinkWidgets.demo_1.productsPages),
@@ -121,7 +120,7 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
       // Go back to BO
-      page = await foHomePage.closePage(browserContext, page, 0);
+      page = await foClassicHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await linkWidgetsPage.getPageTitle(page);
       expect(pageTitle).to.contains(linkWidgetsPage.pageTitle);

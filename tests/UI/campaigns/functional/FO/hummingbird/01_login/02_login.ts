@@ -4,12 +4,10 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
-// Import FO pages
-import homePage from '@pages/FO/hummingbird/home';
-
 import {
   dataCustomers,
   FakerCustomer,
+  foHummingbirdHomePage,
   foHummingbirdLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -44,16 +42,16 @@ describe('FO - Login : Login in FO', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-      await homePage.goTo(page, global.FO.URL);
+      await foHummingbirdHomePage.goTo(page, global.FO.URL);
 
-      const result = await homePage.isHomePage(page);
+      const result = await foHummingbirdHomePage.isHomePage(page);
       expect(result).to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPage', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foHummingbirdHomePage.goToLoginPage(page);
 
       const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
       expect(pageTitle).to.equal(foHummingbirdLoginPage.pageTitle);
@@ -108,7 +106,7 @@ describe('FO - Login : Login in FO', async () => {
       const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
 
-      const result = await homePage.isHomePage(page);
+      const result = await foHummingbirdHomePage.isHomePage(page);
       expect(result).to.eq(true);
     });
   });

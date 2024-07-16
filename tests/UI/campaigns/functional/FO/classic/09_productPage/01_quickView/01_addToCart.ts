@@ -2,13 +2,13 @@
 import testContext from '@utils/testContext';
 
 // Import pages
-import {homePage} from '@pages/FO/classic/home';
 import {cartPage} from '@pages/FO/classic/cart';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
   type CartProductDetails,
   dataProducts,
+  foClassicHomePage,
   foClassicModalQuickViewPage,
   foClassicSearchResultsPage,
   type ProductAttribute,
@@ -66,20 +66,20 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
   it('should go to FO home page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount', baseContext);
 
-    await homePage.goToFo(page);
+    await foClassicHomePage.goToFo(page);
 
-    const isHomePage = await homePage.isHomePage(page);
+    const isHomePage = await foClassicHomePage.isHomePage(page);
     expect(isHomePage).to.eq(true);
   });
 
   it('should add first product to cart by quick view', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'addToCartByQuickView', baseContext);
 
-    await homePage.quickViewProduct(page, 1);
+    await foClassicHomePage.quickViewProduct(page, 1);
     await foClassicModalQuickViewPage.addToCartByQuickView(page);
 
     const successMessage = await blockCartModal.getBlockCartModalTitle(page);
-    expect(successMessage).to.contains(homePage.successAddToCartMessage);
+    expect(successMessage).to.contains(foClassicHomePage.successAddToCartMessage);
   });
 
   it('should check product details from cart modal', async function () {
@@ -142,16 +142,16 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
   it('should go to home page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage', baseContext);
 
-    await homePage.goToHomePage(page);
+    await foClassicHomePage.goToHomePage(page);
 
-    const isHomePage = await homePage.isHomePage(page);
+    const isHomePage = await foClassicHomePage.isHomePage(page);
     expect(isHomePage, 'Home page is not displayed').to.eq(true);
   });
 
   it(`should search for the product ${dataProducts.demo_14.name}`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchForProductCustomized', baseContext);
 
-    await homePage.searchProduct(page, dataProducts.demo_14.name);
+    await foClassicHomePage.searchProduct(page, dataProducts.demo_14.name);
 
     const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
     expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);

@@ -1,14 +1,12 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import pages
-import {homePage} from '@pages/FO/classic/home';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataCategories,
   FakerCategory,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -36,9 +34,9 @@ describe('FO - Menu and Navigation : Check categories and subcategories links in
   it('should go to FO home page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
-    await homePage.goToFo(page);
+    await foClassicHomePage.goToFo(page);
 
-    const isHomePage = await homePage.isHomePage(page);
+    const isHomePage = await foClassicHomePage.isHomePage(page);
     expect(isHomePage).to.eq(true);
   });
 
@@ -46,9 +44,9 @@ describe('FO - Menu and Navigation : Check categories and subcategories links in
     it(`should check category '${test.name}' link`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `check${test.name}Link`, baseContext);
 
-      await homePage.goToCategory(page, test.id);
+      await foClassicHomePage.goToCategory(page, test.id);
 
-      const pageTitle = await homePage.getPageTitle(page);
+      const pageTitle = await foClassicHomePage.getPageTitle(page);
       expect(pageTitle).to.equal(test.name);
     });
   });
@@ -62,9 +60,9 @@ describe('FO - Menu and Navigation : Check categories and subcategories links in
     it(`should check subcategory '${test.args.subcategory.name}' link`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `check${test.args.subcategory.name}Link`, baseContext);
 
-      await homePage.goToSubCategory(page, test.args.category.id, test.args.subcategory.id);
+      await foClassicHomePage.goToSubCategory(page, test.args.category.id, test.args.subcategory.id);
 
-      const pageTitle = await homePage.getPageTitle(page);
+      const pageTitle = await foClassicHomePage.getPageTitle(page);
       expect(pageTitle).to.equal(test.args.subcategory.name);
     });
   });

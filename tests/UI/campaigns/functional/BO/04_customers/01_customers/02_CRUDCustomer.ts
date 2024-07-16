@@ -9,12 +9,11 @@ import loginCommon from '@commonTests/BO/loginBO';
 import customersPage from '@pages/BO/customers';
 import addCustomerPage from '@pages/BO/customers/add';
 import viewCustomerPage from '@pages/BO/customers/view';
-// Import FO pages
-import {homePage as foHomePage} from '@pages/FO/classic/home';
 
 import {
   boDashboardPage,
   FakerCustomer,
+  foClassicHomePage,
   foClassicLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -101,16 +100,16 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
       // View shop
       page = await customersPage.viewMyShop(page);
       // Change language in FO
-      await foHomePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foHomePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should sign in by new customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInWithNewCustomer', baseContext);
 
-      await foHomePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
       await foClassicLoginPage.customerLogin(page, createCustomerData);
 
       const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
@@ -121,9 +120,9 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'logOutFO', baseContext);
 
       // Logout in FO
-      await foHomePage.logout(page);
+      await foClassicHomePage.logout(page);
 
-      const isCustomerConnected = await foHomePage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected!').to.eq(false);
     });
 
@@ -131,7 +130,7 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO1', baseContext);
 
       // Go back to BO
-      page = await foHomePage.closePage(browserContext, page, 0);
+      page = await foClassicHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await customersPage.getPageTitle(page);
       expect(pageTitle).to.contains(customersPage.pageTitle);
@@ -228,9 +227,9 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
       // View shop
       page = await customersPage.viewMyShop(page);
       // Change language in FO
-      await foHomePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foHomePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
@@ -238,7 +237,7 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkFOSignInWithUpdatedCustomer', baseContext);
 
       // Try to log in
-      await foHomePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
       await foClassicLoginPage.customerLogin(page, editCustomerData);
 
       const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
@@ -252,7 +251,7 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
 
       // Go back to BO
-      page = await foHomePage.closePage(browserContext, page, 0);
+      page = await foClassicHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await customersPage.getPageTitle(page);
       expect(pageTitle).to.contains(customersPage.pageTitle);

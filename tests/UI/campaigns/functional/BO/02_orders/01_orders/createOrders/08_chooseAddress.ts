@@ -12,7 +12,6 @@ import ordersPage from '@pages/BO/orders';
 import addOrderPage from '@pages/BO/orders/add';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
@@ -23,6 +22,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerAddress,
+  foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
   utilsPlaywright,
@@ -320,16 +320,16 @@ describe('BO - Orders - Create order : Choose address', async () => {
         // Click on view my shop
         page = await orderPageCustomerBlock.viewMyShop(page);
         // Change FO language
-        await homePage.changeLanguage(page, 'en');
+        await foClassicHomePage.changeLanguage(page, 'en');
 
-        const isHomePage = await homePage.isHomePage(page);
+        const isHomePage = await foClassicHomePage.isHomePage(page);
         expect(isHomePage, 'Home page is not displayed').to.eq(true);
       });
 
       it('should go to login page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO', baseContext);
 
-        await homePage.goToLoginPage(page);
+        await foClassicHomePage.goToLoginPage(page);
 
         const pageTitle = await foClassicLoginPage.getPageTitle(page);
         expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
@@ -347,7 +347,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
       it('should go to account page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage', baseContext);
 
-        await homePage.goToMyAccountPage(page);
+        await foClassicHomePage.goToMyAccountPage(page);
 
         const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
         expect(pageTitle).to.contains(foClassicMyAccountPage.pageTitle);

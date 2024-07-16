@@ -9,7 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import customerServicePage from '@pages/BO/customerService/customerService';
 // Import FO pages
 import {contactUsPage} from '@pages/FO/classic/contactUs';
-import {homePage} from '@pages/FO/classic/home';
 import {gdprPersonalDataPage} from '@pages/FO/classic/myAccount/gdprPersonalData';
 
 import {
@@ -17,6 +16,7 @@ import {
   dataCustomers,
   dataOrders,
   FakerContactMessage,
+  foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
   utilsFile,
@@ -57,16 +57,16 @@ describe('FO - Account : Contact us on GDPR page', async () => {
   it('should go to FO home page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
-    await homePage.goToFo(page);
+    await foClassicHomePage.goToFo(page);
 
-    const isHomePage = await homePage.isHomePage(page);
+    const isHomePage = await foClassicHomePage.isHomePage(page);
     expect(isHomePage).to.eq(true);
   });
 
   it('should go to login page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLoginFoPage', baseContext);
 
-    await homePage.goToLoginPage(page);
+    await foClassicHomePage.goToLoginPage(page);
 
     const pageHeaderTitle = await foClassicLoginPage.getPageTitle(page);
     expect(pageHeaderTitle).to.equal(foClassicLoginPage.pageTitle);
@@ -84,7 +84,7 @@ describe('FO - Account : Contact us on GDPR page', async () => {
   it('should go to my account page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccountPage', baseContext);
 
-    await homePage.goToMyAccountPage(page);
+    await foClassicHomePage.goToMyAccountPage(page);
 
     const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
     expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);

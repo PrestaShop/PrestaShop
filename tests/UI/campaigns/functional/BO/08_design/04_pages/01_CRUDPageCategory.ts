@@ -11,7 +11,6 @@ import pagesPage from '@pages/BO/design/pages';
 import addPageCategoryPage from '@pages/BO/design/pages/pageCategory/add';
 // Import FO pages
 import cmsPage from '@pages/FO/classic/cms';
-import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {siteMapPage} from '@pages/FO/classic/siteMap';
 
 import {expect} from 'chai';
@@ -20,6 +19,7 @@ import {
   boDashboardPage,
   FakerCMSCategory,
   FakerCMSPage,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -141,16 +141,16 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
 
       page = await pagesPage.viewMyShop(page);
 
-      await foHomePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const pageTitle = await foHomePage.getPageTitle(page);
-      expect(pageTitle).to.equal(foHomePage.pageTitle);
+      const pageTitle = await foClassicHomePage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicHomePage.pageTitle);
     });
 
     it('should go to \'Sitemap\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToSiteMapPage1', baseContext);
 
-      await foHomePage.goToFooterLink(page, 'Sitemap');
+      await foClassicHomePage.goToFooterLink(page, 'Sitemap');
 
       const pageTitle = await siteMapPage.getPageTitle(page);
       expect(pageTitle).to.equal(siteMapPage.pageTitle);
@@ -313,16 +313,16 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop2', baseContext);
 
       page = await pagesPage.viewMyShop(page);
-      await foHomePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const pageTitle = await foHomePage.getPageTitle(page);
-      expect(pageTitle).to.equal(foHomePage.pageTitle);
+      const pageTitle = await foClassicHomePage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicHomePage.pageTitle);
     });
 
     it('should go to \'Sitemap\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToSiteMapPage2', baseContext);
 
-      await foHomePage.goToFooterLink(page, 'Sitemap');
+      await foClassicHomePage.goToFooterLink(page, 'Sitemap');
 
       const pageTitle = await siteMapPage.getPageTitle(page);
       expect(pageTitle).to.equal(siteMapPage.pageTitle);

@@ -9,13 +9,13 @@ import customerServicePage from '@pages/BO/customerService/customerService';
 import viewPage from '@pages/BO/customerService/customerService/view';
 // Import FO pages
 import {contactUsPage} from '@pages/FO/classic/contactUs';
-import {homePage} from '@pages/FO/classic/home';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerContactMessage,
+  foClassicHomePage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -79,7 +79,7 @@ describe('BO - Customer Service : Contact options', async () => {
 
       page = await customerServicePage.viewMyShop(page);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
@@ -87,7 +87,7 @@ describe('BO - Customer Service : Contact options', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToContactPage', baseContext);
 
       // Go to contact us page
-      await homePage.goToFooterLink(page, 'Contact us');
+      await foClassicHomePage.goToFooterLink(page, 'Contact us');
 
       const pageTitle = await contactUsPage.getPageTitle(page);
       expect(pageTitle).to.equal(contactUsPage.pageTitle);
@@ -161,14 +161,14 @@ describe('BO - Customer Service : Contact options', async () => {
 
         page = await customerServicePage.viewMyShop(page);
 
-        const isHomePage = await homePage.isHomePage(page);
+        const isHomePage = await foClassicHomePage.isHomePage(page);
         expect(isHomePage, 'Fail to open FO home page').to.eq(true);
       });
 
       it('should go to contact us page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToContactUsPage${index}`, baseContext);
 
-        await homePage.clickOnHeaderLink(page, 'Contact us');
+        await foClassicHomePage.clickOnHeaderLink(page, 'Contact us');
 
         const pageTitle = await contactUsPage.getPageTitle(page);
         expect(pageTitle).to.equal(contactUsPage.pageTitle);

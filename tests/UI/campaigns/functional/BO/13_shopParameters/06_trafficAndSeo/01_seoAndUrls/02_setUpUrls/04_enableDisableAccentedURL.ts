@@ -10,14 +10,13 @@ import seoAndUrlsPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls';
 import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 import seoTab from '@pages/BO/catalog/products/add/seoTab';
-// Import FO pages
-import {homePage as foHomePage} from '@pages/FO/classic/home';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerProduct,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -173,7 +172,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', a
         // Go to product page in FO
         page = await addProductPage.previewProduct(page);
 
-        const url = await foHomePage.getCurrentURL(page);
+        const url = await foClassicHomePage.getCurrentURL(page);
         expect(url).to.contains(test.args.productNameInURL.toLowerCase());
       });
 
@@ -181,7 +180,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', a
         await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${test.args.action}`, baseContext);
 
         // Go back to BO
-        page = await foHomePage.closePage(browserContext, page, 0);
+        page = await foClassicHomePage.closePage(browserContext, page, 0);
 
         const pageTitle = await addProductPage.getPageTitle(page);
         expect(pageTitle).to.contains(addProductPage.pageTitle);

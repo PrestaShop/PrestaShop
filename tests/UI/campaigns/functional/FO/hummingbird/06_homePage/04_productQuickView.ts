@@ -6,7 +6,6 @@ import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/prod
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
-import homePage from '@pages/FO/hummingbird/home';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {expect} from 'chai';
@@ -15,6 +14,7 @@ import {
   dataProducts,
   FakerProduct,
   foHummingbirdCategoryPage,
+  foHummingbirdHomePage,
   foHummingbirdModalQuickViewPage,
   type ProductAttribute,
   utilsPlaywright,
@@ -80,16 +80,16 @@ describe('FO - Home Page : Product quick view', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-      await homePage.goTo(page, global.FO.URL);
+      await foHummingbirdHomePage.goTo(page, global.FO.URL);
 
-      const result = await homePage.isHomePage(page);
+      const result = await foHummingbirdHomePage.isHomePage(page);
       expect(result).to.equal(true);
     });
 
     it(`should quick view the product '${dataProducts.demo_6.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewProduct1', baseContext);
 
-      await homePage.quickViewProduct(page, 3);
+      await foHummingbirdHomePage.quickViewProduct(page, 3);
 
       const isModalVisible = await foHummingbirdModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.equal(true);
@@ -162,7 +162,7 @@ describe('FO - Home Page : Product quick view', async () => {
     it(`should quick view the product '${dataProducts.demo_11.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewProduct2', baseContext);
 
-      await homePage.quickViewProduct(page, 6);
+      await foHummingbirdHomePage.quickViewProduct(page, 6);
 
       const isModalVisible = await foHummingbirdModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.equal(true);
@@ -204,7 +204,7 @@ describe('FO - Home Page : Product quick view', async () => {
     it('should go to all products page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAllProducts', baseContext);
 
-      await homePage.goToAllProductsPage(page);
+      await foHummingbirdHomePage.goToAllProductsPage(page);
 
       const isCategoryPageVisible = await foHummingbirdCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.equal(true);

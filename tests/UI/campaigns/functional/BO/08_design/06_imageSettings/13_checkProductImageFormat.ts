@@ -10,8 +10,6 @@ import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 import imageSettingsPage from '@pages/BO/design/imageSettings';
-// Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -19,6 +17,7 @@ import {
   boDashboardPage,
   FakerProduct,
   foClassicCategoryPage,
+  foClassicHomePage,
   foClassicModalQuickViewPage,
   utilsFile,
   utilsPlaywright,
@@ -268,16 +267,16 @@ describe('BO - Design - Image Settings - Check product image format', async () =
         await testContext.addContextItem(this, 'testIdentifier', `goToFo${arg.extOriginal}`, baseContext);
 
         page = await createProductsPage.viewMyShop(page);
-        await homePage.changeLanguage(page, 'en');
+        await foClassicHomePage.changeLanguage(page, 'en');
 
-        const isHomePage = await homePage.isHomePage(page);
+        const isHomePage = await foClassicHomePage.isHomePage(page);
         expect(isHomePage, 'Fail to open FO home page').to.eq(true);
       });
 
       it('should go to all products page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAllProducts${arg.extOriginal}`, baseContext);
 
-        await homePage.goToAllProductsPage(page);
+        await foClassicHomePage.goToAllProductsPage(page);
 
         const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
         expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);

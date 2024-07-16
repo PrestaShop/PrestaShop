@@ -11,7 +11,6 @@ import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
-import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
@@ -20,6 +19,7 @@ import {
   dataCustomers,
   dataProducts,
   FakerCartRule,
+  foClassicHomePage,
   foClassicLoginPage,
   foClassicModalQuickViewPage,
   foClassicSearchResultsPage,
@@ -104,9 +104,9 @@ describe('BO - Catalog - Cart rules : Apply discount to specific product', async
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop1', baseContext);
 
       page = await addCartRulePage.viewMyShop(page);
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
   });
@@ -115,7 +115,7 @@ describe('BO - Catalog - Cart rules : Apply discount to specific product', async
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPage', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
 
       const pageTitle = await foClassicLoginPage.getPageTitle(page);
       expect(pageTitle).to.eq(foClassicLoginPage.pageTitle);
@@ -133,7 +133,7 @@ describe('BO - Catalog - Cart rules : Apply discount to specific product', async
     it(`should search for the product '${dataProducts.demo_8.name}' and go to product page`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
 
-      await homePage.searchProduct(page, dataProducts.demo_8.name);
+      await foClassicHomePage.searchProduct(page, dataProducts.demo_8.name);
       await foClassicSearchResultsPage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
@@ -146,14 +146,14 @@ describe('BO - Catalog - Cart rules : Apply discount to specific product', async
       await productPage.addProductToTheCart(page, 1, undefined, false);
       await productPage.goToHomePage(page);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should quick view the first product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewTheFirstProduct', baseContext);
 
-      await homePage.quickViewProduct(page, 1);
+      await foClassicHomePage.quickViewProduct(page, 1);
 
       const isQuickViewModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isQuickViewModalVisible).to.equal(true);
@@ -171,7 +171,7 @@ describe('BO - Catalog - Cart rules : Apply discount to specific product', async
     it('should quick view the second product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewTheSecondProduct', baseContext);
 
-      await homePage.quickViewProduct(page, 2);
+      await foClassicHomePage.quickViewProduct(page, 2);
 
       const isQuickViewModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isQuickViewModalVisible).to.equal(true);
@@ -184,7 +184,7 @@ describe('BO - Catalog - Cart rules : Apply discount to specific product', async
       await blockCartModal.proceedToCheckout(page);
 
       // Check number of products in cart
-      const notificationsNumber = await homePage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foClassicHomePage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.eq(3);
     });
 

@@ -1,14 +1,12 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import pages
-import {homePage} from '@pages/FO/classic/home';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataCategories,
   foClassicCategoryPage,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -31,16 +29,16 @@ describe('FO - Menu and Navigation : Breadcrumb', async () => {
   it('should open the shop page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
-    await homePage.goToFo(page);
+    await foClassicHomePage.goToFo(page);
 
-    const isHomePage = await homePage.isHomePage(page);
+    const isHomePage = await foClassicHomePage.isHomePage(page);
     expect(isHomePage).to.eq(true);
   });
 
   it('should go to the category Clothes', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkClothesLink', baseContext);
 
-    await homePage.goToCategory(page, dataCategories.clothes.id);
+    await foClassicHomePage.goToCategory(page, dataCategories.clothes.id);
 
     const pageTitle = await foClassicCategoryPage.getPageTitle(page);
     expect(pageTitle).to.equal(dataCategories.clothes.name);
@@ -56,9 +54,9 @@ describe('FO - Menu and Navigation : Breadcrumb', async () => {
   it('should go to the subcategory Men', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkMenLink', baseContext);
 
-    await homePage.goToSubCategory(page, dataCategories.clothes.id, dataCategories.men.id);
+    await foClassicHomePage.goToSubCategory(page, dataCategories.clothes.id, dataCategories.men.id);
 
-    const pageTitle = await homePage.getPageTitle(page);
+    const pageTitle = await foClassicHomePage.getPageTitle(page);
     expect(pageTitle).to.equal(dataCategories.men.name);
   });
 
@@ -90,14 +88,14 @@ describe('FO - Menu and Navigation : Breadcrumb', async () => {
 
     await foClassicCategoryPage.clickOnBreadCrumbLink(page, 'en');
 
-    const isHomePage = await homePage.isHomePage(page);
+    const isHomePage = await foClassicHomePage.isHomePage(page);
     expect(isHomePage).to.eq(true);
   });
 
   it('should go to the subcategory stationery', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkStationeryLink', baseContext);
 
-    await homePage.goToSubCategory(page, dataCategories.accessories.id, dataCategories.stationery.id);
+    await foClassicHomePage.goToSubCategory(page, dataCategories.accessories.id, dataCategories.stationery.id);
 
     const pageTitle = await foClassicCategoryPage.getPageTitle(page);
     expect(pageTitle).to.equal(dataCategories.stationery.name);
@@ -131,7 +129,7 @@ describe('FO - Menu and Navigation : Breadcrumb', async () => {
 
     await foClassicCategoryPage.clickOnBreadCrumbLink(page, 'en');
 
-    const isHomePage = await homePage.isHomePage(page);
+    const isHomePage = await foClassicHomePage.isHomePage(page);
     expect(isHomePage).to.eq(true);
   });
 });

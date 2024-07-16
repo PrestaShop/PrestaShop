@@ -1,15 +1,13 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import pages
-import {homePage} from '@pages/FO/classic/home';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataCategories,
   FakerCategory,
   foClassicCategoryPage,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -32,9 +30,9 @@ describe('FO - Menu and Navigation : Side block categories', async () => {
   it('should go to FO home page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
-    await homePage.goToFo(page);
+    await foClassicHomePage.goToFo(page);
 
-    const isHomePage = await homePage.isHomePage(page);
+    const isHomePage = await foClassicHomePage.isHomePage(page);
     expect(isHomePage).to.eq(true);
   });
 
@@ -54,9 +52,9 @@ describe('FO - Menu and Navigation : Side block categories', async () => {
     it(`should click on category '${arg.parent.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToCategory${index}`, baseContext);
 
-      await homePage.goToCategory(page, arg.parent.id);
+      await foClassicHomePage.goToCategory(page, arg.parent.id);
 
-      const pageTitle = await homePage.getPageTitle(page);
+      const pageTitle = await foClassicHomePage.getPageTitle(page);
       expect(pageTitle).to.equal(arg.parent.name);
     });
 
@@ -76,7 +74,7 @@ describe('FO - Menu and Navigation : Side block categories', async () => {
 
         await foClassicCategoryPage.clickBlockCategory(page, arg.child!.name);
 
-        const pageTitle = await homePage.getPageTitle(page);
+        const pageTitle = await foClassicHomePage.getPageTitle(page);
         expect(pageTitle).to.equal(arg.child!.name);
       });
 

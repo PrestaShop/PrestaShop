@@ -16,7 +16,6 @@ import viewOrderProductsBlockPage from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {creditSlipPage} from '@pages/FO/classic/myAccount/creditSlips';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 
@@ -28,6 +27,7 @@ import {
   FakerAddress,
   FakerCustomer,
   FakerOrder,
+  foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
   type MailDev,
@@ -117,16 +117,16 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
       it('should go to FO home page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-        await homePage.goTo(page, global.FO.URL);
+        await foClassicHomePage.goTo(page, global.FO.URL);
 
-        const result = await homePage.isHomePage(page);
+        const result = await foClassicHomePage.isHomePage(page);
         expect(result).to.eq(true);
       });
 
       it('should go to login page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPage', baseContext);
 
-        await homePage.goToLoginPage(page);
+        await foClassicHomePage.goToLoginPage(page);
 
         const pageTitle = await foClassicLoginPage.getPageTitle(page);
         expect(pageTitle).to.equal(foClassicLoginPage.pageTitle);
@@ -144,7 +144,7 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
       it('should go to my account page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccountPage1', baseContext);
 
-        await homePage.goToMyAccountPage(page);
+        await foClassicHomePage.goToMyAccountPage(page);
 
         const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
         expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);
@@ -260,16 +260,16 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
 
         // View my shop and init pages
         page = await viewOrderBasePage.viewMyShop(page);
-        await homePage.changeLanguage(page, 'en');
+        await foClassicHomePage.changeLanguage(page, 'en');
 
-        const isHomePage = await homePage.isHomePage(page);
+        const isHomePage = await foClassicHomePage.isHomePage(page);
         expect(isHomePage, 'Fail to open FO home page').to.eq(true);
       });
 
       it('should go to my account page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccountPage2', baseContext);
 
-        await homePage.goToMyAccountPage(page);
+        await foClassicHomePage.goToMyAccountPage(page);
 
         const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
         expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);
@@ -356,7 +356,7 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
       it('should go to credit slips page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goTocreditSlipPage3', baseContext);
 
-        await homePage.goToMyAccountPage(page);
+        await foClassicHomePage.goToMyAccountPage(page);
 
         const myAccountPageTitle = await foClassicMyAccountPage.getPageTitle(page);
         expect(myAccountPageTitle).to.equal(foClassicMyAccountPage.pageTitle);
@@ -390,8 +390,8 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
 
         await creditSlipPage.clickHomeLink(page);
 
-        const homePageTitle = await homePage.getPageTitle(page);
-        expect(homePageTitle).to.equal(homePage.pageTitle);
+        const homePageTitle = await foClassicHomePage.getPageTitle(page);
+        expect(homePageTitle).to.equal(foClassicHomePage.pageTitle);
       });
     });
   });

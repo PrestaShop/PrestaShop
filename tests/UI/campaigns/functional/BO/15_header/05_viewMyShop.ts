@@ -6,10 +6,9 @@ import {expect} from 'chai';
 // Import test context
 import testContext from '@utils/testContext';
 
-// Import pages
-import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {
   boDashboardPage,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -47,7 +46,7 @@ describe('BO - Header : View My Shop', async () => {
     const numPages = utilsPlaywright.getNumberTabs(browserContext);
     expect(numPages).to.be.eq(2);
 
-    const pageTitle = await foHomePage.getPageTitle(page);
-    expect(pageTitle).to.contains(foHomePage.pageTitle);
+    const pageTitle = await foClassicHomePage.getPageTitle(page);
+    expect(pageTitle).to.contains(foClassicHomePage.pageTitle);
   });
 });

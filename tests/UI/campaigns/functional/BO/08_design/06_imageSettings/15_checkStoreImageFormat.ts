@@ -10,7 +10,6 @@ import contactPage from '@pages/BO/shopParameters/contact';
 import storesPage from '@pages/BO/shopParameters/stores';
 import createStoresPage from '@pages/BO/shopParameters/stores/add';
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {storesPage as storePage} from '@pages/FO/classic/stores';
 
 import {expect} from 'chai';
@@ -18,6 +17,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerStore,
+  foClassicHomePage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -224,16 +224,16 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
         await testContext.addContextItem(this, 'testIdentifier', `goToFo${arg.extOriginal}`, baseContext);
 
         page = await storesPage.viewMyShop(page);
-        await homePage.changeLanguage(page, 'en');
+        await foClassicHomePage.changeLanguage(page, 'en');
 
-        const isHomePage = await homePage.isHomePage(page);
+        const isHomePage = await foClassicHomePage.isHomePage(page);
         expect(isHomePage, 'Fail to open FO home page').to.eq(true);
       });
 
       it('should go to Stores page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAllProducts${arg.extOriginal}`, baseContext);
 
-        await homePage.goToFooterLink(page, 'Stores');
+        await foClassicHomePage.goToFooterLink(page, 'Stores');
 
         const pageTitle = await storePage.getPageTitle(page);
         expect(pageTitle).to.be.eq(storePage.pageTitle);

@@ -6,7 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import pages
-import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import invoicesPage from '@pages/BO/orders/invoices';
 import ordersPage from '@pages/BO/orders';
@@ -19,6 +18,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
+  foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
   utilsFile,
@@ -119,16 +119,16 @@ describe('FO - Account - Order details : Download invoice', async () => {
     it('should go to FO home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount', baseContext);
 
-      await foHomePage.goToFo(page);
+      await foClassicHomePage.goToFo(page);
 
-      const isHomePage: boolean = await foHomePage.isHomePage(page);
+      const isHomePage: boolean = await foClassicHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginFoPage', baseContext);
 
-      await foHomePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
 
       const pageHeaderTitle: string = await foClassicLoginPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(foClassicLoginPage.pageTitle);
@@ -146,7 +146,7 @@ describe('FO - Account - Order details : Download invoice', async () => {
     it('should go to my account page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage', baseContext);
 
-      await foHomePage.goToMyAccountPage(page);
+      await foClassicHomePage.goToMyAccountPage(page);
 
       const pageTitle: string = await foClassicMyAccountPage.getPageTitle(page);
       expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);
@@ -185,7 +185,7 @@ describe('FO - Account - Order details : Download invoice', async () => {
     it('should go to my account page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage2', baseContext);
 
-      await foHomePage.goToMyAccountPage(page);
+      await foClassicHomePage.goToMyAccountPage(page);
 
       const pageTitle: string = await foClassicMyAccountPage.getPageTitle(page);
       expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);

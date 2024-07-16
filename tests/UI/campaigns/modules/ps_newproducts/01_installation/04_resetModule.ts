@@ -4,16 +4,13 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-// Import FO pages
-import {homePage} from '@pages/FO/classic/home';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boModuleManagerPage,
   dataModules,
+  foClassicHomePage,
   modPsNewProductsBoMain,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -97,23 +94,23 @@ describe('New products block module - Reset module', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTheFo', baseContext);
 
     page = await modPsNewProductsBoMain.viewMyShop(page);
-    await homePage.changeLanguage(page, 'en');
+    await foClassicHomePage.changeLanguage(page, 'en');
 
-    const isHomePage = await homePage.isHomePage(page);
+    const isHomePage = await foClassicHomePage.isHomePage(page);
     expect(isHomePage).to.eq(true);
   });
 
   it('should check the number of products in the "New Products" block', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts', baseContext);
 
-    const numProductsInBlock = await homePage.getProductsBlockNumber(page, 'newproducts');
+    const numProductsInBlock = await foClassicHomePage.getProductsBlockNumber(page, 'newproducts');
     expect(numProductsInBlock).to.be.equal(numProducts);
   });
 
   it('should return to the back office', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'returnToBO', baseContext);
 
-    page = await homePage.closePage(browserContext, page, 0);
+    page = await foClassicHomePage.closePage(browserContext, page, 0);
 
     const pageTitle = await modPsNewProductsBoMain.getPageSubtitle(page);
     expect(pageTitle).to.eq(modPsNewProductsBoMain.pageSubTitle);
@@ -167,16 +164,16 @@ describe('New products block module - Reset module', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTheFoAfterReset', baseContext);
 
     page = await modPsNewProductsBoMain.viewMyShop(page);
-    await homePage.changeLanguage(page, 'en');
+    await foClassicHomePage.changeLanguage(page, 'en');
 
-    const isHomePage = await homePage.isHomePage(page);
+    const isHomePage = await foClassicHomePage.isHomePage(page);
     expect(isHomePage).to.eq(true);
   });
 
   it('should check the number of products in the "New Products" block', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProductsAfterReset', baseContext);
 
-    const numProductsInBlock = await homePage.getProductsBlockNumber(page, 'newproducts');
+    const numProductsInBlock = await foClassicHomePage.getProductsBlockNumber(page, 'newproducts');
     expect(numProductsInBlock).to.be.equal(defaultValue);
   });
 });

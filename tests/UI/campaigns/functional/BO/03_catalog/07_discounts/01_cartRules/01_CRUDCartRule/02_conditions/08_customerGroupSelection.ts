@@ -10,7 +10,6 @@ import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
-import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 import {
@@ -18,6 +17,7 @@ import {
   dataCustomers,
   dataProducts,
   FakerCartRule,
+  foClassicHomePage,
   foClassicLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -101,9 +101,9 @@ describe('BO - Catalog - Cart rules : Customer Group selection', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
       page = await addCartRulePage.viewMyShop(page);
-      await foHomePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foHomePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
   });
@@ -112,7 +112,7 @@ describe('BO - Catalog - Cart rules : Customer Group selection', async () => {
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPage', baseContext);
 
-      await foHomePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
 
       const pageTitle = await foClassicLoginPage.getPageTitle(page);
       expect(pageTitle).to.equal(foClassicLoginPage.pageTitle);
@@ -126,14 +126,14 @@ describe('BO - Catalog - Cart rules : Customer Group selection', async () => {
       const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
 
-      const isHomePage = await foHomePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should go to the first product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFirstProductPage', baseContext);
 
-      await foHomePage.goToProductPage(page, 1);
+      await foClassicHomePage.goToProductPage(page, 1);
 
       const pageTitle = await foProductPage.getPageTitle(page);
       expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
@@ -160,25 +160,25 @@ describe('BO - Catalog - Cart rules : Customer Group selection', async () => {
     it('should logout by the link in the header', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFOByHeaderLink', baseContext);
 
-      await foHomePage.logout(page);
+      await foClassicHomePage.logout(page);
 
-      const isCustomerConnected = await foHomePage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected!').to.eq(false);
     });
 
     it('should go to home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkLogoLink', baseContext);
 
-      await foHomePage.clickOnHeaderLink(page, 'Logo');
+      await foClassicHomePage.clickOnHeaderLink(page, 'Logo');
 
-      const pageTitle = await foHomePage.getPageTitle(page);
-      expect(pageTitle).to.equal(foHomePage.pageTitle);
+      const pageTitle = await foClassicHomePage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicHomePage.pageTitle);
     });
 
     it('should go to the first product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFirstProductPage2', baseContext);
 
-      await foHomePage.goToProductPage(page, 1);
+      await foClassicHomePage.goToProductPage(page, 1);
 
       const pageTitle = await foProductPage.getPageTitle(page);
       expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
@@ -205,16 +205,16 @@ describe('BO - Catalog - Cart rules : Customer Group selection', async () => {
     it('should go to Home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage', baseContext);
 
-      await foHomePage.clickOnHeaderLink(page, 'Logo');
+      await foClassicHomePage.clickOnHeaderLink(page, 'Logo');
 
-      const pageTitle = await foHomePage.getPageTitle(page);
-      expect(pageTitle).to.equal(foHomePage.pageTitle);
+      const pageTitle = await foClassicHomePage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicHomePage.pageTitle);
     });
 
     it('should go to cart page and delete the product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
-      await foHomePage.goToCartPage(page);
+      await foClassicHomePage.goToCartPage(page);
 
       await cartPage.deleteProduct(page, 1);
 

@@ -10,12 +10,12 @@ import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
 import CustomerSettingsOptions from '@pages/BO/shopParameters/customerSettings/options';
 
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
   boDashboardPage,
   dataCustomers,
+  foClassicHomePage,
   foClassicLoginPage,
   foClassicModalQuickViewPage,
   utilsPlaywright,
@@ -93,9 +93,9 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
 
       // Go to FO
       page = await customerSettingsPage.viewMyShop(page);
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
@@ -103,10 +103,10 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
       await testContext.addContextItem(this, 'testIdentifier', `loginFO_${index}`, baseContext);
 
       // Login FO
-      await homePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
       await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const connected = await homePage.isCustomerConnected(page);
+      const connected = await foClassicHomePage.isCustomerConnected(page);
       expect(connected, 'Customer is not connected in FO').to.eq(true);
     });
 
@@ -114,8 +114,8 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
       await testContext.addContextItem(this, 'testIdentifier', `quickViewFirstProduct_${index}`, baseContext);
 
       // Add first product to the cart
-      await homePage.goToHomePage(page);
-      await homePage.quickViewProduct(page, 1);
+      await foClassicHomePage.goToHomePage(page);
+      await foClassicHomePage.quickViewProduct(page, 1);
     });
 
     it('should add the first product to the cart', async function () {
@@ -125,7 +125,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
       await blockCartModal.proceedToCheckout(page);
 
       // Check number of product in cart
-      const notificationsNumber = await homePage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foClassicHomePage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.above(0);
     });
 
@@ -133,9 +133,9 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
       await testContext.addContextItem(this, 'testIdentifier', `logoutFO_${index}`, baseContext);
 
       // Logout from FO
-      await homePage.logout(page);
+      await foClassicHomePage.logout(page);
 
-      const connected = await homePage.isCustomerConnected(page);
+      const connected = await foClassicHomePage.isCustomerConnected(page);
       expect(connected, 'Customer is connected in FO').to.eq(false);
     });
 
@@ -143,10 +143,10 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
       await testContext.addContextItem(this, 'testIdentifier', `loginFO_2_${index}`, baseContext);
 
       // Login FO
-      await homePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
       await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const connected = await homePage.isCustomerConnected(page);
+      const connected = await foClassicHomePage.isCustomerConnected(page);
       expect(connected, 'Customer is not connected in FO').to.eq(true);
     });
 
@@ -154,12 +154,12 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
       await testContext.addContextItem(this, 'testIdentifier', `checkNotificationNumber_${index}`, baseContext);
 
       // Check number of products in cart
-      const notificationsNumber = await homePage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foClassicHomePage.getCartNotificationsNumber(page);
 
       if (test.args.enable) {
         expect(notificationsNumber).to.be.above(0);
         // Logout from FO
-        await homePage.logout(page);
+        await foClassicHomePage.logout(page);
       } else {
         expect(notificationsNumber).to.be.equal(0);
       }
@@ -170,7 +170,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
         await testContext.addContextItem(this, 'testIdentifier', `goBackToBO_${index}`, baseContext);
 
         // Go back to BO
-        page = await homePage.closePage(browserContext, page, 0);
+        page = await foClassicHomePage.closePage(browserContext, page, 0);
 
         const pageTitle = await customerSettingsPage.getPageTitle(page);
         expect(pageTitle).to.contains(customerSettingsPage.pageTitle);

@@ -13,7 +13,6 @@ import ordersPage from '@pages/BO/orders';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 import editMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns/edit';
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {merchandiseReturnsPage as foMerchandiseReturnsPage} from '@pages/FO/classic/myAccount/merchandiseReturns';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
@@ -28,6 +27,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
+  foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
   utilsDate,
@@ -183,16 +183,16 @@ describe('FO - Account : Check order return PDF', async () => {
       // Click on view my shop
       page = await viewOrderBasePage.viewMyShop(page);
       // Change FO language
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
     it('should login', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'logonFO', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
       await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
@@ -202,7 +202,7 @@ describe('FO - Account : Check order return PDF', async () => {
     it('should go to my account page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage2', baseContext);
 
-      await homePage.goToMyAccountPage(page);
+      await foClassicHomePage.goToMyAccountPage(page);
 
       const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
       expect(pageTitle).to.contains(foClassicMyAccountPage.pageTitle);
@@ -364,16 +364,16 @@ describe('FO - Account : Check order return PDF', async () => {
         // Click on view my shop
         page = await editMerchandiseReturnsPage.viewMyShop(page);
         // Change FO language
-        await homePage.changeLanguage(page, 'en');
+        await foClassicHomePage.changeLanguage(page, 'en');
 
-        const isHomePage = await homePage.isHomePage(page);
+        const isHomePage = await foClassicHomePage.isHomePage(page);
         expect(isHomePage, 'Home page is not displayed').to.eq(true);
       });
 
       it('should go to account page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage', baseContext);
 
-        await homePage.goToMyAccountPage(page);
+        await foClassicHomePage.goToMyAccountPage(page);
 
         const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
         expect(pageTitle).to.contains(foClassicMyAccountPage.pageTitle);

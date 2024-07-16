@@ -9,7 +9,6 @@ import {resetModule} from '@commonTests/BO/modules/moduleManager';
 // Import pages
 // Import FO pages
 import {contactUsPage} from '@pages/FO/classic/contactUs';
-import {homePage, homePage as foHomePage} from '@pages/FO/classic/home';
 import {createAccountPage as foCreateAccountPage} from '@pages/FO/classic/myAccount/add';
 import {accountIdentityPage} from '@pages/FO/classic/myAccount/identity';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
@@ -123,7 +122,7 @@ describe('GDPR : Consent checkbox customization', async () => {
       // View my shop and get the new tab
       page = await psGdprTabDataConsent.viewMyShop(page);
 
-      const isHomePage = await foHomePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
@@ -131,7 +130,7 @@ describe('GDPR : Consent checkbox customization', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnSignInLink', baseContext);
 
       // Check sign in link
-      await foHomePage.clickOnHeaderLink(page, 'Sign in');
+      await foClassicHomePage.clickOnHeaderLink(page, 'Sign in');
 
       const pageTitle = await foClassicLoginPage.getPageTitle(page);
       expect(pageTitle).to.equal(foClassicLoginPage.pageTitle);
@@ -172,7 +171,7 @@ describe('GDPR : Consent checkbox customization', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAccountIdentityPage', baseContext);
 
       page = await psGdprTabDataConsent.changePage(browserContext, 1);
-      await homePage.goToMyAccountPage(page);
+      await foClassicHomePage.goToMyAccountPage(page);
       await foClassicMyAccountPage.goToInformationPage(page);
 
       const pageTitle = await accountIdentityPage.getPageTitle(page);
@@ -246,14 +245,14 @@ describe('GDPR : Consent checkbox customization', async () => {
       const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
 
-      const hasSubscribeNewsletterRGPD = await foHomePage.hasSubscribeNewsletterRGPD(page);
+      const hasSubscribeNewsletterRGPD = await foClassicHomePage.hasSubscribeNewsletterRGPD(page);
       expect(hasSubscribeNewsletterRGPD).to.equal(false);
     });
 
     it('should go to the Manage Hooks page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToManageHooks', baseContext);
 
-      page = await foHomePage.changePage(browserContext, 0);
+      page = await foClassicHomePage.changePage(browserContext, 0);
       await psGdprTabDataConsent.clickHeaderManageHooks(page);
 
       const pageTitle = await boDesignPositionsPage.getPageTitle(page);
@@ -280,26 +279,26 @@ describe('GDPR : Consent checkbox customization', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSubscribeNewsletterHasBlock', baseContext);
 
       page = await boDesignPositionsPage.changePage(browserContext, 1);
-      await foHomePage.reloadPage(page);
+      await foClassicHomePage.reloadPage(page);
 
-      const hasSubscribeNewsletterRGPD = await foHomePage.hasSubscribeNewsletterRGPD(page);
+      const hasSubscribeNewsletterRGPD = await foClassicHomePage.hasSubscribeNewsletterRGPD(page);
       expect(hasSubscribeNewsletterRGPD).to.be.equals(true);
 
-      const labelSubscribeNewsletterRGPD = await foHomePage.getSubscribeNewsletterRGPDLabel(page);
+      const labelSubscribeNewsletterRGPD = await foClassicHomePage.getSubscribeNewsletterRGPDLabel(page);
       expect(labelSubscribeNewsletterRGPD).to.be.equals(messageNewsletter);
     });
 
     it('should register to the newsletter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'subscribeNewsletter', baseContext);
 
-      const newsletterSubscribeAlertMessage = await foHomePage.subscribeToNewsletter(page, customerData.email);
-      expect(newsletterSubscribeAlertMessage).to.contains(foHomePage.successSubscriptionMessage);
+      const newsletterSubscribeAlertMessage = await foClassicHomePage.subscribeToNewsletter(page, customerData.email);
+      expect(newsletterSubscribeAlertMessage).to.contains(foClassicHomePage.successSubscriptionMessage);
     });
 
     it('should go to \'Modules > Module Manager\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnToModuleManagerPage', baseContext);
 
-      page = await foHomePage.changePage(browserContext, 0);
+      page = await foClassicHomePage.changePage(browserContext, 0);
 
       await boDashboardPage.goToSubMenu(
         page,
@@ -349,9 +348,9 @@ describe('GDPR : Consent checkbox customization', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'hasSubscribeNewsletterRGPDFalse', baseContext);
 
       page = await psGdprTabDataConsent.changePage(browserContext, 1);
-      await foHomePage.reloadPage(page);
+      await foClassicHomePage.reloadPage(page);
 
-      const hasSubscribeNewsletterRGPD = await foHomePage.hasSubscribeNewsletterRGPD(page);
+      const hasSubscribeNewsletterRGPD = await foClassicHomePage.hasSubscribeNewsletterRGPD(page);
       expect(hasSubscribeNewsletterRGPD).to.be.equals(false);
     });
 
@@ -369,7 +368,7 @@ describe('GDPR : Consent checkbox customization', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoAndClickSignIn', baseContext);
 
       page = await psGdprTabDataConsent.changePage(browserContext, 1);
-      await foHomePage.clickOnHeaderLink(page, 'Sign in');
+      await foClassicHomePage.clickOnHeaderLink(page, 'Sign in');
 
       const pageTitle = await foClassicLoginPage.getPageTitle(page);
       expect(pageTitle).to.equal(foClassicLoginPage.pageTitle);
@@ -383,14 +382,14 @@ describe('GDPR : Consent checkbox customization', async () => {
       const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
 
-      const isHomePage = await foHomePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should go to the product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
 
-      await foHomePage.goToProductPage(page, 1);
+      await foClassicHomePage.goToProductPage(page, 1);
 
       const pageTitle = await foProductPage.getPageTitle(page);
       expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());

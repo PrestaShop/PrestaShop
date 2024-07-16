@@ -15,7 +15,6 @@ import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
-import {homePage} from '@pages/FO/classic/home';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 
@@ -24,6 +23,7 @@ import {
   dataCustomers,
   dataPaymentMethods,
   FakerProduct,
+  foClassicHomePage,
   foClassicMyAccountPage,
   utilsDate,
   utilsFile,
@@ -169,7 +169,7 @@ describe('BO - Catalog - Products : Virtual tab', async () => {
     it('should go to my account page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage', baseContext);
 
-      await homePage.goToMyAccountPage(page);
+      await foClassicHomePage.goToMyAccountPage(page);
 
       const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
       expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);

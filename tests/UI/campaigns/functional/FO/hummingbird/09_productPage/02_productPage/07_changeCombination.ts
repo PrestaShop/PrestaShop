@@ -16,7 +16,6 @@ import createProductsPage from '@pages/BO/catalog/products/add';
 import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
 
 // Import FO pages
-import homePage from '@pages/FO/hummingbird/home';
 import productPage from '@pages/FO/hummingbird/product';
 
 import {expect} from 'chai';
@@ -26,6 +25,7 @@ import {
   FakerAttribute,
   FakerAttributeValue,
   FakerProduct,
+  foHummingbirdHomePage,
   foHummingbirdSearchResultsPage,
   type ProductAttribute,
   utilsFile,
@@ -251,16 +251,16 @@ describe('FO - Product page - Product page : Change combination', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount', baseContext);
 
       page = await addValuePage.viewMyShop(page);
-      await homePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.equal(true);
     });
 
     it(`should search the product '${newProductData.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchProduct', baseContext);
 
-      await homePage.searchProduct(page, newProductData.name);
+      await foHummingbirdHomePage.searchProduct(page, newProductData.name);
 
       const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
       expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);

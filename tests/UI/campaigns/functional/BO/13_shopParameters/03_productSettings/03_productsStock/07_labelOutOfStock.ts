@@ -11,13 +11,13 @@ import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 // Import FO pages
 import {productPage} from '@pages/FO/classic/product';
-import {homePage} from '@pages/FO/classic/home';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerProduct,
+  foClassicHomePage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -172,7 +172,7 @@ describe('BO - Shop Parameters - product Settings : Set label out-of-stock with 
 
         page = await productSettingsPage.viewMyShop(page);
 
-        const isHomePage = await homePage.isHomePage(page);
+        const isHomePage = await foClassicHomePage.isHomePage(page);
         expect(isHomePage, 'Home page was not opened').to.eq(true);
       });
 
@@ -185,7 +185,7 @@ describe('BO - Shop Parameters - product Settings : Set label out-of-stock with 
         );
 
         // Search and go to product page
-        await homePage.searchProduct(page, productData.name);
+        await foClassicHomePage.searchProduct(page, productData.name);
         await foClassicSearchResultsPage.goToProductPage(page, 1);
 
         const pageTitle = await productPage.getPageTitle(page);

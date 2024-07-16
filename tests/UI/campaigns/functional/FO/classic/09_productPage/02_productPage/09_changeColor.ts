@@ -2,13 +2,13 @@
 import testContext from '@utils/testContext';
 
 // Import pages
-import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foClassicHomePage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -33,16 +33,16 @@ describe('FO - Product page - Product page : Change Color', async () => {
   it('should go to FO home page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount', baseContext);
 
-    await homePage.goToFo(page);
+    await foClassicHomePage.goToFo(page);
 
-    const isHomePage = await homePage.isHomePage(page);
+    const isHomePage = await foClassicHomePage.isHomePage(page);
     expect(isHomePage).to.equal(true);
   });
 
   it(`should search the product "${dataProducts.demo_1.name}"`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchDemo1', baseContext);
 
-    await homePage.searchProduct(page, dataProducts.demo_1.name);
+    await foClassicHomePage.searchProduct(page, dataProducts.demo_1.name);
 
     const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
     expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);

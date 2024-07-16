@@ -13,11 +13,7 @@ import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import storesPage from '@pages/BO/shopParameters/stores';
 
 // Import FO pages classic theme
-import {homePage} from '@pages/FO/classic/home';
 import {createAccountPage as foCreateAccountPage} from '@pages/FO/classic/myAccount/add';
-
-// Import FO pages hummingbird theme
-import homePageHummingbird from '@pages/FO/hummingbird/home';
 
 import {
   boDashboardPage,
@@ -26,7 +22,9 @@ import {
   dataLanguages,
   dataModules,
   FakerCustomer,
+  foClassicHomePage,
   foClassicLoginPage,
+  foHummingbirdHomePage,
   foHummingbirdLoginPage,
   type MailDev,
   type MailDevEmail,
@@ -173,16 +171,16 @@ describe('BO - International - Translation : Modify translation', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO1', baseContext);
 
       page = await translationsPage.viewMyShop(page);
-      await homePage.changeLanguage(page, 'fr');
+      await foClassicHomePage.changeLanguage(page, 'fr');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should check the translation', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTranslation', baseContext);
 
-      const title = await homePage.getBlockTitle(page, 'popularproducts');
+      const title = await foClassicHomePage.getBlockTitle(page, 'popularproducts');
       expect(title).to.contain('translate');
     });
   });
@@ -195,7 +193,7 @@ describe('BO - International - Translation : Modify translation', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo', baseContext);
 
       // Close tab and init other page objects with new current tab
-      page = await homePage.closePage(browserContext, page, 0);
+      page = await foClassicHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await translationsPage.getPageTitle(page);
       expect(pageTitle).to.contains(translationsPage.pageTitle);
@@ -237,16 +235,16 @@ describe('BO - International - Translation : Modify translation', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO2', baseContext);
 
       page = await translationsPage.viewMyShop(page);
-      await homePageHummingbird.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePageHummingbird.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPage', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
 
       const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
       expect(pageTitle).to.equal(foHummingbirdLoginPage.pageTitle);
@@ -264,7 +262,7 @@ describe('BO - International - Translation : Modify translation', async () => {
     it('should click on add product to wishlist icon', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnAddToWishlist', baseContext);
 
-      const wishlistModalTitle = await homePageHummingbird.clickOnAddToWishListLink(page, 1);
+      const wishlistModalTitle = await foHummingbirdHomePage.addToWishList(page, 1);
       expect(wishlistModalTitle).to.equal('Add to wishlist now');
     });
   });
@@ -277,7 +275,7 @@ describe('BO - International - Translation : Modify translation', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo2', baseContext);
 
       // Close tab and init other page objects with new current tab
-      page = await homePage.closePage(browserContext, page, 0);
+      page = await foClassicHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await translationsPage.getPageTitle(page);
       expect(pageTitle).to.contains(translationsPage.pageTitle);
@@ -392,25 +390,25 @@ describe('BO - International - Translation : Modify translation', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'openFO', baseContext);
 
       page = await storesPage.viewMyShop(page);
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should logout by the link in the header', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFOByHeaderLink', baseContext);
 
-      await homePage.logout(page);
+      await foClassicHomePage.logout(page);
 
-      const isCustomerConnected = await homePage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected!').to.eq(false);
     });
 
     it('should go to create account page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreateAccountPage', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
       await foClassicLoginPage.goToCreateAccountPage(page);
 
       const pageHeaderTitle = await foCreateAccountPage.getHeaderTitle(page);
@@ -422,7 +420,7 @@ describe('BO - International - Translation : Modify translation', async () => {
 
       await foCreateAccountPage.createAccount(page, customerData);
 
-      const isCustomerConnected = await homePage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);
       expect(isCustomerConnected).to.eq(true);
     });
 
@@ -430,9 +428,9 @@ describe('BO - International - Translation : Modify translation', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFO', baseContext);
 
       await foCreateAccountPage.goToHomePage(page);
-      await homePage.logout(page);
+      await foClassicHomePage.logout(page);
 
-      const isCustomerConnected = await homePage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
 
@@ -451,7 +449,7 @@ describe('BO - International - Translation : Modify translation', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo3', baseContext);
 
       // Close tab and init other page objects with new current tab
-      page = await homePage.closePage(browserContext, page, 0);
+      page = await foClassicHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await translationsPage.getPageTitle(page);
       expect(pageTitle).to.contains(translationsPage.pageTitle);

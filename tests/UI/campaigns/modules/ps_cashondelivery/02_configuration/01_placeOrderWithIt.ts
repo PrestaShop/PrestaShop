@@ -6,7 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
@@ -78,7 +77,7 @@ describe('Cash on delivery (COD) module - Place an order with it', async () => {
       await foClassicLoginPage.goToHomePage(page);
 
       // Add first product to cart by quick view
-      await homePage.quickViewProduct(page, 1);
+      await foClassicHomePage.quickViewProduct(page, 1);
       await foClassicModalQuickViewPage.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);
 

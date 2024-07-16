@@ -4,10 +4,6 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-// Import FO pages
-import {homePage} from '@pages/FO/classic/home';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
@@ -16,6 +12,7 @@ import {
   dataModules,
   FakerProduct,
   foClassicCategoryPage,
+  foClassicHomePage,
   modPsFacetedsearchBoFilterTemplate,
   modPsFacetedsearchBoMain,
   utilsFile,
@@ -188,14 +185,14 @@ describe('Faceted search module - Edit template: Product condition filter', asyn
 
         page = await modPsFacetedsearchBoMain.viewMyShop(page);
 
-        const isHomePage = await homePage.isHomePage(page);
+        const isHomePage = await foClassicHomePage.isHomePage(page);
         expect(isHomePage).to.be.eq(true);
       });
 
       it('should check the "All products" page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAllProductsPage_${index}`, baseContext);
 
-        await homePage.goToAllProductsBlockPage(page, 1);
+        await foClassicHomePage.goToAllProductsBlockPage(page, 1);
 
         const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
         expect(isCategoryPageVisible).to.be.eq(true);

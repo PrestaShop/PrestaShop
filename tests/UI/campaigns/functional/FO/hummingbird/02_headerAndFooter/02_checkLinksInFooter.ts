@@ -13,7 +13,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 import bestSalesPage from '@pages/FO/hummingbird/bestSales';
 import contactUsPage from '@pages/FO/hummingbird/contactUs';
 import deliveryPage from '@pages/FO/hummingbird/delivery';
-import homePage from '@pages/FO/hummingbird/home';
 import legalNoticePage from '@pages/FO/hummingbird/legalNotice';
 import createAccountPage from '@pages/FO/hummingbird/myAccount/add';
 import addAddressPage from '@pages/FO/hummingbird/myAccount/addAddress';
@@ -33,6 +32,7 @@ import {
   dataCustomers,
   FakerCustomer,
   foHummingbirdAboutUsPage,
+  foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyWishlistsPage,
   utilsPlaywright,
@@ -89,9 +89,9 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
   it('should go to FO home page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
-    await homePage.goToFo(page);
+    await foHummingbirdHomePage.goToFo(page);
 
-    const isHomePage = await homePage.isHomePage(page);
+    const isHomePage = await foHummingbirdHomePage.isHomePage(page);
     expect(isHomePage).to.be.eq(true);
   });
 
@@ -105,9 +105,9 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `checkProductsFooterLinks${index}`, baseContext);
 
         // Check prices drop link
-        await homePage.goToFooterLink(page, args.linkSelector);
+        await foHummingbirdHomePage.goToFooterLink(page, args.linkSelector);
 
-        const pageTitle = await homePage.getPageTitle(page);
+        const pageTitle = await foHummingbirdHomePage.getPageTitle(page);
         expect(pageTitle).to.equal(args.pageTitle);
       });
     });
@@ -128,9 +128,9 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `checkOurCompanyFooterLinks${index}`, baseContext);
 
         // Check prices drop link
-        await homePage.goToFooterLink(page, args.linkSelector);
+        await foHummingbirdHomePage.goToFooterLink(page, args.linkSelector);
 
-        const pageTitle = await homePage.getPageTitle(page);
+        const pageTitle = await foHummingbirdHomePage.getPageTitle(page);
         expect(pageTitle).to.equal(args.pageTitle);
       });
     });
@@ -146,12 +146,12 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `checkYourAccountFooterLinks1${index}`, baseContext);
 
         // Check prices drop link
-        await homePage.goToFooterLink(page, args.linkSelector);
+        await foHummingbirdHomePage.goToFooterLink(page, args.linkSelector);
 
         if (args.linkSelector === 'Create account') {
           pageTitle = await createAccountPage.getHeaderTitle(page);
         } else {
-          pageTitle = await homePage.getPageTitle(page);
+          pageTitle = await foHummingbirdHomePage.getPageTitle(page);
         }
         expect(pageTitle).to.equal(args.pageTitle);
       });
@@ -162,7 +162,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
     it('should login to FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'loginFO', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foHummingbirdHomePage.goToLoginPage(page);
       await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
       const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
@@ -181,12 +181,12 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `checkYourAccountFooterLinks2${index}`, baseContext);
 
         // Check prices drop link
-        await homePage.goToFooterLink(page, args.linkSelector);
+        await foHummingbirdHomePage.goToFooterLink(page, args.linkSelector);
 
         if (args.linkSelector === 'Wishlist') {
           pageTitle = await foHummingbirdMyWishlistsPage.getPageTitle(page);
         } else {
-          pageTitle = await homePage.getPageTitle(page);
+          pageTitle = await foHummingbirdHomePage.getPageTitle(page);
         }
         expect(pageTitle).to.equal(args.pageTitle);
       });
@@ -200,7 +200,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
     it('should login to FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'loginFONewCustomer', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foHummingbirdHomePage.goToLoginPage(page);
       await foHummingbirdLoginPage.customerLogin(page, createCustomerData);
 
       const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
@@ -219,12 +219,12 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `checkYourAccountFooterLinks3${index}`, baseContext);
 
         // Check prices drop link
-        await homePage.goToFooterLink(page, args.linkSelector);
+        await foHummingbirdHomePage.goToFooterLink(page, args.linkSelector);
 
         if (args.linkSelector === 'Wishlist') {
           pageTitle = await foHummingbirdMyWishlistsPage.getPageTitle(page);
         } else {
-          pageTitle = await homePage.getPageTitle(page);
+          pageTitle = await foHummingbirdHomePage.getPageTitle(page);
         }
         expect(pageTitle).to.equal(args.pageTitle);
       });
@@ -235,7 +235,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
     it('should check \'Store Information\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkStoreInformation', baseContext);
 
-      const storeInformation = await homePage.getStoreInformation(page);
+      const storeInformation = await foHummingbirdHomePage.getStoreInformation(page);
       expect(storeInformation).to.contains(global.INSTALL.SHOP_NAME)
         .and.to.contain(global.INSTALL.COUNTRY)
         .and.to.contains(global.BO.EMAIL);
@@ -246,7 +246,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
     it('should check the copyright', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCopyright', baseContext);
 
-      const copyright = await homePage.getCopyright(page);
+      const copyright = await foHummingbirdHomePage.getCopyright(page);
       expect(copyright).to.equal(`© ${currentYear} - Ecommerce software by PrestaShop™`);
     });
   });

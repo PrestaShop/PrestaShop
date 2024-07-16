@@ -8,13 +8,12 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 // Import pages
 // Import BO pages
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
-// Import FO pages
-import homePage from '@pages/FO/hummingbird/home';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  foHummingbirdHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -74,28 +73,28 @@ describe('BO - Shop Parameters - Product Settings : Display add to cart button w
 
         page = await productSettingsPage.viewMyShop(page);
 
-        const isHomePage = await homePage.isHomePage(page);
+        const isHomePage = await foHummingbirdHomePage.isHomePage(page);
         expect(isHomePage, 'Home page was not opened').to.eq(true);
       });
 
       it('should check the add to cart button in the second popular product', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkAddToCartButton${index}`, baseContext);
 
-        const isAddToCartButtonVisible = await homePage.isAddToCartButtonVisible(page, 2);
+        const isAddToCartButtonVisible = await foHummingbirdHomePage.isAddToCartButtonVisible(page, 2);
         expect(isAddToCartButtonVisible).to.eq(test.args.enable);
       });
 
       it('should check that the add to cart button in the sixth popular product is visible', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkAddToCartButton2${index}`, baseContext);
 
-        const isAddToCartButtonVisible = await homePage.isAddToCartButtonVisible(page, 6);
+        const isAddToCartButtonVisible = await foHummingbirdHomePage.isAddToCartButtonVisible(page, 6);
         expect(isAddToCartButtonVisible).to.eq(true);
       });
 
       it('should close the page and go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `closePageAndBackToBO${index}`, baseContext);
 
-        page = await homePage.closePage(browserContext, page, 0);
+        page = await foHummingbirdHomePage.closePage(browserContext, page, 0);
 
         const pageTitle = await productSettingsPage.getPageTitle(page);
         expect(pageTitle).to.contains(productSettingsPage.pageTitle);

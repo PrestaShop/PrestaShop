@@ -13,7 +13,6 @@ import contactFormPage from '@pages/BO/modules/contactForm';
 
 // Import FO pages
 import contactUsPage from '@pages/FO/hummingbird/contactUs';
-import homePage from '@pages/FO/hummingbird/home';
 
 import {
   boDashboardPage,
@@ -22,6 +21,7 @@ import {
   dataModules,
   dataOrders,
   FakerContactMessage,
+  foHummingbirdHomePage,
   foHummingbirdLoginPage,
   type MailDev,
   type MailDevEmail,
@@ -157,16 +157,16 @@ describe('FO - Contact us : Send message from contact us page with customer logg
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'openShop', baseContext);
 
-      await homePage.goTo(page, global.FO.URL);
+      await foHummingbirdHomePage.goTo(page, global.FO.URL);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFo', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foHummingbirdHomePage.goToLoginPage(page);
 
       const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
       expect(pageTitle, 'Fail to open FO login page').to.contains(foHummingbirdLoginPage.pageTitle);

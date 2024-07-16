@@ -9,8 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import categoriesPage from '@pages/BO/catalog/categories';
 import addCategoryPage from '@pages/BO/catalog/categories/add';
 import imageSettingsPage from '@pages/BO/design/imageSettings';
-// Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -18,6 +16,7 @@ import {
   boDashboardPage,
   FakerCategory,
   foClassicCategoryPage,
+  foClassicHomePage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -266,16 +265,16 @@ describe('BO - Design - Image Settings - Check category image format', async () 
           await testContext.addContextItem(this, 'testIdentifier', `goToFo${argExtension}`, baseContext);
 
           page = await addCategoryPage.viewMyShop(page);
-          await homePage.changeLanguage(page, 'en');
+          await foClassicHomePage.changeLanguage(page, 'en');
 
-          const isHomePage = await homePage.isHomePage(page);
+          const isHomePage = await foClassicHomePage.isHomePage(page);
           expect(isHomePage, 'Fail to open FO home page').to.eq(true);
         });
 
         it('should go to all products page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToFoAllProducts${argExtension}`, baseContext);
 
-          await homePage.goToAllProductsPage(page);
+          await foClassicHomePage.goToAllProductsPage(page);
 
           const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
           expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);

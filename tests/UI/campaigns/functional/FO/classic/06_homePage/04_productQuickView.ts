@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
 
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {expect} from 'chai';
@@ -15,6 +14,7 @@ import {
   dataProducts,
   FakerProduct,
   foClassicCategoryPage,
+  foClassicHomePage,
   foClassicModalQuickViewPage,
   type ProductAttribute,
   utilsPlaywright,
@@ -75,16 +75,16 @@ describe('FO - Home Page : Product quick view', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-      await homePage.goTo(page, global.FO.URL);
+      await foClassicHomePage.goTo(page, global.FO.URL);
 
-      const result = await homePage.isHomePage(page);
+      const result = await foClassicHomePage.isHomePage(page);
       expect(result).to.equal(true);
     });
 
     it(`should quick view the product '${dataProducts.demo_6.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewProduct1', baseContext);
 
-      await homePage.quickViewProduct(page, 3);
+      await foClassicHomePage.quickViewProduct(page, 3);
 
       const isModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.equal(true);
@@ -150,7 +150,7 @@ describe('FO - Home Page : Product quick view', async () => {
     it(`should quick view the product '${dataProducts.demo_11.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewProduct2', baseContext);
 
-      await homePage.quickViewProduct(page, 6);
+      await foClassicHomePage.quickViewProduct(page, 6);
 
       const isModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.equal(true);
@@ -192,7 +192,7 @@ describe('FO - Home Page : Product quick view', async () => {
     it('should go to all products page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAllProducts', baseContext);
 
-      await homePage.goToAllProductsPage(page);
+      await foClassicHomePage.goToAllProductsPage(page);
 
       const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.equal(true);

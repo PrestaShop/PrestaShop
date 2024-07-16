@@ -10,7 +10,6 @@ import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advanced
 // Import BO pages
 import ordersPage from '@pages/BO/orders';
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
 import {
@@ -20,6 +19,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
+  foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
   type MailDev,
@@ -240,9 +240,9 @@ describe('BO - orders : Update order status', async () => {
           await testContext.addContextItem(this, 'testIdentifier', `goToFoToCheckStatus${index}`, baseContext);
 
           page = await ordersPage.viewMyShop(page);
-          await homePage.changeLanguage(page, 'en');
+          await foClassicHomePage.changeLanguage(page, 'en');
 
-          const isHomePage = await homePage.isHomePage(page);
+          const isHomePage = await foClassicHomePage.isHomePage(page);
           expect(isHomePage, 'Fail to open FO home page').to.eq(true);
         });
 
@@ -250,7 +250,7 @@ describe('BO - orders : Update order status', async () => {
           it('should go to login page', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `goToLoginPage${index}`, baseContext);
 
-            await homePage.goToLoginPage(page);
+            await foClassicHomePage.goToLoginPage(page);
 
             const pageTitle = await foClassicLoginPage.getPageTitle(page);
             expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
@@ -268,7 +268,7 @@ describe('BO - orders : Update order status', async () => {
         it('should go to orders history page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToOrderHistoryPage${index}`, baseContext);
 
-          await homePage.goToMyAccountPage(page);
+          await foClassicHomePage.goToMyAccountPage(page);
           await foClassicMyAccountPage.goToHistoryAndDetailsPage(page);
 
           const pageTitle = await orderHistoryPage.getPageTitle(page);

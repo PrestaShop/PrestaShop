@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import addressesPage from '@pages/BO/customers/addresses';
 // Import FO pages
-import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {addressesPage as foAddressesPage} from '@pages/FO/classic/myAccount/addresses';
 import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
 
@@ -16,6 +15,7 @@ import {
   boDashboardPage,
   dataCustomers,
   FakerAddress,
+  foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
   utilsPlaywright,
@@ -84,9 +84,9 @@ describe('BO - Customers - Addresses : Set required fields for addresses', async
       // View shop
       page = await addressesPage.viewMyShop(page);
       // Change language in FO
-      await foHomePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foHomePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
@@ -94,17 +94,17 @@ describe('BO - Customers - Addresses : Set required fields for addresses', async
       await testContext.addContextItem(this, 'testIdentifier', `loginFO${index}`, baseContext);
 
       // Go to create account page
-      await foHomePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
       await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const connected = await foHomePage.isCustomerConnected(page);
+      const connected = await foClassicHomePage.isCustomerConnected(page);
       expect(connected, 'Customer is not connected in FO').to.eq(true);
     });
 
     it('should go to \'Customers > Addresses\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToFOAddressesPage${index}`, baseContext);
 
-      await foHomePage.goToMyAccountPage(page);
+      await foClassicHomePage.goToMyAccountPage(page);
       await foClassicMyAccountPage.goToAddressesPage(page);
 
       const pageHeaderTitle = await foAddressesPage.getPageTitle(page);

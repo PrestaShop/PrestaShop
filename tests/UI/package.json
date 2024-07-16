@@ -106,7 +106,7 @@
   "homepage": "https://github.com/PrestaShop/PrestaShop/tree/develop/tests/UI#readme",
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
-    "@prestashop-core/ui-testing": "https://github.com/PrestaShop/ui-testing-library#main",
+    "@prestashop-core/ui-testing": "https://github.com/PrestaShop/ui-testing-library#pull/89/head",
     "chai": "^4.4.1",
     "chai-string": "^1.5.0",
     "dotenv": "^16.4.5",

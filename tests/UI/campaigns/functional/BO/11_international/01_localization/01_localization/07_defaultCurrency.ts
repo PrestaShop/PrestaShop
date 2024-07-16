@@ -8,14 +8,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import currenciesPage from '@pages/BO/international/currencies';
 import languagesPage from '@pages/BO/international/languages';
-// Import FO pages
-import {homePage as foHomePage} from '@pages/FO/classic/home';
 
 import {
   boDashboardPage,
   boLocalizationPage,
   dataCurrencies,
   dataLanguages,
+  foClassicHomePage,
   type ImportContent,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -138,14 +137,14 @@ describe('BO - International - Localization : Update default currency', async ()
         // View my shop and init pages
         page = await boLocalizationPage.viewMyShop(page);
 
-        const defaultCurrency = await foHomePage.getDefaultCurrency(page);
+        const defaultCurrency = await foClassicHomePage.getDefaultCurrency(page);
         expect(defaultCurrency).to.equal(test.args.currency);
       });
 
       it('should go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
-        page = await foHomePage.closePage(browserContext, page, 0);
+        page = await foClassicHomePage.closePage(browserContext, page, 0);
 
         const pageTitle = await boLocalizationPage.getPageTitle(page);
         expect(pageTitle).to.contains(boLocalizationPage.pageTitle);

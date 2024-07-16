@@ -1,13 +1,11 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import pages
-import {homePage} from '@pages/FO/classic/home';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foClassicHomePage,
   foClassicModalQuickViewPage,
   type ProductAttribute,
   utilsPlaywright,
@@ -42,16 +40,16 @@ describe('FO - Product page - Quick view : Display of the product', async () => 
   it('should go to FO home page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
-    await homePage.goToFo(page);
+    await foClassicHomePage.goToFo(page);
 
-    const isHomePage = await homePage.isHomePage(page);
+    const isHomePage = await foClassicHomePage.isHomePage(page);
     expect(isHomePage).to.equal(true);
   });
 
   it('should quick view the third product', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'quickView', baseContext);
 
-    await homePage.quickViewProduct(page, 3);
+    await foClassicHomePage.quickViewProduct(page, 3);
 
     const isModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
     expect(isModalVisible).to.equal(true);

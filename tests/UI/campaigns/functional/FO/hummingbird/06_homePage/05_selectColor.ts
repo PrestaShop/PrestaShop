@@ -5,13 +5,13 @@ import testContext from '@utils/testContext';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
-import homePage from '@pages/FO/hummingbird/home';
 import productPage from '@pages/FO/hummingbird/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foHummingbirdHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -38,16 +38,16 @@ describe('FO - Home Page : Select color', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-      await homePage.goTo(page, global.FO.URL);
+      await foHummingbirdHomePage.goTo(page, global.FO.URL);
 
-      const result = await homePage.isHomePage(page);
+      const result = await foHummingbirdHomePage.isHomePage(page);
       expect(result).to.equal(true);
     });
 
     it('should select the color White for the first product in list', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectColor1', baseContext);
 
-      await homePage.selectProductColor(page, 1, 'White');
+      await foHummingbirdHomePage.selectProductColor(page, 1, 'White');
 
       const pageTitle = await productPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_1.name);
@@ -67,14 +67,14 @@ describe('FO - Home Page : Select color', async () => {
 
       await productPage.goToHomePage(page);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
     it('should select the color Black for the first product in list', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectColor2', baseContext);
 
-      await homePage.selectProductColor(page, 1, 'Black');
+      await foHummingbirdHomePage.selectProductColor(page, 1, 'Black');
 
       const pageTitle = await productPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_1.name);

@@ -4,12 +4,12 @@ import testContext from '@utils/testContext';
 // Import common tests
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
-// Import FO pages
-import homePage from '@pages/FO/hummingbird/home';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {utilsPlaywright} from '@prestashop-core/ui-testing';
+import {
+  foHummingbirdHomePage,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_hummingbird_search_consultAutoCompleteList';
 
@@ -47,9 +47,9 @@ describe('FO - Search Page : Search product and consult autocomplete list', asyn
     it('should go to FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
-      await homePage.goToFo(page);
+      await foHummingbirdHomePage.goToFo(page);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
@@ -59,19 +59,19 @@ describe('FO - Search Page : Search product and consult autocomplete list', asyn
       const searchValue: string = 'test';
       const numSearchResults: number = 7;
 
-      const numResults = await homePage.countAutocompleteSearchResult(page, searchValue);
+      const numResults = await foHummingbirdHomePage.countAutocompleteSearchResult(page, searchValue);
       expect(numResults).equal(numSearchResults);
 
-      const inputValue = await homePage.getSearchValue(page);
+      const inputValue = await foHummingbirdHomePage.getSearchValue(page);
       expect(inputValue).equal(searchValue);
     });
 
     it('should click outside the autocomplete list and check that the list is not displayed', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOutsideAutocompleteList', baseContext);
 
-      await homePage.closeAutocompleteSearch(page);
+      await foHummingbirdHomePage.closeAutocompleteSearch(page);
 
-      const hasAutocompleteList = await homePage.isAutocompleteSearchResultVisible(page);
+      const hasAutocompleteList = await foHummingbirdHomePage.isAutocompleteSearchResultVisible(page);
       expect(hasAutocompleteList).to.eq(false);
     });
 
@@ -92,20 +92,20 @@ describe('FO - Search Page : Search product and consult autocomplete list', asyn
       it(`should check the autocomplete list with the value ${search.searchValue}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkAutocompleteList_${index}`, baseContext);
 
-        const numResults = await homePage.countAutocompleteSearchResult(page, search.searchValue);
+        const numResults = await foHummingbirdHomePage.countAutocompleteSearchResult(page, search.searchValue);
         expect(numResults).equal(search.numResults);
 
-        const inputValue = await homePage.getSearchValue(page);
+        const inputValue = await foHummingbirdHomePage.getSearchValue(page);
         expect(inputValue).equal(search.searchValue);
 
-        await homePage.closeAutocompleteSearch(page);
+        await foHummingbirdHomePage.closeAutocompleteSearch(page);
       });
     });
 
     it('should check the autocomplete list with a string with less than 3 characters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAutocompleteListSmallString', baseContext);
 
-      const hasSearchResult = await homePage.hasAutocompleteSearchResult(page, 'te');
+      const hasSearchResult = await foHummingbirdHomePage.hasAutocompleteSearchResult(page, 'te');
       expect(hasSearchResult, 'There are results in autocomplete search').to.eq(false);
     });
   });

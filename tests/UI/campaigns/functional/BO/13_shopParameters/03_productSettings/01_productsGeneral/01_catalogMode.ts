@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 
 import {expect} from 'chai';
@@ -16,6 +15,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataProducts,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -111,23 +111,23 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
           await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
           page = await productSettingsPage.viewMyShop(page);
-          await homePage.changeLanguage(page, 'en');
+          await foClassicHomePage.changeLanguage(page, 'en');
 
-          const isHomePage = await homePage.isHomePage(page);
+          const isHomePage = await foClassicHomePage.isHomePage(page);
           expect(isHomePage, 'Fail to open FO home page').to.eq(true);
         });
 
         it('should check the product price of the first product in the home page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkPricesInHomePage${index}`, baseContext);
 
-          const isPriceVisible = await homePage.isPriceVisible(page, 1);
+          const isPriceVisible = await foClassicHomePage.isPriceVisible(page, 1);
           expect(isPriceVisible).to.equal(showPrices.args.enable);
         });
 
         it('should go to the first product page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToFirstProductPage${index}`, baseContext);
 
-          await homePage.goToProductPage(page, 1);
+          await foClassicHomePage.goToProductPage(page, 1);
 
           const pageTitle = await productPage.getPageTitle(page);
           expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
@@ -157,23 +157,23 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
         await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
         page = await productSettingsPage.viewMyShop(page);
-        await homePage.changeLanguage(page, 'en');
+        await foClassicHomePage.changeLanguage(page, 'en');
 
-        const isHomePage = await homePage.isHomePage(page);
+        const isHomePage = await foClassicHomePage.isHomePage(page);
         expect(isHomePage, 'Fail to open FO home page').to.eq(true);
       });
 
       it('should check that the product price is visible in the home page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkPricesInHomePageVisible', baseContext);
 
-        const isPriceVisible = await homePage.isPriceVisible(page, 1);
+        const isPriceVisible = await foClassicHomePage.isPriceVisible(page, 1);
         expect(isPriceVisible).to.eq(true);
       });
 
       it('should go to the first product page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFirstProductPage3', baseContext);
 
-        await homePage.goToProductPage(page, 1);
+        await foClassicHomePage.goToProductPage(page, 1);
 
         const pageTitle = await productPage.getPageTitle(page);
         expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());

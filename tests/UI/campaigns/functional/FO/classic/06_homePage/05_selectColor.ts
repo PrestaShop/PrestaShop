@@ -2,13 +2,13 @@
 import testContext from '@utils/testContext';
 
 // Import pages
-import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -31,26 +31,26 @@ describe('FO - Home Page : Select color on hover on product list', async () => {
   it('should open the shop page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-    await homePage.goTo(page, global.FO.URL);
+    await foClassicHomePage.goTo(page, global.FO.URL);
 
-    const result = await homePage.isHomePage(page);
+    const result = await foClassicHomePage.isHomePage(page);
     expect(result).to.equal(true);
   });
 
   it('should put the mouse over the first product and check that quick view button is displayed', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'putMouseOnFirstProduct', baseContext);
 
-    const isQuickViewLinkVisible = await homePage.isQuickViewLinkVisible(page, 1);
+    const isQuickViewLinkVisible = await foClassicHomePage.isQuickViewLinkVisible(page, 1);
     expect(isQuickViewLinkVisible).to.equal(true);
 
-    const isBoxesVisible = await homePage.isColoredBoxesVisible(page, 1);
+    const isBoxesVisible = await foClassicHomePage.isColoredBoxesVisible(page, 1);
     expect(isBoxesVisible).to.equal(true);
   });
 
   it('should select the color White for the first product in list', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'selectColor1', baseContext);
 
-    await homePage.selectProductColor(page, 1, 'White');
+    await foClassicHomePage.selectProductColor(page, 1, 'White');
 
     const pageTitle = await productPage.getPageTitle(page);
     expect(pageTitle).to.contains(dataProducts.demo_1.name);
@@ -74,14 +74,14 @@ describe('FO - Home Page : Select color on hover on product list', async () => {
 
     await productPage.goToHomePage(page);
 
-    const isHomePage = await homePage.isHomePage(page);
+    const isHomePage = await foClassicHomePage.isHomePage(page);
     expect(isHomePage, 'Home page is not displayed').to.eq(true);
   });
 
   it('should select the color Black for the first product in list', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'selectColor2', baseContext);
 
-    await homePage.selectProductColor(page, 1, 'Black');
+    await foClassicHomePage.selectProductColor(page, 1, 'Black');
 
     const pageTitle = await productPage.getPageTitle(page);
     expect(pageTitle).to.contains(dataProducts.demo_1.name);

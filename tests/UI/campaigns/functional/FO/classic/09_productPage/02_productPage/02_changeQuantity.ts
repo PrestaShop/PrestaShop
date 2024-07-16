@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import pages
-import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 import {cartPage} from '@pages/FO/classic/cart';
@@ -11,6 +10,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -40,16 +40,16 @@ describe('FO - Product page : Change quantity', async () => {
   it('should go to FO home page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
-    await homePage.goToFo(page);
+    await foClassicHomePage.goToFo(page);
 
-    const isHomePage = await homePage.isHomePage(page);
+    const isHomePage = await foClassicHomePage.isHomePage(page);
     expect(isHomePage).to.equal(true);
   });
 
   it('should go to the third product page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
 
-    await homePage.goToProductPage(page, 3);
+    await foClassicHomePage.goToProductPage(page, 3);
 
     const pageTitle = await productPage.getPageTitle(page);
     expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_6.name.toUpperCase());
@@ -117,7 +117,7 @@ describe('FO - Product page : Change quantity', async () => {
   it('should check the cart notifications number', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkNotificationsNumber2', baseContext);
 
-    const notificationsNumber = await homePage.getCartNotificationsNumber(page);
+    const notificationsNumber = await foClassicHomePage.getCartNotificationsNumber(page);
     expect(notificationsNumber).to.equal(13);
   });
 
@@ -126,7 +126,7 @@ describe('FO - Product page : Change quantity', async () => {
 
     await productPage.addProductToTheCart(page, 'Prestashop');
 
-    const notificationsNumber = await homePage.getCartNotificationsNumber(page);
+    const notificationsNumber = await foClassicHomePage.getCartNotificationsNumber(page);
     expect(notificationsNumber).to.equal(14);
   });
 

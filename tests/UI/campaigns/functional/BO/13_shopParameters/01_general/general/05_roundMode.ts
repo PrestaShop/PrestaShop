@@ -12,7 +12,6 @@ import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 
 import {expect} from 'chai';
@@ -20,6 +19,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerProduct,
+  foClassicHomePage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -98,16 +98,16 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
 
           // View shop
           page = await generalPage.viewMyShop(page);
-          await homePage.changeLanguage(page, 'en');
+          await foClassicHomePage.changeLanguage(page, 'en');
 
-          const isHomePage = await homePage.isHomePage(page);
+          const isHomePage = await foClassicHomePage.isHomePage(page);
           expect(isHomePage).to.eq(true);
         });
 
         it('should search for the created product', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `searchProduct${index}`, baseContext);
 
-          await homePage.searchProduct(page, productData.name);
+          await foClassicHomePage.searchProduct(page, productData.name);
 
           const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
           expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
@@ -217,16 +217,16 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
 
           // View shop
           page = await generalPage.viewMyShop(page);
-          await homePage.changeLanguage(page, 'en');
+          await foClassicHomePage.changeLanguage(page, 'en');
 
-          const isHomePage = await homePage.isHomePage(page);
+          const isHomePage = await foClassicHomePage.isHomePage(page);
           expect(isHomePage).to.eq(true);
         });
 
         it('should search for the created product', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `searchProduct2${index}`, baseContext);
 
-          await homePage.searchProduct(page, productData.name);
+          await foClassicHomePage.searchProduct(page, productData.name);
 
           const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
           expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
@@ -336,16 +336,16 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
 
           // View shop
           page = await generalPage.viewMyShop(page);
-          await homePage.changeLanguage(page, 'en');
+          await foClassicHomePage.changeLanguage(page, 'en');
 
-          const isHomePage = await homePage.isHomePage(page);
+          const isHomePage = await foClassicHomePage.isHomePage(page);
           expect(isHomePage).to.eq(true);
         });
 
         it('should search for the created product', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `searchProduct3${index}`, baseContext);
 
-          await homePage.searchProduct(page, productData.name);
+          await foClassicHomePage.searchProduct(page, productData.name);
 
           const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
           expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
