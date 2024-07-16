@@ -76,6 +76,7 @@ final class GetCarrierForEditingHandler implements GetCarrierForEditingHandlerIn
             (int) $carrier->range_behavior,
             $carrier->getAssociatedShops(),
             $logoPath,
+            $this->carrierRepository->ordersCount($query->getCarrierId()),
         );
     }
 }
