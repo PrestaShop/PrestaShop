@@ -4,14 +4,12 @@ import testContext from '@utils/testContext';
 // Import login steps
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import addSearchPage from '@pages/BO/shopParameters/search/add';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boSearchPage,
+  boSearchAliasCreatePage,
   FakerSearchAlias,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -72,14 +70,14 @@ describe('BO - Shop Parameters - Search : Create, update and delete search in BO
 
       await boSearchPage.goToAddNewAliasPage(page);
 
-      const pageTitle = await addSearchPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addSearchPage.pageTitleCreate);
+      const pageTitle = await boSearchAliasCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boSearchAliasCreatePage.pageTitleCreate);
     });
 
     it('should create alias and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createAlias', baseContext);
 
-      const textResult = await addSearchPage.setAlias(page, createAliasData);
+      const textResult = await boSearchAliasCreatePage.setAlias(page, createAliasData);
       expect(textResult).to.contains(boSearchPage.successfulCreationMessage);
 
       const numberOfElementAfterCreation = await boSearchPage.getNumberOfElementInGrid(page);
@@ -104,15 +102,15 @@ describe('BO - Shop Parameters - Search : Create, update and delete search in BO
 
       await boSearchPage.gotoEditAliasPage(page, 1);
 
-      const pageTitle = await addSearchPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addSearchPage.pageTitleEdit);
+      const pageTitle = await boSearchAliasCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boSearchAliasCreatePage.pageTitleEdit);
     });
 
     it('should update alias', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateAlias', baseContext);
 
-      const textResult = await addSearchPage.setAlias(page, editSearchData);
-      expect(textResult).to.contains(boSearchPage.successfulUpdateMessage);
+      const textResult = await boSearchAliasCreatePage.setAlias(page, editSearchData);
+      expect(textResult).to.contains(boSearchPage.updateSuccessMessage);
 
       const numberOfSearchAfterUpdate = await boSearchPage.resetAndGetNumberOfLines(page);
       expect(numberOfSearchAfterUpdate).to.be.equal(numberOfSearch + 1);
