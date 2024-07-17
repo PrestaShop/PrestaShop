@@ -67,6 +67,8 @@ class QueryProviderTest extends TestCase
 
     private LanguageContext $languageContext;
 
+    private CurrencyContext $currencyContext;
+
     private ShopContext $shopContext;
 
     private ApiClientContext $apiClientContext;
