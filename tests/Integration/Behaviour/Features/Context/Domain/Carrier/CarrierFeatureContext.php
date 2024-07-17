@@ -353,6 +353,10 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
                 $carrier->getAssociatedShopIds(),
             );
         }
+
+        if (isset($data['ordersCount'])) {
+            Assert::assertEquals($data['ordersCount'], $carrier->getOrdersCount());
+        }
     }
 
     /**

@@ -172,7 +172,7 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
     public function getEditableOrNewVersion(CarrierId $carrierId): Carrier
     {
         // If the carrier don't have orders linked, we can return it as is
-        if (!$this->carrierHasOrders($carrierId)) {
+        if ($this->ordersCount($carrierId) === 0) {
             return $this->get($carrierId);
         }
 
@@ -278,7 +278,7 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
         $qb->executeStatement();
     }
 
-    protected function carrierHasOrders(CarrierId $carrierId): bool
+    public function ordersCount(CarrierId $carrierId): int
     {
         $qb = $this->connection->createQueryBuilder();
 
@@ -289,6 +289,6 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
             ->executeQuery()
             ->fetchOne();
 
-        return (bool) $count;
+        return $count;
     }
 }

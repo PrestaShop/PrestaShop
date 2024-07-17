@@ -51,6 +51,7 @@ Feature: Carrier management
       | isFree           | true                               |
       | shippingMethod   | weight                             |
       | rangeBehavior    | disabled                           |
+      | ordersCount      | 0                                  |
     Then carrier "carrier1" shouldn't have a logo
 
   Scenario: Partially editing carrier with name and with an order linked
@@ -93,8 +94,10 @@ Feature: Carrier management
       | name | Carrier 1 new |
     Then carrier "carrier1" should have the following properties:
       | name             | Carrier 1                          |
+      | ordersCount      | 1                                  |
     Then carrier "newCarrier1" should have the following properties:
       | name             | Carrier 1 new                      |
+      | ordersCount      | 0                                  |
 
   Scenario: Partially editing carrier with name and without an order linked
     When I create carrier "carrier1" with specified properties:

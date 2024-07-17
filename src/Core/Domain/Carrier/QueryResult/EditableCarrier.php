@@ -54,6 +54,7 @@ class EditableCarrier
         private int $rangeBehavior,
         private array $associatedShopIds,
         private ?string $logoPath = null,
+        private int $ordersCount = 0,
     ) {
     }
 
@@ -156,5 +157,10 @@ class EditableCarrier
     public function getAssociatedShopIds(): array
     {
         return $this->associatedShopIds;
+    }
+
+    public function getOrdersCount(): int
+    {
+        return $this->ordersCount;
     }
 }
