@@ -764,6 +764,8 @@ class HookCore extends ObjectModel
             }
         }
 
+        Hook::exec('actionGetHookExecListAfter', ['modules_to_invoke' => $modulesToInvoke]);
+
         return !empty($modulesToInvoke) ? $modulesToInvoke : false;
     }
 
