@@ -1,4 +1,4 @@
-{#**
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,21 +21,21 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
-{% trans_default_domain 'Admin.Shipping.Feature' %}
+ */
 
-{% form_theme carrierForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+export default class MultipleZoneChoice {
+  constructor() {
+    this.initZoneChoice();
+  }
 
-{% block content %}
-  {% block carrier_form_block %}
-    {{ form_start(carrierForm) }}
-      {{ form_row(carrierForm) }}
-    {{ form_end(carrierForm) }}
-  {% endblock %}
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-  <script src="{{ asset('themes/new-theme/public/carrier_form.bundle.js') }}"></script>
-{% endblock %}
+  initZoneChoice(): void {
+    const $multipleZoneChoice = $('.js-multiple-zone-choice');
+    $multipleZoneChoice.select2(
+      {
+        multiple: true,
+        theme: 'classic',
+        placeholder: $multipleZoneChoice.data('placeholder'),
+      },
+    );
+  }
+}

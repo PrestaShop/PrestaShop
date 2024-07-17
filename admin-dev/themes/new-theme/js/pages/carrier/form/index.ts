@@ -28,5 +28,6 @@ $(() => {
     'TranslatableInput',
     'EventEmitter',
     'CarrierRanges',
+    'MultipleZoneChoice',
   ]);
 });

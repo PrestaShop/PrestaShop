@@ -3,3 +3,84 @@
     width: 100%;
   }
 }
+
+#carrier_shipping_location_and_costs {
+  /* stylelint-disable order/properties-order */
+  .select2-container--bootstrap {
+    height: 2.188rem;
+    padding: 0.4375rem 0.375rem;
+    padding-left: 15px;
+    cursor: default;
+    border: 1px solid #bbcdd2;
+    /* stylelint-disable-next-line property-disallowed-list */
+    border-radius: 4px;
+  }
+
+  .select2-container--classic.select2-container--open .select2-dropdown,
+  .select2-container--classic.select2-container--open .select2-selection--multiple {
+    border-color: #7cd5e7;
+  }
+
+  .select2-container--classic .select2-selection--multiple .select2-selection__choice {
+    margin: 5px;
+    background-color: #e5eff1;
+  }
+
+  .select2-container .select2-selection--multiple {
+    display: flex;
+    align-items: center;
+    min-height: 39px;
+
+    &::after {
+      position: absolute;
+      right: 6px;
+      display: inline-block;
+      width: auto;
+      font-family: "Material Icons", Arial, Verdana, Tahoma, sans-serif;
+      font-size: 1.5rem;
+      font-style: normal;
+      font-weight: 400;
+      font-feature-settings: "liga";
+      line-height: 1;
+      color: #6c868e;
+      text-transform: none;
+      letter-spacing: normal;
+      word-wrap: normal;
+      white-space: nowrap;
+      vertical-align: middle;
+      direction: ltr;
+      -webkit-font-smoothing: antialiased;
+      content: "expand_more";
+      text-rendering: "optimizeLegibility";
+      -moz-osx-font-smoothing: grayscale;
+      border: none;
+      /* stylelint-disable-next-line property-disallowed-list */
+      transition: 0.15s ease-out;
+    }
+  }
+
+  .select2-container--open .select2-selection--multiple {
+
+    &::after {
+      /* stylelint-disable-next-line property-disallowed-list */
+      transition: 0.15s ease-out;
+      transform: rotate(180deg);
+    }
+  }
+
+  .select2-search__field {
+    /* stylelint-disable-next-line declaration-no-important */
+    margin: 5px !important;
+    /* stylelint-disable-next-line declaration-no-important */
+    width: 100% !important;
+  }
+
+  .form-group .form-control-label{
+    justify-content: flex-end;
+  }
+
+  .help-box {
+    width: 19px;
+    margin-right: 0;
+  }
+}
