@@ -144,7 +144,7 @@
 </template>
 
 <script lang="ts">
-  import Modal from '@PSVue/components/Modal';
+  import Modal from '@PSVue/components/Modal.vue';
   import {defineComponent} from 'vue';
   import CarrierFormEventMap from '@pages/carrier/form/carrier-form-event-map';
 

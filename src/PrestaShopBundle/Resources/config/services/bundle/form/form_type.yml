@@ -559,7 +559,7 @@ services:
     arguments:
       $zonesChoiceProvider: '@prestashop.core.form.choice_provider.zone_by_id'
 
-  PrestaShopBundle\Form\Admin\Type\ZoneMultipleChoicesType:
+  PrestaShopBundle\Form\Admin\Type\MultipleZoneChoiceType:
     arguments:
       $zonesChoiceProvider: '@prestashop.core.form.choice_provider.zone_by_id'
 

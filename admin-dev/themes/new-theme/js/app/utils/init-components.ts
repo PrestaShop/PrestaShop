@@ -51,7 +51,7 @@ import TinyMCEEditor from '@js/components/tinymce-editor';
 import TranslatableField from '@js/components/translatable-field';
 import TranslatableInput from '@js/components/translatable-input';
 import EntitySearchInput from '@js/components/entity-search-input';
-import MultipleZoneChoice from "@js/components/form/multiple-zone-choice";
+import MultipleZoneChoice from '@js/components/form/multiple-zone-choice';
 
 // Grid extensions
 import AsyncToggleColumnExtension from '@components/grid/extension/column/common/async-toggle-column-extension';

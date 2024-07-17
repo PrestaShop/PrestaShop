@@ -28,8 +28,14 @@ export default class MultipleZoneChoice {
     this.initZoneChoice();
   }
 
-  initZoneChoice(): void
-  {
-    $('.js-multiple-zone-choice').select2();
+  initZoneChoice(): void {
+    const $multipleZoneChoice = $('.js-multiple-zone-choice');
+    $multipleZoneChoice.select2(
+      {
+        multiple: true,
+        theme: 'classic',
+        placeholder: $multipleZoneChoice.data('placeholder'),
+      },
+    );
   }
 }

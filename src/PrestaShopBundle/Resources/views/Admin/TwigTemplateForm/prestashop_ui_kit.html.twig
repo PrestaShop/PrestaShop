@@ -78,6 +78,17 @@
       {% set disabledField = true %}
     {% endif %}
 
+    {% if form.vars.external_link is defined %}
+        {% set externalLink = form.vars.external_link %}
+        {% if externalLink.position is defined %}
+            {% set position = externalLink.position %}
+        {% else %}
+            {% set position = 'append' %}
+        {% endif %}
+    {% else %}
+        {% set position = 'append' %}
+    {% endif %}
+
     <div class="{{ block('form_row_class') }}{{ block('widget_type_class') }}{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}{% if (attr.visible is defined and not attr.visible) %} d-none{% endif %}">
       {% set multistoreCheckboxName = multistore_field_prefix ~ form.vars.name %}
       {% if attribute(form.parent, multistoreCheckboxName) is defined %}
@@ -85,9 +96,19 @@
         {{ form_widget(attribute(form.parent, multistoreCheckboxName)) }}
       {% endif %}
 
-      {% if label_tag_name is not defined %}
-        {{ form_label(form) }}
+      {% if position == 'prepend' %}
+        {% if label_tag_name is not defined %}
+        <div class="form-control-label flex flex-col items-end">
+            {{ form_label(form) }}
+            {{- block('form_external_link') -}}
+        </div>
+        {% endif %}
+      {% else %}
+        {% if label_tag_name is not defined %}
+          {{ form_label(form) }}
+        {% endif %}
       {% endif %}
+
       <div class="{{ block('form_group_class') }}{% if disabledField %} disabled{% endif %}">
         {{- block('form_prepend_alert') -}}
         {{ form_widget(form) }}
@@ -98,7 +119,9 @@
         {{ attribute(form.parent, form.vars.name).vars.multistore_dropdown | raw }}
       {% endif %}
 
-      {{- block('form_external_link') -}}
+      {% if position == 'append' %}
+        {{- block('form_external_link') -}}
+      {% endif %}
     </div>
   {% endapply %}
 

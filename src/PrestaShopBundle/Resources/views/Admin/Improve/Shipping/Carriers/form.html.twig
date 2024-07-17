@@ -25,6 +25,8 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain 'Admin.Shipping.Feature' %}
 
+{% form_theme carrierForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+
 {% block content %}
   {% block carrier_form_block %}
     {{ form_start(carrierForm) }}
@@ -35,6 +37,5 @@
 
 {% block javascripts %}
   {{ parent() }}
-  <script src="{{ asset('themes/new-theme/public/carrier_form.bundle.js') }}">
-  </script>
+  <script src="{{ asset('themes/new-theme/public/carrier_form.bundle.js') }}"></script>
 {% endblock %}

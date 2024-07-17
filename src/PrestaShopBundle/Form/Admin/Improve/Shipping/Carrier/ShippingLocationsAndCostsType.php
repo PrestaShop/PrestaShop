@@ -26,13 +26,12 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier;
 
+use PrestaShopBundle\Form\Admin\Type\MultipleZoneChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TaxGroupChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use PrestaShopBundle\Form\Admin\Type\MultipleZoneChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ShippingLocationsAndCostsType extends TranslatorAwareType
 {
@@ -41,17 +40,18 @@ class ShippingLocationsAndCostsType extends TranslatorAwareType
         parent::buildForm($builder, $options);
 
         $builder
-            ->add('zone', MultipleZoneChoiceType::class, [
-                'label' => $this->trans('Zone', 'Admin.Shipping.Feature'),
+            ->add('zones', MultipleZoneChoiceType::class, [
+                'label' => $this->trans('Zones', 'Admin.Shipping.Feature'),
                 'required' => false,
                 'multiple' => true,
                 'label_help_box' => $this->trans('Zones that the carrier can handle', 'Admin.Shipping.Help'),
                 'external_link' => [
                     'text' => $this->trans('[1]Manage Zones[/1]', 'Admin.Shipping.Feature'),
-                    'position' => 'append',
+                    'position' => 'prepend',
                     'href' => '',
                 ],
                 'attr' => [
+                    'data-placeholder' => $this->trans('Zones', 'Admin.Shipping.Feature'),
                     'class' => 'select2 js-multiple-zone-choice',
                 ],
             ])
