@@ -10,12 +10,12 @@ import addShopPage from '@pages/BO/advancedParameters/multistore/shop/add';
 import shopPage from '@pages/BO/advancedParameters/multistore/shop';
 import addShopUrlPage from '@pages/BO/advancedParameters/multistore/url/addURL';
 import createProductPage from '@pages/BO/catalog/products/add';
-import productsPage from '@pages/BO/catalog/products';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 import {
   boDashboardPage,
+  boProductsPage,
   FakerProduct,
   FakerShop,
   foClassicHomePage,
@@ -119,29 +119,29 @@ describe('BO - Catalog - Products : Multistore', async () => {
         boDashboardPage.catalogParentLink,
         boDashboardPage.productsLink,
       );
-      await productsPage.closeSfToolBar(page);
+      await boProductsPage.closeSfToolBar(page);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it('should click on multistore header and select the new shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnMultistoreHeader', baseContext);
 
-      await productsPage.clickOnMultiStoreHeader(page);
-      await productsPage.chooseShop(page, 2);
+      await boProductsPage.clickOnMultiStoreHeader(page);
+      await boProductsPage.chooseShop(page, 2);
 
-      const shopName = await productsPage.getShopName(page);
+      const shopName = await boProductsPage.getShopName(page);
       expect(shopName).to.eq(createShopData.name);
 
-      const shopColor = await productsPage.getShopColor(page);
+      const shopColor = await boProductsPage.getShopColor(page);
       expect(shopColor).to.contains(createShopData.color);
     });
 
     it('should click on view my store', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyStore', baseContext);
 
-      page = await productsPage.viewMyStore(page);
+      page = await boProductsPage.viewMyStore(page);
 
       const pageTitle = await foClassicHomePage.getPageTitle(page);
       expect(pageTitle).to.contains(foClassicHomePage.pageTitle);
@@ -155,22 +155,22 @@ describe('BO - Catalog - Products : Multistore', async () => {
 
       page = await foClassicHomePage.closePage(browserContext, page, 0);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it('should click on \'New product\' button and check new product modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
-      const isModalVisible = await productsPage.clickOnNewProductButton(page);
+      const isModalVisible = await boProductsPage.clickOnNewProductButton(page);
       expect(isModalVisible).to.equals(true);
     });
 
     it('should choose \'Standard product\' and go to new product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseStandardProduct', baseContext);
 
-      await productsPage.selectProductType(page, newProductData.type);
-      await productsPage.clickOnAddNewProduct(page);
+      await boProductsPage.selectProductType(page, newProductData.type);
+      await boProductsPage.clickOnAddNewProduct(page);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);
@@ -188,50 +188,50 @@ describe('BO - Catalog - Products : Multistore', async () => {
 
       await createProductPage.goToCatalogPage(page);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it('should click on multistore header and select the default shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectDefaultShop', baseContext);
 
-      await productsPage.clickOnMultiStoreHeader(page);
-      await productsPage.chooseShop(page, 1);
+      await boProductsPage.clickOnMultiStoreHeader(page);
+      await boProductsPage.chooseShop(page, 1);
 
-      const shopName = await productsPage.getShopName(page);
+      const shopName = await boProductsPage.getShopName(page);
       expect(shopName).to.eq(global.INSTALL.SHOP_NAME);
     });
 
     it('should search for the created product and check that the product is not visible in the list', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchCreatedProduct', baseContext);
 
-      await productsPage.filterProducts(page, 'product_name', newProductData.name, 'input');
+      await boProductsPage.filterProducts(page, 'product_name', newProductData.name, 'input');
 
-      const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
+      const numberOfProductsAfterFilter = await boProductsPage.getNumberOfProductsFromList(page);
       expect(numberOfProductsAfterFilter).to.eq(0);
     });
 
     it('should reset filter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfter', baseContext);
 
-      const numberOfProductsAfterReset = await productsPage.resetAndGetNumberOfLines(page);
+      const numberOfProductsAfterReset = await boProductsPage.resetAndGetNumberOfLines(page);
       expect(numberOfProductsAfterReset).to.be.gt(0);
     });
 
     it('should click on multistore header and select the created shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectCreatedShop', baseContext);
 
-      await productsPage.clickOnMultiStoreHeader(page);
-      await productsPage.chooseShop(page, 2);
+      await boProductsPage.clickOnMultiStoreHeader(page);
+      await boProductsPage.chooseShop(page, 2);
 
-      const shopName = await productsPage.getShopName(page);
+      const shopName = await boProductsPage.getShopName(page);
       expect(shopName).to.eq(createShopData.name);
     });
 
     it('should go to the created product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreatedProductPage', baseContext);
 
-      await productsPage.goToProductPage(page, 1);
+      await boProductsPage.goToProductPage(page, 1);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);
@@ -258,38 +258,38 @@ describe('BO - Catalog - Products : Multistore', async () => {
 
       await createProductPage.goToCatalogPage(page);
 
-      const productName = await productsPage.getTextColumn(page, 'product_name', 1);
+      const productName = await boProductsPage.getTextColumn(page, 'product_name', 1);
       expect(productName).to.eq(editProductData.name);
     });
 
     it('should click on multistore header and select the default shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnMultistoreHeader2', baseContext);
 
-      await productsPage.clickOnMultiStoreHeader(page);
-      await productsPage.chooseShop(page, 1);
+      await boProductsPage.clickOnMultiStoreHeader(page);
+      await boProductsPage.chooseShop(page, 1);
 
-      const shopName = await productsPage.getShopName(page);
+      const shopName = await boProductsPage.getShopName(page);
       expect(shopName).to.eq(global.INSTALL.SHOP_NAME);
 
-      const shopColor = await productsPage.getShopColor(page);
+      const shopColor = await boProductsPage.getShopColor(page);
       expect(shopColor).to.eq('');
     });
 
     it('should check the updated product name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductName', baseContext);
 
-      const productName = await productsPage.getTextColumn(page, 'product_name', 1);
+      const productName = await boProductsPage.getTextColumn(page, 'product_name', 1);
       expect(productName).to.eq(editProductData.name);
     });
 
     it('should delete product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
-      const isModalVisible = await productsPage.clickOnDeleteProductFromStoreButton(page, 1);
+      const isModalVisible = await boProductsPage.clickOnDeleteProductFromStoreButton(page, 1);
       expect(isModalVisible).to.equal(true);
 
-      const textMessage = await productsPage.clickOnConfirmDialogButton(page);
-      expect(textMessage).to.equal(productsPage.successfulDeleteMessage);
+      const textMessage = await boProductsPage.clickOnConfirmDialogButton(page);
+      expect(textMessage).to.equal(boProductsPage.successfulDeleteMessage);
     });
   });
 

@@ -9,11 +9,11 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import apiClientPage from '@pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
-import productsPage from '@pages/BO/catalog/products';
 
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 import {
+  boProductsPage,
   boDashboardPage,
   FakerAPIClient,
   FakerProduct,
@@ -135,25 +135,25 @@ describe('API : DELETE /product/{productId}', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
       await boDashboardPage.goToSubMenu(page, boDashboardPage.catalogParentLink, boDashboardPage.productsLink);
-      await productsPage.closeSfToolBar(page);
+      await boProductsPage.closeSfToolBar(page);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForCreation', baseContext);
 
-      await productsPage.resetFilter(page);
-      await productsPage.filterProducts(page, 'product_name', productData.name);
+      await boProductsPage.resetFilter(page);
+      await boProductsPage.filterProducts(page, 'product_name', productData.name);
 
-      const numProducts = await productsPage.getNumberOfProductsFromList(page);
+      const numProducts = await boProductsPage.getNumberOfProductsFromList(page);
       expect(numProducts).to.be.equal(1);
 
-      const productName = await productsPage.getTextColumn(page, 'product_name', 1);
+      const productName = await boProductsPage.getTextColumn(page, 'product_name', 1);
       expect(productName).to.contains(productData.name);
 
-      idProduct = parseInt((await productsPage.getTextColumn(page, 'id_product', 1)).toString(), 10);
+      idProduct = parseInt((await boProductsPage.getTextColumn(page, 'id_product', 1)).toString(), 10);
       expect(idProduct).to.be.gt(0);
     });
   });
@@ -175,10 +175,10 @@ describe('API : DELETE /product/{productId}', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterAfterDeletion', baseContext);
 
-      await productsPage.resetFilter(page);
-      await productsPage.filterProducts(page, 'product_name', productData.name);
+      await boProductsPage.resetFilter(page);
+      await boProductsPage.filterProducts(page, 'product_name', productData.name);
 
-      const numProducts = await productsPage.getNumberOfProductsFromList(page);
+      const numProducts = await boProductsPage.getNumberOfProductsFromList(page);
       expect(numProducts).to.be.equal(0);
     });
   });

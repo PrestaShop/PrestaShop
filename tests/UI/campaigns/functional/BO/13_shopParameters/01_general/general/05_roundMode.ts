@@ -8,7 +8,6 @@ import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/prod
 // Import BO pages
 import generalPage from '@pages/BO/shopParameters/general';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
-import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 
 // Import FO pages
@@ -18,6 +17,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boProductsPage,
   FakerProduct,
   foClassicHomePage,
   foClassicSearchResultsPage,
@@ -164,16 +164,16 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
           boDashboardPage.catalogParentLink,
           boDashboardPage.productsLink,
         );
-        await productsPage.closeSfToolBar(page);
+        await boProductsPage.closeSfToolBar(page);
 
-        const pageTitle = await productsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(productsPage.pageTitle);
+        const pageTitle = await boProductsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductsPage.pageTitle);
       });
 
       it('should go to the created product', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFirstProductPage1', baseContext);
 
-        await productsPage.goToProductPage(page, 1);
+        await boProductsPage.goToProductPage(page, 1);
 
         const pageTitle = await createProductsPage.getPageTitle(page);
         expect(pageTitle).to.contains(createProductsPage.pageTitle);
@@ -283,16 +283,16 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
           boDashboardPage.catalogParentLink,
           boDashboardPage.productsLink,
         );
-        await productsPage.closeSfToolBar(page);
+        await boProductsPage.closeSfToolBar(page);
 
-        const pageTitle = await productsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(productsPage.pageTitle);
+        const pageTitle = await boProductsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductsPage.pageTitle);
       });
 
       it('should go to the created product', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFirstProductPage2', baseContext);
 
-        await productsPage.goToProductPage(page, 1);
+        await boProductsPage.goToProductPage(page, 1);
 
         const pageTitle = await createProductsPage.getPageTitle(page);
         expect(pageTitle).to.contains(createProductsPage.pageTitle);

@@ -11,7 +11,6 @@ import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advanced
 // Import BO pages
 import psEmailAlerts from '@pages/BO/modules/psEmailAlerts';
 import ordersPage from '@pages/BO/orders';
-import productsPage from '@pages/BO/catalog/products';
 import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 import addProductPage from '@pages/BO/catalog/products/add';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
@@ -26,6 +25,7 @@ import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmatio
 import {
   boDashboardPage,
   boModuleManagerPage,
+  boProductsPage,
   dataCustomers,
   dataModules,
   dataOrderStatuses,
@@ -335,26 +335,26 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
         boDashboardPage.productsLink,
       );
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it(`should filter by name '${productData.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterProducts', baseContext);
 
-      await productsPage.filterProducts(page, 'product_name', productData.name, 'input');
+      await boProductsPage.filterProducts(page, 'product_name', productData.name, 'input');
 
-      const numberOfProductsAfterFilter: number = await productsPage.getNumberOfProductsFromList(page);
+      const numberOfProductsAfterFilter: number = await boProductsPage.getNumberOfProductsFromList(page);
       expect(numberOfProductsAfterFilter).to.equal(1);
 
-      const textColumn = await productsPage.getTextColumn(page, 'product_name', 1);
+      const textColumn = await boProductsPage.getTextColumn(page, 'product_name', 1);
       expect(textColumn).to.eq(productData.name);
     });
 
     it('should go to product page and update product quantity to 1', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityTo1', baseContext);
 
-      await productsPage.goToProductPage(page, 1);
+      await boProductsPage.goToProductPage(page, 1);
       await stocksTab.setProductQuantity(page, 1);
 
       const message = await addProductPage.saveProduct(page);
@@ -492,26 +492,26 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
         boDashboardPage.productsLink,
       );
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it(`should filter by name '${productData.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByName2', baseContext);
 
-      await productsPage.filterProducts(page, 'product_name', productData.name, 'input');
+      await boProductsPage.filterProducts(page, 'product_name', productData.name, 'input');
 
-      const numberOfProductsAfterFilter: number = await productsPage.getNumberOfProductsFromList(page);
+      const numberOfProductsAfterFilter: number = await boProductsPage.getNumberOfProductsFromList(page);
       expect(numberOfProductsAfterFilter).to.equal(1);
 
-      const textColumn = await productsPage.getTextColumn(page, 'product_name', 1);
+      const textColumn = await boProductsPage.getTextColumn(page, 'product_name', 1);
       expect(textColumn).to.eq(productData.name);
     });
 
     it('should go to product page and update product quantity to 0', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityToO', baseContext);
 
-      await productsPage.goToProductPage(page, 1);
+      await boProductsPage.goToProductPage(page, 1);
       await stocksTab.setProductQuantity(page, 0);
 
       const message = await addProductPage.saveProduct(page);

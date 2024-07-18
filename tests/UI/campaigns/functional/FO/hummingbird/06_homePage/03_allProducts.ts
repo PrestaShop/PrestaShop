@@ -5,14 +5,11 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
-// Import pages
-// Import BO pages
-import productsPage from '@pages/BO/catalog/products';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boProductsPage,
   foHummingbirdHomePage,
   foHummingbirdCategoryPage,
   utilsPlaywright,
@@ -52,29 +49,29 @@ describe('FO - Home Page : Display all products', async () => {
         boDashboardPage.catalogParentLink,
         boDashboardPage.productsLink,
       );
-      await productsPage.closeSfToolBar(page);
+      await boProductsPage.closeSfToolBar(page);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
-      numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+      numberOfProducts = await boProductsPage.resetAndGetNumberOfLines(page);
       expect(numberOfProducts).to.be.above(0);
     });
 
     it('should filter by Active Status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByStatus', baseContext);
 
-      await productsPage.filterProducts(page, 'active', 'Yes', 'select');
+      await boProductsPage.filterProducts(page, 'active', 'Yes', 'select');
 
-      numberOfActiveProducts = await productsPage.getNumberOfProductsFromList(page);
+      numberOfActiveProducts = await boProductsPage.getNumberOfProductsFromList(page);
       expect(numberOfActiveProducts).to.within(0, numberOfProducts);
 
       for (let i = 1; i <= numberOfActiveProducts; i++) {
-        const productStatus = await productsPage.getProductStatusFromList(page, i);
+        const productStatus = await boProductsPage.getProductStatusFromList(page, i);
         expect(productStatus).to.eq(true);
       }
     });

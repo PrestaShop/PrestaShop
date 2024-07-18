@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import statsPage from '@pages/BO/stats';
 import newCategoryPage from '@pages/BO/catalog/categories/add';
 import newVoucherPage from '@pages/BO/catalog/discounts/add';
-import productsPage from '@pages/BO/catalog/products/';
 import ordersPage from '@pages/BO/orders';
 import quickAccessPage from '@pages/BO/quickAccess';
 import addNewQuickAccessPage from '@pages/BO/quickAccess/add';
@@ -19,6 +18,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boModuleManagerPage,
+  boProductsPage,
   FakerQuickAccess,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -54,7 +54,7 @@ describe('BO - Header : Quick access links', async () => {
       {args: {pageName: 'Catalog evaluation', pageTitle: statsPage.pageTitle}},
       {args: {pageName: 'Installed modules', pageTitle: boModuleManagerPage.pageTitle}},
       {args: {pageName: 'New category', pageTitle: newCategoryPage.pageTitleCreate}},
-      {args: {pageName: 'New product', pageTitle: productsPage.pageTitle}},
+      {args: {pageName: 'New product', pageTitle: boProductsPage.pageTitle}},
       {args: {pageName: 'Orders', pageTitle: ordersPage.pageTitle}},
       {args: {pageName: 'New voucher', pageTitle: newVoucherPage.pageTitle}},
     ].forEach((test, index: number) => {
@@ -64,10 +64,10 @@ describe('BO - Header : Quick access links', async () => {
         if (test.args.pageName === 'New product') {
           await boDashboardPage.quickAccessToPageWithFrame(page, test.args.pageName);
 
-          const isModalVisible = await productsPage.isNewProductModalVisibleInFrame(page);
+          const isModalVisible = await boProductsPage.isNewProductModalVisibleInFrame(page);
           expect(isModalVisible).to.be.equal(true);
 
-          const isModalNotVisible = await productsPage.closeNewProductModal(page);
+          const isModalNotVisible = await boProductsPage.closeNewProductModal(page);
           expect(isModalNotVisible).to.be.equal(true);
         } else {
           await boDashboardPage.quickAccessToPage(page, test.args.pageName);

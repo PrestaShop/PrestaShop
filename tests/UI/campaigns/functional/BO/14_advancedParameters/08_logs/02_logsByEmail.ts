@@ -8,7 +8,6 @@ import {createProductTest} from '@commonTests/BO/catalog/product';
 
 // Import pages
 import logsPage from '@pages/BO/advancedParameters/logs';
-import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 
 import type {BrowserContext, Page} from 'playwright';
@@ -16,6 +15,7 @@ import {expect} from 'chai';
 import {faker} from '@faker-js/faker';
 import {
   boDashboardPage,
+  boProductsPage,
   dataEmployees,
   FakerProduct,
   type MailDev,
@@ -113,14 +113,14 @@ describe('BO - Advanced Parameters - Logs : Logs by email', async () => {
         boDashboardPage.productsLink,
       );
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it('should go to the first product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditPage', baseContext);
 
-      await productsPage.goToProductPage(page, 1);
+      await boProductsPage.goToProductPage(page, 1);
 
       const pageTitle = await createProductsPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductsPage.pageTitle);
@@ -149,7 +149,7 @@ describe('BO - Advanced Parameters - Logs : Logs by email', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
       const createProductMessage = await createProductsPage.deleteProduct(page);
-      expect(createProductMessage).to.equal(productsPage.successfulDeleteMessage);
+      expect(createProductMessage).to.equal(boProductsPage.successfulDeleteMessage);
     });
   });
 

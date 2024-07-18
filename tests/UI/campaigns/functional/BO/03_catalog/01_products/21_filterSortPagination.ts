@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
@@ -13,6 +12,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boProductsPage,
   dataCategories,
   type ProductFilterMinMax,
   utilsCore,
@@ -51,14 +51,14 @@ describe('BO - Catalog - Products list : Filter & Sort, Pagination, Filter by ca
         boDashboardPage.productsLink,
       );
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it('should reset filter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
-      numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+      numberOfProducts = await boProductsPage.resetAndGetNumberOfLines(page);
       expect(numberOfProducts).to.be.gt(0);
     });
 
@@ -118,13 +118,13 @@ describe('BO - Catalog - Products list : Filter & Sort, Pagination, Filter by ca
       it(`should filter list by '${test.args.filterBy}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.identifier}`, baseContext);
 
-        await productsPage.filterProducts(page, test.args.filterBy, test.args.filterValue, test.args.filterType);
+        await boProductsPage.filterProducts(page, test.args.filterBy, test.args.filterValue, test.args.filterType);
 
-        const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
+        const numberOfProductsAfterFilter = await boProductsPage.getNumberOfProductsFromList(page);
         expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
 
         for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
-          const textColumn = await productsPage.getTextColumn(page, test.args.filterBy, i);
+          const textColumn = await boProductsPage.getTextColumn(page, test.args.filterBy, i);
 
           switch (test.args.comparisonType) {
             case 'toWithinMinMax':
@@ -143,7 +143,7 @@ describe('BO - Catalog - Products list : Filter & Sort, Pagination, Filter by ca
       it('should reset filter', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `resetAfter${test.args.identifier}`, baseContext);
 
-        const numberOfProductsAfterReset = await productsPage.resetAndGetNumberOfLines(page);
+        const numberOfProductsAfterReset = await boProductsPage.resetAndGetNumberOfLines(page);
         expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
       });
     });
@@ -151,16 +151,16 @@ describe('BO - Catalog - Products list : Filter & Sort, Pagination, Filter by ca
     it('should filter list by \'active\' No and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByStatusNo', baseContext);
 
-      await productsPage.filterProducts(page, 'active', 'No', 'select');
+      await boProductsPage.filterProducts(page, 'active', 'No', 'select');
 
-      const textColumn = await productsPage.getTextForEmptyTable(page);
+      const textColumn = await boProductsPage.getTextForEmptyTable(page);
       expect(textColumn).to.equal('warning No records found');
     });
 
     it('should reset filter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterByStatus', baseContext);
 
-      const numberOfProductsAfterReset = await productsPage.resetAndGetNumberOfLines(page);
+      const numberOfProductsAfterReset = await boProductsPage.resetAndGetNumberOfLines(page);
       expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
     });
   });
@@ -180,22 +180,22 @@ describe('BO - Catalog - Products list : Filter & Sort, Pagination, Filter by ca
         it(`should filter by category '${arg.categoryName}'`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `filterByCategories${arg.categoryName}`, baseContext);
 
-          await productsPage.filterProductsByCategory(page, arg.categoryName);
+          await boProductsPage.filterProductsByCategory(page, arg.categoryName);
 
-          const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
+          const numberOfProductsAfterFilter = await boProductsPage.getNumberOfProductsFromList(page);
           expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
         });
 
         it('should check result', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkResults${arg.categoryName}`, baseContext);
 
-          const filterButtonName = await productsPage.getFilterByCategoryButtonName(page);
+          const filterButtonName = await boProductsPage.getFilterByCategoryButtonName(page);
           expect(filterButtonName).to.equal(`Filter by categories (${arg.categoryName})`);
 
-          numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
+          numberOfProductsAfterFilter = await boProductsPage.getNumberOfProductsFromList(page);
           expect(numberOfProductsAfterFilter).to.be.equals(arg.numProducts);
 
-          const isVisible = await productsPage.isClearFilterLinkVisible(page);
+          const isVisible = await boProductsPage.isClearFilterLinkVisible(page);
           expect(isVisible).to.eq(true);
         });
       });
@@ -211,7 +211,7 @@ describe('BO - Catalog - Products list : Filter & Sort, Pagination, Filter by ca
               baseContext,
             );
 
-            await productsPage.goToProductPage(page, idxProduct);
+            await boProductsPage.goToProductPage(page, idxProduct);
 
             const pageTitle: string = await createProductsPage.getPageTitle(page);
             expect(pageTitle).to.contains(createProductsPage.pageTitle);
@@ -239,8 +239,8 @@ describe('BO - Catalog - Products list : Filter & Sort, Pagination, Filter by ca
 
             await createProductsPage.goToCatalogPage(page);
 
-            const pageTitle = await productsPage.getPageTitle(page);
-            expect(pageTitle).to.contains(productsPage.pageTitle);
+            const pageTitle = await boProductsPage.getPageTitle(page);
+            expect(pageTitle).to.contains(boProductsPage.pageTitle);
           });
         });
       }
@@ -249,9 +249,9 @@ describe('BO - Catalog - Products list : Filter & Sort, Pagination, Filter by ca
         it('should click on \'Clear filter\' button', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `clickOnClearFilterButton${arg.categoryName}`, baseContext);
 
-          await productsPage.clickOnClearFilterLink(page);
+          await boProductsPage.clickOnClearFilterLink(page);
 
-          const numberOfProductsAfterReset = await productsPage.resetAndGetNumberOfLines(page);
+          const numberOfProductsAfterReset = await boProductsPage.resetAndGetNumberOfLines(page);
           expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
         });
       });
@@ -262,35 +262,35 @@ describe('BO - Catalog - Products list : Filter & Sort, Pagination, Filter by ca
     it('should change display items to 10', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeDisplayItemsTo10', baseContext);
 
-      const paginationNumber = await productsPage.selectPaginationLimit(page, 10);
+      const paginationNumber = await boProductsPage.selectPaginationLimit(page, 10);
       expect(paginationNumber).to.contains('page 1');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await productsPage.paginationNext(page);
+      const paginationNumber = await boProductsPage.paginationNext(page);
       expect(paginationNumber).to.contains('page 2');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await productsPage.paginationPrevious(page);
+      const paginationNumber = await boProductsPage.paginationPrevious(page);
       expect(paginationNumber).to.contains('page 1');
     });
 
     it('should set the pagination page to 2', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setPaginationPage', baseContext);
 
-      const paginationNumber = await productsPage.setPaginationPage(page, 2);
+      const paginationNumber = await boProductsPage.setPaginationPage(page, 2);
       expect(paginationNumber).to.contains('page 2');
     });
 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
-      const paginationNumber = await productsPage.selectPaginationLimit(page, 50);
+      const paginationNumber = await boProductsPage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.contains('page 1');
     });
   });
@@ -387,11 +387,11 @@ describe('BO - Catalog - Products list : Filter & Sort, Pagination, Filter by ca
       it(`should sort by '${test.sortBy}' '${test.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.identifier, baseContext);
 
-        const nonSortedTable = await productsPage.getAllRowsColumnContent(page, test.column);
+        const nonSortedTable = await boProductsPage.getAllRowsColumnContent(page, test.column);
 
-        await productsPage.sortTable(page, test.sortBy, test.sortDirection);
+        await boProductsPage.sortTable(page, test.sortBy, test.sortDirection);
 
-        const sortedTable = await productsPage.getAllRowsColumnContent(page, test.column);
+        const sortedTable = await boProductsPage.getAllRowsColumnContent(page, test.column);
 
         const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
         const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));

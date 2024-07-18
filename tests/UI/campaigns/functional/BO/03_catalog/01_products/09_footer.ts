@@ -5,13 +5,13 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 import {
   boDashboardPage,
+  boProductsPage,
   dataProducts,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -44,29 +44,29 @@ describe('BO - Catalog - Products : Footer', async () => {
       boDashboardPage.catalogParentLink,
       boDashboardPage.productsLink,
     );
-    await productsPage.closeSfToolBar(page);
+    await boProductsPage.closeSfToolBar(page);
 
-    const pageTitle = await productsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(productsPage.pageTitle);
+    const pageTitle = await boProductsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boProductsPage.pageTitle);
   });
 
   it(`should filter a product named "${dataProducts.demo_12.name}"`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterProduct', baseContext);
 
-    await productsPage.resetFilter(page);
-    await productsPage.filterProducts(page, 'product_name', dataProducts.demo_12.name, 'input');
+    await boProductsPage.resetFilter(page);
+    await boProductsPage.filterProducts(page, 'product_name', dataProducts.demo_12.name, 'input');
 
-    const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
+    const numberOfProductsAfterFilter = await boProductsPage.getNumberOfProductsFromList(page);
     expect(numberOfProductsAfterFilter).to.equal(1);
 
-    const textColumn = await productsPage.getTextColumn(page, 'product_name', 1);
+    const textColumn = await boProductsPage.getTextColumn(page, 'product_name', 1);
     expect(textColumn).to.equal(dataProducts.demo_12.name);
   });
 
   it('should edit the product', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEditPage', baseContext);
 
-    await productsPage.goToProductPage(page, 1);
+    await boProductsPage.goToProductPage(page, 1);
 
     const pageTitle: string = await createProductsPage.getPageTitle(page);
     expect(pageTitle).to.contains(createProductsPage.pageTitle);

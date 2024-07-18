@@ -6,7 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
@@ -19,6 +18,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boProductsPage,
   FakerProduct,
   type ProductAttribute,
   utilsPlaywright,
@@ -128,27 +128,27 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
         productSettingsPage.catalogParentLink,
         productSettingsPage.productsLink,
       );
-      await productsPage.closeSfToolBar(page);
+      await boProductsPage.closeSfToolBar(page);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterProducts', baseContext);
 
-      numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+      numberOfProducts = await boProductsPage.resetAndGetNumberOfLines(page);
       expect(numberOfProducts).to.be.above(0);
     });
 
     it('should click on new product button and go to new product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductPage', baseContext);
 
-      const isModalVisible = await productsPage.clickOnNewProductButton(page);
+      const isModalVisible = await boProductsPage.clickOnNewProductButton(page);
       expect(isModalVisible).to.be.equal(true);
 
-      await productsPage.selectProductType(page, productWithCombinations.type);
-      await productsPage.clickOnAddNewProduct(page);
+      await boProductsPage.selectProductType(page, productWithCombinations.type);
+      await boProductsPage.clickOnAddNewProduct(page);
 
       const pageTitle = await addProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(addProductPage.pageTitle);
@@ -258,29 +258,29 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
         productSettingsPage.productsLink,
       );
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it('should filter list by the created product and delete product from dropDown menu', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
-      await productsPage.filterProducts(page, 'reference', productWithCombinations.reference, 'input');
+      await boProductsPage.filterProducts(page, 'reference', productWithCombinations.reference, 'input');
 
-      const isModalVisible = await productsPage.clickOnDeleteProductButton(page);
+      const isModalVisible = await boProductsPage.clickOnDeleteProductButton(page);
       expect(isModalVisible).to.be.equal(true);
 
-      const textMessage = await productsPage.clickOnConfirmDialogButton(page);
-      expect(textMessage).to.equal(productsPage.successfulDeleteMessage);
+      const textMessage = await boProductsPage.clickOnConfirmDialogButton(page);
+      expect(textMessage).to.equal(boProductsPage.successfulDeleteMessage);
 
-      const numberOfProductsAfterDelete = await productsPage.resetAndGetNumberOfLines(page);
+      const numberOfProductsAfterDelete = await boProductsPage.resetAndGetNumberOfLines(page);
       expect(numberOfProductsAfterDelete).to.equal(numberOfProducts);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
 
-      const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+      const numberOfProducts = await boProductsPage.resetAndGetNumberOfLines(page);
       expect(numberOfProducts).to.be.above(0);
     });
   });

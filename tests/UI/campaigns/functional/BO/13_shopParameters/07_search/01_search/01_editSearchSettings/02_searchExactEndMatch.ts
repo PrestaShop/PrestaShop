@@ -57,7 +57,7 @@ describe('BO - Shop Parameters - Search : Search exact end match', async () => {
 
       const pageTitle = await boSearchPage.getPageTitle(page);
       expect(pageTitle).to.contains(boSearchPage.pageTitle);
-    
+
       const statusSearchExactEndMatch = await boSearchPage.getSearchExactEndMatchStatus(page);
       expect(statusSearchExactEndMatch).to.be.eq(false);
     });
@@ -79,38 +79,38 @@ describe('BO - Shop Parameters - Search : Search exact end match', async () => {
           dataProducts.demo_10.name,
           productData.name,
         ],
-      }
+      },
     ].forEach((arg: {verb: string, numResults: number, results: string[]}, index: number) => {
       it(`should ${arg.verb} the Search exact end match`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${arg.verb}SearchExactEndMatch`, baseContext);
-    
+
         const textResult = await boSearchPage.setSearchExactEndMatch(page, arg.verb === 'enable');
         expect(textResult).to.be.eq(boSearchPage.settingsUpdateMessage);
       });
 
       it('should go to the Front Office', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToFo${index}`, baseContext);
-    
+
         page = await boSearchPage.viewMyShop(page);
-    
+
         const pageTitle = await foClassicHomePage.getPageTitle(page);
         expect(pageTitle).to.be.eq(foClassicHomePage.pageTitle);
       });
 
       it('should check the search page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkSearchPage${index}`, baseContext);
-    
+
         await foClassicHomePage.searchProduct(page, 'note');
-    
+
         const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
         expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
-    
+
         const searchInputValue = await foClassicSearchResultsPage.getSearchValue(page);
         expect(searchInputValue).to.be.equal('note');
-    
+
         const hasResults = await foClassicSearchResultsPage.hasResults(page);
         expect(hasResults).to.eq(true);
-    
+
         const numResults = await foClassicSearchResultsPage.getSearchResultsNumber(page);
         expect(numResults).to.eq(arg.numResults);
 

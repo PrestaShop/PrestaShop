@@ -10,7 +10,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import deleteNonOrderedShoppingCarts from '@commonTests/BO/orders/shoppingCarts';
 
 // Import BO pages
-import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import stocksPage from '@pages/BO/catalog/stocks';
@@ -19,6 +18,7 @@ import addOrderPage from '@pages/BO/orders/add';
 
 import {
   boDashboardPage,
+  boProductsPage,
   dataCurrencies,
   dataCustomers,
   dataProducts,
@@ -216,10 +216,10 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
       await boDashboardPage.goToSubMenu(page, boDashboardPage.catalogParentLink, boDashboardPage.productsLink);
-      await productsPage.closeSfToolBar(page);
+      await boProductsPage.closeSfToolBar(page);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     [
@@ -234,14 +234,14 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
         it('should click on \'New product\' button and check new product modal', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `clickOnNewProductButton${index}`, baseContext);
 
-          const isModalVisible = await productsPage.clickOnNewProductButton(page);
+          const isModalVisible = await boProductsPage.clickOnNewProductButton(page);
           expect(isModalVisible).to.be.eq(true);
         });
 
         it(`should choose '${product.type} product'`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `chooseStandardProduct${index}`, baseContext);
 
-          await productsPage.selectProductType(page, product.type);
+          await boProductsPage.selectProductType(page, product.type);
 
           const pageTitle = await addProductPage.getPageTitle(page);
           expect(pageTitle).to.contains(addProductPage.pageTitle);
@@ -254,7 +254,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
         if (index !== 0) {
           await addProductPage.clickOnNewProductButton(page);
         } else {
-          await productsPage.clickOnAddNewProduct(page);
+          await boProductsPage.clickOnAddNewProduct(page);
         }
 
         const pageTitle = await addProductPage.getPageTitle(page);

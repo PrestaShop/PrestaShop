@@ -6,7 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
-import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
@@ -14,6 +13,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boProductsPage,
   FakerProduct,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -85,18 +85,18 @@ describe('BO - Shop Parameters - Product Settings : Update max size of short des
           productSettingsPage.productsLink,
         );
 
-        const pageTitle = await productsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(productsPage.pageTitle);
+        const pageTitle = await boProductsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductsPage.pageTitle);
       });
 
       it('should click on new product button and go to new product page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `clickOnNewProductPage${index}`, baseContext);
 
-        const isModalVisible = await productsPage.clickOnNewProductButton(page);
+        const isModalVisible = await boProductsPage.clickOnNewProductButton(page);
         expect(isModalVisible).to.be.equal(true);
 
-        await productsPage.selectProductType(page, productData.type);
-        await productsPage.clickOnAddNewProduct(page);
+        await boProductsPage.selectProductType(page, productData.type);
+        await boProductsPage.clickOnAddNewProduct(page);
 
         const pageTitle = await addProductPage.getPageTitle(page);
         expect(pageTitle).to.contains(addProductPage.pageTitle);
@@ -128,7 +128,7 @@ describe('BO - Shop Parameters - Product Settings : Update max size of short des
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
       const testResult = await addProductPage.deleteProduct(page);
-      expect(testResult).to.equal(productsPage.successfulDeleteMessage);
+      expect(testResult).to.equal(boProductsPage.successfulDeleteMessage);
     });
   });
 });

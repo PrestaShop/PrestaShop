@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import employeesPage from '@pages/BO/advancedParameters/team';
 import addEmployeePage from '@pages/BO/advancedParameters/team/add';
-import productsPage from '@pages/BO/catalog/products';
 import ordersPage from '@pages/BO/orders';
 
 import {expect} from 'chai';
@@ -15,6 +14,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
+  boProductsPage,
   FakerEmployee,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -109,8 +109,8 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
 
       await boLoginPage.successLogin(page, createEmployeeData.email, createEmployeeData.password);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it('should logout from BO', async function () {

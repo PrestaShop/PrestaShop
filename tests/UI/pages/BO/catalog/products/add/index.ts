@@ -1,7 +1,6 @@
 // Import pages
 import virtualProductTab from '@pages/BO/catalog/products/add/virtualProductTab';
 import BOBasePage from '@pages/BO/BObasePage';
-import productsPage from '@pages/BO/catalog/products';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 import detailsTab from '@pages/BO/catalog/products/add/detailsTab';
 import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
@@ -10,6 +9,7 @@ import packTab from '@pages/BO/catalog/products/add/packTab';
 
 import type {Frame, Page} from 'playwright';
 import {
+  boProductsPage,
   type FakerProduct,
   type ProductHeaderSummary,
 } from '@prestashop-core/ui-testing';
@@ -447,7 +447,7 @@ class CreateProduct extends BOBasePage {
     await this.waitForVisibleSelector(page, this.deleteProductFooterModal);
     await this.clickAndWaitForURL(page, this.deleteProductSubmitButton);
 
-    return productsPage.getAlertSuccessBlockParagraphContent(page);
+    return boProductsPage.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -468,7 +468,7 @@ class CreateProduct extends BOBasePage {
     await this.waitForSelectorAndClick(page, this.footerProductDropDown);
     await this.waitForSelectorAndClick(page, this.newProductButton);
 
-    return this.elementVisible(page, productsPage.modalCreateProduct, 1000);
+    return this.elementVisible(page, boProductsPage.modalCreateProduct, 1000);
   }
 
   /**
@@ -494,8 +494,8 @@ class CreateProduct extends BOBasePage {
   async chooseProductType(page: Page, productType: string): Promise<void> {
     const currentUrl: string = page.url();
 
-    await productsPage.selectProductType(page, productType);
-    await productsPage.clickOnAddNewProduct(page);
+    await boProductsPage.selectProductType(page, productType);
+    await boProductsPage.clickOnAddNewProduct(page);
     await page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'});
   }
 
@@ -526,7 +526,7 @@ class CreateProduct extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async isChooseProductIframeVisible(page: Page): Promise<boolean> {
-    return !(await this.elementNotVisible(page, `${productsPage.modalCreateProduct} iframe`, 1000));
+    return !(await this.elementNotVisible(page, `${boProductsPage.modalCreateProduct} iframe`, 1000));
   }
 
   /**

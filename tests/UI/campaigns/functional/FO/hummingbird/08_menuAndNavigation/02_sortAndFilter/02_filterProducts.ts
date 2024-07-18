@@ -6,13 +6,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import BO pages
-import productsPage from '@pages/BO/catalog/products';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boProductsPage,
   foHummingbirdCategoryPage,
   foHummingbirdHomePage,
   utilsPlaywright,
@@ -64,19 +64,19 @@ describe('FO - Menu and navigation : Filter products', async () => {
         boDashboardPage.catalogParentLink,
         boDashboardPage.productsLink,
       );
-      await productsPage.closeSfToolBar(page);
+      await boProductsPage.closeSfToolBar(page);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it('should filter by Active Status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfActiveProducts', baseContext);
 
-      const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-      await productsPage.filterProducts(page, 'active', 'Yes', 'select');
+      const numberOfProducts = await boProductsPage.resetAndGetNumberOfLines(page);
+      await boProductsPage.filterProducts(page, 'active', 'Yes', 'select');
 
-      numberOfActiveProducts = await productsPage.getNumberOfProductsFromList(page);
+      numberOfActiveProducts = await boProductsPage.getNumberOfProductsFromList(page);
       expect(numberOfActiveProducts).to.within(0, numberOfProducts);
     });
   });

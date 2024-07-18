@@ -9,13 +9,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
-import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 import {
+  boProductsPage,
   boDashboardPage,
   dataLanguages,
   FakerAPIClient,
@@ -188,33 +188,33 @@ describe('API : POST /product', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
       await boDashboardPage.goToSubMenu(page, boDashboardPage.catalogParentLink, boDashboardPage.productsLink);
-      await productsPage.closeSfToolBar(page);
+      await boProductsPage.closeSfToolBar(page);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForCreation', baseContext);
 
-      await productsPage.resetFilter(page);
-      await productsPage.filterProducts(page, 'product_name', createProduct.name);
+      await boProductsPage.resetFilter(page);
+      await boProductsPage.filterProducts(page, 'product_name', createProduct.name);
 
-      const numProducts = await productsPage.getNumberOfProductsFromList(page);
+      const numProducts = await boProductsPage.getNumberOfProductsFromList(page);
       expect(numProducts).to.be.equal(1);
     });
 
     it('should check the JSON Response : `productId`', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseProductId', baseContext);
 
-      const value = parseInt((await productsPage.getTextColumn(page, 'id_product', 1)).toString(), 10);
+      const value = parseInt((await boProductsPage.getTextColumn(page, 'id_product', 1)).toString(), 10);
       expect(value).to.equal(jsonResponse.productId);
     });
 
     it('should go to edit product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditProductPageAfterPost', baseContext);
 
-      await productsPage.goToProductPage(page, 1);
+      await boProductsPage.goToProductPage(page, 1);
 
       const pageTitle: string = await createProductsPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductsPage.pageTitle);

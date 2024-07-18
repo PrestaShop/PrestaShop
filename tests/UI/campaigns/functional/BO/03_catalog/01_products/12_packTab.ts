@@ -8,7 +8,6 @@ import {deleteProductTest} from '@commonTests/BO/catalog/product';
 // Import pages
 // Import BO pages
 import createProductsPage from '@pages/BO/catalog/products/add';
-import productsPage from '@pages/BO/catalog/products';
 import packTab from '@pages/BO/catalog/products/add/packTab';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import ordersPage from '@pages/BO/orders';
@@ -20,6 +19,7 @@ import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmatio
 
 import {
   boDashboardPage,
+  boProductsPage,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
@@ -71,62 +71,62 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
         boDashboardPage.catalogParentLink,
         boDashboardPage.productsLink,
       );
-      await productsPage.closeSfToolBar(page);
+      await boProductsPage.closeSfToolBar(page);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it(`should filter the product "${dataProducts.demo_1.reference}"`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterProductDemo1', baseContext);
 
-      await productsPage.resetFilter(page);
-      await productsPage.filterProducts(page, 'product_name', dataProducts.demo_1.name);
+      await boProductsPage.resetFilter(page);
+      await boProductsPage.filterProducts(page, 'product_name', dataProducts.demo_1.name);
 
-      const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
+      const numberOfProductsAfterFilter = await boProductsPage.getNumberOfProductsFromList(page);
       expect(numberOfProductsAfterFilter).to.be.gte(1);
 
-      const productReference = await productsPage.getTextColumn(page, 'reference', 1);
+      const productReference = await boProductsPage.getTextColumn(page, 'reference', 1);
       expect(productReference).to.be.eq(dataProducts.demo_1.reference);
 
-      productStockDemo1 = await productsPage.getTextColumn(page, 'quantity', 1) as number;
+      productStockDemo1 = await boProductsPage.getTextColumn(page, 'quantity', 1) as number;
       expect(productStockDemo1).to.be.gte(1);
     });
 
     it(`should filter the product "${dataProducts.demo_9.reference}"`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterProductDemo9', baseContext);
 
-      await productsPage.resetFilter(page);
-      await productsPage.filterProducts(page, 'product_name', dataProducts.demo_9.name);
+      await boProductsPage.resetFilter(page);
+      await boProductsPage.filterProducts(page, 'product_name', dataProducts.demo_9.name);
 
-      const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
+      const numberOfProductsAfterFilter = await boProductsPage.getNumberOfProductsFromList(page);
       expect(numberOfProductsAfterFilter).to.be.gte(1);
 
-      const productReference = await productsPage.getTextColumn(page, 'reference', 1);
+      const productReference = await boProductsPage.getTextColumn(page, 'reference', 1);
       expect(productReference).to.be.eq(dataProducts.demo_9.reference);
 
-      productStockDemo9 = await productsPage.getTextColumn(page, 'quantity', 1) as number;
+      productStockDemo9 = await boProductsPage.getTextColumn(page, 'quantity', 1) as number;
       expect(productStockDemo9).to.be.gte(1);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterBeforeNew', baseContext);
 
-      const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+      const numberOfProducts = await boProductsPage.resetAndGetNumberOfLines(page);
       expect(numberOfProducts).to.be.above(0);
     });
 
     it('should click on \'New product\' button and check new product modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
-      const isModalVisible = await productsPage.clickOnNewProductButton(page);
+      const isModalVisible = await boProductsPage.clickOnNewProductButton(page);
       expect(isModalVisible).to.be.eq(true);
     });
 
     it('should choose \'Pack of products\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'choosePackProduct', baseContext);
 
-      await productsPage.selectProductType(page, 'pack');
+      await boProductsPage.selectProductType(page, 'pack');
 
       const pageTitle = await createProductsPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductsPage.pageTitle);
@@ -135,7 +135,7 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
     it('should go to new product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewProductPage', baseContext);
 
-      await productsPage.clickOnAddNewProduct(page);
+      await boProductsPage.clickOnAddNewProduct(page);
 
       const pageTitle = await createProductsPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductsPage.pageTitle);
@@ -434,16 +434,16 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
         boDashboardPage.catalogParentLink,
         boDashboardPage.productsLink,
       );
-      await productsPage.closeSfToolBar(page);
+      await boProductsPage.closeSfToolBar(page);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it('should go to the first product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFirstProductPage', baseContext);
 
-      await productsPage.goToProductPage(page);
+      await boProductsPage.goToProductPage(page);
 
       const pageTitle: string = await createProductsPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductsPage.pageTitle);
@@ -533,25 +533,25 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
         boDashboardPage.catalogParentLink,
         boDashboardPage.productsLink,
       );
-      await productsPage.closeSfToolBar(page);
+      await boProductsPage.closeSfToolBar(page);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it(`should filter and check the product "${dataProducts.demo_1.reference}"`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterProductDemo11', baseContext);
 
-      await productsPage.resetFilter(page);
-      await productsPage.filterProducts(page, 'product_name', dataProducts.demo_1.name);
+      await boProductsPage.resetFilter(page);
+      await boProductsPage.filterProducts(page, 'product_name', dataProducts.demo_1.name);
 
-      const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
+      const numberOfProductsAfterFilter = await boProductsPage.getNumberOfProductsFromList(page);
       expect(numberOfProductsAfterFilter).to.be.gte(1);
 
-      const productReference = await productsPage.getTextColumn(page, 'reference', 1);
+      const productReference = await boProductsPage.getTextColumn(page, 'reference', 1);
       expect(productReference).to.be.eq(dataProducts.demo_1.reference);
 
-      const productStock = await productsPage.getTextColumn(page, 'quantity', 1) as number;
+      const productStock = await boProductsPage.getTextColumn(page, 'quantity', 1) as number;
       expect(productStock).to.be.gte(1);
 
       expect(productStock).to.be.eq(productStockDemo1 - productQuantity);
@@ -560,16 +560,16 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
     it(`should filter and check the product "${dataProducts.demo_9.reference}"`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterProductDemo91', baseContext);
 
-      await productsPage.resetFilter(page);
-      await productsPage.filterProducts(page, 'product_name', dataProducts.demo_9.name);
+      await boProductsPage.resetFilter(page);
+      await boProductsPage.filterProducts(page, 'product_name', dataProducts.demo_9.name);
 
-      const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
+      const numberOfProductsAfterFilter = await boProductsPage.getNumberOfProductsFromList(page);
       expect(numberOfProductsAfterFilter).to.be.gte(1);
 
-      const productReference = await productsPage.getTextColumn(page, 'reference', 1);
+      const productReference = await boProductsPage.getTextColumn(page, 'reference', 1);
       expect(productReference).to.be.eq(dataProducts.demo_9.reference);
 
-      const productStock = await productsPage.getTextColumn(page, 'quantity', 1) as number;
+      const productStock = await boProductsPage.getTextColumn(page, 'quantity', 1) as number;
       expect(productStock).to.be.gte(1);
 
       expect(productStock).to.be.eq(productStockDemo9 - 1);
@@ -578,7 +578,7 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFinal', baseContext);
 
-      const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+      const numberOfProducts = await boProductsPage.resetAndGetNumberOfLines(page);
       expect(numberOfProducts).to.be.above(0);
     });
   });
