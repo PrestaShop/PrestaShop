@@ -6,7 +6,6 @@ import {deleteProductTest} from '@commonTests/BO/catalog/product';
 
 // Import BO pages
 import loginCommon from '@commonTests/BO/loginBO';
-import productsPage from '@pages/BO/catalog/products';
 import createProductPage from '@pages/BO/catalog/products/add';
 import detailsTab from '@pages/BO/catalog/products/add/detailsTab';
 
@@ -17,6 +16,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boProductsPage,
   FakerProduct,
   utilsFile,
   utilsPlaywright,
@@ -74,24 +74,24 @@ describe('FO - Product page - Product page : Add a file customization', async ()
         boDashboardPage.productsLink,
       );
 
-      await productsPage.closeSfToolBar(page);
+      await boProductsPage.closeSfToolBar(page);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it('should click on \'New product\' button and check new product modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
-      const isModalVisible = await productsPage.clickOnNewProductButton(page);
+      const isModalVisible = await boProductsPage.clickOnNewProductButton(page);
       expect(isModalVisible).to.eq(true);
     });
 
     it('should choose \'Standard product\' and go to new product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseStandardProduct', baseContext);
 
-      await productsPage.selectProductType(page, newProductData.type);
-      await productsPage.clickOnAddNewProduct(page);
+      await boProductsPage.selectProductType(page, newProductData.type);
+      await boProductsPage.clickOnAddNewProduct(page);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);

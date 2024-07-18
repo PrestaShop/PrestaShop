@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import createProductPage from '@pages/BO/catalog/products/add';
 import seoTab from '@pages/BO/catalog/products/add/seoTab';
-import productsPage from '@pages/BO/catalog/products';
 
 // Import FO pages
 import {productPage as foProductPage} from '@pages/FO/classic/product';
@@ -16,6 +15,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 import {
   boDashboardPage,
+  boProductsPage,
   dataProducts,
   FakerProduct,
   foClassicCategoryPage,
@@ -68,24 +68,24 @@ describe('BO - Catalog - Products : Seo tab', async () => {
         boDashboardPage.catalogParentLink,
         boDashboardPage.productsLink,
       );
-      await productsPage.closeSfToolBar(page);
+      await boProductsPage.closeSfToolBar(page);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it('should click on \'New product\' button and check new product modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
-      const isModalVisible = await productsPage.clickOnNewProductButton(page);
+      const isModalVisible = await boProductsPage.clickOnNewProductButton(page);
       await expect(isModalVisible).to.be.true;
     });
 
     it('should choose \'Standard product\' and go to new product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseStandardProduct', baseContext);
 
-      await productsPage.selectProductType(page, newProductData.type);
-      await productsPage.clickOnAddNewProduct(page);
+      await boProductsPage.selectProductType(page, newProductData.type);
+      await boProductsPage.clickOnAddNewProduct(page);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       await expect(pageTitle).to.contains(createProductPage.pageTitle);
@@ -267,7 +267,7 @@ describe('BO - Catalog - Products : Seo tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
       const createProductMessage = await createProductPage.deleteProduct(page);
-      expect(createProductMessage).to.equal(productsPage.successfulDeleteMessage);
+      expect(createProductMessage).to.equal(boProductsPage.successfulDeleteMessage);
     });
   });
 });

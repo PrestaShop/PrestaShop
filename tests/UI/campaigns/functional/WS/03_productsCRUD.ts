@@ -12,7 +12,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
 import webservicePage from '@pages/BO/advancedParameters/webservice';
-import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 import detailsTab from '@pages/BO/catalog/products/add/detailsTab';
@@ -31,6 +30,7 @@ import type {
 } from 'playwright';
 import {
   boDashboardPage,
+  boProductsPage,
   utilsPlaywright,
   utilsXML,
   type WebservicePermission,
@@ -468,18 +468,18 @@ describe('WS - Products : CRUD', async () => {
               boDashboardPage.catalogParentLink,
               boDashboardPage.productsLink,
             );
-            await productsPage.closeSfToolBar(page);
+            await boProductsPage.closeSfToolBar(page);
 
-            const pageTitle = await productsPage.getPageTitle(page);
-            expect(pageTitle).to.contains(productsPage.pageTitle);
+            const pageTitle = await boProductsPage.getPageTitle(page);
+            expect(pageTitle).to.contains(boProductsPage.pageTitle);
           });
 
           it('should filter product by ID', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdateAfterPost', baseContext);
 
             // Filter
-            await productsPage.resetFilter(page);
-            await productsPage.filterProducts(
+            await boProductsPage.resetFilter(page);
+            await boProductsPage.filterProducts(
               page,
               'id_product',
               {min: productNodeID, max: productNodeID},
@@ -487,17 +487,17 @@ describe('WS - Products : CRUD', async () => {
             );
 
             // Check number of Products
-            const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
+            const numberOfProductsAfterFilter = await boProductsPage.getNumberOfProductsFromList(page);
             expect(numberOfProductsAfterFilter).to.eq(1);
 
-            const textColumn = await productsPage.getTextColumn(page, 'id_product', 1);
+            const textColumn = await boProductsPage.getTextColumn(page, 'id_product', 1);
             expect(textColumn).to.eq(productNodeID);
           });
 
           it('should go to edit product page', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'goToEditProductPageAfterPost', baseContext);
 
-            await productsPage.goToProductPage(page, 1);
+            await boProductsPage.goToProductPage(page, 1);
 
             const pageTitle: string = await createProductsPage.getPageTitle(page);
             expect(pageTitle).to.contains(createProductsPage.pageTitle);
@@ -982,16 +982,16 @@ describe('WS - Products : CRUD', async () => {
               boDashboardPage.catalogParentLink,
               boDashboardPage.productsLink,
             );
-            await productsPage.closeSfToolBar(page);
+            await boProductsPage.closeSfToolBar(page);
 
-            const pageTitle = await productsPage.getPageTitle(page);
-            expect(pageTitle).to.contains(productsPage.pageTitle);
+            const pageTitle = await boProductsPage.getPageTitle(page);
+            expect(pageTitle).to.contains(boProductsPage.pageTitle);
           });
 
           it('should reset all filters', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirstAfterPost', baseContext);
 
-            const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+            const numberOfProducts = await boProductsPage.resetAndGetNumberOfLines(page);
             expect(numberOfProducts).to.be.above(0);
           });
         });
@@ -1153,7 +1153,7 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdateAfterPut', baseContext);
 
             // Filter
-            await productsPage.filterProducts(
+            await boProductsPage.filterProducts(
               page,
               'id_product',
               {min: productNodeID, max: productNodeID},
@@ -1161,17 +1161,17 @@ describe('WS - Products : CRUD', async () => {
             );
 
             // Check number of Products
-            const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
+            const numberOfProductsAfterFilter = await boProductsPage.getNumberOfProductsFromList(page);
             expect(numberOfProductsAfterFilter).to.eq(1);
 
-            const textColumn = await productsPage.getTextColumn(page, 'id_product', 1);
+            const textColumn = await boProductsPage.getTextColumn(page, 'id_product', 1);
             expect(textColumn).to.eq(productNodeID);
           });
 
           it('should go to edit product page', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'goToEditProductPageAfterPut', baseContext);
 
-            await productsPage.goToProductPage(page, 1);
+            await boProductsPage.goToProductPage(page, 1);
 
             const pageTitle: string = await createProductsPage.getPageTitle(page);
             expect(pageTitle).to.contains(createProductsPage.pageTitle);
@@ -1656,16 +1656,16 @@ describe('WS - Products : CRUD', async () => {
               boDashboardPage.catalogParentLink,
               boDashboardPage.productsLink,
             );
-            await productsPage.closeSfToolBar(page);
+            await boProductsPage.closeSfToolBar(page);
 
-            const pageTitle = await productsPage.getPageTitle(page);
-            expect(pageTitle).to.contains(productsPage.pageTitle);
+            const pageTitle = await boProductsPage.getPageTitle(page);
+            expect(pageTitle).to.contains(boProductsPage.pageTitle);
           });
 
           it('should reset all filters', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirstAfterPut', baseContext);
 
-            const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+            const numberOfProducts = await boProductsPage.resetAndGetNumberOfLines(page);
             expect(numberOfProducts).to.be.above(0);
           });
         });
@@ -1701,7 +1701,7 @@ describe('WS - Products : CRUD', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdateAfterDelete', baseContext);
 
         // Filter
-        await productsPage.filterProducts(
+        await boProductsPage.filterProducts(
           page,
           'id_product',
           {min: productNodeID, max: productNodeID},
@@ -1709,14 +1709,14 @@ describe('WS - Products : CRUD', async () => {
         );
 
         // Check number of Products
-        const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
+        const numberOfProductsAfterFilter = await boProductsPage.getNumberOfProductsFromList(page);
         expect(numberOfProductsAfterFilter).to.eq(0);
       });
 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-        const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+        const numberOfProducts = await boProductsPage.resetAndGetNumberOfLines(page);
         expect(numberOfProducts).to.be.above(0);
       });
     });

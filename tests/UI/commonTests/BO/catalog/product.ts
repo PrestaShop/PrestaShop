@@ -5,13 +5,13 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
-import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boProductsPage,
   FakerProduct,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -45,23 +45,23 @@ function createProductTest(productData: FakerProduct, baseContext: string = 'com
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
       await boDashboardPage.goToSubMenu(page, boDashboardPage.catalogParentLink, boDashboardPage.productsLink);
-      await productsPage.closeSfToolBar(page);
+      await boProductsPage.closeSfToolBar(page);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it('should click on \'New product\' button and check new product modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
-      const isModalVisible = await productsPage.clickOnNewProductButton(page);
+      const isModalVisible = await boProductsPage.clickOnNewProductButton(page);
       expect(isModalVisible).to.be.eq(true);
     });
 
     it(`should choose '${productData.type} product'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseTypeOfProduct', baseContext);
 
-      await productsPage.selectProductType(page, productData.type);
+      await boProductsPage.selectProductType(page, productData.type);
 
       const pageTitle = await addProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(addProductPage.pageTitle);
@@ -70,7 +70,7 @@ function createProductTest(productData: FakerProduct, baseContext: string = 'com
     it('should go to new product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewProductPage', baseContext);
 
-      await productsPage.clickOnAddNewProduct(page);
+      await boProductsPage.clickOnAddNewProduct(page);
 
       const pageTitle = await addProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(addProductPage.pageTitle);
@@ -113,37 +113,37 @@ function deleteProductTest(productData: FakerProduct, baseContext: string = 'com
 
       await boDashboardPage.goToSubMenu(page, boDashboardPage.catalogParentLink, boDashboardPage.productsLink);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
 
-      await productsPage.resetFilter(page);
+      await boProductsPage.resetFilter(page);
 
-      const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+      const numberOfProducts = await boProductsPage.resetAndGetNumberOfLines(page);
       expect(numberOfProducts).to.be.above(0);
     });
 
     it('should click on delete product button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnDeleteProduct', baseContext);
 
-      const isModalVisible: boolean = await productsPage.clickOnDeleteProductButton(page);
+      const isModalVisible: boolean = await boProductsPage.clickOnDeleteProductButton(page);
       expect(isModalVisible).to.eq(true);
     });
 
     it('should delete product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
-      const textMessage: string = await productsPage.clickOnConfirmDialogButton(page);
-      expect(textMessage).to.equal(productsPage.successfulDeleteMessage);
+      const textMessage: string = await boProductsPage.clickOnConfirmDialogButton(page);
+      expect(textMessage).to.equal(boProductsPage.successfulDeleteMessage);
     });
 
     it('should reset filter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
-      const numberOfProductsAfterReset: number = await productsPage.resetAndGetNumberOfLines(page);
+      const numberOfProductsAfterReset: number = await boProductsPage.resetAndGetNumberOfLines(page);
       expect(numberOfProductsAfterReset).to.be.above(0);
     });
   });
@@ -177,60 +177,60 @@ function bulkDeleteProductsTest(productName: string, baseContext: string = 'comm
 
       await boDashboardPage.goToSubMenu(page, boDashboardPage.catalogParentLink, boDashboardPage.productsLink);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it('should reset filter and get number of products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProduct', baseContext);
 
-      numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+      numberOfProducts = await boProductsPage.resetAndGetNumberOfLines(page);
       expect(numberOfProducts).to.be.above(0);
     });
 
     it('should filter list by \'Name\' and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterListByReference', baseContext);
 
-      await productsPage.filterProducts(page, 'product_name', productName, 'input');
+      await boProductsPage.filterProducts(page, 'product_name', productName, 'input');
 
-      numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
+      numberOfProductsAfterFilter = await boProductsPage.getNumberOfProductsFromList(page);
 
-      const textColumn = await productsPage.getTextColumn(page, 'product_name', 1);
+      const textColumn = await boProductsPage.getTextColumn(page, 'product_name', 1);
       expect(textColumn).to.contains(productName);
     });
 
     it('should select the products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectProducts', baseContext);
 
-      const isBulkDeleteButtonEnabled = await productsPage.bulkSelectProducts(page);
+      const isBulkDeleteButtonEnabled = await boProductsPage.bulkSelectProducts(page);
       expect(isBulkDeleteButtonEnabled).to.be.eq(true);
     });
 
     it('should click on bulk actions button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnBulkActionsButton', baseContext);
 
-      const textMessage = await productsPage.clickOnBulkActionsProducts(page, 'delete');
+      const textMessage = await boProductsPage.clickOnBulkActionsProducts(page, 'delete');
       expect(textMessage).to.equal(`Deleting ${numberOfProductsAfterFilter} products`);
     });
 
     it('should bulk delete products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteProducts', baseContext);
 
-      const textMessage = await productsPage.bulkActionsProduct(page, 'delete');
+      const textMessage = await boProductsPage.bulkActionsProduct(page, 'delete');
       expect(textMessage).to.equal(`Deleting ${numberOfProductsAfterFilter} / ${numberOfProductsAfterFilter} products`);
     });
 
     it('should close progress modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeDeleteProgressModal', baseContext);
 
-      const isModalVisible = await productsPage.closeBulkActionsProgressModal(page, 'delete');
+      const isModalVisible = await boProductsPage.closeBulkActionsProgressModal(page, 'delete');
       expect(isModalVisible).to.be.eq(true);
     });
 
     it('should reset filter and get number of products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProduct', baseContext);
 
-      const numberOfProductAfterBulkActions = await productsPage.resetAndGetNumberOfLines(page);
+      const numberOfProductAfterBulkActions = await boProductsPage.resetAndGetNumberOfLines(page);
       expect(numberOfProductAfterBulkActions).to.be.equal(numberOfProducts - numberOfProductsAfterFilter);
     });
   });

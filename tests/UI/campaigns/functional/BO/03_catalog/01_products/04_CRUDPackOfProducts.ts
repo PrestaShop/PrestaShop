@@ -6,7 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import createProductsPage from '@pages/BO/catalog/products/add';
-import productsPage from '@pages/BO/catalog/products';
 import packTab from '@pages/BO/catalog/products/add/packTab';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
@@ -15,6 +14,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 import {
   boDashboardPage,
+  boProductsPage,
   dataEmployees,
   dataProducts,
   FakerProduct,
@@ -116,23 +116,23 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
           boDashboardPage.productsLink,
         );
 
-        await productsPage.closeSfToolBar(page);
+        await boProductsPage.closeSfToolBar(page);
 
-        const pageTitle = await productsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(productsPage.pageTitle);
+        const pageTitle = await boProductsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductsPage.pageTitle);
       });
 
       it('should click on \'New product\' button and check new product modal', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
-        const isModalVisible = await productsPage.clickOnNewProductButton(page);
+        const isModalVisible = await boProductsPage.clickOnNewProductButton(page);
         expect(isModalVisible).to.eq(true);
       });
 
       it('should choose \'Pack of products\'', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'choosePackOfProducts', baseContext);
 
-        await productsPage.selectProductType(page, newProductData.type);
+        await boProductsPage.selectProductType(page, newProductData.type);
 
         const pageTitle = await createProductsPage.getPageTitle(page);
         expect(pageTitle).to.contains(createProductsPage.pageTitle);
@@ -141,16 +141,16 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
       it('should select the pack of products and check the description', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkPackOfProductsDescription', baseContext);
 
-        await productsPage.selectProductType(page, newProductData.type);
+        await boProductsPage.selectProductType(page, newProductData.type);
 
-        const productTypeDescription = await productsPage.getProductDescription(page);
-        expect(productTypeDescription).to.contains(productsPage.packOfProductsDescription);
+        const productTypeDescription = await boProductsPage.getProductDescription(page);
+        expect(productTypeDescription).to.contains(boProductsPage.packOfProductsDescription);
       });
 
       it('should go to new product page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToNewProductPage', baseContext);
 
-        await productsPage.clickOnAddNewProduct(page);
+        await boProductsPage.clickOnAddNewProduct(page);
 
         const pageTitle = await createProductsPage.getPageTitle(page);
         expect(pageTitle).to.contains(createProductsPage.pageTitle);
@@ -498,7 +498,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
       const createProductMessage = await createProductsPage.deleteProduct(page);
-      expect(createProductMessage).to.equal(productsPage.successfulDeleteMessage);
+      expect(createProductMessage).to.equal(boProductsPage.successfulDeleteMessage);
     });
   });
 });

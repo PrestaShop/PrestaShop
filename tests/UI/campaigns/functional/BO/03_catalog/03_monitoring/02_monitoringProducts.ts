@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
 import monitoringPage from '@pages/BO/catalog/monitoring';
@@ -14,6 +13,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boProductsPage,
   FakerProduct,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -99,30 +99,30 @@ describe('BO - Catalog - Monitoring : Create different products and delete them 
           boDashboardPage.catalogParentLink,
           boDashboardPage.productsLink,
         );
-        await productsPage.closeSfToolBar(page);
+        await boProductsPage.closeSfToolBar(page);
 
-        const pageTitle = await productsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(productsPage.pageTitle);
+        const pageTitle = await boProductsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductsPage.pageTitle);
       });
 
       it('should reset filter and get number of products', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.testIdentifier}_getNumberOfProduct`, baseContext);
 
-        numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+        numberOfProducts = await boProductsPage.resetAndGetNumberOfLines(page);
         expect(numberOfProducts).to.be.above(0);
       });
 
       it('should click on \'New product\' button and check new product modal', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.testIdentifier}_clickNewProductBtn`, baseContext);
 
-        const isModalVisible = await productsPage.clickOnNewProductButton(page);
+        const isModalVisible = await boProductsPage.clickOnNewProductButton(page);
         expect(isModalVisible).to.be.equal(true);
       });
 
       it('should choose the type of product', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.testIdentifier}_chooseTypeOfProduct`, baseContext);
 
-        await productsPage.selectProductType(page, test.productToCreate.type);
+        await boProductsPage.selectProductType(page, test.productToCreate.type);
 
         const pageTitle = await addProductPage.getPageTitle(page);
         expect(pageTitle).to.contains(addProductPage.pageTitle);
@@ -131,7 +131,7 @@ describe('BO - Catalog - Monitoring : Create different products and delete them 
       it('should go to new product page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.testIdentifier}_goToNewProductPage`, baseContext);
 
-        await productsPage.clickOnAddNewProduct(page);
+        await boProductsPage.clickOnAddNewProduct(page);
 
         const pageTitle = await addProductPage.getPageTitle(page);
         expect(pageTitle).to.contains(addProductPage.pageTitle);
@@ -271,10 +271,10 @@ describe('BO - Catalog - Monitoring : Create different products and delete them 
         );
 
         const textResult = await monitoringPage.deleteProductInGrid(page, test.gridName, 1);
-        expect(textResult).to.equal(productsPage.successfulDeleteMessage);
+        expect(textResult).to.equal(boProductsPage.successfulDeleteMessage);
 
-        const pageTitle = await productsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(productsPage.pageTitle);
+        const pageTitle = await boProductsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductsPage.pageTitle);
       });
 
       it('should reset filter check number of products', async function () {
@@ -285,7 +285,7 @@ describe('BO - Catalog - Monitoring : Create different products and delete them 
           baseContext,
         );
 
-        const numberOfProductsAfterDelete = await productsPage.resetAndGetNumberOfLines(page);
+        const numberOfProductsAfterDelete = await boProductsPage.resetAndGetNumberOfLines(page);
         expect(numberOfProductsAfterDelete).to.be.equal(numberOfProducts);
       });
     });

@@ -7,8 +7,6 @@ import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/prod
 import {installModule} from '@commonTests/BO/modules/moduleManager';
 
 // Import pages
-// Import BO pages
-import productsPage from '@pages/BO/catalog/products';
 // Import FO pages
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
@@ -17,6 +15,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boModuleManagerPage,
+  boProductsPage,
   dataModules,
   FakerProduct,
   foClassicCategoryPage,
@@ -69,19 +68,19 @@ describe('Mail alerts module - Uninstall and delete module', async () => {
         boDashboardPage.productsLink,
       );
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it('should filter list by \'product_name\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterProductName', baseContext);
 
-      await productsPage.filterProducts(page, 'product_name', productOutOfStockNotAllowed.name, 'input');
+      await boProductsPage.filterProducts(page, 'product_name', productOutOfStockNotAllowed.name, 'input');
 
-      const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
+      const numberOfProductsAfterFilter = await boProductsPage.getNumberOfProductsFromList(page);
       expect(numberOfProductsAfterFilter).to.be.eq(1);
 
-      idProduct = await productsPage.getTextColumn(page, 'id_product', 1) as number;
+      idProduct = await boProductsPage.getTextColumn(page, 'id_product', 1) as number;
     });
   });
 

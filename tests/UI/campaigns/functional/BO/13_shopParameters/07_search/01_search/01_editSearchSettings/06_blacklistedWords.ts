@@ -6,13 +6,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import boProductsPage from '@pages/BO/catalog/products';
 import boProductsCreatePage from '@pages/BO/catalog/products/add';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boProductsPage,
   boSearchPage,
   dataLanguages,
   foClassicHomePage,

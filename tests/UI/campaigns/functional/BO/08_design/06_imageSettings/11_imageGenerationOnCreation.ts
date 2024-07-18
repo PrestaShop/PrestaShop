@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import categoriesPage from '@pages/BO/catalog/categories';
 import addCategoryPage from '@pages/BO/catalog/categories/add';
-import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 import imageSettingsPage from '@pages/BO/design/imageSettings';
 
@@ -15,6 +14,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boProductsPage,
   FakerCategory,
   FakerProduct,
   utilsCore,
@@ -142,30 +142,30 @@ describe('BO - Design - Image Settings - Image Generation on creation', async ()
         boDashboardPage.productsLink,
       );
 
-      await productsPage.closeSfToolBar(page);
+      await boProductsPage.closeSfToolBar(page);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it('should click on \'New product\' button and check new product modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
-      const isModalVisible = await productsPage.clickOnNewProductButton(page);
+      const isModalVisible = await boProductsPage.clickOnNewProductButton(page);
       expect(isModalVisible).to.eq(true);
     });
 
     it('should check the standard product description', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkStandardProductDescription', baseContext);
 
-      const productTypeDescription = await productsPage.getProductDescription(page);
-      expect(productTypeDescription).to.contains(productsPage.standardProductDescription);
+      const productTypeDescription = await boProductsPage.getProductDescription(page);
+      expect(productTypeDescription).to.contains(boProductsPage.standardProductDescription);
     });
 
     it('should choose \'Standard product\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseStandardProduct', baseContext);
 
-      await productsPage.selectProductType(page, productData.type);
+      await boProductsPage.selectProductType(page, productData.type);
 
       const pageTitle = await createProductsPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductsPage.pageTitle);
@@ -174,7 +174,7 @@ describe('BO - Design - Image Settings - Image Generation on creation', async ()
     it('should go to new product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewProductPage', baseContext);
 
-      await productsPage.clickOnAddNewProduct(page);
+      await boProductsPage.clickOnAddNewProduct(page);
 
       const pageTitle = await createProductsPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductsPage.pageTitle);

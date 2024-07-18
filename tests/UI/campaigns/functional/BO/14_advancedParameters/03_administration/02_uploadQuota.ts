@@ -11,12 +11,12 @@ import virtualProductTab from '@pages/BO/catalog/products/add/virtualProductTab'
 import createProductPage from '@pages/BO/catalog/products/add';
 import filesPage from '@pages/BO/catalog/files';
 import addFilePage from '@pages/BO/catalog/files/add';
-import productsPage from '@pages/BO/catalog/products';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boProductsPage,
   FakerFile,
   FakerProduct,
   utilsFile,
@@ -182,23 +182,23 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
         boDashboardPage.productsLink,
       );
 
-      await productsPage.closeSfToolBar(page);
+      await boProductsPage.closeSfToolBar(page);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it('should click on \'New product\' button and check new product modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
-      const isModalVisible = await productsPage.clickOnNewProductButton(page);
+      const isModalVisible = await boProductsPage.clickOnNewProductButton(page);
       expect(isModalVisible).eq(true);
     });
 
     it('should choose \'Virtual product\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseVirtualProduct', baseContext);
 
-      await productsPage.selectProductType(page, firstVirtualProductData.type);
+      await boProductsPage.selectProductType(page, firstVirtualProductData.type);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);
@@ -207,7 +207,7 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
     it('should go to new product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewFoProductPage', baseContext);
 
-      await productsPage.clickOnAddNewProduct(page);
+      await boProductsPage.clickOnAddNewProduct(page);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);
@@ -238,7 +238,7 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'deleteCreatedProduct', baseContext);
 
       const createProductMessage = await createProductPage.deleteProduct(page);
-      expect(createProductMessage).to.equal(productsPage.successfulDeleteMessage);
+      expect(createProductMessage).to.equal(boProductsPage.successfulDeleteMessage);
     });
   });
 
@@ -272,23 +272,23 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
         boDashboardPage.productsLink,
       );
 
-      await productsPage.closeSfToolBar(page);
+      await boProductsPage.closeSfToolBar(page);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it('should click on \'New product\' button and check new product modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton2', baseContext);
 
-      const isModalVisible = await productsPage.clickOnNewProductButton(page);
+      const isModalVisible = await boProductsPage.clickOnNewProductButton(page);
       expect(isModalVisible).eq(true);
     });
 
     it('should choose \'Standard product\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseStandardProduct', baseContext);
 
-      await productsPage.selectProductType(page, firstStandardProductData.type);
+      await boProductsPage.selectProductType(page, firstStandardProductData.type);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);
@@ -297,7 +297,7 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
     it('should go to new product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewFoProductPage2', baseContext);
 
-      await productsPage.clickOnAddNewProduct(page);
+      await boProductsPage.clickOnAddNewProduct(page);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);
@@ -328,7 +328,7 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'deleteFile2', baseContext);
 
       const createProductMessage = await createProductPage.deleteProduct(page);
-      expect(createProductMessage).to.equal(productsPage.successfulDeleteMessage);
+      expect(createProductMessage).to.equal(boProductsPage.successfulDeleteMessage);
     });
   });
 });

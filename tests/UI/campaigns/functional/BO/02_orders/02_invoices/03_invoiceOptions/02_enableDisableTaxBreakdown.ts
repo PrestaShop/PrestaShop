@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import addProductPage from '@pages/BO/catalog/products/add';
-import boProductsPage from '@pages/BO/catalog/products';
 import taxesPage from '@pages/BO/international/taxes';
 import addTaxRulesPage from '@pages/BO/international/taxes/taxRules/add';
 import taxRulesPage from '@pages/BO/international/taxes/taxRules';
@@ -23,6 +22,7 @@ import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmatio
 
 import {
   boDashboardPage,
+  boProductsPage,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,

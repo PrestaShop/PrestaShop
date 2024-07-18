@@ -8,12 +8,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
-import productsPage from '@pages/BO/catalog/products';
 
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boProductsPage,
   FakerAPIClient,
   utilsAPI,
   utilsPlaywright,
@@ -171,13 +171,13 @@ describe('API : GET /products', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
       await boDashboardPage.goToSubMenu(page, boDashboardPage.catalogParentLink, boDashboardPage.productsLink);
-      await productsPage.closeSfToolBar(page);
-      await productsPage.resetFilter(page);
+      await boProductsPage.closeSfToolBar(page);
+      await boProductsPage.resetFilter(page);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
 
-      const numProducts = await productsPage.getNumberOfProductsFromHeader(page);
+      const numProducts = await boProductsPage.getNumberOfProductsFromHeader(page);
       expect(numProducts).to.eq(jsonResponse.totalItems);
     });
 
@@ -186,31 +186,31 @@ describe('API : GET /products', async () => {
 
       for (let idxItem: number = 0; idxItem < jsonResponse.totalItems; idxItem++) {
         // eslint-disable-next-line no-loop-func
-        await productsPage.resetFilter(page);
-        await productsPage.filterProducts(page, 'id_product', {
+        await boProductsPage.resetFilter(page);
+        await boProductsPage.filterProducts(page, 'id_product', {
           min: jsonResponse.items[idxItem].productId,
           max: jsonResponse.items[idxItem].productId,
         });
 
-        const numProducts = await productsPage.getNumberOfProductsFromList(page);
+        const numProducts = await boProductsPage.getNumberOfProductsFromList(page);
         expect(numProducts).to.be.equal(1);
 
-        const productId = parseInt((await productsPage.getTextColumn(page, 'id_product', 1)).toString(), 10);
+        const productId = parseInt((await boProductsPage.getTextColumn(page, 'id_product', 1)).toString(), 10);
         expect(productId).to.equal(jsonResponse.items[idxItem].productId);
 
-        const productActive = await productsPage.getTextColumn(page, 'active', 1);
+        const productActive = await boProductsPage.getTextColumn(page, 'active', 1);
         expect(productActive).to.equal(jsonResponse.items[idxItem].active);
 
-        const productName = await productsPage.getTextColumn(page, 'product_name', 1);
+        const productName = await boProductsPage.getTextColumn(page, 'product_name', 1);
         expect(productName).to.equal(jsonResponse.items[idxItem].name);
 
-        const productQuantity = await productsPage.getTextColumn(page, 'quantity', 1);
+        const productQuantity = await boProductsPage.getTextColumn(page, 'quantity', 1);
         expect(productQuantity).to.equal(jsonResponse.items[idxItem].quantity);
 
-        const productPrice = await productsPage.getTextColumn(page, 'price', 1);
+        const productPrice = await boProductsPage.getTextColumn(page, 'price', 1);
         expect(productPrice).to.equal(parseFloat(jsonResponse.items[idxItem].price));
 
-        const productCategory = await productsPage.getTextColumn(page, 'category', 1);
+        const productCategory = await boProductsPage.getTextColumn(page, 'category', 1);
         expect(productCategory).to.equal(jsonResponse.items[idxItem].category);
       }
     });
@@ -218,9 +218,9 @@ describe('API : GET /products', async () => {
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
-      await productsPage.resetFilter(page);
+      await boProductsPage.resetFilter(page);
 
-      const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+      const numberOfProducts = await boProductsPage.resetAndGetNumberOfLines(page);
       expect(numberOfProducts).to.be.above(0);
     });
   });

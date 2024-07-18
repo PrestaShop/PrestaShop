@@ -8,7 +8,6 @@ import cleanTableStockMovements from '@commonTests/BO/catalog/stock';
 
 // Import pages
 // Import BO pages
-import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
 import ordersPage from '@pages/BO/orders';
@@ -24,6 +23,7 @@ import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {
   boDashboardPage,
   boLoginPage,
+  boProductsPage,
   dataCategories,
   dataCustomers,
   dataOrderStatuses,
@@ -366,25 +366,25 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
           boDashboardPage.catalogParentLink,
           boDashboardPage.productsLink,
         );
-        await productsPage.closeSfToolBar(page);
+        await boProductsPage.closeSfToolBar(page);
 
-        const pageTitle = await productsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(productsPage.pageTitle);
+        const pageTitle = await boProductsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductsPage.pageTitle);
       });
 
       it(`should filter by name '${dataProducts.demo_8.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
-        await productsPage.filterProducts(page, 'product_name', dataProducts.demo_8.name);
+        await boProductsPage.filterProducts(page, 'product_name', dataProducts.demo_8.name);
 
-        const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
+        const numberOfProductsAfterFilter = await boProductsPage.getNumberOfProductsFromList(page);
         expect(numberOfProductsAfterFilter).to.be.eq(1);
       });
 
       it('should go to the product page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
 
-        await productsPage.goToProductPage(page, 1);
+        await boProductsPage.goToProductPage(page, 1);
 
         const pageTitle = await addProductPage.getPageTitle(page);
         expect(pageTitle).to.contains(addProductPage.pageTitle);
@@ -565,26 +565,26 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
           boDashboardPage.catalogParentLink,
           boDashboardPage.productsLink,
         );
-        await productsPage.closeSfToolBar(page);
+        await boProductsPage.closeSfToolBar(page);
 
-        const pageTitle = await productsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(productsPage.pageTitle);
+        const pageTitle = await boProductsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductsPage.pageTitle);
       });
 
       it(`should filter by name '${dataProducts.demo_8.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEditForDisabling', baseContext);
 
-        await productsPage.resetFilter(page);
-        await productsPage.filterProducts(page, 'product_name', dataProducts.demo_8.name);
+        await boProductsPage.resetFilter(page);
+        await boProductsPage.filterProducts(page, 'product_name', dataProducts.demo_8.name);
 
-        const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
+        const numberOfProductsAfterFilter = await boProductsPage.getNumberOfProductsFromList(page);
         expect(numberOfProductsAfterFilter).to.be.eq(1);
       });
 
       it('should go to the product page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToProductPageForDisabling', baseContext);
 
-        await productsPage.goToProductPage(page, 1);
+        await boProductsPage.goToProductPage(page, 1);
 
         const pageTitle = await addProductPage.getPageTitle(page);
         expect(pageTitle).to.contains(addProductPage.pageTitle);
@@ -662,26 +662,26 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
           boDashboardPage.catalogParentLink,
           boDashboardPage.productsLink,
         );
-        await productsPage.closeSfToolBar(page);
+        await boProductsPage.closeSfToolBar(page);
 
-        const pageTitle = await productsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(productsPage.pageTitle);
+        const pageTitle = await boProductsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductsPage.pageTitle);
       });
 
       it(`should filter by name '${dataProducts.demo_8.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEditForEnabling', baseContext);
 
-        await productsPage.resetFilter(page);
-        await productsPage.filterProducts(page, 'product_name', dataProducts.demo_8.name);
+        await boProductsPage.resetFilter(page);
+        await boProductsPage.filterProducts(page, 'product_name', dataProducts.demo_8.name);
 
-        const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
+        const numberOfProductsAfterFilter = await boProductsPage.getNumberOfProductsFromList(page);
         expect(numberOfProductsAfterFilter).to.be.eq(1);
       });
 
       it('should go to the product page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToProductPageForEnabling', baseContext);
 
-        await productsPage.goToProductPage(page, 1);
+        await boProductsPage.goToProductPage(page, 1);
 
         const pageTitle = await addProductPage.getPageTitle(page);
         expect(pageTitle).to.contains(addProductPage.pageTitle);

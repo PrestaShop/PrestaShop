@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import apiClientPage from 'pages/BO/advancedParameters/APIClient';
 import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
-import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
@@ -16,6 +15,7 @@ import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boProductsPage,
   dataLanguages,
   dataProducts,
   FakerAPIClient,
@@ -175,29 +175,29 @@ describe('API : GET /product/image/{imageId}', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
       await boDashboardPage.goToSubMenu(page, boDashboardPage.catalogParentLink, boDashboardPage.productsLink);
-      await productsPage.closeSfToolBar(page);
+      await boProductsPage.closeSfToolBar(page);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterProduct', baseContext);
 
-      await productsPage.resetFilter(page);
-      await productsPage.filterProducts(page, 'product_name', dataProducts.demo_1.name);
+      await boProductsPage.resetFilter(page);
+      await boProductsPage.filterProducts(page, 'product_name', dataProducts.demo_1.name);
 
-      const numProducts = await productsPage.getNumberOfProductsFromList(page);
+      const numProducts = await boProductsPage.getNumberOfProductsFromList(page);
       expect(numProducts).to.be.equal(1);
 
-      const productName = await productsPage.getTextColumn(page, 'product_name', 1);
+      const productName = await boProductsPage.getTextColumn(page, 'product_name', 1);
       expect(productName).to.contains(dataProducts.demo_1.name);
     });
 
     it('should go to edit product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditProductPage', baseContext);
 
-      await productsPage.goToProductPage(page, 1);
+      await boProductsPage.goToProductPage(page, 1);
 
       const pageTitle: string = await createProductsPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductsPage.pageTitle);

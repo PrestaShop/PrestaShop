@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 import seoTab from '@pages/BO/catalog/products/add/seoTab';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
@@ -14,6 +13,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boProductsPage,
   FakerProduct,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -60,23 +60,23 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable force update 
         boDashboardPage.catalogParentLink,
         boDashboardPage.productsLink,
       );
-      await productsPage.closeSfToolBar(page);
+      await boProductsPage.closeSfToolBar(page);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it('should click on \'New product\' button and check new product modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
-      const isModalVisible = await productsPage.clickOnNewProductButton(page);
+      const isModalVisible = await boProductsPage.clickOnNewProductButton(page);
       expect(isModalVisible).to.be.eq(true);
     });
 
     it('should choose \'Standard product\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseStandardProduct', baseContext);
 
-      await productsPage.selectProductType(page, productData.type);
+      await boProductsPage.selectProductType(page, productData.type);
 
       const pageTitle = await addProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(addProductPage.pageTitle);
@@ -85,7 +85,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable force update 
     it('should go to new product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewProductPage', baseContext);
 
-      await productsPage.clickOnAddNewProduct(page);
+      await boProductsPage.clickOnAddNewProduct(page);
 
       const pageTitle = await addProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(addProductPage.pageTitle);
@@ -148,15 +148,15 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable force update 
           productSettingsPage.productsLink,
         );
 
-        const pageTitle = await productsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(productsPage.pageTitle);
+        const pageTitle = await boProductsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductsPage.pageTitle);
       });
 
       it('should go to the created product page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToProductPage${index}`, baseContext);
 
-        await productsPage.resetFilter(page);
-        await productsPage.goToProductPage(page, 1);
+        await boProductsPage.resetFilter(page);
+        await boProductsPage.goToProductPage(page, 1);
 
         const pageTitle = await addProductPage.getPageTitle(page);
         expect(pageTitle).to.contains(addProductPage.pageTitle);
@@ -177,7 +177,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable force update 
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
       const testResult = await addProductPage.deleteProduct(page);
-      expect(testResult).to.equal(productsPage.successfulDeleteMessage);
+      expect(testResult).to.equal(boProductsPage.successfulDeleteMessage);
     });
   });
 });

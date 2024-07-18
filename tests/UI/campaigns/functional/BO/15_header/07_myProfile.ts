@@ -10,7 +10,6 @@ import setPermissions from '@commonTests/BO/advancedParameters/setPermissions';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import productsPage from '@pages/BO/catalog/products';
 import creditSlipsPage from '@pages/BO/orders/creditSlips';
 import employeesPage from '@pages/BO/advancedParameters/team';
 import myProfilePage from '@pages/BO/advancedParameters/team/myProfile';
@@ -18,6 +17,7 @@ import myProfilePage from '@pages/BO/advancedParameters/team/myProfile';
 import {
   boDashboardPage,
   boLoginPage,
+  boProductsPage,
   type EmployeePermission,
   FakerEmployee,
   utilsFile,
@@ -73,8 +73,8 @@ describe('BO - Header : My profile', async () => {
       await boLoginPage.goTo(page, global.BO.URL);
       await boLoginPage.successLogin(page, employeeData.email, employeeData.password);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it('should go to \'Your profile\' page', async function () {

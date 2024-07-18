@@ -8,7 +8,6 @@ import ordersPage from '@pages/BO/orders';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 import merchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns';
 import monitoringPage from '@pages/BO/catalog/monitoring';
-import productsPage from '@pages/BO/catalog/products';
 import createProductPage from '@pages/BO/catalog/products/add';
 import customerServicePage from '@pages/BO/customerService/customerService';
 import productCommentsPage from '@pages/BO/modules/productComments';
@@ -34,6 +33,7 @@ import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 
 import {
   boDashboardPage,
+  boProductsPage,
   dataCustomers,
   dataOrders,
   dataOrderStatuses,
@@ -416,24 +416,24 @@ describe('BO - Dashboard : Activity overview', async () => {
           boDashboardPage.catalogParentLink,
           boDashboardPage.productsLink,
         );
-        await productsPage.closeSfToolBar(page);
+        await boProductsPage.closeSfToolBar(page);
 
-        const pageTitle = await productsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(productsPage.pageTitle);
+        const pageTitle = await boProductsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductsPage.pageTitle);
       });
 
       it('should click on \'New product\' button and check new product modal', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
-        const isModalVisible = await productsPage.clickOnNewProductButton(page);
+        const isModalVisible = await boProductsPage.clickOnNewProductButton(page);
         expect(isModalVisible).to.eq(true);
       });
 
       it('should choose \'Standard product\' and go to new product page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'chooseStandardProduct', baseContext);
 
-        await productsPage.selectProductType(page, productData.type);
-        await productsPage.clickOnAddNewProduct(page);
+        await boProductsPage.selectProductType(page, productData.type);
+        await boProductsPage.clickOnAddNewProduct(page);
 
         const pageTitle = await createProductPage.getPageTitle(page);
         expect(pageTitle).to.contains(createProductPage.pageTitle);

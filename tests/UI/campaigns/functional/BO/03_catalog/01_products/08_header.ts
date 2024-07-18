@@ -6,7 +6,6 @@ import {deleteProductTest} from '@commonTests/BO/catalog/product';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 import detailsTab from '@pages/BO/catalog/products/add/detailsTab';
@@ -18,6 +17,7 @@ import {expect} from 'chai';
 import {faker} from '@faker-js/faker';
 import {
   boDashboardPage,
+  boProductsPage,
   FakerProduct,
   type ProductHeaderSummary,
   utilsFile,
@@ -86,30 +86,30 @@ describe('BO - Catalog - Products : Header', async () => {
       boDashboardPage.productsLink,
     );
 
-    await productsPage.closeSfToolBar(page);
+    await boProductsPage.closeSfToolBar(page);
 
-    const pageTitle = await productsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(productsPage.pageTitle);
+    const pageTitle = await boProductsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boProductsPage.pageTitle);
   });
 
   it('should click on \'New product\' button and check new product modal', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
-    const isModalVisible = await productsPage.clickOnNewProductButton(page);
+    const isModalVisible = await boProductsPage.clickOnNewProductButton(page);
     expect(isModalVisible).to.eq(true);
   });
 
   it('should check the standard product description', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkStandardProductDescription', baseContext);
 
-    const productTypeDescription = await productsPage.getProductDescription(page);
-    expect(productTypeDescription).to.contains(productsPage.standardProductDescription);
+    const productTypeDescription = await boProductsPage.getProductDescription(page);
+    expect(productTypeDescription).to.contains(boProductsPage.standardProductDescription);
   });
 
   it('should choose \'Standard product\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'chooseStandardProduct', baseContext);
 
-    await productsPage.selectProductType(page, newProductData.type);
+    await boProductsPage.selectProductType(page, newProductData.type);
 
     const pageTitle = await createProductsPage.getPageTitle(page);
     expect(pageTitle).to.contains(createProductsPage.pageTitle);
@@ -118,7 +118,7 @@ describe('BO - Catalog - Products : Header', async () => {
   it('should go to new product page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToNewProductPage', baseContext);
 
-    await productsPage.clickOnAddNewProduct(page);
+    await boProductsPage.clickOnAddNewProduct(page);
 
     const pageTitle = await createProductsPage.getPageTitle(page);
     expect(pageTitle).to.contains(createProductsPage.pageTitle);
@@ -138,33 +138,33 @@ describe('BO - Catalog - Products : Header', async () => {
 
     await createProductsPage.goToCatalogPage(page);
 
-    const pageTitle = await productsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(productsPage.pageTitle);
+    const pageTitle = await boProductsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boProductsPage.pageTitle);
   });
 
   it('should reset filter and get number of products', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProduct', baseContext);
 
-    numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+    numberOfProducts = await boProductsPage.resetAndGetNumberOfLines(page);
     expect(numberOfProducts).to.be.above(0);
   });
 
   it(`should filter list by '${newProductData.name}' and check result`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterListByName', baseContext);
 
-    await productsPage.filterProducts(page, 'product_name', newProductData.name, 'input');
+    await boProductsPage.filterProducts(page, 'product_name', newProductData.name, 'input');
 
-    const numberOfProductsAfterFilter: number = await productsPage.getNumberOfProductsFromList(page);
+    const numberOfProductsAfterFilter: number = await boProductsPage.getNumberOfProductsFromList(page);
     expect(numberOfProductsAfterFilter).to.equal(1);
 
-    const textColumn = await productsPage.getTextColumn(page, 'product_name', 1);
+    const textColumn = await boProductsPage.getTextColumn(page, 'product_name', 1);
     expect(textColumn).to.eq(newProductData.name);
   });
 
   it('should go to the first product page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEditPage', baseContext);
 
-    await productsPage.goToProductPage(page, 1);
+    await boProductsPage.goToProductPage(page, 1);
 
     const pageTitle = await createProductsPage.getPageTitle(page);
     expect(pageTitle).to.contains(createProductsPage.pageTitle);

@@ -6,13 +6,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
-import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boProductsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -84,22 +84,22 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable default activ
           productSettingsPage.productsLink,
         );
 
-        const pageTitle = await productsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(productsPage.pageTitle);
+        const pageTitle = await boProductsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductsPage.pageTitle);
       });
 
       it('should click on \'New product\' button and check new product modal', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `clickOnNewProductButton${index}`, baseContext);
 
-        const isModalVisible = await productsPage.clickOnNewProductButton(page);
+        const isModalVisible = await boProductsPage.clickOnNewProductButton(page);
         expect(isModalVisible).to.be.equal(true);
       });
 
       it('should select product type and create new product', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createProduct${index}`, baseContext);
 
-        await productsPage.selectProductType(page, 'standard');
-        await productsPage.clickOnAddNewProduct(page);
+        await boProductsPage.selectProductType(page, 'standard');
+        await boProductsPage.clickOnAddNewProduct(page);
 
         const pageTitle = await addProductPage.getPageTitle(page);
         expect(pageTitle).to.contains(addProductPage.pageTitle);

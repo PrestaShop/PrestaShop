@@ -6,7 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
 // Import FO pages
@@ -16,6 +15,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boProductsPage,
   FakerProduct,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -79,23 +79,23 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
         boDashboardPage.productsLink,
       );
 
-      await productsPage.closeSfToolBar(page);
+      await boProductsPage.closeSfToolBar(page);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it('should click on \'New product\' button and check new product modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
-      const isModalVisible: boolean = await productsPage.clickOnNewProductButton(page);
+      const isModalVisible: boolean = await boProductsPage.clickOnNewProductButton(page);
       expect(isModalVisible).to.eq(true);
     });
 
     it('should choose \'Product with combinations\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseProductWithCombinations', baseContext);
 
-      await productsPage.selectProductType(page, newProductData.type);
+      await boProductsPage.selectProductType(page, newProductData.type);
 
       const pageTitle = await createProductsPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductsPage.pageTitle);
@@ -104,7 +104,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     it('should go to new product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewProductPage', baseContext);
 
-      await productsPage.clickOnAddNewProduct(page);
+      await boProductsPage.clickOnAddNewProduct(page);
 
       const pageTitle = await createProductsPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductsPage.pageTitle);
@@ -285,7 +285,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
       const createProductMessage = await createProductsPage.deleteProduct(page);
-      expect(createProductMessage).to.equal(productsPage.successfulDeleteMessage);
+      expect(createProductMessage).to.equal(boProductsPage.successfulDeleteMessage);
     });
   });
 });
