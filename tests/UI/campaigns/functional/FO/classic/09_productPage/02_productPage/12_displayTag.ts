@@ -22,7 +22,7 @@ import {
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
-const baseContext: string = 'functional_FO_classic_foClassicProductPage._foClassicProductPage._displayTag';
+const baseContext: string = 'functional_FO_classic_productPage_productPage_displayTag';
 
 describe('FO - Product page - Product page : Display tag products', async () => {
   let browserContext: BrowserContext;

@@ -406,7 +406,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
         await Promise.all([
           expect(result.image).to.contains(test.args.product.coverImage),
           expect(result.name).to.equal(test.args.product.name),
-          expect(result.price).to.equal(`€${test.args.product.finalPrice.toFixed(2)}`),
+          expect(result.price).to.equal(test.args.product.finalPrice),
           expect(result.quantity).to.equal(test.args.quantity),
         ]);
       });
@@ -475,7 +475,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
         await Promise.all([
           expect(result.image).to.contains(test.args.product.coverImage),
           expect(result.name).to.equal(test.args.product.name),
-          expect(result.price).to.equal(`€${test.args.product.finalPrice.toFixed(2)}`),
+          expect(result.price).to.equal(test.args.product.finalPrice),
           expect(result.quantity).to.equal(test.args.quantity),
         ]);
       });

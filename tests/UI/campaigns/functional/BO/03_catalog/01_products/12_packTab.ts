@@ -332,7 +332,7 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
           + `${utilsCore.capitalize(dataProducts.demo_1.attributes[0].name)}-${dataProducts.demo_1.attributes[0].values[0]} `
           + `${utilsCore.capitalize(dataProducts.demo_1.attributes[1].name)}-${dataProducts.demo_1.attributes[1].values[0]}`,
         ),
-        expect(product1.price).to.equals(`€${dataProducts.demo_1.finalPrice.toFixed(2)}`),
+        expect(product1.price).to.equals(dataProducts.demo_1.finalPrice),
         expect(product1.quantity).to.equals(productQuantity),
       ]);
 
@@ -342,7 +342,7 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
           `${dataProducts.demo_9.name} `
           + `${utilsCore.capitalize(dataProducts.demo_9.attributes[0].name)}-${dataProducts.demo_9.attributes[0].values[0]}`,
         ),
-        expect(product2.price).to.equals(`€${dataProducts.demo_9.finalPrice.toFixed(2)}`),
+        expect(product2.price).to.equals(dataProducts.demo_9.finalPrice),
         expect(product2.quantity).to.equals(1),
       ]);
     });

@@ -70,14 +70,14 @@ describe('FO - Product Page : Display pack content and link to product', async (
         `${dataProducts.demo_7.name} `
         + `${utilsCore.capitalize(dataProducts.demo_7.attributes[0].name)}-${dataProducts.demo_7.attributes[0].values[0]}`,
       ),
-      expect(product1.price).to.equals(`€${dataProducts.demo_7.price.toFixed(2)}`),
+      expect(product1.price.toFixed(2)).to.equals(dataProducts.demo_7.price.toFixed(2)),
       expect(product1.quantity).to.equals(5),
     ]);
 
     const product2 = await foClassicProductPage.getProductInPackList(page, 2);
     await Promise.all([
       expect(product2.name).to.equals(dataProducts.demo_12.name),
-      expect(product2.price).to.equals(`€${dataProducts.demo_12.price.toFixed(2)}`),
+      expect(product2.price.toFixed(2)).to.equals(dataProducts.demo_12.price.toFixed(2)),
       expect(product2.quantity).to.equals(5),
     ]);
   });
