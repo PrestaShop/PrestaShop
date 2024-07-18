@@ -5,13 +5,11 @@ import testContext from '@utils/testContext';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
 
-// Import pages
-import homePage from '@pages/FO/hummingbird/home';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   FakerProduct,
+  foHummingbirdHomePage,
   foHummingbirdModalQuickViewPage,
   foHummingbirdSearchResultsPage,
   utilsFile,
@@ -67,16 +65,16 @@ describe('FO - Product page - Quick view : Change image', async () => {
     it('should go to FO home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
-      await homePage.goToFo(page);
+      await foHummingbirdHomePage.goToFo(page);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.equal(true);
     });
 
     it('should search for the created product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchCreatedProduct', baseContext);
 
-      await homePage.searchProduct(page, productWith2Images.name);
+      await foHummingbirdHomePage.searchProduct(page, productWith2Images.name);
 
       const productsNumber = await foHummingbirdSearchResultsPage.getSearchResultsNumber(page);
       expect(productsNumber).to.equal(1);

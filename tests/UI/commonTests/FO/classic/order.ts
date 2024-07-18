@@ -3,7 +3,6 @@ import testContext from '@utils/testContext';
 
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
-import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {checkoutPage} from '@pages/FO/classic/checkout';
@@ -12,6 +11,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   FakerOrder,
+  foClassicHomePage,
   foClassicLoginPage,
   foClassicSearchResultsPage,
   utilsPlaywright,
@@ -41,18 +41,18 @@ function createOrderByCustomerTest(orderData: FakerOrder, baseContext: string = 
       await testContext.addContextItem(this, 'testIdentifier', 'openFO', baseContext);
 
       // Go to FO and change language
-      await homePage.goToFo(page);
+      await foClassicHomePage.goToFo(page);
 
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
 
       const pageTitle = await foClassicLoginPage.getPageTitle(page);
       expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
@@ -73,7 +73,7 @@ function createOrderByCustomerTest(orderData: FakerOrder, baseContext: string = 
       // Go to home page
       await foClassicLoginPage.goToHomePage(page);
       // Go to the first product page
-      await homePage.goToProductPage(page, orderData.products[0].product.id);
+      await foClassicHomePage.goToProductPage(page, orderData.products[0].product.id);
       // Add the product to the cart
       await productPage.addProductToTheCart(page, orderData.products[0].quantity);
 
@@ -137,17 +137,17 @@ function createOrderSpecificProductTest(
       await testContext.addContextItem(this, 'testIdentifier', 'openFO', baseContext);
 
       // Go to FO and change language
-      await homePage.goToFo(page);
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.goToFo(page);
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
 
       const pageTitle = await foClassicLoginPage.getPageTitle(page);
       expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
@@ -165,7 +165,7 @@ function createOrderSpecificProductTest(
     it(`should search for the product ${orderData.products[0].product.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchForProduct', baseContext);
 
-      await homePage.searchProduct(page, orderData.products[0].product.name);
+      await foClassicHomePage.searchProduct(page, orderData.products[0].product.name);
 
       const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
       expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
@@ -235,19 +235,19 @@ function createOrderByGuestTest(orderData: FakerOrder, baseContext: string = 'co
       await testContext.addContextItem(this, 'testIdentifier', 'openFO', baseContext);
 
       // Go to FO and change language
-      await homePage.goToFo(page);
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.goToFo(page);
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should add product to cart and proceed to checkout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await homePage.goToHomePage(page);
+      await foClassicHomePage.goToHomePage(page);
       // Go to the fourth product page
-      await homePage.goToProductPage(page, orderData.products[0].product.id);
+      await foClassicHomePage.goToProductPage(page, orderData.products[0].product.id);
       // Add the created product to the cart
       await productPage.addProductToTheCart(page, orderData.products[0].quantity);
       // Proceed to checkout the shopping cart

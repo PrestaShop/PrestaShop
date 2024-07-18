@@ -15,7 +15,6 @@ import addGroupPage from '@pages/BO/shopParameters/customerSettings/groups/add';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
-import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 
 import {
@@ -23,6 +22,7 @@ import {
   dataCustomers,
   dataGroups,
   FakerCarrier,
+  foClassicHomePage,
   foClassicLoginPage,
   utilsFile,
   utilsPlaywright,
@@ -197,16 +197,16 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
       // Click on view my shop
       page = await carriersPage.viewMyShop(page);
       // Change language
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'firstGoToLoginPageFO1', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
 
       const pageTitle = await foClassicLoginPage.getPageTitle(page);
       expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
@@ -227,7 +227,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
       // Go to home page
       await foClassicLoginPage.goToHomePage(page);
       // Go to the first product page
-      await homePage.goToProductPage(page, 1);
+      await foClassicHomePage.goToProductPage(page, 1);
       // Add the created product to the cart
       await productPage.addProductToTheCart(page);
       // Proceed to checkout the shopping cart
@@ -294,16 +294,16 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
       // Click on view my shop
       page = await carriersPage.viewMyShop(page);
       // Change language
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'firstGoToLoginPageFO2', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
 
       const pageTitle = await foClassicLoginPage.getPageTitle(page);
       expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
@@ -324,7 +324,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
       // Go to home page
       await foClassicLoginPage.goToHomePage(page);
       // Go to the first product page
-      await homePage.goToProductPage(page, 1);
+      await foClassicHomePage.goToProductPage(page, 1);
       // Add the created product to the cart
       await productPage.addProductToTheCart(page);
       // Proceed to checkout the shopping cart

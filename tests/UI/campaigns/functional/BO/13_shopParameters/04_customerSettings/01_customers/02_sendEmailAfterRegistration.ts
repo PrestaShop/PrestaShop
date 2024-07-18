@@ -13,12 +13,12 @@ import emailPage from '@pages/BO/advancedParameters/email';
 import customersPage from '@pages/BO/customers';
 
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {createAccountPage} from '@pages/FO/classic/myAccount/add';
 
 import {
   boDashboardPage,
   FakerCustomer,
+  foClassicHomePage,
   foClassicLoginPage,
   type MailDev,
   type MailDevEmail,
@@ -123,9 +123,9 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
 
         // Go to FO
         page = await customerSettingsPage.viewMyShop(page);
-        await homePage.changeLanguage(page, 'en');
+        await foClassicHomePage.changeLanguage(page, 'en');
 
-        const isHomePage = await homePage.isHomePage(page);
+        const isHomePage = await foClassicHomePage.isHomePage(page);
         expect(isHomePage, 'Fail to open FO home page').to.eq(true);
       });
 
@@ -133,7 +133,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
         await testContext.addContextItem(this, 'testIdentifier', `createCustomerAccount${index}`, baseContext);
 
         // Create account
-        await homePage.goToLoginPage(page);
+        await foClassicHomePage.goToLoginPage(page);
         await foClassicLoginPage.goToCreateAccountPage(page);
         await createAccountPage.createAccount(page, test.args.customer);
 
@@ -147,7 +147,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
         // Logout from FO
         await createAccountPage.logout(page);
 
-        const connected = await homePage.isCustomerConnected(page);
+        const connected = await foClassicHomePage.isCustomerConnected(page);
         expect(connected, 'Customer is connected in FO').to.eq(false);
       });
 

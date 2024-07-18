@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
-import homePage from '@pages/FO/hummingbird/home';
 import productPage from '@pages/FO/hummingbird/product';
 import cartPage from '@pages/FO/hummingbird/cart';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
@@ -16,6 +15,7 @@ import {
   dataProducts,
   FakerAddress,
   FakerCustomer,
+  foHummingbirdHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -66,17 +66,17 @@ describe('FO - Checkout - Addresses: Use different invoice address', async () =>
     it('should go to FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
-      await homePage.goToFo(page);
-      await homePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.goToFo(page);
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.equal(true);
     });
 
     it('should go to fourth product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
 
-      await homePage.goToProductPage(page, 4);
+      await foHummingbirdHomePage.goToProductPage(page, 4);
 
       const pageTitle = await productPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_5.name);

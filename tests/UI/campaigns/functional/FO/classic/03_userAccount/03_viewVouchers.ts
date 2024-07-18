@@ -7,12 +7,12 @@ import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {createAccountTest} from '@commonTests/FO/classic/account';
 
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {vouchersPage as foVouchersPage} from '@pages/FO/classic/myAccount/vouchers';
 
 import {
   FakerCartRule,
   FakerCustomer,
+  foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
   utilsDate,
@@ -81,16 +81,16 @@ describe('FO - Account : View vouchers', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-      await homePage.goTo(page, global.FO.URL);
+      await foClassicHomePage.goTo(page, global.FO.URL);
 
-      const result = await homePage.isHomePage(page);
+      const result = await foClassicHomePage.isHomePage(page);
       expect(result).to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
 
       const pageTitle = await foClassicLoginPage.getPageTitle(page);
       expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
@@ -108,7 +108,7 @@ describe('FO - Account : View vouchers', async () => {
     it('should go to vouchers page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOVouchersPage', baseContext);
 
-      await homePage.goToMyAccountPage(page);
+      await foClassicHomePage.goToMyAccountPage(page);
       await foClassicMyAccountPage.goToVouchersPage(page);
 
       const pageHeaderTitle = await foVouchersPage.getPageTitle(page);

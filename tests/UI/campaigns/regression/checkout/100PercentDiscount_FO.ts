@@ -12,7 +12,6 @@ import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
-import {homePage} from '@pages/FO/classic/home';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
@@ -20,6 +19,7 @@ import {
   FakerAddress,
   FakerCartRule,
   FakerCustomer,
+  foClassicHomePage,
   foClassicModalQuickViewPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -136,14 +136,14 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
 
       page = await cartRulesPage.viewMyShop(page);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should quick view the first product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewTheFirstProduct', baseContext);
 
-      await homePage.quickViewProduct(page, 1);
+      await foClassicHomePage.quickViewProduct(page, 1);
 
       const isQuickViewModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isQuickViewModalVisible).to.equal(true);

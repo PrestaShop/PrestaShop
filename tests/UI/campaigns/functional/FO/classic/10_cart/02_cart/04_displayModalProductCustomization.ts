@@ -3,7 +3,6 @@ import testContext from '@utils/testContext';
 
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
-import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
@@ -11,6 +10,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foClassicHomePage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -34,17 +34,17 @@ describe('FO - cart : Display modal of product customization', async () => {
   it('should open the shop page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
-    await homePage.goToFo(page);
-    await homePage.changeLanguage(page, 'en');
+    await foClassicHomePage.goToFo(page);
+    await foClassicHomePage.changeLanguage(page, 'en');
 
-    const isHomePage = await homePage.isHomePage(page);
+    const isHomePage = await foClassicHomePage.isHomePage(page);
     expect(isHomePage, 'Fail to open FO home page').to.eq(true);
   });
 
   it(`should search for the product '${dataProducts.demo_14.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchProduct', baseContext);
 
-    await homePage.searchProduct(page, dataProducts.demo_14.name);
+    await foClassicHomePage.searchProduct(page, dataProducts.demo_14.name);
 
     const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
     expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
@@ -70,7 +70,7 @@ describe('FO - cart : Display modal of product customization', async () => {
     expect(isBlockCartModal).to.equal(true);
 
     const successMessage = await blockCartModal.getBlockCartModalTitle(page);
-    expect(successMessage).to.contains(homePage.successAddToCartMessage);
+    expect(successMessage).to.contains(foClassicHomePage.successAddToCartMessage);
   });
 
   it('should click on continue shopping button', async function () {

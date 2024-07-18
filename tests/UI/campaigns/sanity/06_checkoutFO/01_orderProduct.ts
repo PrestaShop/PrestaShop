@@ -5,13 +5,13 @@ import testContext from '@utils/testContext';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
-import {homePage} from '@pages/FO/classic/home';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
+  foClassicHomePage,
   foClassicLoginPage,
   foClassicModalQuickViewPage,
   utilsPlaywright,
@@ -43,16 +43,16 @@ describe('BO - Checkout : Order a product and check order confirmation', async (
   it('should open the shop page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-    await homePage.goTo(page, global.FO.URL);
+    await foClassicHomePage.goTo(page, global.FO.URL);
 
-    const result = await homePage.isHomePage(page);
+    const result = await foClassicHomePage.isHomePage(page);
     expect(result).to.eq(true);
   });
 
   it('should go to login page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPage', baseContext);
 
-    await homePage.goToLoginPage(page);
+    await foClassicHomePage.goToLoginPage(page);
 
     const pageTitle = await foClassicLoginPage.getPageTitle(page);
     expect(pageTitle).to.equal(foClassicLoginPage.pageTitle);
@@ -63,27 +63,27 @@ describe('BO - Checkout : Order a product and check order confirmation', async (
 
     await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-    const connected = await homePage.isCustomerConnected(page);
+    const connected = await foClassicHomePage.isCustomerConnected(page);
     expect(connected, 'Customer is not connected in FO').to.eq(true);
   });
 
   it('should go to home page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage', baseContext);
 
-    const isHomepage = await homePage.isHomePage(page);
+    const isHomepage = await foClassicHomePage.isHomePage(page);
 
     if (!isHomepage) {
-      await homePage.goToHomePage(page);
+      await foClassicHomePage.goToHomePage(page);
     }
 
-    const result = await homePage.isHomePage(page);
+    const result = await foClassicHomePage.isHomePage(page);
     expect(result).to.eq(true);
   });
 
   it('should quick view the first product', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'quickViewFirstProduct', baseContext);
 
-    await homePage.quickViewProduct(page, 1);
+    await foClassicHomePage.quickViewProduct(page, 1);
 
     const isQuickViewModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
     expect(isQuickViewModalVisible).to.equal(true);

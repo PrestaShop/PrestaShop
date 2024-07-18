@@ -3,13 +3,13 @@ import testContext from '@utils/testContext';
 
 // Import pages
 // Import FO pages
-import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
   dataCustomers,
+  foClassicHomePage,
   foClassicModalQuickViewPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -38,19 +38,19 @@ describe('FO - Guest checkout: Billing address when logged in', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
       // Go to FO
-      await foHomePage.goToFo(page);
+      await foClassicHomePage.goToFo(page);
 
       // Change FO language
-      await foHomePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foHomePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should add the first product to cart and proceed to checkout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCartAndCheckout', baseContext);
 
-      await foHomePage.quickViewProduct(page, 3);
+      await foClassicHomePage.quickViewProduct(page, 3);
       await foClassicModalQuickViewPage.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);
 

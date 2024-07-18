@@ -13,7 +13,6 @@ import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
-import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 import {
@@ -22,6 +21,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerCartRule,
+  foClassicHomePage,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -102,9 +102,9 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
 
       // View my shop and init pages
       page = await addCartRulePage.viewMyShop(page);
-      await foHomePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foHomePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
   });
@@ -117,7 +117,7 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
       it('should go to the first product page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToFirstProductPage${index}`, baseContext);
 
-        await foHomePage.goToProductPage(page, 1);
+        await foClassicHomePage.goToProductPage(page, 1);
 
         const pageTitle = await foProductPage.getPageTitle(page);
         expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
@@ -196,10 +196,10 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
         it('should click on the logo of the shop', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkLogoLink', baseContext);
 
-          await foHomePage.clickOnHeaderLink(page, 'Logo');
+          await foClassicHomePage.clickOnHeaderLink(page, 'Logo');
 
-          const pageTitle = await foHomePage.getPageTitle(page);
-          expect(pageTitle).to.equal(foHomePage.pageTitle);
+          const pageTitle = await foClassicHomePage.getPageTitle(page);
+          expect(pageTitle).to.equal(foClassicHomePage.pageTitle);
         });
       }
       if (test.args.testIdentifier === 'cartRuleNotAccepted') {

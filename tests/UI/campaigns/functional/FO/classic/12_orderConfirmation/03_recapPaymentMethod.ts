@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import ordersPage from '@pages/BO/orders';
 
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
@@ -19,6 +18,7 @@ import {
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
+  foClassicHomePage,
   foClassicModalQuickViewPage,
   foClassicSearchResultsPage,
   utilsPlaywright,
@@ -55,26 +55,26 @@ describe('FO - Order confirmation : Order details and totals - Recap of payment 
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'openFoShop', baseContext);
 
-      await homePage.goToFo(page);
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.goToFo(page);
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const result = await homePage.isHomePage(page);
+      const result = await foClassicHomePage.isHomePage(page);
       expect(result).to.equal(true);
     });
 
     it('should go to home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage', baseContext);
 
-      await homePage.goToHomePage(page);
+      await foClassicHomePage.goToHomePage(page);
 
-      const result = await homePage.isHomePage(page);
+      const result = await foClassicHomePage.isHomePage(page);
       expect(result).to.eq(true);
     });
 
     it(`should add the product ${dataProducts.demo_6.name} to cart by quick view`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addDemo3ByQuickView', baseContext);
 
-      await homePage.searchProduct(page, dataProducts.demo_6.name);
+      await foClassicHomePage.searchProduct(page, dataProducts.demo_6.name);
       await foClassicSearchResultsPage.quickViewProduct(page, 1);
 
       await foClassicModalQuickViewPage.addToCartByQuickView(page);

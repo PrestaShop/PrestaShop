@@ -6,7 +6,6 @@ import {createCartRuleTest, deleteCartRuleTest} from '@commonTests/BO/catalog/ca
 
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
-import {homePage} from '@pages/FO/classic/home';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
@@ -17,6 +16,7 @@ import {
   dataCustomers,
   dataProducts,
   FakerCartRule,
+  foClassicHomePage,
   foClassicLoginPage,
   foClassicModalQuickViewPage,
   foClassicSearchResultsPage,
@@ -76,17 +76,17 @@ describe('FO - Checkout : Display of totals', async () => {
     it('should go to FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
-      await homePage.goToFo(page);
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.goToFo(page);
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.equal(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
 
       const pageTitle = await foClassicLoginPage.getPageTitle(page);
       expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
@@ -104,7 +104,7 @@ describe('FO - Checkout : Display of totals', async () => {
     it(`should search for the product ${dataProducts.demo_12.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchProduct', baseContext);
 
-      await homePage.searchProduct(page, dataProducts.demo_12.name);
+      await foClassicHomePage.searchProduct(page, dataProducts.demo_12.name);
 
       const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
       expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);

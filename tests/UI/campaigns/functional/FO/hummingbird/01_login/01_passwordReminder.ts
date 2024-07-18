@@ -8,11 +8,11 @@ import createAccountTest from '@commonTests/FO/hummingbird/account';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
-import homePage from '@pages/FO/hummingbird/home';
 import passwordReminderPage from '@pages/FO/hummingbird/passwordReminder';
 
 import {
   FakerCustomer,
+  foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
   type MailDev,
@@ -83,16 +83,16 @@ describe('FO - Login : Password reminder', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-      await homePage.goTo(page, global.FO.URL);
+      await foHummingbirdHomePage.goTo(page, global.FO.URL);
 
-      const result = await homePage.isHomePage(page);
+      const result = await foHummingbirdHomePage.isHomePage(page);
       expect(result).to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPage', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foHummingbirdHomePage.goToLoginPage(page);
 
       const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
       expect(pageTitle).to.equal(foHummingbirdLoginPage.pageTitle);

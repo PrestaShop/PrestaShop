@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import carriersPage from '@pages/BO/shipping/carriers';
 
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
@@ -17,6 +16,7 @@ import {
   boDashboardPage,
   dataCarriers,
   dataCustomers,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -79,17 +79,17 @@ describe('BO - Shipping - Carriers : Quick edit status and free shipping', async
 
       page = await carriersPage.viewMyShop(page);
       // Change language in FO
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const pageTitle = await homePage.getPageTitle(page);
-      expect(pageTitle).to.contains(homePage.pageTitle);
+      const pageTitle = await foClassicHomePage.getPageTitle(page);
+      expect(pageTitle).to.contains(foClassicHomePage.pageTitle);
     });
 
     it('should add the first product to the cart and checkout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addFirstProductToCart', baseContext);
 
       // Go to the first product page
-      await homePage.goToProductPage(page, 1);
+      await foClassicHomePage.goToProductPage(page, 1);
       // Add the product to the cart
       await productPage.addProductToTheCart(page);
       // Proceed to checkout the shopping cart

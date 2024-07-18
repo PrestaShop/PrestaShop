@@ -2,13 +2,13 @@
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foClassicHomePage,
   foClassicSearchResultsPage,
   utilsCore,
   utilsPlaywright,
@@ -33,16 +33,16 @@ describe('FO - Product Page : Display pack content and link to product', async (
   it('should go to FO home page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
-    await homePage.goToFo(page);
+    await foClassicHomePage.goToFo(page);
 
-    const isHomePage = await homePage.isHomePage(page);
+    const isHomePage = await foClassicHomePage.isHomePage(page);
     expect(isHomePage).to.equal(true);
   });
 
   it('should search the product', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchPack', baseContext);
 
-    await homePage.searchProduct(page, 'pack');
+    await foClassicHomePage.searchProduct(page, 'pack');
 
     const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
     expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);

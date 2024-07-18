@@ -11,7 +11,6 @@ import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
@@ -22,6 +21,7 @@ import {
   dataCustomers,
   dataPaymentMethods,
   dataTaxes,
+  foClassicHomePage,
   foClassicLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -146,16 +146,16 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
           page = await orderSettingsPage.viewMyShop(page);
-          await homePage.changeLanguage(page, 'en');
+          await foClassicHomePage.changeLanguage(page, 'en');
 
-          const isHomePage = await homePage.isHomePage(page);
+          const isHomePage = await foClassicHomePage.isHomePage(page);
           expect(isHomePage, 'Fail to open FO home page').to.eq(true);
         });
 
         it('should go to login page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToLoginPageFO${index}`, baseContext);
 
-          await homePage.goToLoginPage(page);
+          await foClassicHomePage.goToLoginPage(page);
 
           const pageTitle = await foClassicLoginPage.getPageTitle(page);
           expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
@@ -175,7 +175,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
 
           await foClassicLoginPage.goToHomePage(page);
 
-          const isHomePage = await homePage.isHomePage(page);
+          const isHomePage = await foClassicHomePage.isHomePage(page);
           expect(isHomePage, 'Fail to open home page!').to.eq(true);
         });
 
@@ -183,7 +183,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           await testContext.addContextItem(this, 'testIdentifier', `addProductToCart${index}`, baseContext);
 
           // Go to the fourth product page
-          await homePage.goToProductPage(page, 4);
+          await foClassicHomePage.goToProductPage(page, 4);
           await productPage.addProductToTheCart(page);
 
           const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
@@ -285,9 +285,9 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           await testContext.addContextItem(this, 'testIdentifier', `sighOutFOAfterCheck${index}`, baseContext);
 
           await checkoutPage.goToHomePage(page);
-          await homePage.logout(page);
+          await foClassicHomePage.logout(page);
 
-          const isCustomerConnected = await homePage.isCustomerConnected(page);
+          const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);
           expect(isCustomerConnected, 'Customer should be disconnected').to.eq(false);
         });
       });

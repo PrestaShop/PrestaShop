@@ -6,11 +6,11 @@ import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advanced
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {createAccountPage} from '@pages/FO/classic/myAccount/add';
 
 import {
   FakerCustomer,
+  foClassicHomePage,
   foClassicLoginPage,
   type MailDev,
   type MailDevEmail,
@@ -57,16 +57,16 @@ describe('FO - Login : Create account', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-      await homePage.goTo(page, global.FO.URL);
+      await foClassicHomePage.goTo(page, global.FO.URL);
 
-      const result = await homePage.isHomePage(page);
+      const result = await foClassicHomePage.isHomePage(page);
       expect(result).to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPage', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
 
       const pageTitle = await foClassicLoginPage.getPageTitle(page);
       expect(pageTitle).to.equal(foClassicLoginPage.pageTitle);
@@ -86,14 +86,14 @@ describe('FO - Login : Create account', async () => {
 
       await createAccountPage.createAccount(page, customerData);
 
-      const isCustomerConnected = await homePage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Created customer is not connected!').to.eq(true);
     });
 
     it('should check if the page is redirected to home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'isHomePage', baseContext);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to redirect to FO home page!').to.eq(true);
     });
 
@@ -114,9 +114,9 @@ describe('FO - Login : Create account', async () => {
     it('should sign out from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFO', baseContext);
 
-      await homePage.logout(page);
+      await foClassicHomePage.logout(page);
 
-      const isCustomerConnected = await homePage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected!').to.eq(false);
     });
   });

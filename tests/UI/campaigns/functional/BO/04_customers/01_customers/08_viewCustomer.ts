@@ -16,7 +16,6 @@ import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
-import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 
 import {
@@ -27,6 +26,7 @@ import {
   dataProducts,
   FakerAddress,
   FakerCustomer,
+  foClassicHomePage,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -202,9 +202,9 @@ describe('BO - Customers - Customers : View information about customer', async (
       // Click on view my shop
       page = await viewCustomerPage.viewMyShop(page);
       // Change language
-      await foHomePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foHomePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
@@ -212,7 +212,7 @@ describe('BO - Customers - Customers : View information about customer', async (
       await testContext.addContextItem(this, 'testIdentifier', 'addFirstProductToCart', baseContext);
 
       // Go to the first product page
-      await foHomePage.goToProductPage(page, 1);
+      await foClassicHomePage.goToProductPage(page, 1);
       // Add the product to the cart
       await productPage.addProductToTheCart(page);
 

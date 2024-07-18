@@ -7,14 +7,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
-// Import FO pages
-import {homePage as homePageFO} from '@pages/FO/classic/home';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   foClassicCategoryPage,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -88,15 +87,15 @@ describe('BO - Shop Parameters - Product Settings : Update number of product dis
 
         page = await productSettingsPage.viewMyShop(page);
 
-        const isHomePage = await homePageFO.isHomePage(page);
+        const isHomePage = await foClassicHomePage.isHomePage(page);
         expect(isHomePage, 'Home page was not opened').to.eq(true);
       });
 
       it('should go to all products page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToHomeCategory${index + 1}`, baseContext);
 
-        await homePageFO.changeLanguage(page, 'en');
-        await homePageFO.goToAllProductsPage(page);
+        await foClassicHomePage.changeLanguage(page, 'en');
+        await foClassicHomePage.goToAllProductsPage(page);
 
         const isCategoryPage = await foClassicCategoryPage.isCategoryPage(page);
         expect(isCategoryPage, 'Home category page was not opened');
@@ -116,7 +115,7 @@ describe('BO - Shop Parameters - Product Settings : Update number of product dis
       it('should close the page and go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index + 1}`, baseContext);
 
-        page = await homePageFO.closePage(browserContext, page, 0);
+        page = await foClassicHomePage.closePage(browserContext, page, 0);
 
         const pageTitle = await productSettingsPage.getPageTitle(page);
         expect(pageTitle).to.contains(productSettingsPage.pageTitle);

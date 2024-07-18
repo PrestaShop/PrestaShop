@@ -8,7 +8,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 // Import FO pages
 import cartPage from '@pages/FO/hummingbird/cart';
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
-import homePage from '@pages/FO/hummingbird/home';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
@@ -16,6 +15,7 @@ import {
   dataCustomers,
   dataPaymentMethods,
   type FakerPaymentMethod,
+  foHummingbirdHomePage,
   foHummingbirdModalQuickViewPage,
   type MailDev,
   type MailDevEmail,
@@ -70,17 +70,17 @@ describe('FO - Checkout - Payment : Choose a payment method', async () => {
       it('should go to FO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToFo${index}`, baseContext);
 
-        await homePage.goToFo(page);
-        await homePage.changeLanguage(page, 'en');
+        await foHummingbirdHomePage.goToFo(page);
+        await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-        const isHomePage = await homePage.isHomePage(page);
+        const isHomePage = await foHummingbirdHomePage.isHomePage(page);
         expect(isHomePage, 'Fail to open FO home page').to.eq(true);
       });
 
       it('should quick view the first product', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `quickViewFirstProduct${index}`, baseContext);
 
-        await homePage.quickViewProduct(page, 1);
+        await foHummingbirdHomePage.quickViewProduct(page, 1);
 
         const isQuickViewModal = await foHummingbirdModalQuickViewPage.isQuickViewProductModalVisible(page);
         expect(isQuickViewModal).to.equal(true);

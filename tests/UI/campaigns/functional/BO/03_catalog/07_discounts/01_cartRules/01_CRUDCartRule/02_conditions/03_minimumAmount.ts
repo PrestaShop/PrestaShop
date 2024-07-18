@@ -10,7 +10,6 @@ import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {cartPage} from '@pages/FO/classic/cart';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
@@ -20,6 +19,7 @@ import {
   boDashboardPage,
   dataProducts,
   FakerCartRule,
+  foClassicHomePage,
   foClassicLoginPage,
   foClassicModalQuickViewPage,
   utilsCore,
@@ -105,9 +105,9 @@ describe('BO - Catalog - Cart rules : Minimum amount', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-      await homePage.goTo(page, global.FO.URL);
+      await foClassicHomePage.goTo(page, global.FO.URL);
 
-      const result = await homePage.isHomePage(page);
+      const result = await foClassicHomePage.isHomePage(page);
       expect(result).to.eq(true);
     });
 
@@ -115,7 +115,7 @@ describe('BO - Catalog - Cart rules : Minimum amount', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewProduct', baseContext);
 
       await foClassicLoginPage.goToHomePage(page);
-      await homePage.quickViewProduct(page, 3);
+      await foClassicHomePage.quickViewProduct(page, 3);
 
       const isQuickViewModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isQuickViewModalVisible).to.equal(true);

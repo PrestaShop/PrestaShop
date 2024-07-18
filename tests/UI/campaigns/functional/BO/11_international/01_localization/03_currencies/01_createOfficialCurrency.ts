@@ -8,13 +8,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import currenciesPage from '@pages/BO/international/currencies';
 import addCurrencyPage from '@pages/BO/international/currencies/add';
-// Import FO pages
-import {homePage as foHomePage} from '@pages/FO/classic/home';
 
 import {
   boDashboardPage,
   boLocalizationPage,
   dataCurrencies,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -130,7 +129,7 @@ describe('BO - International - Currencies : Create official currency and check i
       // View my shop and int pages
       page = await currenciesPage.viewMyShop(page);
 
-      const isHomePage = await foHomePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
@@ -138,16 +137,16 @@ describe('BO - International - Currencies : Create official currency and check i
       await testContext.addContextItem(this, 'testIdentifier', 'changeFoCurrency1', baseContext);
 
       // Check currency
-      await foHomePage.changeCurrency(page, dataCurrencies.mad.isoCode, dataCurrencies.mad.symbol);
+      await foClassicHomePage.changeCurrency(page, dataCurrencies.mad.isoCode, dataCurrencies.mad.symbol);
 
-      const shopCurrency = await foHomePage.getDefaultCurrency(page);
+      const shopCurrency = await foClassicHomePage.getDefaultCurrency(page);
       expect(shopCurrency).to.contain(dataCurrencies.mad.isoCode);
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo1', baseContext);
 
-      page = await foHomePage.closePage(browserContext, page, 0);
+      page = await foClassicHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await currenciesPage.getPageTitle(page);
       expect(pageTitle).to.contains(currenciesPage.pageTitle);
@@ -199,21 +198,21 @@ describe('BO - International - Currencies : Create official currency and check i
       // View my shop and init pages
       page = await currenciesPage.viewMyShop(page);
 
-      const isHomePage = await foHomePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should check that the currencies list is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCurrency2', baseContext);
 
-      const found = await foHomePage.isCurrencyDropdownExist(page);
+      const found = await foClassicHomePage.isCurrencyDropdownExist(page);
       expect(found, 'Currencies list is visible').to.eq(false);
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo2', baseContext);
 
-      page = await foHomePage.closePage(browserContext, page, 0);
+      page = await foClassicHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await currenciesPage.getPageTitle(page);
       expect(pageTitle).to.contains(currenciesPage.pageTitle);

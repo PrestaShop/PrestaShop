@@ -12,7 +12,6 @@ import customersPage from '@pages/BO/customers';
 import addCustomerPage from '@pages/BO/customers/add';
 
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
@@ -26,6 +25,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerCustomer,
+  foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
   utilsPlaywright,
@@ -125,16 +125,16 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
       page = await boDashboardPage.viewMyShop(page);
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginFO2', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
 
       const pageTitle = await foClassicLoginPage.getPageTitle(page);
       expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
@@ -153,7 +153,7 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       await foClassicLoginPage.goToHomePage(page);
-      await homePage.goToProductPage(page, 1);
+      await foClassicHomePage.goToProductPage(page, 1);
       await productPage.addProductToTheCart(page);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
@@ -340,16 +340,16 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop2', baseContext);
 
       page = await boDashboardPage.viewMyShop(page);
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to order history page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
-      await homePage.goToMyAccountPage(page);
+      await foClassicHomePage.goToMyAccountPage(page);
       await foClassicMyAccountPage.goToHistoryAndDetailsPage(page);
 
       const pageHeaderTitle = await orderHistoryPage.getPageTitle(page);
@@ -369,7 +369,7 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo', baseContext);
 
       // Close tab and init other page objects with new current tab
-      page = await homePage.closePage(browserContext, page, 0);
+      page = await foClassicHomePage.closePage(browserContext, page, 0);
 
       await boDashboardPage.reloadPage(page);
 

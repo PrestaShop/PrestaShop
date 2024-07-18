@@ -4,16 +4,13 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-// Import FO pages
-import {homePage} from '@pages/FO/classic/home';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boModuleManagerPage,
   dataModules,
+  foClassicHomePage,
   modPsNewProductsBoMain,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -80,23 +77,23 @@ describe('New products block module - Disable/Enable module', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOAfterDisable', baseContext);
 
       page = await modPsNewProductsBoMain.viewMyShop(page);
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should check if the "New Products" block is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNotVisible', baseContext);
 
-      const hasProductsBlock = await homePage.hasProductsBlock(page, 'newproducts');
+      const hasProductsBlock = await foClassicHomePage.hasProductsBlock(page, 'newproducts');
       expect(hasProductsBlock).to.eq(false);
     });
 
     it('should return to the back office', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnBO', baseContext);
 
-      page = await homePage.closePage(browserContext, page, 0);
+      page = await foClassicHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await boModuleManagerPage.getPageTitle(page);
       expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
@@ -120,16 +117,16 @@ describe('New products block module - Disable/Enable module', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOAfterEnable', baseContext);
 
       page = await modPsNewProductsBoMain.viewMyShop(page);
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should check if the "New Products" block is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkVisible', baseContext);
 
-      const hasProductsBlock = await homePage.hasProductsBlock(page, 'newproducts');
+      const hasProductsBlock = await foClassicHomePage.hasProductsBlock(page, 'newproducts');
       expect(hasProductsBlock).to.eq(true);
     });
   });

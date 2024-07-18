@@ -9,7 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import productsPage from '@pages/BO/catalog/products';
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 import {expect} from 'chai';
@@ -20,6 +19,7 @@ import {
   dataModules,
   FakerProduct,
   foClassicCategoryPage,
+  foClassicHomePage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -140,16 +140,16 @@ describe('Mail alerts module - Uninstall and install module', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoAfterUninstall', baseContext);
 
       page = await boModuleManagerPage.viewMyShop(page);
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should go to the All Products Page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAllProductsPageAfterUninstall', baseContext);
 
-      await homePage.goToAllProductsPage(page);
+      await foClassicHomePage.goToAllProductsPage(page);
 
       const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
@@ -208,16 +208,16 @@ describe('Mail alerts module - Uninstall and install module', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
       page = await boModuleManagerPage.viewMyShop(page);
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should go to the All Products Page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAllProductsPage', baseContext);
 
-      await homePage.goToAllProductsPage(page);
+      await foClassicHomePage.goToAllProductsPage(page);
 
       const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);

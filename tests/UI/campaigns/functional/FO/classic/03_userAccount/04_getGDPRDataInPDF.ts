@@ -16,7 +16,6 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {contactUsPage} from '@pages/FO/classic/contactUs';
-import {homePage} from '@pages/FO/classic/home';
 import {createAccountPage} from '@pages/FO/classic/myAccount/add';
 import {gdprPersonalDataPage} from '@pages/FO/classic/myAccount/gdprPersonalData';
 import {productPage} from '@pages/FO/classic/product';
@@ -28,6 +27,7 @@ import {
   FakerAddress,
   FakerContactMessage,
   FakerCustomer,
+  foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
   utilsCore,
@@ -114,16 +114,16 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
       it('should go to FO home page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount1', baseContext);
 
-        await homePage.goToFo(page);
+        await foClassicHomePage.goToFo(page);
 
-        const isHomePage = await homePage.isHomePage(page);
+        const isHomePage = await foClassicHomePage.isHomePage(page);
         expect(isHomePage).to.eq(true);
       });
 
       it('should go to create account page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToCreateAccountPage', baseContext);
 
-        await homePage.goToLoginPage(page);
+        await foClassicHomePage.goToLoginPage(page);
         await foClassicLoginPage.goToCreateAccountPage(page);
 
         const pageHeaderTitle = await createAccountPage.getHeaderTitle(page);
@@ -135,14 +135,14 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
 
         await createAccountPage.createAccount(page, customerData);
 
-        const isCustomerConnected = await homePage.isCustomerConnected(page);
+        const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);
         expect(isCustomerConnected).to.eq(true);
       });
 
       it('should go to my account page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccountPage1', baseContext);
 
-        await homePage.goToMyAccountPage(page);
+        await foClassicHomePage.goToMyAccountPage(page);
 
         const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
         expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);
@@ -333,9 +333,9 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
       it('should go to FO home page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount2', baseContext);
 
-        await homePage.goToFo(page);
+        await foClassicHomePage.goToFo(page);
 
-        const isHomePage = await homePage.isHomePage(page);
+        const isHomePage = await foClassicHomePage.isHomePage(page);
         expect(isHomePage).to.eq(true);
       });
 
@@ -343,7 +343,7 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart1', baseContext);
 
         // Go to the first product page
-        await homePage.goToProductPage(page, 1);
+        await foClassicHomePage.goToProductPage(page, 1);
         // Add the product to the cart
         await productPage.addProductToTheCart(page, 2);
 
@@ -354,7 +354,7 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
       it('should go to my account page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccountPage2', baseContext);
 
-        await homePage.goToMyAccountPage(page);
+        await foClassicHomePage.goToMyAccountPage(page);
 
         const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
         expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);
@@ -451,16 +451,16 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
       it('should go to FO home page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount3', baseContext);
 
-        await homePage.goToFo(page);
+        await foClassicHomePage.goToFo(page);
 
-        const isHomePage = await homePage.isHomePage(page);
+        const isHomePage = await foClassicHomePage.isHomePage(page);
         expect(isHomePage).to.eq(true);
       });
 
       it('should go to carts page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart2', baseContext);
 
-        await homePage.goToCartPage(page);
+        await foClassicHomePage.goToCartPage(page);
 
         const pageTitle = await cartPage.getPageTitle(page);
         expect(pageTitle).to.contains(cartPage.pageTitle);
@@ -498,7 +498,7 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
       it('should go to my account page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccountPage3', baseContext);
 
-        await homePage.goToMyAccountPage(page);
+        await foClassicHomePage.goToMyAccountPage(page);
 
         const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
         expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);
@@ -613,9 +613,9 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
       it('should go to FO home page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount4', baseContext);
 
-        await homePage.goToFo(page);
+        await foClassicHomePage.goToFo(page);
 
-        const isHomePage = await homePage.isHomePage(page);
+        const isHomePage = await foClassicHomePage.isHomePage(page);
         expect(isHomePage).to.eq(true);
       });
 
@@ -641,7 +641,7 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
       it('should go to my account page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccountPage4', baseContext);
 
-        await homePage.goToMyAccountPage(page);
+        await foClassicHomePage.goToMyAccountPage(page);
 
         const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
         expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);
@@ -752,25 +752,25 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
       it('should go to FO home page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount5', baseContext);
 
-        await homePage.goToFo(page);
+        await foClassicHomePage.goToFo(page);
 
-        const isHomePage = await homePage.isHomePage(page);
+        const isHomePage = await foClassicHomePage.isHomePage(page);
         expect(isHomePage).to.eq(true);
       });
 
       it('should logout by the link in the header', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'signOutFOByHeaderLink', baseContext);
 
-        await homePage.logout(page);
+        await foClassicHomePage.logout(page);
 
-        const isCustomerConnected = await homePage.isCustomerConnected(page);
+        const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);
         expect(isCustomerConnected, 'Customer is connected!').to.eq(false);
       });
 
       it('should sign in', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'signInFO2', baseContext);
 
-        await homePage.goToLoginPage(page);
+        await foClassicHomePage.goToLoginPage(page);
         await foClassicLoginPage.customerLogin(page, customerData);
 
         const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
@@ -780,7 +780,7 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
       it('should go to my account page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccountPage5', baseContext);
 
-        await homePage.goToMyAccountPage(page);
+        await foClassicHomePage.goToMyAccountPage(page);
 
         const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
         expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);

@@ -4,16 +4,13 @@ import testContext from '@utils/testContext';
 // Import login steps
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-// Import FO pages
-import {homePage} from '@pages/FO/classic/home';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boSearchPage,
   dataProducts,
+  foClassicHomePage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -71,16 +68,16 @@ describe('BO - Shop Parameters - Search : Maximum approximate words allowed by f
     await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
     page = await boSearchPage.viewMyShop(page);
-    await homePage.changeLanguage(page, 'en');
+    await foClassicHomePage.changeLanguage(page, 'en');
 
-    const isHomePage = await homePage.isHomePage(page);
+    const isHomePage = await foClassicHomePage.isHomePage(page);
     expect(isHomePage, 'Fail to open FO home page').to.eq(true);
   });
 
   it('should search the word "notenook"', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchWordnotenook', baseContext);
 
-    await homePage.searchProduct(page, 'notenook');
+    await foClassicHomePage.searchProduct(page, 'notenook');
 
     const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
     expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);

@@ -5,13 +5,13 @@ import testContext from '@utils/testContext';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
-import homePage from '@pages/FO/hummingbird/home';
 import productPage from '@pages/FO/hummingbird/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foHummingbirdHomePage,
   foHummingbirdSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -56,16 +56,16 @@ describe('FO - Search Page : Consult results list', async () => {
     it('should go to FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
-      await homePage.goToFo(page);
+      await foHummingbirdHomePage.goToFo(page);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should put \'Mug\' in the search input and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchProduct1', baseContext);
 
-      await homePage.searchProduct(page, 'mug');
+      await foHummingbirdHomePage.searchProduct(page, 'mug');
 
       const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
       expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
@@ -133,7 +133,7 @@ describe('FO - Search Page : Consult results list', async () => {
     it('should remove the searched value and press enter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removeSearch', baseContext);
 
-      await homePage.searchProduct(page, '');
+      await foHummingbirdHomePage.searchProduct(page, '');
 
       const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
       expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);

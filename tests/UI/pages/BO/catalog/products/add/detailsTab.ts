@@ -173,6 +173,7 @@ class DetailsTab extends BOBasePage {
   async setProductDetails(page: Page, productData: FakerProduct): Promise<void> {
     await this.waitForSelectorAndClick(page, this.detailsTabLink);
     await this.setValue(page, this.productReferenceInput, productData.reference);
+    await this.setCondition(page, productData);
   }
 
   /**
@@ -359,7 +360,9 @@ class DetailsTab extends BOBasePage {
    */
   async setCondition(page: Page, productData: FakerProduct): Promise<void> {
     await this.setChecked(page, this.displayCondition(productData.displayCondition ? 1 : 0));
-    await this.selectByVisibleText(page, this.productConditionSelect, productData.condition);
+    if (productData.displayCondition === true) {
+      await this.selectByVisibleText(page, this.productConditionSelect, productData.condition);
+    }
   }
 
   /**

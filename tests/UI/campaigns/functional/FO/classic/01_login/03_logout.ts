@@ -1,11 +1,9 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import FO pages
-import {homePage} from '@pages/FO/classic/home';
-
 import {
   dataCustomers,
+  foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
   utilsPlaywright,
@@ -33,16 +31,16 @@ describe('FO - Login : Logout from FO', async () => {
   it('should open the shop page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-    await homePage.goTo(page, global.FO.URL);
+    await foClassicHomePage.goTo(page, global.FO.URL);
 
-    const result = await homePage.isHomePage(page);
+    const result = await foClassicHomePage.isHomePage(page);
     expect(result).to.eq(true);
   });
 
   it('should go to login page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPage', baseContext);
 
-    await homePage.goToLoginPage(page);
+    await foClassicHomePage.goToLoginPage(page);
 
     const pageTitle = await foClassicLoginPage.getPageTitle(page);
     expect(pageTitle).to.equal(foClassicLoginPage.pageTitle);
@@ -60,16 +58,16 @@ describe('FO - Login : Logout from FO', async () => {
   it('should logout by the link in the header', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'signOutFOByHeaderLink', baseContext);
 
-    await homePage.logout(page);
+    await foClassicHomePage.logout(page);
 
-    const isCustomerConnected = await homePage.isCustomerConnected(page);
+    const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);
     expect(isCustomerConnected, 'Customer is connected!').to.eq(false);
   });
 
   it('should sign in with default customer', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'signInFO2', baseContext);
 
-    await homePage.goToLoginPage(page);
+    await foClassicHomePage.goToLoginPage(page);
     await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
     const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
@@ -79,7 +77,7 @@ describe('FO - Login : Logout from FO', async () => {
   it('should go to my account page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage', baseContext);
 
-    await homePage.goToMyAccountPage(page);
+    await foClassicHomePage.goToMyAccountPage(page);
 
     const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
     expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);

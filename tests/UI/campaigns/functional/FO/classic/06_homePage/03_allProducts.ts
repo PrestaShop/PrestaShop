@@ -7,14 +7,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import productsPage from '@pages/BO/catalog/products';
-// Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   foClassicCategoryPage,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -81,17 +80,17 @@ describe('FO - Home Page : Display all products', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-      await homePage.goTo(page, global.FO.URL);
+      await foClassicHomePage.goTo(page, global.FO.URL);
 
-      const result = await homePage.isHomePage(page);
+      const result = await foClassicHomePage.isHomePage(page);
       expect(result).to.eq(true);
     });
 
     it('should go to all products page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAllProducts', baseContext);
 
-      await homePage.changeLanguage(page, 'en');
-      await homePage.goToAllProductsPage(page);
+      await foClassicHomePage.changeLanguage(page, 'en');
+      await foClassicHomePage.goToAllProductsPage(page);
 
       const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);

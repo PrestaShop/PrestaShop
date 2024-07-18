@@ -7,8 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import languagesPage from '@pages/BO/international/languages';
-// Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -16,6 +14,7 @@ import {
   boDashboardPage,
   boLocalizationPage,
   dataLanguages,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -118,23 +117,23 @@ describe('FO - Header and Footer : Change language', async () => {
     it('should go to FO home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO1', baseContext);
 
-      await homePage.goToFo(page);
+      await foClassicHomePage.goToFo(page);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should check that the languages list is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkLanguageListNotVisible', baseContext);
 
-      const isVisible = await homePage.isLanguageListVisible(page);
+      const isVisible = await foClassicHomePage.isLanguageListVisible(page);
       expect(isVisible, 'Language list is visible!').to.eq(false);
     });
 
     it('should check that the shop language is \'English\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkShopLanguage', baseContext);
 
-      const language = await homePage.getShopLanguage(page);
+      const language = await foClassicHomePage.getShopLanguage(page);
       expect(language).to.equal('en-US');
     });
   });
@@ -144,7 +143,7 @@ describe('FO - Header and Footer : Change language', async () => {
     it('should go to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'openBOPage2', baseContext);
 
-      await homePage.goToBO(page);
+      await foClassicHomePage.goToBO(page);
 
       const pageTitle = await boDashboardPage.getPageTitle(page);
       expect(pageTitle).to.contains(boDashboardPage.pageTitle);
@@ -213,34 +212,34 @@ describe('FO - Header and Footer : Change language', async () => {
     it('should go to FO home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO2', baseContext);
 
-      await homePage.goToFo(page);
+      await foClassicHomePage.goToFo(page);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should check that the languages list is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkLanguageListVisible', baseContext);
 
-      const isVisible = await homePage.isLanguageListVisible(page);
+      const isVisible = await foClassicHomePage.isLanguageListVisible(page);
       expect(isVisible, 'Language list is not visible!').to.eq(true);
     });
 
     it('should change the shop language to \'French\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'ChangeLanguageToFrench', baseContext);
 
-      await homePage.changeLanguage(page, 'fr');
+      await foClassicHomePage.changeLanguage(page, 'fr');
 
-      const language = await homePage.getDefaultShopLanguage(page);
+      const language = await foClassicHomePage.getDefaultShopLanguage(page);
       expect(language, 'Language is not changed to French!').to.equal('Français');
     });
 
     it('should change the shop language to \'English\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'ChangeLanguageToEnglish', baseContext);
 
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const language = await homePage.getDefaultShopLanguage(page);
+      const language = await foClassicHomePage.getDefaultShopLanguage(page);
       expect(language, 'Language is not changed to English!').to.equal('English');
     });
   });

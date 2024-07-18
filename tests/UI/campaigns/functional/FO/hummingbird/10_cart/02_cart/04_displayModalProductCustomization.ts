@@ -6,7 +6,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 
 // Import FO pages
 import cartPage from '@pages/FO/hummingbird/cart';
-import homePage from '@pages/FO/hummingbird/home';
 import productPage from '@pages/FO/hummingbird/product';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
@@ -14,6 +13,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foHummingbirdHomePage,
   foHummingbirdSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -41,17 +41,17 @@ describe('FO - cart : Display modal of product customization', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
-      await homePage.goToFo(page);
-      await homePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.goToFo(page);
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it(`should search for the product '${dataProducts.demo_14.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchProduct', baseContext);
 
-      await homePage.searchProduct(page, dataProducts.demo_14.name);
+      await foHummingbirdHomePage.searchProduct(page, dataProducts.demo_14.name);
 
       const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
       expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
@@ -77,7 +77,7 @@ describe('FO - cart : Display modal of product customization', async () => {
       expect(isBlockCartModal).to.equal(true);
 
       const successMessage = await blockCartModal.getBlockCartModalTitle(page);
-      expect(successMessage).to.contains(homePage.successAddToCartMessage);
+      expect(successMessage).to.contains(foHummingbirdHomePage.successAddToCartMessage);
     });
 
     it('should click on continue shopping button', async function () {

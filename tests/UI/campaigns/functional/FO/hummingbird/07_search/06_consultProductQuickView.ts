@@ -4,13 +4,11 @@ import testContext from '@utils/testContext';
 // Import common tests
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
-// Import FO pages
-import homePage from '@pages/FO/hummingbird/home';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foHummingbirdHomePage,
   foHummingbirdModalQuickViewPage,
   foHummingbirdSearchResultsPage,
   utilsPlaywright,
@@ -52,16 +50,16 @@ describe('FO - Search Page : Consult product quick view', async () => {
     it('should go to FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
-      await homePage.goToFo(page);
+      await foHummingbirdHomePage.goToFo(page);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should put \'Mug\' in the search input and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchProduct1', baseContext);
 
-      await homePage.searchProduct(page, 'mug');
+      await foHummingbirdHomePage.searchProduct(page, 'mug');
 
       const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
       expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);

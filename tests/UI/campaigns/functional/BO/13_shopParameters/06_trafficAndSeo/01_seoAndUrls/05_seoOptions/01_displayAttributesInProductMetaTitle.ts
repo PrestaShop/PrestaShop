@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import seoAndUrlsPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls';
 // Import FO pages
-import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 
 import {expect} from 'chai';
@@ -17,6 +16,7 @@ import {
   boDashboardPage,
   dataAttributes,
   dataProducts,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -86,9 +86,9 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable display attribut
       // Go to FO
       page = await seoAndUrlsPage.viewMyShop(page);
       // Change FO language
-      await foHomePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foHomePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
@@ -96,7 +96,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable display attribut
       await testContext.addContextItem(this, 'testIdentifier', `checkTitle_${index}`, baseContext);
 
       // Go to the first product page
-      await foHomePage.goToProductPage(page, 1);
+      await foClassicHomePage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
       expect(pageTitle).to.equal(test.args.metaTitle);
@@ -106,7 +106,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable display attribut
       await testContext.addContextItem(this, 'testIdentifier', `goBackToBo_${index}`, baseContext);
 
       // Close page and init page objects
-      page = await foHomePage.closePage(browserContext, page, 0);
+      page = await foClassicHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await seoAndUrlsPage.getPageTitle(page);
       expect(pageTitle).to.contains(seoAndUrlsPage.pageTitle);

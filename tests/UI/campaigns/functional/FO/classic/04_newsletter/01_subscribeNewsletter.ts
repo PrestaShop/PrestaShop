@@ -9,13 +9,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {moduleConfigurationPage} from '@pages/BO/modules/moduleConfiguration';
 import psEmailSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
 // Import FO pages
-import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {accountIdentityPage} from '@pages/FO/classic/myAccount/identity';
 
 import {
   boDashboardPage,
   boModuleManagerPage,
   dataCustomers,
+  foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
   FakerModule,
@@ -60,17 +60,17 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'openFoShop', baseContext);
 
-      await foHomePage.goTo(page, global.FO.URL);
+      await foClassicHomePage.goTo(page, global.FO.URL);
 
-      const result = await foHomePage.isHomePage(page);
+      const result = await foClassicHomePage.isHomePage(page);
       expect(result).to.eq(true);
     });
 
     it('should subscribe to newsletter with already used email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'subscribeWithAlreadyUsedEmail', baseContext);
 
-      const newsletterSubscribeAlertMessage = await foHomePage.subscribeToNewsletter(page, dataCustomers.johnDoe.email);
-      expect(newsletterSubscribeAlertMessage).to.contains(foHomePage.alreadyUsedEmailMessage);
+      const newsletterSubscribeAlertMessage = await foClassicHomePage.subscribeToNewsletter(page, dataCustomers.johnDoe.email);
+      expect(newsletterSubscribeAlertMessage).to.contains(foClassicHomePage.alreadyUsedEmailMessage);
     });
   });
 
@@ -78,7 +78,7 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOLoginPage', baseContext);
 
-      await foHomePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
 
       const pageHeaderTitle = await foClassicLoginPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(foClassicLoginPage.pageTitle);
@@ -96,7 +96,7 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
     it('should go account information page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAccountInformationPage', baseContext);
 
-      await foHomePage.goToMyAccountPage(page);
+      await foClassicHomePage.goToMyAccountPage(page);
       await foClassicMyAccountPage.goToInformationPage(page);
 
       const pageTitle = await accountIdentityPage.getPageTitle(page);
@@ -163,17 +163,17 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOToSubscribeToNewsletter', baseContext);
 
-      await foHomePage.goTo(page, global.FO.URL);
+      await foClassicHomePage.goTo(page, global.FO.URL);
 
-      const result = await foHomePage.isHomePage(page);
+      const result = await foClassicHomePage.isHomePage(page);
       expect(result).to.eq(true);
     });
 
     it('should subscribe to newsletter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'subscribeToNewsletter', baseContext);
 
-      const newsletterSubscribeAlertMessage = await foHomePage.subscribeToNewsletter(page, dataCustomers.johnDoe.email);
-      expect(newsletterSubscribeAlertMessage).to.contains(foHomePage.successSubscriptionMessage);
+      const newsletterSubscribeAlertMessage = await foClassicHomePage.subscribeToNewsletter(page, dataCustomers.johnDoe.email);
+      expect(newsletterSubscribeAlertMessage).to.contains(foClassicHomePage.successSubscriptionMessage);
     });
   });
 

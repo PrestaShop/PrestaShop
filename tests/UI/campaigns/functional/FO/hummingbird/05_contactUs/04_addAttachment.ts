@@ -12,13 +12,13 @@ import viewPage from '@pages/BO/customerService/customerService/view';
 
 // Import FO pages
 import contactUsPage from '@pages/FO/hummingbird/contactUs';
-import homePage from '@pages/FO/hummingbird/home';
 
 import {
   boDashboardPage,
   dataCustomers,
   dataOrders,
   FakerContactMessage,
+  foHummingbirdHomePage,
   foHummingbirdLoginPage,
   utilsFile,
   utilsPlaywright,
@@ -78,16 +78,16 @@ describe('FO - Contact us : Add attachment', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'openShop', baseContext);
 
-      await homePage.goTo(page, global.FO.URL);
+      await foHummingbirdHomePage.goTo(page, global.FO.URL);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFo', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foHummingbirdHomePage.goToLoginPage(page);
 
       const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
       expect(pageTitle, 'Fail to open FO login page').to.contains(foHummingbirdLoginPage.pageTitle);

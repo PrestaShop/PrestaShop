@@ -11,13 +11,13 @@ import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
 // Import FO pages
 import {productPage as foProductPage} from '@pages/FO/classic/product';
-import {homePage} from '@pages/FO/classic/home';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 import {
   boDashboardPage,
   FakerProduct,
+  foClassicHomePage,
   foClassicCategoryPage,
   foClassicModalQuickViewPage,
   foClassicSearchResultsPage,
@@ -272,7 +272,7 @@ describe('BO - Catalog - Products : Options tab', async () => {
     it('should search for the created product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchProduct2', baseContext);
 
-      await homePage.searchProduct(page, newProductData.name);
+      await foClassicHomePage.searchProduct(page, newProductData.name);
 
       const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
       expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);

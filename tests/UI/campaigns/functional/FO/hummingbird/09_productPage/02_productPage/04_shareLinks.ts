@@ -5,13 +5,13 @@ import testContext from '@utils/testContext';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
-import homePage from '@pages/FO/hummingbird/home';
 import productPage from '@pages/FO/hummingbird/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foHummingbirdHomePage,
   foHummingbirdSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -39,16 +39,16 @@ describe('FO - Product page - Product page : Share links', async () => {
     it('should go to FO home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
-      await homePage.goToFo(page);
+      await foHummingbirdHomePage.goToFo(page);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.equal(true);
     });
 
     it(`should search for the product '${dataProducts.demo_12.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchDemo12', baseContext);
 
-      await homePage.searchProduct(page, dataProducts.demo_12.name);
+      await foHummingbirdHomePage.searchProduct(page, dataProducts.demo_12.name);
 
       const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
       expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);

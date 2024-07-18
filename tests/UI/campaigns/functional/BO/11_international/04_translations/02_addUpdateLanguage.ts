@@ -8,8 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import translationsPage from '@pages/BO/international/translations';
 import languagesPage from '@pages/BO/international/languages';
-// Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -17,6 +15,7 @@ import {
   boDashboardPage,
   boLocalizationPage,
   dataLanguages,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -73,9 +72,9 @@ describe('BO - International - Translation : Add update a language', async () =>
     await testContext.addContextItem(this, 'testIdentifier', 'goToFOAndCheckLanguage', baseContext);
 
     page = await translationsPage.viewMyShop(page);
-    await homePage.changeLanguage(page, dataLanguages.deutsch.isoCode);
+    await foClassicHomePage.changeLanguage(page, dataLanguages.deutsch.isoCode);
 
-    const isHomePage = await homePage.isHomePage(page);
+    const isHomePage = await foClassicHomePage.isHomePage(page);
     expect(isHomePage, 'Fail to open FO home page').to.eq(true);
   });
 
@@ -83,7 +82,7 @@ describe('BO - International - Translation : Add update a language', async () =>
     await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo', baseContext);
 
     // Close tab and init other page objects with new current tab
-    page = await homePage.closePage(browserContext, page, 0);
+    page = await foClassicHomePage.closePage(browserContext, page, 0);
 
     const pageTitle = await translationsPage.getPageTitle(page);
     expect(pageTitle).to.contains(translationsPage.pageTitle);

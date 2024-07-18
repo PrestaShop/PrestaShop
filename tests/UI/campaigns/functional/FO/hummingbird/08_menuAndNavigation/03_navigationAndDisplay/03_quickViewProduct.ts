@@ -5,13 +5,13 @@ import testContext from '@utils/testContext';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
-import homePage from '@pages/FO/hummingbird/home';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foHummingbirdHomePage,
   foHummingbirdModalQuickViewPage,
   foHummingbirdSearchResultsPage,
   utilsPlaywright,
@@ -50,16 +50,16 @@ describe('FO - Navigation and display : Quick view products', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-      await homePage.goTo(page, global.FO.URL);
+      await foHummingbirdHomePage.goTo(page, global.FO.URL);
 
-      const result = await homePage.isHomePage(page);
+      const result = await foHummingbirdHomePage.isHomePage(page);
       expect(result).to.equal(true);
     });
 
     it(`should search for the product '${dataProducts.demo_3.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchProduct1', baseContext);
 
-      await homePage.searchProduct(page, dataProducts.demo_3.name);
+      await foHummingbirdHomePage.searchProduct(page, dataProducts.demo_3.name);
 
       const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
       expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
@@ -109,7 +109,7 @@ describe('FO - Navigation and display : Quick view products', async () => {
     it(`should search for the product '${dataProducts.demo_12.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchProduct2', baseContext);
 
-      await homePage.searchProduct(page, dataProducts.demo_12.name);
+      await foHummingbirdHomePage.searchProduct(page, dataProducts.demo_12.name);
 
       const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
       expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
@@ -150,7 +150,7 @@ describe('FO - Navigation and display : Quick view products', async () => {
     it(`should search for the product '${dataProducts.demo_12.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchProduct3', baseContext);
 
-      await homePage.searchProduct(page, dataProducts.demo_14.name);
+      await foHummingbirdHomePage.searchProduct(page, dataProducts.demo_14.name);
 
       const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
       expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);

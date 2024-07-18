@@ -3,7 +3,6 @@ import testContext from '@utils/testContext';
 
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
-import {homePage} from '@pages/FO/classic/home';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
@@ -16,6 +15,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
   FakerCartRule,
+  foClassicHomePage,
   foClassicModalQuickViewPage,
   foClassicSearchResultsPage,
   utilsCore,
@@ -74,17 +74,17 @@ describe('FO - cart : Display discount', async () => {
     it('should go to FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
-      await homePage.goToFo(page);
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.goToFo(page);
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it(`should search for the product '${dataProducts.demo_8.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchProduct', baseContext);
 
-      await homePage.searchProduct(page, dataProducts.demo_8.name);
+      await foClassicHomePage.searchProduct(page, dataProducts.demo_8.name);
 
       const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
       expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
@@ -111,7 +111,7 @@ describe('FO - cart : Display discount', async () => {
     it(`should search for the product '${dataProducts.demo_9.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchProduct2', baseContext);
 
-      await homePage.searchProduct(page, dataProducts.demo_9.name);
+      await foClassicHomePage.searchProduct(page, dataProducts.demo_9.name);
 
       const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
       expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);

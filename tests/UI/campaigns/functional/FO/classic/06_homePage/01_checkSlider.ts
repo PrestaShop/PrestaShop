@@ -1,12 +1,10 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import FO pages
-import {homePage} from '@pages/FO/classic/home';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -29,40 +27,40 @@ describe('FO - Home Page : Check slider', async () => {
   it('should open the shop page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openShopFO', baseContext);
 
-    await homePage.goTo(page, global.FO.URL);
+    await foClassicHomePage.goTo(page, global.FO.URL);
 
-    const result = await homePage.isHomePage(page);
+    const result = await foClassicHomePage.isHomePage(page);
     expect(result).to.eq(true);
   });
 
   it('should click in right arrow of the slider', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'clickOnRightSlideArrow', baseContext);
 
-    let isVisible = await homePage.isSliderVisible(page, 1);
+    let isVisible = await foClassicHomePage.isSliderVisible(page, 1);
     expect(isVisible).to.eq(true);
 
-    await homePage.clickOnLeftOrRightArrow(page, 'right');
+    await foClassicHomePage.clickOnLeftOrRightArrow(page, 'right');
 
-    isVisible = await homePage.isSliderVisible(page, 2);
+    isVisible = await foClassicHomePage.isSliderVisible(page, 2);
     expect(isVisible).to.eq(true);
   });
 
   it('should click in left arrow of the slider', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'clickOnLeftSlideArrow', baseContext);
 
-    let isVisible = await homePage.isSliderVisible(page, 2);
+    let isVisible = await foClassicHomePage.isSliderVisible(page, 2);
     expect(isVisible).to.eq(true);
 
-    await homePage.clickOnLeftOrRightArrow(page, 'left');
+    await foClassicHomePage.clickOnLeftOrRightArrow(page, 'left');
 
-    isVisible = await homePage.isSliderVisible(page, 1);
+    isVisible = await foClassicHomePage.isSliderVisible(page, 1);
     expect(isVisible).to.eq(true);
   });
 
   it('should check the slider URL', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkSliderURL', baseContext);
 
-    const currentURL = await homePage.getSliderURL(page);
+    const currentURL = await foClassicHomePage.getSliderURL(page);
     expect(currentURL).to.contains('www.prestashop-project.org');
   });
 });

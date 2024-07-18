@@ -8,8 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import boProductsPage from '@pages/BO/catalog/products';
 import boProductsCreatePage from '@pages/BO/catalog/products/add';
-// Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -17,6 +15,7 @@ import {
   boDashboardPage,
   boSearchPage,
   dataLanguages,
+  foClassicHomePage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -105,16 +104,16 @@ describe('BO - Shop Parameters - Search : Blacklisted words', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
     page = await boProductsCreatePage.viewMyShop(page);
-    await homePage.changeLanguage(page, 'en');
+    await foClassicHomePage.changeLanguage(page, 'en');
 
-    const isHomePage = await homePage.isHomePage(page);
+    const isHomePage = await foClassicHomePage.isHomePage(page);
     expect(isHomePage, 'Fail to open FO home page').to.eq(true);
   });
 
   it(`should search the word "${searchWord}"`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchWordWithError', baseContext);
 
-    await homePage.searchProduct(page, searchWord);
+    await foClassicHomePage.searchProduct(page, searchWord);
 
     const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
     expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);

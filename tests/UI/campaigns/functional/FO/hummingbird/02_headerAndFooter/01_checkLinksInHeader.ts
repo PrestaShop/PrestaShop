@@ -7,11 +7,11 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 // Import FO pages
 import cartPage from '@pages/FO/hummingbird/cart';
 import contactUsPage from '@pages/FO/hummingbird/contactUs';
-import homePage from '@pages/FO/hummingbird/home';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {
   dataCustomers,
+  foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdModalQuickViewPage,
   foHummingbirdMyAccountPage,
@@ -54,9 +54,9 @@ describe('FO - Header and Footer : Check links in header page', async () => {
     it('should go to FO home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
-      await homePage.goToFo(page);
+      await foHummingbirdHomePage.goToFo(page);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
@@ -64,7 +64,7 @@ describe('FO - Header and Footer : Check links in header page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkContactUsHeaderLink', baseContext);
 
       // Check Contact us
-      await homePage.clickOnHeaderLink(page, 'Contact us');
+      await foHummingbirdHomePage.clickOnHeaderLink(page, 'Contact us');
 
       const pageTitle = await contactUsPage.getPageTitle(page);
       expect(pageTitle, 'Fail to open FO login page').to.contains(contactUsPage.pageTitle);
@@ -74,7 +74,7 @@ describe('FO - Header and Footer : Check links in header page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSignInLink', baseContext);
 
       // Check sign in link
-      await homePage.clickOnHeaderLink(page, 'Sign in');
+      await foHummingbirdHomePage.clickOnHeaderLink(page, 'Sign in');
 
       const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
       expect(pageTitle).to.equal(foHummingbirdLoginPage.pageTitle);
@@ -104,7 +104,7 @@ describe('FO - Header and Footer : Check links in header page', async () => {
 
       await foHummingbirdLoginPage.goToHomePage(page);
       // Add product to cart by quick view
-      await homePage.quickViewProduct(page, 1);
+      await foHummingbirdHomePage.quickViewProduct(page, 1);
       await foHummingbirdModalQuickViewPage.setQuantityAndAddToCart(page, 3);
 
       // Close block cart modal
@@ -116,7 +116,7 @@ describe('FO - Header and Footer : Check links in header page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkShoppingCartLink', baseContext);
 
       // Check cart link
-      await homePage.clickOnHeaderLink(page, 'Cart');
+      await foHummingbirdHomePage.clickOnHeaderLink(page, 'Cart');
 
       const pageTitle = await cartPage.getPageTitle(page);
       expect(pageTitle).to.equal(cartPage.pageTitle);
@@ -127,7 +127,7 @@ describe('FO - Header and Footer : Check links in header page', async () => {
 
       await foHummingbirdLoginPage.goToHomePage(page);
 
-      const notificationsNumber = await homePage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foHummingbirdHomePage.getCartNotificationsNumber(page);
       expect(notificationsNumber, 'Notification number is not equal to 3!').to.be.equal(3);
     });
 
@@ -135,26 +135,26 @@ describe('FO - Header and Footer : Check links in header page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSignOutLink', baseContext);
 
       // Sign out
-      await homePage.logout(page);
+      await foHummingbirdHomePage.logout(page);
 
-      const isCustomerConnected = await homePage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdHomePage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected!').to.eq(false);
     });
 
     it('should check that the cart is empty', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNotificationNumber2', baseContext);
 
-      const notificationsNumber = await homePage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foHummingbirdHomePage.getCartNotificationsNumber(page);
       expect(notificationsNumber, 'The cart is not empty!').to.be.equal(0);
     });
 
     it('should check \'Logo\' link', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkLogoLink', baseContext);
 
-      await homePage.clickOnHeaderLink(page, 'Logo', false);
+      await foHummingbirdHomePage.clickOnHeaderLink(page, 'Logo', false);
 
-      const pageTitle = await homePage.getPageTitle(page);
-      expect(pageTitle).to.equal(homePage.pageTitle);
+      const pageTitle = await foHummingbirdHomePage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdHomePage.pageTitle);
     });
   });
 

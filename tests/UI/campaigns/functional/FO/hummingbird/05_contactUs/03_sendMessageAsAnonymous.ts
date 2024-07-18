@@ -13,7 +13,6 @@ import contactFormPage from '@pages/BO/modules/contactForm';
 
 // Import FO pages
 import contactUsPage from '@pages/FO/hummingbird/contactUs';
-import homePage from '@pages/FO/hummingbird/home';
 
 import {
   boDashboardPage,
@@ -21,6 +20,7 @@ import {
   dataCustomers,
   dataModules,
   FakerContactMessage,
+  foHummingbirdHomePage,
   foHummingbirdLoginPage,
   type MailDev,
   type MailDevEmail,
@@ -173,16 +173,16 @@ describe('FO - Contact us : Send message from contact us page with customer not 
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'openShop', baseContext);
 
-      await homePage.goTo(page, global.FO.URL);
+      await foHummingbirdHomePage.goTo(page, global.FO.URL);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should check if that any account is connected', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkIfCustomerNotConnected', baseContext);
 
-      const isCustomerConnected = await homePage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdHomePage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected!').to.eq(false);
     });
 

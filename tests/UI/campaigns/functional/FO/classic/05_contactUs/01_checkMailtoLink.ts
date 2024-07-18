@@ -3,12 +3,12 @@ import testContext from '@utils/testContext';
 
 // Import FO pages
 import {contactUsPage} from '@pages/FO/classic/contactUs';
-import {homePage} from '@pages/FO/classic/home';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataEmployees,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -36,16 +36,16 @@ describe('FO - Contact us : Check mail link on contact us page', async () => {
   it('should go to FO home page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
-    await homePage.goToFo(page);
+    await foClassicHomePage.goToFo(page);
 
-    const isHomePage = await homePage.isHomePage(page);
+    const isHomePage = await foClassicHomePage.isHomePage(page);
     expect(isHomePage).to.eq(true);
   });
 
   it('should go to \'Contact us\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToContactUsPage', baseContext);
 
-    await homePage.clickOnHeaderLink(page, 'Contact us');
+    await foClassicHomePage.clickOnHeaderLink(page, 'Contact us');
 
     const pageTitle = await contactUsPage.getPageTitle(page);
     expect(pageTitle, 'Fail to open FO login page').to.contains(contactUsPage.pageTitle);

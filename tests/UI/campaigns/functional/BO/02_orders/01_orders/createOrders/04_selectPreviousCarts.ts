@@ -14,7 +14,6 @@ import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
-import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 
 import {
@@ -24,6 +23,7 @@ import {
   dataOrderStatuses,
   dataPaymentMethods,
   dataProducts,
+  foClassicHomePage,
   foClassicLoginPage,
   utilsDate,
   utilsPlaywright,
@@ -265,16 +265,16 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnViewMyShop', baseContext);
 
       page = await addOrderPage.viewMyShop(page);
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
 
       const pageTitle = await foClassicLoginPage.getPageTitle(page);
       expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
@@ -295,7 +295,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
       // Go to home page
       await foClassicLoginPage.goToHomePage(page);
       // Go to the first product page
-      await homePage.goToProductPage(page, 1);
+      await foClassicHomePage.goToProductPage(page, 1);
       // Add the product to the cart
       await productPage.addProductToTheCart(page);
 

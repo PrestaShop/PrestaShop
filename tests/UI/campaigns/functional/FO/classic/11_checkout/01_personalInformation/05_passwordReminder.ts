@@ -7,7 +7,6 @@ import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advanced
 import {createAccountTest} from '@commonTests/FO/classic/account';
 
 // Import pages
-import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
@@ -15,6 +14,7 @@ import {passwordReminderPage} from '@pages/FO/classic/passwordReminder';
 
 import {
   FakerCustomer,
+  foClassicHomePage,
   foClassicMyAccountPage,
   type MailDev,
   type MailDevEmail,
@@ -84,17 +84,17 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
     it('should open FO page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'openFO', baseContext);
 
-      await homePage.goToFo(page);
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.goToFo(page);
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should add product to cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await homePage.goToProductPage(page, 1);
+      await foClassicHomePage.goToProductPage(page, 1);
       await productPage.addProductToTheCart(page, 1);
 
       const pageTitle = await cartPage.getPageTitle(page);
@@ -174,14 +174,14 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage', baseContext);
 
       await foClassicMyAccountPage.goToHomePage(page);
-      const result = await homePage.isHomePage(page);
+      const result = await foClassicHomePage.isHomePage(page);
       expect(result).to.eq(true);
     });
 
     it('should add product to cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart2', baseContext);
 
-      await homePage.goToProductPage(page, 1);
+      await foClassicHomePage.goToProductPage(page, 1);
       await productPage.addProductToTheCart(page, 1);
 
       const pageTitle = await cartPage.getPageTitle(page);

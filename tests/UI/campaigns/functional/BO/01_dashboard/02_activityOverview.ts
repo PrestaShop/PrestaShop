@@ -16,7 +16,6 @@ import newsletterSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
 import customersPage from '@pages/BO/customers';
 
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
@@ -42,6 +41,7 @@ import {
   FakerContactMessage,
   FakerCustomer,
   FakerProduct,
+  foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
   utilsPlaywright,
@@ -124,16 +124,16 @@ describe('BO - Dashboard : Activity overview', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop2', baseContext);
 
         page = await boDashboardPage.viewMyShop(page);
-        await homePage.changeLanguage(page, 'en');
+        await foClassicHomePage.changeLanguage(page, 'en');
 
-        const isHomePage = await homePage.isHomePage(page);
+        const isHomePage = await foClassicHomePage.isHomePage(page);
         expect(isHomePage, 'Fail to open FO home page').to.eq(true);
       });
 
       it('should go to login page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToLoginFO2', baseContext);
 
-        await homePage.goToLoginPage(page);
+        await foClassicHomePage.goToLoginPage(page);
 
         const pageTitle = await foClassicLoginPage.getPageTitle(page);
         expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
@@ -154,7 +154,7 @@ describe('BO - Dashboard : Activity overview', async () => {
         // Go to home page
         await foClassicLoginPage.goToHomePage(page);
         // Go to the first product page
-        await homePage.goToProductPage(page, 1);
+        await foClassicHomePage.goToProductPage(page, 1);
         // Add the product to the cart
         await productPage.addProductToTheCart(page);
 
@@ -302,16 +302,16 @@ describe('BO - Dashboard : Activity overview', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop3', baseContext);
 
         page = await viewOrderBasePage.viewMyShop(page);
-        await homePage.changeLanguage(page, 'en');
+        await foClassicHomePage.changeLanguage(page, 'en');
 
-        const isHomePage = await homePage.isHomePage(page);
+        const isHomePage = await foClassicHomePage.isHomePage(page);
         expect(isHomePage, 'Home page is not displayed').to.eq(true);
       });
 
       it('should go to account page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage', baseContext);
 
-        await homePage.goToMyAccountPage(page);
+        await foClassicHomePage.goToMyAccountPage(page);
 
         const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
         expect(pageTitle).to.contains(foClassicMyAccountPage.pageTitle);
@@ -485,16 +485,16 @@ describe('BO - Dashboard : Activity overview', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
         page = await boDashboardPage.viewMyShop(page);
-        await homePage.changeLanguage(page, 'en');
+        await foClassicHomePage.changeLanguage(page, 'en');
 
-        const isHomePage = await homePage.isHomePage(page);
+        const isHomePage = await foClassicHomePage.isHomePage(page);
         expect(isHomePage, 'Fail to open FO home page').to.eq(true);
       });
 
       it('should to contact us page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goOnContactPage', baseContext);
 
-        await homePage.goToFooterLink(page, 'Contact us');
+        await foClassicHomePage.goToFooterLink(page, 'Contact us');
 
         const pageTitle = await contactUsPage.getPageTitle(page);
         expect(pageTitle).to.equal(contactUsPage.pageTitle);

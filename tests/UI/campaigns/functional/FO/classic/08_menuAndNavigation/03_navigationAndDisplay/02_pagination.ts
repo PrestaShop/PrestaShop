@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import {homePage} from '@pages/FO/classic/home';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 
 import {expect} from 'chai';
@@ -13,6 +12,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   foClassicCategoryPage,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -48,17 +48,17 @@ describe('FO - Navigation and display : Pagination', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'openShopPage', baseContext);
 
-      await homePage.goTo(page, global.FO.URL);
+      await foClassicHomePage.goTo(page, global.FO.URL);
 
-      const result = await homePage.isHomePage(page);
+      const result = await foClassicHomePage.isHomePage(page);
       expect(result).to.eq(true);
     });
 
     it('should go to all products page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAllProducts', baseContext);
 
-      await homePage.changeLanguage(page, 'en');
-      await homePage.goToAllProductsPage(page);
+      await foClassicHomePage.changeLanguage(page, 'en');
+      await foClassicHomePage.goToAllProductsPage(page);
 
       const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
@@ -135,17 +135,17 @@ describe('FO - Navigation and display : Pagination', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO1', baseContext);
 
       page = await productSettingsPage.viewMyShop(page);
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const result = await homePage.isHomePage(page);
+      const result = await foClassicHomePage.isHomePage(page);
       expect(result).to.eq(true);
     });
 
     it('should go to all products page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAllProducts1', baseContext);
 
-      await homePage.changeLanguage(page, 'en');
-      await homePage.goToAllProductsPage(page);
+      await foClassicHomePage.changeLanguage(page, 'en');
+      await foClassicHomePage.goToAllProductsPage(page);
 
       const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
@@ -195,7 +195,7 @@ describe('FO - Navigation and display : Pagination', async () => {
     it('should close the FO page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeFOPage', baseContext);
 
-      page = await homePage.closePage(browserContext, page, 0);
+      page = await foClassicHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await productSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(productSettingsPage.pageTitle);
@@ -214,17 +214,17 @@ describe('FO - Navigation and display : Pagination', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO2', baseContext);
 
       page = await productSettingsPage.viewMyShop(page);
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const result = await homePage.isHomePage(page);
+      const result = await foClassicHomePage.isHomePage(page);
       expect(result).to.eq(true);
     });
 
     it('should go to all products page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAllProducts2', baseContext);
 
-      await homePage.changeLanguage(page, 'en');
-      await homePage.goToAllProductsPage(page);
+      await foClassicHomePage.changeLanguage(page, 'en');
+      await foClassicHomePage.goToAllProductsPage(page);
 
       const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
@@ -250,7 +250,7 @@ describe('FO - Navigation and display : Pagination', async () => {
     it('should go back BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO4', baseContext);
 
-      page = await homePage.closePage(browserContext, page, 0);
+      page = await foClassicHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await productSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(productSettingsPage.pageTitle);

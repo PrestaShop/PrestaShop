@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import pages
-import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
@@ -12,6 +11,7 @@ import {
   dataPaymentMethods,
   FakerAddress,
   FakerCustomer,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -50,17 +50,17 @@ describe('FO - Checkout - Personal information : Order as a guest', async () => 
     await testContext.addContextItem(this, 'testIdentifier', 'openFO', baseContext);
 
     // Go to FO and change language
-    await homePage.goToFo(page);
-    await homePage.changeLanguage(page, 'en');
+    await foClassicHomePage.goToFo(page);
+    await foClassicHomePage.changeLanguage(page, 'en');
 
-    const isHomePage = await homePage.isHomePage(page);
+    const isHomePage = await foClassicHomePage.isHomePage(page);
     expect(isHomePage, 'Fail to open FO home page').to.eq(true);
   });
 
   it('should add product to cart', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-    await homePage.goToProductPage(page, 1);
+    await foClassicHomePage.goToProductPage(page, 1);
     await productPage.addProductToTheCart(page, 1);
 
     const pageTitle = await cartPage.getPageTitle(page);

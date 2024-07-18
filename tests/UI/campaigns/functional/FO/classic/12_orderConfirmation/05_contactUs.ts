@@ -9,7 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import customerServiceMainPage from '@pages/BO/customerService/customerService';
 import customerServiceMessageViewPage from '@pages/BO/customerService/customerService/view';
 // FO pages
-import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {cartPage} from '@pages/FO/classic/cart';
 import {contactUsPage} from '@pages/FO/classic/contactUs';
 import {checkoutPage} from '@pages/FO/classic/checkout';
@@ -22,6 +21,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerContactMessage,
+  foClassicHomePage,
   foClassicLoginPage,
   foClassicModalQuickViewPage,
   foClassicMyAccountPage,
@@ -82,15 +82,15 @@ describe('FO - Order confirmation : Contact us', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'openFoShop', baseContext);
 
-      await foHomePage.goTo(page, global.FO.URL);
-      const result = await foHomePage.isHomePage(page);
+      await foClassicHomePage.goTo(page, global.FO.URL);
+      const result = await foClassicHomePage.isHomePage(page);
       expect(result).to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOLoginPage', baseContext);
 
-      await foHomePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
 
       const pageHeaderTitle = await foClassicLoginPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(foClassicLoginPage.pageTitle);
@@ -107,15 +107,15 @@ describe('FO - Order confirmation : Contact us', async () => {
     it('should go to home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage', baseContext);
 
-      await foHomePage.goToHomePage(page);
-      const result = await foHomePage.isHomePage(page);
+      await foClassicHomePage.goToHomePage(page);
+      const result = await foClassicHomePage.isHomePage(page);
       expect(result).to.eq(true);
     });
 
     it('should add first product to cart and Proceed to checkout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await foHomePage.quickViewProduct(page, 1);
+      await foClassicHomePage.quickViewProduct(page, 1);
       await foClassicModalQuickViewPage.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);
 

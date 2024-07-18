@@ -5,13 +5,13 @@ import testContext from '@utils/testContext';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
-import homePage from '@pages/FO/hummingbird/home';
 import cartPage from '@pages/FO/hummingbird/cart';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {
   type CartProductDetails,
   dataProducts,
+  foHummingbirdHomePage,
   foHummingbirdModalQuickViewPage,
   foHummingbirdSearchResultsPage,
   type ProductAttribute,
@@ -77,21 +77,21 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
     it('should go to FO home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount', baseContext);
 
-      await homePage.goToFo(page);
+      await foHummingbirdHomePage.goToFo(page);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should add first product to cart by quick view', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addToCartByQuickView', baseContext);
 
-      await homePage.quickViewProduct(page, 1);
+      await foHummingbirdHomePage.quickViewProduct(page, 1);
 
       await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
 
       const successMessage = await blockCartModal.getBlockCartModalTitle(page);
-      expect(successMessage).to.contains(homePage.successAddToCartMessage);
+      expect(successMessage).to.contains(foHummingbirdHomePage.successAddToCartMessage);
     });
 
     it('should check product details from cart modal', async function () {
@@ -154,16 +154,16 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
     it('should go to home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage', baseContext);
 
-      await homePage.goToHomePage(page);
+      await foHummingbirdHomePage.goToHomePage(page);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
     it(`should search for the product ${dataProducts.demo_14.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchForProductCustomized', baseContext);
 
-      await homePage.searchProduct(page, dataProducts.demo_14.name);
+      await foHummingbirdHomePage.searchProduct(page, dataProducts.demo_14.name);
 
       const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
       expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);

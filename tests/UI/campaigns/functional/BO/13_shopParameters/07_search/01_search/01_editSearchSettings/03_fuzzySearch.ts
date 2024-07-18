@@ -4,15 +4,12 @@ import testContext from '@utils/testContext';
 // Import login steps
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-// Import FO pages
-import {homePage} from '@pages/FO/classic/home';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boSearchPage,
+  foClassicHomePage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -62,24 +59,24 @@ describe('BO - Shop Parameters - Search : Fuzzy search', async () => {
 
     await boSearchPage.goToFo(page);
 
-    const pageTitle = await homePage.getPageTitle(page);
-    expect(pageTitle).to.be.eq(homePage.pageTitle);
+    const pageTitle = await foClassicHomePage.getPageTitle(page);
+    expect(pageTitle).to.be.eq(foClassicHomePage.pageTitle);
   });
 
   it('should check the autocomplete', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkAutocompleteWoFuzzy', baseContext);
 
-    const hasSearchResult = await homePage.hasAutocompleteSearchResult(page, 'test');
+    const hasSearchResult = await foClassicHomePage.hasAutocompleteSearchResult(page, 'test');
     expect(hasSearchResult).to.eq(false);
 
-    const inputValue = await homePage.getSearchValue(page);
+    const inputValue = await foClassicHomePage.getSearchValue(page);
     expect(inputValue).equal('test');
   });
 
   it('should check the search page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkSearchPageWoFuzzy', baseContext);
 
-    await homePage.searchProduct(page, 'test');
+    await foClassicHomePage.searchProduct(page, 'test');
 
     const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
     expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
@@ -125,27 +122,27 @@ describe('BO - Shop Parameters - Search : Fuzzy search', async () => {
 
     await boSearchPage.goToFo(page);
 
-    const pageTitle = await homePage.getPageTitle(page);
-    expect(pageTitle).to.be.eq(homePage.pageTitle);
+    const pageTitle = await foClassicHomePage.getPageTitle(page);
+    expect(pageTitle).to.be.eq(foClassicHomePage.pageTitle);
   });
 
   it('should check the autocomplete', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkAutocompleteWFuzzy', baseContext);
 
-    const hasSearchResult = await homePage.hasAutocompleteSearchResult(page, 'test');
+    const hasSearchResult = await foClassicHomePage.hasAutocompleteSearchResult(page, 'test');
     expect(hasSearchResult).to.eq(true);
 
-    const countSearchResult = await homePage.countAutocompleteSearchResult(page, 'test');
+    const countSearchResult = await foClassicHomePage.countAutocompleteSearchResult(page, 'test');
     expect(countSearchResult).to.be.eq(7);
 
-    const inputValue = await homePage.getSearchValue(page);
+    const inputValue = await foClassicHomePage.getSearchValue(page);
     expect(inputValue).equal('test');
   });
 
   it('should check the search page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkSearchPageWFuzzy', baseContext);
 
-    await homePage.searchProduct(page, 'test');
+    await foClassicHomePage.searchProduct(page, 'test');
 
     const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
     expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);

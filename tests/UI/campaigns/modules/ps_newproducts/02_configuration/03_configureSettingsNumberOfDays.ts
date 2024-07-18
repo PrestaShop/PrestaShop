@@ -4,16 +4,13 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-// Import FO pages
-import {homePage} from '@pages/FO/classic/home';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boModuleManagerPage,
   dataModules,
+  foClassicHomePage,
   modPsNewProductsBoMain,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -118,23 +115,23 @@ describe('New products block module - Configure settings of "Number of days for 
         await testContext.addContextItem(this, 'testIdentifier', `goToTheFo${index}`, baseContext);
 
         page = await modPsNewProductsBoMain.viewMyShop(page);
-        await homePage.changeLanguage(page, 'en');
+        await foClassicHomePage.changeLanguage(page, 'en');
 
-        const isHomePage = await homePage.isHomePage(page);
+        const isHomePage = await foClassicHomePage.isHomePage(page);
         expect(isHomePage).to.eq(true);
       });
 
       it('should check the block "New Products" is visible', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkBlockNewProductsVisible${index}`, baseContext);
 
-        const hasProductsBlock = await homePage.hasProductsBlock(page, 'newproducts');
+        const hasProductsBlock = await foClassicHomePage.hasProductsBlock(page, 'newproducts');
         expect(hasProductsBlock).to.be.equal(arg.blockIsVisible);
       });
 
       it('should return to the back office', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `returnToBO${index}`, baseContext);
 
-        page = await homePage.closePage(browserContext, page, 0);
+        page = await foClassicHomePage.closePage(browserContext, page, 0);
 
         const pageTitle = await modPsNewProductsBoMain.getPageSubtitle(page);
         expect(pageTitle).to.eq(modPsNewProductsBoMain.pageSubTitle);

@@ -8,7 +8,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 import createAccountTest from '@commonTests/FO/hummingbird/account';
 
 // Import pages
-import homePage from '@pages/FO/hummingbird/home';
 import productPage from '@pages/FO/hummingbird/product';
 import cartPage from '@pages/FO/hummingbird/cart';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
@@ -16,6 +15,7 @@ import passwordReminderPage from '@pages/FO/hummingbird/passwordReminder';
 
 import {
   FakerCustomer,
+  foHummingbirdHomePage,
   foHummingbirdMyAccountPage,
   type MailDev,
   type MailDevEmail,
@@ -88,17 +88,17 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
     it('should open FO page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'openFO', baseContext);
 
-      await homePage.goToFo(page);
-      await homePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.goToFo(page);
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should add product to cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await homePage.goToProductPage(page, 1);
+      await foHummingbirdHomePage.goToProductPage(page, 1);
       await productPage.addProductToTheCart(page, 1);
 
       const pageTitle = await cartPage.getPageTitle(page);
@@ -178,14 +178,14 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage', baseContext);
 
       await foHummingbirdMyAccountPage.goToHomePage(page);
-      const result = await homePage.isHomePage(page);
+      const result = await foHummingbirdHomePage.isHomePage(page);
       expect(result).to.eq(true);
     });
 
     it('should add product to cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart2', baseContext);
 
-      await homePage.goToProductPage(page, 1);
+      await foHummingbirdHomePage.goToProductPage(page, 1);
       await productPage.addProductToTheCart(page, 1);
 
       const pageTitle = await cartPage.getPageTitle(page);

@@ -3,11 +3,11 @@ import testContext from '@utils/testContext';
 
 // Import pages
 import installPage from '@pages/install';
-import {homePage} from '@pages/FO/classic/home';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -229,7 +229,7 @@ describe('Install Prestashop', async () => {
 
     page = await installPage.goToFOAfterInstall(page);
 
-    const result = await homePage.isHomePage(page);
+    const result = await foClassicHomePage.isHomePage(page);
     expect(result).to.eq(true);
   });
 });

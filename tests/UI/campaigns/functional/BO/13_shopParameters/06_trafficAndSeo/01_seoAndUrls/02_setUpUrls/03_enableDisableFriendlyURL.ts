@@ -7,13 +7,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import seoAndUrlsPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls';
-// Import FO pages
-import {homePage as foHomePage} from '@pages/FO/classic/home';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -64,7 +63,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable friendly URL', a
     // Go to FO
     page = await seoAndUrlsPage.viewMyShop(page);
 
-    const url = await foHomePage.getCurrentURL(page);
+    const url = await foClassicHomePage.getCurrentURL(page);
     expect(url).to.contains('index.php');
   });
 
@@ -72,7 +71,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable friendly URL', a
     await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
     // Go back to BO
-    page = await foHomePage.closePage(browserContext, page, 0);
+    page = await foClassicHomePage.closePage(browserContext, page, 0);
 
     const pageTitle = await seoAndUrlsPage.getPageTitle(page);
     expect(pageTitle).to.contains(seoAndUrlsPage.pageTitle);
@@ -90,9 +89,9 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable friendly URL', a
 
     // Go to FO
     page = await seoAndUrlsPage.viewMyShop(page);
-    await foHomePage.changeLanguage(page, 'en');
+    await foClassicHomePage.changeLanguage(page, 'en');
 
-    const url = await foHomePage.getCurrentURL(page);
+    const url = await foClassicHomePage.getCurrentURL(page);
     expect(url).to.contains('/en/');
   });
 });

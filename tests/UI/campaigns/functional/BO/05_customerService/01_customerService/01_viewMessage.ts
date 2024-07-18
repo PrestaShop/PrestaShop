@@ -10,13 +10,13 @@ import customerServicePage from '@pages/BO/customerService/customerService';
 import viewPage from '@pages/BO/customerService/customerService/view';
 // Import FO pages
 import {contactUsPage} from '@pages/FO/classic/contactUs';
-import {homePage} from '@pages/FO/classic/home';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerContactMessage,
+  foClassicHomePage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -53,9 +53,9 @@ describe('BO - Customer Service : View message', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'openShop', baseContext);
 
-      await homePage.goTo(page, global.FO.URL);
+      await foClassicHomePage.goTo(page, global.FO.URL);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
@@ -63,7 +63,7 @@ describe('BO - Customer Service : View message', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goOnContactPage', baseContext);
 
       // Go to contact us page
-      await homePage.goToFooterLink(page, 'Contact us');
+      await foClassicHomePage.goToFooterLink(page, 'Contact us');
 
       const pageTitle = await contactUsPage.getPageTitle(page);
       expect(pageTitle).to.equal(contactUsPage.pageTitle);

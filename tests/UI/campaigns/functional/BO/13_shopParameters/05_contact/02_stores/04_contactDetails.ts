@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import contactPage from '@pages/BO/shopParameters/contact';
 import storesPage from '@pages/BO/shopParameters/stores';
-import {homePage as foHomePage} from '@pages/FO/classic/home';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -15,6 +14,7 @@ import {
   boDashboardPage,
   dataStores,
   FakerStore,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -75,16 +75,16 @@ describe('BO - Shop Parameters - Contact : Configure contact details', async () 
 
     // View my shop and init pages
     page = await storesPage.viewMyShop(page);
-    await foHomePage.changeLanguage(page, 'en');
+    await foClassicHomePage.changeLanguage(page, 'en');
 
-    const isHomePage = await foHomePage.isHomePage(page);
+    const isHomePage = await foClassicHomePage.isHomePage(page);
     expect(isHomePage, 'Fail to open FO home page').to.eq(true);
   });
 
   it('should check contact details in FO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkContactDetailsInFO', baseContext);
 
-    const storeInformation = await foHomePage.getStoreInformation(page);
+    const storeInformation = await foClassicHomePage.getStoreInformation(page);
     expect(storeInformation).to.contains(storesContactToCreate.name);
     expect(storeInformation).to.contains(storesContactToCreate.email);
     expect(storeInformation).to.not.contains(storesContactToCreate.registrationNumber);
@@ -101,7 +101,7 @@ describe('BO - Shop Parameters - Contact : Configure contact details', async () 
     await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo', baseContext);
 
     // Close tab and init other page objects with new current tab
-    page = await foHomePage.closePage(browserContext, page, 0);
+    page = await foClassicHomePage.closePage(browserContext, page, 0);
 
     const pageTitle = await storesPage.getPageTitle(page);
     expect(pageTitle).to.contains(storesPage.pageTitle);

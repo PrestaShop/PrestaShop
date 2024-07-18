@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {createAccountPage as foCreateAccountPage} from '@pages/FO/classic/myAccount/add';
 import {addressesPage} from '@pages/FO/classic/myAccount/addresses';
 import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
@@ -10,6 +9,7 @@ import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
 import {
   FakerAddress,
   FakerCustomer,
+  foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
   utilsPlaywright,
@@ -42,18 +42,18 @@ function createAccountTest(customerData: FakerCustomer, baseContext: string = 'c
       await testContext.addContextItem(this, 'testIdentifier', 'openFO', baseContext);
 
       // Go to FO and change language
-      await homePage.goToFo(page);
+      await foClassicHomePage.goToFo(page);
 
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to create account page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreateAccountPage', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
       await foClassicLoginPage.goToCreateAccountPage(page);
 
       const pageHeaderTitle = await foCreateAccountPage.getHeaderTitle(page);
@@ -65,7 +65,7 @@ function createAccountTest(customerData: FakerCustomer, baseContext: string = 'c
 
       await foCreateAccountPage.createAccount(page, customerData);
 
-      const isCustomerConnected = await homePage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);
       expect(isCustomerConnected).to.eq(true);
     });
 
@@ -73,9 +73,9 @@ function createAccountTest(customerData: FakerCustomer, baseContext: string = 'c
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFO', baseContext);
 
       await foCreateAccountPage.goToHomePage(page);
-      await homePage.logout(page);
+      await foClassicHomePage.logout(page);
 
-      const isCustomerConnected = await homePage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
   });
@@ -101,18 +101,18 @@ function createAddressTest(
       await testContext.addContextItem(this, 'testIdentifier', 'openFO', baseContext);
 
       // Go to FO and change language
-      await homePage.goToFo(page);
+      await foClassicHomePage.goToFo(page);
 
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
 
       const pageTitle = await foClassicLoginPage.getPageTitle(page);
       expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
@@ -129,7 +129,7 @@ function createAddressTest(
     it('should go to \'My account\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage', baseContext);
 
-      await homePage.goToMyAccountPage(page);
+      await foClassicHomePage.goToMyAccountPage(page);
 
       const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
       expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);
@@ -164,9 +164,9 @@ function createAddressTest(
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFO', baseContext);
 
       await addAddressPage.goToHomePage(page);
-      await homePage.logout(page);
+      await foClassicHomePage.logout(page);
 
-      const isCustomerConnected = await homePage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
   });

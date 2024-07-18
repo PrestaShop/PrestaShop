@@ -12,15 +12,13 @@ import addShopUrlPage from '@pages/BO/advancedParameters/multistore/url/addURL';
 import createProductPage from '@pages/BO/catalog/products/add';
 import productsPage from '@pages/BO/catalog/products';
 
-// Import FO pages
-import {homePage} from '@pages/FO/classic/home';
-
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 import {
   boDashboardPage,
   FakerProduct,
   FakerShop,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -145,17 +143,17 @@ describe('BO - Catalog - Products : Multistore', async () => {
 
       page = await productsPage.viewMyStore(page);
 
-      const pageTitle = await homePage.getPageTitle(page);
-      expect(pageTitle).to.contains(homePage.pageTitle);
+      const pageTitle = await foClassicHomePage.getPageTitle(page);
+      expect(pageTitle).to.contains(foClassicHomePage.pageTitle);
 
-      const newUrl = await homePage.getCurrentURL(page);
+      const newUrl = await foClassicHomePage.getCurrentURL(page);
       expect(newUrl).to.contains(createShopData.name);
     });
 
     it('should close the page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closePage', baseContext);
 
-      page = await homePage.closePage(browserContext, page, 0);
+      page = await foClassicHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await productsPage.getPageTitle(page);
       expect(pageTitle).to.contains(productsPage.pageTitle);

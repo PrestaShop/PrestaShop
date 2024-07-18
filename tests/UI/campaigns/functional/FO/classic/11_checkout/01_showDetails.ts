@@ -3,7 +3,6 @@ import testContext from '@utils/testContext';
 
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
-import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
@@ -12,6 +11,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foClassicHomePage,
   foClassicLoginPage,
   foClassicModalQuickViewPage,
   utilsPlaywright,
@@ -45,17 +45,17 @@ describe('FO - Checkout : Show details', async () => {
   it('should go to FO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
-    await homePage.goToFo(page);
-    await homePage.changeLanguage(page, 'en');
+    await foClassicHomePage.goToFo(page);
+    await foClassicHomePage.changeLanguage(page, 'en');
 
-    const isHomePage = await homePage.isHomePage(page);
+    const isHomePage = await foClassicHomePage.isHomePage(page);
     expect(isHomePage, 'Fail to open FO home page').to.eq(true);
   });
 
   it('should add the first product to cart then close block cart modal', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart1', baseContext);
 
-    await homePage.quickViewProduct(page, 1);
+    await foClassicHomePage.quickViewProduct(page, 1);
     await foClassicModalQuickViewPage.addToCartByQuickView(page);
 
     const isModalClosed = await blockCartModal.closeBlockCartModal(page);
@@ -66,7 +66,7 @@ describe('FO - Checkout : Show details', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart2', baseContext);
 
     await foClassicLoginPage.goToHomePage(page);
-    await homePage.quickViewProduct(page, 3);
+    await foClassicHomePage.quickViewProduct(page, 3);
     await foClassicModalQuickViewPage.setQuantityAndAddToCart(page, 2);
     await blockCartModal.proceedToCheckout(page);
 

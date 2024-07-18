@@ -7,13 +7,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import generalPage from '@pages/BO/shopParameters/general';
 import brandsPage from '@pages/BO/catalog/brands';
-import {homePage} from '@pages/FO/classic/home';
 import {siteMapPage} from '@pages/FO/classic/siteMap';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -99,16 +99,16 @@ describe('BO - Shop Parameters - General : Enable/Disable display brands', async
         page = await brandsPage.viewMyShop(page);
 
         // Change FO language
-        await homePage.changeLanguage(page, 'en');
+        await foClassicHomePage.changeLanguage(page, 'en');
 
-        const isHomePage = await homePage.isHomePage(page);
+        const isHomePage = await foClassicHomePage.isHomePage(page);
         expect(isHomePage).to.eq(true);
       });
 
       it('should verify the existence of the brands page link', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkBrandsPage_${test.args.action}`, baseContext);
 
-        await homePage.goToFooterLink(page, 'Sitemap');
+        await foClassicHomePage.goToFooterLink(page, 'Sitemap');
 
         const pageTitle = await siteMapPage.getPageTitle(page);
         expect(pageTitle).to.equal(siteMapPage.pageTitle);

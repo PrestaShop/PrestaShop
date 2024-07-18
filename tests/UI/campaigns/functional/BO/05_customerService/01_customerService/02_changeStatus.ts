@@ -10,13 +10,13 @@ import customerServicePage from '@pages/BO/customerService/customerService';
 import viewPage from '@pages/BO/customerService/customerService/view';
 // Import FO pages
 import {contactUsPage} from '@pages/FO/classic/contactUs';
-import {homePage} from '@pages/FO/classic/home';
 
 import {
   boDashboardPage,
   dataCustomers,
   dataEmployees,
   FakerContactMessage,
+  foClassicHomePage,
   foClassicLoginPage,
   utilsFile,
   utilsPlaywright,
@@ -60,16 +60,16 @@ describe('BO - Customer Service : Change status', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'openShop', baseContext);
 
-      await homePage.goTo(page, global.FO.URL);
+      await foClassicHomePage.goTo(page, global.FO.URL);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginFO', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
 
       const pageTitle = await foClassicLoginPage.getPageTitle(page);
       expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
@@ -88,7 +88,7 @@ describe('BO - Customer Service : Change status', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToContactPage', baseContext);
 
       // Go to contact us page
-      await homePage.goToFooterLink(page, 'Contact us');
+      await foClassicHomePage.goToFooterLink(page, 'Contact us');
 
       const pageTitle = await contactUsPage.getPageTitle(page);
       expect(pageTitle).to.equal(contactUsPage.pageTitle);

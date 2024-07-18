@@ -10,12 +10,12 @@ import preferencesPage from '@pages/BO/payment/preferences';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
-import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 
 import {
   boDashboardPage,
   dataCustomers,
+  foClassicHomePage,
   foClassicLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -43,17 +43,17 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
     it('should go to FO page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
-      await homePage.goToFo(page);
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.goToFo(page);
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
 
       const pageTitle = await foClassicLoginPage.getPageTitle(page);
       expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
@@ -117,17 +117,17 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
         // Click on view my shop
         page = await preferencesPage.viewMyShop(page);
         // Change language in FO
-        await homePage.changeLanguage(page, 'en');
+        await foClassicHomePage.changeLanguage(page, 'en');
 
-        const pageTitle = await homePage.getPageTitle(page);
-        expect(pageTitle).to.contains(homePage.pageTitle);
+        const pageTitle = await foClassicHomePage.getPageTitle(page);
+        expect(pageTitle).to.contains(foClassicHomePage.pageTitle);
       });
 
       it('should add the first product to the cart and proceed to checkout', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `addProductToCart${index}`, baseContext);
 
         // Go to the first product page
-        await homePage.goToProductPage(page, 1);
+        await foClassicHomePage.goToProductPage(page, 1);
         // Add the product to the cart
         await productPage.addProductToTheCart(page);
         // Proceed to checkout the shopping cart
@@ -161,7 +161,7 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
         await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
         // Close current tab
-        page = await homePage.closePage(browserContext, page, 0);
+        page = await foClassicHomePage.closePage(browserContext, page, 0);
 
         const pageTitle = await preferencesPage.getPageTitle(page);
         expect(pageTitle).to.contains(preferencesPage.pageTitle);

@@ -6,7 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 import {expect} from 'chai';
@@ -16,6 +15,7 @@ import {
   boModuleManagerPage,
   dataModules,
   dataProducts,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -81,16 +81,16 @@ describe('Category products module - Disable/Enable module', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOAfterDisable', baseContext);
 
       page = await boModuleManagerPage.viewMyShop(page);
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should go to the product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductPageAfterDisable', baseContext);
 
-      await homePage.goToProductPage(page, dataProducts.demo_6.id);
+      await foClassicHomePage.goToProductPage(page, dataProducts.demo_6.id);
 
       const pageTitle = await foProductPage.getPageTitle(page);
       expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_6.name.toUpperCase());
@@ -130,16 +130,16 @@ describe('Category products module - Disable/Enable module', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOAfterEnable', baseContext);
 
       page = await boModuleManagerPage.viewMyShop(page);
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should go to the product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductPageAfterEnable', baseContext);
 
-      await homePage.goToProductPage(page, dataProducts.demo_6.id);
+      await foClassicHomePage.goToProductPage(page, dataProducts.demo_6.id);
 
       const pageTitle = await foProductPage.getPageTitle(page);
       expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_6.name.toUpperCase());

@@ -7,7 +7,6 @@ import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 // Import FO pages
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
-import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
@@ -16,6 +15,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
+  foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
   utilsPlaywright,
@@ -71,16 +71,16 @@ describe('FO - Account - Order details : Reorder from order detail', async () =>
     it('should go to FO home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount', baseContext);
 
-      await foHomePage.goToFo(page);
+      await foClassicHomePage.goToFo(page);
 
-      const isHomePage: boolean = await foHomePage.isHomePage(page);
+      const isHomePage: boolean = await foClassicHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginFoPage', baseContext);
 
-      await foHomePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
 
       const pageHeaderTitle = await foClassicLoginPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(foClassicLoginPage.pageTitle);
@@ -98,7 +98,7 @@ describe('FO - Account - Order details : Reorder from order detail', async () =>
     it('should go to my account page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage', baseContext);
 
-      await foHomePage.goToMyAccountPage(page);
+      await foClassicHomePage.goToMyAccountPage(page);
 
       const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
       expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);
@@ -162,7 +162,7 @@ describe('FO - Account - Order details : Reorder from order detail', async () =>
     it('should go to my account page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToAccountPage', baseContext);
 
-      await foHomePage.goToMyAccountPage(page);
+      await foClassicHomePage.goToMyAccountPage(page);
 
       const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
       expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);

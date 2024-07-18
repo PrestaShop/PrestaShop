@@ -2,11 +2,11 @@
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import homePage from '@pages/FO/hummingbird/home';
 import foCreateAccountPage from '@pages/FO/hummingbird/myAccount/add';
 
 import {
   FakerCustomer,
+  foHummingbirdHomePage,
   foHummingbirdLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -38,17 +38,17 @@ function createAccountTest(customerData: FakerCustomer, baseContext: string = 'c
       await testContext.addContextItem(this, 'testIdentifier', 'openFO', baseContext);
 
       // Go to FO and change language
-      await homePage.goToFo(page);
-      await homePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.goToFo(page);
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to create account page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreateAccountPage', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foHummingbirdHomePage.goToLoginPage(page);
       await foHummingbirdLoginPage.goToCreateAccountPage(page);
 
       const pageHeaderTitle = await foCreateAccountPage.getHeaderTitle(page);
@@ -60,7 +60,7 @@ function createAccountTest(customerData: FakerCustomer, baseContext: string = 'c
 
       await foCreateAccountPage.createAccount(page, customerData);
 
-      const isCustomerConnected = await homePage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdHomePage.isCustomerConnected(page);
       expect(isCustomerConnected).to.eq(true);
     });
 
@@ -68,9 +68,9 @@ function createAccountTest(customerData: FakerCustomer, baseContext: string = 'c
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFO', baseContext);
 
       await foCreateAccountPage.goToHomePage(page);
-      await homePage.logout(page);
+      await foHummingbirdHomePage.logout(page);
 
-      const isCustomerConnected = await homePage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdHomePage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
   });

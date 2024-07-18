@@ -6,7 +6,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 
 // Import FO pages
 import cartPage from '@pages/FO/hummingbird/cart';
-import homePage from '@pages/FO/hummingbird/home';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 // Import commonTests
@@ -16,6 +15,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   FakerCartRule,
+  foHummingbirdHomePage,
   foHummingbirdModalQuickViewPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -57,17 +57,17 @@ describe('FO - cart : Add promo code', async () => {
     it('should go to FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
-      await homePage.goToFo(page);
-      await homePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.goToFo(page);
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should add the first product to cart and proceed to checkout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addFirstProductToCart', baseContext);
 
-      await homePage.quickViewProduct(page, 1);
+      await foHummingbirdHomePage.quickViewProduct(page, 1);
       await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);
 

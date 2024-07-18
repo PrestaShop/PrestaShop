@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 
 import {expect} from 'chai';
@@ -16,6 +15,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   dataProducts,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -82,14 +82,14 @@ describe('BO - Shop Parameters - Product Settings : Display available quantities
 
       page = await productSettingsPage.viewMyShop(page);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Home page was not opened').to.eq(true);
     });
 
     it('should go to the first product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToFirstProductPage${index}`, baseContext);
 
-      await homePage.goToProductPage(page, 1);
+      await foClassicHomePage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
       expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());

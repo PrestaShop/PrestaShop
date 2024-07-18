@@ -7,11 +7,11 @@ import {createAccountTest} from '@commonTests/FO/classic/account';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
-import homePage from '@pages/FO/hummingbird/home';
 import accountIdentityPage from '@pages/FO/hummingbird/myAccount/identity';
 
 import {
   FakerCustomer,
+  foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
   utilsPlaywright,
@@ -83,16 +83,16 @@ describe('FO - Account : Edit information', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-      await homePage.goTo(page, global.FO.URL);
+      await foHummingbirdHomePage.goTo(page, global.FO.URL);
 
-      const result = await homePage.isHomePage(page);
+      const result = await foHummingbirdHomePage.isHomePage(page);
       expect(result).to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPage', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foHummingbirdHomePage.goToLoginPage(page);
 
       const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
       expect(pageTitle).to.equal(foHummingbirdLoginPage.pageTitle);
@@ -110,7 +110,7 @@ describe('FO - Account : Edit information', async () => {
     it('should go to my account page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccountPage', baseContext);
 
-      await homePage.goToMyAccountPage(page);
+      await foHummingbirdHomePage.goToMyAccountPage(page);
 
       const pageTitle = await foHummingbirdMyAccountPage.getPageTitle(page);
       expect(pageTitle).to.equal(foHummingbirdMyAccountPage.pageTitle);

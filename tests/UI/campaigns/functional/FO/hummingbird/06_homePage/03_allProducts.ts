@@ -8,13 +8,12 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 // Import pages
 // Import BO pages
 import productsPage from '@pages/BO/catalog/products';
-// Import FO pages
-import homePage from '@pages/FO/hummingbird/home';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  foHummingbirdHomePage,
   foHummingbirdCategoryPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -85,17 +84,17 @@ describe('FO - Home Page : Display all products', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-      await homePage.goTo(page, global.FO.URL);
+      await foHummingbirdHomePage.goTo(page, global.FO.URL);
 
-      const result = await homePage.isHomePage(page);
+      const result = await foHummingbirdHomePage.isHomePage(page);
       expect(result).to.eq(true);
     });
 
     it('should go to all products page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAllProducts', baseContext);
 
-      await homePage.changeLanguage(page, 'en');
-      await homePage.goToAllProductsPage(page, 'featured-products');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.goToAllProductsPage(page, 'featured-products');
 
       const isCategoryPageVisible = await foHummingbirdCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);

@@ -4,14 +4,12 @@ import testContext from '@utils/testContext';
 // Import common tests
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
-// Import pages
-import homePage from '@pages/FO/hummingbird/home';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataCategories,
   foHummingbirdCategoryPage,
+  foHummingbirdHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -38,16 +36,16 @@ describe('FO - Menu and Navigation : Breadcrumb', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
-      await homePage.goToFo(page);
+      await foHummingbirdHomePage.goToFo(page);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.equal(true);
     });
 
     it('should go to the category Clothes', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkClothesLink', baseContext);
 
-      await homePage.goToCategory(page, dataCategories.clothes.id);
+      await foHummingbirdHomePage.goToCategory(page, dataCategories.clothes.id);
 
       const pageTitle = await foHummingbirdCategoryPage.getPageTitle(page);
       expect(pageTitle).to.equal(dataCategories.clothes.name);
@@ -63,9 +61,9 @@ describe('FO - Menu and Navigation : Breadcrumb', async () => {
     it('should go to the subcategory Men', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkMenLink', baseContext);
 
-      await homePage.goToSubCategory(page, dataCategories.clothes.id, dataCategories.men.id);
+      await foHummingbirdHomePage.goToSubCategory(page, dataCategories.clothes.id, dataCategories.men.id);
 
-      const pageTitle = await homePage.getPageTitle(page);
+      const pageTitle = await foHummingbirdHomePage.getPageTitle(page);
       expect(pageTitle).to.equal(dataCategories.men.name);
     });
 
@@ -97,14 +95,14 @@ describe('FO - Menu and Navigation : Breadcrumb', async () => {
 
       await foHummingbirdCategoryPage.clickOnBreadCrumbLink(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.equal(true);
     });
 
     it('should go to the subcategory stationery', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkStationeryLink', baseContext);
 
-      await homePage.goToSubCategory(page, dataCategories.accessories.id, dataCategories.stationery.id);
+      await foHummingbirdHomePage.goToSubCategory(page, dataCategories.accessories.id, dataCategories.stationery.id);
 
       const pageTitle = await foHummingbirdCategoryPage.getPageTitle(page);
       expect(pageTitle).to.equal(dataCategories.stationery.name);
@@ -138,7 +136,7 @@ describe('FO - Menu and Navigation : Breadcrumb', async () => {
 
       await foHummingbirdCategoryPage.clickOnBreadCrumbLink(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.equal(true);
     });
   });

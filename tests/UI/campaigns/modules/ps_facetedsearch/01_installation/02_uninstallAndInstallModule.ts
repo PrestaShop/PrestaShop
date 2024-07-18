@@ -6,7 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 import {expect} from 'chai';
@@ -17,6 +16,7 @@ import {
   dataCategories,
   dataModules,
   foClassicCategoryPage,
+  foClassicHomePage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -97,18 +97,18 @@ describe('Faceted search module - Uninstall and install module', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoAfterDisable', baseContext);
 
       page = await boModuleManagerPage.viewMyShop(page);
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should go to the category Page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCategoryPageAfterDisable', baseContext);
 
-      await homePage.goToCategory(page, dataCategories.clothes.id);
+      await foClassicHomePage.goToCategory(page, dataCategories.clothes.id);
 
-      const pageTitle = await homePage.getPageTitle(page);
+      const pageTitle = await foClassicHomePage.getPageTitle(page);
       expect(pageTitle).to.equal(dataCategories.clothes.name);
     });
 
@@ -148,18 +148,18 @@ describe('Faceted search module - Uninstall and install module', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoAfterEnable', baseContext);
 
       page = await boModuleManagerPage.viewMyShop(page);
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should go to the category Page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCategoryPageAfterEnable', baseContext);
 
-      await homePage.goToCategory(page, dataCategories.clothes.id);
+      await foClassicHomePage.goToCategory(page, dataCategories.clothes.id);
 
-      const pageTitle = await homePage.getPageTitle(page);
+      const pageTitle = await foClassicHomePage.getPageTitle(page);
       expect(pageTitle).to.equal(dataCategories.clothes.name);
     });
 

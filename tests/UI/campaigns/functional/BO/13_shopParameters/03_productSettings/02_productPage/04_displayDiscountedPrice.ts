@@ -11,7 +11,6 @@ import cartRulesPage from '@pages/BO/catalog/discounts';
 import catalogPriceRulesPage from '@pages/BO/catalog/discounts/catalogPriceRules';
 import addCatalogPriceRulePage from '@pages/BO/catalog/discounts/catalogPriceRules/add';
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 
 import {expect} from 'chai';
@@ -20,6 +19,7 @@ import {
   boDashboardPage,
   dataProducts,
   FakerCatalogPriceRule,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -138,16 +138,16 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable display disco
       await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
       page = await productSettingsPage.viewMyShop(page);
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Home page was not opened').to.eq(true);
     });
 
     it('should go to first product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToFirstProductPage${index}`, baseContext);
 
-      await homePage.goToProductPage(page, 1);
+      await foClassicHomePage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
       expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());

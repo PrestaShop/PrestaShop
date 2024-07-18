@@ -10,12 +10,12 @@ import preferencesPage from '@pages/BO/payment/preferences';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
-import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 
 import {
   boDashboardPage,
   dataCustomers,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -79,17 +79,17 @@ describe('BO - Payment - Preferences : Configure currency restrictions', async (
       // Click on view my shop
       page = await preferencesPage.viewMyShop(page);
       // Change language in FO
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const pageTitle = await homePage.getPageTitle(page);
-      expect(pageTitle).to.contains(homePage.pageTitle);
+      const pageTitle = await foClassicHomePage.getPageTitle(page);
+      expect(pageTitle).to.contains(foClassicHomePage.pageTitle);
     });
 
     it('should create the order and go to payment step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `createOrder${index}`, baseContext);
 
       // Go to the first product page
-      await homePage.goToProductPage(page, 1);
+      await foClassicHomePage.goToProductPage(page, 1);
       // Add the product to the cart
       await productPage.addProductToTheCart(page);
       // Proceed to checkout the shopping cart

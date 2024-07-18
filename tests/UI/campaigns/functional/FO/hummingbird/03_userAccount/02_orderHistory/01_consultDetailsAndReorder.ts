@@ -9,7 +9,6 @@ import {createOrderByCustomerTest} from '@commonTests/FO/hummingbird/order';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
-import homePage from '@pages/FO/hummingbird/home';
 import orderHistoryPage from '@pages/FO/hummingbird/myAccount/orderHistory';
 import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
@@ -22,6 +21,7 @@ import {
   FakerAddress,
   FakerCustomer,
   FakerOrder,
+  foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
   utilsDate,
@@ -94,16 +94,16 @@ describe('FO - Account - Order history : Consult details and reorder', async () 
     it('should go to FO home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount', baseContext);
 
-      await homePage.goToFo(page);
+      await foHummingbirdHomePage.goToFo(page);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginFoPage', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foHummingbirdHomePage.goToLoginPage(page);
 
       const pageHeaderTitle = await foHummingbirdLoginPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(foHummingbirdLoginPage.pageTitle);
@@ -121,7 +121,7 @@ describe('FO - Account - Order history : Consult details and reorder', async () 
     it('should go to order history page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
-      await homePage.goToMyAccountPage(page);
+      await foHummingbirdHomePage.goToMyAccountPage(page);
       await foHummingbirdMyAccountPage.goToHistoryAndDetailsPage(page);
 
       const pageHeaderTitle = await orderHistoryPage.getPageTitle(page);
@@ -182,7 +182,7 @@ describe('FO - Account - Order history : Consult details and reorder', async () 
     it('should go to order history page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage2', baseContext);
 
-      await homePage.goToMyAccountPage(page);
+      await foHummingbirdHomePage.goToMyAccountPage(page);
       await foHummingbirdMyAccountPage.goToHistoryAndDetailsPage(page);
 
       const pageHeaderTitle = await orderHistoryPage.getPageTitle(page);

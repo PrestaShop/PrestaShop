@@ -9,7 +9,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 import customerServicePage from '@pages/BO/customerService/customerService';
 // Import FO pages
 import contactUsPage from '@pages/FO/hummingbird/contactUs';
-import homePage from '@pages/FO/hummingbird/home';
 import gdprPersonalDataPage from '@pages/FO/hummingbird/myAccount/gdprPersonalData';
 
 import {
@@ -17,6 +16,7 @@ import {
   dataCustomers,
   dataOrders,
   FakerContactMessage,
+  foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
   utilsFile,
@@ -61,16 +61,16 @@ describe('FO - Account : Contact us on GDPR page', async () => {
     it('should go to FO home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
-      await homePage.goToFo(page);
+      await foHummingbirdHomePage.goToFo(page);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginFoPage', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foHummingbirdHomePage.goToLoginPage(page);
 
       const pageHeaderTitle = await foHummingbirdLoginPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(foHummingbirdLoginPage.pageTitle);
@@ -88,7 +88,7 @@ describe('FO - Account : Contact us on GDPR page', async () => {
     it('should go to my account page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccountPage', baseContext);
 
-      await homePage.goToMyAccountPage(page);
+      await foHummingbirdHomePage.goToMyAccountPage(page);
 
       const pageTitle = await foHummingbirdMyAccountPage.getPageTitle(page);
       expect(pageTitle).to.equal(foHummingbirdMyAccountPage.pageTitle);

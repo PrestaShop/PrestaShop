@@ -10,7 +10,6 @@ import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {cartPage} from '@pages/FO/classic/cart';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
@@ -19,6 +18,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerCartRule,
+  foClassicHomePage,
   foClassicLoginPage,
   foClassicModalQuickViewPage,
   utilsDate,
@@ -99,9 +99,9 @@ describe('BO - Catalog - Cart rules : Invalid date time', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-      await homePage.goTo(page, global.FO.URL);
+      await foClassicHomePage.goTo(page, global.FO.URL);
 
-      const result = await homePage.isHomePage(page);
+      const result = await foClassicHomePage.isHomePage(page);
       expect(result).to.eq(true);
     });
 
@@ -109,7 +109,7 @@ describe('BO - Catalog - Cart rules : Invalid date time', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewTheFirstProduct', baseContext);
 
       await foClassicLoginPage.goToHomePage(page);
-      await homePage.quickViewProduct(page, 1);
+      await foClassicHomePage.quickViewProduct(page, 1);
 
       const isQuickViewModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isQuickViewModalVisible).to.equal(true);

@@ -7,11 +7,11 @@ import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {createAccountTest} from '@commonTests/FO/classic/account';
 
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {passwordReminderPage} from '@pages/FO/classic/passwordReminder';
 
 import {
   FakerCustomer,
+  foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
   type MailDev,
@@ -79,16 +79,16 @@ describe('FO - Login : Password reminder', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-      await homePage.goTo(page, global.FO.URL);
+      await foClassicHomePage.goTo(page, global.FO.URL);
 
-      const result = await homePage.isHomePage(page);
+      const result = await foClassicHomePage.isHomePage(page);
       expect(result).to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPage', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
 
       const pageTitle = await foClassicLoginPage.getPageTitle(page);
       expect(pageTitle).to.equal(foClassicLoginPage.pageTitle);

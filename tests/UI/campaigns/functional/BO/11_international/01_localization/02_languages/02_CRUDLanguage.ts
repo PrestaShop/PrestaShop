@@ -8,8 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import languagesPage from '@pages/BO/international/languages';
 import addLanguagePage from '@pages/BO/international/languages/add';
-// Import FO pages
-import {homePage as foHomePage} from '@pages/FO/classic/home';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -17,6 +15,7 @@ import {
   boDashboardPage,
   boLocalizationPage,
   FakerLanguage,
+  foClassicHomePage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -122,21 +121,21 @@ describe('BO - International - Languages : CRUD language', async () => {
       // View my shop and get the new tab
       page = await languagesPage.viewMyShop(page);
 
-      const isHomePage = await foHomePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it(`should check that '${createLanguageData.name}' exist`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCreatedLanguageFO', baseContext);
 
-      const isLanguageInFO = await foHomePage.languageExists(page, createLanguageData.isoCode);
+      const isLanguageInFO = await foClassicHomePage.languageExists(page, createLanguageData.isoCode);
       expect(isLanguageInFO, `${createLanguageData.name} was not found as a language in FO`).to.eq(true);
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo1', baseContext);
 
-      page = await foHomePage.closePage(browserContext, page, 0);
+      page = await foClassicHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await languagesPage.getPageTitle(page);
       expect(pageTitle).to.contains(languagesPage.pageTitle);
@@ -183,21 +182,21 @@ describe('BO - International - Languages : CRUD language', async () => {
       // View my shop and get the new tab
       page = await languagesPage.viewMyShop(page);
 
-      const isHomePage = await foHomePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it(`should check that '${editLanguageData.name}' does not exist`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedLanguageFO', baseContext);
 
-      const isLanguageInFO = await foHomePage.languageExists(page, editLanguageData.isoCode);
+      const isLanguageInFO = await foClassicHomePage.languageExists(page, editLanguageData.isoCode);
       expect(isLanguageInFO, `${editLanguageData.name} was found as a language in FO`).to.eq(false);
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo2', baseContext);
 
-      page = await foHomePage.closePage(browserContext, page, 0);
+      page = await foClassicHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await languagesPage.getPageTitle(page);
       expect(pageTitle).to.contains(languagesPage.pageTitle);

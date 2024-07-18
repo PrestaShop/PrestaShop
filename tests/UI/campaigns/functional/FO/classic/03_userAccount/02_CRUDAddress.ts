@@ -9,7 +9,6 @@ import {createAccountTest} from '@commonTests/FO/classic/account';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
-import {homePage} from '@pages/FO/classic/home';
 import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
 import {addressesPage} from '@pages/FO/classic/myAccount/addresses';
 import {productPage} from '@pages/FO/classic/product';
@@ -18,6 +17,7 @@ import {
   dataProducts,
   FakerAddress,
   FakerCustomer,
+  foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
   utilsPlaywright,
@@ -74,16 +74,16 @@ describe('FO - Account : CRUD address', async () => {
     it('should go to FO home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoHomePage', baseContext);
 
-      await homePage.goToFo(page);
+      await foClassicHomePage.goToFo(page);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginFoPage', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
 
       const pageHeaderTitle = await foClassicLoginPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(foClassicLoginPage.pageTitle);
@@ -101,7 +101,7 @@ describe('FO - Account : CRUD address', async () => {
     it('should go to \'My Account\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccountPage', baseContext);
 
-      await homePage.goToMyAccountPage(page);
+      await foClassicHomePage.goToMyAccountPage(page);
 
       const pageHeaderTitle = await foClassicMyAccountPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(foClassicMyAccountPage.pageTitle);
@@ -190,16 +190,16 @@ describe('FO - Account : CRUD address', async () => {
     it('should go to home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage', baseContext);
 
-      await homePage.goToHomePage(page);
+      await foClassicHomePage.goToHomePage(page);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
     it('should go to product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
 
-      await homePage.goToProductPage(page, 1);
+      await foClassicHomePage.goToProductPage(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_1.name);
@@ -229,16 +229,16 @@ describe('FO - Account : CRUD address', async () => {
     it('should go to home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToHomePageToDeleteAddress', baseContext);
 
-      await homePage.goToHomePage(page);
+      await foClassicHomePage.goToHomePage(page);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
     it('should go to \'My Account\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccountPageToDeleteAddress', baseContext);
 
-      await homePage.goToMyAccountPage(page);
+      await foClassicHomePage.goToMyAccountPage(page);
 
       const pageHeaderTitle = await foClassicMyAccountPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(foClassicMyAccountPage.pageTitle);
@@ -288,16 +288,16 @@ describe('FO - Account : CRUD address', async () => {
     it('should go to home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToHomePageToDeleteAddress2', baseContext);
 
-      await homePage.goToHomePage(page);
+      await foClassicHomePage.goToHomePage(page);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
     it('should go to \'My Account\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccountPageToDeleteAddress2', baseContext);
 
-      await homePage.goToMyAccountPage(page);
+      await foClassicHomePage.goToMyAccountPage(page);
 
       const pageHeaderTitle = await foClassicMyAccountPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(foClassicMyAccountPage.pageTitle);

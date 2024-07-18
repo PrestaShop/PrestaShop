@@ -10,7 +10,6 @@ import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 
 import {expect} from 'chai';
@@ -18,6 +17,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerProduct,
+  foClassicHomePage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -130,14 +130,14 @@ describe('BO - Shop Parameters - Product Settings : Display remaining quantities
 
         page = await productSettingsPage.viewMyShop(page);
 
-        const isHomePage = await homePage.isHomePage(page);
+        const isHomePage = await foClassicHomePage.isHomePage(page);
         expect(isHomePage, 'Home page was not opened').to.eq(true);
       });
 
       it('should search for the product and go to product page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToProductPage${test.state}`, baseContext);
 
-        await homePage.searchProduct(page, productData.name);
+        await foClassicHomePage.searchProduct(page, productData.name);
         await foClassicSearchResultsPage.goToProductPage(page, 1);
 
         const pageTitle = await productPage.getPageTitle(page);

@@ -10,7 +10,6 @@ import zonesPage from '@pages/BO/international/locations';
 import countriesPage from '@pages/BO/international/locations/countries';
 import addCountryPage from '@pages/BO/international/locations/countries/add';
 // Import FO pages
-import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {addressesPage} from '@pages/FO/classic/myAccount/addresses';
 import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
 
@@ -18,6 +17,7 @@ import {
   boDashboardPage,
   dataCustomers,
   FakerCountry,
+  foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
   utilsPlaywright,
@@ -143,16 +143,16 @@ describe('BO - International - Countries : CRUD country', async () => {
 
       // View my shop and init pages
       page = await countriesPage.viewMyShop(page);
-      await foHomePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foHomePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO_1', baseContext);
 
-      await foHomePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
 
       const pageTitle = await foClassicLoginPage.getPageTitle(page);
       expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
@@ -170,7 +170,7 @@ describe('BO - International - Countries : CRUD country', async () => {
     it('should go to addresses page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage_1', baseContext);
 
-      await foHomePage.goToMyAccountPage(page);
+      await foClassicHomePage.goToMyAccountPage(page);
       await foClassicMyAccountPage.goToAddressesPage(page);
 
       const pageTitle = await addressesPage.getPageTitle(page);
@@ -199,7 +199,7 @@ describe('BO - International - Countries : CRUD country', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo_1', baseContext);
 
       // Close tab and init other page objects with new current tab
-      page = await foHomePage.closePage(browserContext, page, 0);
+      page = await foClassicHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await countriesPage.getPageTitle(page);
       expect(pageTitle).to.contains(countriesPage.pageTitle);
@@ -246,16 +246,16 @@ describe('BO - International - Countries : CRUD country', async () => {
 
       // View my shop and init pages
       page = await countriesPage.viewMyShop(page);
-      await foHomePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foHomePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO_2', baseContext);
 
-      await foHomePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
 
       const pageTitle = await foClassicLoginPage.getPageTitle(page);
       expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
@@ -273,7 +273,7 @@ describe('BO - International - Countries : CRUD country', async () => {
     it('should go to addresses page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage_2', baseContext);
 
-      await foHomePage.goToMyAccountPage(page);
+      await foClassicHomePage.goToMyAccountPage(page);
       await foClassicMyAccountPage.goToAddressesPage(page);
 
       const pageTitle = await addressesPage.getPageTitle(page);
@@ -293,7 +293,7 @@ describe('BO - International - Countries : CRUD country', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo_2', baseContext);
 
       // Close tab and init other page objects with new current tab
-      page = await foHomePage.closePage(browserContext, page, 0);
+      page = await foClassicHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await countriesPage.getPageTitle(page);
       expect(pageTitle).to.contains(countriesPage.pageTitle);

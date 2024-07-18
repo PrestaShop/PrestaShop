@@ -4,12 +4,10 @@ import testContext from '@utils/testContext';
 // Import common tests
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
-// Import pages
-import homePage from '@pages/FO/hummingbird/home';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  foHummingbirdHomePage,
   foHummingbirdModalQuickViewPage,
   type ProductAttribute,
   utilsPlaywright,
@@ -70,16 +68,16 @@ describe('FO - Product page - Quick view : Change combination', async () => {
     it('should go to FO home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
-      await homePage.goToFo(page);
+      await foHummingbirdHomePage.goToFo(page);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.equal(true);
     });
 
     it('should quick view the first product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewFirstProduct', baseContext);
 
-      await homePage.quickViewProduct(page, 1);
+      await foHummingbirdHomePage.quickViewProduct(page, 1);
 
       const isModalVisible = await foHummingbirdModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.equal(true);
@@ -136,7 +134,7 @@ describe('FO - Product page - Quick view : Change combination', async () => {
     it('should quick view the third product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickView2', baseContext);
 
-      await homePage.quickViewProduct(page, 3);
+      await foHummingbirdHomePage.quickViewProduct(page, 3);
 
       const isModalVisible = await foHummingbirdModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.equal(true);

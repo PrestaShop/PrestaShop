@@ -13,7 +13,6 @@ import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
-import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 
 import {
@@ -22,6 +21,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerCartRule,
+  foClassicHomePage,
   foClassicLoginPage,
   utilsCore,
   utilsPlaywright,
@@ -105,9 +105,9 @@ describe('BO - Catalog - Cart rules : Check Total available for each user', asyn
 
       // View my shop and init pages
       page = await addCartRulePage.viewMyShop(page);
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
   });
@@ -121,7 +121,7 @@ describe('BO - Catalog - Cart rules : Check Total available for each user', asyn
       it('should go to the first product page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToFirstProductPage${index}`, baseContext);
 
-        await homePage.goToProductPage(page, 1);
+        await foClassicHomePage.goToProductPage(page, 1);
 
         const pageTitle = await productPage.getPageTitle(page);
         expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
@@ -199,10 +199,10 @@ describe('BO - Catalog - Cart rules : Check Total available for each user', asyn
         it('should go to home page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage', baseContext);
 
-          await homePage.clickOnHeaderLink(page, 'Logo');
+          await foClassicHomePage.clickOnHeaderLink(page, 'Logo');
 
-          const pageTitle = await homePage.getPageTitle(page);
-          expect(pageTitle).to.equal(homePage.pageTitle);
+          const pageTitle = await foClassicHomePage.getPageTitle(page);
+          expect(pageTitle).to.equal(foClassicHomePage.pageTitle);
         });
       }
       if (test.args.testIdentifier === 'cartRuleNotAccepted') {
@@ -219,7 +219,7 @@ describe('BO - Catalog - Cart rules : Check Total available for each user', asyn
           await cartPage.logout(page);
           await foClassicLoginPage.clickOnHeaderLink(page, 'Logo');
 
-          const isCustomerConnected = await homePage.isCustomerConnected(page);
+          const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);
           expect(isCustomerConnected, 'Customer is connected!').to.eq(false);
         });
       }

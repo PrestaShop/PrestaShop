@@ -10,7 +10,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 import {moduleConfigurationPage} from '@pages/BO/modules/moduleConfiguration';
 import psEmailSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
 // Import FO pages
-import homePage from '@pages/FO/hummingbird/home';
 import accountIdentityPage from '@pages/FO/hummingbird/myAccount/identity';
 
 import {
@@ -18,6 +17,7 @@ import {
   boModuleManagerPage,
   dataCustomers,
   FakerModule,
+  foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
   utilsPlaywright,
@@ -69,17 +69,20 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'openFoShop', baseContext);
 
-      await homePage.goTo(page, global.FO.URL);
+      await foHummingbirdHomePage.goTo(page, global.FO.URL);
 
-      const result = await homePage.isHomePage(page);
+      const result = await foHummingbirdHomePage.isHomePage(page);
       expect(result).to.eq(true);
     });
 
     it('should subscribe to newsletter with already used email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'subscribeWithAlreadyUsedEmail', baseContext);
 
-      const newsletterSubscribeAlertMessage = await homePage.subscribeToNewsletter(page, dataCustomers.johnDoe.email);
-      expect(newsletterSubscribeAlertMessage).to.contains(homePage.alreadyUsedEmailMessage);
+      const newsletterSubscribeAlertMessage = await foHummingbirdHomePage.subscribeToNewsletter(
+        page,
+        dataCustomers.johnDoe.email,
+      );
+      expect(newsletterSubscribeAlertMessage).to.contains(foHummingbirdHomePage.alreadyUsedEmailMessage);
     });
   });
 
@@ -87,7 +90,7 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOLoginPage', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foHummingbirdHomePage.goToLoginPage(page);
 
       const pageHeaderTitle = await foHummingbirdLoginPage.getPageTitle(page);
       expect(pageHeaderTitle).to.equal(foHummingbirdLoginPage.pageTitle);
@@ -105,7 +108,7 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
     it('should go to account information page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAccountInformationPage', baseContext);
 
-      await homePage.goToMyAccountPage(page);
+      await foHummingbirdHomePage.goToMyAccountPage(page);
       await foHummingbirdMyAccountPage.goToInformationPage(page);
 
       const pageTitle = await accountIdentityPage.getPageTitle(page);
@@ -172,17 +175,20 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOToSubscribeToNewsletter', baseContext);
 
-      await homePage.goTo(page, global.FO.URL);
+      await foHummingbirdHomePage.goTo(page, global.FO.URL);
 
-      const result = await homePage.isHomePage(page);
+      const result = await foHummingbirdHomePage.isHomePage(page);
       expect(result).to.eq(true);
     });
 
     it('should subscribe to newsletter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'subscribeToNewsletter', baseContext);
 
-      const newsletterSubscribeAlertMessage = await homePage.subscribeToNewsletter(page, dataCustomers.johnDoe.email);
-      expect(newsletterSubscribeAlertMessage).to.contains(homePage.successSubscriptionMessage);
+      const newsletterSubscribeAlertMessage = await foHummingbirdHomePage.subscribeToNewsletter(
+        page,
+        dataCustomers.johnDoe.email,
+      );
+      expect(newsletterSubscribeAlertMessage).to.contains(foHummingbirdHomePage.successSubscriptionMessage);
     });
   });
 

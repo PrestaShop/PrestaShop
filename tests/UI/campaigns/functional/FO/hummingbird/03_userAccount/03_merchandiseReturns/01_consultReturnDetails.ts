@@ -14,7 +14,6 @@ import editMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseRet
 import ordersPage from '@pages/BO/orders';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
-import homePage from '@pages/FO/hummingbird/home';
 import foMerchandiseReturnsPage from '@pages/FO/hummingbird/myAccount/merchandiseReturns';
 import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
 import orderHistoryPage from '@pages/FO/hummingbird/myAccount/orderHistory';
@@ -28,6 +27,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
+  foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
   utilsPlaywright,
@@ -184,16 +184,16 @@ describe('FO - Account : Consult return details', async () => {
         // Click on view my shop
         page = await viewOrderBasePage.viewMyShop(page);
         // Change FO language
-        await homePage.changeLanguage(page, 'en');
+        await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-        const isHomePage = await homePage.isHomePage(page);
+        const isHomePage = await foHummingbirdHomePage.isHomePage(page);
         expect(isHomePage, 'Home page is not displayed').to.eq(true);
       });
 
       it('should login', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'logonFO', baseContext);
 
-        await homePage.goToLoginPage(page);
+        await foHummingbirdHomePage.goToLoginPage(page);
         await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
         const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
@@ -203,7 +203,7 @@ describe('FO - Account : Consult return details', async () => {
       it('should go to my account page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage2', baseContext);
 
-        await homePage.goToMyAccountPage(page);
+        await foHummingbirdHomePage.goToMyAccountPage(page);
 
         const pageTitle = await foHummingbirdMyAccountPage.getPageTitle(page);
         expect(pageTitle).to.contains(foHummingbirdMyAccountPage.pageTitle);
@@ -375,16 +375,16 @@ describe('FO - Account : Consult return details', async () => {
           // Click on view my shop
           page = await editMerchandiseReturnsPage.viewMyShop(page);
           // Change FO language
-          await homePage.changeLanguage(page, 'en');
+          await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-          const isHomePage = await homePage.isHomePage(page);
+          const isHomePage = await foHummingbirdHomePage.isHomePage(page);
           expect(isHomePage, 'Home page is not displayed').to.eq(true);
         });
 
         it('should go to account page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToAccountPage${index + 3}`, baseContext);
 
-          await homePage.goToMyAccountPage(page);
+          await foHummingbirdHomePage.goToMyAccountPage(page);
 
           const pageTitle = await foHummingbirdMyAccountPage.getPageTitle(page);
           expect(pageTitle).to.contains(foHummingbirdMyAccountPage.pageTitle);

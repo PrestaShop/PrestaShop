@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
@@ -17,6 +16,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -81,9 +81,9 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable guest checkout'
       // Click on view my shop
       page = await orderSettingsPage.viewMyShop(page);
       // Change FO language
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
@@ -91,7 +91,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable guest checkout'
       await testContext.addContextItem(this, 'testIdentifier', `addProductToCart${index}`, baseContext);
 
       // Go to the first product page
-      await homePage.goToProductPage(page, 1);
+      await foClassicHomePage.goToProductPage(page, 1);
 
       // Add the product to the cart
       await productPage.addProductToTheCart(page);

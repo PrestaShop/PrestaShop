@@ -8,13 +8,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import customersPage from '@pages/BO/customers';
 // Import FO pages
-import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {createAccountPage as foCreateAccountPage} from '@pages/FO/classic/myAccount/add';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  foClassicHomePage,
   foClassicLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -70,9 +70,9 @@ describe('BO - Customers - Customers : Set required fields', async () => {
       // View shop
       page = await customersPage.viewMyShop(page);
       // Change language in FO
-      await foHomePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foHomePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
@@ -80,7 +80,7 @@ describe('BO - Customers - Customers : Set required fields', async () => {
       await testContext.addContextItem(this, 'testIdentifier', `checkPartnersOffers${index}`, baseContext);
 
       // Go to create account page
-      await foHomePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
       await foClassicLoginPage.goToCreateAccountPage(page);
 
       const pageTitle = await foCreateAccountPage.getHeaderTitle(page);

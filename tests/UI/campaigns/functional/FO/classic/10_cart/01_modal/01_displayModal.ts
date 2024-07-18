@@ -3,13 +3,13 @@ import testContext from '@utils/testContext';
 
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
-import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  foClassicHomePage,
   foClassicModalQuickViewPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -32,24 +32,24 @@ describe('FO - cart : Display modal when adding a product to cart', async () => 
   it('should open the shop page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
-    await homePage.goToFo(page);
-    await homePage.changeLanguage(page, 'en');
+    await foClassicHomePage.goToFo(page);
+    await foClassicHomePage.changeLanguage(page, 'en');
 
-    const isHomePage = await homePage.isHomePage(page);
+    const isHomePage = await foClassicHomePage.isHomePage(page);
     expect(isHomePage, 'Fail to open FO home page').to.eq(true);
   });
 
   it('should add the first product to cart by quick view and click on continue button', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'addFirstProductToCart', baseContext);
 
-    await homePage.quickViewProduct(page, 1);
+    await foClassicHomePage.quickViewProduct(page, 1);
     await foClassicModalQuickViewPage.setQuantityAndAddToCart(page, 2);
 
     const isBlockCartModal = await blockCartModal.isBlockCartModalVisible(page);
     expect(isBlockCartModal).to.equal(true);
 
     const successMessage = await blockCartModal.getBlockCartModalTitle(page);
-    expect(successMessage).to.contains(homePage.successAddToCartMessage);
+    expect(successMessage).to.contains(foClassicHomePage.successAddToCartMessage);
 
     const isModalNotVisible = await blockCartModal.continueShopping(page);
     expect(isModalNotVisible).to.eq(true);
@@ -58,7 +58,7 @@ describe('FO - cart : Display modal when adding a product to cart', async () => 
   it('should go to the second product page and add the product to the cart', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSecondProductPage', baseContext);
 
-    await homePage.goToProductPage(page, 2);
+    await foClassicHomePage.goToProductPage(page, 2);
     // Add the product to the cart
     await productPage.addProductToTheCart(page, 3);
 
@@ -69,7 +69,7 @@ describe('FO - cart : Display modal when adding a product to cart', async () => 
   it('should check notifications number', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkNotificationsNumber', baseContext);
 
-    const notificationsNumber = await homePage.getCartNotificationsNumber(page);
+    const notificationsNumber = await foClassicHomePage.getCartNotificationsNumber(page);
     expect(notificationsNumber).to.eq(5);
   });
 });

@@ -10,13 +10,13 @@ import customerServicePage from '@pages/BO/customerService/customerService';
 import viewPage from '@pages/BO/customerService/customerService/view';
 // Import FO pages
 import {contactUsPage} from '@pages/FO/classic/contactUs';
-import {homePage as foHomePage} from '@pages/FO/classic/home';
 
 import {
   boDashboardPage,
   dataCustomers,
   dataOrders,
   FakerContactMessage,
+  foClassicHomePage,
   foClassicLoginPage,
   utilsFile,
   utilsPlaywright,
@@ -67,16 +67,16 @@ describe('FO - Contact us : Add attachment', async () => {
   it('should open the shop page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openShop', baseContext);
 
-    await foHomePage.goTo(page, global.FO.URL);
+    await foClassicHomePage.goTo(page, global.FO.URL);
 
-    const isHomePage = await foHomePage.isHomePage(page);
+    const isHomePage = await foClassicHomePage.isHomePage(page);
     expect(isHomePage).to.eq(true);
   });
 
   it('should go to login page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFo', baseContext);
 
-    await foHomePage.goToLoginPage(page);
+    await foClassicHomePage.goToLoginPage(page);
 
     const pageTitle = await foClassicLoginPage.getPageTitle(page);
     expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);

@@ -9,7 +9,6 @@ import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 // Import FO pages
-import {homePage as foHomePage} from '@pages/FO/classic/home';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
@@ -20,6 +19,7 @@ import {
   dataCustomers,
   dataPaymentMethods,
   FakerProduct,
+  foClassicHomePage,
   foClassicLoginPage,
   foClassicSearchResultsPage,
   utilsPlaywright,
@@ -166,16 +166,16 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
           await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
           page = await productSettingsPage.viewMyShop(page);
-          await foHomePage.changeLanguage(page, 'en');
+          await foClassicHomePage.changeLanguage(page, 'en');
 
-          const isFoHomePage = await foHomePage.isHomePage(page);
+          const isFoHomePage = await foClassicHomePage.isHomePage(page);
           expect(isFoHomePage, 'Fail to open FO home page').to.eq(true);
         });
 
         it('should go to login page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToLoginFO${index}`, baseContext);
 
-          await foHomePage.goToLoginPage(page);
+          await foClassicHomePage.goToLoginPage(page);
 
           const pageTitle = await foClassicLoginPage.getPageTitle(page);
           expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
@@ -196,7 +196,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
           // Go to home page
           await foClassicLoginPage.goToHomePage(page);
 
-          const isFoHomePage = await foHomePage.isHomePage(page);
+          const isFoHomePage = await foClassicHomePage.isHomePage(page);
           expect(isFoHomePage, 'Fail to open FO home page').to.eq(true);
         });
 
@@ -204,7 +204,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
           await testContext.addContextItem(this, 'testIdentifier', `goToCreatedProductPage${index}`, baseContext);
 
           // search for the created pack and add go to product page
-          await foHomePage.searchProduct(page, productPackData.name);
+          await foClassicHomePage.searchProduct(page, productPackData.name);
           await foClassicSearchResultsPage.goToProductPage(page, 1);
 
           const pageTitle = await foProductPage.getPageTitle(page);

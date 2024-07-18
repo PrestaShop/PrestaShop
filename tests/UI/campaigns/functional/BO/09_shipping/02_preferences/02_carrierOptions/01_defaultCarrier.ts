@@ -11,13 +11,13 @@ import preferencesPage from '@pages/BO/shipping/preferences';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage as foCheckoutPage} from '@pages/FO/classic/checkout';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
-import {homePage as foHomePage} from '@pages/FO/classic/home';
 
 import {
   boDashboardPage,
   dataCarriers,
   dataCustomers,
   FakerCarrier,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -85,9 +85,9 @@ describe('BO - Shipping - Preferences : Update default carrier and check it in F
         // Click on view my shop
         page = await preferencesPage.viewMyShop(page);
         // Change FO language
-        await foHomePage.changeLanguage(page, 'en');
+        await foClassicHomePage.changeLanguage(page, 'en');
 
-        const isHomePage = await foHomePage.isHomePage(page);
+        const isHomePage = await foClassicHomePage.isHomePage(page);
         expect(isHomePage, 'Home page is not displayed').to.eq(true);
       });
 
@@ -95,7 +95,7 @@ describe('BO - Shipping - Preferences : Update default carrier and check it in F
         await testContext.addContextItem(this, 'testIdentifier', `checkFinalSummary${index}`, baseContext);
 
         // Go to the first product page
-        await foHomePage.goToProductPage(page, 1);
+        await foClassicHomePage.goToProductPage(page, 1);
         // Add the product to the cart
         await foProductPage.addProductToTheCart(page);
         // Proceed to checkout the shopping cart

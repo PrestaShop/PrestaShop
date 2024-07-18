@@ -4,15 +4,13 @@ import testContext from '@utils/testContext';
 // Import common tests
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
-// Import pages
-import homePage from '@pages/FO/hummingbird/home';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataCategories,
   FakerCategory,
   foHummingbirdCategoryPage,
+  foHummingbirdHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -39,9 +37,9 @@ describe('FO - Menu and Navigation : Side block categories', async () => {
     it('should go to FO home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
-      await homePage.goToFo(page);
+      await foHummingbirdHomePage.goToFo(page);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
@@ -61,9 +59,9 @@ describe('FO - Menu and Navigation : Side block categories', async () => {
       it(`should click on category '${arg.parent.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToCategory${index}`, baseContext);
 
-        await homePage.goToCategory(page, arg.parent.id);
+        await foHummingbirdHomePage.goToCategory(page, arg.parent.id);
 
-        const pageTitle = await homePage.getPageTitle(page);
+        const pageTitle = await foHummingbirdHomePage.getPageTitle(page);
         expect(pageTitle).to.equal(arg.parent.name);
       });
 
@@ -85,7 +83,7 @@ describe('FO - Menu and Navigation : Side block categories', async () => {
 
           await foHummingbirdCategoryPage.clickBlockCategory(page, arg.child!.name);
 
-          const pageTitle = await homePage.getPageTitle(page);
+          const pageTitle = await foHummingbirdHomePage.getPageTitle(page);
           expect(pageTitle).to.equal(arg.child!.name);
         });
       }

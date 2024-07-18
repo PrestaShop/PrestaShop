@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import {cartPage} from '@pages/FO/classic/cart';
-import {homePage} from '@pages/FO/classic/home';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {vouchersPage as foVouchersPage} from '@pages/FO/classic/myAccount/vouchers';
@@ -20,6 +19,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerCartRule,
+  foClassicHomePage,
   foClassicMyAccountPage,
   utilsDate,
   utilsPlaywright,
@@ -112,16 +112,16 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
 
         // View my shop and init pages
         page = await addCartRulePage.viewMyShop(page);
-        await homePage.changeLanguage(page, 'en');
+        await foClassicHomePage.changeLanguage(page, 'en');
 
-        const isHomePage = await homePage.isHomePage(page);
+        const isHomePage = await foClassicHomePage.isHomePage(page);
         expect(isHomePage, 'Fail to open FO home page').to.eq(true);
       });
 
       it('should go to the first product page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFirstProductPage1', baseContext);
 
-        await homePage.goToProductPage(page, 1);
+        await foClassicHomePage.goToProductPage(page, 1);
 
         const pageTitle = await foProductPage.getPageTitle(page);
         expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
@@ -197,7 +197,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
       it('should go to vouchers page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFOVouchersPage', baseContext);
 
-        await homePage.goToMyAccountPage(page);
+        await foClassicHomePage.goToMyAccountPage(page);
         await foClassicMyAccountPage.goToVouchersPage(page);
 
         const pageHeaderTitle = await foVouchersPage.getPageTitle(page);
@@ -236,7 +236,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo1', baseContext);
 
         // Close tab and init other page objects with new current tab
-        page = await homePage.closePage(browserContext, page, 0);
+        page = await foClassicHomePage.closePage(browserContext, page, 0);
 
         await cartRulesPage.reloadPage(page);
 
@@ -320,16 +320,16 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
 
         // View my shop and init pages
         page = await addCartRulePage.viewMyShop(page);
-        await homePage.changeLanguage(page, 'en');
+        await foClassicHomePage.changeLanguage(page, 'en');
 
-        const isHomePage = await homePage.isHomePage(page);
+        const isHomePage = await foClassicHomePage.isHomePage(page);
         expect(isHomePage, 'Fail to open FO home page').to.eq(true);
       });
 
       it('should go to the first product page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFirstProductPage2', baseContext);
 
-        await homePage.goToProductPage(page, 1);
+        await foClassicHomePage.goToProductPage(page, 1);
 
         const pageTitle = await foProductPage.getPageTitle(page);
         expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
@@ -396,7 +396,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
       it('should go to vouchers page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFOVouchersPage2', baseContext);
 
-        await homePage.goToMyAccountPage(page);
+        await foClassicHomePage.goToMyAccountPage(page);
         await foClassicMyAccountPage.goToVouchersPage(page);
 
         const pageHeaderTitle = await foVouchersPage.getPageTitle(page);
@@ -416,7 +416,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo2', baseContext);
 
         // Close tab and init other page objects with new current tab
-        page = await homePage.closePage(browserContext, page, 0);
+        page = await foClassicHomePage.closePage(browserContext, page, 0);
 
         await cartRulesPage.reloadPage(page);
 

@@ -7,7 +7,6 @@ import createAccountTest from '@commonTests/FO/hummingbird/account';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
-import foHomePage from '@pages/FO/hummingbird/home';
 import foProductPage from '@pages/FO/hummingbird/product';
 import cartPage from '@pages/FO/hummingbird/cart';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
@@ -16,6 +15,7 @@ import {
   dataProducts,
   FakerAddress,
   FakerCustomer,
+  foHummingbirdHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -82,17 +82,17 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
     it('should open the FO page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
-      await foHomePage.goToFo(page);
-      await foHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.goToFo(page);
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foHomePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to first product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
 
-      await foHomePage.goToProductPage(page, 1);
+      await foHummingbirdHomePage.goToProductPage(page, 1);
 
       const pageTitle = await foProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_1.name);

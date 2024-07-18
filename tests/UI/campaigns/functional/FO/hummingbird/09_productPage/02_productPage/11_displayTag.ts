@@ -13,7 +13,6 @@ import optionsTab from '@pages/BO/catalog/products/add/optionsTab';
 
 // Import FO pages
 import productPage from '@pages/FO/hummingbird/product';
-import homePage from '@pages/FO/hummingbird/home';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -21,6 +20,7 @@ import {
   boDashboardPage,
   FakerProduct,
   foHummingbirdCategoryPage,
+  foHummingbirdHomePage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -149,14 +149,14 @@ describe('FO - Product page - Product page : Display tag products', async () => 
       page = await createProductPage.viewMyShop(page);
       await productPage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
     it('should go to all products page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAllProductsPage', baseContext);
 
-      await homePage.goToAllProductsPage(page);
+      await foHummingbirdHomePage.goToAllProductsPage(page);
 
       const isCategoryPageVisible = await foHummingbirdCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);

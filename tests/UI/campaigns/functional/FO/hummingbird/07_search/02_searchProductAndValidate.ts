@@ -5,13 +5,13 @@ import testContext from '@utils/testContext';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
-import homePage from '@pages/FO/hummingbird/home';
 import productPage from '@pages/FO/hummingbird/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foHummingbirdHomePage,
   foHummingbirdSearchResultsPage,
   utilsCore,
   utilsPlaywright,
@@ -52,9 +52,9 @@ describe('FO - Search Page : Search product and validate', async () => {
     it('should go to FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
-      await homePage.goToFo(page);
+      await foHummingbirdHomePage.goToFo(page);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
@@ -64,10 +64,10 @@ describe('FO - Search Page : Search product and validate', async () => {
       const searchValue: string = dataProducts.demo_8.name;
       const numSearchResults: number = 3;
 
-      const numResults = await homePage.countAutocompleteSearchResult(page, searchValue);
+      const numResults = await foHummingbirdHomePage.countAutocompleteSearchResult(page, searchValue);
       expect(numResults).equal(numSearchResults);
 
-      const results = await homePage.getAutocompleteSearchResult(page, searchValue);
+      const results = await foHummingbirdHomePage.getAutocompleteSearchResult(page, searchValue);
 
       const occurrence = await utilsCore.searchOccurrence(results, 'notebook');
       expect(occurrence).to.equal(numSearchResults);
@@ -76,7 +76,7 @@ describe('FO - Search Page : Search product and validate', async () => {
     it('should go to the first product in the list and check the product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFirstProductInList', baseContext);
 
-      await homePage.clickAutocompleteSearchResult(page, 1);
+      await foHummingbirdHomePage.clickAutocompleteSearchResult(page, 1);
 
       const pageTitle = await productPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_8.name);
@@ -87,14 +87,14 @@ describe('FO - Search Page : Search product and validate', async () => {
 
       await productPage.goToHomePage(page);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
     it('should search for the product and click on enter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchProduct2', baseContext);
 
-      await homePage.searchProduct(page, dataProducts.demo_8.name);
+      await foHummingbirdHomePage.searchProduct(page, dataProducts.demo_8.name);
 
       const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
       expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);

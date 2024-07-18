@@ -1,14 +1,12 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import FO pages
-import {homePage} from '@pages/FO/classic/home';
-
 import {expect} from 'chai';
 import {BrowserContext, Page} from 'playwright';
 import {
   dataCategories,
   foClassicCategoryPage,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -40,16 +38,16 @@ describe('FO - Catalog : Filter Products by categories in Home page', async () =
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-      await homePage.goTo(page, global.FO.URL);
+      await foClassicHomePage.goTo(page, global.FO.URL);
 
-      const result = await homePage.isHomePage(page);
+      const result = await foClassicHomePage.isHomePage(page);
       expect(result).to.eq(true);
     });
 
     it('should check and get the products number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts', baseContext);
 
-      await homePage.goToAllProductsPage(page);
+      await foClassicHomePage.goToAllProductsPage(page);
 
       allProductsNumber = await foClassicCategoryPage.getProductsNumber(page);
       expect(allProductsNumber).to.be.above(0);

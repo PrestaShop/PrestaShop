@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
@@ -13,6 +12,7 @@ import {
   dataProducts,
   FakerAddress,
   FakerCustomer,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -53,17 +53,17 @@ describe('FO - Checkout - Addresses: Use different invoice address', async () =>
   it('should go to FO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
-    await homePage.goToFo(page);
-    await homePage.changeLanguage(page, 'en');
+    await foClassicHomePage.goToFo(page);
+    await foClassicHomePage.changeLanguage(page, 'en');
 
-    const isHomePage = await homePage.isHomePage(page);
+    const isHomePage = await foClassicHomePage.isHomePage(page);
     expect(isHomePage, 'Fail to open FO home page').to.equal(true);
   });
 
   it('should go to fourth product page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
 
-    await homePage.goToProductPage(page, 4);
+    await foClassicHomePage.goToProductPage(page, 4);
 
     const pageTitle = await productPage.getPageTitle(page);
     expect(pageTitle).to.contains(dataProducts.demo_5.name);

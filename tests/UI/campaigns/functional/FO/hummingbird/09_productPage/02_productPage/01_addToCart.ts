@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
-import homePage from '@pages/FO/hummingbird/home';
 import cartPage from '@pages/FO/hummingbird/cart';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 import productPage from '@pages/FO/hummingbird/product';
@@ -14,6 +13,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foHummingbirdHomePage,
   foHummingbirdModalQuickViewPage,
   foHummingbirdSearchResultsPage,
   utilsPlaywright,
@@ -46,16 +46,16 @@ describe('FO - Product page - Product page : Add to cart', async () => {
     it('should go to FO home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount', baseContext);
 
-      await homePage.goToFo(page);
+      await foHummingbirdHomePage.goToFo(page);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it(`should search the product "${dataProducts.demo_12.name}"`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchDemo12', baseContext);
 
-      await homePage.searchProduct(page, dataProducts.demo_12.name);
+      await foHummingbirdHomePage.searchProduct(page, dataProducts.demo_12.name);
 
       const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
       expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
@@ -92,14 +92,14 @@ describe('FO - Product page - Product page : Add to cart', async () => {
 
       await productPage.goToHomePage(page);
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should add product to cart by quick view', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCartByQuickView', baseContext);
 
-      await homePage.quickViewProduct(page, 1);
+      await foHummingbirdHomePage.quickViewProduct(page, 1);
       await foHummingbirdModalQuickViewPage.setQuantity(page, qtyQuickView);
       await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
 
@@ -118,7 +118,7 @@ describe('FO - Product page - Product page : Add to cart', async () => {
     it('should add product to cart by quick add', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCartByQuickAdd', baseContext);
 
-      await homePage.addProductToCart(page, 1);
+      await foHummingbirdHomePage.addProductToCart(page, 1);
 
       const productDetails = await blockCartModal.getProductDetailsFromBlockCartModal(page);
       expect(productDetails.quantity).to.be.equal(qtyQuickView + qtyQuickAdd);

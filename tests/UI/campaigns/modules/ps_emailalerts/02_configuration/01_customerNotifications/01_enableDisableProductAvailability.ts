@@ -18,7 +18,6 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import stocksPage from '@pages/BO/catalog/stocks';
 // Import FO pages
-import {homePage} from '@pages/FO/classic/home';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
@@ -32,6 +31,7 @@ import {
   dataOrderStatuses,
   dataPaymentMethods,
   FakerProduct,
+  foClassicHomePage,
   foClassicLoginPage,
   foClassicSearchResultsPage,
   type MailDev,
@@ -147,16 +147,16 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
       await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
       page = await psEmailAlerts.viewMyShop(page);
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should search the product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchProduct', baseContext);
 
-      await homePage.searchProduct(page, productData.name);
+      await foClassicHomePage.searchProduct(page, productData.name);
 
       const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
       expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
@@ -417,7 +417,7 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
 
       await orderConfirmationPage.goToHomePage(page);
 
-      await homePage.searchProduct(page, productData.name);
+      await foClassicHomePage.searchProduct(page, productData.name);
       await foClassicSearchResultsPage.goToProductPage(page, 1);
 
       const pageTitle = await foProductPage.getPageTitle(page);

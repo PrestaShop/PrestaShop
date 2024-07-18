@@ -11,7 +11,6 @@ import addProductPage from '@pages/BO/catalog/products/add';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
-import {homePage} from '@pages/FO/classic/home';
 import {productPage} from '@pages/FO/classic/product';
 
 import {expect} from 'chai';
@@ -20,6 +19,7 @@ import {
   boDashboardPage,
   dataProducts,
   FakerProduct,
+  foClassicHomePage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -100,16 +100,16 @@ describe('FO - Navigation and display : Display tags', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'openShopPage', baseContext);
 
-      await homePage.goTo(page, global.FO.URL);
+      await foClassicHomePage.goTo(page, global.FO.URL);
 
-      const result = await homePage.isHomePage(page);
+      const result = await foClassicHomePage.isHomePage(page);
       expect(result).to.eq(true);
     });
 
     it(`should search for the product '${dataProducts.demo_6.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchProductDemo6', baseContext);
 
-      await homePage.searchProduct(page, dataProducts.demo_6.name);
+      await foClassicHomePage.searchProduct(page, dataProducts.demo_6.name);
 
       const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
       expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
@@ -162,16 +162,16 @@ describe('FO - Navigation and display : Display tags', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO1', baseContext);
 
-      await homePage.goTo(page, global.FO.URL);
+      await foClassicHomePage.goTo(page, global.FO.URL);
 
-      const result = await homePage.isHomePage(page);
+      const result = await foClassicHomePage.isHomePage(page);
       expect(result).to.eq(true);
     });
 
     it(`should search for the product '${dataProducts.demo_6.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchProductDemo6_2', baseContext);
 
-      await homePage.searchProduct(page, dataProducts.demo_6.name);
+      await foClassicHomePage.searchProduct(page, dataProducts.demo_6.name);
 
       const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
       expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
@@ -270,7 +270,7 @@ describe('FO - Navigation and display : Display tags', async () => {
     it('should go back BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
 
-      page = await homePage.closePage(browserContext, page, 0);
+      page = await foClassicHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await addProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(addProductPage.pageTitle);
@@ -341,7 +341,7 @@ describe('FO - Navigation and display : Display tags', async () => {
     it('should go back BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO3', baseContext);
 
-      page = await homePage.closePage(browserContext, page, 0);
+      page = await foClassicHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await addProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(addProductPage.pageTitle);
@@ -381,7 +381,7 @@ describe('FO - Navigation and display : Display tags', async () => {
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO4', baseContext);
 
-      page = await homePage.closePage(browserContext, page, 0);
+      page = await foClassicHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await addProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(addProductPage.pageTitle);

@@ -19,7 +19,6 @@ import movementsPage from '@pages/BO/catalog/stocks/movements';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
-import {homePage} from '@pages/FO/classic/home';
 import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 import {
@@ -31,6 +30,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerEmployee,
+  foClassicHomePage,
   type ProductCombinationBulk,
   utilsDate,
   utilsPlaywright,
@@ -143,17 +143,17 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
         await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
         page = await movementsPage.viewMyShop(page);
-        await homePage.changeLanguage(page, 'en');
+        await foClassicHomePage.changeLanguage(page, 'en');
 
-        const pageTitle = await homePage.getPageTitle(page);
-        expect(pageTitle).to.contains(homePage.pageTitle);
+        const pageTitle = await foClassicHomePage.getPageTitle(page);
+        expect(pageTitle).to.contains(foClassicHomePage.pageTitle);
       });
 
       it('should go to the first product', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFirstProduct', baseContext);
 
         // Go to the first product page
-        await homePage.goToProductPage(page, 1);
+        await foClassicHomePage.goToProductPage(page, 1);
 
         const pageTitle = await foProductPage.getPageTitle(page);
         expect(pageTitle).to.contains(dataProducts.demo_1.name);

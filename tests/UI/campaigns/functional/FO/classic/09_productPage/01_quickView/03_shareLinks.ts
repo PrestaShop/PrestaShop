@@ -1,12 +1,10 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import pages
-import {homePage} from '@pages/FO/classic/home';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  foClassicHomePage,
   foClassicModalQuickViewPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -36,16 +34,16 @@ describe('FO - Product page - Quick view : Share links', async () => {
   it('should go to FO home page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
-    await homePage.goToFo(page);
+    await foClassicHomePage.goToFo(page);
 
-    const isHomePage = await homePage.isHomePage(page);
+    const isHomePage = await foClassicHomePage.isHomePage(page);
     expect(isHomePage).to.eq(true);
   });
 
   it('should quick view the third product', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'quickView', baseContext);
 
-    await homePage.quickViewProduct(page, 3);
+    await foClassicHomePage.quickViewProduct(page, 3);
 
     const isModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
     expect(isModalVisible).to.eq(true);
