@@ -11,7 +11,6 @@ import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 // Import FO pages
-import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 
 import {expect} from 'chai';
@@ -20,6 +19,7 @@ import {
   boDashboardPage,
   boProductsPage,
   FakerProduct,
+  foClassicProductPage,
   type ProductAttribute,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -201,8 +201,8 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
       await testContext.addContextItem(this, 'testIdentifier', 'previewProductAndCheckPriceATI', baseContext);
 
       page = await addProductPage.previewProduct(page);
-      await foProductPage.addProductToTheCart(page, 1, firstAttributeToChoose, false);
-      await foProductPage.addProductToTheCart(page, 1, secondAttributeToChoose, true);
+      await foClassicProductPage.addProductToTheCart(page, 1, firstAttributeToChoose, false);
+      await foClassicProductPage.addProductToTheCart(page, 1, secondAttributeToChoose, true);
 
       const priceATI = await cartPage.getATIPrice(page);
       expect(priceATI).to.equal(firstCartTotalATI);
@@ -234,7 +234,7 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
       await testContext.addContextItem(this, 'testIdentifier', 'ViewMyShopAndCheckPriceATI', baseContext);
 
       page = await productSettingsPage.viewMyShop(page);
-      await foProductPage.goToCartPage(page);
+      await foClassicProductPage.goToCartPage(page);
 
       const priceATI = await cartPage.getATIPrice(page);
       expect(priceATI).to.equal(secondCartTotalATI);

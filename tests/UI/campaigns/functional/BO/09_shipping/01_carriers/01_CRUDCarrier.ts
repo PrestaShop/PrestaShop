@@ -10,7 +10,6 @@ import carriersPage from '@pages/BO/shipping/carriers';
 import addCarrierPage from '@pages/BO/shipping/carriers/add';
 // Import FO pages
 import {checkoutPage} from '@pages/FO/classic/checkout';
-import {productPage} from '@pages/FO/classic/product';
 
 import {
   dataCustomers,
@@ -21,6 +20,7 @@ import {
   foClassicCheckoutPage,
   foClassicHomePage,
   foClassicLoginPage,
+  foClassicProductPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -243,7 +243,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       // Go to the first product page
       await foClassicHomePage.goToProductPage(page, 1);
       // Add the created product to the cart
-      await productPage.addProductToTheCart(page);
+      await foClassicProductPage.addProductToTheCart(page);
       // Proceed to checkout the shopping cart
       await foClassicCartPage.clickOnProceedToCheckout(page);
 
@@ -376,7 +376,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       // Go to the first product page
       await foClassicHomePage.goToProductPage(page, 1);
       // Add the created product to the cart
-      await productPage.addProductToTheCart(page);
+      await foClassicProductPage.addProductToTheCart(page);
       // Proceed to checkout the shopping cart
       await foClassicCartPage.clickOnProceedToCheckout(page);
 

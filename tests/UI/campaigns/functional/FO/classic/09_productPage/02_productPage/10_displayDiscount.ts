@@ -9,9 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import createProductPage from '@pages/BO/catalog/products/add';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 
-// Import FO pages
-import {productPage as foProductPage} from '@pages/FO/classic/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
@@ -20,6 +17,7 @@ import {
   FakerProduct,
   foClassicCategoryPage,
   foClassicHomePage,
+  foClassicProductPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -150,7 +148,7 @@ describe('FO - Product page - Product page : Display discount', async () => {
 
       // Click on preview button
       page = await createProductPage.viewMyShop(page);
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
       const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Home page is not displayed').to.eq(true);
@@ -187,14 +185,14 @@ describe('FO - Product page - Product page : Display discount', async () => {
 
       await foClassicCategoryPage.goToProductPage(page, productsNumber - 12);
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check the tag \'New, -€2.00\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkFlag', baseContext);
 
-      const flagText = await foProductPage.getProductTag(page);
+      const flagText = await foClassicProductPage.getProductTag(page);
       expect(flagText).to.contains('-€2.00')
         .and.to.contain('New');
     });
@@ -202,13 +200,13 @@ describe('FO - Product page - Product page : Display discount', async () => {
     it('should check the product price before and after the discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductPrice', baseContext);
 
-      const discountValue = await foProductPage.getDiscountAmount(page);
+      const discountValue = await foClassicProductPage.getDiscountAmount(page);
       expect(discountValue).to.equal('Save €2.00');
 
-      const finalPrice = await foProductPage.getProductPrice(page);
+      const finalPrice = await foClassicProductPage.getProductPrice(page);
       expect(finalPrice).to.equal('€22.00');
 
-      const regularPrice = await foProductPage.getRegularPrice(page);
+      const regularPrice = await foClassicProductPage.getRegularPrice(page);
       expect(regularPrice).to.equal('€24.00');
     });
   });

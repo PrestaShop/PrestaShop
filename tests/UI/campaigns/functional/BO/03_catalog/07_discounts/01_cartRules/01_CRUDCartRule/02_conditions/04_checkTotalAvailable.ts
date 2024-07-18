@@ -13,7 +13,6 @@ import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
-import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 import {
   boDashboardPage,
@@ -22,6 +21,7 @@ import {
   dataProducts,
   FakerCartRule,
   foClassicHomePage,
+  foClassicProductPage,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -119,14 +119,14 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
 
         await foClassicHomePage.goToProductPage(page, 1);
 
-        const pageTitle = await foProductPage.getPageTitle(page);
+        const pageTitle = await foClassicProductPage.getPageTitle(page);
         expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
       });
 
       it('should add product to cart and proceed to checkout', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `addProductToCart${index}`, baseContext);
 
-        await foProductPage.addProductToTheCart(page);
+        await foClassicProductPage.addProductToTheCart(page);
 
         const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
         expect(notificationsNumber).to.be.equal(1);

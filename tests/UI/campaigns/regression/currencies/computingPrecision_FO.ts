@@ -18,7 +18,6 @@ import ordersPage from '@pages/BO/orders';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
-import {productPage} from '@pages/FO/classic/product';
 
 import {
   boDashboardPage,
@@ -32,6 +31,7 @@ import {
   FakerSqlQuery,
   foClassicHomePage,
   foClassicLoginPage,
+  foClassicProductPage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -251,7 +251,7 @@ describe(
         await foClassicHomePage.searchProduct(page, orderToMake.products[0].product.name);
         await foClassicSearchResultsPage.goToProductPage(page, 1);
         // Add the created product to the cart
-        await productPage.addProductToTheCart(page, orderToMake.products[0].quantity);
+        await foClassicProductPage.addProductToTheCart(page, orderToMake.products[0].quantity);
 
         // Check cart page
         const pageTitle = await cartPage.getPageTitle(page);

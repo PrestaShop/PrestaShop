@@ -8,9 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import createProductPage from '@pages/BO/catalog/products/add';
 import seoTab from '@pages/BO/catalog/products/add/seoTab';
 
-// Import FO pages
-import {productPage as foProductPage} from '@pages/FO/classic/product';
-
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 import {
@@ -19,6 +16,7 @@ import {
   dataProducts,
   FakerProduct,
   foClassicCategoryPage,
+  foClassicProductPage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -159,9 +157,9 @@ describe('BO - Catalog - Products : Seo tab', async () => {
 
       // Click on preview button
       page = await createProductPage.previewProduct(page);
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_1.name);
     });
 
@@ -169,7 +167,7 @@ describe('BO - Catalog - Products : Seo tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
 
       // Go back to BO
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);
@@ -190,12 +188,12 @@ describe('BO - Catalog - Products : Seo tab', async () => {
 
       // Click on preview button
       page = await createProductPage.previewProduct(page);
-      const currentUrl = await foProductPage.getCurrentURL(page);
+      const currentUrl = await foClassicProductPage.getCurrentURL(page);
       const newUrl = currentUrl.split('token');
-      await foProductPage.goTo(page, newUrl[0]);
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.goTo(page, newUrl[0]);
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains('Home Accessories');
     });
 
@@ -203,7 +201,7 @@ describe('BO - Catalog - Products : Seo tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
       // Go back to BO
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);
@@ -232,16 +230,16 @@ describe('BO - Catalog - Products : Seo tab', async () => {
 
       // Click on preview button
       page = await createProductPage.previewProduct(page);
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_1.name);
     });
 
     it('should search the new tag \'welcome\' from the search bar', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchTag', baseContext);
 
-      await foProductPage.searchProduct(page, 'welcome');
+      await foClassicProductPage.searchProduct(page, 'welcome');
 
       const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
       await expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
@@ -254,7 +252,7 @@ describe('BO - Catalog - Products : Seo tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO3', baseContext);
 
       // Go back to BO
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);

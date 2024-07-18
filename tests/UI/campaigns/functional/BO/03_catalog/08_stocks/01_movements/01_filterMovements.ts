@@ -18,7 +18,6 @@ import movementsPage from '@pages/BO/catalog/stocks/movements';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
-import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 import {
   boDashboardPage,
@@ -31,6 +30,7 @@ import {
   dataProducts,
   FakerEmployee,
   foClassicHomePage,
+  foClassicProductPage,
   type ProductCombinationBulk,
   utilsDate,
   utilsPlaywright,
@@ -155,7 +155,7 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
         // Go to the first product page
         await foClassicHomePage.goToProductPage(page, 1);
 
-        const pageTitle = await foProductPage.getPageTitle(page);
+        const pageTitle = await foClassicProductPage.getPageTitle(page);
         expect(pageTitle).to.contains(dataProducts.demo_1.name);
       });
 
@@ -163,7 +163,7 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
         await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
         // Add the created product to the cart
-        await foProductPage.addProductToTheCart(page);
+        await foClassicProductPage.addProductToTheCart(page);
 
         const pageTitle = await cartPage.getPageTitle(page);
         expect(pageTitle).to.equal(cartPage.pageTitle);

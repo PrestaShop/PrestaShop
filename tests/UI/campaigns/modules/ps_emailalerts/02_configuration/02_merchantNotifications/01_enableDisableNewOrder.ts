@@ -11,7 +11,6 @@ import ordersPage from '@pages/BO/orders';
 import emailAlertsPage from '@pages/BO/modules/psEmailAlerts';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
-import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
@@ -26,6 +25,7 @@ import {
   FakerOrder,
   foClassicHomePage,
   foClassicLoginPage,
+  foClassicProductPage,
   type MailDev,
   type MailDevEmail,
   utilsMail,
@@ -167,7 +167,7 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
       await foClassicLoginPage.goToHomePage(page);
       await foClassicHomePage.goToProductPage(page, orderData.products[0].product.id);
       // Add the product to the cart
-      await productPage.addProductToTheCart(page, orderData.products[0].quantity);
+      await foClassicProductPage.addProductToTheCart(page, orderData.products[0].quantity);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(orderData.products[0].quantity);
@@ -328,7 +328,7 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
       // Go to the first product page
       await foClassicHomePage.goToProductPage(page, orderData.products[0].product.id);
       // Add the product to the cart
-      await productPage.addProductToTheCart(page, orderData.products[0].quantity);
+      await foClassicProductPage.addProductToTheCart(page, orderData.products[0].quantity);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(orderData.products[0].quantity);

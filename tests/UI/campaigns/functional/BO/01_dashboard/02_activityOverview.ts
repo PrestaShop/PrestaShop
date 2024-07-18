@@ -15,7 +15,6 @@ import newsletterSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
 import customersPage from '@pages/BO/customers';
 
 // Import FO pages
-import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
@@ -44,6 +43,7 @@ import {
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
+  foClassicProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -156,7 +156,7 @@ describe('BO - Dashboard : Activity overview', async () => {
         // Go to the first product page
         await foClassicHomePage.goToProductPage(page, 1);
         // Add the product to the cart
-        await productPage.addProductToTheCart(page);
+        await foClassicProductPage.addProductToTheCart(page);
 
         const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
         expect(notificationsNumber).to.be.equal(1);

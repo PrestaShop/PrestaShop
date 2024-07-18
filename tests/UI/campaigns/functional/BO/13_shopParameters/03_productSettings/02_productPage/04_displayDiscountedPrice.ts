@@ -10,8 +10,6 @@ import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import catalogPriceRulesPage from '@pages/BO/catalog/discounts/catalogPriceRules';
 import addCatalogPriceRulePage from '@pages/BO/catalog/discounts/catalogPriceRules/add';
-// Import FO pages
-import {productPage} from '@pages/FO/classic/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -20,6 +18,7 @@ import {
   dataProducts,
   FakerCatalogPriceRule,
   foClassicHomePage,
+  foClassicProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -149,24 +148,24 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable display disco
 
       await foClassicHomePage.goToProductPage(page, 1);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
     });
 
     it('should check the existence of the unit value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkUnitValue${index}`, baseContext);
 
-      const columnTitle = await productPage.getDiscountColumnTitle(page);
+      const columnTitle = await foClassicProductPage.getDiscountColumnTitle(page);
       expect(columnTitle).to.equal(test.args.textColumnToCheck);
 
-      const columnValue = await productPage.getDiscountValue(page);
+      const columnValue = await foClassicProductPage.getDiscountValue(page);
       expect(columnValue).to.equal(test.args.valueToCheck);
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
-      page = await productPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await productSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(productSettingsPage.pageTitle);

@@ -3,7 +3,6 @@ import testContext from '@utils/testContext';
 
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
-import {productPage} from '@pages/FO/classic/product';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {expect} from 'chai';
@@ -11,6 +10,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
   foClassicHomePage,
+  foClassicProductPage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -55,16 +55,16 @@ describe('FO - cart : Display modal of product customization', async () => {
 
     await foClassicSearchResultsPage.goToProductPage(page, 1);
 
-    const pageTitle = await productPage.getPageTitle(page);
+    const pageTitle = await foClassicProductPage.getPageTitle(page);
     expect(pageTitle).to.contains(dataProducts.demo_14.name);
   });
 
   it('should add custom text and add the product to cart', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-    await productPage.setProductCustomizations(page, [customText]);
+    await foClassicProductPage.setProductCustomizations(page, [customText]);
 
-    await productPage.clickOnAddToCartButton(page);
+    await foClassicProductPage.clickOnAddToCartButton(page);
 
     const isBlockCartModal = await blockCartModal.isBlockCartModalVisible(page);
     expect(isBlockCartModal).to.equal(true);
@@ -83,7 +83,7 @@ describe('FO - cart : Display modal of product customization', async () => {
   it('should go to the cart page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCartPage', baseContext);
 
-    await productPage.goToCartPage(page);
+    await foClassicProductPage.goToCartPage(page);
 
     const pageTitle = await cartPage.getPageTitle(page);
     expect(pageTitle).to.equal(cartPage.pageTitle);

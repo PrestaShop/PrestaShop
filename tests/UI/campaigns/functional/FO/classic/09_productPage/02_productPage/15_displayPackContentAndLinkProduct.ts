@@ -1,14 +1,12 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import FO pages
-import {productPage as foProductPage} from '@pages/FO/classic/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
   foClassicHomePage,
+  foClassicProductPage,
   foClassicSearchResultsPage,
   utilsCore,
   utilsPlaywright,
@@ -59,14 +57,14 @@ describe('FO - Product Page : Display pack content and link to product', async (
 
     await foClassicSearchResultsPage.goToProductPage(page, 1);
 
-    const pageTitle = await foProductPage.getPageTitle(page);
+    const pageTitle = await foClassicProductPage.getPageTitle(page);
     expect(pageTitle).to.contains(dataProducts.demo_21.name);
   });
 
   it('should check product information', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation', baseContext);
 
-    const product1 = await foProductPage.getProductInPackList(page, 1);
+    const product1 = await foClassicProductPage.getProductInPackList(page, 1);
     await Promise.all([
       expect(product1.name).to.equals(
         `${dataProducts.demo_7.name} `
@@ -76,7 +74,7 @@ describe('FO - Product Page : Display pack content and link to product', async (
       expect(product1.quantity).to.equals(5),
     ]);
 
-    const product2 = await foProductPage.getProductInPackList(page, 2);
+    const product2 = await foClassicProductPage.getProductInPackList(page, 2);
     await Promise.all([
       expect(product2.name).to.equals(dataProducts.demo_12.name),
       expect(product2.price).to.equals(`€${dataProducts.demo_12.price.toFixed(2)}`),
@@ -87,9 +85,9 @@ describe('FO - Product Page : Display pack content and link to product', async (
   it('should click on the first product of the pack', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'clickPackProduct', baseContext);
 
-    await foProductPage.clickProductInPackList(page, 1);
+    await foClassicProductPage.clickProductInPackList(page, 1);
 
-    const pageTitle = await foProductPage.getPageTitle(page);
+    const pageTitle = await foClassicProductPage.getPageTitle(page);
     expect(pageTitle).to.contains(dataProducts.demo_7.name);
   });
 });

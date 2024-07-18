@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import {cartPage} from '@pages/FO/classic/cart';
-import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -17,6 +16,7 @@ import {
   dataProducts,
   FakerCartRule,
   foClassicHomePage,
+  foClassicProductPage,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -109,14 +109,14 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with disabled status', asyn
 
       await foClassicHomePage.goToProductPage(page, 1);
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
     });
 
     it('should add product to cart and proceed to checkout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await foProductPage.addProductToTheCart(page);
+      await foClassicProductPage.addProductToTheCart(page);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(1);

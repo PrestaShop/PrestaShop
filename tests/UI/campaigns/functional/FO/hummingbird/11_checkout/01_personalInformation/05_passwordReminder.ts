@@ -8,7 +8,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 import createAccountTest from '@commonTests/FO/hummingbird/account';
 
 // Import pages
-import productPage from '@pages/FO/hummingbird/product';
 import cartPage from '@pages/FO/hummingbird/cart';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 import passwordReminderPage from '@pages/FO/hummingbird/passwordReminder';
@@ -17,6 +16,7 @@ import {
   FakerCustomer,
   foHummingbirdHomePage,
   foHummingbirdMyAccountPage,
+  foHummingbirdProductPage,
   type MailDev,
   type MailDevEmail,
   utilsMail,
@@ -99,7 +99,7 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       await foHummingbirdHomePage.goToProductPage(page, 1);
-      await productPage.addProductToTheCart(page, 1);
+      await foHummingbirdProductPage.addProductToTheCart(page, 1);
 
       const pageTitle = await cartPage.getPageTitle(page);
       expect(pageTitle).to.equal(cartPage.pageTitle);
@@ -186,7 +186,7 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart2', baseContext);
 
       await foHummingbirdHomePage.goToProductPage(page, 1);
-      await productPage.addProductToTheCart(page, 1);
+      await foHummingbirdProductPage.addProductToTheCart(page, 1);
 
       const pageTitle = await cartPage.getPageTitle(page);
       expect(pageTitle).to.equal(cartPage.pageTitle);

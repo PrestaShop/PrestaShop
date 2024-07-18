@@ -11,7 +11,6 @@ import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 // Import FO pages
-import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
@@ -23,6 +22,7 @@ import {
   dataTaxes,
   foClassicHomePage,
   foClassicLoginPage,
+  foClassicProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -184,7 +184,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
 
           // Go to the fourth product page
           await foClassicHomePage.goToProductPage(page, 4);
-          await productPage.addProductToTheCart(page);
+          await foClassicProductPage.addProductToTheCart(page);
 
           const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
           expect(notificationsNumber).to.be.equal(1);

@@ -11,7 +11,6 @@ import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
-import {productPage} from '@pages/FO/classic/product';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
@@ -22,6 +21,7 @@ import {
   foClassicHomePage,
   foClassicLoginPage,
   foClassicModalQuickViewPage,
+  foClassicProductPage,
   foClassicSearchResultsPage,
   utilsCore,
   utilsPlaywright,
@@ -137,15 +137,15 @@ describe('BO - Catalog - Cart rules : Product selection', async () => {
       await foClassicHomePage.searchProduct(page, dataProducts.demo_8.name);
       await foClassicSearchResultsPage.goToProductPage(page, 1);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_8.name);
     });
 
     it('should add the product to cart and click on continue shopping', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await productPage.addProductToTheCart(page, 1, undefined, false);
-      await productPage.goToHomePage(page);
+      await foClassicProductPage.addProductToTheCart(page, 1, undefined, false);
+      await foClassicProductPage.goToHomePage(page);
 
       const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);

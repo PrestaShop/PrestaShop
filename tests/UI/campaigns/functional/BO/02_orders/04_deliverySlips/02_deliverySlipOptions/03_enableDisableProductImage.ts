@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
-import {productPage} from '@pages/FO/classic/product';
 
 // Import BO pages
 import deliverySlipsPage from '@pages/BO/orders/deliverySlips';
@@ -22,6 +21,7 @@ import {
   dataPaymentMethods,
   foClassicHomePage,
   foClassicLoginPage,
+  foClassicProductPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -143,7 +143,7 @@ describe('BO - Orders - Delivery slips : Enable/Disable product image', async ()
           // Go to the first product page
           await foClassicHomePage.goToProductPage(page, 1);
           // Add the product to the cart
-          await productPage.addProductToTheCart(page);
+          await foClassicProductPage.addProductToTheCart(page);
 
           const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
           expect(notificationsNumber).to.be.equal(1);

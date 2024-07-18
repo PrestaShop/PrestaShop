@@ -7,7 +7,6 @@ import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advanced
 import {createAccountTest} from '@commonTests/FO/classic/account';
 
 // Import pages
-import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {passwordReminderPage} from '@pages/FO/classic/passwordReminder';
@@ -16,6 +15,7 @@ import {
   FakerCustomer,
   foClassicHomePage,
   foClassicMyAccountPage,
+  foClassicProductPage,
   type MailDev,
   type MailDevEmail,
   utilsMail,
@@ -95,7 +95,7 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       await foClassicHomePage.goToProductPage(page, 1);
-      await productPage.addProductToTheCart(page, 1);
+      await foClassicProductPage.addProductToTheCart(page, 1);
 
       const pageTitle = await cartPage.getPageTitle(page);
       expect(pageTitle).to.equal(cartPage.pageTitle);
@@ -182,7 +182,7 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart2', baseContext);
 
       await foClassicHomePage.goToProductPage(page, 1);
-      await productPage.addProductToTheCart(page, 1);
+      await foClassicProductPage.addProductToTheCart(page, 1);
 
       const pageTitle = await cartPage.getPageTitle(page);
       expect(pageTitle).to.equal(cartPage.pageTitle);

@@ -3,7 +3,6 @@ import testContext from '@utils/testContext';
 
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
-import {productPage} from '@pages/FO/classic/product';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {expect} from 'chai';
@@ -11,6 +10,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   foClassicHomePage,
   foClassicModalQuickViewPage,
+  foClassicProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -63,7 +63,7 @@ describe('FO - cart : Continue shopping / Proceed to checkout / Close', async ()
     await testContext.addContextItem(this, 'testIdentifier', 'goToSecondProductPage', baseContext);
 
     await foClassicHomePage.goToProductPage(page, 2);
-    await productPage.clickOnAddToCartButton(page);
+    await foClassicProductPage.clickOnAddToCartButton(page);
 
     const successMessage = await blockCartModal.getBlockCartModalTitle(page);
     expect(successMessage).to.contains(foClassicHomePage.successAddToCartMessage);
@@ -79,7 +79,7 @@ describe('FO - cart : Continue shopping / Proceed to checkout / Close', async ()
   it('should click on add product to cart button', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-    await productPage.clickOnAddToCartButton(page);
+    await foClassicProductPage.clickOnAddToCartButton(page);
 
     const successMessage = await blockCartModal.getBlockCartModalTitle(page);
     expect(successMessage).to.contains(foClassicHomePage.successAddToCartMessage);
@@ -95,7 +95,7 @@ describe('FO - cart : Continue shopping / Proceed to checkout / Close', async ()
   it('should click on add product to cart button', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart2', baseContext);
 
-    await productPage.clickOnAddToCartButton(page);
+    await foClassicProductPage.clickOnAddToCartButton(page);
 
     const successMessage = await blockCartModal.getBlockCartModalTitle(page);
     expect(successMessage).to.contains(foClassicHomePage.successAddToCartMessage);

@@ -5,10 +5,6 @@ import testContext from '@utils/testContext';
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-// Import FO pages
-import {productPage as foProductPage} from '@pages/FO/classic/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
@@ -19,6 +15,7 @@ import {
   FakerProduct,
   foClassicCategoryPage,
   foClassicHomePage,
+  foClassicProductPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -168,13 +165,13 @@ describe('Mail alerts module - Uninstall and install module', async () => {
 
       await foClassicCategoryPage.goToProductPage(page, nthProduct!);
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle.toUpperCase()).to.contains(productOutOfStockNotAllowed.name.toUpperCase());
 
-      const hasFlagOutOfStock = await foProductPage.hasProductFlag(page, 'out_of_stock');
+      const hasFlagOutOfStock = await foClassicProductPage.hasProductFlag(page, 'out_of_stock');
       expect(hasFlagOutOfStock).to.be.equal(true);
 
-      const hasBlockMailAlert = await foProductPage.hasBlockMailAlert(page);
+      const hasBlockMailAlert = await foClassicProductPage.hasBlockMailAlert(page);
       expect(hasBlockMailAlert).to.be.equal(false);
     });
   });
@@ -183,7 +180,7 @@ describe('Mail alerts module - Uninstall and install module', async () => {
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo', baseContext);
 
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
       await boModuleManagerPage.reloadPage(page);
 
       const pageTitle = await boModuleManagerPage.getPageTitle(page);
@@ -228,13 +225,13 @@ describe('Mail alerts module - Uninstall and install module', async () => {
       await foClassicCategoryPage.goToNextPage(page);
       await foClassicCategoryPage.goToProductPage(page, nthProduct!);
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle.toUpperCase()).to.contains(productOutOfStockNotAllowed.name.toUpperCase());
 
-      const hasFlagOutOfStock = await foProductPage.hasProductFlag(page, 'out_of_stock');
+      const hasFlagOutOfStock = await foClassicProductPage.hasProductFlag(page, 'out_of_stock');
       expect(hasFlagOutOfStock).to.be.equal(true);
 
-      const hasBlockMailAlert = await foProductPage.hasBlockMailAlert(page);
+      const hasBlockMailAlert = await foClassicProductPage.hasBlockMailAlert(page);
       expect(hasBlockMailAlert).to.be.equal(true);
     });
   });

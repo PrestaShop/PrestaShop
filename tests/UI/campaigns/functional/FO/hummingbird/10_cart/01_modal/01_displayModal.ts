@@ -6,7 +6,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 
 // Import FO pages
 import cartPage from '@pages/FO/hummingbird/cart';
-import productPage from '@pages/FO/hummingbird/product';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {expect} from 'chai';
@@ -14,6 +13,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   foHummingbirdHomePage,
   foHummingbirdModalQuickViewPage,
+  foHummingbirdProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -71,7 +71,7 @@ describe('FO - cart : Display modal when adding a product to cart', async () => 
 
       await foHummingbirdHomePage.goToProductPage(page, 2);
       // Add the product to the cart
-      await productPage.addProductToTheCart(page, 3);
+      await foHummingbirdProductPage.addProductToTheCart(page, 3);
 
       const pageTitle = await cartPage.getPageTitle(page);
       expect(pageTitle).to.equal(cartPage.pageTitle);

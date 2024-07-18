@@ -10,9 +10,6 @@ import createProductPage from '@pages/BO/catalog/products/add';
 import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 import movementsPage from '@pages/BO/catalog/stocks/movements';
 
-// Import FO pages
-import {productPage as foProductPage} from '@pages/FO/classic/product';
-
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 import {
@@ -20,6 +17,7 @@ import {
   boProductsPage,
   dataEmployees,
   FakerProduct,
+  foClassicProductPage,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -208,9 +206,9 @@ describe('BO - Catalog - Products : Stocks tab', async () => {
 
       // Click on preview button
       page = await createProductPage.previewProduct(page);
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle: string = await foProductPage.getPageTitle(page);
+      const pageTitle: string = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
@@ -218,12 +216,12 @@ describe('BO - Catalog - Products : Stocks tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart1', baseContext);
 
       // Add the product to the cart
-      await foProductPage.addProductToTheCart(page, productMinimalQuantity, [], false);
+      await foClassicProductPage.addProductToTheCart(page, productMinimalQuantity, [], false);
 
-      const notificationsNumber = await foProductPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foClassicProductPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(productMinimalQuantity);
 
-      const productAvailability = await foProductPage.getProductAvailabilityLabel(page);
+      const productAvailability = await foClassicProductPage.getProductAvailabilityLabel(page);
       expect(productAvailability).to.be.contains(productLabelWhenInStock);
     });
 
@@ -231,7 +229,7 @@ describe('BO - Catalog - Products : Stocks tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBackOffice', baseContext);
 
       // Go back to BO
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);
@@ -262,19 +260,19 @@ describe('BO - Catalog - Products : Stocks tab', async () => {
 
       // Click on preview button
       page = await createProductPage.previewProduct(page);
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle: string = await foProductPage.getPageTitle(page);
+      const pageTitle: string = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check that the Add to cart Button is disabled', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'tryAddProductToCart', baseContext);
 
-      const isAddToCartButtonEnabled = await foProductPage.isAddToCartButtonEnabled(page);
+      const isAddToCartButtonEnabled = await foClassicProductPage.isAddToCartButtonEnabled(page);
       expect(isAddToCartButtonEnabled).to.be.equal(false);
 
-      const productAvailability = await foProductPage.getProductAvailabilityLabel(page);
+      const productAvailability = await foClassicProductPage.getProductAvailabilityLabel(page);
       expect(productAvailability).to.be.contains('Out-of-Stock');
     });
 
@@ -282,7 +280,7 @@ describe('BO - Catalog - Products : Stocks tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBackOffice2', baseContext);
 
       // Go back to BO
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);
@@ -302,19 +300,19 @@ describe('BO - Catalog - Products : Stocks tab', async () => {
 
       // Click on preview button
       page = await createProductPage.previewProduct(page);
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle: string = await foProductPage.getPageTitle(page);
+      const pageTitle: string = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check that the Add to cart Button is enabled', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      const isAddToCartButtonEnabled = await foProductPage.isAddToCartButtonEnabled(page);
+      const isAddToCartButtonEnabled = await foClassicProductPage.isAddToCartButtonEnabled(page);
       expect(isAddToCartButtonEnabled).to.be.equal(true);
 
-      const productAvailability = await foProductPage.getProductAvailabilityLabel(page);
+      const productAvailability = await foClassicProductPage.getProductAvailabilityLabel(page);
       expect(productAvailability).to.be.contains(productLabelWhenOutOfStock);
     });
   });

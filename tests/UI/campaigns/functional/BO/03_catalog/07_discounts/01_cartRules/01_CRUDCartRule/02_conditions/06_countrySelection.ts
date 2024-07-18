@@ -14,7 +14,6 @@ import countriesPage from '@pages/BO/international/locations/countries';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
-import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 import {
   boDashboardPage,
@@ -24,6 +23,7 @@ import {
   dataProducts,
   FakerCartRule,
   foClassicHomePage,
+  foClassicProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -186,14 +186,14 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
 
       await foClassicHomePage.goToProductPage(page, 3);
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_6.name.toUpperCase());
     });
 
     it('should add product to cart and proceed to checkout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await foProductPage.addProductToTheCart(page);
+      await foClassicProductPage.addProductToTheCart(page);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(1);

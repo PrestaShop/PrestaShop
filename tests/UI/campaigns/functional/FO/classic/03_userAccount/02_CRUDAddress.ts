@@ -11,7 +11,6 @@ import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
 import {addressesPage} from '@pages/FO/classic/myAccount/addresses';
-import {productPage} from '@pages/FO/classic/product';
 
 import {
   dataProducts,
@@ -20,6 +19,7 @@ import {
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
+  foClassicProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -201,14 +201,14 @@ describe('FO - Account : CRUD address', async () => {
 
       await foClassicHomePage.goToProductPage(page, 1);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_1.name);
     });
 
     it('should add product to the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await productPage.addProductToTheCart(page);
+      await foClassicProductPage.addProductToTheCart(page);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(1);

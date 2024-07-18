@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import createProductsPage from '@pages/BO/catalog/products/add';
 import ordersPage from '@pages/BO/orders';
-import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
@@ -24,6 +23,7 @@ import {
   FakerProduct,
   foClassicHomePage,
   foClassicMyAccountPage,
+  foClassicProductPage,
   type MailDev,
   type MailDevEmail,
   utilsCore,
@@ -199,9 +199,9 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
       // Click on preview button
       page = await createProductsPage.previewProduct(page);
 
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
@@ -210,7 +210,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
 
       const taxValue = await utilsCore.percentage(newProductData.priceTaxExcluded, newProductData.tax);
 
-      const result = await foProductPage.getProductInformation(page);
+      const result = await foClassicProductPage.getProductInformation(page);
       await Promise.all([
         expect(result.name).to.equal(newProductData.name),
         expect(result.price.toFixed(2)).to.equal((newProductData.priceTaxExcluded + taxValue).toFixed(2)),
@@ -224,7 +224,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
         // Add the product to the cart
-        await foProductPage.addProductToTheCart(page, 1);
+        await foClassicProductPage.addProductToTheCart(page, 1);
 
         const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
         expect(notificationsNumber).to.be.equal(1);
@@ -264,7 +264,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO1', baseContext);
 
         // Go back to BO
-        page = await foProductPage.closePage(browserContext, page, 0);
+        page = await foClassicProductPage.closePage(browserContext, page, 0);
 
         const pageTitle = await createProductsPage.getPageTitle(page);
         expect(pageTitle).to.contains(createProductsPage.pageTitle);
@@ -358,7 +358,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
 
       // Go back to BO
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await ordersPage.getPageTitle(page);
       expect(pageTitle).to.contains(ordersPage.pageTitle);
@@ -419,9 +419,9 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
       // Click on preview button
       page = await createProductsPage.previewProduct(page);
 
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(editProductData.name);
     });
 
@@ -430,7 +430,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
 
       const taxValue = await utilsCore.percentage(editProductData.priceTaxExcluded, editProductData.tax);
 
-      const result = await foProductPage.getProductInformation(page);
+      const result = await foClassicProductPage.getProductInformation(page);
       await Promise.all([
         expect(result.name).to.equal(editProductData.name),
         expect(result.price.toFixed(2)).to.equal((editProductData.priceTaxExcluded + taxValue).toFixed(2)),
@@ -442,7 +442,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO3', baseContext);
 
       // Go back to BO
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductsPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductsPage.pageTitle);

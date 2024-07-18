@@ -10,9 +10,6 @@ import generalPage from '@pages/BO/shopParameters/general';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import createProductsPage from '@pages/BO/catalog/products/add';
 
-// Import FO pages
-import {productPage} from '@pages/FO/classic/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
@@ -20,6 +17,7 @@ import {
   boProductsPage,
   FakerProduct,
   foClassicHomePage,
+  foClassicProductPage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -118,21 +116,21 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
 
           await foClassicSearchResultsPage.goToProductPage(page, 1);
 
-          const pageTitle = await productPage.getPageTitle(page);
+          const pageTitle = await foClassicProductPage.getPageTitle(page);
           expect(pageTitle).to.contains(productData.name);
         });
 
         it('should check the product price', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkProductPrice${index}`, baseContext);
 
-          const productPrice = await productPage.getProductPrice(page);
+          const productPrice = await foClassicProductPage.getProductPrice(page);
           expect(productPrice).to.equal(test.args.price);
         });
 
         it('should go back to BO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
-          page = await productPage.closePage(browserContext, page, 0);
+          page = await foClassicProductPage.closePage(browserContext, page, 0);
 
           const pageTitle = await generalPage.getPageTitle(page);
           expect(pageTitle).to.contains(generalPage.pageTitle);
@@ -237,21 +235,21 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
 
           await foClassicSearchResultsPage.goToProductPage(page, 1);
 
-          const pageTitle = await productPage.getPageTitle(page);
+          const pageTitle = await foClassicProductPage.getPageTitle(page);
           expect(pageTitle).to.contains(productData.name);
         });
 
         it('should check the product price', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkProductPrice2${index}`, baseContext);
 
-          const productPrice = await productPage.getProductPrice(page);
+          const productPrice = await foClassicProductPage.getProductPrice(page);
           expect(productPrice).to.equal(test.args.price);
         });
 
         it('should go back to BO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goBackToBo2${index}`, baseContext);
 
-          page = await productPage.closePage(browserContext, page, 0);
+          page = await foClassicProductPage.closePage(browserContext, page, 0);
 
           const pageTitle = await generalPage.getPageTitle(page);
           expect(pageTitle).to.contains(generalPage.pageTitle);
@@ -356,21 +354,21 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
 
           await foClassicSearchResultsPage.goToProductPage(page, 1);
 
-          const pageTitle = await productPage.getPageTitle(page);
+          const pageTitle = await foClassicProductPage.getPageTitle(page);
           expect(pageTitle).to.contains(productData.name);
         });
 
         it('should check the product price', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkProductPrice3${index}`, baseContext);
 
-          const productPrice = await productPage.getProductPrice(page);
+          const productPrice = await foClassicProductPage.getProductPrice(page);
           expect(productPrice).to.equal(test.args.price);
         });
 
         it('should go back to BO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goBackToBo3${index}`, baseContext);
 
-          page = await productPage.closePage(browserContext, page, 0);
+          page = await foClassicProductPage.closePage(browserContext, page, 0);
 
           const pageTitle = await generalPage.getPageTitle(page);
           expect(pageTitle).to.contains(generalPage.pageTitle);

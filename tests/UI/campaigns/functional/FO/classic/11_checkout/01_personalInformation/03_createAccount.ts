@@ -6,7 +6,6 @@ import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advanced
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 
 // Import pages
-import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
@@ -16,6 +15,7 @@ import {
   FakerAddress,
   FakerCustomer,
   foClassicHomePage,
+  foClassicProductPage,
   type MailDev,
   type MailDevEmail,
   utilsMail,
@@ -90,7 +90,7 @@ describe('FO - Checkout - Personal information : Create account', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       await foClassicHomePage.goToProductPage(page, 1);
-      await productPage.addProductToTheCart(page, 1);
+      await foClassicProductPage.addProductToTheCart(page, 1);
 
       const pageTitle = await cartPage.getPageTitle(page);
       expect(pageTitle).to.equal(cartPage.pageTitle);

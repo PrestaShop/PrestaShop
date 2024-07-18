@@ -12,9 +12,6 @@ import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 
-// Import FO pages
-import productPage from '@pages/FO/hummingbird/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
@@ -23,6 +20,7 @@ import {
   dataProducts,
   FakerProduct,
   foHummingbirdHomePage,
+  foHummingbirdProductPage,
   foHummingbirdSearchResultsPage,
   utilsFile,
   utilsPlaywright,
@@ -135,14 +133,14 @@ describe('FO - Navigation and display : Display tags', async () => {
 
       await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_6.name);
     });
 
     it('should check the new tag', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNewTag', baseContext);
 
-      const flagText = await productPage.getProductTag(page);
+      const flagText = await foHummingbirdProductPage.getProductTag(page);
       expect(flagText).to.equal('New');
     });
   });
@@ -197,14 +195,14 @@ describe('FO - Navigation and display : Display tags', async () => {
 
       await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_6.name);
     });
 
     it('should check that the new tag is not displayed', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkIsNewTagNotVisible', baseContext);
 
-      const isTagVisible = await productPage.isProductTagVisible(page);
+      const isTagVisible = await foHummingbirdProductPage.isProductTagVisible(page);
       expect(isTagVisible).to.equal(false);
     });
   });
@@ -213,7 +211,7 @@ describe('FO - Navigation and display : Display tags', async () => {
     it('should go back BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO1', baseContext);
 
-      await productPage.goTo(page, global.BO.URL);
+      await foHummingbirdProductPage.goTo(page, global.BO.URL);
 
       const pageTitle = await boDashboardPage.getPageTitle(page);
       expect(pageTitle).to.contains(boDashboardPage.pageTitle);
@@ -269,14 +267,14 @@ describe('FO - Navigation and display : Display tags', async () => {
 
       page = await addProductPage.previewProduct(page);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check the discount tag', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountTag', baseContext);
 
-      const flagText = await productPage.getProductTag(page);
+      const flagText = await foHummingbirdProductPage.getProductTag(page);
       expect(flagText).to.equal(`-€${specificPriceData.specificPrice.discount.toFixed(2)}`);
     });
   });
@@ -340,14 +338,14 @@ describe('FO - Navigation and display : Display tags', async () => {
 
       page = await addProductPage.previewProduct(page);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(packOfProducts.name);
     });
 
     it('should check the pack tag', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPackTag', baseContext);
 
-      const flagText = await productPage.getProductTag(page);
+      const flagText = await foHummingbirdProductPage.getProductTag(page);
       expect(flagText).to.equal('Pack');
     });
   });
@@ -378,14 +376,14 @@ describe('FO - Navigation and display : Display tags', async () => {
 
       page = await addProductPage.previewProduct(page);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(packOfProducts.name);
     });
 
     it('should check the out-of-stock and pack tags', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOutOfStockTag', baseContext);
 
-      const flagText = await productPage.getProductTag(page);
+      const flagText = await foHummingbirdProductPage.getProductTag(page);
       expect(flagText).to.contain('Pack')
         .and.contain('Out-of-Stock');
     });

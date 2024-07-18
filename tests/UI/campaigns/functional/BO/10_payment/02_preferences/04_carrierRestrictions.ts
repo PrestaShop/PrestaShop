@@ -10,13 +10,13 @@ import preferencesPage from '@pages/BO/payment/preferences';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
-import {productPage} from '@pages/FO/classic/product';
 
 import {
   boDashboardPage,
   dataCustomers,
   foClassicHomePage,
   foClassicLoginPage,
+  foClassicProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -129,7 +129,7 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
         // Go to the first product page
         await foClassicHomePage.goToProductPage(page, 1);
         // Add the product to the cart
-        await productPage.addProductToTheCart(page);
+        await foClassicProductPage.addProductToTheCart(page);
         // Proceed to checkout the shopping cart
         await cartPage.clickOnProceedToCheckout(page);
 

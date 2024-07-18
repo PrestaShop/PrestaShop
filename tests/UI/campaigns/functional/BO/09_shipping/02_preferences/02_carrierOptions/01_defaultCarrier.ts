@@ -10,7 +10,6 @@ import preferencesPage from '@pages/BO/shipping/preferences';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage as foCheckoutPage} from '@pages/FO/classic/checkout';
-import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 import {
   boDashboardPage,
@@ -18,6 +17,7 @@ import {
   dataCustomers,
   FakerCarrier,
   foClassicHomePage,
+  foClassicProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -97,7 +97,7 @@ describe('BO - Shipping - Preferences : Update default carrier and check it in F
         // Go to the first product page
         await foClassicHomePage.goToProductPage(page, 1);
         // Add the product to the cart
-        await foProductPage.addProductToTheCart(page);
+        await foClassicProductPage.addProductToTheCart(page);
         // Proceed to checkout the shopping cart
         await cartPage.clickOnProceedToCheckout(page);
 

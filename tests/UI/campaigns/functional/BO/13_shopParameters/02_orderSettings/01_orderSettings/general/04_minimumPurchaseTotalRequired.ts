@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 // Import FO pages
-import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 
 import {expect} from 'chai';
@@ -16,6 +15,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   foClassicHomePage,
+  foClassicProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -96,7 +96,7 @@ describe('BO - Shop Parameters - Order Settings : Test minimum purchase total re
       await foClassicHomePage.goToProductPage(page, 1);
 
       // Add the created product to the cart
-      await productPage.addProductToTheCart(page);
+      await foClassicProductPage.addProductToTheCart(page);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(index + 1);

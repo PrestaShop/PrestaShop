@@ -6,7 +6,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 
 // Import FO pages
 import cartPage from '@pages/FO/hummingbird/cart';
-import productPage from '@pages/FO/hummingbird/product';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {expect} from 'chai';
@@ -14,6 +13,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   foHummingbirdHomePage,
   foHummingbirdModalQuickViewPage,
+  foHummingbirdProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -70,7 +70,7 @@ describe('FO - cart : Continue shopping / Proceed to checkout / Close', async ()
       await testContext.addContextItem(this, 'testIdentifier', 'goToSecondProductPage', baseContext);
 
       await foHummingbirdHomePage.goToProductPage(page, 2);
-      await productPage.clickOnAddToCartButton(page);
+      await foHummingbirdProductPage.clickOnAddToCartButton(page);
 
       const successMessage = await blockCartModal.getBlockCartModalTitle(page);
       expect(successMessage).to.contains(foHummingbirdHomePage.successAddToCartMessage);
@@ -86,7 +86,7 @@ describe('FO - cart : Continue shopping / Proceed to checkout / Close', async ()
     it('should click on add product to cart button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await productPage.clickOnAddToCartButton(page);
+      await foHummingbirdProductPage.clickOnAddToCartButton(page);
 
       const successMessage = await blockCartModal.getBlockCartModalTitle(page);
       expect(successMessage).to.contains(foHummingbirdHomePage.successAddToCartMessage);
@@ -102,7 +102,7 @@ describe('FO - cart : Continue shopping / Proceed to checkout / Close', async ()
     it('should click on add product to cart button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart2', baseContext);
 
-      await productPage.clickOnAddToCartButton(page);
+      await foHummingbirdProductPage.clickOnAddToCartButton(page);
 
       const successMessage = await blockCartModal.getBlockCartModalTitle(page);
       expect(successMessage).to.contains(foHummingbirdHomePage.successAddToCartMessage);

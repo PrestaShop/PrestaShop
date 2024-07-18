@@ -4,10 +4,6 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-// Import FO pages
-import {productPage as foProductPage} from '@pages/FO/classic/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
@@ -16,6 +12,7 @@ import {
   dataModules,
   dataProducts,
   foClassicHomePage,
+  foClassicProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -92,21 +89,21 @@ describe('Category products module - Disable/Enable module', async () => {
 
       await foClassicHomePage.goToProductPage(page, dataProducts.demo_6.id);
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_6.name.toUpperCase());
     });
 
     it('should check if the "Category Products" block is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNotVisible', baseContext);
 
-      const hasProductsBlock = await foProductPage.hasProductsBlock(page, 'categoryproducts');
+      const hasProductsBlock = await foClassicProductPage.hasProductsBlock(page, 'categoryproducts');
       expect(hasProductsBlock).to.eq(false);
     });
 
     it('should return to the back office', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnBO', baseContext);
 
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await boModuleManagerPage.getPageTitle(page);
       expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
@@ -141,14 +138,14 @@ describe('Category products module - Disable/Enable module', async () => {
 
       await foClassicHomePage.goToProductPage(page, dataProducts.demo_6.id);
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_6.name.toUpperCase());
     });
 
     it('should check if the "Category Products" block is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkVisible', baseContext);
 
-      const hasProductsBlock = await foProductPage.hasProductsBlock(page, 'categoryproducts');
+      const hasProductsBlock = await foClassicProductPage.hasProductsBlock(page, 'categoryproducts');
       expect(hasProductsBlock).to.eq(true);
     });
   });

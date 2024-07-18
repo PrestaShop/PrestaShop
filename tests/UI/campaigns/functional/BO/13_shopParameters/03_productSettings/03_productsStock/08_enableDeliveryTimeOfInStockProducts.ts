@@ -7,14 +7,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
-// Import FO pages
-import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   foClassicHomePage,
+  foClassicProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -79,7 +78,7 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time in stoc
 
       await foClassicHomePage.goToProductPage(page, 4);
 
-      const isDeliveryTimeBlockVisible = await foProductPage.isDeliveryInformationVisible(page);
+      const isDeliveryTimeBlockVisible = await foClassicProductPage.isDeliveryInformationVisible(page);
       expect(isDeliveryTimeBlockVisible).to.equal(test.args.enable);
     });
 
@@ -87,7 +86,7 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time in stoc
       it('should check delivery time text', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deliveryTimeBlockText${index}`, baseContext);
 
-        const deliveryTimeText = await foProductPage.getDeliveryInformationText(page);
+        const deliveryTimeText = await foClassicProductPage.getDeliveryInformationText(page);
         expect(deliveryTimeText).to.equal(test.args.deliveryTimeText);
       });
     }
@@ -95,7 +94,7 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time in stoc
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await productSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(productSettingsPage.pageTitle);

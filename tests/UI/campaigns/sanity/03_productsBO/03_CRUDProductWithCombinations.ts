@@ -8,8 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import createProductsPage from '@pages/BO/catalog/products/add';
 import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
-// Import FO pages
-import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -17,6 +15,7 @@ import {
   boDashboardPage,
   boProductsPage,
   FakerProduct,
+  foClassicProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -163,16 +162,16 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       // Click on preview button
       page = await createProductsPage.previewProduct(page);
 
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check all product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation', baseContext);
 
-      const result = await foProductPage.getProductInformation(page);
+      const result = await foClassicProductPage.getProductInformation(page);
       await Promise.all([
         expect(result.name).to.equal(newProductData.name),
         expect(result.price).to.equal(newProductData.price),
@@ -180,7 +179,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
         expect(result.description).to.equal(newProductData.description),
       ]);
 
-      const productAttributes = await foProductPage.getProductAttributes(page);
+      const productAttributes = await foClassicProductPage.getProductAttributes(page);
       await Promise.all([
         // color
         expect(productAttributes[0].value).to.equal(newProductData.attributes[1].values.join(' ')),
@@ -193,7 +192,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
       // Go back to BO
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductsPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductsPage.pageTitle);
@@ -245,23 +244,23 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       // Click on preview button
       page = await createProductsPage.previewProduct(page);
 
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(editProductData.name);
     });
 
     it('should check all product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkEditedProductInformation', baseContext);
 
-      const result = await foProductPage.getProductInformation(page);
+      const result = await foClassicProductPage.getProductInformation(page);
       await Promise.all([
         expect(result.name).to.equal(editProductData.name),
         expect(result.price).to.equal(editProductData.price),
         expect(result.description).to.equal(editProductData.description),
       ]);
 
-      const productAttributes = await foProductPage.getProductAttributes(page);
+      const productAttributes = await foClassicProductPage.getProductAttributes(page);
       await Promise.all([
         expect(productAttributes[0].value).to.equal(
           `${newProductData.attributes[1].values.join(' ')} ${editProductData.attributes[1].values.join(' ')}`),
@@ -273,7 +272,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
 
       // Go back to BO
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductsPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductsPage.pageTitle);

@@ -11,7 +11,6 @@ import createCatalogPriceRulePage from '@pages/BO/catalog/discounts/catalogPrice
 import cartRulesPage from '@pages/BO/catalog/discounts';
 
 // Import FO pages
-import {productPage as foProductPage} from '@pages/FO/classic/product';
 import catalogPriceRulesPage from '@pages/BO/catalog/discounts/catalogPriceRules';
 
 import type {BrowserContext, Page} from 'playwright';
@@ -21,6 +20,7 @@ import {
   boProductsPage,
   FakerCatalogPriceRule,
   FakerProduct,
+  foClassicProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -142,23 +142,23 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct', baseContext);
 
       page = await createProductPage.previewProduct(page);
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check the product price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductPrice', baseContext);
 
-      const productPrice = await foProductPage.getProductPrice(page);
+      const productPrice = await foClassicProductPage.getProductPrice(page);
       expect(productPrice).to.eq('€100.00');
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);
@@ -190,23 +190,23 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct2', baseContext);
 
       page = await createProductPage.previewProduct(page);
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check the product price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductPrice2', baseContext);
 
-      const productPrice = await foProductPage.getProductPrice(page);
+      const productPrice = await foClassicProductPage.getProductPrice(page);
       expect(productPrice).to.eq('€120.00');
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
 
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);
@@ -264,23 +264,23 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct3', baseContext);
 
       page = await createProductPage.previewProduct(page);
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check the price per unit', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkUnitPrice', baseContext);
 
-      const flagText = await foProductPage.getProductUnitPrice(page);
+      const flagText = await foClassicProductPage.getProductUnitPrice(page);
       expect(flagText).to.eq('€12.00 per unit');
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO3', baseContext);
 
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);
@@ -299,23 +299,23 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct4', baseContext);
 
       page = await createProductPage.previewProduct(page);
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check the on sale flag', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOnSaleFlag', baseContext);
 
-      const flagText = await foProductPage.getProductTag(page);
+      const flagText = await foClassicProductPage.getProductTag(page);
       expect(flagText).to.contains('On sale!');
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO4', baseContext);
 
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);
@@ -334,23 +334,23 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct5', baseContext);
 
       page = await createProductPage.previewProduct(page);
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check the product price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSpecificPrice', baseContext);
 
-      const productPrice = await foProductPage.getProductPrice(page);
+      const productPrice = await foClassicProductPage.getProductPrice(page);
       expect(productPrice).to.eq('€100.00');
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO5', baseContext);
 
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);
@@ -369,23 +369,23 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct6', baseContext);
 
       page = await createProductPage.previewProduct(page);
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check the product price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedSpecificPrice', baseContext);
 
-      const productPrice = await foProductPage.getProductPrice(page);
+      const productPrice = await foClassicProductPage.getProductPrice(page);
       expect(productPrice).to.eq('€90.00');
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO6', baseContext);
 
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);
@@ -402,23 +402,23 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct7', baseContext);
 
       page = await createProductPage.previewProduct(page);
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check the product price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDeletedSpecificPrice', baseContext);
 
-      const productPrice = await foProductPage.getProductPrice(page);
+      const productPrice = await foClassicProductPage.getProductPrice(page);
       expect(productPrice).to.eq('€120.00');
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO7', baseContext);
 
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);

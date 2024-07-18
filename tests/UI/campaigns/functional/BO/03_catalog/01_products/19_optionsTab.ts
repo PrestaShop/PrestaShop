@@ -8,9 +8,6 @@ import createProductPage from '@pages/BO/catalog/products/add';
 import optionsTab from '@pages/BO/catalog/products/add/optionsTab';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
-// Import FO pages
-import {productPage as foProductPage} from '@pages/FO/classic/product';
-
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 import {
@@ -20,6 +17,7 @@ import {
   foClassicHomePage,
   foClassicCategoryPage,
   foClassicModalQuickViewPage,
+  foClassicProductPage,
   foClassicSearchResultsPage,
   utilsFile,
   utilsPlaywright,
@@ -141,16 +139,16 @@ describe('BO - Catalog - Products : Options tab', async () => {
 
       // Click on preview button
       page = await createProductPage.previewProduct(page);
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should click on Clothes category', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickHomeCategory', baseContext);
 
-      await foProductPage.clickOnBreadCrumbLink(page, 'clothes');
+      await foClassicProductPage.clickOnBreadCrumbLink(page, 'clothes');
 
       const pageTitle = await foClassicCategoryPage.getHeaderPageName(page);
       expect(pageTitle).to.contains('CLOTHES');
@@ -172,7 +170,7 @@ describe('BO - Catalog - Products : Options tab', async () => {
     it('should close the page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closePage', baseContext);
 
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);
@@ -192,16 +190,16 @@ describe('BO - Catalog - Products : Options tab', async () => {
 
       // Click on preview button
       page = await createProductPage.previewProduct(page);
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should click on Clothes category', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickClothesCategory2', baseContext);
 
-      await foProductPage.clickOnBreadCrumbLink(page, 'clothes');
+      await foClassicProductPage.clickOnBreadCrumbLink(page, 'clothes');
 
       const pageTitle = await foClassicCategoryPage.getHeaderPageName(page);
       expect(pageTitle).to.contains('CLOTHES');
@@ -220,14 +218,14 @@ describe('BO - Catalog - Products : Options tab', async () => {
       await foClassicCategoryPage.searchProduct(page, newProductData.name);
       await foClassicSearchResultsPage.goToProductPage(page, 1);
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should close the page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closePage2', baseContext);
 
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);
@@ -247,16 +245,16 @@ describe('BO - Catalog - Products : Options tab', async () => {
 
       // Click on preview button
       page = await createProductPage.previewProduct(page);
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should click on Clothes category', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickClothesCategory3', baseContext);
 
-      await foProductPage.clickOnBreadCrumbLink(page, 'clothes');
+      await foClassicProductPage.clickOnBreadCrumbLink(page, 'clothes');
 
       const pageTitle = await foClassicCategoryPage.getHeaderPageName(page);
       expect(pageTitle).to.contains('CLOTHES');
@@ -284,7 +282,7 @@ describe('BO - Catalog - Products : Options tab', async () => {
     it('should close the page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closePage3', baseContext);
 
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);
@@ -305,23 +303,23 @@ describe('BO - Catalog - Products : Options tab', async () => {
 
       // Click on preview button
       page = await createProductPage.previewProduct(page);
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check that the add to cart button is disabled', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'isAddToCartButtonEnabled', baseContext);
 
-      const isVisible = await foProductPage.isAddToCartButtonEnabled(page);
+      const isVisible = await foClassicProductPage.isAddToCartButtonEnabled(page);
       expect(isVisible).eq(false);
     });
 
     it('should close the page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closePage4', baseContext);
 
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);
@@ -341,23 +339,23 @@ describe('BO - Catalog - Products : Options tab', async () => {
 
       // Click on preview button
       page = await createProductPage.previewProduct(page);
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check that the price is not displayed', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'isPriceDisplayed', baseContext);
 
-      const isVisible = await foProductPage.isPriceDisplayed(page);
+      const isVisible = await foClassicProductPage.isPriceDisplayed(page);
       expect(isVisible).to.equal(false);
     });
 
     it('should close the page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closePage5', baseContext);
 
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);
@@ -378,23 +376,23 @@ describe('BO - Catalog - Products : Options tab', async () => {
 
       // Click on preview button
       page = await createProductPage.previewProduct(page);
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check the online tag', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOnlineTag', baseContext);
 
-      const flagText = await foProductPage.getProductTag(page);
+      const flagText = await foClassicProductPage.getProductTag(page);
       expect(flagText).to.contains('Online only');
     });
 
     it('should close the page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closePage6', baseContext);
 
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);

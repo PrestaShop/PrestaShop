@@ -9,8 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import addProductPage from '@pages/BO/catalog/products/add';
 import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
-// Import FO pages
-import {productPage} from '@pages/FO/classic/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -19,6 +17,7 @@ import {
   boProductsPage,
   FakerProduct,
   foClassicHomePage,
+  foClassicProductPage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -170,24 +169,30 @@ describe('BO - Shop Parameters - Product Settings : Display unavailable product 
         await foClassicHomePage.searchProduct(page, productData.name);
         await foClassicSearchResultsPage.goToProductPage(page, 1);
 
-        const pageTitle = await productPage.getPageTitle(page);
+        const pageTitle = await foClassicProductPage.getPageTitle(page);
         expect(pageTitle.toUpperCase()).to.contains(productData.name.toUpperCase());
       });
 
       it('should check the unavailable product attributes in FO product page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkUnavailableAttribute${index}`, baseContext);
 
-        const sizeIsVisible = await productPage.isUnavailableProductSizeDisplayed(page, productData.attributes[1].values[0]);
+        const sizeIsVisible = await foClassicProductPage.isUnavailableProductSizeDisplayed(
+          page,
+          productData.attributes[1].values[0],
+        );
         expect(sizeIsVisible).to.be.equal(test.args.enable);
 
-        const colorIsVisible = await productPage.isUnavailableProductColorDisplayed(page, productData.attributes[0].values[0]);
+        const colorIsVisible = await foClassicProductPage.isUnavailableProductColorDisplayed(
+          page,
+          productData.attributes[0].values[0],
+        );
         expect(colorIsVisible).to.be.equal(test.args.enable);
       });
 
       it('should close the page and go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `closePageAndBackToBO${index}`, baseContext);
 
-        page = await productPage.closePage(browserContext, page, 0);
+        page = await foClassicProductPage.closePage(browserContext, page, 0);
 
         const pageTitle = await productSettingsPage.getPageTitle(page);
         expect(pageTitle).to.contains(productSettingsPage.pageTitle);

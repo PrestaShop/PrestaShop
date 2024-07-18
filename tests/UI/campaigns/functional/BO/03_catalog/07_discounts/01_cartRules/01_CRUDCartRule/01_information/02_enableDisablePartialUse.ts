@@ -9,7 +9,6 @@ import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import {cartPage} from '@pages/FO/classic/cart';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
-import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {vouchersPage as foVouchersPage} from '@pages/FO/classic/myAccount/vouchers';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
@@ -21,6 +20,7 @@ import {
   FakerCartRule,
   foClassicHomePage,
   foClassicMyAccountPage,
+  foClassicProductPage,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -123,14 +123,14 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
 
         await foClassicHomePage.goToProductPage(page, 1);
 
-        const pageTitle = await foProductPage.getPageTitle(page);
+        const pageTitle = await foClassicProductPage.getPageTitle(page);
         expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
       });
 
       it('should add product to cart and proceed to checkout', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart1', baseContext);
 
-        await foProductPage.addProductToTheCart(page);
+        await foClassicProductPage.addProductToTheCart(page);
 
         const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
         expect(notificationsNumber).to.be.equal(1);
@@ -331,14 +331,14 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
 
         await foClassicHomePage.goToProductPage(page, 1);
 
-        const pageTitle = await foProductPage.getPageTitle(page);
+        const pageTitle = await foClassicProductPage.getPageTitle(page);
         expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
       });
 
       it('should add product to cart and proceed to checkout', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart2', baseContext);
 
-        await foProductPage.addProductToTheCart(page);
+        await foClassicProductPage.addProductToTheCart(page);
 
         const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
         expect(notificationsNumber).to.be.equal(1);

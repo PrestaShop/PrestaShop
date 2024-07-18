@@ -6,7 +6,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 
 // Import FO pages
 import cartPage from '@pages/FO/hummingbird/cart';
-import productPage from '@pages/FO/hummingbird/product';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
@@ -17,6 +16,7 @@ import {
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdModalQuickViewPage,
+  foHummingbirdProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -141,17 +141,17 @@ describe('FO - Checkout : Show details', async () => {
 
       page = await checkoutPage.clickOnProductName(page, 1);
 
-      const productInformation = await productPage.getProductInformation(page);
+      const productInformation = await foHummingbirdProductPage.getProductInformation(page);
       expect(productInformation.name).to.equal(dataProducts.demo_1.name);
     });
 
     it('should close the page and click on the first product image', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnFirstProductImage', baseContext);
 
-      page = await productPage.closePage(browserContext, page, 0);
+      page = await foHummingbirdProductPage.closePage(browserContext, page, 0);
       await checkoutPage.clickOnProductImage(page, 1);
 
-      const productInformation = await productPage.getProductInformation(page);
+      const productInformation = await foHummingbirdProductPage.getProductInformation(page);
       expect(productInformation.name).to.equal(dataProducts.demo_1.name);
     });
   });

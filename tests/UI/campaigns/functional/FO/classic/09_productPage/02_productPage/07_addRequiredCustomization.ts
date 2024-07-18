@@ -9,15 +9,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 import createProductPage from '@pages/BO/catalog/products/add';
 import detailsTab from '@pages/BO/catalog/products/add/detailsTab';
 
-// Import FO pages
-import {productPage as foProductPage} from '@pages/FO/classic/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boProductsPage,
   FakerProduct,
+  foClassicProductPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -117,68 +115,68 @@ describe('FO - Product page - Product page : Add a required customization', asyn
       // Click on preview button
       page = await createProductPage.previewProduct(page);
 
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check the customization section', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductCustomizations', baseContext);
 
-      const productCondition = await foProductPage.isCustomizationBlockVisible(page);
+      const productCondition = await foClassicProductPage.isCustomizationBlockVisible(page);
       expect(productCondition).to.eq(true);
     });
 
     it('should check that add to card button is disabled', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAddToCartButtonDisabled', baseContext);
 
-      const isAddToCartButtonDisabled = await foProductPage.isAddToCartButtonDisplayed(page);
+      const isAddToCartButtonDisabled = await foClassicProductPage.isAddToCartButtonDisplayed(page);
       expect(isAddToCartButtonDisabled).to.equal(true);
     });
 
     it('should set the text customization and save', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setTextCustomizations', baseContext);
 
-      await foProductPage.setProductCustomizations(page, ['prestashop']);
+      await foClassicProductPage.setProductCustomizations(page, ['prestashop']);
 
-      const isMessageVisible = await foProductPage.isCustomizationMessageVisible(page, 1);
+      const isMessageVisible = await foClassicProductPage.isCustomizationMessageVisible(page, 1);
       expect(isMessageVisible).to.equal(false);
     });
 
     it('should set the file customizations and save', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setFileCustomization', baseContext);
 
-      await foProductPage.setProductFileCustomizations(page, ['file_1.jpg'], 2);
+      await foClassicProductPage.setProductFileCustomizations(page, ['file_1.jpg'], 2);
 
-      const firstCustomImage = await foProductPage.isCustomizationImageVisible(page, 2);
+      const firstCustomImage = await foClassicProductPage.isCustomizationImageVisible(page, 2);
       expect(firstCustomImage).to.equal(false);
     });
 
     it('should check that add to card button is still disabled', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAddToCartButtonDisabled2', baseContext);
 
-      const isAddToCartButtonDisabled = await foProductPage.isAddToCartButtonDisplayed(page);
+      const isAddToCartButtonDisabled = await foClassicProductPage.isAddToCartButtonDisplayed(page);
       expect(isAddToCartButtonDisabled).to.equal(true);
     });
 
     it('should add the text and the file customizations and save', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setCustomizations', baseContext);
 
-      await foProductPage.setProductCustomizations(page, ['prestashop'], false);
-      await foProductPage.setProductFileCustomizations(page, ['file_1.jpg'], 2);
+      await foClassicProductPage.setProductCustomizations(page, ['prestashop'], false);
+      await foClassicProductPage.setProductFileCustomizations(page, ['file_1.jpg'], 2);
 
-      const firstCustomMessage = await foProductPage.getCustomizationsMessages(page, 1);
+      const firstCustomMessage = await foClassicProductPage.getCustomizationsMessages(page, 1);
       expect(firstCustomMessage).to.equal('Your customization: prestashop');
 
-      const secondCustomImage = await foProductPage.getCustomizationImage(page, 2);
+      const secondCustomImage = await foClassicProductPage.getCustomizationImage(page, 2);
       expect(secondCustomImage).to.contains('deletePicture');
     });
 
     it('should check that add to card button is enabled', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAddToCartButtonEnabled', baseContext);
 
-      const isAddToCartButtonEnabled = await foProductPage.isAddToCartButtonEnabled(page);
+      const isAddToCartButtonEnabled = await foClassicProductPage.isAddToCartButtonEnabled(page);
       expect(isAddToCartButtonEnabled).to.equal(true);
     });
   });

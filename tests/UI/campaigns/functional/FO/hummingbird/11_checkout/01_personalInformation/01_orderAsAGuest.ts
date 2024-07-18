@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
-import productPage from '@pages/FO/hummingbird/product';
 import cartPage from '@pages/FO/hummingbird/cart';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
@@ -15,6 +14,7 @@ import {
   FakerAddress,
   FakerCustomer,
   foHummingbirdHomePage,
+  foHummingbirdProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -72,7 +72,7 @@ describe('FO - Checkout - Personal information : Order as a guest', async () => 
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       await foHummingbirdHomePage.goToProductPage(page, 1);
-      await productPage.addProductToTheCart(page, 1);
+      await foHummingbirdProductPage.addProductToTheCart(page, 1);
 
       const pageTitle = await cartPage.getPageTitle(page);
       expect(pageTitle).to.equal(cartPage.pageTitle);

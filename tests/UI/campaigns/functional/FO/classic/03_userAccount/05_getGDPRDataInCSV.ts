@@ -17,7 +17,6 @@ import {createAccountPage} from '@pages/FO/classic/myAccount/add';
 import {gdprPersonalDataPage} from '@pages/FO/classic/myAccount/gdprPersonalData';
 import ordersPage from '@pages/BO/orders';
 import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
-import {productPage} from '@pages/FO/classic/product';
 
 import {
   boDashboardPage,
@@ -29,6 +28,7 @@ import {
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
+  foClassicProductPage,
   utilsCore,
   utilsFile,
   utilsPlaywright,
@@ -370,7 +370,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         // Go to the first product page
         await foClassicHomePage.goToProductPage(page, 1);
         // Add the product to the cart
-        await productPage.addProductToTheCart(page, 2);
+        await foClassicProductPage.addProductToTheCart(page, 2);
 
         const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
         expect(notificationsNumber).to.be.equal(2);

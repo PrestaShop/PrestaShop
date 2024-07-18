@@ -10,15 +10,13 @@ import createProductPage from '@pages/BO/catalog/products/add';
 import detailsTab from '@pages/BO/catalog/products/add/detailsTab';
 import filesPage from '@pages/BO/catalog/files';
 
-// Import FO pages
-import {productPage as foProductPage} from '@pages/FO/classic/product';
-
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 import {
   boDashboardPage,
   boProductsPage,
   FakerProduct,
+  foClassicProductPage,
   type ProductFeatures,
   utilsFile,
   utilsPlaywright,
@@ -204,16 +202,16 @@ describe('BO - Catalog - Products : Details tab', async () => {
       // Click on preview button
       page = await createProductPage.previewProduct(page);
 
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check the product features list', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getProductFeaturesList', baseContext);
 
-      const productFeatures = await foProductPage.getProductFeaturesList(page);
+      const productFeatures = await foClassicProductPage.getProductFeaturesList(page);
       expect(productFeatures).to.eq(
         `Data sheet ${editProductData.features[0].featureName} ${editProductData.features[0].preDefinedValue}`
         + ` ${editProductData.features[1].customizedValueEn}`);
@@ -223,7 +221,7 @@ describe('BO - Catalog - Products : Details tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
       // Go back to BO
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);
@@ -273,16 +271,16 @@ describe('BO - Catalog - Products : Details tab', async () => {
       // Click on preview button
       page = await createProductPage.previewProduct(page);
 
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check that product features list is empty', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'isFeatureBlockNotVisible', baseContext);
 
-      const isVisible = await foProductPage.isFeaturesBlockVisible(page);
+      const isVisible = await foClassicProductPage.isFeaturesBlockVisible(page);
       expect(isVisible).to.eq(false);
     });
 
@@ -290,7 +288,7 @@ describe('BO - Catalog - Products : Details tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
 
       // Go back to BO
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);
@@ -354,16 +352,16 @@ describe('BO - Catalog - Products : Details tab', async () => {
       // Click on preview button
       page = await createProductPage.previewProduct(page);
 
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check the product condition', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductCondition', baseContext);
 
-      const productCondition = await foProductPage.getProductCondition(page);
+      const productCondition = await foClassicProductPage.getProductCondition(page);
       expect(productCondition).to.eq(`Condition ${editProductData.condition}`);
     });
 
@@ -371,7 +369,7 @@ describe('BO - Catalog - Products : Details tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO3', baseContext);
 
       // Go back to BO
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);
@@ -392,16 +390,16 @@ describe('BO - Catalog - Products : Details tab', async () => {
       // Click on preview button
       page = await createProductPage.previewProduct(page);
 
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check the customization section', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductCustomizations', baseContext);
 
-      const productCondition = await foProductPage.isCustomizationBlockVisible(page);
+      const productCondition = await foClassicProductPage.isCustomizationBlockVisible(page);
       expect(productCondition).to.eq(true);
     });
 
@@ -409,7 +407,7 @@ describe('BO - Catalog - Products : Details tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO4', baseContext);
 
       // Go back to BO
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);

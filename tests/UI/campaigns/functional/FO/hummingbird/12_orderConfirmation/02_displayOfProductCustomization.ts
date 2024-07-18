@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
-import productPage from '@pages/FO/hummingbird/product';
 import cartPage from '@pages/FO/hummingbird/cart';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
@@ -16,6 +15,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   foHummingbirdHomePage,
+  foHummingbirdProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -79,14 +79,14 @@ describe('FO - Order confirmation : Display of product customization', async () 
       await foHummingbirdHomePage.setProductNameInSearchInput(page, dataProducts.demo_14.name);
       await foHummingbirdHomePage.clickAutocompleteSearchResult(page, 1);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_14.name);
     });
 
     it('should add custom text and add the product to cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await productPage.addProductToTheCart(page, 1, undefined, true, 'Hello world!');
+      await foHummingbirdProductPage.addProductToTheCart(page, 1, undefined, true, 'Hello world!');
 
       const pageTitle = await cartPage.getPageTitle(page);
       expect(pageTitle).to.equal(cartPage.pageTitle);

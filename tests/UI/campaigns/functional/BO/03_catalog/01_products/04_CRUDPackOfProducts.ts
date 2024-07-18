@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import createProductsPage from '@pages/BO/catalog/products/add';
 import packTab from '@pages/BO/catalog/products/add/packTab';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
-import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
@@ -18,6 +17,7 @@ import {
   dataEmployees,
   dataProducts,
   FakerProduct,
+  foClassicProductPage,
   type ProductPackOptions,
   utilsCore,
   utilsDate,
@@ -373,9 +373,9 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
       // Click on preview button
       page = await createProductsPage.previewProduct(page);
 
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
@@ -384,7 +384,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
 
       const taxValue = await utilsCore.percentage(pricingData.priceTaxExcluded, 20);
 
-      const result = await foProductPage.getProductInformation(page);
+      const result = await foClassicProductPage.getProductInformation(page);
       await Promise.all([
         expect(result.name).to.equal(newProductData.name),
         expect(result.price.toFixed(2)).to.equal((pricingData.priceTaxExcluded + taxValue).toFixed(2)),
@@ -402,7 +402,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
       it(`should check the product '${test.args.product.name}' in the pack`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkProductInPack${index}`, baseContext);
 
-        const result = await foProductPage.getProductInPackList(page, index + 1);
+        const result = await foClassicProductPage.getProductInPackList(page, index + 1);
         await Promise.all([
           expect(result.image).to.contains(test.args.product.coverImage),
           expect(result.name).to.equal(test.args.product.name),
@@ -419,7 +419,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO1', baseContext);
 
       // Go back to BO
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductsPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductsPage.pageTitle);
@@ -441,9 +441,9 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
       // Click on preview button
       page = await createProductsPage.previewProduct(page);
 
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(editProductData.name);
     });
 
@@ -452,7 +452,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
 
       const taxValue = await utilsCore.percentage(editProductData.priceTaxExcluded, 10);
 
-      const result = await foProductPage.getProductInformation(page);
+      const result = await foClassicProductPage.getProductInformation(page);
       await Promise.all([
         expect(result.name).to.equal(editProductData.name),
         expect(result.price.toFixed(2)).to.equal((editProductData.priceTaxExcluded + taxValue).toFixed(2)),
@@ -471,7 +471,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
       it(`should check the product '${test.args.product.name}' in the pack`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkEditProductInPack${index}`, baseContext);
 
-        const result = await foProductPage.getProductInPackList(page, index + 1);
+        const result = await foClassicProductPage.getProductInPackList(page, index + 1);
         await Promise.all([
           expect(result.image).to.contains(test.args.product.coverImage),
           expect(result.name).to.equal(test.args.product.name),
@@ -488,7 +488,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
 
       // Go back to BO
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductsPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductsPage.pageTitle);

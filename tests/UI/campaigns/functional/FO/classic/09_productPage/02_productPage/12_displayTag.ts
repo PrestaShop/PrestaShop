@@ -9,9 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import createProductPage from '@pages/BO/catalog/products/add';
 import optionsTab from '@pages/BO/catalog/products/add/optionsTab';
 
-// Import FO pages
-import {productPage as foProductPage} from '@pages/FO/classic/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
@@ -20,11 +17,12 @@ import {
   FakerProduct,
   foClassicCategoryPage,
   foClassicHomePage,
+  foClassicProductPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
-const baseContext: string = 'functional_FO_classic_productPage_productPage_displayTag';
+const baseContext: string = 'functional_FO_classic_foClassicProductPage._foClassicProductPage._displayTag';
 
 describe('FO - Product page - Product page : Display tag products', async () => {
   let browserContext: BrowserContext;
@@ -143,7 +141,7 @@ describe('FO - Product page - Product page : Display tag products', async () => 
 
       // Click on preview button
       page = await createProductPage.viewMyShop(page);
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
       const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Home page is not displayed').to.eq(true);
@@ -182,14 +180,14 @@ describe('FO - Product page - Product page : Display tag products', async () => 
 
       await foClassicCategoryPage.goToProductPage(page, productsNumber - 12);
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check the tag \'New, pack, out-of-stock and Online only\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOnSaleFlag', baseContext);
 
-      const flagText = await foProductPage.getProductTag(page);
+      const flagText = await foClassicProductPage.getProductTag(page);
       expect(flagText).to.contains('Online only')
         .and.to.contain('New')
         .and.to.contain('Pack')

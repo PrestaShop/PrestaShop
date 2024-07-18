@@ -9,7 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import emailPage from '@pages/BO/advancedParameters/email';
 
 // Import FO pages
-import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
@@ -20,6 +19,7 @@ import {
   dataLanguages,
   dataPaymentMethods,
   foClassicHomePage,
+  foClassicProductPage,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -77,7 +77,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
       await foClassicHomePage.goToProductPage(page, 1);
 
       // Add the product to the cart
-      await productPage.addProductToTheCart(page);
+      await foClassicProductPage.addProductToTheCart(page);
 
       const pageTitle = await cartPage.getPageTitle(page);
       expect(pageTitle).to.contains(cartPage.pageTitle);

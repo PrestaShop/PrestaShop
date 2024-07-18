@@ -1,14 +1,12 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import FO pages
-import {productPage} from '@pages/FO/classic/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
   foClassicHomePage,
+  foClassicProductPage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -61,7 +59,7 @@ describe('FO - Search Page : Search a product and validate', async () => {
     await foClassicHomePage.setProductNameInSearchInput(page, dataProducts.demo_8.name);
     await foClassicHomePage.clickAutocompleteSearchResult(page, 1);
 
-    const pageTitle = await productPage.getPageTitle(page);
+    const pageTitle = await foClassicProductPage.getPageTitle(page);
     expect(pageTitle).to.contains(dataProducts.demo_8.name);
 
     const inputValue = await foClassicHomePage.getSearchValue(page);

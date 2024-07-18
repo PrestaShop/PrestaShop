@@ -1,14 +1,12 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import pages
-import {productPage} from '@pages/FO/classic/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
   foClassicHomePage,
+  foClassicProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -52,7 +50,7 @@ describe('FO - Home Page : Select color on hover on product list', async () => {
 
     await foClassicHomePage.selectProductColor(page, 1, 'White');
 
-    const pageTitle = await productPage.getPageTitle(page);
+    const pageTitle = await foClassicProductPage.getPageTitle(page);
     expect(pageTitle).to.contains(dataProducts.demo_1.name);
   });
 
@@ -64,7 +62,7 @@ describe('FO - Home Page : Select color on hover on product list', async () => {
       this.skip();
     }
 
-    const pageURL = await productPage.getCurrentURL(page);
+    const pageURL = await foClassicProductPage.getCurrentURL(page);
     expect(pageURL).to.contains('color-white')
       .and.to.contains('size-m');
   });
@@ -72,7 +70,7 @@ describe('FO - Home Page : Select color on hover on product list', async () => {
   it('should go to Home page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage', baseContext);
 
-    await productPage.goToHomePage(page);
+    await foClassicProductPage.goToHomePage(page);
 
     const isHomePage = await foClassicHomePage.isHomePage(page);
     expect(isHomePage, 'Home page is not displayed').to.eq(true);
@@ -83,14 +81,14 @@ describe('FO - Home Page : Select color on hover on product list', async () => {
 
     await foClassicHomePage.selectProductColor(page, 1, 'Black');
 
-    const pageTitle = await productPage.getPageTitle(page);
+    const pageTitle = await foClassicProductPage.getPageTitle(page);
     expect(pageTitle).to.contains(dataProducts.demo_1.name);
   });
 
   it('should check that the displayed product is black', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkDisplayedProduct2', baseContext);
 
-    const pageURL = await productPage.getCurrentURL(page);
+    const pageURL = await foClassicProductPage.getCurrentURL(page);
     expect(pageURL).to.contains('color-black')
       .and.to.contains('size-s');
   });

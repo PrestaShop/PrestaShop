@@ -1,14 +1,12 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import pages
-import {productPage} from '@pages/FO/classic/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
   foClassicHomePage,
+  foClassicProductPage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -53,42 +51,42 @@ describe('FO - Product page - Product page : Change Color', async () => {
 
     await foClassicSearchResultsPage.goToProductPage(page, 1);
 
-    const pageTitle = await productPage.getPageTitle(page);
+    const pageTitle = await foClassicProductPage.getPageTitle(page);
     expect(pageTitle).to.contains(dataProducts.demo_1.name);
   });
 
   it('should get the default color selected', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'getDefaultColor', baseContext);
 
-    firstCoverImageURL = await productPage.getCoverImage(page);
+    firstCoverImageURL = await foClassicProductPage.getCoverImage(page);
 
-    const selectedAttribute = await productPage.getSelectedAttribute(page, 2, 'radio');
+    const selectedAttribute = await foClassicProductPage.getSelectedAttribute(page, 2, 'radio');
     expect(selectedAttribute).to.equal('White');
   });
 
   it('should check the selected attribute text', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkSelectedColor', baseContext);
 
-    const variantText = await productPage.getSelectedAttributeText(page, 2);
+    const variantText = await foClassicProductPage.getSelectedAttributeText(page, 2);
     expect(variantText).to.equal('Color: White');
   });
 
   it('should change the color and check the image', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'changeColor', baseContext);
 
-    await productPage.selectAttributes(page, 'radio', [{name: 'Color', value: 'Black'}], 2);
+    await foClassicProductPage.selectAttributes(page, 'radio', [{name: 'Color', value: 'Black'}], 2);
 
-    const selectedAttribute = await productPage.getSelectedAttribute(page, 2, 'radio');
+    const selectedAttribute = await foClassicProductPage.getSelectedAttribute(page, 2, 'radio');
     expect(selectedAttribute).to.equal('Black');
 
-    const newCoverImage = await productPage.getCoverImage(page);
+    const newCoverImage = await foClassicProductPage.getCoverImage(page);
     expect(newCoverImage).to.not.equal(firstCoverImageURL);
   });
 
   it('should check the attribute text', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkSelectedColor2', baseContext);
 
-    const variantText = await productPage.getSelectedAttributeText(page, 2);
+    const variantText = await foClassicProductPage.getSelectedAttributeText(page, 2);
     expect(variantText).to.equal('Color: Black');
   });
 });

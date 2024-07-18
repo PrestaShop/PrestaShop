@@ -3,7 +3,6 @@ import testContext from '@utils/testContext';
 
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
-import {productPage} from '@pages/FO/classic/product';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {expect} from 'chai';
@@ -11,6 +10,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   foClassicHomePage,
   foClassicModalQuickViewPage,
+  foClassicProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -60,7 +60,7 @@ describe('FO - cart : Display modal when adding a product to cart', async () => 
 
     await foClassicHomePage.goToProductPage(page, 2);
     // Add the product to the cart
-    await productPage.addProductToTheCart(page, 3);
+    await foClassicProductPage.addProductToTheCart(page, 3);
 
     const pageTitle = await cartPage.getPageTitle(page);
     expect(pageTitle).to.eq(cartPage.pageTitle);

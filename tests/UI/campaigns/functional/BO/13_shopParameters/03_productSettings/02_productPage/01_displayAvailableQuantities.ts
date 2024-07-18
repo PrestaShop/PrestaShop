@@ -7,8 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
-// Import FO pages
-import {productPage} from '@pages/FO/classic/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -16,6 +14,7 @@ import {
   boDashboardPage,
   dataProducts,
   foClassicHomePage,
+  foClassicProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -91,21 +90,21 @@ describe('BO - Shop Parameters - Product Settings : Display available quantities
 
       await foClassicHomePage.goToProductPage(page, 1);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
     });
 
     it('should check the product quantity on the product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkQuantity${index}`, baseContext);
 
-      const quantityIsVisible = await productPage.isQuantityDisplayed(page);
+      const quantityIsVisible = await foClassicProductPage.isQuantityDisplayed(page);
       expect(quantityIsVisible).to.be.equal(test.args.enable);
     });
 
     it('should close the page and go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `closePageAndBackToBO${index}`, baseContext);
 
-      page = await productPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await productSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(productSettingsPage.pageTitle);

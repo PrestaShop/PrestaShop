@@ -8,8 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import addProductPage from '@pages/BO/catalog/products/add';
-// Import FO pages
-import {productPage} from '@pages/FO/classic/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -18,6 +16,7 @@ import {
   boProductsPage,
   FakerProduct,
   foClassicHomePage,
+  foClassicProductPage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -127,7 +126,7 @@ describe('BO - Shop Parameters - Product Settings : Allow ordering of out-of-sto
         await foClassicHomePage.searchProduct(page, productData.name);
         await foClassicSearchResultsPage.goToProductPage(page, 1);
 
-        const pageTitle = await productPage.getPageTitle(page);
+        const pageTitle = await foClassicProductPage.getPageTitle(page);
         expect(pageTitle).to.contains(productData.name);
       });
 
@@ -140,7 +139,7 @@ describe('BO - Shop Parameters - Product Settings : Allow ordering of out-of-sto
         );
 
         // Check add to cart button
-        const lastQuantityIsVisible = await productPage.isAddToCartButtonEnabled(page);
+        const lastQuantityIsVisible = await foClassicProductPage.isAddToCartButtonEnabled(page);
         expect(lastQuantityIsVisible).to.be.equal(test.args.enable);
       });
 
@@ -148,7 +147,7 @@ describe('BO - Shop Parameters - Product Settings : Allow ordering of out-of-sto
         await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${test.args.action}`, baseContext);
 
         // Go back to BO
-        page = await productPage.closePage(browserContext, page, 0);
+        page = await foClassicProductPage.closePage(browserContext, page, 0);
 
         const pageTitle = await productSettingsPage.getPageTitle(page);
         expect(pageTitle).to.contains(productSettingsPage.pageTitle);

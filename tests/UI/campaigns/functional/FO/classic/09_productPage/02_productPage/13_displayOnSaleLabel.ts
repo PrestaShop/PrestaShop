@@ -8,9 +8,6 @@ import {deleteProductTest} from '@commonTests/BO/catalog/product';
 import loginCommon from '@commonTests/BO/loginBO';
 import createProductPage from '@pages/BO/catalog/products/add';
 
-// Import FO pages
-import {productPage as foProductPage} from '@pages/FO/classic/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
@@ -19,6 +16,7 @@ import {
   FakerProduct,
   foClassicCategoryPage,
   foClassicHomePage,
+  foClassicProductPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -127,7 +125,7 @@ describe('FO - Product page - Product page : Display on sale label', async () =>
 
       // Click on preview button
       page = await createProductPage.viewMyShop(page);
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
       const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Home page is not displayed').to.eq(true);
@@ -165,14 +163,14 @@ describe('FO - Product page - Product page : Display on sale label', async () =>
 
       await foClassicCategoryPage.goToProductPage(page, productsNumber - 12);
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check the tag \'New, pack, out-of-stock and Online only\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOnSaleFlag', baseContext);
 
-      const flagText = await foProductPage.getProductTag(page);
+      const flagText = await foClassicProductPage.getProductTag(page);
       expect(flagText).to.contains('On sale!')
         .and.to.contain('New')
         .and.to.contain('Out-of-Stock');

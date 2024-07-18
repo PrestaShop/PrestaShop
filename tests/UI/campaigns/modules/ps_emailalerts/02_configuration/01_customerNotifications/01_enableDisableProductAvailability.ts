@@ -17,7 +17,6 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import stocksPage from '@pages/BO/catalog/stocks';
 // Import FO pages
-import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
@@ -33,6 +32,7 @@ import {
   FakerProduct,
   foClassicHomePage,
   foClassicLoginPage,
+  foClassicProductPage,
   foClassicSearchResultsPage,
   type MailDev,
   type MailDevEmail,
@@ -167,20 +167,20 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
 
       await foClassicSearchResultsPage.goToProductPage(page, 1);
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(productData.name);
 
-      const availabilityLabel = await foProductPage.getProductAvailabilityLabel(page);
+      const availabilityLabel = await foClassicProductPage.getProductAvailabilityLabel(page);
       expect(availabilityLabel).to.contains('Out-of-Stock');
 
-      const hasBlockMailAlert = await foProductPage.hasBlockMailAlert(page);
+      const hasBlockMailAlert = await foClassicProductPage.hasBlockMailAlert(page);
       expect(hasBlockMailAlert).to.be.equal(false);
     });
 
     it('should define to "Yes" the "Product Availability"', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'case1DefineYesProductAvailability', baseContext);
 
-      page = await foProductPage.changePage(browserContext, 0);
+      page = await foClassicProductPage.changePage(browserContext, 0);
 
       const pageTitle = await psEmailAlerts.getPageSubtitle(page);
       expect(pageTitle).to.eq(psEmailAlerts.pageTitle);
@@ -194,21 +194,21 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
     it('should reload the product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'reloadProductPage', baseContext);
 
-      page = await foProductPage.changePage(browserContext, 1);
+      page = await foClassicProductPage.changePage(browserContext, 1);
       await page.reload();
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(productData.name);
 
-      const hasBlockMailAlert = await foProductPage.hasBlockMailAlert(page);
+      const hasBlockMailAlert = await foClassicProductPage.hasBlockMailAlert(page);
       expect(hasBlockMailAlert).to.be.equal(true);
     });
 
     it('should fill the block "Email Alerts" with a valid email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'fillBlockValidEmail', baseContext);
 
-      const textMessage = await foProductPage.notifyEmailAlert(page, emailValid);
-      expect(textMessage).to.be.equal(foProductPage.messageAlertNotificationSaved);
+      const textMessage = await foClassicProductPage.notifyEmailAlert(page, emailValid);
+      expect(textMessage).to.be.equal(foClassicProductPage.messageAlertNotificationSaved);
     });
 
     it('should fill the block "Email Alerts" with an invalid email', async function () {
@@ -216,22 +216,22 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
 
       await page.reload();
 
-      const textMessage = await foProductPage.notifyEmailAlert(page, emailInvalid);
-      expect(textMessage).to.be.equal(foProductPage.messageAlertNotificationEmailInvalid);
+      const textMessage = await foClassicProductPage.notifyEmailAlert(page, emailInvalid);
+      expect(textMessage).to.be.equal(foClassicProductPage.messageAlertNotificationEmailInvalid);
     });
 
     it('should fill the block "Email Alerts" with numbers', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'fillBlockNumbers', baseContext);
 
-      const textMessage = await foProductPage.notifyEmailAlert(page, '123456');
-      expect(textMessage).to.be.equal(foProductPage.messageAlertNotificationEmailInvalid);
+      const textMessage = await foClassicProductPage.notifyEmailAlert(page, '123456');
+      expect(textMessage).to.be.equal(foClassicProductPage.messageAlertNotificationEmailInvalid);
     });
 
     it('should fill the block "Email Alerts" with invalid characters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'fillBlockInvalidChars', baseContext);
 
-      const textMessage = await foProductPage.notifyEmailAlert(page, '**¨¨@');
-      expect(textMessage).to.be.equal(foProductPage.messageAlertNotificationEmailInvalid);
+      const textMessage = await foClassicProductPage.notifyEmailAlert(page, '**¨¨@');
+      expect(textMessage).to.be.equal(foClassicProductPage.messageAlertNotificationEmailInvalid);
     });
   });
 
@@ -239,7 +239,7 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
     it('should define to "No" the "Product Availability"', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'case2DefineNoProductAvailability', baseContext);
 
-      page = await foProductPage.changePage(browserContext, 0);
+      page = await foClassicProductPage.changePage(browserContext, 0);
 
       const pageTitle = await psEmailAlerts.getPageSubtitle(page);
       expect(pageTitle).to.eq(psEmailAlerts.pageTitle);
@@ -253,8 +253,8 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPage', baseContext);
 
-      page = await foProductPage.changePage(browserContext, 1);
-      await foProductPage.goToLoginPage(page);
+      page = await foClassicProductPage.changePage(browserContext, 1);
+      await foClassicProductPage.goToLoginPage(page);
 
       const pageTitle = await foClassicLoginPage.getPageTitle(page);
       expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
@@ -265,24 +265,24 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
 
       await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await foProductPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicProductPage.isCustomerConnected(page);
       expect(isCustomerConnected).to.eq(true);
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(productData.name);
     });
 
     it('should check the block "Notify when it\' available" is not present', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkBlockNotPresent', baseContext);
 
-      const hasBlockMailAlert = await foProductPage.hasBlockMailAlert(page);
+      const hasBlockMailAlert = await foClassicProductPage.hasBlockMailAlert(page);
       expect(hasBlockMailAlert).to.be.equal(false);
     });
 
     it('should define to "Yes" the "Product Availability"', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'case2DefineYesProductAvailability', baseContext);
 
-      page = await foProductPage.changePage(browserContext, 0);
+      page = await foClassicProductPage.changePage(browserContext, 0);
 
       const pageTitle = await psEmailAlerts.getPageSubtitle(page);
       expect(pageTitle).to.eq(psEmailAlerts.pageTitle);
@@ -296,21 +296,21 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
     it('should check the block "Notify when it\' available"', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkBlockPresent', baseContext);
 
-      page = await foProductPage.changePage(browserContext, 1);
+      page = await foClassicProductPage.changePage(browserContext, 1);
       await page.reload();
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(productData.name);
 
-      const hasBlockMailAlert = await foProductPage.hasBlockMailAlert(page);
+      const hasBlockMailAlert = await foClassicProductPage.hasBlockMailAlert(page);
       expect(hasBlockMailAlert).to.be.equal(true);
     });
 
     it('should click on  "Notify me when available" button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickNotifyButton', baseContext);
 
-      const textMessage = await foProductPage.notifyEmailAlert(page);
-      expect(textMessage).to.be.equal(foProductPage.messageAlertNotificationSaved);
+      const textMessage = await foClassicProductPage.notifyEmailAlert(page);
+      expect(textMessage).to.be.equal(foClassicProductPage.messageAlertNotificationSaved);
     });
 
     it('should reload the page', async function () {
@@ -318,8 +318,8 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
 
       await page.reload();
 
-      const textMessage = await foProductPage.getBlockMailAlertNotification(page);
-      expect(textMessage).to.be.equal(foProductPage.messageAlertNotificationAlreadyRegistered);
+      const textMessage = await foClassicProductPage.getBlockMailAlertNotification(page);
+      expect(textMessage).to.be.equal(foClassicProductPage.messageAlertNotificationAlreadyRegistered);
     });
   });
 
@@ -327,7 +327,7 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-      page = await foProductPage.changePage(browserContext, 0);
+      page = await foClassicProductPage.changePage(browserContext, 0);
 
       await boDashboardPage.goToSubMenu(
         page,
@@ -376,7 +376,7 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
       await page.reload();
 
       // Add the product to the cart
-      await foProductPage.addProductToTheCart(page, 1);
+      await foClassicProductPage.addProductToTheCart(page, 1);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(1);
@@ -420,21 +420,21 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
       await foClassicHomePage.searchProduct(page, productData.name);
       await foClassicSearchResultsPage.goToProductPage(page, 1);
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(productData.name);
     });
 
     it('should click on \'Notify me when available\' button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickNotifyButton2', baseContext);
 
-      const textMessage = await foProductPage.notifyEmailAlert(page);
-      expect(textMessage).to.be.equal(foProductPage.messageAlertNotificationSaved);
+      const textMessage = await foClassicProductPage.notifyEmailAlert(page);
+      expect(textMessage).to.be.equal(foClassicProductPage.messageAlertNotificationSaved);
     });
 
     it('should go to orders page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-      page = await foProductPage.changePage(browserContext, 0);
+      page = await foClassicProductPage.changePage(browserContext, 0);
       await page.reload();
 
       await boDashboardPage.goToSubMenu(
@@ -484,7 +484,7 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage2', baseContext);
 
-      page = await foProductPage.changePage(browserContext, 0);
+      page = await foClassicProductPage.changePage(browserContext, 0);
 
       await boDashboardPage.goToSubMenu(
         page,
@@ -524,14 +524,14 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
       page = await addProductPage.changePage(browserContext, 1);
       await page.reload();
 
-      const textMessage = await foProductPage.notifyEmailAlert(page);
-      expect(textMessage).to.be.equal(foProductPage.messageAlertNotificationSaved);
+      const textMessage = await foClassicProductPage.notifyEmailAlert(page);
+      expect(textMessage).to.be.equal(foClassicProductPage.messageAlertNotificationSaved);
     });
 
     it('should go to stocks page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToStocksPage', baseContext);
 
-      page = await foProductPage.changePage(browserContext, 0);
+      page = await foClassicProductPage.changePage(browserContext, 0);
 
       await boDashboardPage.goToSubMenu(
         page,

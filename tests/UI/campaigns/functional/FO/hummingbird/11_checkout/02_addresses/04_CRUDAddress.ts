@@ -7,7 +7,6 @@ import createAccountTest from '@commonTests/FO/hummingbird/account';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
-import foProductPage from '@pages/FO/hummingbird/product';
 import cartPage from '@pages/FO/hummingbird/cart';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 
@@ -16,6 +15,7 @@ import {
   FakerAddress,
   FakerCustomer,
   foHummingbirdHomePage,
+  foHummingbirdProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -94,14 +94,14 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
 
       await foHummingbirdHomePage.goToProductPage(page, 1);
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_1.name);
     });
 
     it('should add product to cart and go to cart page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await foProductPage.addProductToTheCart(page);
+      await foHummingbirdProductPage.addProductToTheCart(page);
 
       const pageTitle = await cartPage.getPageTitle(page);
       expect(pageTitle).to.equal(cartPage.pageTitle);

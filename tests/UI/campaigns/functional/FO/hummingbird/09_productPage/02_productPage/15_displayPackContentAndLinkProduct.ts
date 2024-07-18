@@ -4,14 +4,12 @@ import testContext from '@utils/testContext';
 // Import common tests
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
-// Import FO pages
-import foProductPage from '@pages/FO/hummingbird/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
   foHummingbirdHomePage,
+  foHummingbirdProductPage,
   foHummingbirdSearchResultsPage,
   utilsCore,
   utilsPlaywright,
@@ -66,14 +64,14 @@ describe('FO - Product Page : Display pack content and link to product', async (
 
       await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_21.name);
     });
 
     it('should check product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation', baseContext);
 
-      const product1 = await foProductPage.getProductInPackList(page, 1);
+      const product1 = await foHummingbirdProductPage.getProductInPackList(page, 1);
       await Promise.all([
         expect(product1.name).to.equals(
           `${dataProducts.demo_7.name} `
@@ -83,7 +81,7 @@ describe('FO - Product Page : Display pack content and link to product', async (
         expect(product1.quantity).to.equals(5),
       ]);
 
-      const product2 = await foProductPage.getProductInPackList(page, 2);
+      const product2 = await foHummingbirdProductPage.getProductInPackList(page, 2);
       await Promise.all([
         expect(product2.name).to.equals(dataProducts.demo_12.name),
         expect(product2.price).to.equals(`€${dataProducts.demo_12.price.toFixed(2)}`),
@@ -94,9 +92,9 @@ describe('FO - Product Page : Display pack content and link to product', async (
     it('should click on the first product of the pack', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickPackProduct', baseContext);
 
-      await foProductPage.clickProductInPackList(page, 1);
+      await foHummingbirdProductPage.clickProductInPackList(page, 1);
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_7.name);
     });
   });

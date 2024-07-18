@@ -9,9 +9,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 import loginCommon from '@commonTests/BO/loginBO';
 import createProductPage from '@pages/BO/catalog/products/add';
 
-// Import FO pages
-import productPage from '@pages/FO/hummingbird/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
@@ -20,6 +17,7 @@ import {
   FakerProduct,
   foHummingbirdCategoryPage,
   foHummingbirdHomePage,
+  foHummingbirdProductPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -131,7 +129,7 @@ describe('FO - Product page - Product page : Display on sale label', async () =>
 
       // Click on preview button
       page = await createProductPage.viewMyShop(page);
-      await productPage.changeLanguage(page, 'en');
+      await foHummingbirdProductPage.changeLanguage(page, 'en');
 
       const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage, 'Home page is not displayed').to.eq(true);
@@ -169,14 +167,14 @@ describe('FO - Product page - Product page : Display on sale label', async () =>
 
       await foHummingbirdCategoryPage.goToProductPage(page, productsNumber - 12);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check the tag \'New, pack, out-of-stock and Online only\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOnSaleFlag', baseContext);
 
-      const flagText = await productPage.getProductTag(page);
+      const flagText = await foHummingbirdProductPage.getProductTag(page);
       expect(flagText).to.contains('On sale!')
         .and.to.contain('New')
         .and.to.contain('Out-of-Stock');

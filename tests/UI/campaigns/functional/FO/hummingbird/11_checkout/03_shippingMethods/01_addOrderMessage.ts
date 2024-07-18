@@ -7,7 +7,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 // Import FO pages
 import cartPage from '@pages/FO/hummingbird/cart';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
-import productPage from '@pages/FO/hummingbird/product';
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
 import orderHistoryPage from '@pages/FO/hummingbird/myAccount/orderHistory';
 import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
@@ -19,6 +18,7 @@ import {
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
+  foHummingbirdProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -100,7 +100,7 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
       // Go to the first product page
       await foHummingbirdHomePage.goToProductPage(page, 1);
       // Add the product to the cart
-      await productPage.addProductToTheCart(page);
+      await foHummingbirdProductPage.addProductToTheCart(page);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(1);
