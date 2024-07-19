@@ -66,6 +66,8 @@ use RuntimeException;
  */
 abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, JsonSerializable
 {
+    private const INDEX_NAME_PATTERN = '/@indexName\s+"([^"]+)"/';
+
     /**
      * @var ArrayObject
      */
@@ -94,11 +96,17 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
         foreach ($methods as $method) {
             $methodDoc = $method->getDocComment();
             if (strpos($methodDoc, '@arrayAccess') !== false) {
+                if (preg_match(self::INDEX_NAME_PATTERN, $methodDoc, $matches)) {
+                    $indexName = $matches[1];
+                } else {
+                    $indexName = $this->convertMethodNameToIndex($method->getName());
+                }
                 $this->arrayAccessList->offsetSet(
-                    $this->convertMethodNameToIndex($method->getName()),
+                    $indexName,
                     [
                         'type' => 'method',
                         'value' => $method->getName(),
+                        'isRewritable' => strpos($methodDoc, '@isRewritable') !== false,
                     ]
                 );
             }
@@ -391,15 +399,17 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      */
     public function offsetSet($offset, $value, $force = false): void
     {
-        if (!$force && $this->arrayAccessList->offsetExists($offset)) {
+        if ($this->arrayAccessList->offsetExists($offset)) {
             $result = $this->arrayAccessList->offsetGet($offset);
-            if ($result['type'] !== 'variable') {
+
+            if (!$force && $result['type'] !== 'variable' && !$result['isRewritable']) {
                 throw new RuntimeException('Trying to set the index ' . print_r($offset, true) . ' of the LazyArray ' . get_class($this) . ' already defined by a method is not allowed');
             }
         }
         $this->arrayAccessList->offsetSet($offset, [
             'type' => 'variable',
             'value' => $value,
+            'isRewritable' => $result['isRewritable'] ?? false,
         ]);
     }
 
