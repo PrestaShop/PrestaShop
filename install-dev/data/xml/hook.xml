@@ -4919,10 +4919,5 @@
       <title>Modify customer groups grid template data</title>
       <description>This hook allows to modify data which is about to be used in template for customer groups grid</description>
     </hook>
-    <hook id="actionGetHookExecListAfter">
-      <name>actionGetHookExecListAfter</name>
-      <title>Add action after GetHookExecList</title>
-      <description>This hook is called after getting a list of hook exec</description>
-    </hook>
   </entities>
 </entity_hook>

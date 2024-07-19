@@ -764,7 +764,21 @@ class HookCore extends ObjectModel
             }
         }
 
-        Hook::exec('actionGetHookExecListAfter', ['modules_to_invoke' => $modulesToInvoke]);
+        // Retrieve the filtered modules configuration
+        $filteredModules = Configuration::get('PS_FILTERED_MODULES');
+        if ($filteredModules !== false) {
+            $filteredModules = json_decode($filteredModules, true);
+            if (!is_array($filteredModules) || array_filter($filteredModules, 'is_string') !== $filteredModules) {
+                $filteredModules = [];
+            }
+        }
+
+        // Apply filtering based on the configuration
+        if (!empty($modulesToInvoke) && $filteredModules) {
+            $modulesToInvoke = array_filter($modulesToInvoke, function ($module) use ($filteredModules) {
+                return !in_array($module['module'], $filteredModules);
+            });
+        }
 
         return !empty($modulesToInvoke) ? $modulesToInvoke : false;
     }
