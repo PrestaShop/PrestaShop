@@ -15,7 +15,6 @@ import addGroupPage from '@pages/BO/shopParameters/customerSettings/groups/add';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
-import {productPage} from '@pages/FO/classic/product';
 
 import {
   boDashboardPage,
@@ -24,6 +23,7 @@ import {
   FakerCarrier,
   foClassicHomePage,
   foClassicLoginPage,
+  foClassicProductPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -229,7 +229,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
       // Go to the first product page
       await foClassicHomePage.goToProductPage(page, 1);
       // Add the created product to the cart
-      await productPage.addProductToTheCart(page);
+      await foClassicProductPage.addProductToTheCart(page);
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);
 
@@ -326,7 +326,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
       // Go to the first product page
       await foClassicHomePage.goToProductPage(page, 1);
       // Add the created product to the cart
-      await productPage.addProductToTheCart(page);
+      await foClassicProductPage.addProductToTheCart(page);
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);
 

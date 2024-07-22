@@ -14,9 +14,6 @@ import addValuePage from '@pages/BO/catalog/attributes/addValue';
 import createProductsPage from '@pages/BO/catalog/products/add';
 import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
 
-// Import FO pages
-import productPage from '@pages/FO/hummingbird/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
@@ -26,6 +23,7 @@ import {
   FakerAttributeValue,
   FakerProduct,
   foHummingbirdHomePage,
+  foHummingbirdProductPage,
   foHummingbirdSearchResultsPage,
   type ProductAttribute,
   utilsFile,
@@ -271,7 +269,7 @@ describe('FO - Product page - Product page : Change combination', async () => {
 
       await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
@@ -285,9 +283,9 @@ describe('FO - Product page - Product page : Change combination', async () => {
         },
       ];
 
-      await productPage.selectAttributes(page, 'select', combination);
+      await foHummingbirdProductPage.selectAttributes(page, 'select', combination);
 
-      const selectedAttribute = await productPage.getSelectedAttribute(page, 1, 'select');
+      const selectedAttribute = await foHummingbirdProductPage.getSelectedAttribute(page, 1, 'select');
       expect(selectedAttribute).to.equal('S');
     });
 
@@ -301,9 +299,9 @@ describe('FO - Product page - Product page : Change combination', async () => {
         },
       ];
 
-      await productPage.selectAttributes(page, 'radio', combination, 2);
+      await foHummingbirdProductPage.selectAttributes(page, 'radio', combination, 2);
 
-      const selectedAttribute = await productPage.getSelectedAttribute(page, 2, 'radio');
+      const selectedAttribute = await foHummingbirdProductPage.getSelectedAttribute(page, 2, 'radio');
       expect(selectedAttribute).to.equal('Carton');
     });
   });
@@ -312,7 +310,7 @@ describe('FO - Product page - Product page : Change combination', async () => {
     it('should close the FO tab', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeFO', baseContext);
 
-      page = await productPage.closePage(browserContext, page, 0);
+      page = await foHummingbirdProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductsPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductsPage.pageTitle);

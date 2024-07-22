@@ -7,8 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
-// Import FO pages
-import {productPage} from '@pages/FO/classic/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -16,6 +14,7 @@ import {
   boDashboardPage,
   dataProducts,
   foClassicHomePage,
+  foClassicProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -129,24 +128,24 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
 
           await foClassicHomePage.goToProductPage(page, 1);
 
-          const pageTitle = await productPage.getPageTitle(page);
+          const pageTitle = await foClassicProductPage.getPageTitle(page);
           expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
         });
 
         it('should check the existence of product price and add to cart button', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkPrice&AddToCartButton${index}`, baseContext);
 
-          let isVisible = await productPage.isPriceDisplayed(page);
+          let isVisible = await foClassicProductPage.isPriceDisplayed(page);
           expect(isVisible).to.equal(showPrices.args.isPriceExist);
 
-          isVisible = await productPage.isAddToCartButtonDisplayed(page);
+          isVisible = await foClassicProductPage.isAddToCartButtonDisplayed(page);
           expect(isVisible).to.equal(showPrices.args.isAddToCartExist);
         });
 
         it('should close the page and go back to BO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `closePageAndBackToBO${index}`, baseContext);
 
-          page = await productPage.closePage(browserContext, page, 0);
+          page = await foClassicProductPage.closePage(browserContext, page, 0);
 
           const pageTitle = await productSettingsPage.getPageTitle(page);
           expect(pageTitle).to.contains(productSettingsPage.pageTitle);
@@ -175,24 +174,24 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
 
         await foClassicHomePage.goToProductPage(page, 1);
 
-        const pageTitle = await productPage.getPageTitle(page);
+        const pageTitle = await foClassicProductPage.getPageTitle(page);
         expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
       });
 
       it('should check the existence of product price and add to cart button', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkPrice&AddToCartButtonVisible', baseContext);
 
-        let isVisible = await productPage.isPriceDisplayed(page);
+        let isVisible = await foClassicProductPage.isPriceDisplayed(page);
         expect(isVisible).to.eq(true);
 
-        isVisible = await productPage.isAddToCartButtonDisplayed(page);
+        isVisible = await foClassicProductPage.isAddToCartButtonDisplayed(page);
         expect(isVisible).to.eq(true);
       });
 
       it('should close the page and go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
-        page = await productPage.closePage(browserContext, page, 0);
+        page = await foClassicProductPage.closePage(browserContext, page, 0);
 
         const pageTitle = await productSettingsPage.getPageTitle(page);
         expect(pageTitle).to.contains(productSettingsPage.pageTitle);

@@ -12,7 +12,6 @@ import packTab from '@pages/BO/catalog/products/add/packTab';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import ordersPage from '@pages/BO/orders';
 // Import FO pages
-import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
@@ -25,6 +24,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerProduct,
+  foClassicProductPage,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -302,20 +302,20 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'previewPack', baseContext);
 
       page = await createProductsPage.previewProduct(page);
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle: string = await foProductPage.getPageTitle(page);
+      const pageTitle: string = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(productNameEn);
     });
 
     it('should check product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation', baseContext);
 
-      const productInformation = await foProductPage.getProductInformation(page);
+      const productInformation = await foClassicProductPage.getProductInformation(page);
       const taxValue = await utilsCore.percentage(productRetailPrice, mostUsedTaxValue);
       expect(productRetailPrice + taxValue).to.eq(productInformation.price);
 
-      const productsPrice = await foProductPage.getPackProductsPrice(page);
+      const productsPrice = await foClassicProductPage.getPackProductsPrice(page);
       const calculatedPrice = (
         ((
           (dataProducts.demo_1.price - (dataProducts.demo_1.price * (dataProducts.demo_1.specificPrice.discount / 100)))
@@ -325,24 +325,24 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       ).toFixed(2);
       expect(calculatedPrice).to.eq(productsPrice.toString());
 
-      const product1 = await foProductPage.getProductInPackList(page, 1);
+      const product1 = await foClassicProductPage.getProductInPackList(page, 1);
       await Promise.all([
         expect(product1.name).to.equals(
           `${dataProducts.demo_1.name} `
           + `${utilsCore.capitalize(dataProducts.demo_1.attributes[0].name)}-${dataProducts.demo_1.attributes[0].values[0]} `
           + `${utilsCore.capitalize(dataProducts.demo_1.attributes[1].name)}-${dataProducts.demo_1.attributes[1].values[0]}`,
         ),
-        expect(product1.price).to.equals(`€${dataProducts.demo_1.finalPrice.toFixed(2)}`),
+        expect(product1.price).to.equals(dataProducts.demo_1.finalPrice),
         expect(product1.quantity).to.equals(productQuantity),
       ]);
 
-      const product2 = await foProductPage.getProductInPackList(page, 2);
+      const product2 = await foClassicProductPage.getProductInPackList(page, 2);
       await Promise.all([
         expect(product2.name).to.equals(
           `${dataProducts.demo_9.name} `
           + `${utilsCore.capitalize(dataProducts.demo_9.attributes[0].name)}-${dataProducts.demo_9.attributes[0].values[0]}`,
         ),
-        expect(product2.price).to.equals(`€${dataProducts.demo_9.finalPrice.toFixed(2)}`),
+        expect(product2.price).to.equals(dataProducts.demo_9.finalPrice),
         expect(product2.quantity).to.equals(1),
       ]);
     });
@@ -353,7 +353,7 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'orderPack1', baseContext);
 
       // Add product to the cart
-      await foProductPage.addProductToTheCart(page);
+      await foClassicProductPage.addProductToTheCart(page);
 
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);
@@ -485,9 +485,9 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'previewPack2', baseContext);
 
       page = await createProductsPage.previewProduct(page);
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle: string = await foProductPage.getPageTitle(page);
+      const pageTitle: string = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(productNameEn);
     });
 
@@ -495,7 +495,7 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'orderPack2', baseContext);
 
       // Add product to the cart
-      await foProductPage.addProductToTheCart(page);
+      await foClassicProductPage.addProductToTheCart(page);
 
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);

@@ -9,8 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import generalPage from '@pages/BO/shopParameters/general';
 import addProductPage from '@pages/BO/catalog/products/add';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
-// Import FO pages
-import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -18,6 +16,7 @@ import {
   boDashboardPage,
   boProductsPage,
   dataProducts,
+  foClassicProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -120,20 +119,20 @@ describe('BO - Shop Parameters - General : Enable/Disable Allow iframes on HTML 
         await testContext.addContextItem(this, 'testIdentifier', `previewProduct${index}`, baseContext);
 
         page = await addProductPage.previewProduct(page);
-        await foProductPage.changeLanguage(page, 'en');
+        await foClassicProductPage.changeLanguage(page, 'en');
 
-        const pageTitle = await foProductPage.getPageTitle(page);
+        const pageTitle = await foClassicProductPage.getPageTitle(page);
         expect(pageTitle).to.contains(dataProducts.demo_14.name);
       });
 
       it('should check the existence of the iframe in the product description', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkIframe${index}`, baseContext);
 
-        const isIframeVisible = await foProductPage.isIframeVisibleInProductDescription(page);
+        const isIframeVisible = await foClassicProductPage.isIframeVisibleInProductDescription(page);
         expect(isIframeVisible).to.equal(test.args.exist);
 
         if (test.args.exist) {
-          const youtubeURL = await foProductPage.getURLInProductDescription(page);
+          const youtubeURL = await foClassicProductPage.getURLInProductDescription(page);
           expect(youtubeURL).to.equal('https://www.youtube.com/embed/3qcApq8NMhw?si=0O8BBWjbJ7gJRkoi');
         }
       });
@@ -141,7 +140,7 @@ describe('BO - Shop Parameters - General : Enable/Disable Allow iframes on HTML 
       it('should go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
-        page = await foProductPage.closePage(browserContext, page, 0);
+        page = await foClassicProductPage.closePage(browserContext, page, 0);
 
         const pageTitle = await addProductPage.getPageTitle(page);
         expect(pageTitle).to.contains(addProductPage.pageTitle);

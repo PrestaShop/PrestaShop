@@ -7,14 +7,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import createProductsPage from '@pages/BO/catalog/products/add';
 
-// Import FO pages
-import {productPage as foProductPage} from '@pages/FO/classic/product';
-
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 import {
   boDashboardPage,
   boProductsPage,
+  foClassicProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -215,9 +213,9 @@ describe('BO - Catalog - Products list : Bulk actions, Enable/Disable, 3-dot but
         productName = await boProductsPage.getTextColumn(page, 'product_name', 1) as string;
 
         page = await boProductsPage.clickOnPreviewProductButton(page);
-        await foProductPage.changeLanguage(page, 'en');
+        await foClassicProductPage.changeLanguage(page, 'en');
 
-        const result = await foProductPage.getProductInformation(page);
+        const result = await foClassicProductPage.getProductInformation(page);
         expect(result.name).to.contains(productName);
       });
 
@@ -225,7 +223,7 @@ describe('BO - Catalog - Products list : Bulk actions, Enable/Disable, 3-dot but
         await testContext.addContextItem(this, 'testIdentifier', 'returnOnBackOfficeAfterPreview', baseContext);
 
         // Go back to BO
-        page = await foProductPage.closePage(browserContext, page, 0);
+        page = await foClassicProductPage.closePage(browserContext, page, 0);
 
         const pageTitle = await boProductsPage.getPageTitle(page);
         expect(pageTitle).to.contains(boProductsPage.pageTitle);
@@ -281,24 +279,24 @@ describe('BO - Catalog - Products list : Bulk actions, Enable/Disable, 3-dot but
 
         page = await boProductsPage.clickOnPreviewProductButton(page);
         // @todo : https://github.com/PrestaShop/PrestaShop/issues/34191
-        // await foProductPage.changeLanguage(page, 'en');
+        // await foClassicProductPage.changeLanguage(page, 'en');
 
-        const result = await foProductPage.getProductInformation(page);
+        const result = await foClassicProductPage.getProductInformation(page);
         expect(result.name).to.contains(productName);
       });
 
       it('should check that the product is displayed on the front-office', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkProductDuplicatedFrontOffice', baseContext);
 
-        const pageTitle = await foProductPage.getWarningMessage(page);
-        expect(pageTitle).to.equals(foProductPage.messageNotVisibleToCustomers);
+        const pageTitle = await foClassicProductPage.getWarningMessage(page);
+        expect(pageTitle).to.equals(foClassicProductPage.messageNotVisibleToCustomers);
       });
 
       it('should return on the back office', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'returnOnBackOfficeAfterDuplicate', baseContext);
 
         // Go back to BO
-        page = await foProductPage.closePage(browserContext, page, 0);
+        page = await foClassicProductPage.closePage(browserContext, page, 0);
 
         const pageTitle = await boProductsPage.getPageTitle(page);
         expect(pageTitle).to.contains(boProductsPage.pageTitle);

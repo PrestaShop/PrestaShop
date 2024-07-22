@@ -4,14 +4,12 @@ import testContext from '@utils/testContext';
 // Import common tests
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
-// Import pages
-import productPage from '@pages/FO/hummingbird/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
   foHummingbirdHomePage,
+  foHummingbirdProductPage,
   foHummingbirdSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -59,7 +57,7 @@ describe('FO - Product page - Product page : Share links', async () => {
 
       await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_12.name);
     });
 
@@ -71,21 +69,21 @@ describe('FO - Product page - Product page : Share links', async () => {
       it(`should click on the ${args.socialNetwork} link and check it`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `click${args.socialNetwork}Link`, baseContext);
 
-        const socialLink = await productPage.getSocialSharingLink(page, args.socialNetwork);
+        const socialLink = await foHummingbirdProductPage.getSocialSharingLink(page, args.socialNetwork);
         expect(socialLink).to.contains(args.link);
 
-        page = await productPage.clickOnSocialSharingLink(page, args.socialNetwork);
+        page = await foHummingbirdProductPage.clickOnSocialSharingLink(page, args.socialNetwork);
 
-        const link = await productPage.getCurrentURL(page);
+        const link = await foHummingbirdProductPage.getCurrentURL(page);
         expect(link).to.contains(args.url);
       });
 
       it('should close the page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `close${args.link}Page`, baseContext);
 
-        page = await productPage.closePage(browserContext, page, 0);
+        page = await foHummingbirdProductPage.closePage(browserContext, page, 0);
 
-        const pageTitle = await productPage.getPageTitle(page);
+        const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
         expect(pageTitle).to.contains(dataProducts.demo_12.name);
       });
     });

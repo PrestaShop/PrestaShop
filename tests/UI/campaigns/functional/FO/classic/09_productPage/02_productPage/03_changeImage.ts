@@ -9,9 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import createProductsPage from '@pages/BO/catalog/products/add';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
-// Import FO pages
-import {productPage} from '@pages/FO/classic/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
@@ -19,6 +16,7 @@ import {
   boProductsPage,
   FakerProduct,
   foClassicHomePage,
+  foClassicProductPage,
   foClassicSearchResultsPage,
   utilsFile,
   utilsPlaywright,
@@ -146,58 +144,58 @@ describe('FO - Product page - Quick view : Change image', async () => {
 
       await foClassicSearchResultsPage.goToProductPage(page, 1);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.equal(newProductData.name);
     });
 
     it('should display the second image', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'displaySecondImage', baseContext);
 
-      const firstCoverImageURL = await productPage.getCoverImage(page);
+      const firstCoverImageURL = await foClassicProductPage.getCoverImage(page);
 
-      const secondCoverImageURL = await productPage.selectThumbImage(page, 2);
+      const secondCoverImageURL = await foClassicProductPage.selectThumbImage(page, 2);
       expect(firstCoverImageURL).to.not.equal(secondCoverImageURL);
     });
 
     it('should display the first image', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'displayFirstImage', baseContext);
 
-      const firstCoverImageURL = await productPage.getCoverImage(page);
+      const firstCoverImageURL = await foClassicProductPage.getCoverImage(page);
 
-      const secondCoverImageURL = await productPage.selectThumbImage(page, 1);
+      const secondCoverImageURL = await foClassicProductPage.selectThumbImage(page, 1);
       expect(firstCoverImageURL).to.not.equal(secondCoverImageURL);
     });
 
     it('should click on the arrow right and click on the 4th product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'display4ThImage', baseContext);
 
-      const coverImageURL = await productPage.getCoverImage(page);
-      await productPage.scrollBoxArrowsImages(page, 'right');
+      const coverImageURL = await foClassicProductPage.getCoverImage(page);
+      await foClassicProductPage.scrollBoxArrowsImages(page, 'right');
 
-      const fourthCoverImageURL = await productPage.selectThumbImage(page, 4);
+      const fourthCoverImageURL = await foClassicProductPage.selectThumbImage(page, 4);
       expect(coverImageURL).to.not.equal(fourthCoverImageURL);
     });
 
     it('should zoom the cover image and check the modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'zoomImage', baseContext);
 
-      const isModalVisible = await productPage.zoomCoverImage(page);
+      const isModalVisible = await foClassicProductPage.zoomCoverImage(page);
       expect(isModalVisible).to.equal(true);
     });
 
     it('should click on the third little image', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnSecondLittleImage', baseContext);
 
-      const coverImageURL = await productPage.getCoverImageFromProductModal(page);
+      const coverImageURL = await foClassicProductPage.getCoverImageFromProductModal(page);
 
-      const thirdCoverImageURL = await productPage.selectThumbImageFromProductModal(page, 3);
+      const thirdCoverImageURL = await foClassicProductPage.selectThumbImageFromProductModal(page, 3);
       expect(coverImageURL).to.not.equal(thirdCoverImageURL);
     });
 
     it('should close the product modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeModal', baseContext);
 
-      const isModalNotVisible = await productPage.closeProductModal(page);
+      const isModalNotVisible = await foClassicProductPage.closeProductModal(page);
       expect(isModalNotVisible).to.equal(true);
     });
   });

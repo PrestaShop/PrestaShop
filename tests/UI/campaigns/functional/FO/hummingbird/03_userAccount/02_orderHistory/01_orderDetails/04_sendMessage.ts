@@ -16,7 +16,6 @@ import checkoutPage from '@pages/FO/hummingbird/checkout';
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
 import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
 import orderHistoryPage from '@pages/FO/hummingbird/myAccount/orderHistory';
-import productPage from '@pages/FO/hummingbird/product';
 
 import {
   boDashboardPage,
@@ -27,6 +26,7 @@ import {
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
+  foHummingbirdProductPage,
   type MailDev,
   type MailDevEmail,
   utilsMail,
@@ -132,7 +132,7 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       // Go to the first product page
       await foHummingbirdHomePage.goToProductPage(page, 1);
       // Add the created product to the cart
-      await productPage.addProductToTheCart(page);
+      await foHummingbirdProductPage.addProductToTheCart(page);
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);
 

@@ -3,7 +3,6 @@ import testContext from '@utils/testContext';
 
 // Import FO pages
 import cartPage from '@pages/FO/hummingbird/cart';
-import productPage from '@pages/FO/hummingbird/product';
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 
@@ -13,6 +12,7 @@ import {
   FakerOrder,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
+  foHummingbirdProductPage,
   foHummingbirdSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -75,7 +75,7 @@ function createOrderByCustomerTest(orderData: FakerOrder, baseContext: string = 
       // Go to the first product page
       await foHummingbirdHomePage.goToProductPage(page, orderData.products[0].product.id);
       // Add the product to the cart
-      await productPage.addProductToTheCart(page, orderData.products[0].quantity);
+      await foHummingbirdProductPage.addProductToTheCart(page, orderData.products[0].quantity);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(orderData.products[0].quantity);
@@ -176,7 +176,7 @@ function createOrderSpecificProductTest(
 
       await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
       // Add the product to the cart
-      await productPage.addProductToTheCart(page, orderData.products[0].quantity);
+      await foHummingbirdProductPage.addProductToTheCart(page, orderData.products[0].quantity);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(orderData.products[0].quantity);
@@ -249,7 +249,7 @@ function createOrderByGuestTest(orderData: FakerOrder, baseContext: string = 'co
       // Go to the fourth product page
       await foHummingbirdHomePage.goToProductPage(page, orderData.products[0].product.id);
       // Add the created product to the cart
-      await productPage.addProductToTheCart(page, orderData.products[0].quantity);
+      await foHummingbirdProductPage.addProductToTheCart(page, orderData.products[0].quantity);
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);
 

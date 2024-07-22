@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import pages
-import {productPage} from '@pages/FO/classic/product';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 import {cartPage} from '@pages/FO/classic/cart';
 
@@ -11,6 +10,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
   foClassicHomePage,
+  foClassicProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -51,33 +51,33 @@ describe('FO - Product page : Change quantity', async () => {
 
     await foClassicHomePage.goToProductPage(page, 3);
 
-    const pageTitle = await productPage.getPageTitle(page);
+    const pageTitle = await foClassicProductPage.getPageTitle(page);
     expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_6.name.toUpperCase());
   });
 
   it('should change the quantity by using the arrow \'UP\' button', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'incrementQuantity', baseContext);
 
-    await productPage.setQuantityByArrowUpDown(page, 5, 'up');
+    await foClassicProductPage.setQuantityByArrowUpDown(page, 5, 'up');
 
-    const productQuantity = await productPage.getProductQuantity(page);
+    const productQuantity = await foClassicProductPage.getProductQuantity(page);
     expect(productQuantity).to.equal(5);
   });
 
   it('should change the quantity by using the arrow \'Down\' button', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'incrementQuantity2', baseContext);
 
-    await productPage.setQuantityByArrowUpDown(page, 1, 'down');
+    await foClassicProductPage.setQuantityByArrowUpDown(page, 1, 'down');
 
-    const productQuantity = await productPage.getProductQuantity(page);
+    const productQuantity = await foClassicProductPage.getProductQuantity(page);
     expect(productQuantity).to.equal(1);
   });
 
   it('should add quantity of the product by setting input value', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityByInput', baseContext);
 
-    await productPage.setQuantity(page, 12);
-    await productPage.clickOnAddToCartButton(page);
+    await foClassicProductPage.setQuantity(page, 12);
+    await foClassicProductPage.clickOnAddToCartButton(page);
 
     const isVisible = await blockCartModal.isBlockCartModalVisible(page);
     expect(isVisible).to.equal(true);
@@ -93,15 +93,15 @@ describe('FO - Product page : Change quantity', async () => {
   it('should check the cart notifications number', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkNotificationsNumber', baseContext);
 
-    const notificationsNumber = await productPage.getCartNotificationsNumber(page);
+    const notificationsNumber = await foClassicProductPage.getCartNotificationsNumber(page);
     expect(notificationsNumber).to.equal(12);
   });
 
   it('should set \'-24\' in the quantity input', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityByInput2', baseContext);
 
-    await productPage.setQuantity(page, '-24');
-    await productPage.clickOnAddToCartButton(page);
+    await foClassicProductPage.setQuantity(page, '-24');
+    await foClassicProductPage.clickOnAddToCartButton(page);
 
     const isVisible = await blockCartModal.isBlockCartModalVisible(page);
     expect(isVisible).to.equal(true);
@@ -124,7 +124,7 @@ describe('FO - Product page : Change quantity', async () => {
   it('should set \'Prestashop\' in the quantity input and proceed to checkout', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityByInput3', baseContext);
 
-    await productPage.addProductToTheCart(page, 'Prestashop');
+    await foClassicProductPage.addProductToTheCart(page, 'Prestashop');
 
     const notificationsNumber = await foClassicHomePage.getCartNotificationsNumber(page);
     expect(notificationsNumber).to.equal(14);

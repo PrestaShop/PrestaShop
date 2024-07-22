@@ -20,7 +20,6 @@ import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmat
 import contactUsPage from '@pages/FO/hummingbird/contactUs';
 import createAccountPage from '@pages/FO/hummingbird/myAccount/add';
 import gdprPersonalDataPage from '@pages/FO/hummingbird/myAccount/gdprPersonalData';
-import productPage from '@pages/FO/hummingbird/product';
 
 import {
   boDashboardPage,
@@ -32,6 +31,7 @@ import {
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
+  foHummingbirdProductPage,
   utilsCore,
   utilsFile,
   utilsPlaywright,
@@ -378,7 +378,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         // Go to the first product page
         await foHummingbirdHomePage.goToProductPage(page, 1);
         // Add the product to the cart
-        await productPage.addProductToTheCart(page, 2);
+        await foHummingbirdProductPage.addProductToTheCart(page, 2);
 
         const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
         expect(notificationsNumber).to.be.equal(2);

@@ -7,8 +7,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import addProductPage from '@pages/BO/catalog/products/add';
-// Import FO pages
-import {productPage as foProductPage} from '@pages/FO/classic/product';
+// Import FO pages=
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
@@ -21,6 +20,7 @@ import {
   FakerProduct,
   foClassicHomePage,
   foClassicLoginPage,
+  foClassicProductPage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -207,7 +207,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
           await foClassicHomePage.searchProduct(page, productPackData.name);
           await foClassicSearchResultsPage.goToProductPage(page, 1);
 
-          const pageTitle = await foProductPage.getPageTitle(page);
+          const pageTitle = await foClassicProductPage.getPageTitle(page);
           expect(pageTitle.toUpperCase()).to.contains(productPackData.name.toUpperCase());
         });
 
@@ -215,7 +215,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
           await testContext.addContextItem(this, 'testIdentifier', `addProductToCart${index}`, baseContext);
 
           // Add the created product to the cart
-          await foProductPage.addProductToTheCart(page);
+          await foClassicProductPage.addProductToTheCart(page);
 
           // Proceed to checkout the shopping cart
           await cartPage.clickOnProceedToCheckout(page);
@@ -260,7 +260,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
         it('should go back to BO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
-          page = await foProductPage.closePage(browserContext, page, 0);
+          page = await foClassicProductPage.closePage(browserContext, page, 0);
 
           const pageTitle = await productSettingsPage.getPageTitle(page);
           expect(pageTitle).to.contains(productSettingsPage.pageTitle);

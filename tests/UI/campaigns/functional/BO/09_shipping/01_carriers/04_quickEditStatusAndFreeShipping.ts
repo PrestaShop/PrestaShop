@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import carriersPage from '@pages/BO/shipping/carriers';
 
 // Import FO pages
-import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
@@ -17,6 +16,7 @@ import {
   dataCarriers,
   dataCustomers,
   foClassicHomePage,
+  foClassicProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -91,7 +91,7 @@ describe('BO - Shipping - Carriers : Quick edit status and free shipping', async
       // Go to the first product page
       await foClassicHomePage.goToProductPage(page, 1);
       // Add the product to the cart
-      await productPage.addProductToTheCart(page);
+      await foClassicProductPage.addProductToTheCart(page);
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);
 

@@ -11,7 +11,6 @@ import createProductPage from '@pages/BO/catalog/products/add';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 
 // Import FO pages
-import foProductPage from '@pages/FO/hummingbird/product';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 import cartPage from '@pages/FO/hummingbird/cart';
 
@@ -21,6 +20,7 @@ import {
   boDashboardPage,
   boProductsPage,
   FakerProduct,
+  foHummingbirdProductPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -161,7 +161,7 @@ describe('FO - Product page - Product page : Display discount', async () => {
 
       page = await createProductPage.previewProduct(page);
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
@@ -169,22 +169,22 @@ describe('FO - Product page - Product page : Display discount', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscount', baseContext);
 
       // Check quantity for discount value
-      const quantityDiscountValue = await foProductPage.getQuantityDiscountValue(page);
+      const quantityDiscountValue = await foHummingbirdProductPage.getQuantityDiscountValue(page);
       expect(quantityDiscountValue).to.equal(3);
 
       // Check unit discount value
-      const unitDiscountValue = await foProductPage.getDiscountValue(page);
+      const unitDiscountValue = await foHummingbirdProductPage.getDiscountValue(page);
       expect(unitDiscountValue).to.equal('€2.00');
 
       // Check saved value
-      const savedValue = await foProductPage.getSavedValue(page);
+      const savedValue = await foHummingbirdProductPage.getSavedValue(page);
       expect(savedValue).to.equal('€6.00');
     });
 
     it('should check the product price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductPrice1', baseContext);
 
-      const regularPrice = await foProductPage.getProductPrice(page);
+      const regularPrice = await foHummingbirdProductPage.getProductPrice(page);
       expect(regularPrice).to.equal('€20.00');
     });
 
@@ -192,16 +192,16 @@ describe('FO - Product page - Product page : Display discount', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'setQuantity', baseContext);
 
       // Set quantity of the product
-      await foProductPage.setQuantity(page, 3);
+      await foHummingbirdProductPage.setQuantity(page, 3);
 
-      const productQuantity = await foProductPage.getProductQuantity(page);
+      const productQuantity = await foHummingbirdProductPage.getProductQuantity(page);
       expect(productQuantity).to.equal(3);
     });
 
     it('should check the tag \'New, -€2.00\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkFlag', baseContext);
 
-      const flagText = await foProductPage.getProductTag(page);
+      const flagText = await foHummingbirdProductPage.getProductTag(page);
       expect(flagText).to.contains('-€2.00')
         .and.to.contain('New');
     });
@@ -209,20 +209,20 @@ describe('FO - Product page - Product page : Display discount', async () => {
     it('should check the product price before and after the discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductPrice', baseContext);
 
-      const discountValue = await foProductPage.getDiscountAmount(page);
+      const discountValue = await foHummingbirdProductPage.getDiscountAmount(page);
       expect(discountValue).to.equal('(Save €2.00)');
 
-      const finalPrice = await foProductPage.getProductPrice(page);
+      const finalPrice = await foHummingbirdProductPage.getProductPrice(page);
       expect(finalPrice).to.equal('€18.00');
 
-      const regularPrice = await foProductPage.getRegularPrice(page);
+      const regularPrice = await foHummingbirdProductPage.getRegularPrice(page);
       expect(regularPrice).to.equal('€20.00');
     });
 
     it('should add the product to cart and check the block cart modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await foProductPage.clickOnAddToCartButton(page);
+      await foHummingbirdProductPage.clickOnAddToCartButton(page);
 
       const result = await blockCartModal.getProductDetailsFromBlockCartModal(page);
       await Promise.all([
@@ -248,7 +248,7 @@ describe('FO - Product page - Product page : Display discount', async () => {
     it('should go back to BO > Product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo', baseContext);
 
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foHummingbirdProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);
@@ -266,8 +266,8 @@ describe('FO - Product page - Product page : Display discount', async () => {
     it('should go to the second tab', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToSecondTab', baseContext);
 
-      page = await foProductPage.changePage(browserContext, 0);
-      await foProductPage.reloadPage(page);
+      page = await foHummingbirdProductPage.changePage(browserContext, 0);
+      await foHummingbirdProductPage.reloadPage(page);
     });
 
     it('should preview product page', async function () {
@@ -275,14 +275,14 @@ describe('FO - Product page - Product page : Display discount', async () => {
 
       page = await createProductPage.previewProduct(page);
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check the tag \'New and -15%\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkFlag2', baseContext);
 
-      const flagText = await foProductPage.getProductTag(page);
+      const flagText = await foHummingbirdProductPage.getProductTag(page);
       expect(flagText).to.contains('-15%')
         .and.to.contain('New');
     });
@@ -291,17 +291,17 @@ describe('FO - Product page - Product page : Display discount', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSecondDiscount', baseContext);
 
       // Check discount percentage
-      const discountPercentage = await foProductPage.getDiscountPercentage(page);
+      const discountPercentage = await foHummingbirdProductPage.getDiscountPercentage(page);
       expect(discountPercentage).to.equal('(Save 15%)');
     });
 
     it('should check the product price before and after the discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductPrice3', baseContext);
 
-      const finalPrice = await foProductPage.getProductPrice(page);
+      const finalPrice = await foHummingbirdProductPage.getProductPrice(page);
       expect(finalPrice).to.equal('€17.00');
 
-      const regularPrice = await foProductPage.getRegularPrice(page);
+      const regularPrice = await foHummingbirdProductPage.getRegularPrice(page);
       expect(regularPrice).to.equal('€20.00');
     });
 
@@ -309,22 +309,22 @@ describe('FO - Product page - Product page : Display discount', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkVolumeDiscount', baseContext);
 
       // Check quantity for discount value
-      const quantityDiscountValue = await foProductPage.getQuantityDiscountValue(page);
+      const quantityDiscountValue = await foHummingbirdProductPage.getQuantityDiscountValue(page);
       expect(quantityDiscountValue).to.equal(3);
 
       // Check unit discount value
-      const unitDiscountValue = await foProductPage.getDiscountValue(page);
+      const unitDiscountValue = await foHummingbirdProductPage.getDiscountValue(page);
       expect(unitDiscountValue).to.equal('€2.00');
 
       // Check saved value
-      const savedValue = await foProductPage.getSavedValue(page);
+      const savedValue = await foHummingbirdProductPage.getSavedValue(page);
       expect(savedValue).to.equal('€6.00');
     });
 
     it('should add the product to cart and check the block cart modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart2', baseContext);
 
-      await foProductPage.clickOnAddToCartButton(page);
+      await foHummingbirdProductPage.clickOnAddToCartButton(page);
 
       const result = await blockCartModal.getProductDetailsFromBlockCartModal(page);
       await Promise.all([

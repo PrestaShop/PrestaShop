@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
@@ -13,6 +12,7 @@ import {
   dataCustomers,
   dataProducts,
   foClassicHomePage,
+  foClassicProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -69,14 +69,14 @@ describe('FO - Order confirmation : Display of product customization', async () 
       await foClassicHomePage.setProductNameInSearchInput(page, dataProducts.demo_14.name);
       await foClassicHomePage.clickAutocompleteSearchResult(page, 1);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_14.name);
     });
 
     it('should add custom text and add the product to cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await productPage.addProductToTheCart(page, 1, undefined, true, 'Hello world!');
+      await foClassicProductPage.addProductToTheCart(page, 1, undefined, true, 'Hello world!');
 
       const pageTitle = await cartPage.getPageTitle(page);
       expect(pageTitle).to.equal(cartPage.pageTitle);

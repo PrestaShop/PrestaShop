@@ -16,7 +16,6 @@ import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
-import {productPage} from '@pages/FO/classic/product';
 
 import {
   boDashboardPage,
@@ -27,6 +26,7 @@ import {
   FakerAddress,
   FakerCustomer,
   foClassicHomePage,
+  foClassicProductPage,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -214,7 +214,7 @@ describe('BO - Customers - Customers : View information about customer', async (
       // Go to the first product page
       await foClassicHomePage.goToProductPage(page, 1);
       // Add the product to the cart
-      await productPage.addProductToTheCart(page);
+      await foClassicProductPage.addProductToTheCart(page);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(1);

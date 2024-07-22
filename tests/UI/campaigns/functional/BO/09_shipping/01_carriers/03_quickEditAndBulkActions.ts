@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import carriersPage from '@pages/BO/shipping/carriers';
 import addCarrierPage from '@pages/BO/shipping/carriers/add';
-import {productPage} from '@pages/FO/classic/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -19,6 +18,7 @@ import {
   foClassicCartPage,
   foClassicCheckoutPage,
   foClassicHomePage,
+  foClassicProductPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -122,7 +122,7 @@ describe('BO - Shipping - Carriers : Bulk actions', async () => {
     // Go to the first product page
     await foClassicHomePage.goToProductPage(page, 1);
     // Add the product to the cart
-    await productPage.addProductToTheCart(page);
+    await foClassicProductPage.addProductToTheCart(page);
     // Proceed to checkout the shopping cart
     await foClassicCartPage.clickOnProceedToCheckout(page);
 

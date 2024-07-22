@@ -16,7 +16,6 @@ import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmatio
 import {merchandiseReturnsPage as foMerchandiseReturnsPage} from '@pages/FO/classic/myAccount/merchandiseReturns';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
-import {productPage} from '@pages/FO/classic/product';
 
 import {
   boDashboardPage,
@@ -26,6 +25,7 @@ import {
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
+  foClassicProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -98,7 +98,7 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
       // Go to the first product page
       await foClassicHomePage.goToProductPage(page, 1);
       // Add the product to the cart
-      await productPage.addProductToTheCart(page);
+      await foClassicProductPage.addProductToTheCart(page);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(1);

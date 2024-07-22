@@ -9,15 +9,13 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 // Import BO pages
 import addProductPage from '@pages/BO/catalog/products/add';
 
-// Import FO pages
-import productPage from '@pages/FO/hummingbird/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boProductsPage,
   FakerProduct,
+  foHummingbirdProductPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -105,14 +103,14 @@ describe('FO - Navigation and display : Display \'On sale\' flag', async () => {
 
       page = await addProductPage.previewProduct(page);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(onSaleProductData.name);
     });
 
     it('should check the discount flag', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountTag', baseContext);
 
-      const flagText = await productPage.getProductTag(page);
+      const flagText = await foHummingbirdProductPage.getProductTag(page);
       expect(flagText).to.contains('On sale!');
     });
   });

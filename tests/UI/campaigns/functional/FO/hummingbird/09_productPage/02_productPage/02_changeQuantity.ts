@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
-import productPage from '@pages/FO/hummingbird/product';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 import cartPage from '@pages/FO/hummingbird/cart';
 
@@ -14,6 +13,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
   foHummingbirdHomePage,
+  foHummingbirdProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -62,32 +62,32 @@ describe('FO - Product page : Change quantity', async () => {
 
       await foHummingbirdHomePage.goToProductPage(page, 3);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_6.name.toUpperCase());
     });
 
     it('should change the quantity by using the arrow \'Down\' button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'decrement', baseContext);
 
-      await productPage.setQuantityByArrowUpDown(page, 1, 'down');
+      await foHummingbirdProductPage.setQuantityByArrowUpDown(page, 1, 'down');
 
-      const productQuantity = await productPage.getProductQuantity(page);
+      const productQuantity = await foHummingbirdProductPage.getProductQuantity(page);
       expect(productQuantity).to.equal(1);
     });
 
     it('should change the quantity by using the arrow \'UP\' button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'incrementQuantity', baseContext);
 
-      await productPage.setQuantityByArrowUpDown(page, 2, 'increment');
+      await foHummingbirdProductPage.setQuantityByArrowUpDown(page, 2, 'increment');
 
-      const productQuantity = await productPage.getProductQuantity(page);
+      const productQuantity = await foHummingbirdProductPage.getProductQuantity(page);
       expect(productQuantity).to.equal(2);
     });
 
     it('should click on add to cart button then on continue shopping button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnAddToCartButton', baseContext);
 
-      await productPage.clickOnAddToCartButton(page);
+      await foHummingbirdProductPage.clickOnAddToCartButton(page);
 
       const isNotVisible = await blockCartModal.continueShopping(page);
       expect(isNotVisible).to.equal(true);
@@ -96,8 +96,8 @@ describe('FO - Product page : Change quantity', async () => {
     it('should set the quantity 0 and add to cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAddToCartButtonIsDisabled', baseContext);
 
-      await productPage.setQuantity(page, 0);
-      await productPage.clickOnAddToCartButton(page);
+      await foHummingbirdProductPage.setQuantity(page, 0);
+      await foHummingbirdProductPage.clickOnAddToCartButton(page);
 
       const isNotVisible = await blockCartModal.continueShopping(page);
       expect(isNotVisible).to.equal(true);
@@ -106,15 +106,15 @@ describe('FO - Product page : Change quantity', async () => {
     it('should check the cart notifications number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNotificationsNumber1', baseContext);
 
-      const notificationsNumber = await productPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foHummingbirdProductPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.equal(3);
     });
 
     it('should add quantity of the product by setting input value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityByInput', baseContext);
 
-      await productPage.setQuantity(page, 12);
-      await productPage.clickOnAddToCartButton(page);
+      await foHummingbirdProductPage.setQuantity(page, 12);
+      await foHummingbirdProductPage.clickOnAddToCartButton(page);
 
       const isVisible = await blockCartModal.isBlockCartModalVisible(page);
       expect(isVisible).to.equal(true);
@@ -130,17 +130,17 @@ describe('FO - Product page : Change quantity', async () => {
     it('should check the cart notifications number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNotificationsNumber', baseContext);
 
-      const notificationsNumber = await productPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foHummingbirdProductPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.equal(15);
     });
 
     it('should set \'-24\' in the quantity input and check the quantity in the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityByInput2', baseContext);
 
-      await productPage.setQuantity(page, '-24');
-      await productPage.clickOnAddToCartButton(page);
+      await foHummingbirdProductPage.setQuantity(page, '-24');
+      await foHummingbirdProductPage.clickOnAddToCartButton(page);
 
-      const notificationsNumber = await productPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foHummingbirdProductPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.equal(16);
     });
 
@@ -154,10 +154,10 @@ describe('FO - Product page : Change quantity', async () => {
     it('should set \'Prestashop\' in the quantity input and proceed to checkout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityByInput3', baseContext);
 
-      await productPage.setQuantity(page, 'Prestashop');
-      await productPage.clickOnAddToCartButton(page);
+      await foHummingbirdProductPage.setQuantity(page, 'Prestashop');
+      await foHummingbirdProductPage.clickOnAddToCartButton(page);
 
-      const notificationsNumber = await productPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foHummingbirdProductPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.equal(17);
     });
 

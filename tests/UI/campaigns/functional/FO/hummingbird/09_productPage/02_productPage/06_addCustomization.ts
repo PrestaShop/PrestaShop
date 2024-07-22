@@ -10,15 +10,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 import createProductPage from '@pages/BO/catalog/products/add';
 import detailsTab from '@pages/BO/catalog/products/add/detailsTab';
 
-// Import FO pages
-import foProductPage from '@pages/FO/hummingbird/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boProductsPage,
   FakerProduct,
+  foHummingbirdProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -118,42 +116,42 @@ describe('FO - Product page - Product page : Add customization', async () => {
       // Click on preview button
       page = await createProductPage.previewProduct(page);
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check the customization section', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductCustomizations', baseContext);
 
-      await foProductPage.changeLanguage(page, 'en');
+      await foHummingbirdProductPage.changeLanguage(page, 'en');
 
-      const productCondition = await foProductPage.isCustomizationBlockVisible(page);
+      const productCondition = await foHummingbirdProductPage.isCustomizationBlockVisible(page);
       expect(productCondition).to.eq(true);
     });
 
     it('should check that add to card button is disabled', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAddToCartButtonDisabled', baseContext);
 
-      const isAddToCartButtonDisabled = await foProductPage.isAddToCartButtonDisplayed(page);
+      const isAddToCartButtonDisabled = await foHummingbirdProductPage.isAddToCartButtonDisplayed(page);
       expect(isAddToCartButtonDisabled).to.equal(true);
     });
 
     it('should set the 2 customizations and save', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setCustomizations', baseContext);
 
-      await foProductPage.setProductCustomizations(page, ['prestashop', 'prestashop2']);
+      await foHummingbirdProductPage.setProductCustomizations(page, ['prestashop', 'prestashop2']);
 
-      const firstCustomMessage = await foProductPage.getCustomizationsMessages(page, 1);
+      const firstCustomMessage = await foHummingbirdProductPage.getCustomizationsMessages(page, 1);
       expect(firstCustomMessage).to.equal('Your customization: prestashop');
 
-      const secondCustomMessage = await foProductPage.getCustomizationsMessages(page, 2);
+      const secondCustomMessage = await foHummingbirdProductPage.getCustomizationsMessages(page, 2);
       expect(secondCustomMessage).to.equal('Your customization: prestashop2');
     });
 
     it('should check that add to card button is enabled', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAddToCartButtonEnabled', baseContext);
 
-      const isAddToCartButtonEnabled = await foProductPage.isAddToCartButtonEnabled(page);
+      const isAddToCartButtonEnabled = await foHummingbirdProductPage.isAddToCartButtonEnabled(page);
       expect(isAddToCartButtonEnabled).to.equal(true);
     });
   });

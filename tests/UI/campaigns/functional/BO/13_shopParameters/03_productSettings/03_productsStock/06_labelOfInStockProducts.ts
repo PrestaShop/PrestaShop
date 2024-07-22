@@ -7,8 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
-// Import FO pages
-import {productPage} from '@pages/FO/classic/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -16,6 +14,7 @@ import {
   boDashboardPage,
   dataProducts,
   foClassicHomePage,
+  foClassicProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -79,24 +78,24 @@ describe('BO - Shop Parameters - Product Settings : Update label of in-stock pro
 
       await foClassicHomePage.goToProductPage(page, 1);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
     });
 
     it('should check the label of in-stock product in FO product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkLabelInStock_${index}`, baseContext);
 
-      const isVisible = await productPage.isAvailabilityQuantityDisplayed(page);
+      const isVisible = await foClassicProductPage.isAvailabilityQuantityDisplayed(page);
       expect(isVisible).to.be.equal(test.args.exist);
 
-      const availabilityLabel = await productPage.getProductAvailabilityLabel(page);
+      const availabilityLabel = await foClassicProductPage.getProductAvailabilityLabel(page);
       expect(availabilityLabel).to.contains(test.args.labelToCheck);
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
-      page = await productPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await productSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(productSettingsPage.pageTitle);

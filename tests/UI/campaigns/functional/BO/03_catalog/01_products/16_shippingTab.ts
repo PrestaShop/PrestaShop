@@ -11,7 +11,6 @@ import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 
 // Import FO pages
-import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
@@ -21,6 +20,7 @@ import {
   dataCarriers,
   dataCustomers,
   FakerProduct,
+  foClassicProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -130,23 +130,23 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
 
       page = await createProductPage.previewProduct(page);
 
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check that no delivery time is displayed', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDeliveryTime', baseContext);
 
-      const isDisplayed = await foProductPage.isDeliveryTimeDisplayed(page);
+      const isDisplayed = await foClassicProductPage.isDeliveryTimeDisplayed(page);
       expect(isDisplayed).to.equal(false);
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);
@@ -166,23 +166,23 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
 
       page = await createProductPage.previewProduct(page);
 
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check that no delivery time is displayed', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDeliveryTime1', baseContext);
 
-      const isDisplayed = await foProductPage.isDeliveryTimeDisplayed(page);
+      const isDisplayed = await foClassicProductPage.isDeliveryTimeDisplayed(page);
       expect(isDisplayed).to.equal(false);
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO1', baseContext);
 
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);
@@ -230,23 +230,23 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
 
       page = await createProductPage.previewProduct(page);
 
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check the delivery time in stock product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDeliveryTimeInStock', baseContext);
 
-      const deliveryTimeText = await foProductPage.getDeliveryInformationText(page);
+      const deliveryTimeText = await foClassicProductPage.getDeliveryInformationText(page);
       expect(deliveryTimeText).to.equal('1 Day');
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO3', baseContext);
 
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);
@@ -275,23 +275,23 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
 
       page = await createProductPage.previewProduct(page);
 
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check the delivery time in stock product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDeliveryTimeInStock2', baseContext);
 
-      const deliveryTimeText = await foProductPage.getDeliveryInformationText(page);
+      const deliveryTimeText = await foClassicProductPage.getDeliveryInformationText(page);
       expect(deliveryTimeText).to.equal('12 Days');
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO4', baseContext);
 
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);
@@ -311,16 +311,16 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
 
       page = await createProductPage.previewProduct(page);
 
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should add product to cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await foProductPage.addProductToTheCart(page, 1);
+      await foClassicProductPage.addProductToTheCart(page, 1);
 
       const pageTitle = await cartPage.getPageTitle(page);
       expect(pageTitle).to.equal(cartPage.pageTitle);
@@ -363,7 +363,7 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO5', baseContext);
 
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);
@@ -384,16 +384,16 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
       // Click on preview button
       page = await createProductPage.previewProduct(page);
 
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should go to cart page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCartPage', baseContext);
 
-      await foProductPage.goToCartPage(page);
+      await foClassicProductPage.goToCartPage(page);
 
       const pageTitle = await cartPage.getPageTitle(page);
       expect(pageTitle).to.contains(cartPage.pageTitle);
@@ -411,7 +411,7 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO6', baseContext);
 
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);

@@ -10,7 +10,6 @@ import addProductPage from '@pages/BO/catalog/products/add';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
-import {productPage} from '@pages/FO/classic/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -20,6 +19,7 @@ import {
   dataProducts,
   FakerProduct,
   foClassicHomePage,
+  foClassicProductPage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -120,14 +120,14 @@ describe('FO - Navigation and display : Display tags', async () => {
 
       await foClassicSearchResultsPage.goToProductPage(page, 1);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_6.name);
     });
 
     it('should check the new tag', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNewTag', baseContext);
 
-      const flagText = await productPage.getProductTag(page);
+      const flagText = await foClassicProductPage.getProductTag(page);
       expect(flagText).to.eq('New');
     });
   });
@@ -182,14 +182,14 @@ describe('FO - Navigation and display : Display tags', async () => {
 
       await foClassicSearchResultsPage.goToProductPage(page, 1);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_6.name);
     });
 
     it('should check that the new tag is not displayed', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkIsNewTagNotVisible', baseContext);
 
-      const isTagVisible = await productPage.isProductTagVisible(page);
+      const isTagVisible = await foClassicProductPage.isProductTagVisible(page);
       expect(isTagVisible).to.eq(false);
     });
   });
@@ -198,7 +198,7 @@ describe('FO - Navigation and display : Display tags', async () => {
     it('should go back BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO1', baseContext);
 
-      await productPage.goTo(page, global.BO.URL);
+      await foClassicProductPage.goTo(page, global.BO.URL);
 
       const pageTitle = await boDashboardPage.getPageTitle(page);
       expect(pageTitle).to.contains(boDashboardPage.pageTitle);
@@ -254,14 +254,14 @@ describe('FO - Navigation and display : Display tags', async () => {
 
       page = await addProductPage.previewProduct(page);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check the discount tag', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountTag', baseContext);
 
-      const flagText = await productPage.getProductTag(page);
+      const flagText = await foClassicProductPage.getProductTag(page);
       expect(flagText).to.eq(`-€${specificPriceData.specificPrice.discount.toFixed(2)}`);
     });
   });
@@ -325,14 +325,14 @@ describe('FO - Navigation and display : Display tags', async () => {
 
       page = await addProductPage.previewProduct(page);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(packOfProducts.name);
     });
 
     it('should check the pack tag', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPackTag', baseContext);
 
-      const flagText = await productPage.getProductTag(page);
+      const flagText = await foClassicProductPage.getProductTag(page);
       expect(flagText).to.eq('Pack');
     });
   });
@@ -363,14 +363,14 @@ describe('FO - Navigation and display : Display tags', async () => {
 
       page = await addProductPage.previewProduct(page);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(packOfProducts.name);
     });
 
     it('should check the out-of-stock and pack tags', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOutOfStockTag', baseContext);
 
-      const flagText = await productPage.getProductTag(page);
+      const flagText = await foClassicProductPage.getProductTag(page);
       expect(flagText).to.contain('Pack')
         .and.contain('Out-of-Stock');
     });

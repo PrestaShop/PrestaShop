@@ -1,14 +1,12 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import FO pages
-import {productPage} from '@pages/FO/classic/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
   foClassicHomePage,
+  foClassicProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -48,14 +46,14 @@ describe('FO - Catalog : Check the Product page', async () => {
 
       await foClassicHomePage.goToProductPage(page, 1);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_1.name);
     });
 
     it('should check the product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductPage', baseContext);
 
-      const result = await productPage.getProductInformation(page);
+      const result = await foClassicProductPage.getProductInformation(page);
       await Promise.all([
         expect(result.name).to.equal(dataProducts.demo_1.name),
         expect(result.price).to.equal(dataProducts.demo_1.finalPrice),

@@ -10,15 +10,13 @@ import createProductPage from '@pages/BO/catalog/products/add';
 import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 import shippingTab from '@pages/BO/catalog/products/add/shippingTab';
 
-// Import FO pages
-import {productPage as foProductPage} from '@pages/FO/classic/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boProductsPage,
   FakerProduct,
+  foClassicProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -138,16 +136,16 @@ describe('FO - Product page - Product page : Display specific delivery time', as
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct', baseContext);
 
       page = await createProductPage.previewProduct(page);
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check the delivery time out of stock product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDeliveryTimeOutOfStock', baseContext);
 
-      const deliveryTimeText = await foProductPage.getDeliveryInformationText(page);
+      const deliveryTimeText = await foClassicProductPage.getDeliveryInformationText(page);
       expect(deliveryTimeText).to.equal('Hello');
     });
   });
@@ -156,7 +154,7 @@ describe('FO - Product page - Product page : Display specific delivery time', as
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);
@@ -188,16 +186,16 @@ describe('FO - Product page - Product page : Display specific delivery time', as
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct2', baseContext);
 
       page = await createProductPage.previewProduct(page);
-      await foProductPage.changeLanguage(page, 'en');
+      await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check the delivery time out of stock product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDeliveryTimeInStock2', baseContext);
 
-      const deliveryTimeText = await foProductPage.getDeliveryInformationText(page);
+      const deliveryTimeText = await foClassicProductPage.getDeliveryInformationText(page);
       expect(deliveryTimeText).to.equal('Delivered in less than a week');
     });
   });

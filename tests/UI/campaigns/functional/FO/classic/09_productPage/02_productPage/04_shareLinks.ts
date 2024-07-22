@@ -1,14 +1,12 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import pages
-import {productPage} from '@pages/FO/classic/product';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
   foClassicHomePage,
+  foClassicProductPage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -52,7 +50,7 @@ describe('FO - Product page - Product page : Share links', async () => {
 
     await foClassicSearchResultsPage.goToProductPage(page, 1);
 
-    const pageTitle = await productPage.getPageTitle(page);
+    const pageTitle = await foClassicProductPage.getPageTitle(page);
     expect(pageTitle).to.contains(dataProducts.demo_12.name);
   });
 
@@ -64,21 +62,21 @@ describe('FO - Product page - Product page : Share links', async () => {
     it(`should click on the ${args.socialNetwork} link and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `click${args.socialNetwork}Link`, baseContext);
 
-      const socialLink = await productPage.getSocialSharingLink(page, args.socialNetwork);
+      const socialLink = await foClassicProductPage.getSocialSharingLink(page, args.socialNetwork);
       expect(socialLink).to.contains(args.link);
 
-      page = await productPage.clickOnSocialSharingLink(page, args.socialNetwork);
+      page = await foClassicProductPage.clickOnSocialSharingLink(page, args.socialNetwork);
 
-      const link = await productPage.getCurrentURL(page);
+      const link = await foClassicProductPage.getCurrentURL(page);
       expect(link).to.contains(args.url);
     });
 
     it('should close the page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `close${args.link}Page`, baseContext);
 
-      page = await productPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_12.name);
     });
   });

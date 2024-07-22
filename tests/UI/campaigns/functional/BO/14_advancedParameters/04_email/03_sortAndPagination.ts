@@ -9,7 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import emailPage from '@pages/BO/advancedParameters/email';
 
 // Import FO pages
-import {productPage} from '@pages/FO/classic/product';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
@@ -20,6 +19,7 @@ import {
   dataPaymentMethods,
   foClassicHomePage,
   foClassicLoginPage,
+  foClassicProductPage,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -126,7 +126,7 @@ describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async
         await foClassicHomePage.goToProductPage(page, 1);
 
         // Add the created product to the cart
-        await productPage.addProductToTheCart(page);
+        await foClassicProductPage.addProductToTheCart(page);
 
         // Proceed to checkout the shopping cart
         await cartPage.clickOnProceedToCheckout(page);

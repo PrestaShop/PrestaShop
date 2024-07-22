@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import createProductsPage from '@pages/BO/catalog/products/add';
 import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
 import attributesPage from '@pages/BO/catalog/attributes';
-import {productPage as foProductPage} from '@pages/FO/classic/product';
 import productSettings from '@pages/BO/shopParameters/productSettings';
 
 import {expect} from 'chai';
@@ -17,6 +16,7 @@ import {
   boDashboardPage,
   boProductsPage,
   FakerProduct,
+  foClassicProductPage,
   type ProductAttribute,
   type ProductCombinationOptions,
   utilsFile,
@@ -246,7 +246,7 @@ describe('BO - Catalog - Products : Combination tab', async () => {
         // Click on preview button
         page = await createProductsPage.previewProduct(page);
 
-        const pageTitle = await foProductPage.getPageTitle(page);
+        const pageTitle = await foClassicProductPage.getPageTitle(page);
         expect(pageTitle).to.contains(newProductData.name);
       });
 
@@ -262,9 +262,9 @@ describe('BO - Catalog - Products : Combination tab', async () => {
             value: 'White',
           },
         ];
-        await foProductPage.selectDefaultAttributes(page, firstCombination);
+        await foClassicProductPage.selectDefaultAttributes(page, firstCombination);
 
-        const isVisible = await foProductPage.isAddToCartButtonEnabled(page);
+        const isVisible = await foClassicProductPage.isAddToCartButtonEnabled(page);
         expect(isVisible).to.eq(test.args.isAddToCartButtonVisible);
       });
 
@@ -272,7 +272,7 @@ describe('BO - Catalog - Products : Combination tab', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index}`, baseContext);
 
         // Go back to BO
-        page = await foProductPage.closePage(browserContext, page, 0);
+        page = await foClassicProductPage.closePage(browserContext, page, 0);
 
         const pageTitle = await createProductsPage.getPageTitle(page);
         expect(pageTitle).to.contains(createProductsPage.pageTitle);
@@ -312,7 +312,7 @@ describe('BO - Catalog - Products : Combination tab', async () => {
       // Click on preview button
       page = await createProductsPage.previewProduct(page);
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
@@ -328,16 +328,16 @@ describe('BO - Catalog - Products : Combination tab', async () => {
           value: 'Taupe',
         },
       ];
-      await foProductPage.selectDefaultAttributes(page, firstCombination);
+      await foClassicProductPage.selectDefaultAttributes(page, firstCombination);
 
-      const isVisible = await foProductPage.isAddToCartButtonEnabled(page);
+      const isVisible = await foClassicProductPage.isAddToCartButtonEnabled(page);
       expect(isVisible).eq(false);
     });
 
     it('should check the product availability label', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectCombination4', baseContext);
 
-      const availabilityLabel = await foProductPage.getProductAvailabilityLabel(page);
+      const availabilityLabel = await foClassicProductPage.getProductAvailabilityLabel(page);
       expect(availabilityLabel).to.contains('Product available');
     });
 
@@ -367,7 +367,7 @@ describe('BO - Catalog - Products : Combination tab', async () => {
       // Click on preview button
       page = await createProductsPage.previewProduct(page);
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
@@ -383,19 +383,19 @@ describe('BO - Catalog - Products : Combination tab', async () => {
           value: 'Taupe',
         },
       ];
-      await foProductPage.selectDefaultAttributes(page, firstCombination);
+      await foClassicProductPage.selectDefaultAttributes(page, firstCombination);
 
-      const isVisible = await foProductPage.isAddToCartButtonEnabled(page);
+      const isVisible = await foClassicProductPage.isAddToCartButtonEnabled(page);
       expect(isVisible).eq(true);
     });
 
     it('should check the label of out of stock', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectCombination6', baseContext);
 
-      const availabilityLabel = await foProductPage.getProductAvailabilityLabel(page);
+      const availabilityLabel = await foClassicProductPage.getProductAvailabilityLabel(page);
       expect(availabilityLabel).to.contains('Out of stock');
 
-      const isVisible = await foProductPage.isAddToCartButtonEnabled(page);
+      const isVisible = await foClassicProductPage.isAddToCartButtonEnabled(page);
       expect(isVisible).eq(true);
     });
 

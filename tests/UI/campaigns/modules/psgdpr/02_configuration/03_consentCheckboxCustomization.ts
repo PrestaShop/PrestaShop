@@ -11,7 +11,6 @@ import {resetModule} from '@commonTests/BO/modules/moduleManager';
 import {contactUsPage} from '@pages/FO/classic/contactUs';
 import {createAccountPage as foCreateAccountPage} from '@pages/FO/classic/myAccount/add';
 import {accountIdentityPage} from '@pages/FO/classic/myAccount/identity';
-import {productPage as foProductPage} from '@pages/FO/classic/product';
 // Import BO pages
 import boDesignPositionsPage from '@pages/BO/design/positions';
 import psGdpr from '@pages/BO/modules/psGdpr';
@@ -32,6 +31,7 @@ import {
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
+  foClassicProductPage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -391,26 +391,26 @@ describe('GDPR : Consent checkbox customization', async () => {
 
       await foClassicHomePage.goToProductPage(page, 1);
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
     });
 
     it('should open the product review modal and check the GDPR label', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickAddReviewButton', baseContext);
 
-      await foProductPage.clickAddReviewButton(page);
+      await foClassicProductPage.clickAddReviewButton(page);
 
-      const hasProductReviewGDPRLabel = await foProductPage.hasProductReviewGDPRLabel(page);
+      const hasProductReviewGDPRLabel = await foClassicProductPage.hasProductReviewGDPRLabel(page);
       expect(hasProductReviewGDPRLabel).to.be.equals(true);
 
-      const labelProductReviewGDPRLabel = await foProductPage.getProductReviewGDPRLabel(page);
+      const labelProductReviewGDPRLabel = await foClassicProductPage.getProductReviewGDPRLabel(page);
       expect(labelProductReviewGDPRLabel).to.be.equals(messageProductComments);
     });
 
     it('should close the product review modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeProductReviewModal', baseContext);
 
-      const isModalVisible = await foProductPage.closeProductReviewModal(page);
+      const isModalVisible = await foClassicProductPage.closeProductReviewModal(page);
       expect(isModalVisible).to.be.equals(false);
     });
 
@@ -428,17 +428,17 @@ describe('GDPR : Consent checkbox customization', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'hasProductReviewGDPRLabelFalse', baseContext);
 
       page = await psGdprTabDataConsent.changePage(browserContext, 1);
-      await foProductPage.reloadPage(page);
-      await foProductPage.clickAddReviewButton(page);
+      await foClassicProductPage.reloadPage(page);
+      await foClassicProductPage.clickAddReviewButton(page);
 
-      const hasProductReviewGDPRLabel = await foProductPage.hasProductReviewGDPRLabel(page);
+      const hasProductReviewGDPRLabel = await foClassicProductPage.hasProductReviewGDPRLabel(page);
       expect(hasProductReviewGDPRLabel).to.be.equals(false);
     });
 
     it('should close the product review modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeProductReviewModal2', baseContext);
 
-      const isModalVisible = await foProductPage.closeProductReviewModal(page);
+      const isModalVisible = await foClassicProductPage.closeProductReviewModal(page);
       expect(isModalVisible).to.be.equals(false);
     });
 
@@ -456,7 +456,7 @@ describe('GDPR : Consent checkbox customization', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkContactFormGDPRLabel', baseContext);
 
       page = await psGdprTabDataConsent.changePage(browserContext, 1);
-      await foProductPage.goToFooterLink(page, 'Contact us');
+      await foClassicProductPage.goToFooterLink(page, 'Contact us');
 
       const pageTitle = await contactUsPage.getPageTitle(page);
       expect(pageTitle).to.equal(contactUsPage.pageTitle);
@@ -509,19 +509,19 @@ describe('GDPR : Consent checkbox customization', async () => {
 
       await foClassicSearchResultsPage.goToProductPage(page, 1);
 
-      const pageTitleFoProduct = await foProductPage.getPageTitle(page);
+      const pageTitleFoProduct = await foClassicProductPage.getPageTitle(page);
       expect(pageTitleFoProduct).to.contains(productOutOfStock.name);
 
-      const availabilityLabel = await foProductPage.getProductAvailabilityLabel(page);
+      const availabilityLabel = await foClassicProductPage.getProductAvailabilityLabel(page);
       expect(availabilityLabel).to.contains('Out-of-Stock');
 
-      const hasBlockMailAlert = await foProductPage.hasBlockMailAlert(page);
+      const hasBlockMailAlert = await foClassicProductPage.hasBlockMailAlert(page);
       expect(hasBlockMailAlert).to.be.equal(true);
 
-      const hasBlockMailAlertGDPRLabel = await foProductPage.hasBlockMailAlertGDPRLabel(page);
+      const hasBlockMailAlertGDPRLabel = await foClassicProductPage.hasBlockMailAlertGDPRLabel(page);
       expect(hasBlockMailAlertGDPRLabel).to.be.equal(true);
 
-      const gdprLabel = await foProductPage.getBlockMailAlertGDPRLabel(page);
+      const gdprLabel = await foClassicProductPage.getBlockMailAlertGDPRLabel(page);
       expect(gdprLabel).to.be.equal(messageMailAlerts);
     });
 
@@ -539,22 +539,22 @@ describe('GDPR : Consent checkbox customization', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkMailAlertsFormGDPRLabelFR', baseContext);
 
       page = await psGdprTabDataConsent.changePage(browserContext, 1);
-      await foProductPage.reloadPage(page);
-      await foProductPage.changeLanguage(page, 'fr');
+      await foClassicProductPage.reloadPage(page);
+      await foClassicProductPage.changeLanguage(page, 'fr');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(productOutOfStock.nameFR);
 
-      const availabilityLabel = await foProductPage.getProductAvailabilityLabel(page);
+      const availabilityLabel = await foClassicProductPage.getProductAvailabilityLabel(page);
       expect(availabilityLabel).to.contains('Rupture de stock');
 
-      const hasBlockMailAlert = await foProductPage.hasBlockMailAlert(page);
+      const hasBlockMailAlert = await foClassicProductPage.hasBlockMailAlert(page);
       expect(hasBlockMailAlert).to.be.equal(true);
 
-      const hasBlockMailAlertGDPRLabel = await foProductPage.hasBlockMailAlertGDPRLabel(page);
+      const hasBlockMailAlertGDPRLabel = await foClassicProductPage.hasBlockMailAlertGDPRLabel(page);
       expect(hasBlockMailAlertGDPRLabel).to.be.equal(true);
 
-      const gdprLabel = await foProductPage.getBlockMailAlertGDPRLabel(page);
+      const gdprLabel = await foClassicProductPage.getBlockMailAlertGDPRLabel(page);
       expect(gdprLabel).to.be.equal(messageMailAlertsFR);
     });
 
@@ -572,12 +572,12 @@ describe('GDPR : Consent checkbox customization', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkMailAlertsFormGDPRLabelHidden', baseContext);
 
       page = await psGdprTabDataConsent.changePage(browserContext, 1);
-      await foProductPage.reloadPage(page);
+      await foClassicProductPage.reloadPage(page);
 
-      const hasBlockMailAlert = await foProductPage.hasBlockMailAlert(page);
+      const hasBlockMailAlert = await foClassicProductPage.hasBlockMailAlert(page);
       expect(hasBlockMailAlert).to.be.equal(true);
 
-      const hasBlockMailAlertGDPRLabel = await foProductPage.hasBlockMailAlertGDPRLabel(page);
+      const hasBlockMailAlertGDPRLabel = await foClassicProductPage.hasBlockMailAlertGDPRLabel(page);
       expect(hasBlockMailAlertGDPRLabel).to.be.equal(false);
     });
   });

@@ -3,7 +3,6 @@ import testContext from '@utils/testContext';
 
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
-import {productPage as foProductPage} from '@pages/FO/classic/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -11,6 +10,7 @@ import {
   FakerOrder,
   foClassicHomePage,
   foClassicLoginPage,
+  foClassicProductPage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -78,7 +78,7 @@ function createShoppingCart(orderData: FakerOrder, baseContext: string = 'common
 
       await foClassicSearchResultsPage.goToProductPage(page, 1);
       // Add the product to the cart
-      await foProductPage.addProductToTheCart(page, orderData.products[0].quantity);
+      await foClassicProductPage.addProductToTheCart(page, orderData.products[0].quantity);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(orderData.products[0].quantity);

@@ -4,7 +4,6 @@ import testContext from '@utils/testContext';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
-import {productPage} from '@pages/FO/classic/product';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
@@ -16,6 +15,7 @@ import {
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
+  foClassicProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -93,7 +93,7 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
     // Go to the first product page
     await foClassicHomePage.goToProductPage(page, 1);
     // Add the product to the cart
-    await productPage.addProductToTheCart(page);
+    await foClassicProductPage.addProductToTheCart(page);
 
     const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
     expect(notificationsNumber).to.be.equal(1);

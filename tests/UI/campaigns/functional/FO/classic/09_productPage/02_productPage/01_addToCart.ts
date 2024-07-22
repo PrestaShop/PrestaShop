@@ -4,7 +4,6 @@ import testContext from '@utils/testContext';
 // Import pages
 import {cartPage} from '@pages/FO/classic/cart';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
-import {productPage} from '@pages/FO/classic/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -13,6 +12,7 @@ import {
   foClassicCategoryPage,
   foClassicHomePage,
   foClassicModalQuickViewPage,
+  foClassicProductPage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -59,14 +59,14 @@ describe('FO - Product page - Product page : Add to cart', async () => {
 
     await foClassicSearchResultsPage.goToProductPage(page, 1);
 
-    const pageTitle = await productPage.getPageTitle(page);
+    const pageTitle = await foClassicProductPage.getPageTitle(page);
     expect(pageTitle).to.contains(dataProducts.demo_12.name);
   });
 
   it('should add the product to cart', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-    await productPage.addProductToTheCart(page, qtyProductPage, [], null);
+    await foClassicProductPage.addProductToTheCart(page, qtyProductPage, [], null);
 
     const productDetails = await blockCartModal.getProductDetailsFromBlockCartModal(page);
     expect(productDetails.quantity).to.equal(qtyProductPage);
@@ -83,7 +83,7 @@ describe('FO - Product page - Product page : Add to cart', async () => {
   it('should go back to the home page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goHomePage', baseContext);
 
-    await productPage.goToHomePage(page);
+    await foClassicProductPage.goToHomePage(page);
 
     const isHomePage = await foClassicHomePage.isHomePage(page);
     expect(isHomePage).to.equal(true);

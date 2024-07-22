@@ -17,7 +17,6 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
-import {productPage as foProductPage} from '@pages/FO/classic/product';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
@@ -29,6 +28,7 @@ import {
   FakerProduct,
   FakerTaxRule,
   FakerTaxRulesGroup,
+  foClassicProductPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -231,9 +231,9 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
 
         // Click on preview button
         page = await addProductPage.previewProduct(page);
-        await foProductPage.changeLanguage(page, 'en');
+        await foClassicProductPage.changeLanguage(page, 'en');
 
-        const pageTitle = await foProductPage.getPageTitle(page);
+        const pageTitle = await foClassicProductPage.getPageTitle(page);
         expect(pageTitle).to.contains(productData.name);
       });
 
@@ -241,7 +241,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
         // Add the created product to the cart
-        await foProductPage.addProductToTheCart(page);
+        await foClassicProductPage.addProductToTheCart(page);
 
         const pageTitle = await cartPage.getPageTitle(page);
         expect(pageTitle).to.equal(cartPage.pageTitle);

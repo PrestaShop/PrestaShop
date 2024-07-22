@@ -15,7 +15,6 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
-import {productPage} from '@pages/FO/classic/product';
 
 import {
   boDashboardPage,
@@ -26,6 +25,7 @@ import {
   FakerCustomer,
   FakerOrderShipping,
   foClassicHomePage,
+  foClassicProductPage,
   foClassicSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -110,9 +110,9 @@ describe('BO - Orders : Preview order', async () => {
 
         await foClassicSearchResultsPage.goToProductPage(page, 1);
         // Add the product to the cart
-        await productPage.addProductToTheCart(page, 1, [], false);
+        await foClassicProductPage.addProductToTheCart(page, 1, [], false);
 
-        const notificationsNumber = await productPage.getCartNotificationsNumber(page);
+        const notificationsNumber = await foClassicProductPage.getCartNotificationsNumber(page);
         expect(notificationsNumber).to.be.equal(index + 1);
       });
     });
@@ -120,7 +120,7 @@ describe('BO - Orders : Preview order', async () => {
     it('should go to shopping cart page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCart', baseContext);
 
-      await productPage.goToCartPage(page);
+      await foClassicProductPage.goToCartPage(page);
 
       const pageTitle = await cartPage.getPageTitle(page);
       expect(pageTitle).to.contains(cartPage.pageTitle);

@@ -7,7 +7,6 @@ import {deleteProductTest} from '@commonTests/BO/catalog/product';
 
 // Import pages
 import addProductPage from '@pages/BO/catalog/products/add';
-import {productPage} from '@pages/FO/classic/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -15,6 +14,7 @@ import {
   boDashboardPage,
   boProductsPage,
   FakerProduct,
+  foClassicProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -93,14 +93,14 @@ describe('FO - Navigation and display : Display \'On sale\' flag', async () => {
 
       page = await addProductPage.previewProduct(page);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(onSaleProductData.name);
     });
 
     it('should check the discount flag', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountTag', baseContext);
 
-      const flagText = await productPage.getProductTag(page);
+      const flagText = await foClassicProductPage.getProductTag(page);
       expect(flagText).to.contains('On sale!');
     });
   });

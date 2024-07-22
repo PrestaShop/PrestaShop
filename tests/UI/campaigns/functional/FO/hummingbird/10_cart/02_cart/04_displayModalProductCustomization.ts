@@ -6,7 +6,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 
 // Import FO pages
 import cartPage from '@pages/FO/hummingbird/cart';
-import productPage from '@pages/FO/hummingbird/product';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {expect} from 'chai';
@@ -14,6 +13,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
   foHummingbirdHomePage,
+  foHummingbirdProductPage,
   foHummingbirdSearchResultsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -62,16 +62,16 @@ describe('FO - cart : Display modal of product customization', async () => {
 
       await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
 
-      const pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_14.name);
     });
 
     it('should add custom text and add the product to cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await productPage.setProductCustomizations(page, [customText]);
+      await foHummingbirdProductPage.setProductCustomizations(page, [customText]);
 
-      await productPage.clickOnAddToCartButton(page);
+      await foHummingbirdProductPage.clickOnAddToCartButton(page);
 
       const isBlockCartModal = await blockCartModal.isBlockCartModalVisible(page);
       expect(isBlockCartModal).to.equal(true);
@@ -90,7 +90,7 @@ describe('FO - cart : Display modal of product customization', async () => {
     it('should go to the cart page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCartPage', baseContext);
 
-      await productPage.goToCartPage(page);
+      await foHummingbirdProductPage.goToCartPage(page);
 
       const pageTitle = await cartPage.getPageTitle(page);
       expect(pageTitle).to.equal(cartPage.pageTitle);
