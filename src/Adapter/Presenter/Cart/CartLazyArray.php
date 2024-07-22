@@ -43,9 +43,6 @@ use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tools;
 
-/*
- *
- */
 class CartLazyArray extends AbstractLazyArray
 {
     /**
@@ -74,7 +71,7 @@ class CartLazyArray extends AbstractLazyArray
     private $priceFormatter;
 
     /**
-     * @var array
+     * @var array|null
      */
     private $products;
 
