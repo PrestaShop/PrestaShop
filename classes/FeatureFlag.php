@@ -88,9 +88,9 @@ class FeatureFlagCore extends ObjectModel
                 'size' => 64,
                 'default' => FeatureFlagSettings::TYPE_DEFAULT,
             ],
-            'label_wording' => ['type' => self::TYPE_STRING, 'required' => true, 'size' => 512],
+            'label_wording' => ['type' => self::TYPE_STRING, 'required' => true, 'size' => 191],
             'label_domain' => ['type' => self::TYPE_STRING, 'required' => true, 'size' => 255],
-            'description_wording' => ['type' => self::TYPE_STRING, 'required' => true, 'size' => 512],
+            'description_wording' => ['type' => self::TYPE_STRING, 'required' => true, 'size' => 191],
             'description_domain' => ['type' => self::TYPE_STRING, 'required' => true, 'size' => 255],
             'state' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'stability' => [

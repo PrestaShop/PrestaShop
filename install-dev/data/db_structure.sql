@@ -47,7 +47,7 @@ CREATE TABLE `PREFIX_address` (
 /* Used for search, if a search string is present inside the table, search the alias as well */
 CREATE TABLE `PREFIX_alias` (
   `id_alias` int(10) unsigned NOT NULL auto_increment,
-  `alias` varchar(255) NOT NULL,
+  `alias` varchar(191) NOT NULL,
   `search` varchar(255) NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id_alias`),
@@ -2978,9 +2978,9 @@ CREATE TABLE `PREFIX_feature_flag` (
   `name`                VARCHAR(191)                         NOT NULL,
   `type`                VARCHAR(64)  DEFAULT 'env,dotenv,db' NOT NULL,
   `state`               TINYINT(1) DEFAULT 0 NOT NULL,
-  `label_wording`       VARCHAR(512) DEFAULT ''              NOT NULL,
+  `label_wording`       VARCHAR(191) DEFAULT ''              NOT NULL,
   `label_domain`        VARCHAR(255) DEFAULT ''              NOT NULL,
-  `description_wording` VARCHAR(512) DEFAULT ''              NOT NULL,
+  `description_wording` VARCHAR(191) DEFAULT ''              NOT NULL,
   `description_domain`  VARCHAR(255) DEFAULT ''              NOT NULL,
   `stability`           VARCHAR(64)  DEFAULT 'beta'          NOT NULL,
   UNIQUE KEY `UNIQ_91700F175E237E06` (`name`),
