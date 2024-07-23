@@ -1,13 +1,12 @@
 import loginCommon from '@commonTests/BO/loginBO';
 
-import themeAndLogoPage from '@pages/BO/design/themeAndLogo/themeAndLogo';
-
 import testContext from '@utils/testContext';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boThemeAndLogoPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -38,20 +37,20 @@ function enableHummingbird(baseContext: string = 'commonTests-enableHummingbird'
         boDashboardPage.designParentLink,
         boDashboardPage.themeAndLogoParentLink,
       );
-      await themeAndLogoPage.closeSfToolBar(page);
+      await boThemeAndLogoPage.closeSfToolBar(page);
 
-      const pageTitle = await themeAndLogoPage.getPageTitle(page);
-      expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+      const pageTitle = await boThemeAndLogoPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boThemeAndLogoPage.pageTitle);
 
-      const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
+      const numThemes = await boThemeAndLogoPage.getNumberOfThemes(page);
       expect(numThemes).to.eq(2);
     });
 
     it('should enable the theme Hummingbird', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableThemeHummingbird', baseContext);
 
-      const result = await themeAndLogoPage.enableTheme(page, 'hummingbird');
-      expect(result).to.eq(themeAndLogoPage.successfulUpdateMessage);
+      const result = await boThemeAndLogoPage.enableTheme(page, 'hummingbird');
+      expect(result).to.eq(boThemeAndLogoPage.successfulUpdateMessage);
     });
   });
 }
@@ -83,20 +82,20 @@ function disableHummingbird(baseContext: string = 'commonTests-disableHummingbir
         boDashboardPage.designParentLink,
         boDashboardPage.themeAndLogoParentLink,
       );
-      await themeAndLogoPage.closeSfToolBar(page);
+      await boThemeAndLogoPage.closeSfToolBar(page);
 
-      const pageTitle = await themeAndLogoPage.getPageTitle(page);
-      expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+      const pageTitle = await boThemeAndLogoPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boThemeAndLogoPage.pageTitle);
 
-      const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
+      const numThemes = await boThemeAndLogoPage.getNumberOfThemes(page);
       expect(numThemes).to.eq(2);
     });
 
     it('should enable the theme Classic', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableThemeClassic', baseContext);
 
-      const result = await themeAndLogoPage.enableTheme(page, 'classic');
-      expect(result).to.eq(themeAndLogoPage.successfulUpdateMessage);
+      const result = await boThemeAndLogoPage.enableTheme(page, 'classic');
+      expect(result).to.eq(boThemeAndLogoPage.successfulUpdateMessage);
     });
   });
 }

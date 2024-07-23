@@ -4,15 +4,13 @@ import testContext from '@utils/testContext';
 // Import login steps
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import BO pages
-import advancedCustomizationPage from '@pages/BO/design/themeAndLogo/advancedCustomization';
-import themeAndLogoPage from '@pages/BO/design/themeAndLogo/themeAndLogo';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boModuleManagerPage,
+  boThemeAndLogoPage,
+  boThemeAdvancedConfigurationPage,
   dataModules,
   foClassicHomePage,
   utilsFile,
@@ -93,25 +91,25 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
         boDashboardPage.designParentLink,
         boDashboardPage.themeAndLogoParentLink,
       );
-      await themeAndLogoPage.closeSfToolBar(page);
+      await boThemeAndLogoPage.closeSfToolBar(page);
 
-      const pageTitle = await themeAndLogoPage.getPageTitle(page);
-      expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+      const pageTitle = await boThemeAndLogoPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boThemeAndLogoPage.pageTitle);
     });
 
     it('should go to \'Advanced Customization\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAdvancedCustomizationPage_1', baseContext);
 
-      await themeAndLogoPage.goToSubTabAdvancedCustomization(page);
+      await boThemeAndLogoPage.goToSubTabAdvancedCustomization(page);
 
-      const pageTitle = await advancedCustomizationPage.getPageTitle(page);
-      expect(pageTitle).to.contains(advancedCustomizationPage.pageTitle);
+      const pageTitle = await boThemeAdvancedConfigurationPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boThemeAdvancedConfigurationPage.pageTitle);
     });
 
     it('should download theme', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'downloadTheme', baseContext);
 
-      filePath = await advancedCustomizationPage.downloadTheme(page);
+      filePath = await boThemeAdvancedConfigurationPage.downloadTheme(page);
 
       const exist = await utilsFile.doesFileExist(filePath);
       expect(exist, 'Theme was not downloaded').to.eq(true);
@@ -120,7 +118,7 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
     it('should click on upload child theme button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnUploadChildTheme', baseContext);
 
-      const modalTitle = await advancedCustomizationPage.clickOnUploadChildThemeButton(page);
+      const modalTitle = await boThemeAdvancedConfigurationPage.clickOnUploadChildThemeButton(page);
       expect(modalTitle, 'Modal \'Upload child theme\' is not displayed')
         .to.contains('Drop your child theme archive here or select file');
     });
@@ -130,7 +128,7 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
 
       await utilsFile.renameFile(filePath, renamedFilePath);
 
-      const uploadTheme = await advancedCustomizationPage.uploadTheme(page, renamedFilePath);
+      const uploadTheme = await boThemeAdvancedConfigurationPage.uploadTheme(page, renamedFilePath);
       expect(uploadTheme, 'Child theme is not uploaded')
         .to.contains('The child theme has been added successfully.');
     });
@@ -138,7 +136,7 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
     it('should close the modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeModal', baseContext);
 
-      const isModalClosed = await advancedCustomizationPage.closeModal(page);
+      const isModalClosed = await boThemeAdvancedConfigurationPage.closeModal(page);
       expect(isModalClosed, 'Modal not closed').to.eq(true);
     });
 
@@ -175,23 +173,23 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
         boDashboardPage.designParentLink,
         boDashboardPage.themeAndLogoParentLink,
       );
-      await themeAndLogoPage.closeSfToolBar(page);
+      await boThemeAndLogoPage.closeSfToolBar(page);
 
-      const pageTitle = await themeAndLogoPage.getPageTitle(page);
-      expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+      const pageTitle = await boThemeAndLogoPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boThemeAndLogoPage.pageTitle);
     });
 
     it('should use the child theme', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'useChildTheme', baseContext);
 
-      const successResult = await themeAndLogoPage.useTheme(page, 'child_classic');
-      expect(successResult).to.be.equal(themeAndLogoPage.successfulUpdateMessage);
+      const successResult = await boThemeAndLogoPage.useTheme(page, 'child_classic');
+      expect(successResult).to.be.equal(boThemeAndLogoPage.successfulUpdateMessage);
     });
 
     it('should click on view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnViewMyShop', baseContext);
 
-      page = await themeAndLogoPage.viewMyShop(page);
+      page = await boThemeAndLogoPage.viewMyShop(page);
       await foClassicHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foClassicHomePage.isHomePage(page);
@@ -203,8 +201,8 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
 
       page = await foClassicHomePage.closePage(browserContext, page, 0);
 
-      const pageTitle = await themeAndLogoPage.getPageTitle(page);
-      expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+      const pageTitle = await boThemeAndLogoPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boThemeAndLogoPage.pageTitle);
     });
   });
 
@@ -213,15 +211,15 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
     it('should use the classic theme', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'useClassicTheme', baseContext);
 
-      const successResult = await themeAndLogoPage.useTheme(page, 'classic');
-      expect(successResult).to.be.equal(themeAndLogoPage.successfulUpdateMessage);
+      const successResult = await boThemeAndLogoPage.useTheme(page, 'classic');
+      expect(successResult).to.be.equal(boThemeAndLogoPage.successfulUpdateMessage);
     });
 
     it('should delete the child theme', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteChildTheme', baseContext);
 
-      const successResult = await themeAndLogoPage.deleteTheme(page, 'child_classic');
-      expect(successResult).to.be.equal(themeAndLogoPage.successfulDeleteMessage);
+      const successResult = await boThemeAndLogoPage.deleteTheme(page, 'child_classic');
+      expect(successResult).to.be.equal(boThemeAndLogoPage.successfulDeleteMessage);
     });
   });
 
@@ -230,17 +228,17 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
     it('should go to \'Advanced Customization\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAdvancedCustomizationPage_2', baseContext);
 
-      await themeAndLogoPage.goToSubTabAdvancedCustomization(page);
+      await boThemeAndLogoPage.goToSubTabAdvancedCustomization(page);
 
-      const pageTitle = await advancedCustomizationPage.getPageTitle(page);
-      expect(pageTitle).to.contains(advancedCustomizationPage.pageTitle);
+      const pageTitle = await boThemeAdvancedConfigurationPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boThemeAdvancedConfigurationPage.pageTitle);
     });
 
     it('should get the How to use parents/child themes link', async function () {
       await testContext
         .addContextItem(this, 'testIdentifier', 'getHowToUseParentsChildThemesLink', baseContext);
 
-      const linkParentChildPage = await advancedCustomizationPage.getHowToUseParentsChildThemesLink(page);
+      const linkParentChildPage = await boThemeAdvancedConfigurationPage.getHowToUseParentsChildThemesLink(page);
       expect(linkParentChildPage)
         .to
         .contains('https://devdocs.prestashop.com/1.7/themes/reference/template_inheritance/parent_child_feature/');

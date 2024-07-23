@@ -1,5 +1,4 @@
 import loginCommon from '@commonTests/BO/loginBO';
-import themeAndLogoPage from '@pages/BO/design/themeAndLogo/themeAndLogo';
 import testContext from '@utils/testContext';
 
 import {expect} from 'chai';
@@ -8,6 +7,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boModuleManagerPage,
+  boThemeAndLogoPage,
   dataModules,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -78,10 +78,10 @@ describe('Theme Customization module - Disable/Enable module', async () => {
         boDashboardPage.designParentLink,
         boDashboardPage.themeAndLogoParentLink,
       );
-      await themeAndLogoPage.closeSfToolBar(page);
+      await boThemeAndLogoPage.closeSfToolBar(page);
 
-      const pageTitle = await themeAndLogoPage.getPageTitle(page);
-      expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+      const pageTitle = await boThemeAndLogoPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boThemeAndLogoPage.pageTitle);
     });
 
     // @todo : https://github.com/PrestaShop/PrestaShop/issues/36590
@@ -90,10 +90,10 @@ describe('Theme Customization module - Disable/Enable module', async () => {
 
       this.skip();
 
-      const hasSubTabAdvancedCustomization = await themeAndLogoPage.hasSubTabAdvancedCustomization(page);
+      const hasSubTabAdvancedCustomization = await boThemeAndLogoPage.hasSubTabAdvancedCustomization(page);
       expect(hasSubTabAdvancedCustomization).to.equal(false);
 
-      const hasSubTabPagesConfiguration = await themeAndLogoPage.hasSubTabPagesConfiguration(page);
+      const hasSubTabPagesConfiguration = await boThemeAndLogoPage.hasSubTabPagesConfiguration(page);
       expect(hasSubTabPagesConfiguration).to.equal(false);
     });
 
@@ -133,19 +133,19 @@ describe('Theme Customization module - Disable/Enable module', async () => {
         boDashboardPage.designParentLink,
         boDashboardPage.themeAndLogoParentLink,
       );
-      await themeAndLogoPage.closeSfToolBar(page);
+      await boThemeAndLogoPage.closeSfToolBar(page);
 
-      const pageTitle = await themeAndLogoPage.getPageTitle(page);
-      expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+      const pageTitle = await boThemeAndLogoPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boThemeAndLogoPage.pageTitle);
     });
 
     it('should check that tabs are present', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTabsPresent', baseContext);
 
-      const hasSubTabAdvancedCustomization = await themeAndLogoPage.hasSubTabAdvancedCustomization(page);
+      const hasSubTabAdvancedCustomization = await boThemeAndLogoPage.hasSubTabAdvancedCustomization(page);
       expect(hasSubTabAdvancedCustomization).to.equal(true);
 
-      const hasSubTabPagesConfiguration = await themeAndLogoPage.hasSubTabPagesConfiguration(page);
+      const hasSubTabPagesConfiguration = await boThemeAndLogoPage.hasSubTabPagesConfiguration(page);
       expect(hasSubTabPagesConfiguration).to.equal(true);
     });
   });

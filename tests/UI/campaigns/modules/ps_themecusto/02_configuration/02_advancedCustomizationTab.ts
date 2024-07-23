@@ -4,15 +4,12 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-// Import BO pages
-import themeAndLogoPage from '@pages/BO/design/themeAndLogo/themeAndLogo';
-import advancedCustomizationPage from '@pages/BO/design/themeAndLogo/advancedCustomization';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boThemeAdvancedConfigurationPage,
+  boThemeAndLogoPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -46,25 +43,25 @@ describe('Theme Customization module - Advanced Customization tab ', async () =>
         boDashboardPage.designParentLink,
         boDashboardPage.themeAndLogoParentLink,
       );
-      await themeAndLogoPage.closeSfToolBar(page);
+      await boThemeAndLogoPage.closeSfToolBar(page);
 
-      const pageTitle = await themeAndLogoPage.getPageTitle(page);
-      expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+      const pageTitle = await boThemeAndLogoPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boThemeAndLogoPage.pageTitle);
     });
 
     it('should go to \'Advanced Customization\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAdvancedCustomizationPage', baseContext);
 
-      await themeAndLogoPage.goToSubTabAdvancedCustomization(page);
+      await boThemeAndLogoPage.goToSubTabAdvancedCustomization(page);
 
-      const pageTitle = await advancedCustomizationPage.getPageTitle(page);
-      expect(pageTitle).to.contains(advancedCustomizationPage.pageTitle);
+      const pageTitle = await boThemeAdvancedConfigurationPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boThemeAdvancedConfigurationPage.pageTitle);
     });
 
     it('should download theme', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'downloadTheme', baseContext);
 
-      const filePath = await advancedCustomizationPage.downloadTheme(page);
+      const filePath = await boThemeAdvancedConfigurationPage.downloadTheme(page);
 
       const exist = await utilsFile.doesFileExist(filePath);
       expect(exist, 'Theme was not downloaded').to.eq(true);
@@ -76,7 +73,7 @@ describe('Theme Customization module - Advanced Customization tab ', async () =>
     it('should click on the link "How to use parents/child themes"', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickHowToUseParentsChildThemesLink', baseContext);
 
-      page = await advancedCustomizationPage.clickHowToUseParentsChildThemesLink(page);
+      page = await boThemeAdvancedConfigurationPage.clickHowToUseParentsChildThemesLink(page);
       expect(page.url()).to.equal(
         'https://devdocs.prestashop-project.org/1.7/themes/reference/template-inheritance/parent-child-feature/',
       );
@@ -85,9 +82,9 @@ describe('Theme Customization module - Advanced Customization tab ', async () =>
     it('should click on the button "Upload child theme"', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnUploadChildThemeButton', baseContext);
 
-      page = await advancedCustomizationPage.closePage(browserContext, page, 0);
+      page = await boThemeAdvancedConfigurationPage.closePage(browserContext, page, 0);
 
-      const modalTitle = await advancedCustomizationPage.clickOnUploadChildThemeButton(page);
+      const modalTitle = await boThemeAdvancedConfigurationPage.clickOnUploadChildThemeButton(page);
       expect(modalTitle).to.contains('Drop your child theme archive here or select file');
     });
   });

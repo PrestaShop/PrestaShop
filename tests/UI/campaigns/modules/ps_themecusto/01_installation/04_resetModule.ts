@@ -4,17 +4,14 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-// Import BO pages
-import advancedCustomizationPage from '@pages/BO/design/themeAndLogo/advancedCustomization';
-import pagesConfigurationPage from '@pages/BO/design/themeAndLogo/pagesConfiguration';
-import themeAndLogoPage from '@pages/BO/design/themeAndLogo/themeAndLogo';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boModuleManagerPage,
+  boThemeAdvancedConfigurationPage,
+  boThemeAndLogoPage,
+  boThemePagesConfigurationPage,
   dataModules,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -88,27 +85,27 @@ describe('Theme Customization module - Reset module', async () => {
       boDashboardPage.designParentLink,
       boDashboardPage.themeAndLogoParentLink,
     );
-    await themeAndLogoPage.closeSfToolBar(page);
+    await boThemeAndLogoPage.closeSfToolBar(page);
 
-    const pageTitle = await themeAndLogoPage.getPageTitle(page);
-    expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+    const pageTitle = await boThemeAndLogoPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boThemeAndLogoPage.pageTitle);
   });
 
   it('should go to \'Pages configuration\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToPagesConfigurationPage', baseContext);
 
-    await themeAndLogoPage.goToSubTabPagesConfiguration(page);
+    await boThemeAndLogoPage.goToSubTabPagesConfiguration(page);
 
-    const pageTitle = await pagesConfigurationPage.getPageTitle(page);
-    expect(pageTitle).to.contains(pagesConfigurationPage.pageTitle);
+    const pageTitle = await boThemePagesConfigurationPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boThemePagesConfigurationPage.pageTitle);
   });
 
   it('should go to \'Advanced Customization\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAdvancedCustomizationPage', baseContext);
 
-    await themeAndLogoPage.goToSubTabAdvancedCustomization(page);
+    await boThemeAndLogoPage.goToSubTabAdvancedCustomization(page);
 
-    const pageTitle = await advancedCustomizationPage.getPageTitle(page);
-    expect(pageTitle).to.contains(advancedCustomizationPage.pageTitle);
+    const pageTitle = await boThemeAdvancedConfigurationPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boThemeAdvancedConfigurationPage.pageTitle);
   });
 });
