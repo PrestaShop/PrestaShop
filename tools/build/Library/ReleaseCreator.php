@@ -883,11 +883,17 @@ class ReleaseCreator
 
         foreach ($files as $key => $value) {
             if (is_numeric($key)) {
-                $md5 = md5_file($value);
                 $count = substr_count($value, DIRECTORY_SEPARATOR) - $subCount + 1;
                 $file_name = str_replace($this->tempProjectPath, '', $value);
                 $file_name = pathinfo($file_name, PATHINFO_BASENAME);
-                $content .= str_repeat("\t", $count) . "<md5file name=\"$file_name\">$md5</md5file>" . PHP_EOL;
+
+                if (is_link($value)) {
+                    $linkTarget = readlink($value);
+                    $content .= str_repeat("\t", $count) . "<link name=\"$file_name\">$linkTarget</link>" . PHP_EOL;
+                } else {
+                    $md5 = md5_file($value);
+                    $content .= str_repeat("\t", $count) . "<md5file name=\"$file_name\">$md5</md5file>" . PHP_EOL;
+                }
             } else {
                 $count = substr_count($key, DIRECTORY_SEPARATOR) - $subCount + 1;
                 $dir_name = str_replace($this->tempProjectPath, '', $key);
