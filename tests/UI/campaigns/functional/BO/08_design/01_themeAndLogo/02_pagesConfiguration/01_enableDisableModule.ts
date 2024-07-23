@@ -4,14 +4,12 @@ import testContext from '@utils/testContext';
 // Import login steps
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import BO pages
-import themeAndLogoPage from '@pages/BO/design/themeAndLogo/themeAndLogo';
-import pagesConfigurationPage from '@pages/BO/design/themeAndLogo/pagesConfiguration';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boThemeAndLogoPage,
+  boThemePagesConfigurationPage,
   dataModules,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -44,19 +42,19 @@ describe('BO - Design - Theme & Logo : Enable/disable module', async () => {
       boDashboardPage.designParentLink,
       boDashboardPage.themeAndLogoParentLink,
     );
-    await themeAndLogoPage.closeSfToolBar(page);
+    await boThemeAndLogoPage.closeSfToolBar(page);
 
-    const pageTitle = await themeAndLogoPage.getPageTitle(page);
-    expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+    const pageTitle = await boThemeAndLogoPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boThemeAndLogoPage.pageTitle);
   });
 
   it('should go to \'Pages configuration\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToPagesConfigurationPage', baseContext);
 
-    await themeAndLogoPage.goToSubTabPagesConfiguration(page);
+    await boThemeAndLogoPage.goToSubTabPagesConfiguration(page);
 
-    const pageTitle = await pagesConfigurationPage.getPageTitle(page);
-    expect(pageTitle).to.contains(pagesConfigurationPage.pageTitle);
+    const pageTitle = await boThemePagesConfigurationPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boThemePagesConfigurationPage.pageTitle);
   });
 
   [
@@ -76,8 +74,8 @@ describe('BO - Design - Theme & Logo : Enable/disable module', async () => {
     it(`should ${test.args.title}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', test.args.action, baseContext);
 
-      const successMessage = await pagesConfigurationPage.setActionInModule(page, dataModules.mainMenu, test.args.action);
-      expect(successMessage).to.eq(pagesConfigurationPage.successMessage);
+      const successMessage = await boThemePagesConfigurationPage.setActionInModule(page, dataModules.mainMenu, test.args.action);
+      expect(successMessage).to.eq(boThemePagesConfigurationPage.successMessage);
     });
   });
 });

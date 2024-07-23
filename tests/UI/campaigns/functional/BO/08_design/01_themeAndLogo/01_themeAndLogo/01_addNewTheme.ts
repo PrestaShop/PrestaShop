@@ -4,14 +4,12 @@ import testContext from '@utils/testContext';
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import BO pages
-import themeAndLogoPage from '@pages/BO/design/themeAndLogo/themeAndLogo';
-import themeImportPage from '@pages/BO/design/themeAndLogo/themeAndLogo/import';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boThemeAndLogoPage,
+  boThemeAndLogoImportPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -52,19 +50,19 @@ describe('BO - Design - Theme & Logo : Add new theme', async () => {
       boDashboardPage.designParentLink,
       boDashboardPage.themeAndLogoParentLink,
     );
-    await themeAndLogoPage.closeSfToolBar(page);
+    await boThemeAndLogoPage.closeSfToolBar(page);
 
-    const pageTitle = await themeAndLogoPage.getPageTitle(page);
-    expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+    const pageTitle = await boThemeAndLogoPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boThemeAndLogoPage.pageTitle);
   });
 
   it('should go to \'Add new theme\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewTheme1', baseContext);
 
-    await themeAndLogoPage.goToNewThemePage(page);
+    await boThemeAndLogoPage.goToNewThemePage(page);
 
-    const pageTitle = await themeImportPage.getPageTitle(page);
-    expect(pageTitle).to.contains(themeImportPage.pageTitle);
+    const pageTitle = await boThemeAndLogoImportPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boThemeAndLogoImportPage.pageTitle);
   });
 
   describe('Import from your computer', async () => {
@@ -80,22 +78,22 @@ describe('BO - Design - Theme & Logo : Add new theme', async () => {
     it('should import theme from your computer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'importThemeFromComputer', baseContext);
 
-      await themeImportPage.importFromYourComputer(page, 'theme.zip');
+      await boThemeAndLogoImportPage.importFromYourComputer(page, 'theme.zip');
 
-      const pageTitle = await themeAndLogoPage.getPageTitle(page);
-      expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+      const pageTitle = await boThemeAndLogoPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boThemeAndLogoPage.pageTitle);
 
-      const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
+      const numThemes = await boThemeAndLogoPage.getNumberOfThemes(page);
       expect(numThemes).to.eq(3);
     });
 
     it('should remove the theme classic-rocket', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removeThemeClassicrocket1', baseContext);
 
-      const result = await themeAndLogoPage.removeTheme(page, 'classic-rocket');
-      expect(result).to.eq(themeAndLogoPage.successfulDeleteMessage);
+      const result = await boThemeAndLogoPage.removeTheme(page, 'classic-rocket');
+      expect(result).to.eq(boThemeAndLogoPage.successfulDeleteMessage);
 
-      const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
+      const numThemes = await boThemeAndLogoPage.getNumberOfThemes(page);
       expect(numThemes).to.eq(2);
     });
   });
@@ -104,31 +102,31 @@ describe('BO - Design - Theme & Logo : Add new theme', async () => {
     it('should go to \'Add new theme\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewTheme2', baseContext);
 
-      await themeAndLogoPage.goToNewThemePage(page);
+      await boThemeAndLogoPage.goToNewThemePage(page);
 
-      const pageTitle = await themeImportPage.getPageTitle(page);
-      expect(pageTitle).to.contains(themeImportPage.pageTitle);
+      const pageTitle = await boThemeAndLogoImportPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boThemeAndLogoImportPage.pageTitle);
     });
 
     it('should import from the web the classic-rocket theme', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'importThemeFromWeb', baseContext);
 
-      await themeImportPage.importFromWeb(page, urlTheme);
+      await boThemeAndLogoImportPage.importFromWeb(page, urlTheme);
 
-      const pageTitle = await themeAndLogoPage.getPageTitle(page);
-      expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+      const pageTitle = await boThemeAndLogoPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boThemeAndLogoPage.pageTitle);
 
-      const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
+      const numThemes = await boThemeAndLogoPage.getNumberOfThemes(page);
       expect(numThemes).to.eq(3);
     });
 
     it('should remove the theme classic-rocket', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removeThemeClassicrocket2', baseContext);
 
-      const result = await themeAndLogoPage.removeTheme(page, 'classic-rocket');
-      expect(result).to.eq(themeAndLogoPage.successfulDeleteMessage);
+      const result = await boThemeAndLogoPage.removeTheme(page, 'classic-rocket');
+      expect(result).to.eq(boThemeAndLogoPage.successfulDeleteMessage);
 
-      const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
+      const numThemes = await boThemeAndLogoPage.getNumberOfThemes(page);
       expect(numThemes).to.eq(2);
     });
   });
@@ -139,31 +137,31 @@ describe('BO - Design - Theme & Logo : Add new theme', async () => {
 
       await utilsFile.downloadFile(urlTheme, '../../themes/theme.zip');
 
-      await themeAndLogoPage.goToNewThemePage(page);
+      await boThemeAndLogoPage.goToNewThemePage(page);
 
-      const pageTitle = await themeImportPage.getPageTitle(page);
-      expect(pageTitle).to.contains(themeImportPage.pageTitle);
+      const pageTitle = await boThemeAndLogoImportPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boThemeAndLogoImportPage.pageTitle);
     });
 
     it('should import from FTP', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'importFromFTP', baseContext);
 
-      await themeImportPage.importFromFTP(page, 'theme.zip');
+      await boThemeAndLogoImportPage.importFromFTP(page, 'theme.zip');
 
-      const pageTitle = await themeAndLogoPage.getPageTitle(page);
-      expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+      const pageTitle = await boThemeAndLogoPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boThemeAndLogoPage.pageTitle);
 
-      const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
+      const numThemes = await boThemeAndLogoPage.getNumberOfThemes(page);
       expect(numThemes).to.eq(3);
     });
 
     it('should remove the theme classic-rocket', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removeThemeClassicrocket3', baseContext);
 
-      const result = await themeAndLogoPage.removeTheme(page, 'classic-rocket');
-      expect(result).to.eq(themeAndLogoPage.successfulDeleteMessage);
+      const result = await boThemeAndLogoPage.removeTheme(page, 'classic-rocket');
+      expect(result).to.eq(boThemeAndLogoPage.successfulDeleteMessage);
 
-      const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
+      const numThemes = await boThemeAndLogoPage.getNumberOfThemes(page);
       expect(numThemes).to.eq(2);
     });
   });

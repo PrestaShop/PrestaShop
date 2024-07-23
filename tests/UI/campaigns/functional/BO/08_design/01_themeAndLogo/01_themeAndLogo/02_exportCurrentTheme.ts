@@ -4,13 +4,11 @@ import testContext from '@utils/testContext';
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import BO pages
-import themeAndLogoPage from '@pages/BO/design/themeAndLogo/themeAndLogo';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boThemeAndLogoPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -45,17 +43,17 @@ describe('BO - Design - Theme & Logo : Export current theme', async () => {
       boDashboardPage.designParentLink,
       boDashboardPage.themeAndLogoParentLink,
     );
-    await themeAndLogoPage.closeSfToolBar(page);
+    await boThemeAndLogoPage.closeSfToolBar(page);
 
-    const pageTitle = await themeAndLogoPage.getPageTitle(page);
-    expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+    const pageTitle = await boThemeAndLogoPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boThemeAndLogoPage.pageTitle);
   });
 
   it('should click on export current theme button', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'exportCurrentTheme', baseContext);
 
-    const successMessage = await themeAndLogoPage.exportCurrentTheme(page);
-    expect(successMessage).to.contains(themeAndLogoPage.successExportMessage);
+    const successMessage = await boThemeAndLogoPage.exportCurrentTheme(page);
+    expect(successMessage).to.contains(boThemeAndLogoPage.successExportMessage);
   });
 
   it('should check that the theme is exported successfully', async function () {

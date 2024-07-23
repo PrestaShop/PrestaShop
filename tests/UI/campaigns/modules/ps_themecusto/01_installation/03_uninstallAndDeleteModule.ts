@@ -4,15 +4,12 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-// Import BO pages
-import themeAndLogoPage from '@pages/BO/design/themeAndLogo/themeAndLogo';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boModuleManagerPage,
+  boThemeAndLogoPage,
   dataModules,
   utilsFile,
   utilsPlaywright,
@@ -97,19 +94,19 @@ describe('Theme Customization module - Uninstall and delete module', async () =>
       boDashboardPage.designParentLink,
       boDashboardPage.themeAndLogoLink,
     );
-    await themeAndLogoPage.closeSfToolBar(page);
+    await boThemeAndLogoPage.closeSfToolBar(page);
 
-    const pageTitle = await themeAndLogoPage.getPageTitle(page);
-    expect(pageTitle).to.equal(themeAndLogoPage.pageTitle);
+    const pageTitle = await boThemeAndLogoPage.getPageTitle(page);
+    expect(pageTitle).to.equal(boThemeAndLogoPage.pageTitle);
   });
 
   it('should check that tabs are not present', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkTabsNotPresent', baseContext);
 
-    const hasSubTabAdvancedCustomization = await themeAndLogoPage.hasSubTabAdvancedCustomization(page);
+    const hasSubTabAdvancedCustomization = await boThemeAndLogoPage.hasSubTabAdvancedCustomization(page);
     expect(hasSubTabAdvancedCustomization).to.equal(false);
 
-    const hasSubTabPagesConfiguration = await themeAndLogoPage.hasSubTabPagesConfiguration(page);
+    const hasSubTabPagesConfiguration = await boThemeAndLogoPage.hasSubTabPagesConfiguration(page);
     expect(hasSubTabPagesConfiguration).to.equal(false);
   });
 
