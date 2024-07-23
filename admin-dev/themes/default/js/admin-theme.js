@@ -511,7 +511,17 @@ $(() => {
     $('#modal-shipping').modal();
   });
 
-  // Function to update padding of the target element
+  // Function to debounce
+  function debounce(func, wait) {
+    let timeout;
+
+    return function (...args) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+  }
+
+  // Function to update page head CSS properties
   const prefixName = 'cdk';
 
   function updatePadding() {
@@ -532,6 +542,9 @@ $(() => {
   // Initial padding update
   updatePadding();
 
+  // Create a debounced version of the updatePadding function
+  const debouncedUpdatePadding = debounce(updatePadding, 100);
+
   // Update padding when the window is resized
-  window.addEventListener('resize', updatePadding);
+  window.addEventListener('resize', debouncedUpdatePadding);
 });

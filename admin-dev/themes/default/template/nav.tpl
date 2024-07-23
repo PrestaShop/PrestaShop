@@ -1,7 +1,7 @@
 <nav class="nav-bar" role="navigation" id="nav-sidebar">
-	<span class="menu-collapse" data-toggle-url="{$toggle_navigation_url}">
+  <span class="menu-collapse" data-toggle-url="{$toggle_navigation_url}">
     <i class="material-icons rtl-flip">first_page</i>
-	</span>
+  </span>
 
   <div class="nav-bar-overflow">
     <div class="logo-container">

@@ -360,10 +360,7 @@ table {
         }
       }
 
-      td[data-column-id^="id_product"],
-      td[data-column-id^="final_price_tax_excluded"],
-      td[data-column-id^="date_add"],
-      td[data-column-id^="quantity"] {
+      td {
         .input-group {
           &:nth-child(2) {
             margin-top: -1px;

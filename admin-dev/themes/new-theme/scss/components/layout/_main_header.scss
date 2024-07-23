@@ -451,6 +451,10 @@ $header-text-color: var(--#{$cdk}white) !default;
       }
     }
   }
+
+  #maintenance-mode {
+    color: var(--#{$cdk}yellow-500);
+  }
 }
 
 .shop-list {

@@ -159,6 +159,10 @@
     }
   }
 
+  #maintenance-mode {
+    color: var(--#{$cdk}yellow-500);
+  }
+
   .header-list {
     padding: 0;
     margin: 0;
