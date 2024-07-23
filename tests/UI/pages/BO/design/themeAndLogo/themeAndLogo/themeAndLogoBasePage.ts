@@ -96,7 +96,7 @@ export default class themeAndLogoBasePage extends BOBasePage {
    * @return {Promise<boolean>}
    */
   async hasSubTabPagesConfiguration(page: Page): Promise<boolean> {
-    return this.elementVisible(page, this.pagesConfigurationNavItemLink);
+    return !(await this.elementNotVisible(page, this.pagesConfigurationNavItemLink, 2000));
   }
 
   /**
@@ -114,7 +114,7 @@ export default class themeAndLogoBasePage extends BOBasePage {
    * @return {Promise<boolean>}
    */
   async hasSubTabAdvancedCustomization(page: Page): Promise<boolean> {
-    return this.elementVisible(page, this.advancedCustomizationNavItemLink);
+    return !(await this.elementNotVisible(page, this.advancedCustomizationNavItemLink, 2000));
   }
 
   /**
