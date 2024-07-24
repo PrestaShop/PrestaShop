@@ -6,12 +6,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import zonesPage from '@pages/BO/international/locations';
-import countriesPage from '@pages/BO/international/locations/countries';
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
+  boCountriesPage,
   boDashboardPage,
   dataCountries,
   dataPaymentMethods,
@@ -70,23 +70,23 @@ describe('BO - International - Countries : Enable / Disable Countries', async ()
 
     await zonesPage.goToSubTabCountries(page);
 
-    const pageTitle = await countriesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(countriesPage.pageTitle);
+    const pageTitle = await boCountriesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCountriesPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetAllFilters', baseContext);
 
-    const numberOfCountries = await countriesPage.resetAndGetNumberOfLines(page);
+    const numberOfCountries = await boCountriesPage.resetAndGetNumberOfLines(page);
     expect(numberOfCountries).to.be.above(0);
   });
 
   it('should filter by Enabled countries', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterEnabled', baseContext);
 
-    await countriesPage.filterTable(page, 'select', 'a!active', '1');
+    await boCountriesPage.filterTable(page, 'select', 'a!active', '1');
 
-    const numberOfCountries = await countriesPage.getNumberOfElementInGrid(page);
+    const numberOfCountries = await boCountriesPage.getNumberOfElementInGrid(page);
     expect(numberOfCountries).to.equal(2);
   });
 
@@ -94,7 +94,7 @@ describe('BO - International - Countries : Enable / Disable Countries', async ()
     await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
     // Click on view my shop
-    page = await countriesPage.viewMyShop(page);
+    page = await boCountriesPage.viewMyShop(page);
     // Change FO language
     await foClassicHomePage.changeLanguage(page, 'en');
 
@@ -174,11 +174,11 @@ describe('BO - International - Countries : Enable / Disable Countries', async ()
 
     page = await orderConfirmationPage.closePage(browserContext, page, 0);
 
-    await countriesPage.resetFilter(page);
-    await countriesPage.filterTable(page, 'input', 'b!name', dataCountries.france.name);
-    await countriesPage.setCountryStatus(page, 1, false);
+    await boCountriesPage.resetFilter(page);
+    await boCountriesPage.filterTable(page, 'input', 'b!name', dataCountries.france.name);
+    await boCountriesPage.setCountryStatus(page, 1, false);
 
-    const currentStatus = await countriesPage.getCountryStatus(page, 1);
+    const currentStatus = await boCountriesPage.getCountryStatus(page, 1);
     expect(currentStatus).to.eq(false);
 
   });
@@ -187,7 +187,7 @@ describe('BO - International - Countries : Enable / Disable Countries', async ()
     await testContext.addContextItem(this, 'testIdentifier', 'goToFOAfterDisable', baseContext);
 
     // Click on view my shop
-    page = await countriesPage.viewMyShop(page);
+    page = await boCountriesPage.viewMyShop(page);
     // Change FO language
     await foClassicHomePage.changeLanguage(page, 'en');
 
@@ -269,11 +269,11 @@ describe('BO - International - Countries : Enable / Disable Countries', async ()
 
     page = await orderConfirmationPage.closePage(browserContext, page, 0);
 
-    await countriesPage.setCountryStatus(page, 1, true);
+    await boCountriesPage.setCountryStatus(page, 1, true);
 
-    const currentStatus = await countriesPage.getCountryStatus(page, 1);
+    const currentStatus = await boCountriesPage.getCountryStatus(page, 1);
     expect(currentStatus).to.eq(true);
 
-    await countriesPage.resetFilter(page);
+    await boCountriesPage.resetFilter(page);
   });
 });

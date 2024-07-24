@@ -12,8 +12,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import webservicePage from '@pages/BO/advancedParameters/webservice';
 import zonesPage from '@pages/BO/international/locations';
-import countriesPage from '@pages/BO/international/locations/countries';
-import addCountryPage from '@pages/BO/international/locations/countries/add';
 
 // Import data
 import getCountryXml from '@data/xml/country';
@@ -23,6 +21,8 @@ import type {
   APIResponse, APIRequestContext, BrowserContext, Page,
 } from 'playwright';
 import {
+  boCountriesPage,
+  boCountriesCreatePage,
   boDashboardPage,
   utilsPlaywright,
   utilsXML,
@@ -431,39 +431,39 @@ describe('WS - Countries : CRUD', async () => {
 
           await zonesPage.goToSubTabCountries(page);
 
-          const pageTitle = await countriesPage.getPageTitle(page);
-          expect(pageTitle).to.contains(countriesPage.pageTitle);
+          const pageTitle = await boCountriesPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boCountriesPage.pageTitle);
         });
 
         it('should filter country by ID', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdateAfterPost', baseContext);
 
           // Filter
-          await countriesPage.resetFilter(page);
-          await countriesPage.filterTable(page, 'input', 'id_country', countryNodeID as string);
+          await boCountriesPage.resetFilter(page);
+          await boCountriesPage.filterTable(page, 'input', 'id_country', countryNodeID as string);
 
           // Check number of countries
-          const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
+          const numberOfCountriesAfterFilter = await boCountriesPage.getNumberOfElementInGrid(page);
           expect(numberOfCountriesAfterFilter).to.be.eq(1);
 
-          const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 'id_country');
+          const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'id_country');
           expect(textColumn).to.contains(countryNodeID as string);
         });
 
         it('should go to edit country page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToEditCountryPageAfterPost', baseContext);
 
-          await countriesPage.goToEditCountryPage(page, 1);
+          await boCountriesPage.goToEditCountryPage(page, 1);
 
-          const pageTitle = await addCountryPage.getPageTitle(page);
-          expect(pageTitle).to.contains(addCountryPage.pageTitleEdit);
+          const pageTitle = await boCountriesCreatePage.getPageTitle(page);
+          expect(pageTitle).to.contains(boCountriesCreatePage.pageTitleEdit);
         });
 
         it('should check country\'s zone', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryZone1', baseContext);
 
           const xmlValueIDZone = countryXml.getAttributeValue(xmlCreate, 'id_zone');
-          const valueIDZone = await addCountryPage.getSelectValue(page, 'id_zone');
+          const valueIDZone = await boCountriesCreatePage.getSelectValue(page, 'id_zone');
           expect(valueIDZone).to.be.eq(xmlValueIDZone);
         });
 
@@ -471,7 +471,7 @@ describe('WS - Countries : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryCurrency1', baseContext);
 
           const xmlValueIDCurrency = countryXml.getAttributeValue(xmlCreate, 'id_currency');
-          const valueIDCurrency = await addCountryPage.getSelectValue(page, 'id_currency');
+          const valueIDCurrency = await boCountriesCreatePage.getSelectValue(page, 'id_currency');
           expect(valueIDCurrency).to.be.eq(xmlValueIDCurrency);
         });
 
@@ -479,7 +479,7 @@ describe('WS - Countries : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryCallPrefix1', baseContext);
 
           const xmlValueCallPrefix = countryXml.getAttributeValue(xmlCreate, 'call_prefix');
-          const valueCallPrefix = await addCountryPage.getInputValue(page, 'call_prefix');
+          const valueCallPrefix = await boCountriesCreatePage.getInputValue(page, 'call_prefix');
           expect(valueCallPrefix).to.be.eq(xmlValueCallPrefix);
         });
 
@@ -487,7 +487,7 @@ describe('WS - Countries : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryIsoCode1', baseContext);
 
           const xmlValueIsoCode = countryXml.getAttributeValue(xmlCreate, 'iso_code');
-          const valueIsoCode = await addCountryPage.getInputValue(page, 'iso_code');
+          const valueIsoCode = await boCountriesCreatePage.getInputValue(page, 'iso_code');
           expect(valueIsoCode).to.be.eq(xmlValueIsoCode);
         });
 
@@ -495,7 +495,7 @@ describe('WS - Countries : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryActive1', baseContext);
 
           const xmlValueActive = countryXml.getAttributeValue(xmlCreate, 'active');
-          const valueActive = (await addCountryPage.isCheckboxChecked(page, 'active')) ? '1' : '0';
+          const valueActive = (await boCountriesCreatePage.isCheckboxChecked(page, 'active')) ? '1' : '0';
           expect(valueActive).to.be.eq(xmlValueActive);
         });
 
@@ -503,7 +503,7 @@ describe('WS - Countries : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryStates1', baseContext);
 
           const xmlValueContainsStates = countryXml.getAttributeValue(xmlCreate, 'contains_states');
-          const valueContainsStates = (await addCountryPage.isCheckboxChecked(page, 'contains_states')) ? '1' : '0';
+          const valueContainsStates = (await boCountriesCreatePage.isCheckboxChecked(page, 'contains_states')) ? '1' : '0';
           expect(valueContainsStates).to.be.eq(xmlValueContainsStates);
         });
 
@@ -511,7 +511,7 @@ describe('WS - Countries : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryIdentificationNumber1', baseContext);
 
           const xmlValueNeedIDNumber = countryXml.getAttributeValue(xmlCreate, 'need_identification_number');
-          const valueNeedIDNumber = (await addCountryPage.isCheckboxChecked(page, 'need_identification_number')) ? '1' : '0';
+          const valueNeedIDNumber = (await boCountriesCreatePage.isCheckboxChecked(page, 'need_identification_number')) ? '1' : '0';
           expect(valueNeedIDNumber).to.be.eq(xmlValueNeedIDNumber);
         });
 
@@ -519,7 +519,7 @@ describe('WS - Countries : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryZipCodeNumber1', baseContext);
 
           const xmlValueNeedZipCode = countryXml.getAttributeValue(xmlCreate, 'need_zip_code');
-          const valueNeedZipCode = (await addCountryPage.isCheckboxChecked(page, 'need_zip_code')) ? '1' : '0';
+          const valueNeedZipCode = (await boCountriesCreatePage.isCheckboxChecked(page, 'need_zip_code')) ? '1' : '0';
           expect(valueNeedZipCode).to.be.eq(xmlValueNeedZipCode);
         });
 
@@ -527,7 +527,7 @@ describe('WS - Countries : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryZipCodeFormat1', baseContext);
 
           const xmlValueZipCode = countryXml.getAttributeValue(xmlCreate, 'zip_code_format');
-          const valueZipCode = await addCountryPage.getInputValue(page, 'zipCodeFormat');
+          const valueZipCode = await boCountriesCreatePage.getInputValue(page, 'zipCodeFormat');
           expect(valueZipCode).to.be.eq(xmlValueZipCode);
         });
 
@@ -535,7 +535,7 @@ describe('WS - Countries : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryNameLang11', baseContext);
 
           const xmlValueNameEn = countryXml.getAttributeLangValue(xmlCreate, 'name', '1');
-          const valueNameEn = (await addCountryPage.getInputValue(page, 'nameEn'));
+          const valueNameEn = (await boCountriesCreatePage.getInputValue(page, 'nameEn'));
           expect(valueNameEn).to.be.eq(xmlValueNameEn);
         });
 
@@ -543,7 +543,7 @@ describe('WS - Countries : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryNameLang21', baseContext);
 
           const xmlValueNameFr = countryXml.getAttributeLangValue(xmlCreate, 'name', '2');
-          const valueNameFr = (await addCountryPage.getInputValue(page, 'nameFr'));
+          const valueNameFr = (await boCountriesCreatePage.getInputValue(page, 'nameFr'));
           expect(valueNameFr).to.be.eq(xmlValueNameFr);
         });
 
@@ -552,14 +552,14 @@ describe('WS - Countries : CRUD', async () => {
 
           await zonesPage.goToSubTabCountries(page);
 
-          const pageTitle = await countriesPage.getPageTitle(page);
-          expect(pageTitle).to.contains(countriesPage.pageTitle);
+          const pageTitle = await boCountriesPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boCountriesPage.pageTitle);
         });
 
         it('should reset all filters', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirstAfterPost', baseContext);
 
-          const numberOfCountries = await countriesPage.resetAndGetNumberOfLines(page);
+          const numberOfCountries = await boCountriesPage.resetAndGetNumberOfLines(page);
           expect(numberOfCountries).to.be.above(0);
         });
       });
@@ -699,31 +699,31 @@ describe('WS - Countries : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdateAfterPost2', baseContext);
 
           // Filter
-          await countriesPage.resetFilter(page);
-          await countriesPage.filterTable(page, 'input', 'id_country', countryNodeID as string);
+          await boCountriesPage.resetFilter(page);
+          await boCountriesPage.filterTable(page, 'input', 'id_country', countryNodeID as string);
 
           // Check number of countries
-          const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
+          const numberOfCountriesAfterFilter = await boCountriesPage.getNumberOfElementInGrid(page);
           expect(numberOfCountriesAfterFilter).to.be.eq(1);
 
-          const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 'id_country');
+          const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'id_country');
           expect(textColumn).to.contains(countryNodeID as string);
         });
 
         it('should go to edit country page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToEditCountryPageAfterPost2', baseContext);
 
-          await countriesPage.goToEditCountryPage(page, 1);
+          await boCountriesPage.goToEditCountryPage(page, 1);
 
-          const pageTitle = await addCountryPage.getPageTitle(page);
-          expect(pageTitle).to.contains(addCountryPage.pageTitleEdit);
+          const pageTitle = await boCountriesCreatePage.getPageTitle(page);
+          expect(pageTitle).to.contains(boCountriesCreatePage.pageTitleEdit);
         });
 
         it('should check country\'s zone', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryZone2', baseContext);
 
           const xmlValueIDZone = countryXml.getAttributeValue(xmlUpdate, 'id_zone');
-          const valueIDZone = await addCountryPage.getSelectValue(page, 'id_zone');
+          const valueIDZone = await boCountriesCreatePage.getSelectValue(page, 'id_zone');
           expect(valueIDZone).to.be.eq(xmlValueIDZone);
         });
 
@@ -731,7 +731,7 @@ describe('WS - Countries : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryCurrency2', baseContext);
 
           const xmlValueIDCurrency = countryXml.getAttributeValue(xmlUpdate, 'id_currency');
-          const valueIDCurrency = await addCountryPage.getSelectValue(page, 'id_currency');
+          const valueIDCurrency = await boCountriesCreatePage.getSelectValue(page, 'id_currency');
           expect(valueIDCurrency).to.be.eq(xmlValueIDCurrency);
         });
 
@@ -739,7 +739,7 @@ describe('WS - Countries : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryCallPrefix2', baseContext);
 
           const xmlValueCallPrefix = countryXml.getAttributeValue(xmlUpdate, 'call_prefix');
-          const valueCallPrefix = await addCountryPage.getInputValue(page, 'call_prefix');
+          const valueCallPrefix = await boCountriesCreatePage.getInputValue(page, 'call_prefix');
           expect(valueCallPrefix).to.be.eq(xmlValueCallPrefix);
         });
 
@@ -747,7 +747,7 @@ describe('WS - Countries : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryIsoCode2', baseContext);
 
           const xmlValueIsoCode = countryXml.getAttributeValue(xmlUpdate, 'iso_code');
-          const valueIsoCode = await addCountryPage.getInputValue(page, 'iso_code');
+          const valueIsoCode = await boCountriesCreatePage.getInputValue(page, 'iso_code');
           expect(valueIsoCode).to.be.eq(xmlValueIsoCode);
         });
 
@@ -755,7 +755,7 @@ describe('WS - Countries : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryActive2', baseContext);
 
           const xmlValueActive = countryXml.getAttributeValue(xmlUpdate, 'active');
-          const valueActive = (await addCountryPage.isCheckboxChecked(page, 'active')) ? '1' : '0';
+          const valueActive = (await boCountriesCreatePage.isCheckboxChecked(page, 'active')) ? '1' : '0';
           expect(valueActive).to.be.eq(xmlValueActive);
         });
 
@@ -763,7 +763,7 @@ describe('WS - Countries : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryStates2', baseContext);
 
           const xmlValueContainsStates = countryXml.getAttributeValue(xmlUpdate, 'contains_states');
-          const valueContainsStates = (await addCountryPage.isCheckboxChecked(page, 'contains_states')) ? '1' : '0';
+          const valueContainsStates = (await boCountriesCreatePage.isCheckboxChecked(page, 'contains_states')) ? '1' : '0';
           expect(valueContainsStates).to.be.eq(xmlValueContainsStates);
         });
 
@@ -771,7 +771,7 @@ describe('WS - Countries : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryIdentificationNumber2', baseContext);
 
           const xmlValueNeedIDNumber = countryXml.getAttributeValue(xmlUpdate, 'need_identification_number');
-          const valueNeedIDNumber = (await addCountryPage.isCheckboxChecked(page, 'need_identification_number')) ? '1' : '0';
+          const valueNeedIDNumber = (await boCountriesCreatePage.isCheckboxChecked(page, 'need_identification_number')) ? '1' : '0';
           expect(valueNeedIDNumber).to.be.eq(xmlValueNeedIDNumber);
         });
 
@@ -779,7 +779,7 @@ describe('WS - Countries : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryZipCodeNumber2', baseContext);
 
           const xmlValueNeedZipCode = countryXml.getAttributeValue(xmlUpdate, 'need_zip_code');
-          const valueNeedZipCode = (await addCountryPage.isCheckboxChecked(page, 'need_zip_code')) ? '1' : '0';
+          const valueNeedZipCode = (await boCountriesCreatePage.isCheckboxChecked(page, 'need_zip_code')) ? '1' : '0';
           expect(valueNeedZipCode).to.be.eq(xmlValueNeedZipCode);
         });
 
@@ -787,7 +787,7 @@ describe('WS - Countries : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryZipCodeFormat2', baseContext);
 
           const xmlValueZipCode = countryXml.getAttributeValue(xmlUpdate, 'zip_code_format');
-          const valueZipCode = await addCountryPage.getInputValue(page, 'zipCodeFormat');
+          const valueZipCode = await boCountriesCreatePage.getInputValue(page, 'zipCodeFormat');
           expect(valueZipCode).to.be.eq(xmlValueZipCode);
         });
 
@@ -795,7 +795,7 @@ describe('WS - Countries : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryNameLang12', baseContext);
 
           const xmlValueNameEn = countryXml.getAttributeLangValue(xmlUpdate, 'name', '1');
-          const valueNameEn = (await addCountryPage.getInputValue(page, 'nameEn'));
+          const valueNameEn = (await boCountriesCreatePage.getInputValue(page, 'nameEn'));
           expect(valueNameEn).to.be.eq(xmlValueNameEn);
         });
 
@@ -803,7 +803,7 @@ describe('WS - Countries : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryNameLang22', baseContext);
 
           const xmlValueNameFr = countryXml.getAttributeLangValue(xmlUpdate, 'name', '2');
-          const valueNameFr = (await addCountryPage.getInputValue(page, 'nameFr'));
+          const valueNameFr = (await boCountriesCreatePage.getInputValue(page, 'nameFr'));
           expect(valueNameFr).to.be.eq(xmlValueNameFr);
         });
 
@@ -812,14 +812,14 @@ describe('WS - Countries : CRUD', async () => {
 
           await zonesPage.goToSubTabCountries(page);
 
-          const pageTitle = await countriesPage.getPageTitle(page);
-          expect(pageTitle).to.contains(countriesPage.pageTitle);
+          const pageTitle = await boCountriesPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boCountriesPage.pageTitle);
         });
 
         it('should reset all filters', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirstAfterPut', baseContext);
 
-          const numberOfCountries = await countriesPage.resetAndGetNumberOfLines(page);
+          const numberOfCountries = await boCountriesPage.resetAndGetNumberOfLines(page);
           expect(numberOfCountries).to.be.above(0);
         });
       });
@@ -854,18 +854,18 @@ describe('WS - Countries : CRUD', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdateAfterDelete', baseContext);
 
         // Filter
-        await countriesPage.resetFilter(page);
-        await countriesPage.filterTable(page, 'input', 'id_country', countryNodeID as string);
+        await boCountriesPage.resetFilter(page);
+        await boCountriesPage.filterTable(page, 'input', 'id_country', countryNodeID as string);
 
         // Check number of countries
-        const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
+        const numberOfCountriesAfterFilter = await boCountriesPage.getNumberOfElementInGrid(page);
         expect(numberOfCountriesAfterFilter).to.be.eq(0);
       });
 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-        const numberOfCountries = await countriesPage.resetAndGetNumberOfLines(page);
+        const numberOfCountries = await boCountriesPage.resetAndGetNumberOfLines(page);
         expect(numberOfCountries).to.be.above(0);
       });
     });

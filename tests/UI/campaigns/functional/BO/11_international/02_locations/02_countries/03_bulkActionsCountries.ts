@@ -6,10 +6,10 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import zonesPage from '@pages/BO/international/locations';
-import countriesPage from '@pages/BO/international/locations/countries';
-import addCountryPage from '@pages/BO/international/locations/countries/add';
 
 import {
+  boCountriesPage,
+  boCountriesCreatePage,
   boDashboardPage,
   FakerCountry,
   utilsPlaywright,
@@ -81,14 +81,14 @@ describe('BO - International - Countries : Bulk actions', async () => {
 
     await zonesPage.goToSubTabCountries(page);
 
-    const pageTitle = await countriesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(countriesPage.pageTitle);
+    const pageTitle = await boCountriesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCountriesPage.pageTitle);
   });
 
   it('should reset all filters and get number of countries in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfCountries = await countriesPage.resetAndGetNumberOfLines(page);
+    numberOfCountries = await boCountriesPage.resetAndGetNumberOfLines(page);
     expect(numberOfCountries).to.be.above(0);
   });
 
@@ -98,19 +98,19 @@ describe('BO - International - Countries : Bulk actions', async () => {
         it('should go to add new country page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToAddNewCountryPage${index}`, baseContext);
 
-          await countriesPage.goToAddNewCountryPage(page);
+          await boCountriesPage.goToAddNewCountryPage(page);
 
-          const pageTitle = await addCountryPage.getPageTitle(page);
-          expect(pageTitle).to.contains(addCountryPage.pageTitleCreate);
+          const pageTitle = await boCountriesCreatePage.getPageTitle(page);
+          expect(pageTitle).to.contains(boCountriesCreatePage.pageTitleCreate);
         });
 
         it('should create new country', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `createNewCountry${index}`, baseContext);
 
-          const textResult = await addCountryPage.createEditCountry(page, countryToCreate);
-          expect(textResult).to.to.contains(countriesPage.successfulCreationMessage);
+          const textResult = await boCountriesCreatePage.createEditCountry(page, countryToCreate);
+          expect(textResult).to.to.contains(boCountriesPage.successfulCreationMessage);
 
-          const numberOfCountriesAfterCreation = await countriesPage.getNumberOfElementInGrid(page);
+          const numberOfCountriesAfterCreation = await boCountriesPage.getNumberOfElementInGrid(page);
           expect(numberOfCountriesAfterCreation).to.be.equal(numberOfCountries + index + 1);
         });
       });
@@ -121,13 +121,13 @@ describe('BO - International - Countries : Bulk actions', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
       // Filter
-      await countriesPage.filterTable(page, 'input', 'b!name', 'todelete');
+      await boCountriesPage.filterTable(page, 'input', 'b!name', 'todelete');
 
       // Check number of countries
-      const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
+      const numberOfCountriesAfterFilter = await boCountriesPage.getNumberOfElementInGrid(page);
       expect(numberOfCountriesAfterFilter).to.be.at.least(1);
 
-      const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 'b!name');
+      const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'b!name');
       expect(textColumn).to.contains('todelete');
     });
 
@@ -138,11 +138,11 @@ describe('BO - International - Countries : Bulk actions', async () => {
       it(`should ${test.action} countries with bulk actions`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.action}Countries`, baseContext);
 
-        await countriesPage.bulkSetStatus(page, test.wantedStatus);
-        const numberOfZonesBulkActions = await countriesPage.getNumberOfElementInGrid(page);
+        await boCountriesPage.bulkSetStatus(page, test.wantedStatus);
+        const numberOfZonesBulkActions = await boCountriesPage.getNumberOfElementInGrid(page);
 
         for (let row = 1; row <= numberOfZonesBulkActions; row++) {
-          const rowStatus = await countriesPage.getCountryStatus(page, row);
+          const rowStatus = await boCountriesPage.getCountryStatus(page, row);
           expect(rowStatus).to.equal(test.wantedStatus);
         }
       });
@@ -151,14 +151,14 @@ describe('BO - International - Countries : Bulk actions', async () => {
     it('should bulk delete countries', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteCountries', baseContext);
 
-      const textResult = await countriesPage.deleteCountriesByBulkActions(page);
-      expect(textResult).to.to.contains(countriesPage.successfulMultiDeleteMessage);
+      const textResult = await boCountriesPage.deleteCountriesByBulkActions(page);
+      expect(textResult).to.to.contains(boCountriesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
-      const numberOfCountriesAfterReset = await countriesPage.resetAndGetNumberOfLines(page);
+      const numberOfCountriesAfterReset = await boCountriesPage.resetAndGetNumberOfLines(page);
       expect(numberOfCountriesAfterReset).to.be.equal(numberOfCountries);
     });
   });

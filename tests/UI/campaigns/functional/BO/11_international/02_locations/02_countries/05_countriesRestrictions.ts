@@ -7,12 +7,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import zonesPage from '@pages/BO/international/locations';
-import countriesPage from '@pages/BO/international/locations/countries';
 // Import FO pages
 import {addressesPage} from '@pages/FO/classic/myAccount/addresses';
 import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
 
 import {
+  boCountriesPage,
   boDashboardPage,
   dataCountries,
   dataCustomers,
@@ -73,35 +73,35 @@ describe('BO - International - Countries : Restrict country selections in front 
 
     await zonesPage.goToSubTabCountries(page);
 
-    const pageTitle = await countriesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(countriesPage.pageTitle);
+    const pageTitle = await boCountriesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCountriesPage.pageTitle);
   });
 
   it('should reset all filters and get number of countries in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfCountries = await countriesPage.resetAndGetNumberOfLines(page);
+    numberOfCountries = await boCountriesPage.resetAndGetNumberOfLines(page);
     expect(numberOfCountries).to.be.above(0);
   });
 
   it(`should search for the country '${dataCountries.afghanistan.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterByNameToEnable', baseContext);
 
-    await countriesPage.filterTable(page, 'input', 'b!name', dataCountries.afghanistan.name);
+    await boCountriesPage.filterTable(page, 'input', 'b!name', dataCountries.afghanistan.name);
 
-    const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
+    const numberOfCountriesAfterFilter = await boCountriesPage.getNumberOfElementInGrid(page);
     expect(numberOfCountriesAfterFilter).to.be.equal(1);
 
-    const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 'b!name');
+    const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'b!name');
     expect(textColumn).to.equal(dataCountries.afghanistan.name);
   });
 
   it(`should enable the country '${dataCountries.afghanistan.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enableCountry', baseContext);
 
-    await countriesPage.setCountryStatus(page, 1, true);
+    await boCountriesPage.setCountryStatus(page, 1, true);
 
-    const currentStatus = await countriesPage.getCountryStatus(page, 1);
+    const currentStatus = await boCountriesPage.getCountryStatus(page, 1);
     expect(currentStatus).to.eq(true);
   });
 
@@ -112,15 +112,15 @@ describe('BO - International - Countries : Restrict country selections in front 
     it(`should ${status.args.status} restrict country selections`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${status.args.status}RestrictCountry`, baseContext);
 
-      const currentStatus = await countriesPage.setCountriesRestrictions(page, status.args.enable);
-      expect(currentStatus).to.contains(countriesPage.settingsUpdateMessage);
+      const currentStatus = await boCountriesPage.setCountriesRestrictions(page, status.args.enable);
+      expect(currentStatus).to.contains(boCountriesPage.settingsUpdateMessage);
     });
 
     it('should go to FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToFO${index}`, baseContext);
 
       // Click on view my shop
-      page = await countriesPage.viewMyShop(page);
+      page = await boCountriesPage.viewMyShop(page);
       // Change FO language
       await foClassicHomePage.changeLanguage(page, 'en');
 
@@ -175,36 +175,36 @@ describe('BO - International - Countries : Restrict country selections in front 
 
       page = await foClassicMyAccountPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await countriesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(countriesPage.pageTitle);
+      const pageTitle = await boCountriesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCountriesPage.pageTitle);
     });
   });
 
   it(`should search for the country '${dataCountries.afghanistan.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterByNameToDisable', baseContext);
 
-    await countriesPage.filterTable(page, 'input', 'b!name', dataCountries.afghanistan.name);
+    await boCountriesPage.filterTable(page, 'input', 'b!name', dataCountries.afghanistan.name);
 
-    const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
+    const numberOfCountriesAfterFilter = await boCountriesPage.getNumberOfElementInGrid(page);
     expect(numberOfCountriesAfterFilter).to.be.equal(1);
 
-    const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 'b!name');
+    const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'b!name');
     expect(textColumn).to.equal(dataCountries.afghanistan.name);
   });
 
   it('should disable the country', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'disableCountry', baseContext);
 
-    await countriesPage.setCountryStatus(page, 1, false);
+    await boCountriesPage.setCountryStatus(page, 1, false);
 
-    const currentStatus = await countriesPage.getCountryStatus(page, 1);
+    const currentStatus = await boCountriesPage.getCountryStatus(page, 1);
     expect(currentStatus).to.eq(false);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDisable', baseContext);
 
-    const numberOfCountriesAfterReset = await countriesPage.resetAndGetNumberOfLines(page);
+    const numberOfCountriesAfterReset = await boCountriesPage.resetAndGetNumberOfLines(page);
     expect(numberOfCountriesAfterReset).to.equal(numberOfCountries);
   });
 });
