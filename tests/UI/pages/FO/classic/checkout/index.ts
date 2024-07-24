@@ -749,6 +749,16 @@ class CheckoutPage extends FOBasePage {
   }
 
   /**
+   * Returns all available countries in Address form
+   * @param page {Page} Browser tab
+   * @returns {Promise<string[]>}
+   */
+  async getAvailableAddressCountries(page: Page): Promise<string[]> {
+    return (await page.locator(`${this.addressStepCountrySelect} option`).allInnerTexts())
+      .filter((e: string) => e !== 'Please choose');
+  }
+
+  /**
    * Fill address form, used for delivery and invoice addresses
    * @param page {Page} Browser tab
    * @param address {FakerAddress} Address's information to fill form with

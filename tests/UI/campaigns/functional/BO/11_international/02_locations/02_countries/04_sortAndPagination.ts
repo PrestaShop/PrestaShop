@@ -6,11 +6,11 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import zonesPage from '@pages/BO/international/locations';
-import countriesPage from '@pages/BO/international/locations/countries';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  boCountriesPage,
   boDashboardPage,
   utilsCore,
   utilsPlaywright,
@@ -58,8 +58,8 @@ describe('BO - International - Countries : Sort and pagination', async () => {
 
     await zonesPage.goToSubTabCountries(page);
 
-    const pageTitle = await countriesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(countriesPage.pageTitle);
+    const pageTitle = await boCountriesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCountriesPage.pageTitle);
   });
 
   // 1 - Pagination next and previous
@@ -67,28 +67,28 @@ describe('BO - International - Countries : Sort and pagination', async () => {
     it('should change the item number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
-      const paginationNumber = await countriesPage.selectPaginationLimit(page, 20);
+      const paginationNumber = await boCountriesPage.selectPaginationLimit(page, 20);
       expect(paginationNumber).to.equal('1');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await countriesPage.paginationNext(page);
+      const paginationNumber = await boCountriesPage.paginationNext(page);
       expect(paginationNumber).to.equal('2');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await countriesPage.paginationPrevious(page);
+      const paginationNumber = await boCountriesPage.paginationPrevious(page);
       expect(paginationNumber).to.equal('1');
     });
 
     it('should change the item number to 300 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo300', baseContext);
 
-      const paginationNumber = await countriesPage.selectPaginationLimit(page, 300);
+      const paginationNumber = await boCountriesPage.selectPaginationLimit(page, 300);
       expect(paginationNumber).to.equal('1');
     });
   });
@@ -152,11 +152,11 @@ describe('BO - International - Countries : Sort and pagination', async () => {
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await countriesPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const nonSortedTable = await boCountriesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
-        await countriesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+        await boCountriesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        const sortedTable = await countriesPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await boCountriesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
@@ -184,7 +184,7 @@ describe('BO - International - Countries : Sort and pagination', async () => {
     it('should change the item number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
-      const paginationNumber = await countriesPage.selectPaginationLimit(page, 50);
+      const paginationNumber = await boCountriesPage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.equal('1');
     });
   });

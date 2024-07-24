@@ -7,13 +7,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import zonesPage from '@pages/BO/international/locations';
-import countriesPage from '@pages/BO/international/locations/countries';
-import addCountryPage from '@pages/BO/international/locations/countries/add';
 // Import FO pages
 import {addressesPage} from '@pages/FO/classic/myAccount/addresses';
 import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
 
 import {
+  boCountriesPage,
+  boCountriesCreatePage,
   boDashboardPage,
   dataCustomers,
   FakerCountry,
@@ -100,14 +100,14 @@ describe('BO - International - Countries : CRUD country', async () => {
 
     await zonesPage.goToSubTabCountries(page);
 
-    const pageTitle = await countriesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(countriesPage.pageTitle);
+    const pageTitle = await boCountriesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCountriesPage.pageTitle);
   });
 
   it('should reset all filters and get number of countries in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfCountries = await countriesPage.resetAndGetNumberOfLines(page);
+    numberOfCountries = await boCountriesPage.resetAndGetNumberOfLines(page);
     expect(numberOfCountries).to.be.above(0);
   });
 
@@ -115,26 +115,27 @@ describe('BO - International - Countries : CRUD country', async () => {
     it('should go to add new country page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewCountryPage', baseContext);
 
-      await countriesPage.goToAddNewCountryPage(page);
+      await boCountriesPage.goToAddNewCountryPage(page);
 
-      const pageTitle = await addCountryPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addCountryPage.pageTitleCreate);
+      const pageTitle = await boCountriesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCountriesCreatePage.pageTitleCreate);
     });
 
     it('should try to create new country with a used ISO code and an invalid prefix', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCreateNewCountry', baseContext);
 
-      const textResult = await addCountryPage.createEditCountry(page, countryDataIncorrectDate);
-      expect(textResult).to.to.contains(addCountryPage.errorMessageIsoCode).and.contains(addCountryPage.errorMessagePrefix);
+      const textResult = await boCountriesCreatePage.createEditCountry(page, countryDataIncorrectDate);
+      expect(textResult).to.contain(boCountriesCreatePage.errorMessageIsoCode)
+        .and.contains(boCountriesCreatePage.errorMessagePrefix);
     });
 
     it('should create new country', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createNewCountry', baseContext);
 
-      const textResult = await addCountryPage.createEditCountry(page, createCountryData);
-      expect(textResult).to.to.contains(countriesPage.successfulCreationMessage);
+      const textResult = await boCountriesCreatePage.createEditCountry(page, createCountryData);
+      expect(textResult).to.contain(boCountriesPage.successfulCreationMessage);
 
-      const numberOfCountriesAfterCreation = await countriesPage.getNumberOfElementInGrid(page);
+      const numberOfCountriesAfterCreation = await boCountriesPage.getNumberOfElementInGrid(page);
       expect(numberOfCountriesAfterCreation).to.be.equal(numberOfCountries + 1);
     });
 
@@ -142,7 +143,7 @@ describe('BO - International - Countries : CRUD country', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop_1', baseContext);
 
       // View my shop and init pages
-      page = await countriesPage.viewMyShop(page);
+      page = await boCountriesPage.viewMyShop(page);
       await foClassicHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foClassicHomePage.isHomePage(page);
@@ -201,8 +202,8 @@ describe('BO - International - Countries : CRUD country', async () => {
       // Close tab and init other page objects with new current tab
       page = await foClassicHomePage.closePage(browserContext, page, 0);
 
-      const pageTitle = await countriesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(countriesPage.pageTitle);
+      const pageTitle = await boCountriesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCountriesPage.pageTitle);
     });
   });
 
@@ -211,33 +212,33 @@ describe('BO - International - Countries : CRUD country', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdate', baseContext);
 
       // Filter
-      await countriesPage.filterTable(page, 'input', 'b!name', createCountryData.name);
+      await boCountriesPage.filterTable(page, 'input', 'b!name', createCountryData.name);
 
       // Check number of countries
-      const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
+      const numberOfCountriesAfterFilter = await boCountriesPage.getNumberOfElementInGrid(page);
       expect(numberOfCountriesAfterFilter).to.be.at.least(1);
 
       // row = 1 (first row)
-      const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 'b!name');
+      const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'b!name');
       expect(textColumn).to.contains(createCountryData.name);
     });
 
     it('should go to edit country page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditCountryPage', baseContext);
 
-      await countriesPage.goToEditCountryPage(page, 1);
+      await boCountriesPage.goToEditCountryPage(page, 1);
 
-      const pageTitle = await addCountryPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addCountryPage.pageTitleEdit);
+      const pageTitle = await boCountriesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCountriesCreatePage.pageTitleEdit);
     });
 
     it('should edit country', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editCountry', baseContext);
 
-      const textResult = await addCountryPage.createEditCountry(page, editCountryData);
-      expect(textResult).to.to.contains(countriesPage.successfulUpdateMessage);
+      const textResult = await boCountriesCreatePage.createEditCountry(page, editCountryData);
+      expect(textResult).to.to.contains(boCountriesPage.successfulUpdateMessage);
 
-      const numberOfCountriesAfterReset = await countriesPage.resetAndGetNumberOfLines(page);
+      const numberOfCountriesAfterReset = await boCountriesPage.resetAndGetNumberOfLines(page);
       expect(numberOfCountriesAfterReset).to.be.equal(numberOfCountries + 1);
     });
 
@@ -245,7 +246,7 @@ describe('BO - International - Countries : CRUD country', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop_2', baseContext);
 
       // View my shop and init pages
-      page = await countriesPage.viewMyShop(page);
+      page = await boCountriesPage.viewMyShop(page);
       await foClassicHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foClassicHomePage.isHomePage(page);
@@ -295,8 +296,8 @@ describe('BO - International - Countries : CRUD country', async () => {
       // Close tab and init other page objects with new current tab
       page = await foClassicHomePage.closePage(browserContext, page, 0);
 
-      const pageTitle = await countriesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(countriesPage.pageTitle);
+      const pageTitle = await boCountriesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCountriesPage.pageTitle);
     });
   });
 
@@ -305,27 +306,27 @@ describe('BO - International - Countries : CRUD country', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
       // Filter
-      await countriesPage.filterTable(page, 'input', 'b!name', editCountryData.name);
+      await boCountriesPage.filterTable(page, 'input', 'b!name', editCountryData.name);
 
       // Check number of countries
-      const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
+      const numberOfCountriesAfterFilter = await boCountriesPage.getNumberOfElementInGrid(page);
       expect(numberOfCountriesAfterFilter).to.be.at.least(1);
 
-      const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 'b!name');
+      const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'b!name');
       expect(textColumn).to.contains(editCountryData.name);
     });
 
     it('should delete country', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteCountry', baseContext);
 
-      const textResult = await countriesPage.deleteCountriesByBulkActions(page);
-      expect(textResult).to.to.contains(countriesPage.successfulMultiDeleteMessage);
+      const textResult = await boCountriesPage.deleteCountriesByBulkActions(page);
+      expect(textResult).to.to.contains(boCountriesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
-      const numberOfCountriesAfterReset = await countriesPage.resetAndGetNumberOfLines(page);
+      const numberOfCountriesAfterReset = await boCountriesPage.resetAndGetNumberOfLines(page);
       expect(numberOfCountriesAfterReset).to.be.equal(numberOfCountries);
     });
   });

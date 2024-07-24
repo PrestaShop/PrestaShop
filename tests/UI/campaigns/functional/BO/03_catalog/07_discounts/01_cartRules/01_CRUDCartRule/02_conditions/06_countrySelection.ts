@@ -10,12 +10,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import zonesPage from '@pages/BO/international/locations';
-import countriesPage from '@pages/BO/international/locations/countries';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
 import {
+  boCountriesPage,
   boDashboardPage,
   dataCarriers,
   dataCountries,
@@ -97,44 +97,44 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
 
       await zonesPage.goToSubTabCountries(page);
 
-      const pageTitle = await countriesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(countriesPage.pageTitle);
+      const pageTitle = await boCountriesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCountriesPage.pageTitle);
     });
 
     it('should reset all filters and get number of countries in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-      const numberOfCountries = await countriesPage.resetAndGetNumberOfLines(page);
+      const numberOfCountries = await boCountriesPage.resetAndGetNumberOfLines(page);
       expect(numberOfCountries).to.be.above(0);
     });
 
     it(`should search for the country '${dataCountries.unitedStates.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByNameToEnable', baseContext);
 
-      await countriesPage.filterTable(page, 'input', 'b!name', dataCountries.unitedStates.name);
+      await boCountriesPage.filterTable(page, 'input', 'b!name', dataCountries.unitedStates.name);
 
-      const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
+      const numberOfCountriesAfterFilter = await boCountriesPage.getNumberOfElementInGrid(page);
       expect(numberOfCountriesAfterFilter).to.be.equal(1);
 
-      const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 'b!name');
+      const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'b!name');
       expect(textColumn).to.equal(dataCountries.unitedStates.name);
     });
 
     it('should enable the country', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'verifyTheCountryStatus', baseContext);
 
-      await countriesPage.setCountryStatus(page, 1, true);
+      await boCountriesPage.setCountryStatus(page, 1, true);
 
-      const currentStatus = await countriesPage.getCountryStatus(page, 1);
+      const currentStatus = await boCountriesPage.getCountryStatus(page, 1);
       expect(currentStatus).to.eq(true);
     });
 
     it('should reset filter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterCountry', baseContext);
 
-      await countriesPage.resetFilter(page);
+      await boCountriesPage.resetFilter(page);
 
-      const numberOfCountriesAfterReset = await countriesPage.resetAndGetNumberOfLines(page);
+      const numberOfCountriesAfterReset = await boCountriesPage.resetAndGetNumberOfLines(page);
       expect(numberOfCountriesAfterReset).to.be.at.least(1);
     });
   });
