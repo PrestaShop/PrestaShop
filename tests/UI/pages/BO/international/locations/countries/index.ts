@@ -296,7 +296,7 @@ class Countries extends BOBasePage {
    * @param row {number} Row on table
    * @return {Promise<boolean>}
    */
-  getCountryStatus(page: Page, row: number): Promise<boolean> {
+  async getCountryStatus(page: Page, row: number): Promise<boolean> {
     return this.elementVisible(page, this.tableColumnStatusEnableLink(row), 1000);
   }
 
