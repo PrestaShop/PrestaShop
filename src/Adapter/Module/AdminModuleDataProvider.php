@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -285,7 +286,13 @@ class AdminModuleDataProvider implements ModuleInterface
             if ($specific_action && array_key_exists($specific_action, $filteredUrls)) {
                 $urlActive = $specific_action;
             } else {
-                $urlActive = key($filteredUrls);
+                // if there is an 'enable' action available set it as first button action
+                // instead of 'configure' action which is the first action in the list
+                if (array_key_exists('enable', $filteredUrls)) {
+                    $urlActive = 'enable';
+                } else {
+                    $urlActive = key($filteredUrls);
+                }
             }
 
             $moduleAttributes->set('urls', $filteredUrls);
