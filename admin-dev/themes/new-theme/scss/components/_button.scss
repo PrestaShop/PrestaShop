@@ -5,16 +5,6 @@
     background-color: var(--#{$cdk}white);
     @extend .btn-outline-secondary;
   }
-
-  &.btn-outline-secondary {
-    &:not(:disabled):not(.disabled):active,
-    &:not(:disabled):not(.disabled).active,
-    .show > &.dropdown-toggle {
-      color: var(--#{$cdk}primary-800);
-      background-color: var(--#{$cdk}primary-300);
-      border-color: var(--#{$cdk}primary-800);
-    }
-  }
 }
 
 a.btn.auto-pointer-events {

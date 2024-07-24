@@ -153,6 +153,7 @@ span.twitter-typeahead {
 // setting dropdown button
 .dropdown-toggle.tool-button {
   &::after {
+    margin: 0;
     font-size: var(--#{$cdk}size-24);
     color: var(--#{$cdk}primary-800);
     content: "settings";
