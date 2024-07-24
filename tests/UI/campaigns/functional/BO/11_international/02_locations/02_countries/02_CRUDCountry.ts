@@ -125,14 +125,15 @@ describe('BO - International - Countries : CRUD country', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCreateNewCountry', baseContext);
 
       const textResult = await boCountriesCreatePage.createEditCountry(page, countryDataIncorrectDate);
-      expect(textResult).to.to.contains(boCountriesCreatePage.errorMessageIsoCode).and.contains(boCountriesCreatePage.errorMessagePrefix);
+      expect(textResult).to.contain(boCountriesCreatePage.errorMessageIsoCode)
+        .and.contains(boCountriesCreatePage.errorMessagePrefix);
     });
 
     it('should create new country', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createNewCountry', baseContext);
 
       const textResult = await boCountriesCreatePage.createEditCountry(page, createCountryData);
-      expect(textResult).to.to.contains(boCountriesPage.successfulCreationMessage);
+      expect(textResult).to.contain(boCountriesPage.successfulCreationMessage);
 
       const numberOfCountriesAfterCreation = await boCountriesPage.getNumberOfElementInGrid(page);
       expect(numberOfCountriesAfterCreation).to.be.equal(numberOfCountries + 1);

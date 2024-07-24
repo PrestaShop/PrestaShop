@@ -511,7 +511,9 @@ describe('WS - Countries : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryIdentificationNumber1', baseContext);
 
           const xmlValueNeedIDNumber = countryXml.getAttributeValue(xmlCreate, 'need_identification_number');
-          const valueNeedIDNumber = (await boCountriesCreatePage.isCheckboxChecked(page, 'need_identification_number')) ? '1' : '0';
+          const valueNeedIDNumber = (await boCountriesCreatePage.isCheckboxChecked(page, 'need_identification_number'))
+            ? '1'
+            : '0';
           expect(valueNeedIDNumber).to.be.eq(xmlValueNeedIDNumber);
         });
 
@@ -771,7 +773,9 @@ describe('WS - Countries : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCountryIdentificationNumber2', baseContext);
 
           const xmlValueNeedIDNumber = countryXml.getAttributeValue(xmlUpdate, 'need_identification_number');
-          const valueNeedIDNumber = (await boCountriesCreatePage.isCheckboxChecked(page, 'need_identification_number')) ? '1' : '0';
+          const valueNeedIDNumber = (await boCountriesCreatePage.isCheckboxChecked(page, 'need_identification_number'))
+            ? '1'
+            : '0';
           expect(valueNeedIDNumber).to.be.eq(xmlValueNeedIDNumber);
         });
 

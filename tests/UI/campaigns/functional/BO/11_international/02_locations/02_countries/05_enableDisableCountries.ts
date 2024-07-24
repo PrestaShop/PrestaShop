@@ -115,7 +115,7 @@ describe('BO - International - Countries : Enable / Disable Countries', async ()
   });
 
   it('should proceed to checkout', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'proceedtoCheckout', baseContext);
 
     // Proceed to checkout the shopping cart
     await cartPage.clickOnProceedToCheckout(page);
@@ -180,7 +180,6 @@ describe('BO - International - Countries : Enable / Disable Countries', async ()
 
     const currentStatus = await boCountriesPage.getCountryStatus(page, 1);
     expect(currentStatus).to.eq(false);
-
   });
 
   it('should go to FO', async function () {
@@ -208,7 +207,7 @@ describe('BO - International - Countries : Enable / Disable Countries', async ()
   });
 
   it('should proceed to checkout', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'addProductToCartAfterDisable', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'proceedtoCheckoutAfterDisable', baseContext);
 
     // Proceed to checkout the shopping cart
     await cartPage.clickOnProceedToCheckout(page);
