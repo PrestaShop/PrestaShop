@@ -252,9 +252,9 @@ class ReleaseCreator
                 "--- Release will be zipped.{$this->lineSeparator}",
                 ConsoleWriter::COLOR_GREEN
             );
-        } elseif ($this->useInstaller) {
+        } else {
             $this->consoleWriter->displayText(
-                "--- Release will have the installer.{$this->lineSeparator}",
+                "--- Release will be a folder without installer.{$this->lineSeparator}",
                 ConsoleWriter::COLOR_GREEN
             );
         }
@@ -540,6 +540,10 @@ class ReleaseCreator
             && composer config autoloader-suffix {$autoloaderSuffix} \
             && composer install --no-dev --optimize-autoloader --no-interaction 2>&1";
         exec($command, $output, $returnCode);
+        if (!empty($output)) {
+            $logPath = __DIR__ . '/../../../var/logs/composer-install.log';
+            file_put_contents($logPath, implode(PHP_EOL, $output));
+        }
 
         if ($returnCode !== 0) {
             throw new BuildException('Unable to run composer install.');
@@ -562,6 +566,10 @@ class ReleaseCreator
         $argProjectPath = escapeshellarg($this->tempProjectPath);
         $command = "cd {$argProjectPath} && make assets 2>&1";
         exec($command, $output, $returnCode);
+        if (!empty($output)) {
+            $logPath = __DIR__ . '/../../../var/logs/build-assets.log';
+            file_put_contents($logPath, implode(PHP_EOL, $output));
+        }
 
         if ($returnCode !== 0) {
             throw new BuildException('Unable to build assets.');
