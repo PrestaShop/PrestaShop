@@ -6,7 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 
 // Import BO pages
-import administrationPage from '@pages/BO/advancedParameters/administration';
 import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
 import customersPage from '@pages/BO/customers';
 import addCustomerPage from '@pages/BO/customers/add';
@@ -19,6 +18,7 @@ import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 
 import {
+  boAdministrationPage,
   boDashboardPage,
   dataCustomers,
   dataPaymentMethods,
@@ -88,27 +88,27 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
         boDashboardPage.administrationLink,
       );
 
-      const pageTitle = await administrationPage.getPageTitle(page);
-      expect(pageTitle).to.contains(administrationPage.pageTitle);
+      const pageTitle = await boAdministrationPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boAdministrationPage.pageTitle);
     });
 
     it('should disable all notifications', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableAllNotifications', baseContext);
 
-      let successMessage = await administrationPage.setShowNotificationsForNewOrders(page, false);
-      expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
+      let successMessage = await boAdministrationPage.setShowNotificationsForNewOrders(page, false);
+      expect(successMessage).to.eq(boAdministrationPage.successfulUpdateMessage);
 
-      successMessage = await administrationPage.setShowNotificationsForNewCustomers(page, false);
-      expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
+      successMessage = await boAdministrationPage.setShowNotificationsForNewCustomers(page, false);
+      expect(successMessage).to.eq(boAdministrationPage.successfulUpdateMessage);
 
-      successMessage = await administrationPage.setShowNotificationsForNewMessages(page, false);
-      expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
+      successMessage = await boAdministrationPage.setShowNotificationsForNewMessages(page, false);
+      expect(successMessage).to.eq(boAdministrationPage.successfulUpdateMessage);
     });
 
     it('should check that the notifications icon is not visible in the header page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkIconNotVisible', baseContext);
 
-      const isLinkVisible = await administrationPage.isNotificationsLinkVisible(page);
+      const isLinkVisible = await boAdministrationPage.isNotificationsLinkVisible(page);
       expect(isLinkVisible).to.equal(false);
     });
   });
@@ -117,8 +117,8 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
     it('should enable new notifications for new orders', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableNotificationsNewOrders', baseContext);
 
-      const successMessage = await administrationPage.setShowNotificationsForNewOrders(page, true);
-      expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
+      const successMessage = await boAdministrationPage.setShowNotificationsForNewOrders(page, true);
+      expect(successMessage).to.eq(boAdministrationPage.successfulUpdateMessage);
     });
 
     it('should view my shop', async function () {
@@ -197,42 +197,42 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
       page = await orderConfirmationPage.closePage(browserContext, page, 0);
       await shoppingCartsPage.reloadPage(page);
 
-      const pageTitle = await administrationPage.getPageTitle(page);
-      expect(pageTitle).to.contains(administrationPage.pageTitle);
+      const pageTitle = await boAdministrationPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boAdministrationPage.pageTitle);
     });
 
     it('should check notifications number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNotificationsNumber2', baseContext);
 
-      const number = await administrationPage.getAllNotificationsNumber(page);
+      const number = await boAdministrationPage.getAllNotificationsNumber(page);
       expect(number).to.equal(1);
     });
 
     it('should click on notifications icon', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNotificationsLink2', baseContext);
 
-      const isNotificationsVisible = await administrationPage.clickOnNotificationsLink(page);
+      const isNotificationsVisible = await boAdministrationPage.clickOnNotificationsLink(page);
       expect(isNotificationsVisible).to.eq(true);
     });
 
     it('should check notifications number in orders tab', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNotificationsInOrdersTab', baseContext);
 
-      const notificationsNumber = await administrationPage.getNotificationsNumberInTab(page, 'orders');
+      const notificationsNumber = await boAdministrationPage.getNotificationsNumberInTab(page, 'orders');
       expect(notificationsNumber).to.equal(1);
     });
 
     it('should check that customers tab is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'isCustomersTabInvisible', baseContext);
 
-      const isVisible = await administrationPage.isNotificationsTabVisible(page, 'customers');
+      const isVisible = await boAdministrationPage.isNotificationsTabVisible(page, 'customers');
       expect(isVisible).to.equal(false);
     });
 
     it('should check that messages tab is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'isMessagesTabInvisible', baseContext);
 
-      const isVisible = await administrationPage.isNotificationsTabVisible(page, 'messages');
+      const isVisible = await boAdministrationPage.isNotificationsTabVisible(page, 'messages');
       expect(isVisible).to.equal(false);
     });
   });
@@ -241,8 +241,8 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
     it('should enable new notifications for new customers', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableNotificationsNewCustomers', baseContext);
 
-      const successMessage = await administrationPage.setShowNotificationsForNewCustomers(page, true);
-      expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
+      const successMessage = await boAdministrationPage.setShowNotificationsForNewCustomers(page, true);
+      expect(successMessage).to.eq(boAdministrationPage.successfulUpdateMessage);
     });
 
     it('should go to \'Customers > Customers\' page', async function () {
@@ -310,7 +310,7 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
     it('should check that messages tab is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'isMessagesTabInvisible2', baseContext);
 
-      const isVisible = await administrationPage.isNotificationsTabVisible(page, 'messages');
+      const isVisible = await boAdministrationPage.isNotificationsTabVisible(page, 'messages');
       expect(isVisible).to.equal(false);
     });
   });
@@ -325,15 +325,15 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
         boDashboardPage.administrationLink,
       );
 
-      const pageTitle = await administrationPage.getPageTitle(page);
-      expect(pageTitle).to.contains(administrationPage.pageTitle);
+      const pageTitle = await boAdministrationPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boAdministrationPage.pageTitle);
     });
 
     it('should enable new notifications for new messages', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableNotificationsNewMessages', baseContext);
 
-      const successMessage = await administrationPage.setShowNotificationsForNewMessages(page, true);
-      expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
+      const successMessage = await boAdministrationPage.setShowNotificationsForNewMessages(page, true);
+      expect(successMessage).to.eq(boAdministrationPage.successfulUpdateMessage);
     });
 
     it('should view my shop', async function () {
@@ -373,30 +373,30 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
 
       await boDashboardPage.reloadPage(page);
 
-      const pageTitle = await administrationPage.getPageTitle(page);
-      expect(pageTitle).to.contains(administrationPage.pageTitle);
+      const pageTitle = await boAdministrationPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boAdministrationPage.pageTitle);
     });
 
     it('should check notifications number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNotificationsNumber4', baseContext);
 
-      const number = await administrationPage.getAllNotificationsNumber(page);
+      const number = await boAdministrationPage.getAllNotificationsNumber(page);
       expect(number).to.equal(1);
     });
 
     it('should click on notifications icon', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNotificationsLink4', baseContext);
 
-      const isNotificationsVisible = await administrationPage.clickOnNotificationsLink(page);
+      const isNotificationsVisible = await boAdministrationPage.clickOnNotificationsLink(page);
       expect(isNotificationsVisible).to.eq(true);
     });
 
     it('should check the notifications number in messages tab', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickMessagesTab', baseContext);
 
-      await administrationPage.clickOnNotificationsTab(page, 'messages');
+      await boAdministrationPage.clickOnNotificationsTab(page, 'messages');
 
-      const notificationsNumber = await administrationPage.getNotificationsNumberInTab(page, 'messages');
+      const notificationsNumber = await boAdministrationPage.getNotificationsNumberInTab(page, 'messages');
       expect(notificationsNumber).to.equal(1);
     });
   });

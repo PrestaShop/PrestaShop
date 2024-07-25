@@ -4,12 +4,10 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import administrationPage from '@pages/BO/advancedParameters/administration';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  boAdministrationPage,
   boDashboardPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -43,89 +41,89 @@ describe('BO - Advanced Parameters - Administration : Check general options', as
       boDashboardPage.administrationLink,
     );
 
-    const pageTitle = await administrationPage.getPageTitle(page);
-    expect(pageTitle).to.contains(administrationPage.pageTitle);
+    const pageTitle = await boAdministrationPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boAdministrationPage.pageTitle);
   });
 
   it('should disable \'Cookie\'s IP address\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'disableCookiesIPAddress', baseContext);
 
-    await administrationPage.setCookiesIPAddress(page, false);
+    await boAdministrationPage.setCookiesIPAddress(page, false);
 
-    const successMessage = await administrationPage.saveGeneralForm(page);
-    expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
+    const successMessage = await boAdministrationPage.saveGeneralForm(page);
+    expect(successMessage).to.eq(boAdministrationPage.successfulUpdateMessage);
   });
 
   it('should check that the \'Cookie\'s IP address\' is disabled', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkThatCookieIpAddressDisabled', baseContext);
 
-    const isEnabled = await administrationPage.isCheckCookiesAddressEnabled(page);
+    const isEnabled = await boAdministrationPage.isCheckCookiesAddressEnabled(page);
     expect(isEnabled).to.eq(false);
   });
 
   it('should enable \'Cookie\'s IP address\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enableCookiesIPAddress', baseContext);
 
-    await administrationPage.setCookiesIPAddress(page, true);
+    await boAdministrationPage.setCookiesIPAddress(page, true);
 
-    const successMessage = await administrationPage.saveGeneralForm(page);
-    expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
+    const successMessage = await boAdministrationPage.saveGeneralForm(page);
+    expect(successMessage).to.eq(boAdministrationPage.successfulUpdateMessage);
   });
 
   it('should check that the \'Cookie\'s IP address\' is enabled', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkThatCookieIpAddressEnabled', baseContext);
 
-    const isEnabled = await administrationPage.isCheckCookiesAddressEnabled(page);
+    const isEnabled = await boAdministrationPage.isCheckCookiesAddressEnabled(page);
     expect(isEnabled).to.eq(true);
   });
 
   it('should update \'Lifetime of front office cookies\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'updateLifetimeOfFOCookies', baseContext);
 
-    await administrationPage.setLifetimeFOCookies(page, 500);
+    await boAdministrationPage.setLifetimeFOCookies(page, 500);
 
-    const successMessage = await administrationPage.saveGeneralForm(page);
-    expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
+    const successMessage = await boAdministrationPage.saveGeneralForm(page);
+    expect(successMessage).to.eq(boAdministrationPage.successfulUpdateMessage);
   });
 
   it('should update \' Lifetime of back office cookies\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'updateLifetimeOfBOCookies', baseContext);
 
-    await administrationPage.setLifetimeBOCookies(page, 500);
+    await boAdministrationPage.setLifetimeBOCookies(page, 500);
 
-    const successMessage = await administrationPage.saveGeneralForm(page);
-    expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
+    const successMessage = await boAdministrationPage.saveGeneralForm(page);
+    expect(successMessage).to.eq(boAdministrationPage.successfulUpdateMessage);
   });
 
   it('should update \'Cookie SameSite\' to \'Strict\' value', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'updateCookieSameSite1', baseContext);
 
-    await administrationPage.setCookieSameSite(page, 'Strict');
+    await boAdministrationPage.setCookieSameSite(page, 'Strict');
 
-    const successMessage = await administrationPage.saveGeneralForm(page);
-    expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
+    const successMessage = await boAdministrationPage.saveGeneralForm(page);
+    expect(successMessage).to.eq(boAdministrationPage.successfulUpdateMessage);
   });
 
   it('should update \'Cookie SameSite\' to \'None\' value', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'updateCookieSameSite2', baseContext);
 
-    await administrationPage.setCookieSameSite(page, 'None');
+    await boAdministrationPage.setCookieSameSite(page, 'None');
 
-    const message = await administrationPage.saveGeneralForm(page);
+    const message = await boAdministrationPage.saveGeneralForm(page);
 
     if (global.INSTALL.ENABLE_SSL) {
-      expect(message).to.eq(administrationPage.successfulUpdateMessage);
+      expect(message).to.eq(boAdministrationPage.successfulUpdateMessage);
     } else {
-      expect(message).to.eq(administrationPage.dangerAlertCookieSameSite);
+      expect(message).to.eq(boAdministrationPage.dangerAlertCookieSameSite);
     }
   });
 
   it('should update \'Cookie SameSite\' to \'default\' value', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'updateCookieSameSite3', baseContext);
 
-    await administrationPage.setCookieSameSite(page, 'Lax');
+    await boAdministrationPage.setCookieSameSite(page, 'Lax');
 
-    const successMessage = await administrationPage.saveGeneralForm(page);
-    expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
+    const successMessage = await boAdministrationPage.saveGeneralForm(page);
+    expect(successMessage).to.eq(boAdministrationPage.successfulUpdateMessage);
   });
 });
