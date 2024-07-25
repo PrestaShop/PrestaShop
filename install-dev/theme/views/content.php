@@ -32,7 +32,10 @@
     <input type="hidden" value="<?php echo current($this->themes)->get('name'); ?>" name="theme" />
   <?php else: ?>
     <div class="field clearfix theme-selection">
-      <label class="aligned"><?php echo $this->translator->trans('Installation of theme', [], 'Install'); ?></label>
+      <label class="aligned">
+        <?php echo $this->translator->trans('Installation of theme', [], 'Install'); ?>
+        <p class="theme-infos userInfos aligned"><?php echo $this->translator->trans('Select the theme to install', [], 'Install'); ?></p>
+      </label>
 
       <div class="contentinput">
         <div class="themes-container">
@@ -53,8 +56,6 @@
           <?php endforeach; ?>
         </div>
       </div>
-
-      <p class="userInfos aligned"><?php echo $this->translator->trans('Select the theme to install', [], 'Install'); ?></p>
     </div>
   <?php endif; ?>
 

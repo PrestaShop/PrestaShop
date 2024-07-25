@@ -77,7 +77,7 @@
             </tr>
         </table>
 
-        <button class="button" rowspan="2" class="print" onclick="$('#password_content').text('<?php echo htmlspecialchars(addslashes($this->session->admin_password)); ?>'); $('#password_display').hide(); window.print();">
+        <button class="button" rowspan="2" class="print" onclick="$('#password_content').text('<?php echo htmlspecialchars(addslashes($this->session->admin_password)); ?>'); $('#password_display').hide(); window.print(); return false">
             <?php echo $this->translator->trans('Print my login information', [], 'Install'); ?>
         </button>
 
