@@ -28,7 +28,7 @@
 {% block content %}
 <div class="row">
   <div class="col-lg-6">
-    <div class="card">
+    <div class="card" data-block="configuration_information">
       <h3 class="card-header">
         <i class="material-icons">info_outline</i> {{ 'Configuration information'|trans }}
       </h3>
@@ -37,7 +37,7 @@
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" data-block="server_information">
       <h3 class="card-header">
         <i class="material-icons">info_outline</i> {{ 'Server information'|trans }}
       </h3>
@@ -73,7 +73,7 @@
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" data-block="database_information">
       <h3 class="card-header">
         <i class="material-icons">info_outline</i> {{ 'Database information'|trans({}, 'Admin.Advparameters.Feature') }}
       </h3>
@@ -102,7 +102,7 @@
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" data-block="list_overrides">
       <h3 class="card-header">
         <i class="material-icons">info_outline</i> {{ 'List of overrides'|trans({}, 'Admin.Advparameters.Feature') }}
       </h3>
@@ -122,7 +122,7 @@
     </div>
   </div>
   <div class="col-lg-6">
-    <div class="card">
+    <div class="card" data-block="store_information">
       <h3 class="card-header">
         <i class="material-icons">info_outline</i> {{ 'Store information'|trans }}
       </h3>
@@ -142,7 +142,7 @@
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" data-block="mail_configuration">
       <h3 class="card-header">
         <i class="material-icons">info_outline</i> {{ 'Mail configuration'|trans }}
       </h3>
@@ -184,7 +184,7 @@
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" data-block="your_information">
       <h3 class="card-header">
         <i class="material-icons">info_outline</i> {{ 'Your information'|trans }}
       </h3>
@@ -243,7 +243,7 @@
   </div>
 </div>
 
-<div class="card">
+<div class="card" data-block="list_changed_files">
   <h3 class="card-header">
     <i class="material-icons">info_outline</i> {{ 'List of changed files'|trans }}
   </h3>

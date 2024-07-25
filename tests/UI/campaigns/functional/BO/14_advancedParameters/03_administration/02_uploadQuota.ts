@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import administrationPage from '@pages/BO/advancedParameters/administration';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 import virtualProductTab from '@pages/BO/catalog/products/add/virtualProductTab';
 import createProductPage from '@pages/BO/catalog/products/add';
@@ -15,6 +14,7 @@ import addFilePage from '@pages/BO/catalog/files/add';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  boAdministrationPage,
   boDashboardPage,
   boProductsPage,
   FakerFile,
@@ -94,15 +94,15 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
         boDashboardPage.administrationLink,
       );
 
-      const pageTitle = await administrationPage.getPageTitle(page);
-      expect(pageTitle).to.contains(administrationPage.pageTitle);
+      const pageTitle = await boAdministrationPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boAdministrationPage.pageTitle);
     });
 
     it('should set the \'Maximum size for attached files\' to 2MB', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setMaximumSizeForAttachedFiles', baseContext);
 
-      const successMessage = await administrationPage.setMaxSizeAttachedFiles(page, 2);
-      expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
+      const successMessage = await boAdministrationPage.setMaxSizeAttachedFiles(page, 2);
+      expect(successMessage).to.eq(boAdministrationPage.successfulUpdateMessage);
     });
 
     it('should go to \'Catalog > Files\' page', async function () {
@@ -162,15 +162,15 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
         boDashboardPage.administrationLink,
       );
 
-      const pageTitle = await administrationPage.getPageTitle(page);
-      expect(pageTitle).to.contains(administrationPage.pageTitle);
+      const pageTitle = await boAdministrationPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boAdministrationPage.pageTitle);
     });
 
     it('should set the \'Maximum size for a downloadable product\' to 2MB', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setMaximumSizeForAttachedFiles2', baseContext);
 
-      const successMessage = await administrationPage.setMaxSizeDownloadedProduct(page, 2);
-      expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
+      const successMessage = await boAdministrationPage.setMaxSizeDownloadedProduct(page, 2);
+      expect(successMessage).to.eq(boAdministrationPage.successfulUpdateMessage);
     });
 
     it('should go to \'Catalog > Products\' page', async function () {
@@ -252,15 +252,15 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
         boDashboardPage.administrationLink,
       );
 
-      const pageTitle = await administrationPage.getPageTitle(page);
-      expect(pageTitle).to.contains(administrationPage.pageTitle);
+      const pageTitle = await boAdministrationPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boAdministrationPage.pageTitle);
     });
 
     it('should set the \'Maximum size for a product\' to 1MB', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setMaximumSizeForAttachedFiles3', baseContext);
 
-      const successMessage = await administrationPage.setMaxSizeForProductImage(page, 1);
-      expect(successMessage).to.eq(administrationPage.successfulUpdateMessage);
+      const successMessage = await boAdministrationPage.setMaxSizeForProductImage(page, 1);
+      expect(successMessage).to.eq(boAdministrationPage.successfulUpdateMessage);
     });
 
     it('should go to \'Catalog > Products\' page', async function () {
