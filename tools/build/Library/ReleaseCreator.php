@@ -87,7 +87,7 @@ class ReleaseCreator
      *
      * @var array
      */
-    protected $foldersRemoveList = ['.docker'];
+    protected $foldersRemoveList = [];
 
     /**
      * Pattern of files or directories to remove.
@@ -95,15 +95,12 @@ class ReleaseCreator
      * @var array
      */
     protected $patternsRemoveList = [
-        'tests(\-legacy)?$',
         'tools/contrib$',
         'travis\-scripts$',
         'CONTRIBUTING\.md$',
         'composer\.json$',
         'diff\-hooks\.php',
-        '((?<!_dev\/)package\.json)$',
         '(.*)?\.composer$',
-        '(.*)?\.git(.*)?$',
         '.*\.map$',
         '.*\.psd$',
         '.*\.md$',
@@ -141,7 +138,6 @@ class ReleaseCreator
         '\.eslintignore$',
         '\.eslintrc\.js$',
         '\.php_cs\.dist$',
-        'docker-compose\.yml$',
         'tools/assets$',
         '\.webpack$',
     ];
@@ -206,12 +202,13 @@ class ReleaseCreator
     /**
      * Set the release wanted version, and some options.
      *
-     * @param string $version
+     * @param string|null $version
      * @param bool $useInstaller
      * @param bool $useZip
      * @param string $destinationDir
+     * @param bool $keepTests
      */
-    public function __construct($version = null, $useInstaller = true, $useZip = true, $destinationDir = '')
+    public function __construct(?string $version = null, bool $useInstaller = true, bool $useZip = true, string $destinationDir = '', bool $keepTests = false)
     {
         $this->consoleWriter = new ConsoleWriter();
         $tmpDir = sys_get_temp_dir();
@@ -224,6 +221,14 @@ class ReleaseCreator
         $this->projectPath = realpath(__DIR__ . '/../../..');
         $this->version = $version ? $version : $this->getCurrentVersion();
         $this->zipFileName = "prestashop_$this->version.zip";
+        // Keep files for tests (tests, git and docker folders)
+        if (!$keepTests) {
+            $this->patternsRemoveList[] = 'tests(\-legacy)?$';
+            $this->patternsRemoveList[] = '(.*)?\.git(.*)?$';
+            $this->patternsRemoveList[] = '.docker';
+            $this->patternsRemoveList[] = 'docker-compose\.yml$';
+            $this->patternsRemoveList[] = '((?<!_dev\/)package\.json)$';
+        }
 
         if (empty($this->version)) {
             throw new Exception('Version is not provided and cannot be found in project.');
