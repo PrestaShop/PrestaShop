@@ -203,6 +203,8 @@ jobs:
           DOCKER_PREFIX: prestashop
           ARTIFACT_NAME: setup-nightly-${{ matrix.BRANCH }}-${{ matrix.CAMPAIGN }}-${{ inputs.DB_SERVER }}
           DB_SERVER: ${{ inputs.DB_SERVER }}
+          ENABLE_SSL: ${{ env.ENABLE_SSL }}
+          INSTALL_AUTO: ${{ env.INSTALL_AUTO }}
         if: failure()
 
       # Keycloak is only needed for API campaign

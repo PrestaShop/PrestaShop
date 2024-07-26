@@ -80,6 +80,8 @@ jobs:
           DOCKER_PREFIX: prestashop
           ARTIFACT_NAME: setup-sanity-${{ matrix.php }}-${{ matrix.browser }}-${{ matrix.db }}
           DB_SERVER: ${{ matrix.db }}
+          ENABLE_SSL: 'true'
+          INSTALL_AUTO: 'false'
         if: failure()
 
       - name: Run Tests

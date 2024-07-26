@@ -35,6 +35,10 @@ inputs:
     required: false
     description: true to disable Make
     default: 'false'
+  PRESTASHOP_DIR:
+    required: false
+    description: Prestashop folder
+    default: '.'
 
 runs:
   using: 'composite'
@@ -51,16 +55,17 @@ runs:
           chmod +x mkcert-v*-linux-amd64
           sudo cp mkcert-v*-linux-amd64 /usr/local/bin/mkcert
           ## Generate certificate
-          mkcert -key-file ./.docker/ssl.key -cert-file ./.docker/ssl.crt localhost
+          mkcert -key-file ${{ inputs.PRESTASHOP_DIR }}/.docker/ssl.key -cert-file ${{ inputs.PRESTASHOP_DIR }}/.docker/ssl.crt localhost
           ## Link certificate to Chrome Trust Store
           mkdir -p $HOME/.pki/nssdb
           certutil -d $HOME/.pki/nssdb -N
-          certutil -d sql:$HOME/.pki/nssdb -n localhost -A -t "TCu,Cu,Tu" -i ./.docker/ssl.crt
+          certutil -d sql:$HOME/.pki/nssdb -n localhost -A -t "TCu,Cu,Tu" -i ${{ inputs.PRESTASHOP_DIR }}/.docker/ssl.crt
           ## Add self-signed certificate to Chrome Trust Store
           mkcert -install
 
     # Run composer install outside of docker because inside it regularly has network issues
     - name: Composer Install
+      if: inputs.DISABLE_MAKE != 'true'
       run: COMPOSER_PROCESS_TIMEOUT=600 composer install --ansi --prefer-dist --no-interaction --no-progress
       shell: bash
 
@@ -86,6 +91,7 @@ runs:
         PS_LANGUAGE: 'en'
         ADMIN_PASSWD: 'Correct Horse Battery Staple'
       run: |
+        cd ${{ inputs.PRESTASHOP_DIR }}
         USER_ID=$(id -u) GROUP_ID=$(id -g) \
         docker compose -f ${{ (inputs.DB_SERVER == 'mysql') && 'docker-compose.yml' || 'docker-compose.mariadb.yml' }} up -d prestashop-git --build
         bash -c 'while [[ "$(curl -L -s -o /dev/null -w %{http_code} ${{ env.URL_FO }}${{ env.URL_PING }})" != "200" ]]; do sleep 5; done'
