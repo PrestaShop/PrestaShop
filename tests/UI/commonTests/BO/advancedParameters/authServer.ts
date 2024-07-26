@@ -2,12 +2,11 @@ import testContext from '@utils/testContext';
 
 import loginCommon from '@commonTests/BO/loginBO';
 
-import apiClientPage from 'pages/BO/advancedParameters/APIClient';
-import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  boApiClientsPage,
+  boApiClientsCreatePage,
   boDashboardPage,
   type FakerAPIClient,
   utilsPlaywright,
@@ -47,34 +46,34 @@ function createAPIClientTest(apiClient: FakerAPIClient, baseContext: string = 'c
         boDashboardPage.adminAPILink,
       );
 
-      const pageTitle = await apiClientPage.getPageTitle(page);
-      expect(pageTitle).to.eq(apiClientPage.pageTitle);
+      const pageTitle = await boApiClientsPage.getPageTitle(page);
+      expect(pageTitle).to.eq(boApiClientsPage.pageTitle);
 
-      numberOfAPIClient = await apiClientPage.getNumberOfElementInGrid(page);
+      numberOfAPIClient = await boApiClientsPage.getNumberOfElementInGrid(page);
       expect(numberOfAPIClient).to.gte(0);
     });
 
     it('should check that no records found', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkThatNoRecordFound', baseContext);
 
-      const noRecordsFoundText = await apiClientPage.getTextForEmptyTable(page);
+      const noRecordsFoundText = await boApiClientsPage.getTextForEmptyTable(page);
       expect(noRecordsFoundText).to.contains('warning No records found');
     });
 
     it('should go to add New API Client page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewAPIClientPage', baseContext);
 
-      await apiClientPage.goToNewAPIClientPage(page);
+      await boApiClientsPage.goToNewAPIClientPage(page);
 
-      const pageTitle = await addNewApiClientPage.getPageTitle(page);
-      expect(pageTitle).to.eq(addNewApiClientPage.pageTitleCreate);
+      const pageTitle = await boApiClientsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.eq(boApiClientsCreatePage.pageTitleCreate);
     });
 
     it('should create API Client', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createAPIClient', baseContext);
 
-      const textResult = await addNewApiClientPage.addAPIClient(page, apiClient);
-      expect(textResult).to.contains(addNewApiClientPage.successfulCreationMessage);
+      const textResult = await boApiClientsCreatePage.addAPIClient(page, apiClient);
+      expect(textResult).to.contains(boApiClientsCreatePage.successfulCreationMessage);
 
       // Go back to list to get number of elements because creation form redirects to edition form
       await boDashboardPage.goToSubMenu(
@@ -82,7 +81,7 @@ function createAPIClientTest(apiClient: FakerAPIClient, baseContext: string = 'c
         boDashboardPage.advancedParametersLink,
         boDashboardPage.adminAPILink,
       );
-      const numElements = await apiClientPage.getNumberOfElementInGrid(page);
+      const numElements = await boApiClientsPage.getNumberOfElementInGrid(page);
       expect(numElements).to.equal(numberOfAPIClient + 1);
     });
   });
@@ -121,20 +120,20 @@ function deleteAPIClientTest(baseContext: string = 'commonTests-deleteAPIClientT
         boDashboardPage.adminAPILink,
       );
 
-      const pageTitle = await apiClientPage.getPageTitle(page);
-      expect(pageTitle).to.eq(apiClientPage.pageTitle);
+      const pageTitle = await boApiClientsPage.getPageTitle(page);
+      expect(pageTitle).to.eq(boApiClientsPage.pageTitle);
 
-      numberOfAPIClient = await apiClientPage.getNumberOfElementInGrid(page);
+      numberOfAPIClient = await boApiClientsPage.getNumberOfElementInGrid(page);
       expect(numberOfAPIClient).to.gte(0);
     });
 
     it('should delete API Client', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteAPIClient', baseContext);
 
-      const textResult = await apiClientPage.deleteAPIClient(page, 1);
-      expect(textResult).to.equal(addNewApiClientPage.successfulDeleteMessage);
+      const textResult = await boApiClientsPage.deleteAPIClient(page, 1);
+      expect(textResult).to.equal(boApiClientsCreatePage.successfulDeleteMessage);
 
-      const numElements = await apiClientPage.getNumberOfElementInGrid(page);
+      const numElements = await boApiClientsPage.getNumberOfElementInGrid(page);
       expect(numElements).to.equal(0);
     });
   });
