@@ -336,8 +336,8 @@ $product-page-padding-bottom: 80px !default;
     }
 
     .help-box {
-      margin-top: 0.3rem;
-      margin-left: 0.625rem;
+      margin-top: var(--#{$cdk}size-5);
+      margin-left: var(--#{$cdk}size-10);
     }
 
     .form_step1_type_product,
@@ -916,13 +916,13 @@ $product-page-padding-bottom: 80px !default;
 
     h4,
     .ref {
-      padding: 0.625rem;
+      padding: var(--#{$cdk}size-10);
     }
 
     h4 {
       margin: 0;
       font-weight: 400;
-      line-height: 1.25rem;
+      line-height: var(--#{$cdk}size-20);
       color: $black;
     }
 
@@ -941,7 +941,7 @@ $product-page-padding-bottom: 80px !default;
   }
 
   #add-categories {
-    margin-top: 2.5rem;
+    margin-top: var(--#{$cdk}size-40);
   }
 
   #categories-tree {
@@ -950,7 +950,7 @@ $product-page-padding-bottom: 80px !default;
 
   .ui-widget {
     > .form-control-label {
-      font-size: 0.625rem;
+      font-size: var(--#{$cdk}size-10);
       font-weight: 600;
     }
 
@@ -960,7 +960,7 @@ $product-page-padding-bottom: 80px !default;
       &::-moz-placeholder,
       &:-ms-input-placeholder,
       &:-moz-placeholder {
-        font-size: 0.75rem;
+        font-size: var(--#{$cdk}size-12);
       }
       /* stylelint-enable selector-no-vendor-prefix */
     }
@@ -972,7 +972,7 @@ $product-page-padding-bottom: 80px !default;
     > .main-category {
       display: block;
       margin: 0.2rem 0 0;
-      font-size: 0.625rem;
+      font-size: var(--#{$cdk}size-10);
       font-weight: 600;
       text-align: right;
     }
@@ -980,10 +980,10 @@ $product-page-padding-bottom: 80px !default;
     ul.category-tree {
       display: inline-block;
       min-width: 100%;
-      padding-top: 0.625rem;
+      padding-top: var(--#{$cdk}size-10);
 
       .main-category {
-        font-size: 0.625rem;
+        font-size: var(--#{$cdk}size-10);
         font-weight: 600;
       }
 
@@ -992,7 +992,7 @@ $product-page-padding-bottom: 80px !default;
         position: relative;
         width: 100%;
         max-width: 100%;
-        padding-right: 1.5rem;
+        padding-right: var(--#{$cdk}size-24);
         margin-bottom: 0;
 
         .default-category {
@@ -1011,7 +1011,7 @@ $product-page-padding-bottom: 80px !default;
         flex-wrap: nowrap;
         justify-content: space-between;
         width: 100%;
-        padding: 0 0 0 1.25rem;
+        padding: 0 0 0 var(--#{$cdk}size-20);
 
         .form-radio {
           label {
@@ -1036,20 +1036,20 @@ $product-page-padding-bottom: 80px !default;
       }
 
       ul {
-        padding-left: 0.75rem;
+        padding-left: var(--#{$cdk}size-12);
       }
     }
   }
 
   .categories-tree {
-    padding: 0.625rem;
+    padding: var(--#{$cdk}size-10);
     border: $gray-light 1px solid;
     @include border-radius(0.1875rem);
 
     .categories-tree-actions {
       display: flex;
       align-items: center;
-      font-size: 0.625rem;
+      font-size: var(--#{$cdk}size-10);
       font-weight: 600;
       text-transform: uppercase;
       border-bottom: 0.063rem solid $gray-light;
@@ -1060,15 +1060,15 @@ $product-page-padding-bottom: 80px !default;
       }
 
       > hr {
-        margin-top: 0.625rem;
+        margin-top: var(--#{$cdk}size-10);
       }
 
       .form-control-label {
-        padding-top: 0.3125rem;
+        padding-top: var(--#{$cdk}size-5);
       }
 
       .material-icons {
-        font-size: 1.25rem;
+        font-size: var(--#{$cdk}size-20);
         vertical-align: middle;
       }
 
@@ -1108,7 +1108,7 @@ $product-page-padding-bottom: 80px !default;
     color: $gray-medium;
 
     .material-icons {
-      font-size: 1.25rem;
+      font-size: var(--#{$cdk}size-20);
     }
   }
 
@@ -1260,7 +1260,7 @@ $product-page-padding-bottom: 80px !default;
 
   #custom_fields {
     .required-custom-field {
-      padding: 0.375rem 1rem;
+      padding: var(--#{$cdk}size-6) var(--#{$cdk}size-5);
     }
   }
 
@@ -1276,7 +1276,7 @@ $product-page-padding-bottom: 80px !default;
     display: flex;
 
     > div {
-      margin: 0.5rem;
+      margin: var(--#{$cdk}size-8);
     }
   }
 }
@@ -1783,7 +1783,7 @@ $product-page-padding-bottom: 80px !default;
   #combination-list-actions {
     display: flex;
     flex-direction: row;
-    gap: 1rem;
+    gap: var(--#{$cdk}size-16);
     margin: var(--#{$cdk}size-8) 0;
   }
 
@@ -2289,8 +2289,8 @@ $product-page-padding-bottom: 80px !default;
         top: 0;
         left: 0;
         z-index: 2;
-        height: 3rem;
-        padding: 0.9375rem 0.3125rem;
+        height: var(--#{$cdk}size-48);
+        padding: var(--#{$cdk}size-16) var(--#{$cdk}size-5);
         color: $white;
         cursor: pointer;
         background: $white;
@@ -2328,7 +2328,7 @@ $product-page-padding-bottom: 80px !default;
     }
 
     .combination-form {
-      padding: 0 1.25rem;
+      padding: 0 var(--#{$cdk}size-20);
     }
 
     #form-nav[style*="display:none"] {
@@ -2383,12 +2383,12 @@ $product-page-padding-bottom: 80px !default;
       }
 
       .spinner {
-        margin-top: -0.3125rem;
+        margin-top: calc(-1 * var(--#{$cdk}size-5));
       }
 
       .dropdown {
         display: block;
-        margin-top: 0.625rem;
+        margin-top: var(--#{$cdk}size-10);
 
         .dropdown-menu {
           top: -7.5rem;
@@ -2430,7 +2430,7 @@ $product-page-padding-bottom: 80px !default;
     }
 
     #form-content {
-      margin-bottom: 3rem;
+      margin-bottom: var(--#{$cdk}size-48);
     }
 
     .product-header {
@@ -2439,18 +2439,18 @@ $product-page-padding-bottom: 80px !default;
       }
 
       .product-name {
-        margin-bottom: 0.5rem;
+        margin-bottom: var(--#{$cdk}size-8);
       }
     }
 
     h2 {
-      padding-top: 0.5rem;
-      margin-bottom: 0.5rem;
+      padding-top: var(--#{$cdk}size-8);
+      margin-bottom: var(--#{$cdk}size-8);
     }
 
     .form-group.row,
     .alert-unavailable {
-      margin-bottom: 1rem;
+      margin-bottom: var(--#{$cdk}size-16);
     }
 
     .product-footer {
@@ -2463,8 +2463,8 @@ $product-page-padding-bottom: 80px !default;
       }
 
       .btn {
-        padding: 0.5rem;
-        font-size: 0.75rem;
+        padding: var(--#{$cdk}size-8);
+        font-size: var(--#{$cdk}size-12);
       }
     }
 
@@ -2523,13 +2523,13 @@ $product-page-padding-bottom: 80px !default;
         &::before {
           @include use-material-icon();
           position: absolute;
-          top: calc(50% - 0.75rem);
-          left: calc(50% - 0.75rem);
+          top: calc(50% - var(--#{$cdk}size-12));
+          left: calc(50% - var(--#{$cdk}size-12));
           z-index: 10;
           display: flex;
           flex-direction: column;
           justify-content: center;
-          font-size: 1.5rem;
+          font-size: var(--#{$cdk}size-24);
           color: $warning;
           text-align: center;
           content: "warning";

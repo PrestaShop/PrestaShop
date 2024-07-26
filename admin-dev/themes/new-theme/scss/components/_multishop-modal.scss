@@ -149,6 +149,10 @@ $component-name: multishop-modal;
     background-color: $multishop-header-default-background;
     border-radius: var(--#{$cdk}size-4);
 
+    &--default {
+      background-color: $multishop-header-default-background;
+    }
+
     &-container {
       &.#{$component-name}-color-check {
         margin-right: var(--#{$cdk}size-16);
