@@ -5,13 +5,11 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 import {deleteAPIClientTest} from '@commonTests/BO/advancedParameters/authServer';
 
-// Import pages
-import apiClientPage from 'pages/BO/advancedParameters/APIClient';
-import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
-
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 import {
+  boApiClientsPage,
+  boApiClientsCreatePage,
   boDashboardPage,
   FakerAPIClient,
   utilsAPI,
@@ -79,42 +77,42 @@ describe('API : PATCH /api-client/{apiClientId}', async () => {
         boDashboardPage.adminAPILink,
       );
 
-      const pageTitle = await apiClientPage.getPageTitle(page);
-      expect(pageTitle).to.eq(apiClientPage.pageTitle);
+      const pageTitle = await boApiClientsPage.getPageTitle(page);
+      expect(pageTitle).to.eq(boApiClientsPage.pageTitle);
     });
 
     it('should check that no records found', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkThatNoRecordFound', baseContext);
 
-      const noRecordsFoundText = await apiClientPage.getTextForEmptyTable(page);
+      const noRecordsFoundText = await boApiClientsPage.getTextForEmptyTable(page);
       expect(noRecordsFoundText).to.contains('warning No records found');
     });
 
     it('should go to add New API Client page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewAPIClientPage', baseContext);
 
-      await apiClientPage.goToNewAPIClientPage(page);
+      await boApiClientsPage.goToNewAPIClientPage(page);
 
-      const pageTitle = await addNewApiClientPage.getPageTitle(page);
-      expect(pageTitle).to.eq(addNewApiClientPage.pageTitleCreate);
+      const pageTitle = await boApiClientsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.eq(boApiClientsCreatePage.pageTitleCreate);
     });
 
     it('should create API Client', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createAPIClient', baseContext);
 
-      const textResult = await addNewApiClientPage.addAPIClient(page, clientData);
-      expect(textResult).to.contains(addNewApiClientPage.successfulCreationMessage);
+      const textResult = await boApiClientsCreatePage.addAPIClient(page, clientData);
+      expect(textResult).to.contains(boApiClientsCreatePage.successfulCreationMessage);
 
-      const textMessage = await addNewApiClientPage.getAlertInfoBlockParagraphContent(page);
-      expect(textMessage).to.contains(addNewApiClientPage.apiClientGeneratedMessage);
+      const textMessage = await boApiClientsCreatePage.getAlertInfoBlockParagraphContent(page);
+      expect(textMessage).to.contains(boApiClientsCreatePage.apiClientGeneratedMessage);
     });
 
     it('should copy client secret', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'copyClientSecret', baseContext);
 
-      await addNewApiClientPage.copyClientSecret(page);
+      await boApiClientsCreatePage.copyClientSecret(page);
 
-      clientSecret = await addNewApiClientPage.getClipboardText(page);
+      clientSecret = await boApiClientsCreatePage.getClipboardText(page);
       expect(clientSecret.length).to.be.gt(0);
     });
 
@@ -151,30 +149,30 @@ describe('API : PATCH /api-client/{apiClientId}', async () => {
         boDashboardPage.adminAPILink,
       );
 
-      const pageTitle = await apiClientPage.getPageTitle(page);
-      expect(pageTitle).to.eq(apiClientPage.pageTitle);
+      const pageTitle = await boApiClientsPage.getPageTitle(page);
+      expect(pageTitle).to.eq(boApiClientsPage.pageTitle);
 
-      const numRecords = await apiClientPage.getNumberOfElementInGrid(page);
+      const numRecords = await boApiClientsPage.getNumberOfElementInGrid(page);
       expect(numRecords).to.be.equal(1);
     });
 
     it('should go to add New API Client page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewAPIClientPageForPatch', baseContext);
 
-      await apiClientPage.goToNewAPIClientPage(page);
+      await boApiClientsPage.goToNewAPIClientPage(page);
 
-      const pageTitle = await addNewApiClientPage.getPageTitle(page);
-      expect(pageTitle).to.eq(addNewApiClientPage.pageTitleCreate);
+      const pageTitle = await boApiClientsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.eq(boApiClientsCreatePage.pageTitleCreate);
     });
 
     it('should create API Client', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createAPIClientForPatch', baseContext);
 
-      const textResult = await addNewApiClientPage.addAPIClient(page, createClient);
-      expect(textResult).to.contains(addNewApiClientPage.successfulCreationMessage);
+      const textResult = await boApiClientsCreatePage.addAPIClient(page, createClient);
+      expect(textResult).to.contains(boApiClientsCreatePage.successfulCreationMessage);
 
-      const textMessage = await addNewApiClientPage.getAlertInfoBlockParagraphContent(page);
-      expect(textMessage).to.contains(addNewApiClientPage.apiClientGeneratedMessage);
+      const textMessage = await boApiClientsCreatePage.getAlertInfoBlockParagraphContent(page);
+      expect(textMessage).to.contains(boApiClientsCreatePage.apiClientGeneratedMessage);
     });
 
     it('should go to \'Advanced Parameters > API Client\' page', async function () {
@@ -186,27 +184,27 @@ describe('API : PATCH /api-client/{apiClientId}', async () => {
         boDashboardPage.adminAPILink,
       );
 
-      const pageTitle = await apiClientPage.getPageTitle(page);
-      expect(pageTitle).to.eq(apiClientPage.pageTitle);
+      const pageTitle = await boApiClientsPage.getPageTitle(page);
+      expect(pageTitle).to.eq(boApiClientsPage.pageTitle);
 
-      const numRecords = await apiClientPage.getNumberOfElementInGrid(page);
+      const numRecords = await boApiClientsPage.getNumberOfElementInGrid(page);
       expect(numRecords).to.be.equal(2);
     });
 
     it('should fetch the identifier of the API Client', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'fetchIDApiClient', baseContext);
 
-      idApiClient = parseInt(await apiClientPage.getTextColumn(page, 'id_api_client', 2), 10);
+      idApiClient = parseInt(await boApiClientsPage.getTextColumn(page, 'id_api_client', 2), 10);
       expect(idApiClient).to.be.gt(0);
     });
 
     it('should go to edit page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditPage', baseContext);
 
-      await apiClientPage.goToEditAPIClientPage(page, 2);
+      await boApiClientsPage.goToEditAPIClientPage(page, 2);
 
-      const pageTitle = await addNewApiClientPage.getPageTitle(page);
-      expect(pageTitle).to.eq(addNewApiClientPage.pageTitleEdit(createClient.clientName));
+      const pageTitle = await boApiClientsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.eq(boApiClientsCreatePage.pageTitleEdit(createClient.clientName));
     });
   });
 
@@ -261,19 +259,19 @@ describe('API : PATCH /api-client/{apiClientId}', async () => {
       it(`should check that the property "${data.propertyName}"`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkProperty${data.propertyName}`, baseContext);
 
-        await addNewApiClientPage.reloadPage(page);
+        await boApiClientsCreatePage.reloadPage(page);
 
         if (['clientId', 'clientName', 'description'].includes(data.propertyName)) {
-          const valueProperty = await addNewApiClientPage.getValue(page, data.propertyName);
+          const valueProperty = await boApiClientsCreatePage.getValue(page, data.propertyName);
           expect(valueProperty).to.equal(data.propertyValue);
         } else if (data.propertyName === 'lifetime') {
-          const valueProperty = await addNewApiClientPage.getValue(page, 'tokenLifetime');
+          const valueProperty = await boApiClientsCreatePage.getValue(page, 'tokenLifetime');
           expect(valueProperty).to.equal(data.propertyValue.toString());
         } else if (data.propertyName === 'enabled') {
-          const valueProperty = await addNewApiClientPage.isEnabled(page);
+          const valueProperty = await boApiClientsCreatePage.isEnabled(page);
           expect(valueProperty).to.equal(data.propertyValue);
         } else if (data.propertyName === 'scopes') {
-          const valueProperty = await addNewApiClientPage.getApiScopes(page, 'ps_apiresources', true);
+          const valueProperty = await boApiClientsCreatePage.getApiScopes(page, 'ps_apiresources', true);
           expect(valueProperty).to.deep.equal(data.propertyValue);
         }
       });
@@ -290,20 +288,20 @@ describe('API : PATCH /api-client/{apiClientId}', async () => {
         boDashboardPage.adminAPILink,
       );
 
-      const pageTitle = await apiClientPage.getPageTitle(page);
-      expect(pageTitle).to.eq(apiClientPage.pageTitle);
+      const pageTitle = await boApiClientsPage.getPageTitle(page);
+      expect(pageTitle).to.eq(boApiClientsPage.pageTitle);
 
-      const numElements = await apiClientPage.getNumberOfElementInGrid(page);
+      const numElements = await boApiClientsPage.getNumberOfElementInGrid(page);
       expect(numElements).to.equal(2);
     });
 
     it('should delete API Client', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteAPIClient', baseContext);
 
-      const textResult = await apiClientPage.deleteAPIClient(page, 2);
-      expect(textResult).to.equal(addNewApiClientPage.successfulDeleteMessage);
+      const textResult = await boApiClientsPage.deleteAPIClient(page, 2);
+      expect(textResult).to.equal(boApiClientsCreatePage.successfulDeleteMessage);
 
-      const numElements = await apiClientPage.getNumberOfElementInGrid(page);
+      const numElements = await boApiClientsPage.getNumberOfElementInGrid(page);
       expect(numElements).to.equal(1);
     });
   });

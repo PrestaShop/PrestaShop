@@ -4,14 +4,11 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 import {deleteAPIClientTest} from '@commonTests/BO/advancedParameters/authServer';
 
-// Import pages
-// Import BO pages
-import apiClientPage from 'pages/BO/advancedParameters/APIClient';
-import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
-
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 import {
+  boApiClientsPage,
+  boApiClientsCreatePage,
   boDashboardPage,
   FakerAPIClient,
   utilsAPI,
@@ -57,42 +54,42 @@ describe('API : Internal Auth Server - Authorization Endpoint', async () => {
         boDashboardPage.adminAPILink,
       );
 
-      const pageTitle = await apiClientPage.getPageTitle(page);
-      expect(pageTitle).to.eq(apiClientPage.pageTitle);
+      const pageTitle = await boApiClientsPage.getPageTitle(page);
+      expect(pageTitle).to.eq(boApiClientsPage.pageTitle);
     });
 
     it('should check that no records found', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkThatNoRecordFound', baseContext);
 
-      const noRecordsFoundText = await apiClientPage.getTextForEmptyTable(page);
+      const noRecordsFoundText = await boApiClientsPage.getTextForEmptyTable(page);
       expect(noRecordsFoundText).to.contains('warning No records found');
     });
 
     it('should go to add New API Client page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewAPIClientPage', baseContext);
 
-      await apiClientPage.goToNewAPIClientPage(page);
+      await boApiClientsPage.goToNewAPIClientPage(page);
 
-      const pageTitle = await addNewApiClientPage.getPageTitle(page);
-      expect(pageTitle).to.eq(addNewApiClientPage.pageTitleCreate);
+      const pageTitle = await boApiClientsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.eq(boApiClientsCreatePage.pageTitleCreate);
     });
 
     it('should create API Client', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createAPIClient', baseContext);
 
-      const textResult = await addNewApiClientPage.addAPIClient(page, clientClient);
-      expect(textResult).to.contains(addNewApiClientPage.successfulCreationMessage);
+      const textResult = await boApiClientsCreatePage.addAPIClient(page, clientClient);
+      expect(textResult).to.contains(boApiClientsCreatePage.successfulCreationMessage);
 
-      const textMessage = await addNewApiClientPage.getAlertInfoBlockParagraphContent(page);
-      expect(textMessage).to.contains(addNewApiClientPage.apiClientGeneratedMessage);
+      const textMessage = await boApiClientsCreatePage.getAlertInfoBlockParagraphContent(page);
+      expect(textMessage).to.contains(boApiClientsCreatePage.apiClientGeneratedMessage);
     });
 
     it('should copy client secret', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'copyClientSecret', baseContext);
 
-      await addNewApiClientPage.copyClientSecret(page);
+      await boApiClientsCreatePage.copyClientSecret(page);
 
-      clientSecret = await addNewApiClientPage.getClipboardText(page);
+      clientSecret = await boApiClientsCreatePage.getClipboardText(page);
       expect(clientSecret.length).to.be.gt(0);
     });
   });

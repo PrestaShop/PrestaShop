@@ -4,14 +4,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-// Import BO pages
-import apiClientPage from 'pages/BO/advancedParameters/APIClient';
-import addNewApiClientPage from '@pages/BO/advancedParameters/APIClient/add';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  boApiClientsPage,
+  boApiClientsCreatePage,
   boDashboardPage,
   boModuleManagerPage,
   dataModules,
@@ -94,35 +91,35 @@ describe('PrestaShop API Resources module - Disable/Enable module', async () => 
           boDashboardPage.adminAPILink,
         );
 
-        const pageTitle = await apiClientPage.getPageTitle(page);
-        expect(pageTitle).to.eq(apiClientPage.pageTitle);
+        const pageTitle = await boApiClientsPage.getPageTitle(page);
+        expect(pageTitle).to.eq(boApiClientsPage.pageTitle);
       });
 
       it('should check that no records found', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkThatNoRecordFound${index}`, baseContext);
 
-        const noRecordsFoundText = await apiClientPage.getTextForEmptyTable(page);
+        const noRecordsFoundText = await boApiClientsPage.getTextForEmptyTable(page);
         expect(noRecordsFoundText).to.contains('warning No records found');
       });
 
       it('should go to add New API Client page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewAPIClientPage${index}`, baseContext);
 
-        await apiClientPage.goToNewAPIClientPage(page);
+        await boApiClientsPage.goToNewAPIClientPage(page);
 
-        const pageTitle = await addNewApiClientPage.getPageTitle(page);
-        expect(pageTitle).to.eq(addNewApiClientPage.pageTitleCreate);
+        const pageTitle = await boApiClientsCreatePage.getPageTitle(page);
+        expect(pageTitle).to.eq(boApiClientsCreatePage.pageTitleCreate);
       });
 
       it('should check that scopes from Core are present and enabled', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkScopesCore${index}`, baseContext);
 
-        const scopes = await addNewApiClientPage.getApiScopes(page, '__core_scopes');
+        const scopes = await boApiClientsCreatePage.getApiScopes(page, '__core_scopes');
         expect(scopes.length).to.be.eq(0);
 
         // eslint-disable-next-line no-restricted-syntax
         for (const scope of scopes) {
-          const isScopeDisabled = await addNewApiClientPage.isAPIScopeDisabled(page, scope);
+          const isScopeDisabled = await boApiClientsCreatePage.isAPIScopeDisabled(page, scope);
           expect(isScopeDisabled).to.be.equal(false);
         }
       });
@@ -133,11 +130,11 @@ describe('PrestaShop API Resources module - Disable/Enable module', async () => 
 
         this.skip();
         /*
-        const scopes = await addNewApiClientPage.getApiScopes(page, dataModules.psApiResources.tag);
+        const scopes = await boApiClientsCreatePage.getApiScopes(page, dataModules.psApiResources.tag);
 
         // eslint-disable-next-line no-restricted-syntax
         for (const scope of scopes) {
-          const isScopeDisabled = await addNewApiClientPage.isAPIScopeDisabled(page, scope);
+          const isScopeDisabled = await boApiClientsCreatePage.isAPIScopeDisabled(page, scope);
           expect(isScopeDisabled).to.be.equal(!test.state);
         }
         */
