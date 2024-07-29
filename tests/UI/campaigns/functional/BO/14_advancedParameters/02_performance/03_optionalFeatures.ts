@@ -149,7 +149,7 @@ describe('BO - Advanced Parameters - Performance : Optional features', async () 
   });
 
   it('should check the product features list', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'getProductFeaturesList', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'hasProductFeaturesList', baseContext);
 
     const hasProductFeaturesList = await foClassicProductPage.hasProductFeaturesList(page);
     expect(hasProductFeaturesList).to.equal(true);
@@ -211,7 +211,7 @@ describe('BO - Advanced Parameters - Performance : Optional features', async () 
   });
 
   it('should check the product features list', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'getProductFeaturesList', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'hasNotProductFeaturesList', baseContext);
 
     page = await boPerformancePage.changePage(browserContext, 1);
     await foClassicProductPage.reloadPage(page);
@@ -240,7 +240,7 @@ describe('BO - Advanced Parameters - Performance : Optional features', async () 
   });
 
   it('should select all the combination product and delete them', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'deleteAllCombinationProducts', baseContext);
 
     const isBulkDeleteButtonEnabled = await boProductsPage.bulkSelectProducts(page, productToDelete);
     expect(isBulkDeleteButtonEnabled).to.eq(true);
@@ -265,7 +265,7 @@ describe('BO - Advanced Parameters - Performance : Optional features', async () 
   });
 
   it('should go to \'Advanced Parameters > Performance\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToPerformancePage', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'returnToPerformancePage', baseContext);
 
     page = await foClassicProductPage.changePage(browserContext, 0);
     await boCustomerGroupsPage.goToSubMenu(
@@ -286,7 +286,7 @@ describe('BO - Advanced Parameters - Performance : Optional features', async () 
   });
 
   it('should go to \'Catalog > Products\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'returnToProductsPage', baseContext);
 
     await boPerformancePage.goToSubMenu(page, boDashboardPage.catalogParentLink, boDashboardPage.productsLink);
     await boProductsPage.closeSfToolBar(page);
