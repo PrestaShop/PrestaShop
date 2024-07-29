@@ -322,7 +322,7 @@ class RequestSqlCore extends ObjectModel
                 $tab = [];
                 foreach ($tables as $table) {
                     if ($this->attributExistInTable($attr, $table['table'])) {
-                        $tab = $table['table'];
+                        $tab[] = $table['table'];
                     }
                 }
                 if (count($tab) == 1) {
