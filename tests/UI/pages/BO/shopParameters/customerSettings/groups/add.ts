@@ -101,11 +101,19 @@ class AddGroup extends BOBasePage {
 
     await this.setChecked(page, this.showPricesToggle(groupData.shownPrices ? 'on' : 'off'));
 
-    // Save group
-    await this.clickAndWaitForURL(page, this.saveButton);
+    return this.saveForm(page);
+  }
 
-    // Return successful message
-    return this.getAlertSuccessBlockParagraphContent(page);
+  /**
+   * Set discount and save the form
+   * @param page {Page} Browser tab
+   * @param discount {number} 
+   * @returns {Promise<string>}
+   */
+  async setDiscount(page: Page, discount: number): Promise<string> {
+    await this.setValue(page, this.discountInput, discount.toString());
+
+    return this.saveForm(page);
   }
 
   /**
@@ -117,12 +125,21 @@ class AddGroup extends BOBasePage {
   async setPriceDisplayMethod(page: Page, priceDisplayMethod: string): Promise<string> {
     await this.selectByVisibleText(page, this.priceDisplayMethodSelect, priceDisplayMethod);
 
+    return this.saveForm(page);
+  }
+
+  /**
+   * Save the form
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  private async saveForm(page: Page): Promise<string> {
     // Save customer group
     await this.clickAndWaitForURL(page, this.saveButton);
 
     // Return successful message
     return this.getAlertSuccessBlockParagraphContent(page);
-  }
+  } 
 
   /**
    * Returns the value of a form element
