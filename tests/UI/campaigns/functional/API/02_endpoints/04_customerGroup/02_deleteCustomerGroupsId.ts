@@ -7,12 +7,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
-import groupsPage from '@pages/BO/shopParameters/customerSettings/groups';
-import addGroupPage from '@pages/BO/shopParameters/customerSettings/groups/add';
 
 import {
   boApiClientsPage,
   boApiClientsCreatePage,
+  boCustomerGroupsPage,
+  boCustomerGroupsCreatePage,
   boDashboardPage,
   FakerAPIClient,
   FakerGroup,
@@ -150,49 +150,49 @@ describe('API : DELETE /customers/group/{customerGroupId}', async () => {
 
       await customerSettingsPage.goToGroupsPage(page);
 
-      const pageTitle = await groupsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(groupsPage.pageTitle);
+      const pageTitle = await boCustomerGroupsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerGroupsPage.pageTitle);
     });
 
     it('should reset all filters and get number of groups in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-      numberOfGroups = await groupsPage.resetAndGetNumberOfLines(page);
+      numberOfGroups = await boCustomerGroupsPage.resetAndGetNumberOfLines(page);
       expect(numberOfGroups).to.be.above(0);
     });
 
     it('should go to add new group page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewGroup', baseContext);
 
-      await groupsPage.goToNewGroupPage(page);
+      await boCustomerGroupsPage.goToNewGroupPage(page);
 
-      const pageTitle = await addGroupPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addGroupPage.pageTitleCreate);
+      const pageTitle = await boCustomerGroupsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerGroupsCreatePage.pageTitleCreate);
     });
 
     it('should create group and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createGroup', baseContext);
 
-      const textResult = await addGroupPage.createEditGroup(page, createGroupData);
-      expect(textResult).to.contains(groupsPage.successfulCreationMessage);
+      const textResult = await boCustomerGroupsCreatePage.createEditGroup(page, createGroupData);
+      expect(textResult).to.contains(boCustomerGroupsPage.successfulCreationMessage);
 
-      const numberOfGroupsAfterCreation = await groupsPage.getNumberOfElementInGrid(page);
+      const numberOfGroupsAfterCreation = await boCustomerGroupsPage.getNumberOfElementInGrid(page);
       expect(numberOfGroupsAfterCreation).to.be.equal(numberOfGroups + 1);
     });
 
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForCreation', baseContext);
 
-      await groupsPage.resetFilter(page);
-      await groupsPage.filterTable(page, 'input', 'b!name', createGroupData.name);
+      await boCustomerGroupsPage.resetFilter(page);
+      await boCustomerGroupsPage.filterTable(page, 'input', 'b!name', createGroupData.name);
 
-      const numberOfGroupsAfterCreation = await groupsPage.getNumberOfElementInGrid(page);
+      const numberOfGroupsAfterCreation = await boCustomerGroupsPage.getNumberOfElementInGrid(page);
       expect(numberOfGroupsAfterCreation).to.be.equal(1);
 
-      const textEmail = await groupsPage.getTextColumn(page, 1, 'b!name');
+      const textEmail = await boCustomerGroupsPage.getTextColumn(page, 1, 'b!name');
       expect(textEmail).to.contains(createGroupData.name);
 
-      idCustomerGroup = parseInt(await groupsPage.getTextColumn(page, 1, 'id_group'), 10);
+      idCustomerGroup = parseInt(await boCustomerGroupsPage.getTextColumn(page, 1, 'id_group'), 10);
       expect(idCustomerGroup).to.be.gt(0);
     });
   });
@@ -214,10 +214,10 @@ describe('API : DELETE /customers/group/{customerGroupId}', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterAfterDeletion', baseContext);
 
-      await groupsPage.resetFilter(page);
-      await groupsPage.filterTable(page, 'input', 'b!name', createGroupData.name);
+      await boCustomerGroupsPage.resetFilter(page);
+      await boCustomerGroupsPage.filterTable(page, 'input', 'b!name', createGroupData.name);
 
-      const numberOfGroupsAfterCreation = await groupsPage.getNumberOfElementInGrid(page);
+      const numberOfGroupsAfterCreation = await boCustomerGroupsPage.getNumberOfElementInGrid(page);
       expect(numberOfGroupsAfterCreation).to.be.equal(0);
     });
   });

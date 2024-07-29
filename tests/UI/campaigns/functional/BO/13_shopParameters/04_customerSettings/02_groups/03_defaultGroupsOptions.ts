@@ -6,11 +6,11 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
-import groupsPage from '@pages/BO/shopParameters/customerSettings/groups';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  boCustomerGroupsPage,
   boDashboardPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -54,49 +54,49 @@ describe('BO - Shop Parameters - Customer Settings : Default groups options', as
 
     await customerSettingsPage.goToGroupsPage(page);
 
-    const pageTitle = await groupsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(groupsPage.pageTitle);
+    const pageTitle = await boCustomerGroupsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCustomerGroupsPage.pageTitle);
   });
 
   it('should check that the default value selected for Visitors group is Visitor', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkDefaultGroupForVisitors', baseContext);
 
-    const selectedGroup = await groupsPage.getGroupSelectedValue(page, 'visitors');
+    const selectedGroup = await boCustomerGroupsPage.getGroupSelectedValue(page, 'visitors');
     expect(selectedGroup).to.equal('Visitor');
   });
 
   it('should get the dropdown list of visitors group', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'getOptionsOfVisitorsGroup', baseContext);
 
-    const options = await groupsPage.getGroupDropDownList(page, 'visitors');
+    const options = await boCustomerGroupsPage.getGroupDropDownList(page, 'visitors');
     expect(options).to.equal('Visitor Guest Customer');
   });
 
   it('should check that the default value selected for Guests group is Visitor', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkDefaultGroupForGuests', baseContext);
 
-    const selectedGroup = await groupsPage.getGroupSelectedValue(page, 'guests');
+    const selectedGroup = await boCustomerGroupsPage.getGroupSelectedValue(page, 'guests');
     expect(selectedGroup).to.equal('Guest');
   });
 
   it('should get the dropdown list of Guests group', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'getOptionsOfGuestsGroup', baseContext);
 
-    const options = await groupsPage.getGroupDropDownList(page, 'guests');
+    const options = await boCustomerGroupsPage.getGroupDropDownList(page, 'guests');
     expect(options).to.equal('Visitor Guest Customer');
   });
 
   it('should check that the default value selected for Customers group is Visitor', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkDefaultGroupForCustomers', baseContext);
 
-    const selectedGroup = await groupsPage.getGroupSelectedValue(page, 'customers');
+    const selectedGroup = await boCustomerGroupsPage.getGroupSelectedValue(page, 'customers');
     expect(selectedGroup).to.equal('Customer');
   });
 
   it('should get the dropdown list of Customers group', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'getOptionsOfCustomersGroup', baseContext);
 
-    const options = await groupsPage.getGroupDropDownList(page, 'customers');
+    const options = await boCustomerGroupsPage.getGroupDropDownList(page, 'customers');
     expect(options).to.equal('Visitor Guest Customer');
   });
 });

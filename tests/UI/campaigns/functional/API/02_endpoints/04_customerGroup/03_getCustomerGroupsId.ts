@@ -7,14 +7,14 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
-import groupsPage from '@pages/BO/shopParameters/customerSettings/groups';
-import addGroupPage from '@pages/BO/shopParameters/customerSettings/groups/add';
 
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 import {
   boApiClientsPage,
   boApiClientsCreatePage,
+  boCustomerGroupsPage,
+  boCustomerGroupsCreatePage,
   boDashboardPage,
   dataLanguages,
   FakerAPIClient,
@@ -153,45 +153,45 @@ describe('API : GET /customers/group/{customerGroupId}', async () => {
 
       await customerSettingsPage.goToGroupsPage(page);
 
-      const pageTitle = await groupsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(groupsPage.pageTitle);
+      const pageTitle = await boCustomerGroupsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerGroupsPage.pageTitle);
     });
 
     it('should reset all filters and get number of groups in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-      const numberOfGroups = await groupsPage.resetAndGetNumberOfLines(page);
+      const numberOfGroups = await boCustomerGroupsPage.resetAndGetNumberOfLines(page);
       expect(numberOfGroups).to.be.above(0);
 
-      idCustomerGroup = parseInt(await groupsPage.getTextColumn(page, 1, 'id_group'), 10);
+      idCustomerGroup = parseInt(await boCustomerGroupsPage.getTextColumn(page, 1, 'id_group'), 10);
       expect(idCustomerGroup).to.be.gt(0);
     });
 
     it('should go to edit group page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditGroupPage', baseContext);
 
-      await groupsPage.gotoEditGroupPage(page, 1);
+      await boCustomerGroupsPage.gotoEditGroupPage(page, 1);
 
-      const pageTitle = await addGroupPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addGroupPage.pageTitleEdit);
+      const pageTitle = await boCustomerGroupsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerGroupsCreatePage.pageTitleEdit);
     });
 
     it('should fetch informations', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'fetchInformations', baseContext);
 
-      reductionPercent = parseInt(await addGroupPage.getValue(page, 'reductionPercent'), 10);
+      reductionPercent = parseInt(await boCustomerGroupsCreatePage.getValue(page, 'reductionPercent'), 10);
       expect(reductionPercent).to.be.gte(0);
 
-      displayPriceTaxExcluded = (await addGroupPage.getValue(page, 'displayPriceTaxExcluded')) === 'Tax excluded';
+      displayPriceTaxExcluded = (await boCustomerGroupsCreatePage.getValue(page, 'displayPriceTaxExcluded')) === 'Tax excluded';
       expect(displayPriceTaxExcluded).to.be.a('boolean');
 
-      showPrice = (await addGroupPage.getValue(page, 'showPrice')) === '1';
+      showPrice = (await boCustomerGroupsCreatePage.getValue(page, 'showPrice')) === '1';
       expect(showPrice).to.be.a('boolean');
 
-      nameFr = await addGroupPage.getValue(page, 'localizedNames', dataLanguages.french.id);
+      nameFr = await boCustomerGroupsCreatePage.getValue(page, 'localizedNames', dataLanguages.french.id);
       expect(nameFr).to.be.a('string');
 
-      nameEn = await addGroupPage.getValue(page, 'localizedNames', dataLanguages.english.id);
+      nameEn = await boCustomerGroupsCreatePage.getValue(page, 'localizedNames', dataLanguages.english.id);
       expect(nameFr).to.be.a('string');
     });
   });

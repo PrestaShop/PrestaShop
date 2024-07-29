@@ -6,10 +6,10 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
-import groupsPage from '@pages/BO/shopParameters/customerSettings/groups';
-import addGroupPage from '@pages/BO/shopParameters/customerSettings/groups/add';
 
 import {
+  boCustomerGroupsPage,
+  boCustomerGroupsCreatePage,
   boDashboardPage,
   boPerformancePage,
   boProductsPage,
@@ -81,46 +81,46 @@ describe('BO - Advanced Parameters - Performance : Optional features', async () 
 
     await customerSettingsPage.goToGroupsPage(page);
 
-    const pageTitle = await groupsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(groupsPage.pageTitle);
+    const pageTitle = await boCustomerGroupsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCustomerGroupsPage.pageTitle);
   });
 
   it('should reset all filters and get number of groups in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    const numberOfGroups = await groupsPage.resetAndGetNumberOfLines(page);
+    const numberOfGroups = await boCustomerGroupsPage.resetAndGetNumberOfLines(page);
     expect(numberOfGroups).to.be.above(0);
   });
 
   it(`should filter by '${dataGroups.customer.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterByGroupName1', baseContext);
 
-    await groupsPage.filterTable(page, 'input', 'b!name', dataGroups.customer.name);
+    await boCustomerGroupsPage.filterTable(page, 'input', 'b!name', dataGroups.customer.name);
 
-    const textColumn = await groupsPage.getTextColumn(page, 1, 'b!name');
+    const textColumn = await boCustomerGroupsPage.getTextColumn(page, 1, 'b!name');
     expect(textColumn).to.contains(dataGroups.customer.name);
   });
 
   it('should go to edit group page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEditGroupPage1', baseContext);
 
-    await groupsPage.gotoEditGroupPage(page, 1);
+    await boCustomerGroupsPage.gotoEditGroupPage(page, 1);
 
-    const pageTitle = await addGroupPage.getPageTitle(page);
-    expect(pageTitle).to.contains(addGroupPage.pageTitleEdit);
+    const pageTitle = await boCustomerGroupsCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCustomerGroupsCreatePage.pageTitleEdit);
   });
 
   it(`should update group with discount = ${groupDiscount}`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setDiscount', baseContext);
 
-    const textResult = await addGroupPage.setDiscount(page, groupDiscount);
-    expect(textResult).to.contains(groupsPage.successfulUpdateMessage);
+    const textResult = await boCustomerGroupsCreatePage.setDiscount(page, groupDiscount);
+    expect(textResult).to.contains(boCustomerGroupsPage.successfulUpdateMessage);
   });
 
   it('should view my shop', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
-    page = await groupsPage.viewMyShop(page);
+    page = await boCustomerGroupsPage.viewMyShop(page);
     await foClassicHomePage.changeLanguage(page, 'en');
 
     const isHomePage = await foClassicHomePage.isHomePage(page);
@@ -193,7 +193,7 @@ describe('BO - Advanced Parameters - Performance : Optional features', async () 
     await testContext.addContextItem(this, 'testIdentifier', 'goToPerformancePage', baseContext);
 
     page = await foClassicProductPage.changePage(browserContext, 0);
-    await groupsPage.goToSubMenu(
+    await boCustomerGroupsPage.goToSubMenu(
       page,
       boDashboardPage.advancedParametersLink,
       boDashboardPage.performanceLink,
@@ -268,7 +268,7 @@ describe('BO - Advanced Parameters - Performance : Optional features', async () 
     await testContext.addContextItem(this, 'testIdentifier', 'goToPerformancePage', baseContext);
 
     page = await foClassicProductPage.changePage(browserContext, 0);
-    await groupsPage.goToSubMenu(
+    await boCustomerGroupsPage.goToSubMenu(
       page,
       boDashboardPage.advancedParametersLink,
       boDashboardPage.performanceLink,
@@ -363,15 +363,15 @@ describe('BO - Advanced Parameters - Performance : Optional features', async () 
 
     await customerSettingsPage.goToGroupsPage(page);
 
-    const pageTitleGroups = await groupsPage.getPageTitle(page);
-    expect(pageTitleGroups).to.contains(groupsPage.pageTitle);
+    const pageTitleGroups = await boCustomerGroupsPage.getPageTitle(page);
+    expect(pageTitleGroups).to.contains(boCustomerGroupsPage.pageTitle);
 
-    await groupsPage.gotoEditGroupPage(page, 1);
+    await boCustomerGroupsPage.gotoEditGroupPage(page, 1);
 
-    const pageTitleEdit = await addGroupPage.getPageTitle(page);
-    expect(pageTitleEdit).to.contains(addGroupPage.pageTitleEdit);
+    const pageTitleEdit = await boCustomerGroupsCreatePage.getPageTitle(page);
+    expect(pageTitleEdit).to.contains(boCustomerGroupsCreatePage.pageTitleEdit);
 
-    const textResult = await addGroupPage.setDiscount(page, 0);
-    expect(textResult).to.contains(groupsPage.successfulUpdateMessage);
+    const textResult = await boCustomerGroupsCreatePage.setDiscount(page, 0);
+    expect(textResult).to.contains(boCustomerGroupsPage.successfulUpdateMessage);
   });
 });
