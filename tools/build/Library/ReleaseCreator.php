@@ -796,7 +796,7 @@ class ReleaseCreator
         $argInstallerZipFilename = escapeshellarg($installerZipFilename);
         $argProjectPath = escapeshellarg($this->projectPath);
         $cmd = "cd {$argTempProjectPath} \
-            && zip -rq {$argInstallerZipFilename} . \
+            && zip --symlinks -rq {$argInstallerZipFilename} . \
             && cd -";
         exec($cmd);
 
