@@ -411,6 +411,11 @@ abstract class ModuleCore implements ModuleInterface
             return false;
         }
 
+        // Check for override conflicts
+        if (!$this->checkOverrideConflicts()) {
+            return false;
+        }
+
         if (!$this->installControllers()) {
             $this->_errors[] = Context::getContext()->getTranslator()->trans('Could not install module controllers.', [], 'Admin.Modules.Notification');
             $this->uninstallOverrides();
@@ -470,6 +475,60 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         return true;
+    }
+
+    protected function checkOverrideConflicts(): bool
+    {
+        if (!is_dir($this->getLocalPath() . 'override')) {
+            return true;
+        }
+
+        foreach (Tools::scandir($this->getLocalPath() . 'override', 'php', '', true) as $file) {
+            $module_override_path = $this->getLocalPath() . 'override/' . $file;
+            $prestashop_override_path = _PS_ROOT_DIR_ . '/override/' . $file;
+
+            if (file_exists($prestashop_override_path)) {
+                if (!$this->compareOverrideFiles($module_override_path, $prestashop_override_path)) {
+                    $this->_errors[] = Context::getContext()->getTranslator()->trans(
+                        'The override file %1$s conflicts with an existing override in %2$s.',
+                        [$module_override_path, $prestashop_override_path],
+                        'Admin.Modules.Notification'
+                    );
+
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private function compareOverrideFiles(string $module_override_path, string $prestashop_override_path): bool
+    {
+        $module_methods = $this->getClassMethodsFromContent(file_get_contents($module_override_path));
+        $prestashop_methods = $this->getClassMethodsFromContent(file_get_contents($prestashop_override_path));
+
+        foreach ($module_methods as $method) {
+            if (in_array($method, $prestashop_methods)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private function getClassMethodsFromContent(string $content): array
+    {
+        $methods = [];
+        $tokens = token_get_all($content);
+        $count = count($tokens);
+        for ($i = 2; $i < $count; ++$i) {
+            if ($tokens[$i - 2][0] == T_FUNCTION && $tokens[$i - 1][0] == T_WHITESPACE && $tokens[$i][0] == T_STRING) {
+                $methods[] = $tokens[$i][1];
+            }
+        }
+
+        return $methods;
     }
 
     /**
