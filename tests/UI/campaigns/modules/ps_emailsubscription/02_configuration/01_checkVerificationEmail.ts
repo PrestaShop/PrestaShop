@@ -5,10 +5,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
-// Import pages
-// Import BO pages
-import emailSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
@@ -18,6 +14,7 @@ import {
   foClassicHomePage,
   type MailDev,
   type MailDevEmail,
+  modPsEmailSubscriptionBoMain,
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -101,15 +98,15 @@ describe('Mail alerts module - Enable/Disable send a verification email after su
 
       await boModuleManagerPage.goToConfigurationPage(page, dataModules.psEmailSubscription.tag);
 
-      const pageTitle = await emailSubscriptionPage.getPageSubtitle(page);
-      expect(pageTitle).to.equal(emailSubscriptionPage.pageTitle);
+      const pageTitle = await modPsEmailSubscriptionBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.equal(modPsEmailSubscriptionBoMain.pageTitle);
     });
 
     it('should enable send verification email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableSendVerificationEmail', baseContext);
 
-      const successMessage = await emailSubscriptionPage.setSendVerificationEmail(page, true);
-      expect(successMessage).to.contains(emailSubscriptionPage.updateSettingsSuccessMessage);
+      const successMessage = await modPsEmailSubscriptionBoMain.setSendVerificationEmail(page, true);
+      expect(successMessage).to.contains(modPsEmailSubscriptionBoMain.updateSettingsSuccessMessage);
     });
   });
 
@@ -117,7 +114,7 @@ describe('Mail alerts module - Enable/Disable send a verification email after su
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOToSubscribeToNewsletter', baseContext);
 
-      page = await emailSubscriptionPage.viewMyShop(page);
+      page = await modPsEmailSubscriptionBoMain.viewMyShop(page);
 
       const result = await foClassicHomePage.isHomePage(page);
       expect(result).to.equal(true);
@@ -146,15 +143,15 @@ describe('Mail alerts module - Enable/Disable send a verification email after su
 
         page = await foClassicHomePage.closePage(browserContext, page, 0);
 
-        const pageTitle = await emailSubscriptionPage.getPageSubtitle(page);
-        expect(pageTitle).to.equal(emailSubscriptionPage.pageTitle);
+        const pageTitle = await modPsEmailSubscriptionBoMain.getPageSubtitle(page);
+        expect(pageTitle).to.equal(modPsEmailSubscriptionBoMain.pageTitle);
       });
 
       it('should enable send verification email', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'disableSendVerificationEmail', baseContext);
 
-        const successMessage = await emailSubscriptionPage.setSendVerificationEmail(page, false);
-        expect(successMessage).to.contains(emailSubscriptionPage.updateSettingsSuccessMessage);
+        const successMessage = await modPsEmailSubscriptionBoMain.setSendVerificationEmail(page, false);
+        expect(successMessage).to.contains(modPsEmailSubscriptionBoMain.updateSettingsSuccessMessage);
       });
     });
 
@@ -162,7 +159,7 @@ describe('Mail alerts module - Enable/Disable send a verification email after su
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOToSubscribeToNewsletter2', baseContext);
 
-      page = await emailSubscriptionPage.viewMyShop(page);
+      page = await modPsEmailSubscriptionBoMain.viewMyShop(page);
 
       const result = await foClassicHomePage.isHomePage(page);
       expect(result).to.equal(true);

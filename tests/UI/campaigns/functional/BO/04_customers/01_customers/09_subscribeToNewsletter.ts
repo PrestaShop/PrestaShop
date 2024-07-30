@@ -6,13 +6,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
 import customersPage from '@pages/BO/customers';
-import psEmailSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
 
 import {
   boDashboardPage,
   boModuleManagerPage,
   dataCustomers,
   dataModules,
+  modPsEmailSubscriptionBoMain,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -103,7 +103,7 @@ describe('BO - Customers - Customers : Check customer subscription to newsletter
       await boModuleManagerPage.searchModule(page, dataModules.psEmailSubscription);
       await boModuleManagerPage.goToConfigurationPage(page, dataModules.psEmailSubscription.tag);
 
-      const pageTitle = await psEmailSubscriptionPage.getPageSubtitle(page);
+      const pageTitle = await modPsEmailSubscriptionBoMain.getPageSubtitle(page);
       expect(pageTitle).to.contains(dataModules.psEmailSubscription.name);
     });
 
@@ -111,7 +111,7 @@ describe('BO - Customers - Customers : Check customer subscription to newsletter
       await testContext.addContextItem(this, 'testIdentifier', `checkCustomerRegistration${index}`, baseContext);
 
       // Get list of emails registered to newsletter
-      const listOfEmails = await psEmailSubscriptionPage.getListOfNewsletterRegistrationEmails(page);
+      const listOfEmails = await modPsEmailSubscriptionBoMain.getListOfNewsletterRegistrationEmails(page);
 
       if (test.args.value) {
         expect(listOfEmails).to.include(dataCustomers.johnDoe.email);
@@ -123,10 +123,10 @@ describe('BO - Customers - Customers : Check customer subscription to newsletter
     it('should go to \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `gotoCustomersPage${index}`, baseContext);
 
-      await psEmailSubscriptionPage.goToSubMenu(
+      await modPsEmailSubscriptionBoMain.goToSubMenu(
         page,
-        psEmailSubscriptionPage.customersParentLink,
-        psEmailSubscriptionPage.customersLink,
+        modPsEmailSubscriptionBoMain.customersParentLink,
+        modPsEmailSubscriptionBoMain.customersLink,
       );
 
       const pageTitle = await customersPage.getPageTitle(page);

@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import {moduleConfigurationPage} from '@pages/BO/modules/moduleConfiguration';
-import psEmailSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
 // Import FO pages
 import {accountIdentityPage} from '@pages/FO/classic/myAccount/identity';
 
@@ -15,10 +14,11 @@ import {
   boDashboardPage,
   boModuleManagerPage,
   dataCustomers,
+  FakerModule,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
-  FakerModule,
+  modPsEmailSubscriptionBoMain,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -150,7 +150,7 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
     it('should check if user is unsubscribed from newsletter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkThatEmailIsNotInTable', baseContext);
 
-      const subscribedUserList = await psEmailSubscriptionPage.getListOfNewsletterRegistrationEmails(page);
+      const subscribedUserList = await modPsEmailSubscriptionBoMain.getListOfNewsletterRegistrationEmails(page);
       expect(subscribedUserList).to.not.contains(dataCustomers.johnDoe.email);
     });
 
@@ -209,7 +209,7 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
     it('should check if previous customer subscription is visible in table', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkIfSubscriptionIsInTable', baseContext);
 
-      const subscribedUserList = await psEmailSubscriptionPage.getListOfNewsletterRegistrationEmails(page);
+      const subscribedUserList = await modPsEmailSubscriptionBoMain.getListOfNewsletterRegistrationEmails(page);
       expect(subscribedUserList).to.contains(dataCustomers.johnDoe.email);
     });
 
