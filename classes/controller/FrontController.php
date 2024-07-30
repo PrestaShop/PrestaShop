@@ -1065,7 +1065,7 @@ class FrontControllerCore extends Controller
         ];
         $params = array_merge($default_params, $params);
 
-        if (Tools::hasMediaServer() && !Configuration::get('PS_CSS_THEME_CACHE')) {
+        if (Tools::hasMediaServer() && !Configuration::get('PS_CSS_THEME_CACHE') && $params['server'] == 'local') {
             $relativePath = Tools::getCurrentUrlProtocolPrefix() . Tools::getMediaServer($relativePath)
                 . ($this->stylesheetManager->getFullPath($relativePath) ?? $relativePath);
             $params['server'] = 'remote';
@@ -1095,7 +1095,7 @@ class FrontControllerCore extends Controller
         ];
         $params = array_merge($default_params, $params);
 
-        if (Tools::hasMediaServer() && !Configuration::get('PS_JS_THEME_CACHE')) {
+        if (Tools::hasMediaServer() && !Configuration::get('PS_JS_THEME_CACHE') && $params['server'] == 'local') {
             $relativePath = Tools::getCurrentUrlProtocolPrefix() . Tools::getMediaServer($relativePath)
                 . ($this->javascriptManager->getFullPath($relativePath) ?? $relativePath);
             $params['server'] = 'remote';
