@@ -11,7 +11,6 @@ import monitoringPage from '@pages/BO/catalog/monitoring';
 import createProductPage from '@pages/BO/catalog/products/add';
 import customerServicePage from '@pages/BO/customerService/customerService';
 import productCommentsPage from '@pages/BO/modules/productComments';
-import newsletterSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
 import customersPage from '@pages/BO/customers';
 
 // Import FO pages
@@ -44,6 +43,7 @@ import {
   foClassicLoginPage,
   foClassicMyAccountPage,
   foClassicProductPage,
+  modPsEmailSubscriptionBoMain,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -660,8 +660,8 @@ describe('BO - Dashboard : Activity overview', async () => {
 
         await boDashboardPage.clickOnTotalSubscribersLink(page);
 
-        const pageTitle = await newsletterSubscriptionPage.getPageSubTitle(page);
-        expect(pageTitle).to.eq(newsletterSubscriptionPage.pageTitle);
+        const pageTitle = await modPsEmailSubscriptionBoMain.getPageSubTitle(page);
+        expect(pageTitle).to.eq(modPsEmailSubscriptionBoMain.pageTitle);
       });
 
       it('should go back to dashboard page', async function () {

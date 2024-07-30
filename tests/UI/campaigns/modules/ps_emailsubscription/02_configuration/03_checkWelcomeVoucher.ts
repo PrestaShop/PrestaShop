@@ -5,10 +5,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
-// Import pages
-// Import BO pages
-import emailSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
@@ -18,6 +14,7 @@ import {
   foClassicHomePage,
   MailDev,
   type MailDevEmail,
+  modPsEmailSubscriptionBoMain,
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -98,15 +95,15 @@ describe('Mail alerts module - Check welcome voucher code', async () => {
 
       await boModuleManagerPage.goToConfigurationPage(page, dataModules.psEmailSubscription.tag);
 
-      const pageTitle = await emailSubscriptionPage.getPageSubtitle(page);
-      expect(pageTitle).to.equal(emailSubscriptionPage.pageTitle);
+      const pageTitle = await modPsEmailSubscriptionBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.equal(modPsEmailSubscriptionBoMain.pageTitle);
     });
 
     it('should set a welcome voucher', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setWelcomeVoucher', baseContext);
 
-      const successMessage = await emailSubscriptionPage.setWelcomeVoucher(page, 'welcome');
-      expect(successMessage).to.contains(emailSubscriptionPage.updateSettingsSuccessMessage);
+      const successMessage = await modPsEmailSubscriptionBoMain.setWelcomeVoucher(page, 'welcome');
+      expect(successMessage).to.contains(modPsEmailSubscriptionBoMain.updateSettingsSuccessMessage);
     });
   });
 
@@ -114,7 +111,7 @@ describe('Mail alerts module - Check welcome voucher code', async () => {
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOToSubscribeToNewsletter', baseContext);
 
-      page = await emailSubscriptionPage.viewMyShop(page);
+      page = await modPsEmailSubscriptionBoMain.viewMyShop(page);
 
       const result = await foClassicHomePage.isHomePage(page);
       expect(result).to.equal(true);
@@ -142,15 +139,15 @@ describe('Mail alerts module - Check welcome voucher code', async () => {
 
       page = await foClassicHomePage.closePage(browserContext, page, 0);
 
-      const pageTitle = await emailSubscriptionPage.getPageSubtitle(page);
-      expect(pageTitle).to.equal(emailSubscriptionPage.pageTitle);
+      const pageTitle = await modPsEmailSubscriptionBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.equal(modPsEmailSubscriptionBoMain.pageTitle);
     });
 
     it('should delete the voucher', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteVoucher', baseContext);
 
-      const successMessage = await emailSubscriptionPage.setWelcomeVoucher(page, '');
-      expect(successMessage).to.contains(emailSubscriptionPage.updateSettingsSuccessMessage);
+      const successMessage = await modPsEmailSubscriptionBoMain.setWelcomeVoucher(page, '');
+      expect(successMessage).to.contains(modPsEmailSubscriptionBoMain.updateSettingsSuccessMessage);
     });
   });
 
@@ -158,7 +155,7 @@ describe('Mail alerts module - Check welcome voucher code', async () => {
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOToSubscribeToNewsletter2', baseContext);
 
-      page = await emailSubscriptionPage.viewMyShop(page);
+      page = await modPsEmailSubscriptionBoMain.viewMyShop(page);
 
       const result = await foClassicHomePage.isHomePage(page);
       expect(result).to.equal(true);
