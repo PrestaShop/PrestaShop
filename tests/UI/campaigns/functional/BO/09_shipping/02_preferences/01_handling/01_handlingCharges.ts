@@ -10,13 +10,13 @@ import carriersPage from '@pages/BO/shipping/carriers';
 import addCarrierPage from '@pages/BO/shipping/carriers/add';
 import preferencesPage from '@pages/BO/shipping/preferences';
 import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
-import groupsPage from '@pages/BO/shopParameters/customerSettings/groups';
-import addGroupPage from '@pages/BO/shopParameters/customerSettings/groups/add';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
 import {
+  boCustomerGroupsPage,
+  boCustomerGroupsCreatePage,
   boDashboardPage,
   dataCustomers,
   dataGroups,
@@ -114,33 +114,33 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
 
       await customerSettingsPage.goToGroupsPage(page);
 
-      const pageTitle = await groupsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(groupsPage.pageTitle);
+      const pageTitle = await boCustomerGroupsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerGroupsPage.pageTitle);
     });
 
     it(`should filter by '${dataGroups.customer.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByGroupName1', baseContext);
 
-      await groupsPage.filterTable(page, 'input', 'b!name', dataGroups.customer.name);
+      await boCustomerGroupsPage.filterTable(page, 'input', 'b!name', dataGroups.customer.name);
 
-      const textColumn = await groupsPage.getTextColumn(page, 1, 'b!name');
+      const textColumn = await boCustomerGroupsPage.getTextColumn(page, 1, 'b!name');
       expect(textColumn).to.contains(dataGroups.customer.name);
     });
 
     it('should go to edit group page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditGroupPage1', baseContext);
 
-      await groupsPage.gotoEditGroupPage(page, 1);
+      await boCustomerGroupsPage.gotoEditGroupPage(page, 1);
 
-      const pageTitle = await addGroupPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addGroupPage.pageTitleEdit);
+      const pageTitle = await boCustomerGroupsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerGroupsCreatePage.pageTitleEdit);
     });
 
     it('should update group by choosing \'Tax excluded\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateGroup1', baseContext);
 
-      const textResult = await addGroupPage.setPriceDisplayMethod(page, priceDisplayMethod[0]);
-      expect(textResult).to.contains(groupsPage.successfulUpdateMessage);
+      const textResult = await boCustomerGroupsCreatePage.setPriceDisplayMethod(page, priceDisplayMethod[0]);
+      expect(textResult).to.contains(boCustomerGroupsPage.successfulUpdateMessage);
     });
   });
 
@@ -430,33 +430,33 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
 
       await customerSettingsPage.goToGroupsPage(page);
 
-      const pageTitle = await groupsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(groupsPage.pageTitle);
+      const pageTitle = await boCustomerGroupsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerGroupsPage.pageTitle);
     });
 
     it(`should filter by '${dataGroups.customer.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByGroupName2', baseContext);
 
-      await groupsPage.filterTable(page, 'input', 'b!name', dataGroups.customer.name);
+      await boCustomerGroupsPage.filterTable(page, 'input', 'b!name', dataGroups.customer.name);
 
-      const textColumn = await groupsPage.getTextColumn(page, 1, 'b!name');
+      const textColumn = await boCustomerGroupsPage.getTextColumn(page, 1, 'b!name');
       expect(textColumn).to.contains(dataGroups.customer.name);
     });
 
     it('should go to edit group page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditGroupPage2', baseContext);
 
-      await groupsPage.gotoEditGroupPage(page, 1);
+      await boCustomerGroupsPage.gotoEditGroupPage(page, 1);
 
-      const pageTitle = await addGroupPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addGroupPage.pageTitleEdit);
+      const pageTitle = await boCustomerGroupsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerGroupsCreatePage.pageTitleEdit);
     });
 
     it('should update group by choosing \'Tax included\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateGroup2', baseContext);
 
-      const textResult = await addGroupPage.setPriceDisplayMethod(page, priceDisplayMethod[1]);
-      expect(textResult).to.contains(groupsPage.successfulUpdateMessage);
+      const textResult = await boCustomerGroupsCreatePage.setPriceDisplayMethod(page, priceDisplayMethod[1]);
+      expect(textResult).to.contains(boCustomerGroupsPage.successfulUpdateMessage);
     });
   });
 });

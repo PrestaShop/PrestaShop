@@ -42,8 +42,7 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
   let page: Page;
   const createCustomerData: FakerCustomer = new FakerCustomer();
   const messageSend: string = faker.lorem.sentence().substring(0, 35).trim();
-  const messageOption: string = `${dataProducts.demo_1.name} (Size: ${dataProducts.demo_1.attributes[0].values[0]} `
-    + `- Color: ${dataProducts.demo_1.attributes[1].values[0]})`;
+  const messageOption: string = `${dataProducts.demo_11.name}`;
 
   // before and after functions
   before(async function () {

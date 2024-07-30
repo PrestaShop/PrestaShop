@@ -7,12 +7,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
-import groupsPage from '@pages/BO/shopParameters/customerSettings/groups';
-import addGroupPage from '@pages/BO/shopParameters/customerSettings/groups/add';
 
 import {
   boApiClientsPage,
   boApiClientsCreatePage,
+  boCustomerGroupsPage,
+  boCustomerGroupsCreatePage,
   boDashboardPage,
   dataLanguages,
   FakerAPIClient,
@@ -161,49 +161,49 @@ describe('API : PUT /customers/group/{customerGroupId}', async () => {
 
       await customerSettingsPage.goToGroupsPage(page);
 
-      const pageTitle = await groupsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(groupsPage.pageTitle);
+      const pageTitle = await boCustomerGroupsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerGroupsPage.pageTitle);
     });
 
     it('should reset all filters and get number of groups in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-      numberOfGroups = await groupsPage.resetAndGetNumberOfLines(page);
+      numberOfGroups = await boCustomerGroupsPage.resetAndGetNumberOfLines(page);
       expect(numberOfGroups).to.be.above(0);
     });
 
     it('should go to add new group page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewGroup', baseContext);
 
-      await groupsPage.goToNewGroupPage(page);
+      await boCustomerGroupsPage.goToNewGroupPage(page);
 
-      const pageTitle = await addGroupPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addGroupPage.pageTitleCreate);
+      const pageTitle = await boCustomerGroupsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerGroupsCreatePage.pageTitleCreate);
     });
 
     it('should create group and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createGroup', baseContext);
 
-      const textResult = await addGroupPage.createEditGroup(page, createGroupData);
-      expect(textResult).to.contains(groupsPage.successfulCreationMessage);
+      const textResult = await boCustomerGroupsCreatePage.createEditGroup(page, createGroupData);
+      expect(textResult).to.contains(boCustomerGroupsPage.successfulCreationMessage);
 
-      const numberOfGroupsAfterCreation = await groupsPage.getNumberOfElementInGrid(page);
+      const numberOfGroupsAfterCreation = await boCustomerGroupsPage.getNumberOfElementInGrid(page);
       expect(numberOfGroupsAfterCreation).to.be.equal(numberOfGroups + 1);
     });
 
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterAfterCreation', baseContext);
 
-      await groupsPage.resetFilter(page);
-      await groupsPage.filterTable(page, 'input', 'b!name', createGroupData.name);
+      await boCustomerGroupsPage.resetFilter(page);
+      await boCustomerGroupsPage.filterTable(page, 'input', 'b!name', createGroupData.name);
 
-      const numberOfGroupsAfterCreation = await groupsPage.getNumberOfElementInGrid(page);
+      const numberOfGroupsAfterCreation = await boCustomerGroupsPage.getNumberOfElementInGrid(page);
       expect(numberOfGroupsAfterCreation).to.be.equal(1);
 
-      const textEmail = await groupsPage.getTextColumn(page, 1, 'b!name');
+      const textEmail = await boCustomerGroupsPage.getTextColumn(page, 1, 'b!name');
       expect(textEmail).to.contains(createGroupData.name);
 
-      idCustomerGroup = parseInt(await groupsPage.getTextColumn(page, 1, 'id_group'), 10);
+      idCustomerGroup = parseInt(await boCustomerGroupsPage.getTextColumn(page, 1, 'id_group'), 10);
       expect(idCustomerGroup).to.be.gt(0);
     });
   });
@@ -263,57 +263,57 @@ describe('API : PUT /customers/group/{customerGroupId}', async () => {
     it('should filter list by id', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterAfterUpdate', baseContext);
 
-      await groupsPage.resetFilter(page);
-      await groupsPage.filterTable(page, 'input', 'id_group', idCustomerGroup);
+      await boCustomerGroupsPage.resetFilter(page);
+      await boCustomerGroupsPage.filterTable(page, 'input', 'id_group', idCustomerGroup);
 
-      const numberOfGroupsAfterCreation = await groupsPage.getNumberOfElementInGrid(page);
+      const numberOfGroupsAfterCreation = await boCustomerGroupsPage.getNumberOfElementInGrid(page);
       expect(numberOfGroupsAfterCreation).to.be.equal(1);
 
-      idCustomerGroup = parseInt(await groupsPage.getTextColumn(page, 1, 'id_group'), 10);
+      idCustomerGroup = parseInt(await boCustomerGroupsPage.getTextColumn(page, 1, 'id_group'), 10);
       expect(idCustomerGroup).to.be.equal(idCustomerGroup);
     });
 
     it('should edit the customer group', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editCustomerGroup', baseContext);
 
-      await groupsPage.gotoEditGroupPage(page, 1);
+      await boCustomerGroupsPage.gotoEditGroupPage(page, 1);
 
-      const pageTitle = await addGroupPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addGroupPage.pageTitleEdit);
+      const pageTitle = await boCustomerGroupsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerGroupsCreatePage.pageTitleEdit);
     });
 
     it('should check the JSON Response : `localizedNames` (EN)', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseLocalizedNamesEN', baseContext);
 
-      const value = await addGroupPage.getValue(page, 'localizedNames', dataLanguages.english.id);
+      const value = await boCustomerGroupsCreatePage.getValue(page, 'localizedNames', dataLanguages.english.id);
       expect(jsonResponse.localizedNames[dataLanguages.english.id]).to.be.equal(value);
     });
 
     it('should check the JSON Response : `localizedNames` (FR)', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseLocalizedNamesFR', baseContext);
 
-      const value = await addGroupPage.getValue(page, 'localizedNames', dataLanguages.french.id);
+      const value = await boCustomerGroupsCreatePage.getValue(page, 'localizedNames', dataLanguages.french.id);
       expect(jsonResponse.localizedNames[dataLanguages.french.id]).to.be.equal(value);
     });
 
     it('should check the JSON Response : `reductionPercent`', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseReductionPercent', baseContext);
 
-      const value = parseInt(await addGroupPage.getValue(page, 'reductionPercent'), 10);
+      const value = parseInt(await boCustomerGroupsCreatePage.getValue(page, 'reductionPercent'), 10);
       expect(jsonResponse.reductionPercent).to.be.equal(value);
     });
 
     it('should check the JSON Response : `displayPriceTaxExcluded`', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseDisplayPriceTaxExcluded', baseContext);
 
-      const value = (await addGroupPage.getValue(page, 'displayPriceTaxExcluded')) === 'Tax excluded';
+      const value = (await boCustomerGroupsCreatePage.getValue(page, 'displayPriceTaxExcluded')) === 'Tax excluded';
       expect(jsonResponse.displayPriceTaxExcluded).to.be.equal(value);
     });
 
     it('should check the JSON Response : `showPrice`', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseShowPrice', baseContext);
 
-      const value = (await addGroupPage.getValue(page, 'showPrice')) === '1';
+      const value = (await boCustomerGroupsCreatePage.getValue(page, 'showPrice')) === '1';
       expect(jsonResponse.showPrice).to.be.equal(value);
     });
   });
@@ -324,34 +324,34 @@ describe('API : PUT /customers/group/{customerGroupId}', async () => {
 
       await customerSettingsPage.goToGroupsPage(page);
 
-      const pageTitle = await groupsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(groupsPage.pageTitle);
+      const pageTitle = await boCustomerGroupsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerGroupsPage.pageTitle);
     });
 
     it('should filter list by id', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForDeletion', baseContext);
 
-      await groupsPage.resetFilter(page);
-      await groupsPage.filterTable(page, 'input', 'id_group', idCustomerGroup);
+      await boCustomerGroupsPage.resetFilter(page);
+      await boCustomerGroupsPage.filterTable(page, 'input', 'id_group', idCustomerGroup);
 
-      const numberOfGroupsAfterCreation = await groupsPage.getNumberOfElementInGrid(page);
+      const numberOfGroupsAfterCreation = await boCustomerGroupsPage.getNumberOfElementInGrid(page);
       expect(numberOfGroupsAfterCreation).to.be.equal(1);
 
-      idCustomerGroup = parseInt(await groupsPage.getTextColumn(page, 1, 'id_group'), 10);
+      idCustomerGroup = parseInt(await boCustomerGroupsPage.getTextColumn(page, 1, 'id_group'), 10);
       expect(idCustomerGroup).to.be.equal(idCustomerGroup);
     });
 
     it('should delete group', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteGroup', baseContext);
 
-      const textResult = await groupsPage.deleteGroup(page, 1);
-      expect(textResult).to.contains(groupsPage.successfulDeleteMessage);
+      const textResult = await boCustomerGroupsPage.deleteGroup(page, 1);
+      expect(textResult).to.contains(boCustomerGroupsPage.successfulDeleteMessage);
     });
 
     it('should reset filter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
-      const numberOfGroupsAfterDelete = await groupsPage.resetAndGetNumberOfLines(page);
+      const numberOfGroupsAfterDelete = await boCustomerGroupsPage.resetAndGetNumberOfLines(page);
       expect(numberOfGroupsAfterDelete).to.be.equal(numberOfGroups);
     });
   });

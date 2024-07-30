@@ -14,6 +14,7 @@ import {
   boDashboardPage,
   boSearchPage,
   dataLanguages,
+  dataProducts,
   FakerSearchTag,
   utilsCore,
   utilsPlaywright,
@@ -75,7 +76,11 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
     const creationTests: number[] = new Array(21).fill(0, 0, 21);
 
     creationTests.forEach((test: number, index: number) => {
-      const tagData: FakerSearchTag = new FakerSearchTag({name: `todelete${index}`, language: dataLanguages.english.name});
+      const tagData: FakerSearchTag = new FakerSearchTag({
+        name: `todelete${index}`,
+        language: dataLanguages.english.name,
+        products: dataProducts.demo_19.name,
+      });
 
       it('should go to add new tag page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddTagPage${index}`, baseContext);

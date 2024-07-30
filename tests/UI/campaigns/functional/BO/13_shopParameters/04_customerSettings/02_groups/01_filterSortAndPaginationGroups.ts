@@ -6,10 +6,10 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
-import groupsPage from '@pages/BO/shopParameters/customerSettings/groups';
-import addGroupPage from '@pages/BO/shopParameters/customerSettings/groups/add';
 
 import {
+  boCustomerGroupsPage,
+  boCustomerGroupsCreatePage,
   boDashboardPage,
   dataGroups,
   FakerGroup,
@@ -61,14 +61,14 @@ describe('BO - Shop Parameters - Customer Settings : Filter, sort and pagination
 
     await customerSettingsPage.goToGroupsPage(page);
 
-    const pageTitle = await groupsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(groupsPage.pageTitle);
+    const pageTitle = await boCustomerGroupsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCustomerGroupsPage.pageTitle);
   });
 
   it('should reset all filters and get number of groups in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfGroups = await groupsPage.resetAndGetNumberOfLines(page);
+    numberOfGroups = await boCustomerGroupsPage.resetAndGetNumberOfLines(page);
     expect(numberOfGroups).to.be.above(0);
   });
 
@@ -127,18 +127,18 @@ describe('BO - Shop Parameters - Customer Settings : Filter, sort and pagination
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        await groupsPage.filterTable(
+        await boCustomerGroupsPage.filterTable(
           page,
           test.args.filterType,
           test.args.filterBy,
           test.args.filterValue,
         );
 
-        const numberOfGroupsAfterFilter = await groupsPage.getNumberOfElementInGrid(page);
+        const numberOfGroupsAfterFilter = await boCustomerGroupsPage.getNumberOfElementInGrid(page);
         expect(numberOfGroupsAfterFilter).to.be.at.most(numberOfGroups);
 
         for (let row = 1; row <= numberOfGroupsAfterFilter; row++) {
-          const textColumn = await groupsPage.getTextColumn(page, row, test.args.filterBy);
+          const textColumn = await boCustomerGroupsPage.getTextColumn(page, row, test.args.filterBy);
 
           if (test.expected !== undefined) {
             expect(textColumn).to.contains(test.expected);
@@ -151,7 +151,7 @@ describe('BO - Shop Parameters - Customer Settings : Filter, sort and pagination
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfGroupsAfterReset = await groupsPage.resetAndGetNumberOfLines(page);
+        const numberOfGroupsAfterReset = await boCustomerGroupsPage.resetAndGetNumberOfLines(page);
         expect(numberOfGroupsAfterReset).to.equal(numberOfGroups);
       });
     });
@@ -226,10 +226,10 @@ describe('BO - Shop Parameters - Customer Settings : Filter, sort and pagination
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await groupsPage.getAllRowsColumnContent(page, test.args.sortBy);
-        await groupsPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+        const nonSortedTable = await boCustomerGroupsPage.getAllRowsColumnContent(page, test.args.sortBy);
+        await boCustomerGroupsPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        const sortedTable = await groupsPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await boCustomerGroupsPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
           const nonSortedTableFloat = nonSortedTable.map((text: string): number => parseFloat(text));
@@ -272,19 +272,19 @@ describe('BO - Shop Parameters - Customer Settings : Filter, sort and pagination
       it('should go to add new group page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewGroupPage${index}`, baseContext);
 
-        await groupsPage.goToNewGroupPage(page);
+        await boCustomerGroupsPage.goToNewGroupPage(page);
 
-        const pageTitle = await addGroupPage.getPageTitle(page);
-        expect(pageTitle).to.contains(addGroupPage.pageTitleCreate);
+        const pageTitle = await boCustomerGroupsCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCustomerGroupsCreatePage.pageTitleCreate);
       });
 
       it(`should create group n°${index + 1} and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createGroup${index}`, baseContext);
 
-        const textResult = await addGroupPage.createEditGroup(page, groupToCreate);
-        expect(textResult).to.contains(groupsPage.successfulCreationMessage);
+        const textResult = await boCustomerGroupsCreatePage.createEditGroup(page, groupToCreate);
+        expect(textResult).to.contains(boCustomerGroupsPage.successfulCreationMessage);
 
-        const numberOfGroupsAfterCreation = await groupsPage.getNumberOfElementInGrid(page);
+        const numberOfGroupsAfterCreation = await boCustomerGroupsPage.getNumberOfElementInGrid(page);
         expect(numberOfGroupsAfterCreation).to.be.equal(numberOfGroups + index + 1);
       });
     });
@@ -295,28 +295,28 @@ describe('BO - Shop Parameters - Customer Settings : Filter, sort and pagination
     it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
-      const paginationNumber = await groupsPage.selectPaginationLimit(page, 20);
+      const paginationNumber = await boCustomerGroupsPage.selectPaginationLimit(page, 20);
       expect(paginationNumber).to.equal('1');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await groupsPage.paginationNext(page);
+      const paginationNumber = await boCustomerGroupsPage.paginationNext(page);
       expect(paginationNumber).to.equal('2');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await groupsPage.paginationPrevious(page);
+      const paginationNumber = await boCustomerGroupsPage.paginationPrevious(page);
       expect(paginationNumber).to.equal('1');
     });
 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
-      const paginationNumber = await groupsPage.selectPaginationLimit(page, 50);
+      const paginationNumber = await boCustomerGroupsPage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.equal('1');
     });
   });
@@ -326,13 +326,13 @@ describe('BO - Shop Parameters - Customer Settings : Filter, sort and pagination
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
 
-      await groupsPage.filterTable(page, 'input', 'b!name', 'toSortAndPaginate');
+      await boCustomerGroupsPage.filterTable(page, 'input', 'b!name', 'toSortAndPaginate');
 
-      const numberOfGroupsAfterFilter = await groupsPage.getNumberOfElementInGrid(page);
+      const numberOfGroupsAfterFilter = await boCustomerGroupsPage.getNumberOfElementInGrid(page);
       expect(numberOfGroupsAfterFilter).to.eq(18);
 
       for (let i = 1; i <= numberOfGroupsAfterFilter; i++) {
-        const textColumn = await groupsPage.getTextColumn(page, i, 'name');
+        const textColumn = await boCustomerGroupsPage.getTextColumn(page, i, 'name');
         expect(textColumn).to.contains('toSortAndPaginate');
       }
     });
@@ -340,14 +340,14 @@ describe('BO - Shop Parameters - Customer Settings : Filter, sort and pagination
     it('should delete groups with Bulk Actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteGroups', baseContext);
 
-      const deleteTextResult = await groupsPage.bulkDeleteGroups(page);
-      expect(deleteTextResult).to.be.contains(groupsPage.successfulMultiDeleteMessage);
+      const deleteTextResult = await boCustomerGroupsPage.bulkDeleteGroups(page);
+      expect(deleteTextResult).to.be.contains(boCustomerGroupsPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
-      const numberOfGroupsAfterReset = await groupsPage.resetAndGetNumberOfLines(page);
+      const numberOfGroupsAfterReset = await boCustomerGroupsPage.resetAndGetNumberOfLines(page);
       expect(numberOfGroupsAfterReset).to.be.equal(numberOfGroups);
     });
   });
