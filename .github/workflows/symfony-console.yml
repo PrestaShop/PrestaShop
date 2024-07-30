@@ -104,6 +104,8 @@ jobs:
         with:
           DOCKER_PREFIX: prestashop
           ARTIFACT_NAME: setup-symfony-console-${{ matrix.app-id }}
+          ENABLE_SSL: 'true'
+          INSTALL_AUTO: 'false'
         if: failure()
 
       # Retest the console after shop install

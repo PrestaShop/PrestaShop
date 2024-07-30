@@ -87,7 +87,7 @@ class ReleaseCreator
      *
      * @var array
      */
-    protected $foldersRemoveList = ['.docker'];
+    protected $foldersRemoveList = [];
 
     /**
      * Pattern of files or directories to remove.
@@ -95,15 +95,12 @@ class ReleaseCreator
      * @var array
      */
     protected $patternsRemoveList = [
-        'tests(\-legacy)?$',
         'tools/contrib$',
         'travis\-scripts$',
         'CONTRIBUTING\.md$',
         'composer\.json$',
         'diff\-hooks\.php',
-        '((?<!_dev\/)package\.json)$',
         '(.*)?\.composer$',
-        '(.*)?\.git(.*)?$',
         '.*\.map$',
         '.*\.psd$',
         '.*\.md$',
@@ -141,7 +138,6 @@ class ReleaseCreator
         '\.eslintignore$',
         '\.eslintrc\.js$',
         '\.php_cs\.dist$',
-        'docker-compose\.yml$',
         'tools/assets$',
         '\.webpack$',
     ];
@@ -206,12 +202,13 @@ class ReleaseCreator
     /**
      * Set the release wanted version, and some options.
      *
-     * @param string $version
+     * @param string|null $version
      * @param bool $useInstaller
      * @param bool $useZip
      * @param string $destinationDir
+     * @param bool $keepTests
      */
-    public function __construct($version = null, $useInstaller = true, $useZip = true, $destinationDir = '')
+    public function __construct(?string $version = null, bool $useInstaller = true, bool $useZip = true, string $destinationDir = '', bool $keepTests = false)
     {
         $this->consoleWriter = new ConsoleWriter();
         $tmpDir = sys_get_temp_dir();
@@ -224,6 +221,14 @@ class ReleaseCreator
         $this->projectPath = realpath(__DIR__ . '/../../..');
         $this->version = $version ? $version : $this->getCurrentVersion();
         $this->zipFileName = "prestashop_$this->version.zip";
+        // Keep files for tests (tests, git and docker folders)
+        if (!$keepTests) {
+            $this->patternsRemoveList[] = 'tests(\-legacy)?$';
+            $this->patternsRemoveList[] = '(.*)?\.git(.*)?$';
+            $this->patternsRemoveList[] = '.docker';
+            $this->patternsRemoveList[] = 'docker-compose\.yml$';
+            $this->patternsRemoveList[] = '((?<!_dev\/)package\.json)$';
+        }
 
         if (empty($this->version)) {
             throw new Exception('Version is not provided and cannot be found in project.');
@@ -252,9 +257,9 @@ class ReleaseCreator
                 "--- Release will be zipped.{$this->lineSeparator}",
                 ConsoleWriter::COLOR_GREEN
             );
-        } elseif ($this->useInstaller) {
+        } else {
             $this->consoleWriter->displayText(
-                "--- Release will have the installer.{$this->lineSeparator}",
+                "--- Release will be a folder without installer.{$this->lineSeparator}",
                 ConsoleWriter::COLOR_GREEN
             );
         }
@@ -540,6 +545,10 @@ class ReleaseCreator
             && composer config autoloader-suffix {$autoloaderSuffix} \
             && composer install --no-dev --optimize-autoloader --no-interaction 2>&1";
         exec($command, $output, $returnCode);
+        if (!empty($output)) {
+            $logPath = __DIR__ . '/../../../var/logs/composer-install.log';
+            file_put_contents($logPath, implode(PHP_EOL, $output));
+        }
 
         if ($returnCode !== 0) {
             throw new BuildException('Unable to run composer install.');
@@ -562,6 +571,10 @@ class ReleaseCreator
         $argProjectPath = escapeshellarg($this->tempProjectPath);
         $command = "cd {$argProjectPath} && make assets 2>&1";
         exec($command, $output, $returnCode);
+        if (!empty($output)) {
+            $logPath = __DIR__ . '/../../../var/logs/build-assets.log';
+            file_put_contents($logPath, implode(PHP_EOL, $output));
+        }
 
         if ($returnCode !== 0) {
             throw new BuildException('Unable to build assets.');
@@ -883,11 +896,17 @@ class ReleaseCreator
 
         foreach ($files as $key => $value) {
             if (is_numeric($key)) {
-                $md5 = md5_file($value);
                 $count = substr_count($value, DIRECTORY_SEPARATOR) - $subCount + 1;
                 $file_name = str_replace($this->tempProjectPath, '', $value);
                 $file_name = pathinfo($file_name, PATHINFO_BASENAME);
-                $content .= str_repeat("\t", $count) . "<md5file name=\"$file_name\">$md5</md5file>" . PHP_EOL;
+
+                if (is_link($value)) {
+                    $linkTarget = readlink($value);
+                    $content .= str_repeat("\t", $count) . "<link name=\"$file_name\">$linkTarget</link>" . PHP_EOL;
+                } else {
+                    $md5 = md5_file($value);
+                    $content .= str_repeat("\t", $count) . "<md5file name=\"$file_name\">$md5</md5file>" . PHP_EOL;
+                }
             } else {
                 $count = substr_count($key, DIRECTORY_SEPARATOR) - $subCount + 1;
                 $dir_name = str_replace($this->tempProjectPath, '', $key);

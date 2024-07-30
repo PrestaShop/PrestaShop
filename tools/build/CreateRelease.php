@@ -58,6 +58,10 @@ $releaseOptions = [
         'description' => 'Do not put the installer in the release. Interesting if release will be upload remotely by FTP or for public release. Default: false.',
         'longopt' => 'no-installer',
     ],
+    'keep-tests' => [
+        'description' => 'Keep tests folder in the release. Default: false.',
+        'longopt' => 'keep-tests',
+    ],
     'help' => [
         'description' => 'Show help',
         'opt' => 'h',
@@ -90,6 +94,7 @@ if (isset($userOptions['h'])
 
 $destinationDir = '';
 $useZip = $useInstaller = true;
+$keepTests = false;
 
 if (isset($userOptions['version'])) {
     $version = $userOptions['version'];
@@ -109,8 +114,12 @@ if (isset($userOptions['no-installer'])) {
     $useInstaller = false;
 }
 
+if (isset($userOptions['keep-tests'])) {
+    $keepTests = true;
+}
+
 try {
-    $releaseCreator = new ReleaseCreator($version, $useInstaller, $useZip, $destinationDir);
+    $releaseCreator = new ReleaseCreator($version, $useInstaller, $useZip, $destinationDir, $keepTests);
     $releaseCreator->createRelease();
 } catch (Exception $e) {
     $consoleWrite->displayText(

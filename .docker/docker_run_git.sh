@@ -99,6 +99,11 @@ set -e
 if [ $PS_DEV_MODE -ne 1 ]; then
   echo "\n* Disabling DEV mode ...";
   sed -i -e "s/define('_PS_MODE_DEV_', true);/define('_PS_MODE_DEV_',\ false);/g" /var/www/html/config/defines.inc.php
+else
+  echo "\n* Enabling DEV mode ...";
+  sed -i -e "s/define('_PS_MODE_DEV_', false);/define('_PS_MODE_DEV_',\ true);/g" /var/www/html/config/defines.inc.php
+  echo "\n* Define PHP error logs ...";
+  echo "error_log=/var/www/html/var/logs/php.log" >> /usr/local/etc/php/php.ini
 fi
 
 if [ ! -f ./config/settings.inc.php ]; then
