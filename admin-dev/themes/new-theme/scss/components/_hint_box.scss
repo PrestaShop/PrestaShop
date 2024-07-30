@@ -1,0 +1,5 @@
+.hint-box {
+  .alert {
+    @extend .alert-info;
+  }
+}
