@@ -276,6 +276,11 @@ abstract class PaymentModuleCore extends Module
             }
         }
 
+        if (!$this->isCarrierValid($package_list)) {
+            PrestaShopLogger::addLog('PaymentModule::validateOrder - Carrier is not valid', 3, null, 'Cart', (int) $id_cart, true);
+            die(Tools::displayError('Error processing order. Carrier is not valid.'));
+        }
+
         $order_list = [];
         $order_detail_list = [];
 
@@ -1266,5 +1271,20 @@ abstract class PaymentModuleCore extends Module
         }
 
         return $cart_rules_list;
+    }
+
+    protected function isCarrierValid($package_list): bool
+    {
+        foreach ($package_list as $packageByAddress) {
+            foreach ($packageByAddress as $package) {
+                $carrier = new Carrier((int) $package['id_carrier']);
+
+                if (empty(Db::getInstance()->executeS('SELECT `id_module` FROM `' . _DB_PREFIX_ . 'module_carrier` WHERE `id_reference` = ' . (int) $carrier->id_reference . ' AND `id_shop` = ' . (int) $this->context->shop->id . ' AND `id_module` = ' . (int) $this->id))) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }
