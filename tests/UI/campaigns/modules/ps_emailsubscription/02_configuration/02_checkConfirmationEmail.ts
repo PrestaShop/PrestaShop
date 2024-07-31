@@ -5,16 +5,13 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
-// Import pages
-// Import FO pages
-import {emailSubscriptionPage} from '@pages/FO/classic/emailSubscription';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boModuleManagerPage,
   dataModules,
+  foClassicEmailSubscriptionPage,
   foClassicHomePage,
   type MailDev,
   type MailDevEmail,
@@ -196,8 +193,8 @@ describe('Mail alerts module - Enable/Disable send a confirmation email after su
     it('should check the success message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSuccessMessage', baseContext);
 
-      const successMessage = await emailSubscriptionPage.getSuccessMessage(page);
-      expect(successMessage).to.equal(emailSubscriptionPage.emailRegistrationSuccessMessage);
+      const successMessage = await foClassicEmailSubscriptionPage.getSuccessMessage(page);
+      expect(successMessage).to.equal(foClassicEmailSubscriptionPage.emailRegistrationSuccessMessage);
     });
 
     it('should check the confirmation email', async function () {
