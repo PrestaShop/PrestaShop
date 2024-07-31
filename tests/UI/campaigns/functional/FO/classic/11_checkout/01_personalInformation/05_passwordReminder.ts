@@ -9,12 +9,12 @@ import {createAccountTest} from '@commonTests/FO/classic/account';
 // Import pages
 import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
-import {passwordReminderPage} from '@pages/FO/classic/passwordReminder';
 
 import {
   FakerCustomer,
   foClassicHomePage,
   foClassicMyAccountPage,
+  foClassicPasswordReminderPage,
   foClassicProductPage,
   type MailDev,
   type MailDevEmail,
@@ -116,16 +116,16 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
       await checkoutPage.clickOnSignIn(page);
       await checkoutPage.goToPasswordReminderPage(page);
 
-      const pageTitle = await passwordReminderPage.getPageTitle(page);
-      expect(pageTitle).to.equal(passwordReminderPage.pageTitle);
+      const pageTitle = await foClassicPasswordReminderPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicPasswordReminderPage.pageTitle);
     });
 
     it('should set the email address and send reset link', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sendResetPasswordLink', baseContext);
 
-      await passwordReminderPage.sendResetPasswordLink(page, customerData.email);
+      await foClassicPasswordReminderPage.sendResetPasswordLink(page, customerData.email);
 
-      const successAlertContent = await passwordReminderPage.checkResetLinkSuccess(page);
+      const successAlertContent = await foClassicPasswordReminderPage.checkResetLinkSuccess(page);
       expect(successAlertContent).to.contains(customerData.email);
     });
 
@@ -138,23 +138,23 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
     it('should open reset password link', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'openResetPasswordLink', baseContext);
 
-      await passwordReminderPage.openForgotPasswordPage(page, newMail.text);
+      await foClassicPasswordReminderPage.openForgotPasswordPage(page, newMail.text);
 
-      const pageTitle = await passwordReminderPage.getPageTitle(page);
-      expect(pageTitle).to.equal(passwordReminderPage.pageTitle);
+      const pageTitle = await foClassicPasswordReminderPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicPasswordReminderPage.pageTitle);
     });
 
     it('should check the email address to reset password', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkEmailAddress', baseContext);
 
-      const emailAddress = await passwordReminderPage.getEmailAddressToReset(page);
+      const emailAddress = await foClassicPasswordReminderPage.getEmailAddressToReset(page);
       expect(emailAddress).to.contains(customerData.email);
     });
 
     it('should change the password and check the validation message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changePassword', baseContext);
 
-      await passwordReminderPage.setNewPassword(page, newPassword);
+      await foClassicPasswordReminderPage.setNewPassword(page, newPassword);
 
       const successMessage = await foClassicMyAccountPage.getSuccessMessageAlert(page);
       expect(successMessage).to.equal(`${foClassicMyAccountPage.resetPasswordSuccessMessage} ${customerData.email}`);

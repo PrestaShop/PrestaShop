@@ -9,15 +9,13 @@ import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advanced
 // Import BO pages
 import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
 
-// Import FO pages
-import {passwordReminderPage} from '@pages/FO/classic/passwordReminder';
-
 import {
   boDashboardPage,
   dataCustomers,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
+  foClassicPasswordReminderPage,
   type MailDev,
   type MailDevEmail,
   utilsMail,
@@ -109,16 +107,16 @@ describe('BO - Shop Parameters - Customer Settings : Password reset delay', asyn
 
       await foClassicLoginPage.goToPasswordReminderPage(page);
 
-      const pageTitle = await passwordReminderPage.getPageTitle(page);
-      expect(pageTitle).to.equal(passwordReminderPage.pageTitle);
+      const pageTitle = await foClassicPasswordReminderPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicPasswordReminderPage.pageTitle);
     });
 
     it('should set the email address and send reset link', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sendResetPasswordLink', baseContext);
 
-      await passwordReminderPage.sendResetPasswordLink(page, dataCustomers.johnDoe.email);
+      await foClassicPasswordReminderPage.sendResetPasswordLink(page, dataCustomers.johnDoe.email);
 
-      const successAlertContent = await passwordReminderPage.checkResetLinkSuccess(page);
+      const successAlertContent = await foClassicPasswordReminderPage.checkResetLinkSuccess(page);
       expect(successAlertContent).to.contains(dataCustomers.johnDoe.email);
     });
 
@@ -131,32 +129,32 @@ describe('BO - Shop Parameters - Customer Settings : Password reset delay', asyn
     it('should open reset password link', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'openResetPasswordLink', baseContext);
 
-      await passwordReminderPage.openForgotPasswordPage(page, newMail.text);
+      await foClassicPasswordReminderPage.openForgotPasswordPage(page, newMail.text);
 
-      const pageTitle = await passwordReminderPage.getPageTitle(page);
-      expect(pageTitle).to.equal(passwordReminderPage.pageTitle);
+      const pageTitle = await foClassicPasswordReminderPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicPasswordReminderPage.pageTitle);
     });
 
     it('should check the email address to reset password', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkEmailAddress', baseContext);
 
-      const emailAddress = await passwordReminderPage.getEmailAddressToReset(page);
+      const emailAddress = await foClassicPasswordReminderPage.getEmailAddressToReset(page);
       expect(emailAddress).to.contains(dataCustomers.johnDoe.email);
     });
 
     it('should change the password and check the error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changePasswordButWithoutConfirmation', baseContext);
 
-      await passwordReminderPage.setNewPassword(page, newPassword, '');
+      await foClassicPasswordReminderPage.setNewPassword(page, newPassword, '');
 
-      const errorMessage = await passwordReminderPage.getErrorMessage(page);
-      expect(errorMessage).to.equal(passwordReminderPage.errorFillConfirmationMessage);
+      const errorMessage = await foClassicPasswordReminderPage.getErrorMessage(page);
+      expect(errorMessage).to.equal(foClassicPasswordReminderPage.errorFillConfirmationMessage);
     });
 
     it('should change the password and check the validation message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changePassword', baseContext);
 
-      await passwordReminderPage.setNewPassword(page, newPassword);
+      await foClassicPasswordReminderPage.setNewPassword(page, newPassword);
 
       const successMessage = await foClassicMyAccountPage.getSuccessMessageAlert(page);
       expect(successMessage).to.equal(`${foClassicMyAccountPage.resetPasswordSuccessMessage} ${dataCustomers.johnDoe.email}`);
@@ -176,17 +174,17 @@ describe('BO - Shop Parameters - Customer Settings : Password reset delay', asyn
 
       await foClassicLoginPage.goToPasswordReminderPage(page);
 
-      const pageTitle = await passwordReminderPage.getPageTitle(page);
-      expect(pageTitle).to.equal(passwordReminderPage.pageTitle);
+      const pageTitle = await foClassicPasswordReminderPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicPasswordReminderPage.pageTitle);
     });
 
     it('should set the email address and send reset link', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'retrySendResetPasswordLink', baseContext);
 
-      await passwordReminderPage.sendResetPasswordLink(page, dataCustomers.johnDoe.email);
+      await foClassicPasswordReminderPage.sendResetPasswordLink(page, dataCustomers.johnDoe.email);
 
-      const regeneratePasswordAlert = await passwordReminderPage.getErrorMessage(page);
-      expect(regeneratePasswordAlert).to.contains(passwordReminderPage.errorRegenerationMessage);
+      const regeneratePasswordAlert = await foClassicPasswordReminderPage.getErrorMessage(page);
+      expect(regeneratePasswordAlert).to.contains(foClassicPasswordReminderPage.errorRegenerationMessage);
     });
   });
 
