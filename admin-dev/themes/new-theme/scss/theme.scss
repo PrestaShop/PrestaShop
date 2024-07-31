@@ -1,9 +1,9 @@
-// Load PrestaShop UI Kit
-@import "~prestakit/scss/application";
-
 // Settings
 @import "config/settings";
 @import "config/keyframes";
+
+// Load PrestaShop UI Kit
+@import "~prestakit/scss/application";
 
 // Tools
 @import "~dropzone/dist/min/dropzone.min.css";

@@ -2772,7 +2772,7 @@ $mobile-menu-height: 3.25rem !default;
         position: sticky;
         top: var(--#{$cdk}header-height);
         z-index: 100;
-        background-color: var(--#{$cdk}primary-400);
+        background-color: var(--#{$cdk}primary-300);
 
         .nav-tabs {
           position: static;
@@ -2794,7 +2794,6 @@ $mobile-menu-height: 3.25rem !default;
 
             .nav-link {
               height: 100%;
-              padding: var(--#{$cdk}size-16) var(--#{$cdk}size-16);
               white-space: nowrap;
               border-top: none;
               border-bottom: var(--#{$cdk}size-3) solid transparent;
@@ -2805,7 +2804,7 @@ $mobile-menu-height: 3.25rem !default;
           .nav-link.active {
             background: transparent;
             border-top: none;
-            border-bottom: var(--#{$cdk}size-3) solid var(--#{$cdk}blue-300);
+            border-bottom: var(--#{$cdk}size-3) solid var(--#{$cdk}primary-800);
           }
         }
 

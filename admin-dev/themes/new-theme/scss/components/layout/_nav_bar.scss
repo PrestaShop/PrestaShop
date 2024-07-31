@@ -193,6 +193,8 @@
 
     &.link-active {
       > .link {
+        font-weight: 700;
+
         .material-icons {
           &:first-child {
             color: var(--#{$cdk}sidebar-icon-active);
@@ -206,7 +208,6 @@
     &.link-hover,
     &.-hover {
       > .link {
-        font-weight: 700;
         color: var(--#{$cdk}sidebar-link-color-active);
         background: var(--#{$cdk}sidebar-link-lvl-one-bg-active);
       }

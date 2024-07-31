@@ -51,9 +51,10 @@
   "dependencies": {
     "@fontsource/ibm-plex-sans": "^5.0.20",
     "@openfonts/ubuntu-condensed_latin": "^1.44.2",
+    "material-symbols": "^0.21.3",
     "open-sans-fonts": "^1.6.2",
     "perfect-scrollbar": "^1.4.0",
-    "prestakit": "tblivet/prestashop-ui-kit_fork#reskin_update",
+    "prestakit": "^2.0.1",
     "vazirmatn": "32.102.0"
   }
 }

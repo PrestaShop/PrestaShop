@@ -1,77 +1,33 @@
 /* stylelint-disable */
-$FontPathIBMPlexSans: "~@fontsource/ibm-plex-sans";
+@use "~@fontsource/ibm-plex-sans/scss/mixins" as IBM;
+
+$material-symbols-font-path: '~material-symbols/';
+
 $local-font: true;
 
 @mixin setFont() {
   @if $local-font {
     
     // IBM Plex Sans
-    @font-face {
-      font-family: "IBM Plex Sans";
-      font-style: normal;
-      font-weight: 200;
-      font-display: swap;
-      src:
-        url("#{$FontPathIBMPlexSans}/files/ibm-plex-sans-latin-200-normal.woff2") format("woff2"),
-        url("#{$FontPathIBMPlexSans}/files/ibm-plex-sans-latin-200-normal.woff") format("woff");
-    }
-
-    @font-face {
-      font-family: "IBM Plex Sans";
-      font-style: normal;
-      font-weight: 300;
-      font-display: swap;
-      src:
-        url("#{$FontPathIBMPlexSans}/files/ibm-plex-sans-latin-300-normal.woff2") format("woff2"),
-        url("#{$FontPathIBMPlexSans}/files/ibm-plex-sans-latin-300-normal.woff") format("woff");
-    }
-
-    @font-face {
-      font-family: "IBM Plex Sans";
-      font-style: normal;
-      font-weight: 400;
-      font-display: swap;
-      src:
-        url("#{$FontPathIBMPlexSans}/files/ibm-plex-sans-latin-400-normal.woff2") format("woff2"),
-        url("#{$FontPathIBMPlexSans}/files/ibm-plex-sans-latin-400-normal.woff") format("woff");
-    }
-
-    @font-face {
-      font-family: "IBM Plex Sans";
-      font-style: normal;
-      font-weight: 500;
-      font-display: swap;
-      src:
-        url("#{$FontPathIBMPlexSans}/files/ibm-plex-sans-latin-500-normal.woff2") format("woff2"),
-        url("#{$FontPathIBMPlexSans}/files/ibm-plex-sans-latin-500-normal.woff") format("woff");
-    }
-
-    @font-face {
-      font-family: "IBM Plex Sans";
-      font-style: normal;
-      font-weight: 600;
-      font-display: swap;
-      src:
-        url("#{$FontPathIBMPlexSans}/files/ibm-plex-sans-latin-600-normal.woff2") format("woff2"),
-        url("#{$FontPathIBMPlexSans}/files/ibm-plex-sans-latin-600-normal.woff") format("woff");
-    }
-
-    @font-face {
-      font-family: "IBM Plex Sans";
-      font-style: normal;
-      font-weight: 700;
-      font-display: swap;
-      src:
-        url("#{$FontPathIBMPlexSans}/files/ibm-plex-sans-latin-700-normal.woff2") format("woff2"),
-        url("#{$FontPathIBMPlexSans}/files/ibm-plex-sans-latin-700-normal.woff") format("woff");
-    }
+    @include IBM.faces(
+      $subsets: all,
+      $weights: (
+        200,
+        300,
+        400,
+        500,
+        600,
+        700,
+      ),
+      $styles: all
+    );
 
     // Material Symbols Outlined
     @font-face {
       font-family: "Material Symbols Outlined";
       font-style: normal;
       font-display: swap;
-      src: url("../fonts/MaterialSymbolsOutlined[FILL,GRAD,opsz,wght].woff2") format("woff2"), url("/fonts/MaterialSymbolsOutlined[FILL,GRAD,opsz,wght].ttf") format("truetype");
+      src: url("#{$material-symbols-font-path}material-symbols-outlined.woff2") format("woff2");
     }
   } @else {
     // IBM Plex Sans

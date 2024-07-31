@@ -2,8 +2,7 @@
   white-space: normal;
 
   &.btn-action {
-    background-color: var(--#{$cdk}white);
-    @extend .btn-outline-secondary;
+    @include ps-button-outline-variant(var(--#{$cdk}primary-500), var(--#{$cdk}primary-800), "secondary");
   }
 }
 

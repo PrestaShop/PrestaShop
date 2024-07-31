@@ -83,6 +83,10 @@
       padding: 0 0.125rem;
     }
   }
+
+  @include media-breakpoint-down("xs") {
+    font-size: var(--#{$cdk}size-20);
+  }
 }
 
 .card-footer {
