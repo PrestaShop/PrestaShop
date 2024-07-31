@@ -10,7 +10,9 @@ import type {Page} from 'playwright';
 class PasswordReminderPage extends FOBasePage {
   public readonly pageTitle: string;
 
-  public readonly errorMessage: string;
+  public readonly errorRegenerationMessage: string;
+
+  public readonly errorFillConfirmationMessage: string;
 
   private readonly emailFormField: string;
 
@@ -38,7 +40,8 @@ class PasswordReminderPage extends FOBasePage {
     super(theme);
 
     this.pageTitle = 'Forgot your password';
-    this.errorMessage = 'You can regenerate your password only every 360 minute(s)';
+    this.errorRegenerationMessage = 'You can regenerate your password only every 360 minute(s)';
+    this.errorFillConfirmationMessage = 'The confirmation is empty: please fill in the password confirmation as well';
 
     // Selectors
     this.emailFormField = '#email';
@@ -97,7 +100,7 @@ class PasswordReminderPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getEmailAddressToReset(page: Page): Promise<string> {
+  async getEmailAddressToReset(page: Page): Promise<string> {
     return this.getTextContent(page, this.emailAddressText);
   }
 
@@ -105,11 +108,12 @@ class PasswordReminderPage extends FOBasePage {
    * Set new password
    * @param page {Page} Browser tab
    * @param password {string} New password to set
+   * @param confirmationPassword {string|null} Confirmation password to set (if null, use password parameter)
    * @returns {Promise<void>}
    */
-  async setNewPassword(page: Page, password: string): Promise<void> {
+  async setNewPassword(page: Page, password: string, confirmationPassword: string|null = null): Promise<void> {
     await this.setValue(page, this.newPasswordInput, password);
-    await this.setValue(page, this.confirmationPasswordInput, password);
+    await this.setValue(page, this.confirmationPasswordInput, confirmationPassword === null ? password : confirmationPassword);
     await page.locator(this.submitButton).click();
   }
 
@@ -118,7 +122,7 @@ class PasswordReminderPage extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getErrorMessage(page: Page): Promise<string> {
+  async getErrorMessage(page: Page): Promise<string> {
     return this.getTextContent(page, this.errorMessageAlert);
   }
 }

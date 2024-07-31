@@ -25,6 +25,8 @@ class CustomerSettings extends BOBasePage {
 
   private readonly enableB2BModeToggle: (toggle: number) => string;
 
+  private readonly passwordResetDelayInput: string;
+
   private readonly saveGeneralFormButton: string;
 
   /**
@@ -47,6 +49,7 @@ class CustomerSettings extends BOBasePage {
     this.sendEmailAfterRegistrationToggleInput = (toggle: number) => `#form_send_email_after_registration_${toggle}`;
     this.askForBirthDateToggleInput = (toggle: number) => `#form_ask_for_birthday_${toggle}`;
     this.enableB2BModeToggle = (toggle: number) => `#form_enable_b2b_mode_${toggle}`;
+    this.passwordResetDelayInput = '#form_password_reset_delay';
     this.saveGeneralFormButton = '#form-general-save-button';
   }
 
@@ -106,6 +109,15 @@ class CustomerSettings extends BOBasePage {
     await this.elementNotVisible(page, selector(!toEnable ? 1 : 0));
 
     return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Returns th value of the field "Password reset delay" in minutes
+   * @param page {Page} Browser tab
+   * @return {Promise<number>}
+   */
+  async getPasswordResetDelayValue(page: Page): Promise<number> {
+    return parseInt(await this.getInputValue(page, this.passwordResetDelayInput), 10);
   }
 }
 

@@ -197,7 +197,7 @@ describe('FO - Login : Password reminder', async () => {
       await passwordReminderPage.sendResetPasswordLink(page, customerData.email);
 
       const regeneratePasswordAlert = await passwordReminderPage.getErrorMessage(page);
-      expect(regeneratePasswordAlert).to.contains(passwordReminderPage.errorMessage);
+      expect(regeneratePasswordAlert).to.contains(passwordReminderPage.errorRegenerationMessage);
     });
   });
 

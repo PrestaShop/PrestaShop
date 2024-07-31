@@ -2,15 +2,19 @@
 import testContext from '@utils/testContext';
 
 // Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
-import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import {createAccountTest} from '@commonTests/FO/classic/account';
+
+// Import pages
+// Import BO pages
+import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
 
 // Import FO pages
 import {passwordReminderPage} from '@pages/FO/classic/passwordReminder';
 
 import {
-  FakerCustomer,
+  boDashboardPage,
+  dataCustomers,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
@@ -23,47 +27,26 @@ import {
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_FO_classic_login_passwordReminder';
+const baseContext: string = 'functional_BO_shopParameters_customerSettings_customers_passwordResetDelay';
 
-/*
-Pre-condition:
-- Config smtp
-- Create new customer on FO
-Scenario:
-- Send an email to reset password
-- Reset password
-- Try to sign in with old password and check error message
-- Try to sign in with new password
-Post-condition:
-- Delete created customer
-- Go back to default smtp config
- */
-describe('FO - Login : Password reminder', async () => {
+describe('BO - Shop Parameters - Customer Settings : Password reset delay', async () => {
+  const passwordResetDelayMinutes: number = 360;
+  const resetPasswordMailSubject: string = 'Password query confirmation';
+  const newPassword: string = 'prestashop';
+
   let browserContext: BrowserContext;
   let page: Page;
   let newMail: MailDevEmail;
   let mailListener: MailDev;
 
-  const resetPasswordMailSubject: string = 'Password query confirmation';
-  const customerData: FakerCustomer = new FakerCustomer();
-  const newPassword: string = 'new test password';
-  const customerNewPassword: FakerCustomer = new FakerCustomer();
-  customerNewPassword.email = customerData.email;
-  customerNewPassword.password = newPassword;
-
-  // Pre-Condition : Setup config SMTP
-  setupSmtpConfigTest(`${baseContext}_preTest_1`);
-
-  // Pre-condition : Create new customer on FO
-  createAccountTest(customerData, `${baseContext}_preTest_2`);
-
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
 
+    // Start listening to maildev server
     mailListener = utilsMail.createMailListener();
     utilsMail.startListener(mailListener);
+
     // Handle every new email
     mailListener.on('new', (email: MailDevEmail) => {
       newMail = email;
@@ -72,26 +55,53 @@ describe('FO - Login : Password reminder', async () => {
 
   after(async () => {
     await utilsPlaywright.closeBrowserContext(browserContext);
+
+    // Stop listening to maildev server
     utilsMail.stopListener(mailListener);
   });
 
-  describe('Go to FO and check the password reminder', async () => {
-    it('should open the shop page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
+  // Pre-Condition: Setup config SMTP
+  setupSmtpConfigTest(baseContext);
 
-      await foClassicHomePage.goTo(page, global.FO.URL);
+  describe('Password reset delay', async () => {
+    it('should login in BO', async function () {
+      await loginCommon.loginBO(this, page);
+    });
 
-      const result = await foClassicHomePage.isHomePage(page);
-      expect(result).to.eq(true);
+    it('should go to \'Shop parameters > Customer Settings\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerSettingsPage', baseContext);
+
+      await boDashboardPage.goToSubMenu(
+        page,
+        boDashboardPage.shopParametersParentLink,
+        boDashboardPage.customerSettingsLink,
+      );
+      await customerSettingsPage.closeSfToolBar(page);
+
+      const pageTitle = await customerSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
+
+      const passwordResetDelay = await customerSettingsPage.getPasswordResetDelayValue(page);
+      expect(passwordResetDelay).to.equal(passwordResetDelayMinutes);
+    });
+
+    it('should view my shop', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
+
+      page = await customerSettingsPage.viewMyShop(page);
+      await foClassicHomePage.changeLanguage(page, 'en');
+
+      const isHomePage = await foClassicHomePage.isHomePage(page);
+      expect(isHomePage).to.eq(true);
     });
 
     it('should go to login page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginFO2', baseContext);
 
       await foClassicHomePage.goToLoginPage(page);
 
       const pageTitle = await foClassicLoginPage.getPageTitle(page);
-      expect(pageTitle).to.equal(foClassicLoginPage.pageTitle);
+      expect(pageTitle).to.contains(foClassicLoginPage.pageTitle);
     });
 
     it('should click on \'Forgot your password?\' link', async function () {
@@ -106,10 +116,10 @@ describe('FO - Login : Password reminder', async () => {
     it('should set the email address and send reset link', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sendResetPasswordLink', baseContext);
 
-      await passwordReminderPage.sendResetPasswordLink(page, customerData.email);
+      await passwordReminderPage.sendResetPasswordLink(page, dataCustomers.johnDoe.email);
 
       const successAlertContent = await passwordReminderPage.checkResetLinkSuccess(page);
-      expect(successAlertContent).to.contains(customerData.email);
+      expect(successAlertContent).to.contains(dataCustomers.johnDoe.email);
     });
 
     it('should check if reset password mail is in mailbox', async function () {
@@ -131,7 +141,16 @@ describe('FO - Login : Password reminder', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkEmailAddress', baseContext);
 
       const emailAddress = await passwordReminderPage.getEmailAddressToReset(page);
-      expect(emailAddress).to.contains(customerData.email);
+      expect(emailAddress).to.contains(dataCustomers.johnDoe.email);
+    });
+
+    it('should change the password and check the error message', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changePasswordButWithoutConfirmation', baseContext);
+
+      await passwordReminderPage.setNewPassword(page, newPassword, '');
+
+      const errorMessage = await passwordReminderPage.getErrorMessage(page);
+      expect(errorMessage).to.equal(passwordReminderPage.errorFillConfirmationMessage);
     });
 
     it('should change the password and check the validation message', async function () {
@@ -140,46 +159,20 @@ describe('FO - Login : Password reminder', async () => {
       await passwordReminderPage.setNewPassword(page, newPassword);
 
       const successMessage = await foClassicMyAccountPage.getSuccessMessageAlert(page);
-      expect(successMessage).to.equal(`${foClassicMyAccountPage.resetPasswordSuccessMessage} ${customerData.email}`);
+      expect(successMessage).to.equal(`${foClassicMyAccountPage.resetPasswordSuccessMessage} ${dataCustomers.johnDoe.email}`);
     });
 
     it('should logout from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFO', baseContext);
 
       await foClassicMyAccountPage.logout(page);
-      const isCustomerConnected = await foClassicMyAccountPage.isCustomerConnected(page);
-      expect(isCustomerConnected, 'Customer is connected').to.eq(false);
-    });
-
-    it('should try to login with old password and check the error message', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'signInFOWithOldPassword', baseContext);
-
-      await foClassicLoginPage.customerLogin(page, customerData, false);
-
-      const loginError = await foClassicLoginPage.getLoginError(page);
-      expect(loginError).to.contains(foClassicLoginPage.loginErrorText);
-    });
-
-    it('should sign in with new password', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
-
-      await foClassicLoginPage.customerLogin(page, customerNewPassword);
 
       const isCustomerConnected = await foClassicMyAccountPage.isCustomerConnected(page);
-      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
-    });
-
-    it('should logout from FO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'signOutFO2', baseContext);
-
-      await foClassicMyAccountPage.logout(page);
-
-      const isCustomerConnected = await foClassicMyAccountPage.isCustomerConnected(page);
-      expect(isCustomerConnected, 'Customer is connected').to.eq(false);
+      expect(isCustomerConnected).to.eq(false);
     });
 
     it('should click on \'Forgot your password?\' link', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickOnForgetPassword2', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToPasswordReminderPageAndRetry', baseContext);
 
       await foClassicLoginPage.goToPasswordReminderPage(page);
 
@@ -187,19 +180,16 @@ describe('FO - Login : Password reminder', async () => {
       expect(pageTitle).to.equal(passwordReminderPage.pageTitle);
     });
 
-    it('should set the customer email and check the error alert', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkErrorMessage', baseContext);
+    it('should set the email address and send reset link', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'retrySendResetPasswordLink', baseContext);
 
-      await passwordReminderPage.sendResetPasswordLink(page, customerData.email);
+      await passwordReminderPage.sendResetPasswordLink(page, dataCustomers.johnDoe.email);
 
       const regeneratePasswordAlert = await passwordReminderPage.getErrorMessage(page);
       expect(regeneratePasswordAlert).to.contains(passwordReminderPage.errorRegenerationMessage);
     });
   });
 
-  // Post-condition : Delete created customer
-  deleteCustomerTest(customerData, `${baseContext}_postTest_1`);
-
-  // Post-condition : Reset SMTP config
+  // Post-Condition: Reset config SMTP
   resetSmtpConfigTest(`${baseContext}_postTest_2`);
 });
