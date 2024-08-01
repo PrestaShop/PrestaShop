@@ -32,11 +32,14 @@ use Behat\Gherkin\Node\TableNode;
 use Carrier;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\SetCarrierRangesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetCarrierRanges;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult\CarrierRangesCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
+use Zone;
+
 
 class CarrierRangesFeatureContext extends AbstractDomainFeatureContext
 {
@@ -76,8 +79,22 @@ class CarrierRangesFeatureContext extends AbstractDomainFeatureContext
     {
         try {
             $carrierId = $this->referenceToId($reference);
+            $data = $node->getColumnsHash();
 
-            $command = new SetCarrierRangesCommand($carrierId, $node->getColumnsHash(), $shopConstraint);
+            foreach ($data as &$range) {
+                try {
+                    /** @var Zone $zone */
+                    $zone = $this->referencesToIds($range['id_zone'])[0];
+                    $range['id_zone'] = $zone->id;
+                } catch (\RuntimeException $e) {
+                    $this->setLastException(new CarrierConstraintException(
+                        sprintf('Invalid zone id reference %d supplied. Zone id must be a positive integer.', $range['id_zone']),
+                        CarrierConstraintException::INVALID_ZONE_ID
+                    ));
+                }
+            }
+
+            $command = new SetCarrierRangesCommand($carrierId, $data, $shopConstraint);
 
             $carrierId = $this->getCommandBus()->handle($command);
             $this->getSharedStorage()->set($newReference, $carrierId->getValue());
@@ -94,7 +111,13 @@ class CarrierRangesFeatureContext extends AbstractDomainFeatureContext
             $command = new GetCarrierRanges($carrierId, $shopConstraint);
 
             $rangesDatabase = $this->getCommandBus()->handle($command);
-            $rangesExpected = new CarrierRangesCollection($node->getColumnsHash());
+            $data = $node->getColumnsHash();
+            foreach ($data as &$range) {
+                /** @var Zone $zone */
+                $zone = $this->referencesToIds($range['id_zone'])[0];
+                $range['id_zone'] = $zone->id;
+            }
+            $rangesExpected = new CarrierRangesCollection($data);
 
             Assert::assertEquals($rangesExpected, $rangesDatabase);
         } catch (CarrierException $e) {

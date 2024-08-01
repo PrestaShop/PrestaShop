@@ -8,24 +8,87 @@ Feature: Cart calculation with carrier specific cart rules
 
   Background:
     Given there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
+    And group "visitor" named "Visitor" exists
+    And group "guest" named "Guest" exists
+    And language "en" with locale "en-US" exists
+    And language "fr" with locale "fr-FR" exists
+    And language with iso code "en" is the default one
     And I have an empty default cart
     And shipping handling fees are set to 2.0
     And shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     And there is a zone named "zone1"
     And there is a zone named "zone2"
+    And "zone1" exist with following properties:
+      | name    | zone1 |
+      | enabled | true  |
+    And "zone2" exist with following properties:
+      | name    | zone2 |
+      | enabled | true  |
     And there is a country named "country1" and iso code "FR" in zone "zone1"
     And there is a country named "country2" and iso code "US" in zone "zone2"
     And there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     And there is a state named "state2" with iso code "TEST-2" in country "country2" and zone "zone2"
     And there is an address named "address1" with postcode "1" in state "state1"
     And there is an address named "address2" with postcode "1" in state "state2"
-    And there is a carrier named "carrier1"
-    And carrier "carrier1" applies shipping fees of 3.1 in zone "zone1" for price between 0 and 10000
-    And carrier "carrier1" applies shipping fees of 4.3 in zone "zone2" for price between 0 and 10000
-    And there is a carrier named "carrier2"
-    And carrier "carrier2" applies shipping fees of 5.7 in zone "zone1" for price between 0 and 10000
-    And carrier "carrier2" applies shipping fees of 6.2 in zone "zone2" for price between 0 and 10000
-    And there is a carrier named "carrier3"
+    And I create carrier "carrier1" with specified properties:
+      | name             | Carrier 1                          |
+      | grade            | 1                                  |
+      | trackingUrl      | http://example.com/track.php?num=@ |
+      | position         | 2                                  |
+      | active           | true                               |
+      | max_width        | 1454                               |
+      | max_height       | 1234                               |
+      | max_depth        | 1111                               |
+      | max_weight       | 3864                               |
+      | group_access     | visitor, guest                     |
+      | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
+      | shippingHandling | false                              |
+      | isFree           | true                               |
+      | shippingMethod   | weight                             |
+      | rangeBehavior    | disabled                           |
+    Then I set ranges for carrier "carrier1" called "newCarrier1" with specified properties for all shops:
+      | id_zone | range_from | range_to | range_price |
+      | zone1   | 0          | 10000    | 3.1         |
+      | zone2   | 0          | 10000    | 4.3         |
+    And I create carrier "carrier2" with specified properties:
+      | name             | Carrier 2                          |
+      | grade            | 1                                  |
+      | trackingUrl      | http://example.com/track.php?num=@ |
+      | position         | 2                                  |
+      | active           | true                               |
+      | max_width        | 1454                               |
+      | max_height       | 1234                               |
+      | max_depth        | 1111                               |
+      | max_weight       | 3864                               |
+      | group_access     | visitor, guest                     |
+      | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
+      | shippingHandling | false                              |
+      | isFree           | true                               |
+      | shippingMethod   | weight                             |
+      | rangeBehavior    | disabled                           |
+    Then I set ranges for carrier "carrier2" called "newCarrier2" with specified properties for all shops:
+      | id_zone | range_from | range_to | range_price |
+      | zone1   | 0          | 10000    | 5.7         |
+      | zone2   | 0          | 10000    | 6.2         |
+    And I create carrier "carrier3" with specified properties:
+      | name             | Carrier 3                          |
+      | grade            | 1                                  |
+      | trackingUrl      | http://example.com/track.php?num=@ |
+      | position         | 2                                  |
+      | active           | true                               |
+      | max_width        | 1454                               |
+      | max_height       | 1234                               |
+      | max_depth        | 1111                               |
+      | max_weight       | 3864                               |
+      | group_access     | visitor, guest                     |
+      | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
+      | shippingHandling | false                              |
+      | isFree           | true                               |
+      | shippingMethod   | weight                             |
+      | rangeBehavior    | disabled                           |
     And there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     And there is a product in the catalog named "product2" with a price of 32.388 and 1000 items in stock
     And there is a product in the catalog named "product3" with a price of 31.188 and 1000 items in stock
@@ -59,7 +122,7 @@ Feature: Cart calculation with carrier specific cart rules
   Scenario: I cannot use voucher when it is restricted to specific carrier and that carrier is not selected
     When I add 1 items of product "product1" in my cart
     And I select address "address1" in my cart
-    And I select carrier "carrier1" in my cart
+    And I use carrier "carrier1" in my cart
     And cart shipping fees should be 5.1
     And my cart total shipping fees should be 5.1 tax included
     And my cart total should be 24.912 tax included

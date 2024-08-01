@@ -79,6 +79,22 @@ class ZoneFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Given :zoneReference exist with following properties:
+     *
+     * @param string $zoneReference
+     * @param TableNode $table
+     * @return void
+     */
+    public function createZoneIfNotExist(string $zoneReference, TableNode $table): void
+    {
+        try {
+            SharedStorage::getStorage()->get($zoneReference);
+        } catch (RuntimeException $exception) {
+            $this->createZone($zoneReference, $table);
+        }
+    }
+
+    /**
      * @When I edit zone :zoneReference with following properties:
      *
      * @param string $zoneReference

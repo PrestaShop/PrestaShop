@@ -234,6 +234,10 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function createCarrier($carrierName)
     {
+        // @todo chercher les utilisation de cette methode et remplacer par la step dans le context CQRS.
+        // potentielement utiliser les setp CQRS des zone quand on a besoin
+        // virer si possible dans le behat.yml l'utilisation du domain/featurecontextcarrier
+        // si il est utiliser null part => delete it
         $carrier = new Carrier(null, (int) Configuration::get('PS_LANG_DEFAULT'));
         $carrier->name = $carrierName;
         $carrier->shipping_method = Carrier::SHIPPING_METHOD_PRICE;
@@ -378,6 +382,19 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $this->checkCarrierWithNameExists($carrierName);
         $this->getCurrentCart()->id_carrier = $this->carriers[$carrierName]->id;
+
+        $this->getCurrentCart()->update();
+
+        CartRule::autoRemoveFromCart();
+        CartRule::autoAddToCart();
+    }
+
+    /**
+     * @When /^I use carrier "(.+)" in my cart$/
+     */
+    public function setCartCQRSCarrier($carrierName)
+    {
+        $this->getCurrentCart()->id_carrier = $this->getSharedStorage()->get($carrierName);
 
         $this->getCurrentCart()->update();
 

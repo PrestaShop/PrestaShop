@@ -38,7 +38,7 @@ Feature: Compute correct delivery options
     Given there is a customer named "customer1" whose email is "fake@prestashop.com"
     Given address "address1" is associated to customer "customer1"
     # One standard carrier
-    Given there is a carrier named "carrier1"
+    Given carrier "carrier1" named "carrier1" exists
     Given carrier "carrier1" ships to all groups
     Given carrier "carrier1" applies shipping fees of 5.0 in zone "zone1" for price between 0 and 10000
     # Checkout begins

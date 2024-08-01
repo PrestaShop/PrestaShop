@@ -67,7 +67,31 @@ Feature: Cart rule application is validated before it is applied to cart
       | free_shipping       | true          |
       | code                | rule_carrier1 |
       | discount_percentage | 50            |
-    And there is a carrier named "carrier1"
+    And I create carrier "carrier1" with specified properties:
+      | name             | Carrier 1                          |
+      | grade            | 1                                  |
+      | trackingUrl      | http://example.com/track.php?num=@ |
+      | position         | 2                                  |
+      | active           | true                               |
+      | max_width        | 1454                               |
+      | max_height       | 1234                               |
+      | max_depth        | 1111                               |
+      | max_weight       | 3864                               |
+      | group_access     | visitor, guest                     |
+      | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
+      | shippingHandling | false                              |
+      | isFree           | true                               |
+      | shippingMethod   | weight                             |
+      | rangeBehavior    | disabled                           |
+    And there is a cart rule "cart_rule_4" with following properties:
+      | name[en-US]         | cart_rule_4 |
+      | total_quantity      | 1000        |
+      | quantity_per_user   | 1000        |
+      | priority            | 1           |
+      | free_shipping       | false       |
+      | code                | foo         |
+      | discount_percentage | 50          |
     And I restrict following carriers for cart rule cart_rule_4:
       | restricted carriers | carrier1 |
     And I save all the restrictions for cart rule cart_rule_4
