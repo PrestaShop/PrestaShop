@@ -574,7 +574,6 @@ class FrontControllerCore extends Controller
             'actionFrontControllerSetVariables',
             [
                 'templateVars' => &$templateVars,
-                'cart' => $cart,
             ],
             null,
             true
