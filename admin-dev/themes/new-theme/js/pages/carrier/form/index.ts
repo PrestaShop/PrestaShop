@@ -23,11 +23,35 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import CarrierFormEventMap from '@pages/carrier/form/carrier-form-event-map';
+import ComponentsMap from '@components/components-map';
+
 $(() => {
+  // Initialize components
   window.prestashop.component.initComponents([
-    'TranslatableInput',
-    'EventEmitter',
-    'CarrierRanges',
-    'MultipleZoneChoice',
+   'TranslatableInput',
+   'EventEmitter',
+   'CarrierRanges',
+   'MultipleZoneChoice',
   ]);
+  // Retrieve the event emitter
+  const eventEmitter = window.prestashop.instance.eventEmitter;
+
+  // -- Carrier ranges --
+  // Retrieve the carrier shipping method select element and the event emitter
+  const $shippingMethod = $('#carrier_shipping_settings_shipping_method');
+  const shippingMethodsUnits = $shippingMethod.data('units');
+
+  // Emit a carrier shipping method change event with the symbol to use for the ranges
+  function updateRangeUnits() {
+    const value = <number> $shippingMethod.find('input[name="carrier[shipping_settings][shipping_method]"]:checked').val();
+    eventEmitter.emit(CarrierFormEventMap.shippingMethodChange, shippingMethodsUnits[value] || '');
+  }
+
+  // Listen to the change event on the carrier shipping method select element
+  // and emit a carrier shipping method change event with the symbol to use for the ranges
+  $shippingMethod.on('change', () => {
+    updateRangeUnits();
+  });
+  updateRangeUnits();
 });

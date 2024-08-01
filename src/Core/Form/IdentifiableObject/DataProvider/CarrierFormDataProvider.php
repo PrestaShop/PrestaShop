@@ -26,10 +26,16 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
+use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ZoneByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
+use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetCarrierForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetCarrierRanges;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult\CarrierRangesCollection;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult\EditableCarrier;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class CarrierFormDataProvider implements FormDataProviderInterface
@@ -37,6 +43,9 @@ class CarrierFormDataProvider implements FormDataProviderInterface
     public function __construct(
         private readonly CommandBusInterface $queryBus,
         private readonly ShopContext $shopContext,
+        private readonly CurrencyDataProviderInterface $currencyDataProvider,
+        private readonly ConfigurationInterface $configuration,
+        private readonly ZoneByIdChoiceProvider $zonesChoiceProvider
     ) {
     }
 
@@ -44,6 +53,7 @@ class CarrierFormDataProvider implements FormDataProviderInterface
     {
         /** @var EditableCarrier $carrier */
         $carrier = $this->queryBus->handle(new GetCarrierForEditing((int) $id, ShopConstraint::allShops()));
+        $carrierRanges = $this->queryBus->handle(new GetCarrierRanges((int) $id, ShopConstraint::allShops()));
 
         return [
             'general_settings' => [
@@ -62,6 +72,9 @@ class CarrierFormDataProvider implements FormDataProviderInterface
                 'shipping_method' => $carrier->getShippingMethod(),
                 'id_tax_rule_group' => $carrier->getIdTaxRuleGroup(),
                 'range_behavior' => $carrier->getRangeBehavior(),
+                'zones' => $carrierRanges->getZonesIds(),
+                'ranges' => $this->formatRangesData($carrierRanges),
+                'ranges_costs' => $this->formatRangesCostsData($carrier, $carrierRanges),
             ],
             'size_weight_settings' => [
                 'max_width' => $carrier->getMaxWidth(),
@@ -80,5 +93,84 @@ class CarrierFormDataProvider implements FormDataProviderInterface
                 'associated_shops' => $this->shopContext->getAssociatedShopIds(),
             ],
         ];
+    }
+
+    /**
+     * Function to format ranges data.
+     *
+     * @param CarrierRangesCollection $carrierRangesCollection
+     *
+     * @return array
+     */
+    private function formatRangesData(CarrierRangesCollection $carrierRangesCollection): array
+    {
+        $ranges = [];
+
+        // For each zones, we need to get all ranges
+        foreach ($carrierRangesCollection->getZones() as $zone) {
+            foreach ($zone->getRanges() as $range) {
+                $ranges[] = [
+                    'from' => $range->getFrom()->__toString(),
+                    'to' => $range->getTo()->__toString(),
+                ];
+            }
+        }
+
+        // Then, we remove duplicates and sort ranges by from value.
+        $ranges = array_unique($ranges, SORT_REGULAR);
+        $from_values = array_column($ranges, 'from');
+        array_multisort($from_values, SORT_ASC, $ranges);
+
+        return ['data' => json_encode($ranges)];
+    }
+
+    /**
+     * Function to format ranges costs data.
+     *
+     * @param CarrierRangesCollection $carrierRangesCollection
+     *
+     * @return array
+     */
+    private function formatRangesCostsData(EditableCarrier $carrier, CarrierRangesCollection $carrierRangesCollection): array
+    {
+        $ranges = [];
+
+        // We retrieve zones to get the correct zone name
+        $zones = $this->zonesChoiceProvider->getChoices([]);
+        $zones = array_flip($zones);
+
+        // We choose the right symbol for the range in function of the ShippingMethod
+        switch ($carrier->getShippingMethod()) {
+            default:
+                $rangeSymbol = '';
+                break;
+            case ShippingMethod::BY_PRICE:
+                $rangeSymbol = $this->currencyDataProvider->getDefaultCurrencySymbol();
+                break;
+            case ShippingMethod::BY_WEIGHT:
+                $rangeSymbol = $this->configuration->get('PS_WEIGHT_UNIT');
+                break;
+        }
+
+        // For each zones, we need to get all ranges
+        foreach ($carrierRangesCollection->getZones() as $zone) {
+            $zoneRanges = [];
+            foreach ($zone->getRanges() as $range) {
+                $zoneRanges[] = [
+                    'range' => $range->getFrom()->__toString() . $rangeSymbol . ' - ' . $range->getTo()->__toString() . $rangeSymbol,
+                    'from' => $range->getFrom(),
+                    'to' => $range->getTo(),
+                    'price' => $range->getPrice()->__toString(),
+                ];
+            }
+
+            $ranges[] = [
+                'zoneId' => $zone->getZoneId(),
+                'zoneName' => $zones[$zone->getZoneId()] ?? $zone->getZoneId(),
+                'ranges' => $zoneRanges,
+            ];
+        }
+
+        return ['zones' => $ranges];
     }
 }
