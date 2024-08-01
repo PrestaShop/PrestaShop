@@ -541,31 +541,40 @@ class FrontControllerCore extends Controller
             $cart = new Cart();
         }
 
-        $templateVars = [
-            'cart' => $this->cart_presenter->present($cart),
-            'currency' => $this->getTemplateVarCurrency(),
-            'customer' => $this->getTemplateVarCustomer(),
-            'country' => $this->objectPresenter->present($this->context->country),
-            'language' => $this->objectPresenter->present($this->context->language),
-            'page' => $this->getTemplateVarPage(),
-            'shop' => $this->getTemplateVarShop(),
-            'core_js_public_path' => $this->getCoreJsPublicPath(),
-            'urls' => $this->getTemplateVarUrls(),
-            'configuration' => $this->getTemplateVarConfiguration(),
-            'field_required' => $this->context->customer->validateFieldsRequiredDatabase(),
-            'breadcrumb' => $this->getBreadcrumb(),
-            'link' => $this->context->link,
-            'time' => time(),
-            'static_token' => Tools::getToken(false),
-            'token' => Tools::getToken(),
-            'debug' => _PS_MODE_DEV_,
-        ];
+        $templateVars = [];
+
+        Hook::exec(
+            'actionFrontControllerSetVariablesBefore',
+            [
+                'templateVars' => &$templateVars,
+                'cart' => $cart,
+            ],
+        );
+
+        $templateVars['cart'] = $templateVars['cart'] ?? $this->cart_presenter->present($cart);
+        $templateVars['currency'] = $templateVars['currency'] ?? $this->getTemplateVarCurrency();
+        $templateVars['customer'] = $templateVars['customer'] ?? $this->getTemplateVarCustomer();
+        $templateVars['country'] = $templateVars['country'] ?? $this->objectPresenter->present($this->context->country);
+        $templateVars['language'] = $templateVars['language'] ?? $this->objectPresenter->present($this->context->language);
+        $templateVars['page'] = $templateVars['page'] ?? $this->getTemplateVarPage();
+        $templateVars['shop'] = $templateVars['shop'] ?? $this->getTemplateVarShop();
+        $templateVars['core_js_public_path'] = $templateVars['core_js_public_path'] ?? $this->getCoreJsPublicPath();
+        $templateVars['urls'] = $templateVars['urls'] ?? $this->getTemplateVarUrls();
+        $templateVars['configuration'] = $templateVars['configuration'] ?? $this->getTemplateVarConfiguration();
+        $templateVars['field_required'] = $templateVars['field_required'] ?? $this->context->customer->validateFieldsRequiredDatabase();
+        $templateVars['breadcrumb'] = $templateVars['breadcrumb'] ?? $this->getBreadcrumb();
+        $templateVars['link'] = $templateVars['link'] ?? $this->context->link;
+        $templateVars['time'] = $templateVars['time'] ?? time();
+        $templateVars['static_token'] = $templateVars['static_token'] ?? Tools::getToken(false);
+        $templateVars['token'] = $templateVars['token'] ?? Tools::getToken();
+        $templateVars['debug'] = $templateVars['debug'] ?? _PS_MODE_DEV_;
 
         // An array [module_name => module_output] will be returned
         $modulesVariables = Hook::exec(
             'actionFrontControllerSetVariables',
             [
                 'templateVars' => &$templateVars,
+                'cart' => $cart,
             ],
             null,
             true
