@@ -432,8 +432,8 @@ class AdminTaxRulesGroupControllerCore extends AdminController
             $this->selected_states = [0];
         }
         $tax_rules_group = new TaxRulesGroup((int) $id_tax_rules_group);
+
         foreach ($this->selected_countries as $id_country) {
-            $first = true;
             foreach ($this->selected_states as $id_state) {
                 if ($tax_rules_group->hasUniqueTaxRuleForCountry($id_country, $id_state, $id_rule)) {
                     $this->errors[] = $this->trans('A tax rule already exists for this country/state with tax only behavior.', [], 'Admin.International.Notification');
@@ -441,11 +441,11 @@ class AdminTaxRulesGroupControllerCore extends AdminController
                     continue;
                 }
                 $tr = new TaxRule();
+                // Here we want to update if we selected only one country,
+                // otherwise we create a new one for each country if we selected ALL option
 
-                // update or creation?
-                if ($first) {
+                if (count($this->selected_countries) === 1) {
                     $tr->id = $id_rule;
-                    $first = false;
                 }
 
                 $tr->id_tax = $id_tax;
@@ -515,7 +515,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
         $this->deleteTaxRule([Tools::getValue('id_tax_rule')]);
     }
 
-    protected function displayAjaxUpdateTaxRule()
+    public function displayAjaxUpdateTaxRule()
     {
         if ($this->access('view')) {
             $id_tax_rule = Tools::getValue('id_tax_rule');
@@ -571,6 +571,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
     protected function updateTaxRulesGroup(TaxRulesGroup $object)
     {
         static $tax_rules_group = null;
+
         if ($tax_rules_group === null) {
             $object->update();
             $tax_rules_group = $object;
