@@ -29,7 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\AddCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\EditCarrierCommand;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\SetCarrierRangesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class CarrierFormDataHandler implements FormDataHandlerInterface
@@ -70,11 +72,15 @@ class CarrierFormDataHandler implements FormDataHandlerInterface
             $logoPath,
         ));
 
+        // Then, we need to add ranges for this carrier
+        $carrierId = $this->setCarrierRange($carrierId, $data);
+
         return $carrierId->getValue();
     }
 
     public function update($id, array $data)
     {
+        // First, we need to update the general settings of the carrier
         $command = new EditCarrierCommand($id);
         $command
             ->setName($data['general_settings']['name'])
@@ -97,6 +103,50 @@ class CarrierFormDataHandler implements FormDataHandlerInterface
         /** @var CarrierId $newCarrierId */
         $newCarrierId = $this->commandBus->handle($command);
 
+        // Then, we need to update the shipping ranges of the carrier
+        $newCarrierId = $this->setCarrierRange($newCarrierId, $data);
+
         return $newCarrierId->getValue();
+    }
+
+    /**
+     * Function aim to format ranges data from the form, to be used in the command of Seting carrier ranges.
+     */
+    private function formatFormRangesData(array $data): array
+    {
+        $ranges = [];
+        $data = $data['shipping_settings']['ranges_costs']['zones'] ?? [];
+
+        foreach ($data as $zone) {
+            foreach ($zone['ranges'] as $range) {
+                $ranges[] = [
+                    'id_zone' => $zone['zoneId'],
+                    'range_from' => $range['from'],
+                    'range_to' => $range['to'],
+                    'range_price' => $range['price'],
+                ];
+            }
+        }
+
+        return $ranges;
+    }
+
+    /**
+     * Save the carrier ranges.
+     */
+    private function setCarrierRange(CarrierId $carrierId, array $data): CarrierId
+    {
+        // We format the ranges data from the form, and create the command object.
+        $rangesData = $this->formatFormRangesData($data);
+        $rangesCommand = new SetCarrierRangesCommand(
+            $carrierId->getValue(),
+            $rangesData,
+            ShopConstraint::allShops()
+        );
+        // Then, we handle the command to save the ranges.
+        /** @var CarrierId $newCarrierId */
+        $newCarrierId = $this->commandBus->handle($rangesCommand);
+
+        return $newCarrierId;
     }
 }
