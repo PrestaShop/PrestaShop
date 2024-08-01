@@ -49,11 +49,11 @@ class CarrierType extends TranslatorAwareType
     {
         parent::buildForm($builder, $options);
         $builder
+            ->add('shipping_settings', ShippingLocationsAndCostsType::class, [
+                'label' => $this->trans('Shipping locations and costs', 'Admin.Shipping.Feature'),
+            ])
             ->add('general_settings', GeneralSettings::class, [
                 'label' => $this->trans('General settings', 'Admin.Shipping.Feature'),
-            ])
-            ->add('shipping_location_and_costs', ShippingLocationsAndCostsType::class, [
-                'label' => $this->trans('Shipping locations and costs', 'Admin.Shipping.Feature'),
             ])
             ->add('size_weight_settings', SizeWeightSettings::class, [
                 'label' => $this->trans('Size and weight', 'Admin.Shipping.Feature'),
