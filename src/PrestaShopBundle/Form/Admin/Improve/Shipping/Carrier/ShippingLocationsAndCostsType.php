@@ -26,11 +26,11 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier;
 
-use Carrier;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
+use PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\Type\CarrierRangesCostsType;
 use PrestaShopBundle\Form\Admin\Type\CarrierRangesType;
 use PrestaShopBundle\Form\Admin\Type\MultipleZoneChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -129,6 +129,7 @@ class ShippingLocationsAndCostsType extends TranslatorAwareType
             ->add('ranges', CarrierRangesType::class, [
                 'label' => $this->trans('Ranges', 'Admin.Shipping.Feature'),
             ])
+            ->add('ranges_costs', CarrierRangesCostsType::class)
         ;
     }
 }
