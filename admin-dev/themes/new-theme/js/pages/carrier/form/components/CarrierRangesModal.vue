@@ -64,8 +64,8 @@
             <thead>
               <tr>
                 <th/>
-                <th>{{ $t('modal.col.min') }}</th>
-                <th>{{ $t('modal.col.max') }} </th>
+                <th>{{ $t('modal.col.from') }}</th>
+                <th>{{ $t('modal.col.to') }} </th>
                 <th>{{ $t('modal.col.action') }}</th>
               </tr>
             </thead>
@@ -99,28 +99,28 @@
                   <td>
                     <div class="input-group">
                       <div class="input-group-prepend">
-                        <span class="input-group-text">€</span>
+                        <span class="input-group-text">{{ this.symbol }}</span>
                       </div>
                       <input
                         type="number"
-                        class="form-control form-min"
+                        class="form-control form-from"
                         inputmode="decimal"
                         placeholder="0"
-                        v-model="r.min"
+                        v-model="r.from"
                       >
                     </div>
                   </td>
                   <td>
                     <div class="input-group">
                       <div class="input-group-prepend">
-                        <span class="input-group-text">€</span>
+                        <span class="input-group-text">{{ this.symbol }}</span>
                       </div>
                       <input
                         type="number"
-                        class="form-control form-max"
+                        class="form-control form-to"
                         inputmode="decimal"
                         placeholder="∞"
-                        v-model="r.max"
+                        v-model="r.to"
                       >
                     </div>
                   </td>
@@ -149,8 +149,8 @@
   import CarrierFormEventMap from '@pages/carrier/form/carrier-form-event-map';
 
   interface Range {
-    min: number|null,
-    max: number|null,
+    from: number|null,
+    to: number|null,
   }
 
   interface CarrierRangesModalStates {
@@ -161,6 +161,7 @@
     refreshKey: number, // force the refresh of the table by incrementing this key
     errors: boolean, // define if there are errors in the ranges
     overlappingAlert: boolean, // define if there are overlapping ranges (and display an alert)
+    symbol: string, // define the current symbol used in function of the shipping method
   }
 
   export default defineComponent({
@@ -175,6 +176,7 @@
         refreshKey: 0,
         errors: false,
         overlappingAlert: false,
+        symbol: '',
       };
     },
     props: {
@@ -185,7 +187,12 @@
     },
     mounted() {
       // If we need to open this modal
-      this.eventEmitter.on(CarrierFormEventMap.openRangeSelectionModal, () => this.openModal());
+      this.eventEmitter.on(CarrierFormEventMap.openRangeSelectionModal, (ranges: Range[]) => {
+        this.ranges = ranges ?? [];
+        this.openModal()
+      });
+      // If we need to change the shipping method symbol
+      this.eventEmitter.on(CarrierFormEventMap.shippingMethodChange, (symbol: string) => this.symbol = symbol);
     },
     methods: {
       openModal() {
@@ -195,11 +202,11 @@
 
         // We save the ranges to be able to cancel the changes
         this.savedRanges.splice(0, this.savedRanges.length);
-        this.ranges.forEach((range) => this.savedRanges.push({min: range.min, max: range.max}));
+        this.ranges.forEach((range) => this.savedRanges.push({from: range.from, to: range.to}));
 
         // We add an empty range if there is none
         if (this.ranges.length === 0) {
-          this.ranges.push({min: null, max: null});
+          this.ranges.push({from: null, to: null});
         }
 
         // We reset the errors
@@ -215,21 +222,21 @@
       cancelChanges() {
         // We cancel the changes and close the modal
         this.ranges.splice(0, this.ranges.length);
-        this.savedRanges.forEach((range) => this.ranges.push({min: range.min, max: range.max}));
+        this.savedRanges.forEach((range) => this.ranges.push({from: range.from, to: range.to}));
         // We remove empty ranges
-        this.ranges = this.ranges.filter((range) => range.min !== null || range.max !== null);
+        this.ranges = this.ranges.filter((range) => range.from !== null || range.to !== null);
         // Then, we close the modal
         this.closeModal();
       },
       applyChanges() {
         // We remove empty ranges
-        this.ranges = this.ranges.filter((range) => range.min !== null || range.max !== null);
+        this.ranges = this.ranges.filter((range) => range.from !== null || range.to !== null);
         // We validate the changes
         this.validateChanges();
 
         if (!this.errors) {
           // We emit the new ranges
-          this.eventEmitter.emit('updateRanges', this.ranges);
+          this.eventEmitter.emit(CarrierFormEventMap.rangesUpdated, this.ranges);
           // We close the modal
           this.closeModal();
         }
@@ -245,18 +252,18 @@
         });
 
         // We sort the ranges by min values
-        this.ranges.sort((a, b) => (a.min || 0) - (b.min || 0));
+        this.ranges.sort((a, b) => (a.from || 0) - (b.from || 0));
 
         // We check ranges
         let saveMax: null|number = null;
         this.ranges.forEach((range, index) => {
           // Check overlapping
-          if (saveMax !== null && range.min !== null && range.min < saveMax) {
-            table.querySelectorAll(`tr[data-row="${index - 1}"] input.form-max`)
+          if (saveMax !== null && range.from !== null && range.from < saveMax) {
+            table.querySelectorAll(`tr[data-row="${index - 1}"] input.form-to`)
               .forEach((input) => {
                 input.classList.add('is-invalid');
               });
-            table.querySelectorAll(`tr[data-row="${index}"] input.form-min`)
+            table.querySelectorAll(`tr[data-row="${index}"] input.form-from`)
               .forEach((input) => {
                 input.classList.add('is-invalid');
               });
@@ -264,25 +271,25 @@
             this.overlappingAlert = true;
           }
 
-          // Check min < max for each range
-          if (range.max !== null && range.min !== null && range.max <= range.min) {
-            table.querySelectorAll(`tr[data-row="${index}"] input.form-max`)
+          // Check from < to for each range
+          if (range.to !== null && range.from !== null && range.to <= range.from) {
+            table.querySelectorAll(`tr[data-row="${index}"] input.form-to`)
               .forEach((input) => {
                 input.classList.add('is-invalid');
               });
             this.errors = true;
           }
 
-          saveMax = range.max;
+          saveMax = range.to;
         });
       },
       addRange(index: undefined|number) {
         // Add new range at the index specified, at the bottom if not specified
-        // (with "min" already set to the previous "max")
+        // (with "from" already set to the previous "to")
         if (index === undefined) {
-          this.ranges.push({min: this.ranges[this.ranges.length - 1]?.max, max: null});
+          this.ranges.push({from: this.ranges[this.ranges.length - 1]?.to, to: null});
         } else {
-          this.ranges.splice(index + 1, 0, {min: this.ranges[index]?.max, max: null});
+          this.ranges.splice(index + 1, 0, {from: this.ranges[index]?.to, to: null});
         }
       },
       deleteRange(rangeIndex: number) {
@@ -290,7 +297,7 @@
         this.ranges.splice(rangeIndex, 1);
         // We add an empty range if there is none
         if (this.ranges.length === 0) {
-          this.ranges.push({min: null, max: null});
+          this.ranges.push({from: null, to: null});
         }
       },
       dragStart(rangeIndex: number) {

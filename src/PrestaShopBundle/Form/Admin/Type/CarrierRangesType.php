@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use PrestaShopBundle\Translation\TranslatorInterface;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -56,6 +57,7 @@ class CarrierRangesType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('data', HiddenType::class)
             ->add('show_modal', IconButtonType::class, [
                 'label' => ' ' . $options['button_label'],
                 'icon' => 'add_box',
@@ -66,8 +68,8 @@ class CarrierRangesType extends TranslatorAwareType
                         'modal.addRange' => $this->trans('Add range', 'Admin.Shipping.Feature'),
                         'modal.apply' => $this->trans('Apply', 'Admin.Actions'),
                         'modal.cancel' => $this->trans('Cancel', 'Admin.Actions'),
-                        'modal.col.min' => $this->trans('Minimum', 'Admin.Shipping.Feature'),
-                        'modal.col.max' => $this->trans('Maximum', 'Admin.Shipping.Feature'),
+                        'modal.col.from' => $this->trans('Minimum', 'Admin.Shipping.Feature'),
+                        'modal.col.to' => $this->trans('Maximum', 'Admin.Shipping.Feature'),
                         'modal.col.action' => $this->trans('Action', 'Admin.Shipping.Feature'),
                         'modal.overlappingAlert' => $this->trans('Make sure there are no overlapping ranges. Remember, the minimum is part of the range, but the maximum isn\'t. So, the upper limit of a range is the lower limit of the next range.', 'Admin.Shipping.Feature'),
                     ]),

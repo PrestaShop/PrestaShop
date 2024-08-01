@@ -24,4 +24,7 @@
  */
 export default {
   openRangeSelectionModal: 'openRangeSelectionModal',
+  shippingMethodChange: 'carrierShippingMethodChange',
+  zonesUpdated: 'carrierZonesUpdated',
+  rangesUpdated: 'carrierRangesUpdated',
 };
