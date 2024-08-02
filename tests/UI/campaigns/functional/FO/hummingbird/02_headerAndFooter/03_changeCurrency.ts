@@ -7,12 +7,10 @@ import {createCurrencyTest, deleteCurrencyTest} from '@commonTests/BO/internatio
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-// Import BO pages
-import currenciesPage from '@pages/BO/international/currencies';
-
 import {
   boDashboardPage,
   boLocalizationPage,
+  boCurrenciesPage,
   dataCurrencies,
   dataProducts,
   foHummingbirdHomePage,
@@ -102,18 +100,18 @@ describe('FO - Header and Footer : Change currency', async () => {
 
         await boLocalizationPage.goToSubTabCurrencies(page);
 
-        const pageTitle = await currenciesPage.getPageTitle(page);
-        expect(pageTitle).to.contains(currenciesPage.pageTitle);
+        const pageTitle = await boCurrenciesPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCurrenciesPage.pageTitle);
       });
 
       it(`should get the currency exchange rate value '${dataCurrencies.mad.isoCode}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getExchangeRate', baseContext);
 
         // Filter
-        await currenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.mad.isoCode);
+        await boCurrenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.mad.isoCode);
 
         // Check exchange rate
-        exchangeRateValue = await currenciesPage.getExchangeRateValue(page, 1);
+        exchangeRateValue = await boCurrenciesPage.getExchangeRateValue(page, 1);
         expect(exchangeRateValue).to.be.above(0);
       });
     });

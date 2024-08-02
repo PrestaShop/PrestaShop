@@ -5,12 +5,11 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
-import currenciesPage from '@pages/BO/international/currencies';
-import addCurrencyPage from '@pages/BO/international/currencies/add';
-
 import {
   boDashboardPage,
   boLocalizationPage,
+  boCurrenciesPage,
+  boCurrenciesCreatePage,
   type FakerCurrency,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -62,25 +61,25 @@ function createCurrencyTest(currencyData: FakerCurrency, baseContext: string = '
 
       await boLocalizationPage.goToSubTabCurrencies(page);
 
-      const pageTitle = await currenciesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(currenciesPage.pageTitle);
+      const pageTitle = await boCurrenciesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCurrenciesPage.pageTitle);
     });
 
     it('should go to create new currency page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewCurrencyPage', baseContext);
 
-      await currenciesPage.goToAddNewCurrencyPage(page);
+      await boCurrenciesPage.goToAddNewCurrencyPage(page);
 
-      const pageTitle = await addCurrencyPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addCurrencyPage.pageTitle);
+      const pageTitle = await boCurrenciesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCurrenciesCreatePage.pageTitle);
     });
 
     it('should create currency', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createOfficialCurrency', baseContext);
 
       // Create and check successful message
-      const textResult = await addCurrencyPage.addOfficialCurrency(page, currencyData);
-      expect(textResult).to.contains(currenciesPage.successfulCreationMessage);
+      const textResult = await boCurrenciesCreatePage.addOfficialCurrency(page, currencyData);
+      expect(textResult).to.contains(boCurrenciesPage.successfulCreationMessage);
     });
   });
 }
@@ -125,26 +124,26 @@ function deleteCurrencyTest(currencyData: FakerCurrency, baseContext: string = '
 
       await boLocalizationPage.goToSubTabCurrencies(page);
 
-      const pageTitle = await currenciesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(currenciesPage.pageTitle);
+      const pageTitle = await boCurrenciesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCurrenciesPage.pageTitle);
     });
 
     it(`should filter by iso code of currency '${currencyData.isoCode}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
       // Filter
-      await currenciesPage.filterTable(page, 'input', 'iso_code', currencyData.isoCode);
+      await boCurrenciesPage.filterTable(page, 'input', 'iso_code', currencyData.isoCode);
 
       // Check currency to delete
-      const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
+      const textColumn = await boCurrenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
       expect(textColumn).to.contains(currencyData.isoCode);
     });
 
     it('should delete currency', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteCurrency', baseContext);
 
-      const result = await currenciesPage.deleteCurrency(page, 1);
-      expect(result).to.be.equal(currenciesPage.successfulDeleteMessage);
+      const result = await boCurrenciesPage.deleteCurrency(page, 1);
+      expect(result).to.be.equal(boCurrenciesPage.successfulDeleteMessage);
     });
   });
 }

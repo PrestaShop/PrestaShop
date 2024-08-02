@@ -6,12 +6,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import currenciesPage from '@pages/BO/international/currencies';
 import languagesPage from '@pages/BO/international/languages';
 
 import {
   boDashboardPage,
   boLocalizationPage,
+  boCurrenciesPage,
   dataCurrencies,
   dataLanguages,
   foClassicHomePage,
@@ -157,30 +157,30 @@ describe('BO - International - Localization : Update default currency', async ()
 
             await boLocalizationPage.goToSubTabCurrencies(page);
 
-            const pageTitle = await currenciesPage.getPageTitle(page);
-            expect(pageTitle).to.contains(currenciesPage.pageTitle);
+            const pageTitle = await boCurrenciesPage.getPageTitle(page);
+            expect(pageTitle).to.contains(boCurrenciesPage.pageTitle);
           });
 
           it(`should filter by iso code of currency '${dataCurrencies.chileanPeso.isoCode}'`, async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'filterCurrencies', baseContext);
 
-            await currenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.chileanPeso.isoCode);
+            await boCurrenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.chileanPeso.isoCode);
 
-            const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
+            const textColumn = await boCurrenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
             expect(textColumn).to.contains(dataCurrencies.chileanPeso.isoCode);
           });
 
           it('should delete currency', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'deleteCurrency', baseContext);
 
-            const result = await currenciesPage.deleteCurrency(page, 1);
-            expect(result).to.be.equal(currenciesPage.successfulDeleteMessage);
+            const result = await boCurrenciesPage.deleteCurrency(page, 1);
+            expect(result).to.be.equal(boCurrenciesPage.successfulDeleteMessage);
           });
 
           it('should reset filters', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'resetCurrencies', baseContext);
 
-            const numberOfCurrenciesAfterReset = await currenciesPage.resetAndGetNumberOfLines(page);
+            const numberOfCurrenciesAfterReset = await boCurrenciesPage.resetAndGetNumberOfLines(page);
             expect(numberOfCurrenciesAfterReset).to.be.at.least(1);
           });
         });
