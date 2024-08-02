@@ -6,12 +6,11 @@ import {deleteCurrencyTest} from '@commonTests/BO/international/currency';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import currenciesPage from '@pages/BO/international/currencies';
-import addCurrencyPage from '@pages/BO/international/currencies/add';
-
 import {
   boDashboardPage,
   boLocalizationPage,
+  boCurrenciesPage,
+  boCurrenciesCreatePage,
   dataCurrencies,
   type FakerCurrency,
   utilsPlaywright,
@@ -69,14 +68,14 @@ describe('CLDR : Search a currency by ISO code', async () => {
 
     await boLocalizationPage.goToSubTabCurrencies(page);
 
-    const pageTitle = await currenciesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(currenciesPage.pageTitle);
+    const pageTitle = await boCurrenciesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCurrenciesPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
-    numberOfCurrencies = await currenciesPage.resetAndGetNumberOfLines(page);
+    numberOfCurrencies = await boCurrenciesPage.resetAndGetNumberOfLines(page);
     expect(numberOfCurrencies).to.be.above(0);
   });
 
@@ -84,21 +83,21 @@ describe('CLDR : Search a currency by ISO code', async () => {
     it('should go to create new currency page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToAddNewCurrencyPage${currency.isoCode}`, baseContext);
 
-      await currenciesPage.goToAddNewCurrencyPage(page);
+      await boCurrenciesPage.goToAddNewCurrencyPage(page);
 
-      const pageTitle = await addCurrencyPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addCurrencyPage.pageTitle);
+      const pageTitle = await boCurrenciesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCurrenciesCreatePage.pageTitle);
     });
 
     it(`should create the currency ${currency.isoCode}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `createOfficialCurrency${currency.isoCode}`, baseContext);
 
       // Create and check successful message
-      const textResult = await addCurrencyPage.addOfficialCurrency(page, currency);
-      expect(textResult).to.contains(currenciesPage.successfulCreationMessage);
+      const textResult = await boCurrenciesCreatePage.addOfficialCurrency(page, currency);
+      expect(textResult).to.contains(boCurrenciesPage.successfulCreationMessage);
 
       // Check number of currencies after creation
-      const numberOfCurrenciesAfterCreation = await currenciesPage.getNumberOfElementInGrid(page);
+      const numberOfCurrenciesAfterCreation = await boCurrenciesPage.getNumberOfElementInGrid(page);
       expect(numberOfCurrenciesAfterCreation).to.be.equal(numberOfCurrencies + index + 1);
     });
   });
@@ -107,14 +106,14 @@ describe('CLDR : Search a currency by ISO code', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'filterWithISOCodeEUR', baseContext);
 
     // Filter
-    await currenciesPage.filterTable(page, 'input', 'iso_code', 'EUR');
+    await boCurrenciesPage.filterTable(page, 'input', 'iso_code', 'EUR');
 
     // Check number of currencies
-    const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
+    const numberOfCurrenciesAfterFilter = await boCurrenciesPage.getNumberOfElementInGrid(page);
     expect(numberOfCurrenciesAfterFilter).to.be.equal(1);
 
     // Check currency
-    const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
+    const textColumn = await boCurrenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
     expect(textColumn).to.contains(dataCurrencies.euro.isoCode);
   });
 
@@ -122,14 +121,14 @@ describe('CLDR : Search a currency by ISO code', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'filterWithISOCodeUS', baseContext);
 
     // Filter
-    await currenciesPage.filterTable(page, 'input', 'iso_code', 'US');
+    await boCurrenciesPage.filterTable(page, 'input', 'iso_code', 'US');
 
     // Check number of currencies
-    const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
+    const numberOfCurrenciesAfterFilter = await boCurrenciesPage.getNumberOfElementInGrid(page);
     expect(numberOfCurrenciesAfterFilter).to.be.equal(1);
 
     // Check currency
-    const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
+    const textColumn = await boCurrenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
     expect(textColumn).to.contains(dataCurrencies.usd.isoCode);
   });
 
@@ -137,18 +136,18 @@ describe('CLDR : Search a currency by ISO code', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'filterWithISOCodePY', baseContext);
 
     // Filter
-    await currenciesPage.filterTable(page, 'input', 'iso_code', 'PY');
-    await currenciesPage.sortTable(page, 'iso_code', 'asc');
+    await boCurrenciesPage.filterTable(page, 'input', 'iso_code', 'PY');
+    await boCurrenciesPage.sortTable(page, 'iso_code', 'asc');
 
     // Check number of currencies
-    const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
+    const numberOfCurrenciesAfterFilter = await boCurrenciesPage.getNumberOfElementInGrid(page);
     expect(numberOfCurrenciesAfterFilter).to.be.equal(2);
 
     // Check currencies
-    const textColumnRow1 = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
+    const textColumnRow1 = await boCurrenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
     expect(textColumnRow1).to.contains(dataCurrencies.jpy.isoCode);
 
-    const textColumnRow2 = await currenciesPage.getTextColumnFromTableCurrency(page, 2, 'iso_code');
+    const textColumnRow2 = await boCurrenciesPage.getTextColumnFromTableCurrency(page, 2, 'iso_code');
     expect(textColumnRow2).to.contains(dataCurrencies.pyg.isoCode);
   });
 
@@ -156,21 +155,21 @@ describe('CLDR : Search a currency by ISO code', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'filterWithISOCodeP', baseContext);
 
     // Filter
-    await currenciesPage.filterTable(page, 'input', 'iso_code', 'P');
-    await currenciesPage.sortTable(page, 'iso_code', 'asc');
+    await boCurrenciesPage.filterTable(page, 'input', 'iso_code', 'P');
+    await boCurrenciesPage.sortTable(page, 'iso_code', 'asc');
 
     // Check number of currencies
-    const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
+    const numberOfCurrenciesAfterFilter = await boCurrenciesPage.getNumberOfElementInGrid(page);
     expect(numberOfCurrenciesAfterFilter).to.be.equal(3);
 
     // Check currencies
-    const textColumnRow1 = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
+    const textColumnRow1 = await boCurrenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
     expect(textColumnRow1).to.contains(dataCurrencies.gbp.isoCode);
 
-    const textColumnRow2 = await currenciesPage.getTextColumnFromTableCurrency(page, 2, 'iso_code');
+    const textColumnRow2 = await boCurrenciesPage.getTextColumnFromTableCurrency(page, 2, 'iso_code');
     expect(textColumnRow2).to.contains(dataCurrencies.jpy.isoCode);
 
-    const textColumnRow3 = await currenciesPage.getTextColumnFromTableCurrency(page, 3, 'iso_code');
+    const textColumnRow3 = await boCurrenciesPage.getTextColumnFromTableCurrency(page, 3, 'iso_code');
     expect(textColumnRow3).to.contains(dataCurrencies.pyg.isoCode);
   });
 
@@ -178,21 +177,21 @@ describe('CLDR : Search a currency by ISO code', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'filterWithISOCodeABC', baseContext);
 
     // Filter
-    await currenciesPage.filterTable(page, 'input', 'iso_code', 'ABC');
+    await boCurrenciesPage.filterTable(page, 'input', 'iso_code', 'ABC');
 
     // Check number of currencies
-    const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
+    const numberOfCurrenciesAfterFilter = await boCurrenciesPage.getNumberOfElementInGrid(page);
     expect(numberOfCurrenciesAfterFilter).to.be.equal(0);
 
     // Check currencies
-    const textColumn = await currenciesPage.getTextForEmptyTable(page);
+    const textColumn = await boCurrenciesPage.getTextForEmptyTable(page);
     expect(textColumn).to.equal('warning No records found');
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFinal', baseContext);
 
-    const numberOfCurrenciesAfterReset = await currenciesPage.resetAndGetNumberOfLines(page);
+    const numberOfCurrenciesAfterReset = await boCurrenciesPage.resetAndGetNumberOfLines(page);
     expect(numberOfCurrenciesAfterReset).to.be.eq(numberOfCurrencies + installedCurrencies.length);
   });
 

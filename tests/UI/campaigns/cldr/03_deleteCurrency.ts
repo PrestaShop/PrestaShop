@@ -5,12 +5,11 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import currenciesPage from '@pages/BO/international/currencies';
-import addCurrencyPage from '@pages/BO/international/currencies/add';
-
 import {
   boDashboardPage,
   boLocalizationPage,
+  boCurrenciesPage,
+  boCurrenciesCreatePage,
   dataCurrencies,
   type FakerCurrency,
   utilsPlaywright,
@@ -67,14 +66,14 @@ describe('CLDR : Delete a currency', async () => {
 
     await boLocalizationPage.goToSubTabCurrencies(page);
 
-    const pageTitle = await currenciesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(currenciesPage.pageTitle);
+    const pageTitle = await boCurrenciesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCurrenciesPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
-    numberOfCurrencies = await currenciesPage.resetAndGetNumberOfLines(page);
+    numberOfCurrencies = await boCurrenciesPage.resetAndGetNumberOfLines(page);
     expect(numberOfCurrencies).to.be.above(0);
   });
 
@@ -82,21 +81,21 @@ describe('CLDR : Delete a currency', async () => {
     it('should go to create new currency page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToAddNewCurrencyPage${currency.isoCode}`, baseContext);
 
-      await currenciesPage.goToAddNewCurrencyPage(page);
+      await boCurrenciesPage.goToAddNewCurrencyPage(page);
 
-      const pageTitle = await addCurrencyPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addCurrencyPage.pageTitle);
+      const pageTitle = await boCurrenciesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCurrenciesCreatePage.pageTitle);
     });
 
     it(`should create the currency ${currency.isoCode}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `createOfficialCurrency${currency.isoCode}`, baseContext);
 
       // Create and check successful message
-      const textResult = await addCurrencyPage.addOfficialCurrency(page, currency);
-      expect(textResult).to.contains(currenciesPage.successfulCreationMessage);
+      const textResult = await boCurrenciesCreatePage.addOfficialCurrency(page, currency);
+      expect(textResult).to.contains(boCurrenciesPage.successfulCreationMessage);
 
       // Check number of currencies after creation
-      const numberOfCurrenciesAfterCreation = await currenciesPage.getNumberOfElementInGrid(page);
+      const numberOfCurrenciesAfterCreation = await boCurrenciesPage.getNumberOfElementInGrid(page);
       expect(numberOfCurrenciesAfterCreation).to.be.equal(numberOfCurrencies + index + 1);
     });
   });
@@ -125,30 +124,30 @@ describe('CLDR : Delete a currency', async () => {
 
     await boLocalizationPage.goToSubTabCurrencies(page);
 
-    const pageTitle = await currenciesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(currenciesPage.pageTitle);
+    const pageTitle = await boCurrenciesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCurrenciesPage.pageTitle);
   });
 
   it(`should filter by iso code of currency '${dataCurrencies.usd.isoCode}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterToUSDCurrency0', baseContext);
 
     // Filter
-    await currenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.usd.isoCode);
+    await boCurrenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.usd.isoCode);
 
     // Check number of currencies
-    const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
+    const numberOfCurrenciesAfterFilter = await boCurrenciesPage.getNumberOfElementInGrid(page);
     expect(numberOfCurrenciesAfterFilter).to.be.equal(1);
 
     // Check currency
-    const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
+    const textColumn = await boCurrenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
     expect(textColumn).to.contains(dataCurrencies.usd.isoCode);
   });
 
   it('should delete currency', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'deleteCurrencyUSDWithError', baseContext);
 
-    const result = await currenciesPage.deleteCurrency(page, 1);
-    expect(result).to.be.equal(currenciesPage.cannotDeleteDefaultCurrencyMessage);
+    const result = await boCurrenciesPage.deleteCurrency(page, 1);
+    expect(result).to.be.equal(boCurrenciesPage.cannotDeleteDefaultCurrencyMessage);
   });
 
   it('should go to Localization Tab', async function () {
@@ -175,60 +174,60 @@ describe('CLDR : Delete a currency', async () => {
 
     await boLocalizationPage.goToSubTabCurrencies(page);
 
-    const pageTitle = await currenciesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(currenciesPage.pageTitle);
+    const pageTitle = await boCurrenciesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCurrenciesPage.pageTitle);
   });
 
   it(`should filter by iso code of currency '${dataCurrencies.usd.isoCode}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterToUSDCurrency1', baseContext);
 
     // Filter
-    await currenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.usd.isoCode);
+    await boCurrenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.usd.isoCode);
 
     // Check number of currencies
-    const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
+    const numberOfCurrenciesAfterFilter = await boCurrenciesPage.getNumberOfElementInGrid(page);
     expect(numberOfCurrenciesAfterFilter).to.be.equal(1);
 
     // Check currency
-    const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
+    const textColumn = await boCurrenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
     expect(textColumn).to.contains(dataCurrencies.usd.isoCode);
   });
 
   it('should delete currency', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'deleteCurrencyUSD', baseContext);
 
-    const result = await currenciesPage.deleteCurrency(page, 1);
-    expect(result).to.be.equal(currenciesPage.successfulDeleteMessage);
+    const result = await boCurrenciesPage.deleteCurrency(page, 1);
+    expect(result).to.be.equal(boCurrenciesPage.successfulDeleteMessage);
   });
 
   it(`should select rows except '${dataCurrencies.euro.isoCode}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetAndSelectRowsExceptEUR', baseContext);
 
-    const numberOfCurrenciesAfterDelete = await currenciesPage.resetAndGetNumberOfLines(page);
+    const numberOfCurrenciesAfterDelete = await boCurrenciesPage.resetAndGetNumberOfLines(page);
     expect(numberOfCurrenciesAfterDelete).to.be.eq(numberOfCurrencies + currencies.length - 1);
 
-    const isBulkActionsEnabledBeforeSelect = await currenciesPage.isBulkActionsEnabled(page);
+    const isBulkActionsEnabledBeforeSelect = await boCurrenciesPage.isBulkActionsEnabled(page);
     expect(isBulkActionsEnabledBeforeSelect).to.eq(false);
 
     for (let numRow = 1; numRow <= numberOfCurrenciesAfterDelete; numRow++) {
-      const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, numRow, 'iso_code');
+      const textColumn = await boCurrenciesPage.getTextColumnFromTableCurrency(page, numRow, 'iso_code');
 
       if (textColumn !== dataCurrencies.euro.isoCode) {
-        await currenciesPage.selectRow(page, numRow);
+        await boCurrenciesPage.selectRow(page, numRow);
       }
     }
 
-    const isBulkActionsEnabledAfterSelect = await currenciesPage.isBulkActionsEnabled(page);
+    const isBulkActionsEnabledAfterSelect = await boCurrenciesPage.isBulkActionsEnabled(page);
     expect(isBulkActionsEnabledAfterSelect).to.eq(true);
   });
 
   it('should bulk delete currencies', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCurrencies', baseContext);
 
-    const result = await currenciesPage.bulkDeleteCurrencies(page);
-    expect(result).to.be.eq(currenciesPage.successfulMultiDeleteMessage);
+    const result = await boCurrenciesPage.bulkDeleteCurrencies(page);
+    expect(result).to.be.eq(boCurrenciesPage.successfulMultiDeleteMessage);
 
-    const numberOfCurrenciesAfterBulkDeete = await currenciesPage.getNumberOfElementInGrid(page);
+    const numberOfCurrenciesAfterBulkDeete = await boCurrenciesPage.getNumberOfElementInGrid(page);
     expect(numberOfCurrenciesAfterBulkDeete).to.be.equal(numberOfCurrencies);
   });
 });

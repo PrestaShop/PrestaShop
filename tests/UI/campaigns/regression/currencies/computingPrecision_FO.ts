@@ -11,8 +11,6 @@ import addSqlQueryPage from '@pages/BO/advancedParameters/database/sqlManager/ad
 import viewSqlQueryPage from '@pages/BO/advancedParameters/database/sqlManager/view';
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
-import currenciesPage from '@pages/BO/international/currencies';
-import addCurrencyPage from '@pages/BO/international/currencies/add';
 import ordersPage from '@pages/BO/orders';
 // Import FO pages
 import {cartPage} from '@pages/FO/classic/cart';
@@ -22,6 +20,8 @@ import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmatio
 import {
   boDashboardPage,
   boLocalizationPage,
+  boCurrenciesPage,
+  boCurrenciesCreatePage,
   dataCurrencies,
   dataCustomers,
   dataPaymentMethods,
@@ -113,10 +113,10 @@ describe(
       it('should go to cart rule page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToCartRulesPageToCreate', baseContext);
 
-        await addCurrencyPage.goToSubMenu(
+        await boCurrenciesCreatePage.goToSubMenu(
           page,
-          addCurrencyPage.catalogParentLink,
-          addCurrencyPage.discountsLink,
+          boCurrenciesCreatePage.catalogParentLink,
+          boCurrenciesCreatePage.discountsLink,
         );
 
         const pageTitle = await cartRulesPage.getPageTitle(page);
@@ -180,36 +180,36 @@ describe(
 
         await boLocalizationPage.goToSubTabCurrencies(page);
 
-        const pageTitle = await currenciesPage.getPageTitle(page);
-        expect(pageTitle).to.contains(currenciesPage.pageTitle);
+        const pageTitle = await boCurrenciesPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCurrenciesPage.pageTitle);
       });
 
       it(`should filter by iso code '${dataCurrencies.euro.isoCode}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterCurrenciesToChangePrecision', baseContext);
 
         // Filter
-        await currenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.euro.isoCode);
+        await boCurrenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.euro.isoCode);
 
         // Check number of currencies
-        const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
+        const numberOfCurrenciesAfterFilter = await boCurrenciesPage.getNumberOfElementInGrid(page);
         expect(numberOfCurrenciesAfterFilter).to.be.at.least(1);
       });
 
       it('should go to edit currency page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToEditCurrencyToChangePrecision', baseContext);
 
-        await currenciesPage.goToEditCurrencyPage(page, 1);
+        await boCurrenciesPage.goToEditCurrencyPage(page, 1);
 
-        const pageTitle = await addCurrencyPage.getPageTitle(page);
-        expect(pageTitle).to.contains(addCurrencyPage.editCurrencyPage);
+        const pageTitle = await boCurrenciesCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCurrenciesCreatePage.editCurrencyPage);
       });
 
       it('should set precision to 3', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'changePrecision', baseContext);
 
         // Set currency precision to 3 and check successful update message
-        const textResult = await addCurrencyPage.setCurrencyPrecision(page, 3);
-        expect(textResult).to.contains(currenciesPage.successfulUpdateMessage);
+        const textResult = await boCurrenciesCreatePage.setCurrencyPrecision(page, 3);
+        expect(textResult).to.contains(boCurrenciesPage.successfulUpdateMessage);
       });
     });
 
@@ -316,8 +316,8 @@ describe(
         // Close tab and init other page objects with new current tab
         page = await orderConfirmationPage.closePage(browserContext, page, 0);
 
-        const pageTitle = await currenciesPage.getPageTitle(page);
-        expect(pageTitle).to.contains(currenciesPage.pageTitle);
+        const pageTitle = await boCurrenciesPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCurrenciesPage.pageTitle);
       });
 
       it('should go to orders page', async function () {
@@ -443,36 +443,36 @@ describe(
 
           await boLocalizationPage.goToSubTabCurrencies(page);
 
-          const pageTitle = await currenciesPage.getPageTitle(page);
-          expect(pageTitle).to.contains(currenciesPage.pageTitle);
+          const pageTitle = await boCurrenciesPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boCurrenciesPage.pageTitle);
         });
 
         it(`should filter by iso code '${dataCurrencies.euro.isoCode}'`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'filterCurrenciesToReset', baseContext);
 
           // Filter
-          await currenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.euro.isoCode);
+          await boCurrenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.euro.isoCode);
 
           // Check number of currencies
-          const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
+          const numberOfCurrenciesAfterFilter = await boCurrenciesPage.getNumberOfElementInGrid(page);
           expect(numberOfCurrenciesAfterFilter).to.be.at.least(1);
         });
 
         it('should go to edit currency page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToEditCurrencyPageToReset', baseContext);
 
-          await currenciesPage.goToEditCurrencyPage(page, 1);
+          await boCurrenciesPage.goToEditCurrencyPage(page, 1);
 
-          const pageTitle = await addCurrencyPage.getPageTitle(page);
-          expect(pageTitle).to.contains(addCurrencyPage.editCurrencyPage);
+          const pageTitle = await boCurrenciesCreatePage.getPageTitle(page);
+          expect(pageTitle).to.contains(boCurrenciesCreatePage.editCurrencyPage);
         });
 
         it('should reset currency precision', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'resetCurrencyPrecision', baseContext);
 
           // Set currency precision to 2 and check successful update message
-          const textResult = await addCurrencyPage.setCurrencyPrecision(page, 2);
-          expect(textResult).to.contains(currenciesPage.successfulUpdateMessage);
+          const textResult = await boCurrenciesCreatePage.setCurrencyPrecision(page, 2);
+          expect(textResult).to.contains(boCurrenciesPage.successfulUpdateMessage);
         });
       });
 
@@ -480,10 +480,10 @@ describe(
         it('should go to cart rules page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToCartRulesPageToDelete', baseContext);
 
-          await currenciesPage.goToSubMenu(
+          await boCurrenciesPage.goToSubMenu(
             page,
-            currenciesPage.catalogParentLink,
-            currenciesPage.discountsLink,
+            boCurrenciesPage.catalogParentLink,
+            boCurrenciesPage.discountsLink,
           );
 
           const pageTitle = await cartRulesPage.getPageTitle(page);

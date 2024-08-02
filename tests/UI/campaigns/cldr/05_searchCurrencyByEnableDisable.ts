@@ -6,12 +6,11 @@ import {deleteCurrencyTest} from '@commonTests/BO/international/currency';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import currenciesPage from '@pages/BO/international/currencies';
-import addCurrencyPage from '@pages/BO/international/currencies/add';
-
 import {
   boDashboardPage,
   boLocalizationPage,
+  boCurrenciesPage,
+  boCurrenciesCreatePage,
   dataCurrencies,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -61,35 +60,35 @@ describe('CLDR : Search a currency by enable/disable', async () => {
 
     await boLocalizationPage.goToSubTabCurrencies(page);
 
-    const pageTitle = await currenciesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(currenciesPage.pageTitle);
+    const pageTitle = await boCurrenciesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCurrenciesPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
-    numberOfCurrencies = await currenciesPage.resetAndGetNumberOfLines(page);
+    numberOfCurrencies = await boCurrenciesPage.resetAndGetNumberOfLines(page);
     expect(numberOfCurrencies).to.be.above(0);
   });
 
   it('should go to create new currency page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewCurrencyPageUSD', baseContext);
 
-    await currenciesPage.goToAddNewCurrencyPage(page);
+    await boCurrenciesPage.goToAddNewCurrencyPage(page);
 
-    const pageTitle = await addCurrencyPage.getPageTitle(page);
-    expect(pageTitle).to.contains(addCurrencyPage.pageTitle);
+    const pageTitle = await boCurrenciesCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCurrenciesCreatePage.pageTitle);
   });
 
   it('should create the currency USD', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'createOfficialCurrencyUSD', baseContext);
 
     // Create and check successful message
-    const textResult = await addCurrencyPage.addOfficialCurrency(page, dataCurrencies.usd);
-    expect(textResult).to.contains(currenciesPage.successfulCreationMessage);
+    const textResult = await boCurrenciesCreatePage.addOfficialCurrency(page, dataCurrencies.usd);
+    expect(textResult).to.contains(boCurrenciesPage.successfulCreationMessage);
 
     // Check number of currencies after creation
-    const numberOfCurrenciesAfterCreation = await currenciesPage.getNumberOfElementInGrid(page);
+    const numberOfCurrenciesAfterCreation = await boCurrenciesPage.getNumberOfElementInGrid(page);
     expect(numberOfCurrenciesAfterCreation).to.be.equal(numberOfCurrencies + 1);
   });
 
@@ -97,86 +96,86 @@ describe('CLDR : Search a currency by enable/disable', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'filterToUSDCurrency', baseContext);
 
     // Filter
-    await currenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.usd.isoCode);
+    await boCurrenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.usd.isoCode);
 
     // Check number of currencies
-    const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
+    const numberOfCurrenciesAfterFilter = await boCurrenciesPage.getNumberOfElementInGrid(page);
     expect(numberOfCurrenciesAfterFilter).to.be.equal(1);
 
     // Check currency created
-    const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
+    const textColumn = await boCurrenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
     expect(textColumn).to.contains(dataCurrencies.usd.isoCode);
   });
 
   it(`should disable currency '${dataCurrencies.usd.isoCode}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', `disableCurrency${dataCurrencies.usd.isoCode}`, baseContext);
 
-    await currenciesPage.setStatus(page, 1, false);
+    await boCurrenciesPage.setStatus(page, 1, false);
 
-    const status = await currenciesPage.getStatus(page, 1);
+    const status = await boCurrenciesPage.getStatus(page, 1);
     expect(status).to.eq(false);
   });
 
   it('should search Enabled currencies', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterEnabledCurrencies', baseContext);
 
-    await currenciesPage.resetFilter(page);
-    await currenciesPage.filterTable(page, 'select', 'active', '1');
+    await boCurrenciesPage.resetFilter(page);
+    await boCurrenciesPage.filterTable(page, 'select', 'active', '1');
 
-    const numberEnabledCurrencies = await currenciesPage.getNumberOfElementInGrid(page);
+    const numberEnabledCurrencies = await boCurrenciesPage.getNumberOfElementInGrid(page);
     expect(numberEnabledCurrencies).to.be.eq(1);
 
-    const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
+    const textColumn = await boCurrenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
     expect(textColumn).to.contains(dataCurrencies.euro.isoCode);
   });
 
   it('should search Disabled currencies', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterDisabledCurrencies', baseContext);
 
-    await currenciesPage.resetFilter(page);
-    await currenciesPage.filterTable(page, 'select', 'active', '0');
+    await boCurrenciesPage.resetFilter(page);
+    await boCurrenciesPage.filterTable(page, 'select', 'active', '0');
 
-    const numberEnabledCurrencies = await currenciesPage.getNumberOfElementInGrid(page);
+    const numberEnabledCurrencies = await boCurrenciesPage.getNumberOfElementInGrid(page);
     expect(numberEnabledCurrencies).to.be.eq(1);
 
-    const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
+    const textColumn = await boCurrenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
     expect(textColumn).to.contains(dataCurrencies.usd.isoCode);
   });
 
   it(`should enable currency '${dataCurrencies.usd.isoCode}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', `enableCurrency${dataCurrencies.usd.isoCode}`, baseContext);
 
-    await currenciesPage.setStatus(page, 1, true);
+    await boCurrenciesPage.setStatus(page, 1, true);
 
-    const textColumn = await currenciesPage.getTextForEmptyTable(page);
+    const textColumn = await boCurrenciesPage.getTextForEmptyTable(page);
     expect(textColumn).to.equal('warning No records found');
   });
 
   it('should go to create new currency page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewCurrencyPageGBP', baseContext);
 
-    await currenciesPage.goToAddNewCurrencyPage(page);
+    await boCurrenciesPage.goToAddNewCurrencyPage(page);
 
-    const pageTitle = await addCurrencyPage.getPageTitle(page);
-    expect(pageTitle).to.contains(addCurrencyPage.pageTitle);
+    const pageTitle = await boCurrenciesCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCurrenciesCreatePage.pageTitle);
   });
 
   it('should create the currency GBP', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'createOfficialCurrencyGBP', baseContext);
 
     // Create and check successful message
-    const textResult = await addCurrencyPage.addOfficialCurrency(page, dataCurrencies.gbp);
-    expect(textResult).to.contains(currenciesPage.successfulCreationMessage);
+    const textResult = await boCurrenciesCreatePage.addOfficialCurrency(page, dataCurrencies.gbp);
+    expect(textResult).to.contains(boCurrenciesPage.successfulCreationMessage);
 
     // Check number of currencies after creation
-    const numberOfCurrenciesAfterCreation = await currenciesPage.getNumberOfElementInGrid(page);
+    const numberOfCurrenciesAfterCreation = await boCurrenciesPage.getNumberOfElementInGrid(page);
     expect(numberOfCurrenciesAfterCreation).to.be.eq(0);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFinal', baseContext);
 
-    const numberOfCurrenciesAfterReset = await currenciesPage.resetAndGetNumberOfLines(page);
+    const numberOfCurrenciesAfterReset = await boCurrenciesPage.resetAndGetNumberOfLines(page);
     expect(numberOfCurrenciesAfterReset).to.be.eq(numberOfCurrencies + 2);
   });
 

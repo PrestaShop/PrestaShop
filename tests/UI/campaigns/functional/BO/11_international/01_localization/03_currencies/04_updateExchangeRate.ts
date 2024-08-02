@@ -5,12 +5,11 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import currenciesPage from '@pages/BO/international/currencies';
-import addCurrencyPage from '@pages/BO/international/currencies/add';
-
 import {
   boDashboardPage,
   boLocalizationPage,
+  boCurrenciesPage,
+  boCurrenciesCreatePage,
   dataCurrencies,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -61,35 +60,35 @@ describe('BO - International - Currencies : Update exchange rate', async () => {
 
       await boLocalizationPage.goToSubTabCurrencies(page);
 
-      const pageTitle = await currenciesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(currenciesPage.pageTitle);
+      const pageTitle = await boCurrenciesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCurrenciesPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-      numberOfCurrencies = await currenciesPage.resetAndGetNumberOfLines(page);
+      numberOfCurrencies = await boCurrenciesPage.resetAndGetNumberOfLines(page);
       expect(numberOfCurrencies).to.be.above(0);
     });
 
     it('should go to create new currency page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewCurrencyPage', baseContext);
 
-      await currenciesPage.goToAddNewCurrencyPage(page);
+      await boCurrenciesPage.goToAddNewCurrencyPage(page);
 
-      const pageTitle = await addCurrencyPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addCurrencyPage.pageTitle);
+      const pageTitle = await boCurrenciesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCurrenciesCreatePage.pageTitle);
     });
 
     it('should create currency', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createOfficialCurrency', baseContext);
 
       // Create and check successful message
-      const textResult = await addCurrencyPage.addOfficialCurrency(page, dataCurrencies.mad);
-      expect(textResult).to.contains(currenciesPage.successfulCreationMessage);
+      const textResult = await boCurrenciesCreatePage.addOfficialCurrency(page, dataCurrencies.mad);
+      expect(textResult).to.contains(boCurrenciesPage.successfulCreationMessage);
 
       // Check number of currencies after creation
-      const numberOfCurrenciesAfterCreation = await currenciesPage.getNumberOfElementInGrid(page);
+      const numberOfCurrenciesAfterCreation = await boCurrenciesPage.getNumberOfElementInGrid(page);
       expect(numberOfCurrenciesAfterCreation).to.be.equal(numberOfCurrencies + 1);
     });
   });
@@ -99,55 +98,55 @@ describe('BO - International - Currencies : Update exchange rate', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdate', baseContext);
 
       // Filter
-      await currenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.mad.isoCode);
+      await boCurrenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.mad.isoCode);
 
-      const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
+      const numberOfCurrenciesAfterFilter = await boCurrenciesPage.getNumberOfElementInGrid(page);
       expect(numberOfCurrenciesAfterFilter).to.be.equal(numberOfCurrencies);
 
       // Check currency to delete
-      const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
+      const textColumn = await boCurrenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
       expect(textColumn).to.contains(dataCurrencies.mad.isoCode);
     });
 
     it('should go to the created currency page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditCurrencyPage', baseContext);
 
-      await currenciesPage.goToEditCurrencyPage(page, 1);
+      await boCurrenciesPage.goToEditCurrencyPage(page, 1);
 
-      const pageTitle = await addCurrencyPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addCurrencyPage.editCurrencyPage);
+      const pageTitle = await boCurrenciesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCurrenciesCreatePage.editCurrencyPage);
     });
 
     it('should update the exchange rate of the created currency', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateExchangeRate', baseContext);
 
       // Update and check successful message
-      const textResult = await addCurrencyPage.updateExchangeRate(page, newExchangeRate);
-      expect(textResult).to.contains(currenciesPage.successfulUpdateMessage);
+      const textResult = await boCurrenciesCreatePage.updateExchangeRate(page, newExchangeRate);
+      expect(textResult).to.contains(boCurrenciesPage.successfulUpdateMessage);
     });
 
     it('should click on Update exchange rate button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickUpdateExchangeRates', baseContext);
 
       // Click on update exchange rates button and check successful message
-      const textResult = await currenciesPage.updateExchangeRate(page);
-      expect(textResult).to.contains(currenciesPage.successfulUpdateMessage);
+      const textResult = await boCurrenciesPage.updateExchangeRate(page);
+      expect(textResult).to.contains(boCurrenciesPage.successfulUpdateMessage);
     });
 
     it(`should filter by iso code of currency '${dataCurrencies.mad.isoCode}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToCheckValue', baseContext);
 
       // Filter
-      await currenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.mad.isoCode);
+      await boCurrenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.mad.isoCode);
 
-      const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
+      const textColumn = await boCurrenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
       expect(textColumn).to.contains(dataCurrencies.mad.isoCode);
     });
 
     it(`should check that the exchange rate of currency '${dataCurrencies.mad.isoCode}' is updated`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkExchangeRates', baseContext);
 
-      const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'conversion_rate');
+      const textColumn = await boCurrenciesPage.getTextColumnFromTableCurrency(page, 1, 'conversion_rate');
       expect(textColumn).to.not.equal(newExchangeRate);
     });
   });
@@ -157,27 +156,27 @@ describe('BO - International - Currencies : Update exchange rate', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
       // Filter
-      await currenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.mad.isoCode);
+      await boCurrenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.mad.isoCode);
 
-      const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
+      const numberOfCurrenciesAfterFilter = await boCurrenciesPage.getNumberOfElementInGrid(page);
       expect(numberOfCurrenciesAfterFilter).to.be.equal(numberOfCurrencies);
 
       // Check currency to delete
-      const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
+      const textColumn = await boCurrenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
       expect(textColumn).to.contains(dataCurrencies.mad.isoCode);
     });
 
     it('should delete currency', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteCurrency', baseContext);
 
-      const result = await currenciesPage.deleteCurrency(page, 1);
-      expect(result).to.be.equal(currenciesPage.successfulDeleteMessage);
+      const result = await boCurrenciesPage.deleteCurrency(page, 1);
+      expect(result).to.be.equal(boCurrenciesPage.successfulDeleteMessage);
     });
 
     it('should reset filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
-      const numberOfCurrenciesAfterReset = await currenciesPage.resetAndGetNumberOfLines(page);
+      const numberOfCurrenciesAfterReset = await boCurrenciesPage.resetAndGetNumberOfLines(page);
       expect(numberOfCurrenciesAfterReset).to.be.equal(numberOfCurrencies);
     });
   });
