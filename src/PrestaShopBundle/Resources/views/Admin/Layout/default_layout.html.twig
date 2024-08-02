@@ -39,15 +39,7 @@
     {% endblock %}
   </head>
 
-  {# Construct CSS classes based on version numbers #}
-  {% set major_version = constant('PrestaShop\\PrestaShop\\Core\\Version::MAJOR_VERSION') %}
-  {% set minor_version = constant('PrestaShop\\PrestaShop\\Core\\Version::MINOR_VERSION') %}
-  {% set release_version = constant('PrestaShop\\PrestaShop\\Core\\Version::RELEASE_VERSION') %}
-  {% set body_major = 'body-v' ~ major_version %}
-  {% set body_minor = body_major ~ '-' ~ minor_version %}
-  {% set body_patch = body_minor ~ '-' ~ release_version %}
-
-  <body class="lang-{{ ps.isoUser }}{% if ps.isRtlLanguage %} lang-rtl{% endif %} {{ ps.controllerName|escape|lower }}{% if ps.menuCollapsed %} page-sidebar-closed{% endif %}{% if ps.multiShop|default(false) %} multishop-enabled{% endif %}{% if ps.debugMode|default(false) %} developer-mode{% endif %} {{ body_major }} {{ body_minor }} {{ body_patch }}"
+  <body class="lang-{{ ps.isoUser }}{% if ps.isRtlLanguage %} lang-rtl{% endif %} {{ ps.controllerName|escape|lower }}{% if ps.menuCollapsed %} page-sidebar-closed{% endif %}{% if ps.multiShop|default(false) %} multishop-enabled{% endif %}{% if ps.debugMode|default(false) %} developer-mode{% endif %} ps-bo-rebrand"
     {% if ps.jsRouterMetadata is defined and ps.jsRouterMetadata.base_url is defined %}data-base-url="{{ ps.jsRouterMetadata.base_url }}"{% endif %}
     {% if ps.jsRouterMetadata is defined and ps.jsRouterMetadata.token is defined %}data-token="{{ ps.jsRouterMetadata.token }}"{% endif %}
   >

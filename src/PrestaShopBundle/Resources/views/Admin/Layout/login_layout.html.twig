@@ -35,15 +35,7 @@
   {% block stylesheets %}{% endblock %}
 </head>
 
-{# Construct CSS classes based on version numbers #}
-{% set major_version = constant('PrestaShop\\PrestaShop\\Core\\Version::MAJOR_VERSION') %}
-{% set minor_version = constant('PrestaShop\\PrestaShop\\Core\\Version::MINOR_VERSION') %}
-{% set release_version = constant('PrestaShop\\PrestaShop\\Core\\Version::RELEASE_VERSION') %}
-{% set body_major = 'body-v' ~ major_version %}
-{% set body_minor = body_major ~ '-' ~ minor_version %}
-{% set body_patch = body_minor ~ '-' ~ release_version %}
-
-<body class="lang-{{ ps.isoUser }}{% if ps.isRtlLanguage %} lang-rtl{% endif %} ps_back-office bootstrap {{ body_major }} {{ body_minor }} {{ body_patch }}">
+<body class="lang-{{ ps.isoUser }}{% if ps.isRtlLanguage %} lang-rtl{% endif %} ps_back-office bootstrap ps-bo-rebrand">
   <div id="login">
     <div id="content">
       <div id="login-panel">
