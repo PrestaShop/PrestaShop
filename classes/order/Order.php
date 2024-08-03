@@ -753,6 +753,9 @@ class OrderCore extends ObjectModel
         }
 
         $product['location'] = StockAvailable::getLocation($product['product_id'], $product['product_attribute_id'], (int) $this->id_shop);
+        if ($product['location'] === null) {
+            $product['location'] = false;
+        }
     }
 
     /**
