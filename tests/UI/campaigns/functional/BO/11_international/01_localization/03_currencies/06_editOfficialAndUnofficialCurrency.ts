@@ -11,7 +11,8 @@ import {
   boCurrenciesPage,
   boCurrenciesCreatePage,
   dataCurrencies,
-  FakerCurrency, foClassicHomePage,
+  FakerCurrency,
+  foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -27,9 +28,7 @@ describe('BO - International - Currencies : Edit official and unofficial currenc
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfCurrencies: number = 0;
-
   const customSymbol: string = '£';
-
   const editCurrencyData: FakerCurrency = new FakerCurrency({
     name: 'Euros',
     exchangeRate: 3.000000,
