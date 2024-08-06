@@ -103,16 +103,16 @@
         </div>
 
         <div id="buttons" class="mainForm__footer">
-          <?php if (!$this->isFirstStep() && $this->previous_button) { ?>
-            <input id="btBack" class="button little" type="submit" name="submitPrevious" value="<?php echo $this->translator->trans('Back', [], 'Install'); ?>" />
-          <?php } ?>
-          
           <?php if (!$this->isLastStep()) { ?>
             <?php if ($this->next_button) { ?>
               <input id="btNext" class="button little" type="submit" name="submitNext" value="<?php echo $this->translator->trans('Next', [], 'Install'); ?>" />
             <?php } else { ?>
               <input id="btNext" class="button little disabled" type="submit" name="submitNext" value="<?php echo $this->translator->trans('Next', [], 'Install'); ?>" disabled="disabled" />
             <?php } ?>
+          <?php } ?>
+
+          <?php if (!$this->isFirstStep() && $this->previous_button) { ?>
+            <input id="btBack" class="button little" type="submit" name="submitPrevious" value="<?php echo $this->translator->trans('Back', [], 'Install'); ?>" />
           <?php } ?>
         </div>
       </form>

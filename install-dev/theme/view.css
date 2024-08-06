@@ -221,7 +221,16 @@ img {
 
 .mainForm__footer {
   display: flex;
+  flex-direction: row-reverse;
   gap: var(--cdk-size-16);
+}
+
+#btBack {
+  margin-right: auto;
+}
+
+#btNext {
+  margin-left: auto;
 }
 
 #leftpannel {
@@ -231,10 +240,6 @@ img {
 
 #sheets {
   flex-grow: 1;
-}
-
-#btNext {
-  margin-left: auto;
 }
 
 #footer {
