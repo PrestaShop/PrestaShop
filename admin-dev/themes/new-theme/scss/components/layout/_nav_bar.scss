@@ -426,7 +426,8 @@
       }
     }
 
-    @media (max-height: 870px) {			// this two tabs need to be flipped, otherwise
+    @media (max-height: 1040px) {
+      // these two tabs need to be flipped, otherwise
       // css issue with bottom of the page
       #subtab-ShopParameters.ul-open,
       #subtab-AdminAdvancedParameters.ul-open {

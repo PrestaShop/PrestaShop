@@ -131,7 +131,7 @@ describe('API : PUT /modules/toggle-status', async () => {
     it('should go to \'Modules > Module Manager\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToModulesPage', baseContext);
 
-      await boDashboardPage.goToSubMenu(page, boDashboardPage.modulesParentLink, boDashboardPage.modulesParentLink);
+      await boDashboardPage.goToSubMenu(page, boDashboardPage.modulesParentLink, boDashboardPage.moduleManagerLink);
       await boModuleManagerPage.closeSfToolBar(page);
       await boModuleManagerPage.filterByStatus(page, 'installed');
 
@@ -190,7 +190,7 @@ describe('API : PUT /modules/toggle-status', async () => {
       it('should check module status by technical name', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkModules${index}`, baseContext);
 
-        await boDashboardPage.goToSubMenu(page, boDashboardPage.modulesParentLink, boDashboardPage.modulesParentLink);
+        await boDashboardPage.goToSubMenu(page, boDashboardPage.modulesParentLink, boDashboardPage.moduleManagerLink);
         await boModuleManagerPage.closeSfToolBar(page);
 
         const pageTitle = await boModuleManagerPage.getPageTitle(page);
