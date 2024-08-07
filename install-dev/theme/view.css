@@ -1181,7 +1181,7 @@ ul#optional_update li.ok {
   display: block;
   width: 12px;
   height: 12px;
-  background: url("img/chosen-sprite.png") -42px 1px no-repeat;
+  background: var(--cdk-white);
   font-size: 1px;
 }
 .chosen-container-single .chosen-single abbr:hover {
@@ -1339,7 +1339,7 @@ ul#optional_update li.ok {
   display: block;
   width: 12px;
   height: 12px;
-  background: url("img/chosen-sprite.png") -42px 1px no-repeat;
+  background: var(--cdk-white);
   font-size: 1px;
 }
 .chosen-container-multi
@@ -1481,23 +1481,6 @@ ul#optional_update li.ok {
   background-position: -12px 2px;
 }
 
-/* @end */
-/* @group Retina compatibility */
-@media only screen and (-webkit-min-device-pixel-ratio: 2),
-  only screen and (min-resolution: 144dpi) {
-  .chosen-rtl .chosen-search input[type="text"],
-  .chosen-container-single .chosen-single abbr,
-  .chosen-container-single .chosen-single div b,
-  .chosen-container-single .chosen-search input[type="text"],
-  .chosen-container-multi .chosen-choices .search-choice .search-choice-close,
-  .chosen-container .chosen-results-scroll-down span,
-  .chosen-container .chosen-results-scroll-up span {
-    background-image: url("img/chosen-sprite@2x.png") !important;
-    background-size: 52px 37px !important;
-    background-repeat: no-repeat !important;
-  }
-}
-/* @end */
 #sheet_content ul {
   list-style: none;
   margin: 0;
