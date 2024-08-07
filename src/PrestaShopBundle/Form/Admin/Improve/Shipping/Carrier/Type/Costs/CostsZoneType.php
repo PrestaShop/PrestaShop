@@ -50,6 +50,9 @@ class CostsZoneType extends TranslatorAwareType
                 'icon' => 'delete',
                 'attr' => [
                     'class' => 'btn btn-outline-danger js-carrier-delete-zone',
+                    'data-modal-title' => $this->trans('Delete Zone?', 'Admin.Shipping.Feature'),
+                    'data-modal-confirm' => $this->trans('Delete', 'Admin.Actions'),
+                    'data-modal-cancel' => $this->trans('Cancel', 'Admin.Actions'),
                 ],
             ])
             ->add('zoneName', TextPreviewType::class, [

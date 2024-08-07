@@ -23,19 +23,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import CarrierFormEventMap from '@pages/carrier/form/carrier-form-event-map';
-import ComponentsMap from '@components/components-map';
-import CarrierFormManager from '@pages/carrier/form/manager/carrier-form-manager';
-
-$(() => {
-  // Initialize components
-  window.prestashop.component.initComponents([
-   'TranslatableInput',
-   'EventEmitter',
-   'CarrierRanges',
-   'MultipleZoneChoice',
-  ]);
-
-  // Initialize the carrier form manager
-  new CarrierFormManager(window.prestashop.instance.eventEmitter);
-});
+export default {
+  zonesInput: '#carrier_shipping_settings_zones',
+  rangesInput: '#carrier_shipping_settings_ranges_data',
+  shippingMethodRow: '#carrier_shipping_settings_shipping_method',
+  shippingMethodInput: 'input[name="carrier[shipping_settings][shipping_method]"]',
+  deleteZoneButton: '.js-carrier-delete-zone',
+  zonesContainer: '#carrier_shipping_settings_ranges_costs_zones',
+  rangesContainer: '.js-carrier-range-container',
+  zoneRow: '.js-carrier-zone-row',
+  rangeRow: '.js-carrier-range-row',
+};

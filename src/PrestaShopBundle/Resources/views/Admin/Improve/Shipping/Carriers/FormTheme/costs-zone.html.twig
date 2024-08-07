@@ -23,8 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% block carrier_ranges_costs_zone_widget %}
-<div class="card shadow-none mb-2">
+{% block carrier_ranges_costs_zone_row %}
+<div class="card shadow-none mb-2 js-carrier-zone-row">
   {{ form_widget(form.zoneId) }}
   <div class="card-body p-4">
     <div class="d-flex mb-2 justify-content-between">
@@ -37,7 +37,8 @@
           {{ form_label(form.ranges, null, { 'label_attr': {'class': 'd-block mb-2 text-left text-md-right'} }) }}
         </div>
         <div class="col-12 col-md-10">
-          {{ form_widget(form.ranges, { 'attr': {'class': 'd-flex gap-3 flex-wrap'} }) }}
+          {{ form_widget(form.ranges, { 'attr': {'class': 'd-flex gap-3 flex-wrap js-carrier-range-container'} }) }}
+
         </div>
       </div>
     </div>
