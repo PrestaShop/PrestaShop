@@ -105,7 +105,6 @@
                         type="number"
                         class="form-control form-from"
                         inputmode="decimal"
-                        placeholder="0"
                         v-model="r.from"
                       >
                     </div>
@@ -119,7 +118,6 @@
                         type="number"
                         class="form-control form-to"
                         inputmode="decimal"
-                        placeholder="∞"
                         v-model="r.to"
                       >
                     </div>
@@ -257,6 +255,21 @@
         // We check ranges
         let saveMax: null|number = null;
         this.ranges.forEach((range, index) => {
+          // Check if all fields are filled
+          if (range.from === null) {
+            table.querySelectorAll(`tr[data-row="${index}"] input.form-from`)
+              .forEach((input) => {
+                input.classList.add('is-invalid');
+              });
+            this.errors = true;
+          }
+          if (range.to === null) {
+            table.querySelectorAll(`tr[data-row="${index}"] input.form-to`)
+              .forEach((input) => {
+                input.classList.add('is-invalid');
+              });
+            this.errors = true;
+          }
           // Check overlapping
           if (saveMax !== null && range.from !== null && range.from < saveMax) {
             table.querySelectorAll(`tr[data-row="${index - 1}"] input.form-to`)
