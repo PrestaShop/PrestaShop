@@ -187,10 +187,10 @@
       // If we need to open this modal
       this.eventEmitter.on(CarrierFormEventMap.openRangeSelectionModal, (ranges: Range[]) => {
         this.ranges = ranges ?? [];
-        this.openModal()
+        this.openModal();
       });
       // If we need to change the shipping method symbol
-      this.eventEmitter.on(CarrierFormEventMap.shippingMethodChange, (symbol: string) => this.symbol = symbol);
+      this.eventEmitter.on(CarrierFormEventMap.shippingMethodChange, (symbol: string) => { this.symbol = symbol; });
     },
     methods: {
       openModal() {

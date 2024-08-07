@@ -42,7 +42,7 @@ export default class CarrierRanges {
   initRangesSelectionModal(): void {
     // Create the modal container
     const $showModal = $(ComponentsMap.carrierRanges.addRangeButton);
-    const $modalContainer = $('<div id="' + ComponentsMap.carrierRanges.rangesSelectionAppId + '"></div>');
+    const $modalContainer = $(`<div id="${ComponentsMap.carrierRanges.rangesSelectionAppId}"></div>`);
     $showModal.after($modalContainer);
 
     // Retreive translations from the button
@@ -59,19 +59,19 @@ export default class CarrierRanges {
     }).use(i18n);
 
     // Mount the Vue app to the modal container
-    vueApp.mount('#' + ComponentsMap.carrierRanges.rangesSelectionAppId);
+    vueApp.mount(`#${ComponentsMap.carrierRanges.rangesSelectionAppId}`);
 
     // Open the modal with data when the button "Add range" is clicked
     $showModal.click((e: JQuery.ClickEvent) => {
       e.preventDefault();
       e.stopImmediatePropagation();
-      const data = $('#' + ComponentsMap.carrierRanges.rangesSelectionDataId).val() || '{}';
+      const data = $(`#${ComponentsMap.carrierRanges.rangesSelectionDataId}`).val() || '{}';
       this.eventEmitter.emit(CarrierFormEventMap.openRangeSelectionModal, JSON.parse(data.toString()));
     });
 
     // Listen the modal to apply the ranges selected to the data
     this.eventEmitter.on(CarrierFormEventMap.rangesUpdated, (ranges: Array<object>) => {
-      const $data = $('#' + ComponentsMap.carrierRanges.rangesSelectionDataId);
+      const $data = $(`#${ComponentsMap.carrierRanges.rangesSelectionDataId}`);
       $data.val(JSON.stringify(ranges));
     });
   }

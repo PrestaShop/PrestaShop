@@ -23,17 +23,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import CarrierFormEventMap from '@pages/carrier/form/carrier-form-event-map';
-import ComponentsMap from '@components/components-map';
 import CarrierFormManager from '@pages/carrier/form/manager/carrier-form-manager';
 
 $(() => {
   // Initialize components
   window.prestashop.component.initComponents([
-   'TranslatableInput',
-   'EventEmitter',
-   'CarrierRanges',
-   'MultipleZoneChoice',
+    'TranslatableInput',
+    'EventEmitter',
+    'CarrierRanges',
+    'MultipleZoneChoice',
   ]);
 
   // Initialize the carrier form manager

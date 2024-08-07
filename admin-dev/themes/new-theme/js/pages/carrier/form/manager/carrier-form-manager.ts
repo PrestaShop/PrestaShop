@@ -42,10 +42,13 @@ interface Range {
  */
 export default class CarrierFormManager {
   eventEmitter: EventEmitter;
+
   currentShippingSymbol: string;
 
   $zonesInput: JQuery;
+
   $rangesInput: JQuery;
+
   $shippingMethodInput: JQuery;
 
   /**
@@ -82,7 +85,7 @@ export default class CarrierFormManager {
   private refreshCurrentShippingSymbol() {
     // First, we need to get the units of the selected shipping method
     const shippingMethodUnits = $(CarrierFormMap.shippingMethodRow).data('units');
-    const shippingMethodValue = <number>this.$shippingMethodInput.filter(':checked').first().val() || -1;
+    const shippingMethodValue = <number> this.$shippingMethodInput.filter(':checked').first().val() || -1;
     this.currentShippingSymbol = shippingMethodUnits[shippingMethodValue] || '?';
 
     // Then, we need to emit an event to update this symbol to other components
@@ -105,7 +108,7 @@ export default class CarrierFormManager {
     // First, we retrieve the zones actually displayed and selected
     const $zonesContainer = $(CarrierFormMap.zonesContainer);
     const $zonesRows = $(CarrierFormMap.zoneRow);
-    const zones = <string[]>this.$zonesInput.val();
+    const zones = <string[]> this.$zonesInput.val();
 
     // First, we need to delete the zones that are not selected and already displayed
     // (and we keep the zones that are already displayed)
@@ -127,9 +130,8 @@ export default class CarrierFormManager {
     const zonePrototype = $zonesContainer.data('prototype');
     zones.forEach((zoneId: string) => {
       if (!zonesAlreadyDisplayed.includes(zoneId)) {
-
         // We create new zone row by duplicating the prototype and replacing the zone index
-        let prototype = zonePrototype.replace(/__zone__/g, $(CarrierFormMap.zoneRow).length);
+        const prototype = zonePrototype.replace(/__zone__/g, $(CarrierFormMap.zoneRow).length);
 
         // We need to update the zone id and the zone name
         const $prototype = $(prototype);
@@ -195,11 +197,12 @@ export default class CarrierFormManager {
     rangesContainer.each((_, rangeContainer: HTMLElement) => {
       // First, we need to save all values for this range.
       const $rangeContainer = $(rangeContainer);
-      const pricesRanges = $(rangeContainer).find(CarrierFormMap.rangeRow).map((_, rangeRow: HTMLElement) => {
+      const pricesRanges = $(rangeContainer).find(CarrierFormMap.rangeRow).map((__, rangeRow: HTMLElement) => {
         const $rangeRow = $(rangeRow);
         const from = $rangeRow.find('input[name$="[from]"]').val();
         const to = $rangeRow.find('input[name$="[to]"]').val();
         const price = $rangeRow.find('input[name$="[price]"]').val();
+
         return {from, to, price};
       });
 
