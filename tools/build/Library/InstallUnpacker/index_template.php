@@ -209,7 +209,7 @@ if (isset($_GET['element'])) {
     switch ($_GET['element']) {
         case 'font':
             header('Content-Type: application/font-sfnt');
-            echo getFileContent('OpenSans-Regular.ttf', true);
+            echo getFileContent('IBMPlexSans-Regular.ttf', true);
 
             break;
         case 'css':
@@ -280,7 +280,7 @@ if (isset($_GET['element'])) {
           Do you want to install the latest version instead? (recommended)
         </div>
         <div id="form-panel">
-          <div id="form">
+          <div id="form" class="buttons">
             <a id="skip-button" class="button button-no" href="#">No thanks</a>
             <a id="latest-button" class="button button-yes" href="#">Yes please!</a>
           </div>

@@ -61,44 +61,48 @@
 
   <body>
     <div id="container">
-
       <?php echo $this->getTemplate('header'); ?>
 
       <!-- Ajax loader animation -->
       <div id="loaderSpace">
         <div id="loader">&nbsp;</div>
       </div>
-
-      <?php echo $this->getTemplate('menu'); ?>
-
+      
+        
       <!-- Page content -->
       <form id="mainForm" action="index.php" method="post">
-        <div id="sheets" class="sheet shown">
-          <div id="sheet_<?php echo self::getSteps()->current()->getName(); ?>" class="sheet shown clearfix">
-            <div class="contentTitle">
-              <h1><?php echo $this->translator->trans('Installation Assistant', [], 'Install'); ?></h1>
-              <ul id="stepList_1" class="stepList clearfix">
-                <?php foreach (self::getSteps() as $step) { ?>
-                  <li <?php if ($this->isStepFinished($step->getName())) { ?>class="ok"<?php } ?>><?php echo $step; ?></li>
-                <?php } ?>
-              </ul>
-            </div>
-            <noscript>
-              <h4 class="errorBlock" style="margin-bottom:10px">
-                <?php echo $this->translator->trans('To install PrestaShop, you need to have JavaScript enabled in your browser.', [], 'Install'); ?>
-                <a href="<?php echo $this->translator->trans('https://enable-javascript.com/', [], 'Install'); ?>" target="_blank" rel="noopener noreferrer">
-                  <img src="theme/img/help.png" style="height:16px;width:16px" />
-                </a>
-              </h4>
-            </noscript>
+        <div class="mainForm__header">
+          <h1><?php echo $this->translator->trans('Installation Assistant', [], 'Install'); ?></h1>
 
-            <div>
-              <?php echo $this->getContent(); ?>
+          <ul id="stepList_1" class="stepList">
+            <?php foreach (self::getSteps() as $step) { ?>
+              <li <?php if ($this->isStepFinished($step->getName())) { ?>class="ok"<?php } ?>><?php echo $step; ?></li>
+            <?php } ?>
+          </ul>
+        </div>
+
+        <div class="mainForm__content">
+          <?php echo $this->getTemplate('menu'); ?>
+
+          <div id="sheets" class="sheet shown">
+            <div id="sheet_<?php echo self::getSteps()->current()->getName(); ?>" class="sheet shown clearfix">
+              <noscript>
+                <h4 class="errorBlock" style="margin-bottom:10px">
+                  <?php echo $this->translator->trans('To install PrestaShop, you need to have JavaScript enabled in your browser.', [], 'Install'); ?>
+                  <a href="<?php echo $this->translator->trans('https://enable-javascript.com/', [], 'Install'); ?>" target="_blank" rel="noopener noreferrer">
+                    <img src="theme/img/help.png" style="height:16px;width:16px" />
+                  </a>
+                </h4>
+              </noscript>
+
+              <div>
+                <?php echo $this->getContent(); ?>
+              </div>
             </div>
           </div>
         </div>
 
-        <div id="buttons">
+        <div id="buttons" class="mainForm__footer">
           <?php if (!$this->isLastStep()) { ?>
             <?php if ($this->next_button) { ?>
               <input id="btNext" class="button little" type="submit" name="submitNext" value="<?php echo $this->translator->trans('Next', [], 'Install'); ?>" />

@@ -21,10 +21,13 @@ div#sheets{
 	float:right;
 }
 div#buttons{
-	margin:0 295px 0 0;
+	margin: 0;
 }
-#btNext{
-	float:left;
+#btBack {
+  margin: 0 0 0 auto;
+}
+#btNext {
+  margin: 0 auto 0 0;
 }
 #sheets ul{
 	margin-right: 15px;
@@ -99,9 +102,15 @@ ol#tabs li{
 #sheet_system #btTestDB{
 	float:left;
 }
-ul#optional li.fail{
-	background:#f8eba8 url(img/pict_error.png) no-repeat 1% 8px;
-    padding-left: 20px;
+ul#required li.fail {
+  background: var(--cdk-red-50) url(img/error.svg) no-repeat var(--cdk-size-8) center;
+  background-size: var(--cdk-size-20);
+  padding-inline-end: var(--cdk-size-32);
+}
+ul#optional li.fail {
+  background: var(--cdk-yellow-50) url(img/warning.svg) no-repeat var(--cdk-size-8) center;
+  background-size: var(--cdk-size-20);
+  padding-inline-end: var(--cdk-size-32);
 }
 #mailSMTPParam p{
 	background:url(img/bg_field.png) repeat-x 0 0 transparent;
@@ -295,14 +304,6 @@ ul#optional_update li.ok{
 }
 .chosen-rtl .chosen-search input[type="text"]{
 	padding: 4px 20px 4px 5px;
-}
-@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-resolution: 144dpi)
-{
-	.chosen-container .chosen-results-scroll-up span{
-		background-image: url('img/chosen-sprite@2x.png') !important;
-		background-size: 52px 37px !important;
-		background-repeat: no-repeat !important;
-	}
 }
 .btn-facebook, .btn-twitter, .btn-google-plus, .btn-pinterest, .btn-linkedin{
 	padding: 4px 4px 4px 8px;

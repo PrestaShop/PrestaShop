@@ -34,7 +34,7 @@
 
 <div id="install_process_form">
     <div id="progress_bar">
-        <div class="installing"></div>
+        <h2 class="installing"></h2>
 
         <div class="total">
             <div class="progress"></div>
@@ -65,44 +65,52 @@
             <tr class="odd">
                 <td class="label"><?php echo $this->translator->trans('E-mail', [], 'Install'); ?></td>
                 <td class="resultEnd"><?php echo htmlspecialchars($this->session->admin_email); ?></td>
-                <td rowspan="2" class="print" onclick="$('#password_content').text('<?php echo htmlspecialchars(addslashes($this->session->admin_password)); ?>'); $('#password_display').hide(); window.print();">
-                    <img src="theme/img/print.png" alt="" style="vertical-align:top">
-                    <?php echo $this->translator->trans('Print my login information', [], 'Install'); ?>
-                </td>
             </tr>
             <tr>
                 <td class="label"><?php echo $this->translator->trans('Password', [], 'Install'); ?></td>
                 <td class="resultEnd">
                     <span id="password_content"><?php echo preg_replace('#.#', '*', $this->session->admin_password); ?></span>
                     <span id="password_display">
-            (<a href="#" onclick="$('#password_content').text('<?php echo htmlspecialchars(addslashes($this->session->admin_password)); ?>'); $('#password_display').hide(); return false"><?php echo $this->translator->trans('Display', [], 'Install'); ?></a>)
-          </span>
+                        (<a href="#" onclick="$('#password_content').text('<?php echo htmlspecialchars(addslashes($this->session->admin_password)); ?>'); $('#password_display').hide(); return false"><?php echo $this->translator->trans('Display', [], 'Install'); ?></a>)
+                    </span>
                 </td>
             </tr>
         </table>
 
-        <h3 class="infosBlock">
+        <button class="button" rowspan="2" class="print" onclick="$('#password_content').text('<?php echo htmlspecialchars(addslashes($this->session->admin_password)); ?>'); $('#password_display').hide(); window.print(); return false">
+            <?php echo $this->translator->trans('Print my login information', [], 'Install'); ?>
+        </button>
+
+        <hr />
+
+        <h3 class="messagesBlock">
             <?php echo $this->translator->trans('For security purposes, you must delete the "install" folder.', [], 'Install'); ?>
         </h3>
 
-        <div id="boBlock" class="blockInfoEnd clearfix" onclick="window.open('<?php echo '../' . $this->session->adminFolderName; ?>')">
-            <img src="theme/img/visu_boBlock.png" alt="" />
-            <h3><?php echo $this->translator->trans('Back Office', [], 'Install'); ?></h3>
-            <p class="description"><?php echo $this->translator->trans('Manage your store using your Back Office. Manage your orders and customers, add modules, change themes, etc.', [], 'Install'); ?></p>
-            <p>
-                <a class="BO" target="_blank"><span><?php echo $this->translator->trans('Manage your store', [], 'Install'); ?></span></a>
-            </p>
+        <div class="fo-bo-container">
+          <div id="boBlock" class="blockInfoEnd clearfix" onclick="window.open('<?php echo '../' . $this->session->adminFolderName; ?>')">
+              <img src="theme/img/visu_boBlock.png" alt="" />
+              <div class="bo-infos">
+                <h3><?php echo $this->translator->trans('Back Office', [], 'Install'); ?></h3>
+                <p class="description"><?php echo $this->translator->trans('Manage your store using your Back Office. Manage your orders and customers, add modules, change themes, etc.', [], 'Install'); ?></p>
+                <a class="button button--small" target="_blank">
+                  <?php echo $this->translator->trans('Manage your store', [], 'Install'); ?>
+                </a>
+              </div>
+          </div>
+  
+          <div id="foBlock" class="blockInfoEnd last clearfix" onclick="window.open('../')">
+              <img src="theme/img/visu_foBlock.png" alt="" />
+              <div class="bo-infos">
+                <h3><?php echo $this->translator->trans('Front Office', [], 'Install'); ?></h3>
+                <p class="description"><?php echo $this->translator->trans('Discover your store as your future customers will see it!', [], 'Install'); ?></p>
+                <a class="button button--small" target="_blank">
+                  <?php echo $this->translator->trans('Discover your store', [], 'Install'); ?>
+                </a>
+              </div>
+          </div>
         </div>
-
-        <div id="foBlock" class="blockInfoEnd last clearfix" onclick="window.open('../')" />
-        <img src="theme/img/visu_foBlock.png" alt="" />
-        <h3><?php echo $this->translator->trans('Front Office', [], 'Install'); ?></h3>
-        <p class="description"><?php echo $this->translator->trans('Discover your store as your future customers will see it!', [], 'Install'); ?></p>
-        <p>
-            <a class="FO" target="_blank"><span><?php echo $this->translator->trans('Discover your store', [], 'Install'); ?></span></a>
-        </p>
     </div>
-</div>
 </div>
 
 <?php echo $this->getHook('install-finished'); ?>
