@@ -973,7 +973,7 @@ class ProductLazyArray extends AbstractLazyArray
     public function getRoundedDisplayPrice()
     {
         return Tools::ps_round(
-            $this->product['price'],
+            $this->product['price_amount'],
             Context::getContext()->currency->precision
         );
     }
