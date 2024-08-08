@@ -931,6 +931,18 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
+     * @return string
+     */
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getRoundedDisplayPrice()
+    {
+        return Tools::ps_round(
+            $this->product['price'],
+            Context::getContext()->currency->precision
+        );
+    }
+
+    /**
      * @param array $product
      * @param ProductPresentationSettings $settings
      *
@@ -1244,7 +1256,6 @@ class ProductLazyArray extends AbstractLazyArray
             'category_name',
             'condition',
             'cover',
-            'customer_group_discount',
             'customizable',
             'customization_required',
             'customizations',
