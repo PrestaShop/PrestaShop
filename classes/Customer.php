@@ -1220,11 +1220,14 @@ class CustomerCore extends ObjectModel
         /*
         * If this is an anonymous conversion and we want the customer to set his own password,
         * we set a random one for now.
-        * TODO - This should be revised in the future because 16 chars can be outside of bounds of
-        * isAcceptablePasswordLength. It should not be checked.
         */
         if (empty($password)) {
-            $password = Tools::passwdGen(16, 'RANDOM');
+            $pass_length = 16;
+            $max_pass_length = (int)Configuration::get('PS_SECURITY_PASSWORD_POLICY_MAXIMUM_LENGTH');
+            if ($max_pass_length > 0 && $default_pass_length > $max_pass_length) {
+                $pass_length = $max_pass_length;
+            }
+            $password = Tools::passwdGen($pass_length, 'RANDOM');
         }
 
         if (!Validate::isAcceptablePasswordLength($password) || !Validate::isAcceptablePasswordScore($password)) {
