@@ -5530,11 +5530,6 @@ class ProductCore extends ObjectModel
                 $context->cart,
                 false
             );
-
-            $row['available_date'] = Product::getAvailableDate(
-                (int) $row['id_product'],
-                $id_product_attribute
-            );
         }
 
         // Information about if a product is a pack
