@@ -52,6 +52,7 @@ use Symfony\Component\Translation\Exception\InvalidArgumentException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tools;
 use Validate;
+use Tax;
 
 /**
  * @property string $availability_message
@@ -481,6 +482,17 @@ class ProductLazyArray extends AbstractLazyArray
         }
 
         return null;
+    }
+
+    /**
+     * @return float
+     */
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getEcotaxRate()
+    {
+        return (float) Tax::getProductEcotaxRate(
+            Context::getContext()->cart->{$this->configuration->get('PS_TAX_ADDRESS_TYPE')}
+        );
     }
 
     /**
@@ -1271,7 +1283,6 @@ class ProductLazyArray extends AbstractLazyArray
             'discount_percentage_absolute',
             'discount_type',
             'ecotax',
-            'ecotax_rate',
             'extraContent',
             'features',
             'flags',
