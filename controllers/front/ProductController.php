@@ -316,25 +316,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     public function initContent()
     {
         if (!$this->errors) {
-            if (Pack::isPack((int) $this->product->id)
-                && !Pack::isInStock((int) $this->product->id, $this->product->minimal_quantity, $this->context->cart)
-            ) {
-                $this->product->quantity = 0;
-            }
-
-            $this->product->description = $this->transformDescriptionWithImg($this->product->description);
-
-            $priceDisplay = Product::getTaxCalculationMethod((int) $this->context->cookie->id_customer);
-            $productPrice = 0;
-
-            if (!$priceDisplay || $priceDisplay == 2) {
-                $productPrice = $this->product->getPrice(true, null, 6);
-            } elseif ($priceDisplay == 1) {
-                $productPrice = $this->product->getPrice(false, null, 6);
-            }
-
             // Assign template vars related to the category + execute hooks related to the category
             $this->assignCategory();
+
+            // Assign template vars related to manufacturer of the product
+            $this->assignManufacturer();
 
             // Assign template vars related to the price and tax
             $this->assignPriceAndTax();
@@ -345,9 +331,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             // Add notification about this product being in cart
             $this->addCartQuantityNotification();
 
-            // Pack management
-            $pack_items = Pack::isPack($this->product->id) ? Pack::getItemTable($this->product->id, $this->context->language->id, true) : [];
-
+            // Prepare product presenter for related items like packs and accessories
             $assembler = new ProductAssembler($this->context);
             $presenter = new ProductListingPresenter(
                 new ImageRetriever(
@@ -360,6 +344,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             );
             $presentationSettings = $this->getProductPresentationSettings();
 
+            // Presenting pack items
+            $pack_items = Pack::isPack($this->product->id) ? Pack::getItemTable($this->product->id, $this->context->language->id, true) : [];
             $presentedPackItems = [];
             foreach ($pack_items as $item) {
                 $presentedPackItems[] = $presenter->present(
@@ -368,13 +354,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     $this->context->language
                 );
             }
-
             $this->context->smarty->assign('packItems', $presentedPackItems);
-            $this->context->smarty->assign('noPackPrice', $this->product->getNoPackPrice());
-            $this->context->smarty->assign('displayPackPrice', $pack_items && $productPrice < Pack::noPackPrice((int) $this->product->id));
-            $this->context->smarty->assign('priceDisplay', $priceDisplay);
+
+            // Variable containing information about a pack that this product belongs to
             $this->context->smarty->assign('packs', Pack::getPacksTable($this->product->id, $this->context->language->id, true, 1));
 
+            // Assign accessories
             $accessories = $this->product->getAccessories($this->context->language->id);
             if (is_array($accessories)) {
                 foreach ($accessories as &$accessory) {
@@ -404,11 +389,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $product_for_template = $filteredProduct['object'];
             }
 
-            // Assign template vars related to manufacturer of the product
-            $this->assignManufacturer();
-
             $this->context->smarty->assign([
-                'priceDisplay' => $priceDisplay,
+                'displayPackPrice' => !empty($product_for_template['pack']) && $product_for_template['price_amount'] < $product_for_template['nopackprice'],
+                'noPackPrice' => $product_for_template['nopackprice_to_display'],
+                'priceDisplay' => Product::getTaxCalculationMethod((int) $this->context->cookie->id_customer),
                 'id_customization' => empty($product_for_template['id_customization']) ? null : $product_for_template['id_customization'],
                 'accessories' => $accessories,
                 'product' => $product_for_template,
@@ -557,10 +541,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $id_customer = (isset($this->context->customer) ? (int) $this->context->customer->id : 0);
         $id_group = (int) Group::getCurrent()->id;
         $id_country = $id_customer ? (int) Customer::getCurrentCountry($id_customer) : (int) Tools::getCountry();
-
-        // Tax
-        $tax = (float) $this->product->getTaxesRate(new Address((int) $this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
-
         $id_currency = (int) $this->context->cookie->id_currency;
         $id_product = (int) $this->product->id;
         $id_product_attribute = $this->getIdProductAttributeByGroupOrRequestOrDefault();
@@ -583,6 +563,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         unset($quantity_discount);
 
         $product_price = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, $id_product_attribute, 6, null, false, false);
+        $tax = (float) $this->product->getTaxesRate(new Address((int) $this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
 
         $this->quantity_discounts = $this->formatQuantityDiscounts($quantity_discounts, $product_price, (float) $tax, $this->product->ecotax);
     }
@@ -1184,6 +1165,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $extraContentFinder = new ProductExtraContentFinder();
 
         $product = $this->objectPresenter->present($this->product);
+        $product['description'] = $this->transformDescriptionWithImg($this->product->description);
         $product['out_of_stock'] = (int) $this->product->out_of_stock;
         $product['id_product_attribute'] = $this->getIdProductAttributeByGroupOrRequestOrDefault();
         $product['minimal_quantity'] = $this->getProductMinimalQuantity($product);
