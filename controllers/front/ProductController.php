@@ -387,11 +387,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 unset($accessory);
             }
 
-            // Get information about customization ID, that was not yet added to cart
-            if ($this->product->customizable) {
-                $customization_datas = $this->context->cart->getProductCustomization($this->product->id, null, true);
-            }
-
             $product_for_template = $this->getTemplateVarProduct();
 
             // Chained hook call - if multiple modules are hooked here, they will receive the result of the previous one as a parameter
@@ -414,7 +409,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
             $this->context->smarty->assign([
                 'priceDisplay' => $priceDisplay,
-                'id_customization' => empty($customization_datas) ? null : $customization_datas[0]['id_customization'],
+                'id_customization' => empty($product_for_template['id_customization']) ? null : $product_for_template['id_customization'],
                 'accessories' => $accessories,
                 'product' => $product_for_template,
                 'displayUnitPrice' => !empty($product_for_template['unit_price_tax_excluded']),
