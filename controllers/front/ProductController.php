@@ -326,46 +326,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
             $priceDisplay = Product::getTaxCalculationMethod((int) $this->context->cookie->id_customer);
             $productPrice = 0;
-            $productPriceWithoutReduction = 0;
 
             if (!$priceDisplay || $priceDisplay == 2) {
                 $productPrice = $this->product->getPrice(true, null, 6);
-                $productPriceWithoutReduction = $this->product->getPriceWithoutReduct(false, null);
             } elseif ($priceDisplay == 1) {
                 $productPrice = $this->product->getPrice(false, null, 6);
-                $productPriceWithoutReduction = $this->product->getPriceWithoutReduct(true, null);
-            }
-
-            $pictures = [];
-            $text_fields = [];
-            if ($this->product->customizable) {
-                $files = $this->context->cart->getProductCustomization($this->product->id, Product::CUSTOMIZE_FILE, true);
-                foreach ($files as $file) {
-                    $pictures['pictures_' . $this->product->id . '_' . $file['index']] = $file['value'];
-                }
-
-                $texts = $this->context->cart->getProductCustomization($this->product->id, Product::CUSTOMIZE_TEXTFIELD, true);
-
-                foreach ($texts as $text_field) {
-                    $text_fields['textFields_' . $this->product->id . '_' . $text_field['index']] = str_replace('<br />', "\n", $text_field['value']);
-                }
-            }
-
-            $this->context->smarty->assign([
-                'pictures' => $pictures,
-                'textFields' => $text_fields, ]);
-
-            $this->product->customization_required = false;
-            $customization_fields = $this->product->customizable ? $this->product->getCustomizationFields($this->context->language->id) : false;
-            if (is_array($customization_fields)) {
-                foreach ($customization_fields as &$customization_field) {
-                    if ($customization_field['type'] == Product::CUSTOMIZE_FILE) {
-                        $customization_field['key'] = 'pictures_' . $this->product->id . '_' . $customization_field['id_customization_field'];
-                    } elseif ($customization_field['type'] == Product::CUSTOMIZE_TEXTFIELD) {
-                        $customization_field['key'] = 'textFields_' . $this->product->id . '_' . $customization_field['id_customization_field'];
-                    }
-                }
-                unset($customization_field);
             }
 
             // Assign template vars related to the category + execute hooks related to the category
@@ -422,6 +387,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 unset($accessory);
             }
 
+            // Get information about customization ID, that was not yet added to cart
             if ($this->product->customizable) {
                 $customization_datas = $this->context->cart->getProductCustomization($this->product->id, null, true);
             }
@@ -443,34 +409,15 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $product_for_template = $filteredProduct['object'];
             }
 
-            // Prepare information about product manufacturer
-            $productManufacturer = null;
-            $manufacturerImageUrl = null;
-            $productBrandUrl = null;
-
-            if (!empty($this->product->id_manufacturer)) {
-                $manufacturerPresenter = new ManufacturerPresenter($this->context->link);
-                $productManufacturer = $manufacturerPresenter->present(
-                    new Manufacturer((int) $this->product->id_manufacturer, $this->context->language->id),
-                    $this->context->language
-                );
-
-                // These two variables are deprecated are kept just for backward compatibility and will be removed in v10
-                $manufacturerImageUrl = $productManufacturer['image']['small']['url'];
-                $productBrandUrl = $productManufacturer['url'];
-            }
+            // Assign template vars related to manufacturer of the product
+            $this->assignManufacturer();
 
             $this->context->smarty->assign([
                 'priceDisplay' => $priceDisplay,
-                'productPriceWithoutReduction' => $productPriceWithoutReduction,
-                'customizationFields' => $customization_fields,
                 'id_customization' => empty($customization_datas) ? null : $customization_datas[0]['id_customization'],
                 'accessories' => $accessories,
                 'product' => $product_for_template,
                 'displayUnitPrice' => !empty($product_for_template['unit_price_tax_excluded']),
-                'product_manufacturer' => $productManufacturer,
-                'manufacturer_image_url' => $manufacturerImageUrl,
-                'product_brand_url' => $productBrandUrl,
             ]);
 
             // Assign attribute groups to the template
@@ -618,12 +565,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         // Tax
         $tax = (float) $this->product->getTaxesRate(new Address((int) $this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
-        $this->context->smarty->assign('tax_rate', $tax);
-
-        $product_price_with_tax = Product::getPriceStatic($this->product->id, true, null, 6);
-        if (Product::$_taxCalculationMethod == PS_TAX_INC) {
-            $product_price_with_tax = Tools::ps_round($product_price_with_tax, 2);
-        }
 
         $id_currency = (int) $this->context->cookie->id_currency;
         $id_product = (int) $this->product->id;
@@ -649,12 +590,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product_price = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, $id_product_attribute, 6, null, false, false);
 
         $this->quantity_discounts = $this->formatQuantityDiscounts($quantity_discounts, $product_price, (float) $tax, $this->product->ecotax);
-
-        $this->context->smarty->assign([
-            'no_tax' => !Configuration::get('PS_TAX') || !$tax,
-            'tax_enabled' => Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC'),
-            'customer_group_without_tax' => Group::getPriceDisplayMethod($this->context->customer->id_default_group),
-        ]);
     }
 
     /**
@@ -902,6 +837,35 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $this->context->smarty->assign([
             'attributesCombinations' => $attributes_combinations,
             'attribute_anchor_separator' => Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR'),
+        ]);
+    }
+
+    /**
+     * Assign template vars related to manufacturer.
+     */
+    protected function assignManufacturer()
+    {
+        // Prepare information about product manufacturer
+        $productManufacturer = null;
+        $manufacturerImageUrl = null;
+        $productBrandUrl = null;
+
+        if (!empty($this->product->id_manufacturer)) {
+            $manufacturerPresenter = new ManufacturerPresenter($this->context->link);
+            $productManufacturer = $manufacturerPresenter->present(
+                new Manufacturer((int) $this->product->id_manufacturer, $this->context->language->id),
+                $this->context->language
+            );
+
+            // These two variables are deprecated are kept just for backward compatibility and will be removed in v10
+            $manufacturerImageUrl = $productManufacturer['image']['small']['url'];
+            $productBrandUrl = $productManufacturer['url'];
+        }
+
+        $this->context->smarty->assign([
+            'product_manufacturer' => $productManufacturer,
+            'manufacturer_image_url' => $manufacturerImageUrl,
+            'product_brand_url' => $productBrandUrl,
         ]);
     }
 
@@ -1247,19 +1211,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         );
         $product_full['quantity_label'] = ($this->product->quantity > 1) ? $this->trans('Items', [], 'Shop.Theme.Catalog') : $this->trans('Item', [], 'Shop.Theme.Catalog');
         $product_full['quantity_discounts'] = $this->quantity_discounts;
-
-        $group_reduction = GroupReduction::getValueForProduct($this->product->id, (int) Group::getCurrent()->id);
-        if ($group_reduction === false) {
-            $group_reduction = Group::getReduction((int) $this->context->cookie->id_customer) / 100;
-        }
-        $product_full['customer_group_discount'] = $group_reduction;
-        $product_full['title'] = $this->getProductPageTitle();
-
-        // round display price (without formatting, we don't want the currency symbol here, just the raw rounded value
-        $product_full['rounded_display_price'] = Tools::ps_round(
-            $product_full['price'],
-            Context::getContext()->currency->precision
-        );
 
         $presenter = $this->getProductPresenter();
 
