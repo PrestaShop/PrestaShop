@@ -1130,7 +1130,7 @@ class ProductLazyArray extends AbstractLazyArray
         }
 
         // Quantity available we will display is reduced by amount we want to add to cart
-        $availableQuantity = $product['quantity'] - $product['quantity_wanted'];
+        $availableQuantity = $this->product['quantity'] - $product['quantity_wanted'];
         if (isset($product['stock_quantity'])) {
             $availableQuantity = $product['stock_quantity'] - $product['quantity_wanted'];
         }
@@ -1179,7 +1179,7 @@ class ProductLazyArray extends AbstractLazyArray
             }
 
         // Case 3 - OOSP disabled and customer wants to add more items to cart than are in stock
-        } elseif ($product['quantity'] > 0) {
+        } elseif ($this->product['quantity'] > 0) {
             $this->product['availability_date'] = $this->getAvailableDate();
             $this->product['availability'] = 'unavailable';
 
@@ -1195,7 +1195,7 @@ class ProductLazyArray extends AbstractLazyArray
             $this->product['availability'] = 'unavailable';
 
             // If the product has combinations and other combination is in stock, we show a small hint about it
-            if ($product['cache_default_attribute'] && $product['quantity_all_versions'] > 0) {
+            if ($product['cache_default_attribute'] && $this->product['quantity_all_versions'] > 0) {
                 $this->product['availability_message'] = $this->translator->trans(
                     'Product available with different options',
                     [],

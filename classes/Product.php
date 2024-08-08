@@ -5518,7 +5518,7 @@ class ProductCore extends ObjectModel
         $row['quantity'] = Product::getQuantity(
             (int) $row['id_product'],
             0,
-            null,
+            isset($row['cache_is_pack']) ? $row['cache_is_pack'] : null,
             $context->cart,
             false
         );
@@ -5530,7 +5530,7 @@ class ProductCore extends ObjectModel
             $row['quantity'] = Product::getQuantity(
                 (int) $row['id_product'],
                 $id_product_attribute,
-                null,
+                isset($row['cache_is_pack']) ? $row['cache_is_pack'] : null,
                 $context->cart,
                 false
             );
