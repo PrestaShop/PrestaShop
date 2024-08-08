@@ -967,7 +967,7 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @return string
+     * @return float
      */
     #[LazyArrayAttribute(arrayAccess: true)]
     public function getRoundedDisplayPrice()
