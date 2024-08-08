@@ -51,9 +51,9 @@ use Product;
 use ReflectionException;
 use Symfony\Component\Translation\Exception\InvalidArgumentException;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Tax;
 use Tools;
 use Validate;
-use Tax;
 
 /**
  * @property string $availability_message
@@ -1232,8 +1232,8 @@ class ProductLazyArray extends AbstractLazyArray
     {
         if (!isset($this->product['quantity_label'])) {
             $this->product['quantity_label'] = (
-                $this->product['quantity'] > 1 ? 
-                $this->translator->trans('Items', [], 'Shop.Theme.Catalog') : 
+                $this->product['quantity'] > 1 ?
+                $this->translator->trans('Items', [], 'Shop.Theme.Catalog') :
                 $this->translator->trans('Item', [], 'Shop.Theme.Catalog')
             );
         }
