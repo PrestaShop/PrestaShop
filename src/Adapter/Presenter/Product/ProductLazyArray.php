@@ -1202,6 +1202,46 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
+     * Returns information, if a precise quantity should be displayed. Used on product page.
+     *
+     * @return bool
+     */
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getShowQuantities()
+    {
+        if (!isset($this->product['show_quantities'])) {
+            $this->product['show_quantities'] = (bool) (
+                $this->configuration->get('PS_DISPLAY_QTIES')
+                && $this->configuration->get('PS_STOCK_MANAGEMENT')
+                && $this->product['quantity'] > 0
+                && (bool) $this->product['available_for_order']
+                && !$this->settings->catalog_mode
+            );
+        }
+
+        return $this->product['show_quantities'];
+    }
+
+    /**
+     * Returns a quantity label to use, that is displayed after precise quantity. Used on product page.
+     *
+     * @return string
+     */
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getQuantityLabel()
+    {
+        if (!isset($this->product['quantity_label'])) {
+            $this->product['quantity_label'] = (
+                $this->product['quantity'] > 1 ? 
+                $this->translator->trans('Items', [], 'Shop.Theme.Catalog') : 
+                $this->translator->trans('Item', [], 'Shop.Theme.Catalog')
+            );
+        }
+
+        return $this->product['quantity_label'];
+    }
+
+    /**
      * Returns extra price associated with current combination, if provided
      *
      * @return float
