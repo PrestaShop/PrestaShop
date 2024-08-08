@@ -1224,7 +1224,7 @@ class CustomerCore extends ObjectModel
         if (empty($password)) {
             $pass_length = 16;
             $max_pass_length = (int)Configuration::get('PS_SECURITY_PASSWORD_POLICY_MAXIMUM_LENGTH');
-            if ($max_pass_length > 0 && $default_pass_length > $max_pass_length) {
+            if ($max_pass_length > 0 && $pass_length > $max_pass_length) {
                 $pass_length = $max_pass_length;
             }
             $password = Tools::passwdGen($pass_length, 'RANDOM');
