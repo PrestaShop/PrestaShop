@@ -541,6 +541,9 @@ class FrontControllerCore extends Controller
             $cart = new Cart();
         }
 
+        /**
+         * @var array<string, mixed> $templateVars
+         */
         $templateVars = [];
 
         Hook::exec(
@@ -548,7 +551,7 @@ class FrontControllerCore extends Controller
             [
                 'templateVars' => &$templateVars,
                 'cart' => $cart,
-            ],
+            ]
         );
 
         $templateVars['cart'] = $templateVars['cart'] ?? $this->cart_presenter->present($cart);
