@@ -1106,9 +1106,6 @@ class ProductLazyArray extends AbstractLazyArray
             $product['quantity_wanted'] = $this->getQuantityWanted();
         }
 
-        // Validate and format availability date
-        $product['available_date'] = $this->prepareAvailabilityDate($product);
-
         // Default data
         $this->product['availability_message'] = null;
         $this->product['availability_submessage'] = null;
@@ -1168,7 +1165,7 @@ class ProductLazyArray extends AbstractLazyArray
 
         // Case 2 - Product not in stock, available for order
         } elseif ($product['allow_oosp']) {
-            $this->product['availability_date'] = $product['available_date'];
+            $this->product['availability_date'] = $this->getAvailableDate();
             $this->product['availability'] = 'available';
 
             // We will primarily use label from combination if set, then label on product, then the default label from PS settings
@@ -1183,7 +1180,7 @@ class ProductLazyArray extends AbstractLazyArray
 
         // Case 3 - OOSP disabled and customer wants to add more items to cart than are in stock
         } elseif ($product['quantity'] > 0) {
-            $this->product['availability_date'] = $product['available_date'];
+            $this->product['availability_date'] = $this->getAvailableDate();
             $this->product['availability'] = 'unavailable';
 
             $this->product['availability_message'] = $this->translator->trans(
@@ -1194,7 +1191,7 @@ class ProductLazyArray extends AbstractLazyArray
 
         // Case 4 - Product not in stock, not available for order
         } else {
-            $this->product['availability_date'] = $product['available_date'];
+            $this->product['availability_date'] = $this->getAvailableDate();
             $this->product['availability'] = 'unavailable';
 
             // If the product has combinations and other combination is in stock, we show a small hint about it
@@ -1272,28 +1269,38 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
-     * Validates and formats available_date property passed into the lazy array.
+     * Returns product availability date.
      * It will return the date back only if it's a valid date in the future.
-     * Also handles the case when the date was not passed at all.
-     *
-     * @param array $product
      *
      * @return string|null
      */
-    private function prepareAvailabilityDate($product)
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getAvailableDate()
     {
+        /*
+         * Basic available date is passed here from the product object. We will get it
+         * manually in two cases. If we need it for specific combination, or if it was
+         * not passed for some reason.
+         */
+        if (!isset($this->product['available_date'])) {
+            $this->product['available_date'] = Product::getAvailableDate((int) $this->product['id_product']);
+        }
+        if (!empty($this->product['id_product_attribute'])) {
+            $this->product['available_date'] = Product::getAvailableDate((int) $this->product['id_product'], (int) $this->product['id_product_attribute']);
+        }
+
         // Check if the date is valid
-        if (empty($product['available_date']) || $product['available_date'] == '0000-00-00' || !Validate::isDate($product['available_date'])) {
+        if (empty($this->product['available_date']) || $this->product['available_date'] == '0000-00-00' || !Validate::isDate($this->product['available_date'])) {
             return null;
         }
 
         // Check if it didn't already pass
-        $date = new DateTime($product['available_date']);
+        $date = new DateTime($this->product['available_date']);
         if ($date < new DateTime()) {
             return null;
         }
 
-        return $product['available_date'];
+        return $this->product['available_date'];
     }
 
     /**
