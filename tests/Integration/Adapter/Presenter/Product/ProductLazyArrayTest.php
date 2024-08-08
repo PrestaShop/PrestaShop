@@ -83,6 +83,7 @@ class ProductLazyArrayTest extends TestCase
      * @var array
      */
     private $baseProduct = [
+        'id_product' => 0,
         'id_product_attribute' => 0,
         'price_tax_exc' => 0,
         'specific_prices' => 0,
