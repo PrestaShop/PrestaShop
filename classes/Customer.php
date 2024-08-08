@@ -1223,12 +1223,12 @@ class CustomerCore extends ObjectModel
         */
         if (empty($password)) {
             $pass_length = 16;
-            $min_pass_length = (int)Configuration::get('PS_SECURITY_PASSWORD_POLICY_MINIMUM_LENGTH');
+            $min_pass_length = (int) Configuration::get('PS_SECURITY_PASSWORD_POLICY_MINIMUM_LENGTH');
             if ($min_pass_length > 0 && $pass_length < $min_pass_length) {
                 $pass_length = $min_pass_length;
             }
 
-            $max_pass_length = (int)Configuration::get('PS_SECURITY_PASSWORD_POLICY_MAXIMUM_LENGTH');
+            $max_pass_length = (int) Configuration::get('PS_SECURITY_PASSWORD_POLICY_MAXIMUM_LENGTH');
             if ($max_pass_length > 0 && $pass_length > $max_pass_length) {
                 $pass_length = $max_pass_length;
             }
