@@ -370,10 +370,6 @@ class ProductCore extends ObjectModel
     public $delivery_out_stock;
 
     /**
-     * @var bool|null
-     */
-    public $customization_required;
-    /**
      * @var int|null
      */
     public $pack_quantity;
@@ -5550,17 +5546,6 @@ class ProductCore extends ObjectModel
         $row['packItems'] = $row['pack'] ? Pack::getItemTable($row['id_product'], $id_lang) : [];
         $row['nopackprice'] = $row['pack'] ? Pack::noPackPrice($row['id_product']) : 0;
 
-        if ($row['pack'] && !Pack::isInStock($row['id_product'], $quantity, $context->cart)) {
-            $row['quantity'] = 0;
-        }
-
-        $row['customization_required'] = false;
-        if (isset($row['customizable']) && $row['customizable'] && Customization::isFeatureActive()) {
-            if (count(Product::getRequiredCustomizableFieldsStatic((int) $row['id_product']))) {
-                $row['customization_required'] = true;
-            }
-        }
-
         if (!isset($row['attributes'])) {
             $attributes = Product::getAttributesParams($row['id_product'], $row['id_product_attribute']);
 
@@ -5570,8 +5555,6 @@ class ProductCore extends ObjectModel
         }
 
         $row = Product::getTaxesInformations($row, $context);
-
-        $row['ecotax_rate'] = (float) Tax::getProductEcotaxRate($context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 
         Hook::exec('actionGetProductPropertiesAfter', [
             'id_lang' => $id_lang,

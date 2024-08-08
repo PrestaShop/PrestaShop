@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
 use Category;
 use Combination;
 use Context;
+use Customization;
 use DateTime;
 use Db;
 use Language;
@@ -178,6 +179,29 @@ class ProductLazyArray extends AbstractLazyArray
         }
 
         return [];
+    }
+
+    /**
+     * Returns information, if a customization is required to purchase this product.
+     *
+     * @return bool
+     */
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getCustomizationRequired()
+    {
+        if (!isset($this->product['customization_required'])) {
+            $this->product['customization_required'] = false;
+            // If customizable property passed here was true and customization feature is enabled,
+            // We can further check the fields.
+            if (!empty($this->product['customizable']) && Customization::isFeatureActive()) {
+                //  Now, we fetch the customization fields and if we find some, the product requires customization.
+                if (count(Product::getRequiredCustomizableFieldsStatic((int) $this->product['id_product']))) {
+                    $this->product['customization_required'] = true;
+                }
+            }
+        }
+
+        return $this->product['customization_required'];
     }
 
     /**
@@ -477,7 +501,7 @@ class ProductLazyArray extends AbstractLazyArray
             return [
                 'value' => $this->priceFormatter->format($this->product['ecotax']),
                 'amount' => $this->product['ecotax'],
-                'rate' => $this->product['ecotax_rate'],
+                'rate' => $this->getEcotaxRate(),
             ];
         }
 
@@ -977,7 +1001,7 @@ class ProductLazyArray extends AbstractLazyArray
             return false;
         }
 
-        if ($product['customizable'] == ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION || !empty($product['customization_required'])) {
+        if ($product['customizable'] == ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION || $this->getCustomizationRequired()) {
             $shouldEnable = false;
 
             if (isset($product['customizations'])) {

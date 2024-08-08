@@ -42,7 +42,7 @@ class ProductListingLazyArray extends ProductLazyArray
             return null;
         }
 
-        if ($this->product['customizable'] == ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION || !empty($this->product['customization_required'])) {
+        if ($this->product['customizable'] == ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION || $this->getCustomizationRequired()) {
             return null;
         }
 
