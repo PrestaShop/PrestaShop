@@ -5515,16 +5515,10 @@ class ProductCore extends ObjectModel
                 $context->cart,
                 false
             );
-
-            $row['available_date'] = Product::getAvailableDate(
-                (int) $row['id_product'],
-                $id_product_attribute
-            );
         }
 
-        // Pack management
+        // Information about if a product is a pack
         $row['pack'] = (!isset($row['cache_is_pack']) ? Pack::isPack($row['id_product']) : (int) $row['cache_is_pack']);
-        $row['packItems'] = $row['pack'] ? Pack::getItemTable($row['id_product'], $id_lang) : [];
 
         if (!isset($row['attributes'])) {
             $attributes = Product::getAttributesParams($row['id_product'], $row['id_product_attribute']);
@@ -5535,8 +5529,6 @@ class ProductCore extends ObjectModel
         }
 
         $row = Product::getTaxesInformations($row, $context);
-
-        $row['ecotax_rate'] = (float) Tax::getProductEcotaxRate($context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 
         Hook::exec('actionGetProductPropertiesAfter', [
             'id_lang' => $id_lang,
