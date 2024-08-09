@@ -25,12 +25,22 @@
 
 export default {
   zonesInput: '#carrier_shipping_settings_zones',
+  zoneIdOption: (zoneId: number|string): string => `option[value="${zoneId}"]`,
   rangesInput: '#carrier_shipping_settings_ranges_data',
+  rangesSelectionAppId: '#carrier_shipping_settings_ranges-app',
+  addRangeButton: '.js-add-carrier-ranges-btn',
   shippingMethodRow: '#carrier_shipping_settings_shipping_method',
   shippingMethodInput: 'input[name="carrier[shipping_settings][shipping_method]"]',
   deleteZoneButton: '.js-carrier-delete-zone',
-  zonesContainer: '#carrier_shipping_settings_ranges_costs_zones',
+  zonesContainer: '#carrier_shipping_settings_ranges_costs',
   rangesContainer: '.js-carrier-range-container',
   zoneRow: '.js-carrier-zone-row',
+  zoneIdInput: 'input[name$="[zoneId]"]',
+  zoneNamePreview: '.js-carrier-range-name .text-preview-value',
+  zoneNameInput: '.js-carrier-range-name input[type="hidden"]',
   rangeRow: '.js-carrier-range-row',
+  rangeNamePreview: '.card-title .text-preview-value',
+  rangeFromInput: 'input[name$="[from]"]',
+  rangeToInput: 'input[name$="[to]"]',
+  rangePriceInput: 'input[name$="[price]"]',
 };

@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\Type\Costs;
+namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\Type;
 
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
@@ -75,7 +75,7 @@ class CostsZoneType extends TranslatorAwareType
     {
         $resolver->setDefaults([
             'label' => false,
-            'form_theme' => '@PrestaShop/Admin/Improve/Shipping/Carriers/FormTheme/costs-zone.html.twig',
+            'form_theme' => '@PrestaShop/Admin/Improve/Shipping/Carriers/FormTheme/costs-range.html.twig',
         ]);
     }
 

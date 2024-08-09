@@ -23,7 +23,7 @@
 * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
 */
 
-import ComponentsMap from '@components/components-map';
+import CarrierFormMap from '@pages/carrier/form/carrier-form-map';
 import {createApp} from 'vue';
 import {createI18n} from 'vue-i18n';
 import CarrierRangesModal from '@pages/carrier/form/components/CarrierRangesModal.vue';
@@ -34,15 +34,15 @@ import CarrierFormEventMap from '@pages/carrier/form/carrier-form-event-map';
 export default class CarrierRanges {
   private readonly eventEmitter: typeof EventEmitter;
 
-  constructor() {
-    this.eventEmitter = window.prestashop.instance.eventEmitter;
+  constructor(eventEmitter: typeof EventEmitter) {
+    this.eventEmitter = eventEmitter;
     this.initRangesSelectionModal();
   }
 
   initRangesSelectionModal(): void {
     // Create the modal container
-    const $showModal = $(ComponentsMap.carrierRanges.addRangeButton);
-    const $modalContainer = $(`<div id="${ComponentsMap.carrierRanges.rangesSelectionAppId}"></div>`);
+    const $showModal = $(CarrierFormMap.addRangeButton);
+    const $modalContainer = $(`<div id="${CarrierFormMap.rangesSelectionAppId.slice(1)}"></div>`);
     $showModal.after($modalContainer);
 
     // Retreive translations from the button
@@ -59,19 +59,19 @@ export default class CarrierRanges {
     }).use(i18n);
 
     // Mount the Vue app to the modal container
-    vueApp.mount(`#${ComponentsMap.carrierRanges.rangesSelectionAppId}`);
+    vueApp.mount(CarrierFormMap.rangesSelectionAppId);
 
     // Open the modal with data when the button "Add range" is clicked
     $showModal.click((e: JQuery.ClickEvent) => {
       e.preventDefault();
       e.stopImmediatePropagation();
-      const data = $(`#${ComponentsMap.carrierRanges.rangesSelectionDataId}`).val() || '{}';
+      const data = $(CarrierFormMap.rangesInput).val() || '{}';
       this.eventEmitter.emit(CarrierFormEventMap.openRangeSelectionModal, JSON.parse(data.toString()));
     });
 
     // Listen the modal to apply the ranges selected to the data
     this.eventEmitter.on(CarrierFormEventMap.rangesUpdated, (ranges: Array<object>) => {
-      const $data = $(`#${ComponentsMap.carrierRanges.rangesSelectionDataId}`);
+      const $data = $(CarrierFormMap.rangesInput);
       $data.val(JSON.stringify(ranges));
     });
   }

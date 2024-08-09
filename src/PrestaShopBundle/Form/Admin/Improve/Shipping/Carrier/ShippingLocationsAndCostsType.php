@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
-use PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\Type\CarrierRangesCostsType;
+use PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\Type\CostsZoneType;
 use PrestaShopBundle\Form\Admin\Type\CarrierRangesType;
 use PrestaShopBundle\Form\Admin\Type\MultipleZoneChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -38,6 +38,7 @@ use PrestaShopBundle\Form\Admin\Type\TaxGroupChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Translation\TranslatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -129,7 +130,13 @@ class ShippingLocationsAndCostsType extends TranslatorAwareType
             ->add('ranges', CarrierRangesType::class, [
                 'label' => $this->trans('Ranges', 'Admin.Shipping.Feature'),
             ])
-            ->add('ranges_costs', CarrierRangesCostsType::class)
+            ->add('ranges_costs', CollectionType::class, [
+                'prototype_name' => '__zone__',
+                'entry_type' => CostsZoneType::class,
+                'label' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+            ])
         ;
     }
 }

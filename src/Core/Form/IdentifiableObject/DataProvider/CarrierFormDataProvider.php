@@ -110,8 +110,8 @@ class CarrierFormDataProvider implements FormDataProviderInterface
         foreach ($carrierRangesCollection->getZones() as $zone) {
             foreach ($zone->getRanges() as $range) {
                 $ranges[] = [
-                    'from' => $range->getFrom()->__toString(),
-                    'to' => $range->getTo()->__toString(),
+                    'from' => (float) (string) $range->getFrom(),
+                    'to' => (float) (string) $range->getTo(),
                 ];
             }
         }
@@ -171,6 +171,6 @@ class CarrierFormDataProvider implements FormDataProviderInterface
             ];
         }
 
-        return ['zones' => $ranges];
+        return $ranges;
     }
 }

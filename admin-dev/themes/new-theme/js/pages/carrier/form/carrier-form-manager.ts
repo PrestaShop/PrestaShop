@@ -27,13 +27,9 @@ import {EventEmitter} from 'events';
 import CarrierFormMap from '@pages/carrier/form/carrier-form-map';
 import CarrierFormEventMap from '@pages/carrier/form/carrier-form-event-map';
 import ConfirmModal from '@js/components/modal/confirm-modal';
+import {Range} from '@pages/carrier/form/types';
 
 const {$} = window;
-
-interface Range {
-  from: string;
-  to: string;
-}
 
 /**
  * This component is used in carrier form page to manage the behavior of the form:
@@ -66,7 +62,7 @@ export default class CarrierFormManager {
     // Initialize form
     this.initForm();
 
-    // *dring* yes?
+    // Initialize listeners
     this.initListeners();
   }
 
@@ -94,10 +90,10 @@ export default class CarrierFormManager {
     // Finally, we need to update the ranges names with the new symbol
     $(CarrierFormMap.rangeRow).each((_, rangeRow: HTMLElement) => {
       const $rangeRow = $(rangeRow);
-      const $rangeName = $rangeRow.find('.js-carrier-range-name .text-preview-value');
-      const $rangeNameHidden = $rangeRow.find('.js-carrier-range-name input[type="hidden"]');
-      const from = $rangeRow.find('input[name$="[from]"]').val();
-      const to = $rangeRow.find('input[name$="[to]"]').val();
+      const $rangeName = $rangeRow.find(CarrierFormMap.zoneNamePreview);
+      const $rangeNameHidden = $rangeRow.find(CarrierFormMap.zoneNameInput);
+      const from = $rangeRow.find(CarrierFormMap.rangeFromInput).val();
+      const to = $rangeRow.find(CarrierFormMap.rangeToInput).val();
       const rangeName = `${from}${this.currentShippingSymbol} - ${to}${this.currentShippingSymbol}`;
       $rangeName.text(rangeName);
       $rangeNameHidden.val(rangeName);
@@ -115,7 +111,7 @@ export default class CarrierFormManager {
     const zonesAlreadyDisplayed = <string[]>[];
     $zonesRows.each((_, zoneRow: HTMLElement) => {
       const $zoneRow = $(zoneRow);
-      const zoneId = $zoneRow.find('input[name$="[zoneId]"]').val()?.toString();
+      const zoneId = $zoneRow.find(CarrierFormMap.zoneIdInput).val()?.toString();
 
       if (zoneId !== undefined) {
         if (!zones.includes(zoneId)) {
@@ -135,8 +131,8 @@ export default class CarrierFormManager {
 
         // We need to update the zone id and the zone name
         const $prototype = $(prototype);
-        $prototype.find('input[name$="[zoneId]"]').val(zoneId);
-        $prototype.find('.card-title .text-preview-value').text(this.$zonesInput.find(`option[value="${zoneId}"]`).text());
+        $prototype.find(CarrierFormMap.zoneIdInput).val(zoneId);
+        $prototype.find(CarrierFormMap.rangeNamePreview).text(this.$zonesInput.find(CarrierFormMap.zoneIdOption(zoneId)).text());
 
         // We append the new zone row into the zones container
         $zonesContainer.append($prototype);
@@ -163,7 +159,7 @@ export default class CarrierFormManager {
     // We need to get the zone id to delete
     const $currentTarget = $(e.currentTarget as HTMLElement);
     const $currentZoneRow = $currentTarget.parents(CarrierFormMap.zoneRow);
-    const idZoneToDelete = $currentZoneRow.children('input[name$="[zoneId]"]').val();
+    const idZoneToDelete = $currentZoneRow.children(CarrierFormMap.zoneIdInput).val();
 
     // We need to display a confirmation modal before deleting the zone
     const modal = new ConfirmModal(
@@ -199,9 +195,9 @@ export default class CarrierFormManager {
       const $rangeContainer = $(rangeContainer);
       const pricesRanges = $(rangeContainer).find(CarrierFormMap.rangeRow).map((__, rangeRow: HTMLElement) => {
         const $rangeRow = $(rangeRow);
-        const from = $rangeRow.find('input[name$="[from]"]').val();
-        const to = $rangeRow.find('input[name$="[to]"]').val();
-        const price = $rangeRow.find('input[name$="[price]"]').val();
+        const from = parseFloat($rangeRow.find(CarrierFormMap.rangeFromInput).val()?.toString() || '0');
+        const to = parseFloat($rangeRow.find(CarrierFormMap.rangeToInput).val()?.toString() || '0');
+        const price = $rangeRow.find(CarrierFormMap.rangePriceInput).val() || '';
 
         return {from, to, price};
       });
@@ -214,9 +210,20 @@ export default class CarrierFormManager {
       ranges.forEach((range: Range, index) => {
         // First, we need to prepare the range prototype
         const $rPrototype = this.prepareRangePrototype(rangePrototype, index, range);
+
+        // Then, we need to search the previous price if exist (oldFrom = newFrom OR oldTo = newTo)
+        let price = '';
+
+        for (let i = 0; i < pricesRanges.length; i += 1) {
+          if (pricesRanges[i].from === range.from || pricesRanges[i].to === range.to) {
+            price = pricesRanges[i].price.toString();
+            break;
+          }
+        }
+
         // We set the previous value for this range if it exists
         // @ts-ignore
-        $rPrototype.find('input[name$="[price]"]').val(pricesRanges[index]?.price);
+        $rPrototype.find(CarrierFormMap.rangePriceInput).val(price);
         // Then, we append the new range row into the range container
         $rangeContainer.append($rPrototype);
       });
@@ -226,9 +233,9 @@ export default class CarrierFormManager {
   private prepareRangePrototype(rangePrototype: string, index: number, range: Range): JQuery {
     // We prepare the range prototype by replacing the range index, and setting the range values
     const $rPrototype = $(rangePrototype.replace(/__range__/g, index.toString()));
-    $rPrototype.find('input[name$="[from]"]').val(range.from);
-    $rPrototype.find('input[name$="[to]"]').val(range.to);
-    $rPrototype.find('.js-carrier-range-name .text-preview-value')
+    $rPrototype.find(CarrierFormMap.rangeFromInput).val(range.from || '0');
+    $rPrototype.find(CarrierFormMap.rangeToInput).val(range.to || '0');
+    $rPrototype.find(CarrierFormMap.zoneNamePreview)
       .text(`${range.from}${this.currentShippingSymbol} - ${range.to}${this.currentShippingSymbol}`);
 
     // We return the prototype well formed

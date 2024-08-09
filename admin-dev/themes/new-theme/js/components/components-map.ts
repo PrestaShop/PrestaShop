@@ -146,9 +146,4 @@ export default {
   emailInput: {
     inputSelector: '.email-input',
   },
-  carrierRanges: {
-    addRangeButton: '.js-add-carrier-ranges-btn',
-    rangesSelectionDataId: 'carrier_shipping_settings_ranges_data',
-    rangesSelectionAppId: 'carrier_shipping_settings_ranges-app',
-  },
 };

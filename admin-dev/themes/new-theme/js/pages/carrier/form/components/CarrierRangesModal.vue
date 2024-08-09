@@ -145,11 +145,7 @@
   import Modal from '@PSVue/components/Modal.vue';
   import {defineComponent} from 'vue';
   import CarrierFormEventMap from '@pages/carrier/form/carrier-form-event-map';
-
-  interface Range {
-    from: number|null,
-    to: number|null,
-  }
+  import {Range} from '@pages/carrier/form/types';
 
   interface CarrierRangesModalStates {
     isModalShown: boolean, // define if the modal is shown

@@ -28,20 +28,14 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\Type;
 
-use PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\Type\Costs\CostsZoneType;
+use PrestaShopBundle\Form\Admin\Type\MoneyWithSuffixType;
+use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-/**
- * CarrierRangesCostsType is a form type used to set prices by zones and ranges
- *
- * $builder
- *     ->add('ranges', CarrierRangesCostsType::class)
- * ;
- */
-class CarrierRangesCostsType extends TranslatorAwareType
+class CostsRangeType extends TranslatorAwareType
 {
     /**
      * {@inheritdoc}
@@ -49,12 +43,13 @@ class CarrierRangesCostsType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('zones', CollectionType::class, [
-                'prototype_name' => '__zone__',
-                'entry_type' => CostsZoneType::class,
+            ->add('range', TextPreviewType::class, [
                 'label' => false,
-                'allow_add' => true,
-                'allow_delete' => true,
+            ])
+            ->add('from', HiddenType::class)
+            ->add('to', HiddenType::class)
+            ->add('price', MoneyWithSuffixType::class, [
+                'label' => $this->trans('Price (VAT excl.)', 'Admin.Shipping.Feature'),
             ])
         ;
     }
@@ -66,6 +61,7 @@ class CarrierRangesCostsType extends TranslatorAwareType
     {
         $resolver->setDefaults([
             'label' => false,
+            'form_theme' => '@PrestaShop/Admin/Improve/Shipping/Carriers/FormTheme/costs-range.html.twig',
         ]);
     }
 
@@ -74,6 +70,6 @@ class CarrierRangesCostsType extends TranslatorAwareType
      */
     public function getBlockPrefix()
     {
-        return 'carrier_ranges_costs';
+        return 'carrier_ranges_costs_zone_range';
     }
 }

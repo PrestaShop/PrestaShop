@@ -104,13 +104,13 @@ class CarrierFormDataHandler implements FormDataHandlerInterface
             $command->setLogoPathName($logo->getPathname());
         }
 
-        /** @var CarrierId $newCarrierId */
-        $newCarrierId = $this->commandBus->handle($command);
+        /** @var CarrierId $carrierId */
+        $carrierId = $this->commandBus->handle($command);
 
         // Then, we need to update the shipping ranges of the carrier
-        $newCarrierId = $this->setCarrierRange($newCarrierId, $data);
+        $carrierId = $this->setCarrierRange($carrierId, $data);
 
-        return $newCarrierId->getValue();
+        return $carrierId->getValue();
     }
 
     /**
@@ -119,7 +119,7 @@ class CarrierFormDataHandler implements FormDataHandlerInterface
     private function formatFormRangesData(array $data): array
     {
         $ranges = [];
-        $data = $data['shipping_settings']['ranges_costs']['zones'] ?? [];
+        $data = $data['shipping_settings']['ranges_costs'] ?? [];
 
         foreach ($data as $zone) {
             foreach ($zone['ranges'] as $range) {

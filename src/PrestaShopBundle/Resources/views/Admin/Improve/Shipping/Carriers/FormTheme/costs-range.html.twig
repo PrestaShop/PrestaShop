@@ -23,14 +23,36 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
+{% block carrier_ranges_costs_zone_row %}
+<div class="card shadow-none mb-2 js-carrier-zone-row">
+  {{ form_widget(form.zoneId) }}
+  <div class="card-body p-4">
+    <div class="d-flex mb-2 justify-content-between">
+      <h2 class="card-title">{{ form_widget(form.zoneName) }}</h2>
+      {{ form_widget(form.deleteZone) }}
+    </div>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12 col-md-2">
+          {{ form_label(form.ranges, null, { 'label_attr': {'class': 'd-block mb-2 text-left text-md-right'} }) }}
+        </div>
+        <div class="col-12 col-md-10">
+          {{ form_widget(form.ranges, { 'attr': {'class': 'd-flex gap-3 flex-wrap js-carrier-range-container'} }) }}
+        </div>
+      </div>
+      {{ form_rest(form) }}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
 {% block carrier_ranges_costs_zone_range_row %}
 <div class="p-1 col-12 col-md-6 col-lg-3 js-carrier-range-row">
-  {{ form_widget(form.from) }}
-  {{ form_widget(form.to) }}
   <div class="border p-2">
     <h3 class="mb-3 js-carrier-range-name">{{ form_widget(form.range) }}</h3>
     {{ form_label(form.price, null, { 'label_attr': {'class': 'd-block mb-1 text-left' } }) }}
     {{ form_widget(form.price) }}
+    {{ form_rest(form) }}
   </div>
 </div>
 {% endblock %}

@@ -141,24 +141,22 @@ class CarrierFormDataProviderTest extends TestCase
                 'zones' => [1, 2],
                 'ranges' => [
                     'data' => json_encode([
-                        ['from' => '0', 'to' => '10'],
-                        ['from' => '10', 'to' => '20'],
-                        ['from' => '20', 'to' => '25'],
+                        ['from' => 0, 'to' => 10],
+                        ['from' => 10, 'to' => 20],
+                        ['from' => 20, 'to' => 25],
                     ]),
                 ],
                 'ranges_costs' => [
-                    'zones' => [
-                        ['zoneId' => 1, 'zoneName' => 'Zone A', 'ranges' => [
-                            ['range' => '0kg - 10kg', 'from' => '0', 'to' => '10', 'price' => '10'],
-                            ['range' => '10kg - 20kg', 'from' => '10', 'to' => '20', 'price' => '11'],
-                            ['range' => '20kg - 25kg', 'from' => '20', 'to' => '25', 'price' => '12'],
-                        ]],
-                        ['zoneId' => 2, 'zoneName' => 'Zone B', 'ranges' => [
-                            ['range' => '0kg - 10kg', 'from' => '0', 'to' => '10', 'price' => '20'],
-                            ['range' => '10kg - 20kg', 'from' => '10', 'to' => '20', 'price' => '21'],
-                            ['range' => '20kg - 25kg', 'from' => '20', 'to' => '25', 'price' => '22'],
-                        ]],
-                    ],
+                    ['zoneId' => 1, 'zoneName' => 'Zone A', 'ranges' => [
+                        ['range' => '0kg - 10kg', 'from' => '0', 'to' => '10', 'price' => '10'],
+                        ['range' => '10kg - 20kg', 'from' => '10', 'to' => '20', 'price' => '11'],
+                        ['range' => '20kg - 25kg', 'from' => '20', 'to' => '25', 'price' => '12'],
+                    ]],
+                    ['zoneId' => 2, 'zoneName' => 'Zone B', 'ranges' => [
+                        ['range' => '0kg - 10kg', 'from' => '0', 'to' => '10', 'price' => '20'],
+                        ['range' => '10kg - 20kg', 'from' => '10', 'to' => '20', 'price' => '21'],
+                        ['range' => '20kg - 25kg', 'from' => '20', 'to' => '25', 'price' => '22'],
+                    ]],
                 ],
             ],
             'size_weight_settings' => [
