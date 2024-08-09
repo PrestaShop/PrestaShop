@@ -58,6 +58,21 @@
   padding-top: 0;
 }
 
+#psthemecusto {
+  .btn-group {
+    display: inline-flex;
+
+    .dropdown-action {
+      float: none;
+      height: auto;
+
+      i {
+        padding: 0;
+      }
+    }
+  }
+}
+
 &#content #psthemecusto {
   @media (max-width: $screen-xs) {
     .panel .panel-heading {

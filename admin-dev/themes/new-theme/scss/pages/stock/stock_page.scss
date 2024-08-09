@@ -191,11 +191,11 @@
       min-width: 50px;
       padding: 2px 5px;
       color: $white;
-      background-color: $gray-dark;
+      background-color: var(--#{$cdk}yellow-500);
       @include border-radius(4px);
 
       &.is-positive {
-        background-color: $brand-primary;
+        background-color: var(--#{$cdk}green-500);
       }
     }
   }

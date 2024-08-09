@@ -1449,7 +1449,8 @@ $product-page-padding-bottom: 80px !default;
         position: relative;
 
         .select2-selection {
-          height: auto;
+          // stylelint-disable-next-line
+          height: auto !important;
           padding: var(--#{$cdk}size-8) var(--#{$cdk}size-36) var(--#{$cdk}size-8) var(--#{$cdk}size-16);
 
           .select2-selection__rendered {
@@ -1578,11 +1579,11 @@ $product-page-padding-bottom: 80px !default;
     text-align: center;
 
     &.increased_quantity {
-      background-color: $brand-primary;
+      background-color: var(--#{$cdk}green-500);
     }
 
     &.decreased_quantity {
-      background-color: $gray-dark;
+      background-color: var(--#{$cdk}yellow-500);
     }
   }
 

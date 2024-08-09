@@ -254,3 +254,9 @@
     height: 1.375rem;
   }
 }
+
+.select2 {
+  & &-selection {
+    padding: var(--#{$cdk}size-8) var(--#{$cdk}size-32) var(--#{$cdk}size-8) var(--#{$cdk}size-16);
+  }
+}
