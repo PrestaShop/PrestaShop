@@ -40,7 +40,7 @@
 </head>
 
 <body
-  class="lang-{{ ps.isoUser }}{%if ps.isRtlLanguage %} lang-rtl{% endif %} {{ ps.controllerName|escape|lower }}{% if ps.menuCollapsed %} page-sidebar-closed{% endif %}{% if ps.debugMode|default(false) %} developer-mode{% endif %}"
+  class="lang-{{ ps.isoUser }}{%if ps.isRtlLanguage %} lang-rtl{% endif %} {{ ps.controllerName|escape|lower }}{% if ps.menuCollapsed %} page-sidebar-closed{% endif %}{% if ps.debugMode|default(false) %} developer-mode{% endif %} ps-bo-rebrand"
   {% if ps.jsRouterMetadata is defined and ps.jsRouterMetadata.base_url is defined %}data-base-url="{{ ps.jsRouterMetadata.base_url }}"{% endif %}
   {% if ps.jsRouterMetadata is defined and ps.jsRouterMetadata.token %}data-token="{{ ps.jsRouterMetadata.token }}"{% endif %}
 >

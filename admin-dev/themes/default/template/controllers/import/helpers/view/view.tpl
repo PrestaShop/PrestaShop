@@ -133,11 +133,11 @@
 			</div>
 			<div class="panel-footer">
 				<button type="button" class="btn btn-default" onclick="window.history.back();">
-					<i class="process-icon-cancel text-danger"></i>
+					<i class="process-icon-cancel"></i>
 					{l s='Cancel' d='Admin.Actions'}
 				</button>
 				<button id="import" name="import" type="submit" onclick="return (validateImportation(new Array({$res})));"  class="btn btn-default pull-right">
-					<i class="process-icon-ok text-success"></i>
+					<i class="process-icon-ok"></i>
 					{l s='Import' d='Admin.Actions'}
 				</button>
 			</div>

@@ -49,7 +49,7 @@
         <a class="dropdown-item" data-item="{l s='Carts' d='Admin.Global'}" href="#" data-value="5" data-placeholder="{l s='Cart ID' d='Admin.Navigation.Header'}" data-icon="icon-shopping-cart"><i class="material-icons">shopping_cart</i> {l s='Carts' d='Admin.Global'}</a>
         <a class="dropdown-item" data-item="{l s='Modules' d='Admin.Global'}" href="#" data-value="7" data-placeholder="{l s='Module name' d='Admin.Navigation.Header'}" data-icon="icon-puzzle-piece"><i class="material-icons">extension</i> {l s='Modules' d='Admin.Global'}</a>
       </div>
-      <button class="btn btn-primary" type="submit"><span class="d-none">{l s='SEARCH' d='Admin.Navigation.Header'}</span><i class="material-icons">search</i></button>
+      <button class="btn btn-secondary" type="submit"><span class="d-none">{l s='SEARCH' d='Admin.Navigation.Header'}</span><i class="material-icons">search</i></button>
     </div>
   </div>
 </form>

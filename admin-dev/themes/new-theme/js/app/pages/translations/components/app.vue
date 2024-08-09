@@ -181,11 +181,11 @@
   }
 
   .missing {
-    color: $danger;
+    color: var(--#{$cdk}red-500);
   }
 
   .translations-summary {
-    font-weight: $font-weight-semibold;
-    font-size: 1rem;
+    font-weight: 500;
+    font-size: var(--#{$cdk}size-16);
   }
 </style>

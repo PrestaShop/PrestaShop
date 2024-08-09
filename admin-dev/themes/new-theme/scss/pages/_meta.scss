@@ -1,12 +1,8 @@
-.helper-card__meta-background {
-  background-image: url("img/helper-card/seo-background@3x.png");
-}
-
 @include media-breakpoint-down(xs) {
   .adminmeta {
     #seo-urls-showcase-card {
-      .btn:last-of-type {
-        margin-top: 0.75rem;
+      .btn {
+        margin-block: var(--#{$cdk}size-8);
       }
     }
   }

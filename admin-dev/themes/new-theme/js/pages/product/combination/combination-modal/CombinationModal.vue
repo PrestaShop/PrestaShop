@@ -468,7 +468,7 @@
         .modal-body {
           padding: 0;
           margin: 0;
-          background: #eaebec;
+          background: var(--#{$cdk}primary-300);
 
           .combination-loading {
             position: absolute;
@@ -478,7 +478,7 @@
             align-items: center;
             justify-content: center;
             z-index: 1;
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(map-get($map: $cdk-common, $key: "white"), 0.8);
           }
 
           .combination-iframe {
@@ -499,7 +499,7 @@
 
         .modal-footer {
           margin: 0;
-          padding: 0.6rem 1rem;
+          padding: var(--#{$cdk}size-10) var(--#{$cdk}size-16);
           display: flex;
           flex-direction: row;
           justify-content: flex-end;
@@ -528,7 +528,7 @@
 
         .btn-previous-combination,
         .btn-next-combination {
-          padding: 0.5rem;
+          padding: var(--#{$cdk}size-8);
 
           .btn-label {
             display: none;
@@ -536,15 +536,15 @@
 
           .material-icons {
             display: block;
-            font-size: 1.7rem;
-            color: #6c868e;
+            font-size: var(--#{$cdk}size-28);
+            color: var(--#{$cdk}primary-600);
           }
         }
 
         .btn-previous-combination.disabled,
         .btn-next-combination.disabled {
           .material-icons {
-            color: #b3c7cd;
+            color: var(--#{$cdk}primary-500);
           }
         }
       }

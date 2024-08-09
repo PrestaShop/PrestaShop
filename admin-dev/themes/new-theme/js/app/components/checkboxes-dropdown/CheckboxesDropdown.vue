@@ -130,21 +130,21 @@
 @import "~@scss/config/_bootstrap.scss";
 
 .ps-checkboxes-dropdown {
-  margin: 0 0.35rem;
+  margin: 0 var(--#{$cdk}size-6);
 
   @include media-breakpoint-down(xs) {
-    margin-bottom: .5rem;
+    margin-bottom: var(--#{$cdk}size-8);
   }
 
   .dropdown-item {
-    padding: 0.438rem 1rem 0.438rem 0.938rem;
+    padding: var(--#{$cdk}size-8) var(--#{$cdk}size-16) var(--#{$cdk}size-8) var(--#{$cdk}size-8);
     line-height: normal;
     color: inherit;
     border-bottom: 0;
 
     .md-checkbox-container {
       position: relative;
-      padding-left: 28px;
+      padding-left: var(--#{$cdk}size-28);
     }
   }
 }

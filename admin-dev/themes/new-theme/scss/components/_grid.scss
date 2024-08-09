@@ -25,42 +25,43 @@ table.grid-ordering-column tr {
 }
 
 table.grid-ordering-column tr.position-row-while-drag {
-  color: $white;
+  color: var(--#{$cdk}white);
   background: none;
-  box-shadow: 3px 3px 8px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: var(--#{$cdk}box-shadow-md);
   transform: translate(5px, 10px);
 
   td {
-    background-color: $medium-gray;
-  }
-
-  td:first-child {
-    @include border-left-radius(3px);
-  }
-
-  td:last-child {
-    @include border-right-radius(3px);
+    background-color: var(--#{$cdk}primary-800);
   }
 
   .position-drag-handle,
   .position-drag-handle:hover,
   .btn,
   .btn::after,
-  .btn .material-icons {
-    color: $white;
+  .btn .material-icons,
+  a,
+  a::after {
+    // stylelint-disable-next-line
+    color: var(--#{$cdk}white) !important;
   }
 }
 
 .js-drag-handle {
   cursor: move;
+
+  &:hover {
+    .material-icons {
+      color: var(--#{$cdk}primary-700);
+    }
+  }
 }
 
 .position-drag-handle {
-  color: $gray-medium;
+  color: var(--#{$cdk}primary-800);
   visibility: hidden;
 
   &:hover {
-    color: $primary;
+    color: var(--#{$cdk}primary-700);
   }
 }
 
@@ -78,20 +79,36 @@ table.grid-ordering-column tr.position-row-while-drag {
   a.dropdown-toggle,
   button.dropdown-toggle,
   .dropdown-toggle {
-    color: $gray-medium;
+    color: var(--#{$cdk}primary-500);
 
     &::after {
       content: "more_vert";
     }
 
     &:hover {
-      color: $primary;
+      color: var(--#{$cdk}primary-800);
+      text-decoration: none;
+
+      &::after {
+        color: currentcolor;
+      }
     }
+  }
+
+  .btn-group-inline {
+    gap: var(--#{$cdk}size-4);
   }
 
   .btn.tooltip-link {
     display: flex;
+    flex-grow: 0;
     align-items: center;
+
+    &:focus,
+    &:active {
+      background-color: transparent;
+      outline: none;
+    }
   }
 }
 
@@ -111,6 +128,7 @@ table .column-filters {
 
   td:last-child .grid-search-button,
   td:last-child .grid-reset-button {
+    display: flex;
     margin-left: auto;
     white-space: nowrap;
   }
@@ -128,7 +146,7 @@ table .column-filters {
 
             ~ .form-control {
               display: inline-block;
-              /* stylelint-disable-next-line */
+              // stylelint-disable-next-line
               width: calc(100% - 32px);
             }
           }
@@ -141,7 +159,7 @@ table .column-filters {
         $tr: &;
 
         &:hover {
-          background: #fafbfc;
+          background: var(--#{$cdk}primary-100);
         }
 
         &.preview-row,
@@ -150,17 +168,17 @@ table .column-filters {
         }
 
         &.preview-open {
-          background-color: #e9f8fb;
+          background-color: var(--#{$cdk}primary-100);
         }
 
         // styling for row that is being dragged
         &.dragging-row {
           cursor: move;
-          background: $gray-250;
+          background: var(--#{$cdk}primary-200);
 
           td {
-            color: $white;
-            background: #67868e;
+            color: var(--#{$cdk}white);
+            background: var(--#{$cdk}primary-800);
             transform: translate(5px, 10px);
 
             // make all icons and links white
@@ -169,7 +187,8 @@ table .column-filters {
             i.material-icons,
             a,
             a::after {
-              color: $white;
+              // stylelint-disable-next-line
+              color: var(--#{$cdk}white) !important;
             }
           }
         }
@@ -188,9 +207,8 @@ table .column-filters {
 
             @at-root {
               #{$tr}:hover .draggable-column {
-                /* stylelint-disable declaration-no-important */
-                color: #15b7d7 !important;
-                /* stylelint-enable declaration-no-important */
+                // stylelint-disable-next-line
+                color: var(--#{$cdk}primary-800) !important;
               }
             }
           }
@@ -281,6 +299,25 @@ table .column-filters {
           &.date_time-type {
             word-break: normal;
           }
+
+          &.identifier-type {
+            line-height: var(--#{$cdk}size-24);
+            vertical-align: middle;
+
+            .preview-toggle {
+              display: inline-block;
+              line-height: 1;
+              vertical-align: middle;
+
+              i {
+                vertical-align: middle;
+              }
+            }
+          }
+
+          &.shop_list-type {
+            min-width: var(--#{$cdk}size-144);
+          }
         }
       }
     }
@@ -322,15 +359,24 @@ table {
           max-width: 6rem;
         }
       }
+
+      td {
+        .input-group {
+          &:nth-child(2) {
+            margin-top: -1px;
+          }
+
+          .form-control {
+            position: relative;
+
+            &:hover,
+            &:focus,
+            &:active {
+              z-index: 1;
+            }
+          }
+        }
+      }
     }
   }
-}
-
-// -----------------------
-// Styling grid extensions
-// -----------------------
-
-// Position extension
-.js-btn-reorder-positions {
-  animation: fadeIn 2s;
 }

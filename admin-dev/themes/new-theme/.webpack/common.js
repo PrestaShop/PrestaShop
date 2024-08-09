@@ -387,7 +387,7 @@ module.exports = {
         test: /.(jpg|png|woff2?|eot|otf|ttf|svg|gif)$/,
         type: 'asset/resource',
         generator: {
-          filename: '[hash].[ext]',
+          filename: '[hash][ext]',
         },
         exclude: /MaterialIcons-Regular\.(woff2?|ttf)$/,
       },

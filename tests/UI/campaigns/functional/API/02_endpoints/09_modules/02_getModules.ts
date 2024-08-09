@@ -189,7 +189,7 @@ describe('API : GET /modules', async () => {
     it('should go to \'Modules > Module Manager\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToModulesPage', baseContext);
 
-      await boDashboardPage.goToSubMenu(page, boDashboardPage.modulesParentLink, boDashboardPage.modulesParentLink);
+      await boDashboardPage.goToSubMenu(page, boDashboardPage.modulesParentLink, boDashboardPage.moduleManagerLink);
       await boModuleManagerPage.closeSfToolBar(page);
       await boModuleManagerPage.filterByStatus(page, 'installed');
 

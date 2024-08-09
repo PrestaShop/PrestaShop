@@ -1,35 +1,58 @@
-// stylelint-disable
-@font-face {
-  font-family: "Material Icons";
-  font-style: normal;
-  font-weight: 400;
-  src: local("Material Icons"), local("MaterialIcons-Regular"),
-    url("~material-design-icons-iconfont/dist/fonts/MaterialIcons-Regular.woff2")
-      format("woff2");
+/* stylelint-disable */
+@use "~@fontsource/ibm-plex-sans/scss/mixins" as IBM;
+
+$material-symbols-font-path: '~material-symbols/';
+
+$local-font: true;
+
+@mixin setFont() {
+  @if $local-font {
+    
+    // IBM Plex Sans
+    @include IBM.faces(
+      $subsets: all,
+      $weights: (
+        200,
+        300,
+        400,
+        500,
+        600,
+        700,
+      ),
+      $styles: all
+    );
+
+    // Material Symbols Outlined
+    @font-face {
+      font-family: "Material Symbols Outlined";
+      font-style: normal;
+      font-display: swap;
+      src: url("#{$material-symbols-font-path}material-symbols-outlined.woff2") format("woff2");
+    }
+  } @else {
+    // IBM Plex Sans
+    @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@200;300;400;500;600;700&display=swap");
+
+    // Material Symbols Outlined
+    @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0");
+  }
 }
 
-.material-icons {
+@include setFont();
+
+.material-icons,
+.material-symbols-outlined {
   display: inline-block;
-  font-family: "Material Icons", sans-serif;
-  font-size: 24px; /* Preferred icon size */
+  font-family: "Material Symbols Outlined", sans-serif;
+  font-size: 24px;  /* Preferred icon size */
+  font-variation-settings: "FILL" 0, "wght" 300, "GRAD" 0, "opsz" 24;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 300;
   line-height: 1;
   text-transform: none;
   letter-spacing: normal;
   word-wrap: normal;
   white-space: nowrap;
+  vertical-align: middle;
   direction: ltr;
-
-  /* Support for all WebKit browsers. */
-  -webkit-font-smoothing: antialiased;
-
-  /* Support for Safari and Chrome. */
-  text-rendering: optimizeLegibility;
-
-  /* Support for Firefox. */
-  -moz-osx-font-smoothing: grayscale;
-
-  /* Support for IE. */
-  font-feature-settings: "liga";
 }

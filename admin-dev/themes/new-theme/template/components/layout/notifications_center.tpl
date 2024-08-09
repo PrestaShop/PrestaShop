@@ -29,7 +29,7 @@
   </button>
   <div class="dropdown-menu dropdown-menu-right js-notifs_dropdown">
     <div class="notifications">
-      <ul class="nav nav-tabs" role="tablist">
+      <ul class="nav nav-pills" role="tablist">
         {$active = "active"}
         {if $show_new_orders}
           <li class="nav-item">
