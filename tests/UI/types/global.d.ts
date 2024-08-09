@@ -60,7 +60,8 @@ type GlobalBrowserErrors = {
 
 type GlobalScreenshot = {
   FOLDER: string
-  AFTER_FAIL: any
+  AFTER_FAIL: boolean
+  EACH_STEP: boolean
 }
 
 type GlobalMaildevConfig = {

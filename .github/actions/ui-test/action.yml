@@ -30,6 +30,10 @@ inputs:
     required: false
     description: Database Server (mysql/mariadb)
     default: 'mysql'
+  TAKE_SCREENSHOT_AFTER_EACH_STEP:
+    required: false
+    description: Take screenshot after each step
+    default: 'false'
 
 runs:
   using: 'composite'
@@ -42,7 +46,9 @@ runs:
     - name: Use .env.ci
       working-directory: ${{ inputs.TESTS_DIR }}
       shell: bash
-      run: cp .env.ci .env
+      run: |
+        cp .env.ci .env
+        sed -i -e "s/TAKE_SCREENSHOT_AFTER_EACH_STEP.*/TAKE_SCREENSHOT_AFTER_EACH_STEP=${{ inputs.TAKE_SCREENSHOT_AFTER_EACH_STEP == 'false' && 'false' || 'true' }}/g" .env
 
     - name: Install dependencies
       working-directory: ${{ inputs.TESTS_DIR }}
