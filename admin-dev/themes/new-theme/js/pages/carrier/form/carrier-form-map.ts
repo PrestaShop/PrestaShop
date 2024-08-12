@@ -24,9 +24,10 @@
  */
 
 export default {
-  zonesInput: '#carrier_shipping_settings_zones',
+  freeShippingInput: 'input[name="carrier[shipping_settings][is_free]"]',
+  zonesInput: '#carrier_shipping_settings_ranges_costs_control_zones',
   zoneIdOption: (zoneId: number|string): string => `option[value="${zoneId}"]`,
-  rangesInput: '#carrier_shipping_settings_ranges_data',
+  rangesInput: '#carrier_shipping_settings_ranges_costs_control_ranges_data',
   rangesSelectionAppId: '#carrier_shipping_settings_ranges-app',
   addRangeButton: '.js-add-carrier-ranges-btn',
   shippingMethodRow: '#carrier_shipping_settings_shipping_method',
@@ -34,13 +35,22 @@ export default {
   deleteZoneButton: '.js-carrier-delete-zone',
   zonesContainer: '#carrier_shipping_settings_ranges_costs',
   rangesContainer: '.js-carrier-range-container',
+  rangesContainerBody: '.js-carrier-range-container-body',
   zoneRow: '.js-carrier-zone-row',
   zoneIdInput: 'input[name$="[zoneId]"]',
-  zoneNamePreview: '.js-carrier-range-name .text-preview-value',
-  zoneNameInput: '.js-carrier-range-name input[type="hidden"]',
+  rangeNamePreview: '.js-carrier-range-name .text-preview-value',
+  rangeNameInput: '.js-carrier-range-name input[type="hidden"]',
   rangeRow: '.js-carrier-range-row',
-  rangeNamePreview: '.card-title .text-preview-value',
+  zoneNamePreview: '.card-title .text-preview-value',
   rangeFromInput: 'input[name$="[from]"]',
   rangeToInput: 'input[name$="[to]"]',
   rangePriceInput: 'input[name$="[price]"]',
+  shippingControls: [
+    '#carrier_shipping_settings_id_tax_rule_group',
+    '#carrier_shipping_settings_has_additional_handling_fee',
+    '#carrier_shipping_settings_shipping_method',
+    '#carrier_shipping_settings_range_behavior',
+    '#carrier_shipping_settings_ranges_costs_control',
+    '#carrier_shipping_settings_ranges_costs',
+  ],
 };

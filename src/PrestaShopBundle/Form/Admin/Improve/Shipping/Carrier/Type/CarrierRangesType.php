@@ -26,9 +26,10 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Type;
+namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\Type;
 
-use PrestaShopBundle\Translation\TranslatorInterface;
+use PrestaShopBundle\Form\Admin\Type\IconButtonType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -44,13 +45,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class CarrierRangesType extends TranslatorAwareType
 {
-    public function __construct(
-        TranslatorInterface $translator,
-        array $locales,
-    ) {
-        parent::__construct($translator, $locales);
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -62,7 +56,7 @@ class CarrierRangesType extends TranslatorAwareType
                 'label' => ' ' . $options['button_label'],
                 'icon' => 'add_box',
                 'attr' => [
-                    'class' => 'js-add-carrier-ranges-btn btn btn-outline-primary',
+                    'class' => 'js-add-carrier-ranges-btn btn btn-outline-secondary',
                     'data-translations' => json_encode([
                         'modal.title' => $this->trans('Ranges', 'Admin.Shipping.Feature'),
                         'modal.addRange' => $this->trans('Add range', 'Admin.Shipping.Feature'),
@@ -85,7 +79,7 @@ class CarrierRangesType extends TranslatorAwareType
     {
         $resolver->setDefaults([
             'label' => $this->trans('Ranges', 'Admin.Shipping.Feature'),
-            'button_label' => $this->trans('Add range', 'Admin.Shipping.Feature'),
+            'button_label' => $this->trans('Edit ranges', 'Admin.Shipping.Feature'),
         ]);
     }
 

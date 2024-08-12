@@ -24,67 +24,63 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
 namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\Type;
 
-use PrestaShopBundle\Form\Admin\Type\IconButtonType;
-use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
+use PrestaShopBundle\Form\Admin\Type\MultipleZoneChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class CostsZoneType extends TranslatorAwareType
+class CarrierRangesControlType extends TranslatorAwareType
 {
-    /**
-     * {@inheritdoc}
-     */
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        private readonly RouterInterface $router,
+    ) {
+        parent::__construct($translator, $locales);
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('zoneId', HiddenType::class)
-            ->add('deleteZone', IconButtonType::class, [
-                'label' => false,
-                'icon' => 'delete',
-                'attr' => [
-                    'class' => 'js-carrier-delete-zone',
-                    'data-modal-title' => $this->trans('Delete Zone?', 'Admin.Shipping.Feature'),
-                    'data-modal-confirm' => $this->trans('Delete', 'Admin.Actions'),
-                    'data-modal-cancel' => $this->trans('Cancel', 'Admin.Actions'),
-                ],
-            ])
-            ->add('zoneName', TextPreviewType::class, [
-                'label' => false,
-            ])
-            ->add('ranges', CollectionType::class, [
-                'prototype_name' => '__range__',
-                'entry_type' => CostsRangeType::class,
+            ->add('zones', MultipleZoneChoiceType::class, [
                 'label' => false,
                 'required' => false,
-                'allow_add' => true,
-                'block_prefix' => 'carrier_ranges_costs_zone_ranges_collection',
+                'multiple' => true,
+                'external_link' => [
+                    'text' => $this->trans('[1]Manage locations[/1]', 'Admin.Shipping.Feature'),
+                    'position' => 'below',
+                    'href' => $this->router->generate('admin_zones_index'),
+                    'attr' => [
+                        'target' => '_blank',
+                    ],
+                ],
+                'attr' => [
+                    'data-placeholder' => $this->trans('Zones', 'Admin.Shipping.Feature'),
+                    'class' => 'select2 js-multiple-zone-choice',
+                ],
+            ])
+            ->add('ranges', CarrierRangesType::class, [
+                'label' => false,
+                'row_attr' => [
+                    'class' => 'carrier-ranges-edit-row',
+                ],
             ])
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
+        parent::configureOptions($resolver);
         $resolver->setDefaults([
-            'label' => false,
-            'form_theme' => '@PrestaShop/Admin/Improve/Shipping/Carriers/FormTheme/costs-range.html.twig',
+            'label' => $this->trans('Zones', 'Admin.Shipping.Feature'),
+            'label_help_box' => $this->trans('Zones that the carrier can handle', 'Admin.Shipping.Help'),
+            'attr' => [
+                'class' => 'carrier-ranges-control',
+            ],
         ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getBlockPrefix()
-    {
-        return 'carrier_ranges_costs_zone';
     }
 }

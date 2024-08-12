@@ -44,12 +44,13 @@ class CostsRangeType extends TranslatorAwareType
     {
         $builder
             ->add('range', TextPreviewType::class, [
-                'label' => false,
+                'label' => $this->trans('Range', 'Admin.Shipping.Feature'),
             ])
             ->add('from', HiddenType::class)
             ->add('to', HiddenType::class)
             ->add('price', MoneyWithSuffixType::class, [
                 'label' => $this->trans('Price (VAT excl.)', 'Admin.Shipping.Feature'),
+                'empty_data' => 0.0,
             ])
         ;
     }

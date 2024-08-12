@@ -65,7 +65,7 @@ export default class CarrierRanges {
     $showModal.click((e: JQuery.ClickEvent) => {
       e.preventDefault();
       e.stopImmediatePropagation();
-      const data = $(CarrierFormMap.rangesInput).val() || '{}';
+      const data = $(CarrierFormMap.rangesInput).val() || '[]';
       this.eventEmitter.emit(CarrierFormEventMap.openRangeSelectionModal, JSON.parse(data.toString()));
     });
 

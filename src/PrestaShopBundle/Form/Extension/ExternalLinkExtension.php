@@ -108,7 +108,7 @@ class ExternalLinkExtension extends AbstractTypeExtension
             ->setAllowedTypes('align', 'string')
             ->setAllowedTypes('position', 'string')
             ->setAllowedTypes('attr', ['null', 'array'])
-            ->setAllowedValues('position', ['append', 'prepend'])
+            ->setAllowedValues('position', ['append', 'prepend', 'below'])
             ->setAllowedTypes('open_in_new_tab', 'bool')
         ;
 

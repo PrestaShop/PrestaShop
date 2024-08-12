@@ -39,14 +39,6 @@
         <h5 class="modal-title">
           {{ $t('modal.title') }}
         </h5>
-        <button
-          @click.prevent="addRange()"
-          type="button"
-          class="btn btn-sm btn-outline-primary"
-        >
-          <i class="material-icons">add_box</i>
-          {{ $t('modal.addRange') }}
-        </button>
       </template>
       <template #body>
         <div
@@ -135,6 +127,15 @@
               </template>
             </tbody>
           </table>
+
+          <button
+            @click.prevent="addRange()"
+            type="button"
+            class="btn btn-sm btn-outline-secondary mt-2"
+          >
+            <i class="material-icons">add_box</i>
+            {{ $t('modal.addRange') }}
+          </button>
         </div>
       </template>
     </modal>
