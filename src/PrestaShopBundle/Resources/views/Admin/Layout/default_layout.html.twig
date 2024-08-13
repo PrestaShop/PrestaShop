@@ -39,7 +39,7 @@
     {% endblock %}
   </head>
 
-  <body class="lang-{{ ps.isoUser }}{% if ps.isRtlLanguage %} lang-rtl{% endif %} {{ ps.controllerName|escape|lower }}{% if ps.menuCollapsed %} page-sidebar-closed{% endif %}{% if ps.multiShop|default(false) %} multishop-enabled{% endif %}{% if ps.debugMode|default(false) %} developer-mode{% endif %} ps-bo-rebrand"
+  <body class="lang-{{ ps.isoUser }}{% if ps.isRtlLanguage %} lang-rtl{% endif %} {{ ps.controllerName|escape|lower }}{% if ps.menuCollapsed %} page-sidebar-closed{% endif %}{% if ps.multiShop|default(false) %} multishop-enabled{% endif %}{% if ps.debugMode|default(false) %} developer-mode{% endif %}"
     {% if ps.jsRouterMetadata is defined and ps.jsRouterMetadata.base_url is defined %}data-base-url="{{ ps.jsRouterMetadata.base_url }}"{% endif %}
     {% if ps.jsRouterMetadata is defined and ps.jsRouterMetadata.token is defined %}data-token="{{ ps.jsRouterMetadata.token }}"{% endif %}
   >
@@ -85,7 +85,7 @@
         </div>
       {% endif %}
 
-      {% if ps.maintenanceModeEnabled|default(false) %}
+      {% if ps.isMaintenanceEnabled|default(false) %}
         {% set maintenanceTitle %}
           <p class="text-left text-nowrap">
             <strong>
@@ -113,7 +113,9 @@
              title="{{ maintenanceTitle|e('html') }}"
              href="{{ url('admin_maintenance') }}"
           >
-            <i class="material-icons">build</i>
+            <i class="material-icons"
+               style="{% if ps.frontOfficeAccessibleForAdmins|default(false) %}color: var(--green);{% endif %}"
+            >build</i>
             <span>{{ 'Maintenance mode'|trans({}, 'Admin.Navigation.Header') }}</span>
           </a>
         </div>
