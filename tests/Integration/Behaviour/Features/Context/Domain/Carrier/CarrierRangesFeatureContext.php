@@ -39,6 +39,8 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult\CarrierRangesCollectio
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
 use Zone;
+use Db;
+use DbQuery;
 
 
 class CarrierRangesFeatureContext extends AbstractDomainFeatureContext
@@ -84,7 +86,7 @@ class CarrierRangesFeatureContext extends AbstractDomainFeatureContext
             foreach ($data as &$range) {
                 try {
                     /** @var Zone $zone */
-                    $zone = $this->referencesToIds($range['id_zone'])[0];
+                    $zone = $this->getSharedStorage()->get($range['id_zone']);
                     $range['id_zone'] = $zone->id;
                 } catch (\RuntimeException $e) {
                     $this->setLastException(new CarrierConstraintException(
@@ -112,14 +114,29 @@ class CarrierRangesFeatureContext extends AbstractDomainFeatureContext
 
             $rangesDatabase = $this->getCommandBus()->handle($command);
             $data = $node->getColumnsHash();
+            $zoneIds = [];
             foreach ($data as &$range) {
                 /** @var Zone $zone */
                 $zone = $this->referencesToIds($range['id_zone'])[0];
                 $range['id_zone'] = $zone->id;
+                $zoneIds[] = $zone->id;
             }
             $rangesExpected = new CarrierRangesCollection($data);
 
             Assert::assertEquals($rangesExpected, $rangesDatabase);
+
+            $query = new DbQuery();
+            $query->select('(cz.id_zone)');
+            $query->from('carrier_zone', 'cz');
+            $query->where('id_carrier = \'' . pSQL($carrierId) . '\'');
+            $zonesFromDB = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query->build());
+
+            $zoneIds = array_unique($zoneIds);
+            sort($zoneIds);
+            $zonesFromDB = array_map(fn($row) => $row['id_zone'], $zonesFromDB);
+            sort($zonesFromDB);
+
+            Assert::assertEquals($zoneIds, $zonesFromDB);
         } catch (CarrierException $e) {
             $this->setLastException($e);
         }
