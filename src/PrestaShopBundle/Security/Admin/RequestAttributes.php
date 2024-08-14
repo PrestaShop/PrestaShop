@@ -24,16 +24,29 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShopBundle\Security\Admin;
 
-namespace PrestaShopBundle\Routing;
-
-class LegacyControllerConstants
+/**
+ * This class contains constants for specific attributes used on the request to add some features.
+ */
+class RequestAttributes
 {
-    public const CONTROLLER_CLASS_ATTRIBUTE = '_legacy_controller_class';
-    public const CONTROLLER_NAME_ATTRIBUTE = '_legacy_controller_name';
-    public const CONTROLLER_ACTION_ATTRIBUTE = '_legacy_controller_action';
-    public const INSTANCE_ATTRIBUTE = '_legacy_controller_instance';
-    public const IS_MODULE_ATTRIBUTE = '_legacy_controller_is_module';
-    public const IS_ALL_SHOP_CONTEXT_ATTRIBUTE = '_legacy_controller_is_all_shop_context';
+    /**
+     * Setting this attribute to true on a request makes it "anonymous" or "public access", meaning
+     * it can be accessed even without being authenticated and no CSRF token will be added in the
+     * URL.
+     *
+     * It is equivalent to settings an access_control in the framework config except this attribute can
+     * be set on a particular route settings which is very convenient for modules that can't modify the
+     * access controls.
+     *
+     * Route example:
+     *
+     *  public_anonymous_route:
+     *      path: /public_anonymous_route
+     *      defaults:
+     *          _controller: PrestaShop\Module\PublicRoute\AnonymousController::anonymousAction
+     *          _anonymous_controller: true
+     */
+    public const ANONYMOUS_CONTROLLER_ATTRIBUTE = '_anonymous_controller';
 }

@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use PrestaShopBundle\Routing\Converter\LegacyParametersConverter;
+use PrestaShopBundle\Security\Admin\RequestAttributes;
 use Symfony\Bundle\FrameworkBundle\Routing\Attribute\AsRoutingConditionService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -118,7 +119,7 @@ class LegacyRouterChecker
         $adminController->init();
 
         $request->attributes->set(LegacyControllerConstants::INSTANCE_ATTRIBUTE, $adminController);
-        $request->attributes->set(LegacyControllerConstants::ANONYMOUS_ATTRIBUTE, $adminController->isAnonymousAllowed());
+        $request->attributes->set(RequestAttributes::ANONYMOUS_CONTROLLER_ATTRIBUTE, $adminController->isAnonymousAllowed());
         $request->attributes->set(LegacyControllerConstants::IS_ALL_SHOP_CONTEXT_ATTRIBUTE, $adminController->multishop_context === ShopConstraint::ALL_SHOPS);
         $request->attributes->set(LegacyControllerConstants::CONTROLLER_CLASS_ATTRIBUTE, $controllerClass);
         $request->attributes->set(LegacyControllerConstants::IS_MODULE_ATTRIBUTE, $isModule);

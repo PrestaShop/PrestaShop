@@ -26,6 +26,7 @@
 
 namespace Tests\Resources\Controller;
 
+use PrestaShopBundle\Security\Admin\RequestAttributes;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\ExpressionLanguage\Expression;
@@ -63,5 +64,17 @@ class TestController extends AbstractController
     public function doRedirectIfForbidden(): Response
     {
         return new Response();
+    }
+
+    #[Route('/anonymous-controller', name: 'test_anonymous', defaults: [RequestAttributes::ANONYMOUS_CONTROLLER_ATTRIBUTE => true])]
+    public function anonymousController()
+    {
+        return new Response('AnonymousController');
+    }
+
+    #[Route('/anonymous-hard-coded-controller', name: 'test_hard_coded_anonymous', defaults: ['_anonymous_controller' => true])]
+    public function hardCodedAnonymousController()
+    {
+        return new Response('AnonymousController');
     }
 }

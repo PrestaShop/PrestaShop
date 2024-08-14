@@ -28,7 +28,7 @@ namespace PrestaShopBundle\EventListener\Admin;
 
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
-use PrestaShopBundle\Routing\LegacyControllerConstants;
+use PrestaShopBundle\Security\Admin\RequestAttributes;
 use PrestaShopBundle\Security\Admin\UserTokenManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -87,7 +87,7 @@ class TokenizedUrlsListener
 
     private function isRequestAnonymous(Request $request): bool
     {
-        $publicLegacyRoute = $request->attributes->get(LegacyControllerConstants::ANONYMOUS_ATTRIBUTE);
+        $publicLegacyRoute = $request->attributes->get(RequestAttributes::ANONYMOUS_CONTROLLER_ATTRIBUTE);
         if ($publicLegacyRoute === true) {
             return true;
         }
