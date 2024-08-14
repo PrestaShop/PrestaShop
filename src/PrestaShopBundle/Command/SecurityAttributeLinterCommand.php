@@ -82,9 +82,6 @@ final class SecurityAttributeLinterCommand extends Command
         'admin_legacy_controller_route', // Internal check of permission not based on attributes
         'admin_login',
         'admin_logout',
-        'admin_mail_theme_save_configuration_deprecated', // Deprecated
-        'admin_mail_theme_send_test_mail_deprecated',  // Deprecated
-        'admin_mail_theme_send_test_module_mail_deprecated',  // Deprecated
         'admin_module_import',
         'admin_module_manage_action',
         'admin_module_manage_action_bulk',
