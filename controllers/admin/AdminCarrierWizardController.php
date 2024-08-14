@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+ use PrestaShop\PrestaShop\Core\Util\File\FileSizeConverter;
 /**
  * @property Carrier $object
  */
@@ -247,7 +248,13 @@ class AdminCarrierWizardControllerCore extends AdminController
             ],
         ];
 
-        $tpl_vars = ['max_image_size' => (int) Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE') / 1024 / 1024];
+        $carrierLogoSize = file_exists(_PS_SHIP_IMG_DIR_ . $carrier->id . '.jpg') ? filesize(_PS_SHIP_IMG_DIR_ . $carrier->id . '.jpg') : 0;
+
+        $tpl_vars = [
+            'max_image_size' => (int) Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE') / 1024 / 1024,
+            'carrier_logo_filesize' => (new FileSizeConverter())->convert($carrierLogoSize),
+        ];
+
         $fields_value = $this->getStepOneFieldsValues($carrier);
 
         return $this->renderGenericForm(['form' => $this->fields_form], $fields_value, $tpl_vars);
@@ -774,8 +781,10 @@ class AdminCarrierWizardControllerCore extends AdminController
             if (!ImageManager::resize($file, _PS_TMP_IMG_DIR_ . $tmp_name)) {
                 die('<return result="error" message="Impossible to resize the image into ' . Tools::safeOutput(_PS_TMP_IMG_DIR_) . '" />');
             }
+
+            $fileSize = (new FileSizeConverter())->convert(filesize($file));
             @unlink($file);
-            die('<return result="success" message="' . Tools::safeOutput(_PS_TMP_IMG_ . $tmp_name) . '" />');
+            die('<return result="success" message="' . Tools::safeOutput(_PS_TMP_IMG_ . $tmp_name) . '" data-size="'. $fileSize .'" />');
         }
 
         die('<return result="error" message="Cannot upload file" />');
