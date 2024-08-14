@@ -78,3 +78,12 @@ trans('Enable or disable the migrated order states page.', 'Admin.Advparameters.
 
 trans('New front container', 'Admin.Advparameters.Feature');
 trans('Enable / Disable the new front container.', 'Admin.Advparameters.Help');
+
+trans('Customer group', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the customer group page.', 'Admin.Advparameters.Help');
+
+trans('Store', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the store page.', 'Admin.Advparameters.Help');
+
+trans('Search configuration', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the search configuration page.', 'Admin.Advparameters.Help');
