@@ -148,6 +148,8 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
             );
             $context->cart->setProductCustomizedDatas($product, $customized_datas);
 
+            $product['id_address_delivery'] = (int) $cart->id_address_delivery;
+
             if ($customized_datas) {
                 Product::addProductCustomizationPrice($product, $customized_datas);
             }
