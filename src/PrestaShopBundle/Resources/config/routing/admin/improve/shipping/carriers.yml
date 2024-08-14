@@ -23,6 +23,7 @@ admin_carriers_create:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\Shipping\CarrierController::createAction'
     _legacy_controller: AdminCarriers
     _legacy_link: AdminCarriers:addcarrier
+    _legacy_feature_flag: carrier
 
 admin_carriers_edit:
   path: /{carrierId}/edit
@@ -30,6 +31,8 @@ admin_carriers_edit:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\Shipping\CarrierController::editAction'
     _legacy_controller: AdminCarriers
+    _legacy_link: AdminCarriers:updatecarrier
+    _legacy_feature_flag: carrier
   requirements:
     carrierId: \d+
 
