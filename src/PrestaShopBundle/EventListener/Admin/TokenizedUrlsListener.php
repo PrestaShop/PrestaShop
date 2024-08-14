@@ -44,13 +44,6 @@ use Symfony\Component\Security\Http\AccessMapInterface;
  */
 class TokenizedUrlsListener
 {
-    public const PUBLIC_ROUTES = [
-        'admin_login',
-        'admin_homepage',
-        'admin_request_password_reset',
-        'admin_reset_password',
-    ];
-
     public function __construct(
         private readonly RouterInterface $router,
         private readonly UserTokenManager $userTokenManager,
