@@ -30,6 +30,8 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Carrier;
 
 use Behat\Gherkin\Node\TableNode;
 use Carrier;
+use Db;
+use DbQuery;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\SetCarrierRangesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
@@ -37,11 +39,9 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetCarrierRanges;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult\CarrierRangesCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
 use Zone;
-use Db;
-use DbQuery;
-
 
 class CarrierRangesFeatureContext extends AbstractDomainFeatureContext
 {
@@ -88,7 +88,7 @@ class CarrierRangesFeatureContext extends AbstractDomainFeatureContext
                     /** @var Zone $zone */
                     $zone = $this->getSharedStorage()->get($range['id_zone']);
                     $range['id_zone'] = $zone->id;
-                } catch (\RuntimeException $e) {
+                } catch (RuntimeException $e) {
                     $this->setLastException(new CarrierConstraintException(
                         sprintf('Invalid zone id reference %d supplied. Zone id must be a positive integer.', $range['id_zone']),
                         CarrierConstraintException::INVALID_ZONE_ID
@@ -128,12 +128,12 @@ class CarrierRangesFeatureContext extends AbstractDomainFeatureContext
             $query = new DbQuery();
             $query->select('(cz.id_zone)');
             $query->from('carrier_zone', 'cz');
-            $query->where('id_carrier = \'' . pSQL($carrierId) . '\'');
+            $query->where('id_carrier = \'' . pSQL((string) $carrierId) . '\'');
             $zonesFromDB = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query->build());
 
             $zoneIds = array_unique($zoneIds);
             sort($zoneIds);
-            $zonesFromDB = array_map(fn($row) => $row['id_zone'], $zonesFromDB);
+            $zonesFromDB = array_map(fn ($row) => $row['id_zone'], $zonesFromDB);
             sort($zonesFromDB);
 
             Assert::assertEquals($zoneIds, $zonesFromDB);
