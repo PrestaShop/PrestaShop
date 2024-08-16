@@ -191,6 +191,13 @@ class LegacyLinkLinterCommand extends Command
         'admin_warehouse_refresh_product_warehouse_combination_form',
     ];
 
+    /**
+     * The _legacy_link configuration is not relevant for these routes, no need to apply the linter on them
+     */
+    private const CONTROLLER_WHITE_LIST = [
+        'AdminAdminAPI',
+    ];
+
     public function __construct(LegacyLinkLinter $legacyLinkLinter, AdminRouteProvider $adminRouteProvider)
     {
         parent::__construct();
@@ -243,6 +250,9 @@ class LegacyLinkLinterCommand extends Command
 
         foreach ($routes as $routeName => $route) {
             if (in_array($routeName, self::ROUTE_WHITE_LIST) || true === $this->legacyLinkLinter->lint($routeName, $route)) {
+                continue;
+            }
+            if ($route->getDefault('_legacy_controller') && in_array($route->getDefault('_legacy_controller'), self::CONTROLLER_WHITE_LIST)) {
                 continue;
             }
             $unconfiguredRoutes[] = $routeName;
