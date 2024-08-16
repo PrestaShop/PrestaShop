@@ -177,7 +177,7 @@ class LegacyLinkLinterCommand extends Command
         $unconfiguredRoutes = [];
 
         foreach ($routes as $routeName => $route) {
-            if (in_array($routeName, self::ROUTE_WHITE_LIST) || true === $this->legacyLinkLinter->lint('_legacy_link', $route)) {
+            if (in_array($routeName, self::ROUTE_WHITE_LIST) || true === $this->legacyLinkLinter->lint($routeName, $route)) {
                 continue;
             }
             $unconfiguredRoutes[] = $routeName;
