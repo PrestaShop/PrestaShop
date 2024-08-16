@@ -60,6 +60,9 @@ admin_features_delete:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureController::deleteAction
     _legacy_controller: AdminFeatures
+    _legacy_link: AdminFeature:deletefeature
+    _legacy_parameters:
+      id_feature: featureId
   requirements:
     featureId: \d+
 
@@ -69,6 +72,7 @@ admin_features_bulk_delete:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureController::bulkDeleteAction
     _legacy_controller: AdminFeatures
+    _legacy_link: AdminFeature:submitBulkDeletefeature
   requirements:
     featureId: \d+
 
@@ -125,6 +129,7 @@ admin_feature_values_export:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureValueController::exportAction
     _legacy_controller: AdminFeatures
+    _legacy_link: AdminFeatures:exportfeature_value
   requirements:
     featureId: \d+
 
@@ -134,6 +139,9 @@ admin_feature_values_delete:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureValueController::deleteAction
     _legacy_controller: AdminFeatures
+    _legacy_link: AdminFeatures:deletefeature_value
+    _legacy_parameters:
+      id_feature_value: featureValueId
   requirements:
     featureId: \d+
     featureValueId: \d+
@@ -144,6 +152,7 @@ admin_feature_values_bulk_delete:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureValueController::bulkDeleteAction
     _legacy_controller: AdminFeatures
+    _legacy_link: AdminFeature:submitBulkDeletefeature_value
   requirements:
     featureId: \d+
     featureValueId: \d+
