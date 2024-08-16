@@ -9,6 +9,12 @@ Feature: Cart calculation with country specific cart rules
   Background:
     Given there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
     And I have an empty default cart
+    And language "en" with locale "en-US" exists
+    And language "fr" with locale "fr-FR" exists
+    And group "visitor" named "Visitor" exists
+    And group "guest" named "Guest" exists
+    And there is a zone named "zone1"
+    And there is a zone named "zone2"
     And shipping handling fees are set to 2.0
     And shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     And "zone1" exist with following properties:
@@ -17,33 +23,33 @@ Feature: Cart calculation with country specific cart rules
     And "zone2" exist with following properties:
       | name    | North America |
       | enabled | true          |
-    And there is a country named "France" and iso code "FR" in zone "Europe"
-    And there is a country named "United States of America" and iso code "US" in zone "North America"
-    And there is a state named "state-fr" with iso code "TEST-FR" in country "France" and zone "Europe"
-    And there is a state named "state-us" with iso code "TEST-US" in country "United States of America" and zone "North America"
+    And there is a country named "France" and iso code "FR" in zone "zone1"
+    And there is a country named "United States of America" and iso code "US" in zone "zone2"
+    And there is a state named "state-fr" with iso code "TEST-FR" in country "France" and zone "zone1"
+    And there is a state named "state-us" with iso code "TEST-US" in country "United States of America" and zone "zone2"
     And there is an address named "address-fr" with postcode "1" in state "state-fr"
     And there is an address named "address-us" with postcode "1" in state "state-us"
     And I create carrier "carrier1" with specified properties:
       | name             | Carrier 1                          |
-      | grade            | 1                                  |
+      | grade            | 0                                  |
       | trackingUrl      | http://example.com/track.php?num=@ |
-      | position         | 2                                  |
+      | position         | 4                                  |
       | active           | true                               |
-      | max_width        | 1454                               |
-      | max_height       | 1234                               |
-      | max_depth        | 1111                               |
-      | max_weight       | 3864                               |
+      | max_width        | 0                                  |
+      | max_height       | 0                                  |
+      | max_depth        | 0                                  |
+      | max_weight       | 0                                  |
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
       | delay[fr-FR]     | Délai de livraison                 |
-      | shippingHandling | false                              |
-      | isFree           | true                               |
-      | shippingMethod   | weight                             |
-      | rangeBehavior    | disabled                           |
+      | shippingHandling | true                               |
+      | isFree           | false                              |
+      | shippingMethod   | price                              |
+      | rangeBehavior    | highest_range                      |
     Then I set ranges for carrier "carrier1" called "newCarrier1" with specified properties for all shops:
-      | id_zone       | range_from | range_to | range_price |
-      | Europe        | 0          | 10000    | 12.3        |
-      | North America | 0          | 10000    | 45.6        |
+      | id_zone | range_from | range_to | range_price |
+      | zone1   | 0          | 10000    | 12.3        |
+      | zone2   | 0          | 10000    | 45.6        |
     And there is a cart rule "cartrule1" with following properties:
       | name[en-US]           | cartrule1 |
       | priority              | 1         |
