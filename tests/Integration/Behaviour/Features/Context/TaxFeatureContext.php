@@ -132,7 +132,7 @@ class TaxFeatureContext extends AbstractPrestaShopFeatureContext
         $this->taxRuleGroups[$taxRuleName] = $taxRuleGroup;
 
         $taxRule = new TaxRule();
-        $taxRule->id_country = $this->carrierFeatureContext->getCountryIdWithName($countryName)->id;
+        $taxRule->id_country = $this->carrierFeatureContext->getCountryWithName($countryName)->id;
         $taxRule->id_state = 0;
         $taxRule->id_tax_rules_group = $taxRuleGroup->id;
         $taxRule->id_tax = $this->taxes[$taxName]->id;
@@ -200,7 +200,7 @@ class TaxFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $this->carrierFeatureContext->checkCarrierWithNameExists($carrierName);
         $this->checkTaxRuleWithNameExists($taxName);
-        $carrier = $this->carrierFeatureContext->getCarrierIdWithName($carrierName);
+        $carrier = $this->carrierFeatureContext->getCarrierWithName($carrierName);
         $carrier->setTaxRulesGroup($this->taxRuleGroups[$taxName]->id);
     }
 
