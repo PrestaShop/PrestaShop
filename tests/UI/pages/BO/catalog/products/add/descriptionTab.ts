@@ -20,6 +20,8 @@ class DescriptionTab extends BOBasePage {
 
   private readonly imagePreviewBlock: string;
 
+  private readonly imageDefaultBlock: string;
+
   private readonly imagePreviewCover: string;
 
   private readonly productImage: string;
@@ -113,6 +115,7 @@ class DescriptionTab extends BOBasePage {
     // Image selectors
     this.productImageDropZoneDiv = '#product-images-dropzone';
     this.imagePreviewBlock = `${this.productImageDropZoneDiv} div.dz-preview.openfilemanager`;
+    this.imageDefaultBlock = `${this.productImageDropZoneDiv} div.dz-default.openfilemanager`;
     this.imagePreviewCover = `${this.productImageDropZoneDiv} div.dz-preview.is-cover`;
     this.productImage = `${this.productImageDropZoneDiv} div.dz-preview.dz-image-preview.dz-complete`;
     this.productImageContainer = '#product-images-container';
@@ -189,10 +192,10 @@ class DescriptionTab extends BOBasePage {
     const filteredImagePaths = imagesPaths.filter((el) => el !== null);
 
     if (filteredImagePaths !== null && filteredImagePaths.length !== 0) {
-      const numberOfImages = await this.getNumberOfImages(page);
+      const imagePreviewBlock = await page.locator(this.imagePreviewBlock).isVisible({timeout: 5000});
       await this.uploadOnFileChooser(
         page,
-        numberOfImages === 0 ? this.productImageDropZoneDiv : this.imagePreviewBlock,
+        imagePreviewBlock ? this.imagePreviewBlock : this.imageDefaultBlock,
         filteredImagePaths,
       );
     }
@@ -209,10 +212,10 @@ class DescriptionTab extends BOBasePage {
 
     if (filteredImagePaths !== null && filteredImagePaths.length !== 0) {
       const numberOfImages = await this.getNumberOfImages(page);
-      await this.waitForVisibleSelector(page, numberOfImages === 0 ? this.productImageDropZoneDiv : this.imagePreviewBlock);
+      const imagePreviewBlock = await page.locator(this.imagePreviewBlock).isVisible({timeout: 5000});
       await this.uploadOnFileChooser(
         page,
-        numberOfImages === 0 ? this.productImageDropZoneDiv : this.imagePreviewBlock,
+        imagePreviewBlock ? this.imagePreviewBlock : this.imageDefaultBlock,
         filteredImagePaths,
       );
 
