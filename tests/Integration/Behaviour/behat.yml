@@ -146,6 +146,8 @@ default:
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CarrierFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Carrier\CarrierFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Carrier\CarrierRangesFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\ZoneFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CartFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CartRuleFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CategoryFeatureContext

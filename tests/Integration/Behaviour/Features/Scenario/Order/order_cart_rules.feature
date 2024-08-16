@@ -719,11 +719,52 @@ Feature: Order from Back Office (BO)
     Given there is a product in the catalog named "product1" with a price of 10.00 and 100 items in stock
     And there is a product in the catalog named "product2" with a price of 15.00 and 100 items in stock
     And there is a zone named "zone1"
+    And "zone1" exist with following properties:
+      | name    | zone1 |
+      | enabled | true  |
     And there is a country named "country1" and iso code "FR" in zone "zone1"
-    And there is a carrier named "carrier1"
-    And there is a carrier named "carrier2"
-    And carrier "carrier1" applies shipping fees of 0.0 in zone "zone1" for price between 0 and 10000
-    And carrier "carrier2" applies shipping fees of 0.0 in zone "zone1" for price between 0 and 10000
+    And language "en" with locale "en-US" exists
+    And group "visitor" named "Visitor" exists
+    And group "guest" named "Guest" exists
+    And group "customer" named "Customer" exists
+    And I create carrier "carrier1" with specified properties:
+      | name             | carrier 1                          |
+      | grade            | 0                                  |
+      | trackingUrl      | http://example.com/track.php?num=@ |
+      | position         | 4                                  |
+      | active           | true                               |
+      | max_width        | 0                                  |
+      | max_height       | 0                                  |
+      | max_depth        | 0                                  |
+      | max_weight       | 0                                  |
+      | group_access     | visitor, guest, customer           |
+      | delay[en-US]     | Shipping delay                     |
+      | shippingHandling | true                               |
+      | isFree           | false                              |
+      | shippingMethod   | price                              |
+      | rangeBehavior    | highest_range                      |
+    And I create carrier "carrier2" with specified properties:
+      | name             | carrier 2                          |
+      | grade            | 0                                  |
+      | trackingUrl      | http://example.com/track.php?num=@ |
+      | position         | 5                                  |
+      | active           | true                               |
+      | max_width        | 0                                  |
+      | max_height       | 0                                  |
+      | max_depth        | 0                                  |
+      | max_weight       | 0                                  |
+      | group_access     | visitor, guest, customer           |
+      | delay[en-US]     | Shipping delay                     |
+      | shippingHandling | true                               |
+      | isFree           | false                              |
+      | shippingMethod   | price                              |
+      | rangeBehavior    | highest_range                      |
+    Then I set ranges for carrier "carrier1" called "newCarrier1" with specified properties for all shops:
+      | id_zone | range_from | range_to | range_price |
+      | zone1   | 0          | 10000    | 0.0         |
+    Then I set ranges for carrier "carrier2" called "newCarrier2" with specified properties for all shops:
+      | id_zone | range_from | range_to | range_price |
+      | zone1   | 0          | 10000    | 0.0         |
     And there is a cart rule FreeGift with following properties:
       | name[en-US]  | FreeGift |
       | gift_product | product1 |
