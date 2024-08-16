@@ -83,6 +83,7 @@ class ZoneFeatureContext extends AbstractDomainFeatureContext
      *
      * @param string $zoneReference
      * @param TableNode $table
+     *
      * @return void
      */
     public function createZoneIfNotExist(string $zoneReference, TableNode $table): void

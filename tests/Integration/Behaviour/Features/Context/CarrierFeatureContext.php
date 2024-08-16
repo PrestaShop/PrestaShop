@@ -168,7 +168,7 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
         $state->add();
         $this->states[$stateName] = $state;
 
-        $this->getSharedStorage()->set($stateName,(int) $state->id);
+        $this->getSharedStorage()->set($stateName, (int) $state->id);
     }
 
     /**
