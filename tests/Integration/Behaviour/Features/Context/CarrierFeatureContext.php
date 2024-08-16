@@ -276,8 +276,9 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function setCarrierTrackingUrl(string $carrierName, string $url): void
     {
-        $this->checkCarrierWithNameExists($carrierName);
-        $carrier = $this->carriers[$carrierName];
+        $carrierId = $this->getSharedStorage()->get($carrierName);
+
+        $carrier = new Carrier($carrierId, (int) Configuration::get('PS_LANG_DEFAULT'));
         $carrier->url = $url;
         $carrier->save();
     }

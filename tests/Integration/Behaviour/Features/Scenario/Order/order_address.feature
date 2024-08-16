@@ -22,14 +22,14 @@ Feature: Order from Back Office (BO)
 
   Scenario: Check address when DNI is not defined
     Given I add new address to customer "testCustomer" with following details:
-      | Address alias    | test-customer-france-address |
-      | First name       | testFirstName                |
-      | Last name        | testLastName                 |
-      | Address          | 36 Avenue des Champs Elysees |
-      | City             | Paris                        |
-      | Country          | France                       |
-      | Postal code      | 75008                        |
-      | DNI              | 12345                        |
+      | Address alias | test-customer-france-address |
+      | First name    | testFirstName                |
+      | Last name     | testLastName                 |
+      | Address       | 36 Avenue des Champs Elysees |
+      | City          | Paris                        |
+      | Country       | France                       |
+      | Postal code   | 75008                        |
+      | DNI           | 12345                        |
     And I add order "bo_order1" with the following details:
       | cart                | dummy_cart                 |
       | message             | test                       |
@@ -38,26 +38,26 @@ Feature: Order from Back Office (BO)
     And I change order "bo_order1" shipping address to "test-customer-france-address"
     And I change order "bo_order1" invoice address to "test-customer-france-address"
     Then the preview order "bo_order1" has following shipping address
-      | Fullname         | testFirstName testLastName   |
-      | Address          | 36 Avenue des Champs Elysees |
-      | City             | Paris                        |
-      | Country          | France                       |
-      | Postal code      | 75008                        |
-      | DNI              |                              |
+      | Fullname    | testFirstName testLastName   |
+      | Address     | 36 Avenue des Champs Elysees |
+      | City        | Paris                        |
+      | Country     | France                       |
+      | Postal code | 75008                        |
+      | DNI         |                              |
     And the preview order "bo_order1" has following invoice address
-      | Fullname         | testFirstName testLastName   |
-      | Address          | 36 Avenue des Champs Elysees |
-      | City             | Paris                        |
-      | Country          | France                       |
-      | Postal code      | 75008                        |
-      | DNI              |                              |
+      | Fullname    | testFirstName testLastName   |
+      | Address     | 36 Avenue des Champs Elysees |
+      | City        | Paris                        |
+      | Country     | France                       |
+      | Postal code | 75008                        |
+      | DNI         |                              |
     And the order "bo_order1" has following shipping address
-      | Fullname         | testFirstName testLastName   |
-      | Address          | 36 Avenue des Champs Elysees |
-      | City             | Paris                        |
-      | Country          | France                       |
-      | Postal code      | 75008                        |
-      | DNI              |                              |
+      | Fullname    | testFirstName testLastName   |
+      | Address     | 36 Avenue des Champs Elysees |
+      | City        | Paris                        |
+      | Country     | France                       |
+      | Postal code | 75008                        |
+      | DNI         |                              |
     And the order "bo_order1" has the following formatted shipping address
     """
     testFirstName testLastName
@@ -73,12 +73,12 @@ Feature: Order from Back Office (BO)
     France
     """
     And the order "bo_order1" has following invoice address
-      | Fullname         | testFirstName testLastName   |
-      | Address          | 36 Avenue des Champs Elysees |
-      | City             | Paris                        |
-      | Country          | France                       |
-      | Postal code      | 75008                        |
-      | DNI              |                              |
+      | Fullname    | testFirstName testLastName   |
+      | Address     | 36 Avenue des Champs Elysees |
+      | City        | Paris                        |
+      | Country     | France                       |
+      | Postal code | 75008                        |
+      | DNI         |                              |
     And the order "bo_order1" has the following formatted invoice address
     """
     testFirstName testLastName
@@ -96,14 +96,14 @@ Feature: Order from Back Office (BO)
 
   Scenario: Check address when DNI not defined
     Given I add new address to customer "testCustomer" with following details:
-      | Address alias    | test-customer-spain-address  |
-      | First name       | testFirstName                |
-      | Last name        | testLastName                 |
-      | Address          | Calle de Bailén              |
-      | City             | Madrid                       |
-      | Country          | Spain                        |
-      | Postal code      | 28071                        |
-      | DNI              | 12345                        |
+      | Address alias | test-customer-spain-address |
+      | First name    | testFirstName               |
+      | Last name     | testLastName                |
+      | Address       | Calle de Bailén             |
+      | City          | Madrid                      |
+      | Country       | Spain                       |
+      | Postal code   | 28071                       |
+      | DNI           | 12345                       |
     And I add order "bo_order1" with the following details:
       | cart                | dummy_cart                 |
       | message             | test                       |
@@ -112,26 +112,26 @@ Feature: Order from Back Office (BO)
     And I change order "bo_order1" shipping address to "test-customer-spain-address"
     And I change order "bo_order1" invoice address to "test-customer-spain-address"
     Then the preview order "bo_order1" has following shipping address
-      | Fullname         | testFirstName testLastName   |
-      | Address          | Calle de Bailén              |
-      | City             | Madrid                       |
-      | Country          | Spain                        |
-      | Postal code      | 28071                        |
-      | DNI              | 12345                        |
+      | Fullname    | testFirstName testLastName |
+      | Address     | Calle de Bailén            |
+      | City        | Madrid                     |
+      | Country     | Spain                      |
+      | Postal code | 28071                      |
+      | DNI         | 12345                      |
     And the preview order "bo_order1" has following invoice address
-      | Fullname         | testFirstName testLastName   |
-      | Address          | Calle de Bailén              |
-      | City             | Madrid                       |
-      | Country          | Spain                        |
-      | Postal code      | 28071                        |
-      | DNI              | 12345                        |
+      | Fullname    | testFirstName testLastName |
+      | Address     | Calle de Bailén            |
+      | City        | Madrid                     |
+      | Country     | Spain                      |
+      | Postal code | 28071                      |
+      | DNI         | 12345                      |
     And the order "bo_order1" has following shipping address
-      | Fullname         | testFirstName testLastName   |
-      | Address          | Calle de Bailén              |
-      | City             | Madrid                       |
-      | Country          | Spain                        |
-      | Postal code      | 28071                        |
-      | DNI              | 12345                        |
+      | Fullname    | testFirstName testLastName |
+      | Address     | Calle de Bailén            |
+      | City        | Madrid                     |
+      | Country     | Spain                      |
+      | Postal code | 28071                      |
+      | DNI         | 12345                      |
     And the order "bo_order1" has the following formatted shipping address
     """
     testFirstName testLastName
@@ -141,12 +141,12 @@ Feature: Order from Back Office (BO)
     12345
     """
     And the order "bo_order1" has following invoice address
-      | Fullname         | testFirstName testLastName   |
-      | Address          | Calle de Bailén              |
-      | City             | Madrid                       |
-      | Country          | Spain                        |
-      | Postal code      | 28071                        |
-      | DNI              | 12345                        |
+      | Fullname    | testFirstName testLastName |
+      | Address     | Calle de Bailén            |
+      | City        | Madrid                     |
+      | Country     | Spain                      |
+      | Postal code | 28071                      |
+      | DNI         | 12345                      |
     And the order "bo_order1" has the following formatted invoice address
     """
     testFirstName testLastName
@@ -157,8 +157,27 @@ Feature: Order from Back Office (BO)
     """
 
   Scenario: Check shipping details after updating carrier tracking number & url
-    Given carrier "carrier1" named "tracking-carrier" exists
-    And I enable carrier "tracking-carrier"
+    Given language "en" with locale "en-US" exists
+    And language "fr" with locale "fr-FR" exists
+    And group "visitor" named "Visitor" exists
+    And group "guest" named "Guest" exists
+    And I create carrier "tracking-carrier" with specified properties:
+      | name             | tracking-carrier                   |
+      | grade            | 1                                  |
+      | trackingUrl      | http://example.com/track.php?num=@ |
+      | position         | 2                                  |
+      | active           | true                               |
+      | max_width        | 1454                               |
+      | max_height       | 1234                               |
+      | max_depth        | 1111                               |
+      | max_weight       | 3864                               |
+      | group_access     | visitor, guest                     |
+      | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
+      | shippingHandling | false                              |
+      | isFree           | true                               |
+      | shippingMethod   | weight                             |
+      | rangeBehavior    | disabled                           |
     And I add order "bo_order1" with the following details:
       | cart                | dummy_cart                 |
       | message             | test                       |
@@ -167,15 +186,15 @@ Feature: Order from Back Office (BO)
     And I update order "bo_order1" Tracking number to "" and Carrier to "tracking-carrier"
     Then order "bo_order1" should have "tracking-carrier" as a carrier
     And the preview order "bo_order1" has following shipping details
-      | Tracking number  |                              |
-      | Tracking URL     |                              |
+      | Tracking number |                                    |
+      | Tracking URL    | http://example.com/track.php?num=@ |
     Given I update order "bo_order1" Tracking number to "42424242" and Carrier to "tracking-carrier"
     And the carrier "tracking-carrier" uses "http://tracking.url" as tracking url
     Then order "bo_order1" should have "tracking-carrier" as a carrier
     And the preview order "bo_order1" has following shipping details
-      | Tracking number  | 42424242                     |
-      | Tracking URL     | http://tracking.url          |
+      | Tracking number | 42424242            |
+      | Tracking URL    | http://tracking.url |
     Given the carrier "tracking-carrier" uses "http://tracking.url/@" as tracking url
     Then the preview order "bo_order1" has following shipping details
-      | Tracking number  | 42424242                     |
-      | Tracking URL     | http://tracking.url/42424242 |
+      | Tracking number | 42424242                     |
+      | Tracking URL    | http://tracking.url/42424242 |
