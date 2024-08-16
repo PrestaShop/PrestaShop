@@ -29,6 +29,13 @@ Feature: Compute correct delivery options
       | discount_percentage | 50            |
     # Standard location settings
     Given there is a zone named "zone1"
+    And "zone1" exist with following properties:
+      | name    | zone   |
+      | enabled | true   |
+    And language "en" with locale "en-US" exists
+    And language "fr" with locale "fr-FR" exists
+    And group "visitor" named "Visitor" exists
+    And group "guest" named "Guest" exists
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
@@ -38,9 +45,27 @@ Feature: Compute correct delivery options
     Given there is a customer named "customer1" whose email is "fake@prestashop.com"
     Given address "address1" is associated to customer "customer1"
     # One standard carrier
-    Given carrier "carrier1" named "carrier1" exists
+    And I create carrier "carrier1" with specified properties:
+      | name             | Carrier 1                          |
+      | grade            | 0                                  |
+      | trackingUrl      | http://example.com/track.php?num=@ |
+      | position         | 4                                  |
+      | active           | true                               |
+      | max_width        | 0                                  |
+      | max_height       | 0                                  |
+      | max_depth        | 0                                  |
+      | max_weight       | 0                                  |
+      | group_access     | visitor, guest                     |
+      | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
+      | shippingHandling | true                               |
+      | isFree           | false                              |
+      | shippingMethod   | price                              |
+      | rangeBehavior    | highest_range                      |
+    Then I set ranges for carrier "carrier1" called "newCarrier1" with specified properties for all shops:
+      | id_zone | range_from | range_to | range_price |
+      | zone1   | 0          | 10000    | 5.0         |
     Given carrier "carrier1" ships to all groups
-    Given carrier "carrier1" applies shipping fees of 5.0 in zone "zone1" for price between 0 and 10000
     # Checkout begins
     When I am logged in as "customer1"
     When I add 1 items of product "product1" in my cart

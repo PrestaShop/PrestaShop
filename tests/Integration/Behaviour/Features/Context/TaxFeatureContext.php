@@ -106,8 +106,8 @@ class TaxFeatureContext extends AbstractPrestaShopFeatureContext
         $this->taxRuleGroups[$taxRuleName] = $taxRuleGroup;
 
         $taxRule = new TaxRule();
-        $taxRule->id_country = $this->carrierFeatureContext->getCountryIdWithName($countryName)->id;
-        $taxRule->id_state = $this->carrierFeatureContext->getStateIdWithName($stateName)->id;
+        $taxRule->id_country = $this->getSharedStorage()->get($countryName);
+        $taxRule->id_state = $this->getSharedStorage()->get($stateName);
         $taxRule->id_tax_rules_group = $taxRuleGroup->id;
         $taxRule->id_tax = $this->taxes[$taxName]->id;
         $taxRule->zipcode_from = 0;

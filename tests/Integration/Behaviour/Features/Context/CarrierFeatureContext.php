@@ -160,14 +160,15 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function createState($stateName, $stateIsoCode, $countryName, $zoneName)
     {
-        $this->checkCountryWithNameExists($countryName);
         $state = new State();
         $state->name = $stateName;
         $state->iso_code = $stateIsoCode;
         $state->id_zone = $this->getSharedStorage()->get($zoneName)->id;
-        $state->id_country = $this->countries[$countryName]->id;
+        $state->id_country = $this->getSharedStorage()->get($countryName);
         $state->add();
         $this->states[$stateName] = $state;
+
+        $this->getSharedStorage()->set($stateName,(int) $state->id);
     }
 
     /**
@@ -259,9 +260,9 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function setCarrierShipsToAllGroups($carrierName)
     {
-        $this->checkCarrierWithNameExists($carrierName);
-        $carrier = $this->carriers[$carrierName];
+        $carrierId = $this->getSharedStorage()->get($carrierName);
 
+        $carrier = new Carrier($carrierId, (int) Configuration::get('PS_LANG_DEFAULT'));
         $groups = Group::getGroups(Context::getContext()->language->id);
         $groupIds = [];
         foreach ($groups as $group) {
