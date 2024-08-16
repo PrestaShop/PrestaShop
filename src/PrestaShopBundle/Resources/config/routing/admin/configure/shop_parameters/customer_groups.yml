@@ -4,7 +4,8 @@ admin_customer_groups_index:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\CustomerGroupsController::indexAction'
     _legacy_controller: AdminGroups
-    # _legacy_link: AdminGroups
+    _legacy_link: AdminGroups
+    _legacy_feature_flag: customer_group
 
 admin_customer_groups_search:
   path: /
@@ -14,8 +15,8 @@ admin_customer_groups_search:
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.customer_groups
     redirectRoute: admin_customer_groups_index
     _legacy_controller: AdminGroups
-    # _legacy_link: AdminGenders:submitFiltergenders
-
+    _legacy_link: AdminGroups:submitFiltergroup
+    _legacy_feature_flag: customer_group
 
 admin_customer_groups_create:
   path: /new
@@ -23,8 +24,8 @@ admin_customer_groups_create:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\CustomerGroupsController::createAction'
     _legacy_controller: AdminGroups
-    # _legacy_link: AdminGenders:addgroup
-
+    _legacy_link: AdminGroups:addgroup
+    _legacy_feature_flag: customer_group
 
 admin_customer_groups_edit:
   path: /{groupId}/edit
@@ -32,6 +33,7 @@ admin_customer_groups_edit:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\CustomerGroupsController::editAction'
     _legacy_controller: AdminGroups
-    # _legacy_link: AdminGenders:updategroup
+    _legacy_link: AdminGroups:updategroup
+    _legacy_feature_flag: customer_group
   requirements:
     groupId: \d+
