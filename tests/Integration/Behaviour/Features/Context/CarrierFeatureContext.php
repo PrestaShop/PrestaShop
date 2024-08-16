@@ -106,6 +106,7 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
         $zone->name = $zoneName;
         $zone->add();
         $this->zones[$zoneName] = $zone;
+        $this->getSharedStorage()->set($zoneName, $zone);
     }
 
     /**
@@ -121,7 +122,6 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function createCountry($countryName, $isoCode, $zoneName)
     {
-        $this->checkZoneWithNameExists($zoneName);
         $countryId = Country::getByIso($isoCode, false);
         if (!$countryId) {
             throw new Exception('Country not found with iso code = ' . $isoCode);
@@ -130,7 +130,7 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
         // clone country to be able to properly reset previous data
         $this->previousCountries[$countryName] = clone $country;
         $this->countries[$countryName] = $country;
-        $country->id_zone = $this->zones[$zoneName]->id;
+        $country->id_zone = $this->getSharedStorage()->get($zoneName)->id;
         $country->active = true;
         $country->save();
 
@@ -160,12 +160,11 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function createState($stateName, $stateIsoCode, $countryName, $zoneName)
     {
-        $this->checkZoneWithNameExists($zoneName);
         $this->checkCountryWithNameExists($countryName);
         $state = new State();
         $state->name = $stateName;
         $state->iso_code = $stateIsoCode;
-        $state->id_zone = $this->zones[$zoneName]->id;
+        $state->id_zone = $this->getSharedStorage()->get($zoneName)->id;
         $state->id_country = $this->countries[$countryName]->id;
         $state->add();
         $this->states[$stateName] = $state;
@@ -380,8 +379,7 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function setCartCarrier($carrierName)
     {
-        $this->checkCarrierWithNameExists($carrierName);
-        $this->getCurrentCart()->id_carrier = $this->carriers[$carrierName]->id;
+        $this->getCurrentCart()->id_carrier = $this->getSharedStorage()->get($carrierName);
 
         $this->getCurrentCart()->update();
 

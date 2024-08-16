@@ -109,6 +109,7 @@ abstract class AbstractCartRuleFeatureContext extends AbstractDomainFeatureConte
         $information = $cartRuleForEditing->getInformation();
         $conditions = $cartRuleForEditing->getConditions();
         $actions = $cartRuleForEditing->getActions();
+        $a = $information->getLocalizedNames();
 
         if (isset($expectedData['name'])) {
             Assert::assertSame($expectedData['name'], $information->getLocalizedNames(), 'Unexpected localized name');
