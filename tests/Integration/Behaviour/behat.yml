@@ -145,6 +145,7 @@ default:
                 - "%paths.base%/Features/Scenario/Order"
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CarrierFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Carrier\CarrierFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CartFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CartRuleFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CategoryFeatureContext
