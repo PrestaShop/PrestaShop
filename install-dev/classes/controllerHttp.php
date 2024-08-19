@@ -25,6 +25,7 @@
  */
 
 use PrestaShopBundle\Install\LanguageList;
+use Symfony\Component\Finder\Finder;
 
 class InstallControllerHttp
 {
@@ -401,6 +402,16 @@ class InstallControllerHttp
 
         if (file_exists($customPath . $template . '.php')) {
             return $this->renderTemplate($customPath, $template);
+        }
+
+        // Loop through the modules in modules folder and search for a potential template override
+        $finder = new Finder();
+        $finder->in(_PS_CORE_DIR_ . '/modules')->directories()->depth(0);
+        foreach ($finder as $dir) {
+            $moduleInstallTheme = $dir->getRealPath() . '/install-theme/';
+            if (file_exists($moduleInstallTheme . $template . '.php')) {
+                return $this->renderTemplate($moduleInstallTheme, $template);
+            }
         }
 
         if (file_exists($path . $template . '.php')) {
