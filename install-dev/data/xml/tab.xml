@@ -546,7 +546,7 @@
             <wording>Webservice</wording>
             <wording_domain>Admin.Navigation.Menu</wording_domain>
         </tab>
-        <tab id="AdminAPI" id_parent="Advanced_Parameters" active="1" enabled="1">
+        <tab id="AdminAPI" id_parent="Advanced_Parameters" active="1" enabled="1" route_name="admin_api_index">
             <class_name>AdminAdminAPI</class_name>
             <wording>Admin API</wording>
             <wording_domain>Admin.Navigation.Menu</wording_domain>

@@ -4,7 +4,6 @@ admin_api_index:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AdminAPIController::indexAction
     _legacy_controller: AdminAdminAPI
-    _legacy_link: AdminAdminAPI
 
 admin_api_clients_process_configuration:
   path: /
@@ -12,7 +11,6 @@ admin_api_clients_process_configuration:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AdminAPIController::processConfigurationAction
     _legacy_controller: AdminAdminAPI
-    _legacy_link: AdminAdminAPI
 
 admin_api_clients_create:
   path: /api-clients/create
