@@ -1222,21 +1222,12 @@ class CustomerCore extends ObjectModel
         * we set a random one for now.
         */
         if (empty($password)) {
-            $pass_length = 16;
-            $min_pass_length = (int) Configuration::get('PS_SECURITY_PASSWORD_POLICY_MINIMUM_LENGTH');
-            if ($min_pass_length > 0 && $pass_length < $min_pass_length) {
-                $pass_length = $min_pass_length;
+            $this->passwd = $crypto->hash(Tools::passwdGen(16, 'RANDOM'));
+        } else {
+            if (!Validate::isAcceptablePasswordLength($password) || !Validate::isAcceptablePasswordScore($password)) {
+                return false;
             }
-
-            $max_pass_length = (int) Configuration::get('PS_SECURITY_PASSWORD_POLICY_MAXIMUM_LENGTH');
-            if ($max_pass_length > 0 && $pass_length > $max_pass_length) {
-                $pass_length = $max_pass_length;
-            }
-            $password = Tools::passwdGen($pass_length, 'RANDOM');
-        }
-
-        if (!Validate::isAcceptablePasswordLength($password) || !Validate::isAcceptablePasswordScore($password)) {
-            return false;
+            $this->passwd = $crypto->hash($password);
         }
 
         /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
