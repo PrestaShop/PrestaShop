@@ -24,7 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
- use PrestaShop\PrestaShop\Core\Util\File\FileSizeConverter;
+use PrestaShop\PrestaShop\Core\Util\File\FileSizeConverter;
+
 /**
  * @property Carrier $object
  */
@@ -784,7 +785,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 
             $fileSize = (new FileSizeConverter())->convert(filesize($file));
             @unlink($file);
-            die('<return result="success" message="' . Tools::safeOutput(_PS_TMP_IMG_ . $tmp_name) . '" data-size="'. $fileSize .'" />');
+            die('<return result="success" message="' . Tools::safeOutput(_PS_TMP_IMG_ . $tmp_name) . '" data-size="' . $fileSize . '" />');
         }
 
         die('<return result="error" message="Cannot upload file" />');
