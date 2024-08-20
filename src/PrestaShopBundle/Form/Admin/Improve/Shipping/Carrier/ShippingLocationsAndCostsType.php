@@ -26,75 +26,95 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier;
 
-use PrestaShopBundle\Form\Admin\Type\MultipleZoneChoiceType;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
+use PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\Type\CarrierRangesControlType;
+use PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\Type\CostsZoneType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TaxGroupChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Translation\TranslatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 class ShippingLocationsAndCostsType extends TranslatorAwareType
 {
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        private readonly RouterInterface $router,
+        private readonly ConfigurationInterface $configuration,
+        private readonly CurrencyDataProviderInterface $currencyDataProvider
+    ) {
+        parent::__construct($translator, $locales);
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
 
         $builder
-            ->add('zones', MultipleZoneChoiceType::class, [
-                'label' => $this->trans('Zones', 'Admin.Shipping.Feature'),
-                'required' => false,
-                'multiple' => true,
-                'label_help_box' => $this->trans('Zones that the carrier can handle', 'Admin.Shipping.Help'),
-                'external_link' => [
-                    'text' => $this->trans('[1]Manage Zones[/1]', 'Admin.Shipping.Feature'),
-                    'position' => 'prepend',
-                    'href' => '',
-                ],
-                'attr' => [
-                    'data-placeholder' => $this->trans('Zones', 'Admin.Shipping.Feature'),
-                    'class' => 'select2 js-multiple-zone-choice',
-                ],
-            ])
             ->add('is_free', SwitchType::class, [
                 'label' => $this->trans('Free Shipping', 'Admin.Shipping.Feature'),
-                'external_link' => [
-                    'text' => $this->trans('[1]Manage Free Shipping[/1]', 'Admin.Shipping.Feature'),
-                    'position' => 'prepend',
-                    'href' => '',
-                ],
             ])
-            ->add('tax', TaxGroupChoiceType::class, [
+            ->add('id_tax_rule_group', TaxGroupChoiceType::class, [
                 'label' => $this->trans('Tax', 'Admin.Shipping.Feature'),
                 'external_link' => [
-                    'text' => $this->trans('[1]Manage Tax[/1]', 'Admin.Shipping.Feature'),
-                    'position' => 'prepend',
-                    'href' => '',
+                    'text' => $this->trans('[1]Manage taxes[/1]', 'Admin.Shipping.Feature'),
+                    'position' => 'below',
+                    'href' => $this->router->generate('admin_taxes_index'),
+                    'attr' => [
+                        'target' => '_blank',
+                    ],
                 ],
             ])
             ->add('has_additional_handling_fee', SwitchType::class, [
                 'label' => $this->trans('Handling costs', 'Admin.Shipping.Feature'),
                 'label_help_box' => $this->trans('Does the carrier have additional fees', 'Admin.Shipping.Help'),
                 'external_link' => [
-                    'text' => $this->trans('[1]Manage Free Shipping[/1]', 'Admin.Shipping.Feature'),
-                    'position' => 'prepend',
-                    'href' => '',
+                    'text' => $this->trans('[1]Manage handling costs[/1]', 'Admin.Shipping.Feature'),
+                    'position' => 'below',
+                    'href' => $this->router->generate('admin_shipping_preferences'),
+                    'attr' => [
+                        'target' => '_blank',
+                    ],
                 ],
             ])
             ->add('shipping_method', ChoiceType::class, [
                 'label' => $this->trans('Shipping costs', 'Admin.Shipping.Feature'),
                 'choices' => [
-                    $this->trans("are based on the order's total price", 'Admin.Shipping.Feature') => 0,
-                    $this->trans("are based on the order's total weight", 'Admin.Shipping.Feature') => 1,
+                    $this->trans("Based on the order's total price", 'Admin.Shipping.Feature') => ShippingMethod::BY_PRICE,
+                    $this->trans("Based on the order's total weight", 'Admin.Shipping.Feature') => ShippingMethod::BY_WEIGHT,
                 ],
+                'default_empty_data' => ShippingMethod::BY_PRICE,
                 'expanded' => true,
                 'multiple' => false,
+                'attr' => [
+                    'data-units' => json_encode([
+                        ShippingMethod::BY_PRICE => $this->currencyDataProvider->getDefaultCurrencySymbol(),
+                        ShippingMethod::BY_WEIGHT => $this->configuration->get('PS_WEIGHT_UNIT'),
+                    ]),
+                ],
             ])
             ->add('range_behavior', ChoiceType::class, [
                 'label' => $this->trans('Out of range behavior', 'Admin.Shipping.Feature'),
                 'choices' => [
-                    $this->trans('Apply the cost of the highest defined range', 'Admin.Shipping.Feature') => 0,
-                    $this->trans('Disable carrier', 'Admin.Shipping.Feature') => 1,
+                    $this->trans('Apply the cost of the highest defined range', 'Admin.Shipping.Feature') => OutOfRangeBehavior::USE_HIGHEST_RANGE,
+                    $this->trans('Disable carrier', 'Admin.Shipping.Feature') => OutOfRangeBehavior::DISABLED,
                 ],
+                'default_empty_data' => OutOfRangeBehavior::USE_HIGHEST_RANGE,
+            ])
+            ->add('ranges_costs_control', CarrierRangesControlType::class)
+            ->add('ranges_costs', CollectionType::class, [
+                'prototype_name' => '__zone__',
+                'entry_type' => CostsZoneType::class,
+                'label' => null,
+                'allow_add' => true,
+                'allow_delete' => true,
             ])
         ;
     }

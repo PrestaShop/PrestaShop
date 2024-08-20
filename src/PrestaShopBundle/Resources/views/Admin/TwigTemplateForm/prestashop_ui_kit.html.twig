@@ -114,6 +114,9 @@
         {{ form_widget(form) }}
         {{ form_errors(form, {'attr': {'fieldError': true}}) }}
         {{- block('form_append_alert') -}}
+        {% if position == 'below' %}
+          {{- block('form_external_link') -}}
+        {% endif %}
       </div>
       {% if attribute(form.parent, form.vars.name) is defined and attribute(form.parent, form.vars.name).vars.multistore_dropdown != false %}
         {{ attribute(form.parent, form.vars.name).vars.multistore_dropdown | raw }}

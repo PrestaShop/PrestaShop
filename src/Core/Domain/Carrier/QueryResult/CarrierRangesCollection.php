@@ -76,4 +76,17 @@ class CarrierRangesCollection
     {
         return $this->zones;
     }
+
+    /**
+     * @return int[]
+     */
+    public function getZonesIds(): array
+    {
+        return array_map(
+            function (CarrierRangeZone $zone) {
+                return $zone->getZoneId();
+            },
+            $this->zones
+        );
+    }
 }

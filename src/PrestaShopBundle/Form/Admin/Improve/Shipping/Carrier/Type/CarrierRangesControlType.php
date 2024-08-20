@@ -24,73 +24,62 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier;
+namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\Type;
 
-use PrestaShopBundle\Form\Admin\Type\IconButtonType;
-use PrestaShopBundle\Form\Admin\Type\NavigationTabType;
+use PrestaShopBundle\Form\Admin\Type\MultipleZoneChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class CarrierType extends TranslatorAwareType
+class CarrierRangesControlType extends TranslatorAwareType
 {
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        protected readonly RouterInterface $router,
+        private readonly RouterInterface $router,
     ) {
         parent::__construct($translator, $locales);
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        parent::buildForm($builder, $options);
         $builder
-            ->add('general_settings', GeneralSettings::class, [
-                'label' => $this->trans('General settings', 'Admin.Shipping.Feature'),
+            ->add('zones', MultipleZoneChoiceType::class, [
+                'label' => false,
+                'required' => false,
+                'multiple' => true,
+                'external_link' => [
+                    'text' => $this->trans('[1]Manage locations[/1]', 'Admin.Shipping.Feature'),
+                    'position' => 'below',
+                    'href' => $this->router->generate('admin_zones_index'),
+                    'attr' => [
+                        'target' => '_blank',
+                    ],
+                ],
+                'attr' => [
+                    'data-placeholder' => $this->trans('Zones', 'Admin.Shipping.Feature'),
+                    'class' => 'select2 js-multiple-zone-choice',
+                ],
             ])
-            ->add('shipping_settings', ShippingLocationsAndCostsType::class, [
-                'label' => $this->trans('Shipping locations and costs', 'Admin.Shipping.Feature'),
-            ])
-            ->add('size_weight_settings', SizeWeightSettings::class, [
-                'label' => $this->trans('Size and weight', 'Admin.Shipping.Feature'),
+            ->add('ranges', CarrierRangesType::class, [
+                'label' => false,
+                'row_attr' => [
+                    'class' => 'carrier-ranges-edit-row',
+                ],
             ])
         ;
-    }
-
-    public function getParent()
-    {
-        return NavigationTabType::class;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-
         $resolver->setDefaults([
-            'form_theme' => '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig',
-            'label' => false,
-            'footer_buttons' => [
-                'cancel' => [
-                    'type' => IconButtonType::class,
-                    'options' => [
-                        'label' => $this->trans('Cancel', 'Admin.Global'),
-                        'type' => 'link',
-                        'attr' => [
-                            'href' => $this->router->generate('admin_carriers_index'),
-                        ],
-                    ],
-                ],
-                'submit' => [
-                    'type' => SubmitType::class,
-                    'options' => [
-                        'label' => $this->trans('Save', 'Admin.Global'),
-                    ],
-                    'group' => 'right',
-                ],
+            'label' => $this->trans('Zones', 'Admin.Shipping.Feature'),
+            'label_help_box' => $this->trans('Zones that the carrier can handle', 'Admin.Shipping.Help'),
+            'attr' => [
+                'class' => 'carrier-ranges-control',
             ],
         ]);
     }

@@ -41,7 +41,6 @@ import Grid from '@components/grid/grid';
 import ModifyAllShopsCheckbox from '@components/modify-all-shops-checkbox';
 import MultipleChoiceTable from '@js/components/multiple-choice-table';
 import MultistoreConfigField from '@js/components/form/multistore-config-field';
-import CarrierRanges from '@js/components/form/carrier-ranges';
 import PreviewOpener from '@components/form/preview-opener';
 import Router from '@components/router';
 import ShopSelector from '@components/shop-selector/shop-selector';
@@ -166,7 +165,6 @@ const initPrestashopComponents = (): void => {
     TranslatableInput,
     EntitySearchInput,
     EmailInput,
-    CarrierRanges,
     MultipleZoneChoice,
   };
 };

@@ -23,11 +23,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import CarrierFormManager from '@pages/carrier/form/carrier-form-manager';
+import CarrierRanges from '@pages/carrier/form/carrier-range-modal';
+
 $(() => {
+  // Initialize components
   window.prestashop.component.initComponents([
     'TranslatableInput',
     'EventEmitter',
-    'CarrierRanges',
     'MultipleZoneChoice',
   ]);
+
+  // Initialize the ranges selection modal
+  new CarrierRanges(window.prestashop.instance.eventEmitter);
+
+  // Initialize the carrier form manager
+  new CarrierFormManager(window.prestashop.instance.eventEmitter);
 });
