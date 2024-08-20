@@ -280,10 +280,11 @@ class ImageThumbnailsRegenerator
                     $file = _PS_PRODUCT_IMG_DIR_ . $defaultLang->getIsoCode() . '.jpg';
                 }
                 foreach ($configuredImageFormats as $imageFormat) {
-                    if (!file_exists($dir . $language->getIsoCode() . '-default-' . stripslashes($image_type->getName()) . '.' . $imageFormat)) {
+                    $defaultImagePath = $dir . $language->getIsoCode() . '-default-' . stripslashes($image_type->getName()) . '.' . $imageFormat;
+                    if (!file_exists($defaultImagePath)) {
                         if (!LegacyImageManager::resize(
                             $file,
-                            $dir . $language->getIsoCode() . '-default-' . stripslashes($image_type->getName()) . '.' . $imageFormat,
+                            $defaultImagePath,
                             (int) $image_type->getWidth(),
                             (int) $image_type->getHeight(),
                             $imageFormat

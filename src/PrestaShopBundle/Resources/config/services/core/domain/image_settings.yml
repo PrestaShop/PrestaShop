@@ -11,6 +11,7 @@ services:
   PrestaShop\PrestaShop\Core\Domain\ImageSettings\CommandHandler\DeleteImagesFromTypeHandler: ~
   PrestaShop\PrestaShop\Core\Domain\ImageSettings\CommandHandler\EditImageSettingsHandler: ~
   PrestaShop\PrestaShop\Core\Domain\ImageSettings\CommandHandler\RegenerateThumbnailsHandler: ~
+  PrestaShop\PrestaShop\Core\Domain\ImageSettings\CommandHandler\RegenerateDefaultProductThumbnailsHandler: ~
 
   PrestaShop\PrestaShop\Core\Domain\ImageSettings\QueryHandler\GetImageTypeForEditingHandler: ~
   PrestaShop\PrestaShop\Core\Domain\ImageSettings\QueryHandler\GetImageSettingsForEditingHandler: ~

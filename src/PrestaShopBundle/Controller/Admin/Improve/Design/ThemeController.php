@@ -29,6 +29,10 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
+use PrestaShop\PrestaShop\Core\Domain\ImageSettings\Command\RegenerateDefaultProductThumbnailsCommand;
+use PrestaShop\PrestaShop\Core\Domain\ImageSettings\Exception\RegenerateThumbnailsException;
+use PrestaShop\PrestaShop\Core\Domain\ImageSettings\Exception\RegenerateThumbnailsTimeoutException;
+use PrestaShop\PrestaShop\Core\Domain\ImageSettings\Exception\RegenerateThumbnailsWriteException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization;
 use PrestaShop\PrestaShop\Core\Domain\Meta\QueryResult\LayoutCustomizationPage;
 use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
@@ -238,7 +242,6 @@ class ThemeController extends AbstractAdminController
     {
         try {
             $this->getCommandBus()->handle(new EnableThemeCommand(new ThemeName($themeName)));
-            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
         } catch (ThemeException $e) {
             $this->addFlash(
                 'error',
@@ -246,6 +249,44 @@ class ThemeController extends AbstractAdminController
                     $e,
                     $this->handleEnableThemeException($e)
                 )
+            );
+
+            return $this->redirectToRoute('admin_themes_index');
+        }
+
+        $regenerateWarning = $this->trans(
+            'You may want to regenerate your images. See the Improve > Design > Images Settings screen for the \'%regenerate_label%\' button.',
+            'Admin.Design.Notification',
+            [
+                '%regenerate_label%' => $this->trans('Regenerate thumbnails', 'Admin.Design.Feature'),
+            ]
+        );
+        try {
+            // New theme may have new types of images, we generate all missing default thumbnails
+            $this->getCommandBus()->handle(new RegenerateDefaultProductThumbnailsCommand());
+            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+            $this->addFlash('warning', $regenerateWarning);
+        } catch (RegenerateThumbnailsException $e) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException(
+                    $e,
+                    [
+                        RegenerateThumbnailsTimeoutException::class => $this->trans(
+                            'Image regeneration failed after timeout.',
+                            'Admin.Modules.Notification',
+                        ),
+                        RegenerateThumbnailsWriteException::class => $this->trans(
+                            'Image regeneration failed because of permission issue.',
+                            'Admin.Modules.Notification',
+                        ),
+                    ]
+                )
+            );
+
+            $this->addFlash('warning',
+                $this->trans('Your theme has been correctly enabled, but default images generation failed.', 'Admin.Design.Notification') .
+                ' ' . $regenerateWarning
             );
 
             return $this->redirectToRoute('admin_themes_index');
