@@ -513,7 +513,7 @@ class MailCore extends ObjectModel
                 $replyTo = $from;
             }
 
-            if (isset($replyTo) && $replyTo) {
+            if (!empty($replyTo) && $replyTo != $toPlugin) {
                 $message->setReplyTo($replyTo, ($replyToName !== '' ? $replyToName : null));
             }
 
