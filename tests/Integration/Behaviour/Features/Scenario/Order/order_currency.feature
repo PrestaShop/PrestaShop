@@ -370,7 +370,8 @@ Feature: Multiple currencies for Order in Back Office (BO)
   Scenario: Carrier change for an order with secondary currency
     Given a carrier "default_carrier" with name "My carrier" exists
     And a carrier "price_carrier" with name "My cheap carrier" exists
-    And I enable carrier "price_carrier"
+    And I edit carrier "price_carrier" with specified properties:
+      | active | true |
     And order "bo_order1" should have "default_carrier" as a carrier
     And order "bo_order1" carrier should have following details:
       | weight                 | 0.600 |

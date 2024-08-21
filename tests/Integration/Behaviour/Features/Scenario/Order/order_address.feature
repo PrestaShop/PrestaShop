@@ -157,17 +157,9 @@ Feature: Order from Back Office (BO)
     """
 
   Scenario: Check shipping details after updating carrier tracking number & url
-    Given language "en" with locale "en-US" exists
-    And language "fr" with locale "fr-FR" exists
-    And group "visitor" named "Visitor" exists
-    And group "guest" named "Guest" exists
     And I create carrier "tracking-carrier" with specified properties:
-      | name             | tracking-carrier                   |
-      | trackingUrl      | http://example.com/track.php?num=@ |
-      | shippingHandling | false                              |
-      | isFree           | true                               |
-      | shippingMethod   | weight                             |
-      | rangeBehavior    | disabled                           |
+      | name        | tracking-carrier |
+      | trackingUrl |                  |
     And I add order "bo_order1" with the following details:
       | cart                | dummy_cart                 |
       | message             | test                       |
@@ -176,15 +168,16 @@ Feature: Order from Back Office (BO)
     And I update order "bo_order1" Tracking number to "" and Carrier to "tracking-carrier"
     Then order "bo_order1" should have "tracking-carrier" as a carrier
     And the preview order "bo_order1" has following shipping details
-      | Tracking number |                                    |
-      | Tracking URL    | http://example.com/track.php?num=@ |
+      | Tracking number |  |
+      | Tracking URL    |  |
     Given I update order "bo_order1" Tracking number to "42424242" and Carrier to "tracking-carrier"
-    And the carrier "tracking-carrier" uses "http://tracking.url" as tracking url
+    When I edit carrier "tracking-carrier" with specified properties I get a new carrier called "new-tracking-carrier":
+      | trackingUrl | http://tracking.url/@ |
     Then order "bo_order1" should have "tracking-carrier" as a carrier
     And the preview order "bo_order1" has following shipping details
       | Tracking number | 42424242            |
-      | Tracking URL    | http://tracking.url |
-    Given the carrier "tracking-carrier" uses "http://tracking.url/@" as tracking url
+      | Tracking URL    |  |
+    Given I update order "bo_order1" Tracking number to "42424242" and Carrier to "new-tracking-carrier"
     Then the preview order "bo_order1" has following shipping details
       | Tracking number | 42424242                     |
       | Tracking URL    | http://tracking.url/42424242 |

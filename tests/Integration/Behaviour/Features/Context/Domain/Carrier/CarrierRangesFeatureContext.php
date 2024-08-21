@@ -46,11 +46,27 @@ use Zone;
 class CarrierRangesFeatureContext extends AbstractDomainFeatureContext
 {
     /**
+     * @Then I set ranges for carrier :reference with specified properties for all shops:
+     */
+    public function setCarrierRangesAllShopsWithoutIdUpdate(string $reference, TableNode $node): void
+    {
+        $this->setCarrierRanges($reference, null, ShopConstraint::allShops(), $node);
+    }
+
+    /**
      * @Then I set ranges for carrier :reference called :newReference with specified properties for all shops:
      */
     public function setCarrierRangesAllShops(string $reference, string $newReference, TableNode $node): void
     {
         $this->setCarrierRanges($reference, $newReference, ShopConstraint::allShops(), $node);
+    }
+
+    /**
+     * @Then I set ranges for carrier :reference with specified properties for shop :shopReference:
+     */
+    public function setCarrierRangesShopWithoutIdUpdate(string $reference, string $shopReference, TableNode $node): void
+    {
+        $this->setCarrierRanges($reference, null, $this->getShopConstraint($shopReference), $node);
     }
 
     /**
@@ -77,7 +93,7 @@ class CarrierRangesFeatureContext extends AbstractDomainFeatureContext
         $this->getCarrierRanges($reference, $this->getShopConstraint($shopReference), $node);
     }
 
-    private function setCarrierRanges(string $reference, string $newReference, ShopConstraint $shopConstraint, TableNode $node): void
+    private function setCarrierRanges(string $reference, ?string $newReference, ShopConstraint $shopConstraint, TableNode $node): void
     {
         try {
             $carrierId = $this->referenceToId($reference);
@@ -99,7 +115,9 @@ class CarrierRangesFeatureContext extends AbstractDomainFeatureContext
             $command = new SetCarrierRangesCommand($carrierId, $data, $shopConstraint);
 
             $carrierId = $this->getCommandBus()->handle($command);
-            $this->getSharedStorage()->set($newReference, $carrierId->getValue());
+            if ($newReference) {
+                $this->getSharedStorage()->set($newReference, $carrierId->getValue());
+            }
         } catch (CarrierException $e) {
             $this->setLastException($e);
         }

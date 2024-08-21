@@ -26,10 +26,6 @@ Feature: Set cart rule restrictions in BO
     And manufacturer graphicCorner named "Graphic Corner" exists
     And supplier fashionSupplier named "Fashion supplier" exists
     And supplier accessoriesSupplier named "Accessories supplier" exists
-    And language "en" with locale "en-US" exists
-    And group "visitor" named "Visitor" exists
-    And group "guest" named "Guest" exists
-    And group "customer" named "Customer" exists
     And I create carrier "carrier1" with specified properties:
       | name             | carrier 1                          |
     And I create carrier "carrier2" with specified properties:

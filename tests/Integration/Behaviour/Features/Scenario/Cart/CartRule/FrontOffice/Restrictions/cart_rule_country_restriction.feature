@@ -8,12 +8,6 @@ Feature: Cart calculation with country specific cart rules
   Background:
     Given there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
     And I have an empty default cart
-    And language "en" with locale "en-US" exists
-    And language "fr" with locale "fr-FR" exists
-    And group "visitor" named "Visitor" exists
-    And group "guest" named "Guest" exists
-    And there is a zone named "zone1"
-    And there is a zone named "zone2"
     And shipping handling fees are set to 2.0
     And shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     And I add new zone "zone1" with following properties:
@@ -30,7 +24,7 @@ Feature: Cart calculation with country specific cart rules
     And there is an address named "address-us" with postcode "1" in state "state-us"
     And I create carrier "carrier1" with specified properties:
       | name             | Carrier 1                          |
-    Then I set ranges for carrier "carrier1" called "newCarrier1" with specified properties for all shops:
+    Then I set ranges for carrier "carrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 10000    | 12.3        |
       | zone2   | 0          | 10000    | 45.6        |

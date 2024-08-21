@@ -37,7 +37,6 @@ use Country;
 use Exception;
 use Group;
 use RangePrice;
-use RangeWeight;
 use RuntimeException;
 use State;
 use Zone;
@@ -95,26 +94,6 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
         $customerFeatureContext = $environment->getContext(CustomerFeatureContext::class);
 
         $this->customerFeatureContext = $customerFeatureContext;
-    }
-
-    /**
-     * @Given /^there is a zone named "(.+)"$/
-     */
-    public function createZone($zoneName)
-    {
-        $zone = new Zone();
-        $zone->name = $zoneName;
-        $zone->add();
-        $this->zones[$zoneName] = $zone;
-        $this->getSharedStorage()->set($zoneName, $zone);
-    }
-
-    /**
-     * @param string $zoneName
-     */
-    public function checkZoneWithNameExists(string $zoneName): void
-    {
-        $this->checkFixtureExists($this->zones, 'Zone', $zoneName);
     }
 
     /**
@@ -230,119 +209,6 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^there is a carrier named "(.+)"$/
-     */
-    public function createCarrier($carrierName)
-    {
-        // @todo chercher les utilisation de cette methode et remplacer par la step dans le context CQRS.
-        // potentielement utiliser les setp CQRS des zone quand on a besoin
-        // virer si possible dans le behat.yml l'utilisation du domain/featurecontextcarrier
-        // si il est utiliser null part => delete it
-        $carrier = new Carrier(null, (int) Configuration::get('PS_LANG_DEFAULT'));
-        $carrier->name = $carrierName;
-        $carrier->shipping_method = Carrier::SHIPPING_METHOD_PRICE;
-        $carrier->delay = '28 days later';
-        $carrier->active = true;
-        $carrier->add();
-        $this->carriers[$carrierName] = $carrier;
-        SharedStorage::getStorage()->set($carrierName, (int) $carrier->id);
-
-        $groups = Group::getGroups(Context::getContext()->language->id);
-        $groupIds = [];
-        foreach ($groups as $group) {
-            $groupIds[] = $group['id_group'];
-        }
-        $carrier->setGroups($groupIds);
-    }
-
-    /**
-     * @Given /^carrier "(.+)" ships to all groups$/
-     */
-    public function setCarrierShipsToAllGroups($carrierName)
-    {
-        $carrierId = $this->getSharedStorage()->get($carrierName);
-
-        $carrier = new Carrier($carrierId, (int) Configuration::get('PS_LANG_DEFAULT'));
-        $groups = Group::getGroups(Context::getContext()->language->id);
-        $groupIds = [];
-        foreach ($groups as $group) {
-            $groupIds[] = $group['id_group'];
-        }
-        $carrier->setGroups($groupIds);
-    }
-
-    /**
-     * @Given /^the carrier "(.+)" uses "(.+)" as tracking url$/
-     */
-    public function setCarrierTrackingUrl(string $carrierName, string $url): void
-    {
-        $carrierId = $this->getSharedStorage()->get($carrierName);
-
-        $carrier = new Carrier($carrierId, (int) Configuration::get('PS_LANG_DEFAULT'));
-        $carrier->url = $url;
-        $carrier->save();
-    }
-
-    /**
-     * @param string $carrierName
-     */
-    public function checkCarrierWithNameExists(string $carrierName): void
-    {
-        $this->checkFixtureExists($this->carriers, 'Carrier', $carrierName);
-    }
-
-    /**
-     * @param string $carrierName
-     *
-     * @return Carrier
-     */
-    public function getCarrierWithName(string $carrierName): Carrier
-    {
-        return $this->carriers[$carrierName];
-    }
-
-    /**
-     * Be careful: this method REPLACES shipping fees for carrier
-     *
-     * @Given /^carrier "(.+)" applies shipping fees of (\d+\.\d+) in zone "(.+)" for (weight|price) between (\d+) and (\d+)$/
-     */
-    public function setCarrierFees($carrierName, $shippingPrice, $zoneName, $rangeType, $from, $to)
-    {
-        $this->checkCarrierWithNameExists($carrierName);
-        $this->checkZoneWithNameExists($zoneName);
-        if (empty($this->carriers[$carrierName]->getZone((int) $this->zones[$zoneName]->id))) {
-            $this->carriers[$carrierName]->addZone((int) $this->zones[$zoneName]->id);
-        }
-        $rangeClass = $rangeType == 'weight' ? RangeWeight::class : RangePrice::class;
-        $primary = $rangeType == 'weight' ? 'id_range_weight' : 'id_range_price';
-        $rangeRows = $rangeClass::getRanges($this->carriers[$carrierName]->id);
-        $rangeId = false;
-        foreach ($rangeRows as $rangeRow) {
-            if ($rangeRow['delimiter1'] == $from) {
-                $rangeId = $rangeRow[$primary];
-            }
-        }
-        if (!empty($rangeId)) {
-            $range = new $rangeClass($rangeId);
-        } else {
-            $range = new $rangeClass();
-            $range->id_carrier = $this->carriers[$carrierName]->id;
-            $range->delimiter1 = $from;
-            $range->delimiter2 = $to;
-            $range->add();
-            $this->priceRanges[] = $range;
-        }
-        $carrierPriceRange = [
-            'id_range_price' => (int) $range->id,
-            'id_range_weight' => null,
-            'id_carrier' => (int) $this->carriers[$carrierName]->id,
-            'id_zone' => (int) $this->zones[$zoneName]->id,
-            'price' => $shippingPrice,
-        ];
-        $this->carriers[$carrierName]->addDeliveryPrice([$carrierPriceRange], true);
-    }
-
-    /**
      * @AfterScenario
      */
     public function cleanFixtures()
@@ -390,19 +256,6 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @When /^I use carrier "(.+)" in my cart$/
-     */
-    public function setCartCQRSCarrier($carrierName)
-    {
-        $this->getCurrentCart()->id_carrier = $this->getSharedStorage()->get($carrierName);
-
-        $this->getCurrentCart()->update();
-
-        CartRule::autoRemoveFromCart();
-        CartRule::autoAddToCart();
-    }
-
-    /**
      * @When /^I select address "(.+)" in my cart$/
      */
     public function setCartAddress($addresssName)
@@ -433,21 +286,6 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
             'Could not find carrier with name %s',
             $carrierName
         ));
-    }
-
-    /**
-     * @Given I enable carrier :carrierReference
-     *
-     * @param string $carrierReference
-     */
-    public function enableCarrier(string $carrierReference)
-    {
-        $carrierId = SharedStorage::getStorage()->get($carrierReference);
-        $carrier = new Carrier($carrierId);
-        $carrier->active = true;
-        $carrier->save();
-        // Reset cache so that the carrier becomes selectable
-        Carrier::resetStaticCache();
     }
 
     /**

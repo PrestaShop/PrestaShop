@@ -718,23 +718,18 @@ Feature: Order from Back Office (BO)
   Scenario: When a cart rule is associated to a carrier, when I change the carrier the cart rule should be added/removed accordingly
     Given there is a product in the catalog named "product1" with a price of 10.00 and 100 items in stock
     And there is a product in the catalog named "product2" with a price of 15.00 and 100 items in stock
-    And there is a zone named "zone1"
     And I add new zone "zone1" with following properties:
       | name    | zone1 |
       | enabled | true  |
     And there is a country named "country1" and iso code "FR" in zone "zone1"
-    And language "en" with locale "en-US" exists
-    And group "visitor" named "Visitor" exists
-    And group "guest" named "Guest" exists
-    And group "customer" named "Customer" exists
     And I create carrier "carrier1" with specified properties:
       | name             | carrier 1                          |
     And I create carrier "carrier2" with specified properties:
       | name             | carrier 2                          |
-    Then I set ranges for carrier "carrier1" called "newCarrier1" with specified properties for all shops:
+    Then I set ranges for carrier "carrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 10000    | 0.0         |
-    Then I set ranges for carrier "carrier2" called "newCarrier2" with specified properties for all shops:
+    Then I set ranges for carrier "carrier2" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 10000    | 0.0         |
     And there is a cart rule FreeGift with following properties:

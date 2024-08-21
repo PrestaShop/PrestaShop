@@ -28,7 +28,8 @@ Feature: Order from Back Office (BO)
     And I select "FR" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
     And I add 70 products "Test Product With Odd Tax" to the cart "dummy_cart"
     And a carrier "price_carrier" with name "My cheap carrier" exists
-    And I enable carrier "price_carrier"
+    And I edit carrier "price_carrier" with specified properties:
+      | active | true |
     And I associate the tax rule group "odd-tax-group" to carrier "price_carrier"
     And I select carrier "price_carrier" for cart "dummy_cart"
     And cart "dummy_cart" should have "price_carrier" as a carrier
