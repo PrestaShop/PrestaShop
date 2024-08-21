@@ -112,24 +112,36 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
                 $associatedShops = [$this->getDefaultShopId()];
             }
 
+            if (!empty($properties['delay'])) {
+                $delay = $properties['delay'];
+            } else {
+                $delay = [$this->getDefaultLangId() => 'Shipping delay'];
+            }
+
+            if (!empty($properties['group_access'])) {
+                $groupIds = $this->referencesToIds($properties['group_access']);
+            } else {
+                $groupIds = Group::getAllGroupIds();
+            }
+
             $carrierId = $this->createCarrierUsingCommand(
                 $properties['name'],
-                $properties['delay'],
-                (int) $properties['grade'],
-                $properties['trackingUrl'],
-                (int) $properties['position'],
-                filter_var($properties['active'], FILTER_VALIDATE_BOOLEAN),
-                (int) $properties['max_width'],
-                (int) $properties['max_height'],
-                (int) $properties['max_depth'],
-                (int) $properties['max_weight'],
-                $this->referencesToIds($properties['group_access']),
-                filter_var($properties['shippingHandling'], FILTER_VALIDATE_BOOLEAN),
-                filter_var($properties['isFree'], FILTER_VALIDATE_BOOLEAN),
-                $properties['shippingMethod'],
-                $properties['rangeBehavior'],
+                $delay,
+                (int) ($properties['grade'] ?? 0),
+                $properties['trackingUrl'] ?? '',
+                filter_var($properties['active'] ?? true, FILTER_VALIDATE_BOOLEAN),
+                (int) ($properties['max_width'] ?? 0),
+                (int) ($properties['max_height'] ?? 0),
+                (int) ($properties['max_depth'] ?? 0),
+                (int) ($properties['max_weight'] ?? 0),
+                $groupIds,
+                filter_var($properties['shippingHandling'] ?? true, FILTER_VALIDATE_BOOLEAN),
+                filter_var($properties['isFree'] ?? false, FILTER_VALIDATE_BOOLEAN),
+                $properties['shippingMethod'] ?? 'price',
+                $properties['rangeBehavior'] ?? 'highest_range',
                 $properties['logoPathName'] ?? null,
                 $associatedShops,
+                isset($properties['position']) ? (int) $properties['position'] : null,
             );
 
             if (isset($tmpLogo)) {
@@ -393,7 +405,6 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         array $delay,
         int $grade,
         string $trackingUrl,
-        int $position,
         bool $active,
         int $max_width,
         int $max_height,
@@ -406,13 +417,13 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         string $rangeBehavior,
         ?string $logoPathName,
         array $associatedShops,
+        ?int $position,
     ): CarrierId {
         $command = new AddCarrierCommand(
             $name,
             $delay,
             $grade,
             $trackingUrl,
-            $position,
             $active,
             $group_access,
             $hasAdditionalHandlingFee,
@@ -426,6 +437,10 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
             $max_weight,
             $logoPathName,
         );
+
+        if (null !== $position) {
+            $command->setPosition($position);
+        }
 
         return $this->getCommandBus()->handle($command);
     }
