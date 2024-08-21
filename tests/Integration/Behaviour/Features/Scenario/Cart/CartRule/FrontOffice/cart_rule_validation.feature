@@ -79,17 +79,6 @@ Feature: Cart rule application is validated before it is applied to cart
       | discount_percentage | 50          |
     And I create carrier "carrier1" with specified properties:
       | name             | Carrier 1                          |
-      | grade            | 1                                  |
-      | trackingUrl      | http://example.com/track.php?num=@ |
-      | position         | 2                                  |
-      | active           | true                               |
-      | max_width        | 1454                               |
-      | max_height       | 1234                               |
-      | max_depth        | 1111                               |
-      | max_weight       | 3864                               |
-      | group_access     | visitor, guest                     |
-      | delay[en-US]     | Shipping delay                     |
-      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |

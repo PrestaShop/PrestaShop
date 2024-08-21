@@ -1,5 +1,4 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s cart --tags fo-cart-rule-country-restriction
-
 @restore-all-tables-before-feature
 @fo-cart-rule-country-restriction
 Feature: Cart calculation with country specific cart rules
@@ -31,21 +30,6 @@ Feature: Cart calculation with country specific cart rules
     And there is an address named "address-us" with postcode "1" in state "state-us"
     And I create carrier "carrier1" with specified properties:
       | name             | Carrier 1                          |
-      | grade            | 0                                  |
-      | trackingUrl      | http://example.com/track.php?num=@ |
-      | position         | 4                                  |
-      | active           | true                               |
-      | max_width        | 0                                  |
-      | max_height       | 0                                  |
-      | max_depth        | 0                                  |
-      | max_weight       | 0                                  |
-      | group_access     | visitor, guest                     |
-      | delay[en-US]     | Shipping delay                     |
-      | delay[fr-FR]     | Délai de livraison                 |
-      | shippingHandling | true                               |
-      | isFree           | false                              |
-      | shippingMethod   | price                              |
-      | rangeBehavior    | highest_range                      |
     Then I set ranges for carrier "carrier1" called "newCarrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 10000    | 12.3        |
