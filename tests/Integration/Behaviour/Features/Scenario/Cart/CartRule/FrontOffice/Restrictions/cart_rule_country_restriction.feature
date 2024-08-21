@@ -16,10 +16,10 @@ Feature: Cart calculation with country specific cart rules
     And there is a zone named "zone2"
     And shipping handling fees are set to 2.0
     And shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
-    And "zone1" exist with following properties:
+    And I add new zone "zone1" with following properties:
       | name    | Europe |
       | enabled | true   |
-    And "zone2" exist with following properties:
+    And I add new zone "zone2" with following properties:
       | name    | North America |
       | enabled | true          |
     And there is a country named "France" and iso code "FR" in zone "zone1"

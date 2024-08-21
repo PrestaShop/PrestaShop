@@ -27,9 +27,8 @@ Feature: Compute correct delivery options
       | free_shipping       | true          |
       | discount_percentage | 50            |
     # Standard location settings
-    Given there is a zone named "zone1"
-    And "zone1" exist with following properties:
-      | name    | zone   |
+    And I add new zone "zone1" with following properties:
+      | name    | zone1  |
       | enabled | true   |
     And language "en" with locale "en-US" exists
     And language "fr" with locale "fr-FR" exists
