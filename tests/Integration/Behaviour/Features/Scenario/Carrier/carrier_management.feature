@@ -88,7 +88,7 @@ Feature: Carrier management
       | rangeBehavior    | disabled                           |
     When I update order "bo_order1" Tracking number to "TEST1234" and Carrier to "carrier1"
     Then order "bo_order1" has Tracking number "TEST1234"
-    When I edit carrier "carrier1" with specified properties I get a new carrier called "newCarrier1":
+    When I edit carrier "carrier1" with specified properties I get a new carrier referenced as "newCarrier1":
       | name | Carrier 1 new |
     Then carrier "carrier1" should have the following properties:
       | name        | Carrier 1 |

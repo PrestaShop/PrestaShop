@@ -54,7 +54,7 @@ class CarrierRangesFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then I set ranges for carrier :reference called :newReference with specified properties for all shops:
+     * @Then I set ranges for carrier :reference with specified properties for all shops I get a new carrier referenced as :newReference:
      */
     public function setCarrierRangesAllShops(string $reference, string $newReference, TableNode $node): void
     {
@@ -96,7 +96,7 @@ class CarrierRangesFeatureContext extends AbstractDomainFeatureContext
     private function setCarrierRanges(string $reference, ?string $newReference, ShopConstraint $shopConstraint, TableNode $node): void
     {
         try {
-            $carrierId = $this->referenceToId($reference);
+            $initialCarrierId = $this->referenceToId($reference);
             $data = $node->getColumnsHash();
 
             foreach ($data as &$range) {
@@ -112,12 +112,18 @@ class CarrierRangesFeatureContext extends AbstractDomainFeatureContext
                 }
             }
 
-            $command = new SetCarrierRangesCommand($carrierId, $data, $shopConstraint);
+            $command = new SetCarrierRangesCommand($initialCarrierId, $data, $shopConstraint);
 
             $carrierId = $this->getCommandBus()->handle($command);
             if ($newReference) {
+                Assert::assertNotEquals($initialCarrierId, $carrierId->getValue(), 'Carrier ID was expected to be updated');
                 $this->getSharedStorage()->set($newReference, $carrierId->getValue());
+            } else {
+                Assert::assertEquals($initialCarrierId, $carrierId->getValue(), 'Carrier ID was expected the remain the same');
             }
+
+            // Reset cache so that the carrier becomes selectable
+            Carrier::resetStaticCache();
         } catch (CarrierException $e) {
             $this->setLastException($e);
         }
@@ -143,6 +149,7 @@ class CarrierRangesFeatureContext extends AbstractDomainFeatureContext
 
             Assert::assertEquals($rangesExpected, $rangesDatabase);
 
+            // Automatically checks that the carrier_zone association is properly set
             $query = new DbQuery();
             $query->select('(cz.id_zone)');
             $query->from('carrier_zone', 'cz');

@@ -29,8 +29,8 @@ Feature: Carrier Tax Rule Group management
       | isFree           | false                              |
       | shippingMethod   | weight                             |
       | rangeBehavior    | disabled                           |
-    When I set tax rule for carrier "carrier1" with specified properties:
-      | taxRuleGroup | US-AZ Rate (6.6%) |
+    And I identify tax rules group named "US-AZ Rate (6.6%)" as "us-az-tax-rate"
+    When I set tax rule "us-az-tax-rate" for carrier "carrier1"
     Then carrier "carrier1" should have the following properties:
       | name         | Carrier 1         |
       | taxRuleGroup | US-AZ Rate (6.6%) |
@@ -52,6 +52,5 @@ Feature: Carrier Tax Rule Group management
       | isFree           | false                              |
       | shippingMethod   | weight                             |
       | rangeBehavior    | disabled                           |
-    When I set tax rule for carrier "carrier1" with specified properties:
-      | taxRuleGroup | wrongTaxId |
+    When I set tax rule "wrong-tax-rules" for carrier "carrier1"
     Then I should get error that tax rules group does not exist

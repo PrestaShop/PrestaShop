@@ -26,47 +26,64 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Carrier;
 
-use Behat\Gherkin\Node\TableNode;
+use Carrier;
 use Exception;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\SetCarrierTaxRuleGroupCommand;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupNotFoundException;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
-use Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext;
 
 class CarrierTaxRuleGroupFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @When I set tax rule for carrier :reference with specified properties:
+     * @When I set tax rule :taxRulesGroupReference for carrier :reference
      */
-    public function editTaxRule(string $reference, TableNode $node): void
+    public function editTaxRuleWithoutIdUpdate(string $reference, string $taxRulesGroupReference): void
     {
-        $properties = $this->localizeByRows($node);
-        $carrierId = $this->referenceToId($reference);
-
-        try {
-            if (isset($properties['taxRuleGroup'])) {
-                $command = new SetCarrierTaxRuleGroupCommand(
-                    $carrierId,
-                    (int) TaxRulesGroupFeatureContext::getTaxRulesGroupByName($properties['taxRuleGroup'])->id,
-                    ShopConstraint::allShops()
-                );
-
-                $newCarrierId = $this->getCommandBus()->handle($command);
-                $this->getSharedStorage()->set($reference, $newCarrierId->getValue());
-            }
-        } catch (Exception $e) {
-            $this->setLastException($e);
+        $initialCarrierId = $this->getSharedStorage()->get($reference);
+        $carrierId = $this->editCarrierTaxRule($reference, null, $taxRulesGroupReference);
+        if ($carrierId) {
+            Assert::assertEquals($initialCarrierId, $carrierId->getValue(), 'Carrier ID was expected the remain the same');
         }
     }
 
     /**
-     * @Then I should get error that tax rules group does not exist
+     * @When I set tax rule :taxRulesGroupReference for carrier :reference I get a new carrier referenced as :newReference
      */
-    public function checkCartRuleError(): void
+    public function editTaxRuleWithIdUpdate(string $reference, string $newReference, string $taxRulesGroupReference): void
     {
-        $this->assertLastErrorIs(
-            TaxRulesGroupNotFoundException::class
-        );
+        $initialCarrierId = $this->getSharedStorage()->get($reference);
+        $carrierId = $this->editCarrierTaxRule($reference, $newReference, $taxRulesGroupReference);
+        if ($carrierId) {
+            Assert::assertNotEquals($initialCarrierId, $carrierId->getValue(), 'Carrier ID was expected to be updated');
+        }
+    }
+
+    protected function editCarrierTaxRule(string $reference, ?string $newReference, string $taxRulesGroupReference): ?CarrierId
+    {
+        $carrierId = $this->referenceToId($reference);
+
+        try {
+            $command = new SetCarrierTaxRuleGroupCommand(
+                $carrierId,
+                'wrong-tax-rules' === $taxRulesGroupReference ? 4242 : $this->referenceToId($taxRulesGroupReference),
+                ShopConstraint::allShops()
+            );
+
+            /** @var CarrierId $carrierIdVO */
+            $carrierIdVO = $this->getCommandBus()->handle($command);
+            if ($newReference) {
+                $this->getSharedStorage()->set($newReference, $carrierIdVO->getValue());
+            }
+            // Reset cache so that the carrier becomes selectable
+            Carrier::resetStaticCache();
+
+            return $carrierIdVO;
+        } catch (Exception $e) {
+            $this->setLastException($e);
+        }
+
+        return null;
     }
 }

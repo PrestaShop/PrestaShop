@@ -160,21 +160,41 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     public function editCarrierWithoutUpdate(string $reference, TableNode $node): void
     {
         try {
+            $initialCarrierId = $this->getSharedStorage()->get($reference);
             $carrierId = $this->editCarrier($reference, null, $node);
-            Assert::assertEquals($this->getSharedStorage()->get($reference), $carrierId->getValue());
+            Assert::assertEquals($initialCarrierId, $carrierId->getValue(), 'Carrier ID was expected the remain the same');
         } catch (CarrierConstraintException $e) {
             $this->setLastException($e);
         }
     }
 
     /**
-     * @When I edit carrier :reference with specified properties I get a new carrier called :newReference:
+     * @When I edit carrier :reference with specified properties I get a new carrier referenced as :newReference:
      */
     public function editCarrierWithUpdate(string $reference, string $newReference, TableNode $node): void
     {
         try {
+            $initialCarrierId = $this->getSharedStorage()->get($reference);
             $carrierId = $this->editCarrier($reference, $newReference, $node);
-            Assert::assertNotEquals($this->getSharedStorage()->get($reference), $carrierId->getValue());
+            Assert::assertNotEquals($initialCarrierId, $carrierId->getValue(), 'Carrier ID was expected to be updated');
+        } catch (CarrierConstraintException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * The carrier ID may be changed after an update if it was already associated to an order, to help write
+     * scenarios more easily this step automatically updates the ID referenced so that following steps can keep
+     * using the same reference.
+     *
+     * @When I edit carrier :reference with specified properties and update its reference:
+     */
+    public function editCarrierWithPotentialUpdate(string $reference, TableNode $node): void
+    {
+        // We update carrier and references but without checking if it was modified
+        try {
+            $this->getSharedStorage()->get($reference);
+            $this->editCarrier($reference, $reference, $node);
         } catch (CarrierConstraintException $e) {
             $this->setLastException($e);
         }
@@ -267,7 +287,12 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         if (isset($tmpLogo)) {
             $this->fakeUploadLogo($tmpLogo, $newCarrierId->getValue());
         }
-        $this->getSharedStorage()->set($newReference, $newCarrierId->getValue());
+        if ($newReference) {
+            $this->getSharedStorage()->set($newReference, $newCarrierId->getValue());
+        }
+
+        // Reset cache so that the carrier becomes selectable
+        Carrier::resetStaticCache();
 
         return $newCarrierId;
     }

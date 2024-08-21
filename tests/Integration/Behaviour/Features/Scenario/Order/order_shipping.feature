@@ -417,7 +417,7 @@ Feature: Order from Back Office (BO)
 
   Scenario: I change the customer invoice address to another zone and check that shipping fees have been updated
     Given shop configuration for "PS_TAX_ADDRESS_TYPE" is set to id_address_invoice
-    And I edit carrier "price_carrier" with specified properties:
+    And I edit carrier "price_carrier" with specified properties and update its reference:
       | active | true |
     And I select carrier "price_carrier" for cart "dummy_cart"
     Then cart "dummy_cart" should have "price_carrier" as a carrier
@@ -528,7 +528,7 @@ Feature: Order from Back Office (BO)
 
   Scenario: I change the customer delivery address to another zone and check that shipping fees have been updated
     Given shop configuration for "PS_TAX_ADDRESS_TYPE" is set to id_address_delivery
-    And I edit carrier "price_carrier" with specified properties:
+    And I edit carrier "price_carrier" with specified properties and update its reference:
       | active | true |
     And I select carrier "price_carrier" for cart "dummy_cart"
     Then cart "dummy_cart" should have "price_carrier" as a carrier
@@ -637,7 +637,7 @@ Feature: Order from Back Office (BO)
 
   Scenario: I apply free discount shipping after it has been changed the discount should be correct
     Given shop configuration for "PS_TAX_ADDRESS_TYPE" is set to id_address_invoice
-    And I edit carrier "price_carrier" with specified properties:
+    And I edit carrier "price_carrier" with specified properties and update its reference:
       | active | true |
     And I select carrier "default_carrier" for cart "dummy_cart"
     Then cart "dummy_cart" should have "default_carrier" as a carrier
@@ -732,7 +732,7 @@ Feature: Order from Back Office (BO)
 
   Scenario: I use and address without taxes (no order_detail_tax created), then I change to a country with taxes all is correctly computed
     Given shop configuration for "PS_TAX_ADDRESS_TYPE" is set to id_address_delivery
-    And I edit carrier "price_carrier" with specified properties:
+    And I edit carrier "price_carrier" with specified properties and update its reference:
       | active | true |
     And I select carrier "price_carrier" for cart "dummy_cart"
     Then cart "dummy_cart" should have "price_carrier" as a carrier
@@ -877,7 +877,7 @@ Feature: Order from Back Office (BO)
   Scenario: In rounding per item mode, I use an address without taxes (no order_detail_tax created), then I change to a country with taxes all is correctly computed
     Given shop configuration for "PS_TAX_ADDRESS_TYPE" is set to id_address_delivery
     Given specific shop configuration for "rounding type" is set to round each article
-    And I edit carrier "price_carrier" with specified properties:
+    And I edit carrier "price_carrier" with specified properties and update its reference:
       | active | true |
     And I select carrier "price_carrier" for cart "dummy_cart"
     Then cart "dummy_cart" should have "price_carrier" as a carrier

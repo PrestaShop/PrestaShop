@@ -67,7 +67,7 @@ Feature: Order from Back Office (BO)
 
   Scenario: With PS_ORDER_RECALCULATE_SHIPPING = 1 & status = Processing in progress, check the total price is recalculated
     Given shop configuration for "PS_ORDER_RECALCULATE_SHIPPING" is set to 1
-    And I edit carrier "weight_carrier" with specified properties:
+    And I edit carrier "weight_carrier" with specified properties and update its reference:
       | active | true |
     And there is a product in the catalog named "Shipping Product" with a price of 15.0 and 100 items in stock
     And product "Shipping Product" weight is 0.63 kg
@@ -169,7 +169,7 @@ Feature: Order from Back Office (BO)
 
   Scenario: With PS_ORDER_RECALCULATE_SHIPPING = 0 & status = Processing in progress, check the total price is recalculated
     Given shop configuration for "PS_ORDER_RECALCULATE_SHIPPING" is set to 0
-    And I edit carrier "weight_carrier" with specified properties:
+    And I edit carrier "weight_carrier" with specified properties and update its reference:
       | active | true |
     And there is a product in the catalog named "Shipping Product" with a price of 15.0 and 100 items in stock
     And product "Shipping Product" weight is 0.63 kg
