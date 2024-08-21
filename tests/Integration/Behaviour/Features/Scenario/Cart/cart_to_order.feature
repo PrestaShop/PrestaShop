@@ -11,10 +11,6 @@ Feature: Check cart to order data copy
     And there is a product in the catalog named "product2" with a price of 32.388 and 1000 items in stock
     And there is a product in the catalog named "product3" with a price of 31.188 and 1000 items in stock
     And there is a product in the catalog named "product4" with a price of 35.567 and 1000 items in stock
-    And language "en" with locale "en-US" exists
-    And group "visitor" named "Visitor" exists
-    And group "guest" named "Guest" exists
-    And group "customer" named "Customer" exists
     And there is a cart rule "cartrule1" with following properties:
       | name[en-US]         | cartrule1 |
       | priority            | 1         |
@@ -29,7 +25,6 @@ Feature: Check cart to order data copy
     Given I have an empty default cart
     Given email sending is disabled
     Given shipping handling fees are set to 2.0
-    Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
@@ -40,7 +35,7 @@ Feature: Check cart to order data copy
     Given address "address1" is associated to customer "customer1"
     And I create carrier "carrier1" with specified properties:
       | name | carrier 1 |
-    Then I set ranges for carrier "carrier1" called "newCarrier1" with specified properties for all shops:
+    Then I set ranges for carrier "carrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 10000    | 5.0         |
     When I am logged in as "customer1"
@@ -69,7 +64,6 @@ Feature: Check cart to order data copy
       | free_shipping       | false     |
       | code                | foo2      |
       | discount_percentage | 50        |
-    Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
@@ -78,12 +72,9 @@ Feature: Check cart to order data copy
     Given product "product1" belongs to tax group "taxrule1"
     Given there is a customer named "customer1" whose email is "fake@prestashop.com"
     Given address "address1" is associated to customer "customer1"
-    And I add new zone "zone1" with following properties:
-      | name    | zone1 |
-      | enabled | true  |
     And I create carrier "carrier1" with specified properties:
       | name | carrier 1 |
-    Then I set ranges for carrier "carrier1" called "newCarrier1" with specified properties for all shops:
+    Then I set ranges for carrier "carrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 10000    | 5.0         |
     When I am logged in as "customer1"
@@ -107,7 +98,6 @@ Feature: Check cart to order data copy
     Given I have an empty default cart
     Given email sending is disabled
     Given shipping handling fees are set to 2.0
-    Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
@@ -118,13 +108,9 @@ Feature: Check cart to order data copy
     Given product "product3" belongs to tax group "taxrule1"
     Given there is a customer named "customer1" whose email is "fake@prestashop.com"
     Given address "address1" is associated to customer "customer1"
-    And I add new zone "zone1" with following properties:
-      | name    | zone1 |
-      | enabled | true  |
     And I create carrier "carrier1" with specified properties:
       | name             | carrier 1                          |
-    Given carrier "carrier1" ships to all groups
-    Then I set ranges for carrier "carrier1" called "newCarrier1" with specified properties for all shops:
+    Then I set ranges for carrier "carrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 10000    | 5.0         |
     When I am logged in as "customer1"
@@ -154,7 +140,6 @@ Feature: Check cart to order data copy
       | free_shipping       | false     |
       | code                | foo2      |
       | discount_percentage | 50        |
-    Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
@@ -167,8 +152,7 @@ Feature: Check cart to order data copy
     Given address "address1" is associated to customer "customer1"
     And I create carrier "carrier1" with specified properties:
       | name             | carrier 1                          |
-    Given carrier "carrier1" ships to all groups
-    Then I set ranges for carrier "carrier1" called "newCarrier1" with specified properties for all shops:
+    Then I set ranges for carrier "carrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 10000    | 5.0         |
     When I am logged in as "customer1"
@@ -201,7 +185,6 @@ Feature: Check cart to order data copy
       | discount_currency     | usd       |
       | discount_includes_tax | false     |
       | code                  | foo5      |
-    Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
@@ -212,8 +195,7 @@ Feature: Check cart to order data copy
     Given address "address1" is associated to customer "customer1"
     And I create carrier "carrier1" with specified properties:
       | name             | carrier 1                          |
-    Given carrier "carrier1" ships to all groups
-    Then I set ranges for carrier "carrier1" called "newCarrier1" with specified properties for all shops:
+    Then I set ranges for carrier "carrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 10000    | 5.0         |
     When I am logged in as "customer1"
@@ -243,7 +225,6 @@ Feature: Check cart to order data copy
       | free_shipping | false      |
       | gift_product  | product4   |
       | code          | foo13      |
-    Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
@@ -255,8 +236,7 @@ Feature: Check cart to order data copy
     Given address "address1" is associated to customer "customer1"
     And I create carrier "carrier1" with specified properties:
       | name             | carrier 1                          |
-    Given carrier "carrier1" ships to all groups
-    Then I set ranges for carrier "carrier1" called "newCarrier1" with specified properties for all shops:
+    Then I set ranges for carrier "carrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 10000    | 5.0         |
     When I am logged in as "customer1"
@@ -284,7 +264,6 @@ Feature: Check cart to order data copy
       | free_shipping | false      |
       | gift_product  | product4   |
       | code          | foo13      |
-    Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
@@ -294,9 +273,11 @@ Feature: Check cart to order data copy
     Given product "product4" belongs to tax group "taxrule1"
     Given there is a customer named "customer1" whose email is "fake@prestashop.com"
     Given address "address1" is associated to customer "customer1"
-    Given there is a carrier named "carrier1"
-    Given carrier "carrier1" ships to all groups
-    Given carrier "carrier1" applies shipping fees of 5.0 in zone "zone1" for price between 0 and 10000
+    And I create carrier "carrier1" with specified properties:
+      | name             | carrier 1                          |
+    And I set ranges for carrier "carrier1" with specified properties for all shops:
+      | id_zone | range_from | range_to | range_price |
+      | zone1   | 0          | 10000    | 5.0         |
     When I am logged in as "customer1"
     When I add 1 items of product "product1" in my cart
     When I add 1 items of product "product4" in my cart

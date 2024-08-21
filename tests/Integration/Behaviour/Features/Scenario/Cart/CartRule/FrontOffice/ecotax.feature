@@ -8,7 +8,9 @@ Feature: Cart rule (percent) calculation with one cart rule
 
   Background:
     Given I have an empty default cart
-    And there is a zone named "zone1"
+    And I add new zone "zone1" with following properties:
+      | name    | zone1 |
+      | enabled | true  |
     And there is a country named "country1" and iso code "FR" in zone "zone1"
     And there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     And there is an address named "address1" with postcode "1" in state "state1"

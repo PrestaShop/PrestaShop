@@ -30,10 +30,6 @@ Feature: Compute correct delivery options
     And I add new zone "zone1" with following properties:
       | name    | zone1  |
       | enabled | true   |
-    And language "en" with locale "en-US" exists
-    And language "fr" with locale "fr-FR" exists
-    And group "visitor" named "Visitor" exists
-    And group "guest" named "Guest" exists
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
@@ -45,10 +41,9 @@ Feature: Compute correct delivery options
     # One standard carrier
     And I create carrier "carrier1" with specified properties:
       | name             | Carrier 1                          |
-    Then I set ranges for carrier "carrier1" called "newCarrier1" with specified properties for all shops:
+    Then I set ranges for carrier "carrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 10000    | 5.0         |
-    Given carrier "carrier1" ships to all groups
     # Checkout begins
     When I am logged in as "customer1"
     When I add 1 items of product "product1" in my cart

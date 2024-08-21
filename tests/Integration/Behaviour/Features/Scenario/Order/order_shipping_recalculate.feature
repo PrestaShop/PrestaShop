@@ -25,7 +25,8 @@ Feature: Order from Back Office (BO)
 
   Scenario: With PS_ORDER_RECALCULATE_SHIPPING = 1 & status = Awaiting bank wire payment, check the total price is recalculated
     Given shop configuration for "PS_ORDER_RECALCULATE_SHIPPING" is set to 1
-    And I enable carrier "weight_carrier"
+    And I edit carrier "weight_carrier" with specified properties:
+      | active | true |
     When I select carrier "default_carrier" for cart "dummy_cart"
     Then cart "dummy_cart" should have "default_carrier" as a carrier
     When I add order "bo_order1" with the following details:
@@ -66,7 +67,8 @@ Feature: Order from Back Office (BO)
 
   Scenario: With PS_ORDER_RECALCULATE_SHIPPING = 1 & status = Processing in progress, check the total price is recalculated
     Given shop configuration for "PS_ORDER_RECALCULATE_SHIPPING" is set to 1
-    And I enable carrier "weight_carrier"
+    And I edit carrier "weight_carrier" with specified properties:
+      | active | true |
     And there is a product in the catalog named "Shipping Product" with a price of 15.0 and 100 items in stock
     And product "Shipping Product" weight is 0.63 kg
     And I add 1 products "Shipping Product" to the cart "dummy_cart"
@@ -167,7 +169,8 @@ Feature: Order from Back Office (BO)
 
   Scenario: With PS_ORDER_RECALCULATE_SHIPPING = 0 & status = Processing in progress, check the total price is recalculated
     Given shop configuration for "PS_ORDER_RECALCULATE_SHIPPING" is set to 0
-    And I enable carrier "weight_carrier"
+    And I edit carrier "weight_carrier" with specified properties:
+      | active | true |
     And there is a product in the catalog named "Shipping Product" with a price of 15.0 and 100 items in stock
     And product "Shipping Product" weight is 0.63 kg
     And I add 1 products "Shipping Product" to the cart "dummy_cart"

@@ -8,22 +8,16 @@ Feature: Cart rule application is validated before it is applied to cart
   Background:
     Given I have an empty default cart
     And there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
-    And language "en" with locale "en-US" exists
-    And language "fr" with locale "fr-FR" exists
-    And group "visitor" named "Visitor" exists
-    And group "guest" named "Guest" exists
     And there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     And there is a product in the catalog named "product2" with a price of 32.388 and 1000 items in stock
     And there is a cart rule "cart_rule_1" with following properties:
       | name[en-US]                  | cartrule1 |
-      | name[fr-FR]                  | cartrule1 |
       | free_shipping                | false     |
       | code                         | foo1      |
       | discount_percentage          | 50        |
       | apply_to_discounted_products | true      |
     And there is a cart rule "cart_rule_2" with following properties:
       | name[en-US]           | cartrule2 |
-      | name[fr-FR]           | cartrule2 |
       | free_shipping         | false     |
       | code                  | foo2      |
       | discount_amount       | 10        |
@@ -31,7 +25,6 @@ Feature: Cart rule application is validated before it is applied to cart
       | discount_includes_tax | false     |
     And there is a cart rule "cart_rule_3" with following properties:
       | name[en-US]       | cartrule3 |
-      | name[fr-FR]       | cartrule3 |
       | total_quantity    | 10        |
       | quantity_per_user | 10        |
       | free_shipping     | true      |
@@ -69,29 +62,12 @@ Feature: Cart rule application is validated before it is applied to cart
     # try applying cart rule restricted to carrier
     Given I have an empty default cart
     And there is a cart rule "cart_rule_4" with following properties:
-      | name[en-US]         | cart_rule_4 |
-      | name[fr-FR]         | cart_rule_4 |
-      | total_quantity      | 1000        |
-      | quantity_per_user   | 1000        |
-      | priority            | 1           |
-      | free_shipping       | false       |
-      | code                | foo         |
-      | discount_percentage | 50          |
+      | name[en-US]         | cart_rule_4   |
+      | free_shipping       | true          |
+      | code                | rule_carrier1 |
+      | discount_percentage | 50            |
     And I create carrier "carrier1" with specified properties:
-      | name             | Carrier 1                          |
-      | shippingHandling | false                              |
-      | isFree           | true                               |
-      | shippingMethod   | weight                             |
-      | rangeBehavior    | disabled                           |
-    And there is a cart rule "cart_rule_4" with following properties:
-      | name[en-US]         | cart_rule_4 |
-      | name[fr-FR]         | cart_rule_4 |
-      | total_quantity      | 1000        |
-      | quantity_per_user   | 1000        |
-      | priority            | 1           |
-      | free_shipping       | false       |
-      | code                | foo         |
-      | discount_percentage | 50          |
+      | name | Carrier 1 |
     And I restrict following carriers for cart rule cart_rule_4:
       | restricted carriers | carrier1 |
     And I save all the restrictions for cart rule cart_rule_4
@@ -110,7 +86,6 @@ Feature: Cart rule application is validated before it is applied to cart
     And I should have 0 products in my cart
     When there is a cart rule "cart_rule_5" with following properties:
       | name[en-US]   | cart_rule_5 |
-      | name[fr-FR]   | cart_rule_5 |
       | free_shipping | false       |
       | free_shipping | false       |
       | gift_product  | product1    |
@@ -138,7 +113,6 @@ Feature: Cart rule application is validated before it is applied to cart
     Given I have an empty default cart
     And there is a cart rule "cartrule4" with following properties:
       | name[en-US]           | reduces $5 for product2 |
-      | name[fr-FR]           | reduces $5 for product2 |
       | priority              | 8                       |
       | free_shipping         | false                   |
       | code                  | foo4                    |
@@ -165,7 +139,6 @@ Feature: Cart rule application is validated before it is applied to cart
     Given I have an empty default cart
     And there is a cart rule "cartrule50" with following properties:
       | name[en-US]         | cartrule50 |
-      | name[fr-FR]         | cartrule50 |
       | priority            | 10         |
       | free_shipping       | false      |
       | code                | foo50      |
@@ -181,7 +154,6 @@ Feature: Cart rule application is validated before it is applied to cart
     Given I have an empty default cart
     And there is a cart rule "cartruleFreeShip" with following properties:
       | name[en-US]                  | cartruleFreeShip |
-      | name[fr-FR]                  | cartruleFreeShip |
       | priority                     | 11               |
       | free_shipping                | true             |
       | code                         | cartruleFreeShip |

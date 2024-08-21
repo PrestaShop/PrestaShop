@@ -11,24 +11,11 @@ Feature: Set cart rule carrier restrictions in BO
     And there is a currency named "chf" with iso code "CHF" and exchange rate of 1.25
     And currency "usd" is the default one
     And language "language1" with locale "en-US" exists
-    And language "fr" with locale "fr-FR" exists
-    And group "visitor" named "Visitor" exists
-    And group "guest" named "Guest" exists
     And language with iso code "en" is the default one
     And I create carrier "carrier1" with specified properties:
       | name             | Carrier 1                          |
-      | group_access     | visitor, guest                     |
-      | shippingHandling | false                              |
-      | isFree           | true                               |
-      | shippingMethod   | weight                             |
-      | rangeBehavior    | disabled                           |
     And I create carrier "carrier2" with specified properties:
       | name             | Carrier 2                          |
-      | group_access     | visitor, guest                     |
-      | shippingHandling | false                              |
-      | isFree           | true                               |
-      | shippingMethod   | weight                             |
-      | rangeBehavior    | disabled                           |
     And I add product "product1" with following information:
       | name[en-US] | bottle of beer |
       | type        | virtual        |
