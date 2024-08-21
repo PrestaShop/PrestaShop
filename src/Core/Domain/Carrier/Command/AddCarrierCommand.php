@@ -46,6 +46,8 @@ class AddCarrierCommand
      */
     private array $associatedShopIds;
 
+    private ?int $position = null;
+
     /**
      * @throws CarrierConstraintException
      */
@@ -55,7 +57,6 @@ class AddCarrierCommand
         private array $localizedDelay,
         private int $grade,
         private string $trackingUrl,
-        private int $position,
         private bool $active,
         private array $associatedGroupIds,
         private bool $hasAdditionalHandlingFee,
@@ -95,9 +96,14 @@ class AddCarrierCommand
         return $this->trackingUrl;
     }
 
-    public function getPosition(): int
+    public function getPosition(): ?int
     {
         return $this->position;
+    }
+
+    public function setPosition(int $position): void
+    {
+        $this->position = $position;
     }
 
     public function getActive(): bool
