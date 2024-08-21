@@ -8,11 +8,6 @@ Feature: Cart calculation with carrier specific cart rules
 
   Background:
     Given there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
-    And group "visitor" named "Visitor" exists
-    And group "guest" named "Guest" exists
-    And language "en" with locale "en-US" exists
-    And language "fr" with locale "fr-FR" exists
-    And language with iso code "en" is the default one
     And I have an empty default cart
     And shipping handling fees are set to 2.0
     And shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
@@ -73,7 +68,7 @@ Feature: Cart calculation with carrier specific cart rules
   Scenario: I cannot use voucher when it is restricted to specific carrier and that carrier is not selected
     When I add 1 items of product "product1" in my cart
     And I select address "address1" in my cart
-    And I use carrier "carrier1" in my cart
+    And I select carrier "carrier1" in my cart
     And cart shipping fees should be 5.1
     And my cart total shipping fees should be 5.1 tax included
     And my cart total should be 24.912 tax included
