@@ -163,17 +163,7 @@ Feature: Order from Back Office (BO)
     And group "guest" named "Guest" exists
     And I create carrier "tracking-carrier" with specified properties:
       | name             | tracking-carrier                   |
-      | grade            | 1                                  |
       | trackingUrl      | http://example.com/track.php?num=@ |
-      | position         | 2                                  |
-      | active           | true                               |
-      | max_width        | 1454                               |
-      | max_height       | 1234                               |
-      | max_depth        | 1111                               |
-      | max_weight       | 3864                               |
-      | group_access     | visitor, guest                     |
-      | delay[en-US]     | Shipping delay                     |
-      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |

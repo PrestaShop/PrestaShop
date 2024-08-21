@@ -17,34 +17,14 @@ Feature: Set cart rule carrier restrictions in BO
     And language with iso code "en" is the default one
     And I create carrier "carrier1" with specified properties:
       | name             | Carrier 1                          |
-      | grade            | 1                                  |
-      | trackingUrl      | http://example.com/track.php?num=@ |
-      | position         | 2                                  |
-      | active           | true                               |
-      | max_width        | 1454                               |
-      | max_height       | 1234                               |
-      | max_depth        | 1111                               |
-      | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
-      | delay[en-US]     | Shipping delay                     |
-      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
       | rangeBehavior    | disabled                           |
     And I create carrier "carrier2" with specified properties:
       | name             | Carrier 2                          |
-      | grade            | 1                                  |
-      | trackingUrl      | http://example.com/track.php?num=@ |
-      | position         | 2                                  |
-      | active           | true                               |
-      | max_width        | 1454                               |
-      | max_height       | 1234                               |
-      | max_depth        | 1111                               |
-      | max_weight       | 3864                               |
       | group_access     | visitor, guest                     |
-      | delay[en-US]     | Shipping delay                     |
-      | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |

@@ -26,63 +26,18 @@ Feature: Cart calculation with carrier specific cart rules
     And there is an address named "address2" with postcode "1" in state "state2"
     And I create carrier "carrier1" with specified properties:
       | name             | Carrier 1                          |
-      | grade            | 0                                  |
-      | trackingUrl      | http://example.com/track.php?num=@ |
-      | position         | 4                                  |
-      | active           | true                               |
-      | max_width        | 0                                  |
-      | max_height       | 0                                  |
-      | max_depth        | 0                                  |
-      | max_weight       | 0                                  |
-      | group_access     | visitor, guest                     |
-      | delay[en-US]     | Shipping delay                     |
-      | delay[fr-FR]     | Délai de livraison                 |
-      | shippingHandling | true                               |
-      | isFree           | false                              |
-      | shippingMethod   | price                              |
-      | rangeBehavior    | highest_range                      |
     Then I set ranges for carrier "carrier1" called "newCarrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 10000    | 3.1         |
       | zone2   | 0          | 10000    | 4.3         |
     And I create carrier "carrier2" with specified properties:
       | name             | Carrier 2                          |
-      | grade            | 0                                  |
-      | trackingUrl      | http://example.com/track.php?num=@ |
-      | position         | 5                                  |
-      | active           | true                               |
-      | max_width        | 0                                  |
-      | max_height       | 0                                  |
-      | max_depth        | 0                                  |
-      | max_weight       | 0                                  |
-      | group_access     | visitor, guest                     |
-      | delay[en-US]     | Shipping delay                     |
-      | delay[fr-FR]     | Délai de livraison                 |
-      | shippingHandling | true                               |
-      | isFree           | false                              |
-      | shippingMethod   | price                              |
-      | rangeBehavior    | highest_range                      |
     Then I set ranges for carrier "carrier2" called "newCarrier2" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 10000    | 5.7         |
       | zone2   | 0          | 10000    | 6.2         |
     And I create carrier "carrier3" with specified properties:
       | name             | Carrier 3                          |
-      | grade            | 0                                  |
-      | trackingUrl      | http://example.com/track.php?num=@ |
-      | position         | 6                                  |
-      | active           | true                               |
-      | max_width        | 0                                  |
-      | max_height       | 0                                  |
-      | max_depth        | 0                                  |
-      | max_weight       | 0                                  |
-      | group_access     | visitor, guest                     |
-      | delay[en-US]     | Shipping delay                     |
-      | delay[fr-FR]     | Délai de livraison                 |
-      | shippingHandling | true                               |
-      | isFree           | false                              |
-      | shippingMethod   | price                              |
-      | rangeBehavior    | highest_range                      |
     And there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     And there is a product in the catalog named "product2" with a price of 32.388 and 1000 items in stock
     And there is a product in the catalog named "product3" with a price of 31.188 and 1000 items in stock

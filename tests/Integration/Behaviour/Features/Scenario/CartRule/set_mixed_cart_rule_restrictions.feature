@@ -32,36 +32,8 @@ Feature: Set cart rule restrictions in BO
     And group "customer" named "Customer" exists
     And I create carrier "carrier1" with specified properties:
       | name             | carrier 1                          |
-      | grade            | 0                                  |
-      | trackingUrl      | http://example.com/track.php?num=@ |
-      | position         | 4                                  |
-      | active           | true                               |
-      | max_width        | 0                                  |
-      | max_height       | 0                                  |
-      | max_depth        | 0                                  |
-      | max_weight       | 0                                  |
-      | group_access     | visitor, guest, customer           |
-      | delay[en-US]     | Shipping delay                     |
-      | shippingHandling | true                               |
-      | isFree           | false                              |
-      | shippingMethod   | price                              |
-      | rangeBehavior    | highest_range                      |
     And I create carrier "carrier2" with specified properties:
       | name             | carrier 2                          |
-      | grade            | 0                                  |
-      | trackingUrl      | http://example.com/track.php?num=@ |
-      | position         | 5                                  |
-      | active           | true                               |
-      | max_width        | 0                                  |
-      | max_height       | 0                                  |
-      | max_depth        | 0                                  |
-      | max_weight       | 0                                  |
-      | group_access     | visitor, guest, customer           |
-      | delay[en-US]     | Shipping delay                     |
-      | shippingHandling | true                               |
-      | isFree           | false                              |
-      | shippingMethod   | price                              |
-      | rangeBehavior    | highest_range                      |
     And I add new country "France" with following properties:
       | name[en-US]                | France          |
       | iso_code                   | FR              |
