@@ -719,7 +719,7 @@ Feature: Order from Back Office (BO)
     Given there is a product in the catalog named "product1" with a price of 10.00 and 100 items in stock
     And there is a product in the catalog named "product2" with a price of 15.00 and 100 items in stock
     And there is a zone named "zone1"
-    And "zone1" exist with following properties:
+    And I add new zone "zone1" with following properties:
       | name    | zone1 |
       | enabled | true  |
     And there is a country named "country1" and iso code "FR" in zone "zone1"

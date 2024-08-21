@@ -12,10 +12,10 @@ Feature: Carrier ranges
     Given group "guest" named "Guest" exists
     And language "en" with locale "en-US" exists
     And language with iso code "en" is the default one
-    Given "zone1" exist with following properties:
+    Given I add new zone "zone1" with following properties:
       | name    | zone1 |
       | enabled | true  |
-    Given "zone2" exist with following properties:
+    Given I add new zone "zone2" with following properties:
       | name    | zone2 |
       | enabled | true  |
 
