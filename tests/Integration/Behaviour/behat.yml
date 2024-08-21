@@ -163,6 +163,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\AddressFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\ApiClientManagementFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CartFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Carrier\CarrierTaxRuleGroupFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CartRule\AddCartRuleFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CartRule\CartRuleAssertionFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CartRule\EditCartRuleFeatureContext
@@ -624,24 +625,25 @@ default:
           paths:
             - "%paths.base%/Features/Scenario/Carrier"
           contexts:
+            - Tests\Integration\Behaviour\Features\Context\CategoryFeatureContext
             - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\Configuration\EmailConfigurationFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\CountryFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
             - Tests\Integration\Behaviour\Features\Context\Domain\Carrier\CarrierFeatureContext
             - Tests\Integration\Behaviour\Features\Context\Domain\Carrier\CarrierRangesFeatureContext
             - Tests\Integration\Behaviour\Features\Context\Domain\Carrier\CarrierTaxRuleGroupFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\Domain\CustomerFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\Domain\OrderFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\Configuration\EmailConfigurationFeatureContext
             - Tests\Integration\Behaviour\Features\Context\Domain\CartFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\CountryFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\ModuleFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\EmployeeFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\Domain\CustomerFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\Domain\OrderFeatureContext
             - Tests\Integration\Behaviour\Features\Context\Domain\OrderShippingFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\LegacyProductFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\CategoryFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext
             - Tests\Integration\Behaviour\Features\Context\Domain\ZoneFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\EmployeeFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\LegacyProductFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\ModuleFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
         employee:
           paths:
             - "%paths.base%/Features/Scenario/Employee"

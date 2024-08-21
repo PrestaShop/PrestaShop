@@ -171,7 +171,7 @@ Feature: Order from Back Office (BO)
       | Tracking number |  |
       | Tracking URL    |  |
     Given I update order "bo_order1" Tracking number to "42424242" and Carrier to "tracking-carrier"
-    When I edit carrier "tracking-carrier" with specified properties I get a new carrier called "new-tracking-carrier":
+    When I edit carrier "tracking-carrier" with specified properties I get a new carrier referenced as "new-tracking-carrier":
       | trackingUrl | http://tracking.url/@ |
     Then order "bo_order1" should have "tracking-carrier" as a carrier
     And the preview order "bo_order1" has following shipping details

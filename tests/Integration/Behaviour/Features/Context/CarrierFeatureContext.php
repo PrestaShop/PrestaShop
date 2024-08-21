@@ -35,7 +35,6 @@ use Configuration;
 use Context;
 use Country;
 use Exception;
-use Group;
 use RangePrice;
 use RuntimeException;
 use State;
@@ -245,9 +244,9 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @When /^I select carrier "(.+)" in my cart$/
      */
-    public function setCartCarrier($carrierName)
+    public function setCartCarrier(string $carrierReference)
     {
-        $this->getCurrentCart()->id_carrier = $this->getSharedStorage()->get($carrierName);
+        $this->getCurrentCart()->id_carrier = $this->getSharedStorage()->get($carrierReference);
 
         $this->getCurrentCart()->update();
 
@@ -286,19 +285,5 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
             'Could not find carrier with name %s',
             $carrierName
         ));
-    }
-
-    /**
-     * @Then I associate the tax rule group :taxRulesGroupReference to carrier :carrierReference
-     *
-     * @param string $taxRulesGroupReference
-     * @param string $carrierReference
-     */
-    public function associateCarrierTaxRulesGroup(string $taxRulesGroupReference, string $carrierReference)
-    {
-        $carrierId = SharedStorage::getStorage()->get($carrierReference);
-        $taxRulesGroupId = SharedStorage::getStorage()->get($taxRulesGroupReference);
-        $carrier = new Carrier($carrierId);
-        $carrier->setTaxRulesGroup($taxRulesGroupId);
     }
 }

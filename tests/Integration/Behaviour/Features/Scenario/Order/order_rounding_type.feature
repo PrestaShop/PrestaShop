@@ -2,7 +2,6 @@
 @restore-all-tables-before-feature
 @clear-cache-before-feature
 @order-rounding-type
-
 Feature: In BO, get right display prices for products and totals, depending on the order's rounding type
   As a BO user, I need to see the right prices depending on rounding type with odd tax
 
@@ -33,7 +32,7 @@ Feature: In BO, get right display prices for products and totals, depending on t
     And a carrier "price_carrier" with name "My cheap carrier" exists
     And I edit carrier "price_carrier" with specified properties:
       | active | true |
-    And I associate the tax rule group "odd-tax-group" to carrier "price_carrier"
+    And I set tax rule "odd-tax-group" for carrier "price_carrier"
     And I select carrier "price_carrier" for cart "dummy_cart"
     And cart "dummy_cart" should have "price_carrier" as a carrier
     And I add order "bo_order1" with the following details:
@@ -61,9 +60,9 @@ Feature: In BO, get right display prices for products and totals, depending on t
     And I select "FR" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
     And I add 80 products "Test Product With Odd Tax" to the cart "dummy_cart"
     And a carrier "price_carrier" with name "My cheap carrier" exists
-    And I edit carrier "price_carrier" with specified properties:
+    And I edit carrier "price_carrier" with specified properties I get a new carrier referenced as "price_carrier":
       | active | true |
-    And I associate the tax rule group "odd-tax-group" to carrier "price_carrier"
+    And I set tax rule "odd-tax-group" for carrier "price_carrier"
     And I select carrier "price_carrier" for cart "dummy_cart"
     And cart "dummy_cart" should have "price_carrier" as a carrier
     And I add order "bo_order1" with the following details:
@@ -91,9 +90,9 @@ Feature: In BO, get right display prices for products and totals, depending on t
     And I select "FR" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
     And I add 80 products "Test Product With Odd Tax" to the cart "dummy_cart"
     And a carrier "price_carrier" with name "My cheap carrier" exists
-    And I edit carrier "price_carrier" with specified properties:
+    And I edit carrier "price_carrier" with specified properties I get a new carrier referenced as "price_carrier":
       | active | true |
-    And I associate the tax rule group "odd-tax-group" to carrier "price_carrier"
+    And I set tax rule "odd-tax-group" for carrier "price_carrier"
     And I select carrier "price_carrier" for cart "dummy_cart"
     And cart "dummy_cart" should have "price_carrier" as a carrier
     And I add order "bo_order1" with the following details:

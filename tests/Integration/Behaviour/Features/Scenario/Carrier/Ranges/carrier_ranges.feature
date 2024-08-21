@@ -23,7 +23,7 @@ Feature: Carrier ranges
     When I create carrier "carrier1" with specified properties:
       | name             | Carrier 1                          |
       | shippingMethod   | price                              |
-    Then I set ranges for carrier "carrier1" called "newCarrier1" with specified properties for all shops:
+    Then I set ranges for carrier "carrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 100      | 10          |
       | zone1   | 100        | 200      | 20          |
@@ -32,14 +32,6 @@ Feature: Carrier ranges
       | zone2   | 0          | 100      | 15          |
       | zone2   | 100        | 200      | 25          |
     Then carrier "carrier1" should have the following ranges for all shops:
-      | id_zone | range_from | range_to | range_price |
-      | zone1   | 0          | 100      | 10          |
-      | zone1   | 100        | 200      | 20          |
-      | zone1   | 200        | 300      | 30          |
-      | zone1   | 300        | 400      | 40          |
-      | zone2   | 0          | 100      | 15          |
-      | zone2   | 100        | 200      | 25          |
-    And carrier "newCarrier1" should have the following ranges for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 100      | 10          |
       | zone1   | 100        | 200      | 20          |
@@ -52,7 +44,7 @@ Feature: Carrier ranges
     When I create carrier "carrier1" with specified properties:
       | name             | Carrier 1                          |
       | shippingMethod   | weight                             |
-    Then I set ranges for carrier "carrier1" called "newCarrier1" with specified properties for all shops:
+    Then I set ranges for carrier "carrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 100      | 10          |
       | zone1   | 100        | 200      | 20          |
@@ -60,15 +52,7 @@ Feature: Carrier ranges
       | zone1   | 300        | 400      | 40          |
       | zone2   | 0          | 100      | 15          |
       | zone2   | 100        | 200      | 25          |
-    Then carrier "carrier1" should have the following ranges for all shops:
-      | id_zone | range_from | range_to | range_price |
-      | zone1   | 0          | 100      | 10          |
-      | zone1   | 100        | 200      | 20          |
-      | zone1   | 200        | 300      | 30          |
-      | zone1   | 300        | 400      | 40          |
-      | zone2   | 0          | 100      | 15          |
-      | zone2   | 100        | 200      | 25          |
-    And carrier "newCarrier1" should have the following ranges for all shops:
+    And carrier "carrier1" should have the following ranges for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 100      | 10          |
       | zone1   | 100        | 200      | 20          |
@@ -122,7 +106,7 @@ Feature: Carrier ranges
     When I create carrier "carrier1" with specified properties:
       | name             | Carrier 1                          |
       | shippingMethod   | price                              |
-    Then I set ranges for carrier "carrier1" called "newCarrier1" with specified properties for all shops:
+    Then I set ranges for carrier "carrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 100      | 10          |
       | zone1   | 300        | 400      | 40          |
@@ -130,7 +114,7 @@ Feature: Carrier ranges
       | zone1   | 200        | 300      | 30          |
       | zone2   | 100        | 200      | 25          |
       | zone2   | 0          | 100      | 15          |
-    Then carrier "newCarrier1" should have the following ranges for all shops:
+    Then carrier "carrier1" should have the following ranges for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 100      | 10          |
       | zone1   | 100        | 200      | 20          |
@@ -143,13 +127,13 @@ Feature: Carrier ranges
     When I create carrier "carrier1" with specified properties:
       | name             | Carrier 1                          |
       | shippingMethod   | price                              |
-    Then I set ranges for carrier "carrier1" called "newCarrier1" with specified properties for all shops:
+    Then I set ranges for carrier "carrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 100      | 10          |
       | zone1   | 100        | 200      | 40          |
       | zone2   | 0          | 20       | 15          |
       | zone2   | 20         | 50       | 20          |
-    Then carrier "newCarrier1" should have the following ranges for all shops:
+    Then carrier "carrier1" should have the following ranges for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 100      | 10          |
       | zone1   | 100        | 200      | 40          |
