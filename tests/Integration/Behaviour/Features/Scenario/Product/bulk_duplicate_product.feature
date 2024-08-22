@@ -20,8 +20,10 @@ Feature: Duplicate product from Back Office (BO).
     And language "language1" with locale "en-US" exists
     And language with iso code "en" is the default one
     And language "language2" with locale "fr-FR" exists
-    And carrier carrier1 named "ecoCarrier" exists
-    And carrier carrier2 named "Fast carry" exists
+    And I create carrier "carrier1" with specified properties:
+      | name        | ecoCarrier |
+    And I create carrier "carrier2" with specified properties:
+      | name        | Fast carry |
     And I add new supplier supplier1 with the following properties:
       | name                    | my supplier 1      |
       | address                 | Donelaicio st. 1   |
