@@ -90,7 +90,7 @@ class CategoryControllerCore extends ProductListingFrontController
         if (!Validate::isLoadedObject($this->category) || !$this->category->active || !$this->category->existsInShop($this->context->shop->id)) {
             if (!$this->category->id_type_redirected) {
                 if (in_array($this->category->redirect_type, [RedirectType::TYPE_PERMANENT, RedirectType::TYPE_TEMPORARY])) {
-                    $this->category->id_type_redirected = Category::getRootCategory()->id;
+                    $this->category->id_type_redirected = $this->getCategoryToRedirectTo();
                 }
             }
 
@@ -347,5 +347,32 @@ class CategoryControllerCore extends ProductListingFrontController
             ['%category_name%' => $this->category->name],
             'Shop.Theme.Catalog'
         );
+    }
+
+    /**
+     * Returns a category that we will redirect into, in case we need 301/302 redirect.
+     * We will try to get the closest parent of the current category.
+     *
+     * @return int category ID
+     */
+    private function getCategoryToRedirectTo()
+    {
+        $categoryToRedirectTo = null;
+        foreach ($this->category->getParentsCategories() as $category) {
+            /*
+             * Or new favourite category is a one:
+             * that is not the current one
+             * that is active
+             * and that is deeper than the last one
+             */
+            if ($category['id_category'] != $this->category->id
+                && $category['active'] == 1
+                && $category['level_depth'] > $categoryToRedirectTo['level_depth']
+            ) {
+                $categoryToRedirectTo = $category;
+            }
+        }
+
+        return $categoryToRedirectTo['id_category'];
     }
 }
