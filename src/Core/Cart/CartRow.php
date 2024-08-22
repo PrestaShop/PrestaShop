@@ -362,7 +362,8 @@ class CartRow
                     (int) $rowData['id_product_attribute'],
                     $computationParameters['withTaxes'],
                     true,
-                    $this->useEcotax
+                    $this->useEcotax,
+                    (int) $rowData['id_customization']
                 );
             }
             if (null === $productPrices[$productPrice]['value']) {
