@@ -90,7 +90,7 @@ export default class CarrierFormManager {
     CarrierFormMap.shippingControls.forEach((inputId: string) => {
       const $inputGroup = $(inputId).closest('.form-group');
       $inputGroup.toggleClass('d-none', isFreeShipping);
-      $(inputId).prop('required', isFreeShipping);
+      $(inputId).prop('required', !isFreeShipping);
     });
   }
 
