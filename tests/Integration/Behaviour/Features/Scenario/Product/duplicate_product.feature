@@ -14,8 +14,10 @@ Feature: Duplicate product from Back Office (BO).
     And language "language1" with locale "en-US" exists
     And language with iso code "en" is the default one
     And language "language2" with locale "fr-FR" exists
-    And carrier carrier1 named "ecoCarrier" exists
-    And carrier carrier2 named "Fast carry" exists
+    And I create carrier "carrier1" with specified properties:
+      | name        | ecoCarrier |
+    And I create carrier "carrier2" with specified properties:
+      | name        | Fast carry |
     And attribute group "Color" named "Color" in en language exists
     And attribute "Red" named "Red" in en language exists
     And attribute "Blue" named "Blue" in en language exists

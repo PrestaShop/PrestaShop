@@ -30,8 +30,6 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Carrier;
 
 use Behat\Gherkin\Node\TableNode;
 use Carrier;
-use Configuration;
-use Context;
 use Exception;
 use Group;
 use PHPUnit\Framework\Assert;
@@ -44,7 +42,6 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShopException;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext;
 use Tests\Resources\DummyFileUploader;
@@ -58,40 +55,6 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     public static function restoreCarrierTablesAfterSuite(): void
     {
         CarrierResetter::resetCarrier();
-    }
-
-    /**
-     * @todo: It is a temporary method to use sharedStorage and should be improved once Carrier creation is migrated.
-     *
-     * @Given carrier :carrierReference named :carrierName exists
-     *
-     * @param string $carrierReference
-     * @param string $carrierName
-     *
-     * @throws PrestaShopException
-     */
-    public function createDefaultIfNotExists(string $carrierReference, string $carrierName): void
-    {
-        if ($this->getSharedStorage()->exists($carrierReference)) {
-            return;
-        }
-
-        $carrier = new Carrier(null, (int) Configuration::get('PS_LANG_DEFAULT'));
-        $carrier->name = $carrierName;
-        $carrier->shipping_method = Carrier::SHIPPING_METHOD_PRICE;
-        $carrier->delay = '28 days later';
-        $carrier->active = true;
-        $carrier->add();
-
-        $groups = Group::getGroups(Context::getContext()->language->id);
-        $groupIds = [];
-        foreach ($groups as $group) {
-            $groupIds[] = $group['id_group'];
-        }
-
-        $carrier->setGroups($groupIds);
-
-        $this->getSharedStorage()->set($carrierReference, (int) $carrier->id);
     }
 
     /**
