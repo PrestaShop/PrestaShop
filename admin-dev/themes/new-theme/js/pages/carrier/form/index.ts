@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import ChoiceTable from '@js/components/choice-table';
 import CarrierFormManager from '@pages/carrier/form/carrier-form-manager';
 import CarrierRanges from '@pages/carrier/form/carrier-range-modal';
 
@@ -36,6 +37,8 @@ $(() => {
 
   // Initialize the ranges selection modal
   new CarrierRanges(window.prestashop.instance.eventEmitter);
+
+  new ChoiceTable();
 
   // Initialize the carrier form manager
   new CarrierFormManager(window.prestashop.instance.eventEmitter);
