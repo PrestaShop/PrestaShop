@@ -385,11 +385,11 @@ class ImageCore extends ObjectModel
     }
 
     /**
-     *Get product cover.
+     * Get product cover.
      *
      * @param int $idProduct Product ID
      *
-     * @return bool result
+     * @return mixed result
      */
     public static function getCover($idProduct)
     {
@@ -400,11 +400,11 @@ class ImageCore extends ObjectModel
     }
 
     /**
-     *Get global product cover.
+     * Get global product cover.
      *
      * @param int $idProduct Product ID
      *
-     * @return bool result
+     * @return mixed result
      */
     public static function getGlobalCover($idProduct)
     {
