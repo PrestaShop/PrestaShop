@@ -276,7 +276,7 @@ abstract class PaymentModuleCore extends Module
             }
         }
 
-        if (!$this->isCarrierValid($package_list)) {
+        if (!$this->isCarrierValid($package_list, $cart_delivery_option)) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Carrier is not valid', 3, null, 'Cart', (int) $id_cart, true);
             die(Tools::displayError('Error processing order. Carrier is not valid.'));
         }
@@ -1273,13 +1273,19 @@ abstract class PaymentModuleCore extends Module
         return $cart_rules_list;
     }
 
-    protected function isCarrierValid($package_list): bool
+    protected function isCarrierValid($package_list, $cart_delivery_option): bool
     {
-        foreach ($package_list as $packageByAddress) {
-            foreach ($packageByAddress as $package) {
-                $carrier = new Carrier((int) $package['id_carrier']);
+        foreach ($package_list as $packageKey => $packageByAddress) {
+            $carriers = explode(',', trim($cart_delivery_option[$packageKey], ','));
 
-                if (empty(Db::getInstance()->executeS('SELECT `id_module` FROM `' . _DB_PREFIX_ . 'module_carrier` WHERE `id_reference` = ' . (int) $carrier->id_reference . ' AND `id_shop` = ' . (int) $this->context->shop->id . ' AND `id_module` = ' . (int) $this->id))) {
+            foreach ($carriers as $carrier) {
+                $carrierObject = new Carrier((int) $carrier);
+
+                if (!$carrierObject->id || !$carrierObject->active) {
+                    return false;
+                }
+                
+                if (empty(Db::getInstance()->executeS('SELECT `id_module` FROM `' . _DB_PREFIX_ . 'module_carrier` WHERE `id_reference` = ' . (int) $carrierObject->id_reference . ' AND `id_shop` = ' . (int) $this->context->shop->id . ' AND `id_module` = ' . (int) $this->id))) {
                     return false;
                 }
             }
