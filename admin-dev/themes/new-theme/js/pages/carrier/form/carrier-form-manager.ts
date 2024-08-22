@@ -86,9 +86,11 @@ export default class CarrierFormManager {
 
   private refreshFreeShipping(): void {
     const isFreeShipping = $(`${CarrierFormMap.freeShippingInput}:checked`).val() === '1';
+
     CarrierFormMap.shippingControls.forEach((inputId: string) => {
       const $inputGroup = $(inputId).closest('.form-group');
       $inputGroup.toggleClass('d-none', isFreeShipping);
+      $(inputId).prop('required', !isFreeShipping);
     });
   }
 
