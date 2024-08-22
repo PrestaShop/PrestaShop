@@ -172,7 +172,9 @@ final class SecurityAttributeLinterCommand extends Command
                 $this->listAllRoutesAndRelatedPermissions($input, $output);
                 break;
             case self::ACTION_FIND_MISSING:
-                $this->findRoutesWithMissingSecurityAttributes($input, $output);
+                if ($this->findRoutesWithMissingSecurityAttributes($input, $output)) {
+                    return 1;
+                }
                 break;
 
             default:
@@ -223,7 +225,7 @@ final class SecurityAttributeLinterCommand extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      */
-    private function findRoutesWithMissingSecurityAttributes(InputInterface $input, OutputInterface $output): void
+    private function findRoutesWithMissingSecurityAttributes(InputInterface $input, OutputInterface $output): bool
     {
         $notConfiguredRoutes = [];
 
@@ -248,9 +250,11 @@ final class SecurityAttributeLinterCommand extends Command
             ));
             $io->listing($notConfiguredRoutes);
 
-            return;
+            return true;
         }
 
         $io->success('All admin routes are secured with #[AdminSecurity].');
+
+        return false;
     }
 }
