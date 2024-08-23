@@ -172,7 +172,7 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
     public function getEditableOrNewVersion(CarrierId $carrierId): Carrier
     {
         // If the carrier don't have orders linked, we can return it as is
-        if ($this->ordersCount($carrierId) === 0) {
+        if ($this->getOrdersCount($carrierId) === 0) {
             return $this->get($carrierId);
         }
 
@@ -278,7 +278,7 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
         $qb->executeStatement();
     }
 
-    public function ordersCount(CarrierId $carrierId): int
+    public function getOrdersCount(CarrierId $carrierId): int
     {
         $qb = $this->connection->createQueryBuilder();
 
@@ -290,5 +290,18 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
             ->fetchOne();
 
         return $count;
+    }
+
+    public function getLastPosition(): int
+    {
+        $qb = $this->connection->createQueryBuilder();
+
+        return $qb->select('c.position')
+            ->from($this->prefix . 'carrier', 'c')
+            ->orderBy('c.position', 'DESC')
+            ->setMaxResults(1)
+            ->executeQuery()
+            ->fetchOne()
+        ;
     }
 }

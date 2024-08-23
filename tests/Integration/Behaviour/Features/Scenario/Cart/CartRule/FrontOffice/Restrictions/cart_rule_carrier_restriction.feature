@@ -11,21 +11,32 @@ Feature: Cart calculation with carrier specific cart rules
     And I have an empty default cart
     And shipping handling fees are set to 2.0
     And shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
-    And there is a zone named "zone1"
-    And there is a zone named "zone2"
+    And I add new zone "zone1" with following properties:
+      | name    | zone1 |
+      | enabled | true  |
+    And I add new zone "zone2" with following properties:
+      | name    | zone2 |
+      | enabled | true  |
     And there is a country named "country1" and iso code "FR" in zone "zone1"
     And there is a country named "country2" and iso code "US" in zone "zone2"
     And there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     And there is a state named "state2" with iso code "TEST-2" in country "country2" and zone "zone2"
     And there is an address named "address1" with postcode "1" in state "state1"
     And there is an address named "address2" with postcode "1" in state "state2"
-    And there is a carrier named "carrier1"
-    And carrier "carrier1" applies shipping fees of 3.1 in zone "zone1" for price between 0 and 10000
-    And carrier "carrier1" applies shipping fees of 4.3 in zone "zone2" for price between 0 and 10000
-    And there is a carrier named "carrier2"
-    And carrier "carrier2" applies shipping fees of 5.7 in zone "zone1" for price between 0 and 10000
-    And carrier "carrier2" applies shipping fees of 6.2 in zone "zone2" for price between 0 and 10000
-    And there is a carrier named "carrier3"
+    And I create carrier "carrier1" with specified properties:
+      | name             | Carrier 1                          |
+    Then I set ranges for carrier "carrier1" with specified properties for all shops:
+      | id_zone | range_from | range_to | range_price |
+      | zone1   | 0          | 10000    | 3.1         |
+      | zone2   | 0          | 10000    | 4.3         |
+    And I create carrier "carrier2" with specified properties:
+      | name             | Carrier 2                          |
+    Then I set ranges for carrier "carrier2" with specified properties for all shops:
+      | id_zone | range_from | range_to | range_price |
+      | zone1   | 0          | 10000    | 5.7         |
+      | zone2   | 0          | 10000    | 6.2         |
+    And I create carrier "carrier3" with specified properties:
+      | name             | Carrier 3                          |
     And there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     And there is a product in the catalog named "product2" with a price of 32.388 and 1000 items in stock
     And there is a product in the catalog named "product3" with a price of 31.188 and 1000 items in stock
@@ -139,8 +150,10 @@ Feature: Cart calculation with carrier specific cart rules
     And my cart total should be 17.5 tax included
 
   Scenario: one product in cart, quantity 1, can apply corresponding cart rule
-    Given carrier "carrier3" applies shipping fees of 6.7 in zone "zone1" for price between 0 and 10000
-    And carrier "carrier3" applies shipping fees of 7.2 in zone "zone2" for price between 0 and 10000
+    Given I set ranges for carrier "carrier3" with specified properties for all shops:
+      | id_zone | range_from | range_to | range_price |
+      | zone1   | 0          | 10000    | 6.7         |
+      | zone2   | 0          | 10000    | 7.2         |
     And there is a cart rule "cartrule3" with following properties:
       | name[en-US]                  | cartrule3              |
       | total_quantity               | 1000                   |

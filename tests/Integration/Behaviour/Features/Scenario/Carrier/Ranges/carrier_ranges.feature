@@ -12,123 +12,73 @@ Feature: Carrier ranges
     Given group "guest" named "Guest" exists
     And language "en" with locale "en-US" exists
     And language with iso code "en" is the default one
+    Given I add new zone "zone1" with following properties:
+      | name    | zone1 |
+      | enabled | true  |
+    Given I add new zone "zone2" with following properties:
+      | name    | zone2 |
+      | enabled | true  |
 
   Scenario: Adding prices ranges in carrier
     When I create carrier "carrier1" with specified properties:
       | name             | Carrier 1                          |
-      | grade            | 1                                  |
-      | trackingUrl      | http://example.com/track.php?num=@ |
-      | position         | 2                                  |
-      | active           | true                               |
-      | max_width        | 1454                               |
-      | max_height       | 1234                               |
-      | max_depth        | 1111                               |
-      | max_weight       | 3864                               |
-      | group_access     | visitor, guest                     |
-      | delay[en-US]     | Shipping delay                     |
-      | shippingHandling | false                              |
-      | isFree           | true                               |
       | shippingMethod   | price                              |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
-      | rangeBehavior    | disabled                           |
-    Then I set ranges for carrier "carrier1" called "newCarrier1" with specified properties for all shops:
+    Then I set ranges for carrier "carrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
-      | 1       | 0          | 100      | 10          |
-      | 1       | 100        | 200      | 20          |
-      | 1       | 200        | 300      | 30          |
-      | 1       | 300        | 400      | 40          |
-      | 2       | 0          | 100      | 15          |
-      | 2       | 100        | 200      | 25          |
-    Then carrier "newCarrier1" should have the following ranges for all shops:
+      | zone1   | 0          | 100      | 10          |
+      | zone1   | 100        | 200      | 20          |
+      | zone1   | 200        | 300      | 30          |
+      | zone1   | 300        | 400      | 40          |
+      | zone2   | 0          | 100      | 15          |
+      | zone2   | 100        | 200      | 25          |
+    Then carrier "carrier1" should have the following ranges for all shops:
       | id_zone | range_from | range_to | range_price |
-      | 1       | 0          | 100      | 10          |
-      | 1       | 100        | 200      | 20          |
-      | 1       | 200        | 300      | 30          |
-      | 1       | 300        | 400      | 40          |
-      | 2       | 0          | 100      | 15          |
-      | 2       | 100        | 200      | 25          |
+      | zone1   | 0          | 100      | 10          |
+      | zone1   | 100        | 200      | 20          |
+      | zone1   | 200        | 300      | 30          |
+      | zone1   | 300        | 400      | 40          |
+      | zone2   | 0          | 100      | 15          |
+      | zone2   | 100        | 200      | 25          |
 
   Scenario: Adding weight ranges in carrier
     When I create carrier "carrier1" with specified properties:
       | name             | Carrier 1                          |
-      | grade            | 1                                  |
-      | trackingUrl      | http://example.com/track.php?num=@ |
-      | position         | 2                                  |
-      | active           | true                               |
-      | max_width        | 1454                               |
-      | max_height       | 1234                               |
-      | max_depth        | 1111                               |
-      | max_weight       | 3864                               |
-      | group_access     | visitor, guest                     |
-      | delay[en-US]     | Shipping delay                     |
-      | shippingHandling | false                              |
-      | isFree           | true                               |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
-      | rangeBehavior    | disabled                           |
-    Then I set ranges for carrier "carrier1" called "newCarrier1" with specified properties for all shops:
+    Then I set ranges for carrier "carrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
-      | 1       | 0          | 100      | 10          |
-      | 1       | 100        | 200      | 20          |
-      | 1       | 200        | 300      | 30          |
-      | 1       | 300        | 400      | 40          |
-      | 2       | 0          | 100      | 15          |
-      | 2       | 100        | 200      | 25          |
-    Then carrier "newCarrier1" should have the following ranges for all shops:
+      | zone1   | 0          | 100      | 10          |
+      | zone1   | 100        | 200      | 20          |
+      | zone1   | 200        | 300      | 30          |
+      | zone1   | 300        | 400      | 40          |
+      | zone2   | 0          | 100      | 15          |
+      | zone2   | 100        | 200      | 25          |
+    And carrier "carrier1" should have the following ranges for all shops:
       | id_zone | range_from | range_to | range_price |
-      | 1       | 0          | 100      | 10          |
-      | 1       | 100        | 200      | 20          |
-      | 1       | 200        | 300      | 30          |
-      | 1       | 300        | 400      | 40          |
-      | 2       | 0          | 100      | 15          |
-      | 2       | 100        | 200      | 25          |
+      | zone1   | 0          | 100      | 10          |
+      | zone1   | 100        | 200      | 20          |
+      | zone1   | 200        | 300      | 30          |
+      | zone1   | 300        | 400      | 40          |
+      | zone2   | 0          | 100      | 15          |
+      | zone2   | 100        | 200      | 25          |
 
   Scenario: Adding overlapping ranges in carrier
     When I create carrier "carrier1" with specified properties:
       | name             | Carrier 1                          |
-      | grade            | 1                                  |
-      | trackingUrl      | http://example.com/track.php?num=@ |
-      | position         | 2                                  |
-      | active           | true                               |
-      | max_width        | 1454                               |
-      | max_height       | 1234                               |
-      | max_depth        | 1111                               |
-      | max_weight       | 3864                               |
-      | group_access     | visitor, guest                     |
-      | delay[en-US]     | Shipping delay                     |
-      | shippingHandling | false                              |
-      | isFree           | true                               |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
-      | rangeBehavior    | disabled                           |
-    Then I set ranges for carrier "carrier1" called "newCarrier1" with specified properties for all shops:
+    Then I set ranges for carrier "carrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
-      | 1       | 200        | 300      | 30          |
-      | 1       | 0          | 100      | 10          |
-      | 1       | 50         | 200      | 20          |
-      | 1       | 300        | 400      | 40          |
-      | 2       | 0          | 100      | 15          |
-      | 2       | 100        | 200      | 25          |
+      | zone1   | 200        | 300      | 30          |
+      | zone1   | 0          | 100      | 10          |
+      | zone1   | 50         | 200      | 20          |
+      | zone1   | 300        | 400      | 40          |
+      | zone2   | 0          | 100      | 15          |
+      | zone2   | 100        | 200      | 25          |
     Then carrier edit should throw an error with error code "INVALID_RANGES_OVERLAPPING"
 
   Scenario: Get ranges for not all shops
     When I create carrier "carrier1" with specified properties:
       | name             | Carrier 1                          |
-      | grade            | 1                                  |
-      | trackingUrl      | http://example.com/track.php?num=@ |
-      | position         | 2                                  |
-      | active           | true                               |
-      | max_width        | 1454                               |
-      | max_height       | 1234                               |
-      | max_depth        | 1111                               |
-      | max_weight       | 3864                               |
-      | group_access     | visitor, guest                     |
-      | delay[en-US]     | Shipping delay                     |
-      | shippingHandling | false                              |
-      | isFree           | true                               |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
-      | rangeBehavior    | disabled                           |
     Then carrier "carrier1" should have the following ranges for shop "shop1":
       | range_from | range_to | id_zone | range_price |
       | 0          | 100      | 1       | 10          |
@@ -137,111 +87,55 @@ Feature: Carrier ranges
   Scenario: Set ranges for not all shops
     When I create carrier "carrier1" with specified properties:
       | name             | Carrier 1                          |
-      | grade            | 1                                  |
-      | trackingUrl      | http://example.com/track.php?num=@ |
-      | position         | 2                                  |
-      | active           | true                               |
-      | max_width        | 1454                               |
-      | max_height       | 1234                               |
-      | max_depth        | 1111                               |
-      | max_weight       | 3864                               |
-      | group_access     | visitor, guest                     |
-      | delay[en-US]     | Shipping delay                     |
-      | shippingHandling | false                              |
-      | isFree           | true                               |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
-      | rangeBehavior    | disabled                           |
-    Then I set ranges for carrier "carrier1" called "newCarrier1" with specified properties for shop "shop1":
+    Then I set ranges for carrier "carrier1" with specified properties for shop "shop1":
       | id_zone | range_from | range_to | range_price |
-      | 1       | 0          | 100      | 10          |
+      | zone1   | 0          | 100      | 10          |
     Then carrier edit should throw an error with error code "INVALID_SHOP_CONSTRAINT"
 
   Scenario: Set ranges with invalid zone
     When I create carrier "carrier1" with specified properties:
       | name             | Carrier 1                          |
-      | grade            | 1                                  |
-      | trackingUrl      | http://example.com/track.php?num=@ |
-      | position         | 2                                  |
-      | active           | true                               |
-      | max_width        | 1454                               |
-      | max_height       | 1234                               |
-      | max_depth        | 1111                               |
-      | max_weight       | 3864                               |
-      | group_access     | visitor, guest                     |
-      | delay[en-US]     | Shipping delay                     |
-      | shippingHandling | false                              |
-      | isFree           | true                               |
       | shippingMethod   | weight                             |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
-      | rangeBehavior    | disabled                           |
-    Then I set ranges for carrier "carrier1" called "newCarrier1" with specified properties for all shops:
+    Then I set ranges for carrier "carrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
-      | 0       | 0          | 100      | 10          |
+      | zone0   | 0          | 100      | 10          |
     Then carrier edit should throw an error with error code "INVALID_ZONE_ID"
 
   Scenario: Adding prices ranges in carrier with random sorting of ranges
     When I create carrier "carrier1" with specified properties:
       | name             | Carrier 1                          |
-      | grade            | 1                                  |
-      | trackingUrl      | http://example.com/track.php?num=@ |
-      | position         | 2                                  |
-      | active           | true                               |
-      | max_width        | 1454                               |
-      | max_height       | 1234                               |
-      | max_depth        | 1111                               |
-      | max_weight       | 3864                               |
-      | group_access     | visitor, guest                     |
-      | delay[en-US]     | Shipping delay                     |
-      | shippingHandling | false                              |
-      | isFree           | true                               |
       | shippingMethod   | price                              |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
-      | rangeBehavior    | disabled                           |
-    Then I set ranges for carrier "carrier1" called "newCarrier1" with specified properties for all shops:
+    Then I set ranges for carrier "carrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
-      | 1       | 0          | 100      | 10          |
-      | 1       | 300        | 400      | 40          |
-      | 1       | 100        | 200      | 20          |
-      | 1       | 200        | 300      | 30          |
-      | 2       | 100        | 200      | 25          |
-      | 2       | 0          | 100      | 15          |
-    Then carrier "newCarrier1" should have the following ranges for all shops:
+      | zone1   | 0          | 100      | 10          |
+      | zone1   | 300        | 400      | 40          |
+      | zone1   | 100        | 200      | 20          |
+      | zone1   | 200        | 300      | 30          |
+      | zone2   | 100        | 200      | 25          |
+      | zone2   | 0          | 100      | 15          |
+    Then carrier "carrier1" should have the following ranges for all shops:
       | id_zone | range_from | range_to | range_price |
-      | 1       | 0          | 100      | 10          |
-      | 1       | 100        | 200      | 20          |
-      | 1       | 200        | 300      | 30          |
-      | 1       | 300        | 400      | 40          |
-      | 2       | 0          | 100      | 15          |
-      | 2       | 100        | 200      | 25          |
+      | zone1   | 0          | 100      | 10          |
+      | zone1   | 100        | 200      | 20          |
+      | zone1   | 200        | 300      | 30          |
+      | zone1   | 300        | 400      | 40          |
+      | zone2   | 0          | 100      | 15          |
+      | zone2   | 100        | 200      | 25          |
 
   Scenario: Adding prices ranges in carrier with different ranges by zones
     When I create carrier "carrier1" with specified properties:
       | name             | Carrier 1                          |
-      | grade            | 1                                  |
-      | trackingUrl      | http://example.com/track.php?num=@ |
-      | position         | 2                                  |
-      | active           | true                               |
-      | max_width        | 1454                               |
-      | max_height       | 1234                               |
-      | max_depth        | 1111                               |
-      | max_weight       | 3864                               |
-      | group_access     | visitor, guest                     |
-      | delay[en-US]     | Shipping delay                     |
-      | shippingHandling | false                              |
-      | isFree           | true                               |
       | shippingMethod   | price                              |
-      | taxRuleGroup     | US-AL Rate (4%)                    |
-      | rangeBehavior    | disabled                           |
-    Then I set ranges for carrier "carrier1" called "newCarrier1" with specified properties for all shops:
+    Then I set ranges for carrier "carrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
-      | 1       | 0          | 100      | 10          |
-      | 1       | 100        | 200      | 40          |
-      | 2       | 0          | 20       | 15          |
-      | 2       | 20         | 50       | 20          |
-    Then carrier "newCarrier1" should have the following ranges for all shops:
+      | zone1   | 0          | 100      | 10          |
+      | zone1   | 100        | 200      | 40          |
+      | zone2   | 0          | 20       | 15          |
+      | zone2   | 20         | 50       | 20          |
+    Then carrier "carrier1" should have the following ranges for all shops:
       | id_zone | range_from | range_to | range_price |
-      | 1       | 0          | 100      | 10          |
-      | 1       | 100        | 200      | 40          |
-      | 2       | 0          | 20       | 15          |
-      | 2       | 20         | 50       | 20          |
+      | zone1   | 0          | 100      | 10          |
+      | zone1   | 100        | 200      | 40          |
+      | zone2   | 0          | 20       | 15          |
+      | zone2   | 20         | 50       | 20          |

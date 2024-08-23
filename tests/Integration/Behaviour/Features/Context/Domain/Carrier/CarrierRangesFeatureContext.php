@@ -30,22 +30,43 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Carrier;
 
 use Behat\Gherkin\Node\TableNode;
 use Carrier;
+use Db;
+use DbQuery;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\SetCarrierRangesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetCarrierRanges;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult\CarrierRangesCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
+use Zone;
 
 class CarrierRangesFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @Then I set ranges for carrier :reference called :newReference with specified properties for all shops:
+     * @Then I set ranges for carrier :reference with specified properties for all shops:
+     */
+    public function setCarrierRangesAllShopsWithoutIdUpdate(string $reference, TableNode $node): void
+    {
+        $this->setCarrierRanges($reference, null, ShopConstraint::allShops(), $node);
+    }
+
+    /**
+     * @Then I set ranges for carrier :reference with specified properties for all shops I get a new carrier referenced as :newReference:
      */
     public function setCarrierRangesAllShops(string $reference, string $newReference, TableNode $node): void
     {
         $this->setCarrierRanges($reference, $newReference, ShopConstraint::allShops(), $node);
+    }
+
+    /**
+     * @Then I set ranges for carrier :reference with specified properties for shop :shopReference:
+     */
+    public function setCarrierRangesShopWithoutIdUpdate(string $reference, string $shopReference, TableNode $node): void
+    {
+        $this->setCarrierRanges($reference, null, $this->getShopConstraint($shopReference), $node);
     }
 
     /**
@@ -72,15 +93,37 @@ class CarrierRangesFeatureContext extends AbstractDomainFeatureContext
         $this->getCarrierRanges($reference, $this->getShopConstraint($shopReference), $node);
     }
 
-    private function setCarrierRanges(string $reference, string $newReference, ShopConstraint $shopConstraint, TableNode $node): void
+    private function setCarrierRanges(string $reference, ?string $newReference, ShopConstraint $shopConstraint, TableNode $node): void
     {
         try {
-            $carrierId = $this->referenceToId($reference);
+            $initialCarrierId = $this->referenceToId($reference);
+            $data = $node->getColumnsHash();
 
-            $command = new SetCarrierRangesCommand($carrierId, $node->getColumnsHash(), $shopConstraint);
+            foreach ($data as &$range) {
+                try {
+                    /** @var Zone $zone */
+                    $zone = $this->getSharedStorage()->get($range['id_zone']);
+                    $range['id_zone'] = $zone->id;
+                } catch (RuntimeException $e) {
+                    $this->setLastException(new CarrierConstraintException(
+                        sprintf('Invalid zone id reference %d supplied. Zone id must be a positive integer.', $range['id_zone']),
+                        CarrierConstraintException::INVALID_ZONE_ID
+                    ));
+                }
+            }
+
+            $command = new SetCarrierRangesCommand($initialCarrierId, $data, $shopConstraint);
 
             $carrierId = $this->getCommandBus()->handle($command);
-            $this->getSharedStorage()->set($newReference, $carrierId->getValue());
+            if ($newReference) {
+                Assert::assertNotEquals($initialCarrierId, $carrierId->getValue(), 'Carrier ID was expected to be updated');
+                $this->getSharedStorage()->set($newReference, $carrierId->getValue());
+            } else {
+                Assert::assertEquals($initialCarrierId, $carrierId->getValue(), 'Carrier ID was expected the remain the same');
+            }
+
+            // Reset cache so that the carrier becomes selectable
+            Carrier::resetStaticCache();
         } catch (CarrierException $e) {
             $this->setLastException($e);
         }
@@ -94,9 +137,31 @@ class CarrierRangesFeatureContext extends AbstractDomainFeatureContext
             $command = new GetCarrierRanges($carrierId, $shopConstraint);
 
             $rangesDatabase = $this->getCommandBus()->handle($command);
-            $rangesExpected = new CarrierRangesCollection($node->getColumnsHash());
+            $data = $node->getColumnsHash();
+            $zoneIds = [];
+            foreach ($data as &$range) {
+                /** @var Zone $zone */
+                $zone = $this->referencesToIds($range['id_zone'])[0];
+                $range['id_zone'] = $zone->id;
+                $zoneIds[] = $zone->id;
+            }
+            $rangesExpected = new CarrierRangesCollection($data);
 
             Assert::assertEquals($rangesExpected, $rangesDatabase);
+
+            // Automatically checks that the carrier_zone association is properly set
+            $query = new DbQuery();
+            $query->select('(cz.id_zone)');
+            $query->from('carrier_zone', 'cz');
+            $query->where('id_carrier = \'' . pSQL((string) $carrierId) . '\'');
+            $zonesFromDB = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query->build());
+
+            $zoneIds = array_unique($zoneIds);
+            sort($zoneIds);
+            $zonesFromDB = array_map(fn ($row) => $row['id_zone'], $zonesFromDB);
+            sort($zonesFromDB);
+
+            Assert::assertEquals($zoneIds, $zonesFromDB);
         } catch (CarrierException $e) {
             $this->setLastException($e);
         }

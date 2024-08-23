@@ -30,8 +30,6 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Carrier;
 
 use Behat\Gherkin\Node\TableNode;
 use Carrier;
-use Configuration;
-use Context;
 use Exception;
 use Group;
 use PHPUnit\Framework\Assert;
@@ -44,7 +42,6 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShopException;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext;
 use Tests\Resources\DummyFileUploader;
@@ -58,40 +55,6 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     public static function restoreCarrierTablesAfterSuite(): void
     {
         CarrierResetter::resetCarrier();
-    }
-
-    /**
-     * @todo: It is a temporary method to use sharedStorage and should be improved once Carrier creation is migrated.
-     *
-     * @Given carrier :carrierReference named :carrierName exists
-     *
-     * @param string $carrierReference
-     * @param string $carrierName
-     *
-     * @throws PrestaShopException
-     */
-    public function createDefaultIfNotExists(string $carrierReference, string $carrierName): void
-    {
-        if ($this->getSharedStorage()->exists($carrierReference)) {
-            return;
-        }
-
-        $carrier = new Carrier(null, (int) Configuration::get('PS_LANG_DEFAULT'));
-        $carrier->name = $carrierName;
-        $carrier->shipping_method = Carrier::SHIPPING_METHOD_PRICE;
-        $carrier->delay = '28 days later';
-        $carrier->active = true;
-        $carrier->add();
-
-        $groups = Group::getGroups(Context::getContext()->language->id);
-        $groupIds = [];
-        foreach ($groups as $group) {
-            $groupIds[] = $group['id_group'];
-        }
-
-        $carrier->setGroups($groupIds);
-
-        $this->getSharedStorage()->set($carrierReference, (int) $carrier->id);
     }
 
     /**
@@ -112,24 +75,36 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
                 $associatedShops = [$this->getDefaultShopId()];
             }
 
+            if (!empty($properties['delay'])) {
+                $delay = $properties['delay'];
+            } else {
+                $delay = [$this->getDefaultLangId() => 'Shipping delay'];
+            }
+
+            if (!empty($properties['group_access'])) {
+                $groupIds = $this->referencesToIds($properties['group_access']);
+            } else {
+                $groupIds = Group::getAllGroupIds();
+            }
+
             $carrierId = $this->createCarrierUsingCommand(
                 $properties['name'],
-                $properties['delay'],
-                (int) $properties['grade'],
-                $properties['trackingUrl'],
-                (int) $properties['position'],
-                filter_var($properties['active'], FILTER_VALIDATE_BOOLEAN),
-                (int) $properties['max_width'],
-                (int) $properties['max_height'],
-                (int) $properties['max_depth'],
-                (int) $properties['max_weight'],
-                $this->referencesToIds($properties['group_access']),
-                filter_var($properties['shippingHandling'], FILTER_VALIDATE_BOOLEAN),
-                filter_var($properties['isFree'], FILTER_VALIDATE_BOOLEAN),
-                $properties['shippingMethod'],
-                $properties['rangeBehavior'],
+                $delay,
+                (int) ($properties['grade'] ?? 0),
+                $properties['trackingUrl'] ?? '',
+                filter_var($properties['active'] ?? true, FILTER_VALIDATE_BOOLEAN),
+                (int) ($properties['max_width'] ?? 0),
+                (int) ($properties['max_height'] ?? 0),
+                (int) ($properties['max_depth'] ?? 0),
+                (int) ($properties['max_weight'] ?? 0),
+                $groupIds,
+                filter_var($properties['shippingHandling'] ?? true, FILTER_VALIDATE_BOOLEAN),
+                filter_var($properties['isFree'] ?? false, FILTER_VALIDATE_BOOLEAN),
+                $properties['shippingMethod'] ?? 'price',
+                $properties['rangeBehavior'] ?? 'highest_range',
                 $properties['logoPathName'] ?? null,
                 $associatedShops,
+                isset($properties['position']) ? (int) $properties['position'] : null,
             );
 
             if (isset($tmpLogo)) {
@@ -148,21 +123,41 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     public function editCarrierWithoutUpdate(string $reference, TableNode $node): void
     {
         try {
+            $initialCarrierId = $this->getSharedStorage()->get($reference);
             $carrierId = $this->editCarrier($reference, null, $node);
-            Assert::assertEquals($this->getSharedStorage()->get($reference), $carrierId->getValue());
+            Assert::assertEquals($initialCarrierId, $carrierId->getValue(), 'Carrier ID was expected the remain the same');
         } catch (CarrierConstraintException $e) {
             $this->setLastException($e);
         }
     }
 
     /**
-     * @When I edit carrier :reference with specified properties I get a new carrier called :newReference:
+     * @When I edit carrier :reference with specified properties I get a new carrier referenced as :newReference:
      */
     public function editCarrierWithUpdate(string $reference, string $newReference, TableNode $node): void
     {
         try {
+            $initialCarrierId = $this->getSharedStorage()->get($reference);
             $carrierId = $this->editCarrier($reference, $newReference, $node);
-            Assert::assertNotEquals($this->getSharedStorage()->get($reference), $carrierId->getValue());
+            Assert::assertNotEquals($initialCarrierId, $carrierId->getValue(), 'Carrier ID was expected to be updated');
+        } catch (CarrierConstraintException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * The carrier ID may be changed after an update if it was already associated to an order, to help write
+     * scenarios more easily this step automatically updates the ID referenced so that following steps can keep
+     * using the same reference.
+     *
+     * @When I edit carrier :reference with specified properties and update its reference:
+     */
+    public function editCarrierWithPotentialUpdate(string $reference, TableNode $node): void
+    {
+        // We update carrier and references but without checking if it was modified
+        try {
+            $this->getSharedStorage()->get($reference);
+            $this->editCarrier($reference, $reference, $node);
         } catch (CarrierConstraintException $e) {
             $this->setLastException($e);
         }
@@ -255,7 +250,12 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         if (isset($tmpLogo)) {
             $this->fakeUploadLogo($tmpLogo, $newCarrierId->getValue());
         }
-        $this->getSharedStorage()->set($newReference, $newCarrierId->getValue());
+        if ($newReference) {
+            $this->getSharedStorage()->set($newReference, $newCarrierId->getValue());
+        }
+
+        // Reset cache so that the carrier becomes selectable
+        Carrier::resetStaticCache();
 
         return $newCarrierId;
     }
@@ -393,7 +393,6 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         array $delay,
         int $grade,
         string $trackingUrl,
-        int $position,
         bool $active,
         int $max_width,
         int $max_height,
@@ -406,13 +405,13 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         string $rangeBehavior,
         ?string $logoPathName,
         array $associatedShops,
+        ?int $position,
     ): CarrierId {
         $command = new AddCarrierCommand(
             $name,
             $delay,
             $grade,
             $trackingUrl,
-            $position,
             $active,
             $group_access,
             $hasAdditionalHandlingFee,
@@ -426,6 +425,10 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
             $max_weight,
             $logoPathName,
         );
+
+        if (null !== $position) {
+            $command->setPosition($position);
+        }
 
         return $this->getCommandBus()->handle($command);
     }

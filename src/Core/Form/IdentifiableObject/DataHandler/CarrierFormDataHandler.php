@@ -57,7 +57,6 @@ class CarrierFormDataHandler implements FormDataHandlerInterface
             $data['general_settings']['localized_delay'],
             $data['general_settings']['grade'],
             $data['general_settings']['tracking_url'] ?? '',
-            0, // @todo: should not be in the add command but auto-computed or at least be optional
             (bool) $data['general_settings']['active'],
             $data['general_settings']['group_access'],
             (bool) $data['shipping_settings']['has_additional_handling_fee'],

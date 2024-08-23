@@ -62,13 +62,18 @@ class AddCarrierHandler implements AddCarrierHandlerInterface
         $carrier->name = $command->getName();
         $carrier->grade = $command->getGrade();
         $carrier->url = $command->getTrackingUrl();
-        $carrier->position = $command->getPosition();
         $carrier->active = $command->getActive();
         $carrier->delay = $command->getLocalizedDelay();
         $carrier->max_width = $command->getMaxWidth();
         $carrier->max_height = $command->getMaxHeight();
         $carrier->max_weight = $command->getMaxWeight();
         $carrier->max_depth = $command->getMaxDepth();
+
+        if (null !== $command->getPosition()) {
+            $carrier->position = $command->getPosition();
+        } else {
+            $this->carrierRepository->getLastPosition() + 1;
+        }
 
         // Shipping information
         $carrier->shipping_handling = $command->hasAdditionalHandlingFee();

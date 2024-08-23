@@ -35,9 +35,7 @@ use Configuration;
 use Context;
 use Country;
 use Exception;
-use Group;
 use RangePrice;
-use RangeWeight;
 use RuntimeException;
 use State;
 use Zone;
@@ -98,30 +96,10 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^there is a zone named "(.+)"$/
-     */
-    public function createZone($zoneName)
-    {
-        $zone = new Zone();
-        $zone->name = $zoneName;
-        $zone->add();
-        $this->zones[$zoneName] = $zone;
-    }
-
-    /**
-     * @param string $zoneName
-     */
-    public function checkZoneWithNameExists(string $zoneName): void
-    {
-        $this->checkFixtureExists($this->zones, 'Zone', $zoneName);
-    }
-
-    /**
      * @Given /^there is a country named "(.+)" and iso code "(.+)" in zone "(.+)"$/
      */
     public function createCountry($countryName, $isoCode, $zoneName)
     {
-        $this->checkZoneWithNameExists($zoneName);
         $countryId = Country::getByIso($isoCode, false);
         if (!$countryId) {
             throw new Exception('Country not found with iso code = ' . $isoCode);
@@ -130,7 +108,7 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
         // clone country to be able to properly reset previous data
         $this->previousCountries[$countryName] = clone $country;
         $this->countries[$countryName] = $country;
-        $country->id_zone = $this->zones[$zoneName]->id;
+        $country->id_zone = $this->getSharedStorage()->get($zoneName)->id;
         $country->active = true;
         $country->save();
 
@@ -160,15 +138,15 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function createState($stateName, $stateIsoCode, $countryName, $zoneName)
     {
-        $this->checkZoneWithNameExists($zoneName);
-        $this->checkCountryWithNameExists($countryName);
         $state = new State();
         $state->name = $stateName;
         $state->iso_code = $stateIsoCode;
-        $state->id_zone = $this->zones[$zoneName]->id;
-        $state->id_country = $this->countries[$countryName]->id;
+        $state->id_zone = $this->getSharedStorage()->get($zoneName)->id;
+        $state->id_country = $this->getSharedStorage()->get($countryName);
         $state->add();
         $this->states[$stateName] = $state;
+
+        $this->getSharedStorage()->set($stateName, (int) $state->id);
     }
 
     /**
@@ -230,114 +208,6 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^there is a carrier named "(.+)"$/
-     */
-    public function createCarrier($carrierName)
-    {
-        $carrier = new Carrier(null, (int) Configuration::get('PS_LANG_DEFAULT'));
-        $carrier->name = $carrierName;
-        $carrier->shipping_method = Carrier::SHIPPING_METHOD_PRICE;
-        $carrier->delay = '28 days later';
-        $carrier->active = true;
-        $carrier->add();
-        $this->carriers[$carrierName] = $carrier;
-        SharedStorage::getStorage()->set($carrierName, (int) $carrier->id);
-
-        $groups = Group::getGroups(Context::getContext()->language->id);
-        $groupIds = [];
-        foreach ($groups as $group) {
-            $groupIds[] = $group['id_group'];
-        }
-        $carrier->setGroups($groupIds);
-    }
-
-    /**
-     * @Given /^carrier "(.+)" ships to all groups$/
-     */
-    public function setCarrierShipsToAllGroups($carrierName)
-    {
-        $this->checkCarrierWithNameExists($carrierName);
-        $carrier = $this->carriers[$carrierName];
-
-        $groups = Group::getGroups(Context::getContext()->language->id);
-        $groupIds = [];
-        foreach ($groups as $group) {
-            $groupIds[] = $group['id_group'];
-        }
-        $carrier->setGroups($groupIds);
-    }
-
-    /**
-     * @Given /^the carrier "(.+)" uses "(.+)" as tracking url$/
-     */
-    public function setCarrierTrackingUrl(string $carrierName, string $url): void
-    {
-        $this->checkCarrierWithNameExists($carrierName);
-        $carrier = $this->carriers[$carrierName];
-        $carrier->url = $url;
-        $carrier->save();
-    }
-
-    /**
-     * @param string $carrierName
-     */
-    public function checkCarrierWithNameExists(string $carrierName): void
-    {
-        $this->checkFixtureExists($this->carriers, 'Carrier', $carrierName);
-    }
-
-    /**
-     * @param string $carrierName
-     *
-     * @return Carrier
-     */
-    public function getCarrierWithName(string $carrierName): Carrier
-    {
-        return $this->carriers[$carrierName];
-    }
-
-    /**
-     * Be careful: this method REPLACES shipping fees for carrier
-     *
-     * @Given /^carrier "(.+)" applies shipping fees of (\d+\.\d+) in zone "(.+)" for (weight|price) between (\d+) and (\d+)$/
-     */
-    public function setCarrierFees($carrierName, $shippingPrice, $zoneName, $rangeType, $from, $to)
-    {
-        $this->checkCarrierWithNameExists($carrierName);
-        $this->checkZoneWithNameExists($zoneName);
-        if (empty($this->carriers[$carrierName]->getZone((int) $this->zones[$zoneName]->id))) {
-            $this->carriers[$carrierName]->addZone((int) $this->zones[$zoneName]->id);
-        }
-        $rangeClass = $rangeType == 'weight' ? RangeWeight::class : RangePrice::class;
-        $primary = $rangeType == 'weight' ? 'id_range_weight' : 'id_range_price';
-        $rangeRows = $rangeClass::getRanges($this->carriers[$carrierName]->id);
-        $rangeId = false;
-        foreach ($rangeRows as $rangeRow) {
-            if ($rangeRow['delimiter1'] == $from) {
-                $rangeId = $rangeRow[$primary];
-            }
-        }
-        if (!empty($rangeId)) {
-            $range = new $rangeClass($rangeId);
-        } else {
-            $range = new $rangeClass();
-            $range->id_carrier = $this->carriers[$carrierName]->id;
-            $range->delimiter1 = $from;
-            $range->delimiter2 = $to;
-            $range->add();
-            $this->priceRanges[] = $range;
-        }
-        $carrierPriceRange = [
-            'id_range_price' => (int) $range->id,
-            'id_range_weight' => null,
-            'id_carrier' => (int) $this->carriers[$carrierName]->id,
-            'id_zone' => (int) $this->zones[$zoneName]->id,
-            'price' => $shippingPrice,
-        ];
-        $this->carriers[$carrierName]->addDeliveryPrice([$carrierPriceRange], true);
-    }
-
-    /**
      * @AfterScenario
      */
     public function cleanFixtures()
@@ -374,10 +244,9 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @When /^I select carrier "(.+)" in my cart$/
      */
-    public function setCartCarrier($carrierName)
+    public function setCartCarrier(string $carrierReference)
     {
-        $this->checkCarrierWithNameExists($carrierName);
-        $this->getCurrentCart()->id_carrier = $this->carriers[$carrierName]->id;
+        $this->getCurrentCart()->id_carrier = $this->getSharedStorage()->get($carrierReference);
 
         $this->getCurrentCart()->update();
 
@@ -416,34 +285,5 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
             'Could not find carrier with name %s',
             $carrierName
         ));
-    }
-
-    /**
-     * @Given I enable carrier :carrierReference
-     *
-     * @param string $carrierReference
-     */
-    public function enableCarrier(string $carrierReference)
-    {
-        $carrierId = SharedStorage::getStorage()->get($carrierReference);
-        $carrier = new Carrier($carrierId);
-        $carrier->active = true;
-        $carrier->save();
-        // Reset cache so that the carrier becomes selectable
-        Carrier::resetStaticCache();
-    }
-
-    /**
-     * @Then I associate the tax rule group :taxRulesGroupReference to carrier :carrierReference
-     *
-     * @param string $taxRulesGroupReference
-     * @param string $carrierReference
-     */
-    public function associateCarrierTaxRulesGroup(string $taxRulesGroupReference, string $carrierReference)
-    {
-        $carrierId = SharedStorage::getStorage()->get($carrierReference);
-        $taxRulesGroupId = SharedStorage::getStorage()->get($taxRulesGroupReference);
-        $carrier = new Carrier($carrierId);
-        $carrier->setTaxRulesGroup($taxRulesGroupId);
     }
 }

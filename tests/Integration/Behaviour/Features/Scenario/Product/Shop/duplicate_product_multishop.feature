@@ -52,9 +52,11 @@ Feature: Copy product from shop to shop.
     And I associate attribute "Green" with shops "shop1,shop2,shop3,shop4"
     And I associate attribute "Orange" with shops "shop1,shop2,shop3,shop4"
     And single shop context is loaded
-    Given manufacturer studioDesign named "Studio Design" exists
-    And carrier carrier1 named "ecoCarrier" exists
-    And carrier carrier2 named "Fast carry" exists
+    And manufacturer studioDesign named "Studio Design" exists
+    And I create carrier "carrier1" with specified properties:
+      | name        | ecoCarrier |
+    And I create carrier "carrier2" with specified properties:
+      | name        | Fast carry |
     # Prepare a few data
     And I add new tax "us-tax-state-1" with following properties:
       | name       | US Tax (6%) |
