@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f11c7f41283f0b5a10d475c37b9fb15a",
+    "content-hash": "87869a39462a38c0baa26cd5e8123d2c",
     "packages": [
         {
             "name": "api-platform/core",
@@ -6692,22 +6692,23 @@
         },
         {
             "name": "prestashop/ps_linklist",
-            "version": "v6.0.7",
+            "version": "v7.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_linklist.git",
-                "reference": "a7696f34e8f56d0746be2d52eb0bb32ffd37985b"
+                "reference": "d75fb386d1ee204fb0f5bf1fcbe64afd45cbbbdf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/a7696f34e8f56d0746be2d52eb0bb32ffd37985b",
-                "reference": "a7696f34e8f56d0746be2d52eb0bb32ffd37985b",
+                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/d75fb386d1ee204fb0f5bf1fcbe64afd45cbbbdf",
+                "reference": "d75fb386d1ee204fb0f5bf1fcbe64afd45cbbbdf",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.2.5"
+                "php": ">=8.1.0"
             },
             "require-dev": {
+                "phpstan/phpstan": "^1.11",
                 "prestashop/php-dev-tools": "^4.3"
             },
             "type": "prestashop-module",
@@ -6733,9 +6734,9 @@
             "description": "PrestaShop - Link list",
             "homepage": "https://github.com/PrestaShop/ps_linklist",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_linklist/tree/v6.0.7"
+                "source": "https://github.com/PrestaShop/ps_linklist/tree/v7.0.0"
             },
-            "time": "2024-02-28T13:48:54+00:00"
+            "time": "2024-09-09T14:00:31+00:00"
         },
         {
             "name": "prestashop/ps_mainmenu",
