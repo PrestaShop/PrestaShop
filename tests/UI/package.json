@@ -110,7 +110,7 @@
     "chai": "^4.5.0",
     "chai-string": "^1.5.0",
     "dotenv": "^16.4.5",
-    "mocha": "^10.7.0",
+    "mocha": "^10.7.3",
     "mochawesome": "^7.1.3",
     "mysql2": "^3.11.0",
     "playwright": "^1.42.1"
