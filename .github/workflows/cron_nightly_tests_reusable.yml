@@ -163,6 +163,19 @@ jobs:
             CAMPAIGN: 'functional:FO:hummingbird:04-07'
           - BRANCH: 8.1.x
             CAMPAIGN: 'functional:FO:hummingbird:08-12'
+          ## 8.2.x
+          - BRANCH: 8.2.x
+            CAMPAIGN: 'functional:BO:advanced-parameters:11-12'
+          - BRANCH: 8.2.x
+            CAMPAIGN: 'functional:FO:01-03'
+          - BRANCH: 8.2.x
+            CAMPAIGN: 'functional:FO:04-07'
+          - BRANCH: 8.2.x
+            CAMPAIGN: 'functional:FO:08-12'
+          - BRANCH: 8.2.x
+            CAMPAIGN: 'functional:FO:hummingbird:04-07'
+          - BRANCH: 8.2.x
+            CAMPAIGN: 'functional:FO:hummingbird:08-12'
           ## develop
           - BRANCH: develop
             CAMPAIGN: 'functional:FO:01-03'
@@ -195,7 +208,7 @@ jobs:
           PHP_VERSION: ${{ inputs.PHP_VERSION }}
           ENABLE_SSL: ${{ env.ENABLE_SSL }}
           INSTALL_AUTO: ${{ env.INSTALL_AUTO }}
-          CP_API_CONFIG: ${{ (env.GH_BRANCH == '8.1.x') && 'true' || 'false' }}
+          CP_API_CONFIG: ${{ (env.GH_BRANCH == '8.1.x' || env.GH_BRANCH == '8.2.x') && 'true' || 'false' }}
           DB_SERVER: ${{ inputs.DB_SERVER }}
       - name: Setup Environment failure
         uses: ./.github/actions/setup-env-export-logs
