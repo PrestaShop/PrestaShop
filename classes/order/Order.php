@@ -752,7 +752,7 @@ class OrderCore extends ObjectModel
             $product['current_stock'] = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id'], (int) $this->id_shop);
         }
 
-        $product['location'] = StockAvailable::getLocation($product['product_id'], $product['product_attribute_id'], (int) $this->id_shop);
+        $product['location'] = (string) StockAvailable::getLocation($product['product_id'], $product['product_attribute_id'], (int) $this->id_shop);
     }
 
     /**
