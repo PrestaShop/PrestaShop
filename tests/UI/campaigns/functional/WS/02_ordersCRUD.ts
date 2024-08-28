@@ -13,7 +13,6 @@ import createShoppingCart from '@commonTests/FO/classic/shoppingCart';
 // Import BO pages
 import webservicePage from '@pages/BO/advancedParameters/webservice';
 import ordersPage from '@pages/BO/orders';
-import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 import orderPagePaymentBlock from '@pages/BO/orders/view/paymentBlock';
@@ -25,6 +24,7 @@ import getOrderXml from '@data/xml/order';
 
 import {
   boDashboardPage,
+  boShoppingCartsPage,
   dataAddresses,
   dataCustomers,
   dataProducts,
@@ -150,29 +150,29 @@ describe('WS - Orders : CRUD', async () => {
             boDashboardPage.shoppingCartsLink,
           );
 
-          const pageTitle = await shoppingCartsPage.getPageTitle(page);
-          expect(pageTitle).to.contains(shoppingCartsPage.pageTitle);
+          const pageTitle = await boShoppingCartsPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boShoppingCartsPage.pageTitle);
         });
 
         it('should reset all filters', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
 
-          const numberOfShoppingCarts = await shoppingCartsPage.resetAndGetNumberOfLines(page);
+          const numberOfShoppingCarts = await boShoppingCartsPage.resetAndGetNumberOfLines(page);
           expect(numberOfShoppingCarts).to.be.gt(0);
         });
 
         it('should search the non ordered shopping cart', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'searchNonOrderedShoppingCarts', baseContext);
 
-          await shoppingCartsPage.filterTable(page, 'select', 'status', 'Non ordered');
+          await boShoppingCartsPage.filterTable(page, 'select', 'status', 'Non ordered');
 
-          const numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
+          const numberOfShoppingCartsAfterFilter = await boShoppingCartsPage.getNumberOfElementInGrid(page);
           expect(numberOfShoppingCartsAfterFilter).to.gte(1);
 
-          const textColumn = await shoppingCartsPage.getTextColumn(page, 1, 'status');
+          const textColumn = await boShoppingCartsPage.getTextColumn(page, 1, 'status');
           expect(textColumn).to.contains('Non ordered');
 
-          idShoppingCart = parseInt(await shoppingCartsPage.getTextColumn(page, 1, 'id_cart'), 10);
+          idShoppingCart = parseInt(await boShoppingCartsPage.getTextColumn(page, 1, 'id_cart'), 10);
           expect(idShoppingCart).to.be.gt(0);
         });
       });

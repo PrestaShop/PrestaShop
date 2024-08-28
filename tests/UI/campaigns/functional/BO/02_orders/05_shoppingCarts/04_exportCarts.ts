@@ -4,13 +4,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boShoppingCartsPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -53,14 +51,14 @@ describe('BO - Orders - Shopping carts: Export carts', async () => {
       boDashboardPage.shoppingCartsLink,
     );
 
-    const pageTitle = await shoppingCartsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(shoppingCartsPage.pageTitle);
+    const pageTitle = await boShoppingCartsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boShoppingCartsPage.pageTitle);
   });
 
   it('should export carts to a csv file', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'exportCarts', baseContext);
 
-    filePath = await shoppingCartsPage.exportDataToCsv(page);
+    filePath = await boShoppingCartsPage.exportDataToCsv(page);
 
     const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);
     expect(doesFileExist, 'Export of data has failed').to.eq(true);
@@ -70,11 +68,11 @@ describe('BO - Orders - Shopping carts: Export carts', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'checkAllCartsInCsvFile', baseContext);
 
     // Get number of orders
-    const numberOfOrders = await shoppingCartsPage.getNumberOfElementInGrid(page);
+    const numberOfOrders = await boShoppingCartsPage.getNumberOfElementInGrid(page);
 
     // Check each order in file
     for (let row = 1; row <= numberOfOrders; row++) {
-      const cartInCsvFormat = await shoppingCartsPage.getCartInCsvFormat(page, row);
+      const cartInCsvFormat = await boShoppingCartsPage.getCartInCsvFormat(page, row);
       const textExist = await utilsFile.isTextInFile(filePath, cartInCsvFormat, true, true);
       expect(textExist, `${cartInCsvFormat} was not found in the file`).to.eq(true);
     }

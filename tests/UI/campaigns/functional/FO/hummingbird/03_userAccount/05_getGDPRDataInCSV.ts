@@ -11,7 +11,6 @@ import customersPage from '@pages/BO/customers';
 import viewCustomerPage from '@pages/BO/customers/view';
 import customerServicePage from '@pages/BO/customerService/customerService';
 import ordersPage from '@pages/BO/orders';
-import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
 
 // Import FO pages
 import cartPage from '@pages/FO/hummingbird/cart';
@@ -23,6 +22,7 @@ import gdprPersonalDataPage from '@pages/FO/hummingbird/myAccount/gdprPersonalDa
 
 import {
   boDashboardPage,
+  boShoppingCartsPage,
   dataPaymentMethods,
   dataProducts,
   FakerAddress,
@@ -431,37 +431,37 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
           boDashboardPage.shoppingCartsLink,
         );
 
-        const pageTitle = await shoppingCartsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(shoppingCartsPage.pageTitle);
+        const pageTitle = await boShoppingCartsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boShoppingCartsPage.pageTitle);
       });
 
       it('should reset all filters and get number of shopping carts', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
 
-        numberOfShoppingCarts = await shoppingCartsPage.resetAndGetNumberOfLines(page);
+        numberOfShoppingCarts = await boShoppingCartsPage.resetAndGetNumberOfLines(page);
         expect(numberOfShoppingCarts).to.be.above(0);
       });
 
       it('should filter list by customer', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer', baseContext);
 
-        await shoppingCartsPage.filterTable(page, 'input', 'customer_name', customerData.lastName);
+        await boShoppingCartsPage.filterTable(page, 'input', 'customer_name', customerData.lastName);
 
-        const numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
+        const numberOfShoppingCartsAfterFilter = await boShoppingCartsPage.getNumberOfElementInGrid(page);
         expect(numberOfShoppingCartsAfterFilter).to.equal(1);
 
-        const textColumn = await shoppingCartsPage.getTextColumn(page, 1, 'customer_name');
+        const textColumn = await boShoppingCartsPage.getTextColumn(page, 1, 'customer_name');
         expect(textColumn).to.contains(customerData.lastName);
       });
 
       it('should get shopping cart ID and Date', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getShoppingCartIDAndDate', baseContext);
 
-        shoppingCartDate = await shoppingCartsPage.getTextColumn(page, 1, 'date_add');
+        shoppingCartDate = await boShoppingCartsPage.getTextColumn(page, 1, 'date_add');
         shoppingCartDate = `${shoppingCartDate.substring(6, 10)}-${shoppingCartDate.substring(0, 2)}-`
           + `${shoppingCartDate.substring(3, 5)}${shoppingCartDate.substring(11, 19)}`;
 
-        shoppingCartID = await shoppingCartsPage.getTextColumn(page, 1, 'id_cart');
+        shoppingCartID = await boShoppingCartsPage.getTextColumn(page, 1, 'id_cart');
         expect(parseInt(shoppingCartID, 10)).to.be.greaterThan(5);
       });
     });

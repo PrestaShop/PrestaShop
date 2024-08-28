@@ -3,7 +3,6 @@ import testContext from '@utils/testContext';
 
 // Import BO pages
 import statsPage from '@pages/BO/stats';
-import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
 import ordersPage from '@pages/BO/orders';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 import merchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns';
@@ -32,6 +31,7 @@ import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {
   boDashboardPage,
   boProductsPage,
+  boShoppingCartsPage,
   dataCustomers,
   dataOrders,
   dataOrderStatuses,
@@ -101,14 +101,14 @@ describe('BO - Dashboard : Activity overview', async () => {
 
         await boDashboardPage.clickOnActiveShoppingCartsLink(page);
 
-        const pageTitle = await shoppingCartsPage.getPageTitle(page);
-        expect(pageTitle).to.eq(shoppingCartsPage.pageTitle);
+        const pageTitle = await boShoppingCartsPage.getPageTitle(page);
+        expect(pageTitle).to.eq(boShoppingCartsPage.pageTitle);
       });
 
       it('should go back to dashboard page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goBackToDashboard2', baseContext);
 
-        await shoppingCartsPage.goToDashboardPage(page);
+        await boShoppingCartsPage.goToDashboardPage(page);
 
         const pageTitle = await boDashboardPage.getPageTitle(page);
         expect(pageTitle).to.eq(boDashboardPage.pageTitle);
@@ -197,7 +197,7 @@ describe('BO - Dashboard : Activity overview', async () => {
 
         // Close page and init page objects
         page = await orderConfirmationPage.closePage(browserContext, page, 0);
-        await shoppingCartsPage.reloadPage(page);
+        await boShoppingCartsPage.reloadPage(page);
 
         const pageTitle = await boDashboardPage.getPageTitle(page);
         expect(pageTitle).to.contains(boDashboardPage.pageTitle);
@@ -239,7 +239,7 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should go back to dashboard page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goBackToDashboard3', baseContext);
 
-        await shoppingCartsPage.goToDashboardPage(page);
+        await boShoppingCartsPage.goToDashboardPage(page);
 
         const pageTitle = await boDashboardPage.getPageTitle(page);
         expect(pageTitle).to.eq(boDashboardPage.pageTitle);
@@ -292,7 +292,7 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should go back to dashboard page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goBackToDashboard4', baseContext);
 
-        await shoppingCartsPage.goToDashboardPage(page);
+        await boShoppingCartsPage.goToDashboardPage(page);
 
         const pageTitle = await boDashboardPage.getPageTitle(page);
         expect(pageTitle).to.eq(boDashboardPage.pageTitle);
@@ -378,8 +378,8 @@ describe('BO - Dashboard : Activity overview', async () => {
 
         await boDashboardPage.clickOnAbandonedCartsLink(page);
 
-        const pageTitle = await shoppingCartsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(shoppingCartsPage.pageTitle);
+        const pageTitle = await boShoppingCartsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boShoppingCartsPage.pageTitle);
       });
     });
 
@@ -387,7 +387,7 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should go back to dashboard page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goBackToDashboard5', baseContext);
 
-        await shoppingCartsPage.goToDashboardPage(page);
+        await boShoppingCartsPage.goToDashboardPage(page);
 
         const pageTitle = await boDashboardPage.getPageTitle(page);
         expect(pageTitle).to.eq(boDashboardPage.pageTitle);
@@ -449,7 +449,7 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should go back to dashboard page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goBackToDashboard6', baseContext);
 
-        await shoppingCartsPage.goToDashboardPage(page);
+        await boShoppingCartsPage.goToDashboardPage(page);
 
         const pageTitle = await boDashboardPage.getPageTitle(page);
         expect(pageTitle).to.eq(boDashboardPage.pageTitle);
@@ -521,7 +521,7 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should go back to dashboard page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goBackToDashboard7', baseContext);
 
-        await shoppingCartsPage.goToDashboardPage(page);
+        await boShoppingCartsPage.goToDashboardPage(page);
 
         const pageTitle = await boDashboardPage.getPageTitle(page);
         expect(pageTitle).to.eq(boDashboardPage.pageTitle);
@@ -558,7 +558,7 @@ describe('BO - Dashboard : Activity overview', async () => {
     it('should go back to dashboard page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToDashboard8', baseContext);
 
-      await shoppingCartsPage.goToDashboardPage(page);
+      await boShoppingCartsPage.goToDashboardPage(page);
 
       const pageTitle = await boDashboardPage.getPageTitle(page);
       expect(pageTitle).to.eq(boDashboardPage.pageTitle);
@@ -606,7 +606,7 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should go back to dashboard page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goBackToDashboard9', baseContext);
 
-        await shoppingCartsPage.goToDashboardPage(page);
+        await boShoppingCartsPage.goToDashboardPage(page);
 
         const pageTitle = await boDashboardPage.getPageTitle(page);
         expect(pageTitle).to.eq(boDashboardPage.pageTitle);
@@ -640,7 +640,7 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should go back to dashboard page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goBackToDashboard10', baseContext);
 
-        await shoppingCartsPage.goToDashboardPage(page);
+        await boShoppingCartsPage.goToDashboardPage(page);
 
         const pageTitle = await boDashboardPage.getPageTitle(page);
         expect(pageTitle).to.eq(boDashboardPage.pageTitle);
@@ -667,7 +667,7 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should go back to dashboard page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goBackToDashboard11', baseContext);
 
-        await shoppingCartsPage.goToDashboardPage(page);
+        await boShoppingCartsPage.goToDashboardPage(page);
 
         const pageTitle = await boDashboardPage.getPageTitle(page);
         expect(pageTitle).to.eq(boDashboardPage.pageTitle);
@@ -695,7 +695,7 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should go back to dashboard page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goBackToDashboard12', baseContext);
 
-        await shoppingCartsPage.goToDashboardPage(page);
+        await boShoppingCartsPage.goToDashboardPage(page);
 
         const pageTitle = await boDashboardPage.getPageTitle(page);
         expect(pageTitle).to.eq(boDashboardPage.pageTitle);
