@@ -1,10 +1,10 @@
 .alert {
-  a,
+  a:not(.btn),
   p {
     color: var(--#{$cdk}primary-800);
   }
 
-  a {
+  a:not(.btn) {
     text-decoration: underline;
   }
 
