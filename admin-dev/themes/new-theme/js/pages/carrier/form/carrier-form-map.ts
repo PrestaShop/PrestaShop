@@ -27,6 +27,7 @@ export default {
   freeShippingInput: 'input[name="carrier[shipping_settings][is_free]"]',
   zonesInput: '#carrier_shipping_settings_ranges_costs_control_zones',
   zoneIdOption: (zoneId: number|string): string => `option[value="${zoneId}"]`,
+  navigationBar: '#form-nav',
   rangesInput: '#carrier_shipping_settings_ranges_costs_control_ranges_data',
   rangesSelectionAppId: '#carrier_shipping_settings_ranges-app',
   addRangeButton: '.js-add-carrier-ranges-btn',
