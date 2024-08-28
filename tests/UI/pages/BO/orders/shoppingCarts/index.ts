@@ -288,8 +288,8 @@ class ShoppingCarts extends BOBasePage {
    * @returns {Promise<void>}
    */
   async filterByDate(page: Page, dateFrom: string, dateTo: string): Promise<void> {
-    await page.locator(this.filterDateFromColumn).fill(dateFrom);
-    await page.locator(this.filterDateToColumn).fill(dateTo);
+    await this.setValue(page, this.filterDateFromColumn, dateFrom);
+    await this.setValue(page, this.filterDateToColumn, dateTo);
     // click on search
     await this.clickAndWaitForURL(page, this.filterSearchButton);
   }
