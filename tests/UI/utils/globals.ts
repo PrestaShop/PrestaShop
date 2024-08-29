@@ -61,6 +61,7 @@ global.GENERATE_FAILED_STEPS = process.env.GENERATE_FAILED_STEPS ? JSON.parse(pr
 global.SCREENSHOT = {
   FOLDER: process.env.SCREENSHOT_FOLDER || './screenshots',
   AFTER_FAIL: process.env.TAKE_SCREENSHOT_AFTER_FAIL ? JSON.parse(process.env.TAKE_SCREENSHOT_AFTER_FAIL) : false,
+  EACH_STEP: process.env.TAKE_SCREENSHOT_AFTER_EACH_STEP ? JSON.parse(process.env.TAKE_SCREENSHOT_AFTER_EACH_STEP) : false,
 };
 
 global.maildevConfig = {
