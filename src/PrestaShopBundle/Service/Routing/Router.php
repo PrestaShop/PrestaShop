@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Service\Routing;
 
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
+use PrestaShopBundle\Security\Admin\RequestAttributes;
 use PrestaShopBundle\Security\Admin\UserTokenManager;
 use Symfony\Bundle\FrameworkBundle\Routing\Router as BaseRouter;
 
@@ -37,10 +38,7 @@ use Symfony\Bundle\FrameworkBundle\Routing\Router as BaseRouter;
  */
 class Router extends BaseRouter
 {
-    /**
-     * @var UserTokenManager
-     */
-    private $userTokenManager;
+    private UserTokenManager $userTokenManager;
 
     /**
      * {@inheritdoc}
@@ -48,14 +46,14 @@ class Router extends BaseRouter
     public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): string
     {
         $url = parent::generate($name, $parameters, $referenceType);
-        if (TokenInUrls::isDisabled()) {
+        if (TokenInUrls::isDisabled() || $this->isRouteAnonymous($name)) {
             return $url;
         }
 
         return self::generateTokenizedUrl($url, $this->userTokenManager->getSymfonyToken());
     }
 
-    public function setUserTokenManager(UserTokenManager $userTokenManager)
+    public function setUserTokenManager(UserTokenManager $userTokenManager): void
     {
         $this->userTokenManager = $userTokenManager;
     }
@@ -80,5 +78,15 @@ class Router extends BaseRouter
         }
 
         return $url;
+    }
+
+    private function isRouteAnonymous(string $routeName): bool
+    {
+        $route = $this->getRouteCollection()->get($routeName);
+        if (!$route) {
+            return false;
+        }
+
+        return $route->getDefault(RequestAttributes::ANONYMOUS_CONTROLLER_ATTRIBUTE) === true;
     }
 }

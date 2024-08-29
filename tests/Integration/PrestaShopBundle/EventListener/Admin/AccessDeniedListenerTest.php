@@ -77,4 +77,19 @@ class AccessDeniedListenerTest extends WebTestCase
         $this->assertStringStartsWith('/tests/something-complex?_token=', $response->headers->get('location'));
         $this->assertStringContainsString('Redirecting to /tests/something-complex', $response->getContent());
     }
+
+    public function testAnonymous(): void
+    {
+        $this->client->request('GET', $this->router->generate('test_anonymous'));
+
+        $response = $this->client->getResponse();
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertEquals('AnonymousController', $response->getContent());
+
+        $this->client->request('GET', $this->router->generate('test_hard_coded_anonymous'));
+
+        $response = $this->client->getResponse();
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertEquals('AnonymousController', $response->getContent());
+    }
 }

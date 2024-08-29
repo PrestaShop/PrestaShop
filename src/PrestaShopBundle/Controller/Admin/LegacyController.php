@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use PrestaShopBundle\Routing\LegacyControllerConstants;
+use PrestaShopBundle\Security\Admin\RequestAttributes;
 use PrestaShopBundle\Twig\Layout\MenuBuilder;
 use PrestaShopBundle\Twig\Layout\SmartyVariablesFiller;
 use ReflectionException;
@@ -240,7 +241,7 @@ class LegacyController extends PrestaShopAdminController
     private function checkIsRequestAllowed(Request $request, AdminController $adminController): void
     {
         // If LegacyRouterChecker has already set the request as anonymous no need for further check
-        if ($request->attributes->get(LegacyControllerConstants::ANONYMOUS_ATTRIBUTE) === true) {
+        if ($request->attributes->get(RequestAttributes::ANONYMOUS_CONTROLLER_ATTRIBUTE) === true) {
             return;
         }
 

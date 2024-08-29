@@ -28,7 +28,7 @@ namespace PrestaShopBundle\EventListener\Admin;
 
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
-use PrestaShopBundle\Routing\LegacyControllerConstants;
+use PrestaShopBundle\Security\Admin\RequestAttributes;
 use PrestaShopBundle\Security\Admin\UserTokenManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,13 +44,6 @@ use Symfony\Component\Security\Http\AccessMapInterface;
  */
 class TokenizedUrlsListener
 {
-    public const PUBLIC_ROUTES = [
-        'admin_login',
-        'admin_homepage',
-        'admin_request_password_reset',
-        'admin_reset_password',
-    ];
-
     public function __construct(
         private readonly RouterInterface $router,
         private readonly UserTokenManager $userTokenManager,
@@ -87,7 +80,7 @@ class TokenizedUrlsListener
 
     private function isRequestAnonymous(Request $request): bool
     {
-        $publicLegacyRoute = $request->attributes->get(LegacyControllerConstants::ANONYMOUS_ATTRIBUTE);
+        $publicLegacyRoute = $request->attributes->get(RequestAttributes::ANONYMOUS_CONTROLLER_ATTRIBUTE);
         if ($publicLegacyRoute === true) {
             return true;
         }
