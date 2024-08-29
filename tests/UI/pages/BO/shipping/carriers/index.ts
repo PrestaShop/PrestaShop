@@ -38,6 +38,8 @@ class Carriers extends BOBasePage {
 
   private readonly tableBodyColumn: (row: number) => string;
 
+  private readonly tableBodyColumnNth: (column: number) => string;
+
   private readonly tableColumnId: (row: number) => string;
 
   private readonly tableColumnName: (row: number) => string;
@@ -92,6 +94,8 @@ class Carriers extends BOBasePage {
 
   private readonly selectAllLink: string;
 
+  private readonly unselectAllLink: string;
+
   private readonly bulkEnableLink: string;
 
   private readonly bulkDisableLink: string;
@@ -133,6 +137,7 @@ class Carriers extends BOBasePage {
     this.tableBodyRows = `${this.tableBody} tr`;
     this.tableBodyRow = (row: number) => `${this.tableBodyRows}:nth-child(${row})`;
     this.tableBodyColumn = (row: number) => `${this.tableBodyRow(row)} td`;
+    this.tableBodyColumnNth = (column: number) => `${this.tableBodyRows} td:nth-child(${column})`;
 
     // Columns selectors
     this.tableColumnId = (row: number) => `${this.tableBodyColumn(row)}:nth-child(2)`;
@@ -172,6 +177,7 @@ class Carriers extends BOBasePage {
     this.bulkActionMenuButton = '#bulk_action_menu_carrier';
     this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
     this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
+    this.unselectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(2)`;
     this.bulkEnableLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
     this.bulkDisableLink = `${this.bulkActionDropdownMenu} li:nth-child(5)`;
     this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(7)`;
@@ -432,15 +438,7 @@ class Carriers extends BOBasePage {
     await this.dialogListener(page, true);
 
     // Select all rows
-    await Promise.all([
-      page.locator(this.bulkActionMenuButton).click(),
-      this.waitForVisibleSelector(page, this.selectAllLink),
-    ]);
-
-    await Promise.all([
-      page.locator(this.selectAllLink).click(),
-      this.waitForHiddenSelector(page, this.selectAllLink),
-    ]);
+    await this.bulkSetSelection(page, true);
 
     // Perform delete
     await Promise.all([
@@ -455,6 +453,35 @@ class Carriers extends BOBasePage {
   }
 
   /**
+   * Select all rows
+   * @param page {Page} Browser tab
+   * @param status {boolean} Select or Unselect all
+   * @returns {Promise<void>}
+   */
+  async bulkSetSelection(page: Page, status: boolean): Promise<void> {
+    const selectorAll: string = status ? this.selectAllLink : this.unselectAllLink;
+
+    await Promise.all([
+      page.locator(this.bulkActionMenuButton).click(),
+      this.waitForVisibleSelector(page, selectorAll),
+    ]);
+
+    await Promise.all([
+      page.locator(selectorAll).click(),
+      this.waitForHiddenSelector(page, selectorAll),
+    ]);
+  }
+
+  /**
+   * Returns the number of selected rows
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getSelectedBulkCount(page: Page): Promise<number> {
+    return page.locator(`${this.tableBodyColumnNth(1)} input:checked`).count();
+  }
+
+  /**
    * Bulk set carriers status
    * @param page {Page} Browser tab
    * @param action {string} The action to perform in bulk
@@ -462,15 +489,7 @@ class Carriers extends BOBasePage {
    */
   async bulkSetStatus(page: Page, action: string): Promise<string> {
     // Select all rows
-    await Promise.all([
-      page.locator(this.bulkActionMenuButton).click(),
-      this.waitForVisibleSelector(page, this.selectAllLink),
-    ]);
-
-    await Promise.all([
-      page.locator(this.selectAllLink).click(),
-      this.waitForHiddenSelector(page, this.selectAllLink),
-    ]);
+    await this.bulkSetSelection(page, true);
 
     // Perform delete
     await Promise.all([

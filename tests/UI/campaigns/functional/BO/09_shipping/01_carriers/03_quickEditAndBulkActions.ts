@@ -182,10 +182,28 @@ describe('BO - Shipping - Carriers : Bulk actions', async () => {
     expect(carrierNames.length).to.equals(numberOfCarriers);
   });
 
-  it('should go to add new carrier page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToAddCarrierPage', baseContext);
+  it('should select all', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'selectAll', baseContext);
 
     page = await foClassicCheckoutPage.changePage(browserContext, 0);
+
+    await carriersPage.bulkSetSelection(page, true);
+
+    const numSelectedBulk = await carriersPage.getSelectedBulkCount(page);
+    expect(numSelectedBulk).to.equal(numberOfCarriers);
+  });
+
+  it('should unselect all', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'unselectAll', baseContext);
+
+    await carriersPage.bulkSetSelection(page, false);
+
+    const numSelectedBulk = await carriersPage.getSelectedBulkCount(page);
+    expect(numSelectedBulk).to.equal(0);
+  });
+
+  it('should go to add new carrier page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToAddCarrierPage', baseContext);
 
     await carriersPage.goToAddNewCarrierPage(page);
 
