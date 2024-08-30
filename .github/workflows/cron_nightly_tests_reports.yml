@@ -24,6 +24,8 @@ jobs:
             database: mysql
           - branch: 8.1.x
             database: mysql
+          - branch: 8.2.x
+            database: mysql
           - branch: develop
             database: mysql
           - branch: develop
