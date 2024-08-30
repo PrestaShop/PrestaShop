@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Db;
-use Image;
 use ImageManager as LegacyImageManager;
 use ImageType as LegacyImageType;
 use Module as LegacyModule;
@@ -275,10 +274,19 @@ class ImageThumbnailsRegenerator
 
         foreach ($type as $image_type) {
             foreach ($languages as $language) {
+                // We get the "no image available" in the folder of the object
                 $file = $dir . $language->getIsoCode() . '.jpg';
+
                 if (!file_exists($file)) {
-                    $file = _PS_PRODUCT_IMG_DIR_ . $defaultLang->getIsoCode() . '.jpg';
+                    // If it doesn't exist, we use an image for default language
+                    $file = $dir . $defaultLang->getIsoCode() . '.jpg';
+
+                    if (!file_exists($file)) {
+                        // If it doesn't exist, we use a fallback one in the root of img directory
+                        $file = _PS_IMG_DIR_ . 'noimageavailable.jpg';
+                    }
                 }
+
                 foreach ($configuredImageFormats as $imageFormat) {
                     if (!file_exists($dir . $language->getIsoCode() . '-default-' . stripslashes($image_type->getName()) . '.' . $imageFormat)) {
                         if (!LegacyImageManager::resize(
