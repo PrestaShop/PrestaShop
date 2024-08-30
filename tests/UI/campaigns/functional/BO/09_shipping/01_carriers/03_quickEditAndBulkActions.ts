@@ -4,13 +4,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import carriersPage from '@pages/BO/shipping/carriers';
-import addCarrierPage from '@pages/BO/shipping/carriers/add';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  boCarriersPage,
+  boCarriersCreatePage,
   boDashboardPage,
   dataCarriers,
   dataCustomers,
@@ -79,25 +77,25 @@ describe('BO - Shipping - Carriers : Bulk actions', async () => {
       boDashboardPage.carriersLink,
     );
 
-    const pageTitle = await carriersPage.getPageTitle(page);
-    expect(pageTitle).to.contains(carriersPage.pageTitle);
+    const pageTitle = await boCarriersPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCarriersPage.pageTitle);
   });
 
   it('should reset all filters and get number of carriers in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfCarriers = await carriersPage.resetAndGetNumberOfLines(page);
+    numberOfCarriers = await boCarriersPage.resetAndGetNumberOfLines(page);
     expect(numberOfCarriers).to.be.above(0);
   });
 
   it('should select all and disable them', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'selectAllAndDisable', baseContext);
 
-    const message = await carriersPage.bulkSetStatus(page, 'Disable');
-    expect(message).to.be.contains(carriersPage.successfulUpdateStatusMessage);
+    const message = await boCarriersPage.bulkSetStatus(page, 'Disable');
+    expect(message).to.be.contains(boCarriersPage.successfulUpdateStatusMessage);
 
     for (let i = 1; i <= numberOfCarriers; i++) {
-      const textColumn = await carriersPage.getTextColumn(
+      const textColumn = await boCarriersPage.getTextColumn(
         page,
         i,
         'active',
@@ -109,7 +107,7 @@ describe('BO - Shipping - Carriers : Bulk actions', async () => {
   it('should open the shop page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openTheShopPage', baseContext);
 
-    page = await carriersPage.viewMyShop(page);
+    page = await boCarriersPage.viewMyShop(page);
     await foClassicHomePage.changeLanguage(page, 'en');
 
     const isHomePage = await foClassicHomePage.isHomePage(page);
@@ -159,11 +157,11 @@ describe('BO - Shipping - Carriers : Bulk actions', async () => {
 
     page = await foClassicCheckoutPage.changePage(browserContext, 0);
 
-    const message = await carriersPage.bulkSetStatus(page, 'Enable');
-    expect(message).to.be.contains(carriersPage.successfulUpdateStatusMessage);
+    const message = await boCarriersPage.bulkSetStatus(page, 'Enable');
+    expect(message).to.be.contains(boCarriersPage.successfulUpdateStatusMessage);
 
     for (let i = 1; i <= numberOfCarriers; i++) {
-      const textColumn = await carriersPage.getTextColumn(
+      const textColumn = await boCarriersPage.getTextColumn(
         page,
         i,
         'active',
@@ -175,7 +173,7 @@ describe('BO - Shipping - Carriers : Bulk actions', async () => {
   it('should check there are carriers', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkCarriers', baseContext);
 
-    page = await carriersPage.changePage(browserContext, 1);
+    page = await boCarriersPage.changePage(browserContext, 1);
     await page.reload();
 
     const carrierNames = await foClassicCheckoutPage.getAllCarriersNames(page);
@@ -187,44 +185,44 @@ describe('BO - Shipping - Carriers : Bulk actions', async () => {
 
     page = await foClassicCheckoutPage.changePage(browserContext, 0);
 
-    await carriersPage.bulkSetSelection(page, true);
+    await boCarriersPage.bulkSetSelection(page, true);
 
-    const numSelectedBulk = await carriersPage.getSelectedBulkCount(page);
+    const numSelectedBulk = await boCarriersPage.getSelectedBulkCount(page);
     expect(numSelectedBulk).to.equal(numberOfCarriers);
   });
 
   it('should unselect all', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'unselectAll', baseContext);
 
-    await carriersPage.bulkSetSelection(page, false);
+    await boCarriersPage.bulkSetSelection(page, false);
 
-    const numSelectedBulk = await carriersPage.getSelectedBulkCount(page);
+    const numSelectedBulk = await boCarriersPage.getSelectedBulkCount(page);
     expect(numSelectedBulk).to.equal(0);
   });
 
   it('should go to add new carrier page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAddCarrierPage', baseContext);
 
-    await carriersPage.goToAddNewCarrierPage(page);
+    await boCarriersPage.goToAddNewCarrierPage(page);
 
-    const pageTitle = await addCarrierPage.getPageTitle(page);
-    expect(pageTitle).to.contains(addCarrierPage.pageTitleCreate);
+    const pageTitle = await boCarriersCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCarriersCreatePage.pageTitleCreate);
   });
 
   it('should create carrier and check result', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'createCarrier', baseContext);
 
-    const textResult = await addCarrierPage.createEditCarrier(page, carrierData);
-    expect(textResult).to.contains(carriersPage.successfulCreationMessage);
+    const textResult = await boCarriersCreatePage.createEditCarrier(page, carrierData);
+    expect(textResult).to.contains(boCarriersPage.successfulCreationMessage);
 
-    const numberOfCarriersAfterCreation = await carriersPage.getNumberOfElementInGrid(page);
+    const numberOfCarriersAfterCreation = await boCarriersPage.getNumberOfElementInGrid(page);
     expect(numberOfCarriersAfterCreation).to.be.equal(numberOfCarriers + 1);
   });
 
   it('should check there are carriers (after creation)', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersAfterCreate', baseContext);
 
-    page = await carriersPage.changePage(browserContext, 1);
+    page = await boCarriersPage.changePage(browserContext, 1);
     await page.reload({
       waitUntil: 'networkidle',
     });
@@ -237,25 +235,25 @@ describe('BO - Shipping - Carriers : Bulk actions', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
 
     page = await foClassicCheckoutPage.changePage(browserContext, 0);
-    await carriersPage.filterTable(
+    await boCarriersPage.filterTable(
       page,
       'input',
       'name',
       carrierData.name,
     );
 
-    const numberOfCarriersAfterFilter = await carriersPage.getNumberOfElementInGrid(page);
+    const numberOfCarriersAfterFilter = await boCarriersPage.getNumberOfElementInGrid(page);
     expect(numberOfCarriersAfterFilter).to.equals(1);
 
-    const textColumn = await carriersPage.getTextColumn(page, 1, 'name');
+    const textColumn = await boCarriersPage.getTextColumn(page, 1, 'name');
     expect(textColumn).to.equals(carrierData.name);
   });
 
   it('should delete carriers with Bulk Actions and check result', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCarriers', baseContext);
 
-    const deleteTextResult = await carriersPage.bulkDeleteCarriers(page);
-    expect(deleteTextResult).to.be.contains(carriersPage.successfulMultiDeleteMessage);
+    const deleteTextResult = await boCarriersPage.bulkDeleteCarriers(page);
+    expect(deleteTextResult).to.be.contains(boCarriersPage.successfulMultiDeleteMessage);
   });
 
   [
@@ -266,23 +264,23 @@ describe('BO - Shipping - Carriers : Bulk actions', async () => {
       await testContext.addContextItem(this, 'testIdentifier', `resetCarrier${index}`, baseContext);
 
       page = await foClassicCheckoutPage.changePage(browserContext, 0);
-      await carriersPage.filterTable(
+      await boCarriersPage.filterTable(
         page,
         'input',
         'name',
         carrier.name,
       );
 
-      const numberOfCarriersAfterFilter = await carriersPage.getNumberOfElementInGrid(page);
+      const numberOfCarriersAfterFilter = await boCarriersPage.getNumberOfElementInGrid(page);
       expect(numberOfCarriersAfterFilter).to.equals(1);
 
-      const textColumnName = await carriersPage.getTextColumn(page, 1, 'name');
+      const textColumnName = await boCarriersPage.getTextColumn(page, 1, 'name');
       expect(textColumnName).to.equals(carrier.name);
 
-      const message = await carriersPage.bulkSetStatus(page, 'Disable');
-      expect(message).to.be.contains(carriersPage.successfulUpdateStatusMessage);
+      const message = await boCarriersPage.bulkSetStatus(page, 'Disable');
+      expect(message).to.be.contains(boCarriersPage.successfulUpdateStatusMessage);
 
-      const textColumnActive = await carriersPage.getTextColumn(page, 1, 'active');
+      const textColumnActive = await boCarriersPage.getTextColumn(page, 1, 'active');
       expect(textColumnActive).to.equals('Disabled');
     });
   });
@@ -290,7 +288,7 @@ describe('BO - Shipping - Carriers : Bulk actions', async () => {
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
-    const numberOfCarriersAfterReset = await carriersPage.resetAndGetNumberOfLines(page);
+    const numberOfCarriersAfterReset = await boCarriersPage.resetAndGetNumberOfLines(page);
     expect(numberOfCarriersAfterReset).to.be.equal(numberOfCarriers);
   });
 });

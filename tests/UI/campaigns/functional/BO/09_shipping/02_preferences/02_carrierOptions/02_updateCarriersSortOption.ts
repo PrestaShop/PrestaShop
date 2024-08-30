@@ -6,12 +6,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import carriersPage from '@pages/BO/shipping/carriers';
 import preferencesPage from '@pages/BO/shipping/preferences';
 // Import FO pages
 import {checkoutPage as foCheckoutPage} from '@pages/FO/classic/checkout';
 
 import {
+  boCarriersPage,
   boDashboardPage,
   dataCarriers,
   dataCustomers,
@@ -66,8 +66,8 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
       boDashboardPage.carriersLink,
     );
 
-    const pageTitle = await carriersPage.getPageTitle(page);
-    expect(pageTitle).to.contains(carriersPage.pageTitle);
+    const pageTitle = await boCarriersPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCarriersPage.pageTitle);
   });
 
   const carriersNames: string[] = [
@@ -79,7 +79,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
     it('should reset all filters and get number of carriers in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-      numberOfCarriers = await carriersPage.resetAndGetNumberOfLines(page);
+      numberOfCarriers = await boCarriersPage.resetAndGetNumberOfLines(page);
       expect(numberOfCarriers).to.be.above(0);
     });
 
@@ -87,30 +87,30 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
       it(`should filter list by name ${carrierName}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterByName${index}`, baseContext);
 
-        await carriersPage.filterTable(page, 'input', 'name', carrierName);
+        await boCarriersPage.filterTable(page, 'input', 'name', carrierName);
 
-        const textColumn = await carriersPage.getTextColumn(page, 1, 'name');
+        const textColumn = await boCarriersPage.getTextColumn(page, 1, 'name');
         expect(textColumn).to.contains(carrierName);
       });
 
       it('should enable the carrier', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `enableCarrier${index}`, baseContext);
 
-        const isActionPerformed = await carriersPage.setStatus(page, 1, true);
+        const isActionPerformed = await boCarriersPage.setStatus(page, 1, true);
 
         if (isActionPerformed) {
-          const resultMessage = await carriersPage.getAlertSuccessBlockContent(page);
-          expect(resultMessage).to.contains(carriersPage.successfulUpdateStatusMessage);
+          const resultMessage = await boCarriersPage.getAlertSuccessBlockContent(page);
+          expect(resultMessage).to.contains(boCarriersPage.successfulUpdateStatusMessage);
         }
 
-        const carrierStatus = await carriersPage.getStatus(page, 1);
+        const carrierStatus = await boCarriersPage.getStatus(page, 1);
         expect(carrierStatus).to.eq(true);
       });
 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `resetFilterAfterEnable${index}`, baseContext);
 
-        const numberOfCarriersAfterReset = await carriersPage.resetAndGetNumberOfLines(page);
+        const numberOfCarriersAfterReset = await boCarriersPage.resetAndGetNumberOfLines(page);
         expect(numberOfCarriersAfterReset).to.be.equal(numberOfCarriers);
       });
     });
@@ -227,38 +227,38 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
         boDashboardPage.carriersLink,
       );
 
-      const pageTitle = await carriersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(carriersPage.pageTitle);
+      const pageTitle = await boCarriersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCarriersPage.pageTitle);
     });
 
     carriersNames.forEach((carrierName: string, index: number) => {
       it(`should filter list by name ${carrierName}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterByName${index}ToDisable`, baseContext);
 
-        await carriersPage.filterTable(page, 'input', 'name', carrierName);
+        await boCarriersPage.filterTable(page, 'input', 'name', carrierName);
 
-        const textColumn = await carriersPage.getTextColumn(page, 1, 'name');
+        const textColumn = await boCarriersPage.getTextColumn(page, 1, 'name');
         expect(textColumn).to.contains(carrierName);
       });
 
       it('should disable the carrier', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `disableCarrier${index}`, baseContext);
 
-        const isActionPerformed = await carriersPage.setStatus(page, 1, false);
+        const isActionPerformed = await boCarriersPage.setStatus(page, 1, false);
 
         if (isActionPerformed) {
-          const resultMessage = await carriersPage.getAlertSuccessBlockContent(page);
-          expect(resultMessage).to.contains(carriersPage.successfulUpdateStatusMessage);
+          const resultMessage = await boCarriersPage.getAlertSuccessBlockContent(page);
+          expect(resultMessage).to.contains(boCarriersPage.successfulUpdateStatusMessage);
         }
 
-        const carrierStatus = await carriersPage.getStatus(page, 1);
+        const carrierStatus = await boCarriersPage.getStatus(page, 1);
         expect(carrierStatus).to.eq(false);
       });
 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `resetFilterAfterDisable${index}`, baseContext);
 
-        const numberOfCarriersAfterReset = await carriersPage.resetAndGetNumberOfLines(page);
+        const numberOfCarriersAfterReset = await boCarriersPage.resetAndGetNumberOfLines(page);
         expect(numberOfCarriersAfterReset).to.be.equal(numberOfCarriers);
       });
     });

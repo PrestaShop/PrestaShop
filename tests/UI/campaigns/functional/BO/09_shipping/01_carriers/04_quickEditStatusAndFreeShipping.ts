@@ -4,13 +4,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import BO pages
-import carriersPage from '@pages/BO/shipping/carriers';
-
 // Import FO pages
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
 import {
+  boCarriersPage,
   boDashboardPage,
   dataCarriers,
   dataCustomers,
@@ -53,8 +51,8 @@ describe('BO - Shipping - Carriers : Quick edit status and free shipping', async
         boDashboardPage.carriersLink,
       );
 
-      const pageTitle = await carriersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(carriersPage.pageTitle);
+      const pageTitle = await boCarriersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCarriersPage.pageTitle);
     });
   });
 
@@ -63,21 +61,21 @@ describe('BO - Shipping - Carriers : Quick edit status and free shipping', async
     it('should disable the first carrier and check the validation message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableFirstCarrier', baseContext);
 
-      const isActionPerformed = await carriersPage.setStatus(page, 1, false);
+      const isActionPerformed = await boCarriersPage.setStatus(page, 1, false);
 
       if (isActionPerformed) {
-        const resultMessage = await carriersPage.getAlertSuccessBlockContent(page);
-        expect(resultMessage).to.contains(carriersPage.successfulUpdateStatusMessage);
+        const resultMessage = await boCarriersPage.getAlertSuccessBlockContent(page);
+        expect(resultMessage).to.contains(boCarriersPage.successfulUpdateStatusMessage);
       }
 
-      const carrierStatus = await carriersPage.getStatus(page, 1);
+      const carrierStatus = await boCarriersPage.getStatus(page, 1);
       expect(carrierStatus).to.equal(false);
     });
 
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
-      page = await carriersPage.viewMyShop(page);
+      page = await boCarriersPage.viewMyShop(page);
       // Change language in FO
       await foClassicHomePage.changeLanguage(page, 'en');
 
@@ -129,21 +127,21 @@ describe('BO - Shipping - Carriers : Quick edit status and free shipping', async
 
       page = await checkoutPage.changePage(browserContext, 0);
 
-      const pageTitle = await carriersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(carriersPage.pageTitle);
+      const pageTitle = await boCarriersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCarriersPage.pageTitle);
     });
 
     it('should enable the third carrier and check the validation message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableThirdCarrier', baseContext);
 
-      const isActionPerformed = await carriersPage.setStatus(page, 3, true);
+      const isActionPerformed = await boCarriersPage.setStatus(page, 3, true);
 
       if (isActionPerformed) {
-        const resultMessage = await carriersPage.getAlertSuccessBlockContent(page);
-        expect(resultMessage).to.contains(carriersPage.successfulUpdateStatusMessage);
+        const resultMessage = await boCarriersPage.getAlertSuccessBlockContent(page);
+        expect(resultMessage).to.contains(boCarriersPage.successfulUpdateStatusMessage);
       }
 
-      const carrierStatus = await carriersPage.getStatus(page, 3);
+      const carrierStatus = await boCarriersPage.getStatus(page, 3);
       expect(carrierStatus).to.equal(true);
     });
 
@@ -163,21 +161,21 @@ describe('BO - Shipping - Carriers : Quick edit status and free shipping', async
 
       page = await checkoutPage.changePage(browserContext, 0);
 
-      const pageTitle = await carriersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(carriersPage.pageTitle);
+      const pageTitle = await boCarriersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCarriersPage.pageTitle);
     });
 
     it('should enable \'Free shipping\' for the second carrier', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableFreeShippingSecondCarrier', baseContext);
 
-      const isActionPerformed = await carriersPage.setFreeShippingStatus(page, 2, true);
+      const isActionPerformed = await boCarriersPage.setFreeShippingStatus(page, 2, true);
 
       if (isActionPerformed) {
-        const resultMessage = await carriersPage.getAlertSuccessBlockContent(page);
-        expect(resultMessage).to.contains(carriersPage.successfulUpdateStatusMessage);
+        const resultMessage = await boCarriersPage.getAlertSuccessBlockContent(page);
+        expect(resultMessage).to.contains(boCarriersPage.successfulUpdateStatusMessage);
       }
 
-      const carrierStatus = await carriersPage.isFreeShipping(page, 2);
+      const carrierStatus = await boCarriersPage.isFreeShipping(page, 2);
       expect(carrierStatus).to.equal(true);
     });
 
@@ -215,49 +213,49 @@ describe('BO - Shipping - Carriers : Quick edit status and free shipping', async
 
       page = await checkoutPage.changePage(browserContext, 0);
 
-      const pageTitle = await carriersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(carriersPage.pageTitle);
+      const pageTitle = await boCarriersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCarriersPage.pageTitle);
     });
 
     it('should disable \'Free shipping\' for the second carrier', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableFreeShippingSecondCarrier', baseContext);
 
-      const isActionPerformed = await carriersPage.setFreeShippingStatus(page, 2, false);
+      const isActionPerformed = await boCarriersPage.setFreeShippingStatus(page, 2, false);
 
       if (isActionPerformed) {
-        const resultMessage = await carriersPage.getAlertSuccessBlockContent(page);
-        expect(resultMessage).to.contains(carriersPage.successfulUpdateStatusMessage);
+        const resultMessage = await boCarriersPage.getAlertSuccessBlockContent(page);
+        expect(resultMessage).to.contains(boCarriersPage.successfulUpdateStatusMessage);
       }
 
-      const carrierStatus = await carriersPage.isFreeShipping(page, 2);
+      const carrierStatus = await boCarriersPage.isFreeShipping(page, 2);
       expect(carrierStatus).to.equal(false);
     });
 
     it('should disable the third carrier and check the validation message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableThirdCarrier', baseContext);
 
-      const isActionPerformed = await carriersPage.setStatus(page, 3, false);
+      const isActionPerformed = await boCarriersPage.setStatus(page, 3, false);
 
       if (isActionPerformed) {
-        const resultMessage = await carriersPage.getAlertSuccessBlockContent(page);
-        expect(resultMessage).to.contains(carriersPage.successfulUpdateStatusMessage);
+        const resultMessage = await boCarriersPage.getAlertSuccessBlockContent(page);
+        expect(resultMessage).to.contains(boCarriersPage.successfulUpdateStatusMessage);
       }
 
-      const carrierStatus = await carriersPage.getStatus(page, 3);
+      const carrierStatus = await boCarriersPage.getStatus(page, 3);
       expect(carrierStatus).to.equal(false);
     });
 
     it('should enable the first carrier and check the validation message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableFirstCarrier', baseContext);
 
-      const isActionPerformed = await carriersPage.setStatus(page, 1, true);
+      const isActionPerformed = await boCarriersPage.setStatus(page, 1, true);
 
       if (isActionPerformed) {
-        const resultMessage = await carriersPage.getAlertSuccessBlockContent(page);
-        expect(resultMessage).to.contains(carriersPage.successfulUpdateStatusMessage);
+        const resultMessage = await boCarriersPage.getAlertSuccessBlockContent(page);
+        expect(resultMessage).to.contains(boCarriersPage.successfulUpdateStatusMessage);
       }
 
-      const carrierStatus = await carriersPage.getStatus(page, 1);
+      const carrierStatus = await boCarriersPage.getStatus(page, 1);
       expect(carrierStatus).to.equal(true);
     });
   });

@@ -4,11 +4,9 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import carriersPage from '@pages/BO/shipping/carriers';
-import addCarrierPage from '@pages/BO/shipping/carriers/add';
-
 import {
+  boCarriersPage,
+  boCarriersCreatePage,
   boDashboardPage,
   dataCarriers,
   FakerCarrier,
@@ -52,14 +50,14 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
       boDashboardPage.carriersLink,
     );
 
-    const pageTitle = await carriersPage.getPageTitle(page);
-    expect(pageTitle).to.contains(carriersPage.pageTitle);
+    const pageTitle = await boCarriersPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCarriersPage.pageTitle);
   });
 
   it('should reset all filters and get number of carriers in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfCarriers = await carriersPage.resetAndGetNumberOfLines(page);
+    numberOfCarriers = await boCarriersPage.resetAndGetNumberOfLines(page);
     expect(numberOfCarriers).to.be.above(0);
   });
 
@@ -128,18 +126,18 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        await carriersPage.filterTable(
+        await boCarriersPage.filterTable(
           page,
           test.args.filterType,
           test.args.filterBy,
           test.args.filterValue,
         );
 
-        const numberOfCarriersAfterFilter = await carriersPage.getNumberOfElementInGrid(page);
+        const numberOfCarriersAfterFilter = await boCarriersPage.getNumberOfElementInGrid(page);
         expect(numberOfCarriersAfterFilter).to.be.at.most(numberOfCarriers);
 
         for (let row = 1; row <= numberOfCarriersAfterFilter; row++) {
-          const textColumn = await carriersPage.getTextColumn(page, row, test.args.filterBy);
+          const textColumn = await boCarriersPage.getTextColumn(page, row, test.args.filterBy);
 
           if (test.expected !== undefined) {
             expect(textColumn).to.contains(test.expected);
@@ -152,7 +150,7 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfCarriersAfterReset = await carriersPage.resetAndGetNumberOfLines(page);
+        const numberOfCarriersAfterReset = await boCarriersPage.resetAndGetNumberOfLines(page);
         expect(numberOfCarriersAfterReset).to.equal(numberOfCarriers);
       });
     });
@@ -197,11 +195,11 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await carriersPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const nonSortedTable = await boCarriersPage.getAllRowsColumnContent(page, test.args.sortBy);
 
-        await carriersPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+        await boCarriersPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        const sortedTable = await carriersPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await boCarriersPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
           const nonSortedTableFloat = nonSortedTable.map((text: string): number => parseFloat(text));
@@ -238,18 +236,18 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
       it('should go to add new carrier page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddCarrierPage${index}`, baseContext);
 
-        await carriersPage.goToAddNewCarrierPage(page);
-        const pageTitle = await addCarrierPage.getPageTitle(page);
-        expect(pageTitle).to.contains(addCarrierPage.pageTitleCreate);
+        await boCarriersPage.goToAddNewCarrierPage(page);
+        const pageTitle = await boCarriersCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCarriersCreatePage.pageTitleCreate);
       });
 
       it(`should create carrier n°${index + 1} and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createCarrier${index}`, baseContext);
 
-        const textResult = await addCarrierPage.createEditCarrier(page, carrierData);
-        expect(textResult).to.contains(carriersPage.successfulCreationMessage);
+        const textResult = await boCarriersCreatePage.createEditCarrier(page, carrierData);
+        expect(textResult).to.contains(boCarriersPage.successfulCreationMessage);
 
-        const numberOfCarriersAfterCreation = await carriersPage.getNumberOfElementInGrid(page);
+        const numberOfCarriersAfterCreation = await boCarriersPage.getNumberOfElementInGrid(page);
         expect(numberOfCarriersAfterCreation).to.be.equal(numberOfCarriers + 1 + index);
       });
 
@@ -262,28 +260,28 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
     it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo20', baseContext);
 
-      const paginationNumber = await carriersPage.selectPaginationLimit(page, 20);
+      const paginationNumber = await boCarriersPage.selectPaginationLimit(page, 20);
       expect(paginationNumber).to.equal('1');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await carriersPage.paginationNext(page);
+      const paginationNumber = await boCarriersPage.paginationNext(page);
       expect(paginationNumber).to.equal('2');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await carriersPage.paginationPrevious(page);
+      const paginationNumber = await boCarriersPage.paginationPrevious(page);
       expect(paginationNumber).to.equal('1');
     });
 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
-      const paginationNumber = await carriersPage.selectPaginationLimit(page, 50);
+      const paginationNumber = await boCarriersPage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.equal('1');
     });
   });
@@ -293,17 +291,17 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
 
-      await carriersPage.filterTable(
+      await boCarriersPage.filterTable(
         page,
         'input',
         'name',
         'todelete',
       );
 
-      const numberOfCarriersAfterFilter = await carriersPage.getNumberOfElementInGrid(page);
+      const numberOfCarriersAfterFilter = await boCarriersPage.getNumberOfElementInGrid(page);
 
       for (let i = 1; i <= numberOfCarriersAfterFilter; i++) {
-        const textColumn = await carriersPage.getTextColumn(
+        const textColumn = await boCarriersPage.getTextColumn(
           page,
           i,
           'name',
@@ -315,14 +313,14 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
     it('should delete carriers with Bulk Actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCarriers', baseContext);
 
-      const deleteTextResult = await carriersPage.bulkDeleteCarriers(page);
-      expect(deleteTextResult).to.be.contains(carriersPage.successfulMultiDeleteMessage);
+      const deleteTextResult = await boCarriersPage.bulkDeleteCarriers(page);
+      expect(deleteTextResult).to.be.contains(boCarriersPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
-      const numberOfCarriersAfterReset = await carriersPage.resetAndGetNumberOfLines(page);
+      const numberOfCarriersAfterReset = await boCarriersPage.resetAndGetNumberOfLines(page);
       expect(numberOfCarriersAfterReset).to.be.equal(numberOfCarriers);
     });
   });

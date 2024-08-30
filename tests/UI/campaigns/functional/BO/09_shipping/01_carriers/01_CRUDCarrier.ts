@@ -5,13 +5,12 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-// Import BO pages
-import carriersPage from '@pages/BO/shipping/carriers';
-import addCarrierPage from '@pages/BO/shipping/carriers/add';
 // Import FO pages
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
 import {
+  boCarriersPage,
+  boCarriersCreatePage,
   dataCustomers,
   dataZones,
   FakerCarrier,
@@ -153,14 +152,14 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       boDashboardPage.carriersLink,
     );
 
-    const pageTitle = await carriersPage.getPageTitle(page);
-    expect(pageTitle).to.contains(carriersPage.pageTitle);
+    const pageTitle = await boCarriersPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCarriersPage.pageTitle);
   });
 
   it('should reset all filters and get number of carriers in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfCarriers = await carriersPage.resetAndGetNumberOfLines(page);
+    numberOfCarriers = await boCarriersPage.resetAndGetNumberOfLines(page);
     expect(numberOfCarriers).to.be.above(0);
   });
 
@@ -169,36 +168,36 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
     it('should go to add new carrier page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddCarrierPage', baseContext);
 
-      await carriersPage.goToAddNewCarrierPage(page);
+      await boCarriersPage.goToAddNewCarrierPage(page);
 
-      const pageTitle = await addCarrierPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addCarrierPage.pageTitleCreate);
+      const pageTitle = await boCarriersCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCarriersCreatePage.pageTitleCreate);
     });
 
     it('should create carrier and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCarrier', baseContext);
 
-      const textResult = await addCarrierPage.createEditCarrier(page, createCarrierData);
-      expect(textResult).to.contains(carriersPage.successfulCreationMessage);
+      const textResult = await boCarriersCreatePage.createEditCarrier(page, createCarrierData);
+      expect(textResult).to.contains(boCarriersPage.successfulCreationMessage);
 
-      const numberCarriersAfterCreation = await carriersPage.getNumberOfElementInGrid(page);
+      const numberCarriersAfterCreation = await boCarriersPage.getNumberOfElementInGrid(page);
       expect(numberCarriersAfterCreation).to.be.equal(numberOfCarriers + 1);
     });
 
     it('should filter list by name and get the new carrier ID', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToCheckNewCarrier', baseContext);
 
-      await carriersPage.resetFilter(page);
-      await carriersPage.filterTable(
+      await boCarriersPage.resetFilter(page);
+      await boCarriersPage.filterTable(
         page,
         'input',
         'name',
         createCarrierData.name,
       );
 
-      carrierID = parseInt(await carriersPage.getTextColumn(page, 1, 'id_carrier'), 10);
+      carrierID = parseInt(await boCarriersPage.getTextColumn(page, 1, 'id_carrier'), 10);
 
-      const name = await carriersPage.getTextColumn(page, 1, 'name');
+      const name = await boCarriersPage.getTextColumn(page, 1, 'name');
       expect(name).to.contains(createCarrierData.name);
     });
   });
@@ -209,7 +208,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'firstViewMyShop', baseContext);
 
       // Click on view my shop
-      page = await carriersPage.viewMyShop(page);
+      page = await boCarriersPage.viewMyShop(page);
       // Change language
       await foClassicHomePage.changeLanguage(page, 'en');
 
@@ -280,58 +279,58 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
 
       page = await foClassicCheckoutPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await carriersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(carriersPage.pageTitle);
+      const pageTitle = await boCarriersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCarriersPage.pageTitle);
     });
 
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdate', baseContext);
 
-      await carriersPage.resetFilter(page);
-      await carriersPage.filterTable(
+      await boCarriersPage.resetFilter(page);
+      await boCarriersPage.filterTable(
         page,
         'input',
         'name',
         createCarrierData.name,
       );
 
-      const carrierName = await carriersPage.getTextColumn(page, 1, 'name');
+      const carrierName = await boCarriersPage.getTextColumn(page, 1, 'name');
       expect(carrierName).to.contains(createCarrierData.name);
     });
 
     it('should go to edit carrier page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditCarrierPage', baseContext);
 
-      await carriersPage.gotoEditCarrierPage(page, 1);
+      await boCarriersPage.goToEditCarrierPage(page, 1);
 
-      const pageTitle = await addCarrierPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addCarrierPage.pageTitleEdit);
+      const pageTitle = await boCarriersCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCarriersCreatePage.pageTitleEdit);
     });
 
     it('should update carrier', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateCarrier', baseContext);
 
-      const textResult = await addCarrierPage.createEditCarrier(page, editCarrierData);
-      expect(textResult).to.contains(carriersPage.successfulUpdateMessage);
+      const textResult = await boCarriersCreatePage.createEditCarrier(page, editCarrierData);
+      expect(textResult).to.contains(boCarriersPage.successfulUpdateMessage);
 
-      const numberOfCarriersAfterUpdate = await carriersPage.resetAndGetNumberOfLines(page);
+      const numberOfCarriersAfterUpdate = await boCarriersPage.resetAndGetNumberOfLines(page);
       expect(numberOfCarriersAfterUpdate).to.be.equal(numberOfCarriers + 1);
     });
 
     it('should filter list by name and get the edited carrier ID', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToCheckEditedCarrier', baseContext);
 
-      await carriersPage.resetFilter(page);
-      await carriersPage.filterTable(
+      await boCarriersPage.resetFilter(page);
+      await boCarriersPage.filterTable(
         page,
         'input',
         'name',
         editCarrierData.name,
       );
 
-      carrierID = parseInt(await carriersPage.getTextColumn(page, 1, 'id_carrier'), 10);
+      carrierID = parseInt(await boCarriersPage.getTextColumn(page, 1, 'id_carrier'), 10);
 
-      const name = await carriersPage.getTextColumn(page, 1, 'name');
+      const name = await boCarriersPage.getTextColumn(page, 1, 'name');
       expect(name).to.contains(editCarrierData.name);
     });
   });
@@ -342,7 +341,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'secondViewMyShop', baseContext);
 
       // Click on view my shop
-      page = await carriersPage.viewMyShop(page);
+      page = await boCarriersPage.viewMyShop(page);
       // Change language
       await foClassicHomePage.changeLanguage(page, 'en');
 
@@ -413,32 +412,32 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
 
       page = await foClassicCheckoutPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await carriersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(carriersPage.pageTitle);
+      const pageTitle = await boCarriersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCarriersPage.pageTitle);
     });
 
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForDelete', baseContext);
 
-      await carriersPage.resetFilter(page);
-      await carriersPage.filterTable(
+      await boCarriersPage.resetFilter(page);
+      await boCarriersPage.filterTable(
         page,
         'input',
         'name',
         editCarrierData.name,
       );
 
-      const carrierName = await carriersPage.getTextColumn(page, 1, 'name');
+      const carrierName = await boCarriersPage.getTextColumn(page, 1, 'name');
       expect(carrierName).to.contains(editCarrierData.name);
     });
 
     it('should delete carrier', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteCarrier', baseContext);
 
-      const textResult = await carriersPage.deleteCarrier(page, 1);
-      expect(textResult).to.contains(carriersPage.successfulDeleteMessage);
+      const textResult = await boCarriersPage.deleteCarrier(page, 1);
+      expect(textResult).to.contains(boCarriersPage.successfulDeleteMessage);
 
-      const numberOfCarriersAfterDelete = await carriersPage.resetAndGetNumberOfLines(page);
+      const numberOfCarriersAfterDelete = await boCarriersPage.resetAndGetNumberOfLines(page);
       expect(numberOfCarriersAfterDelete).to.be.equal(numberOfCarriers);
     });
   });

@@ -6,14 +6,14 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import carriersPage from '@pages/BO/shipping/carriers';
-import addCarrierPage from '@pages/BO/shipping/carriers/add';
 import preferencesPage from '@pages/BO/shipping/preferences';
 import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
 // Import FO pages
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
 import {
+  boCarriersPage,
+  boCarriersCreatePage,
   boCustomerGroupsPage,
   boCustomerGroupsCreatePage,
   boDashboardPage,
@@ -156,36 +156,36 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
         boDashboardPage.carriersLink,
       );
 
-      const pageTitle = await carriersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(carriersPage.pageTitle);
+      const pageTitle = await boCarriersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCarriersPage.pageTitle);
     });
 
     it('should go to add new carrier page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddCarrierPage', baseContext);
 
-      await carriersPage.goToAddNewCarrierPage(page);
+      await boCarriersPage.goToAddNewCarrierPage(page);
 
-      const pageTitle = await addCarrierPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addCarrierPage.pageTitleCreate);
+      const pageTitle = await boCarriersCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCarriersCreatePage.pageTitleCreate);
     });
 
     it('should create carrier and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCarrier', baseContext);
 
-      const textResult = await addCarrierPage.createEditCarrier(page, createCarrierData);
-      expect(textResult).to.contains(carriersPage.successfulCreationMessage);
+      const textResult = await boCarriersCreatePage.createEditCarrier(page, createCarrierData);
+      expect(textResult).to.contains(boCarriersPage.successfulCreationMessage);
     });
 
     it('should filter list by name and get the new carrier ID', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToCheckNewCarrier', baseContext);
 
-      await carriersPage.resetFilter(page);
+      await boCarriersPage.resetFilter(page);
 
-      await carriersPage.filterTable(page, 'input', 'name', createCarrierData.name);
+      await boCarriersPage.filterTable(page, 'input', 'name', createCarrierData.name);
 
-      newCarrierID = parseInt(await carriersPage.getTextColumn(page, 1, 'id_carrier'), 10);
+      newCarrierID = parseInt(await boCarriersPage.getTextColumn(page, 1, 'id_carrier'), 10);
 
-      const name = await carriersPage.getTextColumn(page, 1, 'name');
+      const name = await boCarriersPage.getTextColumn(page, 1, 'name');
       expect(name).to.contains(createCarrierData.name);
     });
   });
@@ -196,7 +196,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
       await testContext.addContextItem(this, 'testIdentifier', 'firstViewMyShop1', baseContext);
 
       // Click on view my shop
-      page = await carriersPage.viewMyShop(page);
+      page = await boCarriersPage.viewMyShop(page);
       // Change language
       await foClassicHomePage.changeLanguage(page, 'en');
 
@@ -266,8 +266,8 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
 
       page = await checkoutPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await carriersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(carriersPage.pageTitle);
+      const pageTitle = await boCarriersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCarriersPage.pageTitle);
     });
 
     it('should go to \'Shipping > Preferences\' page', async function () {
@@ -293,7 +293,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
       await testContext.addContextItem(this, 'testIdentifier', 'firstViewMyShop2', baseContext);
 
       // Click on view my shop
-      page = await carriersPage.viewMyShop(page);
+      page = await boCarriersPage.viewMyShop(page);
       // Change language
       await foClassicHomePage.changeLanguage(page, 'en');
 
@@ -386,27 +386,27 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
         boDashboardPage.carriersLink,
       );
 
-      const pageTitle = await carriersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(carriersPage.pageTitle);
+      const pageTitle = await boCarriersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCarriersPage.pageTitle);
     });
 
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForDelete', baseContext);
 
-      await carriersPage.resetFilter(page);
-      await carriersPage.filterTable(page, 'input', 'name', createCarrierData.name);
+      await boCarriersPage.resetFilter(page);
+      await boCarriersPage.filterTable(page, 'input', 'name', createCarrierData.name);
 
-      const carrierName = await carriersPage.getTextColumn(page, 1, 'name');
+      const carrierName = await boCarriersPage.getTextColumn(page, 1, 'name');
       expect(carrierName).to.contains(createCarrierData.name);
     });
 
     it('should delete carrier', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteCarrier', baseContext);
 
-      const textResult = await carriersPage.deleteCarrier(page, 1);
-      expect(textResult).to.contains(carriersPage.successfulDeleteMessage);
+      const textResult = await boCarriersPage.deleteCarrier(page, 1);
+      expect(textResult).to.contains(boCarriersPage.successfulDeleteMessage);
 
-      await carriersPage.resetFilter(page);
+      await boCarriersPage.resetFilter(page);
     });
   });
 
