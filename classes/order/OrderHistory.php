@@ -197,9 +197,6 @@ class OrderHistoryCore extends ObjectModel
                 }
             }
 
-            /** @since 1.5.0 : gets the stock manager */
-            $manager = null;
-
             $error_or_canceled_statuses = [Configuration::get('PS_OS_ERROR'), Configuration::get('PS_OS_CANCELED')];
 
             $employee = null;
