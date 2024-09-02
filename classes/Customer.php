@@ -1222,7 +1222,7 @@ class CustomerCore extends ObjectModel
         * we set a random one for now.
         */
         if (empty($password)) {
-            $this->passwd = $crypto->hash(Tools::passwdGen(16, 'RANDOM'));
+            $this->passwd = Tools::passwdGen(16, 'RANDOM');
         } else {
             if (!Validate::isAcceptablePasswordLength($password) || !Validate::isAcceptablePasswordScore($password)) {
                 return false;
