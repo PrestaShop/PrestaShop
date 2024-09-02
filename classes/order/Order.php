@@ -362,6 +362,7 @@ class OrderCore extends ObjectModel
     public function getCartProducts()
     {
         $product_id_list = [];
+        $grouped_quantity = [];
         $products = $this->getProducts();
         foreach ($products as &$product) {
             $product['id_product_attribute'] = $product['product_attribute_id'];
@@ -370,6 +371,12 @@ class OrderCore extends ObjectModel
                 . $product['product_id'] . '_'
                 . $product['product_attribute_id'] . '_'
                 . (isset($product['id_customization']) ? $product['id_customization'] : '0');
+
+            if (!isset($grouped_quantity[$product['id_product']])) {
+                $grouped_quantity[$product['id_product']] = $product['cart_quantity'];
+            } else {
+                $grouped_quantity[$product['id_product']] += $product['cart_quantity'];
+            }
         }
         unset($product);
 
@@ -379,6 +386,8 @@ class OrderCore extends ObjectModel
                 . $product['id_product'] . '_'
                 . (isset($product['id_product_attribute']) ? $product['id_product_attribute'] : '0') . '_'
                 . (isset($product['id_customization']) ? $product['id_customization'] : '0');
+
+            $product['grouped_quantity'] = isset($grouped_quantity[$product['id_product']]) ? $grouped_quantity[$product['id_product']] : 0;
 
             if (in_array($key, $product_id_list)) {
                 $product_list[] = $product;
