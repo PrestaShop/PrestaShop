@@ -1222,12 +1222,11 @@ class CustomerCore extends ObjectModel
         * we set a random one for now.
         */
         if (empty($password)) {
-            $this->passwd = Tools::passwdGen(16, 'RANDOM');
+            $password = Tools::passwdGen(16, 'RANDOM');
         } else {
             if (!Validate::isAcceptablePasswordLength($password) || !Validate::isAcceptablePasswordScore($password)) {
                 return false;
             }
-            $this->passwd = $crypto->hash($password);
         }
 
         /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
