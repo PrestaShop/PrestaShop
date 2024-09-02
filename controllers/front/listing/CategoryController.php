@@ -351,11 +351,11 @@ class CategoryControllerCore extends ProductListingFrontController
 
     /**
      * Returns a category that we will redirect into, in case we need 301/302 redirect.
-     * We will try to get the closest parent of the current category.
+     * We will try to get the closest active parent of the current category.
      *
      * @return int category ID
      */
-    private function getCategoryToRedirectTo()
+    private function getCategoryToRedirectTo(): int
     {
         $categoryToRedirectTo = null;
         foreach ($this->category->getParentsCategories() as $category) {
