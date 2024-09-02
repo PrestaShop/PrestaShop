@@ -4919,5 +4919,10 @@
       <title>Modify customer groups grid template data</title>
       <description>This hook allows to modify data which is about to be used in template for customer groups grid</description>
     </hook>
+    <hook id="actionObjectDuplicateAfter">
+      <name>actionObjectDuplicateAfter</name>
+      <title>After duplicating an object</title>
+      <description>This hook is called after duplicating an object by the core.</description>
+    </hook>
   </entities>
 </entity_hook>
