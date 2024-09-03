@@ -18,7 +18,7 @@
     <tax id="9" name="moms DK 25%" rate="25" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="10" name="km EE 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="11" name="IVA ES 21%" rate="21" auto-generated="1" from-eu-tax-group="virtual"/>
-    <tax id="12" name="ALV FI 24%" rate="24" auto-generated="1" from-eu-tax-group="virtual"/>
+    <tax id="12" name="ALV FI 25.5%" rate="25.5" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="13" name="TVA FR 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="14" name="VAT UK 20%" rate="20.0" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="15" name="ΦΠΑ GR 24%" rate="24" auto-generated="1" from-eu-tax-group="virtual"/>
@@ -163,6 +163,36 @@
       <taxRule iso_code_country="sk" id_tax="31"/>
     </taxRulesGroup>
   </taxes>
+	<states>
+		<state name="Blagoevgrad" iso_code="01" country="BG" zone="Europe" />
+		<state name="Burgas" iso_code="02" country="BG" zone="Europe" />
+		<state name="Dobrich" iso_code="08" country="BG" zone="Europe" />
+		<state name="Gabrovo" iso_code="07" country="BG" zone="Europe" />
+		<state name="Haskovo" iso_code="26" country="BG" zone="Europe" />
+		<state name="Kardzhali" iso_code="09" country="BG" zone="Europe" />
+		<state name="Kyustendil" iso_code="10" country="BG" zone="Europe" />
+		<state name="Lovech" iso_code="11" country="BG" zone="Europe" />
+		<state name="Montana" iso_code="12" country="BG" zone="Europe" />
+		<state name="Pazardzhik" iso_code="13" country="BG" zone="Europe" />
+		<state name="Pernik" iso_code="14" country="BG" zone="Europe" />
+		<state name="Pleven" iso_code="15" country="BG" zone="Europe" />
+		<state name="Plovdiv" iso_code="16" country="BG" zone="Europe" />
+		<state name="Razgrad" iso_code="17" country="BG" zone="Europe" />
+		<state name="Ruse" iso_code="18" country="BG" zone="Europe" />
+		<state name="Shumen" iso_code="27" country="BG" zone="Europe" />
+		<state name="Silistra" iso_code="19" country="BG" zone="Europe" />
+		<state name="Sliven" iso_code="20" country="BG" zone="Europe" />
+		<state name="Smolyan" iso_code="21" country="BG" zone="Europe" />
+		<state name="Sofia (stolitsa)" iso_code="22" country="BG" zone="Europe" />
+		<state name="Sofia" iso_code="23" country="BG" zone="Europe" />
+		<state name="Stara Zagora" iso_code="24" country="BG" zone="Europe" />
+		<state name="Targovishte" iso_code="25" country="BG" zone="Europe" />
+		<state name="Varna" iso_code="03" country="BG" zone="Europe" />
+		<state name="Veliko Tarnovo" iso_code="04" country="BG" zone="Europe" />
+		<state name="Vidin" iso_code="05" country="BG" zone="Europe" />
+		<state name="Vratsa" iso_code="06" country="BG" zone="Europe" />
+		<state name="Yambol" iso_code="28" country="BG" zone="Europe" />
+	</states>
   <units>
     <unit type="weight" value="kg"/>
     <unit type="volume" value="L"/>

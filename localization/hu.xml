@@ -19,7 +19,7 @@
     <tax id="10" name="moms DK 25%" rate="25" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="11" name="km EE 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="12" name="IVA ES 21%" rate="21" auto-generated="1" from-eu-tax-group="virtual"/>
-    <tax id="13" name="ALV FI 24%" rate="24" auto-generated="1" from-eu-tax-group="virtual"/>
+    <tax id="13" name="ALV FI 25.5%" rate="25.5" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="14" name="TVA FR 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="15" name="VAT UK 20%" rate="20.0" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="16" name="ΦΠΑ GR 24%" rate="24" auto-generated="1" from-eu-tax-group="virtual"/>
@@ -225,6 +225,51 @@
       <taxRule iso_code_country="sk" id_tax="31"/>
     </taxRulesGroup>
   </taxes>
+	<states>
+		<state name="Bács-Kiskun" iso_code="BK" country="HU" zone="Europe" />
+		<state name="Baranya" iso_code="BA" country="HU" zone="Europe" />
+		<state name="Békés" iso_code="BE" country="HU" zone="Europe" />
+		<state name="Békéscsaba" iso_code="BC" country="HU" zone="Europe" />
+		<state name="Borsod-Abaúj-Zemplén" iso_code="BZ" country="HU" zone="Europe" />
+		<state name="Budapest" iso_code="BU" country="HU" zone="Europe" />
+		<state name="Csongrád-Csanád" iso_code="CS" country="HU" zone="Europe" />
+		<state name="Debrecen" iso_code="DE" country="HU" zone="Europe" />
+		<state name="Dunaújváros" iso_code="DU" country="HU" zone="Europe" />
+		<state name="Eger" iso_code="EG" country="HU" zone="Europe" />
+		<state name="Érd" iso_code="ER" country="HU" zone="Europe" />
+		<state name="Fejér" iso_code="FE" country="HU" zone="Europe" />
+		<state name="Győr" iso_code="GY" country="HU" zone="Europe" />
+		<state name="Győr-Moson-Sopron" iso_code="GS" country="HU" zone="Europe" />
+		<state name="Hajdú-Bihar" iso_code="HB" country="HU" zone="Europe" />
+		<state name="Heves" iso_code="HE" country="HU" zone="Europe" />
+		<state name="Hódmezővásárhely" iso_code="HV" country="HU" zone="Europe" />
+		<state name="Jász-Nagykun-Szolnok" iso_code="JN" country="HU" zone="Europe" />
+		<state name="Kaposvár" iso_code="KV" country="HU" zone="Europe" />
+		<state name="Kecskemét" iso_code="KM" country="HU" zone="Europe" />
+		<state name="Komárom-Esztergom" iso_code="KM" country="HU" zone="Europe" />
+		<state name="Miskolc" iso_code="MI" country="HU" zone="Europe" />
+		<state name="Nagykanizsa" iso_code="NK" country="HU" zone="Europe" />
+		<state name="Nógrád" iso_code="NO" country="HU" zone="Europe" />
+		<state name="Nyíregyháza" iso_code="NY" country="HU" zone="Europe" />
+		<state name="Pécs" iso_code="PS" country="HU" zone="Europe" />
+		<state name="Pest" iso_code="PE" country="HU" zone="Europe" />
+		<state name="Salgótarján" iso_code="ST" country="HU" zone="Europe" />
+		<state name="Somogy" iso_code="SO" country="HU" zone="Europe" />
+		<state name="Sopron" iso_code="SN" country="HU" zone="Europe" />
+		<state name="Szabolcs-Szatmár-Bereg" iso_code="SZ" country="HU" zone="Europe" />
+		<state name="Szeged" iso_code="SD" country="HU" zone="Europe" />
+		<state name="Székesfehérvár" iso_code="SF" country="HU" zone="Europe" />
+		<state name="Szekszárd" iso_code="SS" country="HU" zone="Europe" />
+		<state name="Szolnok" iso_code="SK" country="HU" zone="Europe" />
+		<state name="Szombathely" iso_code="SH" country="HU" zone="Europe" />
+		<state name="Tatabánya" iso_code="TB" country="HU" zone="Europe" />
+		<state name="Tolna" iso_code="TO" country="HU" zone="Europe" />
+		<state name="Vas" iso_code="VA" country="HU" zone="Europe" />
+		<state name="Veszprém" iso_code="VM" country="HU" zone="Europe" />
+		<state name="Veszprém city" iso_code="VE" country="HU" zone="Europe" />
+		<state name="Zala" iso_code="ZA" country="HU" zone="Europe" />
+		<state name="Zalaegerszeg" iso_code="ZE" country="HU" zone="Europe" />
+	</states>
   <units>
     <unit type="weight" value="kg"/>
     <unit type="volume" value="L"/>

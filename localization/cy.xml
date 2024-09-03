@@ -19,7 +19,7 @@
     <tax id="9" name="moms DK 25%" rate="25" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="10" name="km EE 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="11" name="IVA ES 21%" rate="21" auto-generated="1" from-eu-tax-group="virtual"/>
-    <tax id="12" name="ALV FI 24%" rate="24" auto-generated="1" from-eu-tax-group="virtual"/>
+    <tax id="12" name="ALV FI 25.5%" rate="25.5" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="13" name="TVA FR 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="14" name="VAT UK 20%" rate="20.0" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="15" name="ΦΠΑ GR 24%" rate="24" auto-generated="1" from-eu-tax-group="virtual"/>
@@ -195,6 +195,14 @@
       <taxRule iso_code_country="sk" id_tax="31"/>
     </taxRulesGroup>
   </taxes>
+	<states>
+		<state name="Ammochostos (Mağusa)" iso_code="04" country="CY" zone="Europe" />
+		<state name="Keryneia (Girne)" iso_code="06" country="CY" zone="Europe" />
+		<state name="Larnaka (Larnaka)" iso_code="03" country="CY" zone="Europe" />
+		<state name="Lefkosia (Lefkoşa)" iso_code="01" country="CY" zone="Europe" />
+		<state name="Lemesos (Leymasun)" iso_code="02" country="CY" zone="Europe" />
+		<state name="Pafos (Baf)" iso_code="05" country="CY" zone="Europe" />
+	</states>
   <units>
     <unit type="weight" value="kg"/>
     <unit type="volume" value="L"/>

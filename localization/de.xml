@@ -17,7 +17,7 @@
     <tax id="8" name="moms DK 25%" rate="25" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="9" name="km EE 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="10" name="IVA ES 21%" rate="21" auto-generated="1" from-eu-tax-group="virtual"/>
-    <tax id="11" name="ALV FI 24%" rate="24" auto-generated="1" from-eu-tax-group="virtual"/>
+    <tax id="11" name="ALV FI 25.5%" rate="25.5" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="12" name="TVA FR 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="13" name="VAT UK 20%" rate="20.0" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="14" name="ΦΠΑ GR 24%" rate="24" auto-generated="1" from-eu-tax-group="virtual"/>
@@ -193,6 +193,24 @@
       <taxRule iso_code_country="sk" id_tax="30"/>
     </taxRulesGroup>
   </taxes>
+	<states>
+		<state name="Baden-Württemberg" iso_code="BW" country="DE" zone="Europe" />
+		<state name="Bayern" iso_code="BY" country="DE" zone="Europe" />
+		<state name="Berlin" iso_code="BE" country="DE" zone="Europe" />
+		<state name="Brandenburg" iso_code="BB" country="DE" zone="Europe" />
+		<state name="Bremen" iso_code="HB" country="DE" zone="Europe" />
+		<state name="Hamburg" iso_code="HH" country="DE" zone="Europe" />
+		<state name="Hessen" iso_code="HE" country="DE" zone="Europe" />
+		<state name="Mecklenburg-Vorpommern" iso_code="MV" country="DE" zone="Europe" />
+		<state name="Niedersachsen" iso_code="NI" country="DE" zone="Europe" />
+		<state name="Nordrhein-Westfalen" iso_code="NW" country="DE" zone="Europe" />
+		<state name="Rheinland-Pfalz" iso_code="RP" country="DE" zone="Europe" />
+		<state name="Saarland" iso_code="SL" country="DE" zone="Europe" />
+		<state name="Sachsen" iso_code="SN" country="DE" zone="Europe" />
+		<state name="Sachsen-Anhalt" iso_code="ST" country="DE" zone="Europe" />
+		<state name="Schleswig-Holstein" iso_code="SH" country="DE" zone="Europe" />
+		<state name="Thüringen" iso_code="TH" country="DE" zone="Europe" />
+	</states>
   <units>
     <unit type="weight" value="kg"/>
     <unit type="volume" value="L"/>
