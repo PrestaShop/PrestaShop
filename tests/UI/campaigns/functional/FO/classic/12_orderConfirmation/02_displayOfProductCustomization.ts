@@ -148,7 +148,7 @@ describe('FO - Order confirmation : Display of product customization', async () 
       const orderDetails = await orderConfirmationPage.getOrderDetails(page);
       expect(orderDetails).to.contains('Payment method: '
         + `${dataPaymentMethods.wirePayment.displayName} Shipping method: `
-        + `${dataCarriers.myCarrier.name} ${dataCarriers.myCarrier.delay}`);
+        + `${dataCarriers.myCarrier.name} ${dataCarriers.myCarrier.transitName}`);
     });
 
     it('should check the products number', async function () {

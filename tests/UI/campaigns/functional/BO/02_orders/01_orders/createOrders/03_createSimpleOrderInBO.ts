@@ -59,7 +59,7 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
     deliveryAddress: dataAddresses.address_2,
     invoiceAddress: dataAddresses.address_2,
     deliveryOption: {
-      name: `${dataCarriers.clickAndCollect.name} - ${dataCarriers.clickAndCollect.delay}`,
+      name: `${dataCarriers.clickAndCollect.name} - ${dataCarriers.clickAndCollect.transitName}`,
       freeShipping: true,
     },
     paymentMethod: dataPaymentMethods.checkPayment,

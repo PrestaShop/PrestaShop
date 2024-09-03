@@ -191,7 +191,7 @@ describe('BO - Shipping - Carriers : Quick edit status and free shipping', async
       const carrierData = await checkoutPage.getCarrierData(page, 3);
       await Promise.all([
         expect(carrierData.name).to.equal(dataCarriers.myCheapCarrier.name),
-        expect(carrierData.delay).to.equal(dataCarriers.myCheapCarrier.delay),
+        expect(carrierData.transitName).to.equal(dataCarriers.myCheapCarrier.transitName),
         expect(carrierData.priceText).to.equal(`€${dataCarriers.myCheapCarrier.priceTTC.toFixed(2)} tax incl.`),
       ]);
     });
@@ -202,7 +202,7 @@ describe('BO - Shipping - Carriers : Quick edit status and free shipping', async
       const carrierData = await checkoutPage.getCarrierData(page, 2);
       await Promise.all([
         expect(carrierData.name).to.equal(dataCarriers.myCarrier.name),
-        expect(carrierData.delay).to.equal(dataCarriers.myCarrier.delay),
+        expect(carrierData.transitName).to.equal(dataCarriers.myCarrier.transitName),
         expect(carrierData.priceText).to.equal('Free'),
       ]);
     });

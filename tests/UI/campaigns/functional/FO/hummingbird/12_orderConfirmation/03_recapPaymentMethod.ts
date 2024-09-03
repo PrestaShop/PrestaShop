@@ -203,7 +203,7 @@ describe('FO - Order confirmation : Order details and totals - Recap of payment 
       expect(orderReferenceValue).to.contains(orderReference);
 
       const shippingMethod = await orderConfirmationPage.getShippingMethod(page);
-      expect(shippingMethod).to.contains(`${dataCarriers.clickAndCollect.name} - ${dataCarriers.clickAndCollect.delay}`);
+      expect(shippingMethod).to.contains(`${dataCarriers.clickAndCollect.name} - ${dataCarriers.clickAndCollect.transitName}`);
     });
   });
 

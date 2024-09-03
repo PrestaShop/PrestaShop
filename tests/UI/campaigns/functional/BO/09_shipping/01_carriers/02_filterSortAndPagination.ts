@@ -90,7 +90,7 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
             testIdentifier: 'filterByDelay',
             filterType: 'input',
             filterBy: 'delay',
-            filterValue: dataCarriers.clickAndCollect.delay,
+            filterValue: dataCarriers.clickAndCollect.transitName,
           },
       },
       {

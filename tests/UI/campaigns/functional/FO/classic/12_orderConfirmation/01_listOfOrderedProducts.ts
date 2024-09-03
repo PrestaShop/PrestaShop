@@ -224,7 +224,7 @@ describe('FO - Order confirmation : List of ordered products', async () => {
       const orderDetails = await orderConfirmationPage.getOrderDetails(page);
       expect(orderDetails).to.equal(`Order reference: ${orderReference} Payment method: `
         + `${dataPaymentMethods.wirePayment.displayName} Shipping method: `
-        + `${dataCarriers.myCarrier.name} ${dataCarriers.myCarrier.delay}`);
+        + `${dataCarriers.myCarrier.name} ${dataCarriers.myCarrier.transitName}`);
     });
 
     it('should check the details of the first product in list', async function () {
