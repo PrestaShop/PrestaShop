@@ -50,7 +50,7 @@ class CostsRangeType extends TranslatorAwareType
             ->add('to', HiddenType::class)
             ->add('price', MoneyWithSuffixType::class, [
                 'label' => $this->trans('Price (VAT excl.)', 'Admin.Shipping.Feature'),
-                'empty_data' => 0.0,
+                'empty_data' => '0.0', // string instead number needed for DecimalNumber.php validation
             ])
         ;
     }

@@ -63,6 +63,8 @@ class AddCarrierCommand
         private bool $isFree,
         int $shippingMethod,
         int $rangeBehavior,
+        /** @var int[] $zones */
+        private array $zones,
         array $associatedShopIds,
         private int $max_width = 0,
         private int $max_height = 0,
@@ -72,7 +74,7 @@ class AddCarrierCommand
     ) {
         $this->shippingMethod = new ShippingMethod($shippingMethod);
         $this->rangeBehavior = new OutOfRangeBehavior($rangeBehavior);
-        $this->associatedShopIds = array_map(fn (int $shopId) => new ShopId($shopId), $associatedShopIds);
+        $this->associatedShopIds = array_map(fn(int $shopId) => new ShopId($shopId), $associatedShopIds);
     }
 
     public function getName(): string
@@ -167,5 +169,13 @@ class AddCarrierCommand
     public function getAssociatedShopIds(): array
     {
         return $this->associatedShopIds;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getZones(): array
+    {
+        return $this->zones;
     }
 }

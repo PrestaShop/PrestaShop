@@ -24,67 +24,33 @@
  *-->
 <template>
   <div data-role="carrier-ranges-edit-modal">
-    <modal
-      v-if="isModalShown"
-      :modal-title="$t('modal.title')"
-      :confirm-label="$t('modal.apply')"
-      :cancel-label="$t('modal.cancel')"
-      :confirmation="true"
-      :close-on-click-outside="false"
-      @close="cancelChanges"
-      @confirm="applyChanges"
-      @mouseleave="mouseLeave"
-    >
+    <modal v-if="isModalShown" :modal-title="$t('modal.title')" :confirm-label="$t('modal.apply')"
+      :cancel-label="$t('modal.cancel')" :confirmation="true" :close-on-click-outside="false" @close="cancelChanges"
+      @confirm="applyChanges" @mouseleave="mouseLeave">
       <template #header>
         <h5 class="modal-title">
           {{ $t('modal.title') }}
         </h5>
       </template>
       <template #body>
-        <div
-          class="alert alert-danger"
-          v-if="overlappingAlert"
-          role="alert"
-        >
+        <div class="alert alert-danger" v-if="overlappingAlert" role="alert">
           {{ $t('modal.overlappingAlert') }}
         </div>
         <div class="table-container">
-          <table
-            class="table table-carrier-ranges-modal"
-            @drop="dragDrop"
-          >
+          <table class="table table-carrier-ranges-modal">
             <thead>
               <tr>
-                <th/>
+                <th />
                 <th>{{ $t('modal.col.from') }}</th>
                 <th>{{ $t('modal.col.to') }} </th>
                 <th>{{ $t('modal.col.action') }}</th>
               </tr>
             </thead>
             <tbody :key="refreshKey">
-              <template
-                :key="i"
-                v-for="r,i in ranges"
-              >
-                <tr
-                  :data-row="i"
-                  draggable="true"
-                  @dragstart="dragStart(i)"
-                  @dragover.stop.prevent="(e) => dragOver(e, i)"
-                  @dragend="dragEnd"
-                >
+              <template :key="i" v-for="r, i in ranges">
+                <tr :data-row="i">
                   <td>
-                    <button
-                      type="button"
-                      class="btn-drag"
-                    >
-                      <i class="material-icons">drag_indicator</i>
-                    </button>
-                    <button
-                      type="button"
-                      class="btn-add"
-                      @click.prevent="addRange(i)"
-                    >
+                    <button type="button" class="btn-add" @click.prevent="addRange(i)">
                       <i class="material-icons">add</i>
                     </button>
                   </td>
@@ -93,12 +59,7 @@
                       <div class="input-group-prepend">
                         <span class="input-group-text">{{ this.symbol }}</span>
                       </div>
-                      <input
-                        type="number"
-                        class="form-control form-from"
-                        inputmode="decimal"
-                        v-model="r.from"
-                      >
+                      <input type="number" class="form-control form-from" inputmode="decimal" v-model="r.from">
                     </div>
                   </td>
                   <td>
@@ -106,20 +67,11 @@
                       <div class="input-group-prepend">
                         <span class="input-group-text">{{ this.symbol }}</span>
                       </div>
-                      <input
-                        type="number"
-                        class="form-control form-to"
-                        inputmode="decimal"
-                        v-model="r.to"
-                      >
+                      <input type="number" class="form-control form-to" inputmode="decimal" v-model="r.to">
                     </div>
                   </td>
                   <td align="center">
-                    <button
-                      type="button"
-                      @click.prevent="deleteRange(i)"
-                      class="btn-delete"
-                    >
+                    <button type="button" @click.prevent="deleteRange(i)" class="btn-delete">
                       <i class="material-icons">delete</i>
                     </button>
                   </td>
@@ -128,11 +80,7 @@
             </tbody>
           </table>
 
-          <button
-            @click.prevent="addRange()"
-            type="button"
-            class="btn btn-sm btn-outline-secondary mt-2"
-          >
+          <button @click.prevent="addRange()" type="button" class="btn btn-sm btn-outline-secondary mt-2">
             <i class="material-icons">add_box</i>
             {{ $t('modal.addRange') }}
           </button>
@@ -143,249 +91,205 @@
 </template>
 
 <script lang="ts">
-  import Modal from '@PSVue/components/Modal.vue';
-  import {defineComponent} from 'vue';
-  import CarrierFormEventMap from '@pages/carrier/form/carrier-form-event-map';
-  import {Range} from '@pages/carrier/form/types';
+import Modal from '@PSVue/components/Modal.vue';
+import { defineComponent } from 'vue';
+import CarrierFormEventMap from '@pages/carrier/form/carrier-form-event-map';
+import { Range } from '@pages/carrier/form/types';
 
-  interface CarrierRangesModalStates {
-    isModalShown: boolean, // define if the modal is shown
-    ranges: Range[], // define the ranges currently displayed
-    savedRanges: Range[], // define the ranges saved before the changes
-    dragIndex: null|number, // store the index of the range being dragged
-    refreshKey: number, // force the refresh of the table by incrementing this key
-    errors: boolean, // define if there are errors in the ranges
-    overlappingAlert: boolean, // define if there are overlapping ranges (and display an alert)
-    symbol: string, // define the current symbol used in function of the shipping method
-  }
+interface CarrierRangesModalStates {
+  isModalShown: boolean, // define if the modal is shown
+  ranges: Range[], // define the ranges currently displayed
+  savedRanges: Range[], // define the ranges saved before the changes
+  refreshKey: number, // force the refresh of the table by incrementing this key
+  errors: boolean, // define if there are errors in the ranges
+  overlappingAlert: boolean, // define if there are overlapping ranges (and display an alert)
+  symbol: string, // define the current symbol used in function of the shipping method
+}
 
-  export default defineComponent({
-    name: 'CarrierRangesModal',
-    components: {Modal},
-    data(): CarrierRangesModalStates {
-      return {
-        isModalShown: false,
-        ranges: [],
-        savedRanges: [],
-        dragIndex: null,
-        refreshKey: 0,
-        errors: false,
-        overlappingAlert: false,
-        symbol: '',
-      };
+export default defineComponent({
+  name: 'CarrierRangesModal',
+  components: { Modal },
+  data(): CarrierRangesModalStates {
+    return {
+      isModalShown: false,
+      ranges: [],
+      savedRanges: [],
+      refreshKey: 0,
+      errors: false,
+      overlappingAlert: false,
+      symbol: '',
+    };
+  },
+  props: {
+    eventEmitter: {
+      type: Object,
+      required: true,
     },
-    props: {
-      eventEmitter: {
-        type: Object,
-        required: true,
-      },
+  },
+  mounted() {
+    // If we need to open this modal
+    this.eventEmitter.on(CarrierFormEventMap.openRangeSelectionModal, (ranges: Range[]) => {
+      this.ranges = ranges ?? [];
+      this.openModal();
+    });
+    // If we need to change the shipping method symbol
+    this.eventEmitter.on(CarrierFormEventMap.shippingMethodChange, (symbol: string) => { this.symbol = symbol; });
+  },
+  methods: {
+    openModal() {
+      // We add a class to the body to prevent scrolling
+      document.querySelector('body')?.classList.add('overflow-hidden');
+      this.isModalShown = true;
+
+      // We save the ranges to be able to cancel the changes
+      this.savedRanges.splice(0, this.savedRanges.length);
+      this.ranges.forEach((range) => this.savedRanges.push({ from: range.from, to: range.to }));
+
+      // We add an empty range if there is none
+      if (this.ranges.length === 0) {
+        this.ranges.push({ from: null, to: null });
+      }
+
+      // We reset the errors
+      this.errors = false;
+      this.overlappingAlert = false;
     },
-    mounted() {
-      // If we need to open this modal
-      this.eventEmitter.on(CarrierFormEventMap.openRangeSelectionModal, (ranges: Range[]) => {
-        this.ranges = ranges ?? [];
-        this.openModal();
-      });
-      // If we need to change the shipping method symbol
-      this.eventEmitter.on(CarrierFormEventMap.shippingMethodChange, (symbol: string) => { this.symbol = symbol; });
+    closeModal() {
+      // We remove the class to allow scrolling
+      document.querySelector('body')?.classList.remove('overflow-hidden');
+      this.isModalShown = false;
+      this.refreshKey = 0;
     },
-    methods: {
-      openModal() {
-        // We add a class to the body to prevent scrolling
-        document.querySelector('body')?.classList.add('overflow-hidden');
-        this.isModalShown = true;
+    cancelChanges() {
+      // We cancel the changes and close the modal
+      this.ranges.splice(0, this.ranges.length);
+      this.savedRanges.forEach((range) => this.ranges.push({ from: range.from, to: range.to }));
+      // We remove empty ranges
+      this.ranges = this.ranges.filter((range) => range.from !== null || range.to !== null);
+      // Then, we close the modal
+      this.closeModal();
+    },
+    applyChanges() {
+      // We remove empty ranges
+      this.ranges = this.ranges.filter((range) => range.from !== null || range.to !== null);
+      // We validate the changes
+      this.validateChanges();
 
-        // We save the ranges to be able to cancel the changes
-        this.savedRanges.splice(0, this.savedRanges.length);
-        this.ranges.forEach((range) => this.savedRanges.push({from: range.from, to: range.to}));
-
-        // We add an empty range if there is none
-        if (this.ranges.length === 0) {
-          this.ranges.push({from: null, to: null});
-        }
-
-        // We reset the errors
-        this.errors = false;
-        this.overlappingAlert = false;
-      },
-      closeModal() {
-        // We remove the class to allow scrolling
-        document.querySelector('body')?.classList.remove('overflow-hidden');
-        this.isModalShown = false;
-        this.refreshKey = 0;
-      },
-      cancelChanges() {
-        // We cancel the changes and close the modal
-        this.ranges.splice(0, this.ranges.length);
-        this.savedRanges.forEach((range) => this.ranges.push({from: range.from, to: range.to}));
-        // We remove empty ranges
-        this.ranges = this.ranges.filter((range) => range.from !== null || range.to !== null);
-        // Then, we close the modal
+      if (!this.errors) {
+        // We emit the new ranges
+        this.eventEmitter.emit(CarrierFormEventMap.rangesUpdated, this.ranges);
+        // We close the modal
         this.closeModal();
-      },
-      applyChanges() {
-        // We remove empty ranges
-        this.ranges = this.ranges.filter((range) => range.from !== null || range.to !== null);
-        // We validate the changes
-        this.validateChanges();
-
-        if (!this.errors) {
-          // We emit the new ranges
-          this.eventEmitter.emit(CarrierFormEventMap.rangesUpdated, this.ranges);
-          // We close the modal
-          this.closeModal();
-        }
-      },
-      validateChanges() {
-        const table = <HTMLElement> document.querySelector('.table-carrier-ranges-modal');
-        // Reset errors
-        this.errors = false;
-        this.overlappingAlert = false;
-        // We remove the error class from all inputs already in error
-        table.querySelectorAll('input.is-invalid').forEach((input) => {
-          input.classList.remove('is-invalid');
-        });
-
-        // We sort the ranges by min values
-        this.ranges.sort((a, b) => (a.from || 0) - (b.from || 0));
-
-        // We check ranges
-        let saveMax: null|number = null;
-        this.ranges.forEach((range, index) => {
-          // Check if all fields are filled
-          if (range.from === null) {
-            table.querySelectorAll(`tr[data-row="${index}"] input.form-from`)
-              .forEach((input) => {
-                input.classList.add('is-invalid');
-              });
-            this.errors = true;
-          }
-          if (range.to === null) {
-            table.querySelectorAll(`tr[data-row="${index}"] input.form-to`)
-              .forEach((input) => {
-                input.classList.add('is-invalid');
-              });
-            this.errors = true;
-          }
-          // Check overlapping
-          if (saveMax !== null && range.from !== null && range.from < saveMax) {
-            table.querySelectorAll(`tr[data-row="${index - 1}"] input.form-to`)
-              .forEach((input) => {
-                input.classList.add('is-invalid');
-              });
-            table.querySelectorAll(`tr[data-row="${index}"] input.form-from`)
-              .forEach((input) => {
-                input.classList.add('is-invalid');
-              });
-            this.errors = true;
-            this.overlappingAlert = true;
-          }
-
-          // Check from < to for each range
-          if (range.to !== null && range.from !== null && range.to <= range.from) {
-            table.querySelectorAll(`tr[data-row="${index}"] input.form-to`)
-              .forEach((input) => {
-                input.classList.add('is-invalid');
-              });
-            this.errors = true;
-          }
-
-          saveMax = range.to;
-        });
-      },
-      addRange(index: undefined|number) {
-        // Add new range at the index specified, at the bottom if not specified
-        // (with "from" already set to the previous "to")
-        if (index === undefined) {
-          this.ranges.push({from: this.ranges[this.ranges.length - 1]?.to, to: null});
-        } else {
-          this.ranges.splice(index + 1, 0, {from: this.ranges[index]?.to, to: null});
-        }
-      },
-      deleteRange(rangeIndex: number) {
-        // We remove the selected range
-        this.ranges.splice(rangeIndex, 1);
-        // We add an empty range if there is none
-        if (this.ranges.length === 0) {
-          this.ranges.push({from: null, to: null});
-        }
-      },
-      dragStart(rangeIndex: number) {
-        // We save the current range index to know which one is being dragged
-        this.dragIndex = rangeIndex;
-      },
-      dragOver(event: DragEvent, rangeIndex: number) {
-        // We retrieve the row being dragged and the row being hovered
-        const table = <HTMLElement> document.querySelector('.table-carrier-ranges-modal');
-        const row = <HTMLElement> table.querySelector(`tr[data-row="${this.dragIndex}"]`);
-        const rowHover = <HTMLElement> table.querySelector(`tr[data-row="${rangeIndex}"]`);
-
-        // We move the dragged row before or after the hovered row depending on the position of the mouse on it
-        if (row !== null && rowHover !== null) {
-          if (event.offsetY > rowHover.offsetHeight / 2) {
-            rowHover.parentNode?.insertBefore(row, rowHover.nextSibling);
-          } else {
-            rowHover.parentNode?.insertBefore(row, rowHover);
-          }
-        }
-      },
-      dragEnd() {
-        // We reorder the ranges according to the new order when the drag ending
-        const rangesNewOrder:Range[] = [];
-        const rows = document.querySelectorAll('.table-carrier-ranges-modal tbody tr[data-row]');
-        rows.forEach((row) => {
-          const rowId = row.getAttribute('data-row');
-
-          if (rowId !== null) {
-            rangesNewOrder.push(this.ranges[parseInt(rowId, 10)]);
-          }
-        });
-
-        // We update the ranges and +1 to the refreshKey to force the refresh
-        this.ranges.splice(0, this.ranges.length, ...rangesNewOrder);
-        this.dragIndex = null;
-        this.refreshKey += 1;
-      },
+      }
     },
-  });
+    validateChanges() {
+      const table = <HTMLElement>document.querySelector('.table-carrier-ranges-modal');
+      // Reset errors
+      this.errors = false;
+      this.overlappingAlert = false;
+      // We remove the error class from all inputs already in error
+      table.querySelectorAll('input.is-invalid').forEach((input) => {
+        input.classList.remove('is-invalid');
+      });
+
+      // We sort the ranges by min values
+      this.ranges.sort((a, b) => (a.from || 0) - (b.from || 0));
+
+      // We check ranges
+      let saveMax: null | number = null;
+      this.ranges.forEach((range, index) => {
+        // Check if all fields are filled
+        if (range.from === null) {
+          table.querySelectorAll(`tr[data-row="${index}"] input.form-from`)
+            .forEach((input) => {
+              input.classList.add('is-invalid');
+            });
+          this.errors = true;
+        }
+        if (range.to === null) {
+          table.querySelectorAll(`tr[data-row="${index}"] input.form-to`)
+            .forEach((input) => {
+              input.classList.add('is-invalid');
+            });
+          this.errors = true;
+        }
+        // Check overlapping
+        if (saveMax !== null && range.from !== null && range.from < saveMax) {
+          table.querySelectorAll(`tr[data-row="${index - 1}"] input.form-to`)
+            .forEach((input) => {
+              input.classList.add('is-invalid');
+            });
+          table.querySelectorAll(`tr[data-row="${index}"] input.form-from`)
+            .forEach((input) => {
+              input.classList.add('is-invalid');
+            });
+          this.errors = true;
+          this.overlappingAlert = true;
+        }
+
+        // Check from < to for each range
+        if (range.to !== null && range.from !== null && range.to <= range.from) {
+          table.querySelectorAll(`tr[data-row="${index}"] input.form-to`)
+            .forEach((input) => {
+              input.classList.add('is-invalid');
+            });
+          this.errors = true;
+        }
+
+        saveMax = range.to;
+      });
+    },
+    addRange(index: undefined | number) {
+      // Add new range at the index specified, at the bottom if not specified
+      // (with "from" already set to the previous "to")
+      if (index === undefined) {
+        this.ranges.push({ from: this.ranges[this.ranges.length - 1]?.to, to: null });
+      } else {
+        this.ranges.splice(index + 1, 0, { from: this.ranges[index]?.to, to: null });
+      }
+    },
+    deleteRange(rangeIndex: number) {
+      // We remove the selected range
+      this.ranges.splice(rangeIndex, 1);
+      // We add an empty range if there is none
+      if (this.ranges.length === 0) {
+        this.ranges.push({ from: null, to: null });
+      }
+    },
+  },
+});
 </script>
 
 <style lang="scss" type="text/scss" scoped>
-  @import '~@scss/config/_settings.scss';
+@import '~@scss/config/_settings.scss';
 
-  .modal {
-    .modal-footer {
-      justify-content: space-between;
-    }
+.modal {
+  .modal-footer {
+    justify-content: space-between;
+  }
 
-    .table {
-      margin-bottom: 0;
-      border-bottom: 0;
+  .table {
+    margin-bottom: 0;
+    border-bottom: 0;
 
-      tr td {
-        border: 0;
-      }
-    }
-
-    .btn-delete, .btn-drag, .btn-add {
-      border: none;
-      background: none;
-
-      i {
-        font-size: 1.2em;
-      }
-    }
-
-    .btn-drag {
-      cursor: move!important;
-      outline: none;
-      user-select: none;
-    }
-
-    .table-container {
-      max-height: 60vh;
-      overflow-y: auto;
+    tr td {
+      border: 0;
     }
   }
 
+  .btn-delete,
+  .btn-add {
+    border: none;
+    background: none;
+
+    i {
+      font-size: 1.2em;
+    }
+  }
+
+  .table-container {
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+}
 </style>

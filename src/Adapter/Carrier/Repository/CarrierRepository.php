@@ -208,6 +208,56 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
         );
     }
 
+    /**
+     * Return all zones associated for the given carrier
+     *
+     * @param CarrierId $carrierId
+     *
+     * @return array
+     */
+    public function getAssociatedZones(CarrierId $carrierId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $result = $qb->select("id_zone")
+            ->from($this->prefix . "carrier_zone")
+            ->where("id_carrier = :carrierId")
+            ->setParameter("carrierId", $carrierId->getValue())
+            ->executeQuery()
+            ->fetchFirstColumn();
+
+        return $result;
+    }
+
+    /**
+     * We add the association between the carrier and the zone.
+     *
+     * @param CarrierId $carrierId
+     * @param int[] $zoneIds
+     *
+     * @return void
+     */
+    public function updateAssociatedZones(CarrierId $carrierId, array $zoneIds): void
+    {
+        $this->connection->beginTransaction();
+
+        $this->connection->delete($this->prefix . 'carrier_zone', [
+            'id_carrier' => $carrierId->getValue(),
+        ]);
+
+        foreach ($zoneIds as $zoneId) {
+            $this->connection->insert(
+                $this->prefix . 'carrier_zone',
+                [
+                    'id_carrier' => $carrierId->getValue(),
+                    'id_zone' => $zoneId,
+                ]
+
+            );
+        }
+
+        $this->connection->commit();
+    }
+
     public function getTaxRulesGroup(CarrierId $carrierId, ShopConstraint $shopConstraint): int
     {
         $qb = $this->connection->createQueryBuilder();
