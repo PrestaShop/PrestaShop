@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\Customiz
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
 use PrestaShopException;
 use Product;
+use Validate;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -198,6 +199,10 @@ final class AddCustomizationHandler extends AbstractCartHandler implements AddCu
 
         if (strlen($value) > CustomizationSettings::MAX_TEXT_LENGTH) {
             throw new CustomizationConstraintException(sprintf('Customization field #%s value is too long', $customFieldId), CustomizationConstraintException::FIELD_IS_TOO_LONG);
+        }
+
+        if (!Validate::isMessage($value)) {
+            throw new CustomizationConstraintException(sprintf('Customization field #%s is invalid message', $customFieldId), CustomizationConstraintException::FIELD_MESSAGE_IS_INVALID);
         }
     }
 }

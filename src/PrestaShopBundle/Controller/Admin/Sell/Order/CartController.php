@@ -576,6 +576,10 @@ class CartController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error',
                     ['%limit%' => CustomizationSettings::MAX_TEXT_LENGTH]
                 ),
+                CustomizationConstraintException::FIELD_MESSAGE_IS_INVALID => $this->trans(
+                    'Custom field text is invalid.',
+                    'Admin.Notifications.Error'
+                ),
             ],
             ProductCustomizationNotFoundException::class => $this->trans(
                 'Product customization could not be found. Go to Catalog > Products to customize the product.',
