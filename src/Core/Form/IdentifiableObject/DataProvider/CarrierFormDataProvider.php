@@ -72,10 +72,8 @@ class CarrierFormDataProvider implements FormDataProviderInterface
                 'shipping_method' => $carrier->getShippingMethod(),
                 'id_tax_rule_group' => $carrier->getIdTaxRuleGroup(),
                 'range_behavior' => $carrier->getRangeBehavior(),
-                'ranges_costs_control' => [
-                    'zones' => $carrierRanges->getZonesIds(),
-                    'ranges' => $this->formatRangesData($carrierRanges),
-                ],
+                'zones' => $carrier->getZones(),
+                'ranges' => $this->formatRangesData($carrierRanges),
                 'ranges_costs' => $this->formatRangesCostsData($carrier, $carrierRanges),
             ],
             'size_weight_settings' => [

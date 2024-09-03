@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Carrier\QueryHandler;
 
-use Carrier;
 use PrestaShop\PrestaShop\Adapter\Carrier\Repository\CarrierRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetCarrierForEditing;
@@ -50,6 +49,7 @@ final class GetCarrierForEditingHandler implements GetCarrierForEditingHandlerIn
     public function handle(GetCarrierForEditing $query): EditableCarrier
     {
         $carrier = $this->carrierRepository->get($query->getCarrierId());
+        $zones = $this->carrierRepository->getAssociatedZones($query->getCarrierId());
 
         $logoPath = null;
         if (file_exists(_PS_SHIP_IMG_DIR_ . $query->getCarrierId()->getValue() . '.jpg')) {
@@ -75,8 +75,10 @@ final class GetCarrierForEditingHandler implements GetCarrierForEditingHandlerIn
             $this->carrierRepository->getTaxRulesGroup($query->getCarrierId(), $query->getShopConstraint()),
             (int) $carrier->range_behavior,
             $carrier->getAssociatedShops(),
+            $zones,
             $logoPath,
             $this->carrierRepository->getOrdersCount($query->getCarrierId()),
         );
     }
 }
+

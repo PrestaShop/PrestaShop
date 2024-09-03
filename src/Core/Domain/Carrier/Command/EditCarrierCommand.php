@@ -41,6 +41,7 @@ class EditCarrierCommand
 {
     private CarrierId $carrierId;
     private ?string $name;
+    /** @var string[] $localizedDelay */
     private ?array $localizedDelay;
     private ?int $grade;
     private ?string $trackingUrl;
@@ -57,6 +58,8 @@ class EditCarrierCommand
     private ?ShippingMethod $shippingMethod;
     private ?int $idTaxRuleGroup;
     private ?OutOfRangeBehavior $rangeBehavior;
+    /** @var int[] $zones */
+    private ?array $zones;
 
     private ?array $associatedShopIds;
 
@@ -294,6 +297,24 @@ class EditCarrierCommand
      */
     public function setAssociatedShopIds(array $associatedShopIds): void
     {
-        $this->associatedShopIds = array_map(fn (int $shopId) => new ShopId($shopId), $associatedShopIds);
+        $this->associatedShopIds = array_map(fn(int $shopId) => new ShopId($shopId), $associatedShopIds);
+    }
+
+    /**
+     * @return int[] | null
+     */
+    public function getZones(): ?array
+    {
+        return $this->zones ?? null;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function setZones(array $zones): self
+    {
+        $this->zones = $zones;
+
+        return $this;
     }
 }

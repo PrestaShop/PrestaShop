@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler;
 
-use Carrier;
 use PrestaShop\PrestaShop\Adapter\Carrier\Repository\CarrierRangeRepository;
 use PrestaShop\PrestaShop\Adapter\Carrier\Repository\CarrierRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;

@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler;
 
-use Carrier;
 use PrestaShop\PrestaShop\Adapter\Carrier\Repository\CarrierRepository;
 use PrestaShop\PrestaShop\Adapter\Carrier\Validate\CarrierValidator;
 use PrestaShop\PrestaShop\Adapter\File\Uploader\CarrierLogoFileUploader;
@@ -59,8 +58,6 @@ class EditCarrierHandler implements EditCarrierHandlerInterface
      */
     public function handle(EditCarrierCommand $command): CarrierId
     {
-        // Get new version of carrier if needed
-        $carrier = $this->carrierRepository->get($command->getCarrierId());
         $newCarrier = $this->carrierRepository->getEditableOrNewVersion($command->getCarrierId());
         $newCarrierId = new CarrierId($newCarrier->id);
 
@@ -151,7 +148,7 @@ class EditCarrierHandler implements EditCarrierHandlerInterface
         );
 
         if (null !== $command->getAssociatedShopIds()) {
-            $this->carrierRepository->updateAssociatedShops($newCarrierId, array_map(fn (ShopId $shopId) => $shopId->getValue(), $command->getAssociatedShopIds()));
+            $this->carrierRepository->updateAssociatedShops($newCarrierId, array_map(fn(ShopId $shopId) => $shopId->getValue(), $command->getAssociatedShopIds()));
         }
 
         if ($command->getLogoPathName() !== null) {
@@ -161,6 +158,8 @@ class EditCarrierHandler implements EditCarrierHandlerInterface
                 $this->carrierLogoFileUploader->upload($command->getLogoPathName(), $newCarrier->id);
             }
         }
+
+        $this->carrierRepository->updateAssociatedZones($newCarrierId, $command->getZones());
 
         return $newCarrierId;
     }

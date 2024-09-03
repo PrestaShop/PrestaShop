@@ -53,9 +53,14 @@ class EditableCarrier
         private int $idTaxRuleGroup,
         private int $rangeBehavior,
         private array $associatedShopIds,
+        private array $zones,
         private ?string $logoPath = null,
         private int $ordersCount = 0,
-    ) {
+    ) {}
+
+    public function getZones(): array
+    {
+        return $this->zones;
     }
 
     public function getCarrierId(): int

@@ -149,15 +149,6 @@ class CarrierRangeRepository
                     ]
                 );
             }
-
-            // We add the association between the carrier and the zone.
-            $this->connection->insert(
-                $this->dbPrefix . 'carrier_zone',
-                [
-                    'id_carrier' => $carrierId->getValue(),
-                    'id_zone' => $idZone,
-                ]
-            );
         }
 
         // Commit transaction
@@ -195,14 +186,6 @@ class CarrierRangeRepository
                 ->setParameter('carrierId', $carrierId->getValue())
                 ->executeQuery();
         }
-
-        // Then , we delete carriers association with zones
-        $this->connection->delete(
-            $this->dbPrefix . 'carrier_zone',
-            [
-                'id_carrier' => $carrierId->getValue(),
-            ]
-        );
     }
 
     private function getRangeMethodTable(int $calculatingMethod): string

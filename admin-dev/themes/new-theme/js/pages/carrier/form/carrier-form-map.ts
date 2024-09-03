@@ -25,10 +25,10 @@
 
 export default {
   freeShippingInput: 'input[name="carrier[shipping_settings][is_free]"]',
-  zonesInput: '#carrier_shipping_settings_ranges_costs_control_zones',
+  zonesInput: '#carrier_shipping_settings_zones',
   zoneIdOption: (zoneId: number|string): string => `option[value="${zoneId}"]`,
   navigationBar: '#form-nav',
-  rangesInput: '#carrier_shipping_settings_ranges_costs_control_ranges_data',
+  rangesInput: '#carrier_shipping_settings_ranges_data',
   rangesSelectionAppId: '#carrier_shipping_settings_ranges-app',
   addRangeButton: '.js-add-carrier-ranges-btn',
   shippingMethodRow: '#carrier_shipping_settings_shipping_method',
@@ -51,7 +51,7 @@ export default {
     '#carrier_shipping_settings_has_additional_handling_fee',
     '#carrier_shipping_settings_shipping_method',
     '#carrier_shipping_settings_range_behavior',
-    '#carrier_shipping_settings_ranges_costs_control',
+    '#carrier_shipping_settings_ranges',
     '#carrier_shipping_settings_ranges_costs',
   ],
 };
