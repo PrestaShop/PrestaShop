@@ -2051,7 +2051,7 @@ class AdminControllerCore extends Controller
                 'employee' => $this->context->employee,
                 'search_type' => Tools::getValue('bo_search_type'),
                 'bo_query' => Tools::safeOutput(Tools::getValue('bo_query')),
-                'quick_access' => empty($quick_access) ? false : $quick_access,
+                'quick_access' => empty($quick_access) ? [] : $quick_access,
                 'multi_shop' => Shop::isFeatureActive(),
                 'shop_list' => $helperShop->getRenderedShopList(),
                 'current_shop_name' => $helperShop->getCurrentShopName(),
