@@ -7,7 +7,7 @@
     <language iso_code="fi"/>
   </languages>
   <taxes>
-    <tax id="1" name="ALV FI 24%" rate="24" eu-tax-group="virtual"/>
+    <tax id="1" name="ALV FI 25.5%" rate="25.5" eu-tax-group="virtual"/>
     <tax id="2" name="ALV FI 14%" rate="14"/>
     <tax id="3" name="ALV FI 10%" rate="10"/>
     <tax id="4" name="USt. AT 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
@@ -38,7 +38,7 @@
     <tax id="29" name="Moms SE 25%" rate="25" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="30" name="DDV SI 22%" rate="22" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="31" name="DPH SK 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
-    <taxRulesGroup name="FI Standard Rate (24%)">
+    <taxRulesGroup name="FI Standard Rate (25.5%)">
       <taxRule iso_code_country="be" id_tax="1"/>
       <taxRule iso_code_country="bg" id_tax="1"/>
       <taxRule iso_code_country="cz" id_tax="1"/>
@@ -225,6 +225,27 @@
       <taxRule iso_code_country="sk" id_tax="31"/>
     </taxRulesGroup>
   </taxes>
+	<states>
+		<state name="Ahvenanmaan maakunta" iso_code="01" country="FI" zone="Europe" />
+		<state name="Etelä-Karjala" iso_code="02" country="FI" zone="Europe" />
+		<state name="Etelä-Pohjanmaa" iso_code="03" country="FI" zone="Europe" />
+		<state name="Etelä-Savo" iso_code="04" country="FI" zone="Europe" />
+		<state name="Kainuu" iso_code="05" country="FI" zone="Europe" />
+		<state name="Kanta-Häme" iso_code="06" country="FI" zone="Europe" />
+		<state name="Keski-Pohjanmaa" iso_code="07" country="FI" zone="Europe" />
+		<state name="Keski-Suomi" iso_code="08" country="FI" zone="Europe" />
+		<state name="Kymenlaakso" iso_code="09" country="FI" zone="Europe" />
+		<state name="Lappi" iso_code="10" country="FI" zone="Europe" />
+		<state name="Pirkanmaa" iso_code="11" country="FI" zone="Europe" />
+		<state name="Pohjanmaa" iso_code="12" country="FI" zone="Europe" />
+		<state name="Pohjois-Karjala" iso_code="13" country="FI" zone="Europe" />
+		<state name="Pohjois-Pohjanmaa" iso_code="14" country="FI" zone="Europe" />
+		<state name="Pohjois-Savo" iso_code="15" country="FI" zone="Europe" />
+		<state name="Päijät-Häme" iso_code="16" country="FI" zone="Europe" />
+		<state name="Satakunta" iso_code="17" country="FI" zone="Europe" />
+		<state name="Uusimaa" iso_code="18" country="FI" zone="Europe" />
+		<state name="Varsinais-Suomi" iso_code="19" country="FI" zone="Europe" />
+	</states>
   <units>
     <unit type="weight" value="kg"/>
     <unit type="volume" value="L"/>

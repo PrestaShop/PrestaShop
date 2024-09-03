@@ -21,7 +21,7 @@
     <tax id="12" name="moms DK 25%" rate="25" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="13" name="km EE 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="14" name="IVA ES 21%" rate="21" auto-generated="1" from-eu-tax-group="virtual"/>
-    <tax id="15" name="ALV FI 24%" rate="24" auto-generated="1" from-eu-tax-group="virtual"/>
+    <tax id="15" name="ALV FI 25.5%" rate="25.5" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="16" name="TVA FR 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="17" name="VAT UK 20%" rate="20.0" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="18" name="ΦΠΑ GR 24%" rate="24" auto-generated="1" from-eu-tax-group="virtual"/>

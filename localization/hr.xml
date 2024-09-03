@@ -20,7 +20,7 @@
     <tax id="11" name="moms DK 25%" rate="25" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="12" name="km EE 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="13" name="IVA ES 21%" rate="21" auto-generated="1" from-eu-tax-group="virtual"/>
-    <tax id="14" name="ALV FI 24%" rate="24" auto-generated="1" from-eu-tax-group="virtual"/>
+    <tax id="14" name="ALV FI 25.5%" rate="25.5" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="15" name="TVA FR 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="16" name="VAT UK 20%" rate="20.0" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="17" name="&#x3A6;&#x3A0;&#x391; GR 24%" rate="24" auto-generated="1" from-eu-tax-group="virtual"/>
@@ -195,6 +195,29 @@
       <taxRule iso_code_country="sk" id_tax="32"/>
     </taxRulesGroup>
   </taxes>
+	<states>
+		<state name="Bjelovarsko-bilogorska županija" iso_code="07" country="HR" zone="Europe" />
+		<state name="Brodsko-posavska županija" iso_code="12" country="HR" zone="Europe" />
+		<state name="Dubrovačko-neretvanska županija" iso_code="19" country="HR" zone="Europe" />
+		<state name="Grad Zagreb" iso_code="21" country="HR" zone="Europe" />
+		<state name="Istarska županija" iso_code="18" country="HR" zone="Europe" />
+		<state name="Karlovačka županija" iso_code="04" country="HR" zone="Europe" />
+		<state name="Koprivničko-križevačka županija" iso_code="06" country="HR" zone="Europe" />
+		<state name="Krapinsko-zagorska županija" iso_code="02" country="HR" zone="Europe" />
+		<state name="Ličko-senjska županija" iso_code="09" country="HR" zone="Europe" />
+		<state name="Međimurska županija" iso_code="20" country="HR" zone="Europe" />
+		<state name="Osječko-baranjska županija" iso_code="14" country="HR" zone="Europe" />
+		<state name="Požeško-slavonska županija" iso_code="11" country="HR" zone="Europe" />
+		<state name="Primorsko-goranska županija" iso_code="08" country="HR" zone="Europe" />
+		<state name="Šibensko-kninska županija" iso_code="15" country="HR" zone="Europe" />
+		<state name="Sisačko-moslavačka županija" iso_code="03" country="HR" zone="Europe" />
+		<state name="Splitsko-dalmatinska županija" iso_code="17" country="HR" zone="Europe" />
+		<state name="Varaždinska županija" iso_code="05" country="HR" zone="Europe" />
+		<state name="Virovitičko-podravska županija" iso_code="10" country="HR" zone="Europe" />
+		<state name="Vukovarsko-srijemska županija" iso_code="16" country="HR" zone="Europe" />
+		<state name="Zadarska županija" iso_code="13" country="HR" zone="Europe" />
+		<state name="Zagrebačka županija" iso_code="01" country="HR" zone="Europe" />
+	</states>
   <units>
     <unit type="weight" value="kg"/>
     <unit type="volume" value="L"/>

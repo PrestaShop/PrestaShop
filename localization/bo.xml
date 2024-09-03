@@ -13,6 +13,17 @@
 			<taxRule iso_code_country="bo" id_tax="1" />
 		</taxRulesGroup>
 	</taxes>
+	<states>
+		<state name="Chuquisaca" iso_code="H" country="BO" zone="South America" />
+		<state name="Cochabamba" iso_code="C" country="BO" zone="South America" />
+		<state name="El Beni" iso_code="B" country="BO" zone="South America" />
+		<state name="La Paz" iso_code="L" country="BO" zone="South America" />
+		<state name="Oruro" iso_code="O" country="BO" zone="South America" />
+		<state name="Pando" iso_code="N" country="BO" zone="South America" />
+		<state name="Potosí" iso_code="P" country="BO" zone="South America" />
+		<state name="Santa Cruz" iso_code="S" country="BO" zone="South America" />
+		<state name="Tarija" iso_code="T" country="BO" zone="South America" />
+	</states>
 	<units>
 		<unit type="weight" value="kg" />
 		<unit type="volume" value="L" />
