@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\AddCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\CommandHandler\AddCarrierHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CannotAddCarrierWithoutZoneException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 
 /**
@@ -57,6 +58,8 @@ class AddCarrierHandler implements AddCarrierHandlerInterface
      */
     public function handle(AddCarrierCommand $command): CarrierId
     {
+        $this->assertZonesExist($command->getZones());
+
         $carrier = new Carrier();
         // General information
         $carrier->name = $command->getName();
@@ -108,5 +111,12 @@ class AddCarrierHandler implements AddCarrierHandlerInterface
         $this->carrierRepository->updateAssociatedZones($carrierId, $command->getZones());
 
         return $carrierId;
+    }
+
+    private function assertZonesExist(array $zoneIds): void
+    {
+        if (null === $zoneIds || count($zoneIds) === 0) {
+            throw new CannotAddCarrierWithoutZoneException();
+        }
     }
 }

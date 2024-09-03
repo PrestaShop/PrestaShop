@@ -32,6 +32,7 @@ use Behat\Gherkin\Node\TableNode;
 use Carrier;
 use Exception;
 use Group;
+use Zone;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\AddCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\EditCarrierCommand;
@@ -63,6 +64,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     public function createCarrier(string $reference, TableNode $node): void
     {
         $properties = $this->localizeByRows($node);
+
         try {
             if (isset($properties['logoPathName']) && 'null' !== $properties['logoPathName']) {
                 $tmpLogo = DummyFileUploader::upload($properties['logoPathName']);
@@ -79,6 +81,16 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
                 $delay = $properties['delay'];
             } else {
                 $delay = [$this->getDefaultLangId() => 'Shipping delay'];
+            }
+
+            if (!empty($properties['zones'])) {
+                $getZone = $this->referencesToIds($properties['zones']);
+                $zones = [];
+                foreach($getZone as $zoneId) {
+                    array_push($zones, $zoneId->id);
+                }
+            } else {
+                $zones = [];
             }
 
             if (!empty($properties['group_access'])) {
@@ -103,6 +115,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
                 $properties['shippingMethod'] ?? 'price',
                 $properties['rangeBehavior'] ?? 'highest_range',
                 $properties['logoPathName'] ?? null,
+                $zones,
                 $associatedShops,
                 isset($properties['position']) ? (int) $properties['position'] : null,
             );
@@ -182,7 +195,6 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         $carrierId = $this->referenceToId($reference);
 
         $command = new EditCarrierCommand($carrierId);
-
         // General information
         if (isset($properties['name'])) {
             $command->setName($properties['name']);
@@ -217,6 +229,16 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         if (isset($properties['group_access'])) {
             $command->setAssociatedGroupIds($this->referencesToIds($properties['group_access']));
         }
+
+        if (isset($properties['zones'])) {
+            $getZone = $this->referencesToIds($properties['zones']);
+            $zones = [];
+            foreach($getZone as $zoneId) {
+                array_push($zones, $zoneId->id);
+            }
+            $command->setZones($zones);
+        }
+
         if (isset($properties['associatedShops'])) {
             $command->setAssociatedShopIds($this->referencesToIds($properties['associatedShops']));
         }
@@ -404,6 +426,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         string $shippingMethod,
         string $rangeBehavior,
         ?string $logoPathName,
+        array $zones,
         array $associatedShops,
         ?int $position,
     ): CarrierId {
@@ -418,6 +441,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
             $isFree,
             $this->convertShippingMethodToInt($shippingMethod),
             $this->convertOutOfRangeBehaviorToInt($rangeBehavior),
+            $zones,
             $associatedShops,
             $max_width,
             $max_height,

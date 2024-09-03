@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\EditCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\CommandHandler\EditCarrierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CannotUpdateCarrierException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CannotAddCarrierWithoutZoneException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 /**
@@ -159,7 +160,14 @@ class EditCarrierHandler implements EditCarrierHandlerInterface
             }
         }
 
-        $this->carrierRepository->updateAssociatedZones($newCarrierId, $command->getZones());
+        if (null !== $command->getZones()) {
+            if (count($this->carrierRepository->getAssociatedZones($newCarrierId)) === 0) {
+                throw new CannotAddCarrierWithoutZoneException();
+            }
+        } else {
+            $this->carrierRepository->updateAssociatedZones($newCarrierId, $command->getZones());
+        }
+
 
         return $newCarrierId;
     }

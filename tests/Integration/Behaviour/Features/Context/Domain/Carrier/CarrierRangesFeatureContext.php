@@ -149,19 +149,20 @@ class CarrierRangesFeatureContext extends AbstractDomainFeatureContext
 
             Assert::assertEquals($rangesExpected, $rangesDatabase);
 
-            // Automatically checks that the carrier_zone association is properly set
-            $query = new DbQuery();
-            $query->select('(cz.id_zone)');
-            $query->from('carrier_zone', 'cz');
-            $query->where('id_carrier = \'' . pSQL((string) $carrierId) . '\'');
-            $zonesFromDB = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query->build());
+            // We remove it because we don't manage zone with ranges.
+            // // Automatically checks that the carrier_zone association is properly set
+            // $query = new DbQuery();
+            // $query->select('(cz.id_zone)');
+            // $query->from('carrier_zone', 'cz');
+            // $query->where('id_carrier = \'' . pSQL((string) $carrierId) . '\'');
+            // $zonesFromDB = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query->build());
 
-            $zoneIds = array_unique($zoneIds);
-            sort($zoneIds);
-            $zonesFromDB = array_map(fn ($row) => $row['id_zone'], $zonesFromDB);
-            sort($zonesFromDB);
+            // $zoneIds = array_unique($zoneIds);
+            // sort($zoneIds);
+            // $zonesFromDB = array_map(fn ($row) => $row['id_zone'], $zonesFromDB);
+            // sort($zonesFromDB);
 
-            Assert::assertEquals($zoneIds, $zonesFromDB);
+            // Assert::assertEquals($zoneIds, $zonesFromDB);
         } catch (CarrierException $e) {
             $this->setLastException($e);
         }
