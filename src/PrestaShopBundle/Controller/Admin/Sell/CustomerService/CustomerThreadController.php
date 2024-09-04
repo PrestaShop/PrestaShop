@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\BulkDeleteCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ForwardCustomerThreadCommand;
@@ -40,11 +41,13 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadFor
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeEmailById;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
+use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerThreadFilter;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Form\Admin\CustomerService\CustomerThread\ForwardCustomerThreadType;
 use PrestaShopBundle\Form\Admin\Sell\CustomerService\ReplyToCustomerThreadType;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -52,7 +55,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Manages page under "Sell > Customer Service > Customer Service"
  */
-class CustomerThreadController extends FrameworkBundleAdminController
+class CustomerThreadController extends PrestaShopAdminController
 {
     /**
      * Show list of customer threads
@@ -63,16 +66,19 @@ class CustomerThreadController extends FrameworkBundleAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
-    public function indexAction(Request $request, CustomerThreadFilter $filters): Response
-    {
-        $customerThreadGridFactory = $this->get('prestashop.core.grid.factory.customer_thread');
-        $customerThreadGrid = $customerThreadGridFactory->getGrid($filters);
+    public function indexAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.grid.factory.customer_thread')]
+        GridFactoryInterface $customerGridFactory,
+        CustomerThreadFilter $filters
+    ): Response {
+        $customerThreadGrid = $customerGridFactory->getGrid($filters);
 
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/CustomerThread/index.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'customerThreadGrid' => $this->presentGrid($customerThreadGrid),
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('Customer service', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Customer service', [], 'Admin.Navigation.Menu'),
         ]);
     }
 
@@ -85,15 +91,18 @@ class CustomerThreadController extends FrameworkBundleAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'You do not have permission to view this.', redirectRoute: 'admin_customer_threads_index')]
-    public function viewAction(Request $request, int $customerThreadId)
-    {
+    public function viewAction(
+        Request $request,
+        EmployeeContext $employeeContext,
+        int $customerThreadId
+    ) {
         /** @var CustomerThreadView $customerThreadView */
-        $customerThreadView = $this->getQueryBus()->handle(
+        $customerThreadView = $this->dispatchQuery(
             new GetCustomerThreadForViewing($customerThreadId)
         );
 
         /** @var string $customerServiceSignature */
-        $customerServiceSignature = $this->getQueryBus()->handle(
+        $customerServiceSignature = $this->dispatchQuery(
             new GetCustomerServiceSignature($customerThreadView->getLanguageId()->getValue())
         );
 
@@ -105,13 +114,13 @@ class CustomerThreadController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/CustomerThread/view.html.twig', [
             'customerThreadView' => $customerThreadView,
-            'employeeAvatarUrl' => $this->getContext()->employee->getImage(),
+            'employeeAvatarUrl' => $employeeContext->getEmployee()->getImageUrl(),
             'customerServiceSignature' => $customerServiceSignature,
             'replyToCustomerThreadForm' => $replyToCustomerThreadForm->createView(),
             'forwardCustomerThreadForm' => $forwardCustomerThreadForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('Customer thread #%s', 'Admin.Navigation.Menu', [$customerThreadId]),
+            'layoutTitle' => $this->trans('Customer thread #%s', [$customerThreadId], 'Admin.Navigation.Menu'),
         ]);
     }
 
@@ -148,7 +157,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
         $data = $replyToCustomerThreadForm->getData();
 
         try {
-            $this->getCommandBus()->handle(
+            $this->dispatchCommand(
                 new ReplyToCustomerThreadCommand((int) $customerThreadId, $data['reply_message'])
             );
 
@@ -156,6 +165,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
                 'success',
                 $this->trans(
                     'The message was successfully sent to the customer.',
+                    [],
                     'Admin.Orderscustomers.Notification'
                 )
             );
@@ -237,7 +247,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
         $data = $forwardCustomerThreadForm->getData();
 
         if (!$data['employee_id'] && empty($data['someone_else_email'])) {
-            $this->addFlash('error', $this->trans('The email address is invalid.', 'Admin.Notifications.Error'));
+            $this->addFlash('error', $this->trans('The email address is invalid.', [], 'Admin.Notifications.Error'));
 
             return $this->redirectToRoute('admin_customer_threads_view', [
                 'customerThreadId' => $customerThreadId,
@@ -246,7 +256,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
 
         if ($data['employee_id']) {
             /** @var Email $employeeEmail */
-            $employeeEmail = $this->getQueryBus()->handle(new GetEmployeeEmailById((int) $data['employee_id']));
+            $employeeEmail = $this->dispatchQuery(new GetEmployeeEmailById((int) $data['employee_id']));
             $forwardEmail = $employeeEmail->getValue();
 
             $command = ForwardCustomerThreadCommand::toAnotherEmployee(
@@ -265,11 +275,11 @@ class CustomerThreadController extends FrameworkBundleAdminController
         }
 
         try {
-            $this->getCommandBus()->handle($command);
+            $this->dispatchCommand($command);
 
             $this->addFlash(
                 'success',
-                sprintf('%s %s', $this->trans('Message forwarded to', 'Admin.Catalog.Feature'), $forwardEmail)
+                sprintf('%s %s', $this->trans('Message forwarded to', [], 'Admin.Catalog.Feature'), $forwardEmail)
             );
         } catch (CustomerServiceException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -293,8 +303,8 @@ class CustomerThreadController extends FrameworkBundleAdminController
     public function deleteAction(int $customerThreadId): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(new DeleteCustomerThreadCommand($customerThreadId));
-            $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+            $this->dispatchCommand(new DeleteCustomerThreadCommand($customerThreadId));
+            $this->addFlash('success', $this->trans('Successful deletion', [], 'Admin.Notifications.Success'));
         } catch (CustomerServiceException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
@@ -317,11 +327,11 @@ class CustomerThreadController extends FrameworkBundleAdminController
         $customerThreadId = $this->getBulkCustomerThreadsFromRequest($request);
 
         try {
-            $this->getCommandBus()->handle(new BulkDeleteCustomerThreadCommand($customerThreadId));
+            $this->dispatchCommand(new BulkDeleteCustomerThreadCommand($customerThreadId));
 
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted.', [], 'Admin.Notifications.Success')
             );
         } catch (CustomerThreadNotFoundException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -340,23 +350,28 @@ class CustomerThreadController extends FrameworkBundleAdminController
         return [
             CustomerThreadNotFoundException::class => $this->trans(
                 'This customer thread does not exist.',
+                [],
                 'Admin.International.Notification'
             ),
             CannotDeleteCustomerThreadException::class => $this->trans(
                 'Cannot delete this customer thread.',
+                [],
                 'Admin.International.Notification'
             ),
             CustomerServiceException::class => [
                 CustomerServiceException::FAILED_TO_ADD_CUSTOMER_MESSAGE => $this->trans(
                     'Failed to add customer message.',
+                    [],
                     'Admin.International.Notification'
                 ),
                 CustomerServiceException::FAILED_TO_UPDATE_STATUS => $this->trans(
                     'Failed to update customer thread status.',
+                    [],
                     'Admin.International.Notification'
                 ),
                 CustomerServiceException::INVALID_COMMENT => $this->trans(
                     'Comment is not valid.',
+                    [],
                     'Admin.International.Notification'
                 ),
             ],
@@ -384,13 +399,13 @@ class CustomerThreadController extends FrameworkBundleAdminController
     private function handleCustomerThreadStatusUpdate(int $customerThreadId, string $newStatus)
     {
         try {
-            $this->getCommandBus()->handle(
+            $this->dispatchCommand(
                 new UpdateCustomerThreadStatusCommand((int) $customerThreadId, $newStatus)
             );
 
             $this->addFlash(
                 'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
             );
         } catch (CustomerServiceException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
