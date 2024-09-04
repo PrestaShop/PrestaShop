@@ -54,10 +54,14 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderAddressType;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\AddressFilters;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Address\RequiredFieldsAddressType;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -66,7 +70,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Class manages "Sell > Customers > Addresses" page.
  */
-class AddressController extends FrameworkBundleAdminController
+class AddressController extends PrestaShopAdminController
 {
     /**
      * Show addresses listing page
@@ -77,9 +81,12 @@ class AddressController extends FrameworkBundleAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
-    public function indexAction(Request $request, AddressFilters $filters): Response
-    {
-        $addressGridFactory = $this->get('prestashop.core.grid.grid_factory.address');
+    public function indexAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.grid.grid_factory.address')]
+        GridFactoryInterface $addressGridFactory,
+        AddressFilters $filters
+    ): Response {
         $addressGrid = $addressGridFactory->getGrid($filters);
         $requiredFieldsForm = $this->getRequiredFieldsForm();
 
@@ -111,8 +118,8 @@ class AddressController extends FrameworkBundleAdminController
             $data = $addressRequiredFieldsForm->getData();
 
             try {
-                $this->getCommandBus()->handle(new SetRequiredFieldsForAddressCommand($data['required_fields']));
-                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+                $this->dispatchCommand(new SetRequiredFieldsForAddressCommand($data['required_fields']));
+                $this->addFlash('success', $this->trans('Update successful', [], 'Admin.Notifications.Success'));
             } catch (Exception $e) {
                 $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
             }
@@ -132,10 +139,10 @@ class AddressController extends FrameworkBundleAdminController
     public function deleteAction(Request $request, int $addressId): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(new DeleteAddressCommand($addressId));
+            $this->dispatchCommand(new DeleteAddressCommand($addressId));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -159,10 +166,10 @@ class AddressController extends FrameworkBundleAdminController
         $addressIds = $this->getBulkAddressesFromRequest($request);
 
         try {
-            $this->getCommandBus()->handle(new BulkDeleteAddressCommand($addressIds));
+            $this->dispatchCommand(new BulkDeleteAddressCommand($addressIds));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -180,7 +187,7 @@ class AddressController extends FrameworkBundleAdminController
 
         $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_addresses_create'),
-            'desc' => $this->trans('Add new address', 'Admin.Orderscustomers.Feature'),
+            'desc' => $this->trans('Add new address', [], 'Admin.Orderscustomers.Feature'),
             'icon' => 'add_circle_outline',
         ];
 
@@ -192,7 +199,7 @@ class AddressController extends FrameworkBundleAdminController
      */
     private function getRequiredFieldsForm(): FormInterface
     {
-        $requiredFields = $this->getQueryBus()->handle(new GetRequiredFieldsForAddress());
+        $requiredFields = $this->dispatchQuery(new GetRequiredFieldsForAddress());
 
         return $this->createForm(RequiredFieldsAddressType::class, ['required_fields' => $requiredFields]);
     }
@@ -221,16 +228,15 @@ class AddressController extends FrameworkBundleAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_addresses_index', message: 'You do not have permission to create this.')]
-    public function createAction(Request $request): Response
-    {
-        $addressFormBuilder = $this->get(
-            'prestashop.core.form.identifiable_object.builder.address_form_builder'
-        );
-
-        $addressFormHandler = $this->get(
-            'prestashop.core.form.identifiable_object.handler.address_form_handler'
-        );
-
+    public function createAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.address_form_builder')]
+        FormBuilderInterface $addressFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.address_form_handler')]
+        FormHandlerInterface $addressFormHandler,
+        #[Autowire(service: 'prestashop.adapter.data_provider.customer')]
+        CustomerDataProvider $customerDataProvider
+    ): Response {
         $formData = [];
         $customerInfo = null;
         $customerId = null;
@@ -250,8 +256,6 @@ class AddressController extends FrameworkBundleAdminController
         }
 
         if (!empty($formData['id_customer'])) {
-            /** @var CustomerDataProvider $customerDataProvider */
-            $customerDataProvider = $this->get('prestashop.adapter.data_provider.customer');
             /** @todo To Remove when PHPStan is fixed https://github.com/phpstan/phpstan/issues/3700 */
             /** @phpstan-ignore-next-line */
             $customerId = $formData['id_customer'];
@@ -268,7 +272,7 @@ class AddressController extends FrameworkBundleAdminController
         try {
             $handlerResult = $addressFormHandler->handle($addressForm);
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
-                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', [], 'Admin.Notifications.Success'));
 
                 if ($request->query->has('submitFormAjax')) {
                     return $this->render(
@@ -291,7 +295,7 @@ class AddressController extends FrameworkBundleAdminController
             'customerId' => $customerId,
             'customerInformation' => $customerInfo,
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('New address', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('New address', [], 'Admin.Navigation.Menu'),
             'displayInIframe' => $request->query->has('submitFormAjax'),
             'addressForm' => $addressForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
@@ -308,18 +312,17 @@ class AddressController extends FrameworkBundleAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_addresses_index')]
-    public function editAction(int $addressId, Request $request): Response
-    {
+    public function editAction(
+        int $addressId,
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.address_form_builder')]
+        FormBuilderInterface $addressFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.address_form_handler')]
+        FormHandlerInterface $addressFormHandler
+    ): Response {
         try {
             /** @var EditableCustomerAddress $editableAddress */
-            $editableAddress = $this->getQueryBus()->handle(new GetCustomerAddressForEditing((int) $addressId));
-
-            $addressFormBuilder = $this->get(
-                'prestashop.core.form.identifiable_object.builder.address_form_builder'
-            );
-            $addressFormHandler = $this->get(
-                'prestashop.core.form.identifiable_object.handler.address_form_handler'
-            );
+            $editableAddress = $this->dispatchQuery(new GetCustomerAddressForEditing((int) $addressId));
 
             $formData = [];
             // Country needs to be preset before building form type because it is used to build state field choices
@@ -340,7 +343,7 @@ class AddressController extends FrameworkBundleAdminController
             $result = $addressFormHandler->handleFor($addressId, $addressForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Update successful', [], 'Admin.Notifications.Success'));
 
                 if ($request->query->has('submitFormAjax')) {
                     return $this->render(
@@ -363,7 +366,7 @@ class AddressController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'customerId' => $editableAddress->getCustomerId()->getValue(),
             'customerInformation' => $customerInfo,
-            'layoutTitle' => $this->trans('Editing address %alias%', 'Admin.Navigation.Menu', ['%alias%' => $editableAddress->getAddressAlias()]),
+            'layoutTitle' => $this->trans('Editing address %alias%', ['%alias%' => $editableAddress->getAddressAlias()], 'Admin.Navigation.Menu'),
             'displayInIframe' => $request->query->has('submitFormAjax'),
             'addressForm' => $addressForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
@@ -381,8 +384,15 @@ class AddressController extends FrameworkBundleAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
-    public function editOrderAddressAction(int $orderId, string $addressType, Request $request): Response
-    {
+    public function editOrderAddressAction(
+        int $orderId,
+        string $addressType,
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.address_form_builder')]
+        FormBuilderInterface $addressFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.order_address_form_handler')]
+        FormHandlerInterface $addressFormHandler
+    ): Response {
         // @todo: don't rely on Order ObjectModel, use a Adapter DataProvider
         $order = new Order($orderId);
         $addressId = null;
@@ -399,15 +409,7 @@ class AddressController extends FrameworkBundleAdminController
 
         try {
             /** @var EditableCustomerAddress $editableAddress */
-            $editableAddress = $this->getQueryBus()->handle(new GetCustomerAddressForEditing((int) $addressId));
-
-            $addressFormBuilder = $this->get(
-                'prestashop.core.form.identifiable_object.builder.address_form_builder'
-            );
-            // Special order handler
-            $addressFormHandler = $this->get(
-                'prestashop.core.form.identifiable_object.handler.order_address_form_handler'
-            );
+            $editableAddress = $this->dispatchQuery(new GetCustomerAddressForEditing((int) $addressId));
 
             // Address type required for EditOrderAddressCommand
             $formData = [
@@ -437,7 +439,7 @@ class AddressController extends FrameworkBundleAdminController
             $result = $addressFormHandler->handleFor($orderId, $addressForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Update successful', [], 'Admin.Notifications.Success'));
 
                 if ($request->query->has('submitFormAjax')) {
                     return $this->render(
@@ -460,7 +462,7 @@ class AddressController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'customerId' => $editableAddress->getCustomerId()->getValue(),
             'customerInformation' => $customerInfo,
-            'layoutTitle' => $this->trans('Editing address %alias%', 'Admin.Navigation.Menu', ['%alias%' => $editableAddress->getAddressAlias()]),
+            'layoutTitle' => $this->trans('Editing address %alias%', ['%alias%' => $editableAddress->getAddressAlias()], 'Admin.Navigation.Menu'),
             'addressForm' => $addressForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'cancelPath' => $this->generateUrl('admin_orders_view', ['orderId' => $orderId]),
@@ -478,8 +480,15 @@ class AddressController extends FrameworkBundleAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
-    public function editCartAddressAction(int $cartId, string $addressType, Request $request): Response
-    {
+    public function editCartAddressAction(
+        int $cartId,
+        string $addressType,
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.address_form_builder')]
+        FormBuilderInterface $addressFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.cart_address_form_handler')]
+        FormHandlerInterface $addressFormHandler
+    ): Response {
         // @todo: don't rely on Cart ObjectModel, use a Adapter DataProvider
         $cart = new Cart($cartId);
         $addressId = null;
@@ -496,15 +505,7 @@ class AddressController extends FrameworkBundleAdminController
 
         try {
             /** @var EditableCustomerAddress $editableAddress */
-            $editableAddress = $this->getQueryBus()->handle(new GetCustomerAddressForEditing((int) $addressId));
-
-            $addressFormBuilder = $this->get(
-                'prestashop.core.form.identifiable_object.builder.address_form_builder'
-            );
-            // Special cart handler
-            $addressFormHandler = $this->get(
-                'prestashop.core.form.identifiable_object.handler.cart_address_form_handler'
-            );
+            $editableAddress = $this->dispatchQuery(new GetCustomerAddressForEditing((int) $addressId));
 
             // Address type required for EditCartAddressCommand
             $formData = [
@@ -534,7 +535,7 @@ class AddressController extends FrameworkBundleAdminController
             $result = $addressFormHandler->handleFor($cartId, $addressForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Update successful', [], 'Admin.Notifications.Success'));
 
                 if ($request->query->has('submitFormAjax')) {
                     return $this->render(
@@ -557,7 +558,7 @@ class AddressController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'customerId' => $editableAddress->getCustomerId()->getValue(),
             'customerInformation' => $customerInfo,
-            'layoutTitle' => $this->trans('Editing address %alias%', 'Admin.Navigation.Menu', ['%alias%' => $editableAddress->getAddressAlias()]),
+            'layoutTitle' => $this->trans('Editing address %alias%', ['%alias%' => $editableAddress->getAddressAlias()], 'Admin.Navigation.Menu'),
             'addressForm' => $addressForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'cancelPath' => $this->generateUrl('admin_carts_view', ['cartId' => $cartId]),
@@ -576,6 +577,7 @@ class AddressController extends FrameworkBundleAdminController
             DeleteAddressException::class => [
                 DeleteAddressException::FAILED_DELETE => $this->trans(
                     'An error occurred while deleting the object.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
             ],
@@ -583,77 +585,93 @@ class AddressController extends FrameworkBundleAdminController
                 '%s: %s',
                 $this->trans(
                     'An error occurred while deleting this selection.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
                 $e instanceof BulkDeleteAddressException ? implode(', ', $e->getAddressIds()) : ''
             ),
             AddressNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found).',
+                [],
                 'Admin.Notifications.Error'
             ),
             CannotSetRequiredFieldsForAddressException::class => $this->trans(
                 'An error occurred when attempting to update the required fields.',
+                [],
                 'Admin.Notifications.Error'
             ),
             AddressException::class => sprintf(
                 $this->trans(
                     'Internal error #%s',
+                    [],
                     'Admin.Notifications.Error'
                 ),
                 $e->getMessage()
             ),
             InvalidAddressRequiredFieldsException::class => $this->trans(
                 'Invalid data supplied.',
+                [],
                 'Admin.Notifications.Error'
             ),
             AddressConstraintException::class => [
                 AddressConstraintException::INVALID_ID => $this->trans(
                     'The object cannot be loaded (the identifier is missing or invalid)',
+                    [],
                     'Admin.Notifications.Error'
                 ),
                 AddressConstraintException::INVALID_REQUIRED_FIELDS => $this->trans(
                     'An error occurred when attempting to update the required fields.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
             ],
             InvalidAddressFieldException::class => $this->trans(
                 'Address fields contain invalid values.',
+                [],
                 'Admin.Notifications.Error'
             ),
             StateConstraintException::class => [
                 StateConstraintException::INVALID_ID => $this->trans(
                     'The object cannot be loaded (the identifier is missing or invalid)',
+                    [],
                     'Admin.Notifications.Error'
                 ),
             ],
             CannotUpdateAddressException::class => $this->trans(
                 'An error occurred while attempting to save.',
+                [],
                 'Admin.Notifications.Error'
             ),
             CannotAddAddressException::class => $this->trans(
                 'An error occurred while attempting to save.',
+                [],
                 'Admin.Notifications.Error'
             ),
             CustomerException::class => $this->trans(
                 'The object cannot be loaded (the identifier is missing or invalid)',
+                [],
                 'Admin.Notifications.Error'
             ),
             CountryConstraintException::class => [
                 CountryConstraintException::INVALID_ID => $this->trans(
                     'The object cannot be loaded (the identifier is missing or invalid)',
+                    [],
                     'Admin.Notifications.Error'
                 ),
             ],
             CustomerNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found).',
+                [],
                 'Admin.Notifications.Error'
             ),
             CountryNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found).',
+                [],
                 'Admin.Notifications.Error'
             ),
             CustomerByEmailNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found).',
+                [],
                 'Admin.Notifications.Error'
             ),
         ];
