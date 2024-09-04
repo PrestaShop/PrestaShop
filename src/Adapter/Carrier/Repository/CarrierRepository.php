@@ -218,10 +218,10 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
     public function getAssociatedZones(CarrierId $carrierId): array
     {
         $qb = $this->connection->createQueryBuilder();
-        $result = $qb->select("id_zone")
-            ->from($this->prefix . "carrier_zone")
-            ->where("id_carrier = :carrierId")
-            ->setParameter("carrierId", $carrierId->getValue())
+        $result = $qb->select('id_zone')
+            ->from($this->prefix . 'carrier_zone')
+            ->where('id_carrier = :carrierId')
+            ->setParameter('carrierId', $carrierId->getValue())
             ->executeQuery()
             ->fetchFirstColumn();
 
@@ -251,7 +251,6 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
                     'id_carrier' => $carrierId->getValue(),
                     'id_zone' => $zoneId,
                 ]
-
             );
         }
 

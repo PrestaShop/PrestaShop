@@ -30,8 +30,6 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Carrier;
 
 use Behat\Gherkin\Node\TableNode;
 use Carrier;
-use Db;
-use DbQuery;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\SetCarrierRangesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
@@ -148,20 +146,6 @@ class CarrierRangesFeatureContext extends AbstractDomainFeatureContext
             $rangesExpected = new CarrierRangesCollection($data);
 
             Assert::assertEquals($rangesExpected, $rangesDatabase);
-
-            // Automatically checks that the carrier_zone association is properly set
-            $query = new DbQuery();
-            $query->select('(cz.id_zone)');
-            $query->from('carrier_zone', 'cz');
-            $query->where('id_carrier = \'' . pSQL((string) $carrierId) . '\'');
-            $zonesFromDB = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query->build());
-
-            $zoneIds = array_unique($zoneIds);
-            sort($zoneIds);
-            $zonesFromDB = array_map(fn ($row) => $row['id_zone'], $zonesFromDB);
-            sort($zonesFromDB);
-
-            Assert::assertEquals($zoneIds, $zonesFromDB);
         } catch (CarrierException $e) {
             $this->setLastException($e);
         }

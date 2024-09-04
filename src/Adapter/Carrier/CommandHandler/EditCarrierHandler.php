@@ -148,7 +148,7 @@ class EditCarrierHandler implements EditCarrierHandlerInterface
         );
 
         if (null !== $command->getAssociatedShopIds()) {
-            $this->carrierRepository->updateAssociatedShops($newCarrierId, array_map(fn(ShopId $shopId) => $shopId->getValue(), $command->getAssociatedShopIds()));
+            $this->carrierRepository->updateAssociatedShops($newCarrierId, array_map(fn (ShopId $shopId) => $shopId->getValue(), $command->getAssociatedShopIds()));
         }
 
         if ($command->getLogoPathName() !== null) {
@@ -159,7 +159,9 @@ class EditCarrierHandler implements EditCarrierHandlerInterface
             }
         }
 
-        $this->carrierRepository->updateAssociatedZones($newCarrierId, $command->getZones());
+        if (null !== $command->getZones()) {
+            $this->carrierRepository->updateAssociatedZones($newCarrierId, $command->getZones());
+        }
 
         return $newCarrierId;
     }

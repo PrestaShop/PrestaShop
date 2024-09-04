@@ -12,6 +12,12 @@ Feature: Carrier management
   Background:
     Given group "visitor" named "Visitor" exists
     Given group "guest" named "Guest" exists
+    Given I add new zone "zone1" with following properties:
+      | name    | zone1 |
+      | enabled | true  |
+    Given I add new zone "zone2" with following properties:
+      | name    | zone2 |
+      | enabled | true  |
     And language "en" with locale "en-US" exists
     And language "fr" with locale "fr-FR" exists
     And language with iso code "en" is the default one
@@ -32,6 +38,7 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
+      | zones            | zone1                              |
       | rangeBehavior    | disabled                           |
     Then carrier "carrier1" should have the following properties:
       | name             | Carrier 1                          |
@@ -50,6 +57,7 @@ Feature: Carrier management
       | isFree           | true                               |
       | shippingMethod   | weight                             |
       | rangeBehavior    | disabled                           |
+      | zones            | zone1                              |
       | ordersCount      | 0                                  |
     Then carrier "carrier1" shouldn't have a logo
 
@@ -82,6 +90,7 @@ Feature: Carrier management
       | delay[en-US]     | Shipping delay                     |
       | delay[fr-FR]     | Délai de livraison                 |
       | shippingHandling | false                              |
+      | zones            | zone2                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
       | taxRuleGroup     | US-AL Rate (4%)                    |
@@ -110,6 +119,7 @@ Feature: Carrier management
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
       | delay[fr-FR]     | Délai de livraison                 |
+      | zones            | zone2                              |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -129,6 +139,7 @@ Feature: Carrier management
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
       | delay[fr-FR]     | Délai de livraison                 |
+      | zones            | zone2                              |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -164,6 +175,7 @@ Feature: Carrier management
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
       | delay[fr-FR]     | Délai de livraison                 |
+      | zones            | zone2                              |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -201,6 +213,7 @@ Feature: Carrier management
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
       | delay[fr-FR]     | Délai de livraison                 |
+      | zones            | zone2                              |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -239,6 +252,7 @@ Feature: Carrier management
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
       | delay[fr-FR]     | Délai de livraison                 |
+      | zones            | zone2                              |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -293,6 +307,7 @@ Feature: Carrier management
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
       | delay[fr-FR]     | Délai de livraison                 |
+      | zones            | zone2                              |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -330,6 +345,7 @@ Feature: Carrier management
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
       | delay[fr-FR]     | Délai de livraison                 |
+      | zones            | zone2                              |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -368,6 +384,7 @@ Feature: Carrier management
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
       | delay[fr-FR]     | Délai de livraison                 |
+      | zones            | zone2                              |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -408,6 +425,7 @@ Feature: Carrier management
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
       | delay[fr-FR]     | Délai de livraison                 |
+      | zones            | zone2                              |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -445,6 +463,7 @@ Feature: Carrier management
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
       | delay[fr-FR]     | Délai de livraison                 |
+      | zones            | zone2                              |
       | shippingHandling | false                              |
       | isFree           | false                              |
       | shippingMethod   | weight                             |
@@ -468,6 +487,7 @@ Feature: Carrier management
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
       | delay[fr-FR]     | Délai de livraison                 |
+      | zones            | zone2                              |
       | shippingHandling | false                              |
       | isFree           | false                              |
       | shippingMethod   | weight                             |
@@ -491,6 +511,7 @@ Feature: Carrier management
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
       | delay[fr-FR]     | Délai de livraison                 |
+      | zones            | zone2                              |
       | shippingHandling | false                              |
       | isFree           | false                              |
       | shippingMethod   | weight                             |
@@ -514,13 +535,14 @@ Feature: Carrier management
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
       | delay[fr-FR]     | Délai de livraison                 |
+      | zones            | zone2                              |
       | shippingHandling | true                               |
       | isFree           | false                              |
       | shippingMethod   | weight                             |
       | rangeBehavior    | disabled                           |
     When I edit carrier "carrier1" with specified properties:
       | shippingMethod | invalid |
-    Then carrier edit should throw an error with error code "INVALID_SHIPPING_METHOD"
+    Then carrier should throw an error with error code "INVALID_SHIPPING_METHOD"
 
   # @debug
   # Scenario: Partially editing carrier with tax rule group
@@ -561,6 +583,7 @@ Feature: Carrier management
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
       | delay[fr-FR]     | Délai de livraison                 |
+      | zones            | zone2                              |
       | shippingHandling | false                              |
       | isFree           | false                              |
       | shippingMethod   | weight                             |
@@ -584,13 +607,14 @@ Feature: Carrier management
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
       | delay[fr-FR]     | Délai de livraison                 |
+      | zones            | zone2                              |
       | shippingHandling | true                               |
       | isFree           | false                              |
       | shippingMethod   | weight                             |
       | rangeBehavior    | disabled                           |
     When I edit carrier "carrier1" with specified properties:
       | rangeBehavior | invalid |
-    Then carrier edit should throw an error with error code "INVALID_RANGE_BEHAVIOR"
+    Then carrier should throw an error with error code "INVALID_RANGE_BEHAVIOR"
 
   Scenario: Partially editing carrier with additional fees and is free already true
     When I create carrier "carrier1" with specified properties:
@@ -605,6 +629,7 @@ Feature: Carrier management
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
       | delay[fr-FR]     | Délai de livraison                 |
+      | zones            | zone2                              |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -628,6 +653,7 @@ Feature: Carrier management
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
       | delay[fr-FR]     | Délai de livraison                 |
+      | zones            | zone2                              |
       | shippingHandling | true                               |
       | isFree           | false                              |
       | shippingMethod   | weight                             |
@@ -651,6 +677,7 @@ Feature: Carrier management
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
       | delay[fr-FR]     | Délai de livraison                 |
+      | zones            | zone2                              |
       | shippingHandling | true                               |
       | isFree           | false                              |
       | shippingMethod   | weight                             |
@@ -658,7 +685,7 @@ Feature: Carrier management
     When I edit carrier "carrier1" with specified properties:
       | isFree           | true |
       | shippingHandling | true |
-    Then carrier edit should throw an error with error code "INVALID_HAS_ADDITIONAL_HANDLING_FEE_WITH_FREE_SHIPPING"
+    Then carrier should throw an error with error code "INVALID_HAS_ADDITIONAL_HANDLING_FEE_WITH_FREE_SHIPPING"
 
   Scenario: Upload logo for carrier
     When I create carrier "carrier1" with specified properties:
@@ -673,6 +700,7 @@ Feature: Carrier management
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
       | delay[fr-FR]     | Délai de livraison                 |
+      | zones            | zone2                              |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -693,6 +721,7 @@ Feature: Carrier management
       | group_access     | visitor, guest                     |
       | delay[en-US]     | Shipping delay                     |
       | delay[fr-FR]     | Délai de livraison                 |
+      | zones            | zone2                              |
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
@@ -702,3 +731,69 @@ Feature: Carrier management
     When I edit carrier "carrier1" with specified properties:
       | logoPathName |  |
     Then carrier "carrier1" shouldn't have a logo
+
+  Scenario: Partially editing carrier with zones
+    When I create carrier "carrier1" with specified properties:
+      | name             | Carrier 1                          |
+      | grade            | 1                                  |
+      | trackingUrl      | http://example.com/track.php?num=@ |
+      | active           | true                               |
+      | max_width        | 1454                               |
+      | max_height       | 1234                               |
+      | max_depth        | 1111                               |
+      | max_weight       | 3864                               |
+      | group_access     | visitor, guest                     |
+      | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
+      | shippingHandling | false                              |
+      | zones            | zone1, zone2                       |
+      | isFree           | false                              |
+      | shippingMethod   | weight                             |
+      | rangeBehavior    | disabled                           |
+    When I edit carrier "carrier1" with specified properties:
+      | zones     | zone1     |
+    Then carrier "carrier1" should have the following properties:
+      | name      | Carrier 1 |
+      | zones     | zone1     |
+
+  Scenario: Add a new carrier without any zone
+    When I create carrier "carrier1" with specified properties:
+      | name             | Carrier 1                          |
+      | grade            | 1                                  |
+      | trackingUrl      | http://example.com/track.php?num=@ |
+      | active           | true                               |
+      | max_width        | 1454                               |
+      | max_height       | 1234                               |
+      | max_depth        | 1111                               |
+      | max_weight       | 3864                               |
+      | group_access     | visitor, guest                     |
+      | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
+      | shippingHandling | false                              |
+      | isFree           | false                              |
+      | shippingMethod   | weight                             |
+      | zones            |                                    |
+      | rangeBehavior    | disabled                           |
+    Then carrier should throw an error with error code "INVALID_ZONE_MISSING"
+
+  Scenario: Edit a new carrier and delete all zone
+    When I create carrier "carrier1" with specified properties:
+      | name             | Carrier 1                          |
+      | grade            | 1                                  |
+      | trackingUrl      | http://example.com/track.php?num=@ |
+      | active           | true                               |
+      | max_width        | 1454                               |
+      | max_height       | 1234                               |
+      | max_depth        | 1111                               |
+      | max_weight       | 3864                               |
+      | group_access     | visitor, guest                     |
+      | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
+      | zones            | zone1, zone2                       |
+      | shippingHandling | false                              |
+      | isFree           | false                              |
+      | shippingMethod   | weight                             |
+      | rangeBehavior    | disabled                           |
+    When I edit carrier "carrier1" with specified properties:
+      | zones     |     |
+    Then carrier should throw an error with error code "INVALID_ZONE_MISSING"

@@ -41,6 +41,7 @@ Feature: Compute correct delivery options
     # One standard carrier
     And I create carrier "carrier1" with specified properties:
       | name             | Carrier 1                          |
+      | zones            | zone1                              |
     Then I set ranges for carrier "carrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 10000    | 5.0         |

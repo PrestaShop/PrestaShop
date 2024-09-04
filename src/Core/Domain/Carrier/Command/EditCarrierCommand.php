@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Carrier\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
@@ -41,7 +42,7 @@ class EditCarrierCommand
 {
     private CarrierId $carrierId;
     private ?string $name;
-    /** @var string[] $localizedDelay */
+    /** @var string[] */
     private ?array $localizedDelay;
     private ?int $grade;
     private ?string $trackingUrl;
@@ -58,7 +59,7 @@ class EditCarrierCommand
     private ?ShippingMethod $shippingMethod;
     private ?int $idTaxRuleGroup;
     private ?OutOfRangeBehavior $rangeBehavior;
-    /** @var int[] $zones */
+    /** @var int[] */
     private ?array $zones;
 
     private ?array $associatedShopIds;
@@ -297,22 +298,23 @@ class EditCarrierCommand
      */
     public function setAssociatedShopIds(array $associatedShopIds): void
     {
-        $this->associatedShopIds = array_map(fn(int $shopId) => new ShopId($shopId), $associatedShopIds);
+        $this->associatedShopIds = array_map(fn (int $shopId) => new ShopId($shopId), $associatedShopIds);
     }
 
-    /**
-     * @return int[] | null
-     */
     public function getZones(): ?array
     {
         return $this->zones ?? null;
     }
 
-    /**
-     * @return int[]
-     */
     public function setZones(array $zones): self
     {
+        if (count($zones) === 0) {
+            throw new CarrierConstraintException(
+                'Carrier need to have at least one zone',
+                CarrierConstraintException::INVALID_ZONE_MISSING
+            );
+        }
+
         $this->zones = $zones;
 
         return $this;

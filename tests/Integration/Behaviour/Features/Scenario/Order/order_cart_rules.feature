@@ -724,8 +724,10 @@ Feature: Order from Back Office (BO)
     And there is a country named "country1" and iso code "FR" in zone "zone1"
     And I create carrier "carrier1" with specified properties:
       | name             | carrier 1                          |
+      | zones            | zone1                              |
     And I create carrier "carrier2" with specified properties:
       | name             | carrier 2                          |
+      | zones            | zone1                              |
     Then I set ranges for carrier "carrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 10000    | 0.0         |

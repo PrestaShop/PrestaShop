@@ -25,18 +25,21 @@ Feature: Cart calculation with carrier specific cart rules
     And there is an address named "address2" with postcode "1" in state "state2"
     And I create carrier "carrier1" with specified properties:
       | name             | Carrier 1                          |
+      | zones            | zone1, zone2                           |
     Then I set ranges for carrier "carrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 10000    | 3.1         |
       | zone2   | 0          | 10000    | 4.3         |
     And I create carrier "carrier2" with specified properties:
       | name             | Carrier 2                          |
+      | zones            | zone1, zone2                           |
     Then I set ranges for carrier "carrier2" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 10000    | 5.7         |
       | zone2   | 0          | 10000    | 6.2         |
     And I create carrier "carrier3" with specified properties:
       | name             | Carrier 3                          |
+      | zones            | zone1, zone2                       |
     And there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     And there is a product in the catalog named "product2" with a price of 32.388 and 1000 items in stock
     And there is a product in the catalog named "product3" with a price of 31.188 and 1000 items in stock

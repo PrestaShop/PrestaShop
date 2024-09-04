@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
 use PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\Type\CarrierRangesType;
 use PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\Type\CostsZoneType;
+use PrestaShopBundle\Form\Admin\Type\MultipleZoneChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TaxGroupChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -40,7 +41,6 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Routing\RouterInterface;
-use PrestaShopBundle\Form\Admin\Type\MultipleZoneChoiceType;
 
 class ShippingLocationsAndCostsType extends TranslatorAwareType
 {
@@ -62,9 +62,6 @@ class ShippingLocationsAndCostsType extends TranslatorAwareType
             ->add('zones', MultipleZoneChoiceType::class, [
                 'label' => $this->trans('Zones', 'Admin.Shipping.Feature'),
                 'label_help_box' => $this->trans('Zones that the carrier can handle', 'Admin.Shipping.Help'),
-                'attr' => [
-                    'class' => 'carrier-ranges-control',
-                ],
                 'required' => true,
                 'multiple' => true,
                 'external_link' => [
@@ -77,7 +74,7 @@ class ShippingLocationsAndCostsType extends TranslatorAwareType
                 ],
                 'attr' => [
                     'data-placeholder' => $this->trans('Zones', 'Admin.Shipping.Feature'),
-                    'class' => 'select2 js-multiple-zone-choice',
+                    'class' => 'select2 js-multiple-zone-choice carrier-ranges-control',
                 ],
             ])
             ->add('is_free', SwitchType::class, [

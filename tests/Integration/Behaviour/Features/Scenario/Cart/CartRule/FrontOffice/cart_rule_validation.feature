@@ -10,6 +10,9 @@ Feature: Cart rule application is validated before it is applied to cart
     And there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
     And there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     And there is a product in the catalog named "product2" with a price of 32.388 and 1000 items in stock
+    And I add new zone "zone1" with following properties:
+      | name    | zone1 |
+      | enabled | true  |
     And there is a cart rule "cart_rule_1" with following properties:
       | name[en-US]                  | cartrule1 |
       | free_shipping                | false     |
@@ -68,6 +71,7 @@ Feature: Cart rule application is validated before it is applied to cart
       | discount_percentage | 50            |
     And I create carrier "carrier1" with specified properties:
       | name | Carrier 1 |
+      | zones| zone1     |
     And I restrict following carriers for cart rule cart_rule_4:
       | restricted carriers | carrier1 |
     And I save all the restrictions for cart rule cart_rule_4

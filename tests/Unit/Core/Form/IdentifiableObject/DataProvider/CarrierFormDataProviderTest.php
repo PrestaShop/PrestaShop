@@ -74,6 +74,7 @@ class CarrierFormDataProviderTest extends TestCase
                     1,
                     OutOfRangeBehavior::USE_HIGHEST_RANGE,
                     [1, 3],
+                    [1, 2],
                     '/img/c/45.jkg',
                 ),
                 new CarrierRangesCollection([
@@ -138,15 +139,13 @@ class CarrierFormDataProviderTest extends TestCase
                 'shipping_method' => 1,
                 'id_tax_rule_group' => 1,
                 'range_behavior' => OutOfRangeBehavior::USE_HIGHEST_RANGE,
-                'ranges_costs_control' => [
-                    'zones' => [1, 2],
-                    'ranges' => [
-                        'data' => json_encode([
-                            ['from' => 0, 'to' => 10],
-                            ['from' => 10, 'to' => 20],
-                            ['from' => 20, 'to' => 25],
-                        ]),
-                    ],
+                'zones' => [1, 2],
+                'ranges' => [
+                    'data' => json_encode([
+                        ['from' => 0, 'to' => 10],
+                        ['from' => 10, 'to' => 20],
+                        ['from' => 20, 'to' => 25],
+                    ]),
                 ],
                 'ranges_costs' => [
                     ['zoneId' => 1, 'zoneName' => 'Zone A', 'ranges' => [

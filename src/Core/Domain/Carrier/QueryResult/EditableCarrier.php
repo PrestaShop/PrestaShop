@@ -56,7 +56,8 @@ class EditableCarrier
         private array $zones,
         private ?string $logoPath = null,
         private int $ordersCount = 0,
-    ) {}
+    ) {
+    }
 
     public function getZones(): array
     {
