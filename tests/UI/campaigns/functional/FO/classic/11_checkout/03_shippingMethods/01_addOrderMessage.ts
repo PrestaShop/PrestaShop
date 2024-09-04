@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
@@ -12,6 +11,7 @@ import {
   dataCarriers,
   dataCustomers,
   dataPaymentMethods,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
@@ -95,7 +95,7 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
     // Add the product to the cart
     await foClassicProductPage.addProductToTheCart(page);
 
-    const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+    const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
     expect(notificationsNumber).to.be.equal(1);
   });
 
@@ -103,7 +103,7 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
 
     // Proceed to checkout the shopping cart
-    await cartPage.clickOnProceedToCheckout(page);
+    await foClassicCartPage.clickOnProceedToCheckout(page);
 
     // Address step - Go to delivery step
     const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);

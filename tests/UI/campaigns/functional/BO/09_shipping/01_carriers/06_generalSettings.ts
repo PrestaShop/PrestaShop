@@ -3,7 +3,6 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
@@ -141,8 +140,8 @@ describe('BO - Shipping - Carriers : General Settings', async () => {
   });
   const customerGuest: FakerCustomer = new FakerCustomer({});
   const addressGuest: FakerAddress = new FakerAddress({
-    country: dataCountries.france.name,    
-  })
+    country: dataCountries.france.name,
+  });
 
   // before and after functions
   before(async function () {
@@ -163,7 +162,6 @@ describe('BO - Shipping - Carriers : General Settings', async () => {
       utilsFile.deleteFile(`${carrierData.name}.jpg`),
     ]);
   });
-
 
   it('should login in BO', async function () {
     await loginCommon.loginBO(this, page);
@@ -250,7 +248,7 @@ describe('BO - Shipping - Carriers : General Settings', async () => {
   });
 
   it('should proceed to checkout', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckout', baseContext);
 
     // Proceed to checkout the shopping cart
     await foClassicCartPage.clickOnProceedToCheckout(page);
@@ -312,7 +310,7 @@ describe('BO - Shipping - Carriers : General Settings', async () => {
   });
 
   it('should go to edit carrier page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToEditCarrierPage', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'goToEditCarrierPageStatus', baseContext);
 
     await boCarriersPage.goToEditCarrierPage(page, 1);
 
@@ -332,7 +330,7 @@ describe('BO - Shipping - Carriers : General Settings', async () => {
   it('should check the carriers position', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersPositionAfterStatus', baseContext);
 
-    page = await boCarriersPage.changePage(browserContext, 1);   
+    page = await boCarriersPage.changePage(browserContext, 1);
     await foClassicCheckoutPage.reloadPage(page);
 
     const carriers = await foClassicCheckoutPage.getAllCarriersNames(page);
@@ -344,7 +342,7 @@ describe('BO - Shipping - Carriers : General Settings', async () => {
   });
 
   it('should go to edit carrier page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToEditCarrierPage', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'goToEditCarrierPageName', baseContext);
 
     page = await foClassicCheckoutPage.changePage(browserContext, 0);
     await boCarriersPage.goToEditCarrierPage(page, 1);
@@ -383,7 +381,7 @@ describe('BO - Shipping - Carriers : General Settings', async () => {
   });
 
   it('should go to edit carrier page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToEditCarrierPage', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'goToEditCarrierPageGroupAccess', baseContext);
 
     page = await foClassicCheckoutPage.changePage(browserContext, 0);
     await boCarriersPage.goToEditCarrierPage(page, 1);
@@ -402,7 +400,7 @@ describe('BO - Shipping - Carriers : General Settings', async () => {
   });
 
   it('should check the carriers position', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersPosition', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersPositionAfterGroupAccess', baseContext);
 
     page = await boCarriersPage.changePage(browserContext, 1);
     await foClassicCheckoutPage.reloadPage(page);
@@ -423,16 +421,16 @@ describe('BO - Shipping - Carriers : General Settings', async () => {
   });
 
   it(`should search for the product '${dataProducts.demo_6.name}'`, async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'searchForProduct', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'searchForProductGuest', baseContext);
 
-    await cartPage.searchProduct(page, dataProducts.demo_6.name);
+    await foClassicCartPage.searchProduct(page, dataProducts.demo_6.name);
 
     const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
     expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
   });
 
   it('should add the product to cart', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'addProductToCartGuest', baseContext);
 
     await foClassicSearchResultsPage.goToProductPage(page, 1);
     // Add the product to the cart
@@ -443,7 +441,7 @@ describe('BO - Shipping - Carriers : General Settings', async () => {
   });
 
   it('should go to shopping cart page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCart', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartGuest', baseContext);
 
     await foClassicProductPage.goToCartPage(page);
 
@@ -452,7 +450,7 @@ describe('BO - Shipping - Carriers : General Settings', async () => {
   });
 
   it('should proceed to checkout', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckoutGuest', baseContext);
 
     // Proceed to checkout the shopping cart
     await foClassicCartPage.clickOnProceedToCheckout(page);
@@ -463,7 +461,7 @@ describe('BO - Shipping - Carriers : General Settings', async () => {
   });
 
   it('should fill guest personal information', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'setPersonalInformation', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'setPersonalInformationGuest', baseContext);
 
     const isStepPersonalInfoCompleted = await checkoutPage.setGuestPersonalInformation(page, customerGuest);
     expect(isStepPersonalInfoCompleted).to.equal(true);

@@ -6,7 +6,6 @@ import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {contactUsPage} from '@pages/FO/classic/contactUs';
@@ -25,6 +24,7 @@ import {
   FakerAddress,
   FakerContactMessage,
   FakerCustomer,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
@@ -372,7 +372,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         // Add the product to the cart
         await foClassicProductPage.addProductToTheCart(page, 2);
 
-        const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+        const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
         expect(notificationsNumber).to.be.equal(2);
       });
 
@@ -492,15 +492,15 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         await foClassicHomePage.goToCartPage(page);
 
-        const pageTitle = await cartPage.getPageTitle(page);
-        expect(pageTitle).to.contains(cartPage.pageTitle);
+        const pageTitle = await foClassicCartPage.getPageTitle(page);
+        expect(pageTitle).to.contains(foClassicCartPage.pageTitle);
       });
 
       it('should fill address form and go to delivery step', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'setAddressStep', baseContext);
 
         // Proceed to checkout the shopping cart
-        await cartPage.clickOnProceedToCheckout(page);
+        await foClassicCartPage.clickOnProceedToCheckout(page);
 
         const isStepAddressComplete = await checkoutPage.setAddress(page, addressData);
         expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);

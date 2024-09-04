@@ -9,7 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import emailPage from '@pages/BO/advancedParameters/email';
 
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
@@ -18,6 +17,7 @@ import {
   dataCustomers,
   dataLanguages,
   dataPaymentMethods,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsDate,
@@ -79,15 +79,15 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
       // Add the product to the cart
       await foClassicProductPage.addProductToTheCart(page);
 
-      const pageTitle = await cartPage.getPageTitle(page);
-      expect(pageTitle).to.contains(cartPage.pageTitle);
+      const pageTitle = await foClassicCartPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foClassicCartPage.pageTitle);
     });
 
     it('should proceed to checkout and sign in', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckout', baseContext);
 
       // Proceed to checkout the shopping cart
-      await cartPage.clickOnProceedToCheckout(page);
+      await foClassicCartPage.clickOnProceedToCheckout(page);
 
       // Personal information step - Login
       await checkoutPage.clickOnSignIn(page);

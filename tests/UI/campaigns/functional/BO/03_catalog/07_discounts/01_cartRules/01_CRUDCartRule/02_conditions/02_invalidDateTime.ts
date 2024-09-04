@@ -10,7 +10,6 @@ import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {expect} from 'chai';
@@ -18,6 +17,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   FakerCartRule,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicModalQuickViewPage,
@@ -121,23 +121,23 @@ describe('BO - Catalog - Cart rules : Invalid date time', async () => {
       await foClassicModalQuickViewPage.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);
 
-      const pageTitle = await cartPage.getPageTitle(page);
-      expect(pageTitle).to.eq(cartPage.pageTitle);
+      const pageTitle = await foClassicCartPage.getPageTitle(page);
+      expect(pageTitle).to.eq(foClassicCartPage.pageTitle);
     });
 
     it('should check that there is no discount applied', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoDiscount', baseContext);
 
-      const isVisible = await cartPage.isCartRuleNameVisible(page);
+      const isVisible = await foClassicCartPage.isCartRuleNameVisible(page);
       expect(isVisible).to.eq(false);
     });
 
     it('should delete the last product from the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteLastProduct', baseContext);
 
-      await cartPage.deleteProduct(page, 1);
+      await foClassicCartPage.deleteProduct(page, 1);
 
-      const notificationNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationNumber = await foClassicCartPage.getCartNotificationsNumber(page);
       expect(notificationNumber).to.eq(0);
     });
   });

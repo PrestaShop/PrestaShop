@@ -5,12 +5,12 @@ import testContext from '@utils/testContext';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
-import cartPage from '@pages/FO/hummingbird/cart';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {
   type CartProductDetails,
   dataProducts,
+  foHummingbirdCartPage,
   foHummingbirdHomePage,
   foHummingbirdModalQuickViewPage,
   foHummingbirdSearchResultsPage,
@@ -123,14 +123,14 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
 
       await blockCartModal.proceedToCheckout(page);
 
-      const pageTitle = await cartPage.getPageTitle(page);
-      expect(pageTitle).to.equal(cartPage.pageTitle);
+      const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdCartPage.pageTitle);
     });
 
     it('should check product details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductDetailsInCartPage', baseContext);
 
-      const result = await cartPage.getProductDetail(page, 1);
+      const result = await foHummingbirdCartPage.getProductDetail(page, 1);
       await Promise.all([
         expect(result.name).to.equal(dataProducts.demo_1.name),
         expect(result.regularPrice).to.equal(dataProducts.demo_1.retailPrice),
@@ -141,7 +141,7 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
         expect(result.totalPrice).to.equal(checkProductDetails.totalTaxIncl),
       ]);
 
-      const cartProductAttributes = await cartPage.getProductAttributes(page, 1);
+      const cartProductAttributes = await foHummingbirdCartPage.getProductAttributes(page, 1);
       await Promise.all([
         expect(cartProductAttributes.length).to.equal(2),
         expect(cartProductAttributes[0].name).to.equal(checkProductDetailsProducts[0].name),

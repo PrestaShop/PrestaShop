@@ -10,7 +10,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
@@ -20,6 +19,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerCartRule,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicProductPage,
@@ -132,14 +132,14 @@ describe('BO - Catalog - Cart rules : Check Total available for each user', asyn
 
         await foClassicProductPage.addProductToTheCart(page);
 
-        const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+        const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
         expect(notificationsNumber).to.be.equal(1);
       });
 
       it('should set the promo code', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `addPromoCode${index}`, baseContext);
 
-        await cartPage.addPromoCode(page, newCartRuleData.code);
+        await foClassicCartPage.addPromoCode(page, newCartRuleData.code);
       });
 
       if (test.args.testIdentifier === 'cartRuleAccepted') {
@@ -149,7 +149,7 @@ describe('BO - Catalog - Cart rules : Check Total available for each user', asyn
           const discountedPrice = dataProducts.demo_1.finalPrice
             - await utilsCore.percentage(dataProducts.demo_1.finalPrice, newCartRuleData.discountPercent!);
 
-          const totalAfterDiscount = await cartPage.getATIPrice(page);
+          const totalAfterDiscount = await foClassicCartPage.getATIPrice(page);
           expect(totalAfterDiscount).to.equal(parseFloat(discountedPrice.toFixed(2)));
         });
 
@@ -157,7 +157,7 @@ describe('BO - Catalog - Cart rules : Check Total available for each user', asyn
           await testContext.addContextItem(this, 'testIdentifier', 'ProceedToCheckout', baseContext);
 
           // Proceed to checkout the shopping cart
-          await cartPage.clickOnProceedToCheckout(page);
+          await foClassicCartPage.clickOnProceedToCheckout(page);
 
           const isCheckout = await checkoutPage.isCheckoutPage(page);
           expect(isCheckout).to.eq(true);
@@ -209,14 +209,14 @@ describe('BO - Catalog - Cart rules : Check Total available for each user', asyn
         it('should check the promo code error message', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkErrorMessage', baseContext);
 
-          const voucherErrorText = await cartPage.getCartRuleErrorMessage(page);
-          expect(voucherErrorText).to.equal(cartPage.cartRuleLimitUsageErrorText);
+          const voucherErrorText = await foClassicCartPage.getCartRuleErrorMessage(page);
+          expect(voucherErrorText).to.equal(foClassicCartPage.cartRuleLimitUsageErrorText);
         });
 
         it('should sign out', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'signOut', baseContext);
 
-          await cartPage.logout(page);
+          await foClassicCartPage.logout(page);
           await foClassicLoginPage.clickOnHeaderLink(page, 'Logo');
 
           const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);
@@ -231,16 +231,16 @@ describe('BO - Catalog - Cart rules : Check Total available for each user', asyn
           const discountedPrice = dataProducts.demo_1.finalPrice
             - await utilsCore.percentage(dataProducts.demo_1.finalPrice, newCartRuleData.discountPercent!);
 
-          const totalAfterDiscount = await cartPage.getATIPrice(page);
+          const totalAfterDiscount = await foClassicCartPage.getATIPrice(page);
           expect(totalAfterDiscount).to.equal(parseFloat(discountedPrice.toFixed(2)));
         });
 
         it('should delete the last product from the cart', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'deleteLastProduct', baseContext);
 
-          await cartPage.deleteProduct(page, 1);
+          await foClassicCartPage.deleteProduct(page, 1);
 
-          const notificationNumber = await cartPage.getCartNotificationsNumber(page);
+          const notificationNumber = await foClassicCartPage.getCartNotificationsNumber(page);
           expect(notificationNumber).to.eq(0);
         });
       }

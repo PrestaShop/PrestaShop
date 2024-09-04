@@ -8,8 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
-// Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -17,6 +15,7 @@ import {
   boDashboardPage,
   dataProducts,
   FakerCartRule,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsDate,
@@ -123,7 +122,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with/without code', async (
 
         await foClassicProductPage.addProductToTheCart(page);
 
-        const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+        const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
         expect(notificationsNumber).to.be.equal(1);
       });
 
@@ -134,22 +133,22 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with/without code', async (
         const totalAfterDiscount = dataProducts.demo_1.finalPrice
           - ((dataProducts.demo_1.finalPrice * discountPercent) / 100);
 
-        const priceATI = await cartPage.getATIPrice(page);
+        const priceATI = await foClassicCartPage.getATIPrice(page);
         expect(priceATI).to.equal(parseFloat(totalAfterDiscount.toFixed(2)));
 
-        const cartRuleName = await cartPage.getCartRuleName(page);
+        const cartRuleName = await foClassicCartPage.getCartRuleName(page);
         expect(cartRuleName).to.equal(cartRuleWithoutCode.name);
 
-        const discountValue = await cartPage.getDiscountValue(page);
+        const discountValue = await foClassicCartPage.getDiscountValue(page);
         expect(discountValue).to.equal(parseFloat(totalAfterDiscount.toFixed(2)) - dataProducts.demo_1.finalPrice);
       });
 
       it('should remove product from shopping cart', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'removeProduct1', baseContext);
 
-        await cartPage.deleteProduct(page, 1);
+        await foClassicCartPage.deleteProduct(page, 1);
 
-        const notificationNumber = await cartPage.getCartNotificationsNumber(page);
+        const notificationNumber = await foClassicCartPage.getCartNotificationsNumber(page);
         expect(notificationNumber).to.be.equal(0);
       });
     });
@@ -210,23 +209,23 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with/without code', async (
 
         await foClassicProductPage.addProductToTheCart(page);
 
-        const notificationNumber = await cartPage.getCartNotificationsNumber(page);
+        const notificationNumber = await foClassicCartPage.getCartNotificationsNumber(page);
         expect(notificationNumber).to.be.equal(1);
       });
 
       it('should verify the total before the discount', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkTotalBeforeDiscount', baseContext);
 
-        const priceATI = await cartPage.getATIPrice(page);
+        const priceATI = await foClassicCartPage.getATIPrice(page);
         expect(priceATI).to.equal(dataProducts.demo_1.finalPrice);
       });
 
       it('should set the promo code', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addPromoCode', baseContext);
 
-        await cartPage.addPromoCode(page, cartRuleWithCode.code);
+        await foClassicCartPage.addPromoCode(page, cartRuleWithCode.code);
 
-        const cartRuleName = await cartPage.getCartRuleName(page, 1);
+        const cartRuleName = await foClassicCartPage.getCartRuleName(page, 1);
         expect(cartRuleName).to.equal(cartRuleWithCode.name);
       });
 
@@ -237,20 +236,20 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with/without code', async (
         const totalAfterPromoCode = dataProducts.demo_1.finalPrice
           - ((dataProducts.demo_1.finalPrice * discountPercent) / 100);
 
-        const priceATI = await cartPage.getATIPrice(page);
+        const priceATI = await foClassicCartPage.getATIPrice(page);
         expect(priceATI).to.equal(parseFloat(totalAfterPromoCode.toFixed(2)));
 
-        const discountValue = await cartPage.getDiscountValue(page, 1);
+        const discountValue = await foClassicCartPage.getDiscountValue(page, 1);
         expect(discountValue).to.equal(parseFloat((totalAfterPromoCode - dataProducts.demo_1.finalPrice).toFixed(2)));
       });
 
       it('should remove voucher and product from shopping cart', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'removeProductAndVoucher', baseContext);
 
-        await cartPage.removeVoucher(page, 1);
-        await cartPage.deleteProduct(page, 1);
+        await foClassicCartPage.removeVoucher(page, 1);
+        await foClassicCartPage.deleteProduct(page, 1);
 
-        const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+        const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
         expect(notificationsNumber).to.be.equal(0);
       });
     });
@@ -311,30 +310,30 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with/without code', async (
 
         await foClassicProductPage.addProductToTheCart(page);
 
-        const notificationNumber = await cartPage.getCartNotificationsNumber(page);
+        const notificationNumber = await foClassicCartPage.getCartNotificationsNumber(page);
         expect(notificationNumber).to.be.equal(1);
       });
 
       it('should verify the total before the discount', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkTotalBeforeDiscount2', baseContext);
 
-        const priceATI = await cartPage.getATIPrice(page);
+        const priceATI = await foClassicCartPage.getATIPrice(page);
         expect(priceATI).to.equal(dataProducts.demo_1.finalPrice);
       });
 
       it('should check the displayed promo code', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkPromoCodeBlock2', baseContext);
 
-        const promoCode = await cartPage.getHighlightPromoCode(page);
+        const promoCode = await foClassicCartPage.getHighlightPromoCode(page);
         expect(promoCode).to.equal(`${secondCartRuleWithCode.code} - ${secondCartRuleWithCode.name}`);
       });
 
       it('should click on the promo code', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addPromoCode2', baseContext);
 
-        await cartPage.clickOnPromoCode(page);
+        await foClassicCartPage.clickOnPromoCode(page);
 
-        const cartRuleName = await cartPage.getCartRuleName(page, 1);
+        const cartRuleName = await foClassicCartPage.getCartRuleName(page, 1);
         expect(cartRuleName).to.equal(secondCartRuleWithCode.name);
       });
 
@@ -344,20 +343,20 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with/without code', async (
         const totalAfterPromoCode = dataProducts.demo_1.finalPrice
           - ((dataProducts.demo_1.finalPrice * (cartRuleWithCode.discountPercent!)) / 100);
 
-        const priceATI = await cartPage.getATIPrice(page);
+        const priceATI = await foClassicCartPage.getATIPrice(page);
         expect(priceATI).to.equal(parseFloat(totalAfterPromoCode.toFixed(2)));
 
-        const discountValue = await cartPage.getDiscountValue(page, 1);
+        const discountValue = await foClassicCartPage.getDiscountValue(page, 1);
         expect(discountValue).to.equal(parseFloat((totalAfterPromoCode - dataProducts.demo_1.finalPrice).toFixed(2)));
       });
 
       it('should remove voucher and product from shopping cart', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'removeProductAndVoucher2', baseContext);
 
-        await cartPage.removeVoucher(page, 1);
-        await cartPage.deleteProduct(page, 1);
+        await foClassicCartPage.removeVoucher(page, 1);
+        await foClassicCartPage.deleteProduct(page, 1);
 
-        const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+        const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
         expect(notificationsNumber).to.be.equal(0);
       });
     });

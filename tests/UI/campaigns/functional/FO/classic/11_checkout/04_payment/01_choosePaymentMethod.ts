@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
@@ -15,6 +14,7 @@ import {
   dataCustomers,
   dataPaymentMethods,
   type FakerPaymentMethod,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicModalQuickViewPage,
   type MailDev,
@@ -89,14 +89,14 @@ describe('FO - Checkout - Payment : Choose a payment method', async () => {
         await foClassicModalQuickViewPage.addToCartByQuickView(page);
         await blockCartModal.proceedToCheckout(page);
 
-        const pageTitle = await cartPage.getPageTitle(page);
-        expect(pageTitle).to.eq(cartPage.pageTitle);
+        const pageTitle = await foClassicCartPage.getPageTitle(page);
+        expect(pageTitle).to.eq(foClassicCartPage.pageTitle);
       });
 
       it('should proceed to checkout and go to checkout page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `proceedToCheckout${index}`, baseContext);
 
-        await cartPage.clickOnProceedToCheckout(page);
+        await foClassicCartPage.clickOnProceedToCheckout(page);
 
         const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
         expect(isCheckoutPage).to.eq(true);

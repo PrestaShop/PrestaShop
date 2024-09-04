@@ -7,7 +7,6 @@ import {createAccountTest} from '@commonTests/FO/classic/account';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
-import cartPage from '@pages/FO/hummingbird/cart';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 import addAddressPage from '@pages/FO/hummingbird/myAccount/addAddress';
 import addressesPage from '@pages/FO/hummingbird/myAccount/addresses';
@@ -16,6 +15,7 @@ import {
   dataProducts,
   FakerAddress,
   FakerCustomer,
+  foHummingbirdCartPage,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
@@ -211,7 +211,7 @@ describe('FO - Account : CRUD address', async () => {
 
       await foHummingbirdProductPage.addProductToTheCart(page);
 
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foHummingbirdCartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(1);
     });
 
@@ -219,7 +219,7 @@ describe('FO - Account : CRUD address', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCreatedAddresses1', baseContext);
 
       // Proceed to checkout the shopping cart
-      await cartPage.clickOnProceedToCheckout(page);
+      await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
       const addressesNumber = await checkoutPage.getNumberOfAddresses(page);
       expect(addressesNumber, 'The addresses number is not equal to 2!').to.equal(2);
@@ -269,15 +269,15 @@ describe('FO - Account : CRUD address', async () => {
 
       await addressesPage.goToCartPage(page);
 
-      const pageTitle = await cartPage.getPageTitle(page);
-      expect(pageTitle).to.equal(cartPage.pageTitle);
+      const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdCartPage.pageTitle);
     });
 
     it('should select the second address and continue', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectSecondAddress', baseContext);
 
       // Proceed to checkout the shopping cart
-      await cartPage.clickOnProceedToCheckout(page);
+      await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
       await checkoutPage.chooseDeliveryAddress(page, secondAddressPosition);
 

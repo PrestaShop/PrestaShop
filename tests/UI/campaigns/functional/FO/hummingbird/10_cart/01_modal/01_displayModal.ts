@@ -5,12 +5,12 @@ import testContext from '@utils/testContext';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
-import cartPage from '@pages/FO/hummingbird/cart';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  foHummingbirdCartPage,
   foHummingbirdHomePage,
   foHummingbirdModalQuickViewPage,
   foHummingbirdProductPage,
@@ -73,8 +73,8 @@ describe('FO - cart : Display modal when adding a product to cart', async () => 
       // Add the product to the cart
       await foHummingbirdProductPage.addProductToTheCart(page, 3);
 
-      const pageTitle = await cartPage.getPageTitle(page);
-      expect(pageTitle).to.equal(cartPage.pageTitle);
+      const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdCartPage.pageTitle);
     });
 
     it('should check notifications number', async function () {

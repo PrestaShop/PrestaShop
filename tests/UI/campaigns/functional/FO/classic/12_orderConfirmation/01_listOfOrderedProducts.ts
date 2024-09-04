@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import ordersPage from '@pages/BO/orders';
 
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
@@ -19,6 +18,7 @@ import {
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicModalQuickViewPage,
   foClassicSearchResultsPage,
@@ -102,32 +102,32 @@ describe('FO - Order confirmation : List of ordered products', async () => {
       await foClassicModalQuickViewPage.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);
 
-      const pageTitle = await cartPage.getPageTitle(page);
-      expect(pageTitle).to.equal(cartPage.pageTitle);
+      const pageTitle = await foClassicCartPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicCartPage.pageTitle);
     });
 
     it(`should update the quantity for the product ${dataProducts.demo_5.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateDemoQuantity', baseContext);
 
-      await cartPage.editProductQuantity(page, 2, 2);
+      await foClassicCartPage.editProductQuantity(page, 2, 2);
 
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.equal(4);
     });
 
     it(`should update the quantity for the product ${dataProducts.demo_12.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateDemo12Quantity', baseContext);
 
-      await cartPage.editProductQuantity(page, 3, 2);
+      await foClassicCartPage.editProductQuantity(page, 3, 2);
 
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.equal(5);
     });
 
     it('should validate shopping cart and go to checkout page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCheckoutPage', baseContext);
 
-      await cartPage.clickOnProceedToCheckout(page);
+      await foClassicCartPage.clickOnProceedToCheckout(page);
 
       const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
       expect(isCheckoutPage).to.equal(true);

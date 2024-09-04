@@ -10,7 +10,6 @@ import boMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseRetur
 import ordersPage from '@pages/BO/orders';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {merchandiseReturnsPage as foMerchandiseReturnsPage} from '@pages/FO/classic/myAccount/merchandiseReturns';
@@ -22,6 +21,7 @@ import {
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
@@ -100,7 +100,7 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
       // Add the product to the cart
       await foClassicProductPage.addProductToTheCart(page);
 
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(1);
     });
 
@@ -108,7 +108,7 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
       await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
 
       // Proceed to checkout the shopping cart
-      await cartPage.clickOnProceedToCheckout(page);
+      await foClassicCartPage.clickOnProceedToCheckout(page);
 
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);

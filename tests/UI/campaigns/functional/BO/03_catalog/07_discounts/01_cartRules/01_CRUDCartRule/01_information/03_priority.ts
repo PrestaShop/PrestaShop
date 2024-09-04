@@ -8,8 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
-// Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -17,6 +15,7 @@ import {
   boDashboardPage,
   dataProducts,
   FakerCartRule,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsDate,
@@ -157,17 +156,17 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with priority', async () =>
 
       await foClassicProductPage.addProductToTheCart(page);
 
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(1);
     });
 
     it('should check that the cart rule priority 1 is applied before priority 2', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCartRule', baseContext);
 
-      const firstCartRule = await cartPage.getCartRuleName(page, 1);
+      const firstCartRule = await foClassicCartPage.getCartRuleName(page, 1);
       expect(firstCartRule).to.equal(cartRulePriority1.name);
 
-      const secondCartRule = await cartPage.getCartRuleName(page, 2);
+      const secondCartRule = await foClassicCartPage.getCartRuleName(page, 2);
       expect(secondCartRule).to.equal(cartRulePriority2.name);
     });
 
@@ -177,30 +176,30 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with priority', async () =>
       const totalAfterDiscount = dataProducts.demo_1.finalPrice
         - (cartRulePriority2.discountAmount!.value + cartRulePriority1.discountAmount!.value);
 
-      const priceATI = await cartPage.getATIPrice(page);
+      const priceATI = await foClassicCartPage.getATIPrice(page);
       expect(priceATI).to.equal(parseFloat(totalAfterDiscount.toFixed(2)));
     });
 
     it('should check the discount value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountValue', baseContext);
 
-      const totalDiscountValue = await cartPage.getSubtotalDiscountValue(page);
+      const totalDiscountValue = await foClassicCartPage.getSubtotalDiscountValue(page);
       expect(totalDiscountValue)
         .to.equal(-(cartRulePriority2.discountAmount!.value + cartRulePriority1.discountAmount!.value));
 
-      const firstDiscountValue = await cartPage.getDiscountValue(page, 1);
+      const firstDiscountValue = await foClassicCartPage.getDiscountValue(page, 1);
       expect(firstDiscountValue).to.equal(-(cartRulePriority1.discountAmount!.value));
 
-      const secondDiscountValue = await cartPage.getDiscountValue(page, 1);
+      const secondDiscountValue = await foClassicCartPage.getDiscountValue(page, 1);
       expect(secondDiscountValue).to.equal(-(cartRulePriority2.discountAmount!.value));
     });
 
     it('should remove product from shopping cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removeProduct1', baseContext);
 
-      await cartPage.deleteProduct(page, 1);
+      await foClassicCartPage.deleteProduct(page, 1);
 
-      const notificationNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationNumber = await foClassicCartPage.getCartNotificationsNumber(page);
       expect(notificationNumber).to.be.equal(0);
     });
   });

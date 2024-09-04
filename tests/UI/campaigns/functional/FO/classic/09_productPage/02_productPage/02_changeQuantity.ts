@@ -3,12 +3,12 @@ import testContext from '@utils/testContext';
 
 // Import pages
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
-import {cartPage} from '@pages/FO/classic/cart';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsPlaywright,
@@ -133,9 +133,9 @@ describe('FO - Product page : Change quantity', async () => {
   it('should remove product from shopping cart', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'removeProduct', baseContext);
 
-    await cartPage.deleteProduct(page, 1);
+    await foClassicCartPage.deleteProduct(page, 1);
 
-    const notificationNumber = await cartPage.getCartNotificationsNumber(page);
+    const notificationNumber = await foClassicCartPage.getCartNotificationsNumber(page);
     expect(notificationNumber).to.equal(0);
   });
 });

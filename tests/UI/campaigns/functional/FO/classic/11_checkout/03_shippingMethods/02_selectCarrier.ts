@@ -6,7 +6,6 @@ import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {createAccountTest} from '@commonTests/FO/classic/account';
 
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
 import {
@@ -14,6 +13,7 @@ import {
   dataProducts,
   FakerAddress,
   FakerCustomer,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsPlaywright,
@@ -86,14 +86,14 @@ describe('FO - Checkout - Shipping methods : Select carrier', async () => {
 
       await foClassicProductPage.addProductToTheCart(page);
 
-      const pageTitle = await cartPage.getPageTitle(page);
-      expect(pageTitle).to.equal(cartPage.pageTitle);
+      const pageTitle = await foClassicCartPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicCartPage.pageTitle);
     });
 
     it('should validate shopping cart and go to checkout page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCheckoutPage', baseContext);
 
-      await cartPage.clickOnProceedToCheckout(page);
+      await foClassicCartPage.clickOnProceedToCheckout(page);
 
       const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
       expect(isCheckoutPage).to.eq(true);

@@ -12,7 +12,6 @@ import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
@@ -24,6 +23,7 @@ import {
   FakerAddress,
   FakerCustomer,
   FakerOrderShipping,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicProductPage,
   foClassicSearchResultsPage,
@@ -122,15 +122,15 @@ describe('BO - Orders : Preview order', async () => {
 
       await foClassicProductPage.goToCartPage(page);
 
-      const pageTitle = await cartPage.getPageTitle(page);
-      expect(pageTitle).to.contains(cartPage.pageTitle);
+      const pageTitle = await foClassicCartPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foClassicCartPage.pageTitle);
     });
 
     it('should proceed to checkout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       // Proceed to checkout the shopping cart
-      await cartPage.clickOnProceedToCheckout(page);
+      await foClassicCartPage.clickOnProceedToCheckout(page);
 
       // Go to checkout page
       const isCheckoutPage = await checkoutPage.isCheckoutPage(page);

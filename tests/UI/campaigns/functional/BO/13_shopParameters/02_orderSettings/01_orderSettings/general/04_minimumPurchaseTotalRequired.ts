@@ -7,13 +7,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
-// Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsPlaywright,
@@ -98,7 +97,7 @@ describe('BO - Shop Parameters - Order Settings : Test minimum purchase total re
       // Add the created product to the cart
       await foClassicProductPage.addProductToTheCart(page);
 
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(index + 1);
     });
 
@@ -106,15 +105,15 @@ describe('BO - Shop Parameters - Order Settings : Test minimum purchase total re
       await testContext.addContextItem(this, 'testIdentifier', `checkMinimumPurchaseTotal_${index}`, baseContext);
 
       // Check proceed to checkout button enable/disable
-      const isDisabled = await cartPage.isProceedToCheckoutButtonDisabled(page);
+      const isDisabled = await foClassicCartPage.isProceedToCheckoutButtonDisabled(page);
       expect(isDisabled).to.equal(test.args.disable);
 
       // Check alert message
-      const isAlertVisible = await cartPage.isAlertWarningForMinimumPurchaseVisible(page);
+      const isAlertVisible = await foClassicCartPage.isAlertWarningForMinimumPurchaseVisible(page);
       expect(isAlertVisible).to.equal(test.args.alertMessage);
 
       if (isAlertVisible) {
-        const alertText = await cartPage.getAlertWarning(page);
+        const alertText = await foClassicCartPage.getAlertWarning(page);
         expect(alertText).to.contains(alertMessage);
       }
     });
@@ -122,7 +121,7 @@ describe('BO - Shop Parameters - Order Settings : Test minimum purchase total re
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `BackToBO${index}`, baseContext);
 
-      page = await cartPage.closePage(browserContext, page, 0);
+      page = await foClassicCartPage.closePage(browserContext, page, 0);
 
       const pageTitle = await orderSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(orderSettingsPage.pageTitle);

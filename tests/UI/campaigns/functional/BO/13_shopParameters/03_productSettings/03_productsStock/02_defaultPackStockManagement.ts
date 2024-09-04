@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import addProductPage from '@pages/BO/catalog/products/add';
 // Import FO pages=
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
@@ -18,6 +17,7 @@ import {
   dataCustomers,
   dataPaymentMethods,
   FakerProduct,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicProductPage,
@@ -218,7 +218,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
           await foClassicProductPage.addProductToTheCart(page);
 
           // Proceed to checkout the shopping cart
-          await cartPage.clickOnProceedToCheckout(page);
+          await foClassicCartPage.clickOnProceedToCheckout(page);
         });
 
         it('should go to delivery step', async function () {

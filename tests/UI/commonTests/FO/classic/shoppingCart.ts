@@ -1,13 +1,11 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   FakerOrder,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicProductPage,
@@ -80,7 +78,7 @@ function createShoppingCart(orderData: FakerOrder, baseContext: string = 'common
       // Add the product to the cart
       await foClassicProductPage.addProductToTheCart(page, orderData.products[0].quantity);
 
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(orderData.products[0].quantity);
     });
 

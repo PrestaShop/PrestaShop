@@ -9,7 +9,6 @@ import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
@@ -19,6 +18,7 @@ import {
   FakerAddress,
   FakerCartRule,
   FakerCustomer,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicModalQuickViewPage,
   utilsPlaywright,
@@ -155,23 +155,23 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
       await foClassicModalQuickViewPage.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);
 
-      const pageTitle = await cartPage.getPageTitle(page);
-      expect(pageTitle).to.equal(cartPage.pageTitle);
+      const pageTitle = await foClassicCartPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicCartPage.pageTitle);
     });
 
     it('should add our discount code and check that the total price is 0', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addPercentDiscount', baseContext);
 
-      await cartPage.addPromoCode(page, percentCartRule.code);
+      await foClassicCartPage.addPromoCode(page, percentCartRule.code);
 
-      const totalPrice = await cartPage.getATIPrice(page);
+      const totalPrice = await foClassicCartPage.getATIPrice(page);
       expect(totalPrice, 'Order total price is incorrect').to.equal(0);
     });
 
     it('should go to checkout process', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckout', baseContext);
 
-      await cartPage.clickOnProceedToCheckout(page);
+      await foClassicCartPage.clickOnProceedToCheckout(page);
 
       const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
       expect(isCheckoutPage).to.eq(true);

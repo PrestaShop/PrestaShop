@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
-import cartPage from '@pages/FO/hummingbird/cart';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
@@ -13,6 +12,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foHummingbirdCartPage,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdModalQuickViewPage,
@@ -81,14 +81,14 @@ describe('FO - Checkout : Show details', async () => {
       await foHummingbirdModalQuickViewPage.setQuantityAndAddToCart(page, 2);
       await blockCartModal.proceedToCheckout(page);
 
-      const pageTitle = await cartPage.getPageTitle(page);
-      expect(pageTitle).to.equal(cartPage.pageTitle);
+      const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdCartPage.pageTitle);
     });
 
     it('should proceed to checkout and go to checkout page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckout', baseContext);
 
-      await cartPage.clickOnProceedToCheckout(page);
+      await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
       const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
       expect(isCheckoutPage).to.eq(true);

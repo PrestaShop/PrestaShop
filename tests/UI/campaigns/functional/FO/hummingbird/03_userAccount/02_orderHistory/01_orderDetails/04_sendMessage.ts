@@ -11,7 +11,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 import customerServicePage from '@pages/BO/customerService/customerService';
 import ordersPage from '@pages/BO/orders';
 // Import FO pages
-import cartPage from '@pages/FO/hummingbird/cart';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
 import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
@@ -23,6 +22,7 @@ import {
   dataOrderStatuses,
   dataPaymentMethods,
   dataProducts,
+  foHummingbirdCartPage,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
@@ -134,7 +134,7 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       // Add the created product to the cart
       await foHummingbirdProductPage.addProductToTheCart(page);
       // Proceed to checkout the shopping cart
-      await cartPage.clickOnProceedToCheckout(page);
+      await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);

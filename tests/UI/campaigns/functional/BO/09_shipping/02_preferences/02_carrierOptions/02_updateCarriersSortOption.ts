@@ -9,13 +9,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 import carriersPage from '@pages/BO/shipping/carriers';
 import preferencesPage from '@pages/BO/shipping/preferences';
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage as foCheckoutPage} from '@pages/FO/classic/checkout';
 
 import {
   boDashboardPage,
   dataCarriers,
   dataCustomers,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsCore,
@@ -170,7 +170,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
         // Add the product to the cart
         await foClassicProductPage.addProductToTheCart(page);
         // Proceed to checkout the shopping cart
-        await cartPage.clickOnProceedToCheckout(page);
+        await foClassicCartPage.clickOnProceedToCheckout(page);
         // Checkout the order
         if (index === 0) {
           // Personal information step - Login

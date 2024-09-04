@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
@@ -10,6 +9,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicModalQuickViewPage,
@@ -70,14 +70,14 @@ describe('FO - Checkout : Show details', async () => {
     await foClassicModalQuickViewPage.setQuantityAndAddToCart(page, 2);
     await blockCartModal.proceedToCheckout(page);
 
-    const pageTitle = await cartPage.getPageTitle(page);
-    expect(pageTitle).to.equal(cartPage.pageTitle);
+    const pageTitle = await foClassicCartPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicCartPage.pageTitle);
   });
 
   it('should proceed to checkout and go to checkout page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckout', baseContext);
 
-    await cartPage.clickOnProceedToCheckout(page);
+    await foClassicCartPage.clickOnProceedToCheckout(page);
 
     const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
     expect(isCheckoutPage).to.eq(true);

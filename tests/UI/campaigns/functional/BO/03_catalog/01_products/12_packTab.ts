@@ -12,7 +12,6 @@ import packTab from '@pages/BO/catalog/products/add/packTab';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import ordersPage from '@pages/BO/orders';
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
@@ -24,6 +23,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerProduct,
+  foClassicCartPage,
   foClassicProductPage,
   utilsCore,
   utilsPlaywright,
@@ -356,7 +356,7 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       await foClassicProductPage.addProductToTheCart(page);
 
       // Proceed to checkout the shopping cart
-      await cartPage.clickOnProceedToCheckout(page);
+      await foClassicCartPage.clickOnProceedToCheckout(page);
       // Connect
       await checkoutPage.clickOnSignIn(page);
       await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
@@ -498,7 +498,7 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       await foClassicProductPage.addProductToTheCart(page);
 
       // Proceed to checkout the shopping cart
-      await cartPage.clickOnProceedToCheckout(page);
+      await foClassicCartPage.clickOnProceedToCheckout(page);
 
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);

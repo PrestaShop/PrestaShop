@@ -8,13 +8,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 import carriersPage from '@pages/BO/shipping/carriers';
 
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
 import {
   boDashboardPage,
   dataCarriers,
   dataCustomers,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsPlaywright,
@@ -93,7 +93,7 @@ describe('BO - Shipping - Carriers : Quick edit status and free shipping', async
       // Add the product to the cart
       await foClassicProductPage.addProductToTheCart(page);
       // Proceed to checkout the shopping cart
-      await cartPage.clickOnProceedToCheckout(page);
+      await foClassicCartPage.clickOnProceedToCheckout(page);
 
       const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
       expect(isCheckoutPage).to.equal(true);

@@ -11,7 +11,6 @@ import ordersPage from '@pages/BO/orders';
 import emailAlertsPage from '@pages/BO/modules/psEmailAlerts';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
@@ -23,6 +22,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicProductPage,
@@ -169,7 +169,7 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
       // Add the product to the cart
       await foClassicProductPage.addProductToTheCart(page, orderData.products[0].quantity);
 
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(orderData.products[0].quantity);
     });
 
@@ -177,7 +177,7 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
 
       // Proceed to checkout the shopping cart
-      await cartPage.clickOnProceedToCheckout(page);
+      await foClassicCartPage.clickOnProceedToCheckout(page);
 
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
@@ -330,7 +330,7 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
       // Add the product to the cart
       await foClassicProductPage.addProductToTheCart(page, orderData.products[0].quantity);
 
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(orderData.products[0].quantity);
     });
 
@@ -338,7 +338,7 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep2', baseContext);
 
       // Proceed to checkout the shopping cart
-      await cartPage.clickOnProceedToCheckout(page);
+      await foClassicCartPage.clickOnProceedToCheckout(page);
 
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);

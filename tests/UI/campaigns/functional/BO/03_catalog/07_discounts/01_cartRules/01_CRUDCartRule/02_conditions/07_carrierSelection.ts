@@ -10,7 +10,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
 import {
@@ -19,6 +18,7 @@ import {
   dataCustomers,
   dataProducts,
   FakerCartRule,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsPlaywright,
@@ -129,23 +129,23 @@ describe('BO - Catalog - Cart rules : Carrier selection', async () => {
 
       await foClassicProductPage.addProductToTheCart(page);
 
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(1);
     });
 
     it('should add the promo code and check the error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkErrorMessage', baseContext);
 
-      await cartPage.addPromoCode(page, newCartRuleData.code);
+      await foClassicCartPage.addPromoCode(page, newCartRuleData.code);
 
-      const alertMessage = await cartPage.getCartRuleErrorMessage(page);
-      expect(alertMessage).to.equal(cartPage.cartRuleChooseCarrierAlertMessageText);
+      const alertMessage = await foClassicCartPage.getCartRuleErrorMessage(page);
+      expect(alertMessage).to.equal(foClassicCartPage.cartRuleChooseCarrierAlertMessageText);
     });
 
     it('should proceed to checkout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckout', baseContext);
 
-      await cartPage.clickOnProceedToCheckout(page);
+      await foClassicCartPage.clickOnProceedToCheckout(page);
 
       const isCheckout = await checkoutPage.isCheckoutPage(page);
       expect(isCheckout).to.eq(true);
@@ -174,7 +174,7 @@ describe('BO - Catalog - Cart rules : Carrier selection', async () => {
       await checkoutPage.addPromoCode(page, newCartRuleData.code);
 
       const errorShippingMessage = await checkoutPage.getCartRuleErrorMessage(page);
-      expect(errorShippingMessage).to.equal(cartPage.cartRuleCannotUseVoucherAlertMessageText);
+      expect(errorShippingMessage).to.equal(foClassicCartPage.cartRuleCannotUseVoucherAlertMessageText);
     });
 
     it('should choose the restricted shipping method and continue', async function () {
@@ -215,9 +215,9 @@ describe('BO - Catalog - Cart rules : Carrier selection', async () => {
 
       await foClassicHomePage.goToCartPage(page);
 
-      await cartPage.deleteProduct(page, 1);
+      await foClassicCartPage.deleteProduct(page, 1);
 
-      const notificationNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationNumber = await foClassicCartPage.getCartNotificationsNumber(page);
       expect(notificationNumber).to.be.equal(0);
     });
   });

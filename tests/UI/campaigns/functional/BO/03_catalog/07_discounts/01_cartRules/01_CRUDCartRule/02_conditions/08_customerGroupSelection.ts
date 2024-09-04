@@ -8,14 +8,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
-// Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 
 import {
   boDashboardPage,
   dataCustomers,
   dataProducts,
   FakerCartRule,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicProductPage,
@@ -144,17 +143,17 @@ describe('BO - Catalog - Cart rules : Customer Group selection', async () => {
 
       await foClassicProductPage.addProductToTheCart(page);
 
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(1);
     });
 
     it('should add the promo code and check the error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addPromoCode', baseContext);
 
-      await cartPage.addPromoCode(page, cartRuleCode.code);
+      await foClassicCartPage.addPromoCode(page, cartRuleCode.code);
 
-      const alertMessage = await cartPage.getCartRuleErrorMessage(page);
-      expect(alertMessage).to.equal(cartPage.cartRuleAlertMessageText);
+      const alertMessage = await foClassicCartPage.getCartRuleErrorMessage(page);
+      expect(alertMessage).to.equal(foClassicCartPage.cartRuleAlertMessageText);
     });
 
     it('should logout by the link in the header', async function () {
@@ -189,16 +188,16 @@ describe('BO - Catalog - Cart rules : Customer Group selection', async () => {
 
       await foClassicProductPage.addProductToTheCart(page);
 
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(1);
     });
 
     it('should add the promo code and verify the total after discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addPromoCode2', baseContext);
 
-      await cartPage.addPromoCode(page, cartRuleCode.code);
+      await foClassicCartPage.addPromoCode(page, cartRuleCode.code);
 
-      const totalAfterDiscount = await cartPage.getATIPrice(page);
+      const totalAfterDiscount = await foClassicCartPage.getATIPrice(page);
       expect(totalAfterDiscount).to.equal(0);
     });
 
@@ -216,9 +215,9 @@ describe('BO - Catalog - Cart rules : Customer Group selection', async () => {
 
       await foClassicHomePage.goToCartPage(page);
 
-      await cartPage.deleteProduct(page, 1);
+      await foClassicCartPage.deleteProduct(page, 1);
 
-      const notificationNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationNumber = await foClassicCartPage.getCartNotificationsNumber(page);
       expect(notificationNumber).to.be.equal(0);
     });
   });

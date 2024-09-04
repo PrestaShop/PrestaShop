@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
@@ -12,6 +11,7 @@ import {
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
+  foClassicCartPage,
   foClassicCategoryPage,
   foClassicHomePage,
   foClassicModalQuickViewPage,
@@ -67,14 +67,14 @@ describe('FO - Order confirmation : Popular product', async () => {
     await foClassicModalQuickViewPage.addToCartByQuickView(page);
     await blockCartModal.proceedToCheckout(page);
 
-    const pageTitle = await cartPage.getPageTitle(page);
-    expect(pageTitle).to.equal(cartPage.pageTitle);
+    const pageTitle = await foClassicCartPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicCartPage.pageTitle);
   });
 
   it('should validate shopping cart and go to checkout page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCheckoutPage', baseContext);
 
-    await cartPage.clickOnProceedToCheckout(page);
+    await foClassicCartPage.clickOnProceedToCheckout(page);
 
     const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
     expect(isCheckoutPage).to.equal(true);
@@ -147,15 +147,15 @@ describe('FO - Order confirmation : Popular product', async () => {
     await foClassicModalQuickViewPage.addToCartByQuickView(page);
     await blockCartModal.proceedToCheckout(page);
 
-    const pageTitle = await cartPage.getPageTitle(page);
-    expect(pageTitle).to.eq(cartPage.pageTitle);
+    const pageTitle = await foClassicCartPage.getPageTitle(page);
+    expect(pageTitle).to.eq(foClassicCartPage.pageTitle);
   });
 
   it('should proceed to checkout', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckout', baseContext);
 
     // Proceed to checkout the shopping cart
-    await cartPage.clickOnProceedToCheckout(page);
+    await foClassicCartPage.clickOnProceedToCheckout(page);
 
     const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
     expect(isCheckoutPage).to.eq(true);

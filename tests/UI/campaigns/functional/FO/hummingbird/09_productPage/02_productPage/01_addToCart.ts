@@ -5,13 +5,13 @@ import testContext from '@utils/testContext';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
-import cartPage from '@pages/FO/hummingbird/cart';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foHummingbirdCartPage,
   foHummingbirdHomePage,
   foHummingbirdModalQuickViewPage,
   foHummingbirdProductPage,
@@ -130,17 +130,17 @@ describe('FO - Product page - Product page : Add to cart', async () => {
 
       await blockCartModal.proceedToCheckout(page);
 
-      const pageTitle = await cartPage.getPageTitle(page);
-      expect(pageTitle).to.eq(cartPage.pageTitle);
+      const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
+      expect(pageTitle).to.eq(foHummingbirdCartPage.pageTitle);
     });
 
     it('should remove products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removeProducts', baseContext);
 
-      await cartPage.deleteProduct(page, 2);
-      await cartPage.deleteProduct(page, 1);
+      await foHummingbirdCartPage.deleteProduct(page, 2);
+      await foHummingbirdCartPage.deleteProduct(page, 1);
 
-      const productCount = await cartPage.getProductsNumber(page);
+      const productCount = await foHummingbirdCartPage.getProductsNumber(page);
       expect(productCount).to.eq(0);
     });
   });

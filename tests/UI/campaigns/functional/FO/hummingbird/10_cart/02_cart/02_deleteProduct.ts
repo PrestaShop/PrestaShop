@@ -5,12 +5,12 @@ import testContext from '@utils/testContext';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
-import cartPage from '@pages/FO/hummingbird/cart';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  foHummingbirdCartPage,
   foHummingbirdHomePage,
   foHummingbirdModalQuickViewPage,
   utilsPlaywright,
@@ -52,30 +52,30 @@ describe('FO - cart : Delete product', async () => {
       await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);
 
-      const pageTitle = await cartPage.getPageTitle(page);
-      expect(pageTitle).to.equal(cartPage.pageTitle);
+      const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdCartPage.pageTitle);
     });
 
     it('should click on remove product link', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removeProduct', baseContext);
 
-      await cartPage.deleteProduct(page, 1);
+      await foHummingbirdCartPage.deleteProduct(page, 1);
 
-      const notificationNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationNumber = await foHummingbirdCartPage.getCartNotificationsNumber(page);
       expect(notificationNumber).to.equal(0);
     });
 
     it('should check the message "There are no more items in your cart"', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoItemMessage', baseContext);
 
-      const message = await cartPage.getNoItemsInYourCartMessage(page);
-      expect(message).to.equal(cartPage.noItemsInYourCartMessage);
+      const message = await foHummingbirdCartPage.getNoItemsInYourCartMessage(page);
+      expect(message).to.equal(foHummingbirdCartPage.noItemsInYourCartMessage);
     });
 
     it('should go to home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage', baseContext);
 
-      await cartPage.goToHomePage(page);
+      await foHummingbirdCartPage.goToHomePage(page);
 
       const result = await foHummingbirdHomePage.isHomePage(page);
       expect(result).to.equal(true);
@@ -88,30 +88,30 @@ describe('FO - cart : Delete product', async () => {
       await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);
 
-      const pageTitle = await cartPage.getPageTitle(page);
-      expect(pageTitle).to.equal(cartPage.pageTitle);
+      const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdCartPage.pageTitle);
     });
 
     it('should set the quantity 0 by the touchSpin', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setQuantity0ByTouchSpin', baseContext);
 
-      await cartPage.setProductQuantity(page, 1, 0);
+      await foHummingbirdCartPage.setProductQuantity(page, 1, 0);
 
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foHummingbirdCartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.equal(0);
     });
 
     it('should check the message "There are no more items in your cart"', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoItemMessage2', baseContext);
 
-      const message = await cartPage.getNoItemsInYourCartMessage(page);
-      expect(message).to.equal(cartPage.noItemsInYourCartMessage);
+      const message = await foHummingbirdCartPage.getNoItemsInYourCartMessage(page);
+      expect(message).to.equal(foHummingbirdCartPage.noItemsInYourCartMessage);
     });
 
     it('should go to home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage2', baseContext);
 
-      await cartPage.goToHomePage(page);
+      await foHummingbirdCartPage.goToHomePage(page);
 
       const result = await foHummingbirdHomePage.isHomePage(page);
       expect(result).to.equal(true);
@@ -124,24 +124,24 @@ describe('FO - cart : Delete product', async () => {
       await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);
 
-      const pageTitle = await cartPage.getPageTitle(page);
-      expect(pageTitle).to.equal(cartPage.pageTitle);
+      const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdCartPage.pageTitle);
     });
 
     it('should set the quantity 0 in the input', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setQuantity0', baseContext);
 
-      await cartPage.editProductQuantity(page, 1, 0);
+      await foHummingbirdCartPage.editProductQuantity(page, 1, 0);
 
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foHummingbirdCartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.equal(0);
     });
 
     it.skip('should check the message "There are no more items in your cart"', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoItemMessage3', baseContext);
 
-      const message = await cartPage.getNoItemsInYourCartMessage(page);
-      expect(message).to.equal(cartPage.noItemsInYourCartMessage);
+      const message = await foHummingbirdCartPage.getNoItemsInYourCartMessage(page);
+      expect(message).to.equal(foHummingbirdCartPage.noItemsInYourCartMessage);
     });
   });
 

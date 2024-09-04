@@ -9,7 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import emailPage from '@pages/BO/advancedParameters/email';
 
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
@@ -17,6 +16,7 @@ import {
   boDashboardPage,
   dataCustomers,
   dataPaymentMethods,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicProductPage,
@@ -129,7 +129,7 @@ describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async
         await foClassicProductPage.addProductToTheCart(page);
 
         // Proceed to checkout the shopping cart
-        await cartPage.clickOnProceedToCheckout(page);
+        await foClassicCartPage.clickOnProceedToCheckout(page);
 
         // Address step - Go to delivery step
         const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);

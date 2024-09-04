@@ -12,7 +12,6 @@ import viewCustomerPage from '@pages/BO/customers/view';
 import customerServicePage from '@pages/BO/customerService/customerService';
 import ordersPage from '@pages/BO/orders';
 // Import FO pages
-import cartPage from '@pages/FO/hummingbird/cart';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
 import contactUsPage from '@pages/FO/hummingbird/contactUs';
@@ -29,6 +28,7 @@ import {
   FakerContactMessage,
   FakerCustomer,
   FakerAddress,
+  foHummingbirdCartPage,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
@@ -353,7 +353,7 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
         // Add the product to the cart
         await foHummingbirdProductPage.addProductToTheCart(page, 2);
 
-        const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+        const notificationsNumber = await foHummingbirdCartPage.getCartNotificationsNumber(page);
         expect(notificationsNumber).to.be.equal(2);
       });
 
@@ -468,15 +468,15 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
 
         await foHummingbirdHomePage.goToCartPage(page);
 
-        const pageTitle = await cartPage.getPageTitle(page);
-        expect(pageTitle).to.contains(cartPage.pageTitle);
+        const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
+        expect(pageTitle).to.contains(foHummingbirdCartPage.pageTitle);
       });
 
       it('should fill address form and go to delivery step', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'setAddressStep', baseContext);
 
         // Proceed to checkout the shopping cart
-        await cartPage.clickOnProceedToCheckout(page);
+        await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
         const isStepAddressComplete = await checkoutPage.setAddress(page, addressData);
         expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);

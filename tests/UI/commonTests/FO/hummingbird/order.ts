@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import cartPage from '@pages/FO/hummingbird/cart';
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 
@@ -10,6 +9,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   FakerOrder,
+  foHummingbirdCartPage,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdProductPage,
@@ -77,7 +77,7 @@ function createOrderByCustomerTest(orderData: FakerOrder, baseContext: string = 
       // Add the product to the cart
       await foHummingbirdProductPage.addProductToTheCart(page, orderData.products[0].quantity);
 
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foHummingbirdCartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(orderData.products[0].quantity);
     });
 
@@ -85,7 +85,7 @@ function createOrderByCustomerTest(orderData: FakerOrder, baseContext: string = 
       await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
 
       // Proceed to checkout the shopping cart
-      await cartPage.clickOnProceedToCheckout(page);
+      await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
@@ -178,7 +178,7 @@ function createOrderSpecificProductTest(
       // Add the product to the cart
       await foHummingbirdProductPage.addProductToTheCart(page, orderData.products[0].quantity);
 
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foHummingbirdCartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(orderData.products[0].quantity);
     });
 
@@ -186,7 +186,7 @@ function createOrderSpecificProductTest(
       await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
 
       // Proceed to checkout the shopping cart
-      await cartPage.clickOnProceedToCheckout(page);
+      await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
@@ -251,7 +251,7 @@ function createOrderByGuestTest(orderData: FakerOrder, baseContext: string = 'co
       // Add the created product to the cart
       await foHummingbirdProductPage.addProductToTheCart(page, orderData.products[0].quantity);
       // Proceed to checkout the shopping cart
-      await cartPage.clickOnProceedToCheckout(page);
+      await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
       // Go to checkout page
       const isCheckoutPage = await checkoutPage.isCheckoutPage(page);

@@ -6,12 +6,12 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 
 // Import pages
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
-import cartPage from '@pages/FO/hummingbird/cart';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foHummingbirdCartPage,
   foHummingbirdHomePage,
   foHummingbirdProductPage,
   utilsPlaywright,
@@ -166,16 +166,16 @@ describe('FO - Product page : Change quantity', async () => {
 
       await blockCartModal.proceedToCheckout(page);
 
-      const pageTitle = await cartPage.getPageTitle(page);
-      expect(pageTitle).to.equal(cartPage.pageTitle);
+      const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdCartPage.pageTitle);
     });
 
     it('should remove product from shopping cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removeProduct', baseContext);
 
-      await cartPage.deleteProduct(page, 1);
+      await foHummingbirdCartPage.deleteProduct(page, 1);
 
-      const notificationNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationNumber = await foHummingbirdCartPage.getCartNotificationsNumber(page);
       expect(notificationNumber).to.equal(0);
     });
   });

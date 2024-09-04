@@ -6,12 +6,12 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 
 // Import pages
 // Import FO pages
-import cartPage from '@pages/FO/hummingbird/cart';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {
   dataCustomers,
+  foHummingbirdCartPage,
   foHummingbirdHomePage,
   foHummingbirdModalQuickViewPage,
   utilsPlaywright,
@@ -60,14 +60,14 @@ describe('FO - Guest checkout: Billing address when logged in', async () => {
       await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);
 
-      const pageTitle = await cartPage.getPageTitle(page);
-      expect(pageTitle).to.eq(cartPage.pageTitle);
+      const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
+      expect(pageTitle).to.eq(foHummingbirdCartPage.pageTitle);
     });
 
     it('should validate shopping cart and go to checkout page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCheckoutPage', baseContext);
 
-      await cartPage.clickOnProceedToCheckout(page);
+      await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
       const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
       expect(isCheckoutPage).to.eq(true);

@@ -2,12 +2,12 @@
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {contactUsPage} from '@pages/FO/classic/contactUs';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
   dataCustomers,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicModalQuickViewPage,
@@ -111,8 +111,8 @@ describe('FO - Header and Footer : Check links in header page', async () => {
     // Check cart link
     await foClassicHomePage.clickOnHeaderLink(page, 'Cart');
 
-    const pageTitle = await cartPage.getPageTitle(page);
-    expect(pageTitle).to.equal(cartPage.pageTitle);
+    const pageTitle = await foClassicCartPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicCartPage.pageTitle);
   });
 
   it('should go to home page and check the notification number', async function () {

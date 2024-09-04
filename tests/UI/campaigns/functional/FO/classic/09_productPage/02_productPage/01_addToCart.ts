@@ -2,13 +2,13 @@
 import testContext from '@utils/testContext';
 
 // Import pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foClassicCartPage,
   foClassicCategoryPage,
   foClassicHomePage,
   foClassicModalQuickViewPage,
@@ -123,34 +123,34 @@ describe('FO - Product page - Product page : Add to cart', async () => {
 
     await blockCartModal.proceedToCheckout(page);
 
-    const pageTitle = await cartPage.getPageTitle(page);
-    expect(pageTitle).to.equal(cartPage.pageTitle);
+    const pageTitle = await foClassicCartPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicCartPage.pageTitle);
   });
 
   it('should change the product quantity from cart page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'changeProductQuantity', baseContext);
 
-    await cartPage.editProductQuantity(page, 1, 200);
+    await foClassicCartPage.editProductQuantity(page, 1, 200);
 
-    const notificationNumber = await cartPage.getCartNotificationsNumber(page);
+    const notificationNumber = await foClassicCartPage.getCartNotificationsNumber(page);
     expect(notificationNumber).to.equal(300);
   });
 
   it('should delete the first product from the cart', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'deleteFirstProduct', baseContext);
 
-    await cartPage.deleteProduct(page, 1);
+    await foClassicCartPage.deleteProduct(page, 1);
 
-    const notificationNumber = await cartPage.getCartNotificationsNumber(page);
+    const notificationNumber = await foClassicCartPage.getCartNotificationsNumber(page);
     expect(notificationNumber).to.equal(100);
   });
 
   it('should delete the first product from the cart', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'deleteSecondProduct', baseContext);
 
-    await cartPage.deleteProduct(page, 1);
+    await foClassicCartPage.deleteProduct(page, 1);
 
-    const notificationNumber = await cartPage.getCartNotificationsNumber(page);
+    const notificationNumber = await foClassicCartPage.getCartNotificationsNumber(page);
     expect(notificationNumber).to.equal(0);
   });
 });

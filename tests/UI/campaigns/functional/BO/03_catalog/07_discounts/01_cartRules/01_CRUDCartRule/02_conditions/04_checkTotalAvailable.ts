@@ -10,7 +10,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
@@ -20,6 +19,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerCartRule,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsCore,
@@ -128,7 +128,7 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
 
         await foClassicProductPage.addProductToTheCart(page);
 
-        const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+        const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
         expect(notificationsNumber).to.be.equal(1);
       });
 
@@ -136,7 +136,7 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `addPromoCode${index}`, baseContext,
         );
 
-        await cartPage.addPromoCode(page, cartRuleCode.code);
+        await foClassicCartPage.addPromoCode(page, cartRuleCode.code);
       });
 
       if (test.args.testIdentifier === 'cartRuleAccepted') {
@@ -146,7 +146,7 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
           const discountedPrice = dataProducts.demo_1.finalPrice
             - await utilsCore.percentage(dataProducts.demo_1.finalPrice, cartRuleCode.discountPercent!);
 
-          const totalAfterDiscount = await cartPage.getATIPrice(page);
+          const totalAfterDiscount = await foClassicCartPage.getATIPrice(page);
           expect(totalAfterDiscount).to.equal(parseFloat(discountedPrice.toFixed(2)));
         });
 
@@ -154,7 +154,7 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckout', baseContext);
 
           // Proceed to checkout the shopping cart
-          await cartPage.clickOnProceedToCheckout(page);
+          await foClassicCartPage.clickOnProceedToCheckout(page);
 
           const isCheckout = await checkoutPage.isCheckoutPage(page);
           expect(isCheckout).to.eq(true);
@@ -206,8 +206,8 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
         it('should search for the same created voucher and check the error message', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'searchExistingVoucher', baseContext);
 
-          const voucherErrorText = await cartPage.getCartRuleErrorMessage(page);
-          expect(voucherErrorText).to.equal(cartPage.cartRuleAlreadyUsedErrorText);
+          const voucherErrorText = await foClassicCartPage.getCartRuleErrorMessage(page);
+          expect(voucherErrorText).to.equal(foClassicCartPage.cartRuleAlreadyUsedErrorText);
         });
       }
     });

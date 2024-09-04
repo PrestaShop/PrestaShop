@@ -5,12 +5,12 @@ import testContext from '@utils/testContext';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
-import cartPage from '@pages/FO/hummingbird/cart';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 
 import {
   dataCustomers,
   FakerCustomer,
+  foHummingbirdCartPage,
   foHummingbirdHomePage,
   foHummingbirdProductPage,
   utilsPlaywright,
@@ -70,14 +70,14 @@ describe('FO - Checkout - Personal information : Sign in', async () => {
       await foHummingbirdHomePage.goToProductPage(page, 1);
       await foHummingbirdProductPage.addProductToTheCart(page, 1);
 
-      const pageTitle = await cartPage.getPageTitle(page);
-      expect(pageTitle).to.equal(cartPage.pageTitle);
+      const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdCartPage.pageTitle);
     });
 
     it('should proceed to checkout validate the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'validateCart', baseContext);
 
-      await cartPage.clickOnProceedToCheckout(page);
+      await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
       const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
       expect(isCheckoutPage).to.eq(true);
@@ -128,8 +128,8 @@ describe('FO - Checkout - Personal information : Sign in', async () => {
     it('should check the message \'There are no more items in your cart\' in shopping cart page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoItemsNumber', baseContext);
 
-      const message = await cartPage.getNoItemsInYourCartMessage(page);
-      expect(message).to.equal(cartPage.noItemsInYourCartMessage);
+      const message = await foHummingbirdCartPage.getNoItemsInYourCartMessage(page);
+      expect(message).to.equal(foHummingbirdCartPage.noItemsInYourCartMessage);
     });
   });
 

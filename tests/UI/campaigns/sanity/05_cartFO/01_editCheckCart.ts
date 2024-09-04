@@ -1,13 +1,11 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsPlaywright,
@@ -98,7 +96,7 @@ describe('FO - Cart : Check Cart in FO', async () => {
     it('should check the first product details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductDetail1', baseContext);
 
-      const result = await cartPage.getProductDetail(page, 1);
+      const result = await foClassicCartPage.getProductDetail(page, 1);
       await Promise.all([
         expect(result.name).to.equal(dataProducts.demo_1.name),
         expect(result.price).to.equal(dataProducts.demo_1.finalPrice),
@@ -109,7 +107,7 @@ describe('FO - Cart : Check Cart in FO', async () => {
     it('should check the second product details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductDetail2', baseContext);
 
-      const result = await cartPage.getProductDetail(page, 2);
+      const result = await foClassicCartPage.getProductDetail(page, 2);
       await Promise.all([
         expect(result.name).to.equal(dataProducts.demo_3.name),
         expect(result.price).to.equal(dataProducts.demo_3.finalPrice),
@@ -121,7 +119,7 @@ describe('FO - Cart : Check Cart in FO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTotalATI', baseContext);
 
       // getNumberFromText is used to get the price ATI
-      totalATI = await cartPage.getATIPrice(page);
+      totalATI = await foClassicCartPage.getATIPrice(page);
       // @todo : https://github.com/PrestaShop/PrestaShop/issues/9779
       // expect(totalATI.toString()).to.be.equal((dataProducts.demo_3.finalPrice + dataProducts.demo_1.finalPrice)
       // .toFixed(2));
@@ -131,35 +129,35 @@ describe('FO - Cart : Check Cart in FO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProductsInCart', baseContext);
 
       // getNumberFromText is used to get the products number
-      itemsNumber = await cartPage.getProductsNumber(page);
+      itemsNumber = await foClassicCartPage.getProductsNumber(page);
       expect(itemsNumber).to.be.equal(2);
     });
 
     it('should edit the quantity of the first product ordered', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editProductQuantity1', baseContext);
 
-      await cartPage.editProductQuantity(page, 1, 3);
+      await foClassicCartPage.editProductQuantity(page, 1, 3);
 
       // getNumberFromText is used to get the new price ATI
-      const totalPrice = await cartPage.getATIPrice(page);
+      const totalPrice = await foClassicCartPage.getATIPrice(page);
       expect(totalPrice).to.be.above(totalATI);
 
       // getNumberFromText is used to get the new products number
-      const productsNumber = await cartPage.getProductsNumber(page);
+      const productsNumber = await foClassicCartPage.getProductsNumber(page);
       expect(productsNumber).to.be.above(itemsNumber);
     });
 
     it('should edit the quantity of the second product ordered', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editProductQuantity2', baseContext);
 
-      await cartPage.editProductQuantity(page, 2, 2);
+      await foClassicCartPage.editProductQuantity(page, 2, 2);
 
       // getNumberFromText is used to get the new price ATI
-      const totalPrice = await cartPage.getATIPrice(page);
+      const totalPrice = await foClassicCartPage.getATIPrice(page);
       expect(totalPrice).to.be.above(totalATI);
 
       // getNumberFromText is used to get the new products number
-      const productsNumber = await cartPage.getCartNotificationsNumber(page);
+      const productsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
       expect(productsNumber).to.be.above(itemsNumber);
     });
   });

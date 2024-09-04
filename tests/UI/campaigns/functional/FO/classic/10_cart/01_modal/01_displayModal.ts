@@ -2,12 +2,12 @@
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  foClassicCartPage,
   foClassicHomePage,
   foClassicModalQuickViewPage,
   foClassicProductPage,
@@ -62,8 +62,8 @@ describe('FO - cart : Display modal when adding a product to cart', async () => 
     // Add the product to the cart
     await foClassicProductPage.addProductToTheCart(page, 3);
 
-    const pageTitle = await cartPage.getPageTitle(page);
-    expect(pageTitle).to.eq(cartPage.pageTitle);
+    const pageTitle = await foClassicCartPage.getPageTitle(page);
+    expect(pageTitle).to.eq(foClassicCartPage.pageTitle);
   });
 
   it('should check notifications number', async function () {

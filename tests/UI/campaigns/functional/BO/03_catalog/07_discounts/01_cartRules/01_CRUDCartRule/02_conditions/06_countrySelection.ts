@@ -11,7 +11,6 @@ import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import zonesPage from '@pages/BO/international/locations';
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
 import {
@@ -22,6 +21,7 @@ import {
   dataCustomers,
   dataProducts,
   FakerCartRule,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsPlaywright,
@@ -195,24 +195,24 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
 
       await foClassicProductPage.addProductToTheCart(page);
 
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(1);
     });
 
     it('should set the promo code and verify the error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addPromoCode1', baseContext);
 
-      await cartPage.addPromoCode(page, cartRule.code);
+      await foClassicCartPage.addPromoCode(page, cartRule.code);
 
-      const chooseDeliveryAddressNotification = await cartPage.getAlertWarningForPromoCode(page);
-      expect(chooseDeliveryAddressNotification).to.equal(cartPage.alertChooseDeliveryAddressWarningText);
+      const chooseDeliveryAddressNotification = await foClassicCartPage.getAlertWarningForPromoCode(page);
+      expect(chooseDeliveryAddressNotification).to.equal(foClassicCartPage.alertChooseDeliveryAddressWarningText);
     });
 
     it('should proceed to checkout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckoutAndSignIn', baseContext);
 
       // Proceed to checkout the shopping cart
-      await cartPage.clickOnProceedToCheckout(page);
+      await foClassicCartPage.clickOnProceedToCheckout(page);
 
       const isCheckout = await checkoutPage.isCheckoutPage(page);
       expect(isCheckout).to.eq(true);
@@ -272,9 +272,9 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'removeProduct1', baseContext);
 
       await foClassicHomePage.goToCartPage(page);
-      await cartPage.deleteProduct(page, 1);
+      await foClassicCartPage.deleteProduct(page, 1);
 
-      const notificationNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationNumber = await foClassicCartPage.getCartNotificationsNumber(page);
       expect(notificationNumber).to.be.equal(0);
     });
   });

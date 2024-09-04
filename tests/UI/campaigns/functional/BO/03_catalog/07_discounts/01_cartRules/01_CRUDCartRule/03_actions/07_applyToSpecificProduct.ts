@@ -10,7 +10,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
@@ -18,6 +17,7 @@ import {
   dataCustomers,
   dataProducts,
   FakerCartRule,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicModalQuickViewPage,
@@ -191,9 +191,9 @@ describe('BO - Catalog - Cart rules : Apply discount to specific product', async
     it('should add the promo code and check the cart rule name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addPromoCode', baseContext);
 
-      await cartPage.addPromoCode(page, newCartRuleData.code);
+      await foClassicCartPage.addPromoCode(page, newCartRuleData.code);
 
-      const cartRuleName = await cartPage.getCartRuleName(page, 1);
+      const cartRuleName = await foClassicCartPage.getCartRuleName(page, 1);
       expect(cartRuleName).to.eq(newCartRuleData.name);
     });
 
@@ -202,16 +202,16 @@ describe('BO - Catalog - Cart rules : Apply discount to specific product', async
 
       const discount = await utilsCore.percentage(dataProducts.demo_8.finalPrice, newCartRuleData.discountPercent!);
 
-      const discountValue = await cartPage.getDiscountValue(page);
+      const discountValue = await foClassicCartPage.getDiscountValue(page);
       expect(discountValue).to.eq(-discount.toFixed(2));
     });
 
     it('should delete the second product from the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteSecondProductFromCart', baseContext);
 
-      await cartPage.deleteProduct(page, 2);
+      await foClassicCartPage.deleteProduct(page, 2);
 
-      const notificationNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationNumber = await foClassicCartPage.getCartNotificationsNumber(page);
       expect(notificationNumber).to.eq(2);
     });
 
@@ -220,32 +220,32 @@ describe('BO - Catalog - Cart rules : Apply discount to specific product', async
 
       const discount = await utilsCore.percentage(dataProducts.demo_8.finalPrice, newCartRuleData.discountPercent!);
 
-      const discountValue = await cartPage.getDiscountValue(page);
+      const discountValue = await foClassicCartPage.getDiscountValue(page);
       expect(discountValue).to.eq(-discount.toFixed(2));
     });
 
     it(`should delete the product '${dataProducts.demo_8.name}' from the cart`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteFirstProductFromCart', baseContext);
 
-      await cartPage.deleteProduct(page, 1);
+      await foClassicCartPage.deleteProduct(page, 1);
 
-      const notificationNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationNumber = await foClassicCartPage.getCartNotificationsNumber(page);
       expect(notificationNumber).to.eq(1);
     });
 
     it('should check that no discount is applied to the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoDiscount', baseContext);
 
-      const isVisible = await cartPage.isCartRuleNameVisible(page);
+      const isVisible = await foClassicCartPage.isCartRuleNameVisible(page);
       expect(isVisible).to.eq(false);
     });
 
     it('should delete the last product from the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteLastProduct', baseContext);
 
-      await cartPage.deleteProduct(page, 1);
+      await foClassicCartPage.deleteProduct(page, 1);
 
-      const notificationNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationNumber = await foClassicCartPage.getCartNotificationsNumber(page);
       expect(notificationNumber).to.eq(0);
     });
   });

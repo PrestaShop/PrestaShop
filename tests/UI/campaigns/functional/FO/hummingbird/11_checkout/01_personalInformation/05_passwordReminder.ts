@@ -8,11 +8,11 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 import createAccountTest from '@commonTests/FO/hummingbird/account';
 
 // Import pages
-import cartPage from '@pages/FO/hummingbird/cart';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 
 import {
   FakerCustomer,
+  foHummingbirdCartPage,
   foHummingbirdHomePage,
   foHummingbirdMyAccountPage,
   foHummingbirdPasswordReminderPage,
@@ -101,14 +101,14 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
       await foHummingbirdHomePage.goToProductPage(page, 1);
       await foHummingbirdProductPage.addProductToTheCart(page, 1);
 
-      const pageTitle = await cartPage.getPageTitle(page);
-      expect(pageTitle).to.equal(cartPage.pageTitle);
+      const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdCartPage.pageTitle);
     });
 
     it('should proceed to checkout and validate the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'validateCart', baseContext);
 
-      await cartPage.clickOnProceedToCheckout(page);
+      await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
       const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
       expect(isCheckoutPage).to.eq(true);
@@ -188,14 +188,14 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
       await foHummingbirdHomePage.goToProductPage(page, 1);
       await foHummingbirdProductPage.addProductToTheCart(page, 1);
 
-      const pageTitle = await cartPage.getPageTitle(page);
-      expect(pageTitle).to.equal(cartPage.pageTitle);
+      const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdCartPage.pageTitle);
     });
 
     it('should proceed to checkout and validate the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'validateCart2', baseContext);
 
-      await cartPage.clickOnProceedToCheckout(page);
+      await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
       const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
       expect(isCheckoutPage).to.eq(true);
