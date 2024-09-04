@@ -44,9 +44,9 @@ class ConnectionsSourceCore extends ObjectModel
         'primary' => 'id_connections_source',
         'fields' => [
             'id_connections' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
-            'http_referer' => ['type' => self::TYPE_STRING, 'validate' => 'isAbsoluteUrl'],
-            'request_uri' => ['type' => self::TYPE_STRING, 'validate' => 'isUrl'],
-            'keywords' => ['type' => self::TYPE_STRING, 'validate' => 'isMessage'],
+            'http_referer' => ['type' => self::TYPE_STRING, 'validate' => 'isAbsoluteUrl', 'size' => 255],
+            'request_uri' => ['type' => self::TYPE_STRING, 'validate' => 'isUrl', 'size' => 255],
+            'keywords' => ['type' => self::TYPE_STRING, 'validate' => 'isMessage', 'size' => 255],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true],
         ],
     ];

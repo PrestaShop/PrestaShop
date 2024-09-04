@@ -65,7 +65,7 @@ class OrderCarrierCore extends ObjectModel
             'weight' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
             'shipping_cost_tax_excl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
             'shipping_cost_tax_incl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
-            'tracking_number' => ['type' => self::TYPE_STRING, 'validate' => 'isTrackingNumber'],
+            'tracking_number' => ['type' => self::TYPE_STRING, 'validate' => 'isTrackingNumber', 'size' => 64],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
         ],
     ];

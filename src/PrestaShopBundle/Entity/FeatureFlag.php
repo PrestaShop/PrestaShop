@@ -67,7 +67,7 @@ class FeatureFlag
     private bool $state;
 
     /**
-     * @ORM\Column(name="label_wording", type="string", length=512, options={"default":""})
+     * @ORM\Column(name="label_wording", type="string", length=191, options={"default":""})
      */
     private string $labelWording;
 
@@ -77,7 +77,7 @@ class FeatureFlag
     private string $labelDomain;
 
     /**
-     * @ORM\Column(name="description_wording", type="string", length=512, options={"default":""})
+     * @ORM\Column(name="description_wording", type="string", length=191, options={"default":""})
      */
     private string $descriptionWording;
 

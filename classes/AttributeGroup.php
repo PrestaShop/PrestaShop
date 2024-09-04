@@ -49,7 +49,7 @@ class AttributeGroupCore extends ObjectModel
         'multilang' => true,
         'fields' => [
             'is_color_group' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
-            'group_type' => ['type' => self::TYPE_STRING, 'required' => true, 'trans' => ['key' => 'Attribute type', 'domain' => 'Admin.Catalog.Feature']],
+            'group_type' => ['type' => self::TYPE_STRING, 'required' => true, 'size' => 255, 'trans' => ['key' => 'Attribute type', 'domain' => 'Admin.Catalog.Feature']],
             'position' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
 
             /* Lang fields */

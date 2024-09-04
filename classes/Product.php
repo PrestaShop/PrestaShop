@@ -504,7 +504,7 @@ class ProductCore extends ObjectModel
             'low_stock_alert' => ['type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'],
             'price' => ['type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice', 'required' => true],
             'wholesale_price' => ['type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice'],
-            'unity' => ['type' => self::TYPE_STRING, 'shop' => true, 'validate' => 'isString'],
+            'unity' => ['type' => self::TYPE_STRING, 'shop' => true, 'validate' => 'isString', 'size' => 255],
             'unit_price' => ['type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice'],
             /*
              * Only the DB field is deprecated because unit_price is the new reference, we need to keep the class field though

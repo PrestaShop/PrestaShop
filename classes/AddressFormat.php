@@ -50,7 +50,7 @@ class AddressFormatCore extends ObjectModel
         'table' => 'address_format',
         'primary' => 'id_country',
         'fields' => [
-            'format' => ['type' => self::TYPE_HTML, 'validate' => 'isGenericName', 'required' => true],
+            'format' => ['type' => self::TYPE_HTML, 'validate' => 'isGenericName', 'required' => true, 'size' => 255],
             'id_country' => ['type' => self::TYPE_INT],
         ],
     ];

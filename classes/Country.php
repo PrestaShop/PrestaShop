@@ -89,7 +89,7 @@ class CountryCore extends ObjectModel
             'contains_states' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true],
             'need_identification_number' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true],
             'need_zip_code' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
-            'zip_code_format' => ['type' => self::TYPE_STRING, 'validate' => 'isZipCodeFormat'],
+            'zip_code_format' => ['type' => self::TYPE_STRING, 'validate' => 'isZipCodeFormat', 'size' => 12],
             'display_tax_label' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true],
 
             /* Lang fields */
