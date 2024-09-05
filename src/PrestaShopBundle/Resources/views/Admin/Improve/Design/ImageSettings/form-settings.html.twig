@@ -31,9 +31,9 @@
       {{ 'Images generation options'|trans({}, 'Admin.Design.Feature') }}
     </h3>
     <div class="alert alert-info mx-3 mt-3 mb-0">
-      {{ 'JPEG images have a small file size and standard quality. PNG images have a larger file size, a higher quality and support transparency. Note that in all cases the image files will have the .jpg extension.'|trans({}, 'Admin.Design.Help') }}
-      <br /><br/>
-      {{ 'WARNING: This feature may not be compatible with your theme, or with some of your modules. In particular, PNG mode is not compatible with the Watermark module. If you encounter any issues, turn it off by selecting "Use JPEG'|trans({}, 'Admin.Design.Help') }}
+      <p>{{ 'The original images of objects you create are almost never used, optimized thumbnails are used instead. In this section, you can define the formats of thumbnails and their quality.'|trans({}, 'Admin.Design.Help') }}</p>
+      <p class="mb-3">{{ 'Most common setup is to have the base JPG/PNG format and one modern WebP or AVIF format - the browser will choose the format it likes the most.'|trans({}, 'Admin.Design.Help') }}</p>
+      <p>{{ 'Beware that to benefit from modern image formats, they must be supported by your theme.'|trans({}, 'Admin.Design.Help') }}</p>
     </div>
     <div class="card-body">
       <div class="form-wrapper">
