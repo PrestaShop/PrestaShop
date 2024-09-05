@@ -23,7 +23,6 @@ describe('ps_supplierlist - Configure Settings',
   async () => {
     let browserContext: BrowserContext;
     let page: Page;
-    let defaultValue: string;
 
     before(async function () {
       browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -97,7 +96,7 @@ describe('ps_supplierlist - Configure Settings',
       expect(isSupplierListDropdown).to.equal(true);
     });
 
-    it(`should set the type of display to "plain-text"`, async function () {
+    it('should set the type of display to "plain-text"', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setTypeDisplayPlaintext', baseContext);
 
       page = await foClassicCategoryPage.changePage(browserContext, 0);
