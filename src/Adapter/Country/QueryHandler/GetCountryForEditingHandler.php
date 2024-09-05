@@ -76,7 +76,7 @@ class GetCountryForEditingHandler implements GetCountryForEditingHandlerInterfac
             (int) $country->id_zone,
             (bool) $country->need_zip_code,
             (string) $country->zip_code_format,
-            $format, //todo: add when address format will be added
+            $format, // todo: add when address format will be added
             (bool) $country->active,
             (bool) $country->contains_states,
             (bool) $country->need_identification_number,

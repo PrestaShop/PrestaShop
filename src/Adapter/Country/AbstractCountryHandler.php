@@ -92,9 +92,9 @@ class AbstractCountryHandler
             $addressFormat->format = $format;
             $addressFormat->id_country = $addressFormat->id_country ?? $countryId;
 
-            $isInvalidAddressFormat = !$addressFormat->checkFormatFields() ||
-                strlen($addressFormat->format) <= 0 ||
-                !$addressFormat->validateFields(false);
+            $isInvalidAddressFormat = !$addressFormat->checkFormatFields()
+                || strlen($addressFormat->format) <= 0
+                || !$addressFormat->validateFields(false);
         } catch (PrestaShopException $e) {
             throw new AddressConstraintException(
                 sprintf('Address format: "%s" is invalid', $format),

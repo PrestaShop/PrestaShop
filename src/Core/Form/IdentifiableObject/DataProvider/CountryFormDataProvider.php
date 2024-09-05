@@ -29,12 +29,10 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetAddressFormatData;
+use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\AddressFormatData;
-use PrestaShop\PrestaShop\Core\Domain\Zone\Query\GetZoneForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Zone\QueryResult\EditableZone;
+use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryForEditing;
 
 /**
  * Provides data for zone add/edit form.

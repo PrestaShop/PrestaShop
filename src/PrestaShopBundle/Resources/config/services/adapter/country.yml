@@ -42,10 +42,9 @@ services:
     autowire: true
     autoconfigure: true
 
-  PrestaShop\PrestaShop\Adapter\Country\Validate\CountryValidator:
+  PrestaShop\PrestaShop\Adapter\Country\QueryHandler\GetAddressFormatDataHandler:
+    public: false
+    autowire: true
+    autoconfigure: true
 
-  prestashop.adapter.country.query_handler.get_address_layout:
-    public: true
-    class: 'PrestaShop\PrestaShop\Adapter\Country\QueryHandler\GetAddressFormatDataHandler'
-    tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Country\Query\GetAddressFormatData' }
+  PrestaShop\PrestaShop\Adapter\Country\Validate\CountryValidator:

@@ -6,7 +6,6 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressFormat;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetAddressFormatData;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\AddressFormatData;
-use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -57,7 +56,7 @@ class AddressFormatType extends TranslatorAwareType
     public function configureOptions(OptionsResolver $resolver)
     {
         /** @var AddressFormatData $addressFormat */
-        $addressFormat = $this->queryBus->handle(new GetAddressFormatData);
+        $addressFormat = $this->queryBus->handle(new GetAddressFormatData());
 
         parent::configureOptions($resolver);
         $resolver

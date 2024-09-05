@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotAddAddressFormatException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\EditCountryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\EditCountryHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 
 /**
  * Handles update of country and address format

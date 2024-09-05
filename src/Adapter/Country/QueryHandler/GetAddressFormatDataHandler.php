@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Country\QueryHandler;
 
 use AddressFormat;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetAddressFormatData;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryHandler\GetAddressFormatDataHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\AddressFormatData;
@@ -36,7 +37,8 @@ use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\AddressFormatData;
 /**
  * Provides legacy address layout modification data
  */
-final class GetAddressFormatDataHandler implements GetAddressFormatDataHandlerInterface
+#[AsQueryHandler]
+class GetAddressFormatDataHandler implements GetAddressFormatDataHandlerInterface
 {
     /**
      * {@inheritdoc}
