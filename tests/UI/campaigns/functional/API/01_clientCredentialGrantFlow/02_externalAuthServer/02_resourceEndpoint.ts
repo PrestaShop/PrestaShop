@@ -4,8 +4,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {deleteAPIClientTest} from '@commonTests/BO/advancedParameters/authServer';
 import {installModule, uninstallModule} from '@commonTests/BO/modules/moduleManager';
 
-import keycloakConnectorDemo from '@pages/BO/modules/keycloakConnectorDemo';
-
 import {expect} from 'chai';
 import {
   APIRequestContext, APIResponse, BrowserContext, Page,
@@ -14,6 +12,7 @@ import {
   boDashboardPage,
   boModuleManagerPage,
   dataModules,
+  modKeycloakConnectorDemoBoMain,
   utilsAPI,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -98,8 +97,8 @@ describe('API : External Auth Server - Resource Endpoint', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage', baseContext);
       await boModuleManagerPage.goToConfigurationPage(page, dataModules.keycloak.tag);
 
-      const pageTitle = await keycloakConnectorDemo.getPageTitle(page);
-      expect(pageTitle).to.eq(keycloakConnectorDemo.pageTitle);
+      const pageTitle = await modKeycloakConnectorDemoBoMain.getPageTitle(page);
+      expect(pageTitle).to.eq(modKeycloakConnectorDemoBoMain.pageTitle);
     });
 
     it('should define the Keycloak Realm endpoint', async function () {
@@ -107,12 +106,12 @@ describe('API : External Auth Server - Resource Endpoint', async () => {
       // The module will use the internal URL (accessible in docker container) as the realm url,
       // but it defines two allowed issuers the internal URL and the external one (used by the host to create
       // the initial access token)
-      const textResult = await keycloakConnectorDemo.setKeycloakEndpoint(
+      const textResult = await modKeycloakConnectorDemoBoMain.setKeycloakEndpoint(
         page,
         `${global.keycloakConfig.keycloakInternalUrl}/realms/prestashop`,
         allowedIssuers,
       );
-      expect(textResult).to.be.eq(keycloakConnectorDemo.successfulUpdateMessage);
+      expect(textResult).to.be.eq(modKeycloakConnectorDemoBoMain.successfulUpdateMessage);
     });
 
     it('should request the endpoint /api-clients without access token', async function () {
