@@ -211,4 +211,9 @@ class Tools
     {
         return LegacyTools::truncateString($text, $length, $options);
     }
+
+    public function scanDir($path, $ext = 'php', $dir = '', $recursive = false)
+    {
+        return LegacyTools::scanDir($path, $ext, $dir, $recursive);
+    }
 }
