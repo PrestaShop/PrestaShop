@@ -28,12 +28,11 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use DateTime;
 use PrestaShop\PrestaShop\Adapter\PDF\CreditSlipPdfGenerator;
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\CreditSlip\Exception\CreditSlipNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CreditSlip\Query\GetCreditSlipIdsByDateRange;
 use PrestaShop\PrestaShop\Core\Domain\CreditSlip\ValueObject\CreditSlipId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShop\PrestaShop\Core\Form\Handler;
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridFactory;
 use PrestaShop\PrestaShop\Core\PDF\Exception\MissingDataException;
 use PrestaShop\PrestaShop\Core\Search\Filters\CreditSlipFilters;
@@ -63,7 +62,7 @@ class CreditSlipController extends PrestaShopAdminController
         Request $request,
         CreditSlipFilters $creditSlipFilters,
         #[Autowire(service: 'prestashop.core.grid.factory.credit_slip')] GridFactory $creditSlipGridFactory,
-        #[Autowire(service: 'prestashop.admin.credit_slip_options.form_handler')] Handler $creditSlipOptionsFormHandler,
+        #[Autowire(service: 'prestashop.admin.credit_slip_options.form_handler')] FormHandlerInterface $creditSlipOptionsFormHandler,
     ) {
         $creditSlipGrid = $creditSlipGridFactory->getGrid($creditSlipFilters);
 
@@ -76,7 +75,7 @@ class CreditSlipController extends PrestaShopAdminController
             if (empty($errors)) {
                 $this->addFlash('success', $this->trans('Update successful', [], 'Admin.Notifications.Success'));
             } else {
-                $this->flashErrors($errors);
+                $this->addflashErrors($errors);
             }
 
             return $this->redirectToRoute('admin_credit_slips_index');
@@ -144,7 +143,6 @@ class CreditSlipController extends PrestaShopAdminController
                 ));
 
                 return new BinaryFileResponse($creditSlipPdfGenerator->generatePDF($slipIds));
-
             } catch (CoreException $e) {
                 $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
             }

@@ -32,9 +32,7 @@ use InvalidArgumentException;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\PDF\OrderInvoicePdfGenerator;
-use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonsCollection;
-use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\InvalidCartRuleDiscountValueException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;
@@ -86,15 +84,14 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductSearchEmptyPhrase
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\QuerySorting;
-use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\GridFactory;
-use PrestaShop\PrestaShop\Core\Kpi\Row\HookableKpiRowFactory;
-use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
+use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowFactoryInterface;
 use PrestaShop\PrestaShop\Core\Order\OrderSiblingProviderInterface;
 use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
@@ -116,7 +113,6 @@ use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderShippingType;
 use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderStatusType;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
-use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use PrestaShopBundle\Service\Routing\Router;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Filesystem\Filesystem;
@@ -159,7 +155,7 @@ class OrderController extends PrestaShopAdminController
     public function indexAction(
         Request $request,
         OrderFilters $filters,
-        #[Autowire(service: 'prestashop.core.kpi_row.factory.orders')] HookableKpiRowFactory $orderKpiFactory,
+        #[Autowire(service: 'prestashop.core.kpi_row.factory.orders')] KpiRowFactoryInterface $orderKpiFactory,
         #[Autowire(service: 'prestashop.core.grid.factory.order')] GridFactory $orderGridFactory,
     ) {
         $orderGrid = $orderGridFactory->getGrid($filters);
@@ -182,12 +178,11 @@ class OrderController extends PrestaShopAdminController
     /**
      * @return array
      */
-    private function getOrderToolbarButtons(
-        ShopContext $shopContext
-    ): array {
+    private function getOrderToolbarButtons(): array
+    {
         $toolbarButtons = [];
 
-        $isSingleShopContext = $shopContext->isSingleShopContext();
+        $isSingleShopContext = $this->getShopContext()->getShopConstraint()->getShopId() !== null;
 
         $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_orders_create'),
@@ -225,7 +220,6 @@ class OrderController extends PrestaShopAdminController
 
         try {
             $result = $formHandler->handle($summaryForm);
-
             if ($result->getIdentifiableObjectId() instanceof OrderId) {
                 /** @var OrderId $orderId */
                 $orderId = $result->getIdentifiableObjectId();
@@ -253,10 +247,11 @@ class OrderController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
     public function createAction(
         Request $request,
-        ShopContext $shopContextChecker,
-        LanguageByIdChoiceProvider $choiceProvider
+        LanguageByIdChoiceProvider $languageChoiceProvider,
+        #[Autowire(service: 'prestashop.core.form.choice_provider.currency_by_id')] FormChoiceProviderInterface $currencyChoiceProvider,
     ) {
-        if (!$shopContextChecker->isSingleShopContext()) {
+        $isSingleShopContext = $this->getShopContext()->getShopConstraint()->getShopId() !== null;
+        if (!$isSingleShopContext) {
             $this->addFlash('error', $this->trans(
                 'You have to select a shop before creating new orders.',
                 [],
@@ -267,17 +262,16 @@ class OrderController extends PrestaShopAdminController
         }
 
         $summaryForm = $this->createForm(CartSummaryType::class);
-        $languages = $choiceProvider->getChoices(
+        $languages = $languageChoiceProvider->getChoices(
             [
-                'shop_id' => $shopContextChecker->getContextShopID(),
+                'shop_id' => $this->getShopContext()->getShopConstraint()->getShopId(),
             ]
         );
-        $currencies = $this->get(CurrencyByIdChoiceProvider::class)->getChoices();
 
         $configuration = $this->getConfiguration();
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/create.html.twig', [
-            'currencies' => $currencies,
+            'currencies' => $currencyChoiceProvider->getChoices(),
             'languages' => $languages,
             'summaryForm' => $summaryForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
@@ -298,10 +292,9 @@ class OrderController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function searchAction(
         Request $request,
-        ResponseBuilder $responseBuilder,
         #[Autowire(service: 'prestashop.core.grid.definition.factory.order')] OrderGridDefinitionFactory $orderGridDefinitionFactory,
     ) {
-        return $responseBuilder->buildSearchResponse(
+        return $this->buildSearchResponse(
             $orderGridDefinitionFactory,
             $request,
             OrderGridDefinitionFactory::GRID_ID,
@@ -317,13 +310,9 @@ class OrderController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function generateInvoicePdfAction(
         int $orderId,
-        OrderInvoicePdfGenerator $invoicePdfGenerator,
-    ) {
-        $invoicePdfGenerator->generatePDF([$orderId]);
-
-        // When using legacy generator,
-        // we want to be sure that displaying PDF is the last thing this controller will do
-        die;
+        #[Autowire(service: 'prestashop.adapter.pdf.order_invoice_pdf_generator')] OrderInvoicePdfGenerator $invoicePdfGenerator,
+    ): BinaryFileResponse {
+        return new BinaryFileResponse($invoicePdfGenerator->generatePDF([$orderId]));
     }
 
     /**
@@ -335,12 +324,8 @@ class OrderController extends PrestaShopAdminController
     public function generateDeliverySlipPdfAction(
         int $orderId,
         #[Autowire(service: 'prestashop.adapter.pdf.delivery_slip_pdf_generator')] PDFGeneratorInterface $deliverySlipPdfGenerator,
-    ) {
-        $deliverySlipPdfGenerator->generatePDF([$orderId]);
-
-        // When using legacy generator,
-        // we want to be sure that displaying PDF is the last thing this controller will do
-        die;
+    ): BinaryFileResponse {
+        return new BinaryFileResponse($deliverySlipPdfGenerator->generatePDF([$orderId]));
     }
 
     /**
@@ -440,10 +425,9 @@ class OrderController extends PrestaShopAdminController
     public function viewAction(
         int $orderId,
         Request $request,
-        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilder $formBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilderInterface $formBuilder,
         #[Autowire(service: 'prestashop.adapter.order.order_sibling_provider')] OrderSiblingProviderInterface $orderSiblingProvider,
         CurrencyDataProvider $currencyDataProvider,
-        LocaleInterface $locale,
     ): Response {
         try {
             /** @var OrderForViewing $orderForViewing */
@@ -546,7 +530,7 @@ class OrderController extends PrestaShopAdminController
 
         $merchandiseReturnEnabled = (bool) $this->getConfiguration()->get('PS_ORDER_RETURN');
 
-        $paginationNum = (int) $this->getConfiguration()->get('PS_ORDER_PRODUCTS_NB_PER_PAGE', self::DEFAULT_PRODUCTS_NUMBER);
+        $paginationNum = (int) $this->getConfiguration()->get('PS_ORDER_PRODUCTS_NB_PER_PAGE');
         $paginationNumOptions = self::PRODUCTS_PAGINATION_OPTIONS;
         if (!in_array($paginationNum, $paginationNumOptions)) {
             $paginationNumOptions[] = $paginationNum;
@@ -556,7 +540,7 @@ class OrderController extends PrestaShopAdminController
         $metatitle = sprintf(
             '%s %s %s',
             $this->trans('Orders', [], 'Admin.Orderscustomers.Feature'),
-            $this->getConfiguration()->get('PS_NAVIGATION_PIPE', '>'),
+            $this->getConfiguration()->get('PS_NAVIGATION_PIPE') ?? '>',
             $this->trans(
                 'Order %reference% from %firstname% %lastname%',
                 [
@@ -590,12 +574,12 @@ class OrderController extends PrestaShopAdminController
             'editProductRowForm' => $editProductRowForm->createView(),
             'backOfficeOrderButtons' => $backOfficeOrderButtons,
             'merchandiseReturnEnabled' => $merchandiseReturnEnabled,
-            'priceSpecification' => $locale->getPriceSpecification($orderCurrency->iso_code)->toArray(),
+            'priceSpecification' => $this->getLanguageContext()->getPriceSpecification($orderCurrency->iso_code)->toArray(),
             'previousOrderId' => $orderSiblingProvider->getPreviousOrderId($orderId),
             'nextOrderId' => $orderSiblingProvider->getNextOrderId($orderId),
             'paginationNum' => $paginationNum,
             'paginationNumOptions' => $paginationNumOptions,
-            'isAvailableQuantityDisplayed' => $this->getConfiguration()->getBoolean('PS_STOCK_MANAGEMENT'),
+            'isAvailableQuantityDisplayed' => (bool) $this->getConfiguration()->get('PS_STOCK_MANAGEMENT'),
             'internalNoteForm' => $internalNoteForm->createView(),
         ]);
     }
@@ -610,7 +594,7 @@ class OrderController extends PrestaShopAdminController
     public function partialRefundAction(
         int $orderId,
         Request $request,
-        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilder $formBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilderInterface $formBuilder,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.partial_refund_form_handler')] FormHandlerInterface $formHandler,
     ) {
         $form = $formBuilder->getFormFor($orderId);
@@ -622,7 +606,7 @@ class OrderController extends PrestaShopAdminController
                 if ($result->isValid()) {
                     $this->addFlash('success', $this->trans('A partial refund was successfully created.', [], 'Admin.Orderscustomers.Notification'));
                 } else {
-                    $this->addFlashErrors(explode("\n", (string) $form->getErrors(true)));
+                    $this->addFlashFormErrors($form);
                 }
             }
         } catch (Exception $e) {
@@ -644,7 +628,7 @@ class OrderController extends PrestaShopAdminController
     public function standardRefundAction(
         int $orderId,
         Request $request,
-        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilder $formBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilderInterface $formBuilder,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.partial_refund_form_handler')] FormHandlerInterface $formHandler,
     ) {
         $form = $formBuilder->getFormFor($orderId);
@@ -656,7 +640,7 @@ class OrderController extends PrestaShopAdminController
                 if ($result->isValid()) {
                     $this->addFlash('success', $this->trans('A standard refund was successfully created.', [], 'Admin.Orderscustomers.Notification'));
                 } else {
-                    $this->addFlashErrors(explode("\n", (string) $form->getErrors(true)));
+                    $this->addFlashFormErrors($form);
                 }
             }
         } catch (Exception $e) {
@@ -678,7 +662,7 @@ class OrderController extends PrestaShopAdminController
     public function returnProductAction(
         int $orderId,
         Request $request,
-        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilder $formBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilderInterface $formBuilder,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.partial_refund_form_handler')] FormHandlerInterface $formHandler,
     ) {
         $form = $formBuilder->getFormFor($orderId);
@@ -690,7 +674,7 @@ class OrderController extends PrestaShopAdminController
                 if ($result->isValid()) {
                     $this->addFlash('success', $this->trans('The product was successfully returned.', [], 'Admin.Orderscustomers.Notification'));
                 } else {
-                    $this->addFlashErrors(explode("\n", (string) $form->getErrors(true)));
+                    $this->addFlashFormErrors($form);
                 }
             }
         } catch (Exception $e) {
@@ -707,7 +691,7 @@ class OrderController extends PrestaShopAdminController
      */
     private function handleOutOfStockProduct(OrderForViewing $orderForViewing)
     {
-        $isStockManagementEnabled = $this->getConfiguration()->getBoolean('PS_STOCK_MANAGEMENT');
+        $isStockManagementEnabled = (bool) $this->getConfiguration()->get('PS_STOCK_MANAGEMENT');
         if (!$isStockManagementEnabled || $orderForViewing->isDelivered() || $orderForViewing->isShipped()) {
             return;
         }
@@ -732,7 +716,7 @@ class OrderController extends PrestaShopAdminController
     public function addProductAction(
         int $orderId,
         Request $request,
-        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilder $formBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilderInterface $formBuilder,
         CurrencyDataProvider $currencyDataProvider
     ): Response {
         /** @var OrderForViewing $orderForViewing */
@@ -803,7 +787,7 @@ class OrderController extends PrestaShopAdminController
                 'product' => $newProduct,
                 'isColumnLocationDisplayed' => $newProduct->getLocation() !== '',
                 'isColumnRefundedDisplayed' => $newProduct->getQuantityRefunded() > 0,
-                'isAvailableQuantityDisplayed' => $this->getConfiguration()->getBoolean('PS_STOCK_MANAGEMENT'),
+                'isAvailableQuantityDisplayed' => (bool) $this->getConfiguration()->get('PS_STOCK_MANAGEMENT'),
                 'cancelProductForm' => $cancelProductForm->createView(),
                 'orderCurrency' => $orderCurrency,
             ]);
@@ -854,11 +838,10 @@ class OrderController extends PrestaShopAdminController
     public function getInvoicesAction(
         int $orderId,
         #[Autowire(service: 'prestashop.adapter.form.choice_provider.order_invoice_by_id')] ConfigurableFormChoiceProviderInterface $choiceProvider,
-        LanguageContext $languageContext
     ) {
         $choices = $choiceProvider->getChoices([
             'id_order' => $orderId,
-            'id_lang' => $languageContext->getId(),
+            'id_lang' => $this->getLanguageContext()->getId(),
             'display_total' => true,
         ]);
 
@@ -1008,7 +991,7 @@ class OrderController extends PrestaShopAdminController
         int $orderId,
         int $orderDetailId,
         Request $request,
-        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilder $formBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilderInterface $formBuilder,
         CurrencyDataProvider $currencyDataProvider
     ): Response {
         try {
@@ -1050,7 +1033,7 @@ class OrderController extends PrestaShopAdminController
             'cancelProductForm' => $cancelProductForm->createView(),
             'isColumnLocationDisplayed' => $product->getLocation() !== '',
             'isColumnRefundedDisplayed' => $product->getQuantityRefunded() > 0,
-            'isAvailableQuantityDisplayed' => $this->getConfiguration()->getBoolean('PS_STOCK_MANAGEMENT'),
+            'isAvailableQuantityDisplayed' => (bool) $this->getConfiguration()->get('PS_STOCK_MANAGEMENT'),
             'orderCurrency' => $orderCurrency,
             'orderForViewing' => $orderForViewing,
             'product' => $product,
@@ -1157,9 +1140,11 @@ class OrderController extends PrestaShopAdminController
      *
      * @return RedirectResponse
      */
-    #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
-    public function addPaymentAction(int $orderId, Request $request): RedirectResponse
-    {
+    #[AdminSecurity("is_granted('update', 'AdminOrders')", message: 'You do not have permission to edit this.', redirectQueryParamsToKeep: ['orderId'], redirectRoute: 'admin_orders_view')]
+    public function addPaymentAction(
+        int $orderId,
+        Request $request,
+    ): RedirectResponse {
         $form = $this->createForm(OrderPaymentType::class, [], [
             'id_order' => $orderId,
         ]);
@@ -1177,7 +1162,7 @@ class OrderController extends PrestaShopAdminController
                             $data['payment_method'],
                             $data['amount'],
                             $data['id_currency'],
-                            (int) $this->getContext()->employee->id,
+                            $this->getEmployeeContext()->getEmployee()->getId(),
                             $data['id_invoice'],
                             $data['transaction_id']
                         )
@@ -1526,7 +1511,7 @@ class OrderController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function getProductsListAction(
         int $orderId,
-        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilder $formBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilderInterface $formBuilder,
         CurrencyDataProvider $currencyDataProvider
     ): Response {
         /** @var OrderForViewing $orderForViewing */
@@ -1536,7 +1521,7 @@ class OrderController extends PrestaShopAdminController
 
         $cancelProductForm = $formBuilder->getFormFor($orderId);
 
-        $paginationNum = $this->getConfiguration()->getInt('PS_ORDER_PRODUCTS_NB_PER_PAGE', self::DEFAULT_PRODUCTS_NUMBER);
+        $paginationNum = (int) $this->getConfiguration()->get('PS_ORDER_PRODUCTS_NB_PER_PAGE');
         $paginationNumOptions = self::PRODUCTS_PAGINATION_OPTIONS;
         if (!in_array($paginationNum, $paginationNumOptions)) {
             $paginationNumOptions[] = $paginationNum;
@@ -1562,7 +1547,7 @@ class OrderController extends PrestaShopAdminController
             'paginationNum' => $paginationNum,
             'isColumnLocationDisplayed' => $isColumnLocationDisplayed,
             'isColumnRefundedDisplayed' => $isColumnRefundedDisplayed,
-            'isAvailableQuantityDisplayed' => $this->getConfiguration()->getBoolean('PS_STOCK_MANAGEMENT'),
+            'isAvailableQuantityDisplayed' => (bool) $this->getConfiguration()->get('PS_STOCK_MANAGEMENT'),
         ]);
     }
 
@@ -1623,7 +1608,7 @@ class OrderController extends PrestaShopAdminController
     public function cancellationAction(
         int $orderId,
         Request $request,
-        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilder $formBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilderInterface $formBuilder,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.partial_refund_form_handler')] FormHandlerInterface $formHandler,
     ) {
         $form = $formBuilder->getFormFor($orderId);
@@ -1848,9 +1833,8 @@ class OrderController extends PrestaShopAdminController
             OrderNotFoundException::class => $e instanceof OrderNotFoundException ?
                 $this->trans(
                     'Order #%d cannot be loaded.',
-                    [],
+                    ['#%d' => $e->getOrderId()->getValue()],
                     'Admin.Orderscustomers.Notification',
-                    ['#%d' => $e->getOrderId()->getValue()]
                 ) : '',
             OrderEmailSendException::class => $this->trans(
                 'An error occurred while sending the e-mail to the customer.',
@@ -2073,14 +2057,14 @@ class OrderController extends PrestaShopAdminController
                 CustomerMessageConstraintException::MISSING_MESSAGE => $this->trans(
                     'The %s field is not valid',
                     [
-                        sprintf('"%s"', $this->trans('Message', 'Admin.Global')),
+                        sprintf('"%s"', $this->trans('Message', [], 'Admin.Global')),
                     ],
                     'Admin.Notifications.Error'
                 ),
                 CustomerMessageConstraintException::INVALID_MESSAGE => $this->trans(
                     'The %s field is not valid',
                     [
-                        sprintf('"%s"', $this->trans('Message', 'Admin.Global')),
+                        sprintf('"%s"', $this->trans('Message', [], 'Admin.Global')),
                     ],
                     'Admin.Notifications.Error'
                 ),

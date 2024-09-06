@@ -28,7 +28,6 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use PrestaShop\PrestaShop\Adapter\PDF\InvoicePdfGenerator;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use PrestaShop\PrestaShop\Core\Form\Handler;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceByDateFormHandler;
 use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceByStatusFormHandler;
@@ -53,9 +52,9 @@ class InvoicesController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'Access denied.')]
     public function indexAction(
         Request $request,
-        #[Autowire(service: 'prestashop.admin.order.invoices.by_date.form_handler')] Handler $byDateForm,
-        #[Autowire(service: 'prestashop.admin.order.invoices.by_status.form_handler')] Handler $byStatusForm,
-        #[Autowire(service: 'prestashop.admin.order.invoices.options.form_handler')] Handler $optionsForm,
+        #[Autowire(service: 'prestashop.admin.order.invoices.by_date.form_handler')] FormHandlerInterface $byDateForm,
+        #[Autowire(service: 'prestashop.admin.order.invoices.by_status.form_handler')] FormHandlerInterface $byStatusForm,
+        #[Autowire(service: 'prestashop.admin.order.invoices.options.form_handler')] FormHandlerInterface $optionsForm,
     ): Response {
         $legacyController = $request->attributes->get('_legacy_controller');
 
@@ -113,7 +112,7 @@ class InvoicesController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'Access denied.')]
     public function processAction(
         Request $request,
-        #[Autowire(service: 'prestashop.admin.order.invoices.options.form_handler')] Handler $formHandler,
+        #[Autowire(service: 'prestashop.admin.order.invoices.options.form_handler')] FormHandlerInterface $formHandler,
     ) {
         if ($this->processForm($formHandler, $request)) {
             $this->addFlash('success', $this->trans('Update successful', [], 'Admin.Notifications.Success'));

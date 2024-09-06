@@ -28,7 +28,6 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use PrestaShop\PrestaShop\Core\Form\Handler;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -53,7 +52,7 @@ class DeliveryController extends PrestaShopAdminController
     public function slipAction(
         Request $request,
         #[Autowire(service: 'prestashop.adapter.order.delivery.slip.options.form_handler')] FormHandlerInterface $formHandler,
-        #[Autowire(service: 'prestashop.adapter.order.delivery.slip.pdf.form_handler')] Handler $pdfFormHandler,
+        #[Autowire(service: 'prestashop.adapter.order.delivery.slip.pdf.form_handler')] FormHandlerInterface $pdfFormHandler,
     ): Response {
         /** @var Form $form */
         $form = $formHandler->getForm();
@@ -96,7 +95,7 @@ class DeliveryController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('create', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller'))", message: 'Access denied.')]
     public function generatePdfAction(
         Request $request,
-        #[Autowire(service: 'prestashop.adapter.order.delivery.slip.pdf.form_handler')] Handler $formHandler,
+        #[Autowire(service: 'prestashop.adapter.order.delivery.slip.pdf.form_handler')] FormHandlerInterface $formHandler,
         LegacyContext $legacyContext
     ) {
         /** @var Form $form */

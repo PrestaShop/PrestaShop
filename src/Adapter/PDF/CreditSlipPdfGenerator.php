@@ -83,6 +83,7 @@ final class CreditSlipPdfGenerator implements PDFGeneratorInterface
             $slipsCollection = ObjectModel::hydrateCollection('OrderSlip', $slipsList);
 
             $pdf = new PDF($slipsCollection, PDF::TEMPLATE_ORDER_SLIP, Context::getContext()->smarty);
+
             return $pdf->render(true);
         } catch (PrestaShopException $e) {
             throw new PdfException('Something went wrong when trying to generate pdf', 0, $e);

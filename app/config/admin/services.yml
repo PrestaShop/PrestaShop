@@ -82,8 +82,3 @@ services:
     autowire: true
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-
-  PrestaShopBundle\Controller\Admin\Sell\Order\CreditSlipController: ~
-  PrestaShopBundle\Controller\Admin\Sell\Order\OrderController: ~
-  PrestaShopBundle\Controller\Admin\Sell\Order\InvoicesController: ~
-  PrestaShopBundle\Controller\Admin\Sell\Order\DeliveryController: ~
