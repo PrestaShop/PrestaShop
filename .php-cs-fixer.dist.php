@@ -11,6 +11,7 @@ $finder = PhpCsFixer\Finder::create()->in([
 ])->notPath([
     'Unit/Resources/config/params.php',
     'Unit/Resources/config/params_modified.php',
+    __DIR__.'/tests/Resources/modules_tests',
 ]);
 
 return (new PhpCsFixer\Config())

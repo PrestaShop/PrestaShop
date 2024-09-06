@@ -74,3 +74,7 @@ services:
     alias: PrestaShop\PrestaShop\Core\Module\ModuleManager
     public: true
     deprecated: ~
+
+  PrestaShop\PrestaShop\Core\Module\ModuleOverrideVerifier:
+    arguments:
+      - '@translator'
