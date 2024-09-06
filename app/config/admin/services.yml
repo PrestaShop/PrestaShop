@@ -83,5 +83,5 @@ services:
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
-  # CreditSlip
   PrestaShopBundle\Controller\Admin\Sell\Order\CreditSlipController: ~
+  PrestaShopBundle\Controller\Admin\Sell\Order\OrderController: ~
