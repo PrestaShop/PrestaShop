@@ -5,10 +5,10 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import customersPage from '@pages/BO/customers';
 import addCustomerPage from '@pages/BO/customers/add';
 
 import {
+  boCustomersPage,
   boDashboardPage,
   FakerCustomer,
   utilsPlaywright,
@@ -53,16 +53,16 @@ describe('BO - Customers - Customers : Customers bulk actions', async () => {
       boDashboardPage.customersParentLink,
       boDashboardPage.customersLink,
     );
-    await customersPage.closeSfToolBar(page);
+    await boCustomersPage.closeSfToolBar(page);
 
-    const pageTitle = await customersPage.getPageTitle(page);
-    expect(pageTitle).to.contains(customersPage.pageTitle);
+    const pageTitle = await boCustomersPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCustomersPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
-    numberOfCustomers = await customersPage.resetAndGetNumberOfLines(page);
+    numberOfCustomers = await boCustomersPage.resetAndGetNumberOfLines(page);
     expect(numberOfCustomers).to.be.above(0);
   });
 
@@ -75,7 +75,7 @@ describe('BO - Customers - Customers : Customers bulk actions', async () => {
       it('should go to add new customer page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddCustomerPage${index + 1}`, baseContext);
 
-        await customersPage.goToAddNewCustomerPage(page);
+        await boCustomersPage.goToAddNewCustomerPage(page);
 
         const pageTitle = await addCustomerPage.getPageTitle(page);
         expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
@@ -85,9 +85,9 @@ describe('BO - Customers - Customers : Customers bulk actions', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `createCustomer${index + 1}`, baseContext);
 
         const textResult = await addCustomerPage.createEditCustomer(page, test.args.customerToCreate);
-        expect(textResult).to.equal(customersPage.successfulCreationMessage);
+        expect(textResult).to.equal(boCustomersPage.successfulCreationMessage);
 
-        const numberOfCustomersAfterCreation = await customersPage.getNumberOfElementInGrid(page);
+        const numberOfCustomersAfterCreation = await boCustomersPage.getNumberOfElementInGrid(page);
         expect(numberOfCustomersAfterCreation).to.be.equal(numberOfCustomers + index + 1);
       });
     });
@@ -98,9 +98,9 @@ describe('BO - Customers - Customers : Customers bulk actions', async () => {
     it('should filter list by firstName', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkEdit', baseContext);
 
-      await customersPage.filterCustomers(page, 'input', 'firstname', 'todelete');
+      await boCustomersPage.filterCustomers(page, 'input', 'firstname', 'todelete');
 
-      const textResult = await customersPage.getTextColumnFromTableCustomers(page, 1, 'firstname');
+      const textResult = await boCustomersPage.getTextColumnFromTableCustomers(page, 1, 'firstname');
       expect(textResult).to.contains('todelete');
     });
 
@@ -111,14 +111,14 @@ describe('BO - Customers - Customers : Customers bulk actions', async () => {
       it(`should ${test.args.action} customers with bulk actions and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Customers`, baseContext);
 
-        const textResult = await customersPage.bulkSetStatus(page, test.args.enabledValue);
-        expect(textResult).to.be.equal(customersPage.successfulUpdateMessage);
+        const textResult = await boCustomersPage.bulkSetStatus(page, test.args.enabledValue);
+        expect(textResult).to.be.equal(boCustomersPage.successfulUpdateMessage);
 
-        const numberOfCustomersInGrid = await customersPage.getNumberOfElementInGrid(page);
+        const numberOfCustomersInGrid = await boCustomersPage.getNumberOfElementInGrid(page);
         expect(numberOfCustomersInGrid).to.be.at.least(2);
 
         for (let i = 1; i <= numberOfCustomersInGrid; i++) {
-          const customerStatus = await customersPage.getCustomerStatus(page, i);
+          const customerStatus = await boCustomersPage.getCustomerStatus(page, i);
           expect(customerStatus).to.equals(test.args.enabledValue);
         }
       });
@@ -130,23 +130,23 @@ describe('BO - Customers - Customers : Customers bulk actions', async () => {
     it('should filter list by firstName', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDelete', baseContext);
 
-      await customersPage.filterCustomers(page, 'input', 'firstname', 'todelete');
+      await boCustomersPage.filterCustomers(page, 'input', 'firstname', 'todelete');
 
-      const textResult = await customersPage.getTextColumnFromTableCustomers(page, 1, 'firstname');
+      const textResult = await boCustomersPage.getTextColumnFromTableCustomers(page, 1, 'firstname');
       expect(textResult).to.contains('todelete');
     });
 
     it('should delete customers', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCustomers', baseContext);
 
-      const deleteTextResult = await customersPage.deleteCustomersBulkActions(page);
-      expect(deleteTextResult).to.be.equal(customersPage.successfulMultiDeleteMessage);
+      const deleteTextResult = await boCustomersPage.deleteCustomersBulkActions(page);
+      expect(deleteTextResult).to.be.equal(boCustomersPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterBulkDelete', baseContext);
 
-      const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
+      const numberOfCustomersAfterReset = await boCustomersPage.resetAndGetNumberOfLines(page);
       expect(numberOfCustomersAfterReset).to.be.equal(numberOfCustomers);
     });
   });

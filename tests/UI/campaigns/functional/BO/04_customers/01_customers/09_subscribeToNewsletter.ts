@@ -4,10 +4,8 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import BO pages
-import customersPage from '@pages/BO/customers';
-
 import {
+  boCustomersPage,
   boDashboardPage,
   boModuleManagerPage,
   dataCustomers,
@@ -48,25 +46,25 @@ describe('BO - Customers - Customers : Check customer subscription to newsletter
       boDashboardPage.customersParentLink,
       boDashboardPage.customersLink,
     );
-    await customersPage.closeSfToolBar(page);
+    await boCustomersPage.closeSfToolBar(page);
 
-    const pageTitle = await customersPage.getPageTitle(page);
-    expect(pageTitle).to.contains(customersPage.pageTitle);
+    const pageTitle = await boCustomersPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCustomersPage.pageTitle);
   });
 
   it('should reset all filters and get number of customers in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetAllFilters', baseContext);
 
-    numberOfCustomers = await customersPage.resetAndGetNumberOfLines(page);
+    numberOfCustomers = await boCustomersPage.resetAndGetNumberOfLines(page);
     expect(numberOfCustomers).to.be.above(0);
   });
 
   it(`should filter by email '${dataCustomers.johnDoe.email}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterByEmail', baseContext);
 
-    await customersPage.filterCustomers(page, 'input', 'email', dataCustomers.johnDoe.email);
+    await boCustomersPage.filterCustomers(page, 'input', 'email', dataCustomers.johnDoe.email);
 
-    const numberOfCustomersAfterFilter = await customersPage.getNumberOfElementInGrid(page);
+    const numberOfCustomersAfterFilter = await boCustomersPage.getNumberOfElementInGrid(page);
     expect(numberOfCustomersAfterFilter).to.equal(1);
   });
 
@@ -77,19 +75,19 @@ describe('BO - Customers - Customers : Check customer subscription to newsletter
     it(`should ${test.args.action} newsletters`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}NewsLetters`, baseContext);
 
-      await customersPage.setNewsletterStatus(page, 1, test.args.value);
+      await boCustomersPage.setNewsletterStatus(page, 1, test.args.value);
 
-      const newsletterStatus = await customersPage.getNewsletterStatus(page, 1);
+      const newsletterStatus = await boCustomersPage.getNewsletterStatus(page, 1);
       expect(newsletterStatus).to.be.equal(test.args.value);
     });
 
     it('should go to \'Modules > Module Manager\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToModuleManageTo${index}`, baseContext);
 
-      await customersPage.goToSubMenu(
+      await boCustomersPage.goToSubMenu(
         page,
-        customersPage.modulesParentLink,
-        customersPage.moduleManagerLink,
+        boCustomersPage.modulesParentLink,
+        boCustomersPage.moduleManagerLink,
       );
 
       const pageTitle = await boModuleManagerPage.getPageTitle(page);
@@ -129,15 +127,15 @@ describe('BO - Customers - Customers : Check customer subscription to newsletter
         modPsEmailSubscriptionBoMain.customersLink,
       );
 
-      const pageTitle = await customersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(customersPage.pageTitle);
+      const pageTitle = await boCustomersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomersPage.pageTitle);
     });
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetAfterAll', baseContext);
 
-    const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
+    const numberOfCustomersAfterReset = await boCustomersPage.resetAndGetNumberOfLines(page);
     expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
   });
 });

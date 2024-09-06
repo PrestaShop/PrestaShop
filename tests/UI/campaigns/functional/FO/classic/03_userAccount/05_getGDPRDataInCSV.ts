@@ -9,7 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {contactUsPage} from '@pages/FO/classic/contactUs';
-import customersPage from '@pages/BO/customers';
 import viewCustomerPage from '@pages/BO/customers/view';
 import customerServicePage from '@pages/BO/customerService/customerService';
 import {createAccountPage} from '@pages/FO/classic/myAccount/add';
@@ -17,6 +16,7 @@ import {gdprPersonalDataPage} from '@pages/FO/classic/myAccount/gdprPersonalData
 import ordersPage from '@pages/BO/orders';
 
 import {
+  boCustomersPage,
   boDashboardPage,
   boShoppingCartsPage,
   dataPaymentMethods,
@@ -176,25 +176,25 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
           boDashboardPage.customersParentLink,
           boDashboardPage.customersLink,
         );
-        await customersPage.closeSfToolBar(page);
+        await boCustomersPage.closeSfToolBar(page);
 
-        const pageTitle = await customersPage.getPageTitle(page);
-        expect(pageTitle).to.contains(customersPage.pageTitle);
+        const pageTitle = await boCustomersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCustomersPage.pageTitle);
       });
 
       it(`should filter by customer first name '${customerData.firstName}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomerFirstName1', baseContext);
 
-        await customersPage.filterCustomers(page, 'input', 'firstname', customerData.firstName);
+        await boCustomersPage.filterCustomers(page, 'input', 'firstname', customerData.firstName);
 
-        const numberOfCustomersAfterFilter = await customersPage.getNumberOfElementInGrid(page);
+        const numberOfCustomersAfterFilter = await boCustomersPage.getNumberOfElementInGrid(page);
         expect(numberOfCustomersAfterFilter).to.equal(1);
       });
 
       it('should get creation account date', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getRegistrationDate', baseContext);
 
-        const registration = await customersPage.getTextColumnFromTableCustomers(page, 1, 'date_add');
+        const registration = await boCustomersPage.getTextColumnFromTableCustomers(page, 1, 'date_add');
 
         registrationDate = `${registration.substring(6, 10)}-${registration.substring(0, 2)}-`
           + `${registration.substring(3, 5)}${registration.substring(11, 19)}`;
@@ -204,7 +204,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should get last visit date', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getLastVisitDate1', baseContext);
 
-        const lastVisit = await customersPage.getTextColumnFromTableCustomers(page, 1, 'connect');
+        const lastVisit = await boCustomersPage.getTextColumnFromTableCustomers(page, 1, 'connect');
         lastVisitDate = `${lastVisit.substring(6, 10)}-${lastVisit.substring(0, 2)}-`
           + `${lastVisit.substring(3, 5)}${lastVisit.substring(11, 19)}`;
         expect(lastVisitDate).to.contains(date.getFullYear());
@@ -213,7 +213,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should click on view customer', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToViewCustomerPage', baseContext);
 
-        await customersPage.goToViewCustomerPage(page, 1);
+        await boCustomersPage.goToViewCustomerPage(page, 1);
 
         const pageTitle = await viewCustomerPage.getPageTitle(page);
         expect(pageTitle).to.contains(viewCustomerPage.pageTitle(createCustomerName));
@@ -883,25 +883,25 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
           boDashboardPage.customersLink,
         );
 
-        await customersPage.closeSfToolBar(page);
+        await boCustomersPage.closeSfToolBar(page);
 
-        const pageTitle = await customersPage.getPageTitle(page);
-        expect(pageTitle).to.contains(customersPage.pageTitle);
+        const pageTitle = await boCustomersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCustomersPage.pageTitle);
       });
 
       it(`should filter by customer first name '${customerData.firstName}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomerFirstName2', baseContext);
 
-        await customersPage.filterCustomers(page, 'input', 'firstname', customerData.firstName);
+        await boCustomersPage.filterCustomers(page, 'input', 'firstname', customerData.firstName);
 
-        const numberOfCustomersAfterFilter = await customersPage.getNumberOfElementInGrid(page);
+        const numberOfCustomersAfterFilter = await boCustomersPage.getNumberOfElementInGrid(page);
         expect(numberOfCustomersAfterFilter).to.equal(1);
       });
 
       it('should get last visit date', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getLastVisitDate2', baseContext);
 
-        const lastVisit = await customersPage.getTextColumnFromTableCustomers(page, 1, 'connect');
+        const lastVisit = await boCustomersPage.getTextColumnFromTableCustomers(page, 1, 'connect');
         secondLastVisitDate = `${lastVisit.substring(6, 10)}-${lastVisit.substring(0, 2)}-`
           + `${lastVisit.substring(3, 5)}${lastVisit.substring(11, 19)}`;
         expect(lastVisitDate).to.contains(date.getFullYear());
@@ -910,7 +910,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should click on view customer', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToViewCustomerPage2', baseContext);
 
-        await customersPage.goToViewCustomerPage(page, 1);
+        await boCustomersPage.goToViewCustomerPage(page, 1);
 
         const pageTitle = await viewCustomerPage.getPageTitle(page);
         expect(pageTitle).to.contains(viewCustomerPage.pageTitle(createCustomerName));

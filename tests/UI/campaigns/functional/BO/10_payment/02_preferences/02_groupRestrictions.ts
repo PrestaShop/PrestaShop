@@ -6,13 +6,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import customersPage from '@pages/BO/customers';
 import addCustomerPage from '@pages/BO/customers/add';
 import preferencesPage from '@pages/BO/payment/preferences';
 // Import FO pages
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
 import {
+  boCustomersPage,
   boDashboardPage,
   dataCustomers,
   FakerAddress,
@@ -61,16 +61,16 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
         boDashboardPage.customersParentLink,
         boDashboardPage.customersLink,
       );
-      await customersPage.closeSfToolBar(page);
+      await boCustomersPage.closeSfToolBar(page);
 
-      const pageTitle = await customersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(customersPage.pageTitle);
+      const pageTitle = await boCustomersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomersPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetBeforeCreate', baseContext);
 
-      numberOfCustomers = await customersPage.resetAndGetNumberOfLines(page);
+      numberOfCustomers = await boCustomersPage.resetAndGetNumberOfLines(page);
       expect(numberOfCustomers).to.be.above(0);
     });
 
@@ -81,7 +81,7 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
       it('should go to add new customer page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewCustomerPage${index}`, baseContext);
 
-        await customersPage.goToAddNewCustomerPage(page);
+        await boCustomersPage.goToAddNewCustomerPage(page);
 
         const pageTitle = await addCustomerPage.getPageTitle(page);
         expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
@@ -92,10 +92,10 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
 
         // Create customer
         const textResult = await addCustomerPage.createEditCustomer(page, test.args.customerData);
-        expect(textResult).to.equal(customersPage.successfulCreationMessage);
+        expect(textResult).to.equal(boCustomersPage.successfulCreationMessage);
 
         // Check number of customers
-        const numberOfCustomersAfterCreation = await customersPage.getNumberOfElementInGrid(page);
+        const numberOfCustomersAfterCreation = await boCustomersPage.getNumberOfElementInGrid(page);
         expect(numberOfCustomersAfterCreation).to.be.equal(numberOfCustomers + index + 1);
       });
     });
@@ -105,10 +105,10 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
     it('should go to \'Payment > Preferences\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToPreferencesPage', baseContext);
 
-      await customersPage.goToSubMenu(
+      await boCustomersPage.goToSubMenu(
         page,
-        customersPage.paymentParentLink,
-        customersPage.preferencesLink,
+        boCustomersPage.paymentParentLink,
+        boCustomersPage.preferencesLink,
       );
 
       const pageTitle = await preferencesPage.getPageTitle(page);
@@ -310,8 +310,8 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
         preferencesPage.customersLink,
       );
 
-      const pageTitle = await customersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(customersPage.pageTitle);
+      const pageTitle = await boCustomersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomersPage.pageTitle);
     });
 
     [
@@ -322,27 +322,27 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
         await testContext.addContextItem(this, 'testIdentifier', `filterToDelete${index}`, baseContext);
 
         // Reset before filter
-        await customersPage.resetFilter(page);
+        await boCustomersPage.resetFilter(page);
 
-        await customersPage.filterCustomers(
+        await boCustomersPage.filterCustomers(
           page,
           'input',
           'email',
           test.args.customerData.email,
         );
 
-        const textEmail = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
+        const textEmail = await boCustomersPage.getTextColumnFromTableCustomers(page, 1, 'email');
         expect(textEmail).to.contains(test.args.customerData.email);
       });
 
       it(`should delete customer n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deleteCustomer${index}`, baseContext);
 
-        const textResult = await customersPage.deleteCustomer(page, 1);
-        expect(textResult).to.equal(customersPage.successfulDeleteMessage);
+        const textResult = await boCustomersPage.deleteCustomer(page, 1);
+        expect(textResult).to.equal(boCustomersPage.successfulDeleteMessage);
 
         // Check number of customers after delete
-        const numberOfCustomersAfterDelete = await customersPage.resetAndGetNumberOfLines(page);
+        const numberOfCustomersAfterDelete = await boCustomersPage.resetAndGetNumberOfLines(page);
         expect(numberOfCustomersAfterDelete).to.be.equal(numberOfCustomers - index + 1);
       });
     });

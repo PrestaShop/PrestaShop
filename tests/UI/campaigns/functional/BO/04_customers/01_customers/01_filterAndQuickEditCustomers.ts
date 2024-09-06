@@ -4,10 +4,8 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import customersPage from '@pages/BO/customers';
-
 import {
+  boCustomersPage,
   boDashboardPage,
   dataCustomers,
   dataGroups,
@@ -53,16 +51,16 @@ describe('BO - Customers - Customers : Filter and quick edit', async () => {
       boDashboardPage.customersParentLink,
       boDashboardPage.customersLink,
     );
-    await customersPage.closeSfToolBar(page);
+    await boCustomersPage.closeSfToolBar(page);
 
-    const pageTitle = await customersPage.getPageTitle(page);
-    expect(pageTitle).to.contains(customersPage.pageTitle);
+    const pageTitle = await boCustomersPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCustomersPage.pageTitle);
   });
 
   it('should reset all filters and get number of customers in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
-    numberOfCustomers = await customersPage.resetAndGetNumberOfLines(page);
+    numberOfCustomers = await boCustomersPage.resetAndGetNumberOfLines(page);
     expect(numberOfCustomers).to.be.above(0);
   });
 
@@ -128,44 +126,44 @@ describe('BO - Customers - Customers : Filter and quick edit', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `${arg.testIdentifier}`, baseContext);
 
         if (['filterActive', 'filterNewsletter', 'filterPartnerOffers'].includes(arg.testIdentifier)) {
-          await customersPage.filterCustomersSwitch(
+          await boCustomersPage.filterCustomersSwitch(
             page,
             arg.filterBy,
             arg.filterValue,
           );
         } else {
-          await customersPage.filterCustomers(
+          await boCustomersPage.filterCustomers(
             page,
             arg.filterType,
             arg.filterBy,
             arg.filterValue,
           );
         }
-        const numberOfCustomersAfterFilter = await customersPage.getNumberOfElementInGrid(page);
+        const numberOfCustomersAfterFilter = await boCustomersPage.getNumberOfElementInGrid(page);
         expect(numberOfCustomersAfterFilter).to.be.at.most(numberOfCustomers);
 
         for (let i = 1; i <= numberOfCustomersAfterFilter; i++) {
           switch (arg.filterBy) {
             case 'active': {
-              const customerStatus = await customersPage.getCustomerStatus(page, i);
+              const customerStatus = await boCustomersPage.getCustomerStatus(page, i);
               expect(customerStatus).to.equals(arg.filterValue === '1');
               break;
             }
 
             case 'newsletter': {
-              const newsletterStatus = await customersPage.getNewsletterStatus(page, i);
+              const newsletterStatus = await boCustomersPage.getNewsletterStatus(page, i);
               expect(newsletterStatus).to.equals(arg.filterValue === '1');
               break;
             }
 
             case 'optin': {
-              const partnerOffersStatus = await customersPage.getPartnerOffersStatus(page, i);
+              const partnerOffersStatus = await boCustomersPage.getPartnerOffersStatus(page, i);
               expect(partnerOffersStatus).to.equals(arg.filterValue === '1');
               break;
             }
 
             default: {
-              const textColumn = await customersPage.getTextColumnFromTableCustomers(
+              const textColumn = await boCustomersPage.getTextColumnFromTableCustomers(
                 page,
                 i,
                 arg.filterBy,
@@ -180,7 +178,7 @@ describe('BO - Customers - Customers : Filter and quick edit', async () => {
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${arg.testIdentifier}Reset`, baseContext);
 
-        const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
+        const numberOfCustomersAfterReset = await boCustomersPage.resetAndGetNumberOfLines(page);
         expect(numberOfCustomersAfterReset).to.equals(numberOfCustomers);
       });
     });
@@ -189,12 +187,12 @@ describe('BO - Customers - Customers : Filter and quick edit', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByDate', baseContext);
 
       // Filter orders
-      await customersPage.filterCustomersByRegistration(page, today, today);
+      await boCustomersPage.filterCustomersByRegistration(page, today, today);
       // Get number of elements
-      const numberOfCustomersAfterFilter = await customersPage.getNumberOfElementInGrid(page);
+      const numberOfCustomersAfterFilter = await boCustomersPage.getNumberOfElementInGrid(page);
 
       for (let i = 1; i <= numberOfCustomersAfterFilter; i++) {
-        const textColumn = await customersPage.getTextColumnFromTableCustomers(page, i, 'date_add');
+        const textColumn = await boCustomersPage.getTextColumnFromTableCustomers(page, i, 'date_add');
         expect(textColumn).to.contains(today);
       }
     });
@@ -202,7 +200,7 @@ describe('BO - Customers - Customers : Filter and quick edit', async () => {
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
-      const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
+      const numberOfCustomersAfterReset = await boCustomersPage.resetAndGetNumberOfLines(page);
       expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
     });
   });
@@ -212,14 +210,14 @@ describe('BO - Customers - Customers : Filter and quick edit', async () => {
     it(`should filter by email '${dataCustomers.johnDoe.email}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
-      await customersPage.filterCustomers(
+      await boCustomersPage.filterCustomers(
         page,
         'input',
         'email',
         dataCustomers.johnDoe.email,
       );
 
-      const numberOfCustomersAfterFilter = await customersPage.getNumberOfElementInGrid(page);
+      const numberOfCustomersAfterFilter = await boCustomersPage.getNumberOfElementInGrid(page);
       expect(numberOfCustomersAfterFilter).to.be.at.above(0);
     });
 
@@ -231,13 +229,13 @@ describe('BO - Customers - Customers : Filter and quick edit', async () => {
         it(`should ${test.args.action} customer status`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `quickEditStatus${index}`, baseContext);
 
-          const resultMessage = await customersPage.setCustomerStatus(page, 1, test.args.value);
+          const resultMessage = await boCustomersPage.setCustomerStatus(page, 1, test.args.value);
 
           if (resultMessage) {
-            expect(resultMessage).to.contains(customersPage.successfulUpdateStatusMessage);
+            expect(resultMessage).to.contains(boCustomersPage.successfulUpdateStatusMessage);
           }
 
-          const customerStatus = await customersPage.getCustomerStatus(page, 1);
+          const customerStatus = await boCustomersPage.getCustomerStatus(page, 1);
           expect(customerStatus).to.equals(test.args.value);
         });
       });
@@ -251,13 +249,13 @@ describe('BO - Customers - Customers : Filter and quick edit', async () => {
         it(`should ${test.args.action} customer newsletter status`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `quickEditNewsletter${index}`, baseContext);
 
-          const resultMessage = await customersPage.setNewsletterStatus(page, 1, test.args.value);
+          const resultMessage = await boCustomersPage.setNewsletterStatus(page, 1, test.args.value);
 
           if (resultMessage) {
-            expect(resultMessage).to.contains(customersPage.successfulUpdateStatusMessage);
+            expect(resultMessage).to.contains(boCustomersPage.successfulUpdateStatusMessage);
           }
 
-          const customerStatus = await customersPage.getNewsletterStatus(page, 1);
+          const customerStatus = await boCustomersPage.getNewsletterStatus(page, 1);
           expect(customerStatus).to.equals(test.args.value);
         });
       });
@@ -271,20 +269,20 @@ describe('BO - Customers - Customers : Filter and quick edit', async () => {
         it(`should ${test.args.action} customer partner offers status`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `quickEditOptin${index}`, baseContext);
 
-          const resultMessage = await customersPage.setPartnerOffersStatus(page, 1, test.args.value);
+          const resultMessage = await boCustomersPage.setPartnerOffersStatus(page, 1, test.args.value);
 
           if (resultMessage) {
-            expect(resultMessage).to.contains(customersPage.successfulUpdateStatusMessage);
+            expect(resultMessage).to.contains(boCustomersPage.successfulUpdateStatusMessage);
           }
 
-          const customerStatus = await customersPage.getPartnerOffersStatus(page, 1);
+          const customerStatus = await boCustomersPage.getPartnerOffersStatus(page, 1);
           expect(customerStatus).to.be.equal(test.args.value);
         });
       });
     });
 
     after(async () => {
-      await customersPage.resetAndGetNumberOfLines(page);
+      await boCustomersPage.resetAndGetNumberOfLines(page);
     });
   });
 });

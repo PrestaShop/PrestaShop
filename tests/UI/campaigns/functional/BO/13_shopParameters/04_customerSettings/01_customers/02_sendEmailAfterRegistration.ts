@@ -10,12 +10,12 @@ import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advanced
 import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
 import CustomerSettingsOptions from '@pages/BO/shopParameters/customerSettings/options';
 import emailPage from '@pages/BO/advancedParameters/email';
-import customersPage from '@pages/BO/customers';
 
 // Import FO pages
 import {createAccountPage} from '@pages/FO/classic/myAccount/add';
 
 import {
+  boCustomersPage,
   boDashboardPage,
   FakerCustomer,
   foClassicHomePage,
@@ -202,14 +202,14 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
         emailPage.customersLink,
       );
 
-      const pageTitle = await customersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(customersPage.pageTitle);
+      const pageTitle = await boCustomersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomersPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
-      numberOfCustomers = await customersPage.resetAndGetNumberOfLines(page);
+      numberOfCustomers = await boCustomersPage.resetAndGetNumberOfLines(page);
       expect(numberOfCustomers).to.be.above(0);
     });
 
@@ -220,26 +220,26 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
       it('should filter list by email', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterToDelete${index + 1}`, baseContext);
 
-        await customersPage.resetFilter(page);
+        await boCustomersPage.resetFilter(page);
 
-        await customersPage.filterCustomers(
+        await boCustomersPage.filterCustomers(
           page,
           'input',
           'email',
           test.args.customerToDelete.email,
         );
 
-        const textEmail = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
+        const textEmail = await boCustomersPage.getTextColumnFromTableCustomers(page, 1, 'email');
         expect(textEmail).to.contains(test.args.customerToDelete.email);
       });
 
       it('should delete customer', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deleteCustomer${index + 1}`, baseContext);
 
-        const textResult = await customersPage.deleteCustomer(page, 1);
-        expect(textResult).to.equal(customersPage.successfulDeleteMessage);
+        const textResult = await boCustomersPage.deleteCustomer(page, 1);
+        expect(textResult).to.equal(boCustomersPage.successfulDeleteMessage);
 
-        const numberOfCustomersAfterDelete = await customersPage.resetAndGetNumberOfLines(page);
+        const numberOfCustomersAfterDelete = await boCustomersPage.resetAndGetNumberOfLines(page);
         expect(numberOfCustomersAfterDelete).to.be.equal(numberOfCustomers - (index + 1));
       });
     });

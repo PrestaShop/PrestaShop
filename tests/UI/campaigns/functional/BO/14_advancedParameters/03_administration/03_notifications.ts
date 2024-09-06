@@ -6,7 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 
 // Import BO pages
-import customersPage from '@pages/BO/customers';
 import addCustomerPage from '@pages/BO/customers/add';
 
 // Import FO pages
@@ -17,6 +16,7 @@ import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 
 import {
   boAdministrationPage,
+  boCustomersPage,
   boDashboardPage,
   boShoppingCartsPage,
   dataCustomers,
@@ -252,16 +252,16 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
         boDashboardPage.customersParentLink,
         boDashboardPage.customersLink,
       );
-      await customersPage.closeSfToolBar(page);
+      await boCustomersPage.closeSfToolBar(page);
 
-      const pageTitle = await customersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(customersPage.pageTitle);
+      const pageTitle = await boCustomersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomersPage.pageTitle);
     });
 
     it('should go to add new customer page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewCustomerPage', baseContext);
 
-      await customersPage.goToAddNewCustomerPage(page);
+      await boCustomersPage.goToAddNewCustomerPage(page);
 
       const pageTitle = await addCustomerPage.getPageTitle(page);
       expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
@@ -271,20 +271,20 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
       await testContext.addContextItem(this, 'testIdentifier', 'createCustomer', baseContext);
 
       const textResult = await addCustomerPage.createEditCustomer(page, createCustomerData);
-      expect(textResult).to.equal(customersPage.successfulCreationMessage);
+      expect(textResult).to.equal(boCustomersPage.successfulCreationMessage);
     });
 
     it('should check notifications number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNotificationsNumber3', baseContext);
 
-      const number = await customersPage.getAllNotificationsNumber(page);
+      const number = await boCustomersPage.getAllNotificationsNumber(page);
       expect(number).to.equal(1);
     });
 
     it('should click on notifications icon', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNotificationsLink3', baseContext);
 
-      const isNotificationsVisible = await customersPage.clickOnNotificationsLink(page);
+      const isNotificationsVisible = await boCustomersPage.clickOnNotificationsLink(page);
       expect(isNotificationsVisible).to.eq(true);
     });
 
@@ -293,7 +293,7 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
 
       await boDashboardPage.clickOnNotificationsTab(page, 'customers');
 
-      const notificationsNumber = await customersPage.getNotificationsNumberInTab(page, 'customers');
+      const notificationsNumber = await boCustomersPage.getNotificationsNumberInTab(page, 'customers');
       expect(notificationsNumber).to.equal(1);
     });
 

@@ -10,7 +10,6 @@ import monitoringPage from '@pages/BO/catalog/monitoring';
 import createProductPage from '@pages/BO/catalog/products/add';
 import customerServicePage from '@pages/BO/customerService/customerService';
 import productCommentsPage from '@pages/BO/modules/productComments';
-import customersPage from '@pages/BO/customers';
 
 // Import FO pages
 import {checkoutPage} from '@pages/FO/classic/checkout';
@@ -28,6 +27,7 @@ import {deleteProductTest} from '@commonTests/BO/catalog/product';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 
 import {
+  boCustomersPage,
   boDashboardPage,
   boProductsPage,
   boShoppingCartsPage,
@@ -588,19 +588,19 @@ describe('BO - Dashboard : Activity overview', async () => {
 
         await boDashboardPage.clickOnNewCustomersLink(page);
 
-        const pageTitle = await customersPage.getPageTitle(page);
-        expect(pageTitle).to.eq(customersPage.pageTitle);
+        const pageTitle = await boCustomersPage.getPageTitle(page);
+        expect(pageTitle).to.eq(boCustomersPage.pageTitle);
       });
 
       it('should create new customer and enable newsletter status', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'createNewCustomer', baseContext);
 
-        await customersPage.goToAddNewCustomerPage(page);
+        await boCustomersPage.goToAddNewCustomerPage(page);
 
         const textResult = await addCustomerPage.createEditCustomer(page, createCustomerData);
-        expect(textResult).to.equal(customersPage.successfulCreationMessage);
+        expect(textResult).to.equal(boCustomersPage.successfulCreationMessage);
 
-        await customersPage.setNewsletterStatus(page, 1, true);
+        await boCustomersPage.setNewsletterStatus(page, 1, true);
       });
 
       it('should go back to dashboard page', async function () {
