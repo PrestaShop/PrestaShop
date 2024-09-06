@@ -28,18 +28,21 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Customer;
 
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OutstandingGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\OutstandingFilters;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class OutstandingController manages "Sell > Customers > Outstandings" page.
  */
-class OutstandingController extends FrameworkBundleAdminController
+class OutstandingController extends PrestaShopAdminController
 {
     /**
      * Show list of outstandings.
@@ -48,16 +51,20 @@ class OutstandingController extends FrameworkBundleAdminController
      * @param OutstandingFilters $filters
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
-    public function indexAction(Request $request, OutstandingFilters $filters)
-    {
-        $grid = $this->get('prestashop.core.grid.factory.outstanding')->getGrid($filters);
+    public function indexAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.grid.factory.outstanding')]
+        GridFactoryInterface $gridFactory,
+        OutstandingFilters $filters,
+    ) {
+        $grid = $gridFactory->getGrid($filters);
 
         return $this->render(
             '@PrestaShop/Admin/Sell/Outstanding/index.html.twig',
             [
                 'layoutHeaderToolbarBtn' => [],
                 'outstandingGrid' => $this->presentGrid($grid),
-                'layoutTitle' => $this->trans('Outstanding', 'Admin.Navigation.Menu'),
+                'layoutTitle' => $this->trans('Outstanding', [], 'Admin.Navigation.Menu'),
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             ]
@@ -70,13 +77,15 @@ class OutstandingController extends FrameworkBundleAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_outstanding_index')]
-    public function searchAction(Request $request)
-    {
-        /** @var ResponseBuilder $responseBuilder */
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
-
+    public function searchAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.grid.definition.factory.outstanding')]
+        GridDefinitionFactoryInterface $definitionFactory,
+        #[Autowire(service: 'prestashop.bundle.grid.response_builder')]
+        ResponseBuilder $responseBuilder
+    ) {
         return $responseBuilder->buildSearchResponse(
-            $this->get('prestashop.core.grid.definition.factory.outstanding'),
+            $definitionFactory,
             $request,
             OutstandingGridDefinitionFactory::GRID_ID,
             'admin_outstanding_index'
