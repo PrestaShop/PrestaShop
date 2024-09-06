@@ -90,7 +90,7 @@ use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\GridFactory;
 use PrestaShop\PrestaShop\Core\Kpi\Row\HookableKpiRowFactory;
@@ -218,7 +218,7 @@ class OrderController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
     public function placeAction(
         Request $request,
-        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.cart_summary_form_handler')] FormHandler $formHandler
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.cart_summary_form_handler')] FormHandlerInterface $formHandler
     ) {
         $summaryForm = $this->createForm(CartSummaryType::class);
         $summaryForm->handleRequest($request);
@@ -611,7 +611,7 @@ class OrderController extends PrestaShopAdminController
         int $orderId,
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilder $formBuilder,
-        #[Autowire(service: 'prestashop.core.form.identifiable_object.partial_refund_form_handler')] FormHandler $formHandler,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.partial_refund_form_handler')] FormHandlerInterface $formHandler,
     ) {
         $form = $formBuilder->getFormFor($orderId);
 
@@ -645,7 +645,7 @@ class OrderController extends PrestaShopAdminController
         int $orderId,
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilder $formBuilder,
-        #[Autowire(service: 'prestashop.core.form.identifiable_object.partial_refund_form_handler')] FormHandler $formHandler,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.partial_refund_form_handler')] FormHandlerInterface $formHandler,
     ) {
         $form = $formBuilder->getFormFor($orderId);
 
@@ -679,7 +679,7 @@ class OrderController extends PrestaShopAdminController
         int $orderId,
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilder $formBuilder,
-        #[Autowire(service: 'prestashop.core.form.identifiable_object.partial_refund_form_handler')] FormHandler $formHandler,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.partial_refund_form_handler')] FormHandlerInterface $formHandler,
     ) {
         $form = $formBuilder->getFormFor($orderId);
 
@@ -1624,7 +1624,7 @@ class OrderController extends PrestaShopAdminController
         int $orderId,
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilder $formBuilder,
-        #[Autowire(service: 'prestashop.core.form.identifiable_object.partial_refund_form_handler')] FormHandler $formHandler,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.partial_refund_form_handler')] FormHandlerInterface $formHandler,
     ) {
         $form = $formBuilder->getFormFor($orderId);
         try {
