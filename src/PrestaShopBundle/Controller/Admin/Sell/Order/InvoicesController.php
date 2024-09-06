@@ -26,9 +26,14 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
+use PrestaShop\PrestaShop\Adapter\PDF\InvoicePdfGenerator;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShop\PrestaShop\Core\Form\Handler;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
+use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceByDateFormHandler;
+use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceByStatusFormHandler;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,7 +41,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Controller responsible of "Sell > Orders > Invoices" page.
  */
-class InvoicesController extends FrameworkBundleAdminController
+class InvoicesController extends PrestaShopAdminController
 {
     /**
      * Show order preferences page.
@@ -46,21 +51,21 @@ class InvoicesController extends FrameworkBundleAdminController
      * @return Response Template parameters
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'Access denied.')]
-    public function indexAction(Request $request): Response
-    {
+    public function indexAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.admin.order.invoices.by_date.form_handler')] Handler $byDateForm,
+        #[Autowire(service: 'prestashop.admin.order.invoices.by_status.form_handler')] Handler $byStatusForm,
+        #[Autowire(service: 'prestashop.admin.order.invoices.options.form_handler')] Handler $optionsForm,
+    ): Response {
         $legacyController = $request->attributes->get('_legacy_controller');
 
-        $byDateForm = $this->get('prestashop.admin.order.invoices.by_date.form_handler')->getForm();
-        $byStatusForm = $this->get('prestashop.admin.order.invoices.by_status.form_handler')->getForm();
-        $optionsForm = $this->get('prestashop.admin.order.invoices.options.form_handler')->getForm();
-
         return $this->render('@PrestaShop/Admin/Sell/Order/Invoices/invoices.html.twig', [
-            'layoutTitle' => $this->trans('Invoices', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Invoices', [], 'Admin.Navigation.Menu'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
-            'generateByDateForm' => $byDateForm->createView(),
-            'generateByStatusForm' => $byStatusForm->createView(),
-            'invoiceOptionsForm' => $optionsForm->createView(),
+            'generateByDateForm' => $byDateForm->getForm()->createView(),
+            'generateByStatusForm' => $byStatusForm->getForm()->createView(),
+            'invoiceOptionsForm' => $optionsForm->getForm()->createView(),
         ]);
     }
 
@@ -72,9 +77,10 @@ class InvoicesController extends FrameworkBundleAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'Access denied.')]
-    public function generatePdfByDateAction(Request $request)
-    {
-        $formHandler = $this->get('prestashop.admin.order.invoices.by_date.form_handler');
+    public function generatePdfByDateAction(
+        Request $request,
+        InvoiceByDateFormHandler $formHandler
+    ) {
         $this->processForm($formHandler, $request);
 
         return $this->redirectToRoute('admin_order_invoices');
@@ -88,9 +94,10 @@ class InvoicesController extends FrameworkBundleAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'Access denied.')]
-    public function generatePdfByStatusAction(Request $request)
-    {
-        $formHandler = $this->get('prestashop.admin.order.invoices.by_status.form_handler');
+    public function generatePdfByStatusAction(
+        Request $request,
+        InvoiceByStatusFormHandler $formHandler
+    ) {
         $this->processForm($formHandler, $request);
 
         return $this->redirectToRoute('admin_order_invoices');
@@ -104,12 +111,12 @@ class InvoicesController extends FrameworkBundleAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'Access denied.')]
-    public function processAction(Request $request)
-    {
-        $formHandler = $this->get('prestashop.admin.order.invoices.options.form_handler');
-
+    public function processAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.admin.order.invoices.options.form_handler')] Handler $formHandler,
+    ) {
         if ($this->processForm($formHandler, $request)) {
-            $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Update successful', [], 'Admin.Notifications.Success'));
         }
 
         return $this->redirectToRoute('admin_order_invoices');
@@ -130,7 +137,7 @@ class InvoicesController extends FrameworkBundleAdminController
 
         if ($form->isSubmitted()) {
             if ($errors = $formHandler->save($form->getData())) {
-                $this->flashErrors($errors);
+                $this->addFlashErrors($errors);
 
                 return false;
             }
@@ -145,9 +152,11 @@ class InvoicesController extends FrameworkBundleAdminController
      * @param int $invoiceId
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'Access denied.')]
-    public function generatePdfByIdAction(int $invoiceId)
-    {
-        $this->get('prestashop.adapter.pdf.generator.single_invoice')->generatePDF([$invoiceId]);
+    public function generatePdfByIdAction(
+        int $invoiceId,
+        InvoicePdfGenerator $invoicePdfGenerator
+    ) {
+        $invoicePdfGenerator->generatePDF([$invoiceId]);
 
         // When using legacy generator,
         // we want to be sure that displaying PDF is the last thing this controller will do

@@ -85,3 +85,4 @@ services:
 
   PrestaShopBundle\Controller\Admin\Sell\Order\CreditSlipController: ~
   PrestaShopBundle\Controller\Admin\Sell\Order\OrderController: ~
+  PrestaShopBundle\Controller\Admin\Sell\Order\InvoicesController: ~
