@@ -15,8 +15,15 @@ services:
   # Interfaced services to decorate
   prestashop.core.admin.page_preference_interface:
     class: PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface
+  PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface:
+    public: false
+
   prestashop.core.admin.data_provider.module_interface:
-    class: PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface
+    alias: PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface
+    public: true
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   # URL generation
   prestashop.core.admin.url_generator_factory:

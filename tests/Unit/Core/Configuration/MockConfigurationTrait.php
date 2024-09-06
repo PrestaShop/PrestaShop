@@ -39,9 +39,9 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
  */
 trait MockConfigurationTrait
 {
-    protected function mockConfiguration(array $configurationValues = [], ?ShopConstraint $expectedShopConstraint = null): ShopConfigurationInterface|MockObject
+    protected function mockConfiguration(array $configurationValues = [], ?ShopConstraint $expectedShopConstraint = null, ?string $configurationClass = null): ShopConfigurationInterface|MockObject
     {
-        $configuration = $this->createMock(ShopConfigurationInterface::class);
+        $configuration = $this->createMock($configurationClass ?? ShopConfigurationInterface::class);
 
         if (!empty($configurationValues)) {
             $configuration

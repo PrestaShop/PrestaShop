@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Grid\Presenter\GridPresenterInterface;
 use PrestaShop\PrestaShop\Core\Help\Documentation;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -229,5 +230,43 @@ class PrestaShopAdminController extends AbstractController
             $message = is_array($error) ? $this->trans($error['key'], $error['parameters'], $error['domain']) : $error;
             $this->addFlash('error', $message);
         }
+    }
+
+    /**
+     * Return the authorization level of the current employee for the request controller.
+     *
+     * @param string $legacyControllerName Name of the legacy controller of which the level is requested
+     *
+     * @return int
+     */
+    protected function getAuthorizationLevel(string $legacyControllerName): int
+    {
+        if ($this->isGranted(Permission::DELETE, $legacyControllerName)) {
+            return Permission::LEVEL_DELETE;
+        }
+
+        if ($this->isGranted(Permission::CREATE, $legacyControllerName)) {
+            return Permission::LEVEL_CREATE;
+        }
+
+        if ($this->isGranted(Permission::UPDATE, $legacyControllerName)) {
+            return Permission::LEVEL_UPDATE;
+        }
+
+        if ($this->isGranted(Permission::READ, $legacyControllerName)) {
+            return Permission::LEVEL_READ;
+        }
+
+        return 0;
+    }
+
+    protected function isDemoModeEnabled(): bool
+    {
+        return (bool) $this->getConfiguration()->get('_PS_MODE_DEMO_');
+    }
+
+    protected function getDemoModeErrorMessage(): string
+    {
+        return $this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error');
     }
 }

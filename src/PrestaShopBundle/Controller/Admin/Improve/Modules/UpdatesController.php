@@ -38,7 +38,7 @@ class UpdatesController extends ModuleAbstractController
      * @return Response
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
-    public function indexAction()
+    public function indexAction(): Response
     {
         $moduleList = $this->getModuleRepository()->getUpgradableModules();
         $pageData = $this->getNotificationPageData($moduleList);
@@ -56,7 +56,7 @@ class UpdatesController extends ModuleAbstractController
             '@PrestaShop/Admin/Module/updates.html.twig',
             array_merge(
                 $pageData,
-                ['layoutTitle' => $this->trans('Module updates', 'Admin.Navigation.Menu')]
+                ['layoutTitle' => $this->trans('Module updates', [], 'Admin.Navigation.Menu')]
             )
         );
     }

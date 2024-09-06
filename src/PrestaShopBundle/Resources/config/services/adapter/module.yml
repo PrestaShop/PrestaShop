@@ -52,9 +52,16 @@ services:
     tags:
       - { name: kernel.event_subscriber }
 
-  prestashop.adapter.presenter.module:
-    class: PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter
+  PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter:
+    public: false
     arguments: [ "@=service('prestashop.adapter.legacy.context').getContext().currency", "@prestashop.adapter.formatter.price" ]
+
+  prestashop.adapter.presenter.module:
+    alias: PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+    public: true
 
   prestashop.adapter.presenter.module.payment:
     class: PrestaShop\PrestaShop\Adapter\Presenter\Module\PaymentModulesPresenter
