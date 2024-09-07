@@ -57,7 +57,7 @@
 {else}
 <div class="form-group">
 	<div class="col-lg-12">
-		<input id="{$id|escape:'html':'UTF-8'}" type="file" name="{$name|escape:'html':'UTF-8'}[]"{if isset($url)} data-url="{$url|escape:'html':'UTF-8'}"{/if}{if isset($multiple) && $multiple} multiple="multiple"{/if} style="width:0px;height:0px;" />
+		<input id="{$id|escape:'html':'UTF-8'}" type="file" name="{$name|escape:'html':'UTF-8'}{if isset($multiple) && $multiple}[]{/if}"{if isset($url)} data-url="{$url|escape:'html':'UTF-8'}"{/if}{if isset($multiple) && $multiple} multiple="multiple"{/if}{if isset($accept) && !empty($accept)} accept="{$accept}"{/if} style="width:0px;height:0px;" />
 		<button class="btn btn-default" data-style="expand-right" data-size="s" type="button" id="{$id|escape:'html':'UTF-8'}-add-button">
 			<i class="icon-folder-open"></i> {if isset($multiple) && $multiple}{l s='Add files...'}{else}{l s='Add file...'}{/if}
 		</button>
@@ -155,7 +155,9 @@
 			},
 		}).on('fileuploadalways', function (e, data) {
 				{$id|escape:'html':'UTF-8'}_total_files--;
-				{$id|escape:'html':'UTF-8'}_max_files--;
+      if (typeof {$id|escape:'html':'UTF-8'}_max_files !== 'undefined') {
+          {$id|escape:'html':'UTF-8'}_max_files--;
+      }
 
 				if ({$id|escape:'html':'UTF-8'}_total_files == 0)
 				{
@@ -173,6 +175,12 @@
 			}
 
 			data.context = $('<div/>').addClass('form-group').appendTo($('#{$id|escape:'html':'UTF-8'}-files-list'));
+        {if isset($accept) && !empty($accept)}
+      if (!validType(data.files[0], "{$accept}")) {
+        $('#{$id|escape:'html':'UTF-8'}-errors').append('<div class="form-group"><strong>'+file.name+'</strong> ('+humanizeSize(file.size)+') : {l s='Format not accepted'}</div>').parent().show();
+        $(data.context).find('button').trigger('click');
+      }
+        {else}
 			var file_name = $('<span/>').append('<strong>'+data.files[0].name+'</strong> ('+humanizeSize(data.files[0].size)+')').appendTo(data.context);
 
 			var button = $('<button/>').addClass('btn btn-default pull-right').prop('type', 'button').html('<i class="icon-trash"></i> {l s='Remove file'}').appendTo(data.context).on('click', function() {
@@ -194,9 +202,15 @@
 			});
 
 			{$id|escape:'html':'UTF-8'}_total_files++;
+      {/if}
 		}).on('fileuploadprocessalways', function (e, data) {
 			var index = data.index,	file = data.files[index];
-
+        {if isset($accept) && !empty($accept)}
+          if (!validType(file, "{$accept}")) {
+            $('#{$id|escape:'html':'UTF-8'}-errors').append('<div class="form-group"><strong>'+file.name+'</strong> ('+humanizeSize(file.size)+') : {l s='Format not accepted'}</div>').parent().show();
+            $(data.context).find('button').trigger('click');
+          }
+        {/if}
 			if (file.error) {
 				$('#{$id|escape:'html':'UTF-8'}-errors').append('<div class="form-group"><strong>'+file.name+'</strong> ('+humanizeSize(file.size)+') : '+file.error+'</div>').parent().show();
 				$(data.context).find('button').trigger('click');
@@ -212,5 +226,29 @@
 			$('#{$id|escape:'html':'UTF-8'}').trigger('click');
 		});
 	});
+
+  function validType(file, accept) {
+    var acceptedFiles = accept.split(",");
+    var mimeType = file.type;
+    var baseMimeType = mimeType.replace(/\/.*$/, "");
+    for(var iAcceptedFile in acceptedFiles) {
+      var validType = acceptedFiles[iAcceptedFile].trim();
+      if (validType.charAt(0) === ".") {
+        if (file.name.toLowerCase().indexOf(validType.toLowerCase(), file.name.length - validType.length) !== -1) {
+          return true;
+        }
+      } else if (/\/\*$/.test(validType)) {
+        // This is something like a image/* mime type
+        if (baseMimeType === validType.replace(/\/.*$/, "")) {
+          return true;
+        }
+      } else {
+        if (mimeType === validType) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 </script>
 {/if}

@@ -58,7 +58,7 @@
 {else}
 <div class="form-group">
 	<div class="col-sm-6">
-		<input id="{$id|escape:'html':'UTF-8'}" type="file" name="{$name|escape:'html':'UTF-8'}{if isset ($multiple) && $multiple}[]{/if}"{if isset($multiple) && $multiple} multiple="multiple"{/if} class="hide" />
+		<input id="{$id|escape:'html':'UTF-8'}" type="file" name="{$name|escape:'html':'UTF-8'}{if isset ($multiple) && $multiple}[]{/if}"{if isset($multiple) && $multiple} multiple="multiple"{/if} class="hide"{if isset($accept) && !empty($accept)} accept="{$accept}"{/if} />
 		<div class="dummyfile input-group">
 			<span class="input-group-addon"><i class="icon-file"></i></span>
 			<input id="{$id|escape:'html':'UTF-8'}-name" type="text" name="{$name|escape:'html':'UTF-8'}" readonly />
@@ -104,7 +104,13 @@
 			e.preventDefault();
 			var files = e.originalEvent.dataTransfer.files;
 			$('#{$id|escape:'html':'UTF-8'}')[0].files = files;
-			$(this).val(files[0].name);
+        {if isset($accept) && !empty($accept)}
+          if (validType(files[0], "{$accept}")) {
+            $(this).val(files[0].name);
+          }
+          {else}
+            $(this).val(files[0].name);
+        {/if}
 		});
 
 		$('#{$id|escape:'html':'UTF-8'}').on('change', function(e) {
@@ -136,5 +142,29 @@
 			});
 		}
 	});
+
+  function validType(file, accept) {
+    var acceptedFiles = accept.split(",");
+    var mimeType = file.type;
+    var baseMimeType = mimeType.replace(/\/.*$/, "");
+    for(var iAcceptedFile in acceptedFiles) {
+      var validType = acceptedFiles[iAcceptedFile].trim();
+      if (validType.charAt(0) === ".") {
+        if (file.name.toLowerCase().indexOf(validType.toLowerCase(), file.name.length - validType.length) !== -1) {
+          return true;
+        }
+      } else if (/\/\*$/.test(validType)) {
+        // This is something like a image/* mime type
+        if (baseMimeType === validType.replace(/\/.*$/, "")) {
+          return true;
+        }
+      } else {
+        if (mimeType === validType) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 </script>
 {/if}

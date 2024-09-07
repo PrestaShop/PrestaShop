@@ -185,6 +185,7 @@ class HelperFormCore extends Helper
                             $uploader->setMultiple(isset($params['multiple']) ? $params['multiple'] : false);
                             $uploader->setUseAjax(isset($params['ajax']) ? $params['ajax'] : false);
                             $uploader->setMaxFiles(isset($params['max_files']) ? $params['max_files'] : null);
+                            $uploader->setAcceptTypes(isset($params['accept']) ? $params['accept'] : null);
 
                             if (isset($params['files']) && $params['files']) {
                                 $uploader->setFiles($params['files']);
