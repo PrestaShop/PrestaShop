@@ -355,44 +355,23 @@ class OrderController extends FrameworkBundleAdminController
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function exportAction(OrderFilters $filters)
     {
-        $isB2bEnabled = $this->getConfiguration()->get('PS_B2B_ENABLE');
-
         $filters = new OrderFilters(['limit' => null] + $filters->all());
         $orderGrid = $this->get('prestashop.core.grid.factory.order')->getGrid($filters);
 
-        $headers = [
-            'id_order' => $this->trans('ID', 'Admin.Global'),
-            'reference' => $this->trans('Reference', 'Admin.Global'),
-            'new' => $this->trans('New client', 'Admin.Orderscustomers.Feature'),
-            'country_name' => $this->trans('Delivery', 'Admin.Global'),
-            'customer' => $this->trans('Customer', 'Admin.Global'),
-            'total_paid_tax_incl' => $this->trans('Total', 'Admin.Global'),
-            'payment' => $this->trans('Payment', 'Admin.Global'),
-            'osname' => $this->trans('Status', 'Admin.Global'),
-            'date_add' => $this->trans('Date', 'Admin.Global'),
-        ];
+        $headers = [];
 
-        if ($isB2bEnabled) {
-            $headers['company'] = $this->trans('Company', 'Admin.Global');
+        foreach ($orderGrid->getDefinition()->getColumns()->toArray() as $columns) {
+            if ($columns['id'] != 'orders_bulk' && $columns['id'] != 'actions') {
+                $headers[$columns['id']] = $columns['name'];
+            }
         }
 
         $data = [];
+        $item = [];
 
         foreach ($orderGrid->getData()->getRecords()->all() as $record) {
-            $item = [
-                'id_order' => $record['id_order'],
-                'reference' => $record['reference'],
-                'new' => $record['new'],
-                'country_name' => $record['country_name'],
-                'customer' => $record['customer'],
-                'total_paid_tax_incl' => $record['total_paid_tax_incl'],
-                'payment' => $record['payment'],
-                'osname' => $record['osname'],
-                'date_add' => $record['date_add'],
-            ];
-
-            if ($isB2bEnabled) {
-                $item['company'] = $record['company'];
+            foreach ($headers as $key => $columns) {
+                $item[$key] = $record[$key];
             }
 
             $data[] = $item;
