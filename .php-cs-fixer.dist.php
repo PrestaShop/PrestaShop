@@ -18,6 +18,7 @@ $finder = PhpCsFixer\Finder::create()->in([
     'Resources/modules_tests/override_for_unit_test/classes/Cart.php',
 ]);
 
+
 return (new PhpCsFixer\Config())
     ->setRiskyAllowed(true)
     ->setRules([
