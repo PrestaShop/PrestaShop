@@ -93,7 +93,6 @@ final class AddManufacturerHandler extends AbstractManufacturerHandler implement
         $manufacturer->description = $command->getLocalizedDescriptions();
         $manufacturer->meta_title = $command->getLocalizedMetaTitles();
         $manufacturer->meta_description = $command->getLocalizedMetaDescriptions();
-        $manufacturer->meta_keywords = $command->getLocalizedMetaKeywords();
         $manufacturer->active = $command->isEnabled();
     }
 }

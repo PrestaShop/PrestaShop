@@ -315,31 +315,6 @@ class SupplierType extends TranslatorAwareType
                     ],
                 ],
             ])
-            ->add('meta_keyword', TranslatableType::class, [
-                'label' => $this->trans('Meta keywords', 'Admin.Global'),
-                'help' => $keywordHint,
-                'type' => TextType::class,
-                'required' => false,
-                'options' => [
-                    'attr' => [
-                        'class' => 'js-taggable-field',
-                        'placeholder' => $this->trans('Add tag', 'Admin.Actions'),
-                    ],
-                    'constraints' => [
-                        new TypedRegex([
-                            'type' => TypedRegex::TYPE_GENERIC_NAME,
-                        ]),
-                        new Length([
-                            'max' => SupplierSettings::MAX_META_KEYWORD_LENGTH,
-                            'maxMessage' => $this->trans(
-                                'This field cannot be longer than %limit% characters',
-                                'Admin.Notifications.Error',
-                                ['%limit%' => SupplierSettings::MAX_META_KEYWORD_LENGTH]
-                            ),
-                        ]),
-                    ],
-                ],
-            ])
             ->add('is_enabled', SwitchType::class, [
                 'label' => $this->trans('Enabled', 'Admin.Global'),
                 'required' => false,

@@ -65,7 +65,6 @@ final class GetMetaForEditingHandler implements GetMetaForEditingHandlerInterfac
             $entity->page,
             $entity->title,
             $entity->description,
-            $entity->keywords,
             $entity->url_rewrite
         );
     }

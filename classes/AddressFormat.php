@@ -89,7 +89,6 @@ class AddressFormatCore extends ObjectModel
         'short_description',
         'link_rewrite',
         'meta_title',
-        'meta_keywords',
         'display_tax_label',
         'need_zip_code',
         'contains_states',

@@ -104,7 +104,6 @@ final class AddMetaHandler implements AddMetaHandlerInterface
             $entity->page = $command->getPageName()->getValue();
             $entity->title = $command->getLocalisedPageTitles();
             $entity->description = $command->getLocalisedMetaDescription();
-            $entity->keywords = $command->getLocalisedMetaKeywords();
 
             $rewriteUrls = $command->getLocalisedRewriteUrls();
             foreach ($rewriteUrls as $idLang => $rewriteUrl) {

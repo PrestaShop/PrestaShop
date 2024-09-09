@@ -24,7 +24,6 @@ Feature: Update product suppliers from Back Office (BO)
       | description[en-US]      | just a supplier    |
       | meta title[en-US]       | my supplier nr one |
       | meta description[en-US] |                    |
-      | meta keywords[en-US]    | sup,1              |
       | shops                   | [shop1]            |
     And I add new supplier supplier2 with the following properties:
       | name                    | my supplier 2      |
@@ -35,7 +34,6 @@ Feature: Update product suppliers from Back Office (BO)
       | description[en-US]      | just a supplier    |
       | meta title[en-US]       | my supplier nr two |
       | meta description[en-US] |                    |
-      | meta keywords[en-US]    | sup,2              |
       | shops                   | [shop1]            |
     And I add new supplier supplier3 with the following properties:
       | name                    | my supplier 3    |
@@ -46,7 +44,6 @@ Feature: Update product suppliers from Back Office (BO)
       | description[en-US]      | just a 3         |
       | meta title[en-US]       | my third supp    |
       | meta description[en-US] |                  |
-      | meta keywords[en-US]    | sup,3            |
       | shops                   | [shop1]          |
     Given I add product "product1" with following information:
       | name[en-US] | magic staff |
@@ -282,7 +279,6 @@ Feature: Update product suppliers from Back Office (BO)
         | description[en-US]      | just a supplier      |
         | meta title[en-US]       | my supplier nr three |
         | meta description[en-US] |                      |
-        | meta keywords[en-US]    | sup,3                |
         | shops                   | [shop1]              |
       And I add new supplier supplier4 with the following properties:
         | name                    | my supplier 4       |
@@ -293,7 +289,6 @@ Feature: Update product suppliers from Back Office (BO)
         | description[en-US]      | just a supplier     |
         | meta title[en-US]       | my supplier nr four |
         | meta description[en-US] |                     |
-        | meta keywords[en-US]    | sup,4               |
         | shops                   | [shop1]             |
       Given I add product "product7" with following information:
         | name[en-US] | magic staff |
@@ -361,7 +356,6 @@ Feature: Update product suppliers from Back Office (BO)
         | description[en-US]      | just a supplier     |
         | meta title[en-US]       | my supplier nr five |
         | meta description[en-US] |                     |
-        | meta keywords[en-US]    | sup,5               |
         | shops                   | [shop1]             |
       Given I add product "product9" with following information:
         | name[en-US] | magic staff |
@@ -397,7 +391,6 @@ Feature: Update product suppliers from Back Office (BO)
         | description[en-US]      | just a supplier     |
         | meta title[en-US]       | my supplier nr five |
         | meta description[en-US] |                     |
-        | meta keywords[en-US]    | sup,5               |
         | shops                   | [shop1]             |
       # Product data don't change
       And product product9 should have following suppliers:

@@ -71,7 +71,6 @@ final class CmsPageCategoryFormDataProvider implements FormDataProviderInterface
             'description' => $editableCmsPageCategory->getLocalisedDescription(),
             'meta_title' => $editableCmsPageCategory->getMetaTitle(),
             'meta_description' => $editableCmsPageCategory->getLocalisedMetaDescription(),
-            'meta_keywords' => $editableCmsPageCategory->getLocalisedMetaKeywords(),
             'friendly_url' => $editableCmsPageCategory->getLocalisedFriendlyUrl(),
             'shop_association' => $editableCmsPageCategory->getShopIds(),
         ];

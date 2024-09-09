@@ -40,7 +40,6 @@ Feature: Update product combination suppliers in Back Office (BO) when using mul
       | description[en-US]      | just a supplier    |
       | meta title[en-US]       | my supplier nr one |
       | meta description[en-US] |                    |
-      | meta keywords[en-US]    | sup,1              |
       | shops                   | [shop1,shop2]      |
     And I associate attribute group "Size" with shops "shop1,shop2"
     And I associate attribute group "Color" with shops "shop1,shop2"

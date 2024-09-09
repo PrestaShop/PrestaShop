@@ -82,18 +82,6 @@ class AddCmsPageCategoryCommandTest extends TestCase
         ]);
     }
 
-    public function testItThrowsAnExceptionWhenMetaKeywordsIsIncorrect()
-    {
-        $this->expectException(CmsPageCategoryConstraintException::class);
-        $this->expectExceptionCode(CmsPageCategoryConstraintException::INVALID_META_KEYWORDS);
-
-        $command = new AddCmsPageCategoryCommand([], [], 1, false);
-
-        $command->setLocalisedMetaKeywords([
-            1 => '<object>',
-        ]);
-    }
-
     public function testItThrowsAnExceptionWhenMetaDescriptionIsIncorrect()
     {
         $this->expectException(CmsPageCategoryConstraintException::class);
