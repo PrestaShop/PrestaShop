@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import preferencesPage from '@pages/BO/shipping/preferences';
-import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
 // Import FO pages
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
@@ -16,6 +15,7 @@ import {
   boCarriersCreatePage,
   boCustomerGroupsPage,
   boCustomerGroupsCreatePage,
+  boCustomerSettingsPage,
   boDashboardPage,
   dataCustomers,
   dataGroups,
@@ -104,16 +104,16 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
         boDashboardPage.shopParametersParentLink,
         boDashboardPage.customerSettingsLink,
       );
-      await customerSettingsPage.closeSfToolBar(page);
+      await boCustomerSettingsPage.closeSfToolBar(page);
 
-      const pageTitle = await customerSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
+      const pageTitle = await boCustomerSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerSettingsPage.pageTitle);
     });
 
     it('should go to Groups page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToGroupsPage1', baseContext);
 
-      await customerSettingsPage.goToGroupsPage(page);
+      await boCustomerSettingsPage.goToGroupsPage(page);
 
       const pageTitle = await boCustomerGroupsPage.getPageTitle(page);
       expect(pageTitle).to.contains(boCustomerGroupsPage.pageTitle);
@@ -420,16 +420,16 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
         boDashboardPage.shopParametersParentLink,
         boDashboardPage.customerSettingsLink,
       );
-      await customerSettingsPage.closeSfToolBar(page);
+      await boCustomerSettingsPage.closeSfToolBar(page);
 
-      const pageTitle = await customerSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
+      const pageTitle = await boCustomerSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerSettingsPage.pageTitle);
     });
 
     it('should go to Groups page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToGroupsPage2', baseContext);
 
-      await customerSettingsPage.goToGroupsPage(page);
+      await boCustomerSettingsPage.goToGroupsPage(page);
 
       const pageTitle = await boCustomerGroupsPage.getPageTitle(page);
       expect(pageTitle).to.contains(boCustomerGroupsPage.pageTitle);

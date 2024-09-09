@@ -7,8 +7,6 @@ import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advanced
 
 // Import pages
 // Import BO pages
-import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
-import CustomerSettingsOptions from '@pages/BO/shopParameters/customerSettings/options';
 import emailPage from '@pages/BO/advancedParameters/email';
 
 // Import FO pages
@@ -16,6 +14,7 @@ import {createAccountPage} from '@pages/FO/classic/myAccount/add';
 
 import {
   boCustomersPage,
+  boCustomerSettingsPage,
   boDashboardPage,
   FakerCustomer,
   foClassicHomePage,
@@ -101,28 +100,28 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
           boDashboardPage.shopParametersParentLink,
           boDashboardPage.customerSettingsLink,
         );
-        await customerSettingsPage.closeSfToolBar(page);
+        await boCustomerSettingsPage.closeSfToolBar(page);
 
-        const pageTitle = await customerSettingsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
+        const pageTitle = await boCustomerSettingsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCustomerSettingsPage.pageTitle);
       });
 
       it(`should ${test.args.action} send an email after registration`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}SendEmail`, baseContext);
 
-        const result = await customerSettingsPage.setOptionStatus(
+        const result = await boCustomerSettingsPage.setOptionStatus(
           page,
-          CustomerSettingsOptions.OPTION_EMAIL_REGISTRATION,
+          boCustomerSettingsPage.OPTION_EMAIL_REGISTRATION,
           test.args.enable,
         );
-        expect(result).to.contains(customerSettingsPage.successfulUpdateMessage);
+        expect(result).to.contains(boCustomerSettingsPage.successfulUpdateMessage);
       });
 
       it('should view my shop', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
         // Go to FO
-        page = await customerSettingsPage.viewMyShop(page);
+        page = await boCustomerSettingsPage.viewMyShop(page);
         await foClassicHomePage.changeLanguage(page, 'en');
 
         const isHomePage = await foClassicHomePage.isHomePage(page);
@@ -164,17 +163,17 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
 
         page = await createAccountPage.closePage(browserContext, page, 0);
 
-        const pageTitle = await customerSettingsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
+        const pageTitle = await boCustomerSettingsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCustomerSettingsPage.pageTitle);
       });
 
       it('should go to \'Advanced parameters > E-mail\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToEmailPage${index}`, baseContext);
 
-        await customerSettingsPage.goToSubMenu(
+        await boCustomerSettingsPage.goToSubMenu(
           page,
-          customerSettingsPage.advancedParametersLink,
-          customerSettingsPage.emailLink,
+          boCustomerSettingsPage.advancedParametersLink,
+          boCustomerSettingsPage.emailLink,
         );
 
         const pageTitle = await emailPage.getPageTitle(page);

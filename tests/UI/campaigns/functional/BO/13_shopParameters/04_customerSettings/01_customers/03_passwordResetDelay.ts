@@ -5,11 +5,8 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
-// Import pages
-// Import BO pages
-import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
-
 import {
+  boCustomerSettingsPage,
   boDashboardPage,
   dataCustomers,
   foClassicHomePage,
@@ -74,19 +71,19 @@ describe('BO - Shop Parameters - Customer Settings : Password reset delay', asyn
         boDashboardPage.shopParametersParentLink,
         boDashboardPage.customerSettingsLink,
       );
-      await customerSettingsPage.closeSfToolBar(page);
+      await boCustomerSettingsPage.closeSfToolBar(page);
 
-      const pageTitle = await customerSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
+      const pageTitle = await boCustomerSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerSettingsPage.pageTitle);
 
-      const passwordResetDelay = await customerSettingsPage.getPasswordResetDelayValue(page);
+      const passwordResetDelay = await boCustomerSettingsPage.getPasswordResetDelayValue(page);
       expect(passwordResetDelay).to.equal(passwordResetDelayMinutes);
     });
 
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
-      page = await customerSettingsPage.viewMyShop(page);
+      page = await boCustomerSettingsPage.viewMyShop(page);
       await foClassicHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foClassicHomePage.isHomePage(page);
