@@ -32,7 +32,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module as ModuleAdapter;
-use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
@@ -125,13 +124,12 @@ class ModuleController extends ModuleAbstractController
         string $module_name,
         #[Autowire(service: 'prestashop.core.admin.url_generator_legacy')]
         UrlGeneratorInterface $legacyUrlGenerator,
-        EmployeeContext $employeeContext,
     ): Response {
         // Get accessed module object
         $moduleAccessed = $this->getModuleRepository()->getModule($module_name);
 
         // Get current employee Id
-        $currentEmployeeId = $employeeContext->getEmployee()->getId();
+        $currentEmployeeId = $this->getEmployeeContext()->getEmployee()->getId();
         // Get accessed module DB Id
         $moduleAccessedId = (int) $moduleAccessed->database->get('id');
 

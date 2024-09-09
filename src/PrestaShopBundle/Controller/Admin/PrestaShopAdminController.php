@@ -30,7 +30,13 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Context\ApiClientContext;
+use PrestaShop\PrestaShop\Core\Context\CountryContext;
+use PrestaShop\PrestaShop\Core\Context\CurrencyContext;
+use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
+use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdaterInterface;
@@ -63,7 +69,13 @@ class PrestaShopAdminController extends AbstractController
             HookDispatcherInterface::class => HookDispatcherInterface::class,
             TranslatorInterface::class => TranslatorInterface::class,
             GridPresenterInterface::class => GridPresenterInterface::class,
+            ApiClientContext::class => ApiClientContext::class,
+            CountryContext::class => CountryContext::class,
+            CurrencyContext::class => CurrencyContext::class,
+            EmployeeContext::class => EmployeeContext::class,
             LanguageContext::class => LanguageContext::class,
+            LegacyControllerContext::class => LegacyControllerContext::class,
+            ShopContext::class => ShopContext::class,
             Documentation::class => Documentation::class,
             ResponseBuilder::class => ResponseBuilder::class,
             PositionUpdateFactoryInterface::class => PositionUpdateFactoryInterface::class,
@@ -74,6 +86,41 @@ class PrestaShopAdminController extends AbstractController
     protected function getConfiguration(): ConfigurationInterface
     {
         return $this->container->get(ConfigurationInterface::class);
+    }
+
+    protected function getApiClientContext(): ApiClientContext
+    {
+        return $this->container->get(ApiClientContext::class);
+    }
+
+    protected function getCountryContext(): CountryContext
+    {
+        return $this->container->get(CountryContext::class);
+    }
+
+    protected function getCurrencyContext(): CurrencyContext
+    {
+        return $this->container->get(CurrencyContext::class);
+    }
+
+    protected function getEmployeeContext(): EmployeeContext
+    {
+        return $this->container->get(EmployeeContext::class);
+    }
+
+    protected function getLanguageContext(): LanguageContext
+    {
+        return $this->container->get(LanguageContext::class);
+    }
+
+    protected function getLegacyControllerContext(): LegacyControllerContext
+    {
+        return $this->container->get(LegacyControllerContext::class);
+    }
+
+    protected function getShopContext(): ShopContext
+    {
+        return $this->container->get(ShopContext::class);
     }
 
     /**
@@ -113,7 +160,7 @@ class PrestaShopAdminController extends AbstractController
             $title = $this->trans('Help', [], 'Admin.Global');
         }
 
-        $iso = $this->container->get(LanguageContext::class)->getIsoCode();
+        $iso = $this->getLanguageContext()->getIsoCode();
         $url = $this->generateUrl('admin_common_sidebar', [
             'url' => $this->container->get(Documentation::class)->generateLink($section, $iso),
             'title' => $title,
