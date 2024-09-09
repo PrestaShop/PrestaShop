@@ -12,12 +12,10 @@ Feature: Meta management (Traffic & Seo)
       | pageName                       | pdf-order-return                      |
       | localisedPageTitle             | page title in default language        |
       | localisedMetaDescription      | meta description in default language  |
-      | localisedMetaKeywords          | meta keywords in default language     |
       | localisedRewriteUrls           | rewrite-url-default                   |
     Then meta "meta1" page should be "pdf-order-return"
     And meta "meta1" field "title" for default language should be "page title in default language"
     And meta "meta1" field "description" for default language should be "meta description in default language"
-    And meta "meta1" field "keywords" for default language should be "meta keywords in default language"
     And meta "meta1" field "url_rewrite" for default language should be "rewrite-url-default"
 
   Scenario: Creating new metadata without default language for url rewrite should not be allowed
@@ -58,12 +56,10 @@ Feature: Meta management (Traffic & Seo)
       | pageName                       | index                                 |
       | localisedPageTitles             | page title in default language        |
       | localisedMetaDescriptions       | meta description in default language  |
-      | localisedMetaKeywords          | meta keywords in default language     |
       | localisedRewriteUrls           | rewrite-url-default                   |
     Then meta "meta7" page should be "index"
     And meta "meta7" field "title" for default language should be "page title in default language"
     And meta "meta7" field "description" for default language should be "meta description in default language"
-    And meta "meta7" field "keywords" for default language should be "meta keywords in default language"
     And meta "meta7" field "url_rewrite" for default language should be "rewrite-url-default"
 
   Scenario: Update index page allows to have empty rewrite url
@@ -115,14 +111,12 @@ Feature: Meta management (Traffic & Seo)
       | pageName                        | index                                 |
       | localisedPageTitles             | page title in default language        |
       | localisedMetaDescriptions       | meta description in default language  |
-      | localisedMetaKeywords          | meta keywords in default language     |
       | localisedRewriteUrls           | rewrite-url-default                   |
     When I get meta "meta13" with specified properties
       | metaId                          | 4                                     |
     Then meta "meta13" editable form field "page" should be equal to "index"
     And meta "meta13" editable form field "title" should be equal to "page title in default language"
     And meta "meta13" editable form field "description" should be equal to "meta description in default language"
-    And meta "meta13" editable form field "keywords" should be equal to "meta keywords in default language"
     And meta "meta13" editable form field "url_rewrite" should be equal to "rewrite-url-default"
 
   Scenario: Get created page for customization layout

@@ -11,14 +11,12 @@ Feature: Manufacturer management
       | description      | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi at nulla id mi gravida blandit a non erat. Mauris nec lorem vel odio sagittis ornare.|
       | meta_title       | Perfect quality shoes              |
       | meta_description |                                    |
-      | meta_keywords    | Boots, shoes, slippers             |
       | enabled          | true                               |
     Then manufacturer "shoeman" name should be "best-shoes"
     And manufacturer "shoeman" "short_description" in default language should be "Makes best shoes in Europe"
     And manufacturer "shoeman" "description" in default language should be "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi at nulla id mi gravida blandit a non erat. Mauris nec lorem vel odio sagittis ornare."
     And manufacturer "shoeman" "meta_title" in default language should be "Perfect quality shoes"
     And manufacturer "shoeman" "meta_description" field in default language should be empty
-    And manufacturer "shoeman" "meta_keywords" in default language should be "Boots, shoes, slippers"
     And manufacturer "shoeman" should be enabled
 
   Scenario: Editing manufacturer
@@ -34,7 +32,6 @@ Feature: Manufacturer management
     And manufacturer "shoeman" "description" field in default language should be empty
     And manufacturer "shoeman" "meta_title" in default language should be "Worst quality shoes"
     And manufacturer "shoeman" "meta_description" in default language should be "You'd better walk bare foot"
-    And manufacturer "shoeman" "meta_keywords" in default language should be "Boots, shoes, slippers"
     And manufacturer "shoeman" should be disabled
 
   Scenario: Delete manufacturer logo image
@@ -64,7 +61,6 @@ Feature: Manufacturer management
       | description      | consectetur adipiscing elit. Morbi at nulla id mi gravida blandit a non erat. Mauris nec lorem vel odio sagittis ornare.|
       | meta_title       | Have some balls                    |
       | meta_description |                                    |
-      | meta_keywords    | Balls, basketball, football        |
       | enabled          | false                              |
     And I add new manufacturer "rocket" with following properties:
       | name             | Rocket                             |
@@ -72,7 +68,6 @@ Feature: Manufacturer management
       | description      | Morbi at nulla id mi gravida blandit a non erat. Mauris nec lorem vel odio sagittis ornare.|
       | meta_title       | You smoke - you die!               |
       | meta_description | The sun is shining and the weather is sweet|
-      | meta_keywords    | Cigarettes, smoke                  |
       | enabled          | true                               |
     When I enable multiple manufacturers: "baller, rocket" using bulk action
     Then manufacturers: "baller, rocket" should be enabled
@@ -97,7 +92,6 @@ Feature: Manufacturer management
       | description      | Lorem ipsum dolor sit amets ornare |
       | meta_title       | Perfect quality shoes              |
       | meta_description |                                    |
-      | meta_keywords    | Boots, shoes, slippers             |
       | enabled          | true                               |
     And I add new brand address "testBrandAddress" with following details:
       | Brand            | testBrand                          |

@@ -56,7 +56,7 @@ describe('BO - Advanced Parameters - Import : Download sample csv files', async 
         {
           type: 'categories_import',
           textToCheck: 'Category ID;Active (0/1);Name *;Parent category;Root category (0/1);Description;Meta title;'
-            + 'Meta keywords;Meta description;URL rewritten;Image URL',
+            + 'Meta description;URL rewritten;Image URL',
         },
     },
     {
@@ -102,7 +102,7 @@ describe('BO - Advanced Parameters - Import : Download sample csv files', async 
         {
           type: 'brands_import',
           textToCheck: 'ID;Active (0/1);Name *;Description;Short description;'
-            + 'Meta title;Meta keywords;Meta description;Image URL',
+            + 'Meta title;Meta description;Image URL',
         },
     },
     {
@@ -110,7 +110,7 @@ describe('BO - Advanced Parameters - Import : Download sample csv files', async 
         {
           type: 'suppliers_import',
           textToCheck: 'Supplier ID;Active (0/1);Name *;Description;Meta title;'
-            + 'Meta keywords;Meta description;Image URL',
+            + 'Meta description;Image URL',
         },
     },
     {

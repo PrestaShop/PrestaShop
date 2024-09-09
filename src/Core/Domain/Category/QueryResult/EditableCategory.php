@@ -69,11 +69,6 @@ class EditableCategory
      */
     private $metaDescription;
 
-    /**
-     * @var string[]
-     */
-    private $metaKeywords;
-
     private string $redirectType;
 
     private ?RedirectTargetInformation $categoryRedirectTarget;
@@ -126,7 +121,6 @@ class EditableCategory
      * @param int $parentId
      * @param string[] $metaTitle
      * @param string[] $metaDescription
-     * @param string[] $metaKeywords
      * @param string $redirectType
      * @param ?RedirectTargetInformation $categoryRedirectTarget
      * @param string[] $linkRewrite
@@ -146,7 +140,6 @@ class EditableCategory
         $parentId,
         array $metaTitle,
         array $metaDescription,
-        array $metaKeywords,
         array $linkRewrite,
         string $redirectType,
         ?RedirectTargetInformation $categoryRedirectTarget,
@@ -165,7 +158,6 @@ class EditableCategory
         $this->parentId = $parentId;
         $this->metaTitle = $metaTitle;
         $this->metaDescription = $metaDescription;
-        $this->metaKeywords = $metaKeywords;
         $this->linkRewrite = $linkRewrite;
         $this->groupAssociationIds = $groupAssociationIds;
         $this->shopAssociationIds = $shopAssociationIds;
@@ -240,14 +232,6 @@ class EditableCategory
     public function getMetaDescription()
     {
         return $this->metaDescription;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getMetaKeywords()
-    {
-        return $this->metaKeywords;
     }
 
     /**

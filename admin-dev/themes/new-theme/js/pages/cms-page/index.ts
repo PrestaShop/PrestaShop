@@ -38,7 +38,6 @@ import ChoiceTree from '@components/form/choice-tree';
 import TranslatableInput from '@components/translatable-input';
 import textToLinkRewriteCopier from '@components/text-to-link-rewrite-copier';
 import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
-import TaggableField from '@components/taggable-field';
 import ShowcaseCard from '@components/showcase-card/showcase-card';
 import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
 
@@ -71,13 +70,6 @@ $(() => {
 
   const shopChoiceTree = new ChoiceTree('#cms_page_category_shop_association');
   shopChoiceTree.enableAutoCheckChildren();
-
-  new TaggableField({
-    tokenFieldSelector: 'input[name^="cms_page_category[meta_keywords]"]',
-    options: {
-      createTokensOnBlur: true,
-    },
-  });
 
   const cmsGrid = new Grid('cms_page');
   cmsGrid.addExtension(new ReloadListActionExtension());

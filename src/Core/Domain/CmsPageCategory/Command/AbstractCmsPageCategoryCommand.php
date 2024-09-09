@@ -81,20 +81,6 @@ abstract class AbstractCmsPageCategoryCommand
     }
 
     /**
-     * @param array $localisedMetaKeywords
-     *
-     * @throws CmsPageCategoryConstraintException
-     */
-    protected function assertIsGenericNameForMetaKeywords(array $localisedMetaKeywords)
-    {
-        $assertionResult = $this->assertIsGenericName($localisedMetaKeywords);
-
-        if (true !== $assertionResult) {
-            throw new CmsPageCategoryConstraintException(sprintf('Given meta keyword "%s" does not match pattern "%s"', $assertionResult, self::GENERIC_NAME_REGEX_PATTERN), CmsPageCategoryConstraintException::INVALID_META_KEYWORDS);
-        }
-    }
-
-    /**
      * @param array $localisedNames
      *
      * @return bool|string

@@ -3,21 +3,18 @@
   <cms id='Delivery'>
     <meta_title>Envío</meta_title>
     <meta_description>Nuestros términos y condiciones de envío</meta_description>
-    <meta_keywords>condiciones, entrega, plazo, envío, paquete</meta_keywords>
     <content>&lt;h2&gt;Envíos y devoluciones&lt;/h2&gt;&lt;h3&gt;Envío del paquete&lt;/h3&gt;&lt;p&gt;Como norma general, los paquetes se envían dentro de las 48 horas siguientes a la recepción del pago, través de UPS con número de seguimiento y entrega sin firma. Si prefieres el envío certificado mediante UPS Extra, se aplicará un cargo adicional. Ponte en contacto con nosotros antes de solicitar esta opción. Sea cual sea la forma de envío que elijas, te proporcionaremos un enlace para que puedas seguir tu pedido en línea.&lt;/p&gt;&lt;p&gt;Los gastos de envío incluyen los gastos de manipulación y empaquetado, así como los gastos postales. Los gastos de manipulación tienen un precio fijo, mientras que los gastos de transporte pueden variar según el peso total del paquete. Te aconsejamos que agrupes todos tus artículos en un mismo pedido. No podemos combinar dos pedidos diferentes, y los gastos de envío se aplicarán para cada uno de manera individual. No nos hacemos responsables de los daños que pueda sufrir tu paquete tras el envío, pero hacemos todo lo posible para proteger todos los artículos frágiles.&lt;br /&gt;&lt;br /&gt;Las cajas son grandes y tus artículos estarán bien protegidos.&lt;/p&gt;</content>
     <link_rewrite>entrega</link_rewrite>
   </cms>
   <cms id='Legal_Notice'>
     <meta_title>Aviso legal</meta_title>
     <meta_description>Aviso legal</meta_description>
-    <meta_keywords>aviso, legal, créditos</meta_keywords>
     <content>&lt;h2&gt;Legal&lt;/h2&gt;&lt;h3&gt;Créditos&lt;/h3&gt;&lt;p&gt;Concepto y producción:&lt;/p&gt;&lt;p&gt;Esta tienda online fue creada utilizando el &lt;a href=&quot;http://www.prestashop.com&quot;&gt;Software Prestashop Shopping Cart&lt;/a&gt;. No olvides echarle un vistazo al &lt;a href=&quot;http://www.prestashop.com/blog/en/&quot;&gt;blog de comercio electrónico&lt;/a&gt; de PrestaShop para estar al día y leer todos los consejos sobre la venta online y sobre cómo gestionar tu web de comercio electrónico.&lt;/p&gt;</content>
     <link_rewrite>aviso-legal</link_rewrite>
   </cms>
   <cms id='Terms_and_conditions_of_use'>
     <meta_title>Términos y condiciones</meta_title>
     <meta_description>Nuestros términos y condiciones</meta_description>
-    <meta_keywords>condiciones, términos, uso, venta</meta_keywords>
     <content>&lt;h1 class=&quot;page-heading&quot;&gt;Términos y condiciones&lt;/h1&gt;
 &lt;h3 class=&quot;page-subheading&quot;&gt;Norma 1&lt;/h3&gt;
 &lt;p class=&quot;bottom-indent&quot;&gt;Lorem ipsum dolor sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.&lt;/p&gt;
@@ -30,7 +27,6 @@
   <cms id='About_us'>
     <meta_title>Sobre nosotros</meta_title>
     <meta_description>Averigüe más sobre nosotros</meta_description>
-    <meta_keywords>sobre nosotros, información</meta_keywords>
     <content>&lt;h1 class=&quot;page-heading bottom-indent&quot;&gt;Sobre nosotros&lt;/h1&gt;
 &lt;div class=&quot;row&quot;&gt;
 &lt;div class=&quot;col-xs-12 col-sm-4&quot;&gt;
@@ -71,7 +67,6 @@
   <cms id='Secure_payment'>
     <meta_title>Pago seguro</meta_title>
     <meta_description>Nuestra forma de pago segura</meta_description>
-    <meta_keywords>pago seguro, ssl, visa, mastercard, paypal</meta_keywords>
     <content>&lt;h2&gt;Pago seguro&lt;/h2&gt;
 &lt;h3&gt;Nuestro pago seguro&lt;/h3&gt;&lt;p&gt;Con SSL&lt;/p&gt;
 &lt;h3&gt;Utilizando Visa/Mastercard/Paypal&lt;/h3&gt;&lt;p&gt;Sobre este servicio&lt;/p&gt;</content>

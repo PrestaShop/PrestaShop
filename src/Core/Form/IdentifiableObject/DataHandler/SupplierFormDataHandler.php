@@ -78,7 +78,6 @@ final class SupplierFormDataHandler implements FormDataHandlerInterface
             $data['description'],
             $data['meta_title'],
             $data['meta_description'],
-            $data['meta_keyword'],
             $data['shop_association'],
             $data['address2'],
             $data['post_code'],
@@ -157,9 +156,6 @@ final class SupplierFormDataHandler implements FormDataHandlerInterface
         }
         if (null !== $data['meta_description']) {
             $command->setLocalizedMetaDescriptions($data['meta_description']);
-        }
-        if (null !== $data['meta_keyword']) {
-            $command->setLocalizedMetaKeywords($data['meta_keyword']);
         }
         if (null !== $data['is_enabled']) {
             $command->setEnabled((bool) $data['is_enabled']);
