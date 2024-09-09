@@ -14,7 +14,6 @@ Feature: Address
       | description      | Lorem ipsum dolor sit amets ornare |
       | meta_title       | Perfect quality shoes              |
       | meta_description |                                    |
-      | meta_keywords    | Boots, shoes, slippers             |
       | enabled          | true                               |
 
   Scenario: add brand address

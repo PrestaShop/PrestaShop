@@ -41,8 +41,6 @@ Feature: Category Management
       | meta description[fr-FR]       | meta description french        |
       | meta title[en-US]             | meta title english             |
       | meta title[fr-FR]             | meta title french              |
-      | meta keywords[en-US]          | meta,keyword,english           |
-      | meta keywords[fr-FR]          | meta,keyword,french            |
       | redirect type                 | 301                            |
       | redirect target               | home-accessories               |
     Then category "category1" should have following details:
@@ -62,8 +60,6 @@ Feature: Category Management
       | meta description[fr-FR]       | meta description french        |
       | meta title[en-US]             | meta title english             |
       | meta title[fr-FR]             | meta title french              |
-      | meta keywords[en-US]          | meta,keyword,english           |
-      | meta keywords[fr-FR]          | meta,keyword,french            |
       | redirect type                 | 301                            |
       | redirect target               | home-accessories               |
 
@@ -94,8 +90,6 @@ Feature: Category Management
       | meta description[fr-FR]       |                                       |
       | meta title[en-US]             |                                       |
       | meta title[fr-FR]             |                                       |
-      | meta keywords[en-US]          |                                       |
-      | meta keywords[fr-FR]          |                                       |
       | redirect type                 | 301                                   |
       | redirect target               | home                                  |
     When I edit category "category2" with following details:
@@ -114,8 +108,6 @@ Feature: Category Management
       | meta description[fr-FR]       | meta description french        |
       | meta title[en-US]             | meta title english             |
       | meta title[fr-FR]             | meta title french              |
-      | meta keywords[en-US]          | meta,keyword,english           |
-      | meta keywords[fr-FR]          | meta,keyword,french            |
       | redirect type                 | 302                            |
     Then category "category2" should have following details:
       | name[en-US]                   | Mobile phones super            |
@@ -134,8 +126,6 @@ Feature: Category Management
       | meta description[fr-FR]       | meta description french        |
       | meta title[en-US]             | meta title english             |
       | meta title[fr-FR]             | meta title french              |
-      | meta keywords[en-US]          | meta,keyword,english           |
-      | meta keywords[fr-FR]          | meta,keyword,french            |
       | redirect type                 | 302                            |
 
   Scenario: Delete category
@@ -602,8 +592,6 @@ Feature: Category Management
       | meta description[fr-FR]       | meta description french        |
       | meta title[en-US]             | meta title english             |
       | meta title[fr-FR]             | meta title french              |
-      | meta keywords[en-US]          | meta,keyword,english           |
-      | meta keywords[fr-FR]          | meta,keyword,french            |
       | redirect type                 | 404                            |
     Then category "home" should have following details:
       | name[en-US]                   | PC parts                       |
@@ -622,8 +610,6 @@ Feature: Category Management
       | meta description[fr-FR]       | meta description french        |
       | meta title[en-US]             | meta title english             |
       | meta title[fr-FR]             | meta title french              |
-      | meta keywords[en-US]          | meta,keyword,english           |
-      | meta keywords[fr-FR]          | meta,keyword,french            |
       | redirect type                 | 404                            |
 
   Scenario: Add new home category
@@ -643,8 +629,6 @@ Feature: Category Management
       | meta description[fr-FR]       | meta description french        |
       | meta title[en-US]             | meta title english             |
       | meta title[fr-FR]             | meta title french              |
-      | meta keywords[en-US]          | meta,english                   |
-      | meta keywords[fr-FR]          | meta,french                    |
     Then category "home2" should have following details:
       | name[en-US]                   | Home sweet home                |
       | name[fr-FR]                   | Home sweet home fr             |
@@ -662,8 +646,6 @@ Feature: Category Management
       | meta description[fr-FR]       | meta description french        |
       | meta title[en-US]             | meta title english             |
       | meta title[fr-FR]             | meta title french              |
-      | meta keywords[en-US]          | meta,english                   |
-      | meta keywords[fr-FR]          | meta,french                    |
 
   # We cannot test the actual image upload due to its dependency from real HTTP upload,
   # but we can mimic the upload and test EditableCategory construct and images deletion

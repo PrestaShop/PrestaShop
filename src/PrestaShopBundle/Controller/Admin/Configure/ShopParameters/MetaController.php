@@ -504,16 +504,6 @@ class MetaController extends PrestaShopAdminController
                     ],
                     'Admin.Notifications.Error',
                 ),
-                MetaConstraintException::INVALID_META_KEYWORDS => $this->trans(
-                    'The %s field is not valid',
-                    [
-                        sprintf(
-                            '"%s"',
-                            $this->trans('Meta keywords', [], 'Admin.Global')
-                        ),
-                    ],
-                    'Admin.Notifications.Error',
-                ),
             ],
             MetaNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found).',

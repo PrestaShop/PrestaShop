@@ -67,7 +67,6 @@ final class CmsPageCategoryFormDataHandler implements FormDataHandlerInterface
         $addCmsPageCategoryCommand
             ->setLocalisedDescription($data['description'])
             ->setLocalisedMetaDescription($data['meta_description'])
-            ->setLocalisedMetaKeywords($data['meta_keywords'])
             ->setLocalisedMetaTitle($data['meta_title'])
             ->setShopAssociation(is_array($data['shop_association']) ? $data['shop_association'] : [])
         ;
@@ -94,7 +93,6 @@ final class CmsPageCategoryFormDataHandler implements FormDataHandlerInterface
             ->setIsDisplayed($data['is_displayed'])
             ->setLocalisedDescription($data['description'])
             ->setLocalisedMetaDescription($data['meta_description'])
-            ->setLocalisedMetaKeywords($data['meta_keywords'])
             ->setLocalisedMetaTitle($data['meta_title'])
             ->setShopAssociation(is_array($data['shop_association']) ? $data['shop_association'] : [])
         ;
