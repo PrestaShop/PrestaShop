@@ -30,7 +30,13 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Context\ApiClientContext;
+use PrestaShop\PrestaShop\Core\Context\CountryContext;
+use PrestaShop\PrestaShop\Core\Context\CurrencyContext;
+use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
+use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdaterInterface;
@@ -40,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Grid\Presenter\GridPresenterInterface;
 use PrestaShop\PrestaShop\Core\Help\Documentation;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -62,7 +69,13 @@ class PrestaShopAdminController extends AbstractController
             HookDispatcherInterface::class => HookDispatcherInterface::class,
             TranslatorInterface::class => TranslatorInterface::class,
             GridPresenterInterface::class => GridPresenterInterface::class,
+            ApiClientContext::class => ApiClientContext::class,
+            CountryContext::class => CountryContext::class,
+            CurrencyContext::class => CurrencyContext::class,
+            EmployeeContext::class => EmployeeContext::class,
             LanguageContext::class => LanguageContext::class,
+            LegacyControllerContext::class => LegacyControllerContext::class,
+            ShopContext::class => ShopContext::class,
             Documentation::class => Documentation::class,
             ResponseBuilder::class => ResponseBuilder::class,
             PositionUpdateFactoryInterface::class => PositionUpdateFactoryInterface::class,
@@ -73,6 +86,41 @@ class PrestaShopAdminController extends AbstractController
     protected function getConfiguration(): ConfigurationInterface
     {
         return $this->container->get(ConfigurationInterface::class);
+    }
+
+    protected function getApiClientContext(): ApiClientContext
+    {
+        return $this->container->get(ApiClientContext::class);
+    }
+
+    protected function getCountryContext(): CountryContext
+    {
+        return $this->container->get(CountryContext::class);
+    }
+
+    protected function getCurrencyContext(): CurrencyContext
+    {
+        return $this->container->get(CurrencyContext::class);
+    }
+
+    protected function getEmployeeContext(): EmployeeContext
+    {
+        return $this->container->get(EmployeeContext::class);
+    }
+
+    protected function getLanguageContext(): LanguageContext
+    {
+        return $this->container->get(LanguageContext::class);
+    }
+
+    protected function getLegacyControllerContext(): LegacyControllerContext
+    {
+        return $this->container->get(LegacyControllerContext::class);
+    }
+
+    protected function getShopContext(): ShopContext
+    {
+        return $this->container->get(ShopContext::class);
     }
 
     /**
@@ -112,7 +160,7 @@ class PrestaShopAdminController extends AbstractController
             $title = $this->trans('Help', [], 'Admin.Global');
         }
 
-        $iso = $this->container->get(LanguageContext::class)->getIsoCode();
+        $iso = $this->getLanguageContext()->getIsoCode();
         $url = $this->generateUrl('admin_common_sidebar', [
             'url' => $this->container->get(Documentation::class)->generateLink($section, $iso),
             'title' => $title,
@@ -229,5 +277,43 @@ class PrestaShopAdminController extends AbstractController
             $message = is_array($error) ? $this->trans($error['key'], $error['parameters'], $error['domain']) : $error;
             $this->addFlash('error', $message);
         }
+    }
+
+    /**
+     * Return the authorization level of the current employee for the request controller.
+     *
+     * @param string $legacyControllerName Name of the legacy controller of which the level is requested
+     *
+     * @return int
+     */
+    protected function getAuthorizationLevel(string $legacyControllerName): int
+    {
+        if ($this->isGranted(Permission::DELETE, $legacyControllerName)) {
+            return Permission::LEVEL_DELETE;
+        }
+
+        if ($this->isGranted(Permission::CREATE, $legacyControllerName)) {
+            return Permission::LEVEL_CREATE;
+        }
+
+        if ($this->isGranted(Permission::UPDATE, $legacyControllerName)) {
+            return Permission::LEVEL_UPDATE;
+        }
+
+        if ($this->isGranted(Permission::READ, $legacyControllerName)) {
+            return Permission::LEVEL_READ;
+        }
+
+        return 0;
+    }
+
+    protected function isDemoModeEnabled(): bool
+    {
+        return (bool) $this->getConfiguration()->get('_PS_MODE_DEMO_');
+    }
+
+    protected function getDemoModeErrorMessage(): string
+    {
+        return $this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error');
     }
 }

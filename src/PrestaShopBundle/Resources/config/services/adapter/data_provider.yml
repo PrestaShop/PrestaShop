@@ -5,8 +5,7 @@ services:
   _defaults:
     public: true
 
-  prestashop.adapter.admin.data_provider.module:
-    class: PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider
+  PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider:
     arguments:
       - "@prestashop.adapter.data_provider.module"
       - '@translator'
@@ -14,8 +13,14 @@ services:
       - '@PrestaShop\PrestaShop\Core\Context\ApiClientContext'
     calls:
       - [ setRouter, [ '@router' ] ]
-    decorates: prestashop.core.admin.data_provider.module_interface
+    decorates: PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface
     public: false
+
+  prestashop.adapter.admin.data_provider.module:
+    alias: PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.adapter.data_provider.category:
     class: PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider
@@ -77,10 +82,16 @@ services:
       - !php/const _PS_ROOT_DIR_
       - '/app/config/addons/categories.yml'
 
-  prestashop.categories_provider:
+  PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider:
     lazy: true
-    class: PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider
     factory: [ '@PrestaShop\PrestaShop\Adapter\Category\CategoriesProviderBuilder', 'build' ]
+
+  prestashop.categories_provider:
+    alias: PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+    public: true
 
   prestashop.adapter.data_provider.default_route:
     class: PrestaShop\PrestaShop\Adapter\Routes\DefaultRouteProvider
