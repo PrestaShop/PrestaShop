@@ -11,6 +11,8 @@ class PsGdprPage extends ModuleConfiguration {
 
   private readonly menuTab: (nth: number) => string;
 
+  private readonly tabDataConfig: string;
+
   private readonly tabDataConsent: string;
 
   private readonly tabCustomerActivity: string;
@@ -25,6 +27,8 @@ class PsGdprPage extends ModuleConfiguration {
     this.pageSubTitle = 'Official GDPR compliance';
 
     this.menuTab = (nth: number) => `#psgdpr-menu .list-group:nth-child(1) a.list-group-item:nth-child(${nth})`;
+
+    this.tabDataConfig = '#dataConfig .panel';
 
     this.tabDataConsent = '#dataConsent .panel';
 
@@ -43,6 +47,9 @@ class PsGdprPage extends ModuleConfiguration {
     let selectorBlock: string;
 
     switch (nth) {
+      case 2:
+        selectorBlock = this.tabDataConfig;
+        break;
       case 3:
         selectorBlock = this.tabDataConsent;
         break;
