@@ -11,7 +11,7 @@ $finder = PhpCsFixer\Finder::create()->in([
 ])->notPath([
     'Unit/Resources/config/params.php',
     'Unit/Resources/config/params_modified.php',
-    'tests/Resources/modules_tests',
+    'tests/Resources/modules_tests/testtrickyconflict/override/classes/Cart.php',
 ]);
 
 
