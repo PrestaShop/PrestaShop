@@ -253,7 +253,6 @@ class AddSupplierCommand
         return $this->localizedMetaDescriptions;
     }
 
-
     /**
      * @return bool
      */

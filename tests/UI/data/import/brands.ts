@@ -16,6 +16,7 @@ function createRecord(): ImportBrand[] {
       description: faker.lorem.sentence(),
       shortDescription: faker.lorem.sentence(),
       metaTitle: name,
+      metaKeywords: [],
       metaDescription: faker.lorem.sentence(),
       imageURL: '',
     });
@@ -33,6 +34,7 @@ export default new FakerImport({
     {id: 'description', title: 'Description'},
     {id: 'shortDescription', title: 'Short description'},
     {id: 'metaTitle', title: 'Meta title'},
+    {id: 'metaKeywords', title: 'Meta keywords'},
     {id: 'metaDescription', title: 'Meta description'},
     {id: 'imageURL', title: 'Image URL'},
   ],

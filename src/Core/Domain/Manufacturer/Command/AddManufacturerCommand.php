@@ -133,7 +133,6 @@ class AddManufacturerCommand
         return $this->localizedMetaDescriptions;
     }
 
-
     /**
      * @return bool
      */
