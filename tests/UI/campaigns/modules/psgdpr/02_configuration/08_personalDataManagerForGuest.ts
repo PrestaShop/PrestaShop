@@ -7,8 +7,6 @@ import {createOrderByGuestTest} from '@commonTests/FO/classic/order';
 
 // Import pages
 // Import BO pages
-import psGdpr from '@pages/BO/modules/psGdpr';
-import psGdprTabDataConfig from '@pages/BO/modules/psGdpr/tabDataConfig';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 
 import {expect} from 'chai';
@@ -24,6 +22,8 @@ import {
   FakerAddress,
   FakerCustomer,
   FakerOrder,
+  modPsGdprBoMain,
+  modPsGdprBoTabDataConfig,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -90,26 +90,26 @@ describe('BO - Modules - GDPR: Personal data manager for guest', async () => {
 
       await boModuleManagerPage.goToConfigurationPage(page, dataModules.psGdpr.tag);
 
-      const pageTitle = await psGdpr.getPageSubtitle(page);
-      expect(pageTitle).to.eq(psGdpr.pageSubTitle);
+      const pageTitle = await modPsGdprBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.eq(modPsGdprBoMain.pageSubTitle);
     });
 
     it('should display the tab "Personal data management"', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'displayTabPersonalDataManagement', baseContext);
 
-      const isTabVisible = await psGdpr.goToTab(page, 2);
+      const isTabVisible = await modPsGdprBoMain.goToTab(page, 2);
       expect(isTabVisible).to.be.equal(true);
 
-      const numCompliantModules = await psGdprTabDataConfig.getNumberCompliantModules(page);
+      const numCompliantModules = await modPsGdprBoTabDataConfig.getNumberCompliantModules(page);
       expect(numCompliantModules).to.equal(5);
     });
 
     it('should return if there is a customer named "hello"', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchCustomerHello', baseContext);
 
-      await psGdprTabDataConfig.searchCustomerData(page, 'hello');
+      await modPsGdprBoTabDataConfig.searchCustomerData(page, 'hello');
 
-      const hasCustomerData = await psGdprTabDataConfig.hasCustomerData(page);
+      const hasCustomerData = await modPsGdprBoTabDataConfig.hasCustomerData(page);
       expect(hasCustomerData).to.equal(false);
     });
 
@@ -117,12 +117,12 @@ describe('BO - Modules - GDPR: Personal data manager for guest', async () => {
     it(`should return if there is a customer named "${customerData.email}"`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchCustomerGuest', baseContext);
 
-      await psGdprTabDataConfig.searchCustomerData(page, customerData.email);
+      await modPsGdprBoTabDataConfig.searchCustomerData(page, customerData.email);
 
-      //const hasCustomerData = await psGdprTabDataConfig.hasCustomerData(page);
+      //const hasCustomerData = await modPsGdprBoTabDataConfig.hasCustomerData(page);
       //expect(hasCustomerData).to.equal(true);
 
-      const numCustomerDataResults = await psGdprTabDataConfig.getNumberCustomerDataResults(page);
+      const numCustomerDataResults = await modPsGdprBoTabDataConfig.getNumberCustomerDataResults(page);
       expect(numCustomerDataResults).to.equal(1);
     });
 
@@ -130,9 +130,9 @@ describe('BO - Modules - GDPR: Personal data manager for guest', async () => {
     it('should click on the card', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickResultCard', baseContext);
 
-      await psGdprTabDataConfig.clickResultCard(page, 1);
+      await modPsGdprBoTabDataConfig.clickResultCard(page, 1);
 
-      /** 
+      /**
        * A panel is displayed with 7 blocks :
        * - General information
        * - Addresses
@@ -209,17 +209,17 @@ describe('BO - Modules - GDPR: Personal data manager for guest', async () => {
 
       await boModuleManagerPage.goToConfigurationPage(page, dataModules.psGdpr.tag);
 
-      const pageTitle = await psGdpr.getPageSubtitle(page);
-      expect(pageTitle).to.eq(psGdpr.pageSubTitle);
+      const pageTitle = await modPsGdprBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.eq(modPsGdprBoMain.pageSubTitle);
     });
 
     it('should display the tab "Personal data management"', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'displayTabPersonalDataManagementAfterOrder', baseContext);
 
-      const isTabVisible = await psGdpr.goToTab(page, 2);
+      const isTabVisible = await modPsGdprBoMain.goToTab(page, 2);
       expect(isTabVisible).to.be.equal(true);
 
-      const numCompliantModules = await psGdprTabDataConfig.getNumberCompliantModules(page);
+      const numCompliantModules = await modPsGdprBoTabDataConfig.getNumberCompliantModules(page);
       expect(numCompliantModules).to.equal(5);
     });
 
@@ -227,12 +227,12 @@ describe('BO - Modules - GDPR: Personal data manager for guest', async () => {
     it(`should return if there is a customer named "${customerData.email}"`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchCustomerGuestBeforeDelete', baseContext);
 
-      await psGdprTabDataConfig.searchCustomerData(page, customerData.email);
+      await modPsGdprBoTabDataConfig.searchCustomerData(page, customerData.email);
 
-      //const hasCustomerData = await psGdprTabDataConfig.hasCustomerData(page);
+      //const hasCustomerData = await modPsGdprBoTabDataConfig.hasCustomerData(page);
       //expect(hasCustomerData).to.equal(true);
 
-      const numCustomerDataResults = await psGdprTabDataConfig.getNumberCustomerDataResults(page);
+      const numCustomerDataResults = await modPsGdprBoTabDataConfig.getNumberCustomerDataResults(page);
       expect(numCustomerDataResults).to.equal(1);
     });
 
@@ -240,9 +240,9 @@ describe('BO - Modules - GDPR: Personal data manager for guest', async () => {
     it('should click on the card', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickResultCardAfterOrder', baseContext);
 
-      await psGdprTabDataConfig.clickResultCard(page, 1);
+      await modPsGdprBoTabDataConfig.clickResultCard(page, 1);
 
-      /** 
+      /**
        * A panel is displayed with 7 blocks :
        * - General information
        * - Addresses
@@ -268,31 +268,31 @@ describe('BO - Modules - GDPR: Personal data manager for guest', async () => {
     it('should click on Remove data and Cancel', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickRemoveDataCancel', baseContext);
 
-      const textResult = await psGdprTabDataConfig.clickResultRemoveData(page, 1, true);
+      const textResult = await modPsGdprBoTabDataConfig.clickResultRemoveData(page, 1, true);
       expect(textResult).to.equal(null);
 
-      const isModalVisible = await psGdprTabDataConfig.isModalRemoveDataVisible(page);
+      const isModalVisible = await modPsGdprBoTabDataConfig.isModalRemoveDataVisible(page);
       expect(isModalVisible).to.equal(false);
     });
 
     it('should click on Remove data and Confirm', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickRemoveDataConfirm', baseContext);
 
-      const textResult = await psGdprTabDataConfig.clickResultRemoveData(page, 1, false);
-      expect(textResult).to.equal(psGdprTabDataConfig.messageCustomerDataDeleted);
+      const textResult = await modPsGdprBoTabDataConfig.clickResultRemoveData(page, 1, false);
+      expect(textResult).to.equal(modPsGdprBoTabDataConfig.messageCustomerDataDeleted);
     });
 
     //@todo : https://github.com/PrestaShop/PrestaShop/issues/36865
     it(`should return if there is a customer named "${customerData.email}"`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchCustomerGuestAfterDelete', baseContext);
 
-      await psGdprTabDataConfig.reloadPage(page);
-      await psGdprTabDataConfig.searchCustomerData(page, customerData.email);
+      await modPsGdprBoTabDataConfig.reloadPage(page);
+      await modPsGdprBoTabDataConfig.searchCustomerData(page, customerData.email);
 
-      const hasCustomerData = await psGdprTabDataConfig.hasCustomerData(page);
+      const hasCustomerData = await modPsGdprBoTabDataConfig.hasCustomerData(page);
       expect(hasCustomerData).to.equal(false);
 
-      //const numCustomerDataResults = await psGdprTabDataConfig.getNumberCustomerDataResults(page);
+      //const numCustomerDataResults = await modPsGdprBoTabDataConfig.getNumberCustomerDataResults(page);
       //expect(numCustomerDataResults).to.equal(0);
     });
   });
