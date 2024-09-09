@@ -58,22 +58,31 @@ class LegacyToolbar extends Toolbar
      * @param string $helpLink
      * @param bool $enableSidebar
      */
-    public function mount(string $layoutTitle = '', string $helpLink = '', bool $enableSidebar = false): void
+    public function mount(string $layoutTitle = '', string $helpLink = '', bool $enableSidebar = false, string $layoutSubTitle = '', array $layoutHeaderToolbarBtn = []): void
     {
+        if (empty($helpLink) && $this->hasLegacyController()) {
+            $helpLink = urldecode($this->helpDocumentation->generateLink($this->getLegacyController()->controller_name, $this->languageContext->getIsoCode()));
+        }
+
+        if (empty($layoutHeaderToolbarBtn) && $this->hasLegacyController()) {
+            $layoutHeaderToolbarBtn = $this->getLegacyController()->page_header_toolbar_btn;
+        }
+
         parent::mount(
             $layoutTitle,
-            urldecode($this->helpDocumentation->generateLink($this->getLegacyController()->controller_name, $this->languageContext->getIsoCode())),
-            $enableSidebar
+            $helpLink,
+            $enableSidebar,
+            $layoutSubTitle,
+            $layoutHeaderToolbarBtn,
         );
-    }
-
-    public function getLayoutHeaderToolbarBtn(): array
-    {
-        return $this->getLegacyController()->page_header_toolbar_btn;
     }
 
     public function getTable(): string
     {
-        return $this->getLegacyController()->table;
+        if ($this->hasLegacyController()) {
+            return $this->getLegacyController()->table;
+        }
+
+        return 'configuration';
     }
 }

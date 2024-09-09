@@ -30,7 +30,7 @@
 <html lang="{{ ps.isoUser }}">
 <head>
   {% block header %}
-    {{ component('LegacyHeadTag') }}
+    {{ component('LegacyHeadTag', {loadLegacyMedia: loadLegacyMedia|default(false)}) }}
   {% endblock %}
 </head>
 
@@ -122,7 +122,13 @@
     <div id="content" class="bootstrap{% if ps.displayedWithTabs %} with-tabs{% endif %}">
       {# Page header toolbar #}
       {% if showContentHeader %}
-        {{ component('LegacyToolbar') }}
+        {{ component('LegacyToolbar', {
+          layoutTitle: layoutTitle|default,
+          layoutSubTitle: layoutSubTitle|default,
+          helpLink: help_link|default,
+          enableSidebar: enableSidebar|default(false),
+          layoutHeaderToolbarBtn: layoutHeaderToolbarBtn|default([])
+        }) }}
       {% endif %}
 
       {% block content_header %}
@@ -143,7 +149,7 @@
     </div>
   </div>
 
-  {% if modals is not empty %}
+  {% if modals is defined and modals is not empty %}
     <div class="bootstrap">
       {{ modals|raw }}
     </div>

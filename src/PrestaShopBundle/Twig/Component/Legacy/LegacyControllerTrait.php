@@ -43,4 +43,9 @@ trait LegacyControllerTrait
     {
         return $this->context->getContext()->controller;
     }
+
+    protected function hasLegacyController(): bool
+    {
+        return $this->context->getContext()->controller instanceof AdminController;
+    }
 }

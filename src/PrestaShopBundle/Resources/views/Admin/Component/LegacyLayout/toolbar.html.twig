@@ -106,6 +106,13 @@
         </div>
       </div>
       {% endblock %}
+      {% block pageSubTitle %}
+        {% if this.subTitle is not empty %}
+          <h4 class="page-subtitle">
+            {{ this.subTitle }}
+          </h4>
+        {% endif %}
+      {% endblock %}
   </div>
 
     {% if this.currentTabLevel >= 3 %}

@@ -45,6 +45,12 @@
     font-weight: 600;
   }
 
+  .page-subtitle {
+    width: 100%;
+    padding: 0;
+    margin-bottom: 0;
+  }
+
   // breadcrumb
   nav {
     @include media-breakpoint-down(sm) {

@@ -38,6 +38,8 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 class Toolbar
 {
     protected string $title = '';
+
+    protected string $subTitle = '';
     protected string $helpLink = '';
     protected bool $sidebarEnabled = true;
     protected int $currentTabLevel = 0;
@@ -52,16 +54,19 @@ class Toolbar
      */
     protected array $breadcrumbs = [];
 
+    protected array $layoutHeaderToolbarBtn = [];
+
     public function __construct(
         protected readonly HookDispatcherInterface $hookDispatcher,
         protected readonly MenuBuilder $menuBuilder,
     ) {
     }
 
-    public function mount(string $layoutTitle, string $helpLink, bool $enableSidebar): void
+    public function mount(string $layoutTitle, string $helpLink, bool $enableSidebar, string $layoutSubTitle, array $layoutHeaderToolbarBtn): void
     {
         $this->sidebarEnabled = $enableSidebar;
         $this->helpLink = $helpLink;
+        $this->layoutHeaderToolbarBtn = $layoutHeaderToolbarBtn;
         $tab = $this->menuBuilder->getCurrentTab();
         if (null !== $tab) {
             $tabs = [];
@@ -79,11 +84,17 @@ class Toolbar
             $this->setBreadcrumbs($tab, $ancestorsTab, $tabs);
         }
         $this->setTitle($layoutTitle);
+        $this->subTitle = $layoutSubTitle;
     }
 
     public function getTitle(): string
     {
         return $this->title;
+    }
+
+    public function getSubTitle(): string
+    {
+        return $this->subTitle;
     }
 
     public function getCurrentTabLevel(): int
@@ -109,6 +120,11 @@ class Toolbar
     public function getHelpLink(): string
     {
         return $this->helpLink;
+    }
+
+    public function getLayoutHeaderToolbarBtn(): array
+    {
+        return $this->layoutHeaderToolbarBtn;
     }
 
     protected function setTitle(string $layoutTitle): void
