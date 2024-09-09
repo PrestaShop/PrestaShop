@@ -292,6 +292,9 @@ class AdminModulesControllerCore extends AdminController
             'add_permission' => $this->access('add'),
         ]);
 
+        // Since this controller renders the header itself we must prevent le one from the layout to be displayed
+        $this->show_page_header_toolbar = false;
+
         // Display checkbox in toolbar if multishop
         if (Shop::isFeatureActive()) {
             if (Shop::getContext() == Shop::CONTEXT_SHOP) {

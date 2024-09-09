@@ -183,6 +183,43 @@ class LegacyControllerContext
         }
     }
 
+    /**
+     * Adds jQuery UI component(s) to queued JS file list.
+     */
+    public function addJqueryUI(string|array $component, string $theme = 'base', bool $checkDependencies = true): void
+    {
+        if (!is_array($component)) {
+            $component = [$component];
+        }
+
+        foreach ($component as $ui) {
+            $ui_path = Media::getJqueryUIPath($ui, $theme, $checkDependencies);
+            $this->addCSS($ui_path['css'], 'all');
+            $this->addJS($ui_path['js'], false);
+        }
+    }
+
+    /**
+     * Adds jQuery plugin(s) to queued JS file list.
+     */
+    public function addJqueryPlugin(string|array $name, ?string $folder = null, bool $css = true): void
+    {
+        if (!is_array($name)) {
+            $name = [$name];
+        }
+
+        foreach ($name as $plugin) {
+            $plugin_path = Media::getJqueryPluginPath($plugin, $folder);
+
+            if (!empty($plugin_path['js'])) {
+                $this->addJS($plugin_path['js'], false);
+            }
+            if ($css && !empty($plugin_path['css'])) {
+                $this->addCSS(key($plugin_path['css']), 'all', null, false);
+            }
+        }
+    }
+
     public function getContainer(): ContainerInterface
     {
         return $this->container;

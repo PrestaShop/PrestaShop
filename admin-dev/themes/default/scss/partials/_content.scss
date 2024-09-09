@@ -54,6 +54,12 @@ body {
   }
 }
 
+body.adminmodules {
+  #content.bootstrap {
+    padding-top: var(--#{$cdk}page-head-with-tabs-height);
+  }
+}
+
 .data-focus {
   &.data-focus-primary {
     color: var(--#{$cdk}white);
