@@ -39,6 +39,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\File;
 
 class GeneralSettings extends TranslatorAwareType
 {
@@ -90,6 +91,16 @@ class GeneralSettings extends TranslatorAwareType
             ->add('logo', FileType::class, [
                 'label' => null,
                 'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '8000k',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                        ],
+                        'mimeTypesMessage' => $this->trans('Please upload a valid jpeg file', 'Admin.Carriers.Form.LogoUpload'),
+                        'maxSizeMessage' => $this->trans('The file is too large. Allowed maximum size is 8MB.', 'Admin.Carriers.Form.LogoUpload'),
+                    ])
+                ],
             ])
             ->add('tracking_url', TextType::class, [
                 'required' => false,
