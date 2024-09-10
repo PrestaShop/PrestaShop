@@ -53,6 +53,8 @@ class GeneralSettings extends TranslatorAwareType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $maximumFileSize = (int) str_replace('M', '', ini_get('upload_max_filesize'));
+
         parent::buildForm($builder, $options);
         $builder
             ->add('name', TextType::class, [
@@ -93,7 +95,7 @@ class GeneralSettings extends TranslatorAwareType
                 'required' => false,
                 'constraints' => [
                     new File([
-                        'maxSize' => '8000k',
+                        'maxSize' => $maximumFileSize,
                         'mimeTypes' => [
                             'image/jpeg',
                         ],
