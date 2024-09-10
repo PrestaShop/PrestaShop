@@ -255,6 +255,9 @@
         "create-test-table-dumps": "Create a dump of each table in the Database for testing purposes",
         "restore-test-db": "Restore the whole DB in a single dump",
         "restore-test-tables": "Restore all tables one by one, only when they have been modified",
-        "test-all": "Launch all PHPUnit test suites"
+        "test-all": "Launch all PHPUnit test suites",
+        "php-cs-fixer": "Launch php cs fixer, fixes will be applied automatically",
+        "php-cs-fixer:dry": "Launch php cs fixer in dry mode: fixes will not be applied automatically",
+        "phpstan": "Launch a phpstan analyzis"
     }
 }
