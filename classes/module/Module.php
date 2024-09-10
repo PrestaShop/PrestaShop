@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use PrestaShop\PrestaShop\Core\Module\Legacy\ModuleInterface;
-use PrestaShop\PrestaShop\Core\Module\ModuleOverrideVerifier;
+use PrestaShop\PrestaShop\Core\Module\ModuleOverrideChecker;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -413,12 +413,12 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         // Check for override conflicts
-        $moduleOverrideVerifier = $this->get(ModuleOverrideVerifier::class);
-        if (!$moduleOverrideVerifier) {
-            $moduleOverrideVerifier = new ModuleOverrideVerifier($this->getTranslator());
+        $moduleOverrideChecker = $this->get(ModuleOverrideChecker::class);
+        if (!$moduleOverrideChecker) {
+            $moduleOverrideChecker = new ModuleOverrideChecker($this->getTranslator());
         }
-        if ($moduleOverrideVerifier->hasOverrideConflict($this->getLocalPath() . 'override')) {
-            $this->_errors = array_merge($moduleOverrideVerifier->getErrors(), $this->_errors);
+        if ($moduleOverrideChecker->hasOverrideConflict($this->getLocalPath() . 'override')) {
+            $this->_errors = array_merge($moduleOverrideChecker->getErrors(), $this->_errors);
 
             return false;
         }

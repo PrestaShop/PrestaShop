@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Module;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ModuleOverrideVerifier
+class ModuleOverrideChecker
 {
     /**
      * @var TranslatorInterface

@@ -75,6 +75,6 @@ services:
     public: true
     deprecated: ~
 
-  PrestaShop\PrestaShop\Core\Module\ModuleOverrideVerifier:
+  PrestaShop\PrestaShop\Core\Module\ModuleOverrideChecker:
     arguments:
       - '@translator'
