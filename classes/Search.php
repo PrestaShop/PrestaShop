@@ -130,29 +130,55 @@ class SearchCore
     public const PS_SEARCH_ABSCISSA_MAX = 2;
     public const PS_DISTANCE_MAX = 8;
 
+    /**
+     * Method that takes a raw string (sentence) and extract all keywords it can find.
+     *
+     * @param string $string Search expression
+     * @param int $id_lang Language ID
+     * @param bool $indexation Are we in indexation mode or not
+     * @param bool|string $iso_code Iso code to use in sanitization function, to perform some tasks
+     */
     public static function extractKeyWords($string, $id_lang, $indexation = false, $iso_code = false)
     {
-        if (null === $string) {
+        // If nothing was passed, nothing to do here
+        if (empty($string)) {
             return [];
         }
 
+        // First, we take the string and clean it as a whole.
+        // This removes special characters, tags, blacklisted words, hyphens etc.
+        // So, "Prestashop Tést A-1000" becomes "prestashop test a 1000";
         $sanitizedString = Search::sanitize($string, $id_lang, $indexation, $iso_code, false);
+
+        // And we separate it by words to get array
+        // So we get an array ["prestashop", "test", "a", "1000"]
         $words = explode(' ', $sanitizedString);
+
+        /*
+         * Now, because we want to maximize the number of keywords we can get from the expression,
+         * we will also try to handle words with hyphens in them. People can search A 1000, A-1000, A1000, we don't know.
+         *
+         * For this reason, if the original expression contained a dash, we will do the process once again,
+         * but keeping the dashes.
+         */
         if (strpos($string, '-') !== false) {
-            $sanitizedString = Search::sanitize($string, $id_lang, $indexation, $iso_code, true);
-            $words2 = explode(' ', $sanitizedString);
-            // foreach word containing hyphen, we want to index additional word removing the hyphen
-            // eg: t-shirt => tshirt
-            foreach ($words2 as $word) {
-                if (strpos($word, '-') !== false) {
-                    $word = str_replace('-', '', $word);
-                    if (!empty($word)) {
-                        $words[] = $word;
-                    }
+            // So, one more sanitization with different parameter, one more separation to get array.
+            // We get an array ["prestashop", "test", "a-1000"]
+            $sanitizedStringWithHyphens = Search::sanitize($string, $id_lang, $indexation, $iso_code, true);
+            $wordsWithHyphens = explode(' ', $sanitizedStringWithHyphens);
+
+            // And we add all words to our final list, in both dashed and non dashed version.
+            foreach ($wordsWithHyphens as $word) {
+                if (strpos($word, '-') === false) {
+                    continue;
+                }
+
+                $words[] = $word;
+                $word = str_replace('-', '', $word);
+                if (!empty($word)) {
+                    $words[] = $word;
                 }
             }
-
-            $words = array_merge($words, $words2);
         }
 
         return array_unique($words);
@@ -160,15 +186,18 @@ class SearchCore
 
     public static function sanitize($string, $id_lang, $indexation = false, $iso_code = false, $keepHyphens = false)
     {
+        // If we get some nonsense or space, just return empty string
         if (null === $string || empty($string = trim($string))) {
             return '';
         }
 
+        // The string gets into this method in a raw form of, like "Prestashop Tést A-1000".
+        // This get rid of all tags, special characters and convert everything to lowercase.
         $string = Tools::strtolower(strip_tags($string));
         $string = html_entity_decode($string, ENT_NOQUOTES, 'utf-8');
-
         $string = preg_replace('/([' . PREG_CLASS_NUMBERS . ']+)[' . PREG_CLASS_PUNCTUATION . ']+(?=[' . PREG_CLASS_NUMBERS . '])/u', '\1', $string);
         $string = preg_replace('/[' . PREG_CLASS_SEARCH_EXCLUDE . ']+/u', ' ', $string);
+        // Now, our string looks something like "prestashop test a-1000".
 
         if ($indexation) {
             if (!$keepHyphens) {
@@ -177,16 +206,18 @@ class SearchCore
                 $string = str_replace(['.', '_'], ' ', $string);
             }
         } else {
-            $words = explode(' ', $string);
-            $processed_words = [];
-            // search for aliases for each word of the query
+            /*
+             * Now, we will search for all aliases, that are contained in our query.
+             * Our string looks something like "prestashop test a-1000".
+             * Aliases must be searched for in a raw form, with no special characters.
+             */
             $query = '
 				SELECT a.alias, a.search
 				FROM `' . _DB_PREFIX_ . 'alias` a
 				WHERE \'' . pSQL($string) . '\' %s AND `active` = 1
             ';
 
-            // check if we can we use '\b' (faster)
+            // Check if we can we use '\b' (faster)
             $useICU = (bool) Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->getValue(
                 'SELECT 1 FROM DUAL WHERE \'icu regex\' REGEXP \'\\\\bregex\''
             );
@@ -199,7 +230,9 @@ class SearchCore
                 )
             );
 
-            foreach ($aliases  as $alias) {
+            $words = explode(' ', $string);
+            $processed_words = [];
+            foreach ($aliases as $alias) {
                 $processed_words = array_merge($processed_words, explode(' ', $alias['search']));
                 // delete words that are being replaced with aliases
                 $words = array_diff($words, explode(' ', $alias['alias']));
@@ -211,6 +244,7 @@ class SearchCore
             }
         }
 
+        // Remove all blacklisted words from the search string
         $blacklist = Tools::strtolower(Configuration::get('PS_SEARCH_BLACKLIST', $id_lang));
         if (!empty($blacklist)) {
             $string = preg_replace('/(?<=\s)(' . $blacklist . ')(?=\s)/Su', '', $string);
@@ -219,7 +253,8 @@ class SearchCore
             $string = preg_replace('/^(' . $blacklist . ')$/Su', '', $string);
         }
 
-        // If the language is constituted with symbol and there is no "words", then split every chars
+        // If the language is constituted with symbol and there is no "words", then split every chars.
+        // This concerns asian languages.
         if (in_array($iso_code, ['zh', 'tw', 'ja'])) {
             // Cut symbols from letters
             $symbols = '';
@@ -248,6 +283,7 @@ class SearchCore
             }
         }
 
+        // Do some more cleaning to the string and return it
         $string = Tools::replaceAccentedChars(trim(preg_replace('/\s+/', ' ', $string)));
 
         return $string;
