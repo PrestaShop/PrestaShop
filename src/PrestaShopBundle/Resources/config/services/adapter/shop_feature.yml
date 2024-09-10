@@ -8,8 +8,7 @@ services:
   prestashop.adapter.combination_feature:
     alias: 'PrestaShop\PrestaShop\Adapter\Feature\CombinationFeature'
 
-  prestashop.adapter.feature.feature:
-    class: 'PrestaShop\PrestaShop\Adapter\Feature\FeatureFeature'
+  PrestaShop\PrestaShop\Adapter\Feature\FeatureFeature:
     arguments: [ '@prestashop.adapter.legacy.configuration' ]
 
   prestashop.adapter.group.feature:
@@ -26,3 +25,6 @@ services:
 
   prestashop.adapter.multistore_feature:
     alias: prestashop.adapter.feature.multistore
+
+  prestashop.adapter.feature.feature:
+    alias: 'PrestaShop\PrestaShop\Adapter\Feature\FeatureFeature'
