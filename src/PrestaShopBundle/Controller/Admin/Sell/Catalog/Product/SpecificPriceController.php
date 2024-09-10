@@ -40,13 +40,14 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class SpecificPriceController extends FrameworkBundleAdminController
+class SpecificPriceController extends PrestaShopAdminController
 {
     private const UNSPECIFIED_VALUE_FORMAT = '--';
 
@@ -54,14 +55,14 @@ class SpecificPriceController extends FrameworkBundleAdminController
     public function listAction(Request $request, int $productId): JsonResponse
     {
         /** @var SpecificPriceList $specificPricesList */
-        $specificPricesList = $this->getQueryBus()->handle(
+        $specificPricesList = $this->dispatchQuery(
             new GetSpecificPriceList(
                 $productId,
-                $this->getContextLangId(),
+                $this->getLanguageContext()->getId(),
                 $request->query->getInt('limit') ?: null,
                 $request->query->getInt('offset') ?: null,
                 // Show only specific prices for current context shop or All shops
-                ['shopIds' => [0, $this->getContextShopId()]]
+                ['shopIds' => [0, $this->getShopContext()->getId()]]
             )
         );
 
@@ -75,16 +76,22 @@ class SpecificPriceController extends FrameworkBundleAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
-    public function createAction(Request $request, int $productId): Response
-    {
-        $form = $this->getFormBuilder()->getForm(['product_id' => $productId]);
+    public function createAction(
+        Request $request,
+        int $productId,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.specific_price_form_builder')]
+        FormBuilderInterface $formBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.specific_price_form_handler')]
+        FormHandlerInterface $formHandler
+    ): Response {
+        $form = $formBuilder->getForm(['product_id' => $productId]);
         $form->handleRequest($request);
 
         try {
-            $result = $this->getFormHandler()->handle($form);
+            $result = $formHandler->handle($form);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_products_specific_prices_edit', [
                     'liteDisplaying' => $request->query->has('liteDisplaying'),
@@ -106,16 +113,22 @@ class SpecificPriceController extends FrameworkBundleAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
-    public function editAction(Request $request, int $specificPriceId): Response
-    {
-        $form = $this->getFormBuilder()->getFormFor($specificPriceId);
+    public function editAction(
+        Request $request,
+        int $specificPriceId,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.specific_price_form_builder')]
+        FormBuilderInterface $formBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.specific_price_form_handler')]
+        FormHandlerInterface $formHandler
+    ): Response {
+        $form = $formBuilder->getFormFor($specificPriceId);
         $form->handleRequest($request);
 
         try {
-            $result = $this->getFormHandler()->handleFor($specificPriceId, $form);
+            $result = $formHandler->handleFor($specificPriceId, $form);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Update successful', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_products_specific_prices_edit', [
                     'specificPriceId' => $specificPriceId,
@@ -133,16 +146,15 @@ class SpecificPriceController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param Request $request
      * @param int $specificPriceId
      *
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
-    public function deleteAction(Request $request, int $specificPriceId): JsonResponse
+    public function deleteAction(int $specificPriceId): JsonResponse
     {
         try {
-            $this->getCommandBus()->handle(new DeleteSpecificPriceCommand($specificPriceId));
+            $this->dispatchCommand(new DeleteSpecificPriceCommand($specificPriceId));
         } catch (Exception $e) {
             return $this->json([
                 'error' => $this->getErrorMessageForException($e, $this->getErrorMessages()),
@@ -150,7 +162,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
         }
 
         return $this->json([
-            'message' => $this->trans('Successful deletion', 'Admin.Notifications.Success'),
+            'message' => $this->trans('Successful deletion', [], 'Admin.Notifications.Success'),
         ]);
     }
 
@@ -165,34 +177,20 @@ class SpecificPriceController extends FrameworkBundleAdminController
             SpecificPriceConstraintException::class => [
                 SpecificPriceConstraintException::NOT_UNIQUE_PER_PRODUCT => $this->trans(
                     'A specific price already exists for these parameters.',
+                    [],
                     'Admin.Catalog.Notification'
                 ),
                 SpecificPriceConstraintException::REDUCTION_OR_PRICE_MUST_BE_SET => $this->trans(
                     sprintf(
                         '%s or %s must be set',
-                        $this->trans('Retail price (tax excl.)', 'Admin.Catalog.Feature'),
-                        $this->trans('Reduction', 'Admin.Catalog.Feature')
+                        $this->trans('Retail price (tax excl.)', [], 'Admin.Catalog.Feature'),
+                        $this->trans('Reduction', [], 'Admin.Catalog.Feature')
                     ),
+                    [],
                     'Admin.Catalog.Notification'
                 ),
             ],
         ];
-    }
-
-    /**
-     * @return FormBuilderInterface
-     */
-    private function getFormBuilder(): FormBuilderInterface
-    {
-        return $this->get('prestashop.core.form.identifiable_object.builder.specific_price_form_builder');
-    }
-
-    /**
-     * @return FormHandlerInterface
-     */
-    private function getFormHandler(): FormHandlerInterface
-    {
-        return $this->get('prestashop.core.form.identifiable_object.handler.specific_price_form_handler');
     }
 
     /**
@@ -207,19 +205,19 @@ class SpecificPriceController extends FrameworkBundleAdminController
             $list[] = [
                 'id' => $specificPrice->getSpecificPriceId(),
                 'combination' => $specificPrice->getCombinationName() ?: self::UNSPECIFIED_VALUE_FORMAT,
-                'currency' => $specificPrice->getCurrencyName() ?? $this->trans('All currencies', 'Admin.Global'),
-                'country' => $specificPrice->getCountryName() ?? $this->trans('All countries', 'Admin.Global'),
-                'group' => $specificPrice->getGroupName() ?? $this->trans('All groups', 'Admin.Global'),
-                'shop' => $specificPrice->getShopName() ?? $this->trans('All stores', 'Admin.Global'),
-                'customer' => $specificPrice->getCustomerName() ?? $this->trans('All customers', 'Admin.Global'),
+                'currency' => $specificPrice->getCurrencyName() ?? $this->trans('All currencies', [], 'Admin.Global'),
+                'country' => $specificPrice->getCountryName() ?? $this->trans('All countries', [], 'Admin.Global'),
+                'group' => $specificPrice->getGroupName() ?? $this->trans('All groups', [], 'Admin.Global'),
+                'shop' => $specificPrice->getShopName() ?? $this->trans('All stores', [], 'Admin.Global'),
+                'customer' => $specificPrice->getCustomerName() ?? $this->trans('All customers', [], 'Admin.Global'),
                 'price' => $this->formatPrice(
                     $specificPrice->getFixedPrice(),
-                    $specificPrice->getCurrencyISOCode() ?: $this->getContextCurrencyIso()
+                    $specificPrice->getCurrencyISOCode() ?: $this->getCurrencyContext()->getIsoCode()
                 ),
                 'impact' => $this->formatImpact(
                     $specificPrice->getReductionType(),
                     $specificPrice->getReductionValue(),
-                    $specificPrice->getCurrencyISOCode() ?: $this->getContextCurrencyIso()
+                    $specificPrice->getCurrencyISOCode() ?: $this->getCurrencyContext()->getIsoCode()
                 ),
                 'period' => $this->formatPeriod($specificPrice->getDateTimeFrom(), $specificPrice->getDateTimeTo()),
                 'fromQuantity' => $specificPrice->getFromQuantity(),
@@ -241,7 +239,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
             return self::UNSPECIFIED_VALUE_FORMAT;
         }
 
-        return $this->getContextLocale()->formatPrice((string) $fixedPrice->getValue(), $currencyIsoCode);
+        return $this->getLanguageContext()->formatPrice((string) $fixedPrice->getValue(), $currencyIsoCode);
     }
 
     /**
@@ -259,9 +257,8 @@ class SpecificPriceController extends FrameworkBundleAdminController
 
         $reductionValue = $reductionValue->toNegative();
 
-        $locale = $this->getContextLocale();
         if ($reductionType === Reduction::TYPE_AMOUNT) {
-            return sprintf('%s', $locale->formatPrice((string) $reductionValue, $currencyIsoCode));
+            return sprintf('%s', $this->getLanguageContext()->formatPrice((string) $reductionValue, $currencyIsoCode));
         }
 
         return sprintf('%s %%', (string) $reductionValue);
@@ -281,10 +278,10 @@ class SpecificPriceController extends FrameworkBundleAdminController
 
         return [
             'from' => DateTimeUtil::isNull($from) ?
-                $this->trans('Always', 'Admin.Global') :
+                $this->trans('Always', [], 'Admin.Global') :
                 $from->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
             'to' => DateTimeUtil::isNull($to) ?
-                $this->trans('Always', 'Admin.Global') :
+                $this->trans('Always', [], 'Admin.Global') :
                 $to->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
         ];
     }
