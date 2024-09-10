@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDisableCategoriesComm
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkEnableCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCoverImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryThumbnailImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\SetCategoryIsEnabledCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoryPositionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotAddCategoryException;
@@ -74,7 +75,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Class CategoryController is responsible for "Sell > Catalog > Categories" page.
@@ -422,16 +422,35 @@ class CategoryController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.', redirectRoute: 'admin_categories_edit', redirectQueryParamsToKeep: ['categoryId'])]
     public function deleteCoverImageAction(Request $request, $categoryId)
     {
-        if (!$this->isCsrfTokenValid('delete-cover-image', $request->request->get('_csrf_token'))) {
-            return $this->redirectToRoute('admin_security_compromised', [
-                'uri' => $this->generateUrl('admin_categories_edit', [
-                    'categoryId' => $categoryId,
-                ], UrlGeneratorInterface::ABSOLUTE_URL),
-            ]);
-        }
-
         try {
             $this->dispatchCommand(new DeleteCategoryCoverImageCommand((int) $categoryId));
+
+            $this->addFlash(
+                'success',
+                $this->trans('Image successfully deleted.', [], 'Admin.Notifications.Success')
+            );
+        } catch (CategoryException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_categories_edit', [
+            'categoryId' => $categoryId,
+        ]);
+    }
+
+    /**
+     * Deletes category thumbnail image.
+     *
+     * @param Request $request
+     * @param int $categoryId
+     *
+     * @return RedirectResponse
+     */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.', redirectRoute: 'admin_categories_edit', redirectQueryParamsToKeep: ['categoryId'])]
+    public function deleteThumbnailImageAction(Request $request, $categoryId)
+    {
+        try {
+            $this->dispatchCommand(new DeleteCategoryThumbnailImageCommand((int) $categoryId));
 
             $this->addFlash(
                 'success',

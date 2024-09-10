@@ -787,7 +787,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         return $this->uploadImage(
             $imageReference,
             $fileName,
-            $this->psCatImgDir . $categoryId . '-small_default' . self::JPG_IMAGE_TYPE
+            $this->psCatImgDir . $categoryId . '_thumb' . self::JPG_IMAGE_TYPE
         );
     }
 

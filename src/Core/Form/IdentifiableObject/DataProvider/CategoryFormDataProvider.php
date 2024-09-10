@@ -76,8 +76,14 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
         if ($thumbnailImage) {
             $thumbnailImages[] =
                 [
-                    'image_path' => $thumbnailImage['path'],
                     'size' => $thumbnailImage['size'],
+                    'image_path' => $thumbnailImage['path'],
+                    'delete_path' => $this->router->generate(
+                        'admin_categories_delete_thumbnail_image',
+                        [
+                            'categoryId' => $categoryId,
+                        ]
+                    ),
                 ];
         }
 
