@@ -30,8 +30,8 @@ use Category;
 use ImageType;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCoverImageCommand;
-use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\DeleteCategoryCoverImageHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryThumbnailImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\DeleteCategoryThumbnailImageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotDeleteImageException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
@@ -40,12 +40,12 @@ use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Handles category cover image deleting command.
+ * Handles category thumbnail image deleting command.
  *
  * @internal
  */
 #[AsCommandHandler]
-final class DeleteCategoryCoverImageHandler implements DeleteCategoryCoverImageHandlerInterface
+final class DeleteCategoryThumbnailImageHandler implements DeleteCategoryThumbnailImageHandlerInterface
 {
     /**
      * @var Filesystem
@@ -72,14 +72,14 @@ final class DeleteCategoryCoverImageHandler implements DeleteCategoryCoverImageH
     /**
      * {@inheritdoc}
      */
-    public function handle(DeleteCategoryCoverImageCommand $command)
+    public function handle(DeleteCategoryThumbnailImageCommand $command)
     {
         $categoryId = $command->getCategoryId();
         $category = new Category($categoryId->getValue());
 
         $this->assertCategoryExists($categoryId, $category);
 
-        $this->deleteCoverImage($category);
+        $this->deleteThumbnailImage($category);
         $this->deleteTemporaryThumbnailImage($category);
         $this->deleteImagesForAllTypes($category);
     }
@@ -102,10 +102,16 @@ final class DeleteCategoryCoverImageHandler implements DeleteCategoryCoverImageH
      *
      * @throws CannotDeleteImageException
      */
-    private function deleteCoverImage(Category $category)
+    private function deleteThumbnailImage(Category $category)
     {
-        if (false === $category->deleteImage(true)) {
-            throw new CannotDeleteImageException(sprintf('Cannot delete cover image for category with id "%s"', $category->id), CannotDeleteImageException::COVER_IMAGE);
+        $thumbnailPath = $this->configuration->get('_PS_CAT_IMG_DIR_') . $category->id . '_thumb.jpg';
+
+        try {
+            if ($this->filesystem->exists($thumbnailPath)) {
+                $this->filesystem->remove($thumbnailPath);
+            }
+        } catch (IOException $e) {
+            throw new CannotDeleteImageException(sprintf('Cannot delete thumbnail image for category with id "%s"', $category->id), CannotDeleteImageException::THUMBNAIL_IMAGE, $e);
         }
     }
 
@@ -140,7 +146,7 @@ final class DeleteCategoryCoverImageHandler implements DeleteCategoryCoverImageH
         try {
             foreach ($imageTypes as $imageType) {
                 foreach (ImageFormatConfiguration::SUPPORTED_FORMATS as $imageFormat) {
-                    $imagePath = $categoryImageDir . $category->id . '-' . $imageType['name'] . '.' . $imageFormat;
+                    $imagePath = $categoryImageDir . $category->id . '_thumb-' . $imageType['name'] . '.' . $imageFormat;
                     if ($this->filesystem->exists($imagePath)) {
                         $this->filesystem->remove($imagePath);
                     }
