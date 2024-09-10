@@ -244,7 +244,10 @@
         ],
         "unit-tests": [
             "@php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c tests/Unit/phpunit.xml"
-        ]
+        ],
+        "php-cs-fixer": "@php ./vendor/bin/php-cs-fixer fix --path-mode=intersection",
+        "php-cs-fixer:dry": "@php ./vendor/bin/php-cs-fixer fix --dry-run --diff --path-mode=intersection",
+        "phpstan": "@php ./vendor/bin/phpstan analyze -c phpstan.neon.dist"
     },
     "scripts-descriptions": {
         "create-release": "Create a release of PrestaShop, run the command with -h/--help argument for more information.",
