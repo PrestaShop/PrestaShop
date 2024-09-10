@@ -715,12 +715,11 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * Export filtered products
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param ProductFilters $filters
      *
      * @return CsvResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_products_index')]
     public function exportAction(ProductFilters $filters)
     {
         $productGridFactory = $this->get('prestashop.core.grid.factory.product');
