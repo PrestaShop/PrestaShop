@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Context;
 
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
+use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
@@ -48,6 +49,7 @@ class ShopContextBuilder implements LegacyContextBuilderInterface
     public function __construct(
         private readonly ShopRepository $shopRepository,
         private readonly ContextStateManager $contextStateManager,
+        private readonly MultistoreFeature $multistoreFeature
     ) {
     }
 
@@ -70,7 +72,8 @@ class ShopContextBuilder implements LegacyContextBuilderInterface
             domainSSL: $legacyShop->domain_ssl ?? '',
             active: (bool) $legacyShop->active,
             secured: $this->secureMode,
-            associatedShopIds: $this->shopRepository->getAssociatedShopIds($this->shopConstraint)
+            associatedShopIds: $this->shopRepository->getAssociatedShopIds($this->shopConstraint),
+            isMultiShopEnabled: $this->multistoreFeature->isActive(),
         );
     }
 

@@ -38,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\NoQtyProductWi
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutDescriptionGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutImageGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutPriceGridDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Grid\GridInterface;
+use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\Monitoring\DisabledProductFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\Monitoring\EmptyCategoryFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\Monitoring\NoQtyProductWithCombinationFilters;
@@ -46,10 +46,10 @@ use PrestaShop\PrestaShop\Core\Search\Filters\Monitoring\NoQtyProductWithoutComb
 use PrestaShop\PrestaShop\Core\Search\Filters\Monitoring\ProductWithoutDescriptionFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\Monitoring\ProductWithoutImageFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\Monitoring\ProductWithoutPriceFilters;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Category\DeleteCategoriesType;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
-use PrestaShopBundle\Service\Grid\ResponseBuilder;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -57,8 +57,21 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Responsible for Sell > Catalog > Monitoring page
  */
-class MonitoringController extends FrameworkBundleAdminController
+class MonitoringController extends PrestaShopAdminController
 {
+    public static function getSubscribedServices(): array
+    {
+        return array_merge(parent::getSubscribedServices(), [
+            NoQtyProductWithCombinationGridDefinitionFactory::GRID_ID => NoQtyProductWithCombinationGridDefinitionFactory::class,
+            NoQtyProductWithoutCombinationGridDefinitionFactory::GRID_ID => NoQtyProductWithoutCombinationGridDefinitionFactory::class,
+            DisabledProductGridDefinitionFactory::GRID_ID => DisabledProductGridDefinitionFactory::class,
+            ProductWithoutImageGridDefinitionFactory::GRID_ID => ProductWithoutImageGridDefinitionFactory::class,
+            ProductWithoutDescriptionGridDefinitionFactory::GRID_ID => ProductWithoutDescriptionGridDefinitionFactory::class,
+            ProductWithoutPriceGridDefinitionFactory::GRID_ID => ProductWithoutPriceGridDefinitionFactory::class,
+            EmptyCategoryGridDefinitionFactory::GRID_ID => EmptyCategoryGridDefinitionFactory::class,
+        ]);
+    }
+
     /**
      * Shows Monitoring listing page
      *
@@ -76,26 +89,40 @@ class MonitoringController extends FrameworkBundleAdminController
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(
         Request $request,
+        #[Autowire(service: 'prestashop.core.grid.grid_factory.empty_category')]
+        GridFactoryInterface $emptyCategoryGrid,
         EmptyCategoryFilters $emptyCategoryFilters,
+        #[Autowire(service: 'prestashop.core.grid.grid_factory.no_qty_product_with_combination')]
+        GridFactoryInterface $noQtyProductWithCombinationGrid,
         NoQtyProductWithCombinationFilters $noQtyProductWithCombinationFilters,
+        #[Autowire(service: 'prestashop.core.grid.grid_factory.no_qty_product_without_combination')]
+        GridFactoryInterface $noQtyProductWithoutCombinationGrid,
         NoQtyProductWithoutCombinationFilters $noQtyProductWithoutCombinationFilters,
+        #[Autowire(service: 'prestashop.core.grid.grid_factory.disabled_product')]
+        GridFactoryInterface $disabledProductGrid,
         DisabledProductFilters $disabledProductFilters,
+        #[Autowire(service: 'prestashop.core.grid.grid_factory.product_without_image')]
+        GridFactoryInterface $productWithoutImageGrid,
         ProductWithoutImageFilters $productWithoutImageFilters,
+        #[Autowire(service: 'prestashop.core.grid.grid_factory.product_without_description')]
+        GridFactoryInterface $productWithoutDescriptionGrid,
         ProductWithoutDescriptionFilters $productWithoutDescriptionFilters,
+        #[Autowire(service: 'prestashop.core.grid.grid_factory.product_without_price')]
+        GridFactoryInterface $productWithoutPriceGrid,
         ProductWithoutPriceFilters $productWithoutPriceFilters
-    ) {
+    ): Response {
         $deleteCategoryForm = $this->createForm(DeleteCategoriesType::class);
 
-        $emptyCategoryGrid = $this->getEmptyCategoryGrid($emptyCategoryFilters);
-        $noQtyProductWithCombinationGrid = $this->getNoQtyProductWithCombinationGrid($noQtyProductWithCombinationFilters);
-        $noQtyProductWithoutCombinationGrid = $this->getNoQtyProductWithoutCombinationGrid($noQtyProductWithoutCombinationFilters);
-        $disabledProductGrid = $this->getDisabledProductGrid($disabledProductFilters);
-        $productWithoutImageGrid = $this->getProductWithoutImageGrid($productWithoutImageFilters);
-        $productWithoutDescriptionGrid = $this->getProductWithoutDescriptionGrid($productWithoutDescriptionFilters);
-        $productWithoutPriceGrid = $this->getProductWithoutPriceGrid($productWithoutPriceFilters);
+        $emptyCategoryGrid = $emptyCategoryGrid->getGrid($emptyCategoryFilters);
+        $noQtyProductWithCombinationGrid = $noQtyProductWithCombinationGrid->getGrid($noQtyProductWithCombinationFilters);
+        $noQtyProductWithoutCombinationGrid = $noQtyProductWithoutCombinationGrid->getGrid($noQtyProductWithoutCombinationFilters);
+        $disabledProductGrid = $disabledProductGrid->getGrid($disabledProductFilters);
+        $productWithoutImageGrid = $productWithoutImageGrid->getGrid($productWithoutImageFilters);
+        $productWithoutDescriptionGrid = $productWithoutDescriptionGrid->getGrid($productWithoutDescriptionFilters);
+        $productWithoutPriceGrid = $productWithoutPriceGrid->getGrid($productWithoutPriceFilters);
 
-        $isShowcaseCardClosed = $this->getQueryBus()->handle(
-            new GetShowcaseCardIsClosed($this->getContext()->employee->id, ShowcaseCard::MONITORING_CARD)
+        $isShowcaseCardClosed = $this->dispatchQuery(
+            new GetShowcaseCardIsClosed($this->getEmployeeContext()->getEmployee()->getId(), ShowcaseCard::MONITORING_CARD)
         );
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Monitoring/index.html.twig', [
@@ -111,7 +138,7 @@ class MonitoringController extends FrameworkBundleAdminController
             'productWithoutPriceGrid' => $this->presentGrid($productWithoutPriceGrid),
             'showcaseCardName' => ShowcaseCard::MONITORING_CARD,
             'isShowcaseCardClosed' => $isShowcaseCardClosed,
-            'layoutTitle' => $this->trans('Monitoring', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Monitoring', [], 'Admin.Navigation.Menu'),
         ]);
     }
 
@@ -123,14 +150,11 @@ class MonitoringController extends FrameworkBundleAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
-    public function searchAction(Request $request)
+    public function searchAction(Request $request): RedirectResponse
     {
         $gridIdentifiers = $this->identifySearchableGrid($request);
 
-        /** @var ResponseBuilder $responseBuilder */
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
-
-        return $responseBuilder->buildSearchResponse(
+        return $this->buildSearchResponse(
             $gridIdentifiers['grid_definition'],
             $request,
             $gridIdentifiers['grid_id'],
@@ -152,16 +176,16 @@ class MonitoringController extends FrameworkBundleAdminController
         $productIds = $this->getBulkProductsFromRequest($request, $gridIdentifiers);
 
         try {
-            $this->getCommandBus()->handle(new BulkDeleteProductCommand(
+            $this->dispatchCommand(new BulkDeleteProductCommand(
                 $productIds,
-                ShopConstraint::shop($this->getContextShopId())
+                ShopConstraint::shop($this->getShopContext()->getId())
             ));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, [$e->getMessage()]));
+            $this->addFlash('error', $this->getErrorMessageForException($e, [$e::class => $e->getMessage()]));
         }
 
         return $this->redirectToRoute('admin_monitorings_index');
@@ -193,114 +217,27 @@ class MonitoringController extends FrameworkBundleAdminController
      */
     private function identifySearchableGrid(Request $request)
     {
-        $gridDefinition = 'prestashop.core.grid.definition.factory.monitoring.empty_category';
         $gridId = EmptyCategoryGridDefinitionFactory::GRID_ID;
 
         $definitionMap = [
-            NoQtyProductWithCombinationGridDefinitionFactory::GRID_ID => 'prestashop.core.grid.definition.factory.monitoring.no_qty_product_with_combination',
-            NoQtyProductWithoutCombinationGridDefinitionFactory::GRID_ID => 'prestashop.core.grid.definition.factory.monitoring.no_qty_product_without_combination',
-            DisabledProductGridDefinitionFactory::GRID_ID => 'prestashop.core.grid.definition.factory.monitoring.disabled_product',
-            ProductWithoutImageGridDefinitionFactory::GRID_ID => 'prestashop.core.grid.definition.factory.monitoring.product_without_image',
-            ProductWithoutDescriptionGridDefinitionFactory::GRID_ID => 'prestashop.core.grid.definition.factory.monitoring.product_without_description',
-            ProductWithoutPriceGridDefinitionFactory::GRID_ID => 'prestashop.core.grid.definition.factory.monitoring.product_without_price',
+            NoQtyProductWithCombinationGridDefinitionFactory::GRID_ID,
+            NoQtyProductWithoutCombinationGridDefinitionFactory::GRID_ID,
+            DisabledProductGridDefinitionFactory::GRID_ID,
+            ProductWithoutImageGridDefinitionFactory::GRID_ID,
+            ProductWithoutDescriptionGridDefinitionFactory::GRID_ID,
+            ProductWithoutPriceGridDefinitionFactory::GRID_ID,
         ];
 
-        foreach ($definitionMap as $id => $definition) {
+        foreach ($definitionMap as $id) {
             if ($request->request->has($id)) {
                 $gridId = $id;
-                $gridDefinition = $definition;
-
                 break;
             }
         }
 
         return [
             'grid_id' => $gridId,
-            'grid_definition' => $this->get($gridDefinition),
+            'grid_definition' => $this->container->get($gridId),
         ];
-    }
-
-    /**
-     * @param EmptyCategoryFilters $filters
-     *
-     * @return GridInterface
-     */
-    private function getEmptyCategoryGrid(EmptyCategoryFilters $filters)
-    {
-        $gridFactory = $this->get('prestashop.core.grid.grid_factory.empty_category');
-
-        return $gridFactory->getGrid($filters);
-    }
-
-    /**
-     * @param NoQtyProductWithCombinationFilters $filters
-     *
-     * @return GridInterface
-     */
-    private function getNoQtyProductWithCombinationGrid(NoQtyProductWithCombinationFilters $filters)
-    {
-        $gridFactory = $this->get('prestashop.core.grid.grid_factory.no_qty_product_with_combination');
-
-        return $gridFactory->getGrid($filters);
-    }
-
-    /**
-     * @param NoQtyProductWithoutCombinationFilters $filters
-     *
-     * @return GridInterface
-     */
-    private function getNoQtyProductWithoutCombinationGrid(NoQtyProductWithoutCombinationFilters $filters)
-    {
-        $gridFactory = $this->get('prestashop.core.grid.grid_factory.no_qty_product_without_combination');
-
-        return $gridFactory->getGrid($filters);
-    }
-
-    /**
-     * @param DisabledProductFilters $filters
-     *
-     * @return GridInterface
-     */
-    private function getDisabledProductGrid(DisabledProductFilters $filters)
-    {
-        $gridFactory = $this->get('prestashop.core.grid.grid_factory.disabled_product');
-
-        return $gridFactory->getGrid($filters);
-    }
-
-    /**
-     * @param ProductWithoutImageFilters $filters
-     *
-     * @return GridInterface
-     */
-    private function getProductWithoutImageGrid(ProductWithoutImageFilters $filters)
-    {
-        $gridFactory = $this->get('prestashop.core.grid.grid_factory.product_without_image');
-
-        return $gridFactory->getGrid($filters);
-    }
-
-    /**
-     * @param ProductWithoutDescriptionFilters $filters
-     *
-     * @return GridInterface
-     */
-    private function getProductWithoutDescriptionGrid(ProductWithoutDescriptionFilters $filters)
-    {
-        $gridFactory = $this->get('prestashop.core.grid.grid_factory.product_without_description');
-
-        return $gridFactory->getGrid($filters);
-    }
-
-    /**
-     * @param ProductWithoutPriceFilters $filters
-     *
-     * @return GridInterface
-     */
-    private function getProductWithoutPriceGrid(ProductWithoutPriceFilters $filters)
-    {
-        $gridFactory = $this->get('prestashop.core.grid.grid_factory.product_without_price');
-
-        return $gridFactory->getGrid($filters);
     }
 }

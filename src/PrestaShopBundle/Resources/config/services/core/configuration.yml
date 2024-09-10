@@ -2,8 +2,12 @@ services:
   _defaults:
     public: true
 
+  PrestaShop\PrestaShop\Core\Configuration\IniConfiguration: ~
   prestashop.core.configuration.ini_configuration:
-    class: 'PrestaShop\PrestaShop\Core\Configuration\IniConfiguration'
+    alias: 'PrestaShop\PrestaShop\Core\Configuration\IniConfiguration'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.configuration.php_extension_checker:
     class: 'PrestaShop\PrestaShop\Core\Configuration\PhpExtensionChecker'

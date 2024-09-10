@@ -49,7 +49,8 @@ class ShopContext
         protected string $domainSSL,
         protected bool $active,
         protected bool $secured,
-        protected array $associatedShopIds
+        protected array $associatedShopIds,
+        protected bool $isMultiShopEnabled,
     ) {
     }
 
@@ -135,5 +136,10 @@ class ShopContext
     public function getAssociatedShopIds(): array
     {
         return $this->associatedShopIds;
+    }
+
+    public function isMultiShopEnabled(): bool
+    {
+        return $this->isMultiShopEnabled;
     }
 }

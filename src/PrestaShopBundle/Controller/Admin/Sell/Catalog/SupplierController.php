@@ -46,15 +46,17 @@ use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\EditableSupplier;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\ViewableSupplier;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\SupplierFilters;
 use PrestaShopBundle\Component\CsvResponse;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -63,7 +65,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 /**
  * Class SupplierController is responsible for "Sell > Catalog > Brands & Suppliers > Suppliers" page.
  */
-class SupplierController extends FrameworkBundleAdminController
+class SupplierController extends PrestaShopAdminController
 {
     /**
      * Show suppliers listing.
@@ -74,9 +76,12 @@ class SupplierController extends FrameworkBundleAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
-    public function indexAction(Request $request, SupplierFilters $filters)
-    {
-        $supplierGridFactory = $this->get('prestashop.core.grid.factory.supplier');
+    public function indexAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.grid.factory.supplier')]
+        GridFactoryInterface $supplierGridFactory,
+        SupplierFilters $filters
+    ): Response {
         $supplierGrid = $supplierGridFactory->getGrid($filters);
 
         return $this->render(
@@ -99,22 +104,27 @@ class SupplierController extends FrameworkBundleAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_suppliers_index', message: 'You do not have permission to add this.')]
-    public function createAction(Request $request)
-    {
+    public function createAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.supplier_form_builder')]
+        FormBuilderInterface $formBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.supplier_form_handler')]
+        FormHandlerInterface $formHandler
+    ): Response {
         $formData = [];
         if ($request->request->has('supplier') && isset($request->request->all('supplier')['id_country'])) {
             $formCountryId = (int) $request->request->all('supplier')['id_country'];
             $formData['id_country'] = $formCountryId;
         }
 
-        $supplierForm = $this->getFormBuilder()->getForm($formData);
+        $supplierForm = $formBuilder->getForm($formData);
         $supplierForm->handleRequest($request);
 
         try {
-            $result = $this->getFormHandler()->handle($supplierForm);
+            $result = $formHandler->handle($supplierForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_suppliers_index');
             }
@@ -125,7 +135,7 @@ class SupplierController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Suppliers/add.html.twig', [
             'supplierForm' => $supplierForm->createView(),
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('New supplier', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('New supplier', [], 'Admin.Navigation.Menu'),
         ]);
     }
 
@@ -138,14 +148,14 @@ class SupplierController extends FrameworkBundleAdminController
      */
     #[DemoRestricted(redirectRoute: 'admin_suppliers_index')]
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_suppliers_index', message: 'You do not have permission to delete this.')]
-    public function deleteAction($supplierId)
+    public function deleteAction($supplierId): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(new DeleteSupplierCommand((int) $supplierId));
+            $this->dispatchCommand(new DeleteSupplierCommand((int) $supplierId));
 
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -163,7 +173,7 @@ class SupplierController extends FrameworkBundleAdminController
      */
     #[DemoRestricted(redirectRoute: 'admin_suppliers_index')]
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_suppliers_index', message: 'You do not have permission to delete this.')]
-    public function bulkDeleteAction(Request $request)
+    public function bulkDeleteAction(Request $request): RedirectResponse
     {
         $suppliersToDelete = $request->request->all('supplier_bulk');
 
@@ -174,11 +184,11 @@ class SupplierController extends FrameworkBundleAdminController
                 },
                 $suppliersToDelete
             );
-            $this->getCommandBus()->handle(new BulkDeleteSupplierCommand($suppliersToDelete));
+            $this->dispatchCommand(new BulkDeleteSupplierCommand($suppliersToDelete));
 
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted.', [], 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -196,7 +206,7 @@ class SupplierController extends FrameworkBundleAdminController
      */
     #[DemoRestricted(redirectRoute: 'admin_suppliers_index')]
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_suppliers_index', message: 'You do not have permission to edit this.')]
-    public function bulkDisableAction(Request $request)
+    public function bulkDisableAction(Request $request): RedirectResponse
     {
         $suppliersToDisable = $request->request->all('supplier_bulk');
 
@@ -207,10 +217,10 @@ class SupplierController extends FrameworkBundleAdminController
                 },
                 $suppliersToDisable
             );
-            $this->getCommandBus()->handle(new BulkDisableSupplierCommand($suppliersToDisable));
+            $this->dispatchCommand(new BulkDisableSupplierCommand($suppliersToDisable));
             $this->addFlash(
                 'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -228,7 +238,7 @@ class SupplierController extends FrameworkBundleAdminController
      */
     #[DemoRestricted(redirectRoute: 'admin_suppliers_index')]
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_suppliers_index', message: 'You do not have permission to edit this.')]
-    public function bulkEnableAction(Request $request)
+    public function bulkEnableAction(Request $request): RedirectResponse
     {
         $suppliersToEnable = $request->request->all('supplier_bulk');
 
@@ -239,10 +249,10 @@ class SupplierController extends FrameworkBundleAdminController
                 },
                 $suppliersToEnable
             );
-            $this->getCommandBus()->handle(new BulkEnableSupplierCommand($suppliersToEnable));
+            $this->dispatchCommand(new BulkEnableSupplierCommand($suppliersToEnable));
             $this->addFlash(
                 'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -260,8 +270,14 @@ class SupplierController extends FrameworkBundleAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_suppliers_index', message: 'You do not have permission to edit this.')]
-    public function editAction(Request $request, $supplierId)
-    {
+    public function editAction(
+        Request $request,
+        int $supplierId,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.supplier_form_builder')]
+        FormBuilderInterface $formBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.supplier_form_handler')]
+        FormHandlerInterface $formHandler
+    ): Response {
         $formData = [];
         if ($request->request->has('supplier') && isset($request->request->all('supplier')['id_country'])) {
             $formCountryId = (int) $request->request->all('supplier')['id_country'];
@@ -270,15 +286,15 @@ class SupplierController extends FrameworkBundleAdminController
 
         try {
             /** @var EditableSupplier $editableSupplier */
-            $editableSupplier = $this->getQueryBus()->handle(new GetSupplierForEditing((int) $supplierId));
+            $editableSupplier = $this->dispatchQuery(new GetSupplierForEditing((int) $supplierId));
 
-            $supplierForm = $this->getFormBuilder()->getFormFor((int) $supplierId, $formData);
+            $supplierForm = $formBuilder->getFormFor((int) $supplierId, $formData);
             $supplierForm->handleRequest($request);
 
-            $result = $this->getFormHandler()->handleFor((int) $supplierId, $supplierForm);
+            $result = $formHandler->handleFor((int) $supplierId, $supplierForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_suppliers_index');
             }
@@ -298,10 +314,10 @@ class SupplierController extends FrameworkBundleAdminController
             'logoImage' => $editableSupplier->getLogoImage(),
             'layoutTitle' => $this->trans(
                 'Editing supplier %name%',
-                'Admin.Navigation.Menu',
                 [
                     '%name%' => $editableSupplier->getName(),
-                ]
+                ],
+                'Admin.Navigation.Menu'
             ),
         ]);
     }
@@ -315,14 +331,14 @@ class SupplierController extends FrameworkBundleAdminController
      */
     #[DemoRestricted(redirectRoute: 'admin_suppliers_index')]
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_suppliers_index', message: 'You do not have permission to edit this.')]
-    public function toggleStatusAction($supplierId)
+    public function toggleStatusAction(int $supplierId): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(new ToggleSupplierStatusCommand((int) $supplierId));
+            $this->dispatchCommand(new ToggleSupplierStatusCommand((int) $supplierId));
 
             $this->addFlash(
                 'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -340,13 +356,15 @@ class SupplierController extends FrameworkBundleAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
-    public function viewAction(Request $request, $supplierId)
-    {
+    public function viewAction(
+        Request $request,
+        int $supplierId,
+    ): Response {
         try {
             /** @var ViewableSupplier $viewableSupplier */
-            $viewableSupplier = $this->getQueryBus()->handle(new GetSupplierForViewing(
+            $viewableSupplier = $this->dispatchQuery(new GetSupplierForViewing(
                 (int) $supplierId,
-                (int) $this->getContextLangId()
+                (int) $this->getLanguageContext()->getId()
             ));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -357,16 +375,16 @@ class SupplierController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Suppliers/view.html.twig', [
             'viewableSupplier' => $viewableSupplier,
             'isStockManagementEnabled' => $this->getConfiguration()->get('PS_STOCK_MANAGEMENT'),
-            'isAllShopContext' => $this->get('prestashop.adapter.shop.context')->isAllShopContext(),
+            'isAllShopContext' => $this->getShopContext()->getShopConstraint()->isAllShopContext(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
             'layoutHeaderToolbarBtn' => $this->getSupplierViewToolbarButtons($supplierId),
             'layoutTitle' => $this->trans(
                 'Supplier %name%',
-                'Admin.Navigation.Menu',
                 [
                     '%name%' => $viewableSupplier->getName(),
-                ]
+                ],
+                'Admin.Navigation.Menu'
             ),
         ]);
     }
@@ -379,17 +397,19 @@ class SupplierController extends FrameworkBundleAdminController
      * @return CsvResponse
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
-    public function exportAction(SupplierFilters $filters)
-    {
+    public function exportAction(
+        #[Autowire(service: 'prestashop.core.grid.factory.supplier')]
+        GridFactoryInterface $supplierGridFactory,
+        SupplierFilters $filters
+    ): CsvResponse {
         $filters = new SupplierFilters(['limit' => null] + $filters->all());
-        $supplierGridFactory = $this->get('prestashop.core.grid.factory.supplier');
         $supplierGrid = $supplierGridFactory->getGrid($filters);
 
         $headers = [
-            'id_supplier' => $this->trans('ID', 'Admin.Global'),
-            'name' => $this->trans('Name', 'Admin.Global'),
-            'products_count' => $this->trans('Number of products', 'Admin.Catalog.Feature'),
-            'active' => $this->trans('Enabled', 'Admin.Global'),
+            'id_supplier' => $this->trans('ID', [], 'Admin.Global'),
+            'name' => $this->trans('Name', [], 'Admin.Global'),
+            'products_count' => $this->trans('Number of products', [], 'Admin.Catalog.Feature'),
+            'active' => $this->trans('Enabled', [], 'Admin.Global'),
         ];
 
         $data = [];
@@ -430,10 +450,10 @@ class SupplierController extends FrameworkBundleAdminController
         }
 
         try {
-            $this->getCommandBus()->handle(new DeleteSupplierLogoImageCommand($supplierId));
+            $this->dispatchCommand(new DeleteSupplierLogoImageCommand($supplierId));
             $this->addFlash(
                 'success',
-                $this->trans('Image successfully deleted.', 'Admin.Notifications.Success')
+                $this->trans('Image successfully deleted.', [], 'Admin.Notifications.Success')
             );
         } catch (SupplierException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -451,84 +471,79 @@ class SupplierController extends FrameworkBundleAdminController
      */
     private function getErrorMessages(): array
     {
-        $iniConfig = $this->get('prestashop.core.configuration.ini_configuration');
-
         return [
             SupplierNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found).',
+                [],
                 'Admin.Notifications.Error'
             ),
             AddressNotFoundException::class => $this->trans(
                 'The address for this supplier has been deleted.',
+                [],
                 'Admin.Notifications.Error'
             ),
             CannotToggleSupplierStatusException::class => $this->trans(
                 'An error occurred while updating the status.',
+                [],
                 'Admin.Notifications.Error'
             ),
             CannotUpdateSupplierStatusException::class => $this->trans(
                 'An error occurred while updating the status for an object.',
+                [],
                 'Admin.Notifications.Error'
             ),
             SupplierConstraintException::class => [
                 SupplierConstraintException::INVALID_BULK_DATA => $this->trans(
                     'You must select at least one element to delete.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
             ],
             CannotDeleteSupplierException::class => [
                 CannotDeleteSupplierException::HAS_PENDING_ORDERS => $this->trans(
                     'It is not possible to delete a supplier if there are pending supplier orders.',
+                    [],
                     'Admin.Catalog.Notification'
                 ),
                 CannotDeleteSupplierException::FAILED_DELETE => $this->trans(
                     'An error occurred while deleting the object.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
                 CannotDeleteSupplierException::FAILED_BULK_DELETE => $this->trans(
                     'An error occurred while deleting this selection.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
             ],
             MemoryLimitException::class => $this->trans(
                 'Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings.',
+                [],
                 'Admin.Notifications.Error'
             ),
             ImageUploadException::class => $this->trans(
                 'An error occurred while uploading the image.',
+                [],
                 'Admin.Notifications.Error'
             ),
             ImageOptimizationException::class => $this->trans(
                 'Unable to resize one or more of your pictures.',
+                [],
                 'Admin.Catalog.Notification'
             ),
             UploadedImageConstraintException::class => [
                 UploadedImageConstraintException::EXCEEDED_SIZE => $this->trans(
-                    'Maximum image size: %s.', 'Admin.Global', [
-                        $iniConfig->getUploadMaxSizeInBytes(),
-                    ]),
+                    'Maximum image size: %s.',
+                    [$this->getIniConfiguration()->getUploadMaxSizeInBytes()],
+                    'Admin.Global'
+                ),
                 UploadedImageConstraintException::UNRECOGNIZED_FORMAT => $this->trans(
                     'Image format not recognized, allowed formats are: .gif, .jpg, .png, .webp',
+                    [],
                     'Admin.Notifications.Error'
                 ),
             ],
         ];
-    }
-
-    /**
-     * @return FormBuilderInterface
-     */
-    private function getFormBuilder(): FormBuilderInterface
-    {
-        return $this->get('prestashop.core.form.identifiable_object.builder.supplier_form_builder');
-    }
-
-    /**
-     * @return FormHandlerInterface
-     */
-    private function getFormHandler(): FormHandlerInterface
-    {
-        return $this->get('prestashop.core.form.identifiable_object.handler.supplier_form_handler');
     }
 
     /**
@@ -540,13 +555,13 @@ class SupplierController extends FrameworkBundleAdminController
             return null;
         }
 
-        $urlOpening = sprintf('<a href="%s">', $this->get('router')->generate('admin_preferences'));
+        $urlOpening = sprintf('<a href="%s">', $this->generateUrl('admin_preferences'));
         $urlEnding = '</a>';
 
         return $this->trans(
             'The display of your suppliers is disabled on your store. Go to %sShop Parameters > General%s to edit settings.',
-            'Admin.Catalog.Notification',
-            [$urlOpening, $urlEnding]
+            [$urlOpening, $urlEnding],
+            'Admin.Catalog.Notification'
         );
     }
 
@@ -559,7 +574,7 @@ class SupplierController extends FrameworkBundleAdminController
 
         $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_suppliers_create'),
-            'desc' => $this->trans('Add new supplier', 'Admin.Catalog.Feature'),
+            'desc' => $this->trans('Add new supplier', [], 'Admin.Catalog.Feature'),
             'icon' => 'add_circle_outline',
         ];
 
@@ -577,7 +592,7 @@ class SupplierController extends FrameworkBundleAdminController
 
         $toolbarButtons['edit'] = [
             'href' => $this->generateUrl('admin_suppliers_edit', ['supplierId' => $supplierId]),
-            'desc' => $this->trans('Edit supplier', 'Admin.Catalog.Feature'),
+            'desc' => $this->trans('Edit supplier', [], 'Admin.Catalog.Feature'),
             'icon' => 'mode_edit',
         ];
 
