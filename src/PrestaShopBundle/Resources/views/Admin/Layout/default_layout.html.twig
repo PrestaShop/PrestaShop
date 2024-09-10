@@ -85,7 +85,7 @@
         </div>
       {% endif %}
 
-      {% if ps.maintenanceModeEnabled|default(false) %}
+      {% if ps.isMaintenanceEnabled|default(false) %}
         {% set maintenanceTitle %}
           <p class="text-left text-nowrap">
             <strong>
