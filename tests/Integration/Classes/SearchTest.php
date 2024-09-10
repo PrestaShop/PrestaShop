@@ -55,12 +55,12 @@ class SearchTest extends Testcase
             'with hyphen' => [
                 'input' => 'test1-test2',
                 'langId' => 1,
-                'expected' => ['test1', 'test2', 'test1test2', 'test1-test2'],
+                'expected' => ['test1', 'test2', 'test1-test2', 'test1test2'],
             ],
             'with hyphen with double' => [
                 'input' => 'test1-test-test',
                 'langId' => 1,
-                'expected' => ['test1', 'test', 'test1testtest', 'test1-test-test'],
+                'expected' => ['test1', 'test', 'test1-test-test', 'test1testtest'],
             ],
             'with space' => [
                 'input' => 'test1 test2',
@@ -90,7 +90,7 @@ class SearchTest extends Testcase
             'with multiple hyphens' => [
                 'input' => 'test1--test2',
                 'langId' => 1,
-                'expected' => ['test1', '-test2', 'test1test2', 'test1--test2'],
+                'expected' => ['test1', '-test2', 'test1--test2', 'test1test2'],
             ],
             'with space separated hyphen' => [
                 'input' => 'test1 - test2',
