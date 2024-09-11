@@ -2805,14 +2805,8 @@ class ProductCore extends ObjectModel
         }
         $sql = new DbQuery();
         $sql->select(
-            'p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`,
-            pl.`meta_keywords`, pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`, image_shop.`id_image` id_image, il.`legend`, m.`name` AS manufacturer_name,
-            (DATEDIFF(product_shop.`date_add`,
-                DATE_SUB(
-                    "' . $now . '",
-                    INTERVAL ' . $nb_days_new_product . ' DAY
-                )
-            ) > 0) as new'
+            'p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
+            pl.`name`, m.`name` AS manufacturer_name'
         );
 
         $sql->from('product', 'p');
@@ -2824,8 +2818,6 @@ class ProductCore extends ObjectModel
             p.`id_product` = pl.`id_product`
             AND pl.`id_lang` = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang('pl')
         );
-        $sql->leftJoin('image_shop', 'image_shop', 'image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $context->shop->id);
-        $sql->leftJoin('image_lang', 'il', 'image_shop.`id_image` = il.`id_image` AND il.`id_lang` = ' . (int) $id_lang);
         $sql->leftJoin('manufacturer', 'm', 'm.`id_manufacturer` = p.`id_manufacturer`');
 
         $sql->where('product_shop.`active` = 1');
@@ -2850,10 +2842,6 @@ class ProductCore extends ObjectModel
             $sql->limit($nb_products, (int) (($page_number - 1) * $nb_products));
         }
 
-        if (Combination::isFeatureActive()) {
-            $sql->select('product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute');
-            $sql->leftJoin('product_attribute_shop', 'product_attribute_shop', 'p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop=' . (int) $context->shop->id);
-        }
         $sql->join(Product::sqlStock('p', 0));
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
@@ -2967,21 +2955,15 @@ class ProductCore extends ObjectModel
             }
 
             // no group by needed : there's only one attribute with cover=1 for a given id_product + shop
-            $sql = 'SELECT p.*, product_shop.*, stock.`out_of_stock` out_of_stock, pl.`description`, pl.`description_short`,
-                        pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`,
-                        p.`ean13`, p.`isbn`, p.`upc`, p.`mpn`, image_shop.`id_image` id_image, il.`legend`,
-                        DATEDIFF(product_shop.`date_add`, DATE_SUB("' . date('Y-m-d') . ' 00:00:00",
-                        INTERVAL ' . (Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20) . '
-                            DAY)) > 0 AS new
+            $sql = 'SELECT p.*, product_shop.*, stock.`out_of_stock` out_of_stock,
+                        pl.`name`,
+                        p.`ean13`, p.`isbn`, p.`upc`, p.`mpn`
                     FROM `' . _DB_PREFIX_ . 'product` p
                     LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (
                         p.`id_product` = pl.`id_product`
                         AND pl.`id_lang` = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang('pl') . '
                     )
                     ' . Shop::addSqlAssociation('product', 'p') . '
-                    LEFT JOIN `' . _DB_PREFIX_ . 'image_shop` image_shop
-                        ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $context->shop->id . ')
-                    LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = ' . (int) $id_lang . ')
                     ' . Product::sqlStock('p', 0) . '
                     WHERE p.id_product = ' . (int) $id_product;
 
@@ -3097,29 +3079,15 @@ class ProductCore extends ObjectModel
 
         $sql = '
         SELECT
-            p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`, pl.`available_now`, pl.`available_later`,
-            IFNULL(product_attribute_shop.id_product_attribute, 0) id_product_attribute,
-            pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`,
-            pl.`name`, image_shop.`id_image` id_image, il.`legend`, m.`name` AS manufacturer_name,
-            DATEDIFF(
-                p.`date_add`,
-                DATE_SUB(
-                    "' . date('Y-m-d') . ' 00:00:00",
-                    INTERVAL ' . (Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20) . ' DAY
-                )
-            ) > 0 AS new
+            p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
+            pl.`name`, m.`name` AS manufacturer_name
         FROM `' . _DB_PREFIX_ . 'product` p
         ' . Shop::addSqlAssociation('product', 'p') . '
-        LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_shop` product_attribute_shop
-            ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop=' . (int) $context->shop->id . ')
         ' . Product::sqlStock('p', 0, false, $context->shop) . '
         LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (
             p.`id_product` = pl.`id_product`
             AND pl.`id_lang` = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang('pl') . '
         )
-        LEFT JOIN `' . _DB_PREFIX_ . 'image_shop` image_shop
-            ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $context->shop->id . ')
-        LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = ' . (int) $id_lang . ')
         LEFT JOIN `' . _DB_PREFIX_ . 'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
         WHERE product_shop.`active` = 1
         AND product_shop.`show_price` = 1
@@ -4403,21 +4371,12 @@ class ProductCore extends ObjectModel
      */
     public function getAccessories($id_lang, $active = true)
     {
-        $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`, pl.`link_rewrite`,
-                    pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`,
-                    image_shop.`id_image` id_image, il.`legend`, m.`name` as manufacturer_name, cl.`name` AS category_default, IFNULL(product_attribute_shop.id_product_attribute, 0) id_product_attribute,
-                    DATEDIFF(
-                        p.`date_add`,
-                        DATE_SUB(
-                            "' . date('Y-m-d') . ' 00:00:00",
-                            INTERVAL ' . (Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20) . ' DAY
-                        )
-                    ) > 0 AS new
+        $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
+                    pl.`name`,
+                    m.`name` as manufacturer_name, cl.`name` AS category_default
                 FROM `' . _DB_PREFIX_ . 'accessory`
                 LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON p.`id_product` = `id_product_2`
                 ' . Shop::addSqlAssociation('product', 'p') . '
-                LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_shop` product_attribute_shop
-                    ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop=' . (int) $this->id_shop . ')
                 LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (
                     p.`id_product` = pl.`id_product`
                     AND pl.`id_lang` = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang('pl') . '
@@ -4426,9 +4385,6 @@ class ProductCore extends ObjectModel
                     product_shop.`id_category_default` = cl.`id_category`
                     AND cl.`id_lang` = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang('cl') . '
                 )
-                LEFT JOIN `' . _DB_PREFIX_ . 'image_shop` image_shop
-                    ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $this->id_shop . ')
-                LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = ' . (int) $id_lang . ')
                 LEFT JOIN `' . _DB_PREFIX_ . 'manufacturer` m ON (p.`id_manufacturer`= m.`id_manufacturer`)
                 ' . Product::sqlStock('p', 0) . '
                 WHERE `id_product_1` = ' . (int) $this->id .

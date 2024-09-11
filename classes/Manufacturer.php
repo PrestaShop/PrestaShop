@@ -445,27 +445,12 @@ class ManufacturerCore extends ObjectModel
             $alias = 'p.';
         }
 
-        $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity'
-            . (Combination::isFeatureActive() ? ', product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, IFNULL(product_attribute_shop.`id_product_attribute`,0) id_product_attribute' : '') . '
-			, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`,
-			pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`, image_shop.`id_image` id_image, il.`legend`, m.`name` AS manufacturer_name,
-				DATEDIFF(
-					product_shop.`date_add`,
-					DATE_SUB(
-						"' . date('Y-m-d') . ' 00:00:00",
-						INTERVAL ' . (Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20) . ' DAY
-					)
-				) > 0 AS new'
-            . ' FROM `' . _DB_PREFIX_ . 'product` p
-			' . Shop::addSqlAssociation('product', 'p') .
-            (Combination::isFeatureActive() ? 'LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_shop` product_attribute_shop
-						ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop=' . (int) $context->shop->id . ')' : '') . '
+        $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity
+			, pl.`name`, m.`name` AS manufacturer_name
+            FROM `' . _DB_PREFIX_ . 'product` p
+			' . Shop::addSqlAssociation('product', 'p') . '
 			LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl
 				ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = ' . (int) $idLang . Shop::addSqlRestrictionOnLang('pl') . ')
-				LEFT JOIN `' . _DB_PREFIX_ . 'image_shop` image_shop
-					ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $context->shop->id . ')
-			LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il
-				ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = ' . (int) $idLang . ')
 			LEFT JOIN `' . _DB_PREFIX_ . 'manufacturer` m
 				ON (m.`id_manufacturer` = p.`id_manufacturer`)
 			' . Product::sqlStock('p', 0);
