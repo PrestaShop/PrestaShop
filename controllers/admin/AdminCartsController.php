@@ -923,6 +923,7 @@ class AdminCartsControllerCore extends AdminController
         $context->cart = new Cart($id_cart);
         $context->currency = new Currency((int) $context->cart->id_currency);
         $context->customer = new Customer((int) $context->cart->id_customer);
+        $context->shop = new Shop((int) $context->cart->id_shop);
 
         return Cart::getTotalCart($id_cart, true, Cart::BOTH_WITHOUT_SHIPPING);
     }
