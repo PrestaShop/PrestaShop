@@ -7,12 +7,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import brandsPage from '@pages/BO/catalog/brands';
 import suppliersPage from '@pages/BO/catalog/suppliers';
-import addSupplierPage from '@pages/BO/catalog/suppliers/add';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boSuppliersCreate,
   FakerSupplier,
   utilsCore,
   utilsFile,
@@ -86,14 +86,14 @@ describe('BO - Catalog - Brands & Suppliers : Pagination and sort suppliers', as
 
         await suppliersPage.goToAddNewSupplierPage(page);
 
-        const pageTitle = await addSupplierPage.getPageTitle(page);
-        expect(pageTitle).to.contains(addSupplierPage.pageTitle);
+        const pageTitle = await boSuppliersCreate.getPageTitle(page);
+        expect(pageTitle).to.contains(boSuppliersCreate.pageTitle);
       });
 
       it(`should create supplier n°${index + 1} and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createSupplier${index}`, baseContext);
 
-        const result = await addSupplierPage.createEditSupplier(page, createSupplierData);
+        const result = await boSuppliersCreate.createEditSupplier(page, createSupplierData);
         expect(result).to.equal(suppliersPage.successfulCreationMessage);
 
         const numberOfSuppliersAfterCreation = await suppliersPage.getNumberOfElementInGrid(page);
