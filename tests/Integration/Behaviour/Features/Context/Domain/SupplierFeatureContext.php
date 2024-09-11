@@ -109,7 +109,6 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
                 $data['description'],
                 $data['meta title'],
                 $data['meta description'],
-                $data['meta keywords'],
                 $this->getShopIdsByReferences($data['shops']),
                 $data['address2'] ?? null,
                 $data['post code'] ?? null,
@@ -194,9 +193,6 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
         }
         if (isset($data['meta description'])) {
             $editCommand->setLocalizedMetaDescriptions($data['meta description']);
-        }
-        if (isset($data['meta keywords'])) {
-            $editCommand->setLocalizedMetaKeywords($data['meta keywords']);
         }
         if (isset($data['shops'])) {
             $editCommand->setAssociatedShops($this->getShopIdsByReferences($data['shops']));
@@ -312,11 +308,6 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
             $data['meta description'],
             $editableSupplier->getLocalizedMetaDescriptions(),
             'Unexpected supplier localized meta descriptions'
-        );
-        Assert::assertEquals(
-            $data['meta keywords'],
-            $editableSupplier->getLocalizedMetaKeywords(),
-            'Unexpected supplier localized meta keywords'
         );
         Assert::assertEquals(
             $this->getShopIdsByReferences($data['shops']),

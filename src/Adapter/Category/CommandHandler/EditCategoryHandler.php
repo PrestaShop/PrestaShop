@@ -111,10 +111,6 @@ final class EditCategoryHandler extends AbstractEditCategoryHandler implements E
             $category->meta_description = $command->getLocalizedMetaDescriptions();
         }
 
-        if (null !== $command->getLocalizedMetaKeywords()) {
-            $category->meta_keywords = $command->getLocalizedMetaKeywords();
-        }
-
         if (null !== $command->getAssociatedGroupIds()) {
             $category->groupBox = $command->getAssociatedGroupIds();
         }

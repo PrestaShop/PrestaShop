@@ -64,11 +64,6 @@ class EditManufacturerCommand
     private $localizedMetaDescriptions;
 
     /**
-     * @var string[]|null
-     */
-    private $localizedMetaKeywords;
-
-    /**
      * @var bool|null
      */
     private $enabled;
@@ -190,26 +185,6 @@ class EditManufacturerCommand
     public function setLocalizedMetaDescriptions($localizedMetaDescriptions)
     {
         $this->localizedMetaDescriptions = $localizedMetaDescriptions;
-
-        return $this;
-    }
-
-    /**
-     * @return string[]|null
-     */
-    public function getLocalizedMetaKeywords()
-    {
-        return $this->localizedMetaKeywords;
-    }
-
-    /**
-     * @param string[]|null $localizedMetaKeywords
-     *
-     * @return self
-     */
-    public function setLocalizedMetaKeywords($localizedMetaKeywords)
-    {
-        $this->localizedMetaKeywords = $localizedMetaKeywords;
 
         return $this;
     }

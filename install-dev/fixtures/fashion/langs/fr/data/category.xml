@@ -5,7 +5,6 @@
     <description>&lt;p&gt;Retrouvez nos coups de c&#x153;ur mode, une s&#xE9;lection de pi&#xE8;ces tendances &#xE0; int&#xE9;grer &#xE0; votre garde-robe. Composez un style unique qui vous ressemble.&lt;/p&gt;</description>
     <link_rewrite>vetements</link_rewrite>
     <meta_title/>
-    <meta_keywords/>
     <meta_description/>
   </category>
   <category id="Men" id_shop="1">
@@ -13,7 +12,6 @@
     <description>&lt;p&gt;T-shirts, pulls, sweats &#xE0; capuche et accessoires pour hommes. Des basiques et des cr&#xE9;ations originales pour tous les styles. &lt;/p&gt;</description>
     <link_rewrite>hommes</link_rewrite>
     <meta_title/>
-    <meta_keywords/>
     <meta_description/>
   </category>
   <category id="Women" id_shop="1">
@@ -21,7 +19,6 @@
     <description>&lt;p&gt;T-shirts, pulls, sweats &#xE0; capuche et accessoires pour femmes. Des basiques et des cr&#xE9;ations originales pour tous les styles. &lt;/p&gt;</description>
     <link_rewrite>femmes</link_rewrite>
     <meta_title/>
-    <meta_keywords/>
     <meta_description/>
   </category>
   <category id="Accessories" id_shop="1">
@@ -29,7 +26,6 @@
     <description>&lt;p&gt;Des objets et accessoires pour le bureau, la cuisine ou le salon. Faites de votre int&#xE9;rieur un espace qui vous ressemble.&lt;/p&gt;</description>
     <link_rewrite>accessoires</link_rewrite>
     <meta_title/>
-    <meta_keywords/>
     <meta_description/>
   </category>
   <category id="Stationery" id_shop="1">
@@ -37,7 +33,6 @@
     <description>&lt;p&gt;Carnets, agendas, accessoires de bureau et plus encore. Tout ce dont vous avez besoin pour joindre l'utile &#xE0; l'agr&#xE9;able, au travail ou &#xE0; la maison.&lt;/p&gt;</description>
     <link_rewrite>papeterie</link_rewrite>
     <meta_title/>
-    <meta_keywords/>
     <meta_description/>
   </category>
   <category id="Home_Accessories" id_shop="1">
@@ -45,7 +40,6 @@
     <description>&lt;p&gt;Vous avez le sens du d&#xE9;tail ? Agr&#xE9;mentez votre int&#xE9;rieur avec notre s&#xE9;lection d'accessoires de maison.&lt;/p&gt;</description>
     <link_rewrite>accessoires-de-maison</link_rewrite>
     <meta_title/>
-    <meta_keywords/>
     <meta_description/>
   </category>
   <category id="Art" id_shop="1">
@@ -53,7 +47,6 @@
     <description>&lt;p&gt;Affiches encadr&#xE9;es et images vectorielles, tout ce dont vous avez besoin pour donner de la personnalit&#xE9; &#xE0; vos murs ou donner vie &#xE0; vos projets cr&#xE9;atifs.&lt;/p&gt;</description>
     <link_rewrite>art</link_rewrite>
     <meta_title/>
-    <meta_keywords/>
     <meta_description/>
   </category>
 </entity_category>

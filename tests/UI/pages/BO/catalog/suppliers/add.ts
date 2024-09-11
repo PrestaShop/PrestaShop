@@ -55,13 +55,7 @@ class AddSupplier extends BOBasePage {
 
   private readonly metaDescriptionTextarea: (id: number) => string;
 
-  private readonly metaKeywordsInput: (id: number) => string;
-
   private readonly statusToggleInput: (toggle: number) => string;
-
-  private readonly taggableFieldDiv: (lang: string) => string;
-
-  private readonly deleteKeywordLink: (lang: string) => string;
 
   private readonly saveButton: string;
 
@@ -97,12 +91,8 @@ class AddSupplier extends BOBasePage {
       + ` span[data-locale='${lang}']`;
     this.metaTitleInput = (id: number) => `#supplier_meta_title_${id}`;
     this.metaDescriptionTextarea = (id: number) => `#supplier_meta_description_${id}`;
-    this.metaKeywordsInput = (id: number) => `#supplier_meta_keyword_${id}-tokenfield`;
     this.statusToggleInput = (toggle: number) => `#supplier_is_enabled_${toggle}`;
 
-    // Selectors for Meta keywords
-    this.taggableFieldDiv = (lang: string) => `div.input-group div.js-locale-${lang}`;
-    this.deleteKeywordLink = (lang: string) => `${this.taggableFieldDiv(lang)} a.close`;
     this.saveButton = '.card-footer button';
   }
 
@@ -135,25 +125,17 @@ class AddSupplier extends BOBasePage {
     // Add logo
     await this.uploadFile(page, this.logoFileInput, supplierData.logo);
 
-    // Fill Description, meta title, meta description and meta keywords in english
+    // Fill Description, meta title, meta description in english
     await this.changeLanguageForSelectors(page, 'en');
     await this.setValueOnTinymceInput(page, this.descriptionIFrame(1), supplierData.description);
     await this.setValue(page, this.metaTitleInput(1), supplierData.metaTitle);
     await this.setValue(page, this.metaDescriptionTextarea(1), supplierData.metaDescription);
 
-    // delete Keywords and other new ones
-    await this.deleteKeywords(page, 'en');
-    await this.addKeywords(page, supplierData.metaKeywords, 1);
-
-    // Fill Description, meta title, meta description and meta keywords in french
+    // Fill Description, meta title, meta description in french
     await this.changeLanguageForSelectors(page, 'fr');
     await this.setValueOnTinymceInput(page, this.descriptionIFrame(2), supplierData.descriptionFr);
     await this.setValue(page, this.metaTitleInput(2), supplierData.metaTitleFr);
     await this.setValue(page, this.metaDescriptionTextarea(2), supplierData.metaDescriptionFr);
-
-    // delete Keywords and other new ones
-    await this.deleteKeywords(page, 'fr');
-    await this.addKeywords(page, supplierData.metaKeywords, 2);
 
     // Set status value
     await this.setChecked(page, this.statusToggleInput(supplierData.enabled ? 1 : 0));
@@ -161,34 +143,6 @@ class AddSupplier extends BOBasePage {
     // Save Supplier
     await this.clickAndWaitForURL(page, this.saveButton);
     return this.getAlertSuccessBlockParagraphContent(page);
-  }
-
-  /**
-   * Delete all keywords
-   * @param page {Page} Browser tab
-   * @param lang {string} To specify which input to empty
-   * @return {Promise<void>}
-   */
-  async deleteKeywords(page: Page, lang: string = 'en'): Promise<void> {
-    const closeButtonsLocator = page.locator(this.deleteKeywordLink(lang));
-
-    for (let i = (await closeButtonsLocator.count()) - 1; i > 0; i--) {
-      await closeButtonsLocator.nth(i).click();
-    }
-  }
-
-  /**
-   * Add keywords
-   * @param page {Page} Browser tab
-   * @param keywords {array} Array of keywords
-   * @param idLang {number} To choose which lang (1 for en, 2 for fr)
-   * @return {Promise<void>}
-   */
-  async addKeywords(page: Page, keywords: string[], idLang: number = 1): Promise<void> {
-    for (let i = 0; i < keywords.length; i++) {
-      await page.locator(this.metaKeywordsInput(idLang)).fill(keywords[i]);
-      await page.keyboard.press('Enter');
-    }
   }
 
   /**
