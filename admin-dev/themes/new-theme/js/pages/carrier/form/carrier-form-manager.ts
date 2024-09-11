@@ -28,6 +28,7 @@ import CarrierFormMap from '@pages/carrier/form/carrier-form-map';
 import CarrierFormEventMap from '@pages/carrier/form/carrier-form-event-map';
 import ConfirmModal from '@js/components/modal/confirm-modal';
 import {Range} from '@pages/carrier/form/types';
+import NavbarHandler from '@components/navbar-handler';
 
 const {$} = window;
 
@@ -49,12 +50,15 @@ export default class CarrierFormManager {
 
   $freeShippingInput: JQuery;
 
+  navBarHandler: NavbarHandler;
+
   /**
    * @param {EventEmitter} eventEmitter
    */
   constructor(eventEmitter: EventEmitter) {
     this.eventEmitter = eventEmitter;
     this.currentShippingSymbol = '';
+    this.navBarHandler = new NavbarHandler($(CarrierFormMap.navigationBar));
 
     // Initialize dom elements
     this.$zonesInput = $(CarrierFormMap.zonesInput);
@@ -87,6 +91,35 @@ export default class CarrierFormManager {
     this.$shippingMethodInput.on('change', () => this.refreshCurrentShippingSymbol());
     $(CarrierFormMap.zonesContainer).on('click', CarrierFormMap.deleteZoneButton, (e:Event) => this.onDeleteZone(e));
     this.eventEmitter.on(CarrierFormEventMap.rangesUpdated, (ranges: Range[]) => this.onChangeRanges(ranges));
+
+    this.initErrorListener();
+  }
+
+  private initErrorListener(): void {
+    const carrierForm = document.querySelector(CarrierFormMap.form);
+    const requiredFields = carrierForm?.querySelectorAll('[required]');
+
+    let firstInvalidField: Element | null = null;
+
+    requiredFields?.forEach((field) => {
+      field.addEventListener('invalid', () => {
+        if (!firstInvalidField) {
+          firstInvalidField = field;
+
+          const tab = field.closest('[role="tabpanel"]');
+          this.navBarHandler.switchToTarget(`#${tab?.id}`);
+
+          field.scrollIntoView({
+            behavior: 'smooth',
+            block: 'end',
+          });
+        }
+      });
+    });
+
+    carrierForm?.addEventListener('click', () => {
+      firstInvalidField = null;
+    }, true);
   }
 
   private refreshFreeShipping(): void {

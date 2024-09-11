@@ -24,6 +24,8 @@
  */
 
 export default {
+  form: 'form[name="carrier"]',
+  navigationBar: '#form-nav',
   freeShippingInput: 'input[name="carrier[shipping_settings][is_free]"]',
   zonesInput: '#carrier_shipping_settings_zones',
   zoneIdOption: (zoneId: number|string): string => `option[value="${zoneId}"]`,
