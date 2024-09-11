@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import ordersPage from '@pages/BO/orders';
 
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
@@ -18,6 +17,7 @@ import {
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicModalQuickViewPage,
   foClassicSearchResultsPage,
@@ -80,14 +80,14 @@ describe('FO - Order confirmation : Order details and totals - Recap of payment 
       await foClassicModalQuickViewPage.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);
 
-      const pageTitle = await cartPage.getPageTitle(page);
-      expect(pageTitle).to.equal(cartPage.pageTitle);
+      const pageTitle = await foClassicCartPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicCartPage.pageTitle);
     });
 
     it('should validate shopping cart and go to checkout page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCheckoutPage', baseContext);
 
-      await cartPage.clickOnProceedToCheckout(page);
+      await foClassicCartPage.clickOnProceedToCheckout(page);
 
       const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
       expect(isCheckoutPage).to.equal(true);
@@ -194,7 +194,7 @@ describe('FO - Order confirmation : Order details and totals - Recap of payment 
       expect(orderReferenceValue).to.contains(orderReference);
 
       const shippingMethod = await orderConfirmationPage.getShippingMethod(page);
-      expect(shippingMethod).to.contains(`${dataCarriers.clickAndCollect.name} ${dataCarriers.clickAndCollect.delay}`);
+      expect(shippingMethod).to.contains(`${dataCarriers.clickAndCollect.name} ${dataCarriers.clickAndCollect.transitName}`);
     });
   });
 });

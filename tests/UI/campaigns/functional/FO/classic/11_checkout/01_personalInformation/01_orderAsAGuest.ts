@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
@@ -10,6 +9,7 @@ import {
   dataPaymentMethods,
   FakerAddress,
   FakerCustomer,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsPlaywright,
@@ -63,14 +63,14 @@ describe('FO - Checkout - Personal information : Order as a guest', async () => 
     await foClassicHomePage.goToProductPage(page, 1);
     await foClassicProductPage.addProductToTheCart(page, 1);
 
-    const pageTitle = await cartPage.getPageTitle(page);
-    expect(pageTitle).to.equal(cartPage.pageTitle);
+    const pageTitle = await foClassicCartPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicCartPage.pageTitle);
   });
 
   it('should proceed to checkout validate the cart', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'validateCart', baseContext);
 
-    await cartPage.clickOnProceedToCheckout(page);
+    await foClassicCartPage.clickOnProceedToCheckout(page);
 
     const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
     expect(isCheckoutPage).to.equal(true);

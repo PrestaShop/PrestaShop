@@ -8,13 +8,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 import carriersPage from '@pages/BO/shipping/carriers';
 
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
 import {
   boDashboardPage,
   dataCarriers,
   dataCustomers,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsPlaywright,
@@ -93,7 +93,7 @@ describe('BO - Shipping - Carriers : Quick edit status and free shipping', async
       // Add the product to the cart
       await foClassicProductPage.addProductToTheCart(page);
       // Proceed to checkout the shopping cart
-      await cartPage.clickOnProceedToCheckout(page);
+      await foClassicCartPage.clickOnProceedToCheckout(page);
 
       const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
       expect(isCheckoutPage).to.equal(true);
@@ -191,7 +191,7 @@ describe('BO - Shipping - Carriers : Quick edit status and free shipping', async
       const carrierData = await checkoutPage.getCarrierData(page, 3);
       await Promise.all([
         expect(carrierData.name).to.equal(dataCarriers.myCheapCarrier.name),
-        expect(carrierData.delay).to.equal(dataCarriers.myCheapCarrier.delay),
+        expect(carrierData.transitName).to.equal(dataCarriers.myCheapCarrier.transitName),
         expect(carrierData.priceText).to.equal(`€${dataCarriers.myCheapCarrier.priceTTC.toFixed(2)} tax incl.`),
       ]);
     });
@@ -202,7 +202,7 @@ describe('BO - Shipping - Carriers : Quick edit status and free shipping', async
       const carrierData = await checkoutPage.getCarrierData(page, 2);
       await Promise.all([
         expect(carrierData.name).to.equal(dataCarriers.myCarrier.name),
-        expect(carrierData.delay).to.equal(dataCarriers.myCarrier.delay),
+        expect(carrierData.transitName).to.equal(dataCarriers.myCarrier.transitName),
         expect(carrierData.priceText).to.equal('Free'),
       ]);
     });

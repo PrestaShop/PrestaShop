@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 // Import commonTests
@@ -13,6 +12,7 @@ import type {BrowserContext, Page} from 'playwright';
 
 import {
   FakerCartRule,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicModalQuickViewPage,
   utilsPlaywright,
@@ -66,64 +66,64 @@ describe('FO - cart : Add promo code', async () => {
       await foClassicModalQuickViewPage.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);
 
-      const pageTitle = await cartPage.getPageTitle(page);
-      expect(pageTitle).to.eq(cartPage.pageTitle);
+      const pageTitle = await foClassicCartPage.getPageTitle(page);
+      expect(pageTitle).to.eq(foClassicCartPage.pageTitle);
     });
 
     it('should add the promo code and check the total', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTotalAfterDiscount', baseContext);
 
-      await cartPage.addPromoCode(page, newCartRuleData.code);
+      await foClassicCartPage.addPromoCode(page, newCartRuleData.code);
 
-      const isVisible = await cartPage.isCartRuleNameVisible(page);
+      const isVisible = await foClassicCartPage.isCartRuleNameVisible(page);
       expect(isVisible).to.eq(true);
     });
 
     it('should check the cart rule name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCartRuleName', baseContext);
 
-      const cartRuleName = await cartPage.getCartRuleName(page);
+      const cartRuleName = await foClassicCartPage.getCartRuleName(page);
       expect(cartRuleName).to.equal(newCartRuleData.name);
     });
 
     it('should check the discount value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountValue', baseContext);
 
-      const totalBeforeDiscount = await cartPage.getDiscountValue(page);
+      const totalBeforeDiscount = await foClassicCartPage.getDiscountValue(page);
       expect(totalBeforeDiscount).to.eq(-newCartRuleData.discountAmount!.value);
     });
 
     it('should set the same promo code and check the error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'samePromoCode', baseContext);
 
-      await cartPage.addPromoCode(page, newCartRuleData.code);
+      await foClassicCartPage.addPromoCode(page, newCartRuleData.code);
 
-      const isVisible = await cartPage.isCartRuleNameVisible(page, 2);
+      const isVisible = await foClassicCartPage.isCartRuleNameVisible(page, 2);
       expect(isVisible).to.eq(false);
 
-      const voucherErrorText = await cartPage.getCartRuleErrorMessage(page);
-      expect(voucherErrorText).to.equal(cartPage.cartRuleAlreadyInYourCartErrorText);
+      const voucherErrorText = await foClassicCartPage.getCartRuleErrorMessage(page);
+      expect(voucherErrorText).to.equal(foClassicCartPage.cartRuleAlreadyInYourCartErrorText);
     });
 
     it('should set a not existing promo code and check the error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'notExistingPromoCode', baseContext);
 
-      await cartPage.addPromoCode(page, 'reduction', false);
+      await foClassicCartPage.addPromoCode(page, 'reduction', false);
 
-      const isVisible = await cartPage.isCartRuleNameVisible(page, 2);
+      const isVisible = await foClassicCartPage.isCartRuleNameVisible(page, 2);
       expect(isVisible).to.eq(false);
 
-      const voucherErrorText = await cartPage.getCartRuleErrorMessage(page);
-      expect(voucherErrorText).to.equal(cartPage.cartRuleNotExistingErrorText);
+      const voucherErrorText = await foClassicCartPage.getCartRuleErrorMessage(page);
+      expect(voucherErrorText).to.equal(foClassicCartPage.cartRuleNotExistingErrorText);
     });
 
     it('should leave the promo code input blanc and check the error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'leavePromoCodeEmpty', baseContext);
 
-      await cartPage.addPromoCode(page, '', false);
+      await foClassicCartPage.addPromoCode(page, '', false);
 
-      const voucherErrorText = await cartPage.getCartRuleErrorMessage(page);
-      expect(voucherErrorText).to.equal(cartPage.cartRuleMustEnterVoucherErrorText);
+      const voucherErrorText = await foClassicCartPage.getCartRuleErrorMessage(page);
+      expect(voucherErrorText).to.equal(foClassicCartPage.cartRuleMustEnterVoucherErrorText);
     });
   });
 

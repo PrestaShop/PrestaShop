@@ -15,7 +15,6 @@ import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import stocksPage from '@pages/BO/catalog/stocks';
 import movementsPage from '@pages/BO/catalog/stocks/movements';
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
@@ -29,6 +28,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerEmployee,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicProductPage,
   type ProductCombinationBulk,
@@ -165,15 +165,15 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
         // Add the created product to the cart
         await foClassicProductPage.addProductToTheCart(page);
 
-        const pageTitle = await cartPage.getPageTitle(page);
-        expect(pageTitle).to.equal(cartPage.pageTitle);
+        const pageTitle = await foClassicCartPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foClassicCartPage.pageTitle);
       });
 
       it('should proceed to checkout and sign in by default customer', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckoutAndSignIn', baseContext);
 
         // Proceed to checkout the shopping cart
-        await cartPage.clickOnProceedToCheckout(page);
+        await foClassicCartPage.clickOnProceedToCheckout(page);
 
         // Personal information step - Login
         await checkoutPage.clickOnSignIn(page);

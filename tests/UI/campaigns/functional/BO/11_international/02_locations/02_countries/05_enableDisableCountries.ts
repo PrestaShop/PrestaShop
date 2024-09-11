@@ -6,7 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import zonesPage from '@pages/BO/international/locations';
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
@@ -17,6 +16,7 @@ import {
   dataPaymentMethods,
   FakerAddress,
   FakerCustomer,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsPlaywright,
@@ -110,7 +110,7 @@ describe('BO - International - Countries : Enable / Disable Countries', async ()
     // Add the product to the cart
     await foClassicProductPage.addProductToTheCart(page);
 
-    const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+    const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
     expect(notificationsNumber).to.be.equal(1);
   });
 
@@ -118,7 +118,7 @@ describe('BO - International - Countries : Enable / Disable Countries', async ()
     await testContext.addContextItem(this, 'testIdentifier', 'proceedtoCheckout', baseContext);
 
     // Proceed to checkout the shopping cart
-    await cartPage.clickOnProceedToCheckout(page);
+    await foClassicCartPage.clickOnProceedToCheckout(page);
 
     // Go to checkout page
     const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
@@ -202,7 +202,7 @@ describe('BO - International - Countries : Enable / Disable Countries', async ()
     // Add the product to the cart
     await foClassicProductPage.addProductToTheCart(page);
 
-    const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+    const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
     expect(notificationsNumber).to.be.equal(1);
   });
 
@@ -210,7 +210,7 @@ describe('BO - International - Countries : Enable / Disable Countries', async ()
     await testContext.addContextItem(this, 'testIdentifier', 'proceedtoCheckoutAfterDisable', baseContext);
 
     // Proceed to checkout the shopping cart
-    await cartPage.clickOnProceedToCheckout(page);
+    await foClassicCartPage.clickOnProceedToCheckout(page);
 
     // Go to checkout page
     const isCheckoutPage = await checkoutPage.isCheckoutPage(page);

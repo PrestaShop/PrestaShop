@@ -6,7 +6,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 import {createCartRuleTest, deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 
 // Import FO pages
-import cartPage from '@pages/FO/hummingbird/cart';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {expect} from 'chai';
@@ -14,6 +13,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
   FakerCartRule,
+  foHummingbirdCartPage,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdModalQuickViewPage,
@@ -110,23 +110,23 @@ describe('FO - Checkout : Display of highlighted cart rule', async () => {
       await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);
 
-      const pageTitle = await cartPage.getPageTitle(page);
-      expect(pageTitle).to.equal(cartPage.pageTitle);
+      const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdCartPage.pageTitle);
     });
 
     it('should check the displayed promo code', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPromoCodeBlock', baseContext);
 
-      const promoCode = await cartPage.getHighlightPromoCode(page);
+      const promoCode = await foHummingbirdCartPage.getHighlightPromoCode(page);
       expect(promoCode).to.equal(`${cartRuleWithCodeData.code} - ${cartRuleWithCodeData.name}`);
     });
 
     it('should click on the promo code', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addPromoCode2', baseContext);
 
-      await cartPage.clickOnPromoCode(page);
+      await foHummingbirdCartPage.clickOnPromoCode(page);
 
-      const cartRuleName = await cartPage.getCartRuleName(page, 1);
+      const cartRuleName = await foHummingbirdCartPage.getCartRuleName(page, 1);
       expect(cartRuleName).to.equal(cartRuleWithCodeData.name);
     });
 
@@ -135,31 +135,31 @@ describe('FO - Checkout : Display of highlighted cart rule', async () => {
 
       const totalAfterPromoCode: number = dataProducts.demo_6.combinations[0].price - cartRuleWithCodeData.discountAmount!.value;
 
-      const priceATI = await cartPage.getATIPrice(page);
+      const priceATI = await foHummingbirdCartPage.getATIPrice(page);
       expect(priceATI).to.equal(parseFloat(totalAfterPromoCode.toFixed(2)));
 
-      const discountValue = await cartPage.getDiscountValue(page, 1);
+      const discountValue = await foHummingbirdCartPage.getDiscountValue(page, 1);
       expect(discountValue).to.equal(-cartRuleWithCodeData.discountAmount!.value);
     });
 
     it('should remove the discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removeTheDiscount', baseContext);
 
-      const isDeleteIconNotVisible = await cartPage.removeVoucher(page);
+      const isDeleteIconNotVisible = await foHummingbirdCartPage.removeVoucher(page);
       expect(isDeleteIconNotVisible, 'The discount is not removed').to.equal(true);
     });
 
     it('should check the displayed promo code', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPromoCodeBlock2', baseContext);
 
-      const promoCode = await cartPage.getHighlightPromoCode(page);
+      const promoCode = await foHummingbirdCartPage.getHighlightPromoCode(page);
       expect(promoCode).to.equal(`${cartRuleWithCodeData.code} - ${cartRuleWithCodeData.name}`);
     });
 
     it('should verify the total without discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTotalWithoutDiscount', baseContext);
 
-      const priceATI = await cartPage.getATIPrice(page);
+      const priceATI = await foHummingbirdCartPage.getATIPrice(page);
       expect(priceATI).to.equal(dataProducts.demo_6.combinations[0].price);
     });
   });

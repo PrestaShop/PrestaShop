@@ -5,13 +5,13 @@ import testContext from '@utils/testContext';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
-import cartPage from '@pages/FO/hummingbird/cart';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foHummingbirdCartPage,
   foHummingbirdHomePage,
   foHummingbirdProductPage,
   foHummingbirdSearchResultsPage,
@@ -92,28 +92,28 @@ describe('FO - cart : Display modal of product customization', async () => {
 
       await foHummingbirdProductPage.goToCartPage(page);
 
-      const pageTitle = await cartPage.getPageTitle(page);
-      expect(pageTitle).to.equal(cartPage.pageTitle);
+      const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdCartPage.pageTitle);
     });
 
     it('should click on product customization and check the modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickCustomization', baseContext);
 
-      const isModalVisible = await cartPage.clickOnProductCustomization(page, 1);
+      const isModalVisible = await foHummingbirdCartPage.clickOnProductCustomization(page, 1);
       expect(isModalVisible).to.equal(true);
     });
 
     it('should check the customization modal content', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getModalContent', baseContext);
 
-      const modalContent = await cartPage.getProductCustomizationModal(page);
+      const modalContent = await foHummingbirdCartPage.getProductCustomizationModal(page);
       expect(modalContent).to.equal(`Type your text here ${customText}`);
     });
 
     it('should close the modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeModal', baseContext);
 
-      const isModalNotVisible = await cartPage.closeProductCustomizationModal(page, 1);
+      const isModalNotVisible = await foHummingbirdCartPage.closeProductCustomizationModal(page, 1);
       expect(isModalNotVisible).to.equal(true);
     });
   });

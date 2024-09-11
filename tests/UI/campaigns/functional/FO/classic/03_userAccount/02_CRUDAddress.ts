@@ -7,7 +7,6 @@ import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {createAccountTest} from '@commonTests/FO/classic/account';
 
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
 import {addressesPage} from '@pages/FO/classic/myAccount/addresses';
@@ -16,6 +15,7 @@ import {
   dataProducts,
   FakerAddress,
   FakerCustomer,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
@@ -210,7 +210,7 @@ describe('FO - Account : CRUD address', async () => {
 
       await foClassicProductPage.addProductToTheCart(page);
 
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(1);
     });
 
@@ -218,7 +218,7 @@ describe('FO - Account : CRUD address', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCreatedAddresses1', baseContext);
 
       // Proceed to checkout the shopping cart
-      await cartPage.clickOnProceedToCheckout(page);
+      await foClassicCartPage.clickOnProceedToCheckout(page);
 
       const addressesNumber = await checkoutPage.getNumberOfAddresses(page);
       expect(addressesNumber, 'The addresses number is not equal to 2!').to.equal(2);
@@ -268,15 +268,15 @@ describe('FO - Account : CRUD address', async () => {
 
       await addressesPage.goToCartPage(page);
 
-      const pageTitle = await cartPage.getPageTitle(page);
-      expect(pageTitle).to.equal(cartPage.pageTitle);
+      const pageTitle = await foClassicCartPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicCartPage.pageTitle);
     });
 
     it('should select the second address and continue', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectSecondAddress', baseContext);
 
       // Proceed to checkout the shopping cart
-      await cartPage.clickOnProceedToCheckout(page);
+      await foClassicCartPage.clickOnProceedToCheckout(page);
 
       await checkoutPage.chooseDeliveryAddress(page, secondAddressPosition);
 

@@ -2,13 +2,13 @@
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicProductPage,
   foClassicSearchResultsPage,
@@ -85,28 +85,28 @@ describe('FO - cart : Display modal of product customization', async () => {
 
     await foClassicProductPage.goToCartPage(page);
 
-    const pageTitle = await cartPage.getPageTitle(page);
-    expect(pageTitle).to.equal(cartPage.pageTitle);
+    const pageTitle = await foClassicCartPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicCartPage.pageTitle);
   });
 
   it('should click on product customization and check the modal', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'clickCustomization', baseContext);
 
-    const isModalVisible = await cartPage.clickOnProductCustomization(page, 1);
+    const isModalVisible = await foClassicCartPage.clickOnProductCustomization(page, 1);
     expect(isModalVisible).to.equal(true);
   });
 
   it('should check the customization modal content', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'getModalContent', baseContext);
 
-    const modalContent = await cartPage.getProductCustomizationModal(page);
+    const modalContent = await foClassicCartPage.getProductCustomizationModal(page);
     expect(modalContent).to.equal(`Type your text here ${customText}`);
   });
 
   it('should close the modal', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeModal', baseContext);
 
-    const isModalNotVisible = await cartPage.closeProductCustomizationModal(page, 1);
+    const isModalNotVisible = await foClassicCartPage.closeProductCustomizationModal(page, 1);
     expect(isModalNotVisible).to.equal(true);
   });
 });

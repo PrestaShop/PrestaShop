@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
@@ -15,6 +14,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   dataProducts,
   FakerCartRule,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicModalQuickViewPage,
   foClassicSearchResultsPage,
@@ -132,23 +132,23 @@ describe('FO - cart : Display discount', async () => {
       await foClassicModalQuickViewPage.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);
 
-      const pageTitle = await cartPage.getPageTitle(page);
-      expect(pageTitle).to.equal(cartPage.pageTitle);
+      const pageTitle = await foClassicCartPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicCartPage.pageTitle);
     });
 
     it('should check the cart notifications', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCartNotifications', baseContext);
 
-      const shoppingCarts = await cartPage.getCartNotificationsNumber(page);
+      const shoppingCarts = await foClassicCartPage.getCartNotificationsNumber(page);
       expect(shoppingCarts).to.equal(2);
     });
 
     it('should add the first promo code', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addFirstPromoCode', baseContext);
 
-      await cartPage.addPromoCode(page, firstCartRuleData.code);
+      await foClassicCartPage.addPromoCode(page, firstCartRuleData.code);
 
-      const cartRuleName = await cartPage.getCartRuleName(page, 1);
+      const cartRuleName = await foClassicCartPage.getCartRuleName(page, 1);
       expect(cartRuleName).to.equal(firstCartRuleData.name);
     });
 
@@ -157,7 +157,7 @@ describe('FO - cart : Display discount', async () => {
 
       const discount = await utilsCore.percentage(dataProducts.demo_9.finalPrice, firstCartRuleData.discountPercent!);
 
-      const discountValue = await cartPage.getDiscountValue(page);
+      const discountValue = await foClassicCartPage.getDiscountValue(page);
       expect(discountValue).to.equal(-discount.toFixed(2));
     });
 
@@ -166,23 +166,23 @@ describe('FO - cart : Display discount', async () => {
 
       const discount = await utilsCore.percentage(dataProducts.demo_9.finalPrice, firstCartRuleData.discountPercent!);
 
-      const totalAfterDiscount = await cartPage.getATIPrice(page);
+      const totalAfterDiscount = await foClassicCartPage.getATIPrice(page);
       expect(totalAfterDiscount.toString()).to.equal((dataProducts.demo_9.finalPrice * 2 - discount).toFixed(2));
     });
 
     it('should add the second promo code', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addSecondPromoCode', baseContext);
 
-      await cartPage.addPromoCode(page, secondCartRuleData.code);
+      await foClassicCartPage.addPromoCode(page, secondCartRuleData.code);
 
-      const cartRuleName = await cartPage.getCartRuleName(page, 2);
+      const cartRuleName = await foClassicCartPage.getCartRuleName(page, 2);
       expect(cartRuleName).to.equal(secondCartRuleData.name);
     });
 
     it('should check the discount value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountValue2', baseContext);
 
-      const discountValue = await cartPage.getDiscountValue(page, 2);
+      const discountValue = await foClassicCartPage.getDiscountValue(page, 2);
       expect(discountValue).to.equal(-secondCartRuleData.discountAmount!.value.toFixed(2));
     });
 
@@ -191,7 +191,7 @@ describe('FO - cart : Display discount', async () => {
 
       const firstDiscount = await utilsCore.percentage(dataProducts.demo_9.finalPrice, firstCartRuleData.discountPercent!);
 
-      const totalAfterDiscount = await cartPage.getATIPrice(page);
+      const totalAfterDiscount = await foClassicCartPage.getATIPrice(page);
       expect(totalAfterDiscount.toString())
         .to.equal((dataProducts.demo_9.finalPrice * 2 - (firstDiscount + secondCartRuleData.discountAmount!.value))
           .toFixed(2));
@@ -209,7 +209,7 @@ describe('FO - cart : Display discount', async () => {
 
       const discount = await utilsCore.percentage(dataProducts.demo_9.finalPrice, firstCartRuleData.discountPercent!);
 
-      const totalAfterDiscount = await cartPage.getATIPrice(page);
+      const totalAfterDiscount = await foClassicCartPage.getATIPrice(page);
       expect(totalAfterDiscount.toString()).to.equal((dataProducts.demo_9.finalPrice * 2 - discount).toFixed(2));
     });
 
@@ -223,25 +223,25 @@ describe('FO - cart : Display discount', async () => {
     it('should check the total', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTotal', baseContext);
 
-      const total = await cartPage.getATIPrice(page);
+      const total = await foClassicCartPage.getATIPrice(page);
       expect(total.toString()).to.equal((dataProducts.demo_9.finalPrice * 2).toFixed(2));
     });
 
     it('should delete the second product from the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteLastProduct', baseContext);
 
-      await cartPage.deleteProduct(page, 2);
+      await foClassicCartPage.deleteProduct(page, 2);
 
-      const notificationNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationNumber = await foClassicCartPage.getCartNotificationsNumber(page);
       expect(notificationNumber).to.equal(1);
     });
 
     it('should delete the first product from the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteFirstProduct', baseContext);
 
-      await cartPage.deleteProduct(page, 1);
+      await foClassicCartPage.deleteProduct(page, 1);
 
-      const notificationNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationNumber = await foClassicCartPage.getCartNotificationsNumber(page);
       expect(notificationNumber).to.equal(0);
     });
   });

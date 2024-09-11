@@ -7,7 +7,6 @@ import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
-import cartPage from '@pages/FO/hummingbird/cart';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
 
@@ -15,6 +14,7 @@ import {
   dataPaymentMethods,
   FakerAddress,
   FakerCustomer,
+  foHummingbirdCartPage,
   foHummingbirdHomePage,
   foHummingbirdProductPage,
   type MailDev,
@@ -98,14 +98,14 @@ describe('FO - Checkout - Personal information : Create account', async () => {
       await foHummingbirdHomePage.goToProductPage(page, 1);
       await foHummingbirdProductPage.addProductToTheCart(page, 1);
 
-      const pageTitle = await cartPage.getPageTitle(page);
-      expect(pageTitle).to.equal(cartPage.pageTitle);
+      const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdCartPage.pageTitle);
     });
 
     it('should proceed to checkout validate the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'validateCart', baseContext);
 
-      await cartPage.clickOnProceedToCheckout(page);
+      await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
       const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
       expect(isCheckoutPage).to.equal(true);

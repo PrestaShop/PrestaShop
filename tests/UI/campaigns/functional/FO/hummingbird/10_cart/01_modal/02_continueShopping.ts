@@ -5,12 +5,12 @@ import testContext from '@utils/testContext';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
-import cartPage from '@pages/FO/hummingbird/cart';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  foHummingbirdCartPage,
   foHummingbirdHomePage,
   foHummingbirdModalQuickViewPage,
   foHummingbirdProductPage,
@@ -113,17 +113,17 @@ describe('FO - cart : Continue shopping / Proceed to checkout / Close', async ()
 
       await blockCartModal.proceedToCheckout(page);
 
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foHummingbirdCartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.equal(5);
     });
 
     it('should delete the shopping cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProducts', baseContext);
 
-      await cartPage.deleteProduct(page, 2);
-      await cartPage.deleteProduct(page, 1);
+      await foHummingbirdCartPage.deleteProduct(page, 2);
+      await foHummingbirdCartPage.deleteProduct(page, 1);
 
-      const notificationNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationNumber = await foHummingbirdCartPage.getCartNotificationsNumber(page);
       expect(notificationNumber).to.be.equal(0);
     });
   });

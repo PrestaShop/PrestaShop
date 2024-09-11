@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
-import {cartPage} from '@pages/FO/classic/cart';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -15,6 +14,7 @@ import {
   boDashboardPage,
   dataProducts,
   FakerCartRule,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsDate,
@@ -118,30 +118,30 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with disabled status', asyn
 
       await foClassicProductPage.addProductToTheCart(page);
 
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(1);
     });
 
     it('should verify the total', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'verifyTotal', baseContext);
 
-      const priceATI = await cartPage.getATIPrice(page);
+      const priceATI = await foClassicCartPage.getATIPrice(page);
       expect(priceATI).to.equal(dataProducts.demo_1.finalPrice);
     });
 
     it('should check that the cart rule name is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'isPromoCodeVisible', baseContext);
 
-      const isVisible = await cartPage.isCartRuleNameVisible(page);
+      const isVisible = await foClassicCartPage.isCartRuleNameVisible(page);
       expect(isVisible).to.eq(false);
     });
 
     it('should remove product from shopping cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removeProduct1', baseContext);
 
-      await cartPage.deleteProduct(page, 1);
+      await foClassicCartPage.deleteProduct(page, 1);
 
-      const notificationNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationNumber = await foClassicCartPage.getCartNotificationsNumber(page);
       expect(notificationNumber).to.be.equal(0);
     });
   });

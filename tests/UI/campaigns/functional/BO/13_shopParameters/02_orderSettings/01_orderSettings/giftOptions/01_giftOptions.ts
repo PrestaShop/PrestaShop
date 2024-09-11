@@ -11,7 +11,6 @@ import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
@@ -20,6 +19,7 @@ import {
   dataCustomers,
   dataPaymentMethods,
   dataTaxes,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicProductPage,
@@ -186,14 +186,14 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           await foClassicHomePage.goToProductPage(page, 4);
           await foClassicProductPage.addProductToTheCart(page);
 
-          const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+          const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
           expect(notificationsNumber).to.be.equal(1);
         });
 
         it('should click on proceed to checkout and go to delivery step', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToDeliveryStep${index}`, baseContext);
 
-          await cartPage.clickOnProceedToCheckout(page);
+          await foClassicCartPage.clickOnProceedToCheckout(page);
 
           const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
           expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);

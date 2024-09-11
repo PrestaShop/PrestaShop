@@ -10,7 +10,6 @@ import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advanced
 import customerServicePage from '@pages/BO/customerService/customerService';
 import ordersPage from '@pages/BO/orders';
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
@@ -22,6 +21,7 @@ import {
   dataOrderStatuses,
   dataPaymentMethods,
   dataProducts,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
@@ -130,7 +130,7 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       // Add the created product to the cart
       await foClassicProductPage.addProductToTheCart(page);
       // Proceed to checkout the shopping cart
-      await cartPage.clickOnProceedToCheckout(page);
+      await foClassicCartPage.clickOnProceedToCheckout(page);
 
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);

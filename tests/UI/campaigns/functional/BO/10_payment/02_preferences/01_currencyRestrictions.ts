@@ -8,12 +8,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import preferencesPage from '@pages/BO/payment/preferences';
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
 import {
   boDashboardPage,
   dataCustomers,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsPlaywright,
@@ -93,7 +93,7 @@ describe('BO - Payment - Preferences : Configure currency restrictions', async (
       // Add the product to the cart
       await foClassicProductPage.addProductToTheCart(page);
       // Proceed to checkout the shopping cart
-      await cartPage.clickOnProceedToCheckout(page);
+      await foClassicCartPage.clickOnProceedToCheckout(page);
 
       // Checkout the order
       if (index === 0) {

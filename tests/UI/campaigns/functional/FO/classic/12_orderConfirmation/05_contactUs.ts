@@ -9,7 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import customerServiceMainPage from '@pages/BO/customerService/customerService';
 import customerServiceMessageViewPage from '@pages/BO/customerService/customerService/view';
 // FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {contactUsPage} from '@pages/FO/classic/contactUs';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
@@ -21,6 +20,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerContactMessage,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicModalQuickViewPage,
@@ -119,14 +119,14 @@ describe('FO - Order confirmation : Contact us', async () => {
       await foClassicModalQuickViewPage.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);
 
-      const pageTitle = await cartPage.getPageTitle(page);
-      expect(pageTitle).to.equal(cartPage.pageTitle);
+      const pageTitle = await foClassicCartPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicCartPage.pageTitle);
     });
 
     it('should check the cart details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCartDetails', baseContext);
 
-      const result = await cartPage.getProductDetail(page, 1);
+      const result = await foClassicCartPage.getProductDetail(page, 1);
       await Promise.all([
         expect(result.name).to.equal(dataProducts.demo_1.name),
         expect(result.price).to.equal(dataProducts.demo_1.finalPrice),
@@ -137,7 +137,7 @@ describe('FO - Order confirmation : Contact us', async () => {
     it('should proceed to checkout and check Step Address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAddressStep', baseContext);
 
-      await cartPage.clickOnProceedToCheckout(page);
+      await foClassicCartPage.clickOnProceedToCheckout(page);
 
       const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
       expect(isCheckoutPage, 'Browser is not in checkout Page').to.eq(true);

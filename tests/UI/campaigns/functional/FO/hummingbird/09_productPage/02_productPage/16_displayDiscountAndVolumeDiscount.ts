@@ -12,7 +12,6 @@ import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 
 // Import FO pages
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
-import cartPage from '@pages/FO/hummingbird/cart';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -20,6 +19,7 @@ import {
   boDashboardPage,
   boProductsPage,
   FakerProduct,
+  foHummingbirdCartPage,
   foHummingbirdProductPage,
   utilsFile,
   utilsPlaywright,
@@ -237,9 +237,9 @@ describe('FO - Product page - Product page : Display discount', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'removeProduct', baseContext);
 
       await blockCartModal.proceedToCheckout(page);
-      await cartPage.deleteProduct(page, 1);
+      await foHummingbirdCartPage.deleteProduct(page, 1);
 
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foHummingbirdCartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.equal(0);
     });
   });
@@ -339,9 +339,9 @@ describe('FO - Product page - Product page : Display discount', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'removeProduct2', baseContext);
 
       await blockCartModal.proceedToCheckout(page);
-      await cartPage.deleteProduct(page, 1);
+      await foHummingbirdCartPage.deleteProduct(page, 1);
 
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foHummingbirdCartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.equal(0);
     });
   });

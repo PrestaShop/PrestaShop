@@ -159,8 +159,12 @@ class AddCarrier extends BOBasePage {
       for (let idxRange: number = 0; idxRange < carrierData.ranges.length; idxRange++) {
         const carrierRange: CarrierRange = carrierData.ranges[idxRange];
 
-        await this.setValue(page, this.rangeInfInput(idxRange), carrierRange.weightMin);
-        await this.setValue(page, this.rangeSupInput(idxRange), carrierRange.weightMax);
+        if (carrierRange.weightMin) {
+          await this.setValue(page, this.rangeInfInput(idxRange), carrierRange.weightMin);
+        }
+        if (carrierRange.weightMax) {
+          await this.setValue(page, this.rangeSupInput(idxRange), carrierRange.weightMax);
+        }
 
         for (let idxZone: number = 0; idxZone < carrierRange.zones.length; idxZone++) {
           const carrierRangeZone = carrierRange.zones[idxZone].zone;
@@ -168,17 +172,21 @@ class AddCarrier extends BOBasePage {
 
           if (typeof carrierRangeZone === 'string') {
             await page.locator(this.allZonesRadioButton).setChecked(true);
-            await page.locator(this.allZonesValueInput(idxRange)).fill(carrierRangePrice.toString());
-            await page.waitForTimeout(1000);
-            await page.locator(this.allZonesValueInput(idxRange)).dispatchEvent('change');
-            await page.waitForTimeout(2000);
+            if (carrierRangePrice) {
+              await page.locator(this.allZonesValueInput(idxRange)).fill(carrierRangePrice.toString());
+              await page.waitForTimeout(1000);
+              await page.locator(this.allZonesValueInput(idxRange)).dispatchEvent('change');
+              await page.waitForTimeout(2000);
+            }
           } else {
             await page.locator(
               this.rangeZoneCheckbox(carrierRangeZone.id!.toString()),
             ).setChecked(true);
-            await page.locator(
-              this.rangePriceInput(idxRange, carrierRangeZone.id!.toString()),
-            ).fill(carrierRangePrice.toString());
+            if (carrierRangePrice) {
+              await page.locator(
+                this.rangePriceInput(idxRange, carrierRangeZone.id!.toString()),
+              ).fill(carrierRangePrice.toString());
+            }
           }
         }
 

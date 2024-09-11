@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
-import cartPage from '@pages/FO/hummingbird/cart';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
 
@@ -14,6 +13,7 @@ import {
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
+  foHummingbirdCartPage,
   foHummingbirdHomePage,
   foHummingbirdProductPage,
   utilsPlaywright,
@@ -88,14 +88,14 @@ describe('FO - Order confirmation : Display of product customization', async () 
 
       await foHummingbirdProductPage.addProductToTheCart(page, 1, undefined, true, 'Hello world!');
 
-      const pageTitle = await cartPage.getPageTitle(page);
-      expect(pageTitle).to.equal(cartPage.pageTitle);
+      const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdCartPage.pageTitle);
     });
 
     it('should validate shopping cart and go to checkout page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCheckoutPage', baseContext);
 
-      await cartPage.clickOnProceedToCheckout(page);
+      await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
       const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
       expect(isCheckoutPage).to.equal(true);
@@ -157,7 +157,7 @@ describe('FO - Order confirmation : Display of product customization', async () 
 
       const orderDetails = await orderConfirmationPage.getOrderDetails(page);
       expect(orderDetails).to.contains(`${dataPaymentMethods.wirePayment.displayName} Shipping method: `
-        + `${dataCarriers.myCarrier.name} - ${dataCarriers.myCarrier.delay}`);
+        + `${dataCarriers.myCarrier.name} - ${dataCarriers.myCarrier.transitName}`);
     });
 
     it('should check the products number', async function () {

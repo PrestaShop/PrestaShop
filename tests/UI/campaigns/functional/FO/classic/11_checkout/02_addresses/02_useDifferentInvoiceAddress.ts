@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
@@ -11,6 +10,7 @@ import {
   dataProducts,
   FakerAddress,
   FakerCustomer,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsPlaywright,
@@ -74,15 +74,15 @@ describe('FO - Checkout - Addresses: Use different invoice address', async () =>
 
     await foClassicProductPage.addProductToTheCart(page, 1);
 
-    const pageTitle = await cartPage.getPageTitle(page);
-    expect(pageTitle).to.equal(cartPage.pageTitle);
+    const pageTitle = await foClassicCartPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicCartPage.pageTitle);
   });
 
   it('should validate shopping cart and go to checkout page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCheckoutPage', baseContext);
 
     // Proceed to checkout the shopping cart
-    await cartPage.clickOnProceedToCheckout(page);
+    await foClassicCartPage.clickOnProceedToCheckout(page);
 
     const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
     expect(isCheckoutPage).to.equal(true);

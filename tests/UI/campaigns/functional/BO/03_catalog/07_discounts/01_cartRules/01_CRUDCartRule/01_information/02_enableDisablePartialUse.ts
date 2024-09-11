@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
-import {cartPage} from '@pages/FO/classic/cart';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {vouchersPage as foVouchersPage} from '@pages/FO/classic/myAccount/vouchers';
 import {checkoutPage} from '@pages/FO/classic/checkout';
@@ -18,6 +17,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerCartRule,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicMyAccountPage,
   foClassicProductPage,
@@ -132,27 +132,27 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
 
         await foClassicProductPage.addProductToTheCart(page);
 
-        const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+        const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
         expect(notificationsNumber).to.be.equal(1);
       });
 
       it('should verify the total after discount', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'verifyTotalAfterDiscount1', baseContext);
 
-        const priceATI = await cartPage.getATIPrice(page);
+        const priceATI = await foClassicCartPage.getATIPrice(page);
         expect(priceATI).to.equal(0);
 
-        const cartRuleName = await cartPage.getCartRuleName(page);
+        const cartRuleName = await foClassicCartPage.getCartRuleName(page);
         expect(cartRuleName).to.equal(cartRuleEnabledPartialUse.name);
 
-        const discountValue = await cartPage.getDiscountValue(page);
+        const discountValue = await foClassicCartPage.getDiscountValue(page);
         expect(discountValue.toString()).to.equal(`-${dataProducts.demo_1.finalPrice}`);
       });
 
       it('should validate shopping cart and go to checkout page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToCheckoutPage', baseContext);
 
-        await cartPage.clickOnProceedToCheckout(page);
+        await foClassicCartPage.clickOnProceedToCheckout(page);
 
         const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
         expect(isCheckoutPage).to.eq(true);
@@ -340,27 +340,27 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
 
         await foClassicProductPage.addProductToTheCart(page);
 
-        const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+        const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
         expect(notificationsNumber).to.be.equal(1);
       });
 
       it('should verify the total after discount', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'verifyTotalAfterDiscount2', baseContext);
 
-        const priceATI = await cartPage.getATIPrice(page);
+        const priceATI = await foClassicCartPage.getATIPrice(page);
         expect(priceATI).to.equal(0);
 
-        const cartRuleName = await cartPage.getCartRuleName(page);
+        const cartRuleName = await foClassicCartPage.getCartRuleName(page);
         expect(cartRuleName).to.equal(cartRuleEnabledPartialUse.name);
 
-        const discountValue = await cartPage.getDiscountValue(page);
+        const discountValue = await foClassicCartPage.getDiscountValue(page);
         expect(discountValue.toString()).to.equal(`-${dataProducts.demo_1.finalPrice}`);
       });
 
       it('should validate shopping cart and go to checkout page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToCheckoutPage2', baseContext);
 
-        await cartPage.clickOnProceedToCheckout(page);
+        await foClassicCartPage.clickOnProceedToCheckout(page);
 
         const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
         expect(isCheckoutPage).to.eq(true);

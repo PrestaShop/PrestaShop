@@ -10,8 +10,6 @@ import addProductPage from '@pages/BO/catalog/products/add';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
-// Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -19,6 +17,7 @@ import {
   boDashboardPage,
   boProductsPage,
   FakerProduct,
+  foClassicCartPage,
   foClassicProductPage,
   type ProductAttribute,
   utilsPlaywright,
@@ -204,10 +203,10 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
       await foClassicProductPage.addProductToTheCart(page, 1, firstAttributeToChoose, false);
       await foClassicProductPage.addProductToTheCart(page, 1, secondAttributeToChoose, true);
 
-      const priceATI = await cartPage.getATIPrice(page);
+      const priceATI = await foClassicCartPage.getATIPrice(page);
       expect(priceATI).to.equal(firstCartTotalATI);
 
-      page = await cartPage.closePage(browserContext, page, 0);
+      page = await foClassicCartPage.closePage(browserContext, page, 0);
     });
 
     it('should go to \'Shop parameters > Product Settings\' page', async function () {
@@ -236,14 +235,14 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
       page = await productSettingsPage.viewMyShop(page);
       await foClassicProductPage.goToCartPage(page);
 
-      const priceATI = await cartPage.getATIPrice(page);
+      const priceATI = await foClassicCartPage.getATIPrice(page);
       expect(priceATI).to.equal(secondCartTotalATI);
     });
 
     it('should close the page and go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closePageAndBackToBO', baseContext);
 
-      page = await cartPage.closePage(browserContext, page, 0);
+      page = await foClassicCartPage.closePage(browserContext, page, 0);
 
       const pageTitle = await productSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(productSettingsPage.pageTitle);

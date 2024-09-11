@@ -15,7 +15,6 @@ import ordersPage from '@pages/BO/orders';
 import invoicesPage from '@pages/BO/orders/invoices';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
@@ -28,6 +27,7 @@ import {
   FakerProduct,
   FakerTaxRule,
   FakerTaxRulesGroup,
+  foClassicCartPage,
   foClassicProductPage,
   utilsFile,
   utilsPlaywright,
@@ -243,15 +243,15 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         // Add the created product to the cart
         await foClassicProductPage.addProductToTheCart(page);
 
-        const pageTitle = await cartPage.getPageTitle(page);
-        expect(pageTitle).to.equal(cartPage.pageTitle);
+        const pageTitle = await foClassicCartPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foClassicCartPage.pageTitle);
       });
 
       it('should proceed to checkout and sign in by default customer', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckoutAndSignIn', baseContext);
 
         // Proceed to checkout the shopping cart
-        await cartPage.clickOnProceedToCheckout(page);
+        await foClassicCartPage.clickOnProceedToCheckout(page);
 
         // Personal information step - Login
         await checkoutPage.clickOnSignIn(page);

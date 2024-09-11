@@ -72,7 +72,7 @@ class Preferences extends BOBasePage {
     await this.selectByVisibleText(
       page,
       this.defaultCarrierSelect,
-      `${carrier.id} - ${carrier.name} (${carrier.delay})`,
+      `${carrier.id} - ${carrier.name} (${carrier.transitName})`,
     );
 
     // Save configuration and return successful message

@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import createProductsPage from '@pages/BO/catalog/products/add';
 import ordersPage from '@pages/BO/orders';
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
@@ -21,6 +20,7 @@ import {
   dataOrderStatuses,
   dataPaymentMethods,
   FakerProduct,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicMyAccountPage,
   foClassicProductPage,
@@ -226,7 +226,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
         // Add the product to the cart
         await foClassicProductPage.addProductToTheCart(page, 1);
 
-        const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+        const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
         expect(notificationsNumber).to.be.equal(1);
       });
 
@@ -234,7 +234,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckout', baseContext);
 
         // Proceed to checkout the shopping cart
-        await cartPage.clickOnProceedToCheckout(page);
+        await foClassicCartPage.clickOnProceedToCheckout(page);
 
         // Personal information step - Login
         await checkoutPage.clickOnSignIn(page);

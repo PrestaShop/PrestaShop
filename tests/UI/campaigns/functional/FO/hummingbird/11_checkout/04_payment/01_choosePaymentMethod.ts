@@ -6,7 +6,6 @@ import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advanced
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
-import cartPage from '@pages/FO/hummingbird/cart';
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
 import checkoutPage from '@pages/FO/hummingbird/checkout';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
@@ -15,6 +14,7 @@ import {
   dataCustomers,
   dataPaymentMethods,
   type FakerPaymentMethod,
+  foHummingbirdCartPage,
   foHummingbirdHomePage,
   foHummingbirdModalQuickViewPage,
   type MailDev,
@@ -92,14 +92,14 @@ describe('FO - Checkout - Payment : Choose a payment method', async () => {
         await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
         await blockCartModal.proceedToCheckout(page);
 
-        const pageTitle = await cartPage.getPageTitle(page);
-        expect(pageTitle).to.eq(cartPage.pageTitle);
+        const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
+        expect(pageTitle).to.eq(foHummingbirdCartPage.pageTitle);
       });
 
       it('should proceed to checkout and go to checkout page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `proceedToCheckout${index}`, baseContext);
 
-        await cartPage.clickOnProceedToCheckout(page);
+        await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
         const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
         expect(isCheckoutPage).to.eq(true);

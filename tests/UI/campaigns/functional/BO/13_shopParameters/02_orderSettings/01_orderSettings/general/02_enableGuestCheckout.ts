@@ -8,13 +8,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsPlaywright,
@@ -96,7 +96,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable guest checkout'
       // Add the product to the cart
       await foClassicProductPage.addProductToTheCart(page);
 
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(index + 1);
     });
 
@@ -104,7 +104,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable guest checkout'
       await testContext.addContextItem(this, 'testIdentifier', `checkIfNoticeVisible${index}`, baseContext);
 
       // Proceed to checkout the shopping cart
-      await cartPage.clickOnProceedToCheckout(page);
+      await foClassicCartPage.clickOnProceedToCheckout(page);
 
       // Check guest checkout
       const isNoticeVisible = await checkoutPage.getActiveLinkFromPersonalInformationBlock(page);

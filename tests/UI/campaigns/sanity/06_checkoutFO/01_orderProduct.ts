@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
@@ -11,6 +10,7 @@ import {
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicModalQuickViewPage,
@@ -95,14 +95,14 @@ describe('BO - Checkout : Order a product and check order confirmation', async (
     await foClassicModalQuickViewPage.addToCartByQuickView(page);
     await blockCartModal.proceedToCheckout(page);
 
-    const pageTitle = await cartPage.getPageTitle(page);
-    expect(pageTitle).to.equal(cartPage.pageTitle);
+    const pageTitle = await foClassicCartPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicCartPage.pageTitle);
   });
 
   it('should check the cart details', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkCartDetails', baseContext);
 
-    const result = await cartPage.getProductDetail(page, 1);
+    const result = await foClassicCartPage.getProductDetail(page, 1);
     await Promise.all([
       expect(result.name).to.equal(dataProducts.demo_1.name),
       expect(result.price).to.equal(dataProducts.demo_1.finalPrice),
@@ -113,7 +113,7 @@ describe('BO - Checkout : Order a product and check order confirmation', async (
   it('should proceed to checkout and check Step Address', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkAddressStep', baseContext);
 
-    await cartPage.clickOnProceedToCheckout(page);
+    await foClassicCartPage.clickOnProceedToCheckout(page);
 
     const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
     expect(isCheckoutPage, 'Browser is not in checkout Page').to.eq(true);

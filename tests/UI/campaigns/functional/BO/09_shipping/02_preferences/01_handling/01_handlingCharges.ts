@@ -11,7 +11,6 @@ import addCarrierPage from '@pages/BO/shipping/carriers/add';
 import preferencesPage from '@pages/BO/shipping/preferences';
 import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
 import {
@@ -21,6 +20,7 @@ import {
   dataCustomers,
   dataGroups,
   FakerCarrier,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicProductPage,
@@ -48,6 +48,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
   let page: Page;
   let newCarrierID: number = 0;
 
+  const createCarrierPrice: number = 5;
   const createCarrierData: FakerCarrier = new FakerCarrier({
     freeShipping: false,
     handlingCosts: true,
@@ -58,7 +59,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
         zones: [
           {
             zone: 'all',
-            price: 5,
+            price: createCarrierPrice,
           },
         ],
       },
@@ -231,7 +232,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
       // Add the created product to the cart
       await foClassicProductPage.addProductToTheCart(page);
       // Proceed to checkout the shopping cart
-      await cartPage.clickOnProceedToCheckout(page);
+      await foClassicCartPage.clickOnProceedToCheckout(page);
 
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
@@ -244,7 +245,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
       await checkoutPage.chooseShippingMethodAndAddComment(page, newCarrierID);
 
       const shippingCost = await checkoutPage.getShippingCost(page);
-      expect(shippingCost).to.contains(defaultHandlingChargesValue + createCarrierData.ranges[0].zones[0].price);
+      expect(shippingCost).to.contains(defaultHandlingChargesValue + createCarrierPrice);
     });
 
     it('should sign out from FO', async function () {
@@ -328,7 +329,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
       // Add the created product to the cart
       await foClassicProductPage.addProductToTheCart(page);
       // Proceed to checkout the shopping cart
-      await cartPage.clickOnProceedToCheckout(page);
+      await foClassicCartPage.clickOnProceedToCheckout(page);
 
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
@@ -341,7 +342,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
       await checkoutPage.chooseShippingMethodAndAddComment(page, newCarrierID);
 
       const shippingCost = await checkoutPage.getShippingCost(page);
-      expect(shippingCost).to.contains(updateHandlingChargesValue + createCarrierData.ranges[0].zones[0].price);
+      expect(shippingCost).to.contains(updateHandlingChargesValue + createCarrierPrice);
     });
 
     it('should sign out from FO', async function () {

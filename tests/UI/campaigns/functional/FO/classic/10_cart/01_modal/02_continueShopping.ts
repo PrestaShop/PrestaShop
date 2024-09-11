@@ -2,12 +2,12 @@
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  foClassicCartPage,
   foClassicHomePage,
   foClassicModalQuickViewPage,
   foClassicProductPage,
@@ -106,17 +106,17 @@ describe('FO - cart : Continue shopping / Proceed to checkout / Close', async ()
 
     await blockCartModal.proceedToCheckout(page);
 
-    const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+    const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
     expect(notificationsNumber).to.equal(5);
   });
 
   it('should delete the shopping cart', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'deleteProducts', baseContext);
 
-    await cartPage.deleteProduct(page, 2);
-    await cartPage.deleteProduct(page, 1);
+    await foClassicCartPage.deleteProduct(page, 2);
+    await foClassicCartPage.deleteProduct(page, 1);
 
-    const notificationNumber = await cartPage.getCartNotificationsNumber(page);
+    const notificationNumber = await foClassicCartPage.getCartNotificationsNumber(page);
     expect(notificationNumber).to.be.equal(0);
   });
 });

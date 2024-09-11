@@ -10,7 +10,6 @@ import customersPage from '@pages/BO/customers';
 import addCustomerPage from '@pages/BO/customers/add';
 import preferencesPage from '@pages/BO/payment/preferences';
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
 import {
@@ -18,6 +17,7 @@ import {
   dataCustomers,
   FakerAddress,
   FakerCustomer,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsPlaywright,
@@ -211,7 +211,7 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
             // Add the product to the cart
             await foClassicProductPage.addProductToTheCart(page);
             // Proceed to checkout the shopping cart
-            await cartPage.clickOnProceedToCheckout(page);
+            await foClassicCartPage.clickOnProceedToCheckout(page);
 
             const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
             expect(isCheckoutPage).to.eq(true);

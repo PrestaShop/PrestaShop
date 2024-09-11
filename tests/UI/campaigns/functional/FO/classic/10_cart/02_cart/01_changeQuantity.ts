@@ -2,12 +2,12 @@
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  foClassicCartPage,
   foClassicHomePage,
   foClassicModalQuickViewPage,
   utilsPlaywright,
@@ -45,104 +45,104 @@ describe('FO - cart : Change quantity', async () => {
     await foClassicModalQuickViewPage.addToCartByQuickView(page);
     await blockCartModal.proceedToCheckout(page);
 
-    const pageTitle = await cartPage.getPageTitle(page);
-    expect(pageTitle).to.eq(cartPage.pageTitle);
+    const pageTitle = await foClassicCartPage.getPageTitle(page);
+    expect(pageTitle).to.eq(foClassicCartPage.pageTitle);
   });
 
   it('should increase the product quantity by the touchspin up to 5', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'increaseQuantity5', baseContext);
 
-    const quantity = await cartPage.setProductQuantity(page, 1, 5);
+    const quantity = await foClassicCartPage.setProductQuantity(page, 1, 5);
     expect(quantity).to.eq(5);
 
-    const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+    const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
     expect(notificationsNumber).to.be.eq(5);
   });
 
   it('should decrease the product quantity by the touchspin down to 2', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'decreaseQuantity2', baseContext);
 
-    const quantity = await cartPage.setProductQuantity(page, 1, 2);
+    const quantity = await foClassicCartPage.setProductQuantity(page, 1, 2);
     expect(quantity).to.eq(2);
 
-    const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+    const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
     expect(notificationsNumber).to.be.eq(2);
   });
 
   it('should set the quantity 3 in the input', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setQuantity3', baseContext);
 
-    await cartPage.editProductQuantity(page, 1, 3);
+    await foClassicCartPage.editProductQuantity(page, 1, 3);
 
-    const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+    const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
     expect(notificationsNumber).to.be.eq(3);
   });
 
   it('should set the quantity -6 in the input', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setQuantity-6', baseContext);
 
-    await cartPage.editProductQuantity(page, 1, -6);
+    await foClassicCartPage.editProductQuantity(page, 1, -6);
 
-    const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+    const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
     expect(notificationsNumber).to.be.eq(3);
   });
 
   it('should set the quantity +6 in the input', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setQuantity+6', baseContext);
 
-    await cartPage.editProductQuantity(page, 1, +6);
+    await foClassicCartPage.editProductQuantity(page, 1, +6);
 
-    const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+    const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
     expect(notificationsNumber).to.be.eq(6);
   });
 
   it('should set the quantity 64 in the input', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setQuantity64', baseContext);
 
-    await cartPage.editProductQuantity(page, 1, 64);
+    await foClassicCartPage.editProductQuantity(page, 1, 64);
 
-    const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+    const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
     expect(notificationsNumber).to.be.eq(64);
   });
 
   it('should set \'azerty\' in the input', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setAZERTY', baseContext);
 
-    await cartPage.editProductQuantity(page, 1, 'azerty');
+    await foClassicCartPage.editProductQuantity(page, 1, 'azerty');
 
-    const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+    const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
     expect(notificationsNumber).to.be.eq(64);
   });
 
   it('should set the quantity 2400 in the input', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setQuantity2400', baseContext);
 
-    await cartPage.editProductQuantity(page, 1, 2400);
+    await foClassicCartPage.editProductQuantity(page, 1, 2400);
 
-    const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+    const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
     expect(notificationsNumber).to.be.eq(2400);
   });
 
   it('should check the error message', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkErrorMessage', baseContext);
 
-    const alertText = await cartPage.getNotificationMessage(page);
-    expect(alertText).to.contains(cartPage.errorNotificationForProductQuantity);
+    const alertText = await foClassicCartPage.getNotificationMessage(page);
+    expect(alertText).to.contains(foClassicCartPage.errorNotificationForProductQuantity);
   });
 
   it('should check that proceed to checkout button is disabled', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkProceedToCheckoutButton', baseContext);
 
-    const isDisabled = await cartPage.isProceedToCheckoutButtonDisabled(page);
+    const isDisabled = await foClassicCartPage.isProceedToCheckoutButtonDisabled(page);
     expect(isDisabled).to.eq(true);
   });
 
   it('should set the quantity 0 in the input', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setQuantity', baseContext);
 
-    await cartPage.editProductQuantity(page, 1, 0);
+    await foClassicCartPage.editProductQuantity(page, 1, 0);
 
-    const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+    const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
     expect(notificationsNumber).to.be.eq(0);
   });
 });

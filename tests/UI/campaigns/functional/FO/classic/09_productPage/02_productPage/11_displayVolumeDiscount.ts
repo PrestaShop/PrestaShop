@@ -11,7 +11,6 @@ import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 
 // Import FO pages
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
-import {cartPage} from '@pages/FO/classic/cart';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -19,6 +18,7 @@ import {
   boDashboardPage,
   boProductsPage,
   FakerProduct,
+  foClassicCartPage,
   foClassicProductPage,
   utilsFile,
   utilsPlaywright,
@@ -234,9 +234,9 @@ describe('FO - Product page - Product page : Display volume discount', async () 
       await testContext.addContextItem(this, 'testIdentifier', 'removeProduct', baseContext);
 
       await blockCartModal.proceedToCheckout(page);
-      await cartPage.deleteProduct(page, 1);
+      await foClassicCartPage.deleteProduct(page, 1);
 
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.equal(0);
     });
   });
@@ -336,9 +336,9 @@ describe('FO - Product page - Product page : Display volume discount', async () 
       await testContext.addContextItem(this, 'testIdentifier', 'removeProduct2', baseContext);
 
       await blockCartModal.proceedToCheckout(page);
-      await cartPage.deleteProduct(page, 1);
+      await foClassicCartPage.deleteProduct(page, 1);
 
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.equal(0);
     });
   });

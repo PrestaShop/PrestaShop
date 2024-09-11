@@ -13,7 +13,6 @@ import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import ordersPage from '@pages/BO/orders';
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
@@ -29,6 +28,7 @@ import {
   FakerCartRule,
   FakerOrder,
   FakerSqlQuery,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicProductPage,
@@ -254,15 +254,15 @@ describe(
         await foClassicProductPage.addProductToTheCart(page, orderToMake.products[0].quantity);
 
         // Check cart page
-        const pageTitle = await cartPage.getPageTitle(page);
-        expect(pageTitle, 'Fail to go to cart page').to.contains(cartPage.pageTitle);
+        const pageTitle = await foClassicCartPage.getPageTitle(page);
+        expect(pageTitle, 'Fail to go to cart page').to.contains(foClassicCartPage.pageTitle);
       });
 
       it('should add percent discount and check that the discount was added', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addPercentDiscount', baseContext);
 
-        await cartPage.addPromoCode(page, percentCartRule.code);
-        const firstSubtotalDiscountValue = await cartPage.getSubtotalDiscountValue(page);
+        await foClassicCartPage.addPromoCode(page, percentCartRule.code);
+        const firstSubtotalDiscountValue = await foClassicCartPage.getSubtotalDiscountValue(page);
 
         expect(firstSubtotalDiscountValue, 'First discount was not applied')
           .to.equal(-(orderToMake.discountPercentValue));
@@ -271,8 +271,8 @@ describe(
       it('should add free gift discount and check that the discount was added', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addGiftDiscount', baseContext);
 
-        await cartPage.addPromoCode(page, giftCartRule.code);
-        const finalSubtotalDiscountValue = await cartPage.getSubtotalDiscountValue(page);
+        await foClassicCartPage.addPromoCode(page, giftCartRule.code);
+        const finalSubtotalDiscountValue = await foClassicCartPage.getSubtotalDiscountValue(page);
 
         expect(finalSubtotalDiscountValue, 'Second discount was not applied')
           .to.equal(-(orderToMake.discountPercentValue + orderToMake.discountGiftValue));
@@ -281,7 +281,7 @@ describe(
       it('should check order total price', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkToTalPriceInFO', baseContext);
 
-        const totalPrice = await cartPage.getATIPrice(page);
+        const totalPrice = await foClassicCartPage.getATIPrice(page);
         expect(totalPrice, 'Order total price is incorrect')
           .to.equal(orderToMake.totalPrice);
       });
@@ -290,7 +290,7 @@ describe(
         await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
         // Proceed to checkout the shopping cart
-        await cartPage.clickOnProceedToCheckout(page);
+        await foClassicCartPage.clickOnProceedToCheckout(page);
 
         // Address step - Go to delivery step
         const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);

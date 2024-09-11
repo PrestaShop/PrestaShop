@@ -11,7 +11,6 @@ import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {checkoutPage} from '@pages/FO/classic/checkout';
 
 import {
@@ -20,6 +19,7 @@ import {
   dataCarriers,
   dataCustomers,
   FakerProduct,
+  foClassicCartPage,
   foClassicProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -322,14 +322,14 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
 
       await foClassicProductPage.addProductToTheCart(page, 1);
 
-      const pageTitle = await cartPage.getPageTitle(page);
-      expect(pageTitle).to.equal(cartPage.pageTitle);
+      const pageTitle = await foClassicCartPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicCartPage.pageTitle);
     });
 
     it('should proceed to checkout and validate the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'validateCart', baseContext);
 
-      await cartPage.clickOnProceedToCheckout(page);
+      await foClassicCartPage.clickOnProceedToCheckout(page);
 
       const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
       expect(isCheckoutPage).to.eq(true);
@@ -395,14 +395,14 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
 
       await foClassicProductPage.goToCartPage(page);
 
-      const pageTitle = await cartPage.getPageTitle(page);
-      expect(pageTitle).to.contains(cartPage.pageTitle);
+      const pageTitle = await foClassicCartPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foClassicCartPage.pageTitle);
     });
 
     it('should proceed to checkout and check the shipping methods', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkShippingMethods', baseContext);
 
-      await cartPage.clickOnProceedToCheckout(page);
+      await foClassicCartPage.clickOnProceedToCheckout(page);
 
       const carriers = await checkoutPage.getAllCarriersNames(page);
       expect(carriers).to.deep.eq([dataCarriers.clickAndCollect.name]);

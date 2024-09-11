@@ -10,7 +10,6 @@ import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 
 // Import FO pages
-import {cartPage} from '@pages/FO/classic/cart';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {expect} from 'chai';
@@ -19,6 +18,7 @@ import {
   boDashboardPage,
   dataProducts,
   FakerCartRule,
+  foClassicCartPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicModalQuickViewPage,
@@ -127,49 +127,49 @@ describe('BO - Catalog - Cart rules : Minimum amount', async () => {
       await foClassicModalQuickViewPage.addToCartByQuickView(page);
       await blockCartModal.proceedToCheckout(page);
 
-      const pageTitle = await cartPage.getPageTitle(page);
-      expect(pageTitle).to.eq(cartPage.pageTitle);
+      const pageTitle = await foClassicCartPage.getPageTitle(page);
+      expect(pageTitle).to.eq(foClassicCartPage.pageTitle);
     });
 
     it('should add the promo code and check the error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoDiscount', baseContext);
 
-      await cartPage.addPromoCode(page, newCartRuleData.code);
+      await foClassicCartPage.addPromoCode(page, newCartRuleData.code);
 
-      const errorMessage = await cartPage.getCartRuleErrorMessage(page);
+      const errorMessage = await foClassicCartPage.getCartRuleErrorMessage(page);
       expect(errorMessage).to.eq(
-        `${cartPage.minimumAmountErrorMessage} €${newCartRuleData.minimumAmount.value.toFixed(2)}.`);
+        `${foClassicCartPage.minimumAmountErrorMessage} €${newCartRuleData.minimumAmount.value.toFixed(2)}.`);
     });
 
     it('should increase the quantity of product to 2', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'increaseProductQuantity', baseContext);
 
-      await cartPage.editProductQuantity(page, 1, 2);
+      await foClassicCartPage.editProductQuantity(page, 1, 2);
 
-      const totalBeforeDiscount = await cartPage.getATIPrice(page);
+      const totalBeforeDiscount = await foClassicCartPage.getATIPrice(page);
       expect(totalBeforeDiscount).to.eq(parseFloat((dataProducts.demo_6.combinations[0].price * 2).toFixed(2)));
     });
 
     it('should add the promo code and check the total', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTotalAfterDiscount', baseContext);
 
-      await cartPage.addPromoCode(page, newCartRuleData.code);
+      await foClassicCartPage.addPromoCode(page, newCartRuleData.code);
 
       const discount = await utilsCore.percentage(
         dataProducts.demo_6.combinations[0].price * 2,
         newCartRuleData.discountPercent!,
       );
 
-      const totalAfterDiscount = await cartPage.getATIPrice(page);
+      const totalAfterDiscount = await foClassicCartPage.getATIPrice(page);
       expect(totalAfterDiscount).to.eq(parseFloat((dataProducts.demo_6.combinations[0].price * 2 - discount).toFixed(2)));
     });
 
     it('should delete the last product from the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteLastProduct', baseContext);
 
-      await cartPage.deleteProduct(page, 1);
+      await foClassicCartPage.deleteProduct(page, 1);
 
-      const notificationNumber = await cartPage.getCartNotificationsNumber(page);
+      const notificationNumber = await foClassicCartPage.getCartNotificationsNumber(page);
       expect(notificationNumber).to.eq(0);
     });
   });
