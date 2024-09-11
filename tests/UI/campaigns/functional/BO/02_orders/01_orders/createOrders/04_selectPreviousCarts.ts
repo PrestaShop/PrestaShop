@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import stocksPage from '@pages/BO/catalog/stocks';
 import ordersPage from '@pages/BO/orders';
 import addOrderPage from '@pages/BO/orders/add';
-import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
 import viewShoppingCartPage from '@pages/BO/orders/shoppingCarts/view';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 // Import FO pages
@@ -17,6 +16,7 @@ import {checkoutPage} from '@pages/FO/classic/checkout';
 
 import {
   boDashboardPage,
+  boShoppingCartsPage,
   dataCarriers,
   dataCustomers,
   dataOrderStatuses,
@@ -91,29 +91,29 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
         boDashboardPage.shoppingCartsLink,
       );
 
-      const pageTitle = await shoppingCartsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(shoppingCartsPage.pageTitle);
+      const pageTitle = await boShoppingCartsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boShoppingCartsPage.pageTitle);
     });
 
     it('should reset all filters and get number of shopping carts', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst1', baseContext);
 
-      numberOfShoppingCarts = await shoppingCartsPage.resetAndGetNumberOfLines(page);
+      numberOfShoppingCarts = await boShoppingCartsPage.resetAndGetNumberOfLines(page);
       expect(numberOfShoppingCarts).to.be.above(0);
     });
 
     it('should search the non ordered shopping carts', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchNonOrderedShoppingCarts1', baseContext);
 
-      await shoppingCartsPage.filterTable(page, 'select', 'status', 'Non ordered');
+      await boShoppingCartsPage.filterTable(page, 'select', 'status', 'Non ordered');
 
-      numberOfNonOrderedShoppingCarts = await shoppingCartsPage.getNumberOfElementInGrid(page);
+      numberOfNonOrderedShoppingCarts = await boShoppingCartsPage.getNumberOfElementInGrid(page);
       expect(numberOfNonOrderedShoppingCarts).to.be.at.most(numberOfShoppingCarts);
 
       numberOfShoppingCarts -= numberOfNonOrderedShoppingCarts;
 
       for (let row = 1; row <= numberOfNonOrderedShoppingCarts; row++) {
-        const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'status');
+        const textColumn = await boShoppingCartsPage.getTextColumn(page, row, 'status');
         expect(textColumn).to.contains('Non ordered');
       }
     });
@@ -122,15 +122,15 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteNonOrderedShoppingCartsIfExists1', baseContext);
 
       if (numberOfNonOrderedShoppingCarts > 0) {
-        const deleteTextResult = await shoppingCartsPage.bulkDeleteShoppingCarts(page);
-        expect(deleteTextResult).to.be.contains(shoppingCartsPage.successfulDeleteMessage);
+        const deleteTextResult = await boShoppingCartsPage.bulkDeleteShoppingCarts(page);
+        expect(deleteTextResult).to.be.contains(boShoppingCartsPage.successfulDeleteMessage);
       }
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDeleteNonOrderedCarts1', baseContext);
 
-      const numberOfShoppingCartsAfterReset = await shoppingCartsPage.resetAndGetNumberOfLines(page);
+      const numberOfShoppingCartsAfterReset = await boShoppingCartsPage.resetAndGetNumberOfLines(page);
       expect(numberOfShoppingCartsAfterReset).to.be.equal(numberOfShoppingCarts);
     });
 
@@ -138,7 +138,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'getIdOfLastShoppingCart1', baseContext);
 
       lastShoppingCartId = parseInt(
-        await shoppingCartsPage.getTextColumn(page, 1, 'id_cart'),
+        await boShoppingCartsPage.getTextColumn(page, 1, 'id_cart'),
         10,
       );
       expect(lastShoppingCartId).to.be.above(0);
@@ -208,29 +208,29 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
         boDashboardPage.shoppingCartsLink,
       );
 
-      const pageTitle = await shoppingCartsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(shoppingCartsPage.pageTitle);
+      const pageTitle = await boShoppingCartsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boShoppingCartsPage.pageTitle);
     });
 
     it('should reset all filters and get number of shopping carts', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst2', baseContext);
 
-      numberOfShoppingCarts = await shoppingCartsPage.resetAndGetNumberOfLines(page);
+      numberOfShoppingCarts = await boShoppingCartsPage.resetAndGetNumberOfLines(page);
       expect(numberOfShoppingCarts).to.be.above(0);
     });
 
     it('should search the non ordered shopping carts', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchNonOrderedShoppingCarts2', baseContext);
 
-      await shoppingCartsPage.filterTable(page, 'select', 'status', 'Non ordered');
+      await boShoppingCartsPage.filterTable(page, 'select', 'status', 'Non ordered');
 
-      numberOfNonOrderedShoppingCarts = await shoppingCartsPage.getNumberOfElementInGrid(page);
+      numberOfNonOrderedShoppingCarts = await boShoppingCartsPage.getNumberOfElementInGrid(page);
       expect(numberOfNonOrderedShoppingCarts).to.be.at.most(numberOfShoppingCarts);
 
       numberOfShoppingCarts -= numberOfNonOrderedShoppingCarts;
 
       for (let row = 1; row <= numberOfNonOrderedShoppingCarts; row++) {
-        const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'status');
+        const textColumn = await boShoppingCartsPage.getTextColumn(page, row, 'status');
         expect(textColumn).to.contains('Non ordered');
       }
     });
@@ -239,22 +239,22 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteNonOrderedShoppingCartsIfExists2', baseContext);
 
       if (numberOfNonOrderedShoppingCarts > 0) {
-        const deleteTextResult = await shoppingCartsPage.bulkDeleteShoppingCarts(page);
-        expect(deleteTextResult).to.be.contains(shoppingCartsPage.successfulDeleteMessage);
+        const deleteTextResult = await boShoppingCartsPage.bulkDeleteShoppingCarts(page);
+        expect(deleteTextResult).to.be.contains(boShoppingCartsPage.successfulDeleteMessage);
       }
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDeleteNonOrderedCarts2', baseContext);
 
-      const numberOfShoppingCartsAfterReset = await shoppingCartsPage.resetAndGetNumberOfLines(page);
+      const numberOfShoppingCartsAfterReset = await boShoppingCartsPage.resetAndGetNumberOfLines(page);
       expect(numberOfShoppingCartsAfterReset).to.be.equal(numberOfShoppingCarts);
     });
 
     it('should get the last shopping cart ID', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getIdOfLastShoppingCart2', baseContext);
 
-      lastShoppingCartId = parseInt(await shoppingCartsPage.getTextColumn(page, 1, 'id_cart'), 10);
+      lastShoppingCartId = parseInt(await boShoppingCartsPage.getTextColumn(page, 1, 'id_cart'), 10);
       expect(lastShoppingCartId).to.be.above(0);
     });
   });
@@ -329,11 +329,11 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
 
       page = await checkoutPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await shoppingCartsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(shoppingCartsPage.pageTitle);
+      const pageTitle = await boShoppingCartsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boShoppingCartsPage.pageTitle);
 
-      await shoppingCartsPage.reloadPage(page);
-      lastShoppingCartId = parseInt(await shoppingCartsPage.getTextColumn(page, 1, 'id_cart'), 10);
+      await boShoppingCartsPage.reloadPage(page);
+      lastShoppingCartId = parseInt(await boShoppingCartsPage.getTextColumn(page, 1, 'id_cart'), 10);
     });
   });
 

@@ -6,7 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 
 // Import BO pages
-import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
 import customersPage from '@pages/BO/customers';
 import addCustomerPage from '@pages/BO/customers/add';
 
@@ -20,6 +19,7 @@ import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {
   boAdministrationPage,
   boDashboardPage,
+  boShoppingCartsPage,
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
@@ -194,7 +194,7 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
 
       // Close page and init page objects
       page = await orderConfirmationPage.closePage(browserContext, page, 0);
-      await shoppingCartsPage.reloadPage(page);
+      await boShoppingCartsPage.reloadPage(page);
 
       const pageTitle = await boAdministrationPage.getPageTitle(page);
       expect(pageTitle).to.contains(boAdministrationPage.pageTitle);

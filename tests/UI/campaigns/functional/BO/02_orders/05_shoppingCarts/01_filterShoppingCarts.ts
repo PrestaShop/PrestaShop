@@ -3,15 +3,19 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
+import createShoppingCart from '@commonTests/FO/classic/shoppingCart';
+import {createCustomerTest, deleteCustomerTest} from '@commonTests/BO/customers/customer';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boShoppingCartsPage,
+  dataProducts,
   dataShoppingCarts,
+  FakerCustomer,
+  FakerOrder,
+  utilsCore,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -23,188 +27,298 @@ Delete the non ordered shopping carts
 Filter shopping carts By :
 Id, order id, customer, carrier, date and online
 */
-describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async () => {
+describe('BO - Orders - Shopping carts: Filter & sort table', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfShoppingCarts: number;
 
-  const todayDate: string = utilsDate.getDateFormat('mm/dd/yyyy');
-
-  // before and after functions
-  before(async function () {
-    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
-    page = await utilsPlaywright.newTab(browserContext);
+  const dateToday: string = utilsDate.getDateFormat('mm/dd/yyyy');
+  const dateTodayFilter: string = utilsDate.getDateFormat('yyyy-mm-dd');
+  const dateTomorrowFilter: string = utilsDate.getDateFormat('yyyy-mm-dd', 'tomorrow');
+  const dateFutureFilter: string = utilsDate.getDateFormat('yyyy-mm-dd', 'future');
+  const customerData: FakerCustomer = new FakerCustomer();
+  const orderData: FakerOrder = new FakerOrder({
+    customer: customerData,
+    products: [
+      {
+        product: dataProducts.demo_1,
+        quantity: 1,
+      },
+    ],
   });
 
-  after(async () => {
-    await utilsPlaywright.closeBrowserContext(browserContext);
-  });
+  // Pre-condition: Create customer
+  createCustomerTest(customerData, `${baseContext}_preTest_0`);
+  // Pre-condition: Create a non-ordered shopping cart being connected in the FO
+  createShoppingCart(orderData, `${baseContext}_preTest_1`);
 
-  it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
-  });
+  describe('Filter the Shopping carts table', async () => {
+    // before and after functions
+    before(async function () {
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
+    });
 
-  it('should go to \'Orders > Shopping carts\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage', baseContext);
+    after(async () => {
+      await utilsPlaywright.closeBrowserContext(browserContext);
+    });
 
-    await boDashboardPage.goToSubMenu(
-      page,
-      boDashboardPage.ordersParentLink,
-      boDashboardPage.shoppingCartsLink,
-    );
+    it('should login in BO', async function () {
+      await loginCommon.loginBO(this, page);
+    });
 
-    const pageTitle = await shoppingCartsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(shoppingCartsPage.pageTitle);
-  });
+    it('should go to \'Orders > Shopping carts\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage', baseContext);
 
-  it('should reset all filters and get number of shopping carts', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
-
-    numberOfShoppingCarts = await shoppingCartsPage.resetAndGetNumberOfLines(page);
-    expect(numberOfShoppingCarts).to.be.above(0);
-  });
-
-  it('should search the non ordered shopping carts and delete them if exist', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'searchNonOrderedShoppingCarts', baseContext);
-
-    await shoppingCartsPage.filterTable(page, 'select', 'status', 'Non ordered');
-
-    const numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
-    expect(numberOfShoppingCartsAfterFilter).to.be.at.most(numberOfShoppingCarts);
-
-    numberOfShoppingCarts -= numberOfShoppingCartsAfterFilter;
-
-    for (let row = 1; row <= numberOfShoppingCartsAfterFilter; row++) {
-      const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'status');
-      expect(textColumn).to.contains('Non ordered');
-    }
-
-    if (numberOfShoppingCartsAfterFilter > 0) {
-      const deleteTextResult = await shoppingCartsPage.bulkDeleteShoppingCarts(page);
-      expect(deleteTextResult).to.be.contains(shoppingCartsPage.successfulDeleteMessage);
-    }
-  });
-
-  it('should reset all filters', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDeleteNonOrderedCarts', baseContext);
-
-    const numberOfShoppingCartsAfterReset = await shoppingCartsPage.resetAndGetNumberOfLines(page);
-    expect(numberOfShoppingCartsAfterReset).to.be.equal(numberOfShoppingCarts);
-  });
-
-  it('should change pagination to 100 items per page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo300', baseContext);
-
-    let paginationNumber: string = '1';
-
-    if (numberOfShoppingCarts >= 21) {
-      paginationNumber = await shoppingCartsPage.selectPaginationLimit(page, 100);
-    }
-
-    expect(paginationNumber).to.contains('(page 1 / 1)');
-  });
-
-  const tests = [
-    {
-      args:
-        {
-          testIdentifier: 'filterId',
-          filterType: 'input',
-          filterBy: 'id_cart',
-          filterValue: dataShoppingCarts[1].id.toString(),
-        },
-    },
-    {
-      args:
-        {
-          testIdentifier: 'filterOrderID',
-          filterType: 'input',
-          filterBy: 'id_order',
-          filterValue: dataShoppingCarts[2].orderID.toString(),
-        },
-    },
-    {
-      args:
-        {
-          testIdentifier: 'filterCustomer',
-          filterType: 'input',
-          filterBy: 'customer_name',
-          filterValue: dataShoppingCarts[3].customer.lastName,
-        },
-    },
-    {
-      args:
-        {
-          testIdentifier: 'filterCarrier',
-          filterType: 'input',
-          filterBy: 'carrier_name',
-          filterValue: dataShoppingCarts[0].carrier.name,
-        },
-    },
-    {
-      args:
-        {
-          testIdentifier: 'filterOnline',
-          filterType: 'select',
-          filterBy: 'customer_online',
-          filterValue: dataShoppingCarts[4].online ? 'Yes' : 'No',
-        },
-    },
-  ];
-
-  tests.forEach((test) => {
-    it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
-
-      await shoppingCartsPage.filterTable(
+      await boDashboardPage.goToSubMenu(
         page,
-        test.args.filterType,
-        test.args.filterBy,
-        test.args.filterValue,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.shoppingCartsLink,
       );
 
-      const numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
+      const pageTitle = await boShoppingCartsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boShoppingCartsPage.pageTitle);
+    });
+
+    it('should reset all filters and get number of shopping carts', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
+
+      numberOfShoppingCarts = await boShoppingCartsPage.resetAndGetNumberOfLines(page);
+      expect(numberOfShoppingCarts).to.be.above(0);
+    });
+
+    it('should filter by identifier with a not-existing ID', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterIdNonExisting', baseContext);
+
+      await boShoppingCartsPage.filterTable(page, 'input', 'id_cart', '123456789');
+
+      const numberOfShoppingCartsAfterFilter = await boShoppingCartsPage.getNumberOfElementInGrid(page);
+      expect(numberOfShoppingCartsAfterFilter).to.equal(0);
+    });
+
+    it('should filter by identifier with a not-integer ID', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterIdNotInteger', baseContext);
+
+      await boShoppingCartsPage.filterTable(page, 'input', 'id_cart', 'Hello');
+
+      const numberOfShoppingCartsAfterFilter = await boShoppingCartsPage.getNumberOfElementInGrid(page);
+      expect(numberOfShoppingCartsAfterFilter).to.equal(0);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterFilterNotExisting', baseContext);
+
+      const numberOfShoppingCartsAfterReset = await boShoppingCartsPage.resetAndGetNumberOfLines(page);
+      expect(numberOfShoppingCartsAfterReset).to.be.equal(numberOfShoppingCarts);
+    });
+
+    [
+      {
+        testIdentifier: 'filterId',
+        filterType: 'input',
+        filterBy: 'id_cart',
+        filterValue: dataShoppingCarts[1].id.toString(),
+      },
+      {
+        testIdentifier: 'filterOrderID',
+        filterType: 'input',
+        filterBy: 'id_order',
+        filterValue: dataShoppingCarts[2].orderID.toString(),
+      },
+      {
+        testIdentifier: 'filterStatus',
+        filterType: 'select',
+        filterBy: 'status',
+        filterValue: dataShoppingCarts[2].status,
+      },
+      {
+        testIdentifier: 'filterStatusNonOrdered',
+        filterType: 'select',
+        filterBy: 'status',
+        filterValue: 'Non ordered',
+      },
+      {
+        testIdentifier: 'filterCustomerFirstName',
+        filterType: 'input',
+        filterBy: 'customer_name',
+        filterValue: dataShoppingCarts[3].customer.firstName.substring(0, 1),
+      },
+      {
+        testIdentifier: 'filterCustomerLastName',
+        filterType: 'input',
+        filterBy: 'customer_name',
+        filterValue: dataShoppingCarts[3].customer.lastName.substring(0, 2),
+      },
+      {
+        testIdentifier: 'filterCarrier',
+        filterType: 'input',
+        filterBy: 'carrier_name',
+        filterValue: dataShoppingCarts[0].carrier.name,
+      },
+      {
+        testIdentifier: 'filterOnline',
+        filterType: 'select',
+        filterBy: 'customer_online',
+        filterValue: dataShoppingCarts[4].online ? 'Yes' : 'No',
+      },
+    ].forEach((arg: {testIdentifier: string, filterType: string, filterBy: string, filterValue: string}) => {
+      it(`should filter by ${arg.filterBy} '${arg.filterValue}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', arg.testIdentifier, baseContext);
+
+        await boShoppingCartsPage.filterTable(
+          page,
+          arg.filterType,
+          arg.filterBy,
+          arg.filterValue,
+        );
+
+        const numberOfShoppingCartsAfterFilter = await boShoppingCartsPage.getNumberOfElementInGrid(page);
+        expect(numberOfShoppingCartsAfterFilter).to.be.at.most(numberOfShoppingCarts);
+
+        for (let row = 1; row <= numberOfShoppingCartsAfterFilter; row++) {
+          const textColumn = await boShoppingCartsPage.getTextColumn(page, row, arg.filterBy);
+
+          if (arg.filterBy === 'id_guest') {
+            expect(textColumn).to.equal(arg.filterValue === '1' ? 'Yes' : 'No');
+          } else {
+            expect(textColumn).to.contains(arg.filterValue);
+          }
+        }
+      });
+
+      it('should reset all filters', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${arg.testIdentifier}Reset`, baseContext);
+
+        const numberOfShoppingCartsAfterReset = await boShoppingCartsPage.resetAndGetNumberOfLines(page);
+        expect(numberOfShoppingCartsAfterReset).to.be.equal(numberOfShoppingCarts);
+      });
+    });
+
+    it('should filter by date \'From\' and \'To\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByDate', baseContext);
+
+      // Filter by date
+      await boShoppingCartsPage.filterByDate(page, dateTodayFilter, dateTodayFilter);
+
+      // Check number of element
+      const numberOfShoppingCartsAfterFilter = await boShoppingCartsPage.getNumberOfElementInGrid(page);
       expect(numberOfShoppingCartsAfterFilter).to.be.at.most(numberOfShoppingCarts);
 
       for (let row = 1; row <= numberOfShoppingCartsAfterFilter; row++) {
-        const textColumn = await shoppingCartsPage.getTextColumn(page, row, test.args.filterBy);
-
-        if (test.args.filterBy === 'id_guest') {
-          expect(textColumn).to.equal(test.args.filterValue === '1' ? 'Yes' : 'No');
-        } else {
-          expect(textColumn).to.contains(test.args.filterValue);
-        }
+        const textColumn = await boShoppingCartsPage.getTextColumn(page, row, 'date_add');
+        expect(textColumn).to.contains(dateToday);
       }
     });
 
     it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterFilterDate', baseContext);
 
-      const numberOfShoppingCartsAfterReset = await shoppingCartsPage.resetAndGetNumberOfLines(page);
+      const numberOfShoppingCartsAfterReset = await boShoppingCartsPage.resetAndGetNumberOfLines(page);
       expect(numberOfShoppingCartsAfterReset).to.be.equal(numberOfShoppingCarts);
+    });
+
+    it('should filter by date \'From\' and \'To\' in the future', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByDateFuture', baseContext);
+
+      // Filter by date
+      await boShoppingCartsPage.filterByDate(page, dateTomorrowFilter, dateFutureFilter);
+
+      // Check number of element
+      const numberOfShoppingCartsAfterFilter = await boShoppingCartsPage.getNumberOfElementInGrid(page);
+      expect(numberOfShoppingCartsAfterFilter).to.equals(0);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterFilterDateFuture', baseContext);
+
+      const numberOfShoppingCartsAfterReset = await boShoppingCartsPage.resetAndGetNumberOfLines(page);
+      expect(numberOfShoppingCartsAfterReset).to.be.equal(numberOfShoppingCarts);
+    });
+
+    [
+      {
+        testIdentifier: 'sortByIdDesc', sortBy: 'id_cart', sortDirection: 'desc', isFloat: true,
+      },
+      {
+        testIdentifier: 'sortByOrderIDAsc', sortBy: 'status', sortDirection: 'asc', isFloat: true,
+      },
+      {
+        testIdentifier: 'sortByOrderIDDesc', sortBy: 'status', sortDirection: 'desc', isFloat: true,
+      },
+      {
+        testIdentifier: 'sortByStatusAsc', sortBy: 'status', sortDirection: 'asc',
+      },
+      {
+        testIdentifier: 'sortByStatusDesc', sortBy: 'status', sortDirection: 'desc',
+      },
+      {
+        testIdentifier: 'sortByCustomerAsc', sortBy: 'customer_name', sortDirection: 'asc',
+      },
+      {
+        testIdentifier: 'sortByCustomerDesc', sortBy: 'customer_name', sortDirection: 'desc',
+      },
+      {
+        testIdentifier: 'sortByCarrierAsc', sortBy: 'carrier_name', sortDirection: 'asc',
+      },
+      {
+        testIdentifier: 'sortByCarrierDesc', sortBy: 'carrier_name', sortDirection: 'desc',
+      },
+      {
+        testIdentifier: 'sortByDateAsc', sortBy: 'date_add', sortDirection: 'asc',
+      },
+      {
+        testIdentifier: 'sortByDateDesc', sortBy: 'date_add', sortDirection: 'desc',
+      },
+      {
+        testIdentifier: 'sortByOnlineAsc', sortBy: 'customer_online', sortDirection: 'asc',
+      },
+      {
+        testIdentifier: 'sortByOnlineDesc', sortBy: 'customer_online', sortDirection: 'desc',
+      },
+      {
+        testIdentifier: 'sortByIdAsc', sortBy: 'id_cart', sortDirection: 'asc', isFloat: true,
+      },
+    ].forEach((arg: {testIdentifier: string, sortBy: string, sortDirection: string, isFloat?: boolean}) => {
+      it(`should sort by '${arg.sortBy}' '${arg.sortDirection}' and check result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', arg.testIdentifier, baseContext);
+
+        const nonSortedTable = await boShoppingCartsPage.getAllRowsColumnContent(page, arg.sortBy);
+
+        await boShoppingCartsPage.sortTable(page, arg.sortBy, arg.sortDirection);
+
+        const sortedTable = await boShoppingCartsPage.getAllRowsColumnContent(page, arg.sortBy);
+
+        if (arg.isFloat) {
+          const nonSortedTableFloat: number[] = nonSortedTable.map((text:string): number => parseFloat(text));
+          const sortedTableFloat: number[] = sortedTable.map((text:string): number => parseFloat(text));
+
+          const expectedResult = await utilsCore.sortArrayNumber(nonSortedTableFloat);
+
+          if (arg.sortDirection === 'asc') {
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
+          } else {
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+          }
+        } else {
+          const expectedResult: string[] = await utilsCore.sortArray(nonSortedTable);
+
+          if (arg.sortDirection === 'asc') {
+            expect(sortedTable).to.deep.equal(expectedResult);
+          } else {
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
+          }
+        }
+      });
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterSort', baseContext);
+
+      const numberOfShoppingCartsAfterReset = await boShoppingCartsPage.resetAndGetNumberOfLines(page);
+      expect(numberOfShoppingCartsAfterReset).to.be.above(1);
     });
   });
 
-  it('should filter by date \'From\' and \'To\'', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'filterByDate', baseContext);
-
-    // Filter by date
-    await shoppingCartsPage.filterByDate(page, todayDate, todayDate);
-
-    // Check number of element
-    const numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
-    expect(numberOfShoppingCartsAfterFilter).to.be.at.most(numberOfShoppingCarts);
-
-    for (let row = 1; row <= numberOfShoppingCartsAfterFilter; row++) {
-      const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'date_add');
-      expect(textColumn).to.contains(todayDate);
-    }
-  });
-
-  it('should reset all filters', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetAfterFilterDate', baseContext);
-
-    const numberOfShoppingCartsAfterReset = await shoppingCartsPage.resetAndGetNumberOfLines(page);
-    expect(numberOfShoppingCartsAfterReset).to.be.equal(numberOfShoppingCarts);
-  });
+  // Post-condition: Delete guest account
+  deleteCustomerTest(customerData, `${baseContext}_postTest_0`);
 });
