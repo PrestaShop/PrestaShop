@@ -130,29 +130,55 @@ class SearchCore
     public const PS_SEARCH_ABSCISSA_MAX = 2;
     public const PS_DISTANCE_MAX = 8;
 
+    /**
+     * Method that takes a raw string (sentence) and extract all keywords it can find.
+     *
+     * @param string $string Search expression
+     * @param int $id_lang Language ID
+     * @param bool $indexation Are we in indexation mode or not
+     * @param bool|string $iso_code Iso code to use in sanitization function, to perform some tasks
+     */
     public static function extractKeyWords($string, $id_lang, $indexation = false, $iso_code = false)
     {
-        if (null === $string) {
+        // If nothing was passed, nothing to do here
+        if (empty($string)) {
             return [];
         }
 
+        // First, we take the string and clean it as a whole.
+        // This removes special characters, tags, blacklisted words, hyphens etc.
+        // So, "Prestashop Tést A-1000" becomes "prestashop test a 1000";
         $sanitizedString = Search::sanitize($string, $id_lang, $indexation, $iso_code, false);
+
+        // And we separate it by words to get array
+        // So we get an array ["prestashop", "test", "a", "1000"]
         $words = explode(' ', $sanitizedString);
+
+        /*
+         * Now, because we want to maximize the number of keywords we can get from the expression,
+         * we will also try to handle words with hyphens in them. People can search A 1000, A-1000, A1000, we don't know.
+         *
+         * For this reason, if the original expression contained a dash, we will do the process once again,
+         * but keeping the dashes.
+         */
         if (strpos($string, '-') !== false) {
-            $sanitizedString = Search::sanitize($string, $id_lang, $indexation, $iso_code, true);
-            $words2 = explode(' ', $sanitizedString);
-            // foreach word containing hyphen, we want to index additional word removing the hyphen
-            // eg: t-shirt => tshirt
-            foreach ($words2 as $word) {
-                if (strpos($word, '-') !== false) {
-                    $word = str_replace('-', '', $word);
-                    if (!empty($word)) {
-                        $words[] = $word;
-                    }
+            // So, one more sanitization with different parameter, one more separation to get array.
+            // We get an array ["prestashop", "test", "a-1000"]
+            $sanitizedStringWithHyphens = Search::sanitize($string, $id_lang, $indexation, $iso_code, true);
+            $wordsWithHyphens = explode(' ', $sanitizedStringWithHyphens);
+
+            // And we add all words to our final list, in both dashed and non dashed version.
+            foreach ($wordsWithHyphens as $word) {
+                if (strpos($word, '-') === false) {
+                    continue;
+                }
+
+                $words[] = $word;
+                $word = str_replace('-', '', $word);
+                if (!empty($word)) {
+                    $words[] = $word;
                 }
             }
-
-            $words = array_merge($words, $words2);
         }
 
         return array_unique($words);
@@ -160,15 +186,18 @@ class SearchCore
 
     public static function sanitize($string, $id_lang, $indexation = false, $iso_code = false, $keepHyphens = false)
     {
+        // If we get some nonsense or space, just return empty string
         if (null === $string || empty($string = trim($string))) {
             return '';
         }
 
+        // The string gets into this method in a raw form of, like "Prestashop Tést A-1000".
+        // This get rid of all tags, special characters and convert everything to lowercase.
         $string = Tools::strtolower(strip_tags($string));
         $string = html_entity_decode($string, ENT_NOQUOTES, 'utf-8');
-
         $string = preg_replace('/([' . PREG_CLASS_NUMBERS . ']+)[' . PREG_CLASS_PUNCTUATION . ']+(?=[' . PREG_CLASS_NUMBERS . '])/u', '\1', $string);
         $string = preg_replace('/[' . PREG_CLASS_SEARCH_EXCLUDE . ']+/u', ' ', $string);
+        // Now, our string looks something like "prestashop test a-1000".
 
         if ($indexation) {
             if (!$keepHyphens) {
@@ -177,16 +206,18 @@ class SearchCore
                 $string = str_replace(['.', '_'], ' ', $string);
             }
         } else {
-            $words = explode(' ', $string);
-            $processed_words = [];
-            // search for aliases for each word of the query
+            /*
+             * Now, we will search for all aliases, that are contained in our query.
+             * Our string looks something like "prestashop test a-1000".
+             * Aliases must be searched for in a raw form, with no special characters.
+             */
             $query = '
 				SELECT a.alias, a.search
 				FROM `' . _DB_PREFIX_ . 'alias` a
 				WHERE \'' . pSQL($string) . '\' %s AND `active` = 1
             ';
 
-            // check if we can we use '\b' (faster)
+            // Check if we can we use '\b' (faster)
             $useICU = (bool) Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->getValue(
                 'SELECT 1 FROM DUAL WHERE \'icu regex\' REGEXP \'\\\\bregex\''
             );
@@ -199,7 +230,9 @@ class SearchCore
                 )
             );
 
-            foreach ($aliases  as $alias) {
+            $words = explode(' ', $string);
+            $processed_words = [];
+            foreach ($aliases as $alias) {
                 $processed_words = array_merge($processed_words, explode(' ', $alias['search']));
                 // delete words that are being replaced with aliases
                 $words = array_diff($words, explode(' ', $alias['alias']));
@@ -211,6 +244,7 @@ class SearchCore
             }
         }
 
+        // Remove all blacklisted words from the search string
         $blacklist = Tools::strtolower(Configuration::get('PS_SEARCH_BLACKLIST', $id_lang));
         if (!empty($blacklist)) {
             $string = preg_replace('/(?<=\s)(' . $blacklist . ')(?=\s)/Su', '', $string);
@@ -219,7 +253,8 @@ class SearchCore
             $string = preg_replace('/^(' . $blacklist . ')$/Su', '', $string);
         }
 
-        // If the language is constituted with symbol and there is no "words", then split every chars
+        // If the language is constituted with symbol and there is no "words", then split every chars.
+        // This concerns asian languages.
         if (in_array($iso_code, ['zh', 'tw', 'ja'])) {
             // Cut symbols from letters
             $symbols = '';
@@ -248,11 +283,27 @@ class SearchCore
             }
         }
 
+        // Do some more cleaning to the string and return it
         $string = Tools::replaceAccentedChars(trim(preg_replace('/\s+/', ' ', $string)));
 
         return $string;
     }
 
+    /**
+     * The holy method to search for products.
+     *
+     * @param int $id_lang Language identifier
+     * @param string $expr Search expression
+     * @param int $page_number Start from page
+     * @param int $page_size Number of products to return
+     * @param $order_by
+     * @param $order_way
+     * @param bool $ajax Specifies the return structure of data
+     * @param bool $use_cookie unused
+     * @param Context $context Context to use when searching data. Current context will be used if missing.
+     *
+     * @return array|bool search results returned in certain structure, depending on $ajax parameter
+     */
     public static function find(
         $id_lang,
         $expr,
@@ -268,38 +319,62 @@ class SearchCore
             $context = Context::getContext();
         }
 
+        // Get database instance to use
         $db = Db::getInstance(_PS_USE_SQL_SLAVE_);
 
-        // TODO : smart page management
-        if ($page_number < 1) {
+        // Initialize pagination if nonsense was passed
+        if (empty($page_number)) {
             $page_number = 1;
         }
-        if ($page_size < 1) {
+        if (empty($page_size)) {
             $page_size = 1;
         }
 
+        // Initialize and validate sorting
         if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way)) {
             return false;
         }
 
-        $scoreArray = [];
+        /*
+         * Variables related to fuzzy search.
+         *
+         * $psFuzzySearch to see if fuzzy search is enabled.
+         * $fuzzyMaxLoop configuration to limit how many times we try to fuzzy search for each word.
+         * $fuzzyLoop to track how many times we tried to fuzzy search, so we can break the loop.
+         */
         $fuzzyLoop = 0;
-        $wordCnt = 0;
-        $eligibleProducts2Full = [];
-        $expressions = explode(';', $expr);
         $fuzzyMaxLoop = (int) Configuration::get('PS_SEARCH_FUZZY_MAX_LOOP');
         $psFuzzySearch = (int) Configuration::get('PS_SEARCH_FUZZY');
+
+        // Score array to keep track of words we will get weights for (for relevance)
+        $scoreArray = [];
+
+        // Word count to track how many words we got for given expression
+        $wordCnt = 0;
+
+        // Final resulting array with product IDs found
+        $foundProductIds = [];
+
+        // Expressions to search for. If user passes search expressions separated with semicolon, they will be treated separately
+        $expressions = explode(';', $expr);
+
+        // Minimal word length configuration, so we don't search for extremely short words
         $psSearchMinWordLength = (int) Configuration::get('PS_SEARCH_MINWORDLEN');
+
+        // Ok, now let's go through each expression. It's usually only one.
         foreach ($expressions as $expression) {
-            $eligibleProducts2 = null;
+            $productIdsFoundForCurrentExpression = null;
+
+            // Get all words from current expression
             $words = Search::extractKeyWords($expression, $id_lang, false, $context->language->iso_code);
             foreach ($words as $key => $word) {
+                // Skip all empty words or shorter than our limit
                 if (empty($word) || strlen($word) < $psSearchMinWordLength) {
                     unset($words[$key]);
                     continue;
                 }
 
-                $sql_param_search = self::getSearchParamFromWord($word);
+                // We prepare a basic part of SQL query that we will be searching
                 $sql = 'SELECT DISTINCT si.id_product ' .
                     'FROM ' . _DB_PREFIX_ . 'search_word sw ' .
                     'LEFT JOIN ' . _DB_PREFIX_ . 'search_index si ON sw.id_word = si.id_word ' .
@@ -311,6 +386,17 @@ class SearchCore
                     'AND product_shop.indexed = 1 ' .
                     'AND sw.word LIKE ';
 
+                /*
+                 * Now, find all products from the index, that have this keyword.
+                 * We start with the word itself wrapped in %%, coming from getSearchParamFromWord.
+                 *
+                 * If we don't find anything, we will leverage levenshtein algorithm to find a closest keyword
+                 * via findClosestWeightestWord method.
+                 *
+                 * We will keep searching with different expressions, until we find something
+                 * or we exceed our fuzzy search limit.
+                 */
+                $sql_param_search = self::getSearchParamFromWord($word);
                 while (!($result = $db->executeS($sql . "'" . $sql_param_search . "';", true, false))) {
                     if (!$psFuzzySearch
                         || $fuzzyLoop++ > $fuzzyMaxLoop
@@ -320,32 +406,52 @@ class SearchCore
                     }
                 }
 
+                // If nothing was found after X retries, skip this keyword
                 if (!$result) {
                     unset($words[$key]);
                     continue;
                 }
 
-                $productIds = array_column($result, 'id_product');
-                if ($eligibleProducts2 === null) {
-                    $eligibleProducts2 = $productIds;
+                /*
+                 * Extremely important step that someone broke in the past.
+                 * Now if we found something, we need to intersect it with the the previously found products.
+                 * If we search for "Red car", we want to get products that contain "red" AND contain "car".
+                 * Somebody broke it before and it found all things "car" and all things "red".
+                 */
+                $productIdsFoundForCurrentWord = array_column($result, 'id_product');
+                if ($productIdsFoundForCurrentExpression === null) {
+                    $productIdsFoundForCurrentExpression = $productIdsFoundForCurrentWord;
                 } else {
-                    $eligibleProducts2 = array_intersect($eligibleProducts2, $productIds);
+                    $productIdsFoundForCurrentExpression = array_intersect($productIdsFoundForCurrentExpression, $productIdsFoundForCurrentWord);
                 }
 
+                // Add the expresion to our score array, so we can later calculate the relevance
                 $scoreArray[] = 'sw.word LIKE \'' . $sql_param_search . '\'';
             }
             $wordCnt += count($words);
-            if ($eligibleProducts2) {
-                $eligibleProducts2Full = array_merge($eligibleProducts2Full, $eligibleProducts2);
+            if ($productIdsFoundForCurrentExpression) {
+                $foundProductIds = array_merge($foundProductIds, $productIdsFoundForCurrentExpression);
             }
         }
 
-        $eligibleProducts2Full = array_unique($eligibleProducts2Full);
+        // Remove all duplicates from product IDs
+        $foundProductIds = array_unique($foundProductIds);
 
-        if (!$wordCnt || !count($eligibleProducts2Full)) {
+        // If we didn't end up anything now, we can immediately return empty response.
+        // No sense in calculating weights of nothing.
+        if (!$wordCnt || !count($foundProductIds)) {
             return $ajax ? [] : ['total' => 0, 'result' => []];
         }
 
+        /*
+         * Now, we have a list of randomly ordered product IDs for our search,
+         * but we don't know if they are active, should be displayed, nothing.
+         */
+
+        /*
+         * This is a subquery that selects weight for each keyword.
+         * This is used as "relevance" sort order.
+         */
         $sqlScore = '';
         if (!empty($scoreArray) && is_array($scoreArray)) {
             $sqlScore = ',( ' .
@@ -365,6 +471,7 @@ class SearchCore
             $sqlGroups = 'AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Group::getCurrent()->id);
         }
 
+        // Select products from the list of IDs that should be displayed and can be returned.
         $results = $db->executeS(
             'SELECT DISTINCT cp.`id_product` ' .
             'FROM `' . _DB_PREFIX_ . 'category_product` cp ' .
@@ -376,20 +483,27 @@ class SearchCore
             'AND product_shop.`active` = 1 ' .
             'AND product_shop.`visibility` IN ("both", "search") ' .
             'AND product_shop.indexed = 1 ' .
-            'AND cp.id_product IN (' . implode(',', $eligibleProducts2Full) . ')' . $sqlGroups,
+            'AND cp.id_product IN (' . implode(',', $foundProductIds) . ')' . $sqlGroups,
             true,
             false
         );
 
+        // And again, extract their IDs
         $eligibleProducts = [];
         foreach ($results as $row) {
             $eligibleProducts[] = $row['id_product'];
         }
 
+        // If we didn't end up anything now, we can immediately return empty response.
+        // No sense in getting more data for nothing.
         if (!count($eligibleProducts)) {
             return $ajax ? [] : ['total' => 0, 'result' => []];
         }
 
+        /*
+         * Now, we have a list of (also) randomly ordered product IDs for our search,
+         * but we know that they are real, active products that should be returned.
+         */
         $product_pool = ' IN (' . implode(',', $eligibleProducts) . ') ';
 
         if ($ajax) {
