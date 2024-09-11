@@ -43,6 +43,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class GeneralSettings extends TranslatorAwareType
 {
+    private const MAX_IMAGE_SIZE_IN_BYTES = 8 * 1000000;
+
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
@@ -53,7 +55,7 @@ class GeneralSettings extends TranslatorAwareType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $maximumFileSize = (int) str_replace('M', '', ini_get('upload_max_filesize'));
+        $maximumFileSize = (int) str_replace('M', '', self::MAX_IMAGE_SIZE_IN_BYTES);
 
         parent::buildForm($builder, $options);
         $builder
