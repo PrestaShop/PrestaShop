@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Module;
 
-use PrestaShop\PrestaShop\Adapter\Tools;
+use Symfony\Component\Finder\Finder;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ModuleOverrideChecker
@@ -61,9 +61,21 @@ class ModuleOverrideChecker
             return false;
         }
 
-        $tools = new Tools();
+        $finder = new Finder();
+        $finder->files()->in($moduleOverridePath)->name('*.php');
+
+        // module doesn't have overrides, return false
+        if (!$finder->hasResults()) {
+            return false;
+        }
+
+        $fileList = [];
+        foreach ($finder as $file) {
+            $fileList[] = $file->getRelativePathname();
+        }
+
         // module has overrides, let's check override files one by one
-        foreach ($tools->scandir($moduleOverridePath, 'php', '', true) as $file) {
+        foreach ($fileList as $file) {
             $moduleOverrideFile = $moduleOverridePath . DIRECTORY_SEPARATOR . $file;
             $existingOverrideFile = $this->psOverrideDir . $file;
 
