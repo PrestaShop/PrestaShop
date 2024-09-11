@@ -415,7 +415,7 @@ abstract class ModuleCore implements ModuleInterface
         // Check for override conflicts
         $moduleOverrideChecker = $this->get(ModuleOverrideChecker::class);
         if (!$moduleOverrideChecker) {
-            $moduleOverrideChecker = new ModuleOverrideChecker($this->getTranslator());
+            $moduleOverrideChecker = new ModuleOverrideChecker($this->getTranslator(), _PS_OVERRIDE_DIR_);
         }
         if ($moduleOverrideChecker->hasOverrideConflict($this->getLocalPath() . 'override')) {
             $this->_errors = array_merge($moduleOverrideChecker->getErrors(), $this->_errors);
@@ -871,7 +871,12 @@ abstract class ModuleCore implements ModuleInterface
             }
         }
 
-        if ($this->getOverrides() != null) {
+        $moduleOverrideChecker = $this->get(ModuleOverrideChecker::class);
+        if (!$moduleOverrideChecker) {
+            $moduleOverrideChecker = new ModuleOverrideChecker($this->getTranslator(), _PS_OVERRIDE_DIR_);
+        }
+
+        if ($this->getOverrides() != null && !$moduleOverrideChecker->hasOverrideConflict($this->getLocalPath() . 'override')) {
             // Install overrides
             try {
                 $this->installOverrides();
@@ -881,6 +886,10 @@ abstract class ModuleCore implements ModuleInterface
 
                 return false;
             }
+        } else {
+            $this->_errors = array_merge($moduleOverrideChecker->getErrors(), $this->_errors);
+
+            return false;
         }
 
         // Enable module in the shop where it is not enabled yet

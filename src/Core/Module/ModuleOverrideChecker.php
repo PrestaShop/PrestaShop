@@ -43,9 +43,15 @@ class ModuleOverrideChecker
      */
     private $errors = [];
 
-    public function __construct(TranslatorInterface $translator)
+    /**
+     * @var string
+     */
+    private $psOverrideDir;
+
+    public function __construct(TranslatorInterface $translator, string $psOverrideDir)
     {
         $this->translator = $translator;
+        $this->psOverrideDir = $psOverrideDir;
     }
 
     public function hasOverrideConflict(string $moduleOverridePath): bool
@@ -59,7 +65,7 @@ class ModuleOverrideChecker
         // module has overrides, let's check override files one by one
         foreach ($tools->scandir($moduleOverridePath, 'php', '', true) as $file) {
             $moduleOverrideFile = $moduleOverridePath . DIRECTORY_SEPARATOR . $file;
-            $existingOverrideFile = _PS_OVERRIDE_DIR_ . $file;
+            $existingOverrideFile = $this->psOverrideDir . $file;
 
             if (file_exists($existingOverrideFile)) {
                 if ($this->hasConflictingMethod($moduleOverrideFile, $existingOverrideFile)) {

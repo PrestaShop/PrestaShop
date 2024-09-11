@@ -78,3 +78,4 @@ services:
   PrestaShop\PrestaShop\Core\Module\ModuleOverrideChecker:
     arguments:
       - '@translator'
+      - !php/const _PS_OVERRIDE_DIR_
