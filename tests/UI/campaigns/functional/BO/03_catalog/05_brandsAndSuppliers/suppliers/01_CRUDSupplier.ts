@@ -7,13 +7,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import brandsPage from '@pages/BO/catalog/brands';
 import suppliersPage from '@pages/BO/catalog/suppliers';
-import addSupplierPage from '@pages/BO/catalog/suppliers/add';
 import viewSupplierPage from '@pages/BO/catalog/suppliers/view';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boSuppliersCreate,
   FakerSupplier,
   utilsFile,
   utilsPlaywright,
@@ -86,14 +86,14 @@ describe('BO - Catalog - Brands & Suppliers : CRUD supplier', async () => {
 
       await suppliersPage.goToAddNewSupplierPage(page);
 
-      const pageTitle = await addSupplierPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addSupplierPage.pageTitle);
+      const pageTitle = await boSuppliersCreate.getPageTitle(page);
+      expect(pageTitle).to.contains(boSuppliersCreate.pageTitle);
     });
 
     it('should create supplier', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createSupplier', baseContext);
 
-      const result = await addSupplierPage.createEditSupplier(page, createSupplierData);
+      const result = await boSuppliersCreate.createEditSupplier(page, createSupplierData);
       expect(result).to.equal(suppliersPage.successfulCreationMessage);
     });
   });
@@ -136,14 +136,14 @@ describe('BO - Catalog - Brands & Suppliers : CRUD supplier', async () => {
 
       await suppliersPage.goToEditSupplierPage(page, 1);
 
-      const pageTitle = await addSupplierPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addSupplierPage.pageTitleEdit);
+      const pageTitle = await boSuppliersCreate.getPageTitle(page);
+      expect(pageTitle).to.contains(boSuppliersCreate.pageTitleEdit);
     });
 
     it('should edit supplier', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateSupplier', baseContext);
 
-      const result = await addSupplierPage.createEditSupplier(page, editSupplierData);
+      const result = await boSuppliersCreate.createEditSupplier(page, editSupplierData);
       expect(result).to.equal(suppliersPage.successfulUpdateMessage);
     });
   });
