@@ -876,20 +876,22 @@ abstract class ModuleCore implements ModuleInterface
             $moduleOverrideChecker = new ModuleOverrideChecker($this->getTranslator(), _PS_OVERRIDE_DIR_);
         }
 
-        if ($this->getOverrides() != null && !$moduleOverrideChecker->hasOverrideConflict($this->getLocalPath() . 'override')) {
-            // Install overrides
-            try {
-                $this->installOverrides();
-            } catch (Exception $e) {
-                $this->_errors[] = Context::getContext()->getTranslator()->trans('Unable to install override: %s', [$e->getMessage()], 'Admin.Modules.Notification');
-                $this->uninstallOverrides();
+        if ($this->getOverrides() != null) {
+            if (!$moduleOverrideChecker->hasOverrideConflict($this->getLocalPath() . 'override')) {
+                // Install overrides
+                try {
+                    $this->installOverrides();
+                } catch (Exception $e) {
+                    $this->_errors[] = Context::getContext()->getTranslator()->trans('Unable to install override: %s', [$e->getMessage()], 'Admin.Modules.Notification');
+                    $this->uninstallOverrides();
+
+                    return false;
+                }
+            } else {
+                $this->_errors = array_merge($moduleOverrideChecker->getErrors(), $this->_errors);
 
                 return false;
             }
-        } else {
-            $this->_errors = array_merge($moduleOverrideChecker->getErrors(), $this->_errors);
-
-            return false;
         }
 
         // Enable module in the shop where it is not enabled yet
