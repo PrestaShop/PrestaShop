@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
-import customersPage from '@pages/BO/customers';
 import ordersPage from '@pages/BO/orders';
 import addOrderPage from '@pages/BO/orders/add';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
@@ -16,6 +15,7 @@ import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 import {
+  boCustomersPage,
   boDashboardPage,
   dataOrderStatuses,
   dataPaymentMethods,
@@ -105,25 +105,25 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
         boDashboardPage.customersParentLink,
         boDashboardPage.customersLink,
       );
-      await customersPage.closeSfToolBar(page);
+      await boCustomersPage.closeSfToolBar(page);
 
-      const pageTitle = await customersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(customersPage.pageTitle);
+      const pageTitle = await boCustomersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomersPage.pageTitle);
     });
 
     it('should filter list by email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
-      await customersPage.filterCustomers(page, 'input', 'email', newCustomer.email);
+      await boCustomersPage.filterCustomers(page, 'input', 'email', newCustomer.email);
 
-      const textResult = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
+      const textResult = await boCustomersPage.getTextColumnFromTableCustomers(page, 1, 'email');
       expect(textResult).to.contains(newCustomer.email);
     });
 
     it('should get the customer ID', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getCustomerID', baseContext);
 
-      customerID = parseInt(await customersPage.getTextColumnFromTableCustomers(page, 1, 'id_customer'), 10);
+      customerID = parseInt(await boCustomersPage.getTextColumnFromTableCustomers(page, 1, 'id_customer'), 10);
       expect(customerID).to.be.above(0);
     });
   });

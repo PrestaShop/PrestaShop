@@ -8,10 +8,10 @@ import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
 // Import BO pages
-import customersPage from '@pages/BO/customers';
 import viewCustomerPage from '@pages/BO/customers/view';
 
 import {
+  boCustomersPage,
   boDashboardPage,
   dataPaymentMethods,
   dataProducts,
@@ -92,33 +92,33 @@ describe('BO - Customers _ Customers : Transform guest to customer account', asy
         boDashboardPage.customersParentLink,
         boDashboardPage.customersLink,
       );
-      await customersPage.closeSfToolBar(page);
+      await boCustomersPage.closeSfToolBar(page);
 
-      const pageTitle = await customersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(customersPage.pageTitle);
+      const pageTitle = await boCustomersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomersPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAllFilter', baseContext);
 
-      numberOfCustomers = await customersPage.resetAndGetNumberOfLines(page);
+      numberOfCustomers = await boCustomersPage.resetAndGetNumberOfLines(page);
       expect(numberOfCustomers).to.be.above(1);
     });
 
     it('should filter customers group by guest', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterCustomer', baseContext);
 
-      await customersPage.resetFilter(page);
-      await customersPage.filterCustomers(page, 'input', 'default_group', 'Guest');
+      await boCustomersPage.resetFilter(page);
+      await boCustomersPage.filterCustomers(page, 'input', 'default_group', 'Guest');
 
-      const textEmail = await customersPage.getTextColumnFromTableCustomers(page, 1, 'default_group');
+      const textEmail = await boCustomersPage.getTextColumnFromTableCustomers(page, 1, 'default_group');
       expect(textEmail).to.eq('Guest');
     });
 
     it('should go to view customer page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToViewPage', baseContext);
 
-      await customersPage.goToViewCustomerPage(page, 1);
+      await boCustomersPage.goToViewCustomerPage(page, 1);
 
       const pageTitle = await viewCustomerPage.getPageTitle(page);
       expect(pageTitle).to.contains(viewCustomerPage.pageTitle(`${customerData.firstName[0]}. ${customerData.lastName}`));
@@ -149,23 +149,23 @@ describe('BO - Customers _ Customers : Transform guest to customer account', asy
 
       await boDashboardPage.goToSubMenu(page, boDashboardPage.customersParentLink, boDashboardPage.customersLink);
 
-      const pageTitle = await customersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(customersPage.pageTitle);
+      const pageTitle = await boCustomersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomersPage.pageTitle);
     });
 
     it('should check that the customers table is empty', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoRecordFound', baseContext);
 
-      const noRecordsFoundText = await customersPage.getTextWhenTableIsEmpty(page);
+      const noRecordsFoundText = await boCustomersPage.getTextWhenTableIsEmpty(page);
       expect(noRecordsFoundText).to.contains('No records found');
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
-      await customersPage.resetFilter(page);
+      await boCustomersPage.resetFilter(page);
 
-      const numberOfCustomers = await customersPage.resetAndGetNumberOfLines(page);
+      const numberOfCustomers = await boCustomersPage.resetAndGetNumberOfLines(page);
       expect(numberOfCustomers).to.be.at.least(0);
     });
   });

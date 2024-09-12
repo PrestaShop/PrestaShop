@@ -6,11 +6,11 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {createCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 
 // Import pages
-import customersPage from '@pages/BO/customers';
 import viewCustomerPage from '@pages/BO/customers/view';
 import editRulesPage from '@pages/BO/catalog/discounts/add';
 
 import {
+  boCustomersPage,
   boDashboardPage,
   dataCustomers,
   FakerCartRule,
@@ -75,26 +75,26 @@ describe('BO - Customers - Customers : View/edit voucher', async () => {
         boDashboardPage.customersParentLink,
         boDashboardPage.customersLink,
       );
-      await customersPage.closeSfToolBar(page);
+      await boCustomersPage.closeSfToolBar(page);
 
-      const pageTitle = await customersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(customersPage.pageTitle);
+      const pageTitle = await boCustomersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomersPage.pageTitle);
     });
 
     it(`should filter list by email '${dataCustomers.johnDoe.email}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToViewCreatedCustomer', baseContext);
 
-      await customersPage.resetFilter(page);
-      await customersPage.filterCustomers(page, 'input', 'email', dataCustomers.johnDoe.email);
+      await boCustomersPage.resetFilter(page);
+      await boCustomersPage.filterCustomers(page, 'input', 'email', dataCustomers.johnDoe.email);
 
-      const textEmail = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
+      const textEmail = await boCustomersPage.getTextColumnFromTableCustomers(page, 1, 'email');
       expect(textEmail).to.contains(dataCustomers.johnDoe.email);
     });
 
     it('should click on view customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToViewCustomerPageAfterCreateCustomer', baseContext);
 
-      await customersPage.goToViewCustomerPage(page, 1);
+      await boCustomersPage.goToViewCustomerPage(page, 1);
 
       const pageTitle = await viewCustomerPage.getPageTitle(page);
       expect(pageTitle).to.contains(viewCustomerPage.pageTitle('J. DOE'));
@@ -150,16 +150,16 @@ describe('BO - Customers - Customers : View/edit voucher', async () => {
         boDashboardPage.customersLink,
       );
 
-      const pageTitle = await customersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(customersPage.pageTitle);
+      const pageTitle = await boCustomersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomersPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
-      await customersPage.resetFilter(page);
+      await boCustomersPage.resetFilter(page);
 
-      const numberOfCustomersAfterDelete = await customersPage.resetAndGetNumberOfLines(page);
+      const numberOfCustomersAfterDelete = await boCustomersPage.resetAndGetNumberOfLines(page);
       expect(numberOfCustomersAfterDelete).to.be.at.least(0);
     });
   });

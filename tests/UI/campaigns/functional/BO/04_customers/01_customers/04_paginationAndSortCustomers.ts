@@ -6,15 +6,13 @@ import importFileTest from '@commonTests/BO/advancedParameters/importFile';
 import {bulkDeleteCustomersTest} from '@commonTests/BO/customers/customer';
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import customersPage from '@pages/BO/customers';
-
 // Import data
 import ImportCustomers from '@data/import/customers';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 import {
+  boCustomersPage,
   boDashboardPage,
   utilsCore,
   utilsFile,
@@ -73,14 +71,14 @@ describe('BO - Customers - Customers : Pagination and sort customers table', asy
       );
       await boDashboardPage.closeSfToolBar(page);
 
-      const pageTitle = await customersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(customersPage.pageTitle);
+      const pageTitle = await boCustomersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomersPage.pageTitle);
     });
 
     it('should reset all filters and get number of customers in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
-      numberOfCustomers = await customersPage.resetAndGetNumberOfLines(page);
+      numberOfCustomers = await boCustomersPage.resetAndGetNumberOfLines(page);
       expect(numberOfCustomers).to.be.above(0);
     });
   });
@@ -90,28 +88,28 @@ describe('BO - Customers - Customers : Pagination and sort customers table', asy
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
-      const paginationNumber = await customersPage.selectPaginationLimit(page, 10);
+      const paginationNumber = await boCustomersPage.selectPaginationLimit(page, 10);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await customersPage.paginationNext(page);
+      const paginationNumber = await boCustomersPage.paginationNext(page);
       expect(paginationNumber).to.contains('(page 2 / 2)');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await customersPage.paginationPrevious(page);
+      const paginationNumber = await boCustomersPage.paginationPrevious(page);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
-      const paginationNumber = await customersPage.selectPaginationLimit(page, 50);
+      const paginationNumber = await boCustomersPage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
@@ -163,11 +161,11 @@ describe('BO - Customers - Customers : Pagination and sort customers table', asy
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await customersPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const nonSortedTable = await boCustomersPage.getAllRowsColumnContent(page, test.args.sortBy);
 
-        await customersPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+        await boCustomersPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        const sortedTable = await customersPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await boCustomersPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isNumber) {
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseInt(text, 10));

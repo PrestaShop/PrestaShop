@@ -10,11 +10,11 @@ import ordersPage from '@pages/BO/orders';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 
 // Import BO pages
-import customersPage from '@pages/BO/customers';
 import addressesPage from '@pages/BO/customers/addresses';
 import viewCustomerPage from '@pages/BO/customers/view';
 
 import {
+  boCustomersPage,
   boDashboardPage,
   dataCustomers,
   dataPaymentMethods,
@@ -112,25 +112,25 @@ describe('BO - Orders - View and edit order : Check and edit customer block', as
         boDashboardPage.customersParentLink,
         boDashboardPage.customersLink,
       );
-      await customersPage.closeSfToolBar(page);
+      await boCustomersPage.closeSfToolBar(page);
 
-      const pageTitle = await customersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(customersPage.pageTitle);
+      const pageTitle = await boCustomersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomersPage.pageTitle);
     });
 
     it('should filter list by email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
-      await customersPage.filterCustomers(page, 'input', 'email', customerData.email);
+      await boCustomersPage.filterCustomers(page, 'input', 'email', customerData.email);
 
-      const textResult = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
+      const textResult = await boCustomersPage.getTextColumnFromTableCustomers(page, 1, 'email');
       expect(textResult).to.contains(customerData.email);
     });
 
     it('should get the customer ID', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getCustomerID', baseContext);
 
-      customerID = parseInt(await customersPage.getTextColumnFromTableCustomers(page, 1, 'id_customer'), 10);
+      customerID = parseInt(await boCustomersPage.getTextColumnFromTableCustomers(page, 1, 'id_customer'), 10);
       expect(customerID).to.be.above(0);
     });
 
