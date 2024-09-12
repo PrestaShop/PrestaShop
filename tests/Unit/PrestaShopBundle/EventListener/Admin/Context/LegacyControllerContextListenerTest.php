@@ -90,7 +90,8 @@ class LegacyControllerContextListenerTest extends ContextEventListenerTestCase
             $this->createMock(EmployeeContext::class),
             ['AdminCarts'],
             $this->createMock(TabRepository::class),
-            $this->createMock(ContainerInterface::class)
+            $this->createMock(ContainerInterface::class),
+            $this->mockConfiguration(),
         );
     }
 }

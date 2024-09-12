@@ -60,6 +60,7 @@ class LegacyControllerContextBuilderTest extends TestCase
             ['AdminCarts'],
             $this->mockTabRepository(),
             $this->createMock(ContainerInterface::class),
+            $this->mockConfiguration()
         );
 
         $builder->setControllerName($controllerName);
@@ -193,6 +194,7 @@ class LegacyControllerContextBuilderTest extends TestCase
             ['AdminCarts'],
             $tabRepository,
             $this->createMock(ContainerInterface::class),
+            $this->mockConfiguration(),
         );
 
         // We don't call setControllerName so the builder falls back on AdminNotFound

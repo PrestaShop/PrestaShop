@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Context;
 
+use Language;
 use Media;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Traversable;
@@ -101,6 +102,8 @@ class LegacyControllerContext
      */
     public array|Traversable $page_header_toolbar_btn = [];
 
+    protected array $languages = [];
+
     /**
      * @param ContainerInterface $container Dependency container
      * @param string $controller_name Current controller name without suffix
@@ -123,11 +126,12 @@ class LegacyControllerContext
         public readonly string $override_folder,
         public readonly string $currentIndex,
         public readonly string $table,
+        protected readonly int $employeeLanguageId,
     ) {
         $this->php_self = $this->controller_name;
     }
 
-    public function addCSS($css_uri, $css_media_type = 'all', $offset = null, $check_path = true): void
+    public function addCSS(array|string $css_uri, string $css_media_type = 'all', ?int $offset = null, bool $check_path = true): void
     {
         if (!is_array($css_uri)) {
             $css_uri = [$css_uri];
@@ -160,7 +164,7 @@ class LegacyControllerContext
         }
     }
 
-    public function addJS($js_uri, $check_path = true): void
+    public function addJS(array|string $js_uri, bool $check_path = true): void
     {
         if (!is_array($js_uri)) {
             $js_uri = [$js_uri];
@@ -218,6 +222,20 @@ class LegacyControllerContext
                 $this->addCSS(key($plugin_path['css']), 'all', null, false);
             }
         }
+    }
+
+    public function getLanguages(): array
+    {
+        if (!empty($this->languages)) {
+            return $this->languages;
+        }
+
+        $this->languages = Language::getLanguages(false);
+        foreach ($this->languages as $k => $language) {
+            $this->languages[$k]['is_default'] = (int) ($language['id_lang'] == $this->employeeLanguageId);
+        }
+
+        return $this->languages;
     }
 
     public function getContainer(): ContainerInterface

@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Context;
 
 use Doctrine\ORM\NoResultException;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\Inflector;
 use PrestaShopBundle\Entity\Repository\TabRepository;
@@ -45,6 +46,7 @@ class LegacyControllerContextBuilder
         private readonly array $controllersLockedToAllShopContext,
         private readonly TabRepository $tabRepository,
         private readonly ContainerInterface $container,
+        private readonly ConfigurationInterface $configuration,
     ) {
     }
 
@@ -53,8 +55,12 @@ class LegacyControllerContextBuilder
         $multiShopContext = $this->getMultiShopContext($this->getControllerName());
         $id = $this->getTabId($this->getControllerName());
         $employeeId = '';
+        $employeeLanguageId = (int) $this->configuration->get('PS_LANG_DEFAULT');
         if ($this->employeeContext->getEmployee()) {
             $employeeId = $this->employeeContext->getEmployee()->getId();
+            if ($this->configuration->get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG')) {
+                $employeeLanguageId = $this->employeeContext->getEmployee()->getLanguageId();
+            }
         }
         $token = Tools::getAdminToken($this->getControllerName() . $id . $employeeId);
         $overrideFolder = Tools::toUnderscoreCase(substr($this->getControllerName(), 5)) . '/';
@@ -73,6 +79,7 @@ class LegacyControllerContextBuilder
             $overrideFolder,
             $this->getCurrentIndex(),
             $table,
+            $employeeLanguageId,
         );
     }
 

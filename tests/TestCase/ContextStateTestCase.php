@@ -130,6 +130,7 @@ abstract class ContextStateTestCase extends TestCase
                 '',
                 'index.php',
                 'configuration',
+                1,
             ])
         ;
 
