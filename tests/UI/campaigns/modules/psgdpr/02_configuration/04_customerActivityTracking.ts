@@ -7,9 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import FO pages
 import {createAccountPage as foCreateAccountPage} from '@pages/FO/classic/myAccount/add';
-// Import BO pages
-import psGdpr from '@pages/BO/modules/psGdpr';
-import psGdprTabCustomerActivity from '@pages/BO/modules/psGdpr/tabCustomerActivity';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -22,6 +19,8 @@ import {
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
+  modPsGdprBoMain,
+  modPsGdprBoTabCustomerActivity,
   utilsCore,
   utilsFile,
   utilsPlaywright,
@@ -75,21 +74,21 @@ describe('BO - Modules - GDPR: Customer activity tracking', async () => {
 
       await boModuleManagerPage.goToConfigurationPage(page, dataModules.psGdpr.tag);
 
-      const pageTitle = await psGdpr.getPageSubtitle(page);
-      expect(pageTitle).to.eq(psGdpr.pageSubTitle);
+      const pageTitle = await modPsGdprBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.eq(modPsGdprBoMain.pageSubTitle);
     });
 
     it('should display the tab "Customer activity tracking"', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'displayTabCustomerActivity', baseContext);
 
-      const isTabVisible = await psGdpr.goToTab(page, 4);
+      const isTabVisible = await modPsGdprBoMain.goToTab(page, 4);
       expect(isTabVisible).to.be.equals(true);
     });
 
     it('should check the Customer Activity list', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerActivityList', baseContext);
 
-      const numRows = await psGdprTabCustomerActivity.getNumberOfElementInGrid(page);
+      const numRows = await modPsGdprBoTabCustomerActivity.getNumberOfElementInGrid(page);
       expect(numRows).to.equal(1);
     });
 
@@ -97,7 +96,7 @@ describe('BO - Modules - GDPR: Customer activity tracking', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
       // View my shop and get the new tab
-      page = await psGdprTabCustomerActivity.viewMyShop(page);
+      page = await modPsGdprBoTabCustomerActivity.viewMyShop(page);
 
       const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage).to.equal(true);
@@ -174,21 +173,21 @@ describe('BO - Modules - GDPR: Customer activity tracking', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerActivityListAfterRequest', baseContext);
 
       page = await foClassicHomePage.changePage(browserContext, 0);
-      await psGdprTabCustomerActivity.reloadPage(page);
+      await modPsGdprBoTabCustomerActivity.reloadPage(page);
 
-      const numRows = await psGdprTabCustomerActivity.getNumberOfElementInGrid(page);
+      const numRows = await modPsGdprBoTabCustomerActivity.getNumberOfElementInGrid(page);
       expect(numRows).to.equal(3);
 
-      const row1Name = await psGdprTabCustomerActivity.getTextColumnFromTable(page, 1, 1);
+      const row1Name = await modPsGdprBoTabCustomerActivity.getTextColumnFromTable(page, 1, 1);
       expect(row1Name).to.equal(`${dataCustomers.johnDoe.firstName} ${dataCustomers.johnDoe.lastName}`);
 
-      const row1Type = await psGdprTabCustomerActivity.getTextColumnFromTable(page, 1, 2);
+      const row1Type = await modPsGdprBoTabCustomerActivity.getTextColumnFromTable(page, 1, 2);
       expect(row1Type).to.equal('Accessibility (pdf)');
 
-      const row2Name = await psGdprTabCustomerActivity.getTextColumnFromTable(page, 2, 1);
+      const row2Name = await modPsGdprBoTabCustomerActivity.getTextColumnFromTable(page, 2, 1);
       expect(row2Name).to.equal(`${dataCustomers.johnDoe.firstName} ${dataCustomers.johnDoe.lastName}`);
 
-      const row2Type = await psGdprTabCustomerActivity.getTextColumnFromTable(page, 2, 2);
+      const row2Type = await modPsGdprBoTabCustomerActivity.getTextColumnFromTable(page, 2, 2);
       expect(row2Type).to.equal('Accessibility (csv)');
     });
 
@@ -224,15 +223,15 @@ describe('BO - Modules - GDPR: Customer activity tracking', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerActivityListAfterRegistration', baseContext);
 
       page = await foClassicHomePage.changePage(browserContext, 0);
-      await psGdprTabCustomerActivity.reloadPage(page);
+      await modPsGdprBoTabCustomerActivity.reloadPage(page);
 
-      const numRows = await psGdprTabCustomerActivity.getNumberOfElementInGrid(page);
+      const numRows = await modPsGdprBoTabCustomerActivity.getNumberOfElementInGrid(page);
       expect(numRows).to.equal(4);
 
-      const row1Name = await psGdprTabCustomerActivity.getTextColumnFromTable(page, 1, 1);
+      const row1Name = await modPsGdprBoTabCustomerActivity.getTextColumnFromTable(page, 1, 1);
       expect(row1Name).to.equal(`${customerData.firstName} ${customerData.lastName}`);
 
-      const row1Type = await psGdprTabCustomerActivity.getTextColumnFromTable(page, 1, 2);
+      const row1Type = await modPsGdprBoTabCustomerActivity.getTextColumnFromTable(page, 1, 2);
       expect(row1Type).to.equal('Consent confirmation');
     });
 
@@ -271,9 +270,9 @@ describe('BO - Modules - GDPR: Customer activity tracking', async () => {
       it(`should sort by ${arg.sortName} ${arg.sortOrder.toUpperCase()}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `sort_${arg.sortColNth}_${arg.sortOrder}`, baseContext);
 
-        const nonSortedTable = await psGdprTabCustomerActivity.getAllRowsColumnContent(page, arg.sortColNth);
-        await psGdprTabCustomerActivity.sortTable(page, arg.sortColNth, arg.sortOrder);
-        const sortedTable = await psGdprTabCustomerActivity.getAllRowsColumnContent(page, arg.sortColNth);
+        const nonSortedTable = await modPsGdprBoTabCustomerActivity.getAllRowsColumnContent(page, arg.sortColNth);
+        await modPsGdprBoTabCustomerActivity.sortTable(page, arg.sortColNth, arg.sortOrder);
+        const sortedTable = await modPsGdprBoTabCustomerActivity.getAllRowsColumnContent(page, arg.sortColNth);
 
         const expectedResult: string[] = await utilsCore.sortArray(nonSortedTable);
 
@@ -292,36 +291,36 @@ describe('BO - Modules - GDPR: Customer activity tracking', async () => {
           + '\n'
           + 'Client name/ID\tType of request\tSubmission date\n';
 
-      const rowsNumber: number = await psGdprTabCustomerActivity.getNumberOfElementInGrid(page);
+      const rowsNumber: number = await modPsGdprBoTabCustomerActivity.getNumberOfElementInGrid(page);
 
       for (let i = 1; i <= rowsNumber; i++) {
-        clipboardExpected += await psGdprTabCustomerActivity.getTextColumnFromTable(page, i, 1);
+        clipboardExpected += await modPsGdprBoTabCustomerActivity.getTextColumnFromTable(page, i, 1);
         clipboardExpected += '\t';
-        clipboardExpected += await psGdprTabCustomerActivity.getTextColumnFromTable(page, i, 2);
+        clipboardExpected += await modPsGdprBoTabCustomerActivity.getTextColumnFromTable(page, i, 2);
         clipboardExpected += '\t';
-        clipboardExpected += await psGdprTabCustomerActivity.getTextColumnFromTable(page, i, 3);
+        clipboardExpected += await modPsGdprBoTabCustomerActivity.getTextColumnFromTable(page, i, 3);
         if (i < rowsNumber) {
           clipboardExpected += '\n';
         }
       }
 
-      const result = await psGdprTabCustomerActivity.copyTable(page);
+      const result = await modPsGdprBoTabCustomerActivity.copyTable(page);
       expect(result).to.be.equal(clipboardExpected);
     });
 
     it('should click on the "Excel" button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkExcelButton', baseContext);
 
-      const filePath = await psGdprTabCustomerActivity.exportTable(page, 'excel');
+      const filePath = await modPsGdprBoTabCustomerActivity.exportTable(page, 'excel');
 
       const hasFoundFile = await utilsFile.doesFileExist(filePath);
       expect(hasFoundFile).to.equals(true);
 
-      const rowsNumber: number = await psGdprTabCustomerActivity.getNumberOfElementInGrid(page);
+      const rowsNumber: number = await modPsGdprBoTabCustomerActivity.getNumberOfElementInGrid(page);
 
       for (let iRow = 1; iRow <= rowsNumber; iRow++) {
         for (let iCol = 1; iCol <= 3; iCol++) {
-          const colContent = await psGdprTabCustomerActivity.getTextColumnFromTable(page, iRow, iCol);
+          const colContent = await modPsGdprBoTabCustomerActivity.getTextColumnFromTable(page, iRow, iCol);
           const cellContent = await utilsFile.getTextInXLSX(filePath, 2 + iRow, iCol);
           expect(colContent).to.equal(cellContent);
         }
@@ -331,12 +330,12 @@ describe('BO - Modules - GDPR: Customer activity tracking', async () => {
     it('should click on the "CSV" button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCSVButton', baseContext);
 
-      const filePath = await psGdprTabCustomerActivity.exportTable(page, 'csv');
+      const filePath = await modPsGdprBoTabCustomerActivity.exportTable(page, 'csv');
 
       const hasFoundFile = await utilsFile.doesFileExist(filePath);
       expect(hasFoundFile).to.equals(true);
 
-      const rowsNumber: number = await psGdprTabCustomerActivity.getNumberOfElementInGrid(page);
+      const rowsNumber: number = await modPsGdprBoTabCustomerActivity.getNumberOfElementInGrid(page);
 
       const hasHeaders = await utilsFile.isTextInFile(filePath, '"Client name/ID","Type of request","Submission date"');
       expect(hasHeaders).to.equal(true);
@@ -344,9 +343,9 @@ describe('BO - Modules - GDPR: Customer activity tracking', async () => {
       for (let i = 1; i <= rowsNumber; i++) {
         const hasRow = await utilsFile.isTextInFile(
           filePath,
-          `"${await psGdprTabCustomerActivity.getTextColumnFromTable(page, i, 1)}",`
-          + `"${await psGdprTabCustomerActivity.getTextColumnFromTable(page, i, 2)}",`
-          + `"${await psGdprTabCustomerActivity.getTextColumnFromTable(page, i, 3)}"`,
+          `"${await modPsGdprBoTabCustomerActivity.getTextColumnFromTable(page, i, 1)}",`
+          + `"${await modPsGdprBoTabCustomerActivity.getTextColumnFromTable(page, i, 2)}",`
+          + `"${await modPsGdprBoTabCustomerActivity.getTextColumnFromTable(page, i, 3)}"`,
         );
         expect(hasRow).to.equal(true);
       }
@@ -355,12 +354,12 @@ describe('BO - Modules - GDPR: Customer activity tracking', async () => {
     it('should click on the "PDF" button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPDFButton', baseContext);
 
-      const filePath = await psGdprTabCustomerActivity.exportTable(page, 'pdf');
+      const filePath = await modPsGdprBoTabCustomerActivity.exportTable(page, 'pdf');
 
       const hasFoundFile = await utilsFile.doesFileExist(filePath);
       expect(hasFoundFile).to.equals(true);
 
-      const rowsNumber: number = await psGdprTabCustomerActivity.getNumberOfElementInGrid(page);
+      const rowsNumber: number = await modPsGdprBoTabCustomerActivity.getNumberOfElementInGrid(page);
 
       const hasHeaders = await utilsFile.isTextInPDF(filePath, 'Client, ,name/,ID, ,Type, ,of, ,request, ,Submission, ,date');
       expect(hasHeaders).to.equal(true);
@@ -368,9 +367,9 @@ describe('BO - Modules - GDPR: Customer activity tracking', async () => {
       for (let i = 1; i <= rowsNumber; i++) {
         const hasRow = await utilsFile.isTextInPDF(
           filePath,
-          `${(await psGdprTabCustomerActivity.getTextColumnFromTable(page, i, 1)).replace(' ', ', ,')}, ,`
-          + `${(await psGdprTabCustomerActivity.getTextColumnFromTable(page, i, 2)).replace(' ', ', ,')}, ,`
-          + `${(await psGdprTabCustomerActivity.getTextColumnFromTable(page, i, 3)).replace(' ', ', ,')}`,
+          `${(await modPsGdprBoTabCustomerActivity.getTextColumnFromTable(page, i, 1)).replace(' ', ', ,')}, ,`
+          + `${(await modPsGdprBoTabCustomerActivity.getTextColumnFromTable(page, i, 2)).replace(' ', ', ,')}, ,`
+          + `${(await modPsGdprBoTabCustomerActivity.getTextColumnFromTable(page, i, 3)).replace(' ', ', ,')}`,
         );
         expect(hasRow).to.equal(true);
       }
