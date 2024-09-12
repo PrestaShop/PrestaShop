@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
-import carriersPage from '@pages/BO/shipping/carriers';
 import preferencesPage from '@pages/BO/shipping/preferences';
 
 // Import FO pages
@@ -16,6 +15,7 @@ import type {BrowserContext, Page} from 'playwright';
 
 // Import data
 import {
+  boCarriersPage,
   boDashboardPage,
   dataCarriers,
   dataCustomers,
@@ -132,29 +132,29 @@ describe('BO - Shipping - Carriers : Change carrier position', async () => {
         boDashboardPage.carriersLink,
       );
 
-      const pageTitle = await carriersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(carriersPage.pageTitle);
+      const pageTitle = await boCarriersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCarriersPage.pageTitle);
     });
 
     it('should change first carrier position to 2', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeCarrierPosition', baseContext);
 
       // Get first row carrier name
-      const firstRowCarrierName = await carriersPage.getTextColumn(page, 1, 'name');
+      const firstRowCarrierName = await boCarriersPage.getTextColumn(page, 1, 'name');
 
       // Change position and check successful message
-      const textResult = await carriersPage.changePosition(page, 1, 2);
-      expect(textResult, 'Unable to change position').to.contains(carriersPage.successfulUpdateMessage);
+      const textResult = await boCarriersPage.changePosition(page, 1, 2);
+      expect(textResult, 'Unable to change position').to.contains(boCarriersPage.successfulUpdateMessage);
 
       // Get second row carrier name and check if is equal the first row carrier name before changing position
-      const secondRowCarrierName = await carriersPage.getTextColumn(page, 2, 'name');
+      const secondRowCarrierName = await boCarriersPage.getTextColumn(page, 2, 'name');
       expect(secondRowCarrierName, 'Changing position was done wrongly').to.equal(firstRowCarrierName);
     });
 
     it('should go back to FO > Checkout page and check the carriers position', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToFO', baseContext);
 
-      page = await carriersPage.changePage(browserContext, 0);
+      page = await boCarriersPage.changePage(browserContext, 0);
 
       await checkoutPage.reloadPage(page);
 
@@ -169,22 +169,22 @@ describe('BO - Shipping - Carriers : Change carrier position', async () => {
 
       page = await checkoutPage.changePage(browserContext, 1);
 
-      const pageTitle = await carriersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(carriersPage.pageTitle);
+      const pageTitle = await boCarriersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCarriersPage.pageTitle);
     });
 
     it('should reset second carrier position to 1', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetCarrierPosition', baseContext);
 
       // Get second row carrier name
-      const secondRowCarrierName = await carriersPage.getTextColumn(page, 2, 'name');
+      const secondRowCarrierName = await boCarriersPage.getTextColumn(page, 2, 'name');
 
       // Change position and check successful message
-      const textResult = await carriersPage.changePosition(page, 2, 1);
-      expect(textResult, 'Unable to change position').to.contains(carriersPage.successfulUpdateMessage);
+      const textResult = await boCarriersPage.changePosition(page, 2, 1);
+      expect(textResult, 'Unable to change position').to.contains(boCarriersPage.successfulUpdateMessage);
 
       // Get first row carrier name and check if is equal the first row carrier name before changing position
-      const firstRowCarrierName = await carriersPage.getTextColumn(page, 1, 'name');
+      const firstRowCarrierName = await boCarriersPage.getTextColumn(page, 1, 'name');
       expect(firstRowCarrierName, 'Changing position was done wrongly').to.equal(secondRowCarrierName);
     });
 
