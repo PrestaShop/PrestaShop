@@ -1065,10 +1065,6 @@ abstract class ModuleCore implements ModuleInterface
 
                 return false;
             }
-        } else {
-            $this->_errors = array_merge($moduleOverrideChecker->getErrors(), $this->_errors);
-
-            return false;
         }
 
         // Enable module in the shop where it is not enabled yet
