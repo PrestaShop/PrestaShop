@@ -26,5 +26,7 @@
     <feature_flag id="store" name="store" type="env,dotenv,db" label_wording="Store" label_domain="Admin.Advparameters.Feature" description_wording="Enable / Disable the store page." description_domain="Admin.Advparameters.Help" state="0" stability="beta" />
     <feature_flag id="search_conf" name="search_conf" type="env,dotenv,db" label_wording="Search configuration" label_domain="Admin.Advparameters.Feature" description_wording="Enable / Disable the search configuration page." description_domain="Admin.Advparameters.Help" state="0" stability="beta" />
     <feature_flag id="merchandise_return" name="merchandise_return" type="env,dotenv,db" label_wording="Merchandise return" label_domain="Admin.Advparameters.Feature" description_wording="Enable / Disable the merchandise return page." description_domain="Admin.Advparameters.Help" state="0" stability="beta" />
+    <feature_flag id="module_configuration" name="module_configuration" type="env,dotenv,db" label_wording="Module configuration" label_domain="Admin.Advparameters.Feature" description_wording="Enable / Disable the module configuration page." description_domain="Admin.Advparameters.Help" state="1" stability="beta" />
+
   </entities>
 </entity_feature_flag>
