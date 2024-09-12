@@ -49,13 +49,10 @@
           {{ $t('modal.overlappingAlert') }}
         </div>
         <div class="table-container">
-          <table
-            class="table table-carrier-ranges-modal"
-            @drop="dragDrop"
-          >
+          <table class="table table-carrier-ranges-modal">
             <thead>
               <tr>
-                <th/>
+                <th />
                 <th>{{ $t('modal.col.from') }}</th>
                 <th>{{ $t('modal.col.to') }} </th>
                 <th>{{ $t('modal.col.action') }}</th>
@@ -64,22 +61,10 @@
             <tbody :key="refreshKey">
               <template
                 :key="i"
-                v-for="r,i in ranges"
+                v-for="r, i in ranges"
               >
-                <tr
-                  :data-row="i"
-                  draggable="true"
-                  @dragstart="dragStart(i)"
-                  @dragover.stop.prevent="(e) => dragOver(e, i)"
-                  @dragend="dragEnd"
-                >
+                <tr :data-row="i">
                   <td>
-                    <button
-                      type="button"
-                      class="btn-drag"
-                    >
-                      <i class="material-icons">drag_indicator</i>
-                    </button>
                     <button
                       type="button"
                       class="btn-add"
@@ -152,7 +137,6 @@
     isModalShown: boolean, // define if the modal is shown
     ranges: Range[], // define the ranges currently displayed
     savedRanges: Range[], // define the ranges saved before the changes
-    dragIndex: null|number, // store the index of the range being dragged
     refreshKey: number, // force the refresh of the table by incrementing this key
     errors: boolean, // define if there are errors in the ranges
     overlappingAlert: boolean, // define if there are overlapping ranges (and display an alert)
@@ -167,7 +151,6 @@
         isModalShown: false,
         ranges: [],
         savedRanges: [],
-        dragIndex: null,
         refreshKey: 0,
         errors: false,
         overlappingAlert: false,
@@ -237,7 +220,7 @@
         }
       },
       validateChanges() {
-        const table = <HTMLElement> document.querySelector('.table-carrier-ranges-modal');
+        const table = <HTMLElement>document.querySelector('.table-carrier-ranges-modal');
         // Reset errors
         this.errors = false;
         this.overlappingAlert = false;
@@ -250,7 +233,7 @@
         this.ranges.sort((a, b) => (a.from || 0) - (b.from || 0));
 
         // We check ranges
-        let saveMax: null|number = null;
+        let saveMax: null | number = null;
         this.ranges.forEach((range, index) => {
           // Check if all fields are filled
           if (range.from === null) {
@@ -293,7 +276,7 @@
           saveMax = range.to;
         });
       },
-      addRange(index: undefined|number) {
+      addRange(index: undefined | number) {
         // Add new range at the index specified, at the bottom if not specified
         // (with "from" already set to the previous "to")
         if (index === undefined) {
@@ -310,82 +293,40 @@
           this.ranges.push({from: null, to: null});
         }
       },
-      dragStart(rangeIndex: number) {
-        // We save the current range index to know which one is being dragged
-        this.dragIndex = rangeIndex;
-      },
-      dragOver(event: DragEvent, rangeIndex: number) {
-        // We retrieve the row being dragged and the row being hovered
-        const table = <HTMLElement> document.querySelector('.table-carrier-ranges-modal');
-        const row = <HTMLElement> table.querySelector(`tr[data-row="${this.dragIndex}"]`);
-        const rowHover = <HTMLElement> table.querySelector(`tr[data-row="${rangeIndex}"]`);
-
-        // We move the dragged row before or after the hovered row depending on the position of the mouse on it
-        if (row !== null && rowHover !== null) {
-          if (event.offsetY > rowHover.offsetHeight / 2) {
-            rowHover.parentNode?.insertBefore(row, rowHover.nextSibling);
-          } else {
-            rowHover.parentNode?.insertBefore(row, rowHover);
-          }
-        }
-      },
-      dragEnd() {
-        // We reorder the ranges according to the new order when the drag ending
-        const rangesNewOrder:Range[] = [];
-        const rows = document.querySelectorAll('.table-carrier-ranges-modal tbody tr[data-row]');
-        rows.forEach((row) => {
-          const rowId = row.getAttribute('data-row');
-
-          if (rowId !== null) {
-            rangesNewOrder.push(this.ranges[parseInt(rowId, 10)]);
-          }
-        });
-
-        // We update the ranges and +1 to the refreshKey to force the refresh
-        this.ranges.splice(0, this.ranges.length, ...rangesNewOrder);
-        this.dragIndex = null;
-        this.refreshKey += 1;
-      },
     },
   });
 </script>
 
 <style lang="scss" type="text/scss" scoped>
-  @import '~@scss/config/_settings.scss';
+@import '~@scss/config/_settings.scss';
 
-  .modal {
-    .modal-footer {
-      justify-content: space-between;
-    }
+.modal {
+  .modal-footer {
+    justify-content: space-between;
+  }
 
-    .table {
-      margin-bottom: 0;
-      border-bottom: 0;
+  .table {
+    margin-bottom: 0;
+    border-bottom: 0;
 
-      tr td {
-        border: 0;
-      }
-    }
-
-    .btn-delete, .btn-drag, .btn-add {
-      border: none;
-      background: none;
-
-      i {
-        font-size: 1.2em;
-      }
-    }
-
-    .btn-drag {
-      cursor: move!important;
-      outline: none;
-      user-select: none;
-    }
-
-    .table-container {
-      max-height: 60vh;
-      overflow-y: auto;
+    tr td {
+      border: 0;
     }
   }
 
+  .btn-delete,
+  .btn-add {
+    border: none;
+    background: none;
+
+    i {
+      font-size: 1.2em;
+    }
+  }
+
+  .table-container {
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+}
 </style>

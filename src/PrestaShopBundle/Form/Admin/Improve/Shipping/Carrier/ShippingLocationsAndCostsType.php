@@ -30,8 +30,9 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
-use PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\Type\CarrierRangesControlType;
+use PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\Type\CarrierRangesType;
 use PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\Type\CostsZoneType;
+use PrestaShopBundle\Form\Admin\Type\MultipleZoneChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TaxGroupChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -58,6 +59,24 @@ class ShippingLocationsAndCostsType extends TranslatorAwareType
         parent::buildForm($builder, $options);
 
         $builder
+            ->add('zones', MultipleZoneChoiceType::class, [
+                'label' => $this->trans('Zones', 'Admin.Shipping.Feature'),
+                'label_help_box' => $this->trans('Zones that the carrier can handle', 'Admin.Shipping.Help'),
+                'required' => true,
+                'multiple' => true,
+                'external_link' => [
+                    'text' => $this->trans('[1]Manage locations[/1]', 'Admin.Shipping.Feature'),
+                    'position' => 'below',
+                    'href' => $this->router->generate('admin_zones_index'),
+                    'attr' => [
+                        'target' => '_blank',
+                    ],
+                ],
+                'attr' => [
+                    'data-placeholder' => $this->trans('Zones', 'Admin.Shipping.Feature'),
+                    'class' => 'select2 js-multiple-zone-choice carrier-ranges-control',
+                ],
+            ])
             ->add('is_free', SwitchType::class, [
                 'label' => $this->trans('Free Shipping', 'Admin.Shipping.Feature'),
             ])
@@ -108,7 +127,13 @@ class ShippingLocationsAndCostsType extends TranslatorAwareType
                 ],
                 'default_empty_data' => OutOfRangeBehavior::USE_HIGHEST_RANGE,
             ])
-            ->add('ranges_costs_control', CarrierRangesControlType::class)
+            ->add('ranges', CarrierRangesType::class, [
+                'label' => $this->trans('Set ranges and prices', 'Admin.Shipping.Feature'),
+                'required' => true,
+                'row_attr' => [
+                    'class' => 'carrier-ranges-edit-row',
+                ],
+            ])
             ->add('ranges_costs', CollectionType::class, [
                 'prototype_name' => '__zone__',
                 'entry_type' => CostsZoneType::class,

@@ -105,6 +105,8 @@ class AddCarrierHandler implements AddCarrierHandlerInterface
             );
         }
 
+        $this->carrierRepository->updateAssociatedZones($carrierId, $command->getZones());
+
         return $carrierId;
     }
 }

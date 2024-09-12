@@ -6,7 +6,7 @@ Feature: Update product shipping options from Back Office (BO)
   As a BO user I must be able to update product shipping options from BO
 
   Scenario: I update product shipping
-    Given I add product "product1" with following information:
+    And I add product "product1" with following information:
       | name[en-US] | Last samurai dvd |
       | type        | standard         |
     And product product1 should have following shipping information:

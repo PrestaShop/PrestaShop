@@ -23,9 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import NavbarHandler from '@components/navbar-handler';
 import ChoiceTable from '@js/components/choice-table';
 import CarrierFormManager from '@pages/carrier/form/carrier-form-manager';
 import CarrierRanges from '@pages/carrier/form/carrier-range-modal';
+import CarrierFormMap from './carrier-form-map';
 
 $(() => {
   // Initialize components
@@ -39,6 +41,8 @@ $(() => {
   new CarrierRanges(window.prestashop.instance.eventEmitter);
 
   new ChoiceTable();
+
+  new NavbarHandler($(CarrierFormMap.navigationBar));
 
   // Initialize the carrier form manager
   new CarrierFormManager(window.prestashop.instance.eventEmitter);

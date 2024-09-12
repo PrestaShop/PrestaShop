@@ -24,6 +24,7 @@ Feature: Cart calculation with country specific cart rules
     And there is an address named "address-us" with postcode "1" in state "state-us"
     And I create carrier "carrier1" with specified properties:
       | name             | Carrier 1                          |
+      | zones            | zone1, zone2                           |
     Then I set ranges for carrier "carrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 10000    | 12.3        |

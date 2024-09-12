@@ -35,6 +35,7 @@ Feature: Check cart to order data copy
     Given address "address1" is associated to customer "customer1"
     And I create carrier "carrier1" with specified properties:
       | name | carrier 1 |
+      | zones| zone1     |
     Then I set ranges for carrier "carrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 10000    | 5.0         |
@@ -74,6 +75,7 @@ Feature: Check cart to order data copy
     Given address "address1" is associated to customer "customer1"
     And I create carrier "carrier1" with specified properties:
       | name | carrier 1 |
+      | zones| zone1     |
     Then I set ranges for carrier "carrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 10000    | 5.0         |
@@ -110,6 +112,7 @@ Feature: Check cart to order data copy
     Given address "address1" is associated to customer "customer1"
     And I create carrier "carrier1" with specified properties:
       | name             | carrier 1                          |
+      | zones            | zone1                              |
     Then I set ranges for carrier "carrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 10000    | 5.0         |
@@ -152,6 +155,7 @@ Feature: Check cart to order data copy
     Given address "address1" is associated to customer "customer1"
     And I create carrier "carrier1" with specified properties:
       | name             | carrier 1                          |
+      | zones            | zone1                              |
     Then I set ranges for carrier "carrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 10000    | 5.0         |
@@ -195,6 +199,7 @@ Feature: Check cart to order data copy
     Given address "address1" is associated to customer "customer1"
     And I create carrier "carrier1" with specified properties:
       | name             | carrier 1                          |
+      | zones            | zone1                              |
     Then I set ranges for carrier "carrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 10000    | 5.0         |
@@ -236,6 +241,7 @@ Feature: Check cart to order data copy
     Given address "address1" is associated to customer "customer1"
     And I create carrier "carrier1" with specified properties:
       | name             | carrier 1                          |
+      | zones            | zone1                              |
     Then I set ranges for carrier "carrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 10000    | 5.0         |
@@ -275,6 +281,7 @@ Feature: Check cart to order data copy
     Given address "address1" is associated to customer "customer1"
     And I create carrier "carrier1" with specified properties:
       | name             | carrier 1                          |
+      | zones            | zone1                              |
     And I set ranges for carrier "carrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 10000    | 5.0         |

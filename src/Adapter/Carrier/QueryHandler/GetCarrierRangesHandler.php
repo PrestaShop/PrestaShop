@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Carrier\QueryHandler;
 
-use Carrier;
 use PrestaShop\PrestaShop\Adapter\Carrier\Repository\CarrierRangeRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetCarrierRanges;

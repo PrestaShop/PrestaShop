@@ -54,7 +54,7 @@ class CarrierRangesType extends TranslatorAwareType
             ->add('data', HiddenType::class)
             ->add('show_modal', IconButtonType::class, [
                 'label' => ' ' . $options['button_label'],
-                'icon' => 'add_box',
+                'icon' => 'tune',
                 'attr' => [
                     'class' => 'js-add-carrier-ranges-btn btn btn-outline-secondary',
                     'data-translations' => json_encode([
@@ -79,7 +79,7 @@ class CarrierRangesType extends TranslatorAwareType
     {
         $resolver->setDefaults([
             'label' => $this->trans('Ranges', 'Admin.Shipping.Feature'),
-            'button_label' => $this->trans('Edit ranges', 'Admin.Shipping.Feature'),
+            'button_label' => $this->trans('Manage ranges', 'Admin.Shipping.Feature'),
         ]);
     }
 

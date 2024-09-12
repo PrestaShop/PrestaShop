@@ -63,6 +63,7 @@ class CarrierFormDataHandler implements FormDataHandlerInterface
             (bool) $data['shipping_settings']['is_free'],
             $data['shipping_settings']['shipping_method'],
             $data['shipping_settings']['range_behavior'],
+            $data['shipping_settings']['zones'],
             $data['general_settings']['associated_shops'],
             $data['size_weight_settings']['max_width'] ?? 0,
             $data['size_weight_settings']['max_height'] ?? 0,
@@ -96,6 +97,7 @@ class CarrierFormDataHandler implements FormDataHandlerInterface
             ->setMaxDepth($data['size_weight_settings']['max_depth'] ?? null)
             ->setMaxWeight($data['size_weight_settings']['max_weight'] ?? null)
             ->setAssociatedGroupIds($data['general_settings']['group_access'] ?? null)
+            ->setZones($data['shipping_settings']['zones'])
         ;
         /** @var UploadedFile|null $logo */
         $logo = $data['general_settings']['logo'];
@@ -106,8 +108,10 @@ class CarrierFormDataHandler implements FormDataHandlerInterface
         /** @var CarrierId $carrierId */
         $carrierId = $this->commandBus->handle($command);
 
-        // Then, we need to update the shipping ranges of the carrier
-        $carrierId = $this->setCarrierRange($carrierId, $data);
+        // Then, we need to update the shipping ranges of the carrier only if shipping is paid
+        if (!$data['shipping_settings']['is_free']) {
+            $carrierId = $this->setCarrierRange($carrierId, $data);
+        }
 
         return $carrierId->getValue();
     }

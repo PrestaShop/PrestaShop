@@ -46,6 +46,7 @@ use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureCon
 use Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext;
 use Tests\Resources\DummyFileUploader;
 use Tests\Resources\Resetter\CarrierResetter;
+use Zone;
 
 class CarrierFeatureContext extends AbstractDomainFeatureContext
 {
@@ -63,6 +64,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     public function createCarrier(string $reference, TableNode $node): void
     {
         $properties = $this->localizeByRows($node);
+
         try {
             if (isset($properties['logoPathName']) && 'null' !== $properties['logoPathName']) {
                 $tmpLogo = DummyFileUploader::upload($properties['logoPathName']);
@@ -80,6 +82,16 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
             } else {
                 $delay = [$this->getDefaultLangId() => 'Shipping delay'];
             }
+
+            if (isset($properties['zones'])) {
+                $zones = $this->referencesToIds($properties['zones']);
+                $keyToFilter = 'id';
+            } else {
+                $keyToFilter = 'id_zone';
+                $zones = Zone::getZones(true);
+            }
+
+            $zoneIds = array_column($zones, $keyToFilter);
 
             if (!empty($properties['group_access'])) {
                 $groupIds = $this->referencesToIds($properties['group_access']);
@@ -103,6 +115,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
                 $properties['shippingMethod'] ?? 'price',
                 $properties['rangeBehavior'] ?? 'highest_range',
                 $properties['logoPathName'] ?? null,
+                $zoneIds,
                 $associatedShops,
                 isset($properties['position']) ? (int) $properties['position'] : null,
             );
@@ -182,7 +195,6 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         $carrierId = $this->referenceToId($reference);
 
         $command = new EditCarrierCommand($carrierId);
-
         // General information
         if (isset($properties['name'])) {
             $command->setName($properties['name']);
@@ -217,6 +229,12 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         if (isset($properties['group_access'])) {
             $command->setAssociatedGroupIds($this->referencesToIds($properties['group_access']));
         }
+
+        if (isset($properties['zones'])) {
+            $zones = $this->referencesToIds($properties['zones']);
+            $command->setZones(array_column($zones, 'id'));
+        }
+
         if (isset($properties['associatedShops'])) {
             $command->setAssociatedShopIds($this->referencesToIds($properties['associatedShops']));
         }
@@ -378,9 +396,9 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then carrier edit should throw an error with error code :errorCode
+     * @Then carrier should throw an error with error code :errorCode
      */
-    public function carrierEditShouldThrowAnError(string $errorCode)
+    public function saveCarrierShouldThrowAnError(string $errorCode)
     {
         $this->assertLastErrorIs(
             CarrierConstraintException::class,
@@ -404,6 +422,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         string $shippingMethod,
         string $rangeBehavior,
         ?string $logoPathName,
+        array $zones,
         array $associatedShops,
         ?int $position,
     ): CarrierId {
@@ -418,6 +437,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
             $isFree,
             $this->convertShippingMethodToInt($shippingMethod),
             $this->convertOutOfRangeBehaviorToInt($rangeBehavior),
+            $zones,
             $associatedShops,
             $max_width,
             $max_height,

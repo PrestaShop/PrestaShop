@@ -63,6 +63,8 @@ class AddCarrierCommand
         private bool $isFree,
         int $shippingMethod,
         int $rangeBehavior,
+        /** @var int[] $zones */
+        private array $zones,
         array $associatedShopIds,
         private int $max_width = 0,
         private int $max_height = 0,
@@ -70,9 +72,23 @@ class AddCarrierCommand
         private float $max_weight = 0,
         private ?string $logoPathName = null
     ) {
+        $this->assertCarrierHasAtLeastOneZone($zones);
         $this->shippingMethod = new ShippingMethod($shippingMethod);
         $this->rangeBehavior = new OutOfRangeBehavior($rangeBehavior);
         $this->associatedShopIds = array_map(fn (int $shopId) => new ShopId($shopId), $associatedShopIds);
+    }
+
+    /**
+     * @param int[] $zones
+     */
+    private function assertCarrierHasAtLeastOneZone(array $zones): void
+    {
+        if (count($zones) === 0) {
+            throw new CarrierConstraintException(
+                'Carrier need to have at least one zone',
+                CarrierConstraintException::INVALID_ZONE_MISSING
+            );
+        }
     }
 
     public function getName(): string
@@ -167,5 +183,13 @@ class AddCarrierCommand
     public function getAssociatedShopIds(): array
     {
         return $this->associatedShopIds;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getZones(): array
+    {
+        return $this->zones;
     }
 }

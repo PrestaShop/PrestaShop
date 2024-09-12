@@ -12,6 +12,9 @@ Feature: Carrier management
   Background:
     Given group "visitor" named "Visitor" exists
     Given group "guest" named "Guest" exists
+    Given I add new zone "zone1" with following properties:
+      | name    | zone1 |
+      | enabled | true  |
     And language "en" with locale "en-US" exists
     And language "fr" with locale "fr-FR" exists
     And language with iso code "en" is the default one
@@ -42,6 +45,7 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
+      | zones            | zone1                              |
       | rangeBehavior    | disabled                           |
       | associatedShops  | shop1, shop3                       |
     Then carrier "carrier1" should have the following properties:
@@ -60,6 +64,7 @@ Feature: Carrier management
       | shippingHandling | false                              |
       | isFree           | true                               |
       | shippingMethod   | weight                             |
+      | zones            | zone1                              |
       | rangeBehavior    | disabled                           |
       | associatedShops  | shop1, shop3                       |
     Then carrier "carrier1" shouldn't have a logo

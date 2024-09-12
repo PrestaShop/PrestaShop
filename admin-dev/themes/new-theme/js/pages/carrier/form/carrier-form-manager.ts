@@ -74,11 +74,16 @@ export default class CarrierFormManager {
     this.refreshFreeShipping();
     // Then, we need to refresh the shipping method symbol
     this.refreshCurrentShippingSymbol();
+
+    this.onChangeZones();
   }
 
   private initListeners() {
     this.$zonesInput.on('change', () => this.onChangeZones());
-    this.$freeShippingInput.on('change', () => this.refreshFreeShipping());
+    this.$freeShippingInput.on('change', () => {
+      this.refreshFreeShipping();
+      this.onChangeZones();
+    });
     this.$shippingMethodInput.on('change', () => this.refreshCurrentShippingSymbol());
     $(CarrierFormMap.zonesContainer).on('click', CarrierFormMap.deleteZoneButton, (e:Event) => this.onDeleteZone(e));
     this.eventEmitter.on(CarrierFormEventMap.rangesUpdated, (ranges: Range[]) => this.onChangeRanges(ranges));

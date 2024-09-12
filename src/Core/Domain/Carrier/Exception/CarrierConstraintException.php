@@ -137,4 +137,9 @@ class CarrierConstraintException extends CarrierException
      * Thrown when shop constraint isn't valid
      */
     public const INVALID_SHOP_CONSTRAINT = 200;
+
+    /**
+     * Thrown when carrier is save without at least one zone
+     */
+    public const INVALID_ZONE_MISSING = 210;
 }
