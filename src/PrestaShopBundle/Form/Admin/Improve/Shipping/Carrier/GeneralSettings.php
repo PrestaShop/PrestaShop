@@ -37,11 +37,14 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class GeneralSettings extends TranslatorAwareType
 {
+    private const MAX_IMAGE_SIZE_IN_BYTES = 8 * 1000000;
+
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
@@ -52,6 +55,8 @@ class GeneralSettings extends TranslatorAwareType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $maximumFileSize = (int) str_replace('M', '', strval(self::MAX_IMAGE_SIZE_IN_BYTES));
+
         parent::buildForm($builder, $options);
         $builder
             ->add('name', TextType::class, [
@@ -90,6 +95,16 @@ class GeneralSettings extends TranslatorAwareType
             ->add('logo', FileType::class, [
                 'label' => null,
                 'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => $maximumFileSize,
+                        'mimeTypes' => [
+                            'image/jpeg',
+                        ],
+                        'mimeTypesMessage' => $this->trans('Please upload a valid jpeg file', 'Admin.Carriers.Form.LogoUpload'),
+                        'maxSizeMessage' => $this->trans('The file is too large. Allowed maximum size is 8MB.', 'Admin.Carriers.Form.LogoUpload'),
+                    ]),
+                ],
             ])
             ->add('tracking_url', TextType::class, [
                 'required' => false,
