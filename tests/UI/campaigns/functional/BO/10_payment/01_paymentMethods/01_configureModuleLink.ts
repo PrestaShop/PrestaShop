@@ -8,13 +8,13 @@ import {resetModule} from '@commonTests/BO/modules/moduleManager';
 // Import pages
 // Import BO pages
 import psCheckPayment from '@pages/BO/modules/psCheckPayment';
-import psWirePayment from '@pages/BO/modules/psWirePayment';
 
 import {
   boDashboardPage,
   boPaymentMethodsPage,
   dataModules,
   dataPaymentMethods,
+  modPsWirepaymentBoMain,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -66,19 +66,19 @@ describe('BO - Payments - Payment methods: Configure module link', async () => {
 
       await boPaymentMethodsPage.clickConfigureButton(page, dataModules.psWirePayment);
 
-      const pageTitle = await psWirePayment.getPageSubTitle(page);
-      expect(pageTitle).to.contains(psWirePayment.pageTitle);
+      const pageTitle = await modPsWirepaymentBoMain.getPageSubTitle(page);
+      expect(pageTitle).to.contains(modPsWirepaymentBoMain.pageTitle);
     });
 
     it(`should fill required fields for "${dataPaymentMethods.wirePayment.displayName}"`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'fillRequiredFieldsWirePayment', baseContext);
 
-      await psWirePayment.setAccountOwner(page, 'Account Owner');
-      await psWirePayment.setAccountDetails(page, 'Account Details');
-      await psWirePayment.setBankAddress(page, 'Bank Address');
+      await modPsWirepaymentBoMain.setAccountOwner(page, 'Account Owner');
+      await modPsWirepaymentBoMain.setAccountDetails(page, 'Account Details');
+      await modPsWirepaymentBoMain.setBankAddress(page, 'Bank Address');
 
-      const result = await psWirePayment.saveFormContactDetails(page);
-      expect(result).to.contains(psWirePayment.successfulUpdateMessage);
+      const result = await modPsWirepaymentBoMain.saveFormContactDetails(page);
+      expect(result).to.contains(modPsWirepaymentBoMain.successfulUpdateMessage);
     });
 
     it('should return to \'Payment > Payment Methods\' page', async function () {
