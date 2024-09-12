@@ -51,7 +51,7 @@ class ImageSettingsType extends TranslatorAwareType
     {
         // Check if AVIF is enabled on the server
         $avifEnabled = $this->avifExtensionChecker->isAvailable();
-        $helpFormats = $this->trans('Choose which image formats you want to be generated. Base image will always have .jpg extension, other formats will have .webp or .avif.', 'Admin.Design.Help');
+        $helpFormats = $this->trans('Choose which image formats you want to be generated. Base image will always have .jpg extension, other formats will have .webp or .avif. Think twice before enabling all of them, because it can easily double the size of your shop.', 'Admin.Design.Help');
 
         if (!$avifEnabled) {
             $helpFormats .= '<br/><strong>' . $this->trans('AVIF is disabled because it\'s not supported on your server, check your configuration if you want to use it.', 'Admin.Design.Help') . '</strong>';
@@ -75,6 +75,7 @@ class ImageSettingsType extends TranslatorAwareType
             ])
             ->add('base-format', ChoiceType::class, [
                 'label' => $this->trans('Base format', 'Admin.Design.Feature'),
+                'help' => $this->trans('JPEG images have a small file size and standard quality. PNG images have a larger file size, a higher quality and support transparency. Note that in all cases, these thumbnails will have .jpg extension.', 'Admin.Design.Feature'),
                 'expanded' => true,
                 'choices' => [
                     $this->trans('Use JPEG', 'Admin.Design.Feature') => 'jpg',
