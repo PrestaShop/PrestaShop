@@ -55,7 +55,7 @@ class GeneralSettings extends TranslatorAwareType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $maximumFileSize = (int) str_replace('M', '', self::MAX_IMAGE_SIZE_IN_BYTES);
+        $maximumFileSize = (int) str_replace('M', '', intval(self::MAX_IMAGE_SIZE_IN_BYTES));
 
         parent::buildForm($builder, $options);
         $builder
