@@ -155,7 +155,7 @@ class ModuleManagerBuilderTest extends TestCase
         $resource_path = dirname(__DIR__, 4) . '/Resources/modules_tests/override/';
 
         $actual_override_cart = file_get_contents(_PS_ROOT_DIR_ . '/override/classes/Cart.php');
-        $expected_override_cart = file_get_contents($resource_path . '/Cart.php');
+        $expected_override_cart = file_get_contents($resource_path . '/classes/Cart.php');
 
         $actual_override_cart = $this->cleanup($actual_override_cart);
         $expected_override_cart = $this->cleanup($expected_override_cart);
@@ -163,7 +163,7 @@ class ModuleManagerBuilderTest extends TestCase
         $this->assertEquals($expected_override_cart, $actual_override_cart);
 
         $actual_override_admin_product = file_get_contents(_PS_ROOT_DIR_ . '/override/controllers/admin/AdminProductsController.php');
-        $expected_override_admin_product = file_get_contents($resource_path . '/AdminProductsController.php');
+        $expected_override_admin_product = file_get_contents($resource_path . '/controllers/admin/AdminProductsController.php');
 
         $this->assertEquals(
             $this->cleanup($expected_override_admin_product),

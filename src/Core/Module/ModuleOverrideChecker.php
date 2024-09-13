@@ -64,7 +64,7 @@ class ModuleOverrideChecker
         $finder = new Finder();
         $finder->files()->in($moduleOverridePath)->name('*.php');
 
-        // module doesn't have overrides, return false
+        // The module's override folder doesn't contain any override, return false
         if (!$finder->hasResults()) {
             return false;
         }
