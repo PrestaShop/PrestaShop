@@ -2002,6 +2002,10 @@ class CartCore extends ObjectModel
             WHERE `id_customization` = ' . (int) $id_customization);
 
         if ($customization) {
+            /*
+             * Now we will select all customized files that could be connected to this customization.
+             * One customization can have multiple fields for files, we need to delete all of them.
+             */
             $cust_datas = Db::getInstance()->executeS('SELECT *
                 FROM `' . _DB_PREFIX_ . 'customized_data`
                 WHERE `id_customization` = ' . (int) $id_customization . '
