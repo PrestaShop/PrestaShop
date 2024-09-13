@@ -2,6 +2,8 @@
 
 class Cart extends CartCore
 {
+    public const BOTH = 999;
+
     /*
     * module: pscsx32412
     * date: 2018-12-26 14:14:05

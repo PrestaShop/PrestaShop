@@ -146,6 +146,24 @@ class ModuleOverrideChecker
             }
         }
 
+        $moduleOverrideProperties = $this->getClassPropertiesFromContent($moduleOverrideContent);
+        $existingOverrideProperties = $this->getClassPropertiesFromContent($existingOverrideContent);
+
+        foreach ($moduleOverrideProperties as $property) {
+            if (in_array($property, $existingOverrideProperties)) {
+                return true;
+            }
+        }
+
+        $moduleOverrideConstants = $this->getClassConstantsFromContent($moduleOverrideContent);
+        $existingOverrideConstants = $this->getClassConstantsFromContent($existingOverrideContent);
+
+        foreach ($moduleOverrideConstants as $constants) {
+            if (in_array($constants, $existingOverrideConstants)) {
+                return true;
+            }
+        }
+
         return false;
     }
 
