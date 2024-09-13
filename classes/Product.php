@@ -3797,7 +3797,8 @@ class ProductCore extends ObjectModel
         int $combinationId,
         bool $withTaxes,
         bool $useReduction,
-        bool $withEcoTax
+        bool $withEcoTax,
+        int $customizationId = 0
     ): ?float {
         $sql = new DbQuery();
         $sql->select('od.*, t.rate AS tax_rate');
@@ -3806,6 +3807,9 @@ class ProductCore extends ObjectModel
         $sql->where('od.`product_id` = ' . $productId);
         if (Combination::isFeatureActive()) {
             $sql->where('od.`product_attribute_id` = ' . $combinationId);
+        }
+        if (Customization::isFeatureActive()) {
+            $sql->where('od.`id_customization` = ' . $customizationId);
         }
         $sql->leftJoin('order_detail_tax', 'odt', 'odt.id_order_detail = od.id_order_detail');
         $sql->leftJoin('tax', 't', 't.id_tax = odt.id_tax');
@@ -7147,7 +7151,7 @@ class ProductCore extends ObjectModel
 
         if (!Cache::isStored($cache_id)) {
             $result = Db::getInstance()->executeS('
-            SELECT a.`id_attribute`, a.`id_attribute_group`, al.`name`, agl.`name` as `group`,
+            SELECT a.`id_attribute`, a.`id_attribute_group`, al.`name`, agl.`name` as `group`, agl.`public_name` as `public_group`,
             pa.`reference`, pa.`ean13`, pa.`isbn`, pa.`upc`, pa.`mpn`,
             pal.`available_now`, pal.`available_later`
             FROM `' . _DB_PREFIX_ . 'attribute` a
@@ -7304,7 +7308,7 @@ class ProductCore extends ObjectModel
         foreach ($attributes as &$attr) {
             $group = str_replace($sep, $replace, Tools::str2url((string) $attr['group']));
             $name = str_replace($sep, $replace, Tools::str2url((string) $attr['name']));
-            $anchor .= '/' . ($with_id ? (int) $attr['id_attribute'] . $sep : '') . $group . $sep . $name;
+            $anchor .= '/' . ($with_id && isset($attr['id_attribute']) && $attr['id_attribute'] ? (int) $attr['id_attribute'] . $sep : '') . $group . $sep . $name;
         }
 
         return $anchor;

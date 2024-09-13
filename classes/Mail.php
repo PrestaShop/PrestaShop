@@ -504,7 +504,7 @@ class MailCore extends ObjectModel
                 $replyTo = $from;
             }
 
-            if (isset($replyTo) && $replyTo) {
+            if (!empty($replyTo) && $replyTo != $toPlugin) {
                 $email->replyTo(new Address($replyTo, (string) $replyToName));
             }
 
