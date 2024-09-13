@@ -87,6 +87,14 @@ class ModuleOverrideCheckerTest extends TestCase
                 'testtrickyconflict',
                 true,
             ],
+            [
+                'testpropertyconflict',
+                true,
+            ],
+            [
+                'testconstantconflict',
+                true,
+            ],
         ];
     }
 }

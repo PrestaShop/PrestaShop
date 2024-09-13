@@ -79,6 +79,12 @@ class ModuleManagerBuilderTest extends TestCase
         if (is_dir($dirResources . '/Resources/modules_tests/testtrickyconflict')) {
             Tools::recurseCopy($dirResources . '/Resources/modules_tests/testtrickyconflict', _PS_MODULE_DIR_ . '/testtrickyconflict');
         }
+        if (is_dir($dirResources . '/Resources/modules_tests/testconstantconflict')) {
+            Tools::recurseCopy($dirResources . '/Resources/modules_tests/testconstantconflict', _PS_MODULE_DIR_ . '/testconstantconflict');
+        }
+        if (is_dir($dirResources . '/Resources/modules_tests/testpropertyconflict')) {
+            Tools::recurseCopy($dirResources . '/Resources/modules_tests/testpropertyconflict', _PS_MODULE_DIR_ . '/testpropertyconflict');
+        }
     }
 
     public static function tearDownAfterClass(): void
@@ -98,6 +104,12 @@ class ModuleManagerBuilderTest extends TestCase
         if (Module::isInstalled('testtrickyconflict')) {
             Module::getInstanceByName('testtrickyconflict')->uninstall();
         }
+        if (Module::isInstalled('testpropertyconflict')) {
+            Module::getInstanceByName('testpropertyconflict')->uninstall();
+        }
+        if (Module::isInstalled('testconstantconflict')) {
+            Module::getInstanceByName('testconstantconflict')->uninstall();
+        }
 
         // Remove modules
         if (is_dir(_PS_MODULE_DIR_ . '/pscsx3241')) {
@@ -111,6 +123,12 @@ class ModuleManagerBuilderTest extends TestCase
         }
         if (is_dir(_PS_MODULE_DIR_ . '/testtrickyconflict')) {
             Tools::deleteDirectory(_PS_MODULE_DIR_ . '/testtrickyconflict');
+        }
+        if (is_dir(_PS_MODULE_DIR_ . '/testpropertyconflict')) {
+            Tools::deleteDirectory(_PS_MODULE_DIR_ . '/testpropertyconflict');
+        }
+        if (is_dir(_PS_MODULE_DIR_ . '/testconstantconflict')) {
+            Tools::deleteDirectory(_PS_MODULE_DIR_ . '/testconstantconflict');
         }
 
         // Remove overrides
@@ -135,7 +153,7 @@ class ModuleManagerBuilderTest extends TestCase
             'pscsx3241',
         ];
 
-        $this->conflictModuleNames = ['testbasicconflict', 'testtrickyconflict'];
+        $this->conflictModuleNames = ['testbasicconflict', 'testtrickyconflict', 'testpropertyconflict', 'testconstantconflict'];
     }
 
     public function testInstall(): void
@@ -195,7 +213,7 @@ class ModuleManagerBuilderTest extends TestCase
          * adds several spaces in function definition (it must still be detected as a conflicting method)
          */
         foreach ($this->conflictModuleNames as $name) {
-            $this->assertFalse($this->moduleManager->install($name));
+            $this->assertFalse($this->moduleManager->install($name), 'module test on ' . $name . ' failed');
         }
     }
 

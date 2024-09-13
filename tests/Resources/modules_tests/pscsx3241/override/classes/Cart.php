@@ -25,6 +25,8 @@
  */
 class Cart extends CartCore
 {
+    public const BOTH = 111;
+
     public $delivery_option;
 
     /** @var bool Allow to seperate order in multiple package in order to recieve as soon as possible the available products */
