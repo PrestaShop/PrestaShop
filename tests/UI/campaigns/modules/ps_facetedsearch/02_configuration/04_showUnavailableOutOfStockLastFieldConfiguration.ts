@@ -29,7 +29,7 @@ describe('Faceted search module: Show unavailable, out of stock last\'s field co
 
   // PRE-TEST: Create a out of stock product
   createProductTest(productOutOfStock, `${baseContext}_preTest_0`);
-  
+
   describe('Show unavailable, out of stock last\'s field configuration', async () => {
     let browserContext: BrowserContext;
     let page: Page;

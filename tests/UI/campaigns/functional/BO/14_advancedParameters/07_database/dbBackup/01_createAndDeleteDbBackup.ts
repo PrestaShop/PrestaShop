@@ -6,12 +6,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import sqlManagerPage from '@pages/BO/advancedParameters/database/sqlManager';
-import dbBackupPage from '@pages/BO/advancedParameters/database/dbBackup';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boDbBackupPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -65,25 +65,25 @@ describe('BO - Advanced Parameters - Database : Generate db backup and download 
 
     await sqlManagerPage.goToDbBackupPage(page);
 
-    const pageTitle = await dbBackupPage.getPageTitle(page);
-    expect(pageTitle).to.contains(dbBackupPage.pageTitle);
+    const pageTitle = await boDbBackupPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDbBackupPage.pageTitle);
   });
 
   describe('Generate new backup', async () => {
     it('should check number of db backups', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfDbBackups', baseContext);
 
-      numberOfBackups = await dbBackupPage.getNumberOfElementInGrid(page);
+      numberOfBackups = await boDbBackupPage.getNumberOfElementInGrid(page);
       expect(numberOfBackups).to.equal(0);
     });
 
     it('should generate new db backup', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'generateNewDbBackup', baseContext);
 
-      const result = await dbBackupPage.createDbDbBackup(page);
-      expect(result).to.equal(dbBackupPage.successfulBackupCreationMessage);
+      const result = await boDbBackupPage.createDbDbBackup(page);
+      expect(result).to.equal(boDbBackupPage.successfulBackupCreationMessage);
 
-      const numberOfBackupsAfterCreation = await dbBackupPage.getNumberOfElementInGrid(page);
+      const numberOfBackupsAfterCreation = await boDbBackupPage.getNumberOfElementInGrid(page);
       expect(numberOfBackupsAfterCreation).to.equal(numberOfBackups + 1);
     });
   });
@@ -92,7 +92,7 @@ describe('BO - Advanced Parameters - Database : Generate db backup and download 
     it('should download db backup created and check file existence', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'DownloadDbBackup', baseContext);
 
-      filePath = await dbBackupPage.downloadDbBackup(page);
+      filePath = await boDbBackupPage.downloadDbBackup(page);
 
       const found = await utilsFile.doesFileExist(filePath);
       expect(found, 'Download backup file failed').to.eq(true);
@@ -103,10 +103,10 @@ describe('BO - Advanced Parameters - Database : Generate db backup and download 
     it('should delete db backup created', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteDbBackup', baseContext);
 
-      const result = await dbBackupPage.deleteBackup(page, 1);
-      expect(result).to.be.equal(dbBackupPage.successfulDeleteMessage);
+      const result = await boDbBackupPage.deleteBackup(page, 1);
+      expect(result).to.be.equal(boDbBackupPage.successfulDeleteMessage);
 
-      const numberOfBackupsAfterDelete = await dbBackupPage.getNumberOfElementInGrid(page);
+      const numberOfBackupsAfterDelete = await boDbBackupPage.getNumberOfElementInGrid(page);
       expect(numberOfBackupsAfterDelete).to.equal(numberOfBackups);
     });
   });
