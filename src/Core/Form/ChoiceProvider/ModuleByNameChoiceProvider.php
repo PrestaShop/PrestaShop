@@ -60,6 +60,9 @@ final class ModuleByNameChoiceProvider implements FormChoiceProviderInterface
             $moduleChoices[$module->get('displayName')] = $module->get('name');
         }
 
+        // Order modules alphabetically
+        ksort($moduleChoices);
+
         return $moduleChoices;
     }
 }
