@@ -118,7 +118,7 @@ describe('Faceted search module: Show products only from default category\'s fie
     expect(productsNum).to.equal(6);
   });
 
-  it(`should return to the backoffice`, async function () {
+  it('should return to the backoffice', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'returnToTheBO', baseContext);
 
     page = await foClassicCategoryPage.changePage(browserContext, 0);
@@ -140,7 +140,7 @@ describe('Faceted search module: Show products only from default category\'s fie
     expect(isShowProductsFromSubcategoriesDisabled).to.equal(false);
   });
 
-  it(`should check the frontoffice`, async function () {
+  it('should check the frontoffice', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkFrontOffice', baseContext);
 
     page = await foClassicHomePage.changePage(browserContext, 1);
