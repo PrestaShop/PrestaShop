@@ -213,7 +213,7 @@ class ModuleManagerBuilderTest extends TestCase
          * adds several spaces in function definition (it must still be detected as a conflicting method)
          */
         foreach ($this->conflictModuleNames as $name) {
-            $this->assertFalse($this->moduleManager->install($name), 'module test on ' . $name . ' failed');
+            $this->assertFalse($this->moduleManager->install($name), 'override conflict test on module ' . $name . ' failed');
         }
     }
 

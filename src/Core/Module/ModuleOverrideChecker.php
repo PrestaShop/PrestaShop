@@ -74,13 +74,22 @@ class ModuleOverrideChecker
             $fileList[] = $file->getRelativePathname();
         }
 
+
+
         // module has overrides, let's check override files one by one
         foreach ($fileList as $file) {
             $moduleOverrideFile = $moduleOverridePath . DIRECTORY_SEPARATOR . $file;
             $existingOverrideFile = $this->psOverrideDir . $file;
 
+            $moduleOverrideContent = file_get_contents($moduleOverrideFile);
+            $existingOverrideContent = file_get_contents($existingOverrideFile);
+
             if (file_exists($existingOverrideFile)) {
-                if ($this->hasConflictingMethod($moduleOverrideFile, $existingOverrideFile)) {
+                if (
+                    $this->hasConflictingMethod($moduleOverrideContent, $existingOverrideContent)
+                    || $this->hasConflictingProperty($moduleOverrideContent, $existingOverrideContent)
+                    || $this->hasConflictingConstant($moduleOverrideContent, $existingOverrideContent)
+                ) {
                     $this->errors[] = $this->translator->trans(
                         'The override file %1$s conflicts with an existing override in %2$s.',
                         [$moduleOverrideFile, $existingOverrideFile],
@@ -98,23 +107,8 @@ class ModuleOverrideChecker
         return $this->errors;
     }
 
-    /*
-     * Checks if a module override class has a method that is already overridden by another module
-     */
-    private function hasConflictingMethod(string $moduleOverridePath, string $existingOverridePath): bool
+    private function hasConflictingProperty(string $moduleOverrideContent, string $existingOverrideContent): bool
     {
-        $moduleOverrideContent = file_get_contents($moduleOverridePath);
-        $existingOverrideContent = file_get_contents($existingOverridePath);
-
-        $moduleMethods = $this->getClassMethodsFromContent($moduleOverrideContent);
-        $existingOverrideMethods = $this->getClassMethodsFromContent($existingOverrideContent);
-
-        foreach ($moduleMethods as $method) {
-            if (in_array($method, $existingOverrideMethods)) {
-                return true;
-            }
-        }
-
         $moduleOverrideProperties = $this->getClassPropertiesFromContent($moduleOverrideContent);
         $existingOverrideProperties = $this->getClassPropertiesFromContent($existingOverrideContent);
 
@@ -124,11 +118,33 @@ class ModuleOverrideChecker
             }
         }
 
+        return false;
+    }
+
+    private function hasConflictingConstant(string $moduleOverrideContent, string $existingOverrideContent): bool
+    {
         $moduleOverrideConstants = $this->getClassConstantsFromContent($moduleOverrideContent);
         $existingOverrideConstants = $this->getClassConstantsFromContent($existingOverrideContent);
 
         foreach ($moduleOverrideConstants as $constants) {
             if (in_array($constants, $existingOverrideConstants)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /*
+     * Checks if a module override class has a method that is already overridden by another module
+     */
+    private function hasConflictingMethod(string $moduleOverrideContent, string $existingOverrideContent): bool
+    {
+        $moduleMethods = $this->getClassMethodsFromContent($moduleOverrideContent);
+        $existingOverrideMethods = $this->getClassMethodsFromContent($existingOverrideContent);
+
+        foreach ($moduleMethods as $method) {
+            if (in_array($method, $existingOverrideMethods)) {
                 return true;
             }
         }
