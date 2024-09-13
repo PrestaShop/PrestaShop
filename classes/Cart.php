@@ -2002,14 +2002,18 @@ class CartCore extends ObjectModel
             WHERE `id_customization` = ' . (int) $id_customization);
 
         if ($customization) {
-            $cust_data = Db::getInstance()->getRow('SELECT *
+            $cust_datas = Db::getInstance()->executeS('SELECT *
                 FROM `' . _DB_PREFIX_ . 'customized_data`
-                WHERE `id_customization` = ' . (int) $id_customization);
+                WHERE `id_customization` = ' . (int) $id_customization . '
+                AND `type` = ' . (int) Product::CUSTOMIZE_FILE
+            );
 
-            // Delete customization picture if necessary
-            if (isset($cust_data['type']) && $cust_data['type'] == Product::CUSTOMIZE_FILE) {
-                $result &= file_exists(_PS_UPLOAD_DIR_ . $cust_data['value']) ? @unlink(_PS_UPLOAD_DIR_ . $cust_data['value']) : true;
-                $result &= file_exists(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small') ? @unlink(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small') : true;
+            // Delete customization pictures if necessary
+            if ($cust_datas) {
+                foreach ($cust_datas as $cust_data) {
+                    $result &= file_exists(_PS_UPLOAD_DIR_ . $cust_data['value']) ? @unlink(_PS_UPLOAD_DIR_ . $cust_data['value']) : true;
+                    $result &= file_exists(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small') ? @unlink(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small') : true;
+                }
             }
 
             $result &= Db::getInstance()->execute(
