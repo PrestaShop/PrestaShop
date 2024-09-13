@@ -156,7 +156,9 @@ class CustomerAddressFormCore extends AbstractForm
         );
 
         foreach ($this->formFields as $formField) {
-            $address->{$formField->getName()} = $formField->getValue();
+            if (property_exists($address, $formField->getName())) {
+                $address->{$formField->getName()} = $formField->getValue();
+            }
         }
 
         if (!isset($this->formFields['id_state'])) {
