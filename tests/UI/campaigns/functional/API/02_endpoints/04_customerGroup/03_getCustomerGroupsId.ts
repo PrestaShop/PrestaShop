@@ -5,9 +5,6 @@ import testContext from '@utils/testContext';
 import {deleteAPIClientTest} from '@commonTests/BO/advancedParameters/authServer';
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
-
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 import {
@@ -15,6 +12,7 @@ import {
   boApiClientsCreatePage,
   boCustomerGroupsPage,
   boCustomerGroupsCreatePage,
+  boCustomerSettingsPage,
   boDashboardPage,
   dataLanguages,
   FakerAPIClient,
@@ -142,16 +140,16 @@ describe('API : GET /customers/group/{customerGroupId}', async () => {
         boDashboardPage.shopParametersParentLink,
         boDashboardPage.customerSettingsLink,
       );
-      await customerSettingsPage.closeSfToolBar(page);
+      await boCustomerSettingsPage.closeSfToolBar(page);
 
-      const pageTitle = await customerSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
+      const pageTitle = await boCustomerSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerSettingsPage.pageTitle);
     });
 
     it('should go to \'Groups\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToGroupsPage', baseContext);
 
-      await customerSettingsPage.goToGroupsPage(page);
+      await boCustomerSettingsPage.goToGroupsPage(page);
 
       const pageTitle = await boCustomerGroupsPage.getPageTitle(page);
       expect(pageTitle).to.contains(boCustomerGroupsPage.pageTitle);

@@ -4,17 +4,13 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-// Import BO pages
-import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
-import CustomerSettingsOptions from '@pages/BO/shopParameters/customerSettings/options';
-
 // Import FO pages
 import {createAccountPage} from '@pages/FO/classic/myAccount/add';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  boCustomerSettingsPage,
   boDashboardPage,
   foClassicHomePage,
   foClassicLoginPage,
@@ -56,10 +52,10 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable B2B mode', a
       boDashboardPage.customerSettingsLink,
     );
 
-    await customerSettingsPage.closeSfToolBar(page);
+    await boCustomerSettingsPage.closeSfToolBar(page);
 
-    const pageTitle = await customerSettingsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
+    const pageTitle = await boCustomerSettingsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCustomerSettingsPage.pageTitle);
   });
 
   const tests = [
@@ -71,19 +67,19 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable B2B mode', a
     it(`should ${test.args.action} B2B mode`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}B2BMode`, baseContext);
 
-      const result = await customerSettingsPage.setOptionStatus(
+      const result = await boCustomerSettingsPage.setOptionStatus(
         page,
-        CustomerSettingsOptions.OPTION_B2B,
+        boCustomerSettingsPage.OPTION_B2B,
         test.args.enable,
       );
-      expect(result).to.contains(customerSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(boCustomerSettingsPage.successfulUpdateMessage);
     });
 
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `viewMyShop_${index}`, baseContext);
 
       // Go to FO
-      page = await customerSettingsPage.viewMyShop(page);
+      page = await boCustomerSettingsPage.viewMyShop(page);
       await foClassicHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foClassicHomePage.isHomePage(page);
@@ -108,8 +104,8 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable B2B mode', a
       // Go back to BO
       page = await createAccountPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await customerSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
+      const pageTitle = await boCustomerSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerSettingsPage.pageTitle);
     });
   });
 });

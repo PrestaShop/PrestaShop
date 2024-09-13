@@ -4,13 +4,10 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
-import CustomerSettingsOptions from '@pages/BO/shopParameters/customerSettings/options';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  boCustomerSettingsPage,
   boDashboardPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -46,21 +43,21 @@ function enableB2BTest(baseContext: string = 'commonTests-enableB2BTest'): void 
         boDashboardPage.shopParametersParentLink,
         boDashboardPage.customerSettingsLink,
       );
-      await customerSettingsPage.closeSfToolBar(page);
+      await boCustomerSettingsPage.closeSfToolBar(page);
 
-      const pageTitle = await customerSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
+      const pageTitle = await boCustomerSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerSettingsPage.pageTitle);
     });
 
     it('should enable B2B mode', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableB2BMode', baseContext);
 
-      const result = await customerSettingsPage.setOptionStatus(
+      const result = await boCustomerSettingsPage.setOptionStatus(
         page,
-        CustomerSettingsOptions.OPTION_B2B,
+        boCustomerSettingsPage.OPTION_B2B,
         true,
       );
-      expect(result).to.contains(customerSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(boCustomerSettingsPage.successfulUpdateMessage);
     });
   });
 }
@@ -93,21 +90,21 @@ function disableB2BTest(baseContext: string = 'commonTests-disableB2BTest'): voi
         boDashboardPage.shopParametersParentLink,
         boDashboardPage.customerSettingsLink,
       );
-      await customerSettingsPage.closeSfToolBar(page);
+      await boCustomerSettingsPage.closeSfToolBar(page);
 
-      const pageTitle = await customerSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
+      const pageTitle = await boCustomerSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerSettingsPage.pageTitle);
     });
 
     it('should disable B2B mode', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableB2BMode', baseContext);
 
-      const result = await customerSettingsPage.setOptionStatus(
+      const result = await boCustomerSettingsPage.setOptionStatus(
         page,
-        CustomerSettingsOptions.OPTION_B2B,
+        boCustomerSettingsPage.OPTION_B2B,
         false,
       );
-      expect(result).to.contains(customerSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(boCustomerSettingsPage.successfulUpdateMessage);
     });
   });
 }

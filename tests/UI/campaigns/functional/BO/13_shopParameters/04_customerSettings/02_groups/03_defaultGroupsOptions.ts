@@ -4,13 +4,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boCustomerGroupsPage,
+  boCustomerSettingsPage,
   boDashboardPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -43,16 +41,16 @@ describe('BO - Shop Parameters - Customer Settings : Default groups options', as
       boDashboardPage.shopParametersParentLink,
       boDashboardPage.customerSettingsLink,
     );
-    await customerSettingsPage.closeSfToolBar(page);
+    await boCustomerSettingsPage.closeSfToolBar(page);
 
-    const pageTitle = await customerSettingsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
+    const pageTitle = await boCustomerSettingsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCustomerSettingsPage.pageTitle);
   });
 
   it('should go to \'Groups\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToGroupsPage', baseContext);
 
-    await customerSettingsPage.goToGroupsPage(page);
+    await boCustomerSettingsPage.goToGroupsPage(page);
 
     const pageTitle = await boCustomerGroupsPage.getPageTitle(page);
     expect(pageTitle).to.contains(boCustomerGroupsPage.pageTitle);
