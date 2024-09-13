@@ -74,14 +74,17 @@ class ModuleOverrideChecker
             $fileList[] = $file->getRelativePathname();
         }
 
+
+
         // module has overrides, let's check override files one by one
         foreach ($fileList as $file) {
             $moduleOverrideFile = $moduleOverridePath . DIRECTORY_SEPARATOR . $file;
             $existingOverrideFile = $this->psOverrideDir . $file;
 
-            if (file_exists($existingOverrideFile) && file_exists($moduleOverrideFile)) {
-                $moduleOverrideContent = file_get_contents($moduleOverrideFile);
-                $existingOverrideContent = file_get_contents($existingOverrideFile);
+            $moduleOverrideContent = file_get_contents($moduleOverrideFile);
+            $existingOverrideContent = file_get_contents($existingOverrideFile);
+
+            if (file_exists($existingOverrideFile)) {
                 if (
                     $this->hasConflictingMethod($moduleOverrideContent, $existingOverrideContent)
                     || $this->hasConflictingProperty($moduleOverrideContent, $existingOverrideContent)
@@ -146,24 +149,6 @@ class ModuleOverrideChecker
             }
         }
 
-        $moduleOverrideProperties = $this->getClassPropertiesFromContent($moduleOverrideContent);
-        $existingOverrideProperties = $this->getClassPropertiesFromContent($existingOverrideContent);
-
-        foreach ($moduleOverrideProperties as $property) {
-            if (in_array($property, $existingOverrideProperties)) {
-                return true;
-            }
-        }
-
-        $moduleOverrideConstants = $this->getClassConstantsFromContent($moduleOverrideContent);
-        $existingOverrideConstants = $this->getClassConstantsFromContent($existingOverrideContent);
-
-        foreach ($moduleOverrideConstants as $constants) {
-            if (in_array($constants, $existingOverrideConstants)) {
-                return true;
-            }
-        }
-
         return false;
     }
 
@@ -172,43 +157,95 @@ class ModuleOverrideChecker
      */
     private function getClassMethodsFromContent(string $content): array
     {
-        $methodPattern = '/(public|private|protected)\s+function\s+(\w+)/';
-
+        // Get the list of tokens, see https://www.php.net/manual/en/function.token-get-all.php
+        $tokens = token_get_all($content);
         $methods = [];
+        foreach ($tokens as $index => $token) {
+            $methodName = null;
+            // filter method definitions
+            if (is_array($token) && $token[0] === T_FUNCTION) {
+                // This loop is necessary in case some additional spaces exist before the function name
+                for ($i = $index + 1; $i < count($tokens); ++$i) {
+                    if (is_array($tokens[$i]) && $tokens[$i][0] === T_STRING) {
+                        $methodName = $tokens[$i][1];
+                        break;
+                    }
+                }
 
-        if (preg_match_all($methodPattern, $content, $matches)) {
-            $methods = $matches[2];
+                // Collect method name
+                if ($methodName) {
+                    $methods[] = $methodName; // Save method name
+                }
+            }
         }
 
         return $methods;
     }
 
     /*
-    * This function parses php file content and gets a list of properties from its content.
-    */
+     * This function parses php file content and gets a list of properties from its content.
+     */
     private function getClassPropertiesFromContent(string $content): array
     {
-        $propertyPattern = '/(public|private|protected)\s*(\w+)?\s+\$(\w+)/';
+        // Get the list of tokens, see https://www.php.net/manual/en/function.token-get-all.php
+        $tokens = token_get_all($content);
         $properties = [];
+        $inClass = false;
+        $inFunction = false;
 
-        if (preg_match_all($propertyPattern, $content, $matches)) {
-            $properties = $matches[3];
+        foreach ($tokens as $index => $token) {
+            // we only want variables that are inside a class AND outside a function
+            if (is_array($token) && $token[0] === T_CLASS) {
+                $inClass = true;
+                $inFunction = false;
+            }
+
+            // check that we are in the beginning of a function
+            if (is_array($token) && $token[0] === T_FUNCTION) {
+                $inFunction = true;
+            }
+
+            // check that this is the end of a function
+            if ($token === '}') {
+                $inFunction = false;
+            }
+
+            // Property name is gathered if we are inside a class and outside a function
+            if ($inClass && !$inFunction && is_array($token) && $token[0] === T_VARIABLE) {
+                $propertyName = $token[1]; // Token contains the variable name as the second element
+                $properties[] = $propertyName; // Add to the properties array
+            }
         }
 
-        return $properties;
+        return $properties;  // Return the list of property names
     }
 
     /*
-    * This function parses php file content and gets a list of properties from its content.
-    */
+     * This function parses php file content and gets a list of constants from its content.
+     */
     private function getClassConstantsFromContent(string $content): array
     {
-        $constantPattern = '/const\s+(\w+)/';
-
+        // Get the list of tokens, see https://www.php.net/manual/en/function.token-get-all.php
+        $tokens = token_get_all($content);
         $constants = [];
+        $inClass = false;
 
-        if (preg_match_all($constantPattern, $content, $matches)) {
-            $constants = $matches[1];
+        foreach ($tokens as $index => $token) {
+            // check that we are at the beginning of a class
+            if (is_array($token) && $token[0] === T_CLASS) {
+                $inClass = true;
+            }
+
+            // Check for constant declarations inside the class
+            if ($inClass && is_array($token) && $token[0] === T_CONST) {
+                // Loop ahead to find the constant name
+                for ($i = $index + 1; $i < count($tokens); ++$i) {
+                    if (is_array($tokens[$i]) && $tokens[$i][0] === T_STRING) {
+                        $constants[] = $tokens[$i][1];  // Save constant name
+                        break;
+                    }
+                }
+            }
         }
 
         return $constants;
