@@ -44,7 +44,7 @@ class ModuleOverrideCheckerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->psOverrideDir = dirname(__DIR__, 3) . '/Resources/modules_tests/override/';
+        $this->psOverrideDir = dirname(__DIR__, 3) . '/Resources/modules_tests/override_for_unit_test/';
         $this->modulesTestsDir = dirname(__DIR__, 3) . '/Resources/modules_tests';
     }
 

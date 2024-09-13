@@ -79,9 +79,6 @@ class ModuleManagerBuilderTest extends TestCase
         if (is_dir($dirResources . '/Resources/modules_tests/testtrickyconflict')) {
             Tools::recurseCopy($dirResources . '/Resources/modules_tests/testtrickyconflict', _PS_MODULE_DIR_ . '/testtrickyconflict');
         }
-        if (is_dir($dirResources . '/Resources/modules_tests/testconstantconflict')) {
-            Tools::recurseCopy($dirResources . '/Resources/modules_tests/testconstantconflict', _PS_MODULE_DIR_ . '/testconstantconflict');
-        }
         if (is_dir($dirResources . '/Resources/modules_tests/testpropertyconflict')) {
             Tools::recurseCopy($dirResources . '/Resources/modules_tests/testpropertyconflict', _PS_MODULE_DIR_ . '/testpropertyconflict');
         }
@@ -107,9 +104,6 @@ class ModuleManagerBuilderTest extends TestCase
         if (Module::isInstalled('testpropertyconflict')) {
             Module::getInstanceByName('testpropertyconflict')->uninstall();
         }
-        if (Module::isInstalled('testconstantconflict')) {
-            Module::getInstanceByName('testconstantconflict')->uninstall();
-        }
 
         // Remove modules
         if (is_dir(_PS_MODULE_DIR_ . '/pscsx3241')) {
@@ -126,9 +120,6 @@ class ModuleManagerBuilderTest extends TestCase
         }
         if (is_dir(_PS_MODULE_DIR_ . '/testpropertyconflict')) {
             Tools::deleteDirectory(_PS_MODULE_DIR_ . '/testpropertyconflict');
-        }
-        if (is_dir(_PS_MODULE_DIR_ . '/testconstantconflict')) {
-            Tools::deleteDirectory(_PS_MODULE_DIR_ . '/testconstantconflict');
         }
 
         // Remove overrides
@@ -153,7 +144,7 @@ class ModuleManagerBuilderTest extends TestCase
             'pscsx3241',
         ];
 
-        $this->conflictModuleNames = ['testbasicconflict', 'testtrickyconflict', 'testpropertyconflict', 'testconstantconflict'];
+        $this->conflictModuleNames = ['testbasicconflict', 'testtrickyconflict', 'testpropertyconflict'];
     }
 
     public function testInstall(): void
@@ -172,20 +163,17 @@ class ModuleManagerBuilderTest extends TestCase
          */
         $resource_path = dirname(__DIR__, 4) . '/Resources/modules_tests/override/';
 
-        $actual_override_cart = file_get_contents(_PS_ROOT_DIR_ . '/override/classes/Cart.php');
-        $expected_override_cart = file_get_contents($resource_path . '/classes/Cart.php');
-
-        $actual_override_cart = $this->cleanup($actual_override_cart);
-        $expected_override_cart = $this->cleanup($expected_override_cart);
+        $actual_override_cart = $this->cleanup(file_get_contents(_PS_ROOT_DIR_ . '/override/classes/Cart.php'));
+        $expected_override_cart = $this->cleanup(file_get_contents($resource_path . 'classes/Cart.php'));
 
         $this->assertEquals($expected_override_cart, $actual_override_cart);
 
-        $actual_override_admin_product = file_get_contents(_PS_ROOT_DIR_ . '/override/controllers/admin/AdminProductsController.php');
-        $expected_override_admin_product = file_get_contents($resource_path . '/controllers/admin/AdminProductsController.php');
+        $actual_override_admin_product = $this->cleanup(file_get_contents(_PS_ROOT_DIR_ . '/override/controllers/admin/AdminProductsController.php'));
+        $expected_override_admin_product = $this->cleanup(file_get_contents($resource_path . '/controllers/admin/AdminProductsController.php'));
 
         $this->assertEquals(
-            $this->cleanup($expected_override_admin_product),
-            $this->cleanup($actual_override_admin_product),
+            $actual_override_admin_product,
+            $expected_override_admin_product,
             'AdminProductsController.php file different'
         );
 
