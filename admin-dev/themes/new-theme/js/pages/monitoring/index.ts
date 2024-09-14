@@ -50,7 +50,7 @@ $(() => {
     'product_without_description',
     'product_without_price',
   ].forEach((gridName) => {
-    const grid = new Grid(gridName);
+    const grid = new window.prestashop.component.Grid(gridName);
 
     grid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
     grid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());

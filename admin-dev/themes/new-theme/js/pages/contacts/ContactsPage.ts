@@ -23,9 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import TranslatableInput from '@components/translatable-input';
-import ChoiceTree from '@components/form/choice-tree';
-
 /**
  * Responsible for actions in Contacts listing page.
  */
@@ -43,8 +40,12 @@ export default class ContactsPage {
     contactGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
     contactGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
 
-    new TranslatableInput();
+    window.prestashop.component.initComponents(
+      [
+        'TranslatableInput',
+      ],
+    );
 
-    new ChoiceTree('#contact_shop_association').enableAutoCheckChildren();
+    new window.prestashop.component.ChoiceTree('#contact_shop_association').enableAutoCheckChildren();
   }
 }

@@ -23,10 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ChoiceTree from '@components/form/choice-tree';
-
-const {$} = window;
-
 $(() => {
   const grid = new window.prestashop.component.Grid('language');
 
@@ -42,5 +38,5 @@ $(() => {
   grid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
 
   // needed for shop association input in form
-  new ChoiceTree('#language_shop_association').enableAutoCheckChildren();
+  new window.prestashop.component.ChoiceTree('#language_shop_association').enableAutoCheckChildren();
 });

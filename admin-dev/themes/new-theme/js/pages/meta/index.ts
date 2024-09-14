@@ -25,8 +25,6 @@
 
 import ShowcaseCard from '@components/showcase-card/showcase-card';
 import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
-import TaggableField from '@components/taggable-field';
-import TranslatableInput from '@components/translatable-input';
 import MetaPageNameOptionHandler from '@pages/meta/meta-page-name-option-handler';
 import TextWithRecommendedLengthCounter from '@components/form/text-with-recommended-length-counter';
 
@@ -48,19 +46,19 @@ $(() => {
   const helperBlock = new ShowcaseCard('seo-urls-showcase-card');
   helperBlock.addExtension(new ShowcaseCardCloseExtension());
 
-  new TaggableField({
+  new window.prestashop.component.TaggableField({
     tokenFieldSelector: 'input.js-taggable-field',
     options: {
       createTokensOnBlur: true,
     },
   });
 
-  new TranslatableInput();
   new MetaPageNameOptionHandler();
 
   window.prestashop.component.initComponents(
     [
       'MultistoreConfigField',
+      'TranslatableInput',
     ],
   );
 

@@ -23,10 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ChoiceTree from '@components/form/choice-tree';
-import TranslatableInput from '@components/translatable-input';
 import textToLinkRewriteCopier from '@components/text-to-link-rewrite-copier';
-import TaggableField from '@components/taggable-field';
 import ShowcaseCard from '@components/showcase-card/showcase-card';
 import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
 
@@ -47,7 +44,13 @@ $(() => {
   cmsCategory.addExtension(new window.prestashop.component.GridExtensions.PositionExtension(cmsCategory));
   cmsCategory.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
 
-  const translatorInput = new TranslatableInput();
+  window.prestashop.component.initComponents(
+    [
+      'TranslatableInput',
+    ],
+  );
+
+  const translatorInput = window.prestashop.instance.translatableInput;
 
   textToLinkRewriteCopier({
     sourceElementSelector: 'input[name^="cms_page_category[name]"]',
@@ -55,12 +58,12 @@ $(() => {
     destinationElementSelector: `${translatorInput.localeInputSelector}:not(.d-none) input[name^="cms_page_category[friendly_url]"]`,
   });
 
-  new ChoiceTree('#cms_page_category_parent_category');
+  new window.prestashop.component.ChoiceTree('#cms_page_category_parent_category');
 
-  const shopChoiceTree = new ChoiceTree('#cms_page_category_shop_association');
+  const shopChoiceTree = new window.prestashop.component.ChoiceTree('#cms_page_category_shop_association');
   shopChoiceTree.enableAutoCheckChildren();
 
-  new TaggableField({
+  new window.prestashop.component.TaggableField({
     tokenFieldSelector: 'input[name^="cms_page_category[meta_keywords]"]',
     options: {
       createTokensOnBlur: true,

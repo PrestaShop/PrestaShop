@@ -23,14 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import TranslatableInput from '../../components/translatable-input';
-
-const {$} = window;
-
 $(() => {
   window.prestashop.component.initComponents(
     [
       'MultistoreConfigField',
+      'TranslatableInput',
     ],
   );
 
@@ -38,6 +35,4 @@ $(() => {
   grid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
   grid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
   grid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
-
-  new TranslatableInput();
 });

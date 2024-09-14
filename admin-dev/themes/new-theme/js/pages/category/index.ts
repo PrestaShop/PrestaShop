@@ -28,7 +28,6 @@ import CategoryPositionExtension from '@components/grid/extension/column/catalog
 import DeleteCategoryRowActionExtension from '@components/grid/extension/action/row/category/delete-category-row-action-extension';
 import DeleteCategoriesBulkActionExtension from '@components/grid/extension/action/bulk/category/delete-categories-bulk-action-extension';
 /* eslint-enable */
-import ChoiceTable from '@components/choice-table';
 import textToLinkRewriteCopier from '@components/text-to-link-rewrite-copier';
 import FormSubmitButton from '@components/form-submit-button';
 import ShowcaseCard from '@components/showcase-card/showcase-card';
@@ -63,11 +62,11 @@ $(() => {
       'TinyMCEEditor',
       'TranslatableInput',
       'TextWithRecommendedLengthCounter',
+      'ChoiceTable',
     ],
   );
 
   const translatorInput = window.prestashop.instance.translatableInput;
-  new ChoiceTable();
 
   textToLinkRewriteCopier({
     sourceElementSelector: 'input[name^="category[name]"]',

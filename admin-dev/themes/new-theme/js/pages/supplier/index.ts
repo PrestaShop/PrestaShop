@@ -23,9 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-
-const {$} = window;
-
 $(() => {
   const supplierGrid = new window.prestashop.component.Grid('supplier');
   supplierGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());

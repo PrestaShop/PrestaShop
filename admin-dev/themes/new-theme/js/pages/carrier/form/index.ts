@@ -24,7 +24,6 @@
  */
 
 import NavbarHandler from '@components/navbar-handler';
-import ChoiceTable from '@js/components/choice-table';
 import CarrierFormManager from '@pages/carrier/form/carrier-form-manager';
 import CarrierRanges from '@pages/carrier/form/carrier-range-modal';
 import CarrierFormMap from './carrier-form-map';
@@ -35,12 +34,11 @@ $(() => {
     'TranslatableInput',
     'EventEmitter',
     'MultipleZoneChoice',
+    'ChoiceTable',
   ]);
 
   // Initialize the ranges selection modal
   new CarrierRanges(window.prestashop.instance.eventEmitter);
-
-  new ChoiceTable();
 
   new NavbarHandler($(CarrierFormMap.navigationBar));
 

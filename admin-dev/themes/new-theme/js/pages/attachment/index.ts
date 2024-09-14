@@ -23,10 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import TranslatableInput from '@components/translatable-input';
-
-const {$} = window;
-
 $(() => {
   const attachmentGrid = new window.prestashop.component.Grid('attachment');
 
@@ -39,5 +35,9 @@ $(() => {
   attachmentGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
   attachmentGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
 
-  new TranslatableInput();
+  window.prestashop.component.initComponents(
+    [
+      'TranslatableInput',
+    ],
+  );
 });

@@ -23,8 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import TranslatableInput from '@components/translatable-input';
-
 /**
  * Responsible for actions in Profiles listing page.
  */
@@ -43,6 +41,10 @@ export default class ProfilesPage {
     profilesGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
     profilesGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
 
-    new TranslatableInput();
+    window.prestashop.component.initComponents(
+      [
+        'TranslatableInput',
+      ],
+    );
   }
 }

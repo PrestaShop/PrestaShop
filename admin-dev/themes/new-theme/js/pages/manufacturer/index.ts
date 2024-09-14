@@ -29,7 +29,7 @@ const {$} = window;
 
 $(() => {
   ['manufacturer', 'manufacturer_address'].forEach((gridName) => {
-    const grid = new Grid(gridName);
+    const grid = new window.prestashop.component.Grid(gridName);
     grid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
     grid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
     grid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());

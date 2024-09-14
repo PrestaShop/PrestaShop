@@ -23,10 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ChoiceTree from '@components/form/choice-tree';
-
-const {$} = window;
-
 $(() => {
   const grid = new window.prestashop.component.Grid('zone');
 
@@ -43,5 +39,5 @@ $(() => {
   grid.addExtension(new window.prestashop.component.GridExtensions.ColumnTogglingExtension());
   grid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
 
-  new ChoiceTree('#zone_shop_association').enableAutoCheckChildren();
+  new window.prestashop.component.ChoiceTree('#zone_shop_association').enableAutoCheckChildren();
 });

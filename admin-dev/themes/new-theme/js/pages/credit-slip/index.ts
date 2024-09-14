@@ -23,10 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import TranslatableInput from '../../components/translatable-input';
-
-const {$} = window;
-
 $(() => {
   const creditSlipGrid = new window.prestashop.component.Grid('credit_slip');
 
@@ -36,5 +32,9 @@ $(() => {
   creditSlipGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
   creditSlipGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
 
-  new TranslatableInput();
+  window.prestashop.component.initComponents(
+    [
+      'TranslatableInput',
+    ],
+  );
 });

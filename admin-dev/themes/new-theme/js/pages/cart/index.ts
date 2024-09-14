@@ -24,9 +24,6 @@
  *
  */
 
-
-const {$} = window;
-
 $(() => {
   const grid = new window.prestashop.component.Grid('cart');
   grid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());

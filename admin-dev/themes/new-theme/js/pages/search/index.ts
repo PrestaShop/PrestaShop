@@ -23,10 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import TranslatableInput from '@components/translatable-input';
-
-const {$} = window;
-
 /**
  * Responsible for actions in admin search listing page to list aliases.
  */
@@ -44,5 +40,9 @@ $(() => {
   aliasGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
   aliasGrid.addExtension(new window.prestashop.component.GridExtensions.ColumnTogglingExtension());
 
-  new TranslatableInput();
+  window.prestashop.component.initComponents(
+    [
+      'TranslatableInput',
+    ],
+  );
 });

@@ -23,10 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ChoiceTable from '@components/choice-table';
-
-const {$} = window;
-
 $(() => {
   const addressGrid = new window.prestashop.component.Grid('address');
 
@@ -39,6 +35,9 @@ $(() => {
   addressGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
   addressGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
 
-  // needed for address required fields form
-  new ChoiceTable();
+  window.prestashop.component.initComponents(
+    [
+      'ChoiceTable',
+    ],
+  );
 });

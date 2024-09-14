@@ -24,7 +24,6 @@
  */
 
 import TaxMap from '@pages/tax/tax-map';
-import TranslatableInput from '@components/translatable-input';
 import DisplayInCartOptionHandler from '@pages/tax/display-in-cart-option-handler';
 
 const {$} = window;
@@ -44,11 +43,11 @@ $(() => {
   taxGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
 
   new DisplayInCartOptionHandler();
-  new TranslatableInput();
 
   window.prestashop.component.initComponents(
     [
       'MultistoreConfigField',
+      'TranslatableInput',
     ],
   );
 
