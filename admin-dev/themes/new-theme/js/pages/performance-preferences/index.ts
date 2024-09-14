@@ -25,7 +25,6 @@
 
 import ConfirmModal from '@components/modal/confirm-modal';
 import PerformancePreferencesPageMap from '@pages/performance-preferences/PerformancePreferencesPageMap';
-import GeneratableInput from '@components/generatable-input';
 
 const {$} = window;
 
@@ -50,6 +49,8 @@ $(() => {
   });
 
   // Initialize cookie name and value generatable inputs
-  const generatableInput = new GeneratableInput();
-  generatableInput.attachOn('.js-generator-btn');
+  window.prestashop.component.initComponents([
+    'GeneratableInput',
+  ]);
+  window.prestashop.instance.generatableInput.attachOn('.js-generator-btn');
 });

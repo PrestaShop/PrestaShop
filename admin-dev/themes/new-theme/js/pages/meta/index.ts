@@ -26,7 +26,6 @@
 import ShowcaseCard from '@components/showcase-card/showcase-card';
 import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
 import MetaPageNameOptionHandler from '@pages/meta/meta-page-name-option-handler';
-import TextWithRecommendedLengthCounter from '@components/form/text-with-recommended-length-counter';
 
 const {$} = window;
 
@@ -59,8 +58,7 @@ $(() => {
     [
       'MultistoreConfigField',
       'TranslatableInput',
+      'TextWithRecommendedLengthCounter',
     ],
   );
-
-  new TextWithRecommendedLengthCounter();
 });
