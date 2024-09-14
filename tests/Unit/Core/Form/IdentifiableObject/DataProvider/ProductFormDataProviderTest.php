@@ -1008,12 +1008,14 @@ class ProductFormDataProviderTest extends TestCase
                     'name' => $localizedNames,
                     'type' => 1,
                     'required' => false,
+                    'addedByModule' => false,
                 ],
                 [
                     'id' => 2,
                     'name' => $localizedNames,
                     'type' => 0,
                     'required' => true,
+                    'addedByModule' => false,
                 ],
             ],
         ];
@@ -1024,12 +1026,14 @@ class ProductFormDataProviderTest extends TestCase
                 'name' => $localizedNames,
                 'type' => CustomizationFieldType::TYPE_TEXT,
                 'required' => false,
+                'addedByModule' => false,
             ],
             [
                 'id' => 2,
                 'name' => $localizedNames,
                 'type' => CustomizationFieldType::TYPE_FILE,
                 'required' => true,
+                'addedByModule' => false,
             ],
         ];
 
