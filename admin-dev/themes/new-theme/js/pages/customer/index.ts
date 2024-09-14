@@ -23,71 +23,58 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Grid from '@components/grid/grid';
-import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
-import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
-import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
 import FormSubmitButton from '@components/form-submit-button';
-import SortingExtension from '@components/grid/extension/sorting-extension';
-import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
-import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
-import SubmitGridExtension from '@components/grid/extension/submit-grid-action-extension';
-import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
-import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 import LinkableItem from '@components/linkable-item';
 import DeleteCustomersBulkActionExtension
   from '@components/grid/extension/action/bulk/customer/delete-customers-bulk-action-extension';
 import DeleteCustomerRowActionExtension
   from '@components/grid/extension/action/row/customer/delete-customer-row-action-extension';
-import FiltersSubmitButtonEnablerExtension
-  from '@components/grid/extension/filters-submit-button-enabler-extension';
 import ShowcaseCard from '@components/showcase-card/showcase-card';
 import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
-import AsyncToggleColumnExtension from '@components/grid/extension/column/common/async-toggle-column-extension';
 import CustomerFormMap from '@pages/customer/customer-form-map';
 
 const {$} = window;
 
 $(() => {
-  const customerGrid = new Grid('customer');
+  const customerGrid = new window.prestashop.component.Grid('customer');
 
-  customerGrid.addExtension(new ReloadListActionExtension());
-  customerGrid.addExtension(new ExportToSqlManagerExtension());
-  customerGrid.addExtension(new FiltersResetExtension());
-  customerGrid.addExtension(new SortingExtension());
-  customerGrid.addExtension(new BulkActionCheckboxExtension());
-  customerGrid.addExtension(new SubmitBulkExtension());
-  customerGrid.addExtension(new SubmitGridExtension());
-  customerGrid.addExtension(new LinkRowActionExtension());
+  customerGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListActionExtension());
+  customerGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
+  customerGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+  customerGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  customerGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
+  customerGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkExtension());
+  customerGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitGridExtension());
+  customerGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
   customerGrid.addExtension(new DeleteCustomersBulkActionExtension());
   customerGrid.addExtension(new DeleteCustomerRowActionExtension());
-  customerGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
-  customerGrid.addExtension(new AsyncToggleColumnExtension());
+  customerGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
+  customerGrid.addExtension(new window.prestashop.component.GridExtensions.AsyncToggleColumnExtension());
 
-  const customerDiscountsGrid = new Grid('customer_discount');
-  customerDiscountsGrid.addExtension(new SubmitRowActionExtension());
-  customerDiscountsGrid.addExtension(new LinkRowActionExtension());
+  const customerDiscountsGrid = new window.prestashop.component.Grid('customer_discount');
+  customerDiscountsGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
+  customerDiscountsGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
 
-  const customerAddressesGrid = new Grid('customer_address');
-  customerAddressesGrid.addExtension(new SubmitRowActionExtension());
-  customerAddressesGrid.addExtension(new SortingExtension());
-  customerAddressesGrid.addExtension(new LinkRowActionExtension());
+  const customerAddressesGrid = new window.prestashop.component.Grid('customer_address');
+  customerAddressesGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
+  customerAddressesGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  customerAddressesGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
 
-  const customerOrdersGrid = new Grid('customer_order');
-  customerOrdersGrid.addExtension(new SortingExtension());
-  customerOrdersGrid.addExtension(new SubmitRowActionExtension());
-  customerOrdersGrid.addExtension(new LinkRowActionExtension());
+  const customerOrdersGrid = new window.prestashop.component.Grid('customer_order');
+  customerOrdersGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  customerOrdersGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
+  customerOrdersGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
 
-  const customerCartsGrid = new Grid('customer_cart');
-  customerCartsGrid.addExtension(new SortingExtension());
-  customerCartsGrid.addExtension(new SubmitRowActionExtension());
-  customerCartsGrid.addExtension(new LinkRowActionExtension());
+  const customerCartsGrid = new window.prestashop.component.Grid('customer_cart');
+  customerCartsGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  customerCartsGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
+  customerCartsGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
 
-  const customerBoughtProductsGrid = new Grid('customer_bought_product');
-  customerBoughtProductsGrid.addExtension(new SortingExtension());
+  const customerBoughtProductsGrid = new window.prestashop.component.Grid('customer_bought_product');
+  customerBoughtProductsGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
 
-  const customerViewedProductsGrid = new Grid('customer_viewed_product');
-  customerViewedProductsGrid.addExtension(new SortingExtension());
+  const customerViewedProductsGrid = new window.prestashop.component.Grid('customer_viewed_product');
+  customerViewedProductsGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
 
   const showcaseCard = new ShowcaseCard('customersShowcaseCard');
   showcaseCard.addExtension(new ShowcaseCardCloseExtension());

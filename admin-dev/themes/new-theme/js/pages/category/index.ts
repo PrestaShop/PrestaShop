@@ -23,17 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Grid from '@components/grid/grid';
-import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
-import SortingExtension from '@components/grid/extension/sorting-extension';
-import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
-import ReloadListExtension from '@components/grid/extension/reload-list-extension';
-import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
-import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
-import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
-import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 import CategoryPositionExtension from '@components/grid/extension/column/catalog/category-position-extension';
-import AsyncToggleColumnExtension from '@components/grid/extension/column/common/async-toggle-column-extension';
 /* eslint-disable */
 import DeleteCategoryRowActionExtension from '@components/grid/extension/action/row/category/delete-category-row-action-extension';
 import DeleteCategoriesBulkActionExtension from '@components/grid/extension/action/bulk/category/delete-categories-bulk-action-extension';
@@ -41,7 +31,6 @@ import DeleteCategoriesBulkActionExtension from '@components/grid/extension/acti
 import ChoiceTable from '@components/choice-table';
 import textToLinkRewriteCopier from '@components/text-to-link-rewrite-copier';
 import FormSubmitButton from '@components/form-submit-button';
-import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
 import ShowcaseCard from '@components/showcase-card/showcase-card';
 import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
 import Serp from '@app/utils/serp/index';
@@ -49,21 +38,21 @@ import Serp from '@app/utils/serp/index';
 const {$} = window;
 
 $(() => {
-  const categoriesGrid = new Grid('category');
+  const categoriesGrid = new window.prestashop.component.Grid('category');
 
-  categoriesGrid.addExtension(new FiltersResetExtension());
-  categoriesGrid.addExtension(new SortingExtension());
+  categoriesGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+  categoriesGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
   categoriesGrid.addExtension(new CategoryPositionExtension(categoriesGrid));
-  categoriesGrid.addExtension(new ExportToSqlManagerExtension());
-  categoriesGrid.addExtension(new ReloadListExtension());
-  categoriesGrid.addExtension(new BulkActionCheckboxExtension());
-  categoriesGrid.addExtension(new SubmitBulkExtension());
-  categoriesGrid.addExtension(new SubmitRowActionExtension());
-  categoriesGrid.addExtension(new LinkRowActionExtension());
-  categoriesGrid.addExtension(new AsyncToggleColumnExtension());
+  categoriesGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
+  categoriesGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
+  categoriesGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
+  categoriesGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkExtension());
+  categoriesGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
+  categoriesGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
+  categoriesGrid.addExtension(new window.prestashop.component.GridExtensions.AsyncToggleColumnExtension());
   categoriesGrid.addExtension(new DeleteCategoryRowActionExtension());
   categoriesGrid.addExtension(new DeleteCategoriesBulkActionExtension());
-  categoriesGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
+  categoriesGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
 
   const showcaseCard = new ShowcaseCard('categoriesShowcaseCard');
   showcaseCard.addExtension(new ShowcaseCardCloseExtension());

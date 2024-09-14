@@ -23,37 +23,23 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Grid from '@components/grid/grid';
-import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
-import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
-import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
-import SortingExtension from '@components/grid/extension/sorting-extension';
-import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
-import SubmitGridExtension from '@components/grid/extension/submit-grid-action-extension';
-import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
-import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
-import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
-import ChoiceExtension from '@components/grid/extension/choice-extension';
-import ModalFormSubmitExtension from '@components/grid/extension/modal-form-submit-extension';
-import PreviewExtension from '@components/grid/extension/preview-extension';
 import previewProductsToggler from '@pages/order/preview-products-toggler';
-import BulkOpenTabsExtension from '@components/grid/extension/bulk-open-tabs-extension';
 
 const {$} = window;
 
 $(() => {
-  const orderGrid = new Grid('order');
-  orderGrid.addExtension(new ReloadListActionExtension());
-  orderGrid.addExtension(new ExportToSqlManagerExtension());
-  orderGrid.addExtension(new FiltersResetExtension());
-  orderGrid.addExtension(new SortingExtension());
-  orderGrid.addExtension(new LinkRowActionExtension());
-  orderGrid.addExtension(new SubmitGridExtension());
-  orderGrid.addExtension(new SubmitBulkExtension());
-  orderGrid.addExtension(new BulkActionCheckboxExtension());
-  orderGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
-  orderGrid.addExtension(new ModalFormSubmitExtension());
-  orderGrid.addExtension(new ChoiceExtension());
-  orderGrid.addExtension(new PreviewExtension(previewProductsToggler, orderGrid));
-  orderGrid.addExtension(new BulkOpenTabsExtension());
+  const orderGrid = new window.prestashop.component.Grid('order');
+  orderGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListActionExtension());
+  orderGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
+  orderGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+  orderGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  orderGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
+  orderGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitGridExtension());
+  orderGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkExtension());
+  orderGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
+  orderGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
+  orderGrid.addExtension(new window.prestashop.component.GridExtensions.ModalFormSubmitExtension());
+  orderGrid.addExtension(new window.prestashop.component.GridExtensions.ChoiceExtension());
+  orderGrid.addExtension(new window.prestashop.component.GridExtensions.PreviewExtension(previewProductsToggler, orderGrid));
+  orderGrid.addExtension(new window.prestashop.component.GridExtensions.BulkOpenTabsExtension());
 });

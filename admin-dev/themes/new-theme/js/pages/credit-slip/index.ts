@@ -23,24 +23,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Grid from '../../components/grid/grid';
-import SortingExtension from '../../components/grid/extension/sorting-extension';
-import FiltersResetExtension from '../../components/grid/extension/filters-reset-extension';
-import ReloadListActionExtension from '../../components/grid/extension/reload-list-extension';
-import ExportToSqlManagerExtension from '../../components/grid/extension/export-to-sql-manager-extension';
 import TranslatableInput from '../../components/translatable-input';
-import FiltersSubmitButtonEnablerExtension from '../../components/grid/extension/filters-submit-button-enabler-extension';
 
 const {$} = window;
 
 $(() => {
-  const creditSlipGrid = new Grid('credit_slip');
+  const creditSlipGrid = new window.prestashop.component.Grid('credit_slip');
 
-  creditSlipGrid.addExtension(new ExportToSqlManagerExtension());
-  creditSlipGrid.addExtension(new ReloadListActionExtension());
-  creditSlipGrid.addExtension(new SortingExtension());
-  creditSlipGrid.addExtension(new FiltersResetExtension());
-  creditSlipGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
+  creditSlipGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
+  creditSlipGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListActionExtension());
+  creditSlipGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  creditSlipGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+  creditSlipGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
 
   new TranslatableInput();
 });

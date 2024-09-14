@@ -23,30 +23,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Grid from '@components/grid/grid';
-import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
-import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
-import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
-import SortingExtension from '@components/grid/extension/sorting-extension';
-import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
-import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
-import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
-import FiltersSubmitButtonEnablerExtension
-  from '@components/grid/extension/filters-submit-button-enabler-extension';
-import SubmitBulkActionExtension from '@components/grid/extension/submit-bulk-action-extension';
 
 const {$} = window;
 
 $(() => {
-  const orderMessageGrid = new Grid('order_message');
+  const orderMessageGrid = new window.prestashop.component.Grid('order_message');
 
-  orderMessageGrid.addExtension(new ReloadListActionExtension());
-  orderMessageGrid.addExtension(new ExportToSqlManagerExtension());
-  orderMessageGrid.addExtension(new FiltersResetExtension());
-  orderMessageGrid.addExtension(new SortingExtension());
-  orderMessageGrid.addExtension(new LinkRowActionExtension());
-  orderMessageGrid.addExtension(new SubmitBulkActionExtension());
-  orderMessageGrid.addExtension(new BulkActionCheckboxExtension());
-  orderMessageGrid.addExtension(new SubmitRowActionExtension());
-  orderMessageGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
+  orderMessageGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListActionExtension());
+  orderMessageGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
+  orderMessageGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+  orderMessageGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  orderMessageGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
+  orderMessageGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
+  orderMessageGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
+  orderMessageGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
+  orderMessageGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
 });

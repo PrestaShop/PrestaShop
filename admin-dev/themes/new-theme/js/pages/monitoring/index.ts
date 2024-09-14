@@ -23,39 +23,24 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Grid from '@components/grid/grid';
-import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
-import SortingExtension from '@components/grid/extension/sorting-extension';
-import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
-import SubmitRowActionExtension
-  from '@components/grid/extension/action/row/submit-row-action-extension';
-import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 import DeleteCategoryRowActionExtension
   from '@components/grid/extension/action/row/category/delete-category-row-action-extension';
-import AsyncToggleColumnExtension
-  from '@components/grid/extension/column/common/async-toggle-column-extension';
-import FiltersSubmitButtonEnablerExtension
-  from '@components/grid/extension/filters-submit-button-enabler-extension';
-import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
-import ExportToSqlManagerExtension
-  from '@components/grid/extension/export-to-sql-manager-extension';
 import ShowcaseCard from '@components/showcase-card/showcase-card';
 import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
-import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
 
 const {$} = window;
 
 $(() => {
-  const emptyCategoriesGrid = new Grid('empty_category');
+  const emptyCategoriesGrid = new window.prestashop.component.Grid('empty_category');
 
-  emptyCategoriesGrid.addExtension(new FiltersResetExtension());
-  emptyCategoriesGrid.addExtension(new SortingExtension());
-  emptyCategoriesGrid.addExtension(new ReloadListActionExtension());
-  emptyCategoriesGrid.addExtension(new SubmitRowActionExtension());
-  emptyCategoriesGrid.addExtension(new LinkRowActionExtension());
-  emptyCategoriesGrid.addExtension(new AsyncToggleColumnExtension());
+  emptyCategoriesGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+  emptyCategoriesGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  emptyCategoriesGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListActionExtension());
+  emptyCategoriesGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
+  emptyCategoriesGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
+  emptyCategoriesGrid.addExtension(new window.prestashop.component.GridExtensions.AsyncToggleColumnExtension());
   emptyCategoriesGrid.addExtension(new DeleteCategoryRowActionExtension());
-  emptyCategoriesGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
+  emptyCategoriesGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
 
   [
     'no_qty_product_with_combination',
@@ -67,16 +52,16 @@ $(() => {
   ].forEach((gridName) => {
     const grid = new Grid(gridName);
 
-    grid.addExtension(new SortingExtension());
-    grid.addExtension(new ExportToSqlManagerExtension());
-    grid.addExtension(new ReloadListActionExtension());
-    grid.addExtension(new FiltersResetExtension());
-    grid.addExtension(new AsyncToggleColumnExtension());
-    grid.addExtension(new SubmitRowActionExtension());
-    grid.addExtension(new BulkActionCheckboxExtension());
-    grid.addExtension(new SubmitBulkExtension());
-    grid.addExtension(new LinkRowActionExtension());
-    grid.addExtension(new FiltersSubmitButtonEnablerExtension());
+    grid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+    grid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
+    grid.addExtension(new window.prestashop.component.GridExtensions.ReloadListActionExtension());
+    grid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+    grid.addExtension(new window.prestashop.component.GridExtensions.AsyncToggleColumnExtension());
+    grid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
+    grid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
+    grid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkExtension());
+    grid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
+    grid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
   });
 
   const showcaseCard = new ShowcaseCard('monitoringShowcaseCard');

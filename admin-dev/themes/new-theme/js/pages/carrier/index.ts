@@ -25,35 +25,23 @@
 
 import ShowcaseCard from '@components/showcase-card/showcase-card';
 import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
-import Grid from '@components/grid/grid';
-import SortingExtension from '@components/grid/extension/sorting-extension';
-import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
-import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
-import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
-import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
-import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
-import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
-import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
-import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
-import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
-import PositionExtension from '@components/grid/extension/position-extension';
 
 const {$} = window;
 
 $(() => {
-  const carrierGrid = new Grid('carrier');
+  const carrierGrid = new window.prestashop.component.Grid('carrier');
 
-  carrierGrid.addExtension(new SortingExtension());
-  carrierGrid.addExtension(new ReloadListActionExtension());
-  carrierGrid.addExtension(new PositionExtension(carrierGrid));
-  carrierGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
-  carrierGrid.addExtension(new FiltersResetExtension());
-  carrierGrid.addExtension(new ExportToSqlManagerExtension());
-  carrierGrid.addExtension(new ColumnTogglingExtension());
-  carrierGrid.addExtension(new LinkRowActionExtension());
-  carrierGrid.addExtension(new SubmitRowActionExtension());
-  carrierGrid.addExtension(new SubmitBulkExtension());
-  carrierGrid.addExtension(new BulkActionCheckboxExtension());
+  carrierGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  carrierGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListActionExtension());
+  carrierGrid.addExtension(new window.prestashop.component.GridExtensions.PositionExtension(carrierGrid));
+  carrierGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
+  carrierGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+  carrierGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
+  carrierGrid.addExtension(new window.prestashop.component.GridExtensions.ColumnTogglingExtension());
+  carrierGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
+  carrierGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
+  carrierGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkExtension());
+  carrierGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
 
   const showcaseCard = new ShowcaseCard('carriersShowcaseCard');
   showcaseCard.addExtension(new ShowcaseCardCloseExtension());

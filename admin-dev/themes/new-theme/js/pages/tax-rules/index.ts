@@ -23,24 +23,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Grid from '@components/grid/grid';
-import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
-import ReloadListExtension from '@components/grid/extension/reload-list-extension';
-import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
-import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
-import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import FormSubmitButton from '@components/form-submit-button';
 
 const {$} = window;
 
 $(() => {
-  const taxRuleGrid = new Grid('tax_rule');
+  const taxRuleGrid = new window.prestashop.component.Grid('tax_rule');
 
-  taxRuleGrid.addExtension(new ExportToSqlManagerExtension());
-  taxRuleGrid.addExtension(new ReloadListExtension());
-  taxRuleGrid.addExtension(new BulkActionCheckboxExtension());
-  taxRuleGrid.addExtension(new SubmitBulkExtension());
-  taxRuleGrid.addExtension(new SubmitRowActionExtension());
+  taxRuleGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
+  taxRuleGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
+  taxRuleGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
+  taxRuleGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkExtension());
+  taxRuleGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
 
   new FormSubmitButton();
 });

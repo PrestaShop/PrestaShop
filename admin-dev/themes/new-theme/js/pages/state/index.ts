@@ -23,35 +23,23 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Grid from '@components/grid/grid';
-import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
-import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
-import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
-import SortingExtension from '@components/grid/extension/sorting-extension';
-import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
-import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
-import SubmitGridExtension from '@components/grid/extension/submit-grid-action-extension';
-import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
-import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
-import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
-import AsyncToggleColumnExtension from '@components/grid/extension/column/common/async-toggle-column-extension';
 
 const {$} = window;
 
 class StatePage {
   constructor() {
-    const stateGrid = new Grid('state');
-    stateGrid.addExtension(new FiltersResetExtension());
-    stateGrid.addExtension(new SortingExtension());
-    stateGrid.addExtension(new ExportToSqlManagerExtension());
-    stateGrid.addExtension(new ReloadListActionExtension());
-    stateGrid.addExtension(new BulkActionCheckboxExtension());
-    stateGrid.addExtension(new SubmitBulkExtension());
-    stateGrid.addExtension(new SubmitRowActionExtension());
-    stateGrid.addExtension(new LinkRowActionExtension());
-    stateGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
-    stateGrid.addExtension(new SubmitGridExtension());
-    stateGrid.addExtension(new AsyncToggleColumnExtension());
+    const stateGrid = new window.prestashop.component.Grid('state');
+    stateGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+    stateGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+    stateGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
+    stateGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListActionExtension());
+    stateGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
+    stateGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkExtension());
+    stateGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
+    stateGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
+    stateGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
+    stateGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitGridExtension());
+    stateGrid.addExtension(new window.prestashop.component.GridExtensions.AsyncToggleColumnExtension());
   }
 }
 

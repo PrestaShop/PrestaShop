@@ -23,33 +23,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Grid from '@components/grid/grid';
-import SortingExtension from '@components/grid/extension/sorting-extension';
-import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
-import SubmitGridActionExtension from '@components/grid/extension/submit-grid-action-extension';
-import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
-import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
-import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
-import SubmitBulkActionExtension from '@components/grid/extension/submit-bulk-action-extension';
-import ReloadListExtension from '@components/grid/extension/reload-list-extension';
-import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
-import FiltersSubmitButtonEnablerExtension
-  from '@components/grid/extension/filters-submit-button-enabler-extension';
-import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 
 const {$} = window;
 
 $(() => {
-  const supplierGrid = new Grid('supplier');
-  supplierGrid.addExtension(new SortingExtension());
-  supplierGrid.addExtension(new SubmitGridActionExtension());
-  supplierGrid.addExtension(new FiltersResetExtension());
-  supplierGrid.addExtension(new ColumnTogglingExtension());
-  supplierGrid.addExtension(new SubmitRowActionExtension());
-  supplierGrid.addExtension(new BulkActionCheckboxExtension());
-  supplierGrid.addExtension(new SubmitBulkActionExtension());
-  supplierGrid.addExtension(new ReloadListExtension());
-  supplierGrid.addExtension(new ExportToSqlManagerExtension());
-  supplierGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
-  supplierGrid.addExtension(new LinkRowActionExtension());
+  const supplierGrid = new window.prestashop.component.Grid('supplier');
+  supplierGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  supplierGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitGridActionExtension());
+  supplierGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+  supplierGrid.addExtension(new window.prestashop.component.GridExtensions.ColumnTogglingExtension());
+  supplierGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
+  supplierGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
+  supplierGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
+  supplierGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
+  supplierGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
+  supplierGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
+  supplierGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
 });

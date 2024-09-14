@@ -23,17 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Grid from '@components/grid/grid';
-import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
-import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
-import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
-import SortingExtension from '@components/grid/extension/sorting-extension';
-import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
-import SubmitGridExtension from '@components/grid/extension/submit-grid-action-extension';
-import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
-import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
-import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
-import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
 import TranslatableInput from '@components/translatable-input';
 
 const {$} = window;
@@ -42,18 +31,18 @@ const {$} = window;
  * Responsible for actions in admin search listing page to list aliases.
  */
 $(() => {
-  const aliasGrid = new Grid('alias');
+  const aliasGrid = new window.prestashop.component.Grid('alias');
 
-  aliasGrid.addExtension(new ReloadListActionExtension());
-  aliasGrid.addExtension(new ExportToSqlManagerExtension());
-  aliasGrid.addExtension(new FiltersResetExtension());
-  aliasGrid.addExtension(new SortingExtension());
-  aliasGrid.addExtension(new LinkRowActionExtension());
-  aliasGrid.addExtension(new SubmitGridExtension());
-  aliasGrid.addExtension(new SubmitBulkExtension());
-  aliasGrid.addExtension(new BulkActionCheckboxExtension());
-  aliasGrid.addExtension(new SubmitRowActionExtension());
-  aliasGrid.addExtension(new ColumnTogglingExtension());
+  aliasGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListActionExtension());
+  aliasGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
+  aliasGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+  aliasGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  aliasGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
+  aliasGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitGridExtension());
+  aliasGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkExtension());
+  aliasGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
+  aliasGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
+  aliasGrid.addExtension(new window.prestashop.component.GridExtensions.ColumnTogglingExtension());
 
   new TranslatableInput();
 });

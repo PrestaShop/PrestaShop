@@ -23,32 +23,22 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Grid from '../../components/grid/grid';
-import FiltersResetExtension from '../../components/grid/extension/filters-reset-extension';
-import ReloadListActionExtension from '../../components/grid/extension/reload-list-extension';
-import ExportToSqlManagerExtension from '../../components/grid/extension/export-to-sql-manager-extension';
-import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
-import SubmitBulkActionExtension from '../../components/grid/extension/submit-bulk-action-extension';
-import SortingExtension from '../../components/grid/extension/sorting-extension';
-import SubmitRowActionExtension from '../../components/grid/extension/action/row/submit-row-action-extension';
-import ColumnTogglingExtension from '../../components/grid/extension/column-toggling-extension';
 import PermissionsRowSelector from './permissions-row-selector';
-import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
 
 const {$} = window;
 
 $(() => {
-  const webserviceGrid = new Grid('webservice_key');
+  const webserviceGrid = new window.prestashop.component.Grid('webservice_key');
 
-  webserviceGrid.addExtension(new ReloadListActionExtension());
-  webserviceGrid.addExtension(new ExportToSqlManagerExtension());
-  webserviceGrid.addExtension(new FiltersResetExtension());
-  webserviceGrid.addExtension(new ColumnTogglingExtension());
-  webserviceGrid.addExtension(new SortingExtension());
-  webserviceGrid.addExtension(new SubmitBulkActionExtension());
-  webserviceGrid.addExtension(new SubmitRowActionExtension());
-  webserviceGrid.addExtension(new BulkActionCheckboxExtension());
-  webserviceGrid.addExtension(new LinkRowActionExtension());
+  webserviceGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListActionExtension());
+  webserviceGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
+  webserviceGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+  webserviceGrid.addExtension(new window.prestashop.component.GridExtensions.ColumnTogglingExtension());
+  webserviceGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  webserviceGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
+  webserviceGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
+  webserviceGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
+  webserviceGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
 
   // needed for shop association input in form
   new window.prestashop.component.ChoiceTree('#webservice_key_shop_association').enableAutoCheckChildren();

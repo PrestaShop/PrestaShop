@@ -23,22 +23,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Grid from '@components/grid/grid';
-import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
-import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
-import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
-import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
-import FiltersSubmitButtonEnablerExtension
-  from '@components/grid/extension/filters-submit-button-enabler-extension';
 
 const {$} = window;
 
 $(() => {
-  const backupGrid = new Grid('backup');
+  const backupGrid = new window.prestashop.component.Grid('backup');
 
-  backupGrid.addExtension(new BulkActionCheckboxExtension());
-  backupGrid.addExtension(new SubmitBulkExtension());
-  backupGrid.addExtension(new LinkRowActionExtension());
-  backupGrid.addExtension(new SubmitRowActionExtension());
-  backupGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
+  backupGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
+  backupGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkExtension());
+  backupGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
+  backupGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
+  backupGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
 });
