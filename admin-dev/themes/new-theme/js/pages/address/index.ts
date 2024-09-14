@@ -35,7 +35,7 @@ $(() => {
   addressGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
   addressGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
   addressGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
-  addressGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkExtension());
+  addressGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
   addressGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
   addressGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
 

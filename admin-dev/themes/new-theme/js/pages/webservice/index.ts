@@ -30,7 +30,7 @@ const {$} = window;
 $(() => {
   const webserviceGrid = new window.prestashop.component.Grid('webservice_key');
 
-  webserviceGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListActionExtension());
+  webserviceGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
   webserviceGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
   webserviceGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
   webserviceGrid.addExtension(new window.prestashop.component.GridExtensions.ColumnTogglingExtension());

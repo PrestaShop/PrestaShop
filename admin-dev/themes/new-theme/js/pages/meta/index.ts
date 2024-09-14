@@ -34,13 +34,13 @@ const {$} = window;
 
 $(() => {
   const meta = new window.prestashop.component.Grid('meta');
-  meta.addExtension(new window.prestashop.component.GridExtensions.ReloadListActionExtension());
+  meta.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
   meta.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
   meta.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
   meta.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
   meta.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
-  meta.addExtension(new window.prestashop.component.GridExtensions.SubmitGridExtension());
-  meta.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkExtension());
+  meta.addExtension(new window.prestashop.component.GridExtensions.SubmitGridActionExtension());
+  meta.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
   meta.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
   meta.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
   meta.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());

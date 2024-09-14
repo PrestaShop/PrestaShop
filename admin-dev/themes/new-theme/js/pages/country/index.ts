@@ -34,7 +34,7 @@ $(() => {
   countryGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
   countryGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
   countryGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
-  countryGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkExtension());
+  countryGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
   countryGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
   countryGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
   countryGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());

@@ -35,7 +35,7 @@ $(() => {
   taxRulesGroupGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
   taxRulesGroupGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
   taxRulesGroupGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
-  taxRulesGroupGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkExtension());
+  taxRulesGroupGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
   taxRulesGroupGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
   taxRulesGroupGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
   taxRulesGroupGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());

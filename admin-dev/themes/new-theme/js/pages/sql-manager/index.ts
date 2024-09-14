@@ -29,13 +29,13 @@ const {$} = window;
 class SqlManagerPage {
   constructor() {
     const requestSqlGrid = new window.prestashop.component.Grid('sql_request');
-    requestSqlGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListActionExtension());
+    requestSqlGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
     requestSqlGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
     requestSqlGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
     requestSqlGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
     requestSqlGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
-    requestSqlGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitGridExtension());
-    requestSqlGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkExtension());
+    requestSqlGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitGridActionExtension());
+    requestSqlGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
     requestSqlGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
     requestSqlGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
     requestSqlGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());

@@ -31,7 +31,7 @@ const {$} = window;
 $(() => {
   const employeeGrid = new window.prestashop.component.Grid('employee');
 
-  employeeGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListActionExtension());
+  employeeGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
   employeeGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
   employeeGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
   employeeGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());

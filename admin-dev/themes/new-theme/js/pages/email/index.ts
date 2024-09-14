@@ -32,14 +32,14 @@ const {$} = window;
 $(() => {
   const emailLogsGrid = new window.prestashop.component.Grid('email_logs');
 
-  emailLogsGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListActionExtension());
+  emailLogsGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
   emailLogsGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
   emailLogsGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
   emailLogsGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
   emailLogsGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
-  emailLogsGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkExtension());
+  emailLogsGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
   emailLogsGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
-  emailLogsGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitGridExtension());
+  emailLogsGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitGridActionExtension());
   emailLogsGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
   emailLogsGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
 

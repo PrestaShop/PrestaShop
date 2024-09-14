@@ -32,7 +32,7 @@ $(() => {
   const carrierGrid = new window.prestashop.component.Grid('carrier');
 
   carrierGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
-  carrierGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListActionExtension());
+  carrierGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
   carrierGrid.addExtension(new window.prestashop.component.GridExtensions.PositionExtension(carrierGrid));
   carrierGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
   carrierGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
@@ -40,7 +40,7 @@ $(() => {
   carrierGrid.addExtension(new window.prestashop.component.GridExtensions.ColumnTogglingExtension());
   carrierGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
   carrierGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
-  carrierGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkExtension());
+  carrierGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
   carrierGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
 
   const showcaseCard = new ShowcaseCard('carriersShowcaseCard');

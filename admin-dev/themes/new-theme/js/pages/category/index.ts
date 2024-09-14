@@ -46,7 +46,7 @@ $(() => {
   categoriesGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
   categoriesGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
   categoriesGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
-  categoriesGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkExtension());
+  categoriesGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
   categoriesGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
   categoriesGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
   categoriesGrid.addExtension(new window.prestashop.component.GridExtensions.AsyncToggleColumnExtension());

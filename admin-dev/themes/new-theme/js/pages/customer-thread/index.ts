@@ -30,12 +30,12 @@ $(() => {
   const grid = new window.prestashop.component.Grid('customer_thread');
 
   grid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
-  grid.addExtension(new window.prestashop.component.GridExtensions.ReloadListActionExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
   grid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
   grid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
   grid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
-  grid.addExtension(new window.prestashop.component.GridExtensions.SubmitGridExtension());
-  grid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.SubmitGridActionExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
   grid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
   grid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
   grid.addExtension(new window.prestashop.component.GridExtensions.ColumnTogglingExtension());

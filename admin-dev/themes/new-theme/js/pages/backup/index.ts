@@ -30,7 +30,7 @@ $(() => {
   const backupGrid = new window.prestashop.component.Grid('backup');
 
   backupGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
-  backupGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkExtension());
+  backupGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
   backupGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
   backupGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
   backupGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());

@@ -31,7 +31,7 @@ $(() => {
   const creditSlipGrid = new window.prestashop.component.Grid('credit_slip');
 
   creditSlipGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
-  creditSlipGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListActionExtension());
+  creditSlipGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
   creditSlipGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
   creditSlipGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
   creditSlipGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());

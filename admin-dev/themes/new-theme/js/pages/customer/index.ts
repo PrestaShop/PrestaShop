@@ -38,13 +38,13 @@ const {$} = window;
 $(() => {
   const customerGrid = new window.prestashop.component.Grid('customer');
 
-  customerGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListActionExtension());
+  customerGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
   customerGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
   customerGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
   customerGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
   customerGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
-  customerGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkExtension());
-  customerGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitGridExtension());
+  customerGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
+  customerGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitGridActionExtension());
   customerGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
   customerGrid.addExtension(new DeleteCustomersBulkActionExtension());
   customerGrid.addExtension(new DeleteCustomerRowActionExtension());

@@ -29,7 +29,7 @@ const {$} = window;
 $(() => {
   const grid = new window.prestashop.component.Grid('logs');
 
-  grid.addExtension(new window.prestashop.component.GridExtensions.ReloadListActionExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
   grid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
   grid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
   grid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());

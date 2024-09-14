@@ -35,12 +35,12 @@ const {$} = window;
 $(() => {
   const cmsCategory = new window.prestashop.component.Grid('cms_page_category');
 
-  cmsCategory.addExtension(new window.prestashop.component.GridExtensions.ReloadListActionExtension());
+  cmsCategory.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
   cmsCategory.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
   cmsCategory.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
   cmsCategory.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
   cmsCategory.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
-  cmsCategory.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkExtension());
+  cmsCategory.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
   cmsCategory.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
   cmsCategory.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
   cmsCategory.addExtension(new window.prestashop.component.GridExtensions.ColumnTogglingExtension());
@@ -68,13 +68,13 @@ $(() => {
   });
 
   const cmsGrid = new window.prestashop.component.Grid('cms_page');
-  cmsGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListActionExtension());
+  cmsGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
   cmsGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
   cmsGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
   cmsGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
   cmsGrid.addExtension(new window.prestashop.component.GridExtensions.ColumnTogglingExtension());
   cmsGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
-  cmsGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkExtension());
+  cmsGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
   cmsGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
   cmsGrid.addExtension(new window.prestashop.component.GridExtensions.PositionExtension(cmsGrid));
   cmsGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());

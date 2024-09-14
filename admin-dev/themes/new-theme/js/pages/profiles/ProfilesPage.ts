@@ -32,13 +32,13 @@ export default class ProfilesPage {
   constructor() {
     const profilesGrid = new window.prestashop.component.Grid('profile');
 
-    profilesGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListActionExtension());
+    profilesGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
     profilesGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
     profilesGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
     profilesGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
     profilesGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
-    profilesGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitGridExtension());
-    profilesGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkExtension());
+    profilesGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitGridActionExtension());
+    profilesGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
     profilesGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
     profilesGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
     profilesGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());

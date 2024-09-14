@@ -35,7 +35,7 @@ $(() => {
   attachmentGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
   attachmentGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
   attachmentGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
-  attachmentGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkExtension());
+  attachmentGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
   attachmentGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
   attachmentGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
 

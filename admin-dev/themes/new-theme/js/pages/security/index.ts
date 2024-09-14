@@ -30,13 +30,13 @@ const {$} = window;
 $(() => {
   const employeeSessionGrid = new window.prestashop.component.Grid('security_session_employee');
 
-  employeeSessionGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListActionExtension());
+  employeeSessionGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
   employeeSessionGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
   employeeSessionGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
   employeeSessionGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
   employeeSessionGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
-  employeeSessionGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkExtension());
-  employeeSessionGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitGridExtension());
+  employeeSessionGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
+  employeeSessionGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitGridActionExtension());
   employeeSessionGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
   employeeSessionGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
   employeeSessionGrid.addExtension(new window.prestashop.component.GridExtensions.ColumnTogglingExtension());
@@ -44,13 +44,13 @@ $(() => {
 
   const customerSessionsGrid = new window.prestashop.component.Grid('security_session_customer');
 
-  customerSessionsGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListActionExtension());
+  customerSessionsGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
   customerSessionsGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
   customerSessionsGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
   customerSessionsGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
   customerSessionsGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
-  customerSessionsGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkExtension());
-  customerSessionsGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitGridExtension());
+  customerSessionsGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
+  customerSessionsGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitGridActionExtension());
   customerSessionsGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
   customerSessionsGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
   customerSessionsGrid.addExtension(new window.prestashop.component.GridExtensions.ColumnTogglingExtension());

@@ -33,7 +33,7 @@ $(() => {
   taxRuleGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
   taxRuleGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
   taxRuleGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
-  taxRuleGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkExtension());
+  taxRuleGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
   taxRuleGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
 
   new FormSubmitButton();

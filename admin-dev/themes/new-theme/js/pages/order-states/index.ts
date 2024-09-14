@@ -33,9 +33,9 @@ $(() => {
   orderStatesGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
   orderStatesGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
   orderStatesGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
-  orderStatesGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListActionExtension());
+  orderStatesGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
   orderStatesGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
-  orderStatesGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitGridExtension());
+  orderStatesGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitGridActionExtension());
   orderStatesGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
   orderStatesGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
   orderStatesGrid.addExtension(new window.prestashop.component.GridExtensions.ColumnTogglingExtension());
@@ -46,9 +46,9 @@ $(() => {
   orderReturnStatusesGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
   orderReturnStatusesGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
   orderReturnStatusesGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
-  orderReturnStatusesGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListActionExtension());
+  orderReturnStatusesGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
   orderReturnStatusesGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
-  orderReturnStatusesGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitGridExtension());
+  orderReturnStatusesGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitGridActionExtension());
   orderReturnStatusesGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
   orderReturnStatusesGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
 });

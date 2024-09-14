@@ -29,7 +29,7 @@ const {$} = window;
 $(() => {
   const outstandingGrid = new window.prestashop.component.Grid('outstanding');
   outstandingGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
-  outstandingGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListActionExtension());
+  outstandingGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
   outstandingGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
   outstandingGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
   outstandingGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());

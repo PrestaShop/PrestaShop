@@ -29,7 +29,7 @@ const {$} = window;
 $(() => {
   const orderMessageGrid = new window.prestashop.component.Grid('order_message');
 
-  orderMessageGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListActionExtension());
+  orderMessageGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
   orderMessageGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
   orderMessageGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
   orderMessageGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
