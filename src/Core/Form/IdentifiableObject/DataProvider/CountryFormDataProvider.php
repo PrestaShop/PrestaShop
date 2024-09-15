@@ -29,7 +29,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetAddressFormatData;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\AddressFormatData;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryForEditing;
 
 /**
@@ -83,7 +85,9 @@ class CountryFormDataProvider implements FormDataProviderInterface
             'zone' => $editableCountry->getZone(),
             'need_zip_code' => $editableCountry->isNeedZipCode(),
             'zip_code_format' => null !== $editableCountry->getZipCodeFormat() ? $editableCountry->getZipCodeFormat()->getValue() : null,
-            'address_format' => $editableCountry->getAddressFormat(),
+            'address_format' => [
+                'address_format' => $editableCountry->getAddressFormat(),
+            ],
             'is_enabled' => $editableCountry->isEnabled(),
             'contains_states' => $editableCountry->isContainsStates(),
             'need_identification_number' => $editableCountry->isNeedIdNumber(),
@@ -102,12 +106,18 @@ class CountryFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData(): array
     {
+        /** @var AddressFormatData $addressFormat */
+        $addressFormat = $this->queryBus->handle(new GetAddressFormatData());
+
         $data = [
             'need_zip_code' => false,
             'is_enabled' => true,
             'contains_states' => false,
             'need_identification_number' => false,
             'display_tax_label' => true,
+            'address_format' => [
+                'address_format' => $addressFormat->getAddressFormat(),
+            ],
         ];
 
         if ($this->multistoreEnabled) {

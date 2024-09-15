@@ -35,7 +35,9 @@ use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\DeleteCountryException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetAddressFormatData;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\AddressFormatData;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryForEditing;
 use PrestaShop\PrestaShop\Core\Search\Filters\CountryFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -89,6 +91,9 @@ class CountryController extends FrameworkBundleAdminController
         $countryForm->handleRequest($request);
 
         try {
+            /** @var AddressFormatData $addressFormat */
+            $addressFormat = $this->getQueryBus()->handle(new GetAddressFormatData());
+
             $handleResult = $countryFormHandler->handle($countryForm);
 
             if (null !== $handleResult->getIdentifiableObjectId()) {
@@ -104,7 +109,10 @@ class CountryController extends FrameworkBundleAdminController
             'countryForm' => $countryForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('New country', 'Admin.Navigation.Menu'),
+            'addressFormat' => $addressFormat->getAddressFormat(),
+            'encodingAddressFormat' => urlencode($addressFormat->getAddressFormat()),
+            'defaultFormat' => urlencode($addressFormat->getDefaultFormat()),
+            'availableFields' => $addressFormat->getAvailableFields(),
         ]);
     }
 
@@ -130,6 +138,9 @@ class CountryController extends FrameworkBundleAdminController
                 'prestashop.core.form.identifiable_object.handler.country_form_handler'
             );
 
+            /** @var AddressFormatData $addressFormat */
+            $addressFormat = $this->getQueryBus()->handle(new GetAddressFormatData());
+
             $countryForm = $countryFormBuilder->getFormFor($countryId);
             $countryForm->handleRequest($request);
             $result = $countryFormHandler->handleFor($countryId, $countryForm);
@@ -150,6 +161,10 @@ class CountryController extends FrameworkBundleAdminController
             'countryForm' => $countryForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'countryName' => $editableCountry->getLocalizedNames()[$this->getContextLangId()],
+            'addressFormat' => $addressFormat->getAddressFormat(),
+            'encodingAddressFormat' => urlencode($addressFormat->getAddressFormat()),
+            'defaultFormat' => urlencode($addressFormat->getDefaultFormat()),
+            'availableFields' => $addressFormat->getAvailableFields(),
         ]);
     }
 

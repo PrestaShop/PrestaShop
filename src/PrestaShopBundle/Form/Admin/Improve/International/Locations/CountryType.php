@@ -81,6 +81,7 @@ class CountryType extends AbstractType
             ->add('name', TranslatableType::class, [
                 'label' => $this->translator->trans('Country', [], 'Admin.Global'),
                 'options' => [
+                    'help' => $this->translator->trans('Country name - Invalid characters: <>;=#{}'),
                     'constraints' => [
                         new Length([
                             'max' => 64,
@@ -100,8 +101,9 @@ class CountryType extends AbstractType
                 ],
             ])
             ->add('iso_code', TextType::class, [
+                'label' => $this->translator->trans('ISO code', [], 'Admin.Global'),
+                'help' => $this->translator->trans('Two -- or three -- letter ISO code (e.g. "us" for United States).'),
                 'required' => true,
-                'label' => $this->translator->trans('ISO code', [], 'Admin.International.Feature'),
                 'constraints' => [
                     new TypedRegex([
                         'type' => TypedRegex::TYPE_LANGUAGE_ISO_CODE,
@@ -109,17 +111,19 @@ class CountryType extends AbstractType
                 ],
             ])
             ->add('call_prefix', TextType::class, [
+                'label' => $this->translator->trans('Call prefix', [], 'Admin.Global'),
                 'required' => true,
-                'label' => $this->translator->trans('Call prefix', [], 'Admin.International.Feature'),
+                'help' => $this->translator->trans('International call prefix, (e.g. 1 for United States).'),
             ])
             ->add('default_currency', CurrencyChoiceType::class, [
+                'label' => $this->translator->trans('Default currency', [], 'Admin.Global'),
                 'required' => false,
-                'label' => $this->translator->trans('Default currency', [], 'Admin.International.Feature'),
                 'placeholder' => $this->translator->trans('Default store currency', [], 'Admin.International.Feature'),
             ])
             ->add('zone', ChoiceType::class, [
-                'required' => false,
                 'label' => $this->translator->trans('Zone', [], 'Admin.Global'),
+                'required' => false,
+                'help' => $this->translator->trans('Geographical region.'),
                 'choices' => $this->zoneChoiceProvider->getChoices(
                     [
                         'active' => false,
@@ -129,43 +133,44 @@ class CountryType extends AbstractType
                 'placeholder' => false,
             ])
             ->add('need_zip_code', SwitchType::class, [
+                'label' => $this->translator->trans('Does it need Zip/postal code?', [], 'Admin.Global'),
                 'required' => false,
-                'label' => $this->translator->trans('Does it need a ZIP/Postal code?', [], 'Admin.International.Feature'),
+                'help' => $this->translator->trans("Indicate the format of the postal code: use L for a letter, N for a number, and C for the country's ISO 3166-1 alpha-2 code. For example, NNNNN for the United States, France, Poland and many other; LNNNNLLL for Argentina, etc. If you do not want PrestaShop to verify the postal code for this country, leave it blank."),
             ])
             ->add('zip_code_format', TextType::class, [
+                'label' => $this->translator->trans('Zip/postal code format', [], 'Admin.Global'),
                 'required' => true,
-                'label' => $this->translator->trans('ZIP/Postal code format', [], 'Admin.International.Feature'),
-                'help' => $this->translator->trans('Indicate the format of the postal code: use L for a letter, N for a number, and C for the country\'s ISO 3166-1 alpha-2 code. For example, NNNNN for the United States, France, Poland and many other; LNNNNLLL for Argentina, etc. If you do not want PrestaShop to verify the postal code for this country, leave it blank.', [], 'Admin.International.Help'),
                 'constraints' => [
                     new TypedRegex([
                         'type' => TypedRegex::TYPE_ZIP_CODE_FORMAT,
                     ]),
                 ],
             ])
-            // todo : create address layout form
-            ->add('address_format', TextType::class, [
+            ->add('address_format', AddressFormatType::class, [
                 'required' => false,
                 'label' => $this->translator->trans('Address format', [], 'Admin.International.Feature'),
             ])
             ->add('is_enabled', SwitchType::class, [
-                'required' => false,
                 'label' => $this->translator->trans('Active', [], 'Admin.Global'),
+                'required' => false,
+                'help' => $this->translator->trans('Display this country to your customers (the selected country will always be displayed in the back office).'),
             ])
             ->add('contains_states', SwitchType::class, [
+                'label' => $this->translator->trans('Contains states', [], 'Admin.Global'),
                 'required' => false,
-                'label' => $this->translator->trans('Contains states', [], 'Admin.International.Feature'),
             ])
             ->add('need_identification_number', SwitchType::class, [
+                'label' => $this->translator->trans('Do you need a tax identification number?', [], 'Admin.Global'),
                 'required' => false,
-                'label' => $this->translator->trans('Do you need a tax identification number?', [], 'Admin.International.Feature'),
             ])
             ->add('display_tax_label', SwitchType::class, [
+                'label' => $this->translator->trans('', [], 'Admin.Global'),
                 'required' => false,
-                'label' => $this->translator->trans('Display tax label (e.g. "Tax incl.")', [], 'Admin.International.Feature'),
             ]);
 
         if ($this->isMultistoreEnabled) {
             $builder->add('shop_association', ShopChoiceTreeType::class, [
+                'label' => $this->translator->trans('Display tax label (e.g. "Tax incl.")', [], 'Admin.Global'),
                 'required' => false,
             ]);
         }

@@ -42,4 +42,9 @@ services:
     autowire: true
     autoconfigure: true
 
+  PrestaShop\PrestaShop\Adapter\Country\QueryHandler\GetAddressFormatDataHandler:
+    public: false
+    autowire: true
+    autoconfigure: true
+
   PrestaShop\PrestaShop\Adapter\Country\Validate\CountryValidator:

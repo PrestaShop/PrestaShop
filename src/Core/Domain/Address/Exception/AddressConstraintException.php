@@ -45,4 +45,9 @@ class AddressConstraintException extends AddressException
      * When one or more unspecified fields in address are invalid
      */
     public const INVALID_REQUIRED_FIELDS = 30;
+
+    /**
+     * When address format is not valid
+     */
+    public const INVALID_FORMAT = 40;
 }
