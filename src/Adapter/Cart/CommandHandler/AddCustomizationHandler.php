@@ -39,9 +39,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\Customizat
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use PrestaShopException;
 use Product;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Validate;
 
 /**
