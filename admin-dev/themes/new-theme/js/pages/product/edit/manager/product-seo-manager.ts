@@ -26,7 +26,6 @@ import Serp from '@app/utils/serp';
 import {EventEmitter} from 'events';
 import RedirectOptionManager from '@pages/product/edit/manager/redirect-option-manager';
 import ProductMap from '@pages/product/product-map';
-import TaggableField from '@components/taggable-field';
 import TranslatableInput from '@components/translatable-input';
 
 const {$} = window;
@@ -80,7 +79,7 @@ export default class ProductSEOManager {
       previewUrl,
     );
 
-    new TaggableField({
+    new window.prestashop.component.TaggableField({
       tokenFieldSelector: ProductMap.seo.tagFields,
       options: {
         createTokensOnBlur: true,

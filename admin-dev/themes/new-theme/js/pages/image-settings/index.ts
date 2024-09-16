@@ -23,18 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Grid from '@components/grid/grid';
-import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
-import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
-import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
-import SortingExtension from '@components/grid/extension/sorting-extension';
-import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
-import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
-import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
-import ChoiceExtension from '@components/grid/extension/choice-extension';
-import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
-import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
-import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import DeleteImageTypeRowActionExtension
   from '@components/grid/extension/action/row/image_type/delete-image-type-row-action-extension';
 import ConfirmModal from '@components/modal/confirm-modal';
@@ -43,18 +31,18 @@ const {$} = window;
 
 $(() => {
   // Init image type grid
-  const grid = new Grid('image_type');
-  grid.addExtension(new FiltersResetExtension());
-  grid.addExtension(new ReloadListActionExtension());
-  grid.addExtension(new ExportToSqlManagerExtension());
-  grid.addExtension(new SortingExtension());
-  grid.addExtension(new LinkRowActionExtension());
-  grid.addExtension(new SubmitBulkExtension());
-  grid.addExtension(new BulkActionCheckboxExtension());
-  grid.addExtension(new FiltersSubmitButtonEnablerExtension());
-  grid.addExtension(new ChoiceExtension());
-  grid.addExtension(new ColumnTogglingExtension());
-  grid.addExtension(new SubmitRowActionExtension());
+  const grid = new window.prestashop.component.Grid('image_type');
+  grid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.ChoiceExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.ColumnTogglingExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
   grid.addExtension(new DeleteImageTypeRowActionExtension());
 
   // Regenerate thumbnails system

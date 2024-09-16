@@ -43,7 +43,7 @@ export default class EmployeeForm {
 
   constructor() {
     this.shopChoiceTreeSelector = employeeFormMap.shopChoiceTree;
-    this.shopChoiceTree = new ChoiceTree(this.shopChoiceTreeSelector);
+    this.shopChoiceTree = new window.prestashop.component.ChoiceTree(this.shopChoiceTreeSelector);
     this.employeeProfileSelector = employeeFormMap.profileSelect;
     this.tabsDropdownSelector = employeeFormMap.defaultPageSelect;
 

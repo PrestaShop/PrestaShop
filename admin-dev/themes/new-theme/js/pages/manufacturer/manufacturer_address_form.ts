@@ -23,19 +23,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import CountryStateSelectionToggler from '@components/country-state-selection-toggler';
 import ManufacturerAddressMap from '@pages/manufacturer/manufacturer-address-map';
-import CountryDniRequiredToggler from '@components/country-dni-required-toggler';
 
 const {$} = window;
 
 $(() => {
-  new CountryStateSelectionToggler(
+  new window.prestashop.component.CountryStateSelectionToggler(
     ManufacturerAddressMap.manufacturerAddressCountrySelect,
     ManufacturerAddressMap.manufacturerAddressStateSelect,
     ManufacturerAddressMap.manufacturerAddressStateBlock,
   );
-  new CountryDniRequiredToggler(
+  new window.prestashop.component.CountryDniRequiredToggler(
     ManufacturerAddressMap.manufacturerAddressCountrySelect,
     ManufacturerAddressMap.manufacturerAddressDniInput,
     ManufacturerAddressMap.manufacturerAddressDniInputLabel,

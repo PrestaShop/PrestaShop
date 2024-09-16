@@ -23,43 +23,34 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Grid from '@components/grid/grid';
-import SortingExtension from '@components/grid/extension/sorting-extension';
-import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
-import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
-import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
-import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
-import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
-import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
-import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
-import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
-import PositionExtension from '@components/grid/extension/position-extension';
-import ChoiceTree from '@components/form/choice-tree';
-import TranslatableInput from '@components/translatable-input';
 import textToLinkRewriteCopier from '@components/text-to-link-rewrite-copier';
-import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
-import TaggableField from '@components/taggable-field';
 import ShowcaseCard from '@components/showcase-card/showcase-card';
 import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
 
 const {$} = window;
 
 $(() => {
-  const cmsCategory = new Grid('cms_page_category');
+  const cmsCategory = new window.prestashop.component.Grid('cms_page_category');
 
-  cmsCategory.addExtension(new ReloadListActionExtension());
-  cmsCategory.addExtension(new ExportToSqlManagerExtension());
-  cmsCategory.addExtension(new FiltersResetExtension());
-  cmsCategory.addExtension(new SortingExtension());
-  cmsCategory.addExtension(new LinkRowActionExtension());
-  cmsCategory.addExtension(new SubmitBulkExtension());
-  cmsCategory.addExtension(new BulkActionCheckboxExtension());
-  cmsCategory.addExtension(new SubmitRowActionExtension());
-  cmsCategory.addExtension(new ColumnTogglingExtension());
-  cmsCategory.addExtension(new PositionExtension(cmsCategory));
-  cmsCategory.addExtension(new FiltersSubmitButtonEnablerExtension());
+  cmsCategory.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
+  cmsCategory.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
+  cmsCategory.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+  cmsCategory.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  cmsCategory.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
+  cmsCategory.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
+  cmsCategory.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
+  cmsCategory.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
+  cmsCategory.addExtension(new window.prestashop.component.GridExtensions.ColumnTogglingExtension());
+  cmsCategory.addExtension(new window.prestashop.component.GridExtensions.PositionExtension(cmsCategory));
+  cmsCategory.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
 
-  const translatorInput = new TranslatableInput();
+  window.prestashop.component.initComponents(
+    [
+      'TranslatableInput',
+    ],
+  );
+
+  const translatorInput = window.prestashop.instance.translatableInput;
 
   textToLinkRewriteCopier({
     sourceElementSelector: 'input[name^="cms_page_category[name]"]',
@@ -67,30 +58,30 @@ $(() => {
     destinationElementSelector: `${translatorInput.localeInputSelector}:not(.d-none) input[name^="cms_page_category[friendly_url]"]`,
   });
 
-  new ChoiceTree('#cms_page_category_parent_category');
+  new window.prestashop.component.ChoiceTree('#cms_page_category_parent_category');
 
-  const shopChoiceTree = new ChoiceTree('#cms_page_category_shop_association');
+  const shopChoiceTree = new window.prestashop.component.ChoiceTree('#cms_page_category_shop_association');
   shopChoiceTree.enableAutoCheckChildren();
 
-  new TaggableField({
+  new window.prestashop.component.TaggableField({
     tokenFieldSelector: 'input[name^="cms_page_category[meta_keywords]"]',
     options: {
       createTokensOnBlur: true,
     },
   });
 
-  const cmsGrid = new Grid('cms_page');
-  cmsGrid.addExtension(new ReloadListActionExtension());
-  cmsGrid.addExtension(new ExportToSqlManagerExtension());
-  cmsGrid.addExtension(new FiltersResetExtension());
-  cmsGrid.addExtension(new SortingExtension());
-  cmsGrid.addExtension(new ColumnTogglingExtension());
-  cmsGrid.addExtension(new BulkActionCheckboxExtension());
-  cmsGrid.addExtension(new SubmitBulkExtension());
-  cmsGrid.addExtension(new SubmitRowActionExtension());
-  cmsGrid.addExtension(new PositionExtension(cmsGrid));
-  cmsGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
-  cmsGrid.addExtension(new LinkRowActionExtension());
+  const cmsGrid = new window.prestashop.component.Grid('cms_page');
+  cmsGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
+  cmsGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
+  cmsGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+  cmsGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  cmsGrid.addExtension(new window.prestashop.component.GridExtensions.ColumnTogglingExtension());
+  cmsGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
+  cmsGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
+  cmsGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
+  cmsGrid.addExtension(new window.prestashop.component.GridExtensions.PositionExtension(cmsGrid));
+  cmsGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
+  cmsGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
 
   const helperBlock = new ShowcaseCard('cms-pages-showcase-card');
   helperBlock.addExtension(new ShowcaseCardCloseExtension());

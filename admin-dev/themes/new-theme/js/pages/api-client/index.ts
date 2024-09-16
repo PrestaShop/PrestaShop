@@ -23,25 +23,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Grid from '@components/grid/grid';
-import SortingExtension from '@components/grid/extension/sorting-extension';
-import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
-import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
-import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
-import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
-import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
-import AsyncToggleColumnExtension from '@components/grid/extension/column/common/async-toggle-column-extension';
-
-const {$} = window;
-
 $(() => {
-  const grid = new Grid('api_client');
+  const grid = new window.prestashop.component.Grid('api_client');
 
-  grid.addExtension(new ExportToSqlManagerExtension());
-  grid.addExtension(new ReloadListActionExtension());
-  grid.addExtension(new SortingExtension());
-  grid.addExtension(new FiltersResetExtension());
-  grid.addExtension(new SubmitRowActionExtension());
-  grid.addExtension(new FiltersSubmitButtonEnablerExtension());
-  grid.addExtension(new AsyncToggleColumnExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.AsyncToggleColumnExtension());
 });

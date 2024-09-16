@@ -26,34 +26,22 @@
 import EmailSendingTest from '@pages/email/email-sending-test';
 import SmtpConfigurationToggler from '@pages/email/smtp-configuration-toggler';
 import DkimConfigurationToggler from '@pages/email/dkim-configuration-toggler';
-import Grid from '@components/grid/grid';
-import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
-import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
-import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
-import SortingExtension from '@components/grid/extension/sorting-extension';
-import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
-import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
-import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
-import SubmitGridExtension from '@components/grid/extension/submit-grid-action-extension';
-import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
-import FiltersSubmitButtonEnablerExtension
-  from '@components/grid/extension/filters-submit-button-enabler-extension';
 
 const {$} = window;
 
 $(() => {
-  const emailLogsGrid = new Grid('email_logs');
+  const emailLogsGrid = new window.prestashop.component.Grid('email_logs');
 
-  emailLogsGrid.addExtension(new ReloadListActionExtension());
-  emailLogsGrid.addExtension(new ExportToSqlManagerExtension());
-  emailLogsGrid.addExtension(new FiltersResetExtension());
-  emailLogsGrid.addExtension(new SortingExtension());
-  emailLogsGrid.addExtension(new BulkActionCheckboxExtension());
-  emailLogsGrid.addExtension(new SubmitBulkExtension());
-  emailLogsGrid.addExtension(new SubmitRowActionExtension());
-  emailLogsGrid.addExtension(new SubmitGridExtension());
-  emailLogsGrid.addExtension(new LinkRowActionExtension());
-  emailLogsGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
+  emailLogsGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
+  emailLogsGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
+  emailLogsGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+  emailLogsGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  emailLogsGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
+  emailLogsGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
+  emailLogsGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
+  emailLogsGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitGridActionExtension());
+  emailLogsGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
+  emailLogsGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
 
   new EmailSendingTest();
   new SmtpConfigurationToggler();

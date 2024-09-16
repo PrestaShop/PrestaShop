@@ -24,28 +24,15 @@
  *
  */
 
-import Grid from '@components/grid/grid';
-import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
-import SortingExtension from '@components/grid/extension/sorting-extension';
-import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
-import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
-import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
-import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
-import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
-import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
-import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
-
-const {$} = window;
-
 $(() => {
-  const grid = new Grid('cart');
-  grid.addExtension(new ExportToSqlManagerExtension());
-  grid.addExtension(new ReloadListActionExtension());
-  grid.addExtension(new FiltersResetExtension());
-  grid.addExtension(new SortingExtension());
-  grid.addExtension(new BulkActionCheckboxExtension());
-  grid.addExtension(new SubmitBulkExtension());
-  grid.addExtension(new SubmitRowActionExtension());
-  grid.addExtension(new LinkRowActionExtension());
-  grid.addExtension(new FiltersSubmitButtonEnablerExtension());
+  const grid = new window.prestashop.component.Grid('cart');
+  grid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
 });

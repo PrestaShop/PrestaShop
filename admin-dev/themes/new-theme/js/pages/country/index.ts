@@ -23,31 +23,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Grid from '@components/grid/grid';
-import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
-import SortingExtension from '@components/grid/extension/sorting-extension';
-import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
-import ReloadListExtension from '@components/grid/extension/reload-list-extension';
-import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
-import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
-import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
-import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
-import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
-import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
-
-const {$} = window;
-
 $(() => {
-  const countryGrid = new Grid('country');
+  const countryGrid = new window.prestashop.component.Grid('country');
 
-  countryGrid.addExtension(new FiltersResetExtension());
-  countryGrid.addExtension(new SortingExtension());
-  countryGrid.addExtension(new ExportToSqlManagerExtension());
-  countryGrid.addExtension(new ReloadListExtension());
-  countryGrid.addExtension(new BulkActionCheckboxExtension());
-  countryGrid.addExtension(new SubmitBulkExtension());
-  countryGrid.addExtension(new SubmitRowActionExtension());
-  countryGrid.addExtension(new LinkRowActionExtension());
-  countryGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
-  countryGrid.addExtension(new ColumnTogglingExtension());
+  countryGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+  countryGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  countryGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
+  countryGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
+  countryGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
+  countryGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
+  countryGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
+  countryGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
+  countryGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
+  countryGrid.addExtension(new window.prestashop.component.GridExtensions.ColumnTogglingExtension());
 });

@@ -24,11 +24,14 @@
  */
 
 import initColorPickers from '@app/utils/colorpicker';
-import TranslatableInput from '@components/translatable-input';
 
 const {$} = window;
 
 $(() => {
   initColorPickers();
-  new TranslatableInput();
+  window.prestashop.component.initComponents(
+    [
+      'TranslatableInput',
+    ],
+  );
 });

@@ -23,27 +23,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Grid from '@components/grid/grid';
-import SortingExtension from '@components/grid/extension/sorting-extension';
-import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
-import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
-import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
-import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
-import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
-import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
-import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
-
-const {$} = window;
-
 $(() => {
-  const priceRuleGrid = new Grid('catalog_price_rule');
+  const priceRuleGrid = new window.prestashop.component.Grid('catalog_price_rule');
 
-  priceRuleGrid.addExtension(new ExportToSqlManagerExtension());
-  priceRuleGrid.addExtension(new ReloadListActionExtension());
-  priceRuleGrid.addExtension(new SortingExtension());
-  priceRuleGrid.addExtension(new FiltersResetExtension());
-  priceRuleGrid.addExtension(new SubmitRowActionExtension());
-  priceRuleGrid.addExtension(new SubmitBulkExtension());
-  priceRuleGrid.addExtension(new BulkActionCheckboxExtension());
-  priceRuleGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
+  priceRuleGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
+  priceRuleGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
+  priceRuleGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  priceRuleGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+  priceRuleGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
+  priceRuleGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
+  priceRuleGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
+  priceRuleGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
 });

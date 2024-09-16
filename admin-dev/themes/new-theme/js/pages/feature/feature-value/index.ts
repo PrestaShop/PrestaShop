@@ -23,29 +23,16 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
-import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
-import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
-import Grid from '@components/grid/grid';
-import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
-import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
-import SortingExtension from '@components/grid/extension/sorting-extension';
-import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
-import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
-import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
-
-const {$} = window;
-
 $(() => {
-  const grid = new Grid('feature_value');
+  const grid = new window.prestashop.component.Grid('feature_value');
 
-  grid.addExtension(new ExportToSqlManagerExtension());
-  grid.addExtension(new FiltersResetExtension());
-  grid.addExtension(new FiltersSubmitButtonEnablerExtension());
-  grid.addExtension(new ReloadListActionExtension());
-  grid.addExtension(new SortingExtension());
-  grid.addExtension(new SubmitRowActionExtension());
-  grid.addExtension(new SubmitBulkExtension());
-  grid.addExtension(new LinkRowActionExtension());
-  grid.addExtension(new BulkActionCheckboxExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
 });

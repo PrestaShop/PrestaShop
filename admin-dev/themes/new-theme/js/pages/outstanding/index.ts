@@ -23,21 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Grid from '@components/grid/grid';
-import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
-import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
-import SortingExtension from '@components/grid/extension/sorting-extension';
-import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
-import FiltersSubmitButtonEnablerExtension
-  from '@components/grid/extension/filters-submit-button-enabler-extension';
-
-const {$} = window;
-
 $(() => {
-  const outstandingGrid = new Grid('outstanding');
-  outstandingGrid.addExtension(new FiltersResetExtension());
-  outstandingGrid.addExtension(new ReloadListActionExtension());
-  outstandingGrid.addExtension(new SortingExtension());
-  outstandingGrid.addExtension(new LinkRowActionExtension());
-  outstandingGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
+  const outstandingGrid = new window.prestashop.component.Grid('outstanding');
+  outstandingGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+  outstandingGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
+  outstandingGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  outstandingGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
+  outstandingGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
 });
