@@ -43,6 +43,7 @@ use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Entity\ModuleHistory;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
+use PrestaShopBundle\Twig\Layout\MenuLink;
 use Symfony\Component\Form\Util\ServerParams;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -169,6 +170,17 @@ class ModuleController extends ModuleAbstractController
                 'translationLinks' => $this->getTranslationLinks($module, $legacyContext),
                 'layoutTitle' => $this->trans('Configure', [], 'Admin.Modules.Feature'),
                 'layoutSubTitle' => $layoutSubTitle,
+                'breadcrumbLinks' => [
+                    'container' => new MenuLink(
+                        $this->trans('Modules', [], 'Admin.Modules.Feature'),
+                        $this->generateUrl('admin_module_manage'),
+                    ),
+                    'tab' => new MenuLink(
+                        $this->trans('Configure', [], 'Admin.Modules.Feature'),
+                        $this->generateUrl('admin_module_configure_action', ['module_name' => $module_name]),
+                        'build',
+                    ),
+                ],
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink('AdminModules'),
             ]

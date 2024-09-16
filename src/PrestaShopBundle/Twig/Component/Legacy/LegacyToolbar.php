@@ -51,14 +51,7 @@ class LegacyToolbar extends Toolbar
         parent::__construct($hookDispatcher, $menuBuilder);
     }
 
-    /**
-     * No parameters are passed to this component but we must respect the method signature.
-     *
-     * @param string $layoutTitle
-     * @param string $helpLink
-     * @param bool $enableSidebar
-     */
-    public function mount(string $layoutTitle = '', string $helpLink = '', bool $enableSidebar = false, string $layoutSubTitle = '', array $layoutHeaderToolbarBtn = []): void
+    public function mount(string $layoutTitle = '', string $helpLink = '', bool $enableSidebar = false, string $layoutSubTitle = '', array $layoutHeaderToolbarBtn = [], array $breadcrumbLinks = []): void
     {
         if (empty($helpLink) && $this->hasLegacyController()) {
             $helpLink = urldecode($this->helpDocumentation->generateLink($this->getLegacyController()->controller_name, $this->languageContext->getIsoCode()));
@@ -74,6 +67,7 @@ class LegacyToolbar extends Toolbar
             $enableSidebar,
             $layoutSubTitle,
             $layoutHeaderToolbarBtn,
+            $breadcrumbLinks,
         );
     }
 

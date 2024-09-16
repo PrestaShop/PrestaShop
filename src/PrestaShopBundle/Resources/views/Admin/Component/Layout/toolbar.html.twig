@@ -31,11 +31,15 @@
         <nav aria-label="Breadcrumb">
           <ol class="breadcrumb">
             {% if this.breadcrumbs.container is defined and this.breadcrumbs.container.name != '' %}
-              <li class="breadcrumb-item">{{ this.breadcrumbs.container.name|escape }}</li>
+              <li class="breadcrumb-item">
+                {% if this.breadcrumbs.container.icon is not empty %}<i class="material-icons">{{ this.breadcrumbs.container.icon }}</i>{% endif %}
+                {{ this.breadcrumbs.container.name|escape }}
+              </li>
             {% endif %}
 
             {% if this.breadcrumbs.container is defined and this.breadcrumbs.tab is defined and this.breadcrumbs.tab.name != '' and this.breadcrumbs.container.name != this.breadcrumbs.tab.name and this.breadcrumbs.tab.href != '' %}
               <li class="breadcrumb-item active">
+                {% if this.breadcrumbs.tab.icon is not empty %}<i class="material-icons">{{ this.breadcrumbs.tab.icon }}</i>{% endif %}
                 <a href="{{ this.breadcrumbs.tab.href|escape }}" aria-current="page">{{ this.breadcrumbs.tab.name|escape }}</a>
               </li>
             {% endif %}

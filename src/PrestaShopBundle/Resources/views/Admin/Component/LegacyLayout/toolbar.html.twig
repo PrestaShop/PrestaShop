@@ -30,6 +30,7 @@
         {# Container #}
         {% if this.breadcrumbs.container is defined and this.breadcrumbs.container.name != '' %}
         <li class="breadcrumb-container">
+          {% if this.breadcrumbs.container.icon is not empty %}<i class="material-icons">{{ this.breadcrumbs.container.icon }}</i>{% endif %}
           {{ this.breadcrumbs.container.name|escape }}
         </li>
         {% endif %}
@@ -37,6 +38,7 @@
         {# Current Tab #}
         {% if this.breadcrumbs.tab is defined and this.breadcrumbs.tab.name != '' %}
         <li class="breadcrumb-current">
+          {% if this.breadcrumbs.tab.icon is not empty %}<i class="material-icons">{{ this.breadcrumbs.tab.icon }}</i>{% endif %}
           {% if this.breadcrumbs.tab.href != '' %}<a href="{{ this.breadcrumbs.tab.href|escape }}">{% endif %}
             {{ this.breadcrumbs.tab.name|escape }}
           {% if this.breadcrumbs.tab.href != '' %}</a>{% endif %}
