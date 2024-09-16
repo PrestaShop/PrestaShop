@@ -128,7 +128,7 @@ abstract class ContextStateTestCase extends TestCase
                 42,
                 'token',
                 '',
-                'index.php',
+                'index.php?controller=' . $controllerName,
                 'configuration',
                 1,
             ])
