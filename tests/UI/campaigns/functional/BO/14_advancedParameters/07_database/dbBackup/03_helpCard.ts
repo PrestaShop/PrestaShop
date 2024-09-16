@@ -6,12 +6,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import sqlManagerPage from '@pages/BO/advancedParameters/database/sqlManager';
-import dbBackupPage from '@pages/BO/advancedParameters/database/dbBackup';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boDbBackupPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -56,24 +56,24 @@ describe('BO - Advanced Parameters - Database : Help card in DB Backup page', as
 
     await sqlManagerPage.goToDbBackupPage(page);
 
-    const pageTitle = await dbBackupPage.getPageTitle(page);
-    expect(pageTitle).to.contains(dbBackupPage.pageTitle);
+    const pageTitle = await boDbBackupPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDbBackupPage.pageTitle);
   });
 
   it('should open the help side bar and check the document language', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openHelpSidebar', baseContext);
 
-    const isHelpSidebarVisible = await dbBackupPage.openHelpSideBar(page);
+    const isHelpSidebarVisible = await boDbBackupPage.openHelpSideBar(page);
     expect(isHelpSidebarVisible).to.eq(true);
 
-    const documentURL = await dbBackupPage.getHelpDocumentURL(page);
+    const documentURL = await boDbBackupPage.getHelpDocumentURL(page);
     expect(documentURL).to.contains('country=en');
   });
 
   it('should close the help side bar', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeHelpSidebar', baseContext);
 
-    const isHelpSidebarNotVisible = await dbBackupPage.closeHelpSideBar(page);
+    const isHelpSidebarNotVisible = await boDbBackupPage.closeHelpSideBar(page);
     expect(isHelpSidebarNotVisible).to.eq(true);
   });
 });
