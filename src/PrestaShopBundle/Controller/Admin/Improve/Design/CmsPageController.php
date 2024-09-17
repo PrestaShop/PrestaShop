@@ -93,24 +93,7 @@ class CmsPageController extends FrameworkBundleAdminController
     public function indexAction(CmsPageCategoryFilters $categoryFilters, CmsPageFilters $cmsFilters, Request $request)
     {
         $cmsCategoryParentId = (int) $categoryFilters->getFilters()['id_cms_category_parent'];
-        $viewData = [];
-
-        try {
-            $viewData = $this
-                ->get('prestashop.core.cms_page.data_provider.cms_page_view')
-                ->getView($cmsCategoryParentId)
-            ;
-        } catch (Exception $exception) {
-            $this->addFlash(
-                'error',
-                $this->getErrorMessageForException($exception, $this->getErrorMessages())
-            );
-
-            if ($exception instanceof CmsPageCategoryNotFoundException) {
-                return $this->redirectToRoute('admin_cms_pages_index');
-            }
-        }
-
+        $viewData = $this->get('prestashop.core.cms_page.data_provider.cms_page_view')->getView($cmsCategoryParentId);
         $cmsCategoryGridFactory = $this->get('prestashop.core.grid.factory.cms_page_category');
         $cmsCategoryGrid = $cmsCategoryGridFactory->getGrid($categoryFilters);
 
