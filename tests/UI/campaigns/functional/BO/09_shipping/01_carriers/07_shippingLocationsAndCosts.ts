@@ -537,7 +537,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   });
 
   it('should choose the delivery address', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'chooseAndConfirmAddressStep', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'chooseAndConfirmAddressStepStart', baseContext);
 
     await checkoutPage.chooseDeliveryAddress(page, 1);
 
@@ -546,7 +546,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   });
 
   it('should check the carriers', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkCarriers', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersBasic', baseContext);
 
     const carriers = await foClassicCheckoutPage.getAllCarriersNames(page);
     expect(carriers).to.deep.equal([dataCarriers.clickAndCollect.name, carrierData.name, dataCarriers.myCarrier.name]);
@@ -587,7 +587,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   });
 
   it('should go to edit carrier page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToEditCarrierPageStatus', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'goToEditCarrierFreeShipping', baseContext);
 
     await boCarriersPage.goToEditCarrierPage(page, 1);
 
@@ -605,7 +605,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   });
 
   it('should check the carriers', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkCarriers', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersFreeShipping', baseContext);
 
     page = await boCarriersPage.changePage(browserContext, 1);
     await foClassicCheckoutPage.reloadPage(page);
@@ -645,7 +645,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   });
 
   it('should check the carriers', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersAfterHandlingCosts', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersHandlingCosts', baseContext);
 
     page = await boCarriersPage.changePage(browserContext, 1);
     await foClassicCheckoutPage.reloadPage(page);
@@ -667,7 +667,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   });
 
   it('should go to edit carrier page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToEditCarrierPageGroupAccess', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'goToEditCarrierTax', baseContext);
 
     page = await foClassicCheckoutPage.changePage(browserContext, 0);
     await boCarriersPage.goToEditCarrierPage(page, 1);
@@ -686,7 +686,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   });
 
   it('should check the carriers', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersAfterHandlingCosts', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersTax', baseContext);
 
     page = await boCarriersPage.changePage(browserContext, 1);
     await foClassicCheckoutPage.reloadPage(page);
@@ -755,7 +755,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   });
 
   it('should check the carriers', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersPositionAfterWeight', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersProductWeight', baseContext);
 
     page = await createProductsPage.changePage(browserContext, 1);
     await foClassicCheckoutPage.reloadPage(page);
@@ -778,7 +778,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   });
 
   it('should go to \'Shipping > Carriers\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToCarriersPage', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'returnToCarriersPage', baseContext);
 
     page = await checkoutPage.changePage(browserContext, 0);
     await boDashboardPage.goToSubMenu(
@@ -792,7 +792,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   });
 
   it('should filter list by name', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdate', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdateAfterProduct', baseContext);
 
     await boCarriersPage.resetFilter(page);
     await boCarriersPage.filterTable(
@@ -809,7 +809,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   });
 
   it('should go to edit carrier page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToEditCarrierPageStatus', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'goToEditCarrierRanges', baseContext);
 
     await boCarriersPage.goToEditCarrierPage(page, 1);
 
@@ -818,7 +818,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   });
 
   it('should update the carrier ranges', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'updateCarrierTax', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'updateCarrierRanges', baseContext);
 
     const textResult = await boCarriersCreatePage.createEditCarrier(page, carrierDataRanges);
     expect(textResult).to.contains(boCarriersPage.successfulUpdateMessage);
@@ -827,7 +827,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   });
 
   it('should check the carriers', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersPositionAfterWeight', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersRanges', baseContext);
 
     page = await createProductsPage.changePage(browserContext, 1);
     await foClassicCheckoutPage.reloadPage(page);
@@ -850,7 +850,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   });
 
   it('should return to cart', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersPositionAfterWeight', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'returnToCartQty2', baseContext);
 
     await foClassicCheckoutPage.clickOnHeaderLink(page, 'Logo');
     await foClassicHomePage.goToCartPage(page);
@@ -860,7 +860,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   });
 
   it('should change quantity to 2 and proceed to checkout', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersPositionAfterWeight', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'changeQuantity2', baseContext);
 
     await foClassicCartPage.editProductQuantity(page, 1, 2);
 
@@ -873,7 +873,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   });
 
   it('should choose the delivery address', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'chooseAndConfirmAddressStep', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'chooseAndConfirmAddressStepQty2', baseContext);
 
     await checkoutPage.chooseDeliveryAddress(page, 1);
 
@@ -881,15 +881,15 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
     expect(isDeliveryStep).to.eq(true);
   });
 
-  it('should check the carriers position', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersPosition', baseContext);
+  it('should check carriers', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersWeightExceeded', baseContext);
 
     const carriers = await foClassicCheckoutPage.getAllCarriersNames(page);
     expect(carriers).to.deep.equal([dataCarriers.clickAndCollect.name, dataCarriers.myCarrier.name]);
   });
 
   it('should return to cart', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersPositionAfterWeight', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'returnToCartQty1', baseContext);
 
     await foClassicCheckoutPage.clickOnHeaderLink(page, 'Logo');
     await foClassicHomePage.goToCartPage(page);
@@ -899,7 +899,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   });
 
   it('should change quantity to 1 and proceed to checkout', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersPositionAfterWeight', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'changeQuantity1', baseContext);
 
     await foClassicCartPage.editProductQuantity(page, 1, 1);
 
@@ -912,7 +912,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   });
 
   it('should choose the delivery address', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'chooseAndConfirmAddressStep', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'chooseAndConfirmAddressStepQty1', baseContext);
 
     await checkoutPage.chooseDeliveryAddress(page, 1);
 
@@ -920,8 +920,8 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
     expect(isDeliveryStep).to.eq(true);
   });
 
-  it('should check the carriers position', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersPosition', baseContext);
+  it('should check the carriers', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersWeightQty1', baseContext);
 
     const carriers = await foClassicCheckoutPage.getAllCarriersNames(page);
     expect(carriers).to.deep.equal([dataCarriers.clickAndCollect.name, dataCarriers.myCarrier.name, carrierData.name]);
@@ -937,7 +937,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   });
 
   it('should go to edit carrier page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToEditCarrierPageGroupAccess', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'goToEditCarrierBilling', baseContext);
 
     page = await foClassicCheckoutPage.changePage(browserContext, 0);
     await boCarriersPage.goToEditCarrierPage(page, 1);
@@ -956,7 +956,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   });
 
   it('should check the carriers', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersPosition', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersBilling', baseContext);
 
     page = await boCarriersPage.changePage(browserContext, 1);
     await foClassicCheckoutPage.reloadPage(page);
@@ -975,7 +975,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   });
 
   it('should go to edit carrier page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToEditCarrierPageGroupAccess', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'goToEditCarrierRemoveRanges', baseContext);
 
     page = await foClassicCheckoutPage.changePage(browserContext, 0);
     await boCarriersPage.goToEditCarrierPage(page, 1);
@@ -985,7 +985,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   });
 
   it('should remove carrier ranges', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'updateCarrierTax', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'removeCarrierRanges', baseContext);
 
     const textResult = await boCarriersCreatePage.createEditCarrier(page, carrierDataRemoveRanges);
     expect(textResult).to.contains(boCarriersPage.successfulUpdateMessage);
@@ -994,7 +994,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   });
 
   it('should check carriers', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersPosition', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersWithoutCorrectRange', baseContext);
 
     page = await boCarriersPage.changePage(browserContext, 1);
     await foClassicCheckoutPage.reloadPage(page);
@@ -1016,7 +1016,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   });
 
   it('should go to \'Catalog > Products\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageForReset', baseContext);
 
     page = await boCarriersPage.changePage(browserContext, 0);
     await boDashboardPage.goToSubMenu(
@@ -1031,7 +1031,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   });
 
   it(`should filter a product named "${dataProducts.demo_11.name}"`, async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'filterProduct', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'filterProductForReset', baseContext);
 
     await boProductsPage.resetFilter(page);
     await boProductsPage.filterProducts(page, 'product_name', dataProducts.demo_11.name, 'input');
@@ -1044,7 +1044,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   });
 
   it('should edit the product', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToEditPage', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'goToEditPageForReset', baseContext);
 
     await boProductsPage.goToProductPage(page, 1);
 
@@ -1053,7 +1053,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   });
 
   it('should go to shipping tab and edit package dimension', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'editPackageDimension', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'editPackageDimensionForReset', baseContext);
 
     await boProductsCreateTabShippingPage.setPackageDimension(page, dataProducts.demo_11);
 

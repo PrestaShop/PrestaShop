@@ -277,7 +277,9 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
             await testContext.addContextItem(this, 'testIdentifier', `checkGiftWrappingPrice${index}`, baseContext);
 
             const giftWrappingValue = await orderConfirmationPage.getGiftWrappingValue(page);
-            expect(giftWrappingValue).to.equal(test.args.giftWrappingPrice);
+            expect(giftWrappingValue).to.equal(
+              test.args.giftWrappingPrice * (test.args.isGiftWrappingTax === 'None' ? 1 : (1 + test.args.taxValue)),
+            );
           });
         }
 
