@@ -18,7 +18,6 @@ import detailsTab from '@pages/BO/catalog/products/add/detailsTab';
 import optionsTab from '@pages/BO/catalog/products/add/optionsTab';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import seoTab from '@pages/BO/catalog/products/add/seoTab';
-import shippingTab from '@pages/BO/catalog/products/add/shippingTab';
 import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 
 // Import data
@@ -31,6 +30,7 @@ import type {
 import {
   boDashboardPage,
   boProductsPage,
+  boProductsCreateTabShippingPage,
   utilsPlaywright,
   utilsXML,
   type WebservicePermission,
@@ -727,7 +727,7 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'postCheckWidth', baseContext);
 
             const xmlValue = productXml.getAttributeValue(xmlCreate, 'width');
-            const value = (await shippingTab.getValue(page, 'width'));
+            const value = (await boProductsCreateTabShippingPage.getValue(page, 'width'));
             expect(xmlValue).to.be.a('string');
             expect(value).to.eq(parseInt(xmlValue as string, 10).toString());
           });
@@ -736,7 +736,7 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'postCheckHeight', baseContext);
 
             const xmlValue = productXml.getAttributeValue(xmlCreate, 'height');
-            const value = (await shippingTab.getValue(page, 'height'));
+            const value = (await boProductsCreateTabShippingPage.getValue(page, 'height'));
             expect(xmlValue).to.be.a('string');
             expect(value).to.eq(parseInt(xmlValue as string, 10).toString());
           });
@@ -745,7 +745,7 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'postCheckDepth', baseContext);
 
             const xmlValue = productXml.getAttributeValue(xmlCreate, 'depth');
-            const value = (await shippingTab.getValue(page, 'depth'));
+            const value = (await boProductsCreateTabShippingPage.getValue(page, 'depth'));
             expect(xmlValue).to.be.a('string');
             expect(value).to.eq(parseInt(xmlValue as string, 10).toString());
           });
@@ -754,7 +754,7 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'postCheckWeight', baseContext);
 
             const xmlValue = productXml.getAttributeValue(xmlCreate, 'weight');
-            const value = (await shippingTab.getValue(page, 'weight'));
+            const value = (await boProductsCreateTabShippingPage.getValue(page, 'weight'));
             expect(xmlValue).to.be.a('string');
             expect(value).to.eq(parseInt(xmlValue as string, 10).toString());
           });
@@ -763,7 +763,7 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'postCheckDeliveryTime', baseContext);
 
             const xmlValue = productXml.getAttributeValue(xmlCreate, 'additional_delivery_times');
-            const value = (await shippingTab.getValue(page, 'additional_delivery_times'));
+            const value = (await boProductsCreateTabShippingPage.getValue(page, 'additional_delivery_times'));
             expect(value).to.eq(xmlValue);
           });
 
@@ -771,11 +771,11 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'postCheckDeliveryInStock', baseContext);
 
             const xmlValueEn = productXml.getAttributeLangValue(xmlCreate, 'delivery_in_stock', '1');
-            const valueEn = (await shippingTab.getValue(page, 'delivery_in_stock', '1'));
+            const valueEn = (await boProductsCreateTabShippingPage.getValue(page, 'delivery_in_stock', '1'));
             expect(valueEn).to.eq(xmlValueEn);
 
             const xmlValueFr = productXml.getAttributeLangValue(xmlCreate, 'delivery_in_stock', '2');
-            const valueFr = (await shippingTab.getValue(page, 'delivery_in_stock', '2'));
+            const valueFr = (await boProductsCreateTabShippingPage.getValue(page, 'delivery_in_stock', '2'));
             expect(valueFr).to.eq(xmlValueFr);
           });
 
@@ -783,11 +783,11 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'postCheckDeliveryOutStock', baseContext);
 
             const xmlValueEn = productXml.getAttributeLangValue(xmlCreate, 'delivery_out_stock', '1');
-            const valueEn = (await shippingTab.getValue(page, 'delivery_out_stock', '1'));
+            const valueEn = (await boProductsCreateTabShippingPage.getValue(page, 'delivery_out_stock', '1'));
             expect(valueEn).to.eq(xmlValueEn);
 
             const xmlValueFr = productXml.getAttributeLangValue(xmlCreate, 'delivery_out_stock', '2');
-            const valueFr = (await shippingTab.getValue(page, 'delivery_out_stock', '2'));
+            const valueFr = (await boProductsCreateTabShippingPage.getValue(page, 'delivery_out_stock', '2'));
             expect(valueFr).to.eq(xmlValueFr);
           });
 
@@ -795,7 +795,7 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'postCheckShippingCost', baseContext);
 
             const xmlValue = productXml.getAttributeValue(xmlCreate, 'additional_shipping_cost');
-            const value = (await shippingTab.getValue(page, 'additional_shipping_cost'));
+            const value = (await boProductsCreateTabShippingPage.getValue(page, 'additional_shipping_cost'));
             expect(value).to.eq(xmlValue);
           });
         });
@@ -1401,7 +1401,7 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'putCheckWidth', baseContext);
 
             const xmlValue = productXml.getAttributeValue(xmlUpdate, 'width');
-            const value = (await shippingTab.getValue(page, 'width'));
+            const value = (await boProductsCreateTabShippingPage.getValue(page, 'width'));
             expect(xmlValue).to.be.a('string');
             expect(value).to.eq(parseInt(xmlValue as string, 10).toString());
           });
@@ -1410,7 +1410,7 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'putCheckHeight', baseContext);
 
             const xmlValue = productXml.getAttributeValue(xmlUpdate, 'height');
-            const value = (await shippingTab.getValue(page, 'height'));
+            const value = (await boProductsCreateTabShippingPage.getValue(page, 'height'));
             expect(xmlValue).to.be.a('string');
             expect(value).to.eq(parseInt(xmlValue as string, 10).toString());
           });
@@ -1419,7 +1419,7 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'putCheckDepth', baseContext);
 
             const xmlValue = productXml.getAttributeValue(xmlUpdate, 'depth');
-            const value = (await shippingTab.getValue(page, 'depth'));
+            const value = (await boProductsCreateTabShippingPage.getValue(page, 'depth'));
             expect(xmlValue).to.be.a('string');
             expect(value).to.eq(parseInt(xmlValue as string, 10).toString());
           });
@@ -1428,7 +1428,7 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'putCheckWeight', baseContext);
 
             const xmlValue = productXml.getAttributeValue(xmlUpdate, 'weight');
-            const value = (await shippingTab.getValue(page, 'weight'));
+            const value = (await boProductsCreateTabShippingPage.getValue(page, 'weight'));
             expect(xmlValue).to.be.a('string');
             expect(value).to.eq(parseInt(xmlValue as string, 10).toString());
           });
@@ -1437,7 +1437,7 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'putCheckDeliveryTime', baseContext);
 
             const xmlValue = productXml.getAttributeValue(xmlUpdate, 'additional_delivery_times');
-            const value = (await shippingTab.getValue(page, 'additional_delivery_times'));
+            const value = (await boProductsCreateTabShippingPage.getValue(page, 'additional_delivery_times'));
             expect(value).to.eq(xmlValue);
           });
 
@@ -1445,11 +1445,11 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'putCheckDeliveryInStock', baseContext);
 
             const xmlValueEn = productXml.getAttributeLangValue(xmlUpdate, 'delivery_in_stock', '1');
-            const valueEn = (await shippingTab.getValue(page, 'delivery_in_stock', '1'));
+            const valueEn = (await boProductsCreateTabShippingPage.getValue(page, 'delivery_in_stock', '1'));
             expect(valueEn).to.eq(xmlValueEn);
 
             const xmlValueFr = productXml.getAttributeLangValue(xmlUpdate, 'delivery_in_stock', '2');
-            const valueFr = (await shippingTab.getValue(page, 'delivery_in_stock', '2'));
+            const valueFr = (await boProductsCreateTabShippingPage.getValue(page, 'delivery_in_stock', '2'));
             expect(valueFr).to.eq(xmlValueFr);
           });
 
@@ -1457,11 +1457,11 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'putCheckDeliveryOutStock', baseContext);
 
             const xmlValueEn = productXml.getAttributeLangValue(xmlUpdate, 'delivery_out_stock', '1');
-            const valueEn = (await shippingTab.getValue(page, 'delivery_out_stock', '1'));
+            const valueEn = (await boProductsCreateTabShippingPage.getValue(page, 'delivery_out_stock', '1'));
             expect(valueEn).to.eq(xmlValueEn);
 
             const xmlValueFr = productXml.getAttributeLangValue(xmlUpdate, 'delivery_out_stock', '2');
-            const valueFr = (await shippingTab.getValue(page, 'delivery_out_stock', '2'));
+            const valueFr = (await boProductsCreateTabShippingPage.getValue(page, 'delivery_out_stock', '2'));
             expect(valueFr).to.eq(xmlValueFr);
           });
 
@@ -1469,7 +1469,7 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'putCheckShippingCost', baseContext);
 
             const xmlValue = productXml.getAttributeValue(xmlUpdate, 'additional_shipping_cost');
-            const value = (await shippingTab.getValue(page, 'additional_shipping_cost'));
+            const value = (await boProductsCreateTabShippingPage.getValue(page, 'additional_shipping_cost'));
             expect(value).to.eq(xmlValue);
           });
         });

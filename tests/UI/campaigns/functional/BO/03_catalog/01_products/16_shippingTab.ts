@@ -6,7 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
 import createProductPage from '@pages/BO/catalog/products/add';
-import shippingTab from '@pages/BO/catalog/products/add/shippingTab';
 import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 
@@ -16,6 +15,7 @@ import {checkoutPage} from '@pages/FO/classic/checkout';
 import {
   boDashboardPage,
   boProductsPage,
+  boProductsCreateTabShippingPage,
   dataCarriers,
   dataCustomers,
   FakerProduct,
@@ -110,7 +110,7 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
     it('should go to shipping tab and edit package dimension', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editPackageDimension', baseContext);
 
-      await shippingTab.setPackageDimension(page, editProductData);
+      await boProductsCreateTabShippingPage.setPackageDimension(page, editProductData);
 
       const message = await createProductPage.saveProduct(page);
       expect(message).to.eq(createProductPage.successfulUpdateMessage);
@@ -119,7 +119,7 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
     it('should edit delivery time to \'None\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editDeliveryTime', baseContext);
 
-      await shippingTab.setDeliveryTime(page, editProductData.deliveryTime);
+      await boProductsCreateTabShippingPage.setDeliveryTime(page, editProductData.deliveryTime);
 
       const message = await createProductPage.saveProduct(page);
       expect(message).to.eq(createProductPage.successfulUpdateMessage);
@@ -155,7 +155,7 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
     it('should edit delivery time to \'Default delivery time\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editDeliveryTime2', baseContext);
 
-      await shippingTab.setDeliveryTime(page, 'Default delivery time');
+      await boProductsCreateTabShippingPage.setDeliveryTime(page, 'Default delivery time');
 
       const message = await createProductPage.saveProduct(page);
       expect(message).to.eq(createProductPage.successfulUpdateMessage);
@@ -191,7 +191,7 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
     it('should click on \'Edit delivery time\' link', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnEditDeliveryTimeLink', baseContext);
 
-      page = await shippingTab.clickOnEditDeliveryTimeLink(page);
+      page = await boProductsCreateTabShippingPage.clickOnEditDeliveryTimeLink(page);
 
       const pageTitle = await productSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(productSettingsPage.pageTitle);
@@ -209,7 +209,7 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
     it('should edit delivery time to \'Specific delivery time\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editDeliveryTime3', baseContext);
 
-      await shippingTab.setDeliveryTime(page, 'Specific delivery time');
+      await boProductsCreateTabShippingPage.setDeliveryTime(page, 'Specific delivery time');
 
       const message = await createProductPage.saveProduct(page);
       expect(message).to.eq(createProductPage.successfulUpdateMessage);
@@ -218,8 +218,8 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
     it('should set delivery time of in-stock products and out-of-stock products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setDeliveryTime', baseContext);
 
-      await shippingTab.setDeliveryTimeInStockProducts(page, '1 Day');
-      await shippingTab.setDeliveryTimeOutOfStockProducts(page, '12 Days');
+      await boProductsCreateTabShippingPage.setDeliveryTimeInStockProducts(page, '1 Day');
+      await boProductsCreateTabShippingPage.setDeliveryTimeOutOfStockProducts(page, '12 Days');
 
       const message = await createProductPage.saveProduct(page);
       expect(message).to.eq(createProductPage.successfulUpdateMessage);
@@ -300,7 +300,7 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
     it('should set additional shipping costs', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setAdditionalShippingCosts', baseContext);
 
-      await shippingTab.setAdditionalShippingCosts(page, 10);
+      await boProductsCreateTabShippingPage.setAdditionalShippingCosts(page, 10);
 
       const message = await createProductPage.saveProduct(page);
       expect(message).to.eq(createProductPage.successfulUpdateMessage);
@@ -372,7 +372,7 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
     it('should select available carrier', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectCarrier', baseContext);
 
-      await shippingTab.selectAvailableCarrier(page, 'Click and collect');
+      await boProductsCreateTabShippingPage.selectAvailableCarrier(page, 'Click and collect');
 
       const message = await createProductPage.saveProduct(page);
       expect(message).to.eq(createProductPage.successfulUpdateMessage);

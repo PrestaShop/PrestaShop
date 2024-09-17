@@ -17,6 +17,7 @@ import {
   boCarriersPage,
   boDashboardPage,
   boProductsPage,
+  boProductsCreateTabShippingPage,
   dataCarriers,
   dataCustomers,
   dataProducts,
@@ -31,7 +32,6 @@ import {
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-import shippingTab from '@pages/BO/catalog/products/add/shippingTab';
 
 const baseContext: string = 'functional_BO_shipping_carriers_shippingLocationsAndCosts';
 
@@ -748,7 +748,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   it('should go to shipping tab and edit package dimension', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'editPackageDimension', baseContext);
 
-    await shippingTab.setPackageDimension(page, editProductData);
+    await boProductsCreateTabShippingPage.setPackageDimension(page, editProductData);
 
     const message = await createProductsPage.saveProduct(page);
     expect(message).to.eq(createProductsPage.successfulUpdateMessage);
@@ -1055,7 +1055,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   it('should go to shipping tab and edit package dimension', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'editPackageDimension', baseContext);
 
-    await shippingTab.setPackageDimension(page, dataProducts.demo_11);
+    await boProductsCreateTabShippingPage.setPackageDimension(page, dataProducts.demo_11);
 
     const message = await createProductsPage.saveProduct(page);
     expect(message).to.eq(createProductsPage.successfulUpdateMessage);
