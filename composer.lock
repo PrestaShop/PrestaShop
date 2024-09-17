@@ -6815,16 +6815,16 @@
         },
         {
             "name": "prestashop/ps_imageslider",
-            "version": "v3.1.4",
+            "version": "v3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_imageslider.git",
-                "reference": "25c86742d2e0d3e1abc778a82f127b04379fa164"
+                "reference": "2fe06c69344d973791928f6b2aebdc9c62bf8280"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_imageslider/zipball/25c86742d2e0d3e1abc778a82f127b04379fa164",
-                "reference": "25c86742d2e0d3e1abc778a82f127b04379fa164",
+                "url": "https://api.github.com/repos/PrestaShop/ps_imageslider/zipball/2fe06c69344d973791928f6b2aebdc9c62bf8280",
+                "reference": "2fe06c69344d973791928f6b2aebdc9c62bf8280",
                 "shasum": ""
             },
             "require": {
@@ -6852,9 +6852,9 @@
             "description": "PrestaShop - Image slider",
             "homepage": "https://github.com/PrestaShop/ps_imageslider",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_imageslider/tree/v3.1.4"
+                "source": "https://github.com/PrestaShop/ps_imageslider/tree/v3.2.0"
             },
-            "time": "2024-01-16T08:14:40+00:00"
+            "time": "2024-09-16T13:57:55+00:00"
         },
         {
             "name": "prestashop/ps_languageselector",
