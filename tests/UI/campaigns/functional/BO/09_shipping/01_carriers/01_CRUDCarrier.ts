@@ -111,6 +111,50 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
     handlingCosts: false,
     freeShipping: false,
     billing: 'According to total weight',
+    ranges: [
+      {
+        weightMin: 0,
+        weightMax: 5,
+        zones: [
+          {
+            zone: dataZones.europe,
+            price: 5,
+          },
+          {
+            zone: dataZones.northAmerica,
+            price: 2,
+          },
+        ],
+      },
+      {
+        weightMin: 5,
+        weightMax: 10,
+        zones: [
+          {
+            zone: dataZones.europe,
+            price: 10,
+          },
+          {
+            zone: dataZones.northAmerica,
+            price: 4,
+          },
+        ],
+      },
+      {
+        weightMin: 10,
+        weightMax: 20,
+        zones: [
+          {
+            zone: dataZones.europe,
+            price: 20,
+          },
+          {
+            zone: dataZones.northAmerica,
+            price: 8,
+          },
+        ],
+      },
+    ],
     // Size weight and group access
     maxWidth: 700,
     maxHeight: 500,

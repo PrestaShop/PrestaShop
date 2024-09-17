@@ -9,13 +9,13 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 import loginCommon from '@commonTests/BO/loginBO';
 import createProductPage from '@pages/BO/catalog/products/add';
 import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
-import shippingTab from '@pages/BO/catalog/products/add/shippingTab';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boProductsPage,
+  boProductsCreateTabShippingPage,
   FakerProduct,
   foHummingbirdProductPage,
   utilsPlaywright,
@@ -119,7 +119,7 @@ describe('FO - Product page - Product page : Display specific delivery time', as
       await testContext.addContextItem(this, 'testIdentifier', 'chooseSpecificDeliveryTime', baseContext);
 
       await createProductPage.goToTab(page, 'shipping');
-      await shippingTab.setDeliveryTime(page, 'Specific delivery time');
+      await boProductsCreateTabShippingPage.setDeliveryTime(page, 'Specific delivery time');
 
       const message = await createProductPage.saveProduct(page);
       expect(message).to.equal(createProductPage.successfulUpdateMessage);
@@ -128,7 +128,7 @@ describe('FO - Product page - Product page : Display specific delivery time', as
     it('should set delivery time out-of-stock products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setDeliveryTime', baseContext);
 
-      await shippingTab.setDeliveryTimeOutOfStockProducts(page, 'Hello');
+      await boProductsCreateTabShippingPage.setDeliveryTimeOutOfStockProducts(page, 'Hello');
 
       const message = await createProductPage.saveProduct(page);
       expect(message).to.equal(createProductPage.successfulUpdateMessage);
@@ -177,7 +177,7 @@ describe('FO - Product page - Product page : Display specific delivery time', as
       await testContext.addContextItem(this, 'testIdentifier', 'setDeliveryTime2', baseContext);
 
       await createProductPage.goToTab(page, 'shipping');
-      await shippingTab.setDeliveryTimeInStockProducts(page, 'Delivered in less than a week');
+      await boProductsCreateTabShippingPage.setDeliveryTimeInStockProducts(page, 'Delivered in less than a week');
 
       const message = await createProductPage.saveProduct(page);
       expect(message).to.equal(createProductPage.successfulUpdateMessage);
