@@ -74,6 +74,7 @@ class ContextStateManagerTest extends ContextStateTestCase
             'override_folder/',
             'index.php?controller=AdminProducts',
             'product',
+            false,
             1
         );
 
@@ -88,6 +89,7 @@ class ContextStateManagerTest extends ContextStateTestCase
             'override_folder/',
             'index.php?controller=AdminCarts',
             'cart',
+            true,
             1
         );
     }
@@ -104,17 +106,20 @@ class ContextStateManagerTest extends ContextStateTestCase
     {
         $this->legacyContext->getContext()->controller = $this->legacyControllerContext1;
         $this->assertEquals($this->legacyControllerContext1->controller_name, $this->legacyContext->getContext()->controller->controller_name);
+        $this->assertEquals($this->legacyControllerContext1->ajax, $this->legacyContext->getContext()->controller->ajax);
 
         $contextStateManager = new ContextStateManager($this->legacyContext);
         $this->assertNull($contextStateManager->getContextFieldsStack());
 
         $contextStateManager->setController($this->legacyControllerContext2);
         $this->assertEquals($this->legacyControllerContext2->controller_name, $this->legacyContext->getContext()->controller->controller_name);
+        $this->assertEquals($this->legacyControllerContext2->ajax, $this->legacyContext->getContext()->controller->ajax);
         $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->restorePreviousContext();
         $this->assertEquals($this->legacyControllerContext1->controller_name, $this->legacyContext->getContext()->controller->controller_name);
+        $this->assertEquals($this->legacyControllerContext1->ajax, $this->legacyContext->getContext()->controller->ajax);
         $this->assertNull($contextStateManager->getContextFieldsStack());
     }
 

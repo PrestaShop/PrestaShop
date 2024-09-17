@@ -126,6 +126,7 @@ class LegacyControllerContext
         public readonly string $override_folder,
         public readonly string $currentIndex,
         public readonly string $table,
+        public readonly bool $ajax,
         protected readonly int $employeeLanguageId,
     ) {
         $this->php_self = $this->controller_name;

@@ -34,6 +34,7 @@ use PrestaShopBundle\Entity\Repository\TabRepository;
 use PrestaShopBundle\EventListener\Admin\Context\LegacyControllerContextListener;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Tests\Unit\PrestaShopBundle\EventListener\ContextEventListenerTestCase;
 
 class LegacyControllerContextListenerTest extends ContextEventListenerTestCase
@@ -92,6 +93,7 @@ class LegacyControllerContextListenerTest extends ContextEventListenerTestCase
             $this->createMock(TabRepository::class),
             $this->createMock(ContainerInterface::class),
             $this->mockConfiguration(),
+            $this->createMock(RequestStack::class),
         );
     }
 }

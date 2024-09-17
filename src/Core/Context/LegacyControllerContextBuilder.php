@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\Inflector;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Tools;
 
 class LegacyControllerContextBuilder
@@ -47,6 +48,7 @@ class LegacyControllerContextBuilder
         private readonly TabRepository $tabRepository,
         private readonly ContainerInterface $container,
         private readonly ConfigurationInterface $configuration,
+        private readonly RequestStack $requestStack,
     ) {
     }
 
@@ -79,6 +81,7 @@ class LegacyControllerContextBuilder
             $overrideFolder,
             $this->getCurrentIndex(),
             $table,
+            (bool) $this->requestStack->getCurrentRequest()?->get('ajax'),
             $employeeLanguageId,
         );
     }
