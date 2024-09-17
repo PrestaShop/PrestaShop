@@ -85,10 +85,12 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
                 'searched_query' => $queryString,
                 'total' => $count,
 
-                // deprecated since 1.7.x
+                // @deprecated since 1.7.x and will be removed in 9.0.0
                 'expr' => $queryString,
             ]);
         } elseif (($tag = $query->getSearchTag())) {
+            // @deprecated since 8.2.0 and will be removed in 9.0.0, searching products by tags
+            // is already included in Search::find method. Tags are indexed for each product.
             $queryString = urldecode($tag);
 
             $products = Search::searchTag(
@@ -119,7 +121,7 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
                 'searched_query' => $queryString,
                 'total' => $count,
 
-                // deprecated since 1.7.x
+                // @deprecated since 1.7.x and will be removed in 9.0.0
                 'expr' => $queryString,
             ]);
         }

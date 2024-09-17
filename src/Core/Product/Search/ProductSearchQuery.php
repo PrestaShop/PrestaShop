@@ -57,6 +57,9 @@ class ProductSearchQuery
     private $searchString;
 
     /**
+     * @deprecated since 8.2.0 and will be removed in 9.0.0, searching products by tags
+     * is already included in Search::find method. Tags are indexed for each product.
+     *
      * @var string
      */
     private $searchTag;
@@ -253,6 +256,9 @@ class ProductSearchQuery
     }
 
     /**
+     * @deprecated since 8.2.0 and will be removed in 9.0.0, searching products by tags
+     * is already included in Search::find method. Tags are indexed for each product.
+     *
      * @param string $searchTag
      *
      * @return $this
@@ -265,6 +271,9 @@ class ProductSearchQuery
     }
 
     /**
+     * @deprecated since 8.2.0 and will be removed in 9.0.0, searching products by tags
+     * is already included in Search::find method. Tags are indexed for each product.
+     *
      * @return string
      */
     public function getSearchTag()

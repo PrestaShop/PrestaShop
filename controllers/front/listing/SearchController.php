@@ -51,12 +51,17 @@ class SearchControllerCore extends ProductListingFrontController
             $this->search_string = Tools::getValue('search_query');
         }
 
+        // @deprecated since 8.2.0 and will be removed in 9.0.0, searching products by tags
+        // is already included in Search::find method. Tags are indexed for each product.
         $this->search_tag = Tools::getValue('tag');
 
         $this->context->smarty->assign(
             [
                 'search_string' => $this->search_string,
+                // @deprecated since 8.2.0 and will be removed in 9.0.0, searching products by tags
+                // is already included in Search::find method. Tags are indexed for each product.
                 'search_tag' => $this->search_tag,
+                // @deprecated since 8.2.0 and will be removed in 9.0.0, unused
                 'subcategories' => [],
             ]
         );
@@ -99,6 +104,8 @@ class SearchControllerCore extends ProductListingFrontController
             ->setQueryType('search')
             ->setSortOrder(new SortOrder('product', 'position', 'desc'))
             ->setSearchString($this->search_string)
+            // @deprecated since 8.2.0 and will be removed in 9.0.0, searching products by tags
+            // is already included in Search::find method. Tags are indexed for each product.
             ->setSearchTag($this->search_tag);
 
         return $query;
