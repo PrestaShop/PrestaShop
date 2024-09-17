@@ -36,11 +36,11 @@ type NavbarFormErrorHandlerType = {
  * Use this component only if you are using a form with NavbarHandler.
  */
 export default class NavbarFormErrorHandler {
-  form: HTMLElement;
+  private readonly form: HTMLElement;
 
-  navbarHandler: NavbarHandler;
+  private readonly navbarHandler: NavbarHandler;
 
-  firstInvalidField: Element | null = null;
+  private firstInvalidField: HTMLElement | null = null;
 
   constructor(options: NavbarFormErrorHandlerType) {
     this.navbarHandler = options.navbarHandler;
@@ -50,7 +50,7 @@ export default class NavbarFormErrorHandler {
     this.resetInvalidField();
   }
 
-  private findRequiredFieldsFromForm(): NodeListOf<Element> {
+  private findRequiredFieldsFromForm(): NodeListOf<HTMLElement> {
     return this.form.querySelectorAll('[required]');
   }
 
@@ -61,7 +61,16 @@ export default class NavbarFormErrorHandler {
           this.firstInvalidField = field;
 
           const tab = field.closest('[role="tabpanel"]');
-          this.navbarHandler.switchToTarget(`#${tab?.id}`);
+
+          if (!tab || typeof tab === null) {
+            throw new Error('NavbarFormErrorHandler: Cannot find the tab that contains some form fields in error.');
+          }
+
+          if (!('id' in tab)) {
+            throw new Error('NavbarFormErrorHandler: Id missing from the tab.');
+          }
+
+          this.navbarHandler.switchToTarget(`#${tab.id}`);
 
           field.scrollIntoView({
             behavior: 'smooth',
