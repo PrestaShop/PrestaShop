@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
 use PrestaShopBundle\Translation\TranslatorComponent as Translator;
 use Shop;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Tests\Integration\Utility\ContextMockerTrait;
 
 abstract class ContextStateTestCase extends TestCase
@@ -130,8 +131,12 @@ abstract class ContextStateTestCase extends TestCase
                 '',
                 'index.php?controller=' . $controllerName,
                 'configuration',
-                false,
+                $this->createMock(Request::class),
                 1,
+                'http://localhost',
+                'admin-dev',
+                false,
+                '9.0.0',
             ])
         ;
 

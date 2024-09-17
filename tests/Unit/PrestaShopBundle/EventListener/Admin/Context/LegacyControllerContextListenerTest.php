@@ -29,7 +29,9 @@ declare(strict_types=1);
 namespace Tests\Unit\PrestaShopBundle\EventListener\Admin\Context;
 
 use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\LegacyControllerContextBuilder;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use PrestaShopBundle\EventListener\Admin\Context\LegacyControllerContextListener;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -94,6 +96,10 @@ class LegacyControllerContextListenerTest extends ContextEventListenerTestCase
             $this->createMock(ContainerInterface::class),
             $this->mockConfiguration(),
             $this->createMock(RequestStack::class),
+            $this->createMock(ShopContext::class),
+            $this->createMock(LanguageContext::class),
+            'admin-dev',
+            '9.0.0',
         );
     }
 }

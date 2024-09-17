@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Shop;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Tests\TestCase\ContextStateTestCase;
 
 class ContextStateManagerTest extends ContextStateTestCase
@@ -74,8 +75,12 @@ class ContextStateManagerTest extends ContextStateTestCase
             'override_folder/',
             'index.php?controller=AdminProducts',
             'product',
+            $this->createMock(Request::class),
+            1,
+            'http://localhost',
+            'admin-dev',
             false,
-            1
+            '9.0.0',
         );
 
         $this->legacyControllerContext2 = new LegacyControllerContext(
@@ -89,8 +94,12 @@ class ContextStateManagerTest extends ContextStateTestCase
             'override_folder/',
             'index.php?controller=AdminCarts',
             'cart',
-            true,
-            1
+            $this->createMock(Request::class),
+            1,
+            'http://localhost',
+            'admin-dev',
+            false,
+            '9.0.0',
         );
     }
 

@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Context;
 use Language;
 use Media;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Traversable;
 
 /**
@@ -102,6 +103,8 @@ class LegacyControllerContext
      */
     public array|Traversable $page_header_toolbar_btn = [];
 
+    public bool $ajax = false;
+
     protected array $languages = [];
 
     /**
@@ -126,10 +129,15 @@ class LegacyControllerContext
         public readonly string $override_folder,
         public readonly string $currentIndex,
         public readonly string $table,
-        public readonly bool $ajax,
+        protected readonly Request $request,
         protected readonly int $employeeLanguageId,
+        protected readonly string $baseUri,
+        protected readonly string $adminFolderName,
+        protected readonly bool $isLanguageRTL,
+        protected readonly string $psVersion,
     ) {
         $this->php_self = $this->controller_name;
+        $this->ajax = (bool) $this->request->get('ajax');
     }
 
     public function addCSS(array|string $css_uri, string $css_media_type = 'all', ?int $offset = null, bool $check_path = true): void
@@ -242,5 +250,63 @@ class LegacyControllerContext
     public function getContainer(): ContainerInterface
     {
         return $this->container;
+    }
+
+    /**
+     * This is an equivalent of AdminController::setMedia(false)
+     *
+     * @return void
+     */
+    public function loadLegacyMedia(): void
+    {
+        $jsDir = rtrim($this->baseUri, '/') . '/js';
+        $adminDir = rtrim($this->baseUri, '/') . '/' . $this->adminFolderName;
+        if ($this->isLanguageRTL) {
+            $this->addCSS($adminDir . '/themes/default/public/rtl.css?v=' . $this->psVersion, 'all', 0);
+        }
+
+        // Bootstrap
+        $this->addCSS($adminDir . '/themes/default/css/theme.css?v=' . $this->psVersion, 'all', 0);
+        $this->addCSS($adminDir . '/themes/default/css/vendor/titatoggle-min.css', 'all', 0);
+        $this->addCSS($adminDir . '/themes/default/public/theme.css?v=' . $this->psVersion, 'all', 0);
+
+        // add Jquery 3 and its migration script
+        $this->addJs($jsDir . '/jquery/jquery-3.7.1.min.js');
+        $this->addJs($jsDir . '/jquery/bo-migrate-mute.min.js');
+        $this->addJs($jsDir . '/jquery/jquery-migrate-3.4.0.min.js');
+
+        $this->addJqueryPlugin(['scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox']);
+        $this->addJqueryPlugin('growl', null, false);
+        $this->addJqueryUI(['ui.slider', 'ui.datepicker']);
+
+        $this->addJS($adminDir . '/themes/default/js/vendor/bootstrap.min.js');
+        $this->addJS($adminDir . '/themes/default/js/vendor/modernizr.min.js');
+        $this->addJS($adminDir . '/themes/default/js/modernizr-loads.js');
+        $this->addJS($adminDir . '/themes/default/js/vendor/moment-with-langs.min.js');
+        $this->addJS($adminDir . '/themes/default/public/theme.bundle.js?v=' . $this->psVersion);
+
+        $this->addJS($jsDir . '/jquery/plugins/timepicker/jquery-ui-timepicker-addon.js');
+
+        if (!$this->request->get('liteDisplaying')) {
+            $this->addJS($adminDir . '/themes/default/js/help.js?v=' . $this->psVersion);
+        }
+
+        if (!$this->request->get('submitFormAjax')) {
+            $this->addJS($jsDir . '/admin/notifications.js?v=' . $this->psVersion);
+        }
+
+        // Specific Admin Theme
+        $this->addCSS($adminDir . '/themes/default/css/overrides.css', 'all', PHP_INT_MAX);
+
+        $this->addCSS($adminDir . '/themes/new-theme/public/create_product_default_theme.css?v=' . $this->psVersion, 'all', 0);
+        $this->addJS([
+            $jsDir . '/admin.js?v=' . $this->psVersion, // TODO: SEE IF REMOVABLE
+            $adminDir . '/themes/new-theme/public/cldr.bundle.js?v=' . $this->psVersion,
+            $jsDir . '/tools.js?v=' . $this->psVersion,
+            $adminDir . '/public/bundle.js?v=' . $this->psVersion,
+        ]);
+
+        // This is handled as an external common dependency for both themes, but once new-theme is the only one it should be integrated directly into the main.bundle.js file
+        $this->addJS($adminDir . '/themes/new-theme/public/create_product.bundle.js?v=' . $this->psVersion);
     }
 }

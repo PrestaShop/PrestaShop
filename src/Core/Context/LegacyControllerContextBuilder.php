@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\Inflector;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Tools;
 
@@ -43,12 +44,16 @@ class LegacyControllerContextBuilder
     private ?string $redirectionUrl = null;
 
     public function __construct(
-        private readonly EmployeeContext $employeeContext,
-        private readonly array $controllersLockedToAllShopContext,
-        private readonly TabRepository $tabRepository,
-        private readonly ContainerInterface $container,
-        private readonly ConfigurationInterface $configuration,
-        private readonly RequestStack $requestStack,
+        protected readonly EmployeeContext $employeeContext,
+        protected readonly array $controllersLockedToAllShopContext,
+        protected readonly TabRepository $tabRepository,
+        protected readonly ContainerInterface $container,
+        protected readonly ConfigurationInterface $configuration,
+        protected readonly RequestStack $requestStack,
+        protected readonly ShopContext $shopContext,
+        protected readonly LanguageContext $languageContext,
+        protected readonly string $adminFolderName,
+        protected string $psVersion,
     ) {
     }
 
@@ -81,8 +86,12 @@ class LegacyControllerContextBuilder
             $overrideFolder,
             $this->getCurrentIndex(),
             $table,
-            (bool) $this->requestStack->getCurrentRequest()?->get('ajax'),
+            $this->requestStack->getCurrentRequest() ?: Request::createFromGlobals(),
             $employeeLanguageId,
+            $this->shopContext->getBaseURI(),
+            $this->adminFolderName,
+            $this->languageContext->isRTL(),
+            $this->psVersion,
         );
     }
 

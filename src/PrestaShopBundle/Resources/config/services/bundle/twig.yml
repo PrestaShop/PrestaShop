@@ -9,7 +9,6 @@ services:
       $controllersLockedToAllShopContext: '%prestashop.controllers_all_shop_context%'
       $defaultLanguageContext: '@prestashop.default.language.context'
       $cookieKey: '%cookie_key%'
-      $adminFolderName: '%prestashop.admin_folder_name%'
 
   Twig\Extension\StringLoaderExtension: ~
 

@@ -150,6 +150,10 @@ class ModuleController extends ModuleAbstractController
             _PS_BO_ALL_THEMES_DIR_ . 'default/template/',
             _PS_OVERRIDE_DIR_ . 'controllers/admin/templates',
         ]);
+
+        // Force legacy layout to load legacy assets like AdminController::setMedia does
+        $this->getLegacyControllerContext()->loadLegacyMedia();
+        // Only after can we add additional plugins (to be sure jquery is loaded before the plugins)
         $this->getLegacyControllerContext()->addJqueryPlugin(['autocomplete', 'fancybox', 'tablefilter']);
 
         if (method_exists($module->getInstance(), 'getContent')) {
@@ -164,8 +168,6 @@ class ModuleController extends ModuleAbstractController
             [
                 'moduleContent' => $moduleContent,
                 'showContentHeader' => true,
-                // Force legacy layout to load legacy assets like AdminController::setMedia does
-                'loadLegacyMedia' => true,
                 'layoutHeaderToolbarBtn' => $this->getConfigureToolbarButtons($module),
                 'translationLinks' => $this->getTranslationLinks($module, $legacyContext),
                 'layoutTitle' => $this->trans('Configure', [], 'Admin.Modules.Feature'),

@@ -33,7 +33,9 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Context\Employee;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\LegacyControllerContextBuilder;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -64,6 +66,10 @@ class LegacyControllerContextBuilderTest extends TestCase
             $this->createMock(ContainerInterface::class),
             $this->mockConfiguration(),
             $this->mockRequestStack(true),
+            $this->createMock(ShopContext::class),
+            $this->createMock(LanguageContext::class),
+            'admin-dev',
+            '9.0.0',
         );
 
         $builder->setControllerName($controllerName);
@@ -200,6 +206,10 @@ class LegacyControllerContextBuilderTest extends TestCase
             $this->createMock(ContainerInterface::class),
             $this->mockConfiguration(),
             $this->mockRequestStack(false),
+            $this->createMock(ShopContext::class),
+            $this->createMock(LanguageContext::class),
+            'admin-dev',
+            '9.0.0',
         );
 
         // We don't call setControllerName so the builder falls back on AdminNotFound
