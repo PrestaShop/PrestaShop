@@ -9,6 +9,7 @@ import packTab from '@pages/BO/catalog/products/add/packTab';
 
 import type {Frame, Page} from 'playwright';
 import {
+  boProductsCreateTabShippingPage,
   boProductsPage,
   type FakerProduct,
   type ProductHeaderSummary,
@@ -368,6 +369,8 @@ class CreateProduct extends BOBasePage {
     if (productData.type === 'pack') {
       await packTab.setPackOfProducts(page, productData.pack);
     }
+
+    await boProductsCreateTabShippingPage.setPackageDimension(page, productData);
 
     await pricingTab.setProductPricing(page, productData);
 
