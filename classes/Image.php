@@ -666,7 +666,7 @@ class ImageCore extends ObjectModel
         }
 
         // We need to delete old thumbnails (if exists) from variant images as well
-        $old_thumbnails = glob(_PS_TMP_IMG_DIR_ . 'product_mini_*.' . $this->image_format);
+        $old_thumbnails = glob(_PS_TMP_IMG_DIR_ . 'product_mini_' . $this->id_product . '_*.' . $this->image_format);
         if (!empty($old_thumbnails)) {
             foreach ($old_thumbnails as $file) {
                 // we don't care, if it exists, because glob will handle this
