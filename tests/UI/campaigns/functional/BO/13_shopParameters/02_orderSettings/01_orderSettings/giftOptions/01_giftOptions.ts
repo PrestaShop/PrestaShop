@@ -11,7 +11,6 @@ import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 // Import FO pages
-import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
@@ -20,6 +19,7 @@ import {
   dataPaymentMethods,
   dataTaxes,
   foClassicCartPage,
+  foClassicCheckoutPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicProductPage,
@@ -195,14 +195,14 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
 
           await foClassicCartPage.clickOnProceedToCheckout(page);
 
-          const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
+          const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
           expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
         });
 
         it(`should check that gift checkbox visibility is '${test.args.isGiftWrapping}'`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkGiftVisibility${index}`, baseContext);
 
-          const isGiftCheckboxVisible = await checkoutPage.isGiftCheckboxVisible(page);
+          const isGiftCheckboxVisible = await foClassicCheckoutPage.isGiftCheckboxVisible(page);
           expect(
             isGiftCheckboxVisible,
             'Gift checkbox has not the correct status',
@@ -213,13 +213,13 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           it('should check the gift checkbox and set a gift message', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `setGiftMessage${index}`, baseContext);
 
-            await checkoutPage.setGiftCheckBox(page);
+            await foClassicCheckoutPage.setGiftCheckBox(page);
 
-            const isVisible = await checkoutPage.isGiftMessageTextareaVisible(page);
+            const isVisible = await foClassicCheckoutPage.isGiftMessageTextareaVisible(page);
             expect(isVisible, 'Gift message textarea is not visible!').to.eq(true);
 
             if (isVisible) {
-              await checkoutPage.setGiftMessage(page, 'This is your gift');
+              await foClassicCheckoutPage.setGiftMessage(page, 'This is your gift');
             }
           });
         }
@@ -228,7 +228,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           it('should check gift price and tax', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkGiftPrice${index}`, baseContext);
 
-            const giftPrice = await checkoutPage.getGiftPrice(page);
+            const giftPrice = await foClassicCheckoutPage.getGiftPrice(page);
             expect(giftPrice, 'Gift price is incorrect').to.equal(
               test.args.giftWrappingPrice === 0
                 ? 'Free'
@@ -245,28 +245,28 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkRecycleDVisibility${index}`, baseContext);
 
-            const isRecycledPackagingCheckboxVisible = await checkoutPage.isRecycledPackagingCheckboxVisible(page);
+            const isRecycledPackagingCheckboxVisible = await foClassicCheckoutPage.isRecycledPackagingCheckboxVisible(page);
             expect(
               isRecycledPackagingCheckboxVisible,
               'Recycled packaging checkbox has not the correct status',
             ).to.equal(test.args.isRecycledPackaging);
 
             if (test.args.isRecycledPackaging) {
-              await checkoutPage.setRecycledPackagingCheckbox(page);
+              await foClassicCheckoutPage.setRecycledPackagingCheckbox(page);
             }
           });
 
         it('should continue to payment', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToPaymentStep${index}`, baseContext);
 
-          const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
+          const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
           expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
         });
 
         it('should choose payment method and confirm the order', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `confirmOrder${index}`, baseContext);
 
-          await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
+          await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
           const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
           expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
@@ -286,7 +286,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
         it('should sign out from FO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `sighOutFOAfterCheck${index}`, baseContext);
 
-          await checkoutPage.goToHomePage(page);
+          await foClassicCheckoutPage.goToHomePage(page);
           await foClassicHomePage.logout(page);
 
           const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);
@@ -298,7 +298,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
         it('should go back to BO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goBackToBoAfterCheck${index}`, baseContext);
 
-          page = await checkoutPage.closePage(browserContext, page, 0);
+          page = await foClassicCheckoutPage.closePage(browserContext, page, 0);
 
           const pageTitle = await orderSettingsPage.getPageTitle(page);
           expect(pageTitle).to.contains(orderSettingsPage.pageTitle);

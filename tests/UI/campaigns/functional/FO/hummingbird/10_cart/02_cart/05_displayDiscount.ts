@@ -3,7 +3,6 @@ import testContext from '@utils/testContext';
 
 // Import FO pages
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
-import checkoutPage from '@pages/FO/hummingbird/checkout';
 
 // Import commonTests
 import {createCartRuleTest, deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
@@ -16,6 +15,7 @@ import {
   dataProducts,
   FakerCartRule,
   foHummingbirdCartPage,
+  foHummingbirdCheckoutPage,
   foHummingbirdHomePage,
   foHummingbirdModalQuickViewPage,
   foHummingbirdSearchResultsPage,
@@ -204,7 +204,7 @@ describe('FO - cart : Display discount', async () => {
     it('should remove the second discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removeTheDiscount2', baseContext);
 
-      const isDeleteIconNotVisible = await checkoutPage.removePromoCode(page, 2);
+      const isDeleteIconNotVisible = await foHummingbirdCheckoutPage.removePromoCode(page, 2);
       expect(isDeleteIconNotVisible, 'The discount is not removed').to.equal(true);
     });
 
@@ -220,7 +220,7 @@ describe('FO - cart : Display discount', async () => {
     it('should remove the first discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removeTheDiscount', baseContext);
 
-      const isDeleteIconNotVisible = await checkoutPage.removePromoCode(page, 1);
+      const isDeleteIconNotVisible = await foHummingbirdCheckoutPage.removePromoCode(page, 1);
       expect(isDeleteIconNotVisible, 'The discount is not removed').to.equal(true);
     });
 

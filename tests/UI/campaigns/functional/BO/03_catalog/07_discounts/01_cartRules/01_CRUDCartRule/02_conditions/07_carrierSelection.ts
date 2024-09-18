@@ -9,8 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
-// Import FO pages
-import {checkoutPage} from '@pages/FO/classic/checkout';
 
 import {
   boDashboardPage,
@@ -19,6 +17,7 @@ import {
   dataProducts,
   FakerCartRule,
   foClassicCartPage,
+  foClassicCheckoutPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsPlaywright,
@@ -147,44 +146,44 @@ describe('BO - Catalog - Cart rules : Carrier selection', async () => {
 
       await foClassicCartPage.clickOnProceedToCheckout(page);
 
-      const isCheckout = await checkoutPage.isCheckoutPage(page);
+      const isCheckout = await foClassicCheckoutPage.isCheckoutPage(page);
       expect(isCheckout).to.eq(true);
     });
 
     it('should sign in by default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
-      await checkoutPage.clickOnSignIn(page);
+      await foClassicCheckoutPage.clickOnSignIn(page);
 
-      const isCustomerConnected = await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
+      const isCustomerConnected = await foClassicCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should go to delivery step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'confirmAddressStep', baseContext);
 
-      const isDeliveryStep = await checkoutPage.goToDeliveryStep(page);
+      const isDeliveryStep = await foClassicCheckoutPage.goToDeliveryStep(page);
       expect(isDeliveryStep, 'Delivery Step block is not displayed').to.eq(true);
     });
 
     it('should set the promo code and choose the wrong shipping method', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseWrongShippingMethod', baseContext);
 
-      await checkoutPage.chooseShippingMethodAndAddComment(page, dataCarriers.clickAndCollect.id);
-      await checkoutPage.addPromoCode(page, newCartRuleData.code);
+      await foClassicCheckoutPage.chooseShippingMethodAndAddComment(page, dataCarriers.clickAndCollect.id);
+      await foClassicCheckoutPage.addPromoCode(page, newCartRuleData.code);
 
-      const errorShippingMessage = await checkoutPage.getCartRuleErrorMessage(page);
+      const errorShippingMessage = await foClassicCheckoutPage.getCartRuleErrorMessage(page);
       expect(errorShippingMessage).to.equal(foClassicCartPage.cartRuleCannotUseVoucherAlertMessageText);
     });
 
     it('should choose the restricted shipping method and continue', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseShippingMethod', baseContext);
 
-      await checkoutPage.goToShippingStep(page);
+      await foClassicCheckoutPage.goToShippingStep(page);
 
-      await checkoutPage.chooseShippingMethodAndAddComment(page, dataCarriers.myCarrier.id);
+      await foClassicCheckoutPage.chooseShippingMethodAndAddComment(page, dataCarriers.myCarrier.id);
 
-      const priceATI = await checkoutPage.getATIPrice(page);
+      const priceATI = await foClassicCheckoutPage.getATIPrice(page);
       expect(priceATI.toFixed(2))
         .to.equal((dataProducts.demo_6.combinations[0].price + dataCarriers.myCarrier.priceTTC).toFixed(2));
     });
@@ -192,12 +191,12 @@ describe('BO - Catalog - Cart rules : Carrier selection', async () => {
     it('should set the promo code for second time and check total after discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setPromoCode', baseContext);
 
-      await checkoutPage.addPromoCode(page, newCartRuleData.code);
+      await foClassicCheckoutPage.addPromoCode(page, newCartRuleData.code);
 
       const totalAfterDiscount = dataProducts.demo_6.combinations[0].price
         - newCartRuleData.discountAmount!.value + dataCarriers.myCarrier.priceTTC;
 
-      const priceATI = await checkoutPage.getATIPrice(page);
+      const priceATI = await foClassicCheckoutPage.getATIPrice(page);
       expect(priceATI.toFixed(2)).to.equal(totalAfterDiscount.toFixed(2));
     });
 

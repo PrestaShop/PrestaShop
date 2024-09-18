@@ -6,12 +6,12 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 
 // Import pages
 // Import FO pages
-import checkoutPage from '@pages/FO/hummingbird/checkout';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {
   dataCustomers,
   foHummingbirdCartPage,
+  foHummingbirdCheckoutPage,
   foHummingbirdHomePage,
   foHummingbirdModalQuickViewPage,
   utilsPlaywright,
@@ -69,58 +69,58 @@ describe('FO - Guest checkout: Billing address when logged in', async () => {
 
       await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
-      const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
+      const isCheckoutPage = await foHummingbirdCheckoutPage.isCheckoutPage(page);
       expect(isCheckoutPage).to.eq(true);
     });
 
     it('should sign in by default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
-      await checkoutPage.clickOnSignIn(page);
+      await foHummingbirdCheckoutPage.clickOnSignIn(page);
 
-      const isCustomerConnected = await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
+      const isCustomerConnected = await foHummingbirdCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
       expect(isCustomerConnected).to.eq(true);
 
-      const isAddressesStep = await checkoutPage.isAddressesStep(page);
+      const isAddressesStep = await foHummingbirdCheckoutPage.isAddressesStep(page);
       expect(isAddressesStep).to.eq(true);
 
-      const isDeliveryAddressSelected = await checkoutPage.isDeliveryAddressSelected(page, 1);
+      const isDeliveryAddressSelected = await foHummingbirdCheckoutPage.isDeliveryAddressSelected(page, 1);
       expect(isDeliveryAddressSelected).to.equal(true);
 
-      const addressesNumber = await checkoutPage.getNumberOfAddresses(page);
+      const addressesNumber = await foHummingbirdCheckoutPage.getNumberOfAddresses(page);
       expect(addressesNumber).to.equal(2);
     });
 
     it('should click on \'Billing address differs from shipping address\' link', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnBillingAddressDifferent', baseContext);
 
-      await checkoutPage.clickOnDifferentInvoiceAddressLink(page);
+      await foHummingbirdCheckoutPage.clickOnDifferentInvoiceAddressLink(page);
 
-      const isInvoiceAddressBlockVisible = await checkoutPage.isInvoiceAddressBlockVisible(page);
+      const isInvoiceAddressBlockVisible = await foHummingbirdCheckoutPage.isInvoiceAddressBlockVisible(page);
       expect(isInvoiceAddressBlockVisible).to.eq(true);
 
-      const addressesNumber = await checkoutPage.getNumberOfAddresses(page);
+      const addressesNumber = await foHummingbirdCheckoutPage.getNumberOfAddresses(page);
       expect(addressesNumber).to.equal(2);
 
-      const invoiceAddressesNumber = await checkoutPage.getNumberOfInvoiceAddresses(page);
+      const invoiceAddressesNumber = await foHummingbirdCheckoutPage.getNumberOfInvoiceAddresses(page);
       expect(invoiceAddressesNumber).to.equal(2);
 
-      const isInvoiceAddress1Selected = await checkoutPage.isInvoiceAddressSelected(page, 1);
+      const isInvoiceAddress1Selected = await foHummingbirdCheckoutPage.isInvoiceAddressSelected(page, 1);
       expect(isInvoiceAddress1Selected).to.equal(true);
 
-      const isInvoiceAddress2Selected = await checkoutPage.isInvoiceAddressSelected(page, 2);
+      const isInvoiceAddress2Selected = await foHummingbirdCheckoutPage.isInvoiceAddressSelected(page, 2);
       expect(isInvoiceAddress2Selected).to.equal(false);
     });
 
     it('should choose the invoice address different than shipping address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'invoiceAddressDiffShippingAddress', baseContext);
 
-      await checkoutPage.selectInvoiceAddress(page, 2);
+      await foHummingbirdCheckoutPage.selectInvoiceAddress(page, 2);
 
-      const isInvoiceAddress1Selected = await checkoutPage.isInvoiceAddressSelected(page, 1);
+      const isInvoiceAddress1Selected = await foHummingbirdCheckoutPage.isInvoiceAddressSelected(page, 1);
       expect(isInvoiceAddress1Selected).to.equal(false);
 
-      const isInvoiceAddress2Selected = await checkoutPage.isInvoiceAddressSelected(page, 2);
+      const isInvoiceAddress2Selected = await foHummingbirdCheckoutPage.isInvoiceAddressSelected(page, 2);
       expect(isInvoiceAddress2Selected).to.equal(true);
     });
   });

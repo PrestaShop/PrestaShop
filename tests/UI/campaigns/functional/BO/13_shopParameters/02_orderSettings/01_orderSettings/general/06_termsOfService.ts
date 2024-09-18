@@ -7,13 +7,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
-// Import FO pages
-import {checkoutPage} from '@pages/FO/classic/checkout';
 
 import {
   boDashboardPage,
   dataCustomers,
   foClassicCartPage,
+  foClassicCheckoutPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsPlaywright,
@@ -134,12 +133,12 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable terms of servic
       // Checkout the order
       if (index === 0) {
         // Personal information step - Login
-        await checkoutPage.clickOnSignIn(page);
-        await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
+        await foClassicCheckoutPage.clickOnSignIn(page);
+        await foClassicCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
       }
 
       // Address step - Go to delivery step
-      const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
+      const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
       expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
@@ -147,7 +146,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable terms of servic
       await testContext.addContextItem(this, 'testIdentifier', `goToPaymentStep${index}`, baseContext);
 
       // Delivery step - Go to payment step
-      const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
+      const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
       expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
     });
 
@@ -155,7 +154,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable terms of servic
       await testContext.addContextItem(this, 'testIdentifier', `checkTermsOfService${index}`, baseContext);
 
       // Check terms of service checkbox existence
-      const isVisible = await checkoutPage.isConditionToApproveCheckboxVisible(page);
+      const isVisible = await foClassicCheckoutPage.isConditionToApproveCheckboxVisible(page);
       expect(isVisible).to.be.equal(test.args.enable);
     });
 
@@ -163,7 +162,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable terms of servic
       it('should check the terms of service page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkTermsOfServicePage${index}`, baseContext);
 
-        const pageName = await checkoutPage.getTermsOfServicePageTitle(page);
+        const pageName = await foClassicCheckoutPage.getTermsOfServicePageTitle(page);
         expect(pageName).to.contains(test.args.title);
       });
     }
@@ -171,7 +170,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable terms of servic
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkAndBackToBO${index}`, baseContext);
 
-      page = await checkoutPage.closePage(browserContext, page, 0);
+      page = await foClassicCheckoutPage.closePage(browserContext, page, 0);
 
       const pageTitle = await orderSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(orderSettingsPage.pageTitle);

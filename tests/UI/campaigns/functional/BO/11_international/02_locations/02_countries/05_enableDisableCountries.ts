@@ -6,7 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import zonesPage from '@pages/BO/international/locations';
-import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
@@ -17,6 +16,7 @@ import {
   FakerAddress,
   FakerCustomer,
   foClassicCartPage,
+  foClassicCheckoutPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsPlaywright,
@@ -121,21 +121,21 @@ describe('BO - International - Countries : Enable / Disable Countries', async ()
     await foClassicCartPage.clickOnProceedToCheckout(page);
 
     // Go to checkout page
-    const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
+    const isCheckoutPage = await foClassicCheckoutPage.isCheckoutPage(page);
     expect(isCheckoutPage).to.eq(true);
   });
 
   it('should fill guest personal information', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setPersonalInformation', baseContext);
 
-    const isStepPersonalInfoCompleted = await checkoutPage.setGuestPersonalInformation(page, customerData);
+    const isStepPersonalInfoCompleted = await foClassicCheckoutPage.setGuestPersonalInformation(page, customerData);
     expect(isStepPersonalInfoCompleted, 'Step personal information is not completed').to.eq(true);
   });
 
   it('should check available countries', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkAvailableCountries', baseContext);
 
-    const countries = await checkoutPage.getAvailableAddressCountries(page);
+    const countries = await foClassicCheckoutPage.getAvailableAddressCountries(page);
     expect(countries.length).to.equal(2);
     expect(countries).to.deep.equal([
       dataCountries.france.name,
@@ -146,7 +146,7 @@ describe('BO - International - Countries : Enable / Disable Countries', async ()
   it('should fill address form and go to delivery step', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setAddressStep', baseContext);
 
-    const isStepAddressComplete = await checkoutPage.setAddress(page, addressDataFR);
+    const isStepAddressComplete = await foClassicCheckoutPage.setAddress(page, addressDataFR);
     expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
   });
 
@@ -154,7 +154,7 @@ describe('BO - International - Countries : Enable / Disable Countries', async ()
     await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
 
     // Delivery step - Go to payment step
-    const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
+    const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
     expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
   });
 
@@ -162,7 +162,7 @@ describe('BO - International - Countries : Enable / Disable Countries', async ()
     await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
     // Payment step - Choose payment step
-    await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
+    await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
     // Check the confirmation message
     const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
@@ -213,21 +213,21 @@ describe('BO - International - Countries : Enable / Disable Countries', async ()
     await foClassicCartPage.clickOnProceedToCheckout(page);
 
     // Go to checkout page
-    const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
+    const isCheckoutPage = await foClassicCheckoutPage.isCheckoutPage(page);
     expect(isCheckoutPage).to.eq(true);
   });
 
   it('should fill guest personal information', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setPersonalInformationAfterDisable', baseContext);
 
-    const isStepPersonalInfoCompleted = await checkoutPage.setGuestPersonalInformation(page, customerData);
+    const isStepPersonalInfoCompleted = await foClassicCheckoutPage.setGuestPersonalInformation(page, customerData);
     expect(isStepPersonalInfoCompleted, 'Step personal information is not completed').to.eq(true);
   });
 
   it('should check available countries', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkAvailableCountriesAfterDisable', baseContext);
 
-    const countries = await checkoutPage.getAvailableAddressCountries(page);
+    const countries = await foClassicCheckoutPage.getAvailableAddressCountries(page);
     expect(countries.length).to.equal(1);
     expect(countries).to.deep.equal([
       dataCountries.unitedStates.name,
@@ -237,7 +237,7 @@ describe('BO - International - Countries : Enable / Disable Countries', async ()
   it('should fill address form and go to delivery step', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setAddressStepAfterDisable', baseContext);
 
-    const isStepAddressComplete = await checkoutPage.setAddress(page, addressDataUS);
+    const isStepAddressComplete = await foClassicCheckoutPage.setAddress(page, addressDataUS);
     expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
   });
 
@@ -245,7 +245,7 @@ describe('BO - International - Countries : Enable / Disable Countries', async ()
     await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStepAfterDisable', baseContext);
 
     // Delivery step - Go to payment step
-    const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
+    const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
     expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
   });
 
@@ -256,7 +256,7 @@ describe('BO - International - Countries : Enable / Disable Countries', async ()
     this.skip();
 
     // Payment step - Choose payment step
-    await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
+    await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
     // Check the confirmation message
     const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);

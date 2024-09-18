@@ -7,8 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import preferencesPage from '@pages/BO/shipping/preferences';
-// Import FO pages
-import {checkoutPage as foCheckoutPage} from '@pages/FO/classic/checkout';
 
 import {
   boCarriersPage,
@@ -16,6 +14,7 @@ import {
   dataCarriers,
   dataCustomers,
   foClassicCartPage,
+  foClassicCheckoutPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsCore,
@@ -174,12 +173,12 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
         // Checkout the order
         if (index === 0) {
           // Personal information step - Login
-          await foCheckoutPage.clickOnSignIn(page);
-          await foCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
+          await foClassicCheckoutPage.clickOnSignIn(page);
+          await foClassicCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
         }
 
         // Address step - Go to delivery step
-        const isStepAddressComplete = await foCheckoutPage.goToDeliveryStep(page);
+        const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
         expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
       });
 
@@ -187,7 +186,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
         await testContext.addContextItem(this, 'testIdentifier', `checkSort${index}`, baseContext);
 
         if (test.args.sortBy === 'Price') {
-          const sortedCarriers = await foCheckoutPage.getAllCarriersPrices(page);
+          const sortedCarriers = await foClassicCheckoutPage.getAllCarriersPrices(page);
           const expectedResult = await utilsCore.sortArray(sortedCarriers);
 
           if (test.args.orderBy === 'Ascending') {
@@ -196,7 +195,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
             expect(sortedCarriers).to.deep.equal(expectedResult.reverse());
           }
         } else if (test.args.sortBy === 'Position') {
-          const sortedCarriers = await foCheckoutPage.getAllCarriersNames(page);
+          const sortedCarriers = await foClassicCheckoutPage.getAllCarriersNames(page);
 
           if (test.args.orderBy === 'Ascending') {
             expect(sortedCarriers).to.deep.equal(sortByPosition);
@@ -209,7 +208,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
       it('should go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index}`, baseContext);
 
-        page = await foCheckoutPage.closePage(browserContext, page, 0);
+        page = await foClassicCheckoutPage.closePage(browserContext, page, 0);
 
         const pageTitle = await preferencesPage.getPageTitle(page);
         expect(pageTitle).to.contains(preferencesPage.pageTitle);

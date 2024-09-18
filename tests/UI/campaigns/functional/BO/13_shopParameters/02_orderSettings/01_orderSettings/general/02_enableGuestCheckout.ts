@@ -7,14 +7,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
-// Import FO pages
-import {checkoutPage} from '@pages/FO/classic/checkout';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   foClassicCartPage,
+  foClassicCheckoutPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsPlaywright,
@@ -107,21 +106,21 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable guest checkout'
       await foClassicCartPage.clickOnProceedToCheckout(page);
 
       // Check guest checkout
-      const isNoticeVisible = await checkoutPage.getActiveLinkFromPersonalInformationBlock(page);
+      const isNoticeVisible = await foClassicCheckoutPage.getActiveLinkFromPersonalInformationBlock(page);
       expect(isNoticeVisible).to.be.equal(test.args.tabName);
     });
 
     it('should verify the guest checkout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkGuestCheckout${index}`, baseContext);
 
-      const isPasswordRequired = await checkoutPage.isPasswordRequired(page);
+      const isPasswordRequired = await foClassicCheckoutPage.isPasswordRequired(page);
       expect(isPasswordRequired).to.be.equal(test.args.pwdRequired);
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index}`, baseContext);
 
-      page = await checkoutPage.closePage(browserContext, page, 0);
+      page = await foClassicCheckoutPage.closePage(browserContext, page, 0);
 
       const pageTitle = await orderSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(orderSettingsPage.pageTitle);

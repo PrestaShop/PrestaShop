@@ -7,8 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import preferencesPage from '@pages/BO/shipping/preferences';
-// Import FO pages
-import {checkoutPage as foCheckoutPage} from '@pages/FO/classic/checkout';
 
 import {
   boDashboardPage,
@@ -16,6 +14,7 @@ import {
   dataCustomers,
   FakerCarrier,
   foClassicCartPage,
+  foClassicCheckoutPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsPlaywright,
@@ -104,26 +103,26 @@ describe('BO - Shipping - Preferences : Update default carrier and check it in F
         // Checkout the order
         if (index === 0) {
           // Personal information step - Login
-          await foCheckoutPage.clickOnSignIn(page);
-          await foCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
+          await foClassicCheckoutPage.clickOnSignIn(page);
+          await foClassicCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
         }
 
         // Address step - Go to delivery step
-        const isStepAddressComplete = await foCheckoutPage.goToDeliveryStep(page);
+        const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
         expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
       });
 
       it('should verify default carrier', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkDefaultCarrier${index}`, baseContext);
 
-        const selectedShippingMethod = await foCheckoutPage.getSelectedShippingMethod(page);
+        const selectedShippingMethod = await foClassicCheckoutPage.getSelectedShippingMethod(page);
         expect(selectedShippingMethod, 'Wrong carrier was selected in FO').to.equal(carrier.name);
       });
 
       it('should go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index}`, baseContext);
 
-        page = await foCheckoutPage.closePage(browserContext, page, 0);
+        page = await foClassicCheckoutPage.closePage(browserContext, page, 0);
 
         const pageTitle = await preferencesPage.getPageTitle(page);
         expect(pageTitle).to.contains(preferencesPage.pageTitle);

@@ -10,7 +10,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 // Import FO pages
-import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
@@ -20,6 +19,7 @@ import {
   dataProducts,
   FakerCartRule,
   foClassicCartPage,
+  foClassicCheckoutPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsCore,
@@ -156,37 +156,37 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
           // Proceed to checkout the shopping cart
           await foClassicCartPage.clickOnProceedToCheckout(page);
 
-          const isCheckout = await checkoutPage.isCheckoutPage(page);
+          const isCheckout = await foClassicCheckoutPage.isCheckoutPage(page);
           expect(isCheckout).to.eq(true);
         });
 
         it('should sign in by default customer', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
-          await checkoutPage.clickOnSignIn(page);
+          await foClassicCheckoutPage.clickOnSignIn(page);
 
-          const isCustomerConnected = await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
+          const isCustomerConnected = await foClassicCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
           expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
         });
 
         it('should go to delivery address step', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'confirmAddressStep', baseContext);
 
-          const isDeliveryStep = await checkoutPage.goToDeliveryStep(page);
+          const isDeliveryStep = await foClassicCheckoutPage.goToDeliveryStep(page);
           expect(isDeliveryStep, 'Delivery Step boc is not displayed').to.eq(true);
         });
 
         it('should choose the shipping method', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'shippingMethodStep', baseContext);
 
-          const isPaymentStep = await checkoutPage.goToPaymentStep(page);
+          const isPaymentStep = await foClassicCheckoutPage.goToPaymentStep(page);
           expect(isPaymentStep, 'Payment Step bloc is not displayed').to.eq(true);
         });
 
         it('should choose the payment type and confirm the order', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'choosePaymentMethod', baseContext);
 
-          await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
+          await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
           const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
           // Check the confirmation message

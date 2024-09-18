@@ -3,7 +3,6 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {expect} from 'chai';
@@ -270,7 +269,7 @@ describe('BO - Shipping - Carriers : General Settings', async () => {
   it('should choose the delivery address', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'chooseAndConfirmAddressStep', baseContext);
 
-    await checkoutPage.chooseDeliveryAddress(page, 1);
+    await foClassicCheckoutPage.chooseDeliveryAddress(page, 1);
 
     const isDeliveryStep = await foClassicCheckoutPage.goToDeliveryStep(page);
     expect(isDeliveryStep).to.eq(true);
@@ -373,7 +372,7 @@ describe('BO - Shipping - Carriers : General Settings', async () => {
       dataCarriers.myCarrier.name,
     ]);
 
-    const carrierData = await checkoutPage.getCarrierData(page, idCarrier);
+    const carrierData = await foClassicCheckoutPage.getCarrierData(page, idCarrier);
     await Promise.all([
       expect(carrierData.name).to.equal(carrierDataName.name),
       expect(carrierData.transitName).to.equal(carrierDataName.transitName),
@@ -415,8 +414,8 @@ describe('BO - Shipping - Carriers : General Settings', async () => {
   it('should click Personal information tab and logout', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'clickPersonalInformationLogout', baseContext);
 
-    await checkoutPage.clickOnEditPersonalInformationStep(page);
-    const isCustomerConnected = await checkoutPage.logOutCustomer(page);
+    await foClassicCheckoutPage.clickOnEditPersonalInformationStep(page);
+    const isCustomerConnected = await foClassicCheckoutPage.logOutCustomer(page);
     expect(isCustomerConnected).to.eq(false);
   });
 
@@ -463,14 +462,14 @@ describe('BO - Shipping - Carriers : General Settings', async () => {
   it('should fill guest personal information', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setPersonalInformationGuest', baseContext);
 
-    const isStepPersonalInfoCompleted = await checkoutPage.setGuestPersonalInformation(page, customerGuest);
+    const isStepPersonalInfoCompleted = await foClassicCheckoutPage.setGuestPersonalInformation(page, customerGuest);
     expect(isStepPersonalInfoCompleted).to.equal(true);
   });
 
   it('should fill address form and go to delivery step', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setAddressStep', baseContext);
 
-    const isStepAddressComplete = await checkoutPage.setAddress(page, addressGuest);
+    const isStepAddressComplete = await foClassicCheckoutPage.setAddress(page, addressGuest);
     expect(isStepAddressComplete).to.equal(true);
   });
 

@@ -7,13 +7,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import preferencesPage from '@pages/BO/payment/preferences';
-// Import FO pages
-import {checkoutPage} from '@pages/FO/classic/checkout';
 
 import {
   boDashboardPage,
   dataCustomers,
   foClassicCartPage,
+  foClassicCheckoutPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicProductPage,
@@ -133,7 +132,7 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
         // Proceed to checkout the shopping cart
         await foClassicCartPage.clickOnProceedToCheckout(page);
 
-        const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
+        const isCheckoutPage = await foClassicCheckoutPage.isCheckoutPage(page);
         expect(isCheckoutPage).to.eq(true);
       });
 
@@ -141,7 +140,7 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
         await testContext.addContextItem(this, 'testIdentifier', `goToDeliveryStep${index}`, baseContext);
 
         // Address step - Go to delivery step
-        const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
+        const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
         expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
       });
 
@@ -149,11 +148,11 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
         await testContext.addContextItem(this, 'testIdentifier', `checkPaymentMethod${index}`, baseContext);
 
         // Delivery step - Go to payment step
-        const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
+        const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
         expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
 
         // Payment step - Check payment method
-        const isVisible = await checkoutPage.isPaymentMethodExist(page, test.args.paymentModule);
+        const isVisible = await foClassicCheckoutPage.isPaymentMethodExist(page, test.args.paymentModule);
         expect(isVisible).to.be.equal(test.args.exist);
       });
 

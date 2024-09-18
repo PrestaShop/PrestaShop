@@ -6,7 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import createProductsPage from '@pages/BO/catalog/products/add';
-import {checkoutPage} from '@pages/FO/classic/checkout';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -253,7 +252,7 @@ describe('BO - Shipping - Carriers : Size and weight', async () => {
     it('should choose the delivery address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseAndConfirmAddressStepStart', baseContext);
 
-      await checkoutPage.chooseDeliveryAddress(page, 1);
+      await foClassicCheckoutPage.chooseDeliveryAddress(page, 1);
 
       const isDeliveryStep = await foClassicCheckoutPage.goToDeliveryStep(page);
       expect(isDeliveryStep).to.eq(true);
@@ -265,7 +264,7 @@ describe('BO - Shipping - Carriers : Size and weight', async () => {
       const carriers = await foClassicCheckoutPage.getAllCarriersNames(page);
       expect(carriers).to.deep.equal([dataCarriers.clickAndCollect.name, dataCarriers.myCarrier.name, carrierData.name]);
 
-      const carrierInfo = await checkoutPage.getCarrierData(page, idCarrier);
+      const carrierInfo = await foClassicCheckoutPage.getCarrierData(page, idCarrier);
       await Promise.all([
         expect(carrierInfo.name).to.equal(carrierData.name),
         expect(carrierInfo.transitName).to.equal(carrierData.transitName),
@@ -300,7 +299,7 @@ describe('BO - Shipping - Carriers : Size and weight', async () => {
     it('should choose the delivery address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseAndConfirmAddressStepQty2', baseContext);
 
-      await checkoutPage.chooseDeliveryAddress(page, 1);
+      await foClassicCheckoutPage.chooseDeliveryAddress(page, 1);
 
       const isDeliveryStep = await foClassicCheckoutPage.goToDeliveryStep(page);
       expect(isDeliveryStep).to.eq(true);
@@ -372,7 +371,7 @@ describe('BO - Shipping - Carriers : Size and weight', async () => {
     it('should go to \'Shipping > Carriers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnToCarriersPage', baseContext);
   
-      page = await checkoutPage.changePage(browserContext, 0);
+      page = await foClassicCheckoutPage.changePage(browserContext, 0);
       await boDashboardPage.goToSubMenu(
         page,
         boDashboardPage.shippingLink,

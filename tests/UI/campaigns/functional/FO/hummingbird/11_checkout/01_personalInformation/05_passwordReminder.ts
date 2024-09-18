@@ -7,12 +7,10 @@ import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advanced
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 import createAccountTest from '@commonTests/FO/hummingbird/account';
 
-// Import pages
-import checkoutPage from '@pages/FO/hummingbird/checkout';
-
 import {
   FakerCustomer,
   foHummingbirdCartPage,
+  foHummingbirdCheckoutPage,
   foHummingbirdHomePage,
   foHummingbirdMyAccountPage,
   foHummingbirdPasswordReminderPage,
@@ -110,15 +108,15 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
 
       await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
-      const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
+      const isCheckoutPage = await foHummingbirdCheckoutPage.isCheckoutPage(page);
       expect(isCheckoutPage).to.eq(true);
     });
 
     it('should click on sign in then on \'Forgot your password?\' link ', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnForgetPasswordLink', baseContext);
 
-      await checkoutPage.clickOnSignIn(page);
-      await checkoutPage.goToPasswordReminderPage(page);
+      await foHummingbirdCheckoutPage.clickOnSignIn(page);
+      await foHummingbirdCheckoutPage.goToPasswordReminderPage(page);
 
       const pageTitle = await foHummingbirdPasswordReminderPage.getPageTitle(page);
       expect(pageTitle).to.equal(foHummingbirdPasswordReminderPage.pageTitle);
@@ -197,26 +195,26 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
 
       await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
-      const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
+      const isCheckoutPage = await foHummingbirdCheckoutPage.isCheckoutPage(page);
       expect(isCheckoutPage).to.eq(true);
     });
 
     it('should enter an invalid credentials', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enterInvalidCredentials', baseContext);
 
-      await checkoutPage.clickOnSignIn(page);
+      await foHummingbirdCheckoutPage.clickOnSignIn(page);
 
-      const isCustomerConnected = await checkoutPage.customerLogin(page, customerData);
+      const isCustomerConnected = await foHummingbirdCheckoutPage.customerLogin(page, customerData);
       expect(isCustomerConnected, 'Customer is connected').to.eq(false);
 
-      const loginError = await checkoutPage.getLoginError(page);
-      expect(loginError).to.contains(checkoutPage.authenticationErrorMessage);
+      const loginError = await foHummingbirdCheckoutPage.getLoginError(page);
+      expect(loginError).to.contains(foHummingbirdCheckoutPage.authenticationErrorMessage);
     });
 
     it('should sign in with customer credentials', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signIn', baseContext);
 
-      const isCustomerConnected = await checkoutPage.customerLogin(page, customerNewPassword);
+      const isCustomerConnected = await foHummingbirdCheckoutPage.customerLogin(page, customerNewPassword);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
   });

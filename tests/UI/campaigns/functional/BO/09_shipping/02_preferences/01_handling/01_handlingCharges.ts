@@ -7,8 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import preferencesPage from '@pages/BO/shipping/preferences';
-// Import FO pages
-import {checkoutPage} from '@pages/FO/classic/checkout';
 
 import {
   boCarriersPage,
@@ -21,6 +19,7 @@ import {
   dataGroups,
   FakerCarrier,
   foClassicCartPage,
+  foClassicCheckoutPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicProductPage,
@@ -235,26 +234,26 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
       await foClassicCartPage.clickOnProceedToCheckout(page);
 
       // Address step - Go to delivery step
-      const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
+      const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
       expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should select the new carrier and check the chipping costs', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkShippingCost1', baseContext);
 
-      await checkoutPage.chooseShippingMethodAndAddComment(page, newCarrierID);
+      await foClassicCheckoutPage.chooseShippingMethodAndAddComment(page, newCarrierID);
 
-      const shippingCost = await checkoutPage.getShippingCost(page);
+      const shippingCost = await foClassicCheckoutPage.getShippingCost(page);
       expect(shippingCost).to.contains(defaultHandlingChargesValue + createCarrierPrice);
     });
 
     it('should sign out from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFO1', baseContext);
 
-      await checkoutPage.goToHomePage(page);
-      await checkoutPage.logout(page);
+      await foClassicCheckoutPage.goToHomePage(page);
+      await foClassicCheckoutPage.logout(page);
 
-      const isCustomerConnected = await checkoutPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicCheckoutPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
   });
@@ -264,7 +263,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO1', baseContext);
 
-      page = await checkoutPage.closePage(browserContext, page, 0);
+      page = await foClassicCheckoutPage.closePage(browserContext, page, 0);
 
       const pageTitle = await boCarriersPage.getPageTitle(page);
       expect(pageTitle).to.contains(boCarriersPage.pageTitle);
@@ -332,26 +331,26 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
       await foClassicCartPage.clickOnProceedToCheckout(page);
 
       // Address step - Go to delivery step
-      const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
+      const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
       expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should select the new carrier and check the chipping costs', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkShippingCost2', baseContext);
 
-      await checkoutPage.chooseShippingMethodAndAddComment(page, newCarrierID);
+      await foClassicCheckoutPage.chooseShippingMethodAndAddComment(page, newCarrierID);
 
-      const shippingCost = await checkoutPage.getShippingCost(page);
+      const shippingCost = await foClassicCheckoutPage.getShippingCost(page);
       expect(shippingCost).to.contains(updateHandlingChargesValue + createCarrierPrice);
     });
 
     it('should sign out from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFo2', baseContext);
 
-      await checkoutPage.goToHomePage(page);
-      await checkoutPage.logout(page);
+      await foClassicCheckoutPage.goToHomePage(page);
+      await foClassicCheckoutPage.logout(page);
 
-      const isCustomerConnected = await checkoutPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicCheckoutPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
   });
@@ -361,7 +360,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
 
-      page = await checkoutPage.closePage(browserContext, page, 0);
+      page = await foClassicCheckoutPage.closePage(browserContext, page, 0);
 
       const pageTitle = await preferencesPage.getPageTitle(page);
       expect(pageTitle).to.contains(preferencesPage.pageTitle);
