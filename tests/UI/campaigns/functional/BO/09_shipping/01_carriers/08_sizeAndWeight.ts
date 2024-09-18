@@ -31,7 +31,7 @@ import {
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-import { createProductTest, deleteProductTest } from '@commonTests/BO/catalog/product';
+import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
 
 const baseContext: string = 'functional_BO_shipping_carriers_sizeAndWeight';
 
@@ -359,7 +359,7 @@ describe('BO - Shipping - Carriers : Size and weight', async () => {
     });
 
     it('should check carriers', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersBasic', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersWithSmallDimensions', baseContext);
 
       page = await boCarriersPage.changePage(browserContext, 1);
       await foClassicCheckoutPage.reloadPage(page);
@@ -370,21 +370,21 @@ describe('BO - Shipping - Carriers : Size and weight', async () => {
 
     it('should go to \'Shipping > Carriers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnToCarriersPage', baseContext);
-  
+
       page = await foClassicCheckoutPage.changePage(browserContext, 0);
       await boDashboardPage.goToSubMenu(
         page,
         boDashboardPage.shippingLink,
         boDashboardPage.carriersLink,
       );
-  
+
       const pageTitle = await boCarriersPage.getPageTitle(page);
       expect(pageTitle).to.contains(boCarriersPage.pageTitle);
     });
-  
+
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdateAfterProduct', baseContext);
-  
+
       await boCarriersPage.resetFilter(page);
       await boCarriersPage.filterTable(
         page,
@@ -392,17 +392,17 @@ describe('BO - Shipping - Carriers : Size and weight', async () => {
         'name',
         carrierData.name,
       );
-  
+
       const carrierName = await boCarriersPage.getTextColumn(page, 1, 'name');
       expect(carrierName).to.contains(carrierData.name);
     });
 
     it('should delete carrier', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteCarrier', baseContext);
-  
+
       const textResult = await boCarriersPage.deleteCarrier(page, 1);
       expect(textResult).to.contains(boCarriersPage.successfulDeleteMessage);
-  
+
       const numberOfCarriersAfterDelete = await boCarriersPage.resetAndGetNumberOfLines(page);
       expect(numberOfCarriersAfterDelete).to.be.equal(numberOfCarriers);
     });

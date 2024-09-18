@@ -369,8 +369,9 @@ class CreateProduct extends BOBasePage {
     if (productData.type === 'pack') {
       await packTab.setPackOfProducts(page, productData.pack);
     }
-
-    await boProductsCreateTabShippingPage.setPackageDimension(page, productData);
+    if (productData.type !== 'virtual') {
+      await boProductsCreateTabShippingPage.setPackageDimension(page, productData);
+    }
 
     await pricingTab.setProductPricing(page, productData);
 
