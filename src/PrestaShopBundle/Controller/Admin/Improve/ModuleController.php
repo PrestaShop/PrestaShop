@@ -171,6 +171,8 @@ class ModuleController extends ModuleAbstractController
                 'layoutHeaderToolbarBtn' => $this->getConfigureToolbarButtons($module),
                 'translationLinks' => $this->getTranslationLinks($module, $legacyContext),
                 'layoutTitle' => $this->trans('Configure', [], 'Admin.Modules.Feature'),
+                // Force metaTitle to match the legacy page one (based on the parent)
+                'metaTitle' => $this->trans('Module Manager', [], 'Admin.Navigation.Menu'),
                 'layoutSubTitle' => $layoutSubTitle,
                 'breadcrumbLinks' => [
                     'container' => new MenuLink(

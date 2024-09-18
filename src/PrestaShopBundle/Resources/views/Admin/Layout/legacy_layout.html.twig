@@ -30,7 +30,7 @@
 <html lang="{{ ps.isoUser }}">
 <head>
   {% block header %}
-    {{ component('LegacyHeadTag') }}
+    {{ component('LegacyHeadTag', {metaTitle: metaTitle|default}) }}
   {% endblock %}
 </head>
 
