@@ -75,6 +75,6 @@ class UploadControllerCore extends GetFileController
 
     private function getPath(): string
     {
-        return _PS_UPLOAD_DIR_ . $this->filename;
+        return _PS_UPLOAD_DIR_ . basename($this->filename);
     }
 }
