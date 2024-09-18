@@ -40,50 +40,50 @@ export default class NavbarFormErrorHandler {
 
   private readonly navbarHandler: NavbarHandler;
 
-  private firstInvalidField: HTMLElement | null = null;
-
   constructor(options: NavbarFormErrorHandlerType) {
     this.navbarHandler = options.navbarHandler;
     this.form = options.form;
 
     this.initListener();
-    this.resetInvalidField();
   }
 
-  private findRequiredFieldsFromForm(): NodeListOf<HTMLElement> {
-    return this.form.querySelectorAll('[required]');
+  private findAllFormFields(): NodeListOf<HTMLElement> {
+    return this.form.querySelectorAll('input, select, textarea');
   }
 
   private initListener(): void {
-    this.findRequiredFieldsFromForm().forEach((field) => {
+    let isFirstInvalidField = false;
+
+    this.findAllFormFields().forEach((field) => {
       field.addEventListener('invalid', () => {
-        if (!this.firstInvalidField) {
-          this.firstInvalidField = field;
-
-          const tab = field.closest('[role="tabpanel"]');
-
-          if (!tab || typeof tab === null) {
-            throw new Error('NavbarFormErrorHandler: Cannot find the tab that contains some form fields in error.');
-          }
-
-          if (!('id' in tab)) {
-            throw new Error('NavbarFormErrorHandler: Id missing from the tab.');
-          }
-
-          this.navbarHandler.switchToTarget(`#${tab.id}`);
-
-          field.scrollIntoView({
-            behavior: 'smooth',
-            block: 'end',
-          });
+        if (isFirstInvalidField) {
+          return;
         }
+
+        isFirstInvalidField = true;
+
+        const tab = field.closest('[role="tabpanel"]');
+
+        if (!tab || typeof tab === null) {
+          throw new Error('NavbarFormErrorHandler: Cannot find the tab that contains some form fields in error.');
+        }
+
+        if (!('id' in tab)) {
+          throw new Error('NavbarFormErrorHandler: Id missing from the tab.');
+        }
+
+        this.navbarHandler.switchToTarget(`#${tab.id}`);
+
+        field.scrollIntoView({
+          behavior: 'smooth',
+          block: 'end',
+        });
+
+        // Set a timeout to reset the flag after the current event loop
+        setTimeout(() => {
+          isFirstInvalidField = false;
+        }, 0);
       });
     });
-  }
-
-  private resetInvalidField() {
-    this.form.addEventListener('click', () => {
-      this.firstInvalidField = null;
-    }, true);
   }
 }
