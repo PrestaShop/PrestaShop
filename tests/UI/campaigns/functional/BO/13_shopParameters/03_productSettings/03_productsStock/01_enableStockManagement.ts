@@ -6,7 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import addProductPage from '@pages/BO/catalog/products/add';
-import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 
 import {expect} from 'chai';
@@ -14,6 +13,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boProductsPage,
+  boProductsCreateTabStocksPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -95,7 +95,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable stock managem
       it('should check the existence of quantity input', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkIsQuantityInput${test.args.action}`, baseContext);
 
-        const isVisible = await stocksTab.isQuantityInputVisible(page);
+        const isVisible = await boProductsCreateTabStocksPage.isQuantityInputVisible(page);
         expect(isVisible).to.equal(test.args.isQuantityVisible);
       });
     });

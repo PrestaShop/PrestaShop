@@ -18,7 +18,6 @@ import detailsTab from '@pages/BO/catalog/products/add/detailsTab';
 import optionsTab from '@pages/BO/catalog/products/add/optionsTab';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import seoTab from '@pages/BO/catalog/products/add/seoTab';
-import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 
 // Import data
 import getProductXml from '@data/xml/product';
@@ -31,6 +30,7 @@ import {
   boDashboardPage,
   boProductsPage,
   boProductsCreateTabShippingPage,
+  boProductsCreateTabStocksPage,
   utilsPlaywright,
   utilsXML,
   type WebservicePermission,
@@ -657,7 +657,7 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'postCheckMinimalQuantity', baseContext);
 
             const xmlValue = productXml.getAttributeValue(xmlCreate, 'minimal_quantity');
-            const value = (await stocksTab.getValue(page, 'minimal_quantity'));
+            const value = (await boProductsCreateTabStocksPage.getValue(page, 'minimal_quantity'));
             expect(value).to.eq(xmlValue);
           });
 
@@ -668,7 +668,7 @@ describe('WS - Products : CRUD', async () => {
             this.skip();
 
             const xmlValue = productXml.getAttributeValue(xmlCreate, 'low_stock_alert');
-            const value = (await stocksTab.getValue(page, 'low_stock_threshold_enabled'));
+            const value = (await boProductsCreateTabStocksPage.getValue(page, 'low_stock_threshold_enabled'));
             expect(value).to.eq(xmlValue);
           });
 
@@ -676,7 +676,7 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'postCheckLowStockThreshold', baseContext);
 
             const xmlValue = productXml.getAttributeValue(xmlCreate, 'low_stock_threshold');
-            const value = (await stocksTab.getValue(page, 'low_stock_threshold'));
+            const value = (await boProductsCreateTabStocksPage.getValue(page, 'low_stock_threshold'));
             expect(value).to.eq(xmlValue);
           });
 
@@ -684,11 +684,11 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'postCheckLabelAvailableNow', baseContext);
 
             const xmlValueEn = productXml.getAttributeLangValue(xmlCreate, 'available_now', '1');
-            const valueEn = (await stocksTab.getValue(page, 'available_now', '1'));
+            const valueEn = (await boProductsCreateTabStocksPage.getValue(page, 'available_now', '1'));
             expect(valueEn).to.eq(xmlValueEn);
 
             const xmlValueFr = productXml.getAttributeLangValue(xmlCreate, 'available_now', '2');
-            const valueFr = (await stocksTab.getValue(page, 'available_now', '2'));
+            const valueFr = (await boProductsCreateTabStocksPage.getValue(page, 'available_now', '2'));
             expect(valueFr).to.eq(xmlValueFr);
           });
 
@@ -696,11 +696,11 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'postCheckLabelAvailableLater', baseContext);
 
             const xmlValueEn = productXml.getAttributeLangValue(xmlCreate, 'available_later', '1');
-            const valueEn = (await stocksTab.getValue(page, 'available_later', '1'));
+            const valueEn = (await boProductsCreateTabStocksPage.getValue(page, 'available_later', '1'));
             expect(valueEn).to.eq(xmlValueEn);
 
             const xmlValueFr = productXml.getAttributeLangValue(xmlCreate, 'available_later', '2');
-            const valueFr = (await stocksTab.getValue(page, 'available_later', '2'));
+            const valueFr = (await boProductsCreateTabStocksPage.getValue(page, 'available_later', '2'));
             expect(valueFr).to.eq(xmlValueFr);
           });
 
@@ -708,7 +708,7 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'postCheckAvailableDate', baseContext);
 
             const xmlValue = productXml.getAttributeValue(xmlCreate, 'available_date');
-            const value = (await stocksTab.getValue(page, 'available_date'));
+            const value = (await boProductsCreateTabStocksPage.getValue(page, 'available_date'));
             expect(value).to.eq(xmlValue);
           });
         });
@@ -1331,7 +1331,7 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'putCheckMinimalQuantity', baseContext);
 
             const xmlValue = productXml.getAttributeValue(xmlUpdate, 'minimal_quantity');
-            const value = (await stocksTab.getValue(page, 'minimal_quantity'));
+            const value = (await boProductsCreateTabStocksPage.getValue(page, 'minimal_quantity'));
             expect(value).to.eq(xmlValue);
           });
 
@@ -1342,7 +1342,7 @@ describe('WS - Products : CRUD', async () => {
             this.skip();
 
             const xmlValue = productXml.getAttributeValue(xmlUpdate, 'low_stock_alert');
-            const value = (await stocksTab.getValue(page, 'low_stock_threshold_enabled'));
+            const value = (await boProductsCreateTabStocksPage.getValue(page, 'low_stock_threshold_enabled'));
             expect(value).to.eq(xmlValue);
           });
 
@@ -1350,7 +1350,7 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'putCheckLowStockThreshold', baseContext);
 
             const xmlValue = productXml.getAttributeValue(xmlUpdate, 'low_stock_threshold');
-            const value = (await stocksTab.getValue(page, 'low_stock_threshold'));
+            const value = (await boProductsCreateTabStocksPage.getValue(page, 'low_stock_threshold'));
             expect(value).to.eq(xmlValue);
           });
 
@@ -1358,11 +1358,11 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'putCheckLabelAvailableNow', baseContext);
 
             const xmlValueEn = productXml.getAttributeLangValue(xmlUpdate, 'available_now', '1');
-            const valueEn = (await stocksTab.getValue(page, 'available_now', '1'));
+            const valueEn = (await boProductsCreateTabStocksPage.getValue(page, 'available_now', '1'));
             expect(valueEn).to.eq(xmlValueEn);
 
             const xmlValueFr = productXml.getAttributeLangValue(xmlUpdate, 'available_now', '2');
-            const valueFr = (await stocksTab.getValue(page, 'available_now', '2'));
+            const valueFr = (await boProductsCreateTabStocksPage.getValue(page, 'available_now', '2'));
             expect(valueFr).to.eq(xmlValueFr);
           });
 
@@ -1370,11 +1370,11 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'putCheckLabelAvailableLater', baseContext);
 
             const xmlValueEn = productXml.getAttributeLangValue(xmlUpdate, 'available_later', '1');
-            const valueEn = (await stocksTab.getValue(page, 'available_later', '1'));
+            const valueEn = (await boProductsCreateTabStocksPage.getValue(page, 'available_later', '1'));
             expect(valueEn).to.eq(xmlValueEn);
 
             const xmlValueFr = productXml.getAttributeLangValue(xmlUpdate, 'available_later', '2');
-            const valueFr = (await stocksTab.getValue(page, 'available_later', '2'));
+            const valueFr = (await boProductsCreateTabStocksPage.getValue(page, 'available_later', '2'));
             expect(valueFr).to.eq(xmlValueFr);
           });
 
@@ -1382,7 +1382,7 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'putCheckAvailableDate', baseContext);
 
             const xmlValue = productXml.getAttributeValue(xmlUpdate, 'available_date');
-            const value = (await stocksTab.getValue(page, 'available_date'));
+            const value = (await boProductsCreateTabStocksPage.getValue(page, 'available_date'));
             expect(value).to.eq(xmlValue);
           });
         });

@@ -9,7 +9,6 @@ import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advanced
 
 // Import pages
 // Import BO pages
-import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 import addProductPage from '@pages/BO/catalog/products/add';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
@@ -22,6 +21,7 @@ import {
   boModuleManagerPage,
   boOrdersPage,
   boProductsPage,
+  boProductsCreateTabStocksPage,
   dataCustomers,
   dataModules,
   dataOrderStatuses,
@@ -355,7 +355,7 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
       await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityTo1', baseContext);
 
       await boProductsPage.goToProductPage(page, 1);
-      await stocksTab.setProductQuantity(page, 1);
+      await boProductsCreateTabStocksPage.setProductQuantity(page, 1);
 
       const message = await addProductPage.saveProduct(page);
       expect(message).to.eq(addProductPage.successfulUpdateMessage);
@@ -512,7 +512,7 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
       await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityToO', baseContext);
 
       await boProductsPage.goToProductPage(page, 1);
-      await stocksTab.setProductQuantity(page, 0);
+      await boProductsCreateTabStocksPage.setProductQuantity(page, 0);
 
       const message = await addProductPage.saveProduct(page);
       expect(message).to.eq(addProductPage.successfulUpdateMessage);

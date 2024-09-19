@@ -10,7 +10,6 @@ import createProductsPage from '@pages/BO/catalog/products/add';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 import detailsTab from '@pages/BO/catalog/products/add/detailsTab';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
-import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
@@ -18,6 +17,7 @@ import {faker} from '@faker-js/faker';
 import {
   boDashboardPage,
   boProductsPage,
+  boProductsCreateTabStocksPage,
   FakerProduct,
   type ProductHeaderSummary,
   utilsFile,
@@ -226,7 +226,7 @@ describe('BO - Catalog - Products : Header', async () => {
   it('should add items to stock', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'addItemsToStock', baseContext);
 
-    await stocksTab.setQuantityDelta(page, 10);
+    await boProductsCreateTabStocksPage.setQuantityDelta(page, 10);
 
     const message = await createProductsPage.saveProduct(page);
     expect(message).to.eq(createProductsPage.successfulUpdateMessage);
@@ -238,7 +238,7 @@ describe('BO - Catalog - Products : Header', async () => {
   it('should subtract items to stock', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'subtractItemsToStock', baseContext);
 
-    await stocksTab.setQuantityDelta(page, -75);
+    await boProductsCreateTabStocksPage.setQuantityDelta(page, -75);
 
     const message = await createProductsPage.saveProduct(page);
     expect(message).to.eq(createProductsPage.successfulUpdateMessage);

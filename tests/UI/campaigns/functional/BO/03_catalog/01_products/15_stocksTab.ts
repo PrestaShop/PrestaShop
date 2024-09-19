@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
 import createProductPage from '@pages/BO/catalog/products/add';
-import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 import movementsPage from '@pages/BO/catalog/stocks/movements';
 
 import type {BrowserContext, Page} from 'playwright';
@@ -15,6 +14,7 @@ import {expect} from 'chai';
 import {
   boDashboardPage,
   boProductsPage,
+  boProductsCreateTabStocksPage,
   dataEmployees,
   FakerProduct,
   foClassicProductPage,
@@ -112,7 +112,7 @@ describe('BO - Catalog - Products : Stocks tab', async () => {
     it('should add quantity to stock', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addQuantityToStock', baseContext);
 
-      await stocksTab.setQuantityDelta(page, productQuantity);
+      await boProductsCreateTabStocksPage.setQuantityDelta(page, productQuantity);
 
       const message = await createProductPage.saveProduct(page);
       expect(message).to.eq(createProductPage.successfulUpdateMessage);
@@ -124,7 +124,7 @@ describe('BO - Catalog - Products : Stocks tab', async () => {
     it('should check the recent stock movement', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkStockMovement', baseContext);
 
-      const result = await stocksTab.getStockMovement(page, 1);
+      const result = await boProductsCreateTabStocksPage.getStockMovement(page, 1);
       await Promise.all([
         expect(result.dateTime).to.contains(todayDate),
         expect(result.employee).to.equal(`${dataEmployees.defaultEmployee.firstName} ${dataEmployees.defaultEmployee.lastName}`),
@@ -135,7 +135,7 @@ describe('BO - Catalog - Products : Stocks tab', async () => {
     it('should click on View all stock movements', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickViewAllStockMovements', baseContext);
 
-      page = await stocksTab.clickViewAllStockMovements(page);
+      page = await boProductsCreateTabStocksPage.clickViewAllStockMovements(page);
 
       const pageTitle = await movementsPage.getPageTitle(page);
       expect(pageTitle).to.equal(movementsPage.pageTitle);
@@ -153,9 +153,9 @@ describe('BO - Catalog - Products : Stocks tab', async () => {
     it('should fill Stocks values', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'fillStockValues', baseContext);
 
-      await stocksTab.setMinimalQuantity(page, productMinimalQuantity);
-      await stocksTab.setStockLocation(page, productStockLocation);
-      await stocksTab.setLowStockAlertByEmail(page, productLowStockAlertByEmail, productLowStockThreshold);
+      await boProductsCreateTabStocksPage.setMinimalQuantity(page, productMinimalQuantity);
+      await boProductsCreateTabStocksPage.setStockLocation(page, productStockLocation);
+      await boProductsCreateTabStocksPage.setLowStockAlertByEmail(page, productLowStockAlertByEmail, productLowStockThreshold);
 
       const message = await createProductPage.saveProduct(page);
       expect(message).to.eq(createProductPage.successfulUpdateMessage);
@@ -164,25 +164,25 @@ describe('BO - Catalog - Products : Stocks tab', async () => {
     it('should check Stocks values', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkStockValues', baseContext);
 
-      const valueMinimalQuantity = await stocksTab.getValue(page, 'minimal_quantity');
+      const valueMinimalQuantity = await boProductsCreateTabStocksPage.getValue(page, 'minimal_quantity');
       expect(valueMinimalQuantity).to.eq(productMinimalQuantity.toString());
 
-      const valueStockLocation = await stocksTab.getValue(page, 'location');
+      const valueStockLocation = await boProductsCreateTabStocksPage.getValue(page, 'location');
       expect(valueStockLocation).to.eq(productStockLocation);
 
-      const valueLowStockAlertByEmail = await stocksTab.getValue(page, 'low_stock_threshold_enabled');
+      const valueLowStockAlertByEmail = await boProductsCreateTabStocksPage.getValue(page, 'low_stock_threshold_enabled');
       expect(valueLowStockAlertByEmail).to.eq(productLowStockAlertByEmail ? '1' : '0');
 
-      const valueLowStockThreshold = await stocksTab.getValue(page, 'low_stock_threshold');
+      const valueLowStockThreshold = await boProductsCreateTabStocksPage.getValue(page, 'low_stock_threshold');
       expect(valueLowStockThreshold).to.eq(productLowStockThreshold.toString());
     });
 
     it('should fill When out of stock values', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'fillWhenOutOfStockValues', baseContext);
 
-      await stocksTab.setLabelWhenInStock(page, productLabelWhenInStock);
-      await stocksTab.setLabelWhenOutOfStock(page, productLabelWhenOutOfStock);
-      await stocksTab.setAvailabilityDate(page, todayDate);
+      await boProductsCreateTabStocksPage.setLabelWhenInStock(page, productLabelWhenInStock);
+      await boProductsCreateTabStocksPage.setLabelWhenOutOfStock(page, productLabelWhenOutOfStock);
+      await boProductsCreateTabStocksPage.setAvailabilityDate(page, todayDate);
 
       const message = await createProductPage.saveProduct(page);
       expect(message).to.eq(createProductPage.successfulUpdateMessage);
@@ -191,13 +191,13 @@ describe('BO - Catalog - Products : Stocks tab', async () => {
     it('should check When out of stock values', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkWhenOutOfStockValues', baseContext);
 
-      const valueLabelWhenInStock = await stocksTab.getValue(page, 'available_now', '1');
+      const valueLabelWhenInStock = await boProductsCreateTabStocksPage.getValue(page, 'available_now', '1');
       expect(valueLabelWhenInStock).to.eq(productLabelWhenInStock);
 
-      const valueLabelWhenOutOfStock = await stocksTab.getValue(page, 'available_later', '1');
+      const valueLabelWhenOutOfStock = await boProductsCreateTabStocksPage.getValue(page, 'available_later', '1');
       expect(valueLabelWhenOutOfStock).to.eq(productLabelWhenOutOfStock);
 
-      const valueAvailabilityDate = await stocksTab.getValue(page, 'available_date');
+      const valueAvailabilityDate = await boProductsCreateTabStocksPage.getValue(page, 'available_date');
       expect(valueAvailabilityDate).to.eq(todayDate);
     });
 
@@ -238,8 +238,8 @@ describe('BO - Catalog - Products : Stocks tab', async () => {
     it('should check the deny orders option', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDenyOrder', baseContext);
 
-      await stocksTab.setQuantityDelta(page, productQuantity * -1);
-      await stocksTab.setOptionWhenOutOfStock(page, 'Deny orders');
+      await boProductsCreateTabStocksPage.setQuantityDelta(page, productQuantity * -1);
+      await boProductsCreateTabStocksPage.setOptionWhenOutOfStock(page, 'Deny orders');
 
       const createProductMessage = await createProductPage.saveProduct(page);
       expect(createProductMessage).to.equal(createProductPage.successfulUpdateMessage);
@@ -247,7 +247,7 @@ describe('BO - Catalog - Products : Stocks tab', async () => {
       const productHeaderSummary = await createProductPage.getProductHeaderSummary(page);
       expect(productHeaderSummary.quantity).to.equal('0 out of stock');
 
-      const result = await stocksTab.getStockMovement(page, 1);
+      const result = await boProductsCreateTabStocksPage.getStockMovement(page, 1);
       await Promise.all([
         expect(result.dateTime).to.contains(todayDate),
         expect(result.employee).to.equal(`${dataEmployees.defaultEmployee.firstName} ${dataEmployees.defaultEmployee.lastName}`),
@@ -289,7 +289,7 @@ describe('BO - Catalog - Products : Stocks tab', async () => {
     it('should check the allow orders option and set Label when out of stock', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAllowOrder', baseContext);
 
-      await stocksTab.setOptionWhenOutOfStock(page, 'Allow orders');
+      await boProductsCreateTabStocksPage.setOptionWhenOutOfStock(page, 'Allow orders');
 
       const createProductMessage = await createProductPage.saveProduct(page);
       expect(createProductMessage).to.equal(createProductPage.successfulUpdateMessage);

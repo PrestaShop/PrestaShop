@@ -3,13 +3,13 @@ import virtualProductTab from '@pages/BO/catalog/products/add/virtualProductTab'
 import BOBasePage from '@pages/BO/BObasePage';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 import detailsTab from '@pages/BO/catalog/products/add/detailsTab';
-import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import packTab from '@pages/BO/catalog/products/add/packTab';
 
 import type {Frame, Page} from 'playwright';
 import {
   boProductsCreateTabShippingPage,
+  boProductsCreateTabStocksPage,
   boProductsPage,
   type FakerProduct,
   type ProductHeaderSummary,
@@ -363,7 +363,7 @@ class CreateProduct extends BOBasePage {
     if (productData.type === 'virtual') {
       await virtualProductTab.setVirtualProduct(page, productData);
     } else if (productData.type !== 'combinations') {
-      await stocksTab.setProductStock(page, productData);
+      await boProductsCreateTabStocksPage.setProductStock(page, productData);
     }
 
     if (productData.type === 'pack') {
