@@ -6,7 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import generalPage from '@pages/BO/shopParameters/general';
 import addProductPage from '@pages/BO/catalog/products/add';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
@@ -15,6 +14,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boProductsPage,
+  boShopParametersPage,
   dataProducts,
   foClassicProductPage,
   utilsPlaywright,
@@ -64,17 +64,17 @@ describe('BO - Shop Parameters - General : Enable/Disable Allow iframes on HTML 
           boDashboardPage.shopParametersParentLink,
           boDashboardPage.shopParametersGeneralLink,
         );
-        await generalPage.closeSfToolBar(page);
+        await boShopParametersPage.closeSfToolBar(page);
 
-        const pageTitle = await generalPage.getPageTitle(page);
-        expect(pageTitle).to.contains(generalPage.pageTitle);
+        const pageTitle = await boShopParametersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boShopParametersPage.pageTitle);
       });
 
       it(`should ${test.args.action} allow iframes`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}AllowIframes`, baseContext);
 
-        const result = await generalPage.setAllowIframes(page, test.args.exist);
-        expect(result).to.contains(generalPage.successfulUpdateMessage);
+        const result = await boShopParametersPage.setAllowIframes(page, test.args.exist);
+        expect(result).to.contains(boShopParametersPage.successfulUpdateMessage);
       });
 
       it('should go to Products page', async function () {

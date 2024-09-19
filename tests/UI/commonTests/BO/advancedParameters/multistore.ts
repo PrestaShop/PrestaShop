@@ -4,13 +4,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import BO pages
-import generalPage from '@pages/BO/shopParameters/general';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boShopParametersPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -46,17 +44,17 @@ function setMultiStoreStatus(status: boolean, baseContext: string = 'commonTests
         boDashboardPage.shopParametersParentLink,
         boDashboardPage.shopParametersGeneralLink,
       );
-      await generalPage.closeSfToolBar(page);
+      await boShopParametersPage.closeSfToolBar(page);
 
-      const pageTitle = await generalPage.getPageTitle(page);
-      expect(pageTitle).to.contains(generalPage.pageTitle);
+      const pageTitle = await boShopParametersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boShopParametersPage.pageTitle);
     });
 
     it(`should ${status ? 'enable' : 'disable'} the multistore`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setMultiStoreStatus', baseContext);
 
-      const result = await generalPage.setMultiStoreStatus(page, status);
-      expect(result).to.contains(generalPage.successfulUpdateMessage);
+      const result = await boShopParametersPage.setMultiStoreStatus(page, status);
+      expect(result).to.contains(boShopParametersPage.successfulUpdateMessage);
     });
   });
 }

@@ -6,7 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import generalPage from '@pages/BO/shopParameters/general';
 import brandsPage from '@pages/BO/catalog/brands';
 import suppliersPage from '@pages/BO/catalog/suppliers';
 // Import FO pages
@@ -16,6 +15,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boShopParametersPage,
   foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -60,27 +60,27 @@ describe('BO - Shop Parameters - General : Enable/Disable display suppliers', as
           boDashboardPage.shopParametersParentLink,
           boDashboardPage.shopParametersGeneralLink,
         );
-        await generalPage.closeSfToolBar(page);
+        await boShopParametersPage.closeSfToolBar(page);
 
-        const pageTitle = await generalPage.getPageTitle(page);
-        expect(pageTitle).to.contains(generalPage.pageTitle);
+        const pageTitle = await boShopParametersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boShopParametersPage.pageTitle);
       });
 
       it(`should ${test.args.action} display suppliers`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}DisplaySuppliers`, baseContext);
 
-        const result = await generalPage.setDisplaySuppliers(page, test.args.exist);
-        expect(result).to.contains(generalPage.successfulUpdateMessage);
+        const result = await boShopParametersPage.setDisplaySuppliers(page, test.args.exist);
+        expect(result).to.contains(boShopParametersPage.successfulUpdateMessage);
       });
 
       if (test.args.action === 'Disable') {
         it('should go to \'Brands & Suppliers\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToBrandsPage_${index}`, baseContext);
 
-          await generalPage.goToSubMenu(
+          await boShopParametersPage.goToSubMenu(
             page,
-            generalPage.catalogParentLink,
-            generalPage.brandsAndSuppliersLink,
+            boShopParametersPage.catalogParentLink,
+            boShopParametersPage.brandsAndSuppliersLink,
           );
 
           const pageTitle = await brandsPage.getPageTitle(page);
@@ -134,8 +134,8 @@ describe('BO - Shop Parameters - General : Enable/Disable display suppliers', as
 
           page = await siteMapPage.closePage(browserContext, page, 0);
 
-          const pageTitle = await generalPage.getPageTitle(page);
-          expect(pageTitle).to.contains(generalPage.pageTitle);
+          const pageTitle = await boShopParametersPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boShopParametersPage.pageTitle);
         });
       }
     });

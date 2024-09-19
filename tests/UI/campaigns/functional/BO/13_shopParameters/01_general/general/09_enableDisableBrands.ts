@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
-import generalPage from '@pages/BO/shopParameters/general';
 import brandsPage from '@pages/BO/catalog/brands';
 import {siteMapPage} from '@pages/FO/classic/siteMap';
 
@@ -13,6 +12,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boShopParametersPage,
   foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -57,27 +57,27 @@ describe('BO - Shop Parameters - General : Enable/Disable display brands', async
           boDashboardPage.shopParametersParentLink,
           boDashboardPage.shopParametersGeneralLink,
         );
-        await generalPage.closeSfToolBar(page);
+        await boShopParametersPage.closeSfToolBar(page);
 
-        const pageTitle = await generalPage.getPageTitle(page);
-        expect(pageTitle).to.contains(generalPage.pageTitle);
+        const pageTitle = await boShopParametersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boShopParametersPage.pageTitle);
       });
 
       it(`should ${test.args.action} display brands`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}DisplayBrands`, baseContext);
 
-        const result = await generalPage.setDisplayBrands(page, test.args.exist);
-        expect(result).to.contains(generalPage.successfulUpdateMessage);
+        const result = await boShopParametersPage.setDisplayBrands(page, test.args.exist);
+        expect(result).to.contains(boShopParametersPage.successfulUpdateMessage);
       });
 
       if (test.args.action === 'Disable') {
         it('should go to \'Brands & Suppliers\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToBrandsPage_${index}`, baseContext);
 
-          await generalPage.goToSubMenu(
+          await boShopParametersPage.goToSubMenu(
             page,
-            generalPage.catalogParentLink,
-            generalPage.brandsAndSuppliersLink,
+            boShopParametersPage.catalogParentLink,
+            boShopParametersPage.brandsAndSuppliersLink,
           );
 
           const pageTitle = await brandsPage.getPageTitle(page);

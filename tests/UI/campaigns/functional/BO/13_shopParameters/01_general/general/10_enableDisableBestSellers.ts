@@ -5,8 +5,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-// Import BO pages
-import generalPage from '@pages/BO/shopParameters/general';
 // Import FO pages
 import {siteMapPage} from '@pages/FO/classic/siteMap';
 
@@ -14,6 +12,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boShopParametersPage,
   foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -57,24 +56,24 @@ describe('BO - Shop Parameters - General : Enable/Disable display best sellers',
           boDashboardPage.shopParametersParentLink,
           boDashboardPage.shopParametersGeneralLink,
         );
-        await generalPage.closeSfToolBar(page);
+        await boShopParametersPage.closeSfToolBar(page);
 
-        const pageTitle = await generalPage.getPageTitle(page);
-        expect(pageTitle).to.contains(generalPage.pageTitle);
+        const pageTitle = await boShopParametersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boShopParametersPage.pageTitle);
       });
 
       it(`should ${test.args.action} display best sellers`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}DisplayBestSellers`, baseContext);
 
-        const result = await generalPage.setDisplayBestSellers(page, test.args.exist);
-        expect(result).to.contains(generalPage.successfulUpdateMessage);
+        const result = await boShopParametersPage.setDisplayBestSellers(page, test.args.exist);
+        expect(result).to.contains(boShopParametersPage.successfulUpdateMessage);
       });
 
       it('should go to FO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToFO_${test.args.action}`, baseContext);
 
         // View shop
-        page = await generalPage.viewMyShop(page);
+        page = await boShopParametersPage.viewMyShop(page);
         // Change shop language
         await foClassicHomePage.changeLanguage(page, 'en');
 
@@ -103,8 +102,8 @@ describe('BO - Shop Parameters - General : Enable/Disable display best sellers',
 
         page = await siteMapPage.closePage(browserContext, page, 0);
 
-        const pageTitle = await generalPage.getPageTitle(page);
-        expect(pageTitle).to.contains(generalPage.pageTitle);
+        const pageTitle = await boShopParametersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boShopParametersPage.pageTitle);
       });
     });
   });

@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 import { installModule, uninstallModule } from '@commonTests/BO/modules/moduleManager';
 // Import BO pages
-import generalPage from '@pages/BO/shopParameters/general';
 import maintenancePage from '@pages/BO/shopParameters/general/maintenance';
 
 import {expect} from 'chai';
@@ -13,6 +12,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boModuleManagerPage,
+  boShopParametersPage,
   dataModules,
   foClassicHomePage,
   utilsFile,
@@ -53,16 +53,16 @@ describe('New products block module: Upgrade module', async () => {
         boDashboardPage.shopParametersParentLink,
         boDashboardPage.shopParametersGeneralLink,
       );
-      await generalPage.closeSfToolBar(page);
+      await boShopParametersPage.closeSfToolBar(page);
   
-      const pageTitle = await generalPage.getPageTitle(page);
-      expect(pageTitle).to.contains(generalPage.pageTitle);
+      const pageTitle = await boShopParametersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boShopParametersPage.pageTitle);
     });
   
     it('should go to \'Maintenance\' tab', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMaintenancePage', baseContext);
   
-      await generalPage.goToSubTabMaintenance(page);
+      await boShopParametersPage.goToSubTabMaintenance(page);
   
       const pageTitle = await maintenancePage.getPageTitle(page);
       expect(pageTitle).to.contains(maintenancePage.pageTitle);
@@ -153,16 +153,16 @@ describe('New products block module: Upgrade module', async () => {
         boDashboardPage.shopParametersParentLink,
         boDashboardPage.shopParametersGeneralLink,
       );
-      await generalPage.closeSfToolBar(page);
+      await boShopParametersPage.closeSfToolBar(page);
   
-      const pageTitle = await generalPage.getPageTitle(page);
-      expect(pageTitle).to.contains(generalPage.pageTitle);
+      const pageTitle = await boShopParametersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boShopParametersPage.pageTitle);
     });
   
     it('should go to \'Maintenance\' tab', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMaintenancePage', baseContext);
   
-      await generalPage.goToSubTabMaintenance(page);
+      await boShopParametersPage.goToSubTabMaintenance(page);
   
       const pageTitle = await maintenancePage.getPageTitle(page);
       expect(pageTitle).to.contains(maintenancePage.pageTitle);
