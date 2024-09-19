@@ -112,8 +112,8 @@ api_platform:
   enable_entrypoint: false
   enable_swagger: false
   enable_swagger_ui: false
-  # We define mapping here because even though the API routes are oncly accessible via the admin-api endpoint we still need
-  # to parse the Api Platform resources to extract the scopes
+  # We define mapping in this common config because even though the API routes are only accessible via the admin-api endpoint we still need
+  # to parse the Api Platform resources to extract the scopes in the back-office
   mapping:
     paths:
       - '%kernel.project_dir%/src/PrestaShopBundle/ApiPlatform/Resources'

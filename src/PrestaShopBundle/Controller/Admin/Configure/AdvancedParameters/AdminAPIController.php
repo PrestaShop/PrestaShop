@@ -239,33 +239,11 @@ class AdminAPIController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_api_index');
     }
 
-    /**
-     * Returns the OAuth base url based on the request that contains the current URL.
-     * This allows returning an appropriate path even if the BO/Shop was installed in a sub folder.
-     *
-     * @param Request $request
-     *
-     * @return string
-     */
-    private function getOAuthApiBaseUrl(Request $request): string
-    {
-        $uri = $request->getUri();
-        $adminFolderName = '/' . $this->getParameter('prestashop.admin_folder_name');
-        // Get root url right before the admin folder part
-        $rootUrl = substr($uri, 0, strpos($uri, $adminFolderName));
-
-        return $rootUrl . '/admin-api';
-    }
-
     private function renderIndex(ApiClientFilters $apiClientFilters, Request $request, ?FormInterface $configurationForm = null): Response
     {
         $apiClientGridFactory = $this->get('prestashop.core.grid.factory.api_client');
         $apiClientGrid = $apiClientGridFactory->getGrid($apiClientFilters);
         $isAdminAPIMultistoreDisabled = $this->isAdminAPIMultistoreDisabled();
-
-        $oauthApiBaseUrl = $this->getOAuthApiBaseUrl($request);
-        $htmlDocUrl = $oauthApiBaseUrl . '/docs.html';
-        $jsonDocUrl = $oauthApiBaseUrl . '/docs.json';
 
         if (null === $configurationForm) {
             $configurationForm = $this->getConfigurationFormHandler()->getForm();
@@ -277,8 +255,6 @@ class AdminAPIController extends FrameworkBundleAdminController
             'layoutTitle' => $this->trans('Admin API', 'Admin.Navigation.Menu'),
             'layoutHeaderToolbarBtn' => $this->getApiClientsToolbarButtons(),
             'isAdminAPIMultistoreDisabled' => $isAdminAPIMultistoreDisabled,
-            'htmlDocUrl' => $htmlDocUrl,
-            'jsonDocUrl' => $jsonDocUrl,
             'configurationForm' => $configurationForm,
         ]);
     }

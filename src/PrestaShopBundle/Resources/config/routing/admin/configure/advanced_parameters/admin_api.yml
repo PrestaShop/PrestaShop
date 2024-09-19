@@ -46,3 +46,9 @@ admin_api_clients_regenerate_secret:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AdminAPIController::regenerateSecretAction
     _legacy_controller: AdminAdminAPI
+
+api_platform_doc:
+  # We only load the routing for the API Swagger documentation, not the whole bundle routing
+  # because we don't want the API endpoints to be accessible from the back-office but via its
+  # dedicated admin-api base endpoint
+  resource: "@ApiPlatformBundle/Resources/config/routing/docs.xml"

@@ -13,3 +13,16 @@ framework:
 
 ux_icons:
   icon_dir: '%prestashop.admin_dir%/themes/new-theme/icons'
+
+api_platform:
+  # Swagger API doc is accessible from the BackOffice, you need to be logged in to access it
+  title: Backoffice API
+  version: 0.1.0
+  enable_docs: true
+  enable_entrypoint: false
+  enable_swagger: true
+  enable_swagger_ui: true
+  docs_formats:
+    # This is used to allow using the Swagger UI in HTML presentation
+    html: [ 'text/html' ]
+    json: [ 'application/json' ]
