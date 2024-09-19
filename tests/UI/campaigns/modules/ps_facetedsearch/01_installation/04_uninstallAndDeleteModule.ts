@@ -16,7 +16,7 @@ import {
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-import { installModule } from '@commonTests/BO/modules/moduleManager';
+import {installModule} from '@commonTests/BO/modules/moduleManager';
 
 const baseContext: string = 'modules_ps_facetedsearch_installation_uninstallAndDeleteModule';
 

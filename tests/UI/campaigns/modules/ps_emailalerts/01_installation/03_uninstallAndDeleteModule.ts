@@ -180,7 +180,7 @@ describe('Mail alerts module - Uninstall and delete module', async () => {
     });
   });
 
-  installModule(dataModules.psEmailAlerts, `${baseContext}_postTest_0`);
+  installModule(dataModules.psEmailAlerts, true, `${baseContext}_postTest_0`);
 
   deleteProductTest(productOutOfStockNotAllowed, `${baseContext}_postTest_1`);
 });

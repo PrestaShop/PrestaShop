@@ -14,7 +14,7 @@ import {
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-import { installModule } from '@commonTests/BO/modules/moduleManager';
+import {installModule} from '@commonTests/BO/modules/moduleManager';
 
 const baseContext: string = 'modules_ps_newproducts_installation_uninstallAndDeleteModule';
 
@@ -78,7 +78,13 @@ describe('New products block module - Uninstall and delete module', async () => 
     it('should uninstall the module', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetModule', baseContext);
 
-      const successMessage = await boModuleManagerPage.setActionInModule(page, dataModules.psNewProducts, 'uninstall', false, true);
+      const successMessage = await boModuleManagerPage.setActionInModule(
+        page,
+        dataModules.psNewProducts,
+        'uninstall',
+        false,
+        true,
+      );
       expect(successMessage).to.eq(boModuleManagerPage.uninstallModuleSuccessMessage(dataModules.psNewProducts.tag));
 
       // Check the directory `modules/dataModules.psNewProducts.tag`

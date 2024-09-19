@@ -14,12 +14,16 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
 /**
- * 
+ *
  * @param module {FakerModule}
- * @param versionCurrent {boolean} 
+ * @param versionCurrent {boolean}
  * @param baseContext {string}
  */
-function installModule(module: FakerModule, versionCurrent: boolean = true, baseContext: string = 'commonTests-installModule'): void {
+function installModule(
+  module: FakerModule,
+  versionCurrent: boolean = true,
+  baseContext: string = 'commonTests-installModule',
+): void {
   describe(`Install module ${module.name}`, async () => {
     let browserContext: BrowserContext;
     let page: Page;

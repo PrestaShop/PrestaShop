@@ -3,7 +3,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import { installModule, uninstallModule } from '@commonTests/BO/modules/moduleManager';
+import {installModule, uninstallModule} from '@commonTests/BO/modules/moduleManager';
 // Import BO pages
 import maintenancePage from '@pages/BO/shopParameters/general/maintenance';
 
@@ -47,42 +47,42 @@ describe('New products block module: Upgrade module', async () => {
 
     it('should go to \'Shop parameters > General\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopParamsPage', baseContext);
-  
+
       await boDashboardPage.goToSubMenu(
         page,
         boDashboardPage.shopParametersParentLink,
         boDashboardPage.shopParametersGeneralLink,
       );
       await boShopParametersPage.closeSfToolBar(page);
-  
+
       const pageTitle = await boShopParametersPage.getPageTitle(page);
       expect(pageTitle).to.contains(boShopParametersPage.pageTitle);
     });
-  
+
     it('should go to \'Maintenance\' tab', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMaintenancePage', baseContext);
-  
+
       await boShopParametersPage.goToSubTabMaintenance(page);
-  
+
       const pageTitle = await maintenancePage.getPageTitle(page);
       expect(pageTitle).to.contains(maintenancePage.pageTitle);
     });
-  
+
     it('should disable the shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableShop', baseContext);
-  
+
       const resultStatus = await maintenancePage.changeShopStatus(page, false);
       expect(resultStatus).to.contains(maintenancePage.successfulUpdateMessage);
-  
+
       const resultLoggedInEmployees = await maintenancePage.changeStoreForLoggedInEmployees(page, false);
       expect(resultLoggedInEmployees).to.contains(maintenancePage.successfulUpdateMessage);
     });
 
     it('should verify the existence of the maintenance text', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'verifyMaintenanceText', baseContext);
-  
+
       page = await maintenancePage.viewMyShop(page);
-  
+
       const pageContent = await foClassicHomePage.getTextContent(page, foClassicHomePage.content);
       expect(pageContent).to.equal(maintenancePage.maintenanceText);
     });
@@ -134,7 +134,7 @@ describe('New products block module: Upgrade module', async () => {
     });
 
     it('should reload the page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetModule', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkModule', baseContext);
 
       await boModuleManagerPage.reloadPage(page);
 
@@ -146,31 +146,31 @@ describe('New products block module: Upgrade module', async () => {
     });
 
     it('should go to \'Shop parameters > General\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToShopParamsPage', baseContext);
-  
+      await testContext.addContextItem(this, 'testIdentifier', 'returnToShopParamsPage', baseContext);
+
       await boDashboardPage.goToSubMenu(
         page,
         boDashboardPage.shopParametersParentLink,
         boDashboardPage.shopParametersGeneralLink,
       );
       await boShopParametersPage.closeSfToolBar(page);
-  
+
       const pageTitle = await boShopParametersPage.getPageTitle(page);
       expect(pageTitle).to.contains(boShopParametersPage.pageTitle);
     });
-  
+
     it('should go to \'Maintenance\' tab', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToMaintenancePage', baseContext);
-  
+      await testContext.addContextItem(this, 'testIdentifier', 'returnToMaintenancePage', baseContext);
+
       await boShopParametersPage.goToSubTabMaintenance(page);
-  
+
       const pageTitle = await maintenancePage.getPageTitle(page);
       expect(pageTitle).to.contains(maintenancePage.pageTitle);
     });
-  
+
     it('should enable the shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableShop', baseContext);
-  
+
       const result = await maintenancePage.changeShopStatus(page, true);
       expect(result).to.contains(maintenancePage.successfulUpdateMessage);
     });
@@ -194,9 +194,9 @@ describe('New products block module: Upgrade module', async () => {
   });
 
   // PRE-TEST : Uninstall ps_newproducts
-  uninstallModule(dataModules.psNewProducts, `${baseContext}_preTest_0`);
+  uninstallModule(dataModules.psNewProducts, `${baseContext}_middleTest_0`);
   // PRE-TEST : Install ps_newproducts (old version)
-  installModule(dataModules.psNewProducts, false, `${baseContext}_preTest_1`);
+  installModule(dataModules.psNewProducts, false, `${baseContext}_middleTest_1`);
 
   describe('Upgrade without shop on maintenance', async () => {
     before(async function () {
@@ -214,7 +214,7 @@ describe('New products block module: Upgrade module', async () => {
     });
 
     it('should go to \'Modules > Module Manager\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPageWoMaintenance', baseContext);
 
       // Go back to BO
       await boDashboardPage.goToSubMenu(
@@ -229,7 +229,7 @@ describe('New products block module: Upgrade module', async () => {
     });
 
     it(`should search the module ${dataModules.psNewProducts.name}`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'searchModuleWoMaintenance', baseContext);
 
       const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.psNewProducts);
       expect(isModuleVisible).to.eq(true);
@@ -239,14 +239,14 @@ describe('New products block module: Upgrade module', async () => {
     });
 
     it('should upgrade the module', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetModule', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'upgradeModuleWoMaintenance', baseContext);
 
       const successMessage = await boModuleManagerPage.setActionInModule(page, dataModules.psNewProducts, 'upgrade', false, true);
       expect(successMessage).to.eq(boModuleManagerPage.updateModuleSuccessMessage(dataModules.psNewProducts.tag));
     });
 
     it('should reload the page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetModule', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkModuleWoMaintenance', baseContext);
 
       await boModuleManagerPage.reloadPage(page);
 
@@ -258,7 +258,7 @@ describe('New products block module: Upgrade module', async () => {
     });
 
     it('should go to the front office', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToTheFo', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToTheFoWoMaintenance', baseContext);
 
       page = await boModuleManagerPage.viewMyShop(page);
       await foClassicHomePage.changeLanguage(page, 'en');
@@ -268,7 +268,7 @@ describe('New products block module: Upgrade module', async () => {
     });
 
     it('should check if the "New Products" block is visible', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkVisible', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkVisibleWoMaintenance', baseContext);
 
       const hasProductsBlock = await foClassicHomePage.hasProductsBlock(page, 'newproducts');
       expect(hasProductsBlock).to.eq(true);
