@@ -31,9 +31,9 @@ class ModuleConfiguration extends BOBasePage {
     // Header selectors
     this.pageHeadSubtitle = '.page-subtitle';
 
-    this.pageHeadButtonBack = '#desc-module-back';
-    this.pageHeadButtonTranslate = '#desc-module-translate';
-    this.pageHeadButtonManageHooks = '#desc-module-hook';
+    this.pageHeadButtonBack = '#page-header-desc-configuration-module-back';
+    this.pageHeadButtonTranslate = '#page-header-desc-configuration-module-translate';
+    this.pageHeadButtonManageHooks = '#page-header-desc-configuration-module-hook';
 
     this.modalTranslate = '#moduleTradLangSelect';
     this.modalTranslateCloseButton = `${this.modalTranslate} div.modal-header button[data-dismiss="modal"]`;
