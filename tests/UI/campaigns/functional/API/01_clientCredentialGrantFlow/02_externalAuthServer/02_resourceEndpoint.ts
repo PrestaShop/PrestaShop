@@ -67,7 +67,7 @@ describe('API : External Auth Server - Resource Endpoint', async () => {
     }
   });
 
-  installModule(dataModules.keycloak, `${baseContext}_preTest_1`);
+  installModule(dataModules.keycloak, true, `${baseContext}_preTest_1`);
 
   describe('Resource Endpoint', async () => {
     it('should login in BO', async function () {
