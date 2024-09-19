@@ -6,13 +6,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import generalPage from '@pages/BO/shopParameters/general';
 import maintenancePage from '@pages/BO/shopParameters/general/maintenance';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boShopParametersPage,
   foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -53,16 +53,16 @@ describe('BO - Shop Parameters - General - Maintenance : Enable/Disable shop', a
       boDashboardPage.shopParametersParentLink,
       boDashboardPage.shopParametersGeneralLink,
     );
-    await generalPage.closeSfToolBar(page);
+    await boShopParametersPage.closeSfToolBar(page);
 
-    const pageTitle = await generalPage.getPageTitle(page);
-    expect(pageTitle).to.contains(generalPage.pageTitle);
+    const pageTitle = await boShopParametersPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boShopParametersPage.pageTitle);
   });
 
   it('should go to \'Maintenance\' tab', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToMaintenancePage', baseContext);
 
-    await generalPage.goToSubTabMaintenance(page);
+    await boShopParametersPage.goToSubTabMaintenance(page);
 
     const pageTitle = await maintenancePage.getPageTitle(page);
     expect(pageTitle).to.contains(maintenancePage.pageTitle);

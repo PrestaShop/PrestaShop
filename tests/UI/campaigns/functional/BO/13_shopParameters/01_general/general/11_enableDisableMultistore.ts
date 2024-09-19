@@ -4,13 +4,11 @@ import testContext from '@utils/testContext';
 // Import login steps
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import generalPage from '@pages/BO/shopParameters/general';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boShopParametersPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -46,10 +44,10 @@ describe('BO - Shop Parameters - General : Enable/Disable multi store', async ()
       boDashboardPage.shopParametersParentLink,
       boDashboardPage.shopParametersGeneralLink,
     );
-    await generalPage.closeSfToolBar(page);
+    await boShopParametersPage.closeSfToolBar(page);
 
-    const pageTitle = await generalPage.getPageTitle(page);
-    expect(pageTitle).to.contains(generalPage.pageTitle);
+    const pageTitle = await boShopParametersPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boShopParametersPage.pageTitle);
   });
 
   const tests = [
@@ -62,17 +60,17 @@ describe('BO - Shop Parameters - General : Enable/Disable multi store', async ()
       it(`should ${test.args.action} multi store`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}MultiStore`, baseContext);
 
-        const result = await generalPage.setMultiStoreStatus(page, test.args.exist);
-        expect(result).to.contains(generalPage.successfulUpdateMessage);
+        const result = await boShopParametersPage.setMultiStoreStatus(page, test.args.exist);
+        expect(result).to.contains(boShopParametersPage.successfulUpdateMessage);
       });
 
       it('should check the existence of \'Advanced Parameters > Multistore\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToMultiStorePage_${index}`, baseContext);
 
-        const result = await generalPage.isSubmenuVisible(
+        const result = await boShopParametersPage.isSubmenuVisible(
           page,
-          generalPage.advancedParametersLink,
-          generalPage.multistoreLink,
+          boShopParametersPage.advancedParametersLink,
+          boShopParametersPage.multistoreLink,
         );
         expect(result).to.be.equal(test.args.exist);
       });

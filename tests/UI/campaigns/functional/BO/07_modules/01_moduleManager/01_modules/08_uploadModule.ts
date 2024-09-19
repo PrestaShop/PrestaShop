@@ -38,7 +38,7 @@ describe('BO - Modules - Module Manager : Upload module', async () => {
   it(`should download the zip of the module '${dataModules.keycloak.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'downloadModule', baseContext);
 
-    await utilsFile.downloadFile(dataModules.keycloak.releaseZip, 'module.zip');
+    await utilsFile.downloadFile(dataModules.keycloak.releaseZip(dataModules.keycloak.versionCurrent), 'module.zip');
 
     const found = await utilsFile.doesFileExist('module.zip');
     expect(found).to.eq(true);

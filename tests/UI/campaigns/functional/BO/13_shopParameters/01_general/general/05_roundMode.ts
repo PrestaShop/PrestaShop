@@ -6,7 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
 
 // Import BO pages
-import generalPage from '@pages/BO/shopParameters/general';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import createProductsPage from '@pages/BO/catalog/products/add';
 
@@ -15,6 +14,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boProductsPage,
+  boShopParametersPage,
   FakerProduct,
   foClassicHomePage,
   foClassicProductPage,
@@ -78,24 +78,24 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
             boDashboardPage.shopParametersParentLink,
             boDashboardPage.shopParametersGeneralLink,
           );
-          await generalPage.closeSfToolBar(page);
+          await boShopParametersPage.closeSfToolBar(page);
 
-          const pageTitle = await generalPage.getPageTitle(page);
-          expect(pageTitle).to.contains(generalPage.pageTitle);
+          const pageTitle = await boShopParametersPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boShopParametersPage.pageTitle);
         });
 
         it(`should select the round mode '${test.args.roundMode}'`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `selectRoundMode${index}`, baseContext);
 
-          const result = await generalPage.selectRoundMode(page, test.args.roundMode);
-          expect(result).to.contains(generalPage.successfulUpdateMessage);
+          const result = await boShopParametersPage.selectRoundMode(page, test.args.roundMode);
+          expect(result).to.contains(boShopParametersPage.successfulUpdateMessage);
         });
 
         it('should view my shop', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
           // View shop
-          page = await generalPage.viewMyShop(page);
+          page = await boShopParametersPage.viewMyShop(page);
           await foClassicHomePage.changeLanguage(page, 'en');
 
           const isHomePage = await foClassicHomePage.isHomePage(page);
@@ -132,8 +132,8 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
 
           page = await foClassicProductPage.closePage(browserContext, page, 0);
 
-          const pageTitle = await generalPage.getPageTitle(page);
-          expect(pageTitle).to.contains(generalPage.pageTitle);
+          const pageTitle = await boShopParametersPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boShopParametersPage.pageTitle);
         });
       });
     });
@@ -197,24 +197,24 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
             boDashboardPage.shopParametersParentLink,
             boDashboardPage.shopParametersGeneralLink,
           );
-          await generalPage.closeSfToolBar(page);
+          await boShopParametersPage.closeSfToolBar(page);
 
-          const pageTitle = await generalPage.getPageTitle(page);
-          expect(pageTitle).to.contains(generalPage.pageTitle);
+          const pageTitle = await boShopParametersPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boShopParametersPage.pageTitle);
         });
 
         it(`should select the round mode '${test.args.roundMode}'`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `selectRoundMode2${index}`, baseContext);
 
-          const result = await generalPage.selectRoundMode(page, test.args.roundMode);
-          expect(result).to.contains(generalPage.successfulUpdateMessage);
+          const result = await boShopParametersPage.selectRoundMode(page, test.args.roundMode);
+          expect(result).to.contains(boShopParametersPage.successfulUpdateMessage);
         });
 
         it('should view my shop', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `viewMyShop2${index}`, baseContext);
 
           // View shop
-          page = await generalPage.viewMyShop(page);
+          page = await boShopParametersPage.viewMyShop(page);
           await foClassicHomePage.changeLanguage(page, 'en');
 
           const isHomePage = await foClassicHomePage.isHomePage(page);
@@ -251,8 +251,8 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
 
           page = await foClassicProductPage.closePage(browserContext, page, 0);
 
-          const pageTitle = await generalPage.getPageTitle(page);
-          expect(pageTitle).to.contains(generalPage.pageTitle);
+          const pageTitle = await boShopParametersPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boShopParametersPage.pageTitle);
         });
       });
     });
@@ -316,24 +316,24 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
             boDashboardPage.shopParametersParentLink,
             boDashboardPage.shopParametersGeneralLink,
           );
-          await generalPage.closeSfToolBar(page);
+          await boShopParametersPage.closeSfToolBar(page);
 
-          const pageTitle = await generalPage.getPageTitle(page);
-          expect(pageTitle).to.contains(generalPage.pageTitle);
+          const pageTitle = await boShopParametersPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boShopParametersPage.pageTitle);
         });
 
         it(`should select the round mode '${test.args.roundMode}'`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `selectRoundMode3${index}`, baseContext);
 
-          const result = await generalPage.selectRoundMode(page, test.args.roundMode);
-          expect(result).to.contains(generalPage.successfulUpdateMessage);
+          const result = await boShopParametersPage.selectRoundMode(page, test.args.roundMode);
+          expect(result).to.contains(boShopParametersPage.successfulUpdateMessage);
         });
 
         it('should view my shop', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `viewMyShop3${index}`, baseContext);
 
           // View shop
-          page = await generalPage.viewMyShop(page);
+          page = await boShopParametersPage.viewMyShop(page);
           await foClassicHomePage.changeLanguage(page, 'en');
 
           const isHomePage = await foClassicHomePage.isHomePage(page);
@@ -370,8 +370,8 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
 
           page = await foClassicProductPage.closePage(browserContext, page, 0);
 
-          const pageTitle = await generalPage.getPageTitle(page);
-          expect(pageTitle).to.contains(generalPage.pageTitle);
+          const pageTitle = await boShopParametersPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boShopParametersPage.pageTitle);
         });
       });
     });

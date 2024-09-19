@@ -13,12 +13,21 @@ import {
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-function installModule(module: FakerModule, baseContext: string = 'commonTests-installModule'): void {
+/**
+ *
+ * @param module {FakerModule}
+ * @param versionCurrent {boolean}
+ * @param baseContext {string}
+ */
+function installModule(
+  module: FakerModule,
+  versionCurrent: boolean = true,
+  baseContext: string = 'commonTests-installModule',
+): void {
   describe(`Install module ${module.name}`, async () => {
     let browserContext: BrowserContext;
     let page: Page;
 
-    // before and after functions
     before(async function () {
       browserContext = await utilsPlaywright.createBrowserContext(this.browser);
       page = await utilsPlaywright.newTab(browserContext);
@@ -36,7 +45,7 @@ function installModule(module: FakerModule, baseContext: string = 'commonTests-i
     it(`should download the zip of the module '${module.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'downloadModule', baseContext);
 
-      await utilsFile.downloadFile(module.releaseZip, 'module.zip');
+      await utilsFile.downloadFile(module.releaseZip(versionCurrent ? module.versionCurrent : module.versionOld), 'module.zip');
 
       const found = await utilsFile.doesFileExist('module.zip');
       expect(found).to.eq(true);
