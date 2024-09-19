@@ -45,7 +45,7 @@ jobs:
         run: composer install --ansi --prefer-dist --no-interaction --no-progress
 
       - name: Run PHPCSFixer
-        run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
+        run: ./vendor/bin/php-cs-fixer fix --dry-run --diff --path-mode=intersection
 
       - name: Run ergebnis/composer-normalize
         run: composer normalize --dry-run --no-check-lock

@@ -74,3 +74,8 @@ services:
     alias: PrestaShop\PrestaShop\Core\Module\ModuleManager
     public: true
     deprecated: ~
+
+  PrestaShop\PrestaShop\Core\Module\ModuleOverrideChecker:
+    arguments:
+      - '@translator'
+      - !php/const _PS_OVERRIDE_DIR_

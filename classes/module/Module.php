@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use PrestaShop\PrestaShop\Core\Module\Legacy\ModuleInterface;
+use PrestaShop\PrestaShop\Core\Module\ModuleOverrideChecker;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -407,6 +408,17 @@ abstract class ModuleCore implements ModuleInterface
         $result = (new ModuleDataProvider(new LegacyLogger(), $this->getTranslator()))->isInstalled($this->name);
         if ($result) {
             $this->_errors[] = Context::getContext()->getTranslator()->trans('This module has already been installed.', [], 'Admin.Modules.Notification');
+
+            return false;
+        }
+
+        // Check for override conflicts
+        $moduleOverrideChecker = $this->get(ModuleOverrideChecker::class);
+        if (!$moduleOverrideChecker) {
+            $moduleOverrideChecker = new ModuleOverrideChecker($this->getTranslator(), _PS_OVERRIDE_DIR_);
+        }
+        if ($moduleOverrideChecker->hasOverrideConflict($this->getLocalPath() . 'override')) {
+            $this->_errors = array_merge($moduleOverrideChecker->getErrors(), $this->_errors);
 
             return false;
         }
@@ -859,13 +871,24 @@ abstract class ModuleCore implements ModuleInterface
             }
         }
 
+        $moduleOverrideChecker = $this->get(ModuleOverrideChecker::class);
+        if (!$moduleOverrideChecker) {
+            $moduleOverrideChecker = new ModuleOverrideChecker($this->getTranslator(), _PS_OVERRIDE_DIR_);
+        }
+
         if ($this->getOverrides() != null) {
-            // Install overrides
-            try {
-                $this->installOverrides();
-            } catch (Exception $e) {
-                $this->_errors[] = Context::getContext()->getTranslator()->trans('Unable to install override: %s', [$e->getMessage()], 'Admin.Modules.Notification');
-                $this->uninstallOverrides();
+            if (!$moduleOverrideChecker->hasOverrideConflict($this->getLocalPath() . 'override')) {
+                // Install overrides
+                try {
+                    $this->installOverrides();
+                } catch (Exception $e) {
+                    $this->_errors[] = Context::getContext()->getTranslator()->trans('Unable to install override: %s', [$e->getMessage()], 'Admin.Modules.Notification');
+                    $this->uninstallOverrides();
+
+                    return false;
+                }
+            } else {
+                $this->_errors = array_merge($moduleOverrideChecker->getErrors(), $this->_errors);
 
                 return false;
             }
