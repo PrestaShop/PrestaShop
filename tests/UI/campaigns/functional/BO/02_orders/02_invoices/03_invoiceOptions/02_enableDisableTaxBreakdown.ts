@@ -11,7 +11,6 @@ import addProductPage from '@pages/BO/catalog/products/add';
 import taxesPage from '@pages/BO/international/taxes';
 import addTaxRulesPage from '@pages/BO/international/taxes/taxRules/add';
 import taxRulesPage from '@pages/BO/international/taxes/taxRules';
-import ordersPage from '@pages/BO/orders';
 import invoicesPage from '@pages/BO/orders/invoices';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 // Import FO pages
@@ -19,6 +18,7 @@ import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmatio
 
 import {
   boDashboardPage,
+  boOrdersPage,
   boProductsPage,
   dataCustomers,
   dataOrderStatuses,
@@ -306,14 +306,14 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
           boDashboardPage.ordersLink,
         );
 
-        const pageTitle = await ordersPage.getPageTitle(page);
-        expect(pageTitle).to.contains(ordersPage.pageTitle);
+        const pageTitle = await boOrdersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersPage.pageTitle);
       });
 
       it('should go to the first order page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderPageTaxBreakdown', baseContext);
 
-        await ordersPage.goToOrder(page, 1);
+        await boOrdersPage.goToOrder(page, 1);
 
         const pageTitle = await orderPageTabListBlock.getPageTitle(page);
         expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
@@ -387,14 +387,14 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
           invoicesPage.ordersLink,
         );
 
-        const pageTitle = await ordersPage.getPageTitle(page);
-        expect(pageTitle).to.contains(ordersPage.pageTitle);
+        const pageTitle = await boOrdersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersPage.pageTitle);
       });
 
       it('should go to the first order page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderPageNoTaxBreakdown', baseContext);
 
-        await ordersPage.goToOrder(page, 1);
+        await boOrdersPage.goToOrder(page, 1);
 
         const pageTitle = await orderPageTabListBlock.getPageTitle(page);
         expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);

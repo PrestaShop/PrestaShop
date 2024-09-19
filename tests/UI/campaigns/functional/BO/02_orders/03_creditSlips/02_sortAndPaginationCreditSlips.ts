@@ -7,12 +7,12 @@ import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
 import creditSlipsPage from '@pages/BO/orders/creditSlips';
-import ordersPage from '@pages/BO/orders';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 import {
   boDashboardPage,
+  boOrdersPage,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
@@ -89,8 +89,8 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
           boDashboardPage.ordersLink,
         );
 
-        const pageTitle = await ordersPage.getPageTitle(page);
-        expect(pageTitle).to.contains(ordersPage.pageTitle);
+        const pageTitle = await boOrdersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersPage.pageTitle);
       });
 
       it(`should change the order status to '${dataOrderStatuses.shipped.name}' and check it`, async function () {
@@ -101,8 +101,8 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
           `${baseContext}_preTest_${i}`,
         );
 
-        const textResult = await ordersPage.setOrderStatus(page, 1, dataOrderStatuses.shipped);
-        expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
+        const textResult = await boOrdersPage.setOrderStatus(page, 1, dataOrderStatuses.shipped);
+        expect(textResult).to.equal(boOrdersPage.successfulUpdateMessage);
       });
 
       it('should go to the first order page', async function () {
@@ -113,7 +113,7 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
           `${baseContext}_preTest_${i}`,
         );
 
-        await ordersPage.goToOrder(page, 1);
+        await boOrdersPage.goToOrder(page, 1);
 
         const pageTitle = await orderPageTabListBlock.getPageTitle(page);
         expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);

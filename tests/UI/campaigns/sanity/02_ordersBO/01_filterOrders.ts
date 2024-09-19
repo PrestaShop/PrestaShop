@@ -4,13 +4,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import ordersPage from '@pages/BO/orders';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boOrdersPage,
   dataOrders,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -51,14 +49,14 @@ describe('BO - Orders - Orders : Filter the Orders table by ID, REFERENCE, STATU
       boDashboardPage.ordersLink,
     );
 
-    const pageTitle = await ordersPage.getPageTitle(page);
-    expect(pageTitle).to.contains(ordersPage.pageTitle);
+    const pageTitle = await boOrdersPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boOrdersPage.pageTitle);
   });
 
   it('should reset all filters and get number of orders', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilters1', baseContext);
 
-    numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+    numberOfOrders = await boOrdersPage.resetAndGetNumberOfLines(page);
     expect(numberOfOrders).to.be.above(0);
   });
 
@@ -96,21 +94,21 @@ describe('BO - Orders - Orders : Filter the Orders table by ID, REFERENCE, STATU
     it(`should filter the Orders table by '${test.args.filterBy}' and check the result`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `filterOrders_${test.args.identifier}`, baseContext);
 
-      await ordersPage.filterOrders(
+      await boOrdersPage.filterOrders(
         page,
         test.args.filterType,
         test.args.filterBy,
         test.args.filterValue,
       );
 
-      const textColumn = await ordersPage.getTextColumn(page, test.args.filterBy, 1);
+      const textColumn = await boOrdersPage.getTextColumn(page, test.args.filterBy, 1);
       expect(textColumn).to.equal(test.args.filterValue);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `resetFilters_${test.args.identifier}`, baseContext);
 
-      const numberOfOrdersAfterReset = await ordersPage.resetAndGetNumberOfLines(page);
+      const numberOfOrdersAfterReset = await boOrdersPage.resetAndGetNumberOfLines(page);
       expect(numberOfOrdersAfterReset).to.be.equal(numberOfOrders);
     });
   });

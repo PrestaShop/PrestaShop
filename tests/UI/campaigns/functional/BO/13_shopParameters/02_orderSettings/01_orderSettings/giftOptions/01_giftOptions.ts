@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
-import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 // Import FO pages
@@ -15,6 +14,7 @@ import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmatio
 
 import {
   boDashboardPage,
+  boOrdersPage,
   dataCustomers,
   dataPaymentMethods,
   dataTaxes,
@@ -308,23 +308,23 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           await testContext.addContextItem(this, 'testIdentifier', `goToOrdersPage${index}`, baseContext);
 
           await boDashboardPage.goToSubMenu(page, boDashboardPage.ordersParentLink, boDashboardPage.ordersLink);
-          await ordersPage.closeSfToolBar(page);
+          await boOrdersPage.closeSfToolBar(page);
 
-          const pageTitle = await ordersPage.getPageTitle(page);
-          expect(pageTitle).to.contains(ordersPage.pageTitle);
+          const pageTitle = await boOrdersPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boOrdersPage.pageTitle);
         });
 
         it('should reset all filters', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `resetOrderTableFilters${index}`, baseContext);
 
-          const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+          const numberOfOrders = await boOrdersPage.resetAndGetNumberOfLines(page);
           expect(numberOfOrders).to.be.above(5);
         });
 
         it('should view the first order in the list', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `viewFirstOrder${index}`, baseContext);
 
-          await ordersPage.goToOrder(page, 1);
+          await boOrdersPage.goToOrder(page, 1);
 
           const pageTitle = await orderPageTabListBlock.getPageTitle(page);
           expect(pageTitle, 'View order page is not visible!').to.contains(orderPageTabListBlock.pageTitle);

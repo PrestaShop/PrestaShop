@@ -10,10 +10,10 @@ import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import pages
 import outstandingPage from '@pages/BO/customers/outstanding';
-import ordersPage from '@pages/BO/orders';
 
 import {
   boDashboardPage,
+  boOrdersPage,
   dataOrderStatuses,
   dataPaymentMethods,
   dataProducts,
@@ -116,24 +116,24 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
               boDashboardPage.ordersLink,
             );
           } else {
-            await ordersPage.reloadPage(page);
+            await boOrdersPage.reloadPage(page);
           }
 
-          const pageTitle = await ordersPage.getPageTitle(page);
-          expect(pageTitle).to.contains(ordersPage.pageTitle);
+          const pageTitle = await boOrdersPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boOrdersPage.pageTitle);
         });
 
         it('should update order status', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus_${index}`, baseContext);
 
-          const textResult = await ordersPage.setOrderStatus(page, 1, dataOrderStatuses.paymentAccepted);
-          expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
+          const textResult = await boOrdersPage.setOrderStatus(page, 1, dataOrderStatuses.paymentAccepted);
+          expect(textResult).to.equal(boOrdersPage.successfulUpdateMessage);
         });
 
         it('should check that the status is updated successfully', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkStatusBO_${index}`, baseContext);
 
-          const orderStatus = await ordersPage.getTextColumn(page, 'osname', 1);
+          const orderStatus = await boOrdersPage.getTextColumn(page, 'osname', 1);
           expect(orderStatus, 'Order status was not updated').to.equal(dataOrderStatuses.paymentAccepted.name);
         });
       });

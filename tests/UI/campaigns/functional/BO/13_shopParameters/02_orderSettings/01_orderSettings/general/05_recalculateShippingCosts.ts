@@ -7,11 +7,11 @@ import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
-import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 import {
   boDashboardPage,
+  boOrdersPage,
   dataCarriers,
   dataCustomers,
   dataPaymentMethods,
@@ -121,14 +121,14 @@ describe('BO - Shop Parameters - Order Settings : Recalculate shipping costs aft
           boDashboardPage.ordersLink,
         );
 
-        const pageTitle = await ordersPage.getPageTitle(page);
-        expect(pageTitle).to.contains(ordersPage.pageTitle);
+        const pageTitle = await boOrdersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersPage.pageTitle);
       });
 
       it('should view the order', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `viewOrderPage_${index}`, baseContext);
 
-        await ordersPage.goToOrder(page, 1);
+        await boOrdersPage.goToOrder(page, 1);
 
         const pageTitle = await orderPageTabListBlock.getPageTitle(page);
         expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);

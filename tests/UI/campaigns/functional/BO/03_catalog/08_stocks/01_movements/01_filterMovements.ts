@@ -10,7 +10,6 @@ import cleanTableStockMovements from '@commonTests/BO/catalog/stock';
 // Import BO pages
 import addProductPage from '@pages/BO/catalog/products/add';
 import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
-import ordersPage from '@pages/BO/orders';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import stocksPage from '@pages/BO/catalog/stocks';
 import movementsPage from '@pages/BO/catalog/stocks/movements';
@@ -20,6 +19,7 @@ import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmatio
 import {
   boDashboardPage,
   boLoginPage,
+  boOrdersPage,
   boProductsPage,
   dataCategories,
   dataCustomers,
@@ -228,16 +228,16 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
           boDashboardPage.ordersLink,
         );
 
-        const pageTitle = await ordersPage.getPageTitle(page);
-        expect(pageTitle).to.contains(ordersPage.pageTitle);
+        const pageTitle = await boOrdersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersPage.pageTitle);
       });
 
       it('should reset filter and get the last order ID', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
-        await ordersPage.resetFilter(page);
+        await boOrdersPage.resetFilter(page);
 
-        const result: string = await ordersPage.getTextColumn(page, 'id_order', 1);
+        const result: string = await boOrdersPage.getTextColumn(page, 'id_order', 1);
         orderId = parseInt(result, 10);
         expect(orderId).to.be.at.least(1);
       });
@@ -245,8 +245,8 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
       it('should update order status', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-        const textResult = await ordersPage.setOrderStatus(page, 1, dataOrderStatuses.delivered);
-        expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
+        const textResult = await boOrdersPage.setOrderStatus(page, 1, dataOrderStatuses.delivered);
+        expect(textResult).to.equal(boOrdersPage.successfulUpdateMessage);
       });
     });
 

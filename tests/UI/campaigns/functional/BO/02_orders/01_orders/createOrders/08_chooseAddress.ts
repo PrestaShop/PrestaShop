@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import addAddressPage from '@pages/BO/customers/addresses/add';
-import ordersPage from '@pages/BO/orders';
 import addOrderPage from '@pages/BO/orders/add';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 // Import FO pages
@@ -17,6 +16,7 @@ import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
 import {
   boDashboardPage,
+  boOrdersPage,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
@@ -95,16 +95,16 @@ describe('BO - Orders - Create order : Choose address', async () => {
         boDashboardPage.ordersParentLink,
         boDashboardPage.ordersLink,
       );
-      await ordersPage.closeSfToolBar(page);
+      await boOrdersPage.closeSfToolBar(page);
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should go to create order page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreateOrderPage', baseContext);
 
-      await ordersPage.goToCreateOrderPage(page);
+      await boOrdersPage.goToCreateOrderPage(page);
 
       const pageTitle = await addOrderPage.getPageTitle(page);
       expect(pageTitle).to.contains(addOrderPage.pageTitle);
@@ -183,14 +183,14 @@ describe('BO - Orders - Create order : Choose address', async () => {
         boDashboardPage.ordersLink,
       );
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should go to create order page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreateOrderPage2', baseContext);
 
-      await ordersPage.goToCreateOrderPage(page);
+      await boOrdersPage.goToCreateOrderPage(page);
 
       const pageTitle = await addOrderPage.getPageTitle(page);
       expect(pageTitle).to.contains(addOrderPage.pageTitle);
@@ -262,23 +262,23 @@ describe('BO - Orders - Create order : Choose address', async () => {
           boDashboardPage.ordersLink,
         );
 
-        const pageTitle = await ordersPage.getPageTitle(page);
-        expect(pageTitle).to.contains(ordersPage.pageTitle);
+        const pageTitle = await boOrdersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersPage.pageTitle);
       });
 
       it('should filter the list by order ID', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterOrdersTableByID', baseContext);
 
-        await ordersPage.filterOrders(page, 'input', 'id_order', orderID.toString());
+        await boOrdersPage.filterOrders(page, 'input', 'id_order', orderID.toString());
 
-        const numberOfOrdersAfterFilter = await ordersPage.getNumberOfElementInGrid(page);
+        const numberOfOrdersAfterFilter = await boOrdersPage.getNumberOfElementInGrid(page);
         expect(numberOfOrdersAfterFilter).to.be.equal(1);
       });
 
       it('should view the order', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'orderPageCustomerBlock1', baseContext);
 
-        await ordersPage.goToOrder(page, 1);
+        await boOrdersPage.goToOrder(page, 1);
 
         const pageTitle = await orderPageCustomerBlock.getPageTitle(page);
         expect(pageTitle).to.contains(orderPageCustomerBlock.pageTitle);
@@ -410,14 +410,14 @@ describe('BO - Orders - Create order : Choose address', async () => {
           boDashboardPage.ordersLink,
         );
 
-        const pageTitle = await ordersPage.getPageTitle(page);
-        expect(pageTitle).to.contains(ordersPage.pageTitle);
+        const pageTitle = await boOrdersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersPage.pageTitle);
       });
 
       it('should go to create order page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToCreateOrderPage3', baseContext);
 
-        await ordersPage.goToCreateOrderPage(page);
+        await boOrdersPage.goToCreateOrderPage(page);
 
         const pageTitle = await addOrderPage.getPageTitle(page);
         expect(pageTitle).to.contains(addOrderPage.pageTitle);

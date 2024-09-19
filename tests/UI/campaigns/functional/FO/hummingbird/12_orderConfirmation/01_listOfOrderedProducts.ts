@@ -5,15 +5,13 @@ import testContext from '@utils/testContext';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import BO pages
-import ordersPage from '@pages/BO/orders';
-
 // Import FO pages
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {
   boDashboardPage,
+  boOrdersPage,
   dataCarriers,
   dataCustomers,
   dataPaymentMethods,
@@ -193,16 +191,16 @@ describe('FO - Order confirmation : List of ordered products', async () => {
         boDashboardPage.ordersParentLink,
         boDashboardPage.ordersLink,
       );
-      await ordersPage.closeSfToolBar(page);
+      await boOrdersPage.closeSfToolBar(page);
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should get the order reference of the first order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getOrderReference', baseContext);
 
-      orderReference = await ordersPage.getTextColumn(page, 'reference', 1);
+      orderReference = await boOrdersPage.getTextColumn(page, 'reference', 1);
       expect(orderReference).to.not.eq(null);
     });
   });
@@ -211,7 +209,7 @@ describe('FO - Order confirmation : List of ordered products', async () => {
     it('should check the payment information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPaymentInformation', baseContext);
 
-      page = await ordersPage.changePage(browserContext, 0);
+      page = await boOrdersPage.changePage(browserContext, 0);
       const totalToPay: string = (dataProducts.demo_3.finalPrice + (2 * dataProducts.demo_5.finalPrice)
         + (2 * dataProducts.demo_12.finalPrice) + dataCarriers.myCarrier.priceTTC).toFixed(2);
 

@@ -9,7 +9,6 @@ import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advanced
 
 // Import pages
 // Import BO pages
-import ordersPage from '@pages/BO/orders';
 import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 import addProductPage from '@pages/BO/catalog/products/add';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
@@ -21,6 +20,7 @@ import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmatio
 import {
   boDashboardPage,
   boModuleManagerPage,
+  boOrdersPage,
   boProductsPage,
   dataCustomers,
   dataModules,
@@ -443,22 +443,22 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
         boDashboardPage.ordersLink,
       );
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it(`should change the order status to '${dataOrderStatuses.delivered.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const result = await ordersPage.setOrderStatus(page, 1, dataOrderStatuses.delivered);
-      expect(result).to.equal(ordersPage.successfulUpdateMessage);
+      const result = await boOrdersPage.setOrderStatus(page, 1, dataOrderStatuses.delivered);
+      expect(result).to.equal(boOrdersPage.successfulUpdateMessage);
     });
 
     it('should go to the first order page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderPage1', baseContext);
 
       // View order
-      await ordersPage.goToOrder(page, 1);
+      await boOrdersPage.goToOrder(page, 1);
 
       const pageTitle = await orderPageTabListBlock.getPageTitle(page);
       expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);

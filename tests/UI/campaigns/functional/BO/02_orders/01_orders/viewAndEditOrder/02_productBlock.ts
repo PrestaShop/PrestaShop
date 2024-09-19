@@ -15,11 +15,11 @@ import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import addProductPage from '@pages/BO/catalog/products/add';
-import ordersPage from '@pages/BO/orders';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
 import {
   boDashboardPage,
+  boOrdersPage,
   boProductsPage,
   dataPaymentMethods,
   dataProducts,
@@ -400,32 +400,32 @@ describe('BO - Orders - View and edit order : Check product block in view order 
         boDashboardPage.ordersParentLink,
         boDashboardPage.ordersLink,
       );
-      await ordersPage.closeSfToolBar(page);
+      await boOrdersPage.closeSfToolBar(page);
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAllFilters', baseContext);
 
-      const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+      const numberOfOrders = await boOrdersPage.resetAndGetNumberOfLines(page);
       expect(numberOfOrders).to.be.above(0);
     });
 
     it(`should filter the Orders table by 'Customer: ${customerData.lastName}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterTable', baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', customerData.lastName);
+      await boOrdersPage.filterOrders(page, 'input', 'customer', customerData.lastName);
 
-      const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
+      const textColumn = await boOrdersPage.getTextColumn(page, 'customer', 1);
       expect(textColumn).to.contains(customerData.lastName);
     });
 
     it('should view the order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'orderPageProductsBlock', baseContext);
 
-      await ordersPage.goToOrder(page, 1);
+      await boOrdersPage.goToOrder(page, 1);
 
       const pageTitle = await orderPageProductsBlock.getPageTitle(page);
       expect(pageTitle).to.contains(orderPageProductsBlock.pageTitle);

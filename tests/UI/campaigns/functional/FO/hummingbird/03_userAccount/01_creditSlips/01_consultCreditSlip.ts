@@ -12,7 +12,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 
 // Import pages
 // Import BO pages
-import ordersPage from '@pages/BO/orders';
 import viewOrderProductsBlockPage from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
@@ -22,6 +21,7 @@ import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
 
 import {
   boDashboardPage,
+  boOrdersPage,
   dataOrderStatuses,
   dataPaymentMethods,
   dataProducts,
@@ -184,15 +184,15 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
           boDashboardPage.ordersLink,
         );
 
-        const pageTitle = await ordersPage.getPageTitle(page);
-        expect(pageTitle).to.contains(ordersPage.pageTitle);
+        const pageTitle = await boOrdersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersPage.pageTitle);
       });
 
       it('should go to the first order page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrderPage', baseContext);
 
         // View order
-        await ordersPage.goToOrder(page, 1);
+        await boOrdersPage.goToOrder(page, 1);
 
         const pageTitle = await viewOrderBasePage.getPageTitle(page);
         expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);

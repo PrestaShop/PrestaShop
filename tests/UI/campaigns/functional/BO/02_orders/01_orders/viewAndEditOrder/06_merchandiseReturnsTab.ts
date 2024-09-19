@@ -9,7 +9,6 @@ import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 // Import BO pages
 import boMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns';
 import editMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns/edit';
-import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 // Import FO pages
 import {merchandiseReturnsPage as foMerchandiseReturnsPage} from '@pages/FO/classic/myAccount/merchandiseReturns';
@@ -18,6 +17,7 @@ import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
 import {
   boDashboardPage,
+  boOrdersPage,
   dataCustomers,
   dataOrderReturnStatuses,
   dataOrderStatuses,
@@ -102,23 +102,23 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
         boDashboardPage.ordersLink,
       );
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should filter the Orders table by the default customer and check the result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterOrder1', baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
+      await boOrdersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
 
-      const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
+      const textColumn = await boOrdersPage.getTextColumn(page, 'customer', 1);
       expect(textColumn).to.contains(dataCustomers.johnDoe.lastName);
     });
 
     it('should get the order ID', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getOrderID', baseContext);
 
-      orderID = await ordersPage.getOrderIDNumber(page);
+      orderID = await boOrdersPage.getOrderIDNumber(page);
       expect(orderID).to.not.equal(1);
     });
 
@@ -126,7 +126,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderPage1', baseContext);
 
       // View order
-      await ordersPage.goToOrder(page, 1);
+      await boOrdersPage.goToOrder(page, 1);
 
       const pageTitle = await orderPageTabListBlock.getPageTitle(page);
       expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
@@ -233,7 +233,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
         boDashboardPage.customerServiceParentLink,
         boDashboardPage.merchandiseReturnsLink,
       );
-      await ordersPage.closeSfToolBar(page);
+      await boOrdersPage.closeSfToolBar(page);
 
       const pageTitle = await boMerchandiseReturnsPage.getPageTitle(page);
       expect(pageTitle).to.contains(boMerchandiseReturnsPage.pageTitle);
@@ -266,16 +266,16 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
         boDashboardPage.ordersLink,
       );
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should filter the Orders table by the default customer and check the result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterOrder2', baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
+      await boOrdersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
 
-      const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
+      const textColumn = await boOrdersPage.getTextColumn(page, 'customer', 1);
       expect(textColumn).to.contains(dataCustomers.johnDoe.lastName);
     });
 
@@ -283,7 +283,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderPage2', baseContext);
 
       // View order
-      await ordersPage.goToOrder(page, 1);
+      await boOrdersPage.goToOrder(page, 1);
 
       const pageTitle = await orderPageTabListBlock.getPageTitle(page);
       expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
@@ -372,16 +372,16 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
           boDashboardPage.ordersLink,
         );
 
-        const pageTitle = await ordersPage.getPageTitle(page);
-        expect(pageTitle).to.contains(ordersPage.pageTitle);
+        const pageTitle = await boOrdersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersPage.pageTitle);
       });
 
       it('should filter the Orders table by the default customer and check the result', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterOrder0${index}`, baseContext);
 
-        await ordersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
+        await boOrdersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
 
-        const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
+        const textColumn = await boOrdersPage.getTextColumn(page, 'customer', 1);
         expect(textColumn).to.contains(dataCustomers.johnDoe.lastName);
       });
 
@@ -389,7 +389,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
         await testContext.addContextItem(this, 'testIdentifier', `goToOrderPage0${index}`, baseContext);
 
         // View order
-        await ordersPage.goToOrder(page, 1);
+        await boOrdersPage.goToOrder(page, 1);
 
         const pageTitle = await orderPageTabListBlock.getPageTitle(page);
         expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);

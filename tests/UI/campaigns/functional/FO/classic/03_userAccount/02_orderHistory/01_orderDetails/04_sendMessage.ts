@@ -8,7 +8,6 @@ import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advanced
 // Import pages
 // Import BO pages
 import customerServicePage from '@pages/BO/customerService/customerService';
-import ordersPage from '@pages/BO/orders';
 // Import FO pages
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
@@ -16,6 +15,7 @@ import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
 import {
   boDashboardPage,
+  boOrdersPage,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
@@ -172,24 +172,24 @@ describe('FO - Account : Send a message with an ordered product', async () => {
         boDashboardPage.ordersLink,
       );
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should reset all filters ', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
 
-      const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+      const numberOfOrders = await boOrdersPage.resetAndGetNumberOfLines(page);
       expect(numberOfOrders).to.be.above(0);
     });
 
     it(`should update order status to '${dataOrderStatuses.paymentAccepted.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const textResult = await ordersPage.setOrderStatus(page, 1, dataOrderStatuses.paymentAccepted);
-      expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
+      const textResult = await boOrdersPage.setOrderStatus(page, 1, dataOrderStatuses.paymentAccepted);
+      expect(textResult).to.equal(boOrdersPage.successfulUpdateMessage);
 
-      const orderStatus = await ordersPage.getTextColumn(page, 'osname', 1);
+      const orderStatus = await boOrdersPage.getTextColumn(page, 'osname', 1);
       expect(orderStatus, 'Order status was not updated').to.equal(dataOrderStatuses.paymentAccepted.name);
     });
 

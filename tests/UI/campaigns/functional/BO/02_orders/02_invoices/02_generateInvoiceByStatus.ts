@@ -5,12 +5,12 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import ordersPage from '@pages/BO/orders';
 import invoicesPage from '@pages/BO/orders/invoices';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 import {
   boDashboardPage,
+  boOrdersPage,
   dataOrderStatuses,
   utilsFile,
   utilsPlaywright,
@@ -54,16 +54,16 @@ describe('BO - Orders - Invoices : Generate PDF file by status', async () => {
           boDashboardPage.ordersParentLink,
           boDashboardPage.ordersLink,
         );
-        await ordersPage.closeSfToolBar(page);
+        await boOrdersPage.closeSfToolBar(page);
 
-        const pageTitle = await ordersPage.getPageTitle(page);
-        expect(pageTitle).to.contains(ordersPage.pageTitle);
+        const pageTitle = await boOrdersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersPage.pageTitle);
       });
 
       it(`should go to the order page n°${orderToEdit.args.orderRow}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToOrderPage${index + 1}`, baseContext);
 
-        await ordersPage.goToOrder(page, orderToEdit.args.orderRow);
+        await boOrdersPage.goToOrder(page, orderToEdit.args.orderRow);
 
         const pageTitle = await orderPageTabListBlock.getPageTitle(page);
         expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);

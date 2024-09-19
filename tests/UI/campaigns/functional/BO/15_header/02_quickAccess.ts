@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import statsPage from '@pages/BO/stats';
 import newCategoryPage from '@pages/BO/catalog/categories/add';
 import newVoucherPage from '@pages/BO/catalog/discounts/add';
-import ordersPage from '@pages/BO/orders';
 import quickAccessPage from '@pages/BO/quickAccess';
 import addNewQuickAccessPage from '@pages/BO/quickAccess/add';
 import newCustomerPage from '@pages/BO/customers/add';
@@ -17,6 +16,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boOrdersPage,
   boModuleManagerPage,
   boProductsPage,
   FakerQuickAccess,
@@ -55,7 +55,7 @@ describe('BO - Header : Quick access links', async () => {
       {args: {pageName: 'Installed modules', pageTitle: boModuleManagerPage.pageTitle}},
       {args: {pageName: 'New category', pageTitle: newCategoryPage.pageTitleCreate}},
       {args: {pageName: 'New product', pageTitle: boProductsPage.pageTitle}},
-      {args: {pageName: 'Orders', pageTitle: ordersPage.pageTitle}},
+      {args: {pageName: 'Orders', pageTitle: boOrdersPage.pageTitle}},
       {args: {pageName: 'New voucher', pageTitle: newVoucherPage.pageTitle}},
     ].forEach((test, index: number) => {
       it(`should check '${test.args.pageName}' link from Quick access`, async function () {

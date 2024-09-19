@@ -12,7 +12,6 @@ import {createOrderByCustomerTest, createOrderSpecificProductTest} from '@common
 import addProductPage from '@pages/BO/catalog/products/add';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import detailsTab from '@pages/BO/catalog/products/add/detailsTab';
-import ordersPage from '@pages/BO/orders';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 import orderPagePaymentBlock from '@pages/BO/orders/view/paymentBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
@@ -20,6 +19,7 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 import {
   boDashboardPage,
+  boOrdersPage,
   boProductsPage,
   dataAddresses,
   dataCarriers,
@@ -289,32 +289,32 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           boDashboardPage.ordersParentLink,
           boDashboardPage.ordersLink,
         );
-        await ordersPage.closeSfToolBar(page);
+        await boOrdersPage.closeSfToolBar(page);
 
-        const pageTitle = await ordersPage.getPageTitle(page);
-        expect(pageTitle).to.contains(ordersPage.pageTitle);
+        const pageTitle = await boOrdersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersPage.pageTitle);
       });
 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters1', baseContext);
 
-        const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+        const numberOfOrders = await boOrdersPage.resetAndGetNumberOfLines(page);
         expect(numberOfOrders).to.be.above(0);
       });
 
       it(`should filter the Orders table by 'Customer: ${dataCustomers.johnDoe.lastName}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer1', baseContext);
 
-        await ordersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
+        await boOrdersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
 
-        const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
+        const textColumn = await boOrdersPage.getTextColumn(page, 'customer', 1);
         expect(textColumn).to.contains(dataCustomers.johnDoe.lastName);
       });
 
       it('should view the order', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'orderPageTabListBlock1', baseContext);
 
-        await ordersPage.goToOrder(page, 2);
+        await boOrdersPage.goToOrder(page, 2);
 
         const pageTitle = await orderPageTabListBlock.getPageTitle(page);
         expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
@@ -566,32 +566,32 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           boDashboardPage.ordersParentLink,
           boDashboardPage.ordersLink,
         );
-        await ordersPage.closeSfToolBar(page);
+        await boOrdersPage.closeSfToolBar(page);
 
-        const pageTitle = await ordersPage.getPageTitle(page);
-        expect(pageTitle).to.contains(ordersPage.pageTitle);
+        const pageTitle = await boOrdersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersPage.pageTitle);
       });
 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters2', baseContext);
 
-        const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+        const numberOfOrders = await boOrdersPage.resetAndGetNumberOfLines(page);
         expect(numberOfOrders).to.be.above(0);
       });
 
       it(`should filter the Orders table by 'Customer: ${dataCustomers.johnDoe.lastName}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer2', baseContext);
 
-        await ordersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
+        await boOrdersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
 
-        const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
+        const textColumn = await boOrdersPage.getTextColumn(page, 'customer', 1);
         expect(textColumn).to.contains(dataCustomers.johnDoe.lastName);
       });
 
       it('should view the order', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'orderPageTabListBlock2', baseContext);
 
-        await ordersPage.goToOrder(page, 1);
+        await boOrdersPage.goToOrder(page, 1);
 
         const pageTitle = await orderPageTabListBlock.getPageTitle(page);
         expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);

@@ -6,7 +6,6 @@ import {createOrderByCustomerTest, createOrderByGuestTest} from '@commonTests/FO
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import ordersPage from '@pages/BO/orders';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import customerServicePage from '@pages/BO/customerService/customerService';
@@ -16,6 +15,7 @@ import viewCustomerPage from '@pages/BO/customers/view';
 
 import {
   boDashboardPage,
+  boOrdersPage,
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
@@ -129,7 +129,7 @@ describe('BO - Header : Check notifications', async () => {
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMySHop', baseContext);
 
-      page = await ordersPage.viewMyShop(page);
+      page = await boOrdersPage.viewMyShop(page);
       await foClassicHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foClassicHomePage.isHomePage(page);

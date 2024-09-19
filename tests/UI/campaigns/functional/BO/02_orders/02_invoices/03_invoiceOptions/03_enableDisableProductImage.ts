@@ -6,7 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import ordersPage from '@pages/BO/orders';
 import invoicesPage from '@pages/BO/orders/invoices';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 // Import FO pages
@@ -14,6 +13,7 @@ import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmatio
 
 import {
   boDashboardPage,
+  boOrdersPage,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
@@ -195,14 +195,14 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
             invoicesPage.ordersLink,
           );
 
-          const pageTitle = await ordersPage.getPageTitle(page);
-          expect(pageTitle).to.contains(ordersPage.pageTitle);
+          const pageTitle = await boOrdersPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boOrdersPage.pageTitle);
         });
 
         it('should go to the created order page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToCreatedOrderPage${index}`, baseContext);
 
-          await ordersPage.goToOrder(page, 1);
+          await boOrdersPage.goToOrder(page, 1);
 
           const pageTitle = await orderPageTabListBlock.getPageTitle(page);
           expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);

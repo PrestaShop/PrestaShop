@@ -12,7 +12,6 @@ import createShoppingCart from '@commonTests/FO/classic/shoppingCart';
 
 // Import BO pages
 import webservicePage from '@pages/BO/advancedParameters/webservice';
-import ordersPage from '@pages/BO/orders';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 import orderPagePaymentBlock from '@pages/BO/orders/view/paymentBlock';
@@ -24,6 +23,7 @@ import getOrderXml from '@data/xml/order';
 
 import {
   boDashboardPage,
+  boOrdersPage,
   boShoppingCartsPage,
   dataAddresses,
   dataCustomers,
@@ -483,31 +483,31 @@ describe('WS - Orders : CRUD', async () => {
             boDashboardPage.ordersParentLink,
             boDashboardPage.ordersLink,
           );
-          await ordersPage.closeSfToolBar(page);
+          await boOrdersPage.closeSfToolBar(page);
 
-          const pageTitle = await ordersPage.getPageTitle(page);
-          expect(pageTitle).to.contains(ordersPage.pageTitle);
+          const pageTitle = await boOrdersPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boOrdersPage.pageTitle);
         });
 
         it('should filter order by ID', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdateAfterPost', baseContext);
 
           // Filter
-          await ordersPage.resetFilter(page);
-          await ordersPage.filterOrders(page, 'input', 'id_order', orderNodeID as string);
+          await boOrdersPage.resetFilter(page);
+          await boOrdersPage.filterOrders(page, 'input', 'id_order', orderNodeID as string);
 
           // Check number of orders
-          const numberOfOrdersAfterFilter = await ordersPage.getNumberOfElementInGrid(page);
+          const numberOfOrdersAfterFilter = await boOrdersPage.getNumberOfElementInGrid(page);
           expect(numberOfOrdersAfterFilter).to.be.eq(1);
 
-          const textColumn = await ordersPage.getTextColumn(page, 'id_order', 1);
+          const textColumn = await boOrdersPage.getTextColumn(page, 'id_order', 1);
           expect(textColumn).to.contains(orderNodeID);
         });
 
         it('should go to view order page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToViewOrderPageAfterPost', baseContext);
 
-          await ordersPage.goToOrder(page, 1);
+          await boOrdersPage.goToOrder(page, 1);
 
           const pageTitle = await viewOrderBasePage.getPageTitle(page);
           expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
@@ -699,16 +699,16 @@ describe('WS - Orders : CRUD', async () => {
               boDashboardPage.ordersParentLink,
               boDashboardPage.ordersLink,
             );
-            await ordersPage.closeSfToolBar(page);
+            await boOrdersPage.closeSfToolBar(page);
 
-            const pageTitle = await ordersPage.getPageTitle(page);
-            expect(pageTitle).to.contains(ordersPage.pageTitle);
+            const pageTitle = await boOrdersPage.getPageTitle(page);
+            expect(pageTitle).to.contains(boOrdersPage.pageTitle);
           });
 
           it('should reset all filters', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirstAfterPost', baseContext);
 
-            const numberOfCountries = await ordersPage.resetAndGetNumberOfLines(page);
+            const numberOfCountries = await boOrdersPage.resetAndGetNumberOfLines(page);
             expect(numberOfCountries).to.be.above(0);
           });
         });
@@ -833,21 +833,21 @@ describe('WS - Orders : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdateAfterPut', baseContext);
 
           // Filter
-          await ordersPage.resetFilter(page);
-          await ordersPage.filterOrders(page, 'input', 'id_order', orderNodeID as string);
+          await boOrdersPage.resetFilter(page);
+          await boOrdersPage.filterOrders(page, 'input', 'id_order', orderNodeID as string);
 
           // Check number of orders
-          const numberOfOrdersAfterFilter = await ordersPage.getNumberOfElementInGrid(page);
+          const numberOfOrdersAfterFilter = await boOrdersPage.getNumberOfElementInGrid(page);
           expect(numberOfOrdersAfterFilter).to.be.eq(1);
 
-          const textColumn = await ordersPage.getTextColumn(page, 'id_order', 1);
+          const textColumn = await boOrdersPage.getTextColumn(page, 'id_order', 1);
           expect(textColumn).to.contains(orderNodeID);
         });
 
         it('should go to view order page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToViewOrderPageAfterPut', baseContext);
 
-          await ordersPage.goToOrder(page, 1);
+          await boOrdersPage.goToOrder(page, 1);
 
           const pageTitle = await viewOrderBasePage.getPageTitle(page);
           expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
@@ -1042,16 +1042,16 @@ describe('WS - Orders : CRUD', async () => {
               boDashboardPage.ordersParentLink,
               boDashboardPage.ordersLink,
             );
-            await ordersPage.closeSfToolBar(page);
+            await boOrdersPage.closeSfToolBar(page);
 
-            const pageTitle = await ordersPage.getPageTitle(page);
-            expect(pageTitle).to.contains(ordersPage.pageTitle);
+            const pageTitle = await boOrdersPage.getPageTitle(page);
+            expect(pageTitle).to.contains(boOrdersPage.pageTitle);
           });
 
           it('should reset all filters', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirstAfterPut', baseContext);
 
-            const numberOfCountries = await ordersPage.resetAndGetNumberOfLines(page);
+            const numberOfCountries = await boOrdersPage.resetAndGetNumberOfLines(page);
             expect(numberOfCountries).to.be.above(0);
           });
         });
@@ -1087,18 +1087,18 @@ describe('WS - Orders : CRUD', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdateAfterDelete', baseContext);
 
         // Filter
-        await ordersPage.resetFilter(page);
-        await ordersPage.filterOrders(page, 'input', 'id_order', orderNodeID as string);
+        await boOrdersPage.resetFilter(page);
+        await boOrdersPage.filterOrders(page, 'input', 'id_order', orderNodeID as string);
 
         // Check number of orders
-        const numberOfCountriesAfterFilter = await ordersPage.getNumberOfElementInGrid(page);
+        const numberOfCountriesAfterFilter = await boOrdersPage.getNumberOfElementInGrid(page);
         expect(numberOfCountriesAfterFilter).to.be.eq(0);
       });
 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-        const numberOfCountries = await ordersPage.resetAndGetNumberOfLines(page);
+        const numberOfCountries = await boOrdersPage.resetAndGetNumberOfLines(page);
         expect(numberOfCountries).to.be.above(0);
       });
     });

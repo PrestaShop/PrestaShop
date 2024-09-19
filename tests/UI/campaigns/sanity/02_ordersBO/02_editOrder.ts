@@ -5,11 +5,11 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import ordersPage from '@pages/BO/orders';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
 import {
   boDashboardPage,
+  boOrdersPage,
   dataOrderStatuses,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -51,16 +51,16 @@ describe('BO - Orders - Orders : Edit Order BO', async () => {
       boDashboardPage.ordersParentLink,
       boDashboardPage.ordersLink,
     );
-    await ordersPage.closeSfToolBar(page);
+    await boOrdersPage.closeSfToolBar(page);
 
-    const pageTitle = await ordersPage.getPageTitle(page);
-    expect(pageTitle).to.contains(ordersPage.pageTitle);
+    const pageTitle = await boOrdersPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boOrdersPage.pageTitle);
   });
 
   it('should go to the first order page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrder', baseContext);
 
-    await ordersPage.goToOrder(page, 1);
+    await boOrdersPage.goToOrder(page, 1);
 
     const pageTitle = await orderPageProductsBlock.getPageTitle(page);
     expect(pageTitle).to.contains(orderPageProductsBlock.pageTitle);

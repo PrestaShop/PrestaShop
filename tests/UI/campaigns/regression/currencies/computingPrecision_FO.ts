@@ -11,7 +11,6 @@ import addSqlQueryPage from '@pages/BO/advancedParameters/database/sqlManager/ad
 import viewSqlQueryPage from '@pages/BO/advancedParameters/database/sqlManager/view';
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
-import ordersPage from '@pages/BO/orders';
 // Import FO pages
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
@@ -20,6 +19,7 @@ import {
   boLocalizationPage,
   boCurrenciesPage,
   boCurrenciesCreatePage,
+  boOrdersPage,
   dataCurrencies,
   dataCustomers,
   dataPaymentMethods,
@@ -329,18 +329,18 @@ describe(
           cartRulesPage.ordersLink,
         );
 
-        const pageTitle = await ordersPage.getPageTitle(page);
-        expect(pageTitle).to.contains(ordersPage.pageTitle);
+        const pageTitle = await boOrdersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersPage.pageTitle);
       });
 
       it('should check order total price', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkToTalPriceInBO', baseContext);
 
         // Get order reference to use in sql query
-        orderToMake.setReference(await ordersPage.getTextColumn(page, 'reference', 1));
+        orderToMake.setReference(await boOrdersPage.getTextColumn(page, 'reference', 1));
 
         // Check total price
-        const totalPriceInOrdersPage = await ordersPage.getOrderATIPrice(page, 1);
+        const totalPriceInOrdersPage = await boOrdersPage.getOrderATIPrice(page, 1);
         expect(totalPriceInOrdersPage, 'Order total price is incorrect').to.equal(orderToMake.totalPrice);
       });
     });
@@ -349,10 +349,10 @@ describe(
       it('should go to sql manager page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToSqlManagerPage', baseContext);
 
-        await ordersPage.goToSubMenu(
+        await boOrdersPage.goToSubMenu(
           page,
-          ordersPage.advancedParametersLink,
-          ordersPage.databaseLink,
+          boOrdersPage.advancedParametersLink,
+          boOrdersPage.databaseLink,
         );
 
         const pageTitle = await sqlManagerPage.getPageTitle(page);

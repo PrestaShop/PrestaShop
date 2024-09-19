@@ -10,12 +10,12 @@ import {deleteProductTest} from '@commonTests/BO/catalog/product';
 import createProductsPage from '@pages/BO/catalog/products/add';
 import packTab from '@pages/BO/catalog/products/add/packTab';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
-import ordersPage from '@pages/BO/orders';
 // Import FO pages
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
   boDashboardPage,
+  boOrdersPage,
   boProductsPage,
   dataCustomers,
   dataOrderStatuses,
@@ -415,15 +415,15 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
         boDashboardPage.ordersLink,
       );
 
-      const pageTitle: string = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle: string = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should update order status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const textResult: string = await ordersPage.setOrderStatus(page, 1, dataOrderStatuses.delivered);
-      expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
+      const textResult: string = await boOrdersPage.setOrderStatus(page, 1, dataOrderStatuses.delivered);
+      expect(textResult).to.equal(boOrdersPage.successfulUpdateMessage);
     });
 
     it('should go to \'Catalog > Products\' page', async function () {

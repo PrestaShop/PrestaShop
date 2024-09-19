@@ -6,13 +6,13 @@ import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
-import ordersPage from '@pages/BO/orders';
 import addOrderPage from '@pages/BO/orders/add';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
 import {
   boDashboardPage,
+  boOrdersPage,
   dataAddresses,
   dataCarriers,
   dataCustomers,
@@ -88,16 +88,16 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
       boDashboardPage.ordersParentLink,
       boDashboardPage.ordersLink,
     );
-    await ordersPage.closeSfToolBar(page);
+    await boOrdersPage.closeSfToolBar(page);
 
-    const pageTitle = await ordersPage.getPageTitle(page);
-    expect(pageTitle).to.contains(ordersPage.pageTitle);
+    const pageTitle = await boOrdersPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boOrdersPage.pageTitle);
   });
 
   it('should go to create order page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCreateOrderPage', baseContext);
 
-    await ordersPage.goToCreateOrderPage(page);
+    await boOrdersPage.goToCreateOrderPage(page);
 
     const pageTitle = await addOrderPage.getPageTitle(page);
     expect(pageTitle).to.contains(addOrderPage.pageTitle);
