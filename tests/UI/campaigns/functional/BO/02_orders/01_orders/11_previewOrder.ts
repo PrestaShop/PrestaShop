@@ -12,7 +12,6 @@ import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 // Import FO pages
-import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
@@ -24,6 +23,7 @@ import {
   FakerCustomer,
   FakerOrderShipping,
   foClassicCartPage,
+  foClassicCheckoutPage,
   foClassicHomePage,
   foClassicProductPage,
   foClassicSearchResultsPage,
@@ -133,21 +133,21 @@ describe('BO - Orders : Preview order', async () => {
       await foClassicCartPage.clickOnProceedToCheckout(page);
 
       // Go to checkout page
-      const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
+      const isCheckoutPage = await foClassicCheckoutPage.isCheckoutPage(page);
       expect(isCheckoutPage).to.eq(true);
     });
 
     it('should fill guest personal information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setPersonalInformation', baseContext);
 
-      const isStepPersonalInfoCompleted = await checkoutPage.setGuestPersonalInformation(page, customerData);
+      const isStepPersonalInfoCompleted = await foClassicCheckoutPage.setGuestPersonalInformation(page, customerData);
       expect(isStepPersonalInfoCompleted, 'Step personal information is not completed').to.eq(true);
     });
 
     it('should fill address form and go to delivery step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setAddressStep', baseContext);
 
-      const isStepAddressComplete = await checkoutPage.setAddress(page, addressData);
+      const isStepAddressComplete = await foClassicCheckoutPage.setAddress(page, addressData);
       expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
@@ -155,11 +155,11 @@ describe('BO - Orders : Preview order', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'validateOrder', baseContext);
 
       // Delivery step - Go to payment step
-      const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
+      const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
       expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
 
       // Payment step - Choose payment step
-      await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
+      await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
 
       // Check the confirmation message

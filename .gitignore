@@ -87,6 +87,7 @@ tests/Resources/img/tmp/.gitkeep
 tests/Resources/img/s/.gitkeep
 !tests/Resources/download/.gitkeep
 tests/Resources/download/*
+tests/UI/tsconfig.tsbuildinfo
 tests/Unit/.phpunit.result.cache
 .phpunit.result.cache
 tests/Integration/.phpunit.result.cache
@@ -219,6 +220,8 @@ tools/build/releases/*
 # Docker configuration
 install.lock
 docker-compose.override.yml
+.docker/ssl.crt
+.docker/ssl.key
 
 # DotEnv files
 /.env.local

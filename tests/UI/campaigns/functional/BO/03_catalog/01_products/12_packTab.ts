@@ -12,7 +12,6 @@ import packTab from '@pages/BO/catalog/products/add/packTab';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import ordersPage from '@pages/BO/orders';
 // Import FO pages
-import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
@@ -24,6 +23,7 @@ import {
   dataProducts,
   FakerProduct,
   foClassicCartPage,
+  foClassicCheckoutPage,
   foClassicProductPage,
   utilsCore,
   utilsPlaywright,
@@ -358,19 +358,19 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       // Proceed to checkout the shopping cart
       await foClassicCartPage.clickOnProceedToCheckout(page);
       // Connect
-      await checkoutPage.clickOnSignIn(page);
-      await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
+      await foClassicCheckoutPage.clickOnSignIn(page);
+      await foClassicCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
 
       // Address step - Go to delivery step
-      const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
+      const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
       expect(isStepAddressComplete).to.be.eq(true);
 
       // Delivery step - Go to payment step
-      const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
+      const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
       expect(isStepDeliveryComplete).to.be.eq(true);
 
       // Payment step - Choose payment step
-      await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
+      await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       // Check the confirmation message
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
@@ -501,15 +501,15 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       await foClassicCartPage.clickOnProceedToCheckout(page);
 
       // Address step - Go to delivery step
-      const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
+      const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
       expect(isStepAddressComplete).to.be.eq(true);
 
       // Delivery step - Go to payment step
-      const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
+      const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
       expect(isStepDeliveryComplete).to.be.eq(true);
 
       // Payment step - Choose payment step
-      await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
+      await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       // Check the confirmation message
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);

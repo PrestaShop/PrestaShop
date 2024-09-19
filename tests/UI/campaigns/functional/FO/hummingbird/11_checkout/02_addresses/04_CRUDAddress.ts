@@ -6,14 +6,12 @@ import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import createAccountTest from '@commonTests/FO/hummingbird/account';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
-// Import pages
-import checkoutPage from '@pages/FO/hummingbird/checkout';
-
 import {
   dataProducts,
   FakerAddress,
   FakerCustomer,
   foHummingbirdCartPage,
+  foHummingbirdCheckoutPage,
   foHummingbirdHomePage,
   foHummingbirdProductPage,
   utilsPlaywright,
@@ -112,23 +110,23 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
 
       await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
-      const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
+      const isCheckoutPage = await foHummingbirdCheckoutPage.isCheckoutPage(page);
       expect(isCheckoutPage).to.eq(true);
     });
 
     it('should sign in by created customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
-      await checkoutPage.clickOnSignIn(page);
+      await foHummingbirdCheckoutPage.clickOnSignIn(page);
 
-      const isCustomerConnected = await checkoutPage.customerLogin(page, customerData);
+      const isCustomerConnected = await foHummingbirdCheckoutPage.customerLogin(page, customerData);
       expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
     });
 
     it('should create address then continue to delivery step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createAddress', baseContext);
 
-      const isStepAddressComplete = await checkoutPage.setAddress(page, addressData);
+      const isStepAddressComplete = await foHummingbirdCheckoutPage.setAddress(page, addressData);
       expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
   });
@@ -137,18 +135,18 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
     it('should click on edit addresses step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickEditAddressStep', baseContext);
 
-      await checkoutPage.clickOnEditAddressesStep(page);
+      await foHummingbirdCheckoutPage.clickOnEditAddressesStep(page);
 
-      const addressesNumber = await checkoutPage.getNumberOfAddresses(page);
+      const addressesNumber = await foHummingbirdCheckoutPage.getNumberOfAddresses(page);
       expect(addressesNumber, 'The addresses number is not equal to 1!').to.equal(1);
     });
 
     it('should edit the created address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editCreatedAddress', baseContext);
 
-      await checkoutPage.clickOnEditAddress(page);
+      await foHummingbirdCheckoutPage.clickOnEditAddress(page);
 
-      const isStepAddressComplete = await checkoutPage.setAddress(page, editAddressData);
+      const isStepAddressComplete = await foHummingbirdCheckoutPage.setAddress(page, editAddressData);
       expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
   });
@@ -157,18 +155,18 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
     it('should click on edit addresses step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickEditAddressStep2', baseContext);
 
-      await checkoutPage.clickOnEditAddressesStep(page);
+      await foHummingbirdCheckoutPage.clickOnEditAddressesStep(page);
 
-      const addressesNumber = await checkoutPage.getNumberOfAddresses(page);
+      const addressesNumber = await foHummingbirdCheckoutPage.getNumberOfAddresses(page);
       expect(addressesNumber, 'The addresses number is not equal to 1!').to.equal(1);
     });
 
     it('should add new address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addNewAddress', baseContext);
 
-      await checkoutPage.clickOnAddNewAddressButton(page);
+      await foHummingbirdCheckoutPage.clickOnAddNewAddressButton(page);
 
-      const isStepAddressComplete = await checkoutPage.setAddress(page, newAddressData);
+      const isStepAddressComplete = await foHummingbirdCheckoutPage.setAddress(page, newAddressData);
       expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
   });
@@ -177,43 +175,43 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
     it('should click on edit addresses step and check the number of addresses', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickEditAddressStep3', baseContext);
 
-      await checkoutPage.clickOnEditAddressesStep(page);
+      await foHummingbirdCheckoutPage.clickOnEditAddressesStep(page);
 
-      const addressesNumber = await checkoutPage.getNumberOfAddresses(page);
+      const addressesNumber = await foHummingbirdCheckoutPage.getNumberOfAddresses(page);
       expect(addressesNumber, 'The addresses number is not equal to 1!').to.equal(2);
     });
 
     it('should click on \'Billing address differs from shipping address\' link', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnBillingAddressDifferent', baseContext);
 
-      await checkoutPage.clickOnDifferentInvoiceAddressLink(page);
+      await foHummingbirdCheckoutPage.clickOnDifferentInvoiceAddressLink(page);
 
-      const isInvoiceAddressBlockVisible = await checkoutPage.isInvoiceAddressBlockVisible(page);
+      const isInvoiceAddressBlockVisible = await foHummingbirdCheckoutPage.isInvoiceAddressBlockVisible(page);
       expect(isInvoiceAddressBlockVisible).to.eq(true);
     });
 
     it('should create new invoice address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createInvoiceAddress', baseContext);
 
-      await checkoutPage.clickOnAddNewInvoiceAddressButton(page);
+      await foHummingbirdCheckoutPage.clickOnAddNewInvoiceAddressButton(page);
 
-      const isStepAddressComplete = await checkoutPage.setInvoiceAddress(page, newInvoiceAddressData);
+      const isStepAddressComplete = await foHummingbirdCheckoutPage.setInvoiceAddress(page, newInvoiceAddressData);
       expect(isStepAddressComplete).to.eq(true);
     });
 
     it('should check the number of delivered addresses', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfAddresses1', baseContext);
 
-      await checkoutPage.clickOnEditAddressesStep(page);
+      await foHummingbirdCheckoutPage.clickOnEditAddressesStep(page);
 
-      const addressesNumber = await checkoutPage.getNumberOfAddresses(page);
+      const addressesNumber = await foHummingbirdCheckoutPage.getNumberOfAddresses(page);
       expect(addressesNumber, 'The addresses number is not equal to 3!').to.equal(3);
     });
 
     it('should check the number of invoice addresses', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfAddresses2', baseContext);
 
-      const addressesNumber = await checkoutPage.getNumberOfInvoiceAddresses(page);
+      const addressesNumber = await foHummingbirdCheckoutPage.getNumberOfInvoiceAddresses(page);
       expect(addressesNumber).to.equal(3);
     });
   });
@@ -222,23 +220,23 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
     it('should delete the first address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteFirstAddress', baseContext);
 
-      const textMessage = await checkoutPage.deleteAddress(page, 3);
-      expect(textMessage).to.equal(checkoutPage.deleteAddressSuccessMessage);
+      const textMessage = await foHummingbirdCheckoutPage.deleteAddress(page, 3);
+      expect(textMessage).to.equal(foHummingbirdCheckoutPage.deleteAddressSuccessMessage);
     });
 
     it('should check the number of delivered addresses', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfAddresses3', baseContext);
 
-      await checkoutPage.clickOnEditAddressesStep(page);
+      await foHummingbirdCheckoutPage.clickOnEditAddressesStep(page);
 
-      const addressesNumber = await checkoutPage.getNumberOfAddresses(page);
+      const addressesNumber = await foHummingbirdCheckoutPage.getNumberOfAddresses(page);
       expect(addressesNumber, 'The addresses number is not equal to 2!').to.equal(2);
     });
 
     it('should check the number of invoice addresses', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfAddresses4', baseContext);
 
-      const addressesNumber = await checkoutPage.getNumberOfInvoiceAddresses(page);
+      const addressesNumber = await foHummingbirdCheckoutPage.getNumberOfInvoiceAddresses(page);
       expect(addressesNumber).to.equal(2);
     });
   });
@@ -247,26 +245,26 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
     it('should choose the invoice address different than shipping address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'invoiceAddressDiffShippingAddress', baseContext);
 
-      await checkoutPage.selectDeliveryAddress(page, 1);
-      await checkoutPage.selectInvoiceAddress(page, 2);
+      await foHummingbirdCheckoutPage.selectDeliveryAddress(page, 1);
+      await foHummingbirdCheckoutPage.selectInvoiceAddress(page, 2);
 
-      const isStepCompleted = await checkoutPage.clickOnContinueButtonFromAddressStep(page);
+      const isStepCompleted = await foHummingbirdCheckoutPage.clickOnContinueButtonFromAddressStep(page);
       expect(isStepCompleted).to.eq(true);
     });
 
     it('should check the number of delivered addresses', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfAddresses5', baseContext);
 
-      await checkoutPage.clickOnEditAddressesStep(page);
+      await foHummingbirdCheckoutPage.clickOnEditAddressesStep(page);
 
-      const addressesNumber = await checkoutPage.getNumberOfAddresses(page);
+      const addressesNumber = await foHummingbirdCheckoutPage.getNumberOfAddresses(page);
       expect(addressesNumber, 'The addresses number is not equal to 2!').to.equal(2);
     });
 
     it('should check the number of invoice addresses', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfAddresses6', baseContext);
 
-      const addressesNumber = await checkoutPage.getNumberOfInvoiceAddresses(page);
+      const addressesNumber = await foHummingbirdCheckoutPage.getNumberOfInvoiceAddresses(page);
       expect(addressesNumber).to.equal(2);
     });
   });
@@ -275,19 +273,19 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
     it('should choose the same address for invoice address and shipping address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sameInvoiceDeliveryAddress', baseContext);
 
-      await checkoutPage.selectDeliveryAddress(page, 1);
-      await checkoutPage.selectInvoiceAddress(page, 1);
+      await foHummingbirdCheckoutPage.selectDeliveryAddress(page, 1);
+      await foHummingbirdCheckoutPage.selectInvoiceAddress(page, 1);
 
-      const isStepCompleted = await checkoutPage.clickOnContinueButtonFromAddressStep(page);
+      const isStepCompleted = await foHummingbirdCheckoutPage.clickOnContinueButtonFromAddressStep(page);
       expect(isStepCompleted).to.eq(true);
     });
 
     it('should click on edit address step and check that there is no invoice address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoInvoiceAddress', baseContext);
 
-      await checkoutPage.clickOnEditAddressesStep(page);
+      await foHummingbirdCheckoutPage.clickOnEditAddressesStep(page);
 
-      const isInvoiceAddressBlockVisible = await checkoutPage.isInvoiceAddressBlockVisible(page);
+      const isInvoiceAddressBlockVisible = await foHummingbirdCheckoutPage.isInvoiceAddressBlockVisible(page);
       expect(isInvoiceAddressBlockVisible).to.eq(false);
     });
   });
@@ -296,17 +294,17 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
     it('should delete the 2 addresses', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteTwoAddresses', baseContext);
 
-      let textMessage = await checkoutPage.deleteAddress(page);
-      expect(textMessage).to.equal(checkoutPage.deleteAddressSuccessMessage);
+      let textMessage = await foHummingbirdCheckoutPage.deleteAddress(page);
+      expect(textMessage).to.equal(foHummingbirdCheckoutPage.deleteAddressSuccessMessage);
 
-      textMessage = await checkoutPage.deleteAddress(page);
-      expect(textMessage).to.equal(checkoutPage.deleteAddressSuccessMessage);
+      textMessage = await foHummingbirdCheckoutPage.deleteAddress(page);
+      expect(textMessage).to.equal(foHummingbirdCheckoutPage.deleteAddressSuccessMessage);
     });
 
     it('should check that the form for create address is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCreateAddressForm', baseContext);
 
-      const isFormVisible = await checkoutPage.isAddressFormVisible(page);
+      const isFormVisible = await foHummingbirdCheckoutPage.isAddressFormVisible(page);
       expect(isFormVisible).to.eq(true);
     });
   });

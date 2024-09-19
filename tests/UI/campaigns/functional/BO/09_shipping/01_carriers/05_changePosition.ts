@@ -7,9 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import preferencesPage from '@pages/BO/shipping/preferences';
 
-// Import FO pages
-import {checkoutPage} from '@pages/FO/classic/checkout';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
@@ -20,6 +17,7 @@ import {
   dataCarriers,
   dataCustomers,
   foClassicCartPage,
+  foClassicCheckoutPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsPlaywright,
@@ -62,16 +60,16 @@ describe('BO - Shipping - Carriers : Change carrier position', async () => {
       // Proceed to checkout the shopping cart
       await foClassicCartPage.clickOnProceedToCheckout(page);
 
-      const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
+      const isCheckoutPage = await foClassicCheckoutPage.isCheckoutPage(page);
       expect(isCheckoutPage).to.equal(true);
     });
 
     it('should login and go to address step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'loginToFO', baseContext);
 
-      await checkoutPage.clickOnSignIn(page);
+      await foClassicCheckoutPage.clickOnSignIn(page);
 
-      const isStepLoginComplete = await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
+      const isStepLoginComplete = await foClassicCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
       expect(isStepLoginComplete, 'Step Personal information is not complete').to.equal(true);
     });
 
@@ -79,14 +77,14 @@ describe('BO - Shipping - Carriers : Change carrier position', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
 
       // Address step - Go to delivery step
-      const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
+      const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
       expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should check the carriers position', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersPosition', baseContext);
 
-      const carriers = await checkoutPage.getAllCarriersNames(page);
+      const carriers = await foClassicCheckoutPage.getAllCarriersNames(page);
       expect(carriers).to.deep.equal([dataCarriers.clickAndCollect.name, dataCarriers.myCarrier.name]);
     });
 
@@ -94,7 +92,7 @@ describe('BO - Shipping - Carriers : Change carrier position', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'resetCarriersFilters', baseContext);
 
       page = await utilsPlaywright.newTab(browserContext);
-      await checkoutPage.goToBO(page);
+      await foClassicCheckoutPage.goToBO(page);
 
       await loginCommon.loginBO(this, page);
 
@@ -156,9 +154,9 @@ describe('BO - Shipping - Carriers : Change carrier position', async () => {
 
       page = await boCarriersPage.changePage(browserContext, 0);
 
-      await checkoutPage.reloadPage(page);
+      await foClassicCheckoutPage.reloadPage(page);
 
-      const carriers = await checkoutPage.getAllCarriersNames(page);
+      const carriers = await foClassicCheckoutPage.getAllCarriersNames(page);
       expect(carriers).to.deep.equal([dataCarriers.myCarrier.name, dataCarriers.clickAndCollect.name]);
     });
   });
@@ -167,7 +165,7 @@ describe('BO - Shipping - Carriers : Change carrier position', async () => {
     it('should go back to BO > Shipping page and reset the carriers position', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
-      page = await checkoutPage.changePage(browserContext, 1);
+      page = await foClassicCheckoutPage.changePage(browserContext, 1);
 
       const pageTitle = await boCarriersPage.getPageTitle(page);
       expect(pageTitle).to.contains(boCarriersPage.pageTitle);

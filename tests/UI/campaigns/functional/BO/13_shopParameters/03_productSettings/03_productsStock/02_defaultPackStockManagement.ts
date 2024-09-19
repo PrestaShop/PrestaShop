@@ -7,8 +7,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import addProductPage from '@pages/BO/catalog/products/add';
-// Import FO pages=
-import {checkoutPage} from '@pages/FO/classic/checkout';
+// Import FO pages
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
@@ -18,6 +17,7 @@ import {
   dataPaymentMethods,
   FakerProduct,
   foClassicCartPage,
+  foClassicCheckoutPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicProductPage,
@@ -225,7 +225,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
           await testContext.addContextItem(this, 'testIdentifier', `goToDeliveryStep${index}`, baseContext);
 
           // Address step - Go to delivery step
-          const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
+          const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
           expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
         });
 
@@ -233,7 +233,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
           await testContext.addContextItem(this, 'testIdentifier', `goToPaymentStep${index}`, baseContext);
 
           // Delivery step - Go to payment step
-          const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
+          const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
           expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
         });
 
@@ -241,7 +241,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
           await testContext.addContextItem(this, 'testIdentifier', `confirmTheOrder${index}`, baseContext);
 
           // Payment step - Choose payment step
-          await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
+          await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
           // Check the confirmation message
           const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);

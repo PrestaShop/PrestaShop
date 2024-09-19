@@ -7,7 +7,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 
 // Import FO pages
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
-import checkoutPage from '@pages/FO/hummingbird/checkout';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {
@@ -15,6 +14,7 @@ import {
   dataPaymentMethods,
   type FakerPaymentMethod,
   foHummingbirdCartPage,
+  foHummingbirdCheckoutPage,
   foHummingbirdHomePage,
   foHummingbirdModalQuickViewPage,
   type MailDev,
@@ -101,7 +101,7 @@ describe('FO - Checkout - Payment : Choose a payment method', async () => {
 
         await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
-        const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
+        const isCheckoutPage = await foHummingbirdCheckoutPage.isCheckoutPage(page);
         expect(isCheckoutPage).to.eq(true);
       });
 
@@ -109,9 +109,9 @@ describe('FO - Checkout - Payment : Choose a payment method', async () => {
         it('should signin', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `signin${index}`, baseContext);
 
-          await checkoutPage.clickOnSignIn(page);
+          await foHummingbirdCheckoutPage.clickOnSignIn(page);
 
-          const isCustomerConnected = await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
+          const isCustomerConnected = await foHummingbirdCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
           expect(isCustomerConnected, 'Customer is connected').to.eq(true);
         });
       }
@@ -120,7 +120,7 @@ describe('FO - Checkout - Payment : Choose a payment method', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `goToDeliveryStep${index}`, baseContext);
 
         // Address step - Go to delivery step
-        const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
+        const isStepAddressComplete = await foHummingbirdCheckoutPage.goToDeliveryStep(page);
         expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
       });
 
@@ -128,7 +128,7 @@ describe('FO - Checkout - Payment : Choose a payment method', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `goToPaymentStep${index}`, baseContext);
 
         // Delivery step - Go to payment step
-        const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
+        const isStepDeliveryComplete = await foHummingbirdCheckoutPage.goToPaymentStep(page);
         expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
       });
 
@@ -136,7 +136,7 @@ describe('FO - Checkout - Payment : Choose a payment method', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `confirmOrder${index}`, baseContext);
 
         // Payment step - Choose payment step
-        await checkoutPage.choosePaymentAndOrder(page, test.moduleName);
+        await foHummingbirdCheckoutPage.choosePaymentAndOrder(page, test.moduleName);
 
         // Check the confirmation message
         const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);

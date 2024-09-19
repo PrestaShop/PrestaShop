@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
@@ -12,6 +11,7 @@ import {
   dataCustomers,
   dataPaymentMethods,
   foClassicCartPage,
+  foClassicCheckoutPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
@@ -106,14 +106,14 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
     await foClassicCartPage.clickOnProceedToCheckout(page);
 
     // Address step - Go to delivery step
-    const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
+    const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
     expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
   });
 
   it(`should select '${dataCarriers.myCarrier.name}' and add a message`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
 
-    const isPaymentStepDisplayed = await checkoutPage.chooseShippingMethodAndAddComment(
+    const isPaymentStepDisplayed = await foClassicCheckoutPage.chooseShippingMethodAndAddComment(
       page,
       dataCarriers.myCarrier.id,
       message,
@@ -124,25 +124,25 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
   it('should click on edit \'Shipping methods\' step and check the order message', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'clickOnEditShippingStep', baseContext);
 
-    await checkoutPage.clickOnEditShippingMethodStep(page);
+    await foClassicCheckoutPage.clickOnEditShippingMethodStep(page);
 
-    const orderMessage = await checkoutPage.getOrderMessage(page);
+    const orderMessage = await foClassicCheckoutPage.getOrderMessage(page);
     expect(orderMessage).to.equal(message);
   });
 
   it(`should choose the other carrier '${dataCarriers.clickAndCollect.name}' and edit the order message`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'chooseAnotherCarrier', baseContext);
 
-    await checkoutPage.chooseShippingMethodWithoutValidation(page, dataCarriers.clickAndCollect.id, editMessage);
+    await foClassicCheckoutPage.chooseShippingMethodWithoutValidation(page, dataCarriers.clickAndCollect.id, editMessage);
 
-    const isPaymentStep = await checkoutPage.goToPaymentStep(page);
+    const isPaymentStep = await foClassicCheckoutPage.goToPaymentStep(page);
     expect(isPaymentStep).to.eq(true);
   });
 
   it('should choose a payment method and validate the order', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'choosePaymentMethod', baseContext);
 
-    await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
+    await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
     // Check the confirmation message
     const cardTitle: string = await orderConfirmationPage.getOrderConfirmationCardTitle(page);

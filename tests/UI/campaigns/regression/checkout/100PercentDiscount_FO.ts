@@ -9,7 +9,6 @@ import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 // Import FO pages
-import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
@@ -19,6 +18,7 @@ import {
   FakerCartRule,
   FakerCustomer,
   foClassicCartPage,
+  foClassicCheckoutPage,
   foClassicHomePage,
   foClassicModalQuickViewPage,
   utilsPlaywright,
@@ -173,21 +173,21 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
 
       await foClassicCartPage.clickOnProceedToCheckout(page);
 
-      const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
+      const isCheckoutPage = await foClassicCheckoutPage.isCheckoutPage(page);
       expect(isCheckoutPage).to.eq(true);
     });
 
     it('should fill personal information as a guest', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setPersonalInformation', baseContext);
 
-      const isStepPersonalInfoCompleted = await checkoutPage.setGuestPersonalInformation(page, customerData);
+      const isStepPersonalInfoCompleted = await foClassicCheckoutPage.setGuestPersonalInformation(page, customerData);
       expect(isStepPersonalInfoCompleted, 'Step personal information is not completed').to.eq(true);
     });
 
     it('should fill address form and go to delivery step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setAddressStep', baseContext);
 
-      const isStepAddressComplete = await checkoutPage.setAddress(page, addressData);
+      const isStepAddressComplete = await foClassicCheckoutPage.setAddress(page, addressData);
       expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
@@ -195,21 +195,21 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
       await testContext.addContextItem(this, 'testIdentifier', 'goToLastStep', baseContext);
 
       // Delivery step - Go to payment step
-      const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
+      const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
       expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should contain no payment needed text', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoPaymentNeededText', baseContext);
 
-      const noPaymentNeededText = await checkoutPage.getNoPaymentNeededBlockContent(page);
-      expect(noPaymentNeededText).to.contains(checkoutPage.noPaymentNeededText);
+      const noPaymentNeededText = await foClassicCheckoutPage.getNoPaymentNeededBlockContent(page);
+      expect(noPaymentNeededText).to.contains(foClassicCheckoutPage.noPaymentNeededText);
     });
 
     it('should check that complete order button is enabled', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCompleteIsNotDisabled', baseContext);
 
-      const confirmButtonVisible = await checkoutPage.isPaymentConfirmationButtonVisibleAndEnabled(page);
+      const confirmButtonVisible = await foClassicCheckoutPage.isPaymentConfirmationButtonVisibleAndEnabled(page);
       expect(confirmButtonVisible, 'Confirm button visible').to.eq(true);
     });
 
@@ -217,7 +217,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
       await testContext.addContextItem(this, 'testIdentifier', 'completeOrder', baseContext);
 
       // complete the order
-      await checkoutPage.orderWithoutPaymentMethod(page);
+      await foClassicCheckoutPage.orderWithoutPaymentMethod(page);
 
       // Check that we got to order confirmation (probably not necessary)
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
@@ -234,7 +234,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'BackToBOForCleanup', baseContext);
 
-      page = await checkoutPage.closePage(browserContext, page, 0);
+      page = await foClassicCheckoutPage.closePage(browserContext, page, 0);
 
       const pageTitle = await orderSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(orderSettingsPage.pageTitle);

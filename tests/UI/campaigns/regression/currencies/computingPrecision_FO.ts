@@ -13,7 +13,6 @@ import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import ordersPage from '@pages/BO/orders';
 // Import FO pages
-import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
@@ -29,6 +28,7 @@ import {
   FakerOrder,
   FakerSqlQuery,
   foClassicCartPage,
+  foClassicCheckoutPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicProductPage,
@@ -293,15 +293,15 @@ describe(
         await foClassicCartPage.clickOnProceedToCheckout(page);
 
         // Address step - Go to delivery step
-        const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
+        const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
         expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
 
         // Delivery step - Go to payment step
-        const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
+        const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
         expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
 
         // Payment step - Choose payment step
-        await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
+        await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
         const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
 
         // Check the confirmation message

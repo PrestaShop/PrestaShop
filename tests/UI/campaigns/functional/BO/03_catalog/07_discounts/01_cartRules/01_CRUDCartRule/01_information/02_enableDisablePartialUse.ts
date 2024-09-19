@@ -9,7 +9,6 @@ import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {vouchersPage as foVouchersPage} from '@pages/FO/classic/myAccount/vouchers';
-import {checkoutPage} from '@pages/FO/classic/checkout';
 
 import {
   boDashboardPage,
@@ -18,6 +17,7 @@ import {
   dataProducts,
   FakerCartRule,
   foClassicCartPage,
+  foClassicCheckoutPage,
   foClassicHomePage,
   foClassicMyAccountPage,
   foClassicProductPage,
@@ -154,16 +154,16 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
 
         await foClassicCartPage.clickOnProceedToCheckout(page);
 
-        const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
+        const isCheckoutPage = await foClassicCheckoutPage.isCheckoutPage(page);
         expect(isCheckoutPage).to.eq(true);
       });
 
       it('should sign in by created customer', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
-        await checkoutPage.clickOnSignIn(page);
+        await foClassicCheckoutPage.clickOnSignIn(page);
 
-        const isCustomerConnected = await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
+        const isCustomerConnected = await foClassicCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
         expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
       });
 
@@ -171,7 +171,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
 
         // Address step - Go to delivery step
-        const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
+        const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
         expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
       });
 
@@ -179,7 +179,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
 
         // Delivery step - Go to payment step
-        const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
+        const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
         expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
       });
 
@@ -187,7 +187,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
         // Payment step - Choose payment step
-        await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
+        await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
         // Check the confirmation message
         const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
@@ -362,7 +362,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
 
         await foClassicCartPage.clickOnProceedToCheckout(page);
 
-        const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
+        const isCheckoutPage = await foClassicCheckoutPage.isCheckoutPage(page);
         expect(isCheckoutPage).to.eq(true);
       });
 
@@ -370,7 +370,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep2', baseContext);
 
         // Address step - Go to delivery step
-        const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
+        const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
         expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
       });
 
@@ -378,7 +378,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep2', baseContext);
 
         // Delivery step - Go to payment step
-        const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
+        const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
         expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
       });
 
@@ -386,7 +386,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder2', baseContext);
 
         // Payment step - Choose payment step
-        await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
+        await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
         // Check the confirmation message
         const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);

@@ -4,10 +4,6 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-// Import FO pages
-import {checkoutPage} from '@pages/FO/classic/checkout';
-
 import {
   boCarriersPage,
   boCarriersCreatePage,
@@ -298,10 +294,10 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
     it('should check that the new carrier is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNewCarrier', baseContext);
 
-      const shippingMethodName = await checkoutPage.getShippingMethodName(page, carrierID);
+      const shippingMethodName = await foClassicCheckoutPage.getShippingMethodName(page, carrierID);
       expect(shippingMethodName).to.eq(createCarrierData.name);
 
-      const isShippingMethodVisible = await checkoutPage.isShippingMethodVisible(page, carrierID);
+      const isShippingMethodVisible = await foClassicCheckoutPage.isShippingMethodVisible(page, carrierID);
       expect(isShippingMethodVisible).to.eq(true);
     });
 
@@ -431,10 +427,10 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
     it('should check that the updated carrier is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkEditedCarrier', baseContext);
 
-      const shippingMethodName = await checkoutPage.getShippingMethodName(page, carrierID);
+      const shippingMethodName = await foClassicCheckoutPage.getShippingMethodName(page, carrierID);
       expect(shippingMethodName).to.eq(editCarrierData.name);
 
-      const isShippingMethodVisible = await checkoutPage.isShippingMethodVisible(page, carrierID);
+      const isShippingMethodVisible = await foClassicCheckoutPage.isShippingMethodVisible(page, carrierID);
       expect(isShippingMethodVisible, 'The carrier is not visible').to.eq(true);
     });
 

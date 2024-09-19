@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
-import checkoutPage from '@pages/FO/hummingbird/checkout';
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
 import orderHistoryPage from '@pages/FO/hummingbird/myAccount/orderHistory';
 import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
@@ -15,6 +14,7 @@ import {
   dataCustomers,
   dataPaymentMethods,
   foHummingbirdCartPage,
+  foHummingbirdCheckoutPage,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
@@ -113,14 +113,14 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
       await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
       // Address step - Go to delivery step
-      const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
+      const isStepAddressComplete = await foHummingbirdCheckoutPage.goToDeliveryStep(page);
       expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it(`should select '${dataCarriers.myCarrier.name}' and add a message`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
 
-      const isPaymentStepDisplayed = await checkoutPage.chooseShippingMethodAndAddComment(
+      const isPaymentStepDisplayed = await foHummingbirdCheckoutPage.chooseShippingMethodAndAddComment(
         page,
         dataCarriers.myCarrier.id,
         message,
@@ -131,25 +131,25 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
     it('should click on edit \'Shipping methods\' step and check the order message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnEditShippingStep', baseContext);
 
-      await checkoutPage.clickOnEditShippingMethodStep(page);
+      await foHummingbirdCheckoutPage.clickOnEditShippingMethodStep(page);
 
-      const orderMessage = await checkoutPage.getOrderMessage(page);
+      const orderMessage = await foHummingbirdCheckoutPage.getOrderMessage(page);
       expect(orderMessage).to.equal(message);
     });
 
     it(`should choose the other carrier '${dataCarriers.clickAndCollect.name}' and edit the order message`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseAnotherCarrier', baseContext);
 
-      await checkoutPage.chooseShippingMethodWithoutValidation(page, dataCarriers.clickAndCollect.id, editMessage);
+      await foHummingbirdCheckoutPage.chooseShippingMethodWithoutValidation(page, dataCarriers.clickAndCollect.id, editMessage);
 
-      const isPaymentStep = await checkoutPage.goToPaymentStep(page);
+      const isPaymentStep = await foHummingbirdCheckoutPage.goToPaymentStep(page);
       expect(isPaymentStep).to.eq(true);
     });
 
     it('should choose a payment method and validate the order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'choosePaymentMethod', baseContext);
 
-      await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
+      await foHummingbirdCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       // Check the confirmation message
       const cardTitle: string = await orderConfirmationPage.getOrderConfirmationCardTitle(page);

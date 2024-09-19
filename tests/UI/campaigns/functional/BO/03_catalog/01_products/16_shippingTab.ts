@@ -9,9 +9,6 @@ import createProductPage from '@pages/BO/catalog/products/add';
 import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 
-// Import FO pages
-import {checkoutPage} from '@pages/FO/classic/checkout';
-
 import {
   boDashboardPage,
   boProductsPage,
@@ -20,6 +17,7 @@ import {
   dataCustomers,
   FakerProduct,
   foClassicCartPage,
+  foClassicCheckoutPage,
   foClassicProductPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -331,32 +329,32 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
 
       await foClassicCartPage.clickOnProceedToCheckout(page);
 
-      const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
+      const isCheckoutPage = await foClassicCheckoutPage.isCheckoutPage(page);
       expect(isCheckoutPage).to.eq(true);
     });
 
     it('should sign in by default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
-      await checkoutPage.clickOnSignIn(page);
+      await foClassicCheckoutPage.clickOnSignIn(page);
 
-      const isCustomerConnected = await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
+      const isCustomerConnected = await foClassicCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should go to delivery address step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'confirmAddressStep', baseContext);
 
-      const isDeliveryStep = await checkoutPage.goToDeliveryStep(page);
+      const isDeliveryStep = await foClassicCheckoutPage.goToDeliveryStep(page);
       expect(isDeliveryStep, 'Delivery Step boc is not displayed').to.eq(true);
     });
 
     it('should select the first carrier and check the shipping price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkShippingPrice1', baseContext);
 
-      await checkoutPage.chooseShippingMethod(page, dataCarriers.myCarrier.id);
+      await foClassicCheckoutPage.chooseShippingMethod(page, dataCarriers.myCarrier.id);
 
-      const shippingCost = await checkoutPage.getShippingCost(page);
+      const shippingCost = await foClassicCheckoutPage.getShippingCost(page);
       expect(shippingCost).to.equal('€20.40');
     });
 
@@ -404,7 +402,7 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
 
       await foClassicCartPage.clickOnProceedToCheckout(page);
 
-      const carriers = await checkoutPage.getAllCarriersNames(page);
+      const carriers = await foClassicCheckoutPage.getAllCarriersNames(page);
       expect(carriers).to.deep.eq([dataCarriers.clickAndCollect.name]);
     });
 

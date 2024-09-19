@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
@@ -11,6 +10,7 @@ import {
   FakerAddress,
   FakerCustomer,
   foClassicCartPage,
+  foClassicCheckoutPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsPlaywright,
@@ -84,21 +84,21 @@ describe('FO - Checkout - Addresses: Use different invoice address', async () =>
     // Proceed to checkout the shopping cart
     await foClassicCartPage.clickOnProceedToCheckout(page);
 
-    const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
+    const isCheckoutPage = await foClassicCheckoutPage.isCheckoutPage(page);
     expect(isCheckoutPage).to.equal(true);
   });
 
   it('should fill customer information', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'fillCustomerInformation', baseContext);
 
-    const isStepCompleted = await checkoutPage.setGuestPersonalInformation(page, guestData);
+    const isStepCompleted = await foClassicCheckoutPage.setGuestPersonalInformation(page, guestData);
     expect(isStepCompleted).to.equal(true);
   });
 
   it('should fill different delivery and invoice addresses', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'fillCustomerAddresses', baseContext);
 
-    const isStepCompleted = await checkoutPage.setAddress(page, deliveryAddress, invoiceAddress);
+    const isStepCompleted = await foClassicCheckoutPage.setAddress(page, deliveryAddress, invoiceAddress);
     expect(isStepCompleted).to.equal(true);
   });
 
@@ -106,11 +106,11 @@ describe('FO - Checkout - Addresses: Use different invoice address', async () =>
     await testContext.addContextItem(this, 'testIdentifier', 'completeTheOrder', baseContext);
 
     // Delivery step - Go to payment step
-    const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
+    const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
     expect(isStepDeliveryComplete, 'Step Address is not complete').to.equal(true);
 
     // Payment step - Choose payment step
-    await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
+    await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
     const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
 
     // Check the confirmation message

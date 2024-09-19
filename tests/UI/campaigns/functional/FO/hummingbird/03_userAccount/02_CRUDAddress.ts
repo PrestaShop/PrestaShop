@@ -7,7 +7,6 @@ import {createAccountTest} from '@commonTests/FO/classic/account';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
-import checkoutPage from '@pages/FO/hummingbird/checkout';
 import addAddressPage from '@pages/FO/hummingbird/myAccount/addAddress';
 import addressesPage from '@pages/FO/hummingbird/myAccount/addresses';
 
@@ -16,6 +15,7 @@ import {
   FakerAddress,
   FakerCustomer,
   foHummingbirdCartPage,
+  foHummingbirdCheckoutPage,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
@@ -221,7 +221,7 @@ describe('FO - Account : CRUD address', async () => {
       // Proceed to checkout the shopping cart
       await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
-      const addressesNumber = await checkoutPage.getNumberOfAddresses(page);
+      const addressesNumber = await foHummingbirdCheckoutPage.getNumberOfAddresses(page);
       expect(addressesNumber, 'The addresses number is not equal to 2!').to.equal(2);
     });
   });
@@ -279,10 +279,10 @@ describe('FO - Account : CRUD address', async () => {
       // Proceed to checkout the shopping cart
       await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
-      await checkoutPage.chooseDeliveryAddress(page, secondAddressPosition);
+      await foHummingbirdCheckoutPage.chooseDeliveryAddress(page, secondAddressPosition);
 
       // Address step - Go to delivery step
-      const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
+      const isStepAddressComplete = await foHummingbirdCheckoutPage.goToDeliveryStep(page);
       expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 

@@ -6,12 +6,10 @@ import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 import {createAccountTest} from '@commonTests/FO/classic/account';
 
-// Import pages
-import {checkoutPage} from '@pages/FO/classic/checkout';
-
 import {
   FakerCustomer,
   foClassicCartPage,
+  foClassicCheckoutPage,
   foClassicHomePage,
   foClassicMyAccountPage,
   foClassicPasswordReminderPage,
@@ -106,15 +104,15 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
 
       await foClassicCartPage.clickOnProceedToCheckout(page);
 
-      const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
+      const isCheckoutPage = await foClassicCheckoutPage.isCheckoutPage(page);
       expect(isCheckoutPage).to.eq(true);
     });
 
     it('should click on sign in then on \'Forgot your password?\' link ', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnForgetPasswordLink', baseContext);
 
-      await checkoutPage.clickOnSignIn(page);
-      await checkoutPage.goToPasswordReminderPage(page);
+      await foClassicCheckoutPage.clickOnSignIn(page);
+      await foClassicCheckoutPage.goToPasswordReminderPage(page);
 
       const pageTitle = await foClassicPasswordReminderPage.getPageTitle(page);
       expect(pageTitle).to.equal(foClassicPasswordReminderPage.pageTitle);
@@ -193,26 +191,26 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
 
       await foClassicCartPage.clickOnProceedToCheckout(page);
 
-      const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
+      const isCheckoutPage = await foClassicCheckoutPage.isCheckoutPage(page);
       expect(isCheckoutPage).to.eq(true);
     });
 
     it('should enter an invalid credentials', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enterInvalidCredentials', baseContext);
 
-      await checkoutPage.clickOnSignIn(page);
+      await foClassicCheckoutPage.clickOnSignIn(page);
 
-      const isCustomerConnected = await checkoutPage.customerLogin(page, customerData);
+      const isCustomerConnected = await foClassicCheckoutPage.customerLogin(page, customerData);
       expect(isCustomerConnected, 'Customer is connected').to.eq(false);
 
-      const loginError = await checkoutPage.getLoginError(page);
-      expect(loginError).to.contains(checkoutPage.authenticationErrorMessage);
+      const loginError = await foClassicCheckoutPage.getLoginError(page);
+      expect(loginError).to.contains(foClassicCheckoutPage.authenticationErrorMessage);
     });
 
     it('should sign in with customer credentials', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signIn', baseContext);
 
-      const isCustomerConnected = await checkoutPage.customerLogin(page, customerNewPassword);
+      const isCustomerConnected = await foClassicCheckoutPage.customerLogin(page, customerNewPassword);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
   });

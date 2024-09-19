@@ -10,8 +10,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import ordersPage from '@pages/BO/orders';
 import addOrderPage from '@pages/BO/orders/add';
 import orderPageMessagesBlock from '@pages/BO/orders/view/messagesBlock';
-// Import FO pages
-import {checkoutPage} from '@pages/FO/classic/checkout';
 
 import {
   boDashboardPage,
@@ -21,6 +19,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerCartRule,
+  foClassicCheckoutPage,
   type MailDev,
   type MailDevEmail,
   utilsCore,
@@ -282,14 +281,14 @@ describe('BO - Orders - Create order : Check summary', async () => {
 
         page = await addOrderPage.setMoreActionsProceedToCheckout(page);
 
-        const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
+        const isCheckoutPage = await foClassicCheckoutPage.isCheckoutPage(page);
         expect(isCheckoutPage, 'Not redirected to checkout page!').to.eq(true);
       });
 
       it('should close the checkout page and go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo', baseContext);
 
-        page = await checkoutPage.closePage(browserContext, page, 0);
+        page = await foClassicCheckoutPage.closePage(browserContext, page, 0);
 
         const pageTitle = await addOrderPage.getPageTitle(page);
         expect(pageTitle, 'Fo page not closed!').to.contains(addOrderPage.pageTitle);

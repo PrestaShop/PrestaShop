@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
-import checkoutPage from '@pages/FO/hummingbird/checkout';
 import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
 
 import {
@@ -14,6 +13,7 @@ import {
   FakerAddress,
   FakerCustomer,
   foHummingbirdCartPage,
+  foHummingbirdCheckoutPage,
   foHummingbirdHomePage,
   foHummingbirdProductPage,
   utilsPlaywright,
@@ -95,21 +95,21 @@ describe('FO - Checkout - Addresses: Use same invoice address', async () => {
       // Proceed to checkout the shopping cart
       await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
-      const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
+      const isCheckoutPage = await foHummingbirdCheckoutPage.isCheckoutPage(page);
       expect(isCheckoutPage).to.equal(true);
     });
 
     it('should fill customer information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'fillCustomerInformation', baseContext);
 
-      const isStepCompleted = await checkoutPage.setGuestPersonalInformation(page, guestData);
+      const isStepCompleted = await foHummingbirdCheckoutPage.setGuestPersonalInformation(page, guestData);
       expect(isStepCompleted).to.equal(true);
     });
 
     it('should fill the same address for delivery and invoice', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'fillCustomerAddresses', baseContext);
 
-      const isStepCompleted = await checkoutPage.setAddress(page, newAddress);
+      const isStepCompleted = await foHummingbirdCheckoutPage.setAddress(page, newAddress);
       expect(isStepCompleted).to.equal(true);
     });
 
@@ -117,11 +117,11 @@ describe('FO - Checkout - Addresses: Use same invoice address', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'completeTheOrder', baseContext);
 
       // Delivery step - Go to payment step
-      const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
+      const isStepDeliveryComplete = await foHummingbirdCheckoutPage.goToPaymentStep(page);
       expect(isStepDeliveryComplete, 'Step Address is not complete').to.equal(true);
 
       // Payment step - Choose payment step
-      await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
+      await foHummingbirdCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
       expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);

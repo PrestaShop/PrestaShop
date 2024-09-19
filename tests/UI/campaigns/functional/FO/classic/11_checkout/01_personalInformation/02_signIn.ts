@@ -1,13 +1,11 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import pages
-import {checkoutPage} from '@pages/FO/classic/checkout';
-
 import {
   dataCustomers,
   FakerCustomer,
   foClassicCartPage,
+  foClassicCheckoutPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsPlaywright,
@@ -68,49 +66,49 @@ describe('FO - Checkout - Personal information : Sign in', async () => {
 
     await foClassicCartPage.clickOnProceedToCheckout(page);
 
-    const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
+    const isCheckoutPage = await foClassicCheckoutPage.isCheckoutPage(page);
     expect(isCheckoutPage).to.eq(true);
   });
 
   it('should enter an invalid credentials', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enterInvalidCredentials', baseContext);
 
-    await checkoutPage.clickOnSignIn(page);
+    await foClassicCheckoutPage.clickOnSignIn(page);
 
-    const isCustomerConnected = await checkoutPage.customerLogin(page, credentialsData);
+    const isCustomerConnected = await foClassicCheckoutPage.customerLogin(page, credentialsData);
     expect(isCustomerConnected, 'Customer is connected').to.eq(false);
 
-    const loginError = await checkoutPage.getLoginError(page);
-    expect(loginError).to.contains(checkoutPage.authenticationErrorMessage);
+    const loginError = await foClassicCheckoutPage.getLoginError(page);
+    expect(loginError).to.contains(foClassicCheckoutPage.authenticationErrorMessage);
   });
 
   it('should sign in with customer credentials', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'signIn', baseContext);
 
-    const isCustomerConnected = await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
+    const isCustomerConnected = await foClassicCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
     expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
   });
 
   it('should click on edit Personal information step and get the identity of the customer', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerIdentity', baseContext);
 
-    await checkoutPage.clickOnEditPersonalInformationStep(page);
+    await foClassicCheckoutPage.clickOnEditPersonalInformationStep(page);
 
-    const customerIdentity = await checkoutPage.getCustomerIdentity(page);
+    const customerIdentity = await foClassicCheckoutPage.getCustomerIdentity(page);
     expect(customerIdentity).to.equal(`Connected as ${dataCustomers.johnDoe.firstName} ${dataCustomers.johnDoe.lastName}.`);
   });
 
   it('should check the existence of the text message \'If you sign out now, your cart will be emptied.\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkMessage', baseContext);
 
-    const message = await checkoutPage.getLogoutMessage(page);
-    expect(message).to.equal(checkoutPage.messageIfYouSignOut);
+    const message = await foClassicCheckoutPage.getLogoutMessage(page);
+    expect(message).to.equal(foClassicCheckoutPage.messageIfYouSignOut);
   });
 
   it('should logout and check that the customer is no longer connected', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'logout', baseContext);
 
-    const isCustomerConnected = await checkoutPage.logOutCustomer(page);
+    const isCustomerConnected = await foClassicCheckoutPage.logOutCustomer(page);
     expect(isCustomerConnected, 'Customer is still connected').to.eq(false);
   });
 

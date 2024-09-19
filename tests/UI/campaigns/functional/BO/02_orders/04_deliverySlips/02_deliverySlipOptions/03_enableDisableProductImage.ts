@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import FO pages
-import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 // Import BO pages
@@ -19,6 +18,7 @@ import {
   dataOrderStatuses,
   dataPaymentMethods,
   foClassicCartPage,
+  foClassicCheckoutPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicProductPage,
@@ -156,7 +156,7 @@ describe('BO - Orders - Delivery slips : Enable/Disable product image', async ()
           await foClassicCartPage.clickOnProceedToCheckout(page);
 
           // Address step - Go to delivery step
-          const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
+          const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
           expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
         });
 
@@ -164,7 +164,7 @@ describe('BO - Orders - Delivery slips : Enable/Disable product image', async ()
           await testContext.addContextItem(this, 'testIdentifier', `goToPaymentStep${index}`, baseContext);
 
           // Delivery step - Go to payment step
-          const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
+          const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
           expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
         });
 
@@ -172,7 +172,7 @@ describe('BO - Orders - Delivery slips : Enable/Disable product image', async ()
           await testContext.addContextItem(this, 'testIdentifier', `confirmOrder${index}`, baseContext);
 
           // Payment step - Choose payment step
-          await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
+          await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
           // Check the confirmation message
           const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);

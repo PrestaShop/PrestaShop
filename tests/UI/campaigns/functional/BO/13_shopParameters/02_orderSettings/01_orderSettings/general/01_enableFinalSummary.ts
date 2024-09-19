@@ -8,13 +8,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 // Import FO pages
-import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
   boDashboardPage,
   dataCustomers,
   foClassicCartPage,
+  foClassicCheckoutPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsPlaywright,
@@ -107,8 +107,8 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable final summary',
       // Checkout the order
       if (index === 0) {
         // Personal information step - Login
-        await checkoutPage.clickOnSignIn(page);
-        await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
+        await foClassicCheckoutPage.clickOnSignIn(page);
+        await foClassicCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
       }
     });
 
@@ -116,7 +116,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable final summary',
       await testContext.addContextItem(this, 'testIdentifier', `goToDeliveryStep${index}`, baseContext);
 
       // Address step - Go to delivery step
-      const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
+      const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
       expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
@@ -124,7 +124,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable final summary',
       await testContext.addContextItem(this, 'testIdentifier', `goToPaymentStep${index}`, baseContext);
 
       // Delivery step - Go to payment step
-      const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
+      const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
       expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
     });
 

@@ -10,7 +10,6 @@ import viewCustomerPage from '@pages/BO/customers/view';
 import customerServicePage from '@pages/BO/customerService/customerService';
 import ordersPage from '@pages/BO/orders';
 // Import FO pages
-import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {contactUsPage} from '@pages/FO/classic/contactUs';
 import {createAccountPage} from '@pages/FO/classic/myAccount/add';
@@ -26,6 +25,7 @@ import {
   FakerContactMessage,
   FakerCustomer,
   foClassicCartPage,
+  foClassicCheckoutPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
@@ -472,7 +472,7 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
         // Proceed to checkout the shopping cart
         await foClassicCartPage.clickOnProceedToCheckout(page);
 
-        const isStepAddressComplete = await checkoutPage.setAddress(page, addressData);
+        const isStepAddressComplete = await foClassicCheckoutPage.setAddress(page, addressData);
         expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
       });
 
@@ -480,7 +480,7 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
 
         // Delivery step - Go to payment step
-        const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
+        const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
         expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
       });
 
@@ -488,7 +488,7 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
         // Payment step - Choose payment step
-        await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
+        await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
         // Check the confirmation message
         const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);

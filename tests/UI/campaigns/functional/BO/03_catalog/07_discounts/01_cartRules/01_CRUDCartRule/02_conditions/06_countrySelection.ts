@@ -10,8 +10,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import zonesPage from '@pages/BO/international/locations';
-// Import FO pages
-import {checkoutPage} from '@pages/FO/classic/checkout';
 
 import {
   boCountriesPage,
@@ -22,6 +20,7 @@ import {
   dataProducts,
   FakerCartRule,
   foClassicCartPage,
+  foClassicCheckoutPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsPlaywright,
@@ -214,48 +213,48 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
       // Proceed to checkout the shopping cart
       await foClassicCartPage.clickOnProceedToCheckout(page);
 
-      const isCheckout = await checkoutPage.isCheckoutPage(page);
+      const isCheckout = await foClassicCheckoutPage.isCheckoutPage(page);
       expect(isCheckout).to.eq(true);
     });
 
     it('should sign in by the default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
-      await checkoutPage.clickOnSignIn(page);
+      await foClassicCheckoutPage.clickOnSignIn(page);
 
-      const isCustomerConnected = await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
+      const isCustomerConnected = await foClassicCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should choose the delivery address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseAndConfirmAddressStep', baseContext);
 
-      await checkoutPage.chooseDeliveryAddress(page, 2);
+      await foClassicCheckoutPage.chooseDeliveryAddress(page, 2);
 
-      const isDeliveryStep = await checkoutPage.goToDeliveryStep(page);
+      const isDeliveryStep = await foClassicCheckoutPage.goToDeliveryStep(page);
       expect(isDeliveryStep, 'Delivery Step block is not displayed').to.eq(true);
     });
 
     it('should set the promo code', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addPromoCode2', baseContext);
 
-      await checkoutPage.addPromoCode(page, cartRule.code);
+      await foClassicCheckoutPage.addPromoCode(page, cartRule.code);
 
-      const cartRuleName = await checkoutPage.getCartRuleName(page, 1);
+      const cartRuleName = await foClassicCheckoutPage.getCartRuleName(page, 1);
       expect(cartRuleName).to.equal(cartRule.name);
     });
 
     it('should check the total after discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTotalAfterDiscount', baseContext);
 
-      const totalAfterDiscount = await checkoutPage.getATIPrice(page);
+      const totalAfterDiscount = await foClassicCheckoutPage.getATIPrice(page);
       expect(totalAfterDiscount).to.eq(dataProducts.demo_6.price - cartRule.discountAmount!.value + dataCarriers.myCarrier.price);
     });
 
     it('should remove the discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removeTheDiscount', baseContext);
 
-      const isDeleteIconNotVisible = await checkoutPage.removePromoCode(page);
+      const isDeleteIconNotVisible = await foClassicCheckoutPage.removePromoCode(page);
       expect(isDeleteIconNotVisible, 'The discount is not removed').to.eq(true);
     });
 

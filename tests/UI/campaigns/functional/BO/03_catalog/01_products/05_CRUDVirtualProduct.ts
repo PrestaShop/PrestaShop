@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import createProductsPage from '@pages/BO/catalog/products/add';
 import ordersPage from '@pages/BO/orders';
-import {checkoutPage} from '@pages/FO/classic/checkout';
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
@@ -21,6 +20,7 @@ import {
   dataPaymentMethods,
   FakerProduct,
   foClassicCartPage,
+  foClassicCheckoutPage,
   foClassicHomePage,
   foClassicMyAccountPage,
   foClassicProductPage,
@@ -237,15 +237,15 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
         await foClassicCartPage.clickOnProceedToCheckout(page);
 
         // Personal information step - Login
-        await checkoutPage.clickOnSignIn(page);
-        await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
+        await foClassicCheckoutPage.clickOnSignIn(page);
+        await foClassicCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
       });
 
       it('should go to payment step', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
 
         // Address step - Go to delivery step
-        const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
+        const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
         expect(isStepAddressComplete, 'Step Address is not complete').eq(true);
       });
 
@@ -253,7 +253,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'payTheOrder', baseContext);
 
         // Payment step - Choose payment step
-        await checkoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
+        await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
         // Check the confirmation message
         const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);

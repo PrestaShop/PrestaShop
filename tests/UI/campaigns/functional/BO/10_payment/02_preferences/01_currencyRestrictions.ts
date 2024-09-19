@@ -7,13 +7,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import preferencesPage from '@pages/BO/payment/preferences';
-// Import FO pages
-import {checkoutPage} from '@pages/FO/classic/checkout';
 
 import {
   boDashboardPage,
   dataCustomers,
   foClassicCartPage,
+  foClassicCheckoutPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsPlaywright,
@@ -98,16 +97,16 @@ describe('BO - Payment - Preferences : Configure currency restrictions', async (
       // Checkout the order
       if (index === 0) {
         // Personal information step - Login
-        await checkoutPage.clickOnSignIn(page);
-        await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
+        await foClassicCheckoutPage.clickOnSignIn(page);
+        await foClassicCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
       }
 
       // Address step - Go to delivery step
-      const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
+      const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
       expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
 
       // Delivery step - Go to payment step
-      const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
+      const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
       expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
     });
 
@@ -115,7 +114,7 @@ describe('BO - Payment - Preferences : Configure currency restrictions', async (
       await testContext.addContextItem(this, 'testIdentifier', `checkPaymentModule${index}`, baseContext);
 
       // Payment step - Choose payment step
-      const isVisible = await checkoutPage.isPaymentMethodExist(page, test.args.paymentModule);
+      const isVisible = await foClassicCheckoutPage.isPaymentMethodExist(page, test.args.paymentModule);
       expect(isVisible).to.be.equal(test.args.exist);
     });
 
@@ -123,7 +122,7 @@ describe('BO - Payment - Preferences : Configure currency restrictions', async (
       await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index}`, baseContext);
 
       // Go back to BO
-      page = await checkoutPage.closePage(browserContext, page, 0);
+      page = await foClassicCheckoutPage.closePage(browserContext, page, 0);
 
       const pageTitle = await preferencesPage.getPageTitle(page);
       expect(pageTitle).to.contains(preferencesPage.pageTitle);

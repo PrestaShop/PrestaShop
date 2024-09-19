@@ -10,8 +10,6 @@ import ordersPage from '@pages/BO/orders';
 import addOrderPage from '@pages/BO/orders/add';
 import viewShoppingCartPage from '@pages/BO/orders/shoppingCarts/view';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
-// Import FO pages
-import {checkoutPage} from '@pages/FO/classic/checkout';
 
 import {
   boDashboardPage,
@@ -22,6 +20,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   foClassicCartPage,
+  foClassicCheckoutPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicProductPage,
@@ -310,14 +309,14 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
       await foClassicCartPage.clickOnProceedToCheckout(page);
 
       // Address step - Go to delivery step
-      const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
+      const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
       expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should select My carrier', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectMyCarrier', baseContext);
 
-      const isPaymentStepDisplayed = await checkoutPage.chooseShippingMethodAndAddComment(
+      const isPaymentStepDisplayed = await foClassicCheckoutPage.chooseShippingMethodAndAddComment(
         page,
         dataCarriers.myCarrier.id,
       );
@@ -327,7 +326,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
     it('should close the current page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeCurrentPage', baseContext);
 
-      page = await checkoutPage.closePage(browserContext, page, 0);
+      page = await foClassicCheckoutPage.closePage(browserContext, page, 0);
 
       const pageTitle = await boShoppingCartsPage.getPageTitle(page);
       expect(pageTitle).to.contains(boShoppingCartsPage.pageTitle);

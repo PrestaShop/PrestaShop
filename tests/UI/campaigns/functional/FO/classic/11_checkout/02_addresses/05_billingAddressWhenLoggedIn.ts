@@ -3,12 +3,12 @@ import testContext from '@utils/testContext';
 
 // Import pages
 // Import FO pages
-import {checkoutPage} from '@pages/FO/classic/checkout';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
   dataCustomers,
   foClassicCartPage,
+  foClassicCheckoutPage,
   foClassicHomePage,
   foClassicModalQuickViewPage,
   utilsPlaywright,
@@ -63,58 +63,58 @@ describe('FO - Guest checkout: Billing address when logged in', async () => {
 
       await foClassicCartPage.clickOnProceedToCheckout(page);
 
-      const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
+      const isCheckoutPage = await foClassicCheckoutPage.isCheckoutPage(page);
       expect(isCheckoutPage).to.eq(true);
     });
 
     it('should sign in by default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
-      await checkoutPage.clickOnSignIn(page);
+      await foClassicCheckoutPage.clickOnSignIn(page);
 
-      const isCustomerConnected = await checkoutPage.customerLogin(page, dataCustomers.johnDoe);
+      const isCustomerConnected = await foClassicCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
       expect(isCustomerConnected).to.eq(true);
 
-      const isAddressesStep = await checkoutPage.isAddressesStep(page);
+      const isAddressesStep = await foClassicCheckoutPage.isAddressesStep(page);
       expect(isAddressesStep).to.eq(true);
 
-      const isDeliveryAddressSelected = await checkoutPage.isDeliveryAddressSelected(page, 1);
+      const isDeliveryAddressSelected = await foClassicCheckoutPage.isDeliveryAddressSelected(page, 1);
       expect(isDeliveryAddressSelected).to.equal(true);
 
-      const addressesNumber = await checkoutPage.getNumberOfAddresses(page);
+      const addressesNumber = await foClassicCheckoutPage.getNumberOfAddresses(page);
       expect(addressesNumber).to.equal(2);
     });
 
     it('should click on \'Billing address differs from shipping address\' link', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnBillingAddressDifferent', baseContext);
 
-      await checkoutPage.clickOnDifferentInvoiceAddressLink(page);
+      await foClassicCheckoutPage.clickOnDifferentInvoiceAddressLink(page);
 
-      const isInvoiceAddressBlockVisible = await checkoutPage.isInvoiceAddressBlockVisible(page);
+      const isInvoiceAddressBlockVisible = await foClassicCheckoutPage.isInvoiceAddressBlockVisible(page);
       expect(isInvoiceAddressBlockVisible).to.eq(true);
 
-      const addressesNumber = await checkoutPage.getNumberOfAddresses(page);
+      const addressesNumber = await foClassicCheckoutPage.getNumberOfAddresses(page);
       expect(addressesNumber).to.equal(2);
 
-      const invoiceAddressesNumber = await checkoutPage.getNumberOfInvoiceAddresses(page);
+      const invoiceAddressesNumber = await foClassicCheckoutPage.getNumberOfInvoiceAddresses(page);
       expect(invoiceAddressesNumber).to.equal(2);
 
-      const isInvoiceAddress1Selected = await checkoutPage.isInvoiceAddressSelected(page, 1);
+      const isInvoiceAddress1Selected = await foClassicCheckoutPage.isInvoiceAddressSelected(page, 1);
       expect(isInvoiceAddress1Selected).to.equal(true);
 
-      const isInvoiceAddress2Selected = await checkoutPage.isInvoiceAddressSelected(page, 2);
+      const isInvoiceAddress2Selected = await foClassicCheckoutPage.isInvoiceAddressSelected(page, 2);
       expect(isInvoiceAddress2Selected).to.equal(false);
     });
 
     it('should choose the invoice address different than shipping address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'invoiceAddressDiffShippingAddress', baseContext);
 
-      await checkoutPage.selectInvoiceAddress(page, 2);
+      await foClassicCheckoutPage.selectInvoiceAddress(page, 2);
 
-      const isInvoiceAddress1Selected = await checkoutPage.isInvoiceAddressSelected(page, 1);
+      const isInvoiceAddress1Selected = await foClassicCheckoutPage.isInvoiceAddressSelected(page, 1);
       expect(isInvoiceAddress1Selected).to.equal(false);
 
-      const isInvoiceAddress2Selected = await checkoutPage.isInvoiceAddressSelected(page, 2);
+      const isInvoiceAddress2Selected = await foClassicCheckoutPage.isInvoiceAddressSelected(page, 2);
       expect(isInvoiceAddress2Selected).to.equal(true);
     });
   });
