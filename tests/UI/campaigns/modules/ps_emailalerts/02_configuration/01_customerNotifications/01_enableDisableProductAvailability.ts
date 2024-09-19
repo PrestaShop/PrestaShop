@@ -9,7 +9,6 @@ import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advanced
 
 // Import pages
 // Import BO pages
-import psEmailAlerts from '@pages/BO/modules/psEmailAlerts';
 import ordersPage from '@pages/BO/orders';
 import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 import addProductPage from '@pages/BO/catalog/products/add';
@@ -36,6 +35,7 @@ import {
   foClassicSearchResultsPage,
   type MailDev,
   type MailDevEmail,
+  modPsEmailAlertsBoMain,
   utilsFile,
   utilsMail,
   utilsPlaywright,
@@ -124,11 +124,11 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
 
       await boModuleManagerPage.goToConfigurationPage(page, dataModules.psEmailAlerts.tag);
 
-      const pageTitle = await psEmailAlerts.getPageSubtitle(page);
-      expect(pageTitle).to.eq(psEmailAlerts.pageTitle);
+      const pageTitle = await modPsEmailAlertsBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.eq(modPsEmailAlertsBoMain.pageTitle);
 
       // Check 'Product availability' is set to 'Yes
-      const isChecked = await psEmailAlerts.getProductAvailabilityStatus(page);
+      const isChecked = await modPsEmailAlertsBoMain.getProductAvailabilityStatus(page);
       expect(isChecked).to.eq(true);
     });
   });
@@ -137,16 +137,16 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
     it('should define to "No" the "Product Availability"', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'case1DefineNoProductAvailability', baseContext);
 
-      await psEmailAlerts.setProductAvailabilityStatus(page, false);
+      await modPsEmailAlertsBoMain.setProductAvailabilityStatus(page, false);
 
-      const textMessage = await psEmailAlerts.saveFormCustomerNotifications(page);
-      expect(textMessage).to.contains(psEmailAlerts.successfulUpdateMessage);
+      const textMessage = await modPsEmailAlertsBoMain.saveFormCustomerNotifications(page);
+      expect(textMessage).to.contains(modPsEmailAlertsBoMain.successfulUpdateMessage);
     });
 
     it('should go to the FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
-      page = await psEmailAlerts.viewMyShop(page);
+      page = await modPsEmailAlertsBoMain.viewMyShop(page);
       await foClassicHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foClassicHomePage.isHomePage(page);
@@ -182,13 +182,13 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
 
       page = await foClassicProductPage.changePage(browserContext, 0);
 
-      const pageTitle = await psEmailAlerts.getPageSubtitle(page);
-      expect(pageTitle).to.eq(psEmailAlerts.pageTitle);
+      const pageTitle = await modPsEmailAlertsBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.eq(modPsEmailAlertsBoMain.pageTitle);
 
-      await psEmailAlerts.setProductAvailabilityStatus(page, true);
+      await modPsEmailAlertsBoMain.setProductAvailabilityStatus(page, true);
 
-      const textMessage = await psEmailAlerts.saveFormCustomerNotifications(page);
-      expect(textMessage).to.contains(psEmailAlerts.successfulUpdateMessage);
+      const textMessage = await modPsEmailAlertsBoMain.saveFormCustomerNotifications(page);
+      expect(textMessage).to.contains(modPsEmailAlertsBoMain.successfulUpdateMessage);
     });
 
     it('should reload the product page', async function () {
@@ -241,13 +241,13 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
 
       page = await foClassicProductPage.changePage(browserContext, 0);
 
-      const pageTitle = await psEmailAlerts.getPageSubtitle(page);
-      expect(pageTitle).to.eq(psEmailAlerts.pageTitle);
+      const pageTitle = await modPsEmailAlertsBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.eq(modPsEmailAlertsBoMain.pageTitle);
 
-      await psEmailAlerts.setProductAvailabilityStatus(page, false);
+      await modPsEmailAlertsBoMain.setProductAvailabilityStatus(page, false);
 
-      const textMessage = await psEmailAlerts.saveFormCustomerNotifications(page);
-      expect(textMessage).to.contains(psEmailAlerts.successfulUpdateMessage);
+      const textMessage = await modPsEmailAlertsBoMain.saveFormCustomerNotifications(page);
+      expect(textMessage).to.contains(modPsEmailAlertsBoMain.successfulUpdateMessage);
     });
 
     it('should go to login page', async function () {
@@ -284,13 +284,13 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
 
       page = await foClassicProductPage.changePage(browserContext, 0);
 
-      const pageTitle = await psEmailAlerts.getPageSubtitle(page);
-      expect(pageTitle).to.eq(psEmailAlerts.pageTitle);
+      const pageTitle = await modPsEmailAlertsBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.eq(modPsEmailAlertsBoMain.pageTitle);
 
-      await psEmailAlerts.setProductAvailabilityStatus(page, true);
+      await modPsEmailAlertsBoMain.setProductAvailabilityStatus(page, true);
 
-      const textMessage = await psEmailAlerts.saveFormCustomerNotifications(page);
-      expect(textMessage).to.contains(psEmailAlerts.successfulUpdateMessage);
+      const textMessage = await modPsEmailAlertsBoMain.saveFormCustomerNotifications(page);
+      expect(textMessage).to.contains(modPsEmailAlertsBoMain.successfulUpdateMessage);
     });
 
     it('should check the block "Notify when it\' available"', async function () {

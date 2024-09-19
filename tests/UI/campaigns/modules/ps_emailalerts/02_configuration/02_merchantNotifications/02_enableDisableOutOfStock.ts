@@ -8,7 +8,6 @@ import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/prod
 
 // Import pages
 // Import BO pages
-import emailAlertsPage from '@pages/BO/modules/psEmailAlerts';
 import stocksPage from '@pages/BO/catalog/stocks';
 
 import {expect} from 'chai';
@@ -20,6 +19,7 @@ import {
   FakerProduct,
   type MailDev,
   type MailDevEmail,
+  modPsEmailAlertsBoMain,
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -130,15 +130,15 @@ describe('Mail alerts module - Enable/Disable out of stock', async () => {
 
       await boModuleManagerPage.goToConfigurationPage(page, dataModules.psEmailAlerts.tag);
 
-      const pageTitle = await emailAlertsPage.getPageSubtitle(page);
-      expect(pageTitle).to.equal(emailAlertsPage.pageTitle);
+      const pageTitle = await modPsEmailAlertsBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.equal(modPsEmailAlertsBoMain.pageTitle);
     });
 
     it('should enable out of stock and set email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableOutOfStock', baseContext);
 
-      const successMessage = await emailAlertsPage.setOutOfStock(page, true, 'demo@prestashop.com');
-      expect(successMessage).to.contains(emailAlertsPage.successfulUpdateMessage);
+      const successMessage = await modPsEmailAlertsBoMain.setOutOfStock(page, true, 'demo@prestashop.com');
+      expect(successMessage).to.contains(modPsEmailAlertsBoMain.successfulUpdateMessage);
     });
   });
 
@@ -209,15 +209,15 @@ describe('Mail alerts module - Enable/Disable out of stock', async () => {
 
       await boModuleManagerPage.goToConfigurationPage(page, dataModules.psEmailAlerts.tag);
 
-      const pageTitle = await emailAlertsPage.getPageSubtitle(page);
-      expect(pageTitle).to.equal(emailAlertsPage.pageTitle);
+      const pageTitle = await modPsEmailAlertsBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.equal(modPsEmailAlertsBoMain.pageTitle);
     });
 
     it('should disable out of stock', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableOutOfStock2', baseContext);
 
-      const successMessage = await emailAlertsPage.setOutOfStock(page, false);
-      expect(successMessage).to.contains(emailAlertsPage.successfulUpdateMessage);
+      const successMessage = await modPsEmailAlertsBoMain.setOutOfStock(page, false);
+      expect(successMessage).to.contains(modPsEmailAlertsBoMain.successfulUpdateMessage);
     });
   });
 

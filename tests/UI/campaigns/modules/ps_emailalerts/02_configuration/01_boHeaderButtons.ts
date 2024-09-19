@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import boDesignPositionsPage from '@pages/BO/design/positions';
-import psEmailAlerts from '@pages/BO/modules/psEmailAlerts';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -15,6 +14,7 @@ import {
   boDashboardPage,
   boModuleManagerPage,
   dataModules,
+  modPsEmailAlertsBoMain,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -65,14 +65,14 @@ describe('Mail alerts module - BO Header Buttons', async () => {
 
       await boModuleManagerPage.goToConfigurationPage(page, dataModules.psEmailAlerts.tag);
 
-      const pageTitle = await psEmailAlerts.getPageSubtitle(page);
-      expect(pageTitle).to.eq(psEmailAlerts.pageTitle);
+      const pageTitle = await modPsEmailAlertsBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.eq(modPsEmailAlertsBoMain.pageTitle);
     });
 
     it('should click on the "Back" button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnBackButton', baseContext);
 
-      await psEmailAlerts.clickHeaderBack(page);
+      await modPsEmailAlertsBoMain.clickHeaderBack(page);
 
       const pageTitle = await boModuleManagerPage.getPageTitle(page);
       expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
@@ -86,35 +86,35 @@ describe('Mail alerts module - BO Header Buttons', async () => {
 
       await boModuleManagerPage.goToConfigurationPage(page, dataModules.psEmailAlerts.tag);
 
-      const pageTitle = await psEmailAlerts.getPageSubtitle(page);
-      expect(pageTitle).to.eq(psEmailAlerts.pageTitle);
+      const pageTitle = await modPsEmailAlertsBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.eq(modPsEmailAlertsBoMain.pageTitle);
     });
 
     it('should click on the "Translate" button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnTranslateButton', baseContext);
 
-      await psEmailAlerts.clickHeaderTranslate(page);
+      await modPsEmailAlertsBoMain.clickHeaderTranslate(page);
 
-      const isModalVisible = await psEmailAlerts.isModalTranslateVisible(page);
+      const isModalVisible = await modPsEmailAlertsBoMain.isModalTranslateVisible(page);
       expect(isModalVisible).to.be.equal(true);
     });
 
     it('should close the "Translate" modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeTranslateModal', baseContext);
 
-      await psEmailAlerts.closeTranslateModal(page);
+      await modPsEmailAlertsBoMain.closeTranslateModal(page);
 
-      const isModalVisible = await psEmailAlerts.isModalTranslateVisible(page);
+      const isModalVisible = await modPsEmailAlertsBoMain.isModalTranslateVisible(page);
       expect(isModalVisible).to.be.equal(false);
 
-      const pageTitle = await psEmailAlerts.getPageSubtitle(page);
-      expect(pageTitle).to.eq(psEmailAlerts.pageTitle);
+      const pageTitle = await modPsEmailAlertsBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.eq(modPsEmailAlertsBoMain.pageTitle);
     });
 
     it('should click on the "Manage hooks" button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnManageHooksButton', baseContext);
 
-      await psEmailAlerts.clickHeaderManageHooks(page);
+      await modPsEmailAlertsBoMain.clickHeaderManageHooks(page);
 
       const pageTitle = await boDesignPositionsPage.getPageTitle(page);
       expect(pageTitle).to.be.equal(boDesignPositionsPage.pageTitle);

@@ -9,7 +9,6 @@ import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advanced
 // Import pages
 // Import BO pages
 import ordersPage from '@pages/BO/orders';
-import emailAlertsPage from '@pages/BO/modules/psEmailAlerts';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
 import {
@@ -22,6 +21,7 @@ import {
   FakerOrder,
   type MailDev,
   type MailDevEmail,
+  modPsEmailAlertsBoMain,
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -127,15 +127,15 @@ describe('Mail alerts module - Enable/Disable return', async () => {
 
       await boModuleManagerPage.goToConfigurationPage(page, dataModules.psEmailAlerts.tag);
 
-      const pageTitle = await emailAlertsPage.getPageSubtitle(page);
-      expect(pageTitle).to.equal(emailAlertsPage.pageTitle);
+      const pageTitle = await modPsEmailAlertsBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.equal(modPsEmailAlertsBoMain.pageTitle);
     });
 
     it('should enable edit order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableEditOrder', baseContext);
 
-      const successMessage = await emailAlertsPage.setEditOrder(page, true);
-      expect(successMessage).to.contains(emailAlertsPage.successfulUpdateMessage);
+      const successMessage = await modPsEmailAlertsBoMain.setEditOrder(page, true);
+      expect(successMessage).to.contains(modPsEmailAlertsBoMain.successfulUpdateMessage);
     });
   });
 
@@ -234,15 +234,15 @@ describe('Mail alerts module - Enable/Disable return', async () => {
 
       await boModuleManagerPage.goToConfigurationPage(page, dataModules.psEmailAlerts.tag);
 
-      const pageTitle = await emailAlertsPage.getPageSubtitle(page);
-      expect(pageTitle).to.equal(emailAlertsPage.pageTitle);
+      const pageTitle = await modPsEmailAlertsBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.equal(modPsEmailAlertsBoMain.pageTitle);
     });
 
     it('should disable order edit', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableNewOrder', baseContext);
 
-      const successMessage = await emailAlertsPage.setEditOrder(page, false);
-      expect(successMessage).to.contains(emailAlertsPage.successfulUpdateMessage);
+      const successMessage = await modPsEmailAlertsBoMain.setEditOrder(page, false);
+      expect(successMessage).to.contains(modPsEmailAlertsBoMain.successfulUpdateMessage);
     });
   });
 

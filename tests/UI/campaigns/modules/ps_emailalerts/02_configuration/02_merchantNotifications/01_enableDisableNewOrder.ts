@@ -8,7 +8,6 @@ import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advanced
 // Import pages
 // Import BO pages
 import ordersPage from '@pages/BO/orders';
-import emailAlertsPage from '@pages/BO/modules/psEmailAlerts';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
@@ -28,6 +27,7 @@ import {
   foClassicProductPage,
   type MailDev,
   type MailDevEmail,
+  modPsEmailAlertsBoMain,
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -128,15 +128,15 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
 
       await boModuleManagerPage.goToConfigurationPage(page, dataModules.psEmailAlerts.tag);
 
-      const pageTitle = await emailAlertsPage.getPageSubtitle(page);
-      expect(pageTitle).to.equal(emailAlertsPage.pageTitle);
+      const pageTitle = await modPsEmailAlertsBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.equal(modPsEmailAlertsBoMain.pageTitle);
     });
 
     it('should enable new order and set email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableNewOrder', baseContext);
 
-      const successMessage = await emailAlertsPage.setNewOrder(page, true, 'demo@prestashop.com');
-      expect(successMessage).to.contains(emailAlertsPage.successfulUpdateMessage);
+      const successMessage = await modPsEmailAlertsBoMain.setNewOrder(page, true, 'demo@prestashop.com');
+      expect(successMessage).to.contains(modPsEmailAlertsBoMain.successfulUpdateMessage);
     });
   });
 
@@ -208,8 +208,8 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
 
       page = await orderConfirmationPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await emailAlertsPage.getPageSubtitle(page);
-      expect(pageTitle).to.equal(emailAlertsPage.pageTitle);
+      const pageTitle = await modPsEmailAlertsBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.equal(modPsEmailAlertsBoMain.pageTitle);
     });
   });
 
@@ -297,15 +297,15 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
 
       await boModuleManagerPage.goToConfigurationPage(page, dataModules.psEmailAlerts.tag);
 
-      const pageTitle = await emailAlertsPage.getPageSubtitle(page);
-      expect(pageTitle).to.equal(emailAlertsPage.pageTitle);
+      const pageTitle = await modPsEmailAlertsBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.equal(modPsEmailAlertsBoMain.pageTitle);
     });
 
     it('should disable new order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableReturns2', baseContext);
 
-      const successMessage = await emailAlertsPage.setNewOrder(page, false);
-      expect(successMessage).to.contains(emailAlertsPage.successfulUpdateMessage);
+      const successMessage = await modPsEmailAlertsBoMain.setNewOrder(page, false);
+      expect(successMessage).to.contains(modPsEmailAlertsBoMain.successfulUpdateMessage);
     });
   });
 
