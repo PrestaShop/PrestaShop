@@ -507,6 +507,16 @@ class FrontControllerCore extends Controller
             $cart = new Cart();
         }
 
+        $templateVars = [];
+
+        Hook::exec(
+            'actionFrontControllerSetVariablesBefore',
+            [
+                'templateVars' => &$templateVars,
+                'cart' => $cart,
+            ]
+        );
+
         $templateVars = [
             'cart' => $this->cart_presenter->present($cart, true),
             'currency' => $this->getTemplateVarCurrency(),

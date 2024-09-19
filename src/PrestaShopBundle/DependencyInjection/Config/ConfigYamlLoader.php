@@ -44,7 +44,7 @@ class ConfigYamlLoader extends FileLoader
     public function load($resource, $type = null)
     {
         $path = $this->locator->locate($resource);
-        $configValues = Yaml::parse(file_get_contents($path));
+        $configValues = Yaml::parse(file_get_contents($path), Yaml::PARSE_CONSTANT);
 
         $this->parseImports($configValues, $path);
         unset($configValues['imports']);

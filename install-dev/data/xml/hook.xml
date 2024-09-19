@@ -2879,6 +2879,11 @@
       <title>Runs an action after ProductSearchProviderInterface::RunQuery()</title>
       <description>Required to return a previous state of an SQL query or/and to change a result of the SQL query after executing it</description>
     </hook>
+    <hook id="actionFrontControllerSetVariablesBefore">
+      <name>actionFrontControllerSetVariablesBefore</name>
+      <title>Add general purpose variables in JavaScript object and Smarty templates before assignation.</title>
+      <description>Allows defining variables for the JavaScript object before the core does it.</description>
+    </hook>
     <hook id="actionFrontControllerSetVariables">
       <name>actionFrontControllerSetVariables</name>
       <title>Add variables in JavaScript object and Smarty templates</title>
