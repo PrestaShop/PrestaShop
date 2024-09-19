@@ -130,6 +130,11 @@ class OrderController extends FrameworkBundleAdminController
      */
     public const PRODUCTS_PAGINATION_OPTIONS = [8, 20, 50, 100];
 
+     /**
+     * Number of search results
+     */
+    public const SEARCH_PRODUCTS_NUMBER = 30;
+
     public function __construct(private readonly FormFactoryInterface $formFactory)
     {
     }
@@ -1728,7 +1733,7 @@ class OrderController extends FrameworkBundleAdminController
             }
 
             /** @var FoundProduct[] $foundProducts */
-            $foundProducts = $this->getQueryBus()->handle(new SearchProducts($searchPhrase, 10, $currencyIsoCode, $orderId));
+            $foundProducts = $this->getQueryBus()->handle(new SearchProducts($searchPhrase, self::SEARCH_PRODUCTS_NUMBER, $currencyIsoCode, $orderId));
 
             return $this->json([
                 'products' => $foundProducts,
