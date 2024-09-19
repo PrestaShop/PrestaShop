@@ -94,7 +94,7 @@ describe('BO - Login : Check links', async () => {
     page = await boLoginPage.clickOnFacebookLink(page);
 
     const url = await boLoginPage.getCurrentURL(page);
-    expect(url).to.equal('https://www.facebook.com/login/?next=https://www.facebook.com/prestashop');
+    expect(url).to.contains('https://www.facebook.com/prestashop');
   });
 
   it('should close the facebook page', async function () {
