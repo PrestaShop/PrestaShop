@@ -189,15 +189,15 @@
         <target>Please choose a rating for your review.</target>
         <note>Line: 28</note>
       </trans-unit>
+      <trans-unit id="7966126831926ad29c528b239d69f855">
+        <source>Write your review</source>
+        <target>Write your review</target>
+        <note>Line: 36</note>
+      </trans-unit>
     </body>
   </file>
   <file original="modules/productcomments/views/templates/hook/product-additional-info.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="7966126831926ad29c528b239d69f855">
-        <source>Write your review</source>
-        <target>Write your review</target>
-        <note>Line: 45</note>
-      </trans-unit>
       <trans-unit id="a71a0229e164fecdcde3c4e0f40473fa">
         <source>Read user reviews</source>
         <target>Read user reviews</target>

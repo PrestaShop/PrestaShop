@@ -68,7 +68,7 @@
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription-column.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="ffb7e666a70151215b4c55c6268d7d72">
         <source>Newsletter</source>

@@ -126,14 +126,19 @@ Comment: Please localize this string with the applicable registration number typ
         <target>Message</target>
         <note>Line: 101</note>
       </trans-unit>
+      <trans-unit id="b357b524e740bc85b9790a0712d84a30">
+        <source>Email address</source>
+        <target>Email address</target>
+        <note>Line: 58</note>
+      </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/classic/modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription-column.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="198584454b0ce1101ff5b50323325aa8">
         <source>Your email address</source>
         <target>Your email address</target>
-        <note>Line: 50</note>
+        <note>Line: 42</note>
       </trans-unit>
     </body>
   </file>
@@ -200,15 +205,6 @@ Comment: Please localize this string with the applicable registration number typ
         <source>Email:</source>
         <target>Email:</target>
         <note>Line: 61</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/templates/customer/password-email.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b357b524e740bc85b9790a0712d84a30">
-        <source>Email address</source>
-        <target>Email address</target>
-        <note>Line: 53</note>
       </trans-unit>
     </body>
   </file>
