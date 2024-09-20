@@ -130,7 +130,7 @@ class OrderController extends FrameworkBundleAdminController
      */
     public const PRODUCTS_PAGINATION_OPTIONS = [8, 20, 50, 100];
 
-     /**
+    /**
      * Number of search results
      */
     public const SEARCH_PRODUCTS_NUMBER = 30;
