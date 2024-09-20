@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import createProductsPage from '@pages/BO/catalog/products/add';
 import virtualProductTab from '@pages/BO/catalog/products/add/virtualProductTab';
-import productSettings from '@pages/BO/shopParameters/productSettings';
 
 // Import FO pages
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
@@ -16,6 +15,7 @@ import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {
   boDashboardPage,
   boProductsPage,
+  boProductSettingsPage,
   dataCustomers,
   dataPaymentMethods,
   FakerProduct,
@@ -273,14 +273,14 @@ describe('BO - Catalog - Products : Virtual tab', async () => {
 
       page = await virtualProductTab.clickOnEditDefaultBehaviourLink(page);
 
-      const pageTitle = await productSettings.getPageTitle(page);
-      expect(pageTitle).to.contains(productSettings.pageTitle);
+      const pageTitle = await boProductSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
     });
 
     it('should close the page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO3', baseContext);
 
-      page = await productSettings.closePage(browserContext, page, 0);
+      page = await boProductSettingsPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductsPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductsPage.pageTitle);

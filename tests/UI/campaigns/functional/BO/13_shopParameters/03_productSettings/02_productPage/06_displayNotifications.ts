@@ -53,7 +53,7 @@ describe('BO - Shop Parameters - Product Settings : Display notifications', asyn
   });
 
   it('should view my shop', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', `viewMyShop`, baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
     page = await boProductSettingsPage.viewMyShop(page);
     await foClassicHomePage.changeLanguage(page, 'en');

@@ -6,13 +6,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
 import createProductPage from '@pages/BO/catalog/products/add';
-import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 
 import {
   boDashboardPage,
   boProductsPage,
   boProductsCreateTabShippingPage,
   boProductsCreateTabStocksPage,
+  boProductSettingsPage,
   dataCarriers,
   dataCustomers,
   FakerProduct,
@@ -191,14 +191,14 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
 
       page = await boProductsCreateTabShippingPage.clickOnEditDeliveryTimeLink(page);
 
-      const pageTitle = await productSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      const pageTitle = await boProductSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
 
-      page = await productSettingsPage.closePage(browserContext, page, 0);
+      page = await boProductSettingsPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductPage.pageTitle);

@@ -5,14 +5,11 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
-// Import pages
-// Import BO pages
-import productSettingsPage from '@pages/BO/shopParameters/productSettings';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boProductSettingsPage,
   foHummingbirdHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -49,10 +46,10 @@ describe('BO - Shop Parameters - Product Settings : Display add to cart button w
         boDashboardPage.shopParametersParentLink,
         boDashboardPage.productSettingsLink,
       );
-      await productSettingsPage.closeSfToolBar(page);
+      await boProductSettingsPage.closeSfToolBar(page);
 
-      const pageTitle = await productSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      const pageTitle = await boProductSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
     });
 
     const tests = [
@@ -64,14 +61,14 @@ describe('BO - Shop Parameters - Product Settings : Display add to cart button w
       it(`should ${test.args.action} Add to cart button when product has attributes`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}DisplayAddToCartButton`, baseContext);
 
-        const result = await productSettingsPage.setDisplayAddToCartButton(page, test.args.enable);
-        expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+        const result = await boProductSettingsPage.setDisplayAddToCartButton(page, test.args.enable);
+        expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
       });
 
       it('should view my shop', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
-        page = await productSettingsPage.viewMyShop(page);
+        page = await boProductSettingsPage.viewMyShop(page);
 
         const isHomePage = await foHummingbirdHomePage.isHomePage(page);
         expect(isHomePage, 'Home page was not opened').to.eq(true);
@@ -96,8 +93,8 @@ describe('BO - Shop Parameters - Product Settings : Display add to cart button w
 
         page = await foHummingbirdHomePage.closePage(browserContext, page, 0);
 
-        const pageTitle = await productSettingsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+        const pageTitle = await boProductSettingsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
       });
     });
   });

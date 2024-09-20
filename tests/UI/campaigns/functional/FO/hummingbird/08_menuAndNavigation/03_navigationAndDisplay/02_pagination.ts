@@ -5,13 +5,11 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
-// Import BO pages
-import productSettingsPage from '@pages/BO/shopParameters/productSettings';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boProductSettingsPage,
   foHummingbirdCategoryPage,
   foHummingbirdHomePage,
   utilsPlaywright,
@@ -125,15 +123,15 @@ describe('FO - Navigation and display : Pagination', async () => {
         boDashboardPage.productSettingsLink,
       );
 
-      const pageTitle = await productSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      const pageTitle = await boProductSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
     });
 
     it('should change the number of products per page to 6', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeNumberOfDays0', baseContext);
 
-      const result = await productSettingsPage.setProductsDisplayedPerPage(page, 6);
-      expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      const result = await boProductSettingsPage.setProductsDisplayedPerPage(page, 6);
+      expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
     });
   });
 
@@ -141,7 +139,7 @@ describe('FO - Navigation and display : Pagination', async () => {
     it('should view my shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO1', baseContext);
 
-      page = await productSettingsPage.viewMyShop(page);
+      page = await boProductSettingsPage.viewMyShop(page);
       await foHummingbirdHomePage.changeLanguage(page, 'en');
 
       const result = await foHummingbirdHomePage.isHomePage(page);
@@ -204,15 +202,15 @@ describe('FO - Navigation and display : Pagination', async () => {
 
       page = await foHummingbirdHomePage.closePage(browserContext, page, 0);
 
-      const pageTitle = await productSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      const pageTitle = await boProductSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
     });
 
     it('should change the number of products per page to 20', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeNumberOfDays1', baseContext);
 
-      const result = await productSettingsPage.setProductsDisplayedPerPage(page, 20);
-      expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      const result = await boProductSettingsPage.setProductsDisplayedPerPage(page, 20);
+      expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
     });
   });
 
@@ -220,7 +218,7 @@ describe('FO - Navigation and display : Pagination', async () => {
     it('should view my shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO2', baseContext);
 
-      page = await productSettingsPage.viewMyShop(page);
+      page = await boProductSettingsPage.viewMyShop(page);
       await foHummingbirdHomePage.changeLanguage(page, 'en');
 
       const result = await foHummingbirdHomePage.isHomePage(page);
@@ -259,15 +257,15 @@ describe('FO - Navigation and display : Pagination', async () => {
 
       page = await foHummingbirdHomePage.closePage(browserContext, page, 0);
 
-      const pageTitle = await productSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      const pageTitle = await boProductSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
     });
 
     it('should change the number of products per page to 12', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeNumberOfDays2', baseContext);
 
-      const result = await productSettingsPage.setProductsDisplayedPerPage(page, 12);
-      expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      const result = await boProductSettingsPage.setProductsDisplayedPerPage(page, 12);
+      expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
     });
   });
 

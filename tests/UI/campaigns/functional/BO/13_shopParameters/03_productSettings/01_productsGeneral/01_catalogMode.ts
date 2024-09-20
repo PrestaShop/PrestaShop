@@ -4,14 +4,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-// Import BO pages
-import productSettingsPage from '@pages/BO/shopParameters/productSettings';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boProductSettingsPage,
   dataProducts,
   foClassicHomePage,
   foClassicProductPage,
@@ -53,10 +50,10 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
       boDashboardPage.shopParametersParentLink,
       boDashboardPage.productSettingsLink,
     );
-    await productSettingsPage.closeSfToolBar(page);
+    await boProductSettingsPage.closeSfToolBar(page);
 
-    const pageTitle = await productSettingsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+    const pageTitle = await boProductSettingsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
   });
 
   const tests = [
@@ -73,8 +70,8 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
         baseContext,
       );
 
-      const result = await productSettingsPage.changeCatalogModeStatus(page, test.args.enable);
-      expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      const result = await boProductSettingsPage.changeCatalogModeStatus(page, test.args.enable);
+      expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
     });
 
     if (test.args.enable) {
@@ -102,14 +99,14 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
             baseContext,
           );
 
-          const result = await productSettingsPage.setShowPricesStatus(page, showPrices.args.enable);
-          expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+          const result = await boProductSettingsPage.setShowPricesStatus(page, showPrices.args.enable);
+          expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
         });
 
         it('should view my shop', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
-          page = await productSettingsPage.viewMyShop(page);
+          page = await boProductSettingsPage.viewMyShop(page);
           await foClassicHomePage.changeLanguage(page, 'en');
 
           const isHomePage = await foClassicHomePage.isHomePage(page);
@@ -147,15 +144,15 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
 
           page = await foClassicProductPage.closePage(browserContext, page, 0);
 
-          const pageTitle = await productSettingsPage.getPageTitle(page);
-          expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+          const pageTitle = await boProductSettingsPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
         });
       });
     } else {
       it('should view my shop', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
-        page = await productSettingsPage.viewMyShop(page);
+        page = await boProductSettingsPage.viewMyShop(page);
         await foClassicHomePage.changeLanguage(page, 'en');
 
         const isHomePage = await foClassicHomePage.isHomePage(page);
@@ -193,8 +190,8 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
 
         page = await foClassicProductPage.closePage(browserContext, page, 0);
 
-        const pageTitle = await productSettingsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+        const pageTitle = await boProductSettingsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
       });
     }
   });

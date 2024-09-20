@@ -5,12 +5,12 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
-import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import addProductPage from '@pages/BO/catalog/products/add';
 
 import {
   boDashboardPage,
   boProductsPage,
+  boProductSettingsPage,
   dataCustomers,
   dataPaymentMethods,
   FakerProduct,
@@ -150,21 +150,21 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
             addProductPage.productSettingsLink,
           );
 
-          const pageTitle = await productSettingsPage.getPageTitle(page);
-          expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+          const pageTitle = await boProductSettingsPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
         });
 
         it(`should choose the Default pack stock management '${test.args.option}'`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `stockManagementOption${index}`, baseContext);
 
-          const result = await productSettingsPage.setDefaultPackStockManagement(page, test.args.option);
-          expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+          const result = await boProductSettingsPage.setDefaultPackStockManagement(page, test.args.option);
+          expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
         });
 
         it('should view my shop', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
-          page = await productSettingsPage.viewMyShop(page);
+          page = await boProductSettingsPage.viewMyShop(page);
           await foClassicHomePage.changeLanguage(page, 'en');
 
           const isFoHomePage = await foClassicHomePage.isHomePage(page);
@@ -261,8 +261,8 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
 
           page = await foClassicProductPage.closePage(browserContext, page, 0);
 
-          const pageTitle = await productSettingsPage.getPageTitle(page);
-          expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+          const pageTitle = await boProductSettingsPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
         });
 
         it('should go to \'Catalog > Products\' page', async function () {
@@ -315,10 +315,10 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageToDeleteProduct', baseContext);
 
-      await productSettingsPage.goToSubMenu(
+      await boProductSettingsPage.goToSubMenu(
         page,
-        productSettingsPage.catalogParentLink,
-        productSettingsPage.productsLink,
+        boProductSettingsPage.catalogParentLink,
+        boProductSettingsPage.productsLink,
       );
 
       const pageTitle = await boProductsPage.getPageTitle(page);

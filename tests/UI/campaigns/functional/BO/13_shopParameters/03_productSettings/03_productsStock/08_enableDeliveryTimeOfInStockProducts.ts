@@ -4,14 +4,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-// Import BO pages
-import productSettingsPage from '@pages/BO/shopParameters/productSettings';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boProductSettingsPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsPlaywright,
@@ -46,8 +43,8 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time in stoc
       boDashboardPage.productSettingsLink,
     );
 
-    const pageTitle = await productSettingsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+    const pageTitle = await boProductSettingsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
   });
 
   const tests = [
@@ -59,14 +56,14 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time in stoc
     it(`should ${test.args.action} delivery time of in-stock products`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}StockManagement`, baseContext);
 
-      const result = await productSettingsPage.setDeliveryTimeInStock(page, test.args.deliveryTimeText);
-      expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      const result = await boProductSettingsPage.setDeliveryTimeInStock(page, test.args.deliveryTimeText);
+      expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
     });
 
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
-      page = await productSettingsPage.viewMyShop(page);
+      page = await boProductSettingsPage.viewMyShop(page);
       await foClassicHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foClassicHomePage.isHomePage(page);
@@ -96,8 +93,8 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time in stoc
 
       page = await foClassicProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await productSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      const pageTitle = await boProductSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
     });
   });
 });

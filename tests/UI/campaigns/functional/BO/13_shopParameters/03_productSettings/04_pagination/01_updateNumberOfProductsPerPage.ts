@@ -4,14 +4,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-// Import BO pages
-import productSettingsPage from '@pages/BO/shopParameters/productSettings';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boProductSettingsPage,
   foClassicCategoryPage,
   foClassicHomePage,
   utilsPlaywright,
@@ -62,10 +59,10 @@ describe('BO - Shop Parameters - Product Settings : Update number of product dis
             boDashboardPage.shopParametersParentLink,
             boDashboardPage.productSettingsLink,
           );
-          await productSettingsPage.closeSfToolBar(page);
+          await boProductSettingsPage.closeSfToolBar(page);
 
-          const pageTitle = await productSettingsPage.getPageTitle(page);
-          expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+          const pageTitle = await boProductSettingsPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
         });
       }
 
@@ -74,18 +71,18 @@ describe('BO - Shop Parameters - Product Settings : Update number of product dis
         async function () {
           await testContext.addContextItem(this, 'testIdentifier', `updateProductsPerPage${index + 1}`, baseContext);
 
-          const result = await productSettingsPage.setProductsDisplayedPerPage(
+          const result = await boProductSettingsPage.setProductsDisplayedPerPage(
             page,
             test.args.numberOfProductsPerPage,
           );
-          expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+          expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
         },
       );
 
       it('should view my shop', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index + 1}`, baseContext);
 
-        page = await productSettingsPage.viewMyShop(page);
+        page = await boProductSettingsPage.viewMyShop(page);
 
         const isHomePage = await foClassicHomePage.isHomePage(page);
         expect(isHomePage, 'Home page was not opened').to.eq(true);
@@ -117,8 +114,8 @@ describe('BO - Shop Parameters - Product Settings : Update number of product dis
 
         page = await foClassicHomePage.closePage(browserContext, page, 0);
 
-        const pageTitle = await productSettingsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+        const pageTitle = await boProductSettingsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
       });
     });
   });

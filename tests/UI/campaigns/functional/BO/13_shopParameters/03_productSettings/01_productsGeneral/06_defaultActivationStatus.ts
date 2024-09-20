@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import addProductPage from '@pages/BO/catalog/products/add';
 
 import {expect} from 'chai';
@@ -13,6 +12,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boProductsPage,
+  boProductSettingsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -57,10 +57,10 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable default activ
           boDashboardPage.shopParametersParentLink,
           boDashboardPage.productSettingsLink,
         );
-        await productSettingsPage.closeSfToolBar(page);
+        await boProductSettingsPage.closeSfToolBar(page);
 
-        const pageTitle = await productSettingsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+        const pageTitle = await boProductSettingsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
       });
 
       it(`should ${test.args.action} default activation status`, async function () {
@@ -71,17 +71,17 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable default activ
           baseContext,
         );
 
-        const result = await productSettingsPage.setDefaultActivationStatus(page, test.args.enable);
-        expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+        const result = await boProductSettingsPage.setDefaultActivationStatus(page, test.args.enable);
+        expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
       });
 
       it('should go to \'Catalog > Products\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToProductsPage${index}`, baseContext);
 
-        await productSettingsPage.goToSubMenu(
+        await boProductSettingsPage.goToSubMenu(
           page,
-          productSettingsPage.catalogParentLink,
-          productSettingsPage.productsLink,
+          boProductSettingsPage.catalogParentLink,
+          boProductSettingsPage.productsLink,
         );
 
         const pageTitle = await boProductsPage.getPageTitle(page);
