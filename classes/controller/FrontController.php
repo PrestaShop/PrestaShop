@@ -466,7 +466,7 @@ class FrontControllerCore extends Controller
 
         if (isset($cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) && $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) {
             $infos = Address::getCountryAndState((int) $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
-            $country = new Country((int) $infos['id_country']);
+            $country = new Country((int) $infos['id_country'], (int) $this->context->language->id);
             $this->context->country = $country;
         }
 
