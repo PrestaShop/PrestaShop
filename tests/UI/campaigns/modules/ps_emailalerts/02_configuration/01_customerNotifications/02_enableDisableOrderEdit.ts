@@ -6,14 +6,11 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
-// Import pages
-// Import BO pages
-import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
-
 import {
   boDashboardPage,
   boModuleManagerPage,
   boOrdersPage,
+  boOrdersViewBlockProductsPage,
   dataCustomers,
   dataModules,
   dataPaymentMethods,
@@ -158,14 +155,14 @@ describe('Mail alerts module - Enable/Disable return', async () => {
 
       await boOrdersPage.goToOrder(page, 1);
 
-      const pageTitle = await orderPageProductsBlock.getPageTitle(page);
-      expect(pageTitle).to.contains(orderPageProductsBlock.pageTitle);
+      const pageTitle = await boOrdersViewBlockProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersViewBlockProductsPage.pageTitle);
     });
 
     it('should update quantity of the ordered product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateQuantity', baseContext);
 
-      const quantity = await orderPageProductsBlock.modifyProductQuantity(page, 1, 5);
+      const quantity = await boOrdersViewBlockProductsPage.modifyProductQuantity(page, 1, 5);
       expect(quantity, 'Quantity was not updated').to.equal(5);
     });
 
@@ -179,10 +176,10 @@ describe('Mail alerts module - Enable/Disable return', async () => {
     it(`should add the product '${dataProducts.demo_14.name}' to the cart`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addCustomizedProduct', baseContext);
 
-      await orderPageProductsBlock.searchProduct(page, dataProducts.demo_14.name);
+      await boOrdersViewBlockProductsPage.searchProduct(page, dataProducts.demo_14.name);
 
-      const textResult = await orderPageProductsBlock.addProductToCart(page);
-      expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
+      const textResult = await boOrdersViewBlockProductsPage.addProductToCart(page);
+      expect(textResult).to.contains(boOrdersViewBlockProductsPage.successfulAddProductMessage);
     });
 
     it('should check that the confirmation mail is in mailbox', async function () {
@@ -195,8 +192,8 @@ describe('Mail alerts module - Enable/Disable return', async () => {
     it('should delete the first product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
-      const textResult = await orderPageProductsBlock.deleteProduct(page, 1);
-      expect(textResult).to.contains(orderPageProductsBlock.successfulDeleteProductMessage);
+      const textResult = await boOrdersViewBlockProductsPage.deleteProduct(page, 1);
+      expect(textResult).to.contains(boOrdersViewBlockProductsPage.successfulDeleteProductMessage);
     });
 
     it('should check that the confirmation mail is in mailbox', async function () {
@@ -265,14 +262,14 @@ describe('Mail alerts module - Enable/Disable return', async () => {
 
       await boOrdersPage.goToOrder(page, 1);
 
-      const pageTitle = await orderPageProductsBlock.getPageTitle(page);
-      expect(pageTitle).to.contains(orderPageProductsBlock.pageTitle);
+      const pageTitle = await boOrdersViewBlockProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersViewBlockProductsPage.pageTitle);
     });
 
     it('should update quantity of the ordered product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateQuantity2', baseContext);
 
-      const quantity = await orderPageProductsBlock.modifyProductQuantity(page, 1, 4);
+      const quantity = await boOrdersViewBlockProductsPage.modifyProductQuantity(page, 1, 4);
       expect(quantity, 'Quantity was not updated').to.equal(4);
     });
 
@@ -285,10 +282,10 @@ describe('Mail alerts module - Enable/Disable return', async () => {
     it(`should add the product '${dataProducts.demo_14.name}' to the cart`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProduct', baseContext);
 
-      await orderPageProductsBlock.searchProduct(page, dataProducts.demo_12.name);
+      await boOrdersViewBlockProductsPage.searchProduct(page, dataProducts.demo_12.name);
 
-      const textResult = await orderPageProductsBlock.addProductToCart(page);
-      expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
+      const textResult = await boOrdersViewBlockProductsPage.addProductToCart(page);
+      expect(textResult).to.contains(boOrdersViewBlockProductsPage.successfulAddProductMessage);
     });
 
     it('should check that the confirmation mail is not received', async function () {
@@ -300,8 +297,8 @@ describe('Mail alerts module - Enable/Disable return', async () => {
     it('should delete the first product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct2', baseContext);
 
-      const textResult = await orderPageProductsBlock.deleteProduct(page, 1);
-      expect(textResult).to.contains(orderPageProductsBlock.successfulDeleteProductMessage);
+      const textResult = await boOrdersViewBlockProductsPage.deleteProduct(page, 1);
+      expect(textResult).to.contains(boOrdersViewBlockProductsPage.successfulDeleteProductMessage);
     });
 
     it('should check that the confirmation mail is not received', async function () {

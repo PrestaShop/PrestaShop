@@ -12,7 +12,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 
 // Import pages
 // Import BO pages
-import viewOrderProductsBlockPage from '@pages/BO/orders/view/productsBlock';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
 import creditSlipPage from '@pages/FO/hummingbird/myAccount/creditSlips';
@@ -21,6 +20,7 @@ import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
 import {
   boDashboardPage,
   boOrdersPage,
+  boOrdersViewBlockProductsPage,
   boOrdersViewBlockTabListPage,
   dataOrderStatuses,
   dataPaymentMethods,
@@ -217,8 +217,8 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
 
         await viewOrderBasePage.clickOnPartialRefund(page);
 
-        const textMessage = await viewOrderProductsBlockPage.addPartialRefundProduct(page, 1, 1);
-        expect(textMessage).to.contains(viewOrderProductsBlockPage.partialRefundValidationMessage);
+        const textMessage = await boOrdersViewBlockProductsPage.addPartialRefundProduct(page, 1, 1);
+        expect(textMessage).to.contains(boOrdersViewBlockProductsPage.partialRefundValidationMessage);
       });
 
       it('should check if the mail is in mailbox', async function () {

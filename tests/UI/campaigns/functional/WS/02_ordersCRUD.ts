@@ -15,7 +15,6 @@ import webservicePage from '@pages/BO/advancedParameters/webservice';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 import orderPagePaymentBlock from '@pages/BO/orders/view/paymentBlock';
-import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
 // Import data
 import getOrderXml from '@data/xml/order';
@@ -23,6 +22,7 @@ import getOrderXml from '@data/xml/order';
 import {
   boDashboardPage,
   boOrdersPage,
+  boOrdersViewBlockProductsPage,
   boOrdersViewBlockTabListPage,
   boShoppingCartsPage,
   dataAddresses,
@@ -546,7 +546,7 @@ describe('WS - Orders : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'checkOrderTotalDiscounts1', baseContext);
 
             const xmlValue = orderXml.getAttributeValue(xmlResponseCreate, 'total_discounts');
-            const value = await orderPageProductsBlock.getOrderTotalDiscounts(page);
+            const value = await boOrdersViewBlockProductsPage.getOrderTotalDiscounts(page);
             expect(parseFloat(value.toString())).to.be.eq(parseFloat(xmlValue as string));
           });
 
@@ -554,7 +554,7 @@ describe('WS - Orders : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'checkOrderTotalShipping1', baseContext);
 
             const xmlValue = orderXml.getAttributeValue(xmlResponseCreate, 'total_shipping');
-            const value = await orderPageProductsBlock.getOrderTotalShipping(page);
+            const value = await boOrdersViewBlockProductsPage.getOrderTotalShipping(page);
             expect(parseFloat(value.toString())).to.be.eq(parseFloat(xmlValue as string));
           });
 
@@ -562,7 +562,7 @@ describe('WS - Orders : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'checkOrderTotalProductWT1', baseContext);
 
             const xmlValue = orderXml.getAttributeValue(xmlResponseCreate, 'total_products_wt');
-            const value = await orderPageProductsBlock.getOrderTotalProducts(page);
+            const value = await boOrdersViewBlockProductsPage.getOrderTotalProducts(page);
             expect(parseFloat(value.toString())).to.be.eq(parseFloat(xmlValue as string));
           });
 
@@ -570,14 +570,14 @@ describe('WS - Orders : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'checkOrderTotalPaid1', baseContext);
 
             const xmlValue = orderXml.getAttributeValue(xmlResponseCreate, 'total_paid');
-            const value = await orderPageProductsBlock.getOrderTotalProducts(page);
+            const value = await boOrdersViewBlockProductsPage.getOrderTotalProducts(page);
             expect(parseFloat(value.toString())).to.be.eq(parseFloat(xmlValue as string));
           });
 
           it('should check order_rows', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'checkOrderRows1', baseContext);
 
-            const value = await orderPageProductsBlock.getProductDetails(page, 1);
+            const value = await boOrdersViewBlockProductsPage.getProductDetails(page, 1);
 
             const xmlValueID = orderXml.getAttributeValue(xmlResponseCreate, 'associations/order_rows/order_row/id');
             expect(value.orderDetailId).to.be.eq(xmlValueID);
@@ -886,7 +886,7 @@ describe('WS - Orders : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'checkOrderTotalDiscounts2', baseContext);
 
             const xmlValue = orderXml.getAttributeValue(xmlResponseUpdate, 'total_discounts');
-            const value = await orderPageProductsBlock.getOrderTotalDiscounts(page);
+            const value = await boOrdersViewBlockProductsPage.getOrderTotalDiscounts(page);
             expect(parseFloat(value.toString())).to.be.eq(parseFloat(xmlValue as string));
           });
 
@@ -894,7 +894,7 @@ describe('WS - Orders : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'checkOrderTotalShipping2', baseContext);
 
             const xmlValue = orderXml.getAttributeValue(xmlResponseUpdate, 'total_shipping');
-            const value = await orderPageProductsBlock.getOrderTotalShipping(page);
+            const value = await boOrdersViewBlockProductsPage.getOrderTotalShipping(page);
             expect(parseFloat(value.toString())).to.be.eq(parseFloat(xmlValue as string));
           });
 
@@ -902,7 +902,7 @@ describe('WS - Orders : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'checkOrderTotalProductWT2', baseContext);
 
             const xmlValue = orderXml.getAttributeValue(xmlResponseUpdate, 'total_products_wt');
-            const value = await orderPageProductsBlock.getOrderTotalProducts(page);
+            const value = await boOrdersViewBlockProductsPage.getOrderTotalProducts(page);
             expect(parseFloat(value.toString())).to.be.eq(parseFloat(xmlValue as string));
           });
 
@@ -910,14 +910,14 @@ describe('WS - Orders : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'checkOrderTotalPaid2', baseContext);
 
             const xmlValue = orderXml.getAttributeValue(xmlResponseUpdate, 'total_paid');
-            const value = await orderPageProductsBlock.getOrderTotalProducts(page);
+            const value = await boOrdersViewBlockProductsPage.getOrderTotalProducts(page);
             expect(parseFloat(value.toString())).to.be.eq(parseFloat(xmlValue as string));
           });
 
           it('should check order_rows', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'checkOrderRows2', baseContext);
 
-            const value = await orderPageProductsBlock.getProductDetails(page, 1);
+            const value = await boOrdersViewBlockProductsPage.getProductDetails(page, 1);
 
             const xmlValueID = orderXml.getAttributeValue(xmlResponseUpdate, 'associations/order_rows/order_row/id');
             expect(value.orderDetailId).to.be.eq(xmlValueID);

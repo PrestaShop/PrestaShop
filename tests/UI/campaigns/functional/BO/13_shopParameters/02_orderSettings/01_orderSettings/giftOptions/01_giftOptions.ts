@@ -7,13 +7,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
-import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 // Import FO pages
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
   boDashboardPage,
   boOrdersPage,
+  boOrdersViewBlockProductsPage,
   boOrdersViewBlockTabListPage,
   dataCustomers,
   dataPaymentMethods,
@@ -370,7 +370,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           it('should check the \'Wrapping\' amount on products block', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkWrappingAmount${index}`, baseContext);
 
-            const wrappingAmount = await orderPageProductsBlock.getOrderWrappingTotal(page);
+            const wrappingAmount = await boOrdersViewBlockProductsPage.getOrderWrappingTotal(page);
             expect(wrappingAmount).to.be.equal(
               test.args.giftWrappingPrice * (test.args.isGiftWrappingTax === 'None' ? 1 : (1 + test.args.taxValue)));
           });

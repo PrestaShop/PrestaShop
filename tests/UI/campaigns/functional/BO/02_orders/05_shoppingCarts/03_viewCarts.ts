@@ -10,10 +10,10 @@ import createShoppingCart from '@commonTests/FO/classic/shoppingCart';
 // Import BO pages
 import addOrderPage from '@pages/BO/orders/add';
 import shoppingCartViewPage from '@pages/BO/orders/shoppingCarts/view';
-import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
 import {
   boDashboardPage,
+  boOrdersViewBlockProductsPage,
   boShoppingCartsPage,
   dataOrderStatuses,
   dataPaymentMethods,
@@ -208,10 +208,10 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
       // Create the order
       await addOrderPage.clickOnCreateOrderButton(page);
 
-      const pageTitle = await orderPageProductsBlock.getPageTitle(page);
-      expect(pageTitle).to.contain(orderPageProductsBlock.pageTitle);
+      const pageTitle = await boOrdersViewBlockProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contain(boOrdersViewBlockProductsPage.pageTitle);
 
-      orderId = await orderPageProductsBlock.getOrderID(page);
+      orderId = await boOrdersViewBlockProductsPage.getOrderID(page);
       expect(orderId).to.be.gt(0);
     });
 
@@ -307,10 +307,10 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
 
       await shoppingCartViewPage.goToOrderPage(page);
 
-      const pageTitle = await orderPageProductsBlock.getPageTitle(page);
-      expect(pageTitle).to.contain(orderPageProductsBlock.pageTitle);
+      const pageTitle = await boOrdersViewBlockProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contain(boOrdersViewBlockProductsPage.pageTitle);
 
-      const orderDetailId = await orderPageProductsBlock.getOrderID(page);
+      const orderDetailId = await boOrdersViewBlockProductsPage.getOrderID(page);
       expect(orderDetailId).to.be.eq(orderId);
     });
 

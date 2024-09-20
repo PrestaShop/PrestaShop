@@ -8,11 +8,11 @@ import loginCommon from '@commonTests/BO/loginBO';
 import stocksPage from '@pages/BO/catalog/stocks';
 import addOrderPage from '@pages/BO/orders/add';
 import viewShoppingCartPage from '@pages/BO/orders/shoppingCarts/view';
-import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
 import {
   boDashboardPage,
   boOrdersPage,
+  boOrdersViewBlockProductsPage,
   boShoppingCartsPage,
   dataCarriers,
   dataCustomers,
@@ -559,8 +559,8 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
         dataOrderStatuses.paymentAccepted,
       );
 
-      const pageTitle = await orderPageProductsBlock.getPageTitle(page);
-      expect(pageTitle).to.contains(orderPageProductsBlock.pageTitle);
+      const pageTitle = await boOrdersViewBlockProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersViewBlockProductsPage.pageTitle);
     });
   });
 });

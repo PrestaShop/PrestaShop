@@ -7,11 +7,11 @@ import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
 import creditSlipsPage from '@pages/BO/orders/creditSlips';
-import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
 import {
   boDashboardPage,
   boOrdersPage,
+  boOrdersViewBlockProductsPage,
   boOrdersViewBlockTabListPage,
   dataCustomers,
   dataOrderStatuses,
@@ -104,8 +104,8 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
 
       await boOrdersViewBlockTabListPage.clickOnPartialRefund(page);
 
-      const textMessage = await orderPageProductsBlock.addPartialRefundProduct(page, 1, 1);
-      expect(textMessage).to.contains(orderPageProductsBlock.partialRefundValidationMessage);
+      const textMessage = await boOrdersViewBlockProductsPage.addPartialRefundProduct(page, 1, 1);
+      expect(textMessage).to.contains(boOrdersViewBlockProductsPage.partialRefundValidationMessage);
     });
 
     it('should check the existence of the Credit slip document', async function () {

@@ -15,11 +15,11 @@ import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import addProductPage from '@pages/BO/catalog/products/add';
-import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
 import {
   boDashboardPage,
   boOrdersPage,
+  boOrdersViewBlockProductsPage,
   boProductsPage,
   dataPaymentMethods,
   dataProducts,
@@ -427,8 +427,8 @@ describe('BO - Orders - View and edit order : Check product block in view order 
 
       await boOrdersPage.goToOrder(page, 1);
 
-      const pageTitle = await orderPageProductsBlock.getPageTitle(page);
-      expect(pageTitle).to.contains(orderPageProductsBlock.pageTitle);
+      const pageTitle = await boOrdersViewBlockProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersViewBlockProductsPage.pageTitle);
     });
   });
 
@@ -437,14 +437,14 @@ describe('BO - Orders - View and edit order : Check product block in view order 
     it('should delete the ordered product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
-      const textResult = await orderPageProductsBlock.deleteProduct(page, 1);
-      expect(textResult).to.contains(orderPageProductsBlock.successfulDeleteProductMessage);
+      const textResult = await boOrdersViewBlockProductsPage.deleteProduct(page, 1);
+      expect(textResult).to.contains(boOrdersViewBlockProductsPage.successfulDeleteProductMessage);
     });
 
     it('should check number of products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts0', baseContext);
 
-      const productCount = await orderPageProductsBlock.getProductsNumber(page);
+      const productCount = await boOrdersViewBlockProductsPage.getProductsNumber(page);
       expect(productCount).to.equal(productNumber);
     });
 
@@ -452,9 +452,9 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it(`should search for the product '${simpleProduct.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'searchSimpleProduct1', baseContext);
 
-        await orderPageProductsBlock.searchProduct(page, simpleProduct.name);
+        await boOrdersViewBlockProductsPage.searchProduct(page, simpleProduct.name);
 
-        const result = await orderPageProductsBlock.getSearchedProductDetails(page);
+        const result = await boOrdersViewBlockProductsPage.getSearchedProductDetails(page);
         await Promise.all([
           expect(result.stockLocation).to.equal(simpleProduct.stockLocation),
           expect(result.available).to.equal(simpleProduct.quantity - 1),
@@ -465,8 +465,8 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it('should add the product to the cart', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addSimpleProductToTheCart1', baseContext);
 
-        const textResult = await orderPageProductsBlock.addProductToCart(page);
-        expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
+        const textResult = await boOrdersViewBlockProductsPage.addProductToCart(page);
+        expect(textResult).to.contains(boOrdersViewBlockProductsPage.successfulAddProductMessage);
 
         productNumber += 1;
       });
@@ -474,7 +474,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it('should check the ordered product details', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkSimpleProductDetails', baseContext);
 
-        const result = await orderPageProductsBlock.getProductDetails(page, 1);
+        const result = await boOrdersViewBlockProductsPage.getProductDetails(page, 1);
         await Promise.all([
           expect(result.name).to.equal(simpleProduct.name),
           expect(result.reference).to.equal(`Reference number: ${simpleProduct.reference}`),
@@ -488,18 +488,18 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it('should add the same product and check the error message', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'orderSimpleProduct2', baseContext);
 
-        await orderPageProductsBlock.searchProduct(page, simpleProduct.name);
+        await boOrdersViewBlockProductsPage.searchProduct(page, simpleProduct.name);
 
-        const textResult = await orderPageProductsBlock.addProductToCart(page);
-        expect(textResult).to.contains(orderPageProductsBlock.errorAddSameProduct);
+        const textResult = await boOrdersViewBlockProductsPage.addProductToCart(page);
+        expect(textResult).to.contains(boOrdersViewBlockProductsPage.errorAddSameProduct);
       });
 
       it('should click on cancel button', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOncancelButton1', baseContext);
 
-        await orderPageProductsBlock.cancelAddProductToCart(page);
+        await boOrdersViewBlockProductsPage.cancelAddProductToCart(page);
 
-        const isVisible = await orderPageProductsBlock.isAddProductTableRowVisible(page);
+        const isVisible = await boOrdersViewBlockProductsPage.isAddProductTableRowVisible(page);
         expect(isVisible).to.eq(false);
       });
     });
@@ -508,9 +508,9 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it(`should search for the product '${combinationProduct.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'searchCombinationProduct', baseContext);
 
-        await orderPageProductsBlock.searchProduct(page, combinationProduct.name);
+        await boOrdersViewBlockProductsPage.searchProduct(page, combinationProduct.name);
 
-        const result = await orderPageProductsBlock.getSearchedProductDetails(page);
+        const result = await boOrdersViewBlockProductsPage.getSearchedProductDetails(page);
         await Promise.all([
           expect(result.available).to.equal(combinationProduct.quantity - 1),
           expect(result.price).to.equal(combinationProduct.price),
@@ -520,8 +520,8 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it('should add the product to the cart', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addCombinationProduct', baseContext);
 
-        const textResult = await orderPageProductsBlock.addProductToCart(page);
-        expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
+        const textResult = await boOrdersViewBlockProductsPage.addProductToCart(page);
+        expect(textResult).to.contains(boOrdersViewBlockProductsPage.successfulAddProductMessage);
 
         productNumber += 1;
       });
@@ -529,7 +529,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it('should check the ordered product details', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkCombinationProductDetails', baseContext);
 
-        const result = await orderPageProductsBlock.getProductDetails(page, 1);
+        const result = await boOrdersViewBlockProductsPage.getProductDetails(page, 1);
         await Promise.all([
           expect(result.name).to.equal(`${combinationProduct.name} (Size: `
             + `${combinationProduct.attributes[1].values[0]} - Color: ${combinationProduct.attributes[0].values[0]})`),
@@ -546,8 +546,8 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it(`should search for the product '${virtualProduct.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'searchVirtualProduct', baseContext);
 
-        await orderPageProductsBlock.searchProduct(page, virtualProduct.name);
-        const result = await orderPageProductsBlock.getSearchedProductDetails(page);
+        await boOrdersViewBlockProductsPage.searchProduct(page, virtualProduct.name);
+        const result = await boOrdersViewBlockProductsPage.getSearchedProductDetails(page);
         await Promise.all([
           expect(result.available).to.equal(virtualProduct.quantity - 1),
           expect(result.price).to.equal(virtualProduct.price),
@@ -557,8 +557,8 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it('should add the product to the cart', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addVirtualProductToTheCart', baseContext);
 
-        const textResult = await orderPageProductsBlock.addProductToCart(page);
-        expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
+        const textResult = await boOrdersViewBlockProductsPage.addProductToCart(page);
+        expect(textResult).to.contains(boOrdersViewBlockProductsPage.successfulAddProductMessage);
 
         productNumber += 1;
       });
@@ -566,7 +566,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it('should check the ordered product details', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkVirtualProductDetails', baseContext);
 
-        const result = await orderPageProductsBlock.getProductDetails(page, 2);
+        const result = await boOrdersViewBlockProductsPage.getProductDetails(page, 2);
         await Promise.all([
           expect(result.name).to.equal(virtualProduct.name),
           expect(result.reference).to.equal(`Reference number: ${virtualProduct.reference}`),
@@ -582,9 +582,9 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it(`should search for the product '${packOfProducts.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'searchPackOfProducts', baseContext);
 
-        await orderPageProductsBlock.searchProduct(page, packOfProducts.name);
+        await boOrdersViewBlockProductsPage.searchProduct(page, packOfProducts.name);
 
-        const result = await orderPageProductsBlock.getSearchedProductDetails(page);
+        const result = await boOrdersViewBlockProductsPage.getSearchedProductDetails(page);
         await Promise.all([
           expect(result.stockLocation).to.equal(packOfProducts.stockLocation),
           expect(result.available).to.be.above(0),
@@ -596,17 +596,17 @@ describe('BO - Orders - View and edit order : Check product block in view order 
         + 'quantity', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addPackOfProductsToTheCart', baseContext);
 
-        const textResult = await orderPageProductsBlock.addProductToCart(page);
-        expect(textResult).to.contains(orderPageProductsBlock.errorMinimumQuantityMessage);
+        const textResult = await boOrdersViewBlockProductsPage.addProductToCart(page);
+        expect(textResult).to.contains(boOrdersViewBlockProductsPage.errorMinimumQuantityMessage);
       });
 
       it('should increase the quantity and check ordered product details', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkPackOfProductsDetails', baseContext);
 
-        const textResult = await orderPageProductsBlock.addProductToCart(page, packOfProducts.minimumQuantity);
-        expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
+        const textResult = await boOrdersViewBlockProductsPage.addProductToCart(page, packOfProducts.minimumQuantity);
+        expect(textResult).to.contains(boOrdersViewBlockProductsPage.successfulAddProductMessage);
 
-        const result = await orderPageProductsBlock.getProductDetails(page, 3);
+        const result = await boOrdersViewBlockProductsPage.getProductDetails(page, 3);
         await Promise.all([
           expect(result.name).to.equal(packOfProducts.name),
           expect(result.reference).to.equal(`Reference number: ${packOfProducts.reference}`),
@@ -624,9 +624,9 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it(`should search for the product '${dataProducts.demo_14.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'searchCustomizedProduct', baseContext);
 
-        await orderPageProductsBlock.searchProduct(page, dataProducts.demo_14.name);
+        await boOrdersViewBlockProductsPage.searchProduct(page, dataProducts.demo_14.name);
 
-        const result = await orderPageProductsBlock.getSearchedProductDetails(page);
+        const result = await boOrdersViewBlockProductsPage.getSearchedProductDetails(page);
         await Promise.all([
           expect(result.available).to.be.above(0),
           expect(result.price).to.equal(dataProducts.demo_14.price),
@@ -636,15 +636,15 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it('should add the product to the cart', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addCustomizedProductToTheCart', baseContext);
 
-        const textResult = await orderPageProductsBlock.addProductToCart(page);
-        expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
+        const textResult = await boOrdersViewBlockProductsPage.addProductToCart(page);
+        expect(textResult).to.contains(boOrdersViewBlockProductsPage.successfulAddProductMessage);
         productNumber += 1;
       });
 
       it('should check the ordered product details', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkCustomizedProductDetails', baseContext);
 
-        const result = await orderPageProductsBlock.getProductDetails(page, 4);
+        const result = await boOrdersViewBlockProductsPage.getProductDetails(page, 4);
         await Promise.all([
           expect(result.name).to.equal(dataProducts.demo_14.name),
           expect(result.reference).to.equal(`Reference number: ${dataProducts.demo_14.reference}`),
@@ -659,9 +659,9 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it(`should search for the product '${productOutOfStockAllowed.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'searchProductOutOfStockAllowed', baseContext);
 
-        await orderPageProductsBlock.searchProduct(page, productOutOfStockAllowed.name);
+        await boOrdersViewBlockProductsPage.searchProduct(page, productOutOfStockAllowed.name);
 
-        const result = await orderPageProductsBlock.getSearchedProductDetails(page);
+        const result = await boOrdersViewBlockProductsPage.getSearchedProductDetails(page);
         await Promise.all([
           expect(result.stockLocation).to.equal(productOutOfStockAllowed.stockLocation),
           expect(result.available).to.equal(productOutOfStockAllowed.quantity - 1),
@@ -672,8 +672,8 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it('should add the product to the cart', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addProductOutOfStockAllowed', baseContext);
 
-        const textResult = await orderPageProductsBlock.addProductToCart(page);
-        expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
+        const textResult = await boOrdersViewBlockProductsPage.addProductToCart(page);
+        expect(textResult).to.contains(boOrdersViewBlockProductsPage.successfulAddProductMessage);
 
         productNumber += 1;
       });
@@ -681,7 +681,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it('should check the ordered product details', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkProductOutOfStockAllowedDetails', baseContext);
 
-        const result = await orderPageProductsBlock.getProductDetails(page, 4);
+        const result = await boOrdersViewBlockProductsPage.getProductDetails(page, 4);
         await Promise.all([
           expect(result.name).to.equal(productOutOfStockAllowed.name),
           expect(result.basePrice).to.equal(productOutOfStockAllowed.price),
@@ -694,7 +694,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it('should update quantity of the product', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityOutOfStockAllowed', baseContext);
 
-        const quantity = await orderPageProductsBlock.modifyProductQuantity(page, 1, newQuantity);
+        const quantity = await boOrdersViewBlockProductsPage.modifyProductQuantity(page, 1, newQuantity);
         expect(quantity, 'Quantity was not updated').to.equal(newQuantity);
       });
     });
@@ -703,9 +703,9 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it(`should search for the product '${productOutOfStockNotAllowed.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'searchProductOutOfStockNotAllowed', baseContext);
 
-        await orderPageProductsBlock.searchProduct(page, productOutOfStockNotAllowed.name);
+        await boOrdersViewBlockProductsPage.searchProduct(page, productOutOfStockNotAllowed.name);
 
-        const result = await orderPageProductsBlock.getSearchedProductDetails(page);
+        const result = await boOrdersViewBlockProductsPage.getSearchedProductDetails(page);
         await Promise.all([
           expect(result.stockLocation).to.equal(productOutOfStockNotAllowed.stockLocation),
           expect(result.available).to.equal(productOutOfStockNotAllowed.quantity - 1),
@@ -716,25 +716,25 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it('should check that add button is disabled', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkThatAddButtonIsDisabled', baseContext);
 
-        const isDisabled = await orderPageProductsBlock.isAddButtonDisabled(page);
+        const isDisabled = await boOrdersViewBlockProductsPage.isAddButtonDisabled(page);
         expect(isDisabled).to.eq(true);
       });
 
       it('should increase the quantity of the product and check that cancel button still disabled', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityOutOfStockNotAllowed', baseContext);
 
-        await orderPageProductsBlock.addQuantity(page, newQuantity);
+        await boOrdersViewBlockProductsPage.addQuantity(page, newQuantity);
 
-        const isDisabled = await orderPageProductsBlock.isAddButtonDisabled(page);
+        const isDisabled = await boOrdersViewBlockProductsPage.isAddButtonDisabled(page);
         expect(isDisabled).to.eq(true);
       });
 
       it('should click on cancel button', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnCancelButton2', baseContext);
 
-        await orderPageProductsBlock.cancelAddProductToCart(page);
+        await boOrdersViewBlockProductsPage.cancelAddProductToCart(page);
 
-        const isVisible = await orderPageProductsBlock.isAddProductTableRowVisible(page);
+        const isVisible = await boOrdersViewBlockProductsPage.isAddProductTableRowVisible(page);
         expect(isVisible).to.eq(false);
       });
     });
@@ -743,9 +743,9 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it(`should search for the product '${productWithSpecificPrice.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'searchProductWithSpecificPrice', baseContext);
 
-        await orderPageProductsBlock.searchProduct(page, productWithSpecificPrice.name);
+        await boOrdersViewBlockProductsPage.searchProduct(page, productWithSpecificPrice.name);
 
-        const result = await orderPageProductsBlock.getSearchedProductDetails(page);
+        const result = await boOrdersViewBlockProductsPage.getSearchedProductDetails(page);
         await Promise.all([
           expect(result.available).to.be.above(0),
           expect(result.price).to.equal(productWithSpecificPrice.price),
@@ -755,8 +755,8 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it('should add the product to the cart', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addProductWithSpecificPriceToTheCart', baseContext);
 
-        const textResult = await orderPageProductsBlock.addProductToCart(page);
-        expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
+        const textResult = await boOrdersViewBlockProductsPage.addProductToCart(page);
+        expect(textResult).to.contains(boOrdersViewBlockProductsPage.successfulAddProductMessage);
 
         productNumber += 1;
       });
@@ -764,7 +764,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it('should check the ordered product details', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkProductWithSpecificPriceDetails', baseContext);
 
-        const result = await orderPageProductsBlock.getProductDetails(page, 6);
+        const result = await boOrdersViewBlockProductsPage.getProductDetails(page, 6);
         await Promise.all([
           expect(result.name).to.equal(productWithSpecificPrice.name),
           expect(result.basePrice).to.equal(productWithSpecificPrice.price),
@@ -779,9 +779,9 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it(`should search for the product '${productWithEcoTax.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'searchProductWithEcoTax', baseContext);
 
-        await orderPageProductsBlock.searchProduct(page, productWithEcoTax.name);
+        await boOrdersViewBlockProductsPage.searchProduct(page, productWithEcoTax.name);
 
-        const result = await orderPageProductsBlock.getSearchedProductDetails(page);
+        const result = await boOrdersViewBlockProductsPage.getSearchedProductDetails(page);
         await Promise.all([
           expect(result.stockLocation).to.equal(productWithEcoTax.stockLocation),
           expect(result.available).to.be.above(0),
@@ -792,16 +792,16 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it('should add the product to the cart', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addProductWithEcoTax', baseContext);
 
-        const textResult = await orderPageProductsBlock.addProductToCart(page);
+        const textResult = await boOrdersViewBlockProductsPage.addProductToCart(page);
 
-        expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
+        expect(textResult).to.contains(boOrdersViewBlockProductsPage.successfulAddProductMessage);
         productNumber += 1;
       });
 
       it('should check the ordered product details', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkProductWithEcoTaxDetails', baseContext);
 
-        const result = await orderPageProductsBlock.getProductDetails(page, 7);
+        const result = await boOrdersViewBlockProductsPage.getProductDetails(page, 7);
         await Promise.all([
           expect(result.name).to.equal(productWithEcoTax.name),
           expect(result.basePrice).to.equal(productWithEcoTax.price),
@@ -816,9 +816,9 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it(`should search for the product '${productWithCartRule.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'searchProductWithCartRule', baseContext);
 
-        await orderPageProductsBlock.searchProduct(page, productWithCartRule.name);
+        await boOrdersViewBlockProductsPage.searchProduct(page, productWithCartRule.name);
 
-        const result = await orderPageProductsBlock.getSearchedProductDetails(page);
+        const result = await boOrdersViewBlockProductsPage.getSearchedProductDetails(page);
         await Promise.all([
           expect(result.stockLocation).to.equal(productWithCartRule.stockLocation),
           expect(result.available).to.be.above(0),
@@ -829,8 +829,8 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it('should add the product to the cart', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addProductWithCartRuleToTheCart', baseContext);
 
-        const textResult = await orderPageProductsBlock.addProductToCart(page);
-        expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
+        const textResult = await boOrdersViewBlockProductsPage.addProductToCart(page);
+        expect(textResult).to.contains(boOrdersViewBlockProductsPage.successfulAddProductMessage);
 
         productNumber += 1;
       });
@@ -838,7 +838,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it('should check the ordered product details', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkProductWithCartRuleDetails', baseContext);
 
-        const result = await orderPageProductsBlock.getProductDetails(page, 8);
+        const result = await boOrdersViewBlockProductsPage.getProductDetails(page, 8);
         await Promise.all([
           expect(result.name).to.equal(productWithCartRule.name),
           expect(result.basePrice).to.equal(productWithCartRule.price),
@@ -853,16 +853,16 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it('should update the quantity', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'updateQuantity', baseContext);
 
-        const quantity = await orderPageProductsBlock.modifyProductQuantity(page, 1, newQuantity);
+        const quantity = await boOrdersViewBlockProductsPage.modifyProductQuantity(page, 1, newQuantity);
         expect(quantity, 'Quantity was not updated').to.equal(newQuantity);
       });
 
       it('should update the price', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'updatePrice', baseContext);
 
-        await orderPageProductsBlock.modifyProductPrice(page, 1, newPrice);
+        await boOrdersViewBlockProductsPage.modifyProductPrice(page, 1, newPrice);
 
-        const result = await orderPageProductsBlock.getProductDetails(page, 1);
+        const result = await boOrdersViewBlockProductsPage.getProductDetails(page, 1);
         await Promise.all([
           expect(result.basePrice, 'Base price was not updated').to.equal(newPrice),
           expect(result.total, 'Total price was not updated').to.equal(newPrice * newQuantity),
@@ -874,7 +874,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it('should check number of products', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts', baseContext);
 
-        const productCount = await orderPageProductsBlock.getProductsNumber(page);
+        const productCount = await boOrdersViewBlockProductsPage.getProductsNumber(page);
         expect(productCount).to.equal(productNumber);
       });
 
@@ -882,35 +882,35 @@ describe('BO - Orders - View and edit order : Check product block in view order 
         it('should display 8 items', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'displayDefaultItemsNumber', baseContext);
 
-          const isNextLinkVisible = await orderPageProductsBlock.selectPaginationLimit(page, 8);
+          const isNextLinkVisible = await boOrdersViewBlockProductsPage.selectPaginationLimit(page, 8);
           expect(isNextLinkVisible).to.eq(true);
         });
 
         it('should click on next', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-          const paginationNumber = await orderPageProductsBlock.paginationNext(page);
+          const paginationNumber = await boOrdersViewBlockProductsPage.paginationNext(page);
           expect(paginationNumber).to.equal('2');
         });
 
         it('should click on previous', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-          const paginationNumber = await orderPageProductsBlock.paginationPrevious(page);
+          const paginationNumber = await boOrdersViewBlockProductsPage.paginationPrevious(page);
           expect(paginationNumber).to.equal('1');
         });
 
         it('should display 20 items', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'displayAllItems', baseContext);
 
-          const isNextLinkVisible = await orderPageProductsBlock.selectPaginationLimit(page, 20);
+          const isNextLinkVisible = await boOrdersViewBlockProductsPage.selectPaginationLimit(page, 20);
           expect(isNextLinkVisible).to.eq(false);
         });
 
         it('should display 8 items', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'redisplayDefaultItemsNumber', baseContext);
 
-          const isNextLinkVisible = await orderPageProductsBlock.selectPaginationLimit(page, 8);
+          const isNextLinkVisible = await boOrdersViewBlockProductsPage.selectPaginationLimit(page, 8);
           expect(isNextLinkVisible).to.eq(true);
         });
       });

@@ -8,11 +8,11 @@ import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
 import orderPageMessagesBlock from '@pages/BO/orders/view/paymentBlock';
-import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
 import {
   boDashboardPage,
   boOrdersPage,
+  boOrdersViewBlockProductsPage,
   boOrdersViewBlockTabListPage,
   dataCurrencies,
   dataCustomers,
@@ -436,11 +436,11 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
     it(`should add the product '${dataProducts.demo_5.name}' to the cart`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchCustomizedProduct', baseContext);
 
-      await orderPageProductsBlock.searchProduct(page, dataProducts.demo_5.name);
-      await orderPageProductsBlock.selectInvoice(page);
+      await boOrdersViewBlockProductsPage.searchProduct(page, dataProducts.demo_5.name);
+      await boOrdersViewBlockProductsPage.selectInvoice(page);
 
-      const textResult = await orderPageProductsBlock.addProductToCart(page, 1, true);
-      expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
+      const textResult = await boOrdersViewBlockProductsPage.addProductToCart(page, 1, true);
+      expect(textResult).to.contains(boOrdersViewBlockProductsPage.successfulAddProductMessage);
     });
 
     it('should check that products number is equal to 2', async function () {
@@ -448,7 +448,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
 
       await orderPageMessagesBlock.reloadPage(page);
 
-      const productCount = await orderPageProductsBlock.getProductsNumber(page);
+      const productCount = await boOrdersViewBlockProductsPage.getProductsNumber(page);
       expect(productCount).to.equal(2);
     });
 

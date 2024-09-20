@@ -7,12 +7,10 @@ import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advanced
 import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
-// Import BO pages
-import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
-
 import {
   boDashboardPage,
   boOrdersPage,
+  boOrdersViewBlockProductsPage,
   boOrdersViewBlockTabListPage,
   dataCustomers,
   dataOrderStatuses,
@@ -135,9 +133,9 @@ describe('BO - Orders - View and edit order : Return an order', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'returnProducts', baseContext);
 
       await boOrdersViewBlockTabListPage.clickOnReturnProductsButton(page);
-      await orderPageProductsBlock.setReturnedProductQuantity(page, 1, 1);
+      await boOrdersViewBlockProductsPage.setReturnedProductQuantity(page, 1, 1);
 
-      const errorMessage = await orderPageProductsBlock.clickOnReturnProducts(page);
+      const errorMessage = await boOrdersViewBlockProductsPage.clickOnReturnProducts(page);
       expect(errorMessage).to.eq('Please select at least one product.');
     });
 
@@ -145,15 +143,15 @@ describe('BO - Orders - View and edit order : Return an order', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'returnProducts2', baseContext);
 
       await boOrdersViewBlockTabListPage.clickOnReturnProductsButton(page);
-      await orderPageProductsBlock.checkReturnedQuantity(page);
+      await boOrdersViewBlockProductsPage.checkReturnedQuantity(page);
     });
 
     it('should check generate a voucher checkbox', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkGenerateVoucher', baseContext);
 
-      await orderPageProductsBlock.checkGenerateVoucher(page, true);
+      await boOrdersViewBlockProductsPage.checkGenerateVoucher(page, true);
 
-      const successMessage = await orderPageProductsBlock.clickOnReturnProducts(page);
+      const successMessage = await boOrdersViewBlockProductsPage.clickOnReturnProducts(page);
       expect(successMessage).to.eq('The product was successfully returned.');
     });
 
@@ -167,7 +165,7 @@ describe('BO - Orders - View and edit order : Return an order', async () => {
     it('should check that the new column refunded is visible in products table', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'isNewColumnVisible', baseContext);
 
-      const isColumnVisible = await orderPageProductsBlock.isRefundedColumnVisible(page);
+      const isColumnVisible = await boOrdersViewBlockProductsPage.isRefundedColumnVisible(page);
       expect(isColumnVisible).to.eq(true);
     });
 

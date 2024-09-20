@@ -10,7 +10,6 @@ import cleanTableStockMovements from '@commonTests/BO/catalog/stock';
 // Import BO pages
 import addProductPage from '@pages/BO/catalog/products/add';
 import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
-import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import stocksPage from '@pages/BO/catalog/stocks';
 import movementsPage from '@pages/BO/catalog/stocks/movements';
 // Import FO pages
@@ -20,6 +19,7 @@ import {
   boDashboardPage,
   boLoginPage,
   boOrdersPage,
+  boOrdersViewBlockProductsPage,
   boProductsPage,
   dataCategories,
   dataCustomers,
@@ -316,14 +316,14 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
 
         page = await movementsPage.clickOnMovementTypeLink(page, 1);
 
-        const pageTitle = await orderPageProductsBlock.getPageTitle(page);
-        expect(pageTitle).to.contains(orderPageProductsBlock.pageTitle);
+        const pageTitle = await boOrdersViewBlockProductsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersViewBlockProductsPage.pageTitle);
       });
 
       it('should close the new tab', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'closeTabViewOrder', baseContext);
 
-        page = await orderPageProductsBlock.closePage(browserContext, page, 0);
+        page = await boOrdersViewBlockProductsPage.closePage(browserContext, page, 0);
 
         const pageTitle = await movementsPage.getPageTitle(page);
         expect(pageTitle).to.contains(movementsPage.pageTitle);

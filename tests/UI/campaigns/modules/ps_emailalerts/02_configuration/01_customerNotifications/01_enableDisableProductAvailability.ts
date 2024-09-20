@@ -10,7 +10,6 @@ import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advanced
 // Import pages
 // Import BO pages
 import addProductPage from '@pages/BO/catalog/products/add';
-import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import stocksPage from '@pages/BO/catalog/stocks';
 // Import FO pages
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
@@ -19,6 +18,7 @@ import {
   boDashboardPage,
   boModuleManagerPage,
   boOrdersPage,
+  boOrdersViewBlockProductsPage,
   boOrdersViewBlockTabListPage,
   boProductsPage,
   boProductsCreateTabStocksPage,
@@ -468,9 +468,9 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
       await testContext.addContextItem(this, 'testIdentifier', 'returnProducts', baseContext);
 
       await boOrdersViewBlockTabListPage.clickOnReturnProductsButton(page);
-      await orderPageProductsBlock.checkReturnedQuantity(page);
+      await boOrdersViewBlockProductsPage.checkReturnedQuantity(page);
 
-      const successMessage = await orderPageProductsBlock.clickOnReturnProducts(page);
+      const successMessage = await boOrdersViewBlockProductsPage.clickOnReturnProducts(page);
       expect(successMessage).to.eq('The product was successfully returned.');
     });
 

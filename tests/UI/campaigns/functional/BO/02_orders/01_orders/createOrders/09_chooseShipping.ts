@@ -7,12 +7,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
 import addOrderPage from '@pages/BO/orders/add';
-import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 
 import {
   boDashboardPage,
   boOrdersPage,
+  boOrdersViewBlockProductsPage,
   boOrdersViewBlockTabListPage,
   dataCarriers,
   dataCustomers,
@@ -246,8 +246,8 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
 
       await addOrderPage.setSummaryAndCreateOrder(page, paymentMethodModuleName, orderStatus);
 
-      const pageTitle = await orderPageProductsBlock.getPageTitle(page);
-      expect(pageTitle).to.contain(orderPageProductsBlock.pageTitle);
+      const pageTitle = await boOrdersViewBlockProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contain(boOrdersViewBlockProductsPage.pageTitle);
     });
 
     it('should check \'Recycled packaging\' and \'gift wrapping\' badges', async function () {

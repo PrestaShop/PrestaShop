@@ -10,12 +10,12 @@ import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 // Import BO pages
 import addOrderPage from '@pages/BO/orders/add';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
-import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
 import {
   boCustomersPage,
   boDashboardPage,
   boOrdersPage,
+  boOrdersViewBlockProductsPage,
   boOrdersViewBlockTabListPage,
   dataOrderStatuses,
   dataPaymentMethods,
@@ -253,14 +253,14 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
     it('should check number of ordered products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts0', baseContext);
 
-      const productCount = await orderPageProductsBlock.getProductsNumber(orderIframe!);
+      const productCount = await boOrdersViewBlockProductsPage.getProductsNumber(orderIframe!);
       expect(productCount).to.equal(1);
     });
 
     it('should check the ordered product details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSimpleProductDetails', baseContext);
 
-      const result = await orderPageProductsBlock.getProductDetails(orderIframe!, 1);
+      const result = await boOrdersViewBlockProductsPage.getProductDetails(orderIframe!, 1);
       await Promise.all([
         expect(result.name).to.equal(`${dataProducts.demo_1.name} (Size: S - Color: White)`),
         expect(result.reference).to.equal(`Reference number: ${dataProducts.demo_1.reference}`),
@@ -306,8 +306,8 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
 
       await addOrderPage.setSummaryAndCreateOrder(page, paymentMethodModuleName, orderStatus);
 
-      const pageTitle = await orderPageProductsBlock.getPageTitle(page);
-      expect(pageTitle).to.contain(orderPageProductsBlock.pageTitle);
+      const pageTitle = await boOrdersViewBlockProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contain(boOrdersViewBlockProductsPage.pageTitle);
     });
   });
 

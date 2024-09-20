@@ -8,13 +8,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
-import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 // Import FO pages
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
   boDashboardPage,
   boOrdersPage,
+  boOrdersViewBlockProductsPage,
   boOrdersViewBlockTabListPage,
   dataCarriers,
   dataPaymentMethods,
@@ -289,17 +289,17 @@ describe('BO - Orders : Preview order', async () => {
 
         await boOrdersPage.openOrderDetails(page);
 
-        const pageTitle = await orderPageProductsBlock.getPageTitle(page);
-        expect(pageTitle).to.contains(orderPageProductsBlock.pageTitle);
+        const pageTitle = await boOrdersViewBlockProductsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersViewBlockProductsPage.pageTitle);
       });
 
       it('should add another product to the list', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addAnotherProductToTheList', baseContext);
 
-        await orderPageProductsBlock.searchProduct(page, dataProducts.demo_19.name);
+        await boOrdersViewBlockProductsPage.searchProduct(page, dataProducts.demo_19.name);
 
-        const textResult = await orderPageProductsBlock.addProductToCart(page);
-        expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
+        const textResult = await boOrdersViewBlockProductsPage.addProductToCart(page);
+        expect(textResult).to.contains(boOrdersViewBlockProductsPage.successfulAddProductMessage);
       });
 
       it('should click on \'Carriers\' tab', async function () {

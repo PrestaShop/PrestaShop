@@ -8,11 +8,11 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import creditSlipsPage from '@pages/BO/orders/creditSlips';
-import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
 import {
   boDashboardPage,
   boOrdersPage,
+  boOrdersViewBlockProductsPage,
   boOrdersViewBlockTabListPage,
   dataCustomers,
   dataOrderStatuses,
@@ -145,8 +145,8 @@ describe('BO - Orders - Credit slips: Credit slip options', async () => {
 
       await boOrdersViewBlockTabListPage.clickOnPartialRefund(page);
 
-      const textMessage = await orderPageProductsBlock.addPartialRefundProduct(page, 1, 1);
-      expect(textMessage).to.contains(orderPageProductsBlock.partialRefundValidationMessage);
+      const textMessage = await boOrdersViewBlockProductsPage.addPartialRefundProduct(page, 1, 1);
+      expect(textMessage).to.contains(boOrdersViewBlockProductsPage.partialRefundValidationMessage);
     });
 
     it('should check the existence of the Credit slip document', async function () {
