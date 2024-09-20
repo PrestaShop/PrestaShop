@@ -9,7 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import viewCustomerPage from '@pages/BO/customers/view';
 import customerServicePage from '@pages/BO/customerService/customerService';
 // Import FO pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {contactUsPage} from '@pages/FO/classic/contactUs';
 import {createAccountPage} from '@pages/FO/classic/myAccount/add';
 import {gdprPersonalDataPage} from '@pages/FO/classic/myAccount/gdprPersonalData';
@@ -26,6 +25,7 @@ import {
   FakerCustomer,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
@@ -491,8 +491,8 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
         await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
         // Check the confirmation message
-        const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-        expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+        const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+        expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
       });
 
       it('should go to my account page', async function () {

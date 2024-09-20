@@ -3,7 +3,6 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -24,6 +23,7 @@ import {
   FakerCustomer,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicProductPage,
   foClassicSearchResultsPage,
@@ -482,10 +482,10 @@ describe('BO - Shipping - Carriers : General Settings', async () => {
 
     // Payment step - Choose payment step
     await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
-    const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
+    const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
 
     // Check the confirmation message
-    expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+    expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
   });
 
   it('should delete carrier', async function () {

@@ -10,7 +10,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 // Import BO pages
 import customerServicePage from '@pages/BO/customerService/customerService';
 // Import FO pages
-import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
 import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
 import orderHistoryPage from '@pages/FO/hummingbird/myAccount/orderHistory';
 
@@ -23,6 +22,7 @@ import {
   dataProducts,
   foHummingbirdCartPage,
   foHummingbirdCheckoutPage,
+  foHummingbirdCheckoutOrderConfirmationPage,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
@@ -146,18 +146,18 @@ describe('FO - Account : Send a message with an ordered product', async () => {
 
       // Payment step - Choose payment step
       await foHummingbirdCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
+      const cardTitle = await foHummingbirdCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
 
       // Check the confirmation message
-      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      expect(cardTitle).to.contains(foHummingbirdCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
 
     it('should sign out from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighOutFO', baseContext);
 
-      await orderConfirmationPage.logout(page);
+      await foHummingbirdCheckoutOrderConfirmationPage.logout(page);
 
-      const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdCheckoutOrderConfirmationPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
   });

@@ -9,7 +9,6 @@ import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import addCustomerPage from '@pages/BO/customers/add';
 
 // Import FO pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 
@@ -24,6 +23,7 @@ import {
   FakerCustomer,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
@@ -185,15 +185,15 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
       await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       // Check the confirmation message
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+      expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
 
       // Close page and init page objects
-      page = await orderConfirmationPage.closePage(browserContext, page, 0);
+      page = await foClassicCheckoutOrderConfirmationPage.closePage(browserContext, page, 0);
       await boShoppingCartsPage.reloadPage(page);
 
       const pageTitle = await boAdministrationPage.getPageTitle(page);

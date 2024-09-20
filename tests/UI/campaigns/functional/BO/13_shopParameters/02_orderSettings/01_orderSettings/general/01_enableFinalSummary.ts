@@ -7,14 +7,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
-// Import FO pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
   boDashboardPage,
   dataCustomers,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsPlaywright,
@@ -132,14 +131,14 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable final summary',
       await testContext.addContextItem(this, 'testIdentifier', `checkFinalSummary${index}`, baseContext);
 
       // Check the final summary existence in payment step
-      const isVisible = await orderConfirmationPage.isFinalSummaryVisible(page);
+      const isVisible = await foClassicCheckoutOrderConfirmationPage.isFinalSummaryVisible(page);
       expect(isVisible).to.be.equal(test.args.exist);
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}CheckAndBackToBO`, baseContext);
 
-      page = await orderConfirmationPage.closePage(browserContext, page, 0);
+      page = await foClassicCheckoutOrderConfirmationPage.closePage(browserContext, page, 0);
 
       const pageTitle = await orderSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(orderSettingsPage.pageTitle);

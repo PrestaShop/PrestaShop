@@ -10,7 +10,6 @@ import customerServiceMainPage from '@pages/BO/customerService/customerService';
 import customerServiceMessageViewPage from '@pages/BO/customerService/customerService/view';
 // FO pages
 import {contactUsPage} from '@pages/FO/classic/contactUs';
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
@@ -21,6 +20,7 @@ import {
   FakerContactMessage,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicModalQuickViewPage,
@@ -166,11 +166,11 @@ describe('FO - Order confirmation : Contact us', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
       await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
-      const pageTitle = await orderConfirmationPage.getPageTitle(page);
-      expect(pageTitle).to.equal(orderConfirmationPage.pageTitle);
+      const pageTitle = await foClassicCheckoutOrderConfirmationPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicCheckoutOrderConfirmationPage.pageTitle);
 
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+      expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
   });
 
@@ -178,7 +178,7 @@ describe('FO - Order confirmation : Contact us', async () => {
     it('should get the order reference value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getOrderReferenceValue', baseContext);
 
-      contactUsData.reference = await orderConfirmationPage.getOrderReferenceValue(page);
+      contactUsData.reference = await foClassicCheckoutOrderConfirmationPage.getOrderReferenceValue(page);
       contactUsData.message += ` ${contactUsData.reference}`;
       expect(contactUsData.reference).to.not.have.lengthOf(0);
     });
@@ -186,7 +186,7 @@ describe('FO - Order confirmation : Contact us', async () => {
     it('should go to the "contact us" page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToTheContactUsPage', baseContext);
 
-      await orderConfirmationPage.goToContactUsPage(page);
+      await foClassicCheckoutOrderConfirmationPage.goToContactUsPage(page);
 
       const pageTitle = await contactUsPage.getPageTitle(page);
       expect(pageTitle).to.contains(contactUsPage.pageTitle);

@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
 // Import FO pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
@@ -15,6 +14,7 @@ import {
   type FakerPaymentMethod,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicModalQuickViewPage,
   type MailDev,
@@ -136,14 +136,14 @@ describe('FO - Checkout - Payment : Choose a payment method', async () => {
         await foClassicCheckoutPage.choosePaymentAndOrder(page, test.moduleName);
 
         // Check the confirmation message
-        const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-        expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+        const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+        expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
       });
 
       it(`should check the payment method is ${test.displayName}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkPaymentMethod${index}`, baseContext);
 
-        const paymentMethod = await orderConfirmationPage.getPaymentMethod(page);
+        const paymentMethod = await foClassicCheckoutOrderConfirmationPage.getPaymentMethod(page);
         expect(paymentMethod).to.be.equal(test.displayName);
       });
 

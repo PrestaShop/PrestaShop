@@ -8,9 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import emailPage from '@pages/BO/advancedParameters/email';
 
-// Import FO pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
-
 import {
   boDashboardPage,
   dataCustomers,
@@ -18,6 +15,7 @@ import {
   dataPaymentMethods,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsDate,
@@ -117,17 +115,17 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
       await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       // Check the confirmation message
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+      expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
 
     it('should logout from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'logoutFO', baseContext);
 
       // Logout from FO
-      await orderConfirmationPage.logout(page);
+      await foClassicCheckoutOrderConfirmationPage.logout(page);
 
-      const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicCheckoutOrderConfirmationPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(false);
     });
 
@@ -135,7 +133,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
       // Go Back to BO
-      page = await orderConfirmationPage.closePage(browserContext, page, 0);
+      page = await foClassicCheckoutOrderConfirmationPage.closePage(browserContext, page, 0);
 
       const pageTitle = await boDashboardPage.getPageTitle(page);
       expect(pageTitle).to.contains(boDashboardPage.pageTitle);

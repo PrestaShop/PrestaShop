@@ -10,7 +10,6 @@ import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 import orderMessagesPage from '@pages/BO/customerService/orderMessages';
 import orderPageMessagesBlock from '@pages/BO/orders/view/messagesBlock';
 // Import FO pages
-import {orderConfirmationPage as foOrderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
 import {
@@ -21,6 +20,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
@@ -233,9 +233,9 @@ describe('BO - Orders - View and edit order : Check messages block', async () =>
     it('should sign out from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFO2', baseContext);
 
-      await foOrderConfirmationPage.logout(page);
+      await foClassicCheckoutOrderConfirmationPage.logout(page);
 
-      const isCustomerConnected = await foOrderConfirmationPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicCheckoutOrderConfirmationPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
   });
@@ -246,7 +246,7 @@ describe('BO - Orders - View and edit order : Check messages block', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo1', baseContext);
 
       // Close page and init page objects
-      page = await foOrderConfirmationPage.closePage(browserContext, page, 0);
+      page = await foClassicCheckoutOrderConfirmationPage.closePage(browserContext, page, 0);
 
       const pageTitle = await orderPageMessagesBlock.getPageTitle(page);
       expect(pageTitle).to.contains(orderPageMessagesBlock.pageTitle);

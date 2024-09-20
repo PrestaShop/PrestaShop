@@ -1,15 +1,13 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
-
 import {
   dataPaymentMethods,
   FakerAddress,
   FakerCustomer,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsPlaywright,
@@ -108,9 +106,9 @@ describe('FO - Checkout - Personal information : Order as a guest', async () => 
 
     // Payment step - Choose payment step
     await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
-    const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
+    const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
 
     // Check the confirmation message
-    expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+    expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
   });
 });

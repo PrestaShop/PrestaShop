@@ -10,8 +10,6 @@ import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advanced
 // Import pages
 // Import BO pages
 import addProductPage from '@pages/BO/catalog/products/add';
-// Import FO pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
   boDashboardPage,
@@ -29,6 +27,7 @@ import {
   FakerProduct,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicProductPage,
@@ -408,14 +407,14 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
       await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       // Check the confirmation message
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+      expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
 
     it('should go to the created product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreatedProductPage', baseContext);
 
-      await orderConfirmationPage.goToHomePage(page);
+      await foClassicCheckoutOrderConfirmationPage.goToHomePage(page);
 
       await foClassicHomePage.searchProduct(page, productData.name);
       await foClassicSearchResultsPage.goToProductPage(page, 1);

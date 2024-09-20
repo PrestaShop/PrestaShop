@@ -4,9 +4,6 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import FO pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
-
 // Import BO pages
 import deliverySlipsPage from '@pages/BO/orders/deliverySlips';
 
@@ -19,6 +16,7 @@ import {
   dataPaymentMethods,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicProductPage,
@@ -175,16 +173,16 @@ describe('BO - Orders - Delivery slips : Enable/Disable product image', async ()
           await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
           // Check the confirmation message
-          const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-          expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+          const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+          expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
         });
 
         it('should sign out from FO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `signOutFO${index}`, baseContext);
 
-          await orderConfirmationPage.logout(page);
+          await foClassicCheckoutOrderConfirmationPage.logout(page);
 
-          const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
+          const isCustomerConnected = await foClassicCheckoutOrderConfirmationPage.isCustomerConnected(page);
           expect(isCustomerConnected, 'Customer is connected').to.eq(false);
         });
 
@@ -192,7 +190,7 @@ describe('BO - Orders - Delivery slips : Enable/Disable product image', async ()
           await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
           // Close tab and init other page objects with new current tab
-          page = await orderConfirmationPage.closePage(browserContext, page, 0);
+          page = await foClassicCheckoutOrderConfirmationPage.closePage(browserContext, page, 0);
 
           const pageTitle = await deliverySlipsPage.getPageTitle(page);
           expect(pageTitle).to.contains(deliverySlipsPage.pageTitle);

@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import FO pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 import {
   boDashboardPage,
@@ -16,6 +15,7 @@ import {
   dataProducts,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicModalQuickViewPage,
   foClassicSearchResultsPage,
@@ -122,11 +122,11 @@ describe('FO - Order confirmation : Order details and totals - Recap of payment 
 
       await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.checkPayment.moduleName);
 
-      const pageTitle = await orderConfirmationPage.getPageTitle(page);
-      expect(pageTitle).to.equal(orderConfirmationPage.pageTitle);
+      const pageTitle = await foClassicCheckoutOrderConfirmationPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicCheckoutOrderConfirmationPage.pageTitle);
 
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+      expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
   });
 
@@ -164,34 +164,34 @@ describe('FO - Order confirmation : Order details and totals - Recap of payment 
     it('should check the subtotal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSubTotal', baseContext);
 
-      const orderSubTotal = await orderConfirmationPage.getOrderSubTotal(page);
+      const orderSubTotal = await foClassicCheckoutOrderConfirmationPage.getOrderSubTotal(page);
       expect(orderSubTotal).to.equal(`€${dataProducts.demo_6.combinations[0].price.toFixed(2)}`);
     });
 
     it('should check the shipping total', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkShippingTotal', baseContext);
 
-      const orderSubTotal = await orderConfirmationPage.getOrderShippingTotal(page);
+      const orderSubTotal = await foClassicCheckoutOrderConfirmationPage.getOrderShippingTotal(page);
       expect(orderSubTotal).to.equal('Free');
     });
 
     it('should check the total (tax incl.)', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTotalTaxInc', baseContext);
 
-      const orderTotalTaxInc = await orderConfirmationPage.getOrderTotal(page);
+      const orderTotalTaxInc = await foClassicCheckoutOrderConfirmationPage.getOrderTotal(page);
       expect(orderTotalTaxInc).to.equal(`€${dataProducts.demo_6.combinations[0].price.toFixed(2)}`);
     });
 
     it('should check the order details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderDetails', baseContext);
 
-      const paymentMethod = await orderConfirmationPage.getPaymentMethod(page);
+      const paymentMethod = await foClassicCheckoutOrderConfirmationPage.getPaymentMethod(page);
       expect(paymentMethod).to.contains(dataPaymentMethods.checkPayment.displayName);
 
-      const orderReferenceValue = await orderConfirmationPage.getOrderReferenceValue(page);
+      const orderReferenceValue = await foClassicCheckoutOrderConfirmationPage.getOrderReferenceValue(page);
       expect(orderReferenceValue).to.contains(orderReference);
 
-      const shippingMethod = await orderConfirmationPage.getShippingMethod(page);
+      const shippingMethod = await foClassicCheckoutOrderConfirmationPage.getShippingMethod(page);
       expect(shippingMethod).to.contains(`${dataCarriers.clickAndCollect.name} ${dataCarriers.clickAndCollect.transitName}`);
     });
   });

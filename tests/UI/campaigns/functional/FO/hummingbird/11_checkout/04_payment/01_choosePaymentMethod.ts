@@ -6,7 +6,6 @@ import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advanced
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
-import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {
@@ -15,6 +14,7 @@ import {
   type FakerPaymentMethod,
   foHummingbirdCartPage,
   foHummingbirdCheckoutPage,
+  foHummingbirdCheckoutOrderConfirmationPage,
   foHummingbirdHomePage,
   foHummingbirdModalQuickViewPage,
   type MailDev,
@@ -139,14 +139,14 @@ describe('FO - Checkout - Payment : Choose a payment method', async () => {
         await foHummingbirdCheckoutPage.choosePaymentAndOrder(page, test.moduleName);
 
         // Check the confirmation message
-        const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-        expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+        const cardTitle = await foHummingbirdCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+        expect(cardTitle).to.contains(foHummingbirdCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
       });
 
       it(`should check the payment method is ${test.displayName}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkPaymentMethod${index}`, baseContext);
 
-        const paymentMethod = await orderConfirmationPage.getPaymentMethod(page);
+        const paymentMethod = await foHummingbirdCheckoutOrderConfirmationPage.getPaymentMethod(page);
         expect(paymentMethod).to.be.equal(test.displayName);
       });
 

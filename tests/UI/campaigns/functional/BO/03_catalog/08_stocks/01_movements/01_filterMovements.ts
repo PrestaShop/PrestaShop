@@ -11,8 +11,6 @@ import cleanTableStockMovements from '@commonTests/BO/catalog/stock';
 import addProductPage from '@pages/BO/catalog/products/add';
 import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
 import movementsPage from '@pages/BO/catalog/stocks/movements';
-// Import FO pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
   boDashboardPage,
@@ -29,6 +27,7 @@ import {
   FakerEmployee,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicProductPage,
   type ProductCombinationBulk,
@@ -203,15 +202,15 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
         await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
         // Check the confirmation message
-        const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-        expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+        const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+        expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
       });
 
       it('should go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo', baseContext);
 
         // Close tab and init other page objects with new current tab
-        page = await orderConfirmationPage.closePage(browserContext, page, 0);
+        page = await foClassicCheckoutOrderConfirmationPage.closePage(browserContext, page, 0);
 
         const pageTitle = await movementsPage.getPageTitle(page);
         expect(pageTitle).to.contains(movementsPage.pageTitle);

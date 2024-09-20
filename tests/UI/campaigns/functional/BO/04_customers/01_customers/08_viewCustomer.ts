@@ -11,8 +11,6 @@ import viewCustomerPage from '@pages/BO/customers/view';
 import addAddressPage from '@pages/BO/customers/addresses/add';
 import viewCartPage from '@pages/BO/orders/shoppingCarts/view';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
-// Import FO pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
   boCustomersPage,
@@ -25,6 +23,7 @@ import {
   FakerCustomer,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsDate,
@@ -263,14 +262,14 @@ describe('BO - Customers - Customers : View information about customer', async (
       await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       // Check the confirmation message
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+      expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo', baseContext);
 
-      page = await orderConfirmationPage.closePage(browserContext, page, 0);
+      page = await foClassicCheckoutOrderConfirmationPage.closePage(browserContext, page, 0);
 
       const pageTitle = await viewCustomerPage.getPageTitle(page);
       expect(pageTitle).to.contains(viewCustomerPage.pageTitle(createCustomerName));

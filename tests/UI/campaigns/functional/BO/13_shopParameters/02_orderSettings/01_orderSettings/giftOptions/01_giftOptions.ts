@@ -7,8 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
-// Import FO pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
   boDashboardPage,
@@ -20,6 +18,7 @@ import {
   dataTaxes,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicProductPage,
@@ -268,15 +267,15 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
 
           await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
-          const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-          expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+          const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+          expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
         });
 
         if (test.args.giftWrappingPrice !== 0) {
           it('should check the gift wrapping price', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkGiftWrappingPrice${index}`, baseContext);
 
-            const giftWrappingValue = await orderConfirmationPage.getGiftWrappingValue(page);
+            const giftWrappingValue = await foClassicCheckoutOrderConfirmationPage.getGiftWrappingValue(page);
             expect(giftWrappingValue).to.equal(
               test.args.giftWrappingPrice * (test.args.isGiftWrappingTax === 'None' ? 1 : (1 + test.args.taxValue)),
             );

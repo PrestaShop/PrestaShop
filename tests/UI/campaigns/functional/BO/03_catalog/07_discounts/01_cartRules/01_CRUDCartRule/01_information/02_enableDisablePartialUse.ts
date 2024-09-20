@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {vouchersPage as foVouchersPage} from '@pages/FO/classic/myAccount/vouchers';
 
 import {
@@ -18,6 +17,7 @@ import {
   FakerCartRule,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicMyAccountPage,
   foClassicProductPage,
@@ -190,8 +190,8 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
         // Check the confirmation message
-        const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-        expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+        const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+        expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
       });
 
       it('should go to vouchers page', async function () {
@@ -389,8 +389,8 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
         // Check the confirmation message
-        const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-        expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+        const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+        expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
       });
 
       it('should go to vouchers page', async function () {

@@ -6,15 +6,13 @@ import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advanced
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
-// Import pages
-import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
-
 import {
   dataPaymentMethods,
   FakerAddress,
   FakerCustomer,
   foHummingbirdCartPage,
   foHummingbirdCheckoutPage,
+  foHummingbirdCheckoutOrderConfirmationPage,
   foHummingbirdHomePage,
   foHummingbirdProductPage,
   type MailDev,
@@ -134,10 +132,10 @@ describe('FO - Checkout - Personal information : Create account', async () => {
 
       // Payment step - Choose payment step
       await foHummingbirdCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
+      const cardTitle = await foHummingbirdCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
 
       // Check the confirmation message
-      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      expect(cardTitle).to.contains(foHummingbirdCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
 
     it('should check if welcome mail and order confirmation email are in mailbox', async function () {

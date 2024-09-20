@@ -7,8 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import invoicesPage from '@pages/BO/orders/invoices';
-// Import FO pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
   boDashboardPage,
@@ -19,6 +17,7 @@ import {
   dataPaymentMethods,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicProductPage,
@@ -161,16 +160,16 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
           await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
           // Check the confirmation message
-          const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-          expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+          const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+          expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
         });
 
         it('should sign out from FO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `sighOutFO${index}`, baseContext);
 
-          await orderConfirmationPage.logout(page);
+          await foClassicCheckoutOrderConfirmationPage.logout(page);
 
-          const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
+          const isCustomerConnected = await foClassicCheckoutOrderConfirmationPage.isCustomerConnected(page);
           expect(isCustomerConnected, 'Customer is connected').to.eq(false);
         });
 
@@ -178,7 +177,7 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
           await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
           // Close page and init page objects
-          page = await orderConfirmationPage.closePage(browserContext, page, 0);
+          page = await foClassicCheckoutOrderConfirmationPage.closePage(browserContext, page, 0);
 
           const pageTitle = await invoicesPage.getPageTitle(page);
           expect(pageTitle).to.contains(invoicesPage.pageTitle);

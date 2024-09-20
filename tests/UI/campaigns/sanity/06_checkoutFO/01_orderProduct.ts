@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
@@ -11,6 +10,7 @@ import {
   dataProducts,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicModalQuickViewPage,
@@ -144,10 +144,10 @@ describe('BO - Checkout : Order a product and check order confirmation', async (
 
     await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
-    const pageTitle = await orderConfirmationPage.getPageTitle(page);
-    expect(pageTitle).to.equal(orderConfirmationPage.pageTitle);
+    const pageTitle = await foClassicCheckoutOrderConfirmationPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicCheckoutOrderConfirmationPage.pageTitle);
 
-    const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-    expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+    const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+    expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
   });
 });

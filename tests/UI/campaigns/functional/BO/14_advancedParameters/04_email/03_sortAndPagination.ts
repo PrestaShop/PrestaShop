@@ -8,15 +8,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import emailPage from '@pages/BO/advancedParameters/email';
 
-// Import FO pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
-
 import {
   boDashboardPage,
   dataCustomers,
   dataPaymentMethods,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicProductPage,
@@ -143,16 +141,16 @@ describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async
         await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
         // Check the confirmation message
-        const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-        expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+        const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+        expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
       });
     });
 
     it('should sign out from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFO', baseContext);
 
-      await orderConfirmationPage.logout(page);
-      const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
+      await foClassicCheckoutOrderConfirmationPage.logout(page);
+      const isCustomerConnected = await foClassicCheckoutOrderConfirmationPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
 
@@ -160,7 +158,7 @@ describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
       // Go Back to BO
-      page = await orderConfirmationPage.closePage(browserContext, page, 0);
+      page = await foClassicCheckoutOrderConfirmationPage.closePage(browserContext, page, 0);
 
       const pageTitle = await emailPage.getPageTitle(page);
       expect(pageTitle).to.contains(emailPage.pageTitle);

@@ -6,7 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import zonesPage from '@pages/BO/international/locations';
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
   boCountriesPage,
@@ -17,6 +16,7 @@ import {
   FakerCustomer,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsPlaywright,
@@ -165,14 +165,14 @@ describe('BO - International - Countries : Enable / Disable Countries', async ()
     await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
     // Check the confirmation message
-    const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-    expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+    const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+    expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
   });
 
   it('should disable France', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'disableFrance', baseContext);
 
-    page = await orderConfirmationPage.closePage(browserContext, page, 0);
+    page = await foClassicCheckoutOrderConfirmationPage.closePage(browserContext, page, 0);
 
     await boCountriesPage.resetFilter(page);
     await boCountriesPage.filterTable(page, 'input', 'b!name', dataCountries.france.name);
@@ -259,14 +259,14 @@ describe('BO - International - Countries : Enable / Disable Countries', async ()
     await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
     // Check the confirmation message
-    const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-    expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+    const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+    expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
   });
 
   it('POST-TEST : should enable France', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enableFrance', baseContext);
 
-    page = await orderConfirmationPage.closePage(browserContext, page, 0);
+    page = await foClassicCheckoutOrderConfirmationPage.closePage(browserContext, page, 0);
 
     await boCountriesPage.setCountryStatus(page, 1, true);
 
