@@ -5,13 +5,13 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import stocksPage from '@pages/BO/catalog/stocks';
 import movementsPage from '@pages/BO/catalog/stocks/movements';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boStockPage,
   dataProducts,
   utilsCore,
   utilsPlaywright,
@@ -46,20 +46,20 @@ describe('BO - Catalog - Movements : Sort and pagination', async () => {
         boDashboardPage.catalogParentLink,
         boDashboardPage.stocksLink,
       );
-      await stocksPage.closeSfToolBar(page);
+      await boStockPage.closeSfToolBar(page);
 
-      const pageTitle = await stocksPage.getPageTitle(page);
-      expect(pageTitle).to.contains(stocksPage.pageTitle);
+      const pageTitle = await boStockPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boStockPage.pageTitle);
     });
 
     it(`should bulk edit the quantity of the product '${dataProducts.demo_1.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkEditQuantity', baseContext);
 
-      await stocksPage.simpleFilter(page, dataProducts.demo_1.name);
+      await boStockPage.simpleFilter(page, dataProducts.demo_1.name);
 
       // Update quantity and check successful message
-      const updateMessage = await stocksPage.bulkEditQuantityWithInput(page, 301);
-      expect(updateMessage).to.contains(stocksPage.successfulUpdateMessage);
+      const updateMessage = await boStockPage.bulkEditQuantityWithInput(page, 301);
+      expect(updateMessage).to.contains(boStockPage.successfulUpdateMessage);
     });
   });
 
@@ -67,7 +67,7 @@ describe('BO - Catalog - Movements : Sort and pagination', async () => {
     it('should go to Movements page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMovementsPage', baseContext);
 
-      await stocksPage.goToSubTabMovements(page);
+      await boStockPage.goToSubTabMovements(page);
 
       const pageTitle = await movementsPage.getPageTitle(page);
       expect(pageTitle).to.contains(movementsPage.pageTitle);
@@ -142,24 +142,24 @@ describe('BO - Catalog - Movements : Sort and pagination', async () => {
         boDashboardPage.stocksLink,
       );
 
-      const pageTitle = await stocksPage.getPageTitle(page);
-      expect(pageTitle).to.contains(stocksPage.pageTitle);
+      const pageTitle = await boStockPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boStockPage.pageTitle);
     });
 
     it('should bulk edit the quantity of all products in the first page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkEditQuantityFirstPage', baseContext);
 
-      const updateMessage = await stocksPage.bulkEditQuantityWithInput(page, 301);
-      expect(updateMessage).to.contains(stocksPage.successfulUpdateMessage);
+      const updateMessage = await boStockPage.bulkEditQuantityWithInput(page, 301);
+      expect(updateMessage).to.contains(boStockPage.successfulUpdateMessage);
     });
 
     it('should go to the second page and bulk edit the quantity of all products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToSecondPage', baseContext);
 
-      await stocksPage.paginateTo(page, 2);
+      await boStockPage.paginateTo(page, 2);
 
-      const updateMessage = await stocksPage.bulkEditQuantityWithInput(page, 301);
-      expect(updateMessage).to.contains(stocksPage.successfulUpdateMessage);
+      const updateMessage = await boStockPage.bulkEditQuantityWithInput(page, 301);
+      expect(updateMessage).to.contains(boStockPage.successfulUpdateMessage);
     });
   });
 
@@ -167,7 +167,7 @@ describe('BO - Catalog - Movements : Sort and pagination', async () => {
     it('should go to Movements page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMovementsPage2', baseContext);
 
-      await stocksPage.goToSubTabMovements(page);
+      await boStockPage.goToSubTabMovements(page);
 
       const pageTitle = await movementsPage.getPageTitle(page);
       expect(pageTitle).to.contains(movementsPage.pageTitle);

@@ -10,7 +10,6 @@ import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advanced
 // Import pages
 // Import BO pages
 import addProductPage from '@pages/BO/catalog/products/add';
-import stocksPage from '@pages/BO/catalog/stocks';
 // Import FO pages
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
@@ -22,6 +21,7 @@ import {
   boOrdersViewBlockTabListPage,
   boProductsPage,
   boProductsCreateTabStocksPage,
+  boStockPage,
   dataCustomers,
   dataModules,
   dataOrderStatuses,
@@ -538,18 +538,18 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
         boDashboardPage.catalogParentLink,
         boDashboardPage.stocksLink,
       );
-      await stocksPage.closeSfToolBar(page);
+      await boStockPage.closeSfToolBar(page);
 
-      const pageTitle = await stocksPage.getPageTitle(page);
-      expect(pageTitle).to.contains(stocksPage.pageTitle);
+      const pageTitle = await boStockPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boStockPage.pageTitle);
     });
 
     it(`should filter by name '${productData.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterStocks', baseContext);
 
-      await stocksPage.simpleFilter(page, productData.name);
+      await boStockPage.simpleFilter(page, productData.name);
 
-      const numberOfProductsAfterFilter = await stocksPage.getNumberOfProductsFromList(page);
+      const numberOfProductsAfterFilter = await boStockPage.getNumberOfProductsFromList(page);
       expect(numberOfProductsAfterFilter).to.be.equal(1);
     });
 
@@ -557,8 +557,8 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
       await testContext.addContextItem(this, 'testIdentifier', 'updateQuantity', baseContext);
 
       // Update Quantity and check successful message
-      const updateMessage = await stocksPage.updateRowQuantityWithInput(page, 1, 1);
-      expect(updateMessage).to.contains(stocksPage.successfulUpdateMessage);
+      const updateMessage = await boStockPage.updateRowQuantityWithInput(page, 1, 1);
+      expect(updateMessage).to.contains(boStockPage.successfulUpdateMessage);
     });
 
     it('should check received email', async function () {

@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
-import stocksPage from '@pages/BO/catalog/stocks';
 import addOrderPage from '@pages/BO/orders/add';
 import viewShoppingCartPage from '@pages/BO/orders/shoppingCarts/view';
 
@@ -14,6 +13,7 @@ import {
   boOrdersPage,
   boOrdersViewBlockProductsPage,
   boShoppingCartsPage,
+  boStockPage,
   dataCarriers,
   dataCustomers,
   dataOrderStatuses,
@@ -347,23 +347,23 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
         boDashboardPage.stocksLink,
       );
 
-      const pageTitle = await stocksPage.getPageTitle(page);
-      expect(pageTitle).to.contains(stocksPage.pageTitle);
+      const pageTitle = await boStockPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boStockPage.pageTitle);
     });
 
     it(`should filter by product '${dataProducts.demo_1.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByProduct', baseContext);
 
-      await stocksPage.simpleFilter(page, dataProducts.demo_1.name);
+      await boStockPage.simpleFilter(page, dataProducts.demo_1.name);
 
-      const numberOfProductsAfterFilter = await stocksPage.getNumberOfProductsFromList(page);
+      const numberOfProductsAfterFilter = await boStockPage.getNumberOfProductsFromList(page);
       expect(numberOfProductsAfterFilter).to.be.at.least(1);
     });
 
     it('should get the Available stock of the ordered product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getAvailableStockOfOrderedProduct', baseContext);
 
-      availableStockOfOrderedProduct = parseInt(await stocksPage.getTextColumnFromTableStocks(page, 1, 'available'), 10);
+      availableStockOfOrderedProduct = parseInt(await boStockPage.getTextColumnFromTableStocks(page, 1, 'available'), 10);
       expect(availableStockOfOrderedProduct).to.be.above(0);
     });
   });

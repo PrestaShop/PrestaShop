@@ -4,13 +4,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import stocksPage from '@pages/BO/catalog/stocks';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boStockPage,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -44,16 +42,16 @@ describe('BO - Catalog - Stocks : Sort and pagination', async () => {
       boDashboardPage.catalogParentLink,
       boDashboardPage.stocksLink,
     );
-    await stocksPage.closeSfToolBar(page);
+    await boStockPage.closeSfToolBar(page);
 
-    const pageTitle = await stocksPage.getPageTitle(page);
-    expect(pageTitle).to.contains(stocksPage.pageTitle);
+    const pageTitle = await boStockPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boStockPage.pageTitle);
   });
 
   it('should reset filter and get number of products in list', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProductsInList', baseContext);
 
-    numberOfProducts = await stocksPage.resetFilter(page);
+    numberOfProducts = await boStockPage.resetFilter(page);
     expect(numberOfProducts).to.be.above(0);
   });
 
@@ -61,14 +59,14 @@ describe('BO - Catalog - Stocks : Sort and pagination', async () => {
     it('should go to the next page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNextPage', baseContext);
 
-      const pageNumber = await stocksPage.paginateTo(page, 2);
+      const pageNumber = await boStockPage.paginateTo(page, 2);
       expect(pageNumber).to.eq(2);
     });
 
     it('should go back to the first page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToFirstPage', baseContext);
 
-      const pageNumber = await stocksPage.paginateTo(page, 1);
+      const pageNumber = await boStockPage.paginateTo(page, 1);
       expect(pageNumber).to.eq(1);
     });
   });
@@ -105,11 +103,11 @@ describe('BO - Catalog - Stocks : Sort and pagination', async () => {
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await stocksPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const nonSortedTable = await boStockPage.getAllRowsColumnContent(page, test.args.sortBy);
 
-        await stocksPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+        await boStockPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        const sortedTable = await stocksPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await boStockPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isNumber) {
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseInt(text, 10));

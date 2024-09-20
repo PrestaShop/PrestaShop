@@ -10,7 +10,6 @@ import cleanTableStockMovements from '@commonTests/BO/catalog/stock';
 // Import BO pages
 import addProductPage from '@pages/BO/catalog/products/add';
 import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
-import stocksPage from '@pages/BO/catalog/stocks';
 import movementsPage from '@pages/BO/catalog/stocks/movements';
 // Import FO pages
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
@@ -21,6 +20,7 @@ import {
   boOrdersPage,
   boOrdersViewBlockProductsPage,
   boProductsPage,
+  boStockPage,
   dataCategories,
   dataCustomers,
   dataOrderStatuses,
@@ -99,17 +99,17 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
           boDashboardPage.catalogParentLink,
           boDashboardPage.stocksLink,
         );
-        await stocksPage.closeSfToolBar(page);
+        await boStockPage.closeSfToolBar(page);
 
-        const pageTitle = await stocksPage.getPageTitle(page);
-        expect(pageTitle).to.contains(stocksPage.pageTitle);
+        const pageTitle = await boStockPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boStockPage.pageTitle);
       });
 
       it('should add to quantities by setting input value', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addToQuantities', baseContext);
 
-        const updateMessage = await stocksPage.bulkEditQuantityWithInput(page, 120);
-        expect(updateMessage).to.contains(stocksPage.successfulUpdateMessage);
+        const updateMessage = await boStockPage.bulkEditQuantityWithInput(page, 120);
+        expect(updateMessage).to.contains(boStockPage.successfulUpdateMessage);
       });
     });
 
@@ -117,7 +117,7 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
       it('should go to Movements page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToMovementsPage', baseContext);
 
-        await stocksPage.goToSubTabMovements(page);
+        await boStockPage.goToSubTabMovements(page);
 
         const pageTitle = await movementsPage.getPageTitle(page);
         expect(pageTitle).to.contains(movementsPage.pageTitle);
@@ -259,16 +259,16 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
           boDashboardPage.catalogParentLink,
           boDashboardPage.stocksLink,
         );
-        await stocksPage.closeSfToolBar(page);
+        await boStockPage.closeSfToolBar(page);
 
-        const pageTitle = await stocksPage.getPageTitle(page);
-        expect(pageTitle).to.contains(stocksPage.pageTitle);
+        const pageTitle = await boStockPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boStockPage.pageTitle);
       });
 
       it('should go to Movements page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToMovementsPageAfterFOOrder', baseContext);
 
-        await stocksPage.goToSubTabMovements(page);
+        await boStockPage.goToSubTabMovements(page);
 
         const pageTitle = await movementsPage.getPageTitle(page);
         expect(pageTitle).to.contains(movementsPage.pageTitle);
@@ -440,16 +440,16 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
           boDashboardPage.catalogParentLink,
           boDashboardPage.stocksLink,
         );
-        await stocksPage.closeSfToolBar(page);
+        await boStockPage.closeSfToolBar(page);
 
-        const pageTitle = await stocksPage.getPageTitle(page);
-        expect(pageTitle).to.contains(stocksPage.pageTitle);
+        const pageTitle = await boStockPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boStockPage.pageTitle);
       });
 
       it('should go to Movements page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToMovementsPageAfterEmployeeEdition', baseContext);
 
-        await stocksPage.goToSubTabMovements(page);
+        await boStockPage.goToSubTabMovements(page);
 
         const pageTitle = await movementsPage.getPageTitle(page);
         expect(pageTitle).to.contains(movementsPage.pageTitle);
@@ -612,10 +612,10 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
           boDashboardPage.catalogParentLink,
           boDashboardPage.stocksLink,
         );
-        await stocksPage.closeSfToolBar(page);
+        await boStockPage.closeSfToolBar(page);
 
-        const pageTitle = await stocksPage.getPageTitle(page);
-        expect(pageTitle).to.contains(stocksPage.pageTitle);
+        const pageTitle = await boStockPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boStockPage.pageTitle);
       });
 
       it('should go to Movements page', async function () {
@@ -623,7 +623,7 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
 
         this.skip();
 
-        await stocksPage.goToSubTabMovements(page);
+        await boStockPage.goToSubTabMovements(page);
 
         const pageTitle = await movementsPage.getPageTitle(page);
         expect(pageTitle).to.contains(movementsPage.pageTitle);
