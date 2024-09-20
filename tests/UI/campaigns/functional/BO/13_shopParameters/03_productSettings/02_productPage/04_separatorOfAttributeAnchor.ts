@@ -4,14 +4,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-// Import BO pages
-import productSettingsPage from '@pages/BO/shopParameters/productSettings';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boProductSettingsPage,
   dataProducts,
   foClassicHomePage,
   foClassicProductPage,
@@ -51,8 +48,8 @@ describe('BO - Shop Parameters - Product Settings : Update separator of attribut
       boDashboardPage.productSettingsLink,
     );
 
-    const pageTitle = await productSettingsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+    const pageTitle = await boProductSettingsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
   });
 
   const tests = [
@@ -64,17 +61,17 @@ describe('BO - Shop Parameters - Product Settings : Update separator of attribut
     it(`should choose the separator option '${test.args.option}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `chooseOption_${index}`, baseContext);
 
-      const result = await productSettingsPage.setSeparatorOfAttributeOnProductLink(
+      const result = await boProductSettingsPage.setSeparatorOfAttributeOnProductLink(
         page,
         test.args.option,
       );
-      expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
     });
 
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
-      page = await productSettingsPage.viewMyShop(page);
+      page = await boProductSettingsPage.viewMyShop(page);
       await foClassicHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foClassicHomePage.isHomePage(page);
@@ -103,8 +100,8 @@ describe('BO - Shop Parameters - Product Settings : Update separator of attribut
 
       page = await foClassicProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await productSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      const pageTitle = await boProductSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
     });
   });
 });

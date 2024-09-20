@@ -6,7 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import catalogPriceRulesPage from '@pages/BO/catalog/discounts/catalogPriceRules';
 import addCatalogPriceRulePage from '@pages/BO/catalog/discounts/catalogPriceRules/add';
@@ -15,6 +14,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boProductSettingsPage,
   dataProducts,
   FakerCatalogPriceRule,
   foClassicHomePage,
@@ -98,10 +98,10 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable display disco
       addCatalogPriceRulePage.shopParametersParentLink,
       addCatalogPriceRulePage.productSettingsLink,
     );
-    await productSettingsPage.closeSfToolBar(page);
+    await boProductSettingsPage.closeSfToolBar(page);
 
-    const pageTitle = await productSettingsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+    const pageTitle = await boProductSettingsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
   });
 
   const tests = [
@@ -126,17 +126,17 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable display disco
         baseContext,
       );
 
-      const result = await productSettingsPage.setDisplayDiscountedPriceStatus(
+      const result = await boProductSettingsPage.setDisplayDiscountedPriceStatus(
         page,
         test.args.enable,
       );
-      expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
     });
 
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
-      page = await productSettingsPage.viewMyShop(page);
+      page = await boProductSettingsPage.viewMyShop(page);
       await foClassicHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foClassicHomePage.isHomePage(page);
@@ -167,18 +167,18 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable display disco
 
       page = await foClassicProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await productSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      const pageTitle = await boProductSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
     });
   });
 
   it('should go to \'Catalog > Discounts\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPageToDeletePriceRule', baseContext);
 
-    await productSettingsPage.goToSubMenu(
+    await boProductSettingsPage.goToSubMenu(
       page,
-      productSettingsPage.catalogParentLink,
-      productSettingsPage.discountsLink,
+      boProductSettingsPage.catalogParentLink,
+      boProductSettingsPage.discountsLink,
     );
 
     const pageTitle = await cartRulesPage.getPageTitle(page);
