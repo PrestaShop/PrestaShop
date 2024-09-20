@@ -9,13 +9,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 // Import FO pages
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
   boDashboardPage,
   boOrdersPage,
+  boOrdersViewBlockTabListPage,
   dataCarriers,
   dataPaymentMethods,
   dataProducts,
@@ -305,22 +305,22 @@ describe('BO - Orders : Preview order', async () => {
       it('should click on \'Carriers\' tab', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'displayCarriersTab', baseContext);
 
-        const isTabOpened = await orderPageTabListBlock.goToCarriersTab(page);
+        const isTabOpened = await boOrdersViewBlockTabListPage.goToCarriersTab(page);
         expect(isTabOpened).to.eq(true);
       });
 
       it('should click on \'Edit\' link and check the modal', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnEditLink', baseContext);
 
-        const isModalVisible = await orderPageTabListBlock.clickOnEditLink(page);
+        const isModalVisible = await boOrdersViewBlockTabListPage.clickOnEditLink(page);
         expect(isModalVisible, 'Edit shipping modal is not visible!').to.eq(true);
       });
 
       it('should edit the carrier', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'editCarrier', baseContext);
 
-        const textResult = await orderPageTabListBlock.setShippingDetails(page, shippingDetailsData);
-        expect(textResult).to.equal(orderPageTabListBlock.successfulUpdateMessage);
+        const textResult = await boOrdersViewBlockTabListPage.setShippingDetails(page, shippingDetailsData);
+        expect(textResult).to.equal(boOrdersViewBlockTabListPage.successfulUpdateMessage);
       });
 
       it('should edit the shipping address', async function () {

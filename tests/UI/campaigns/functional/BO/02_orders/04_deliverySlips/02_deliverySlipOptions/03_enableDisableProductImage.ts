@@ -9,11 +9,11 @@ import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmatio
 
 // Import BO pages
 import deliverySlipsPage from '@pages/BO/orders/deliverySlips';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 import {
   boDashboardPage,
   boOrdersPage,
+  boOrdersViewBlockTabListPage,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
@@ -218,21 +218,21 @@ describe('BO - Orders - Delivery slips : Enable/Disable product image', async ()
 
           await boOrdersPage.goToOrder(page, 1);
 
-          const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-          expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+          const pageTitle = await boOrdersViewBlockTabListPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);
         });
 
         it(`should change the order status to '${dataOrderStatuses.shipped.name}' and check it`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus${index}`, baseContext);
 
-          const result = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
+          const result = await boOrdersViewBlockTabListPage.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
           expect(result).to.equal(dataOrderStatuses.shipped.name);
         });
 
         it('should download the delivery slip', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `downloadDeliverySlips${index}`, baseContext);
 
-          filePath = await orderPageTabListBlock.downloadDeliverySlip(page);
+          filePath = await boOrdersViewBlockTabListPage.downloadDeliverySlip(page);
 
           const exist = await utilsFile.doesFileExist(filePath);
           expect(exist).to.eq(true);

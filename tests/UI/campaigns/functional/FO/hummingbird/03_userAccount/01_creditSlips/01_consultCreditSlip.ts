@@ -13,7 +13,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 // Import pages
 // Import BO pages
 import viewOrderProductsBlockPage from '@pages/BO/orders/view/productsBlock';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
 import creditSlipPage from '@pages/FO/hummingbird/myAccount/creditSlips';
@@ -22,6 +21,7 @@ import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
 import {
   boDashboardPage,
   boOrdersPage,
+  boOrdersViewBlockTabListPage,
   dataOrderStatuses,
   dataPaymentMethods,
   dataProducts,
@@ -232,7 +232,7 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
         await testContext.addContextItem(this, 'testIdentifier', 'checkCreditSlipDocument', baseContext);
 
         // Get document name
-        const documentType = await orderPageTabListBlock.getDocumentType(page, 3);
+        const documentType = await boOrdersViewBlockTabListPage.getDocumentType(page, 3);
         expect(documentType).to.be.equal('Credit slip');
       });
 
@@ -248,11 +248,11 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
         await testContext.addContextItem(this, 'testIdentifier', 'getIdentifierDateIssued', baseContext);
 
         // Get Credit Slip ID
-        creditSlipID = await orderPageTabListBlock.getFileName(page, 3);
+        creditSlipID = await boOrdersViewBlockTabListPage.getFileName(page, 3);
         expect(creditSlipID).is.not.equal('');
 
         // Get Date Issued
-        dateIssued = await orderPageTabListBlock.getDocumentDate(page, 3);
+        dateIssued = await boOrdersViewBlockTabListPage.getDocumentDate(page, 3);
         expect(dateIssued).is.not.equal('');
       });
     });

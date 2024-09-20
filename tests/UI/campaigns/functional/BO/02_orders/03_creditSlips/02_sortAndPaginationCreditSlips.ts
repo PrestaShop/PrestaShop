@@ -8,11 +8,11 @@ import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 // Import BO pages
 import creditSlipsPage from '@pages/BO/orders/creditSlips';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 import {
   boDashboardPage,
   boOrdersPage,
+  boOrdersViewBlockTabListPage,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
@@ -115,8 +115,8 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
 
         await boOrdersPage.goToOrder(page, 1);
 
-        const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-        expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+        const pageTitle = await boOrdersViewBlockTabListPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);
       });
 
       it('should add a partial refund', async function () {
@@ -127,7 +127,7 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
           `${baseContext}_preTest_${i}`,
         );
 
-        await orderPageTabListBlock.clickOnPartialRefund(page);
+        await boOrdersViewBlockTabListPage.clickOnPartialRefund(page);
 
         const textMessage = await orderPageProductsBlock.addPartialRefundProduct(page, 1, 1);
         expect(textMessage).to.contains(orderPageProductsBlock.partialRefundValidationMessage);
@@ -141,7 +141,7 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
           `${baseContext}_preTest_${i}`,
         );
 
-        const documentType = await orderPageTabListBlock.getDocumentType(page, 4);
+        const documentType = await boOrdersViewBlockTabListPage.getDocumentType(page, 4);
         expect(documentType).to.be.equal(creditSlipDocumentName);
       });
     });
@@ -156,10 +156,10 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
         baseContext,
       );
 
-      await orderPageTabListBlock.goToSubMenu(
+      await boOrdersViewBlockTabListPage.goToSubMenu(
         page,
-        orderPageTabListBlock.ordersParentLink,
-        orderPageTabListBlock.creditSlipsLink,
+        boOrdersViewBlockTabListPage.ordersParentLink,
+        boOrdersViewBlockTabListPage.creditSlipsLink,
       );
       await creditSlipsPage.closeSfToolBar(page);
 

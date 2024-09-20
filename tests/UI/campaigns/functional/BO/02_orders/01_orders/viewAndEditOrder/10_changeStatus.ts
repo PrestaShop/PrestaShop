@@ -5,12 +5,10 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
-// Import BO pages
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
-
 import {
   boDashboardPage,
   boOrdersPage,
+  boOrdersViewBlockTabListPage,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
@@ -97,156 +95,156 @@ describe('BO - Orders - View and edit order : Change order status', async () => 
       // View order
       await boOrdersPage.goToOrder(page, 1);
 
-      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      const pageTitle = await boOrdersViewBlockTabListPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);
     });
 
     it('should check that \'Update status button\' is disabled', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkThatUpdateStatusButtonIsDisabled1', baseContext);
 
-      const isButtonDisabled = await orderPageTabListBlock.isUpdateStatusButtonDisabled(page);
+      const isButtonDisabled = await boOrdersViewBlockTabListPage.isUpdateStatusButtonDisabled(page);
       expect(isButtonDisabled, 'Update status button is not disabled!').to.eq(true);
     });
 
     it('should check that \'Partial refund\' button is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPartialRefundButton1', baseContext);
 
-      const isButtonVisible = await orderPageTabListBlock.isPartialRefundButtonVisible(page);
+      const isButtonVisible = await boOrdersViewBlockTabListPage.isPartialRefundButtonVisible(page);
       expect(isButtonVisible, 'Partial refund button is visible!').to.eq(false);
     });
 
     it('should check that \'View invoice\' button is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkViewInvoiceButton1', baseContext);
 
-      const isButtonVisible = await orderPageTabListBlock.isViewInvoiceButtonVisible(page);
+      const isButtonVisible = await boOrdersViewBlockTabListPage.isViewInvoiceButtonVisible(page);
       expect(isButtonVisible, 'Partial refund button is visible!').to.eq(false);
     });
 
     it('should select the same status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectSameStatus', baseContext);
 
-      const actualStatus = await orderPageTabListBlock.getOrderStatus(page);
+      const actualStatus = await boOrdersViewBlockTabListPage.getOrderStatus(page);
       expect(actualStatus).to.be.equal(dataOrderStatuses.awaitingBankWire.name);
 
-      await orderPageTabListBlock.selectOrderStatus(page, actualStatus);
+      await boOrdersViewBlockTabListPage.selectOrderStatus(page, actualStatus);
     });
 
     it('should check that \'Update status button\' still disabled', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkThatUpdateStatusButtonIsDisabled2', baseContext);
 
-      const isButtonDisabled = await orderPageTabListBlock.isUpdateStatusButtonDisabled(page);
+      const isButtonDisabled = await boOrdersViewBlockTabListPage.isUpdateStatusButtonDisabled(page);
       expect(isButtonDisabled, 'Update status button is not disabled!').to.eq(true);
     });
 
     it('should check that \'Partial refund\' button still not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPartialRefundButton2', baseContext);
 
-      const isButtonVisible = await orderPageTabListBlock.isPartialRefundButtonVisible(page);
+      const isButtonVisible = await boOrdersViewBlockTabListPage.isPartialRefundButtonVisible(page);
       expect(isButtonVisible, 'Partial refund button is visible!').to.eq(false);
     });
 
     it('should check that \'View invoice\' button still not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkViewInvoiceButton2', baseContext);
 
-      const isButtonVisible = await orderPageTabListBlock.isViewInvoiceButtonVisible(page);
+      const isButtonVisible = await boOrdersViewBlockTabListPage.isViewInvoiceButtonVisible(page);
       expect(isButtonVisible, 'Partial refund button is visible!').to.eq(false);
     });
 
     it('should check that \'View delivery slip\' button is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkViewInvoiceButton3', baseContext);
 
-      const isButtonVisible = await orderPageTabListBlock.isDeliverySlipButtonVisible(page);
+      const isButtonVisible = await boOrdersViewBlockTabListPage.isDeliverySlipButtonVisible(page);
       expect(isButtonVisible, 'Partial refund button is visible!').to.eq(false);
     });
 
     it(`should select the status '${dataOrderStatuses.canceled.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectCanceledStatus', baseContext);
 
-      const result = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.canceled.name);
+      const result = await boOrdersViewBlockTabListPage.modifyOrderStatus(page, dataOrderStatuses.canceled.name);
       expect(result).to.equal(dataOrderStatuses.canceled.name);
     });
 
     it('should check that the statuses number is equal to 2', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkStatusesNumber1', baseContext);
 
-      const statusesNumber = await orderPageTabListBlock.getStatusesNumber(page);
+      const statusesNumber = await boOrdersViewBlockTabListPage.getStatusesNumber(page);
       expect(statusesNumber).to.be.equal(2);
     });
 
     it(`should check that the actual status is '${dataOrderStatuses.canceled.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkActualStatus', baseContext);
 
-      const actualStatus = await orderPageTabListBlock.getOrderStatus(page);
+      const actualStatus = await boOrdersViewBlockTabListPage.getOrderStatus(page);
       expect(actualStatus).to.be.equal(dataOrderStatuses.canceled.name);
     });
 
     it('should check that \'Partial refund\' button is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPartialRefundButton3', baseContext);
 
-      const isButtonVisible = await orderPageTabListBlock.isPartialRefundButtonVisible(page);
+      const isButtonVisible = await boOrdersViewBlockTabListPage.isPartialRefundButtonVisible(page);
       expect(isButtonVisible, 'Partial refund button is visible!').to.eq(false);
     });
 
     it('should check that \'View invoice\' button is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkViewInvoiceButton4', baseContext);
 
-      const isButtonVisible = await orderPageTabListBlock.isViewInvoiceButtonVisible(page);
+      const isButtonVisible = await boOrdersViewBlockTabListPage.isViewInvoiceButtonVisible(page);
       expect(isButtonVisible, 'Partial refund button is visible!').to.eq(false);
     });
 
     it('should check that \'View delivery slip\' button is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkViewInvoiceButton5', baseContext);
 
-      const isButtonVisible = await orderPageTabListBlock.isDeliverySlipButtonVisible(page);
+      const isButtonVisible = await boOrdersViewBlockTabListPage.isDeliverySlipButtonVisible(page);
       expect(isButtonVisible, 'Partial refund button is visible!').to.eq(false);
     });
 
     it(`should select the status '${dataOrderStatuses.paymentAccepted.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectPaymentAcceptedStatus', baseContext);
 
-      const result = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.paymentAccepted.name);
+      const result = await boOrdersViewBlockTabListPage.modifyOrderStatus(page, dataOrderStatuses.paymentAccepted.name);
       expect(result).to.equal(dataOrderStatuses.paymentAccepted.name);
     });
 
     it('should check that the statuses number is equal to 3', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkStatusesNumber2', baseContext);
 
-      const statusesNumber = await orderPageTabListBlock.getStatusesNumber(page);
+      const statusesNumber = await boOrdersViewBlockTabListPage.getStatusesNumber(page);
       expect(statusesNumber).to.be.equal(3);
     });
 
     it(`should check that the actual status is '${dataOrderStatuses.paymentAccepted.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkActualStatus2', baseContext);
 
-      const actualStatus = await orderPageTabListBlock.getOrderStatus(page);
+      const actualStatus = await boOrdersViewBlockTabListPage.getOrderStatus(page);
       expect(actualStatus).to.be.equal(dataOrderStatuses.paymentAccepted.name);
     });
 
     it('should check that \'Partial refund\' button is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPartialRefundButton4', baseContext);
 
-      const isButtonVisible = await orderPageTabListBlock.isPartialRefundButtonVisible(page);
+      const isButtonVisible = await boOrdersViewBlockTabListPage.isPartialRefundButtonVisible(page);
       expect(isButtonVisible, 'Partial refund button is not visible!').to.eq(true);
     });
 
     it('should check that \'View invoice\' button is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkViewInvoiceButton6', baseContext);
 
-      const isButtonVisible = await orderPageTabListBlock.isViewInvoiceButtonVisible(page);
+      const isButtonVisible = await boOrdersViewBlockTabListPage.isViewInvoiceButtonVisible(page);
       expect(isButtonVisible, 'Partial refund button is not visible!').to.eq(true);
     });
 
     it('should check that \'View delivery slip\' button is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkViewInvoiceButton7', baseContext);
 
-      const isButtonVisible = await orderPageTabListBlock.isDeliverySlipButtonVisible(page);
+      const isButtonVisible = await boOrdersViewBlockTabListPage.isDeliverySlipButtonVisible(page);
       expect(isButtonVisible, 'Partial refund button is visible!').to.eq(false);
     });
 
     it('should click on \'View invoice\' button and check that the file is downloaded', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnViewInvoice', baseContext);
 
-      filePath = await orderPageTabListBlock.viewInvoice(page);
+      filePath = await boOrdersViewBlockTabListPage.viewInvoice(page);
       expect(filePath).to.not.eq(null);
 
       const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);
@@ -256,28 +254,28 @@ describe('BO - Orders - View and edit order : Change order status', async () => 
     it(`should select the status '${dataOrderStatuses.shipped.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectShippedStatus', baseContext);
 
-      const result = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
+      const result = await boOrdersViewBlockTabListPage.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
       expect(result).to.equal(dataOrderStatuses.shipped.name);
     });
 
     it('should check that the statuses number is equal to 4', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkStatusesNumber3', baseContext);
 
-      const statusesNumber = await orderPageTabListBlock.getStatusesNumber(page);
+      const statusesNumber = await boOrdersViewBlockTabListPage.getStatusesNumber(page);
       expect(statusesNumber).to.be.equal(4);
     });
 
     it(`should check that the actual status is '${dataOrderStatuses.shipped.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkActualStatus3', baseContext);
 
-      const actualStatus = await orderPageTabListBlock.getOrderStatus(page);
+      const actualStatus = await boOrdersViewBlockTabListPage.getOrderStatus(page);
       expect(actualStatus).to.be.equal(dataOrderStatuses.shipped.name);
     });
 
     it('should click on \'View delivery slip\' button and check that the file is downloaded', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnViewInvoice2', baseContext);
 
-      filePath = await orderPageTabListBlock.viewDeliverySlip(page);
+      filePath = await boOrdersViewBlockTabListPage.viewDeliverySlip(page);
       expect(filePath).to.not.eq(null);
 
       const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);

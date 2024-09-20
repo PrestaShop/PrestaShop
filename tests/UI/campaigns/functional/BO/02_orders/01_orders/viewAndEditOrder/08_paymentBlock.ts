@@ -9,11 +9,11 @@ import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 // Import BO pages
 import orderPageMessagesBlock from '@pages/BO/orders/view/paymentBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 import {
   boDashboardPage,
   boOrdersPage,
+  boOrdersViewBlockTabListPage,
   dataCurrencies,
   dataCustomers,
   dataOrderStatuses,
@@ -455,7 +455,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
     it('should check that invoices number is equal to 2', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentsNumber', baseContext);
 
-      const documentsNumber = await orderPageTabListBlock.getDocumentsNumber(page);
+      const documentsNumber = await boOrdersViewBlockTabListPage.getDocumentsNumber(page);
       expect(documentsNumber).to.be.equal(2);
     });
 
@@ -495,7 +495,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoiceAndCheckPayment', baseContext);
 
       // Download invoice
-      filePath = await orderPageTabListBlock.downloadInvoice(page, 3);
+      filePath = await boOrdersViewBlockTabListPage.downloadInvoice(page, 3);
       expect(filePath).to.not.eq(null);
 
       const exist = await utilsFile.doesFileExist(filePath);

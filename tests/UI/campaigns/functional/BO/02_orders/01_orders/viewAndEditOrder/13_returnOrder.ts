@@ -8,12 +8,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
 import {
   boDashboardPage,
   boOrdersPage,
+  boOrdersViewBlockTabListPage,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
@@ -127,14 +127,14 @@ describe('BO - Orders - View and edit order : Return an order', async () => {
       // View order
       await boOrdersPage.goToOrder(page, 1);
 
-      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      const pageTitle = await boOrdersViewBlockTabListPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);
     });
 
     it('should click on return products button and type the quantity', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnProducts', baseContext);
 
-      await orderPageTabListBlock.clickOnReturnProductsButton(page);
+      await boOrdersViewBlockTabListPage.clickOnReturnProductsButton(page);
       await orderPageProductsBlock.setReturnedProductQuantity(page, 1, 1);
 
       const errorMessage = await orderPageProductsBlock.clickOnReturnProducts(page);
@@ -144,7 +144,7 @@ describe('BO - Orders - View and edit order : Return an order', async () => {
     it('should click on return products button and check quantity checkbox', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnProducts2', baseContext);
 
-      await orderPageTabListBlock.clickOnReturnProductsButton(page);
+      await boOrdersViewBlockTabListPage.clickOnReturnProductsButton(page);
       await orderPageProductsBlock.checkReturnedQuantity(page);
     });
 
@@ -160,7 +160,7 @@ describe('BO - Orders - View and edit order : Return an order', async () => {
     it('should check that return products button is disabled', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'isButtonDisabled', baseContext);
 
-      const isDisabled = await orderPageTabListBlock.isReturnProductsButtonDisabled(page);
+      const isDisabled = await boOrdersViewBlockTabListPage.isReturnProductsButtonDisabled(page);
       expect(isDisabled).to.eq(true);
     });
 
@@ -174,7 +174,7 @@ describe('BO - Orders - View and edit order : Return an order', async () => {
     it('should check the voucher email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkConfirmationEmail', baseContext);
 
-      const orderReference = await orderPageTabListBlock.getOrderReference(page);
+      const orderReference = await boOrdersViewBlockTabListPage.getOrderReference(page);
 
       numberOfEmails = allEmails.length;
       expect(allEmails[numberOfEmails - 1].subject)

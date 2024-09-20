@@ -9,11 +9,11 @@ import {createOrderSpecificProductTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 import {
   boDashboardPage,
   boOrdersPage,
+  boOrdersViewBlockTabListPage,
   dataCarriers,
   dataCustomers,
   dataOrderStatuses,
@@ -157,14 +157,14 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
     it(`should change the order status to '${dataOrderStatuses.paymentAccepted.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const textResult = await orderPageTabListBlock.updateOrderStatus(page, dataOrderStatuses.paymentAccepted.name);
+      const textResult = await boOrdersViewBlockTabListPage.updateOrderStatus(page, dataOrderStatuses.paymentAccepted.name);
       expect(textResult).to.equal(orderPageProductsBlock.successfulUpdateMessage);
     });
 
     it('should get the first invoice file name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getFirstInvoiceFileName', baseContext);
 
-      firstFileName = await orderPageTabListBlock.getFileName(page);
+      firstFileName = await boOrdersViewBlockTabListPage.getFileName(page);
       expect(filePath).is.not.equal('');
     });
   });
@@ -220,14 +220,14 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
     it('should check that invoices number is equal to 2', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentsNumber', baseContext);
 
-      const documentsNumber = await orderPageTabListBlock.getDocumentsNumber(page);
+      const documentsNumber = await boOrdersViewBlockTabListPage.getDocumentsNumber(page);
       expect(documentsNumber).to.be.equal(2);
     });
 
     it('should get the second invoice file name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getSecondInvoiceNumber', baseContext);
 
-      secondFileName = await orderPageTabListBlock.getFileName(page, 3);
+      secondFileName = await boOrdersViewBlockTabListPage.getFileName(page, 3);
       expect(filePath).is.not.equal('');
     });
   });
@@ -237,7 +237,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
     it('should download the first invoice', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'downloadFirstInvoice', baseContext);
 
-      filePath = await orderPageTabListBlock.downloadInvoice(page, 1);
+      filePath = await boOrdersViewBlockTabListPage.downloadInvoice(page, 1);
       expect(filePath).to.not.eq(null);
 
       const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);
@@ -343,22 +343,22 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
     it('should click on \'Carriers\' tab', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'displayCarriersTab', baseContext);
 
-      const isTabOpened = await orderPageTabListBlock.goToCarriersTab(page);
+      const isTabOpened = await boOrdersViewBlockTabListPage.goToCarriersTab(page);
       expect(isTabOpened).to.eq(true);
     });
 
     it('should click on \'Edit\' link and check the modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnEditLink', baseContext);
 
-      const isModalVisible = await orderPageTabListBlock.clickOnEditLink(page);
+      const isModalVisible = await boOrdersViewBlockTabListPage.clickOnEditLink(page);
       expect(isModalVisible, 'Edit shipping modal is not visible!').to.eq(true);
     });
 
     it(`should select the default not free carrier '${dataCarriers.myCarrier.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectNewCarrier', baseContext);
 
-      const textResult = await orderPageTabListBlock.setShippingDetails(page, carrierDataToSelect);
-      expect(textResult).to.equal(orderPageTabListBlock.successfulUpdateMessage);
+      const textResult = await boOrdersViewBlockTabListPage.setShippingDetails(page, carrierDataToSelect);
+      expect(textResult).to.equal(boOrdersViewBlockTabListPage.successfulUpdateMessage);
     });
 
     it(`should search for the product '${secondProduct.name}' and check that there is `
@@ -404,7 +404,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
 
       await orderPageProductsBlock.reloadPage(page);
 
-      const documentsNumber = await orderPageTabListBlock.getDocumentsNumber(page);
+      const documentsNumber = await boOrdersViewBlockTabListPage.getDocumentsNumber(page);
       expect(documentsNumber).to.be.equal(3);
     });
 
@@ -428,7 +428,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
     it('should download the third invoice', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'downloadThirdInvoice', baseContext);
 
-      filePath = await orderPageTabListBlock.downloadInvoice(page, 5);
+      filePath = await boOrdersViewBlockTabListPage.downloadInvoice(page, 5);
       expect(filePath).to.not.eq(null);
 
       const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);

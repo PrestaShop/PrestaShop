@@ -7,13 +7,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import invoicesPage from '@pages/BO/orders/invoices';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 // Import FO pages
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
   boDashboardPage,
   boOrdersPage,
+  boOrdersViewBlockTabListPage,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
@@ -204,14 +204,14 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
 
           await boOrdersPage.goToOrder(page, 1);
 
-          const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-          expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+          const pageTitle = await boOrdersViewBlockTabListPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);
         });
 
         it(`should change the order status to '${dataOrderStatuses.shipped.name}' and check it`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus${index}`, baseContext);
 
-          const result = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
+          const result = await boOrdersViewBlockTabListPage.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
           expect(result).to.equal(dataOrderStatuses.shipped.name);
         });
 
@@ -219,7 +219,7 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
           await testContext.addContextItem(this, 'testIdentifier', `downloadInvoice${index}`, baseContext);
 
           // Download invoice
-          filePath = await orderPageTabListBlock.downloadInvoice(page);
+          filePath = await boOrdersViewBlockTabListPage.downloadInvoice(page);
           expect(filePath).to.not.eq(null);
 
           const exist = await utilsFile.doesFileExist(filePath);

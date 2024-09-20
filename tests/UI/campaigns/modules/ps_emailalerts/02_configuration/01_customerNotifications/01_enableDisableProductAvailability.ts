@@ -10,7 +10,6 @@ import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advanced
 // Import pages
 // Import BO pages
 import addProductPage from '@pages/BO/catalog/products/add';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import stocksPage from '@pages/BO/catalog/stocks';
 // Import FO pages
@@ -20,6 +19,7 @@ import {
   boDashboardPage,
   boModuleManagerPage,
   boOrdersPage,
+  boOrdersViewBlockTabListPage,
   boProductsPage,
   boProductsCreateTabStocksPage,
   dataCustomers,
@@ -460,14 +460,14 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
       // View order
       await boOrdersPage.goToOrder(page, 1);
 
-      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      const pageTitle = await boOrdersViewBlockTabListPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);
     });
 
     it('should click on return products button and type the quantity', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnProducts', baseContext);
 
-      await orderPageTabListBlock.clickOnReturnProductsButton(page);
+      await boOrdersViewBlockTabListPage.clickOnReturnProductsButton(page);
       await orderPageProductsBlock.checkReturnedQuantity(page);
 
       const successMessage = await orderPageProductsBlock.clickOnReturnProducts(page);

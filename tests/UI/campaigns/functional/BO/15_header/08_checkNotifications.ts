@@ -10,12 +10,12 @@ import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import customerServicePage from '@pages/BO/customerService/customerService';
 import viewOrderMessagePage from '@pages/BO/customerService/orderMessages/add';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import viewCustomerPage from '@pages/BO/customers/view';
 
 import {
   boDashboardPage,
   boOrdersPage,
+  boOrdersViewBlockTabListPage,
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
@@ -243,8 +243,8 @@ describe('BO - Header : Check notifications', async () => {
 
       await boDashboardPage.clickOnNotification(page, 'orders');
 
-      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      const pageTitle = await boOrdersViewBlockTabListPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);
     });
 
     it('should click on customers tab', async function () {

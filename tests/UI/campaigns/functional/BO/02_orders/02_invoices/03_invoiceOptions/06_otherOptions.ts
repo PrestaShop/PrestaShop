@@ -7,11 +7,11 @@ import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
 import invoicesPage from '@pages/BO/orders/invoices';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 import {
   boDashboardPage,
   boOrdersPage,
+  boOrdersViewBlockTabListPage,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
@@ -122,14 +122,14 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
 
       await boOrdersPage.goToOrder(page, 1);
 
-      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      const pageTitle = await boOrdersViewBlockTabListPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);
     });
 
     it(`should change the order status to '${dataOrderStatuses.shipped.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateStatusUpdatedOptions', baseContext);
 
-      const result = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
+      const result = await boOrdersViewBlockTabListPage.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
       expect(result).to.equal(dataOrderStatuses.shipped.name);
     });
 
@@ -137,7 +137,7 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
       await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoiceUpdatedOptions', baseContext);
 
       // Download invoice
-      filePath = await orderPageTabListBlock.downloadInvoice(page);
+      filePath = await boOrdersViewBlockTabListPage.downloadInvoice(page);
       expect(filePath).to.not.eq(null);
 
       if (filePath) {
@@ -150,7 +150,7 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
       await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedInvoiceNumber', baseContext);
 
       // Get file name
-      fileName = await orderPageTabListBlock.getFileName(page);
+      fileName = await boOrdersViewBlockTabListPage.getFileName(page);
       expect(fileName).to.contains(invoiceData.invoiceNumber);
     });
 
@@ -175,10 +175,10 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
     it('should go to \'Orders > Invoices\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPageForDefaultData', baseContext);
 
-      await orderPageTabListBlock.goToSubMenu(
+      await boOrdersViewBlockTabListPage.goToSubMenu(
         page,
-        orderPageTabListBlock.ordersParentLink,
-        orderPageTabListBlock.invoicesLink,
+        boOrdersViewBlockTabListPage.ordersParentLink,
+        boOrdersViewBlockTabListPage.invoicesLink,
       );
 
       const pageTitle = await invoicesPage.getPageTitle(page);

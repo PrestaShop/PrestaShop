@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 // Import FO pages
 import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
@@ -15,6 +14,7 @@ import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmatio
 import {
   boDashboardPage,
   boOrdersPage,
+  boOrdersViewBlockTabListPage,
   dataCustomers,
   dataPaymentMethods,
   dataTaxes,
@@ -326,42 +326,42 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
 
           await boOrdersPage.goToOrder(page, 1);
 
-          const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-          expect(pageTitle, 'View order page is not visible!').to.contains(orderPageTabListBlock.pageTitle);
+          const pageTitle = await boOrdersViewBlockTabListPage.getPageTitle(page);
+          expect(pageTitle, 'View order page is not visible!').to.contains(boOrdersViewBlockTabListPage.pageTitle);
         });
 
         if (test.args.isGiftWrapping && !test.args.isRecycledPackaging) {
           it('should check \'gift wrapping\' badge on status tab', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkGiftOnStatusTab${index}`, baseContext);
 
-            const isGiftWrapping = await orderPageTabListBlock.getSuccessBadge(page, 1);
+            const isGiftWrapping = await boOrdersViewBlockTabListPage.getSuccessBadge(page, 1);
             expect(isGiftWrapping).to.be.equal('Gift wrapping');
           });
 
           it('should check \'gift wrapping\' badge on documents tab', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkGiftOnDocTab${index}`, baseContext);
 
-            const isTabOpened = await orderPageTabListBlock.goToDocumentsTab(page);
+            const isTabOpened = await boOrdersViewBlockTabListPage.goToDocumentsTab(page);
             expect(isTabOpened, 'Documents tab is not opened!').to.eq(true);
 
-            const isGiftWrapping = await orderPageTabListBlock.getSuccessBadge(page, 1);
+            const isGiftWrapping = await boOrdersViewBlockTabListPage.getSuccessBadge(page, 1);
             expect(isGiftWrapping).to.be.equal('Gift wrapping');
           });
 
           it('should check \'gift wrapping\' badge on carriers tab', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkGiftOnCarriersTab${index}`, baseContext);
 
-            const isTabOpened = await orderPageTabListBlock.goToCarriersTab(page);
+            const isTabOpened = await boOrdersViewBlockTabListPage.goToCarriersTab(page);
             expect(isTabOpened, 'Carriers tab is not opened!').to.eq(true);
 
-            const isGiftWrapping = await orderPageTabListBlock.getSuccessBadge(page, 1);
+            const isGiftWrapping = await boOrdersViewBlockTabListPage.getSuccessBadge(page, 1);
             expect(isGiftWrapping).to.be.equal('Gift wrapping');
           });
 
           it('should check the gift message', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkGiftMessage${index}`, baseContext);
 
-            const giftMessageText = await orderPageTabListBlock.getGiftMessage(page);
+            const giftMessageText = await boOrdersViewBlockTabListPage.getGiftMessage(page);
             expect(giftMessageText).to.be.equal('This is your gift');
           });
         }
@@ -380,7 +380,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           it('should check \'Recycled packaging\' and \'gift wrapping\' badges on status tab', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkBadgesOnStatusTab${index}`, baseContext);
 
-            const isRecycledPackaging = await orderPageTabListBlock.getSuccessBadge(page, 2);
+            const isRecycledPackaging = await boOrdersViewBlockTabListPage.getSuccessBadge(page, 2);
             expect(isRecycledPackaging).to.contain('Recycled packaging')
               .and.to.contain('Gift wrapping');
           });
@@ -388,10 +388,10 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           it('should check \'Recycled packaging\' and \'gift wrapping\' badges on documents tab', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkBadgesOnDocTab${index}`, baseContext);
 
-            const isTabOpened = await orderPageTabListBlock.goToDocumentsTab(page);
+            const isTabOpened = await boOrdersViewBlockTabListPage.goToDocumentsTab(page);
             expect(isTabOpened, 'Documents tab is not opened!').to.eq(true);
 
-            const isRecycledPackaging = await orderPageTabListBlock.getSuccessBadge(page, 2);
+            const isRecycledPackaging = await boOrdersViewBlockTabListPage.getSuccessBadge(page, 2);
             expect(isRecycledPackaging).to.contain('Recycled packaging')
               .and.to.contain('Gift wrapping');
           });
@@ -399,10 +399,10 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           it('should check \'Recycled packaging\' and \'gift wrapping\' badges on carriers tab', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkBadgesOnCarriersTab${index}`, baseContext);
 
-            const isTabOpened = await orderPageTabListBlock.goToCarriersTab(page);
+            const isTabOpened = await boOrdersViewBlockTabListPage.goToCarriersTab(page);
             expect(isTabOpened, 'Carriers tab is not opened!').to.eq(true);
 
-            const isRecycledPackaging = await orderPageTabListBlock.getSuccessBadge(page, 2);
+            const isRecycledPackaging = await boOrdersViewBlockTabListPage.getSuccessBadge(page, 2);
             expect(isRecycledPackaging).to.be.contain('Recycled packaging')
               .and.to.contain('Gift wrapping');
           });

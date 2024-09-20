@@ -11,12 +11,12 @@ import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 import addOrderPage from '@pages/BO/orders/add';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 import {
   boCustomersPage,
   boDashboardPage,
   boOrdersPage,
+  boOrdersViewBlockTabListPage,
   dataOrderStatuses,
   dataPaymentMethods,
   dataProducts,
@@ -273,14 +273,14 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
     it('should check that the status number is equal to 1', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkStatusNumber', baseContext);
 
-      const statusNumber = await orderPageTabListBlock.getStatusNumber(orderIframe!);
+      const statusNumber = await boOrdersViewBlockTabListPage.getStatusNumber(orderIframe!);
       expect(statusNumber).to.be.equal(1);
     });
 
     it('should check the status name from the table', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkStatusName', baseContext);
 
-      const statusName = await orderPageTabListBlock.getTextColumnFromHistoryTable(orderIframe!, 'status', 1);
+      const statusName = await boOrdersViewBlockTabListPage.getTextColumnFromHistoryTable(orderIframe!, 'status', 1);
       expect(statusName).to.be.equal('Awaiting bank wire payment');
     });
   });

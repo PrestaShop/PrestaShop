@@ -16,7 +16,6 @@ import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 import orderPagePaymentBlock from '@pages/BO/orders/view/paymentBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
 import getOrderXml from '@data/xml/order';
@@ -24,6 +23,7 @@ import getOrderXml from '@data/xml/order';
 import {
   boDashboardPage,
   boOrdersPage,
+  boOrdersViewBlockTabListPage,
   boShoppingCartsPage,
   dataAddresses,
   dataCustomers,
@@ -595,7 +595,7 @@ describe('WS - Orders : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'checkOrderNote1', baseContext);
 
             const xmlValue = orderXml.getAttributeValue(xmlResponseCreate, 'note');
-            const value = await orderPageTabListBlock.getOrderNoteContent(page);
+            const value = await boOrdersViewBlockTabListPage.getOrderNoteContent(page);
             expect(value).to.be.eq(xmlValue);
           });
 
@@ -603,7 +603,7 @@ describe('WS - Orders : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'checkOrderRecyclable1', baseContext);
 
             const xmlValue = orderXml.getAttributeValue(xmlResponseCreate, 'recyclable');
-            const value = await orderPageTabListBlock.hasBadgeRecyclable(page) ? '1' : '0';
+            const value = await boOrdersViewBlockTabListPage.hasBadgeRecyclable(page) ? '1' : '0';
             expect(value).to.be.eq(xmlValue);
           });
 
@@ -611,7 +611,7 @@ describe('WS - Orders : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'checkOrderGift1', baseContext);
 
             const xmlValue = orderXml.getAttributeValue(xmlResponseCreate, 'gift');
-            const value = await orderPageTabListBlock.hasBadgeGift(page) ? '1' : '0';
+            const value = await boOrdersViewBlockTabListPage.hasBadgeGift(page) ? '1' : '0';
             expect(value).to.be.eq(xmlValue);
           });
 
@@ -619,25 +619,25 @@ describe('WS - Orders : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'checkOrderGiftMessage1', baseContext);
 
             const xmlValue = orderXml.getAttributeValue(xmlResponseCreate, 'gift_message');
-            const value = await orderPageTabListBlock.getGiftMessage(page);
+            const value = await boOrdersViewBlockTabListPage.getGiftMessage(page);
             expect(value).to.be.eq(xmlValue);
           });
 
           it('should display the Documents Tabs', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'displayDocumentsTab1', baseContext);
 
-            const isTabVisible = await orderPageTabListBlock.goToDocumentsTab(page);
+            const isTabVisible = await boOrdersViewBlockTabListPage.goToDocumentsTab(page);
             expect(isTabVisible).to.be.equal(true);
           });
 
           it('should check invoice_number', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'checkOrderInvoiceNumber1', baseContext);
 
-            const documentType = await orderPageTabListBlock.getDocumentType(page, 1);
+            const documentType = await boOrdersViewBlockTabListPage.getDocumentType(page, 1);
             expect(documentType).to.be.equal('Invoice');
 
             const xmlValue = orderXml.getAttributeValue(xmlResponseCreate, 'invoice_number');
-            const value = await orderPageTabListBlock.getFileName(page, 1);
+            const value = await boOrdersViewBlockTabListPage.getFileName(page, 1);
             expect(value).to.endWith(xmlValue as string);
           });
 
@@ -645,21 +645,21 @@ describe('WS - Orders : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'checkOrderInvoiceDate1', baseContext);
 
             const xmlValue = orderXml.getAttributeValue(xmlResponseCreate, 'invoice_date');
-            const value = await orderPageTabListBlock.getDocumentDate(page, 1);
+            const value = await boOrdersViewBlockTabListPage.getDocumentDate(page, 1);
             expect(value).to.be.equal(utilsDate.setDateFormat('mm/dd/yyyy', xmlValue as string, false));
           });
 
           it('should display the Carriers Tabs', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'displayCarrierTab1', baseContext);
 
-            const isTabVisible = await orderPageTabListBlock.goToCarriersTab(page);
+            const isTabVisible = await boOrdersViewBlockTabListPage.goToCarriersTab(page);
             expect(isTabVisible).to.be.equal(true);
           });
 
           it('should check shipping_number', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'checkOrderShippingNumber1', baseContext);
 
-            const value = await orderPageTabListBlock.getCarrierDetails(page);
+            const value = await boOrdersViewBlockTabListPage.getCarrierDetails(page);
             const xmlValue = orderXml.getAttributeValue(xmlResponseCreate, 'shipping_number');
             expect(value.trackingNumber).to.be.eq(xmlValue);
           });
@@ -667,12 +667,12 @@ describe('WS - Orders : CRUD', async () => {
           it('should check id_carrier', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'checkOrderIdCarrier1', baseContext);
 
-            const isModalVisibleBefore = await orderPageTabListBlock.clickOnEditLink(page);
+            const isModalVisibleBefore = await boOrdersViewBlockTabListPage.clickOnEditLink(page);
             expect(isModalVisibleBefore).to.be.equal(true);
 
-            const value = await orderPageTabListBlock.getShippingCarrierID(page);
+            const value = await boOrdersViewBlockTabListPage.getShippingCarrierID(page);
 
-            const isModalHiddenAfter = await orderPageTabListBlock.closeOrderShippingModal(page);
+            const isModalHiddenAfter = await boOrdersViewBlockTabListPage.closeOrderShippingModal(page);
             expect(isModalHiddenAfter).to.be.equal(true);
 
             const xmlValue = orderXml.getAttributeValue(xmlResponseCreate, 'id_carrier');
@@ -935,7 +935,7 @@ describe('WS - Orders : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'checkOrderNote2', baseContext);
 
             const xmlValue = orderXml.getAttributeValue(xmlResponseUpdate, 'note');
-            const value = await orderPageTabListBlock.getOrderNoteContent(page);
+            const value = await boOrdersViewBlockTabListPage.getOrderNoteContent(page);
             expect(value).to.be.eq(xmlValue);
           });
 
@@ -943,7 +943,7 @@ describe('WS - Orders : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'checkOrderRecyclable2', baseContext);
 
             const xmlValue = orderXml.getAttributeValue(xmlResponseUpdate, 'recyclable');
-            const value = await orderPageTabListBlock.hasBadgeRecyclable(page) ? '1' : '0';
+            const value = await boOrdersViewBlockTabListPage.hasBadgeRecyclable(page) ? '1' : '0';
             expect(value).to.be.eq(xmlValue);
           });
 
@@ -951,7 +951,7 @@ describe('WS - Orders : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'checkOrderGift2', baseContext);
 
             const xmlValue = orderXml.getAttributeValue(xmlResponseUpdate, 'gift');
-            const value = await orderPageTabListBlock.hasBadgeGift(page) ? '1' : '0';
+            const value = await boOrdersViewBlockTabListPage.hasBadgeGift(page) ? '1' : '0';
             expect(value).to.be.eq(xmlValue);
           });
 
@@ -959,25 +959,25 @@ describe('WS - Orders : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'checkOrderGiftMessage2', baseContext);
 
             const xmlValue = orderXml.getAttributeValue(xmlResponseUpdate, 'gift_message');
-            const value = await orderPageTabListBlock.getGiftMessage(page);
+            const value = await boOrdersViewBlockTabListPage.getGiftMessage(page);
             expect(value).to.be.eq(xmlValue);
           });
 
           it('should display the Documents Tabs', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'displayDocumentsTab2', baseContext);
 
-            const isTabVisible = await orderPageTabListBlock.goToDocumentsTab(page);
+            const isTabVisible = await boOrdersViewBlockTabListPage.goToDocumentsTab(page);
             expect(isTabVisible).to.be.equal(true);
           });
 
           it('should check invoice_number', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'checkOrderInvoiceNumber2', baseContext);
 
-            const documentType = await orderPageTabListBlock.getDocumentType(page, 1);
+            const documentType = await boOrdersViewBlockTabListPage.getDocumentType(page, 1);
             expect(documentType).to.be.equal('Invoice');
 
             const xmlValue = orderXml.getAttributeValue(xmlResponseUpdate, 'invoice_number');
-            const value = await orderPageTabListBlock.getFileName(page, 1);
+            const value = await boOrdersViewBlockTabListPage.getFileName(page, 1);
             expect(value).to.endWith(xmlValue as string);
           });
 
@@ -985,21 +985,21 @@ describe('WS - Orders : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'checkOrderInvoiceDate2', baseContext);
 
             const xmlValue = orderXml.getAttributeValue(xmlResponseUpdate, 'invoice_date');
-            const value = await orderPageTabListBlock.getDocumentDate(page, 1);
+            const value = await boOrdersViewBlockTabListPage.getDocumentDate(page, 1);
             expect(value).to.be.equal(utilsDate.setDateFormat('mm/dd/yyyy', xmlValue as string, false));
           });
 
           it('should display the Carriers Tabs', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'displayCarrierTab2', baseContext);
 
-            const isTabVisible = await orderPageTabListBlock.goToCarriersTab(page);
+            const isTabVisible = await boOrdersViewBlockTabListPage.goToCarriersTab(page);
             expect(isTabVisible).to.be.equal(true);
           });
 
           it('should check shipping_number', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'checkOrderShippingNumber2', baseContext);
 
-            const value = await orderPageTabListBlock.getCarrierDetails(page);
+            const value = await boOrdersViewBlockTabListPage.getCarrierDetails(page);
             const xmlValue = orderXml.getAttributeValue(xmlResponseUpdate, 'shipping_number');
             expect(value.trackingNumber).to.be.eq(xmlValue);
           });
@@ -1007,12 +1007,12 @@ describe('WS - Orders : CRUD', async () => {
           it('should check id_carrier', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'checkOrderIdCarrier2', baseContext);
 
-            const isModalVisibleBefore = await orderPageTabListBlock.clickOnEditLink(page);
+            const isModalVisibleBefore = await boOrdersViewBlockTabListPage.clickOnEditLink(page);
             expect(isModalVisibleBefore).to.be.equal(true);
 
-            const value = await orderPageTabListBlock.getShippingCarrierID(page);
+            const value = await boOrdersViewBlockTabListPage.getShippingCarrierID(page);
 
-            const isModalHiddenAfter = await orderPageTabListBlock.closeOrderShippingModal(page);
+            const isModalHiddenAfter = await boOrdersViewBlockTabListPage.closeOrderShippingModal(page);
             expect(isModalHiddenAfter).to.be.equal(true);
 
             const xmlValue = orderXml.getAttributeValue(xmlResponseUpdate, 'id_carrier');

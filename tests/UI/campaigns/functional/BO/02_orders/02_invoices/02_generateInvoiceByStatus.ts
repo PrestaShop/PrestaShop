@@ -6,11 +6,11 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import invoicesPage from '@pages/BO/orders/invoices';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 import {
   boDashboardPage,
   boOrdersPage,
+  boOrdersViewBlockTabListPage,
   dataOrderStatuses,
   utilsFile,
   utilsPlaywright,
@@ -65,14 +65,14 @@ describe('BO - Orders - Invoices : Generate PDF file by status', async () => {
 
         await boOrdersPage.goToOrder(page, orderToEdit.args.orderRow);
 
-        const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-        expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+        const pageTitle = await boOrdersViewBlockTabListPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);
       });
 
       it(`should change the order status to '${orderToEdit.args.status}' and check it`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus${index + 1}`, baseContext);
 
-        const result = await orderPageTabListBlock.modifyOrderStatus(page, orderToEdit.args.status);
+        const result = await boOrdersViewBlockTabListPage.modifyOrderStatus(page, orderToEdit.args.status);
         expect(result).to.equal(orderToEdit.args.status);
       });
     });
@@ -82,10 +82,10 @@ describe('BO - Orders - Invoices : Generate PDF file by status', async () => {
     it('should go to \'Orders > Invoices\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPage', baseContext);
 
-      await orderPageTabListBlock.goToSubMenu(
+      await boOrdersViewBlockTabListPage.goToSubMenu(
         page,
-        orderPageTabListBlock.ordersParentLink,
-        orderPageTabListBlock.invoicesLink,
+        boOrdersViewBlockTabListPage.ordersParentLink,
+        boOrdersViewBlockTabListPage.invoicesLink,
       );
 
       const pageTitle = await invoicesPage.getPageTitle(page);

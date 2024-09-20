@@ -8,11 +8,11 @@ import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 // Import BO pages
 import creditSlipsPage from '@pages/BO/orders/creditSlips';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 import {
   boDashboardPage,
   boOrdersPage,
+  boOrdersViewBlockTabListPage,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
@@ -90,14 +90,14 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
 
       await boOrdersPage.goToOrder(page, 1);
 
-      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      const pageTitle = await boOrdersViewBlockTabListPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);
     });
 
     it(`should change the order status to '${dataOrderStatuses.shipped.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateCreatedOrderStatus', baseContext);
 
-      const result = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
+      const result = await boOrdersViewBlockTabListPage.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
       expect(result).to.equal(dataOrderStatuses.shipped.name);
     });
 
@@ -110,7 +110,7 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
       it(`should create the partial refund n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `addPartialRefund${index + 1}`, baseContext);
 
-        await orderPageTabListBlock.clickOnPartialRefund(page);
+        await boOrdersViewBlockTabListPage.clickOnPartialRefund(page);
 
         const textMessage = await orderPageProductsBlock.addPartialRefundProduct(
           page,
@@ -124,7 +124,7 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
         await testContext.addContextItem(this, 'testIdentifier', `checkCreditSlipDocument${index + 1}`, baseContext);
 
         // Get document name
-        const documentType = await orderPageTabListBlock.getDocumentType(page, test.args.documentRow);
+        const documentType = await boOrdersViewBlockTabListPage.getDocumentType(page, test.args.documentRow);
         expect(documentType).to.be.equal('Credit slip');
       });
     });

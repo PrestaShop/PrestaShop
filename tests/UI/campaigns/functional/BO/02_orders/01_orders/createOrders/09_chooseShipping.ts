@@ -8,12 +8,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import addOrderPage from '@pages/BO/orders/add';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 
 import {
   boDashboardPage,
   boOrdersPage,
+  boOrdersViewBlockTabListPage,
   dataCarriers,
   dataCustomers,
   dataOrderStatuses,
@@ -253,7 +253,7 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
     it('should check \'Recycled packaging\' and \'gift wrapping\' badges', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkBadges', baseContext);
 
-      const recyclePackagingBadge = await orderPageTabListBlock.getSuccessBadge(page, 2);
+      const recyclePackagingBadge = await boOrdersViewBlockTabListPage.getSuccessBadge(page, 2);
       expect(recyclePackagingBadge).to.contain('Recycled packaging')
         .and.to.contain('Gift wrapping');
     });
@@ -261,7 +261,7 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
     it('should check the gift message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkGiftMessage', baseContext);
 
-      const giftMessageText = await orderPageTabListBlock.getGiftMessage(page);
+      const giftMessageText = await boOrdersViewBlockTabListPage.getGiftMessage(page);
       expect(giftMessageText).to.be.equal(giftMessage);
     });
   });

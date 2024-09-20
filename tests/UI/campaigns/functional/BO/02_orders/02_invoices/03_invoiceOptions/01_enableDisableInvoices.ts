@@ -7,11 +7,11 @@ import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
 import invoicesPage from '@pages/BO/orders/invoices';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 import {
   boDashboardPage,
   boOrdersPage,
+  boOrdersViewBlockTabListPage,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
@@ -125,21 +125,21 @@ describe('BO - Orders - Invoices : Enable/Disable invoices', async () => {
 
         await boOrdersPage.goToOrder(page, 1);
 
-        const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-        expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+        const pageTitle = await boOrdersViewBlockTabListPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);
       });
 
       it(`should change the order status to '${test.args.orderStatus}' and check it`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `updateStatus${index}`, baseContext);
 
-        const result = await orderPageTabListBlock.modifyOrderStatus(page, test.args.orderStatus);
+        const result = await boOrdersViewBlockTabListPage.modifyOrderStatus(page, test.args.orderStatus);
         expect(result).to.equal(test.args.orderStatus);
       });
 
       it(`should check that there is ${test.args.isInvoiceCreated}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkInvoiceCreation${index}`, baseContext);
 
-        const documentName = await orderPageTabListBlock.getDocumentType(page);
+        const documentName = await boOrdersViewBlockTabListPage.getDocumentType(page);
 
         if (test.args.status) {
           expect(documentName).to.be.equal('Invoice');
