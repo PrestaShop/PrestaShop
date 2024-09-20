@@ -616,6 +616,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
                 'name' => $customizationField->getLocalizedNames(),
                 'type' => $customizationField->getType(),
                 'required' => $customizationField->isRequired(),
+                'addedByModule' => $customizationField->isAddedByModule(),
             ];
         }
 
