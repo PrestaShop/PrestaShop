@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Configuration\IniConfiguration;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Context\ApiClientContext;
 use PrestaShop\PrestaShop\Core\Context\CountryContext;
@@ -64,6 +65,7 @@ class PrestaShopAdminController extends AbstractController
     public static function getSubscribedServices(): array
     {
         return parent::getSubscribedServices() + [
+            IniConfiguration::class => IniConfiguration::class,
             ConfigurationInterface::class => ConfigurationInterface::class,
             CommandBusInterface::class => CommandBusInterface::class,
             HookDispatcherInterface::class => HookDispatcherInterface::class,
@@ -81,6 +83,11 @@ class PrestaShopAdminController extends AbstractController
             PositionUpdateFactoryInterface::class => PositionUpdateFactoryInterface::class,
             GridPositionUpdaterInterface::class => GridPositionUpdaterInterface::class,
         ];
+    }
+
+    protected function getIniConfiguration(): IniConfiguration
+    {
+        return $this->container->get(IniConfiguration::class);
     }
 
     protected function getConfiguration(): ConfigurationInterface

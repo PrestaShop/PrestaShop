@@ -52,6 +52,7 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
         $shopContextBuilder = new ShopContextBuilder(
             $this->mockShopRepository(self::DEFAULT_SHOP_ID),
             $this->mockContextStateManager(),
+            $this->mockMultistoreFeature(false)
         );
         $listener = new ShopContextListener(
             $shopContextBuilder,
@@ -80,6 +81,7 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
         $shopContextBuilder = new ShopContextBuilder(
             $this->mockShopRepository(self::DEFAULT_SHOP_ID),
             $this->mockContextStateManager(),
+            $this->mockMultistoreFeature(true)
         );
         $listener = new ShopContextListener(
             $shopContextBuilder,
@@ -176,6 +178,7 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
         $shopContextBuilder = new ShopContextBuilder(
             $this->mockShopRepository(self::DEFAULT_SHOP_ID),
             $this->mockContextStateManager(),
+            $this->mockMultistoreFeature(true)
         );
         $listener = new ShopContextListener(
             $shopContextBuilder,

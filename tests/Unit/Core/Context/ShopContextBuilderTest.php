@@ -31,6 +31,7 @@ namespace Tests\Unit\Core\Context;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
+use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
@@ -44,7 +45,8 @@ class ShopContextBuilderTest extends TestCase
         $shop = $this->mockShop();
         $builder = new ShopContextBuilder(
             $this->mockShopRepository($shop),
-            $this->createMock(ContextStateManager::class)
+            $this->createMock(ContextStateManager::class),
+            $this->mockMultistoreFeature()
         );
         $shopConstraint = ShopConstraint::shop($shop->id);
         $builder->setShopId($shop->id);
@@ -64,13 +66,15 @@ class ShopContextBuilderTest extends TestCase
         $this->assertEquals($shop->domain_ssl, $shopContext->getDomainSSL());
         $this->assertEquals($shop->active, $shopContext->isActive());
         $this->assertEquals([1, 3], $shopContext->getAssociatedShopIds());
+        $this->assertEquals(false, $shopContext->isMultiShopEnabled());
     }
 
     public function testNoShopId(): void
     {
         $builder = new ShopContextBuilder(
             $this->mockShopRepository(),
-            $this->createMock(ContextStateManager::class)
+            $this->createMock(ContextStateManager::class),
+            $this->mockMultistoreFeature()
         );
         $builder->setShopConstraint(ShopConstraint::allShops());
 
@@ -83,13 +87,28 @@ class ShopContextBuilderTest extends TestCase
     {
         $builder = new ShopContextBuilder(
             $this->mockShopRepository(),
-            $this->createMock(ContextStateManager::class)
+            $this->createMock(ContextStateManager::class),
+            $this->mockMultistoreFeature()
         );
         $builder->setShopId(42);
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessageMatches('/Cannot build shop context as no shopConstraint has been defined/');
         $builder->build();
+    }
+
+    public function testMultistoreEnabled(): void
+    {
+        $builder = new ShopContextBuilder(
+            $this->mockShopRepository(),
+            $this->createMock(ContextStateManager::class),
+            $this->mockMultistoreFeature(true)
+        );
+        $builder->setShopId(42);
+        $builder->setShopConstraint(ShopConstraint::shop(42));
+
+        $shopContext = $builder->build();
+        $this->assertEquals(true, $shopContext->isMultiShopEnabled());
     }
 
     private function mockShop(): Shop|MockObject
@@ -123,5 +142,16 @@ class ShopContextBuilderTest extends TestCase
         ;
 
         return $repository;
+    }
+
+    private function mockMultistoreFeature(bool $isActive = false): MultistoreFeature|MockObject
+    {
+        $feature = $this->createMock(MultistoreFeature::class);
+        $feature
+            ->method('isActive')
+            ->willReturn($isActive)
+        ;
+
+        return $feature;
     }
 }

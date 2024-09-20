@@ -43,11 +43,13 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewableCustomer;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CartRuleFormDataProvider;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CartRuleFilters;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Controller\BulkActionsTrait;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,7 +58,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Responsible for Cart rules (a.k.a cart discounts/vouchers) actions in Back Office
  */
-class CartRuleController extends FrameworkBundleAdminController
+class CartRuleController extends PrestaShopAdminController
 {
     use BulkActionsTrait;
 
@@ -71,20 +73,21 @@ class CartRuleController extends FrameworkBundleAdminController
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(
         Request $request,
-        CartRuleFilters $cartRuleFilters
+        CartRuleFilters $cartRuleFilters,
+        #[Autowire(service: 'prestashop.core.grid.grid_factory.cart_rule')]
+        GridFactoryInterface $cartRuleGridFactory
     ): Response {
-        $cartRuleGridFactory = $this->get('prestashop.core.grid.grid_factory.cart_rule');
         $cartRuleGrid = $cartRuleGridFactory->getGrid($cartRuleFilters);
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/CartRule/index.html.twig', [
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'cartRuleGrid' => $this->presentGrid($cartRuleGrid),
-            'layoutTitle' => $this->trans('Cart rules', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Cart rules', [], 'Admin.Navigation.Menu'),
             'layoutHeaderToolbarBtn' => [
                 'add_cart_rule' => [
                     'href' => $this->generateUrl('admin_cart_rules_create'),
-                    'desc' => $this->trans('Add new cart rule', 'Admin.Catalog.Feature'),
+                    'desc' => $this->trans('Add new cart rule', [], 'Admin.Catalog.Feature'),
                     'icon' => 'add_circle_outline',
                 ],
             ],
@@ -106,10 +109,10 @@ class CartRuleController extends FrameworkBundleAdminController
 
         if ($searchPhrase) {
             try {
-                $cartRules = $this->getQueryBus()->handle(new SearchCartRules($searchPhrase));
+                $cartRules = $this->dispatchQuery(new SearchCartRules($searchPhrase));
             } catch (Exception $e) {
                 return $this->json(
-                    ['message' => $this->getFallbackErrorMessage($e::class, $e->getCode())],
+                    ['message' => $this->getErrorMessageForException($e, [])],
                     Response::HTTP_INTERNAL_SERVER_ERROR
                 );
             }
@@ -132,10 +135,10 @@ class CartRuleController extends FrameworkBundleAdminController
     public function deleteAction(int $cartRuleId): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(new DeleteCartRuleCommand($cartRuleId));
+            $this->dispatchCommand(new DeleteCartRuleCommand($cartRuleId));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -158,10 +161,10 @@ class CartRuleController extends FrameworkBundleAdminController
         $cartRuleIds = $this->getBulkActionIds($request, 'cart_rule_bulk');
 
         try {
-            $this->getCommandBus()->handle(new BulkDeleteCartRuleCommand($cartRuleIds));
+            $this->dispatchCommand(new BulkDeleteCartRuleCommand($cartRuleIds));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -183,13 +186,13 @@ class CartRuleController extends FrameworkBundleAdminController
     {
         try {
             /** @var CartRuleForEditing $editableCartRule */
-            $editableCartRule = $this->getQueryBus()->handle(new GetCartRuleForEditing((int) $cartRuleId));
-            $this->getCommandBus()->handle(
+            $editableCartRule = $this->dispatchQuery(new GetCartRuleForEditing((int) $cartRuleId));
+            $this->dispatchCommand(
                 new ToggleCartRuleStatusCommand((int) $cartRuleId, !$editableCartRule->getInformation()->isEnabled())
             );
             $this->addFlash(
                 'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
             );
         } catch (CartRuleException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -203,15 +206,21 @@ class CartRuleController extends FrameworkBundleAdminController
      */
     #[DemoRestricted(redirectRoute: 'admin_cart_rules_index')]
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_cart_rules_index')]
-    public function createAction(Request $request): Response
-    {
-        $form = $this->getFormBuilder()->getForm($this->prefillFormDataForCreation($request));
+    public function createAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cart_rule_form_builder')]
+        FormBuilderInterface $formBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.cart_rule_form_handler')]
+        FormHandlerInterface $formHandler,
+        CartRuleFormDataProvider $cartRuleFormDataProvider
+    ): Response {
+        $form = $formBuilder->getForm($this->prefillFormDataForCreation($request, $cartRuleFormDataProvider));
         $form->handleRequest($request);
 
         try {
-            $handlerResult = $this->getFormHandler()->handle($form);
+            $handlerResult = $formHandler->handle($form);
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
-                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', [], 'Admin.Notifications.Success'));
 
                 // @todo: redirect to edition page when it is implemented
                 return $this->redirectToRoute('admin_cart_rules_index');
@@ -241,11 +250,11 @@ class CartRuleController extends FrameworkBundleAdminController
         $cartRuleIds = $this->getBulkActionIds($request, 'cart_rule_bulk');
 
         try {
-            $this->getCommandBus()->handle(new BulkToggleCartRuleStatusCommand($cartRuleIds, true));
+            $this->dispatchCommand(new BulkToggleCartRuleStatusCommand($cartRuleIds, true));
 
             $this->addFlash(
                 'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
             );
         } catch (CartRuleException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -268,11 +277,11 @@ class CartRuleController extends FrameworkBundleAdminController
         $cartRuleIds = $this->getBulkActionIds($request, 'cart_rule_bulk');
 
         try {
-            $this->getCommandBus()->handle(new BulkToggleCartRuleStatusCommand($cartRuleIds, false));
+            $this->dispatchCommand(new BulkToggleCartRuleStatusCommand($cartRuleIds, false));
 
             $this->addFlash(
                 'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
             );
         } catch (CartRuleException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -290,18 +299,19 @@ class CartRuleController extends FrameworkBundleAdminController
      *
      * @return array
      */
-    private function prefillFormDataForCreation(Request $request): array
-    {
+    private function prefillFormDataForCreation(
+        Request $request,
+        CartRuleFormDataProvider $cartRuleFormDataProvider
+    ): array {
         $formData = [];
 
         $customerId = $request->query->getInt('customerId');
         if ($customerId) {
-            $cartRuleFormDataProvider = $this->get(CartRuleFormDataProvider::class);
             // form data is multidimensional, so we need to get all of it and override only customer,
             // or else the remaining data from data provider 'conditions' tab will be lost
             $formData = $cartRuleFormDataProvider->getDefaultData();
             /** @var ViewableCustomer $customer */
-            $customer = $this->getQueryBus()->handle(new GetCustomerForViewing($customerId));
+            $customer = $this->dispatchQuery(new GetCustomerForViewing($customerId));
             $customerInfo = $customer->getPersonalInformation();
             $formData['conditions']['customer'][] = [
                 'id_customer' => $customerId,
@@ -324,6 +334,7 @@ class CartRuleController extends FrameworkBundleAdminController
                 '%s: %s',
                 $this->trans(
                     'An error occurred while deleting this selection.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
                 $e instanceof BulkDeleteCartRuleException ? implode(', ', $e->getCartRuleIds()) : ''
@@ -332,6 +343,7 @@ class CartRuleController extends FrameworkBundleAdminController
                 '%s: %s',
                 $this->trans(
                     'An error occurred while toggling this selection.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
                 $e instanceof BulkToggleCartRuleException ? implode(', ', $e->getCartRuleIds()) : ''
@@ -339,25 +351,10 @@ class CartRuleController extends FrameworkBundleAdminController
             CartRuleConstraintException::class => [
                 CartRuleConstraintException::NON_UNIQUE_CODE => $this->trans(
                     'This cart rule code is already used',
+                    [],
                     'Admin.Notifications.Error'
                 ),
             ],
         ];
-    }
-
-    /**
-     * @return FormHandlerInterface
-     */
-    private function getFormHandler(): FormHandlerInterface
-    {
-        return $this->get('prestashop.core.form.identifiable_object.handler.cart_rule_form_handler');
-    }
-
-    /**
-     * @return FormBuilderInterface
-     */
-    private function getFormBuilder(): FormBuilderInterface
-    {
-        return $this->get('prestashop.core.form.identifiable_object.builder.cart_rule_form_builder');
     }
 }

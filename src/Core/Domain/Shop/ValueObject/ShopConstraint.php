@@ -164,4 +164,19 @@ class ShopConstraint
 
         return false;
     }
+
+    public function isSingleShopContext(): bool
+    {
+        return null !== $this->shopId;
+    }
+
+    public function isShopGroupContext(): bool
+    {
+        return null !== $this->shopGroupId;
+    }
+
+    public function isAllShopContext(): bool
+    {
+        return $this->forAllShops();
+    }
 }

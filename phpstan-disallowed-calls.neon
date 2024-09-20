@@ -287,6 +287,7 @@ parameters:
                 - src/PrestaShopBundle/Controller/Admin/FrameworkBundleAdminController.php
                 - src/PrestaShopBundle/Controller/Admin/PrestaShopAdminController.php
                 - src/PrestaShopBundle/Controller/Admin/Improve/Modules/ModuleAbstractController.php
+                - src/PrestaShopBundle/Controller/Admin/Sell/Catalog/MonitoringController.php
   disallowedConstants:
         -
             constant:
