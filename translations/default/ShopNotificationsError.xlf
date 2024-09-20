@@ -104,12 +104,12 @@
       <trans-unit id="914aabd65a536be202b28dc1ac5dd1af">
         <source>This cart has expired.</source>
         <target>This cart has expired.</target>
-        <note>Line: 1323</note>
+        <note>Line: 1334</note>
       </trans-unit>
       <trans-unit id="1e65dae319656efa0e4d3f49be9fdfda">
         <source>This cart was already used in an order and has expired.</source>
         <target>This cart was already used in an order and has expired.</target>
-        <note>Line: 1330</note>
+        <note>Line: 1341</note>
       </trans-unit>
     </body>
   </file>
@@ -347,6 +347,21 @@
         <target>We couldn't find your order with the information provided, please try again</target>
         <note>Line: 78</note>
       </trans-unit>
+      <trans-unit id="e9c8b958cbfb895182fe7eeeeadd1121">
+        <source>A customer account has already been created from this guest account. Please sign in.</source>
+        <target>A customer account has already been created from this guest account. Please sign in.</target>
+        <note>Line: 112</note>
+      </trans-unit>
+      <trans-unit id="97f79d53b078e529949d5c3c8b676d52">
+        <source>An unexpected error occurred while creating your account.</source>
+        <target>An unexpected error occurred while creating your account.</target>
+        <note>Line: 132</note>
+      </trans-unit>
+      <trans-unit id="b5617edd6c80a257d3cb7bbc9b3e5bdf">
+        <source>You can't transform your account into a customer account, because a registered customer with the same email already exists.</source>
+        <target>You can't transform your account into a customer account, because a registered customer with the same email already exists.</target>
+        <note>Line: 119</note>
+      </trans-unit>
     </body>
   </file>
   <file original="controllers/front/IdentityController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -360,16 +375,6 @@
   </file>
   <file original="controllers/front/OrderConfirmationController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="e9c8b958cbfb895182fe7eeeeadd1121">
-        <source>A customer account has already been created from this guest account. Please sign in.</source>
-        <target>A customer account has already been created from this guest account. Please sign in.</target>
-        <note>Line: 186</note>
-      </trans-unit>
-      <trans-unit id="97f79d53b078e529949d5c3c8b676d52">
-        <source>An unexpected error occurred while creating your account.</source>
-        <target>An unexpected error occurred while creating your account.</target>
-        <note>Line: 199</note>
-      </trans-unit>
       <trans-unit id="e74bbc67e02323a626ce95619ef42fd5">
         <source>Password must be between %d and %d characters long</source>
         <target>Password must be between %d and %d characters long</target>
@@ -546,12 +551,12 @@
       <trans-unit id="7cc92687130ea12abb80556681538001">
         <source>An error occurred during the image upload process.</source>
         <target>An error occurred during the image upload process.</target>
-        <note>Line: 949</note>
+        <note>Line: 954</note>
       </trans-unit>
       <trans-unit id="e14005ecaeec15e1019f543a379b83cc">
         <source>Invalid message.</source>
         <target>Invalid message.</target>
-        <note>Line: 977</note>
+        <note>Line: 982</note>
       </trans-unit>
     </body>
   </file>

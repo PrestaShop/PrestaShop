@@ -54,6 +54,11 @@
         <target>%price% tax excl.</target>
         <note>Line: 110</note>
       </trans-unit>
+      <trans-unit id="b24ce0cd392a5b0b8dedc66c25213594">
+        <source>Free</source>
+        <target>Free</target>
+        <note>Line: 92</note>
+      </trans-unit>
     </body>
   </file>
   <file original="classes/form/CustomerAddressForm.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -89,7 +94,7 @@
       <trans-unit id="8bbbace7ffb26d61b400c72ffe493f4d">
         <source>Guest order tracking</source>
         <target>Guest order tracking</target>
-        <note>Line: 173</note>
+        <note>Line: 180</note>
       </trans-unit>
     </body>
   </file>
@@ -98,7 +103,7 @@
       <trans-unit id="fb077ecba55e5552916bde26d8b9e794">
         <source>Order confirmation</source>
         <target>Order confirmation</target>
-        <note>Line: 297</note>
+        <note>Line: 307</note>
       </trans-unit>
     </body>
   </file>
@@ -111,51 +116,42 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/Adapter/Presenter/Cart/CartPresenter.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/Adapter/Presenter/Cart/CartLazyArray.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="40d906eb5dd9a2734d0c20c437e2ff68">
         <source>Discount(s)</source>
         <target>Discount(s)</target>
-        <note>Line: 349</note>
+        <note>Line: 232</note>
       </trans-unit>
       <trans-unit id="ea9cf7e47ff33b2be14e6dd07cbcefc6">
         <source>Shipping</source>
         <target>Shipping</target>
-        <note>Line: 379</note>
+        <note>Line: 260</note>
       </trans-unit>
       <trans-unit id="3b5a05f2c4a0373c7a6e8d1cfec7020f">
         <source>Included taxes</source>
         <target>Included taxes</target>
-        <note>Line: 390</note>
+        <note>Line: 272</note>
       </trans-unit>
       <trans-unit id="719fec04166d6fa75f89cd29ad61fa8c">
         <source>Taxes</source>
         <target>Taxes</target>
-        <note>Line: 391</note>
+        <note>Line: 273</note>
       </trans-unit>
       <trans-unit id="7e0eb131cbb6280fe2b38edf92a3bcc5">
         <source>1 item</source>
         <target>1 item</target>
-        <note>Line: 425</note>
+        <note>Line: 314</note>
       </trans-unit>
       <trans-unit id="ca96f27e7d3e3b67b5d1f43a54296466">
         <source>%count% items</source>
         <target>%count% items</target>
-        <note>Line: 426</note>
+        <note>Line: 315</note>
       </trans-unit>
       <trans-unit id="2bd544f123f671c597c4b330ef05b5da">
         <source>A minimum shopping cart total of %amount% (tax excl.) is required to validate your order. Current cart total is %total% (tax excl.).</source>
         <target>A minimum shopping cart total of %amount% (tax excl.) is required to validate your order. Current cart total is %total% (tax excl.).</target>
-        <note>Line: 480</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Adapter/Presenter/Order/OrderDetailLazyArray.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b24ce0cd392a5b0b8dedc66c25213594">
-        <source>Free</source>
-        <target>Free</target>
-        <note>Line: 236</note>
+        <note>Line: 443</note>
       </trans-unit>
     </body>
   </file>
@@ -355,11 +351,6 @@
         <source>Total products</source>
         <target>Total products</target>
         <note>Line: 31</note>
-      </trans-unit>
-      <trans-unit id="694e8d1f2ee056f98ee488bdc4982d73">
-        <source>Quantity</source>
-        <target>Quantity</target>
-        <note>Line: 30</note>
       </trans-unit>
     </body>
   </file>
@@ -571,6 +562,11 @@
   </file>
   <file original="themes/classic/templates/customer/discount.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="694e8d1f2ee056f98ee488bdc4982d73">
+        <source>Quantity</source>
+        <target>Quantity</target>
+        <note>Line: 72</note>
+      </trans-unit>
       <trans-unit id="ca0dbad92a874b2f69b549293387925e">
         <source>Code</source>
         <target>Code</target>
