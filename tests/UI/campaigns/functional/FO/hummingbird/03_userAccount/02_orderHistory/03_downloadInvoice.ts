@@ -8,13 +8,13 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 
 // Import BO pages
 import invoicesPage from '@pages/BO/orders/invoices';
-import ordersPage from '@pages/BO/orders';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import FO pages
 import orderHistoryPage from '@pages/FO/hummingbird/myAccount/orderHistory';
 
 import {
+  boOrdersPage,
+  boOrdersViewBlockTabListPage,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
@@ -93,24 +93,24 @@ describe('FO - Account - Order history : download invoice', async () => {
         invoicesPage.ordersLink,
       );
 
-      const pageTitle: string = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle: string = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should go to the first order page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderPageForUpdatedPrefix', baseContext);
 
       // View order
-      await ordersPage.goToOrder(page, 1);
+      await boOrdersPage.goToOrder(page, 1);
 
-      const pageTitle: string = await orderPageTabListBlock.getPageTitle(page);
-      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      const pageTitle: string = await boOrdersViewBlockTabListPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);
     });
 
     it(`should change the order status to '${dataOrderStatuses.shipped.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateStatus', baseContext);
 
-      const result: string = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
+      const result: string = await boOrdersViewBlockTabListPage.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
       expect(result).to.equal(dataOrderStatuses.shipped.name);
     });
 
@@ -118,7 +118,7 @@ describe('FO - Account - Order history : download invoice', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkFirstOrderUpdatedPrefix', baseContext);
 
       // Get invoice file name
-      fileName = await orderPageTabListBlock.getFileName(page);
+      fileName = await boOrdersViewBlockTabListPage.getFileName(page);
       expect(fileName).to.not.eq(null);
     });
   });

@@ -9,8 +9,6 @@ import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advanced
 
 // Import pages
 // Import BO pages
-import ordersPage from '@pages/BO/orders';
-import emailAlertsPage from '@pages/BO/modules/psEmailAlerts';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
 import {merchandiseReturnsPage as foMerchandiseReturnsPage} from '@pages/FO/classic/myAccount/merchandiseReturns';
@@ -20,6 +18,7 @@ import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {
   boDashboardPage,
   boModuleManagerPage,
+  boOrdersPage,
   dataCustomers,
   dataModules,
   dataOrderStatuses,
@@ -31,6 +30,7 @@ import {
   foClassicMyAccountPage,
   type MailDev,
   type MailDevEmail,
+  modPsEmailAlertsBoMain,
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -140,15 +140,15 @@ describe('Mail alerts module - Enable/Disable return', async () => {
 
       await boModuleManagerPage.goToConfigurationPage(page, dataModules.psEmailAlerts.tag);
 
-      const pageTitle = await emailAlertsPage.getPageSubtitle(page);
-      expect(pageTitle).to.equal(emailAlertsPage.pageTitle);
+      const pageTitle = await modPsEmailAlertsBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.equal(modPsEmailAlertsBoMain.pageTitle);
     });
 
     it('should enable returns and set email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableReturns', baseContext);
 
-      const successMessage = await emailAlertsPage.setReturns(page, true, 'demo@prestashop.com');
-      expect(successMessage).to.contains(emailAlertsPage.successfulUpdateMessage);
+      const successMessage = await modPsEmailAlertsBoMain.setReturns(page, true, 'demo@prestashop.com');
+      expect(successMessage).to.contains(modPsEmailAlertsBoMain.successfulUpdateMessage);
     });
   });
 
@@ -162,29 +162,29 @@ describe('Mail alerts module - Enable/Disable return', async () => {
         boDashboardPage.ordersLink,
       );
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should get the first order ID', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getOrderID', baseContext);
 
-      orderID = await ordersPage.getOrderIDNumber(page);
+      orderID = await boOrdersPage.getOrderIDNumber(page);
       expect(orderID).to.not.equal(1);
     });
 
     it('should get the first Order reference', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getOrderReference', baseContext);
 
-      orderReference = await ordersPage.getTextColumn(page, 'reference', 1);
+      orderReference = await boOrdersPage.getTextColumn(page, 'reference', 1);
       expect(orderReference).to.not.eq(null);
     });
 
     it(`should change the order status to '${dataOrderStatuses.delivered.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const result = await ordersPage.setOrderStatus(page, 1, dataOrderStatuses.delivered);
-      expect(result).to.equal(ordersPage.successfulUpdateMessage);
+      const result = await boOrdersPage.setOrderStatus(page, 1, dataOrderStatuses.delivered);
+      expect(result).to.equal(boOrdersPage.successfulUpdateMessage);
     });
   });
 
@@ -192,22 +192,22 @@ describe('Mail alerts module - Enable/Disable return', async () => {
     it('should get the second order ID', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getOrderID2', baseContext);
 
-      secondOrderID = await ordersPage.getOrderIDNumber(page, 2);
+      secondOrderID = await boOrdersPage.getOrderIDNumber(page, 2);
       expect(orderID).to.not.equal(1);
     });
 
     it('should get the created Order reference', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getOrderReference2', baseContext);
 
-      secondOrderReference = await ordersPage.getTextColumn(page, 'reference', 2);
+      secondOrderReference = await boOrdersPage.getTextColumn(page, 'reference', 2);
       expect(orderReference).to.not.eq(null);
     });
 
     it(`should change the order status to '${dataOrderStatuses.delivered.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus2', baseContext);
 
-      const result = await ordersPage.setOrderStatus(page, 2, dataOrderStatuses.delivered);
-      expect(result).to.equal(ordersPage.successfulUpdateMessage);
+      const result = await boOrdersPage.setOrderStatus(page, 2, dataOrderStatuses.delivered);
+      expect(result).to.equal(boOrdersPage.successfulUpdateMessage);
     });
   });
 
@@ -311,15 +311,15 @@ describe('Mail alerts module - Enable/Disable return', async () => {
 
       await boModuleManagerPage.goToConfigurationPage(page, dataModules.psEmailAlerts.tag);
 
-      const pageTitle = await emailAlertsPage.getPageSubtitle(page);
-      expect(pageTitle).to.equal(emailAlertsPage.pageTitle);
+      const pageTitle = await modPsEmailAlertsBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.equal(modPsEmailAlertsBoMain.pageTitle);
     });
 
     it('should disable returns', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableReturns2', baseContext);
 
-      const successMessage = await emailAlertsPage.setReturns(page, false);
-      expect(successMessage).to.contains(emailAlertsPage.successfulUpdateMessage);
+      const successMessage = await modPsEmailAlertsBoMain.setReturns(page, false);
+      expect(successMessage).to.contains(modPsEmailAlertsBoMain.successfulUpdateMessage);
     });
   });
 

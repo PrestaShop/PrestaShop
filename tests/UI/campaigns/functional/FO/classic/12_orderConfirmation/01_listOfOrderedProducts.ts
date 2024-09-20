@@ -4,21 +4,19 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import BO pages
-import ordersPage from '@pages/BO/orders';
-
 // Import FO pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
   boDashboardPage,
+  boOrdersPage,
   dataCarriers,
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicModalQuickViewPage,
   foClassicSearchResultsPage,
@@ -164,11 +162,11 @@ describe('FO - Order confirmation : List of ordered products', async () => {
 
       await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
-      const pageTitle = await orderConfirmationPage.getPageTitle(page);
-      expect(pageTitle).to.equal(orderConfirmationPage.pageTitle);
+      const pageTitle = await foClassicCheckoutOrderConfirmationPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicCheckoutOrderConfirmationPage.pageTitle);
 
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+      expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
   });
 
@@ -186,16 +184,16 @@ describe('FO - Order confirmation : List of ordered products', async () => {
         boDashboardPage.ordersParentLink,
         boDashboardPage.ordersLink,
       );
-      await ordersPage.closeSfToolBar(page);
+      await boOrdersPage.closeSfToolBar(page);
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should get the order reference of the first order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getOrderReference', baseContext);
 
-      orderReference = await ordersPage.getTextColumn(page, 'reference', 1);
+      orderReference = await boOrdersPage.getTextColumn(page, 'reference', 1);
       expect(orderReference).to.not.eq(null);
     });
   });
@@ -204,14 +202,14 @@ describe('FO - Order confirmation : List of ordered products', async () => {
     it('should check the payment information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPaymentInformation', baseContext);
 
-      page = await ordersPage.changePage(browserContext, 0);
+      page = await boOrdersPage.changePage(browserContext, 0);
       const totalToPay: string = (dataProducts.demo_3.finalPrice + (2 * dataProducts.demo_5.finalPrice)
         + (2 * dataProducts.demo_12.finalPrice) + dataCarriers.myCarrier.priceTTC).toFixed(2);
 
-      const paymentMethod = await orderConfirmationPage.getPaymentMethod(page);
+      const paymentMethod = await foClassicCheckoutOrderConfirmationPage.getPaymentMethod(page);
       expect(paymentMethod).to.contains(dataPaymentMethods.wirePayment.displayName);
 
-      const paymentInformation = await orderConfirmationPage.getPaymentInformation(page);
+      const paymentInformation = await foClassicCheckoutOrderConfirmationPage.getPaymentInformation(page);
       expect(paymentInformation).to.contains('Please send us a '
         + `${dataPaymentMethods.wirePayment.name.toLowerCase()}`)
         .and.to.contains(`Amount €${totalToPay}`)
@@ -221,7 +219,7 @@ describe('FO - Order confirmation : List of ordered products', async () => {
     it('should check the order details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderDetails', baseContext);
 
-      const orderDetails = await orderConfirmationPage.getOrderDetails(page);
+      const orderDetails = await foClassicCheckoutOrderConfirmationPage.getOrderDetails(page);
       expect(orderDetails).to.equal(`Order reference: ${orderReference} Payment method: `
         + `${dataPaymentMethods.wirePayment.displayName} Shipping method: `
         + `${dataCarriers.myCarrier.name} ${dataCarriers.myCarrier.transitName}`);
@@ -230,7 +228,7 @@ describe('FO - Order confirmation : List of ordered products', async () => {
     it('should check the details of the first product in list', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkFirstProductDetails', baseContext);
 
-      const result = await orderConfirmationPage.getProductDetailsInRow(page, 1);
+      const result = await foClassicCheckoutOrderConfirmationPage.getProductDetailsInRow(page, 1);
       await Promise.all([
         expect(result.image).to.contains(dataProducts.demo_3.coverImage),
         expect(result.details).to.equal(`${dataProducts.demo_3.name} (Size: S)`),
@@ -241,7 +239,7 @@ describe('FO - Order confirmation : List of ordered products', async () => {
     it('should check the details of the second product in list', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSecondProductDetails', baseContext);
 
-      const result = await orderConfirmationPage.getProductDetailsInRow(page, 2);
+      const result = await foClassicCheckoutOrderConfirmationPage.getProductDetailsInRow(page, 2);
       await Promise.all([
         expect(result.image).to.contains(dataProducts.demo_5.coverImage),
         expect(result.details).to.equal(`${dataProducts.demo_5.name} (Dimension: 40x60cm)`),
@@ -253,7 +251,7 @@ describe('FO - Order confirmation : List of ordered products', async () => {
     it('should check the details of the third product in list', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkThirdProductDetails', baseContext);
 
-      const result = await orderConfirmationPage.getProductDetailsInRow(page, 3);
+      const result = await foClassicCheckoutOrderConfirmationPage.getProductDetailsInRow(page, 3);
       await Promise.all([
         expect(result.image).to.contains(dataProducts.demo_12.coverImage),
         expect(result.details).to.equal(`${dataProducts.demo_12.name}`),

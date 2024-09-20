@@ -7,11 +7,11 @@ import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
-import ordersPage from '@pages/BO/orders';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 import {
   boDashboardPage,
+  boOrdersPage,
+  boOrdersViewBlockTabListPage,
   dataCarriers,
   dataCustomers,
   dataPaymentMethods,
@@ -121,46 +121,46 @@ describe('BO - Shop Parameters - Order Settings : Recalculate shipping costs aft
           boDashboardPage.ordersLink,
         );
 
-        const pageTitle = await ordersPage.getPageTitle(page);
-        expect(pageTitle).to.contains(ordersPage.pageTitle);
+        const pageTitle = await boOrdersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersPage.pageTitle);
       });
 
       it('should view the order', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `viewOrderPage_${index}`, baseContext);
 
-        await ordersPage.goToOrder(page, 1);
+        await boOrdersPage.goToOrder(page, 1);
 
-        const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-        expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+        const pageTitle = await boOrdersViewBlockTabListPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);
       });
 
       it('should click on \'Carriers\' tab', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `displayCarriersTab_${index}`, baseContext);
 
-        const isTabOpened = await orderPageTabListBlock.goToCarriersTab(page);
+        const isTabOpened = await boOrdersViewBlockTabListPage.goToCarriersTab(page);
         expect(isTabOpened).to.eq(true);
       });
 
       it('should click on \'Edit\' link and check the modal', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `clickOnEditLink_${index}`, baseContext);
 
-        const isModalVisible = await orderPageTabListBlock.clickOnEditLink(page);
+        const isModalVisible = await boOrdersViewBlockTabListPage.clickOnEditLink(page);
         expect(isModalVisible, 'Edit shipping modal is not visible!').to.eq(true);
       });
 
       it('should update the carrier and add a tracking number', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `updateTrackingNumber_${index}`, baseContext);
 
-        const textResult = await orderPageTabListBlock.setShippingDetails(page, test.args.carrierData!);
-        expect(textResult).to.equal(orderPageTabListBlock.successfulUpdateMessage);
+        const textResult = await boOrdersViewBlockTabListPage.setShippingDetails(page, test.args.carrierData!);
+        expect(textResult).to.equal(boOrdersViewBlockTabListPage.successfulUpdateMessage);
       });
 
       it('should check the updated carrier details', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkUpdatedCarrierDetails_${index}`, baseContext);
 
-        await orderPageTabListBlock.goToCarriersTab(page);
+        await boOrdersViewBlockTabListPage.goToCarriersTab(page);
 
-        const result = await orderPageTabListBlock.getCarrierDetails(page);
+        const result = await boOrdersViewBlockTabListPage.getCarrierDetails(page);
         await Promise.all([
           expect(result.carrier).to.equal(test.args.carrierData.carrier),
           expect(result.shippingCost).to.equal(test.args.cost),

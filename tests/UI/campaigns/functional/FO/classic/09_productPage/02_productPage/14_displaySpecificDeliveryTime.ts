@@ -7,7 +7,6 @@ import {deleteProductTest} from '@commonTests/BO/catalog/product';
 // Import BO pages
 import loginCommon from '@commonTests/BO/loginBO';
 import createProductPage from '@pages/BO/catalog/products/add';
-import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -15,6 +14,7 @@ import {
   boDashboardPage,
   boProductsPage,
   boProductsCreateTabShippingPage,
+  boProductsCreateTabStocksPage,
   FakerProduct,
   foClassicProductPage,
   utilsPlaywright,
@@ -105,7 +105,7 @@ describe('FO - Product page - Product page : Display specific delivery time', as
       await testContext.addContextItem(this, 'testIdentifier', 'chooseAllowOrders', baseContext);
 
       await createProductPage.goToTab(page, 'stock');
-      await stocksTab.setOptionWhenOutOfStock(page, 'Allow orders');
+      await boProductsCreateTabStocksPage.setOptionWhenOutOfStock(page, 'Allow orders');
 
       const message = await createProductPage.saveProduct(page);
       expect(message).to.equal(createProductPage.successfulUpdateMessage);
@@ -164,7 +164,7 @@ describe('FO - Product page - Product page : Display specific delivery time', as
       await testContext.addContextItem(this, 'testIdentifier', 'editProductQuantity', baseContext);
 
       await createProductPage.goToTab(page, 'stock');
-      await stocksTab.setProductQuantity(page, 100);
+      await boProductsCreateTabStocksPage.setProductQuantity(page, 100);
 
       const message = await createProductPage.saveProduct(page);
       expect(message).to.equal(createProductPage.successfulUpdateMessage);

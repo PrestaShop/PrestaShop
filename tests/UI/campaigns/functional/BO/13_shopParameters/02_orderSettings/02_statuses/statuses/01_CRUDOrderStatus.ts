@@ -8,11 +8,11 @@ import loginCommon from '@commonTests/BO/loginBO';
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 import statusesPage from '@pages/BO/shopParameters/orderSettings/statuses';
 import addOrderStatusPage from '@pages/BO/shopParameters/orderSettings/statuses/add';
-import ordersPage from '@pages/BO/orders';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 
 import {
   boDashboardPage,
+  boOrdersPage,
   FakerOrderStatus,
   utilsFile,
   utilsPlaywright,
@@ -126,14 +126,14 @@ describe('BO - Shop Parameters - Order Settings - Statuses : CRUD order status',
         statusesPage.ordersLink,
       );
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should go to the first order page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderPage', baseContext);
 
-      await ordersPage.goToOrder(page, 1);
+      await boOrdersPage.goToOrder(page, 1);
 
       const pageTitle = await viewOrderBasePage.getPageTitle(page);
       expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);

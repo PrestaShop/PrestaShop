@@ -7,11 +7,9 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import merchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns';
-import ordersPage from '@pages/BO/orders';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 import editMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns/edit';
 // Import FO pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {merchandiseReturnsPage as foMerchandiseReturnsPage} from '@pages/FO/classic/myAccount/merchandiseReturns';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
@@ -19,11 +17,13 @@ import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
   boDashboardPage,
+  boOrdersPage,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicModalQuickViewPage,
@@ -138,8 +138,8 @@ describe('BO - Customer Service - Merchandise Returns : Delete product', async (
 
       await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+      expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
   });
 
@@ -180,14 +180,14 @@ describe('BO - Customer Service - Merchandise Returns : Delete product', async (
         boDashboardPage.ordersLink,
       );
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should go to the first order page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderPage', baseContext);
 
-      await ordersPage.goToOrder(page, 1);
+      await boOrdersPage.goToOrder(page, 1);
 
       const pageTitle = await viewOrderBasePage.getPageTitle(page);
       expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);

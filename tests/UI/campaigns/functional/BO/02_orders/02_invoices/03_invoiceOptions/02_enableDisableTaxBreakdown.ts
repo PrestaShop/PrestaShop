@@ -11,14 +11,12 @@ import addProductPage from '@pages/BO/catalog/products/add';
 import taxesPage from '@pages/BO/international/taxes';
 import addTaxRulesPage from '@pages/BO/international/taxes/taxRules/add';
 import taxRulesPage from '@pages/BO/international/taxes/taxRules';
-import ordersPage from '@pages/BO/orders';
 import invoicesPage from '@pages/BO/orders/invoices';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
-// Import FO pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
   boDashboardPage,
+  boOrdersPage,
+  boOrdersViewBlockTabListPage,
   boProductsPage,
   dataCustomers,
   dataOrderStatuses,
@@ -28,6 +26,7 @@ import {
   FakerTaxRulesGroup,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicProductPage,
   utilsFile,
   utilsPlaywright,
@@ -281,15 +280,15 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
         // Check the confirmation message
-        const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-        expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+        const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+        expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
       });
 
       it('should go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo', baseContext);
 
         // Close tab and init other page objects with new current tab
-        page = await orderConfirmationPage.closePage(browserContext, page, 0);
+        page = await foClassicCheckoutOrderConfirmationPage.closePage(browserContext, page, 0);
 
         const pageTitle = await addProductPage.getPageTitle(page);
         expect(pageTitle).to.contains(addProductPage.pageTitle);
@@ -306,23 +305,23 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
           boDashboardPage.ordersLink,
         );
 
-        const pageTitle = await ordersPage.getPageTitle(page);
-        expect(pageTitle).to.contains(ordersPage.pageTitle);
+        const pageTitle = await boOrdersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersPage.pageTitle);
       });
 
       it('should go to the first order page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderPageTaxBreakdown', baseContext);
 
-        await ordersPage.goToOrder(page, 1);
+        await boOrdersPage.goToOrder(page, 1);
 
-        const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-        expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+        const pageTitle = await boOrdersViewBlockTabListPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);
       });
 
       it(`should change the order status to '${dataOrderStatuses.paymentAccepted.name}' and check it`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'changeOrderStatusTaxBreakdown', baseContext);
 
-        const result = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.paymentAccepted.name);
+        const result = await boOrdersViewBlockTabListPage.modifyOrderStatus(page, dataOrderStatuses.paymentAccepted.name);
         expect(result).to.equal(dataOrderStatuses.paymentAccepted.name);
       });
 
@@ -330,7 +329,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoiceTaxBreakdown', baseContext);
 
         // Download invoice
-        firstInvoiceFileName = await orderPageTabListBlock.downloadInvoice(page);
+        firstInvoiceFileName = await boOrdersViewBlockTabListPage.downloadInvoice(page);
         expect(firstInvoiceFileName).to.not.eq(null);
 
         // Check that file exist
@@ -357,10 +356,10 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
       it('should go to \'Orders > Invoices\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPageToDisableTaxBreakdown', baseContext);
 
-        await orderPageTabListBlock.goToSubMenu(
+        await boOrdersViewBlockTabListPage.goToSubMenu(
           page,
-          orderPageTabListBlock.ordersParentLink,
-          orderPageTabListBlock.invoicesLink,
+          boOrdersViewBlockTabListPage.ordersParentLink,
+          boOrdersViewBlockTabListPage.invoicesLink,
         );
 
         const pageTitle = await invoicesPage.getPageTitle(page);
@@ -387,24 +386,24 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
           invoicesPage.ordersLink,
         );
 
-        const pageTitle = await ordersPage.getPageTitle(page);
-        expect(pageTitle).to.contains(ordersPage.pageTitle);
+        const pageTitle = await boOrdersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersPage.pageTitle);
       });
 
       it('should go to the first order page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderPageNoTaxBreakdown', baseContext);
 
-        await ordersPage.goToOrder(page, 1);
+        await boOrdersPage.goToOrder(page, 1);
 
-        const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-        expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+        const pageTitle = await boOrdersViewBlockTabListPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);
       });
 
       it('should download the invoice', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoiceNoTaxBreakdown', baseContext);
 
         // Download invoice and check existence
-        secondInvoiceFileName = await orderPageTabListBlock.downloadInvoice(page);
+        secondInvoiceFileName = await boOrdersViewBlockTabListPage.downloadInvoice(page);
         expect(secondInvoiceFileName).to.not.eq(null);
 
         const exist = await utilsFile.doesFileExist(secondInvoiceFileName);

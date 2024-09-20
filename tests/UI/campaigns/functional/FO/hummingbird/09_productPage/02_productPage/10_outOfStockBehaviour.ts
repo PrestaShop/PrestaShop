@@ -8,7 +8,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 // Import BO pages
 import loginCommon from '@commonTests/BO/loginBO';
 import createProductPage from '@pages/BO/catalog/products/add';
-import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 import movementsPage from '@pages/BO/catalog/stocks/movements';
 
 // Import FO pages
@@ -19,6 +18,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boProductsPage,
+  boProductsCreateTabStocksPage,
   FakerProduct,
   foHummingbirdProductPage,
   utilsDate,
@@ -135,7 +135,7 @@ describe('FO - Product page - Product page : Out of stock behaviour', async () =
     it('should click on View all stock movements', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickViewAllStockMovements', baseContext);
 
-      page = await stocksTab.clickViewAllStockMovements(page);
+      page = await boProductsCreateTabStocksPage.clickViewAllStockMovements(page);
 
       const pageTitle = await movementsPage.getPageTitle(page);
       expect(pageTitle).to.equal(movementsPage.pageTitle);
@@ -153,9 +153,9 @@ describe('FO - Product page - Product page : Out of stock behaviour', async () =
     it('should fill Stocks values', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'fillStockValues', baseContext);
 
-      await stocksTab.setMinimalQuantity(page, 5);
-      await stocksTab.setStockLocation(page, 'Second floor');
-      await stocksTab.setLowStockAlertByEmail(page, true, 3);
+      await boProductsCreateTabStocksPage.setMinimalQuantity(page, 5);
+      await boProductsCreateTabStocksPage.setStockLocation(page, 'Second floor');
+      await boProductsCreateTabStocksPage.setLowStockAlertByEmail(page, true, 3);
 
       const message = await createProductPage.saveProduct(page);
       expect(message).to.equal(createProductPage.successfulUpdateMessage);
@@ -164,9 +164,9 @@ describe('FO - Product page - Product page : Out of stock behaviour', async () =
     it('should fill When out of stock values', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'fillWhenOutOfStockValues', baseContext);
 
-      await stocksTab.setLabelWhenInStock(page, 'In stock');
-      await stocksTab.setLabelWhenOutOfStock(page, 'Out of stock');
-      await stocksTab.setAvailabilityDate(page, todayDate);
+      await boProductsCreateTabStocksPage.setLabelWhenInStock(page, 'In stock');
+      await boProductsCreateTabStocksPage.setLabelWhenOutOfStock(page, 'Out of stock');
+      await boProductsCreateTabStocksPage.setAvailabilityDate(page, todayDate);
 
       const message = await createProductPage.saveProduct(page);
       expect(message).to.equal(createProductPage.successfulUpdateMessage);
@@ -225,8 +225,8 @@ describe('FO - Product page - Product page : Out of stock behaviour', async () =
     it('should check the deny orders option', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDenyOrder', baseContext);
 
-      await stocksTab.setQuantityDelta(page, -300);
-      await stocksTab.setOptionWhenOutOfStock(page, 'Deny orders');
+      await boProductsCreateTabStocksPage.setQuantityDelta(page, -300);
+      await boProductsCreateTabStocksPage.setOptionWhenOutOfStock(page, 'Deny orders');
 
       const createProductMessage = await createProductPage.saveProduct(page);
       expect(createProductMessage).to.equal(createProductPage.successfulUpdateMessage);
@@ -265,7 +265,7 @@ describe('FO - Product page - Product page : Out of stock behaviour', async () =
     it('should check the allow orders option and set Label when out of stock', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAllowOrder', baseContext);
 
-      await stocksTab.setOptionWhenOutOfStock(page, 'Allow orders');
+      await boProductsCreateTabStocksPage.setOptionWhenOutOfStock(page, 'Allow orders');
 
       const createProductMessage = await createProductPage.saveProduct(page);
       expect(createProductMessage).to.equal(createProductPage.successfulUpdateMessage);

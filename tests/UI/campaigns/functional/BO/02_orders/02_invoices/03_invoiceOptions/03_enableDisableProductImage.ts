@@ -6,19 +6,18 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import ordersPage from '@pages/BO/orders';
 import invoicesPage from '@pages/BO/orders/invoices';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
-// Import FO pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
   boDashboardPage,
+  boOrdersPage,
+  boOrdersViewBlockTabListPage,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicProductPage,
@@ -161,16 +160,16 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
           await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
           // Check the confirmation message
-          const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-          expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+          const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+          expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
         });
 
         it('should sign out from FO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `sighOutFO${index}`, baseContext);
 
-          await orderConfirmationPage.logout(page);
+          await foClassicCheckoutOrderConfirmationPage.logout(page);
 
-          const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
+          const isCustomerConnected = await foClassicCheckoutOrderConfirmationPage.isCustomerConnected(page);
           expect(isCustomerConnected, 'Customer is connected').to.eq(false);
         });
 
@@ -178,7 +177,7 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
           await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
           // Close page and init page objects
-          page = await orderConfirmationPage.closePage(browserContext, page, 0);
+          page = await foClassicCheckoutOrderConfirmationPage.closePage(browserContext, page, 0);
 
           const pageTitle = await invoicesPage.getPageTitle(page);
           expect(pageTitle).to.contains(invoicesPage.pageTitle);
@@ -195,23 +194,23 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
             invoicesPage.ordersLink,
           );
 
-          const pageTitle = await ordersPage.getPageTitle(page);
-          expect(pageTitle).to.contains(ordersPage.pageTitle);
+          const pageTitle = await boOrdersPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boOrdersPage.pageTitle);
         });
 
         it('should go to the created order page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToCreatedOrderPage${index}`, baseContext);
 
-          await ordersPage.goToOrder(page, 1);
+          await boOrdersPage.goToOrder(page, 1);
 
-          const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-          expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+          const pageTitle = await boOrdersViewBlockTabListPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);
         });
 
         it(`should change the order status to '${dataOrderStatuses.shipped.name}' and check it`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus${index}`, baseContext);
 
-          const result = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
+          const result = await boOrdersViewBlockTabListPage.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
           expect(result).to.equal(dataOrderStatuses.shipped.name);
         });
 
@@ -219,7 +218,7 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
           await testContext.addContextItem(this, 'testIdentifier', `downloadInvoice${index}`, baseContext);
 
           // Download invoice
-          filePath = await orderPageTabListBlock.downloadInvoice(page);
+          filePath = await boOrdersViewBlockTabListPage.downloadInvoice(page);
           expect(filePath).to.not.eq(null);
 
           const exist = await utilsFile.doesFileExist(filePath);

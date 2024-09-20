@@ -5,21 +5,19 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
-// Import BO pages
-import ordersPage from '@pages/BO/orders';
-
 // Import FO pages
-import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {
   boDashboardPage,
+  boOrdersPage,
   dataCarriers,
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
   foHummingbirdCartPage,
   foHummingbirdCheckoutPage,
+  foHummingbirdCheckoutOrderConfirmationPage,
   foHummingbirdHomePage,
   foHummingbirdModalQuickViewPage,
   foHummingbirdSearchResultsPage,
@@ -133,11 +131,11 @@ describe('FO - Order confirmation : Order details and totals - Recap of payment 
 
       await foHummingbirdCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.checkPayment.moduleName);
 
-      const pageTitle = await orderConfirmationPage.getPageTitle(page);
-      expect(pageTitle).to.equal(orderConfirmationPage.pageTitle);
+      const pageTitle = await foHummingbirdCheckoutOrderConfirmationPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdCheckoutOrderConfirmationPage.pageTitle);
 
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      const cardTitle = await foHummingbirdCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+      expect(cardTitle).to.contains(foHummingbirdCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
   });
 
@@ -155,19 +153,19 @@ describe('FO - Order confirmation : Order details and totals - Recap of payment 
         boDashboardPage.ordersParentLink,
         boDashboardPage.ordersLink,
       );
-      await ordersPage.closeSfToolBar(page);
+      await boOrdersPage.closeSfToolBar(page);
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should get the order reference of the first order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getOrderReference', baseContext);
 
-      orderReference = await ordersPage.getTextColumn(page, 'reference', 1);
+      orderReference = await boOrdersPage.getTextColumn(page, 'reference', 1);
       expect(orderReference).to.not.eq(null);
 
-      page = await ordersPage.changePage(browserContext, 0);
+      page = await boOrdersPage.changePage(browserContext, 0);
     });
   });
 
@@ -175,34 +173,34 @@ describe('FO - Order confirmation : Order details and totals - Recap of payment 
     it('should check the subtotal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSubTotal', baseContext);
 
-      const orderSubTotal = await orderConfirmationPage.getOrderSubTotal(page);
+      const orderSubTotal = await foHummingbirdCheckoutOrderConfirmationPage.getOrderSubTotal(page);
       expect(orderSubTotal).to.equal(`€${dataProducts.demo_6.combinations[0].price.toFixed(2)}`);
     });
 
     it('should check the shipping total', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkShippingTotal', baseContext);
 
-      const orderSubTotal = await orderConfirmationPage.getOrderShippingTotal(page);
+      const orderSubTotal = await foHummingbirdCheckoutOrderConfirmationPage.getOrderShippingTotal(page);
       expect(orderSubTotal).to.equal('Free');
     });
 
     it('should check the total (tax incl.)', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTotalTaxInc', baseContext);
 
-      const orderTotalTaxInc = await orderConfirmationPage.getOrderTotal(page);
+      const orderTotalTaxInc = await foHummingbirdCheckoutOrderConfirmationPage.getOrderTotal(page);
       expect(orderTotalTaxInc).to.equal(`€${dataProducts.demo_6.combinations[0].price.toFixed(2)}`);
     });
 
     it('should check the order details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderDetails', baseContext);
 
-      const paymentMethod = await orderConfirmationPage.getPaymentMethod(page);
+      const paymentMethod = await foHummingbirdCheckoutOrderConfirmationPage.getPaymentMethod(page);
       expect(paymentMethod).to.contains(dataPaymentMethods.checkPayment.displayName);
 
-      const orderReferenceValue = await orderConfirmationPage.getOrderReferenceValue(page);
+      const orderReferenceValue = await foHummingbirdCheckoutOrderConfirmationPage.getOrderReferenceValue(page);
       expect(orderReferenceValue).to.contains(orderReference);
 
-      const shippingMethod = await orderConfirmationPage.getShippingMethod(page);
+      const shippingMethod = await foHummingbirdCheckoutOrderConfirmationPage.getShippingMethod(page);
       expect(shippingMethod).to.contains(`${dataCarriers.clickAndCollect.name} - ${dataCarriers.clickAndCollect.transitName}`);
     });
   });

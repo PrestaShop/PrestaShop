@@ -9,7 +9,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 // Import BO pages
 import addProductPage from '@pages/BO/catalog/products/add';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
-import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 
 import {expect} from 'chai';
@@ -17,6 +16,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boProductsPage,
+  boProductsCreateTabStocksPage,
   dataProducts,
   FakerProduct,
   foHummingbirdHomePage,
@@ -363,7 +363,7 @@ describe('FO - Navigation and display : Display tags', async () => {
     it('should edit the quantity', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editQuantity', baseContext);
 
-      await stocksTab.setProductQuantity(page, 0);
+      await boProductsCreateTabStocksPage.setProductQuantity(page, 0);
 
       const message = await addProductPage.saveProduct(page);
       expect(message).to.equal(addProductPage.successfulUpdateMessage);

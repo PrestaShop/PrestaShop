@@ -3,7 +3,6 @@ import testContext from '@utils/testContext';
 
 // Import BO pages
 import statsPage from '@pages/BO/stats';
-import ordersPage from '@pages/BO/orders';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 import merchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns';
 import monitoringPage from '@pages/BO/catalog/monitoring';
@@ -12,7 +11,6 @@ import customerServicePage from '@pages/BO/customerService/customerService';
 import productCommentsPage from '@pages/BO/modules/productComments';
 
 // Import FO pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {merchandiseReturnsPage as foMerchandiseReturnsPage} from '@pages/FO/classic/myAccount/merchandiseReturns';
@@ -28,6 +26,7 @@ import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {
   boCustomersPage,
   boDashboardPage,
+  boOrdersPage,
   boProductsPage,
   boShoppingCartsPage,
   dataCustomers,
@@ -39,6 +38,7 @@ import {
   FakerProduct,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
@@ -188,15 +188,15 @@ describe('BO - Dashboard : Activity overview', async () => {
         await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
         // Check the confirmation message
-        const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-        expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+        const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+        expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
       });
 
       it('should go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
 
         // Close page and init page objects
-        page = await orderConfirmationPage.closePage(browserContext, page, 0);
+        page = await foClassicCheckoutOrderConfirmationPage.closePage(browserContext, page, 0);
         await boShoppingCartsPage.reloadPage(page);
 
         const pageTitle = await boDashboardPage.getPageTitle(page);
@@ -225,15 +225,15 @@ describe('BO - Dashboard : Activity overview', async () => {
 
         await boDashboardPage.clickOnOrdersLink(page);
 
-        const pageTitle = await ordersPage.getPageTitle(page);
-        expect(pageTitle).to.contains(ordersPage.pageTitle);
+        const pageTitle = await boOrdersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersPage.pageTitle);
       });
 
       it('should change the first order status to Processing in progress', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'changeOrderStatus1', baseContext);
 
-        const textResult = await ordersPage.setOrderStatus(page, 1, dataOrderStatuses.processingInProgress);
-        expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
+        const textResult = await boOrdersPage.setOrderStatus(page, 1, dataOrderStatuses.processingInProgress);
+        expect(textResult).to.equal(boOrdersPage.successfulUpdateMessage);
       });
 
       it('should go back to dashboard page', async function () {
@@ -278,15 +278,15 @@ describe('BO - Dashboard : Activity overview', async () => {
           boDashboardPage.ordersLink,
         );
 
-        const pageTitle = await ordersPage.getPageTitle(page);
-        expect(pageTitle).to.contains(ordersPage.pageTitle);
+        const pageTitle = await boOrdersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersPage.pageTitle);
       });
 
       it('should change the first order status to Delivered', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'changeOrderStatus2', baseContext);
 
-        const textResult = await ordersPage.setOrderStatus(page, 1, dataOrderStatuses.delivered);
-        expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
+        const textResult = await boOrdersPage.setOrderStatus(page, 1, dataOrderStatuses.delivered);
+        expect(textResult).to.equal(boOrdersPage.successfulUpdateMessage);
       });
 
       it('should go back to dashboard page', async function () {

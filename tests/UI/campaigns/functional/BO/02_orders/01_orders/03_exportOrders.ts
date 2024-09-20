@@ -4,13 +4,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import ordersPage from '@pages/BO/orders';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boOrdersPage,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -45,16 +43,16 @@ describe('BO - Orders : Export orders', async () => {
       boDashboardPage.ordersParentLink,
       boDashboardPage.ordersLink,
     );
-    await ordersPage.closeSfToolBar(page);
+    await boOrdersPage.closeSfToolBar(page);
 
-    const pageTitle = await ordersPage.getPageTitle(page);
-    expect(pageTitle).to.contains(ordersPage.pageTitle);
+    const pageTitle = await boOrdersPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boOrdersPage.pageTitle);
   });
 
   it('should export orders to a csv file', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'exportOrders', baseContext);
 
-    filePath = await ordersPage.exportDataToCsv(page);
+    filePath = await boOrdersPage.exportDataToCsv(page);
 
     const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);
     expect(doesFileExist, 'Export of data has failed').to.eq(true);
@@ -64,11 +62,11 @@ describe('BO - Orders : Export orders', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'checkAllOrdersInCsvFile', baseContext);
 
     // Get number of orders
-    const numberOfOrders = await ordersPage.getNumberOfElementInGrid(page);
+    const numberOfOrders = await boOrdersPage.getNumberOfElementInGrid(page);
 
     // Check each order in file
     for (let row = 1; row <= numberOfOrders; row++) {
-      const orderInCsvFormat = await ordersPage.getOrderInCsvFormat(page, row);
+      const orderInCsvFormat = await boOrdersPage.getOrderInCsvFormat(page, row);
       const textExist = await utilsFile.isTextInFile(filePath, orderInCsvFormat, true, true);
       expect(textExist, `${orderInCsvFormat} was not found in the file`).to.eq(true);
     }

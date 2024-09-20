@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
@@ -13,6 +12,7 @@ import {
   foClassicCartPage,
   foClassicCategoryPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicModalQuickViewPage,
   foClassicSearchResultsPage,
@@ -111,31 +111,31 @@ describe('FO - Order confirmation : Popular product', async () => {
 
     await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.checkPayment.moduleName);
 
-    const pageTitle = await orderConfirmationPage.getPageTitle(page);
-    expect(pageTitle).to.equal(orderConfirmationPage.pageTitle);
+    const pageTitle = await foClassicCheckoutOrderConfirmationPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicCheckoutOrderConfirmationPage.pageTitle);
 
-    const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-    expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+    const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+    expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
   });
 
   it('should check popular product title', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkPopularProducts', baseContext);
 
-    const popularProductTitle = await orderConfirmationPage.getBlockTitle(page);
+    const popularProductTitle = await foClassicCheckoutOrderConfirmationPage.getBlockTitle(page);
     expect(popularProductTitle).to.equal('Popular Products');
   });
 
   it('should check the number of popular products', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkPopularProductsNumber', baseContext);
 
-    const productsNumber = await orderConfirmationPage.getProductsBlockNumber(page);
+    const productsNumber = await foClassicCheckoutOrderConfirmationPage.getProductsBlockNumber(page);
     expect(productsNumber).to.equal(8);
   });
 
   it('should quick view the first product in list', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'quickViewFirstProduct', baseContext);
 
-    await orderConfirmationPage.quickViewProduct(page, 1);
+    await foClassicCheckoutOrderConfirmationPage.quickViewProduct(page, 1);
 
     const isQuickViewModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
     expect(isQuickViewModalVisible).to.equal(true);
@@ -180,15 +180,15 @@ describe('FO - Order confirmation : Popular product', async () => {
 
     await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
-    const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
+    const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
     // Check the confirmation message
-    expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+    expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
   });
 
   it('should click on all products page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'clickOnAllProductsPage', baseContext);
 
-    await orderConfirmationPage.goToAllProductsPage(page);
+    await foClassicCheckoutOrderConfirmationPage.goToAllProductsPage(page);
 
     const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
     expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);

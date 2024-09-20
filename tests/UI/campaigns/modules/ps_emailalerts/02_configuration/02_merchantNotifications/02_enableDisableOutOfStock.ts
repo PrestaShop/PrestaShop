@@ -6,20 +6,17 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
 
-// Import pages
-// Import BO pages
-import emailAlertsPage from '@pages/BO/modules/psEmailAlerts';
-import stocksPage from '@pages/BO/catalog/stocks';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boModuleManagerPage,
+  boStockPage,
   dataModules,
   FakerProduct,
   type MailDev,
   type MailDevEmail,
+  modPsEmailAlertsBoMain,
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -130,15 +127,15 @@ describe('Mail alerts module - Enable/Disable out of stock', async () => {
 
       await boModuleManagerPage.goToConfigurationPage(page, dataModules.psEmailAlerts.tag);
 
-      const pageTitle = await emailAlertsPage.getPageSubtitle(page);
-      expect(pageTitle).to.equal(emailAlertsPage.pageTitle);
+      const pageTitle = await modPsEmailAlertsBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.equal(modPsEmailAlertsBoMain.pageTitle);
     });
 
     it('should enable out of stock and set email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableOutOfStock', baseContext);
 
-      const successMessage = await emailAlertsPage.setOutOfStock(page, true, 'demo@prestashop.com');
-      expect(successMessage).to.contains(emailAlertsPage.successfulUpdateMessage);
+      const successMessage = await modPsEmailAlertsBoMain.setOutOfStock(page, true, 'demo@prestashop.com');
+      expect(successMessage).to.contains(modPsEmailAlertsBoMain.successfulUpdateMessage);
     });
   });
 
@@ -151,18 +148,18 @@ describe('Mail alerts module - Enable/Disable out of stock', async () => {
         boDashboardPage.catalogParentLink,
         boDashboardPage.stocksLink,
       );
-      await stocksPage.closeSfToolBar(page);
+      await boStockPage.closeSfToolBar(page);
 
-      const pageTitle = await stocksPage.getPageTitle(page);
-      expect(pageTitle).to.contains(stocksPage.pageTitle);
+      const pageTitle = await boStockPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boStockPage.pageTitle);
     });
 
     it(`should filter by name '${firstProduct.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterStocks', baseContext);
 
-      await stocksPage.simpleFilter(page, firstProduct.name);
+      await boStockPage.simpleFilter(page, firstProduct.name);
 
-      const numberOfProductsAfterFilter = await stocksPage.getNumberOfProductsFromList(page);
+      const numberOfProductsAfterFilter = await boStockPage.getNumberOfProductsFromList(page);
       expect(numberOfProductsAfterFilter).to.be.equal(1);
     });
 
@@ -170,8 +167,8 @@ describe('Mail alerts module - Enable/Disable out of stock', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'updateQuantity', baseContext);
 
       // Update Quantity and check successful message
-      const updateMessage = await stocksPage.updateRowQuantityWithInput(page, 1, -3);
-      expect(updateMessage).to.contains(stocksPage.successfulUpdateMessage);
+      const updateMessage = await boStockPage.updateRowQuantityWithInput(page, 1, -3);
+      expect(updateMessage).to.contains(boStockPage.successfulUpdateMessage);
     });
 
     it('should check received email', async function () {
@@ -209,15 +206,15 @@ describe('Mail alerts module - Enable/Disable out of stock', async () => {
 
       await boModuleManagerPage.goToConfigurationPage(page, dataModules.psEmailAlerts.tag);
 
-      const pageTitle = await emailAlertsPage.getPageSubtitle(page);
-      expect(pageTitle).to.equal(emailAlertsPage.pageTitle);
+      const pageTitle = await modPsEmailAlertsBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.equal(modPsEmailAlertsBoMain.pageTitle);
     });
 
     it('should disable out of stock', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableOutOfStock2', baseContext);
 
-      const successMessage = await emailAlertsPage.setOutOfStock(page, false);
-      expect(successMessage).to.contains(emailAlertsPage.successfulUpdateMessage);
+      const successMessage = await modPsEmailAlertsBoMain.setOutOfStock(page, false);
+      expect(successMessage).to.contains(modPsEmailAlertsBoMain.successfulUpdateMessage);
     });
   });
 
@@ -230,18 +227,18 @@ describe('Mail alerts module - Enable/Disable out of stock', async () => {
         boDashboardPage.catalogParentLink,
         boDashboardPage.stocksLink,
       );
-      await stocksPage.closeSfToolBar(page);
+      await boStockPage.closeSfToolBar(page);
 
-      const pageTitle = await stocksPage.getPageTitle(page);
-      expect(pageTitle).to.contains(stocksPage.pageTitle);
+      const pageTitle = await boStockPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boStockPage.pageTitle);
     });
 
     it(`should filter by name '${secondProduct.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterStocks2', baseContext);
 
-      await stocksPage.simpleFilter(page, secondProduct.name);
+      await boStockPage.simpleFilter(page, secondProduct.name);
 
-      const numberOfProductsAfterFilter = await stocksPage.getNumberOfProductsFromList(page);
+      const numberOfProductsAfterFilter = await boStockPage.getNumberOfProductsFromList(page);
       expect(numberOfProductsAfterFilter).to.be.equal(1);
     });
 
@@ -249,8 +246,8 @@ describe('Mail alerts module - Enable/Disable out of stock', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'updateQuantity2', baseContext);
 
       // Update Quantity and check successful message
-      const updateMessage = await stocksPage.updateRowQuantityWithInput(page, 1, -3);
-      expect(updateMessage).to.contains(stocksPage.successfulUpdateMessage);
+      const updateMessage = await boStockPage.updateRowQuantityWithInput(page, 1, -3);
+      expect(updateMessage).to.contains(boStockPage.successfulUpdateMessage);
     });
 
     it('should check that no email received', async function () {

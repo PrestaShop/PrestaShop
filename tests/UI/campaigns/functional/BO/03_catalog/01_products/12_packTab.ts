@@ -10,12 +10,10 @@ import {deleteProductTest} from '@commonTests/BO/catalog/product';
 import createProductsPage from '@pages/BO/catalog/products/add';
 import packTab from '@pages/BO/catalog/products/add/packTab';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
-import ordersPage from '@pages/BO/orders';
-// Import FO pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
   boDashboardPage,
+  boOrdersPage,
   boProductsPage,
   dataCustomers,
   dataOrderStatuses,
@@ -24,6 +22,7 @@ import {
   FakerProduct,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicProductPage,
   utilsCore,
   utilsPlaywright,
@@ -373,14 +372,14 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       // Check the confirmation message
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+      expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
 
     it('should return to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnToBackOffice', baseContext);
 
-      page = await orderConfirmationPage.closePage(browserContext, page, 0);
+      page = await foClassicCheckoutOrderConfirmationPage.closePage(browserContext, page, 0);
       await page.reload();
 
       const pageTitle = await createProductsPage.getPageTitle(page);
@@ -415,15 +414,15 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
         boDashboardPage.ordersLink,
       );
 
-      const pageTitle: string = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle: string = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should update order status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const textResult: string = await ordersPage.setOrderStatus(page, 1, dataOrderStatuses.delivered);
-      expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
+      const textResult: string = await boOrdersPage.setOrderStatus(page, 1, dataOrderStatuses.delivered);
+      expect(textResult).to.equal(boOrdersPage.successfulUpdateMessage);
     });
 
     it('should go to \'Catalog > Products\' page', async function () {
@@ -512,14 +511,14 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
       await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       // Check the confirmation message
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+      expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
 
     it('should return to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnToBackOffice1', baseContext);
 
-      page = await orderConfirmationPage.closePage(browserContext, page, 0);
+      page = await foClassicCheckoutOrderConfirmationPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductsPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductsPage.pageTitle);

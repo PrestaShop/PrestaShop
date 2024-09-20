@@ -5,11 +5,9 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
-// Import BO pages
-import ordersPage from '@pages/BO/orders';
-
 import {
   boDashboardPage,
+  boOrdersPage,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
@@ -76,27 +74,27 @@ describe('BO - Orders : Bulk update orders status', async () => {
         boDashboardPage.ordersLink,
       );
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should update orders status with bulk action', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkUpdateOrdersStatus', baseContext);
 
-      const textResult = await ordersPage.bulkUpdateOrdersStatus(
+      const textResult = await boOrdersPage.bulkUpdateOrdersStatus(
         page,
         dataOrderStatuses.paymentAccepted.name,
         false,
         [1, 2],
       );
-      expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
+      expect(textResult).to.equal(boOrdersPage.successfulUpdateMessage);
     });
 
     ['first', 'second'].forEach((arg: string, index: number) => {
       it(`should check the ${arg} order status`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkOrderStatus${index + 1}`, baseContext);
 
-        const orderStatus = await ordersPage.getTextColumn(page, 'osname', index + 1);
+        const orderStatus = await boOrdersPage.getTextColumn(page, 'osname', index + 1);
         expect(orderStatus, 'Order status is not correct').to.equal(dataOrderStatuses.paymentAccepted.name);
       });
     });

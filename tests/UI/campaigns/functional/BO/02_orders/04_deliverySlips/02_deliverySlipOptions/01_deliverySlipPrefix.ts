@@ -5,12 +5,12 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import ordersPage from '@pages/BO/orders';
 import deliverySlipsPage from '@pages/BO/orders/deliverySlips';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 import {
   boDashboardPage,
+  boOrdersPage,
+  boOrdersViewBlockTabListPage,
   dataOrderStatuses,
   FakerOrderDeliverySlipOptions,
   utilsPlaywright,
@@ -84,23 +84,23 @@ describe('BO - Orders - Delivery slips : Update delivery slip prefix and check t
         deliverySlipsPage.ordersLink,
       );
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should go to the first order page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderPage', baseContext);
 
-      await ordersPage.goToOrder(page, 1);
+      await boOrdersPage.goToOrder(page, 1);
 
-      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      const pageTitle = await boOrdersViewBlockTabListPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);
     });
 
     it(`should change the order status to '${dataOrderStatuses.shipped.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const result = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
+      const result = await boOrdersViewBlockTabListPage.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
       expect(result).to.equal(dataOrderStatuses.shipped.name);
     });
 
@@ -108,7 +108,7 @@ describe('BO - Orders - Delivery slips : Update delivery slip prefix and check t
       await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentNamePrefix', baseContext);
 
       // Get delivery slips filename
-      fileName = await orderPageTabListBlock.getFileName(page, 3);
+      fileName = await boOrdersViewBlockTabListPage.getFileName(page, 3);
       expect(fileName).to.contains(deliverySlipData.prefix.replace('#', '').trim());
     });
   });
@@ -117,10 +117,10 @@ describe('BO - Orders - Delivery slips : Update delivery slip prefix and check t
     it('should go to \'Orders > Delivery slips\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDeliverySlipsPageBackToDefaultValue', baseContext);
 
-      await orderPageTabListBlock.goToSubMenu(
+      await boOrdersViewBlockTabListPage.goToSubMenu(
         page,
-        orderPageTabListBlock.ordersParentLink,
-        orderPageTabListBlock.deliverySlipslink,
+        boOrdersViewBlockTabListPage.ordersParentLink,
+        boOrdersViewBlockTabListPage.deliverySlipslink,
       );
       await deliverySlipsPage.closeSfToolBar(page);
 

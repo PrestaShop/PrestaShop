@@ -5,15 +5,15 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
-import stocksPage from '@pages/BO/catalog/stocks';
-import ordersPage from '@pages/BO/orders';
 import addOrderPage from '@pages/BO/orders/add';
 import viewShoppingCartPage from '@pages/BO/orders/shoppingCarts/view';
-import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
 import {
   boDashboardPage,
+  boOrdersPage,
+  boOrdersViewBlockProductsPage,
   boShoppingCartsPage,
+  boStockPage,
   dataCarriers,
   dataCustomers,
   dataOrderStatuses,
@@ -154,16 +154,16 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
         boDashboardPage.ordersParentLink,
         boDashboardPage.ordersLink,
       );
-      await ordersPage.closeSfToolBar(page);
+      await boOrdersPage.closeSfToolBar(page);
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should go to create order page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreateOrderPage1', baseContext);
 
-      await ordersPage.goToCreateOrderPage(page);
+      await boOrdersPage.goToCreateOrderPage(page);
 
       const pageTitle = await addOrderPage.getPageTitle(page);
       expect(pageTitle).to.contains(addOrderPage.pageTitle);
@@ -347,23 +347,23 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
         boDashboardPage.stocksLink,
       );
 
-      const pageTitle = await stocksPage.getPageTitle(page);
-      expect(pageTitle).to.contains(stocksPage.pageTitle);
+      const pageTitle = await boStockPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boStockPage.pageTitle);
     });
 
     it(`should filter by product '${dataProducts.demo_1.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByProduct', baseContext);
 
-      await stocksPage.simpleFilter(page, dataProducts.demo_1.name);
+      await boStockPage.simpleFilter(page, dataProducts.demo_1.name);
 
-      const numberOfProductsAfterFilter = await stocksPage.getNumberOfProductsFromList(page);
+      const numberOfProductsAfterFilter = await boStockPage.getNumberOfProductsFromList(page);
       expect(numberOfProductsAfterFilter).to.be.at.least(1);
     });
 
     it('should get the Available stock of the ordered product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getAvailableStockOfOrderedProduct', baseContext);
 
-      availableStockOfOrderedProduct = parseInt(await stocksPage.getTextColumnFromTableStocks(page, 1, 'available'), 10);
+      availableStockOfOrderedProduct = parseInt(await boStockPage.getTextColumnFromTableStocks(page, 1, 'available'), 10);
       expect(availableStockOfOrderedProduct).to.be.above(0);
     });
   });
@@ -379,14 +379,14 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
         boDashboardPage.ordersLink,
       );
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should go to create order page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreateOrderPage2', baseContext);
 
-      await ordersPage.goToCreateOrderPage(page);
+      await boOrdersPage.goToCreateOrderPage(page);
 
       const pageTitle = await addOrderPage.getPageTitle(page);
       expect(pageTitle).to.contains(addOrderPage.pageTitle);
@@ -559,8 +559,8 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
         dataOrderStatuses.paymentAccepted,
       );
 
-      const pageTitle = await orderPageProductsBlock.getPageTitle(page);
-      expect(pageTitle).to.contains(orderPageProductsBlock.pageTitle);
+      const pageTitle = await boOrdersViewBlockProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersViewBlockProductsPage.pageTitle);
     });
   });
 });

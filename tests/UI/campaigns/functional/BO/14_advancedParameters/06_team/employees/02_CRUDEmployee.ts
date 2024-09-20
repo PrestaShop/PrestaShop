@@ -7,13 +7,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import employeesPage from '@pages/BO/advancedParameters/team';
 import addEmployeePage from '@pages/BO/advancedParameters/team/add';
-import ordersPage from '@pages/BO/orders';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
+  boOrdersPage,
   boProductsPage,
   FakerEmployee,
   utilsPlaywright,
@@ -182,8 +182,8 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
 
         await boLoginPage.successLogin(page, firstEditEmployeeData.email, firstEditEmployeeData.password);
 
-        const pageTitle = await ordersPage.getPageTitle(page);
-        expect(pageTitle).to.contains(ordersPage.pageTitle);
+        const pageTitle = await boOrdersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersPage.pageTitle);
       });
 
       it('should logout from BO', async function () {

@@ -4,13 +4,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import ordersPage from '@pages/BO/orders';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boOrdersPage,
   dataOrders,
   utilsDate,
   utilsPlaywright,
@@ -52,14 +50,14 @@ describe('BO - Orders : Filter the Orders table', async () => {
       boDashboardPage.ordersLink,
     );
 
-    const pageTitle = await ordersPage.getPageTitle(page);
-    expect(pageTitle).to.contains(ordersPage.pageTitle);
+    const pageTitle = await boOrdersPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boOrdersPage.pageTitle);
   });
 
   it('should reset all filters and get number of orders', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
 
-    numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+    numberOfOrders = await boOrdersPage.resetAndGetNumberOfLines(page);
     expect(numberOfOrders).to.be.above(0);
   });
 
@@ -140,18 +138,18 @@ describe('BO - Orders : Filter the Orders table', async () => {
     it(`should filter the Orders table by '${test.args.filterBy}' and check the result`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', test.args.identifier, baseContext);
 
-      await ordersPage.filterOrders(
+      await boOrdersPage.filterOrders(
         page,
         test.args.filterType,
         test.args.filterBy,
         test.args.filterValue,
       );
 
-      const numberOfOrdersAfterFilter = await ordersPage.getNumberOfElementInGrid(page);
+      const numberOfOrdersAfterFilter = await boOrdersPage.getNumberOfElementInGrid(page);
       expect(numberOfOrdersAfterFilter).to.be.at.most(numberOfOrders);
 
       for (let row = 1; row <= numberOfOrdersAfterFilter; row++) {
-        const textColumn = await ordersPage.getTextColumn(page, test.args.filterBy, row);
+        const textColumn = await boOrdersPage.getTextColumn(page, test.args.filterBy, row);
         expect(textColumn).to.equal(test.args.filterValue);
       }
     });
@@ -159,7 +157,7 @@ describe('BO - Orders : Filter the Orders table', async () => {
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.identifier}Reset`, baseContext);
 
-      const numberOfOrdersAfterReset = await ordersPage.resetAndGetNumberOfLines(page);
+      const numberOfOrdersAfterReset = await boOrdersPage.resetAndGetNumberOfLines(page);
       expect(numberOfOrdersAfterReset).to.be.equal(numberOfOrders);
     });
   });
@@ -168,14 +166,14 @@ describe('BO - Orders : Filter the Orders table', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'filterByDate', baseContext);
 
     // Filter orders
-    await ordersPage.filterOrdersByDate(page, today, today);
+    await boOrdersPage.filterOrdersByDate(page, today, today);
 
     // Check number of element
-    const numberOfOrdersAfterFilter = await ordersPage.getNumberOfElementInGrid(page);
+    const numberOfOrdersAfterFilter = await boOrdersPage.getNumberOfElementInGrid(page);
     expect(numberOfOrdersAfterFilter).to.be.at.most(numberOfOrders);
 
     for (let i = 1; i <= numberOfOrdersAfterFilter; i++) {
-      const textColumn = await ordersPage.getTextColumn(page, 'date_add', i);
+      const textColumn = await boOrdersPage.getTextColumn(page, 'date_add', i);
       expect(textColumn).to.contains(dateToCheck);
     }
   });
@@ -183,7 +181,7 @@ describe('BO - Orders : Filter the Orders table', async () => {
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
-    const numberOfOrdersAfterReset = await ordersPage.resetAndGetNumberOfLines(page);
+    const numberOfOrdersAfterReset = await boOrdersPage.resetAndGetNumberOfLines(page);
     expect(numberOfOrdersAfterReset).to.be.equal(numberOfOrders);
   });
 });

@@ -6,11 +6,11 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import deliverySlipsPage from '@pages/BO/orders/deliverySlips';
-import ordersPage from '@pages/BO/orders';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 import {
   boDashboardPage,
+  boOrdersPage,
+  boOrdersViewBlockTabListPage,
   dataOrderStatuses,
   utilsDate,
   utilsFile,
@@ -56,32 +56,32 @@ describe('BO - Orders - Delivery slips : Generate Delivery slip file by date', a
         boDashboardPage.ordersParentLink,
         boDashboardPage.ordersLink,
       );
-      await ordersPage.closeSfToolBar(page);
+      await boOrdersPage.closeSfToolBar(page);
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should go to the last order page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderPage', baseContext);
 
-      await ordersPage.goToOrder(page, 1);
+      await boOrdersPage.goToOrder(page, 1);
 
-      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      const pageTitle = await boOrdersViewBlockTabListPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);
     });
 
     it(`should change the order status to '${dataOrderStatuses.shipped.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const result = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
+      const result = await boOrdersViewBlockTabListPage.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
       expect(result).to.equal(dataOrderStatuses.shipped.name);
     });
 
     it('should check the delivery slip document name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentName', baseContext);
 
-      const documentType = await orderPageTabListBlock.getDocumentType(page, 3);
+      const documentType = await boOrdersViewBlockTabListPage.getDocumentType(page, 3);
       expect(documentType).to.be.equal('Delivery slip');
     });
   });
@@ -90,10 +90,10 @@ describe('BO - Orders - Delivery slips : Generate Delivery slip file by date', a
     it('should go to \'Orders > Delivery slips\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDeliverySlipsPage', baseContext);
 
-      await orderPageTabListBlock.goToSubMenu(
+      await boOrdersViewBlockTabListPage.goToSubMenu(
         page,
-        orderPageTabListBlock.ordersParentLink,
-        orderPageTabListBlock.deliverySlipslink,
+        boOrdersViewBlockTabListPage.ordersParentLink,
+        boOrdersViewBlockTabListPage.deliverySlipslink,
       );
 
       const pageTitle = await deliverySlipsPage.getPageTitle(page);

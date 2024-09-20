@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import FO pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
-
 import {
   dataPaymentMethods,
   dataProducts,
@@ -11,6 +8,7 @@ import {
   FakerCustomer,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsPlaywright,
@@ -110,7 +108,7 @@ describe('FO - Checkout - Addresses: Use same invoice address', async () => {
     // Payment step - Choose payment step
     await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
-    const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-    expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+    const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+    expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
   });
 });

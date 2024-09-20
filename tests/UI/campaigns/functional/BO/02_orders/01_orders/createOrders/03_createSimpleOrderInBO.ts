@@ -6,13 +6,13 @@ import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
-import ordersPage from '@pages/BO/orders';
 import addOrderPage from '@pages/BO/orders/add';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
-import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
 import {
   boDashboardPage,
+  boOrdersPage,
+  boOrdersViewBlockProductsPage,
   dataAddresses,
   dataCarriers,
   dataCustomers,
@@ -88,16 +88,16 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
       boDashboardPage.ordersParentLink,
       boDashboardPage.ordersLink,
     );
-    await ordersPage.closeSfToolBar(page);
+    await boOrdersPage.closeSfToolBar(page);
 
-    const pageTitle = await ordersPage.getPageTitle(page);
-    expect(pageTitle).to.contains(ordersPage.pageTitle);
+    const pageTitle = await boOrdersPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boOrdersPage.pageTitle);
   });
 
   it('should go to create order page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCreateOrderPage', baseContext);
 
-    await ordersPage.goToCreateOrderPage(page);
+    await boOrdersPage.goToCreateOrderPage(page);
 
     const pageTitle = await addOrderPage.getPageTitle(page);
     expect(pageTitle).to.contains(addOrderPage.pageTitle);
@@ -109,21 +109,21 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
 
       await addOrderPage.createOrder(page, orderToMake);
 
-      const pageTitle = await orderPageProductsBlock.getPageTitle(page);
-      expect(pageTitle).to.contain(orderPageProductsBlock.pageTitle);
+      const pageTitle = await boOrdersViewBlockProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contain(boOrdersViewBlockProductsPage.pageTitle);
     });
 
     it('should check order status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderStatus', baseContext);
 
-      const orderStatus = await orderPageProductsBlock.getOrderStatus(page);
+      const orderStatus = await boOrdersViewBlockProductsPage.getOrderStatus(page);
       expect(orderStatus).to.equal(orderToMake.status.name);
     });
 
     it('should check order total price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderPrice', baseContext);
 
-      const totalPrice = await orderPageProductsBlock.getOrderTotalPrice(page);
+      const totalPrice = await boOrdersViewBlockProductsPage.getOrderTotalPrice(page);
       expect(totalPrice).to.equal(orderToMake.totalPrice);
     });
 
@@ -157,7 +157,7 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductsNames', baseContext);
 
       for (let i = 1; i <= orderToMake.products.length; i++) {
-        const productName = await orderPageProductsBlock.getProductNameFromTable(page, i);
+        const productName = await boOrdersViewBlockProductsPage.getProductNameFromTable(page, i);
         expect(productName).to.contain(orderToMake.products[i - 1].product.name);
       }
     });

@@ -1,8 +1,4 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import FO pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
   dataCarriers,
@@ -11,6 +7,7 @@ import {
   dataProducts,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicProductPage,
   utilsPlaywright,
@@ -122,11 +119,11 @@ describe('FO - Order confirmation : Display of product customization', async () 
 
       await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
-      const pageTitle = await orderConfirmationPage.getPageTitle(page);
-      expect(pageTitle).to.equal(orderConfirmationPage.pageTitle);
+      const pageTitle = await foClassicCheckoutOrderConfirmationPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicCheckoutOrderConfirmationPage.pageTitle);
 
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+      expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
   });
 
@@ -136,7 +133,7 @@ describe('FO - Order confirmation : Display of product customization', async () 
 
       const totalToPay: string = (dataProducts.demo_14.finalPrice + dataCarriers.myCarrier.priceTTC).toFixed(2);
 
-      const paymentInformation = await orderConfirmationPage.getPaymentInformation(page);
+      const paymentInformation = await foClassicCheckoutOrderConfirmationPage.getPaymentInformation(page);
       expect(paymentInformation).to.contains('Please send us a '
         + `${dataPaymentMethods.wirePayment.name.toLowerCase()}`)
         .and.to.contains(`Amount €${totalToPay}`);
@@ -145,7 +142,7 @@ describe('FO - Order confirmation : Display of product customization', async () 
     it('should check the order details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderDetails', baseContext);
 
-      const orderDetails = await orderConfirmationPage.getOrderDetails(page);
+      const orderDetails = await foClassicCheckoutOrderConfirmationPage.getOrderDetails(page);
       expect(orderDetails).to.contains('Payment method: '
         + `${dataPaymentMethods.wirePayment.displayName} Shipping method: `
         + `${dataCarriers.myCarrier.name} ${dataCarriers.myCarrier.transitName}`);
@@ -154,14 +151,14 @@ describe('FO - Order confirmation : Display of product customization', async () 
     it('should check the products number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductsNumber', baseContext);
 
-      const productsNumber = await orderConfirmationPage.getNumberOfProducts(page);
+      const productsNumber = await foClassicCheckoutOrderConfirmationPage.getNumberOfProducts(page);
       expect(productsNumber).to.equal(1);
     });
 
     it('should check the details of the first product in list', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductDetails', baseContext);
 
-      const result = await orderConfirmationPage.getProductDetailsInRow(page, 1);
+      const result = await foClassicCheckoutOrderConfirmationPage.getProductDetailsInRow(page, 1);
       await Promise.all([
         expect(result.image).to.contains(dataProducts.demo_14.coverImage),
         expect(result.details).to.equal(`${dataProducts.demo_14.name} Product customization × `
@@ -173,21 +170,21 @@ describe('FO - Order confirmation : Display of product customization', async () 
     it('should click on the button Customized and check the modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnCustomizedProduct', baseContext);
 
-      const isModalVisible = await orderConfirmationPage.clickOnCustomizedButton(page);
+      const isModalVisible = await foClassicCheckoutOrderConfirmationPage.clickOnCustomizedButton(page);
       expect(isModalVisible).to.equal(true);
     });
 
     it('should check the modal content', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkModalContent', baseContext);
 
-      const modalContent = await orderConfirmationPage.getModalProductCustomizationContent(page);
+      const modalContent = await foClassicCheckoutOrderConfirmationPage.getModalProductCustomizationContent(page);
       expect(modalContent).to.equal('Type your text here Hello world!');
     });
 
     it('should close the modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeModal', baseContext);
 
-      const isModalNotVisible = await orderConfirmationPage.closeModalProductCustomization(page);
+      const isModalNotVisible = await foClassicCheckoutOrderConfirmationPage.closeModalProductCustomization(page);
       expect(isModalNotVisible).to.equal(true);
     });
   });

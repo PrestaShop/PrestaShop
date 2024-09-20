@@ -6,13 +6,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import addProductPage from '@pages/BO/catalog/products/add';
-import stocksPage from '@pages/BO/catalog/stocks';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boProductsPage,
+  boStockPage,
   FakerProduct,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -114,16 +114,16 @@ describe('BO - Catalog - Stocks : Filter stocks by status', async () => {
         addProductPage.stocksLink,
       );
 
-      const pageTitle = await stocksPage.getPageTitle(page);
-      expect(pageTitle).to.contains(stocksPage.pageTitle);
+      const pageTitle = await boStockPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boStockPage.pageTitle);
     });
 
     it('should filter by status \'disabled\' and check the existence of the created product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterStatus', baseContext);
 
-      await stocksPage.filterByStatus(page, 'disabled');
+      await boStockPage.filterByStatus(page, 'disabled');
 
-      const textColumn = await stocksPage.getTextColumnFromTableStocks(page, 1, 'product_name');
+      const textColumn = await boStockPage.getTextColumnFromTableStocks(page, 1, 'product_name');
       expect(textColumn).to.contains(productData.name);
     });
   });
@@ -132,10 +132,10 @@ describe('BO - Catalog - Stocks : Filter stocks by status', async () => {
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageToDelete', baseContext);
 
-      await stocksPage.goToSubMenu(
+      await boStockPage.goToSubMenu(
         page,
-        stocksPage.catalogParentLink,
-        stocksPage.productsLink,
+        boStockPage.catalogParentLink,
+        boStockPage.productsLink,
       );
 
       const pageTitle = await boProductsPage.getPageTitle(page);

@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
-import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
 import orderHistoryPage from '@pages/FO/hummingbird/myAccount/orderHistory';
 import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
 
@@ -15,6 +14,7 @@ import {
   dataPaymentMethods,
   foHummingbirdCartPage,
   foHummingbirdCheckoutPage,
+  foHummingbirdCheckoutOrderConfirmationPage,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
@@ -152,8 +152,8 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
       await foHummingbirdCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       // Check the confirmation message
-      const cardTitle: string = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      const cardTitle: string = await foHummingbirdCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+      expect(cardTitle).to.contains(foHummingbirdCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
 
     it('should go to order history and details page', async function () {

@@ -6,11 +6,11 @@ import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
-import ordersPage from '@pages/BO/orders';
 import addOrderPage from '@pages/BO/orders/add';
 
 import {
   boDashboardPage,
+  boOrdersPage,
   FakerCustomer,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -55,14 +55,14 @@ describe('BO - Orders - Create order : Create customer from new order page', asy
       boDashboardPage.ordersLink,
     );
 
-    const pageTitle = await ordersPage.getPageTitle(page);
-    expect(pageTitle).to.contains(ordersPage.pageTitle);
+    const pageTitle = await boOrdersPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boOrdersPage.pageTitle);
   });
 
   it('should go to create order page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCreateOrderPage', baseContext);
 
-    await ordersPage.goToCreateOrderPage(page);
+    await boOrdersPage.goToCreateOrderPage(page);
 
     const pageTitle = await addOrderPage.getPageTitle(page);
     expect(pageTitle).to.contains(addOrderPage.pageTitle);

@@ -7,13 +7,11 @@ import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advanced
 import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
-// Import BO pages
-import ordersPage from '@pages/BO/orders';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
-import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
-
 import {
   boDashboardPage,
+  boOrdersPage,
+  boOrdersViewBlockProductsPage,
+  boOrdersViewBlockTabListPage,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
@@ -110,71 +108,71 @@ describe('BO - Orders - View and edit order : Return an order', async () => {
         boDashboardPage.ordersLink,
       );
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it(`should change the order status to '${dataOrderStatuses.delivered.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const result = await ordersPage.setOrderStatus(page, 1, dataOrderStatuses.delivered);
-      expect(result).to.equal(ordersPage.successfulUpdateMessage);
+      const result = await boOrdersPage.setOrderStatus(page, 1, dataOrderStatuses.delivered);
+      expect(result).to.equal(boOrdersPage.successfulUpdateMessage);
     });
 
     it('should go to the first order page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderPage1', baseContext);
 
       // View order
-      await ordersPage.goToOrder(page, 1);
+      await boOrdersPage.goToOrder(page, 1);
 
-      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      const pageTitle = await boOrdersViewBlockTabListPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);
     });
 
     it('should click on return products button and type the quantity', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnProducts', baseContext);
 
-      await orderPageTabListBlock.clickOnReturnProductsButton(page);
-      await orderPageProductsBlock.setReturnedProductQuantity(page, 1, 1);
+      await boOrdersViewBlockTabListPage.clickOnReturnProductsButton(page);
+      await boOrdersViewBlockProductsPage.setReturnedProductQuantity(page, 1, 1);
 
-      const errorMessage = await orderPageProductsBlock.clickOnReturnProducts(page);
+      const errorMessage = await boOrdersViewBlockProductsPage.clickOnReturnProducts(page);
       expect(errorMessage).to.eq('Please select at least one product.');
     });
 
     it('should click on return products button and check quantity checkbox', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnProducts2', baseContext);
 
-      await orderPageTabListBlock.clickOnReturnProductsButton(page);
-      await orderPageProductsBlock.checkReturnedQuantity(page);
+      await boOrdersViewBlockTabListPage.clickOnReturnProductsButton(page);
+      await boOrdersViewBlockProductsPage.checkReturnedQuantity(page);
     });
 
     it('should check generate a voucher checkbox', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkGenerateVoucher', baseContext);
 
-      await orderPageProductsBlock.checkGenerateVoucher(page, true);
+      await boOrdersViewBlockProductsPage.checkGenerateVoucher(page, true);
 
-      const successMessage = await orderPageProductsBlock.clickOnReturnProducts(page);
+      const successMessage = await boOrdersViewBlockProductsPage.clickOnReturnProducts(page);
       expect(successMessage).to.eq('The product was successfully returned.');
     });
 
     it('should check that return products button is disabled', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'isButtonDisabled', baseContext);
 
-      const isDisabled = await orderPageTabListBlock.isReturnProductsButtonDisabled(page);
+      const isDisabled = await boOrdersViewBlockTabListPage.isReturnProductsButtonDisabled(page);
       expect(isDisabled).to.eq(true);
     });
 
     it('should check that the new column refunded is visible in products table', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'isNewColumnVisible', baseContext);
 
-      const isColumnVisible = await orderPageProductsBlock.isRefundedColumnVisible(page);
+      const isColumnVisible = await boOrdersViewBlockProductsPage.isRefundedColumnVisible(page);
       expect(isColumnVisible).to.eq(true);
     });
 
     it('should check the voucher email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkConfirmationEmail', baseContext);
 
-      const orderReference = await orderPageTabListBlock.getOrderReference(page);
+      const orderReference = await boOrdersViewBlockTabListPage.getOrderReference(page);
 
       numberOfEmails = allEmails.length;
       expect(allEmails[numberOfEmails - 1].subject)

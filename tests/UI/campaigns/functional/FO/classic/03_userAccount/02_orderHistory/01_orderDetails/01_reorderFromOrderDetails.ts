@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import FO pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
@@ -15,6 +14,7 @@ import {
   dataProducts,
   FakerOrder,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
@@ -150,11 +150,11 @@ describe('FO - Account - Order details : Reorder from order detail', async () =>
 
       await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
-      const pageTitle = await orderConfirmationPage.getPageTitle(page);
-      expect(pageTitle).to.equal(orderConfirmationPage.pageTitle);
+      const pageTitle = await foClassicCheckoutOrderConfirmationPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicCheckoutOrderConfirmationPage.pageTitle);
 
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+      expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
   });
 
@@ -196,9 +196,9 @@ describe('FO - Account - Order details : Reorder from order detail', async () =>
     it('should sign out from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFO', baseContext);
 
-      await orderConfirmationPage.logout(page);
+      await foClassicCheckoutOrderConfirmationPage.logout(page);
 
-      const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicCheckoutOrderConfirmationPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
   });

@@ -6,11 +6,11 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import addProductPage from '@pages/BO/catalog/products/add';
-import stocksPage from '@pages/BO/catalog/stocks';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  boStockPage,
   dataCategories,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -48,76 +48,76 @@ describe('BO - Catalog - Stocks : Filter stocks by categories', async () => {
       addProductPage.stocksLink,
     );
 
-    const pageTitle = await stocksPage.getPageTitle(page);
-    expect(pageTitle).to.contains(stocksPage.pageTitle);
+    const pageTitle = await boStockPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boStockPage.pageTitle);
   });
 
   it('should reset filter and get number of products in list', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProductsInList', baseContext);
 
-    numberOfProducts = await stocksPage.resetFilter(page);
+    numberOfProducts = await boStockPage.resetFilter(page);
     expect(numberOfProducts).to.be.above(0);
   });
 
   it('should filter by categories \'Art and Accessories\' and check the result', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterCategories', baseContext);
 
-    await stocksPage.filterByCategory(page, ['Art', 'Accessories']);
+    await boStockPage.filterByCategory(page, ['Art', 'Accessories']);
 
-    const result = await stocksPage.getAllRowsColumnContent(page, 'reference');
+    const result = await boStockPage.getAllRowsColumnContent(page, 'reference');
     expect(result).to.include.members(dataCategories.art.products.concat(dataCategories.accessories.products));
 
-    const numberOfProductsAfterFilter = await stocksPage.getTotalNumberOfProducts(page);
+    const numberOfProductsAfterFilter = await boStockPage.getTotalNumberOfProducts(page);
     expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
   });
 
   it('should uncheck the selected categories \'Art and Accessories\' and check the result', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterCategories', baseContext);
 
-    await stocksPage.filterByCategory(page, ['Art', 'Accessories']);
+    await boStockPage.filterByCategory(page, ['Art', 'Accessories']);
 
-    const numberOfProductsAfterFilter = await stocksPage.getTotalNumberOfProducts(page);
+    const numberOfProductsAfterFilter = await boStockPage.getTotalNumberOfProducts(page);
     expect(numberOfProductsAfterFilter).to.equal(numberOfProducts);
   });
 
   it('should filter by category \'Clothes\' and check the result', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterByCategoryClothes', baseContext);
 
-    await stocksPage.filterByCategory(page, ['Clothes']);
+    await boStockPage.filterByCategory(page, ['Clothes']);
 
-    const result = await stocksPage.getAllRowsColumnContent(page, 'reference');
+    const result = await boStockPage.getAllRowsColumnContent(page, 'reference');
     expect(result).to.include.members(dataCategories.clothes.products);
 
-    const numberOfProductsAfterFilter = await stocksPage.getTotalNumberOfProducts(page);
+    const numberOfProductsAfterFilter = await boStockPage.getTotalNumberOfProducts(page);
     expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
   });
 
   it('should uncheck the selected category \'Clothes\' and check the result', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterCategoryClothes', baseContext);
 
-    await stocksPage.filterByCategory(page, ['Clothes']);
+    await boStockPage.filterByCategory(page, ['Clothes']);
 
-    const numberOfProductsAfterFilter = await stocksPage.getTotalNumberOfProducts(page);
+    const numberOfProductsAfterFilter = await boStockPage.getTotalNumberOfProducts(page);
     expect(numberOfProductsAfterFilter).to.equal(numberOfProducts);
   });
 
   it('should filter by all categories and check result', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterByAllCategories', baseContext);
 
-    await stocksPage.filterByCategory(page,
+    await boStockPage.filterByCategory(page,
       ['Home', 'Clothes', 'Men', 'Women', 'Accessories', 'Stationery', 'Home Accessories', 'Art']);
 
-    const numberOfProductsAfterFilter = await stocksPage.getTotalNumberOfProducts(page);
+    const numberOfProductsAfterFilter = await boStockPage.getTotalNumberOfProducts(page);
     expect(numberOfProductsAfterFilter).to.equal(numberOfProducts);
   });
 
   it('should uncheck all categories and check result', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'uncheckAllCategories', baseContext);
 
-    await stocksPage.filterByCategory(page,
+    await boStockPage.filterByCategory(page,
       ['Home', 'Clothes', 'Men', 'Women', 'Accessories', 'Stationery', 'Home Accessories', 'Art']);
 
-    const numberOfProductsAfterFilter = await stocksPage.getTotalNumberOfProducts(page);
+    const numberOfProductsAfterFilter = await boStockPage.getTotalNumberOfProducts(page);
     expect(numberOfProductsAfterFilter).to.equal(numberOfProducts);
   });
 });

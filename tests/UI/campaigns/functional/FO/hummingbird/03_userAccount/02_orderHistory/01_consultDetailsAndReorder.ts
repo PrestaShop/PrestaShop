@@ -11,7 +11,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 // Import FO pages
 import orderHistoryPage from '@pages/FO/hummingbird/myAccount/orderHistory';
 import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
-import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
 
 import {
   dataOrderStatuses,
@@ -21,6 +20,7 @@ import {
   FakerCustomer,
   FakerOrder,
   foHummingbirdCheckoutPage,
+  foHummingbirdCheckoutOrderConfirmationPage,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
@@ -221,8 +221,8 @@ describe('FO - Account - Order history : Consult details and reorder', async () 
       await foHummingbirdCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       // Check the confirmation message
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      const cardTitle = await foHummingbirdCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+      expect(cardTitle).to.contains(foHummingbirdCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
   });
 

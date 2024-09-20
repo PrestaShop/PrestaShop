@@ -4,13 +4,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import stocksPage from '@pages/BO/catalog/stocks';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boStockPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -44,24 +42,24 @@ describe('BO - Catalog - Stocks : Help card in stocks page', async () => {
       boDashboardPage.stocksLink,
     );
 
-    const pageTitle = await stocksPage.getPageTitle(page);
-    expect(pageTitle).to.contains(stocksPage.pageTitle);
+    const pageTitle = await boStockPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boStockPage.pageTitle);
   });
 
   it('should open the help side bar and check the document language', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openHelpSidebar', baseContext);
 
-    const isHelpSidebarVisible = await stocksPage.openHelpSideBar(page);
+    const isHelpSidebarVisible = await boStockPage.openHelpSideBar(page);
     expect(isHelpSidebarVisible).to.eq(true);
 
-    const documentURL = await stocksPage.getHelpDocumentURL(page);
+    const documentURL = await boStockPage.getHelpDocumentURL(page);
     expect(documentURL).to.contains('country=en');
   });
 
   it('should close the help side bar', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeHelpSidebar', baseContext);
 
-    const isHelpSidebarClosed = await stocksPage.closeHelpSideBar(page);
+    const isHelpSidebarClosed = await boStockPage.closeHelpSideBar(page);
     expect(isHelpSidebarClosed).to.eq(true);
   });
 });

@@ -10,7 +10,6 @@ import virtualProductTab from '@pages/BO/catalog/products/add/virtualProductTab'
 import productSettings from '@pages/BO/shopParameters/productSettings';
 
 // Import FO pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 
@@ -22,6 +21,7 @@ import {
   FakerProduct,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicMyAccountPage,
   foClassicProductPage,
@@ -162,8 +162,8 @@ describe('BO - Catalog - Products : Virtual tab', async () => {
 
       await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+      expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
 
     it('should go to my account page', async function () {

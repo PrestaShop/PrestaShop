@@ -6,17 +6,16 @@ import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import FO pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {contactUsPage} from '@pages/FO/classic/contactUs';
 import viewCustomerPage from '@pages/BO/customers/view';
 import customerServicePage from '@pages/BO/customerService/customerService';
 import {createAccountPage} from '@pages/FO/classic/myAccount/add';
 import {gdprPersonalDataPage} from '@pages/FO/classic/myAccount/gdprPersonalData';
-import ordersPage from '@pages/BO/orders';
 
 import {
   boCustomersPage,
   boDashboardPage,
+  boOrdersPage,
   boShoppingCartsPage,
   dataPaymentMethods,
   dataProducts,
@@ -25,6 +24,7 @@ import {
   FakerCustomer,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
@@ -521,8 +521,8 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
         // Check the confirmation message
-        const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-        expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+        const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+        expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
       });
 
       it('should go to my account page', async function () {
@@ -572,30 +572,30 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
           boDashboardPage.ordersLink,
         );
 
-        const pageTitle = await ordersPage.getPageTitle(page);
-        expect(pageTitle).to.contains(ordersPage.pageTitle);
+        const pageTitle = await boOrdersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersPage.pageTitle);
       });
 
       it('should filter the Orders table by customer', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterOrdersTable', baseContext);
 
-        await ordersPage.filterOrders(page, 'input', 'customer', customerData.lastName);
+        await boOrdersPage.filterOrders(page, 'input', 'customer', customerData.lastName);
 
-        const numberOfOrdersAfterFilter = await ordersPage.getNumberOfElementInGrid(page);
+        const numberOfOrdersAfterFilter = await boOrdersPage.getNumberOfElementInGrid(page);
         expect(numberOfOrdersAfterFilter).to.equal(1);
 
-        const textColumn = await ordersPage.getTextColumn(page, 'customer');
+        const textColumn = await boOrdersPage.getTextColumn(page, 'customer');
         expect(textColumn).to.contains(customerData.lastName);
       });
 
       it('should get order data', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getOrderData', baseContext);
 
-        orderReference = await ordersPage.getTextColumn(page, 'reference');
+        orderReference = await boOrdersPage.getTextColumn(page, 'reference');
         expect(orderReference).to.not.eq(null);
 
-        totalPaid = await ordersPage.getOrderATIPrice(page);
-        orderDate = await ordersPage.getTextColumn(page, 'date_add');
+        totalPaid = await boOrdersPage.getOrderATIPrice(page);
+        orderDate = await boOrdersPage.getTextColumn(page, 'date_add');
         orderDate = `${orderDate.substring(6, 10)}-${orderDate.substring(0, 2)}-${orderDate.substring(3, 5)}`
           + `${orderDate.substring(11, 19)}`;
       });
@@ -603,7 +603,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'resetOrdersTable', baseContext);
 
-        const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+        const numberOfOrders = await boOrdersPage.resetAndGetNumberOfLines(page);
         expect(numberOfOrders).to.be.above(0);
       });
     });

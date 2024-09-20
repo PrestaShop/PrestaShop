@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
-import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {
@@ -14,8 +13,9 @@ import {
   dataPaymentMethods,
   dataProducts,
   foHummingbirdCartPage,
-  foHummingbirdCheckoutPage,
   foHummingbirdCategoryPage,
+  foHummingbirdCheckoutPage,
+  foHummingbirdCheckoutOrderConfirmationPage,
   foHummingbirdHomePage,
   foHummingbirdModalQuickViewPage,
   foHummingbirdSearchResultsPage,
@@ -118,31 +118,31 @@ describe('FO - Order confirmation : Popular product', async () => {
 
       await foHummingbirdCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.checkPayment.moduleName);
 
-      const pageTitle = await orderConfirmationPage.getPageTitle(page);
-      expect(pageTitle).to.equal(orderConfirmationPage.pageTitle);
+      const pageTitle = await foHummingbirdCheckoutOrderConfirmationPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdCheckoutOrderConfirmationPage.pageTitle);
 
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      const cardTitle = await foHummingbirdCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+      expect(cardTitle).to.contains(foHummingbirdCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
 
     it('should check popular product title', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPopularProducts', baseContext);
 
-      const popularProductTitle = await orderConfirmationPage.getBlockTitle(page);
+      const popularProductTitle = await foHummingbirdCheckoutOrderConfirmationPage.getBlockTitle(page);
       expect(popularProductTitle).to.equal('Popular Products');
     });
 
     it('should check the number of popular products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPopularProductsNumber', baseContext);
 
-      const productsNumber = await orderConfirmationPage.getProductsBlockNumber(page);
+      const productsNumber = await foHummingbirdCheckoutOrderConfirmationPage.getProductsBlockNumber(page);
       expect(productsNumber).to.equal(8);
     });
 
     it('should quick view the first product in list', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewFirstProduct', baseContext);
 
-      await orderConfirmationPage.quickViewProduct(page, 1);
+      await foHummingbirdCheckoutOrderConfirmationPage.quickViewProduct(page, 1);
 
       const isQuickViewModalVisible = await foHummingbirdModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isQuickViewModalVisible).to.equal(true);
@@ -187,15 +187,15 @@ describe('FO - Order confirmation : Popular product', async () => {
 
       await foHummingbirdCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
+      const cardTitle = await foHummingbirdCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
       // Check the confirmation message
-      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      expect(cardTitle).to.contains(foHummingbirdCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
 
     it('should click on all products page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnAllProductsPage', baseContext);
 
-      await orderConfirmationPage.goToAllProductsPage(page);
+      await foHummingbirdCheckoutOrderConfirmationPage.goToAllProductsPage(page);
 
       const isCategoryPageVisible = await foHummingbirdCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);

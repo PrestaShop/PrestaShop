@@ -7,13 +7,12 @@ import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
 // Import pages
-// Import BO pages
-import ordersPage from '@pages/BO/orders';
 // Import FO pages
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
 import {
   boDashboardPage,
+  boOrdersPage,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
@@ -112,16 +111,16 @@ describe('BO - orders : Update order status', async () => {
         boDashboardPage.ordersLink,
       );
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should reset filter and get the last order ID', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
-      await ordersPage.resetFilter(page);
+      await boOrdersPage.resetFilter(page);
 
-      const result = await ordersPage.getTextColumn(page, 'id_order', 1);
+      const result = await boOrdersPage.getTextColumn(page, 'id_order', 1);
       orderId = parseInt(result, 10);
       expect(orderId).to.be.at.least(1);
     });
@@ -140,14 +139,14 @@ describe('BO - orders : Update order status', async () => {
         it('should update order status', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus${index}`, baseContext);
 
-          const textResult = await ordersPage.setOrderStatus(page, 1, test.args.orderStatus);
-          expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
+          const textResult = await boOrdersPage.setOrderStatus(page, 1, test.args.orderStatus);
+          expect(textResult).to.equal(boOrdersPage.successfulUpdateMessage);
         });
 
         it('should check that the status is updated successfully', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkStatusBO${index}`, baseContext);
 
-          const orderStatus = await ordersPage.getTextColumn(page, 'osname', 1);
+          const orderStatus = await boOrdersPage.getTextColumn(page, 'osname', 1);
           expect(orderStatus, 'Order status was not updated').to.equal(test.args.orderStatus.name);
         });
 
@@ -161,7 +160,7 @@ describe('BO - orders : Update order status', async () => {
           it('should download invoice', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoice', baseContext);
 
-            filePath = await ordersPage.downloadInvoice(page, 1);
+            filePath = await boOrdersPage.downloadInvoice(page, 1);
 
             const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);
             expect(doesFileExist, 'The file is not existing!').to.eq(true);
@@ -171,7 +170,7 @@ describe('BO - orders : Update order status', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'checkInvoiceText', baseContext);
 
             // Get order information
-            const orderInformation = await ordersPage.getOrderFromTable(page, 1);
+            const orderInformation = await boOrdersPage.getOrderFromTable(page, 1);
 
             // Check Reference in pdf
             const referenceExist = await utilsFile.isTextInPDF(filePath, orderInformation.reference);
@@ -199,7 +198,7 @@ describe('BO - orders : Update order status', async () => {
           it('should download delivery slip', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'downloadDeliverySlip', baseContext);
 
-            filePath = await ordersPage.downloadDeliverySlip(page, 1);
+            filePath = await boOrdersPage.downloadDeliverySlip(page, 1);
 
             const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);
             expect(doesFileExist).to.eq(true);
@@ -209,7 +208,7 @@ describe('BO - orders : Update order status', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'checkDeliverySlip', baseContext);
 
             // Get delivery slip information
-            const orderInformation = await ordersPage.getOrderFromTable(page, 1);
+            const orderInformation = await boOrdersPage.getOrderFromTable(page, 1);
 
             // Check Reference in pdf
             const referenceExist = await utilsFile.isTextInPDF(filePath, orderInformation.reference);
@@ -239,7 +238,7 @@ describe('BO - orders : Update order status', async () => {
         it('should go to FO page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToFoToCheckStatus${index}`, baseContext);
 
-          page = await ordersPage.viewMyShop(page);
+          page = await boOrdersPage.viewMyShop(page);
           await foClassicHomePage.changeLanguage(page, 'en');
 
           const isHomePage = await foClassicHomePage.isHomePage(page);
@@ -303,8 +302,8 @@ describe('BO - orders : Update order status', async () => {
 
           page = await orderHistoryPage.closePage(browserContext, page, 0);
 
-          const pageTitle = await ordersPage.getPageTitle(page);
-          expect(pageTitle).to.contains(ordersPage.pageTitle);
+          const pageTitle = await boOrdersPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boOrdersPage.pageTitle);
         });
       });
     });

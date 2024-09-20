@@ -4,21 +4,19 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import FO pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
-
 // Import BO pages
 import deliverySlipsPage from '@pages/BO/orders/deliverySlips';
-import ordersPage from '@pages/BO/orders';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 import {
   boDashboardPage,
+  boOrdersPage,
+  boOrdersViewBlockTabListPage,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicProductPage,
@@ -175,16 +173,16 @@ describe('BO - Orders - Delivery slips : Enable/Disable product image', async ()
           await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
           // Check the confirmation message
-          const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-          expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+          const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+          expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
         });
 
         it('should sign out from FO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `signOutFO${index}`, baseContext);
 
-          await orderConfirmationPage.logout(page);
+          await foClassicCheckoutOrderConfirmationPage.logout(page);
 
-          const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
+          const isCustomerConnected = await foClassicCheckoutOrderConfirmationPage.isCustomerConnected(page);
           expect(isCustomerConnected, 'Customer is connected').to.eq(false);
         });
 
@@ -192,7 +190,7 @@ describe('BO - Orders - Delivery slips : Enable/Disable product image', async ()
           await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
           // Close tab and init other page objects with new current tab
-          page = await orderConfirmationPage.closePage(browserContext, page, 0);
+          page = await foClassicCheckoutOrderConfirmationPage.closePage(browserContext, page, 0);
 
           const pageTitle = await deliverySlipsPage.getPageTitle(page);
           expect(pageTitle).to.contains(deliverySlipsPage.pageTitle);
@@ -209,30 +207,30 @@ describe('BO - Orders - Delivery slips : Enable/Disable product image', async ()
             deliverySlipsPage.ordersLink,
           );
 
-          const pageTitle = await ordersPage.getPageTitle(page);
-          expect(pageTitle).to.contains(ordersPage.pageTitle);
+          const pageTitle = await boOrdersPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boOrdersPage.pageTitle);
         });
 
         it('should go to the created order page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToCreatedOrderPage${index}`, baseContext);
 
-          await ordersPage.goToOrder(page, 1);
+          await boOrdersPage.goToOrder(page, 1);
 
-          const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-          expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+          const pageTitle = await boOrdersViewBlockTabListPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);
         });
 
         it(`should change the order status to '${dataOrderStatuses.shipped.name}' and check it`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus${index}`, baseContext);
 
-          const result = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
+          const result = await boOrdersViewBlockTabListPage.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
           expect(result).to.equal(dataOrderStatuses.shipped.name);
         });
 
         it('should download the delivery slip', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `downloadDeliverySlips${index}`, baseContext);
 
-          filePath = await orderPageTabListBlock.downloadDeliverySlip(page);
+          filePath = await boOrdersViewBlockTabListPage.downloadDeliverySlip(page);
 
           const exist = await utilsFile.doesFileExist(filePath);
           expect(exist).to.eq(true);

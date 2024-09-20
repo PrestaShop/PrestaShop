@@ -12,14 +12,14 @@ import {createOrderByCustomerTest, createOrderSpecificProductTest} from '@common
 import addProductPage from '@pages/BO/catalog/products/add';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import detailsTab from '@pages/BO/catalog/products/add/detailsTab';
-import ordersPage from '@pages/BO/orders';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 import orderPagePaymentBlock from '@pages/BO/orders/view/paymentBlock';
-import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 import {
   boDashboardPage,
+  boOrdersPage,
+  boOrdersViewBlockProductsPage,
+  boOrdersViewBlockTabListPage,
   boProductsPage,
   dataAddresses,
   dataCarriers,
@@ -289,35 +289,35 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           boDashboardPage.ordersParentLink,
           boDashboardPage.ordersLink,
         );
-        await ordersPage.closeSfToolBar(page);
+        await boOrdersPage.closeSfToolBar(page);
 
-        const pageTitle = await ordersPage.getPageTitle(page);
-        expect(pageTitle).to.contains(ordersPage.pageTitle);
+        const pageTitle = await boOrdersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersPage.pageTitle);
       });
 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters1', baseContext);
 
-        const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+        const numberOfOrders = await boOrdersPage.resetAndGetNumberOfLines(page);
         expect(numberOfOrders).to.be.above(0);
       });
 
       it(`should filter the Orders table by 'Customer: ${dataCustomers.johnDoe.lastName}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer1', baseContext);
 
-        await ordersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
+        await boOrdersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
 
-        const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
+        const textColumn = await boOrdersPage.getTextColumn(page, 'customer', 1);
         expect(textColumn).to.contains(dataCustomers.johnDoe.lastName);
       });
 
       it('should view the order', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'orderPageTabListBlock1', baseContext);
 
-        await ordersPage.goToOrder(page, 2);
+        await boOrdersPage.goToOrder(page, 2);
 
-        const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-        expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+        const pageTitle = await boOrdersViewBlockTabListPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);
       });
     });
 
@@ -325,24 +325,24 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
       it('should delete the ordered product', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'deleteOrderedProduct', baseContext);
 
-        const textResult = await orderPageProductsBlock.deleteProduct(page, 1);
-        expect(textResult).to.contains(orderPageProductsBlock.successfulDeleteProductMessage);
+        const textResult = await boOrdersViewBlockProductsPage.deleteProduct(page, 1);
+        expect(textResult).to.contains(boOrdersViewBlockProductsPage.successfulDeleteProductMessage);
       });
 
       it(`should search for the product '${virtualProduct.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'searchProduct1', baseContext);
 
-        await orderPageProductsBlock.searchProduct(page, virtualProduct.name);
+        await boOrdersViewBlockProductsPage.searchProduct(page, virtualProduct.name);
 
-        const result = await orderPageProductsBlock.getSearchedProductInformation(page);
+        const result = await boOrdersViewBlockProductsPage.getSearchedProductInformation(page);
         expect(result.available).to.equal(virtualProduct.quantity - 1);
       });
 
       it('should add the product to the cart', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart1', baseContext);
 
-        const textResult = await orderPageProductsBlock.addProductToCart(page, 13);
-        expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
+        const textResult = await boOrdersViewBlockProductsPage.addProductToCart(page, 13);
+        expect(textResult).to.contains(boOrdersViewBlockProductsPage.successfulAddProductMessage);
       });
 
       it('should change the \'Invoice address\'', async function () {
@@ -359,35 +359,35 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
       it(`should change the order status to '${dataOrderStatuses.paymentAccepted.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus1', baseContext);
 
-        const textResult = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.paymentAccepted.name);
+        const textResult = await boOrdersViewBlockTabListPage.modifyOrderStatus(page, dataOrderStatuses.paymentAccepted.name);
         expect(textResult).to.equal(dataOrderStatuses.paymentAccepted.name);
       });
 
       it('should check that there is no carrier', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersNumber', baseContext);
 
-        const carriersNumber = await orderPageTabListBlock.getCarriersNumber(page);
+        const carriersNumber = await boOrdersViewBlockTabListPage.getCarriersNumber(page);
         expect(carriersNumber).to.be.equal(0);
       });
 
       it('should get the invoice file name', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getInvoiceFileName1', baseContext);
 
-        fileName = await orderPageTabListBlock.getFileName(page);
+        fileName = await boOrdersViewBlockTabListPage.getFileName(page);
         expect(filePath).is.not.equal('');
       });
 
       it('should get the order reference', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getOrderReference1', baseContext);
 
-        orderReference = await orderPageTabListBlock.getOrderReference(page);
+        orderReference = await boOrdersViewBlockTabListPage.getOrderReference(page);
         expect(orderReference).is.not.equal('');
       });
 
       it('should click on \'View invoice\' button and check that the file is downloaded', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnViewInvoice1', baseContext);
 
-        filePath = await orderPageTabListBlock.viewInvoice(page);
+        filePath = await boOrdersViewBlockTabListPage.viewInvoice(page);
         expect(filePath).to.not.eq(null);
 
         const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);
@@ -566,35 +566,35 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           boDashboardPage.ordersParentLink,
           boDashboardPage.ordersLink,
         );
-        await ordersPage.closeSfToolBar(page);
+        await boOrdersPage.closeSfToolBar(page);
 
-        const pageTitle = await ordersPage.getPageTitle(page);
-        expect(pageTitle).to.contains(ordersPage.pageTitle);
+        const pageTitle = await boOrdersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersPage.pageTitle);
       });
 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters2', baseContext);
 
-        const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+        const numberOfOrders = await boOrdersPage.resetAndGetNumberOfLines(page);
         expect(numberOfOrders).to.be.above(0);
       });
 
       it(`should filter the Orders table by 'Customer: ${dataCustomers.johnDoe.lastName}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer2', baseContext);
 
-        await ordersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
+        await boOrdersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
 
-        const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
+        const textColumn = await boOrdersPage.getTextColumn(page, 'customer', 1);
         expect(textColumn).to.contains(dataCustomers.johnDoe.lastName);
       });
 
       it('should view the order', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'orderPageTabListBlock2', baseContext);
 
-        await ordersPage.goToOrder(page, 1);
+        await boOrdersPage.goToOrder(page, 1);
 
-        const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-        expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+        const pageTitle = await boOrdersViewBlockTabListPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);
       });
     });
 
@@ -602,28 +602,28 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
       it(`should change the order status to '${dataOrderStatuses.paymentAccepted.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus2', baseContext);
 
-        const textResult = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.paymentAccepted.name);
+        const textResult = await boOrdersViewBlockTabListPage.modifyOrderStatus(page, dataOrderStatuses.paymentAccepted.name);
         expect(textResult).to.equal(dataOrderStatuses.paymentAccepted.name);
       });
 
       it('should get the invoice file name', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getInvoiceFileName2', baseContext);
 
-        fileName = await orderPageTabListBlock.getFileName(page);
+        fileName = await boOrdersViewBlockTabListPage.getFileName(page);
         expect(filePath).is.not.equal('');
       });
 
       it('should get the order reference', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getOrderReference2', baseContext);
 
-        orderReference = await orderPageTabListBlock.getOrderReference(page);
+        orderReference = await boOrdersViewBlockTabListPage.getOrderReference(page);
         expect(orderReference).is.not.equal('');
       });
 
       it('should click on \'View invoice\' button and check that the file is downloaded', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnViewInvoice2', baseContext);
 
-        filePath = await orderPageTabListBlock.viewInvoice(page);
+        filePath = await boOrdersViewBlockTabListPage.viewInvoice(page);
         expect(filePath).to.not.eq(null);
 
         const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);
@@ -791,37 +791,37 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
       it(`should search for the product '${productWithSpecificPrice.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'searchProduct2', baseContext);
 
-        await orderPageProductsBlock.searchProduct(page, productWithSpecificPrice.name);
+        await boOrdersViewBlockProductsPage.searchProduct(page, productWithSpecificPrice.name);
 
-        const result = await orderPageProductsBlock.getSearchedProductInformation(page);
+        const result = await boOrdersViewBlockProductsPage.getSearchedProductInformation(page);
         expect(result.available).to.equal(productWithSpecificPrice.quantity - 1);
       });
 
       it('should add the product to the cart', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart2', baseContext);
 
-        const textResult = await orderPageProductsBlock.addProductToCart(page, 1);
-        expect(textResult).to.contains(orderPageTabListBlock.successfulAddProductMessage);
+        const textResult = await boOrdersViewBlockProductsPage.addProductToCart(page, 1);
+        expect(textResult).to.contains(boOrdersViewBlockTabListPage.successfulAddProductMessage);
       });
 
       it('should get the invoice file name', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getInvoiceFileName3', baseContext);
 
-        fileName = await orderPageTabListBlock.getFileName(page);
+        fileName = await boOrdersViewBlockTabListPage.getFileName(page);
         expect(filePath).is.not.equal('');
       });
 
       it('should get the order reference', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getOrderReference3', baseContext);
 
-        orderReference = await orderPageTabListBlock.getOrderReference(page);
+        orderReference = await boOrdersViewBlockTabListPage.getOrderReference(page);
         expect(orderReference).is.not.equal('');
       });
 
       it('should click on \'View invoice\' button and check that the file is downloaded', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnViewInvoice3', baseContext);
 
-        filePath = await orderPageTabListBlock.viewInvoice(page);
+        filePath = await boOrdersViewBlockTabListPage.viewInvoice(page);
         expect(filePath).to.not.eq(null);
 
         const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);
@@ -997,14 +997,14 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it(`should delete the ordered product '${productWithSpecificPrice.name}' from the list`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'deleteAddedProduct', baseContext);
 
-          const textResult = await orderPageProductsBlock.deleteProduct(page, 1);
-          expect(textResult).to.contains(orderPageProductsBlock.successfulDeleteProductMessage);
+          const textResult = await boOrdersViewBlockProductsPage.deleteProduct(page, 1);
+          expect(textResult).to.contains(boOrdersViewBlockProductsPage.successfulDeleteProductMessage);
         });
 
         it('should click on \'View invoice\' button and check that the file is downloaded', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'viewInvoice4', baseContext);
 
-          filePath = await orderPageTabListBlock.viewInvoice(page);
+          filePath = await boOrdersViewBlockTabListPage.viewInvoice(page);
           expect(filePath).to.not.eq(null);
 
           const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);
@@ -1034,37 +1034,37 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
       it(`should search for the product '${productWithEcoTax.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'searchProduct3', baseContext);
 
-        await orderPageProductsBlock.searchProduct(page, productWithEcoTax.name);
+        await boOrdersViewBlockProductsPage.searchProduct(page, productWithEcoTax.name);
 
-        const result = await orderPageProductsBlock.getSearchedProductInformation(page);
+        const result = await boOrdersViewBlockProductsPage.getSearchedProductInformation(page);
         expect(result.available).to.equal(productWithEcoTax.quantity - 1);
       });
 
       it('should add the product to the cart', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart3', baseContext);
 
-        const textResult = await orderPageProductsBlock.addProductToCart(page, 1);
-        expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
+        const textResult = await boOrdersViewBlockProductsPage.addProductToCart(page, 1);
+        expect(textResult).to.contains(boOrdersViewBlockProductsPage.successfulAddProductMessage);
       });
 
       it('should get the invoice file name', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getInvoiceFileName4', baseContext);
 
-        fileName = await orderPageTabListBlock.getFileName(page);
+        fileName = await boOrdersViewBlockTabListPage.getFileName(page);
         expect(filePath).is.not.equal('');
       });
 
       it('should get the order reference', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getOrderReference4', baseContext);
 
-        orderReference = await orderPageTabListBlock.getOrderReference(page);
+        orderReference = await boOrdersViewBlockTabListPage.getOrderReference(page);
         expect(orderReference).is.not.equal('');
       });
 
       it('should click on \'View invoice\' button and check that the file is downloaded', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnViewInvoice4', baseContext);
 
-        filePath = await orderPageTabListBlock.viewInvoice(page);
+        filePath = await boOrdersViewBlockTabListPage.viewInvoice(page);
         expect(filePath).to.not.eq(null);
 
         const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);
@@ -1249,7 +1249,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should click on \'View invoice\' button and check that the file is downloaded', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'clickOnViewInvoice5', baseContext);
 
-          filePath = await orderPageTabListBlock.viewInvoice(page);
+          filePath = await boOrdersViewBlockTabListPage.viewInvoice(page);
           expect(filePath).to.not.eq(null);
 
           const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);
@@ -1286,7 +1286,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should click on \'View invoice\' button and check that the file is downloaded', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'clickOnViewInvoice6', baseContext);
 
-          filePath = await orderPageTabListBlock.viewInvoice(page);
+          filePath = await boOrdersViewBlockTabListPage.viewInvoice(page);
           expect(filePath).to.not.eq(null);
 
           const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);
@@ -1314,21 +1314,21 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should click on \'Documents\' tab', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'displayDocumentsTab', baseContext);
 
-          const isTabOpened = await orderPageTabListBlock.goToDocumentsTab(page);
+          const isTabOpened = await boOrdersViewBlockTabListPage.goToDocumentsTab(page);
           expect(isTabOpened).to.eq(true);
         });
 
         it('should add note', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'addNote', baseContext);
 
-          const textResult = await orderPageTabListBlock.setDocumentNote(page, 'Test note', 1);
-          expect(textResult).to.equal(orderPageTabListBlock.updateSuccessfullMessage);
+          const textResult = await boOrdersViewBlockTabListPage.setDocumentNote(page, 'Test note', 1);
+          expect(textResult).to.equal(boOrdersViewBlockTabListPage.updateSuccessfullMessage);
         });
 
         it('should click on \'View invoice\' button and check that the file is downloaded', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'viewInvoiceToCheckNote1', baseContext);
 
-          filePath = await orderPageTabListBlock.viewInvoice(page);
+          filePath = await boOrdersViewBlockTabListPage.viewInvoice(page);
           expect(filePath).to.not.eq(null);
 
           const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);
@@ -1345,21 +1345,21 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should click on \'Documents\' tab', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'displayDocumentsTabToDeleteNote', baseContext);
 
-          const isTabOpened = await orderPageTabListBlock.goToDocumentsTab(page);
+          const isTabOpened = await boOrdersViewBlockTabListPage.goToDocumentsTab(page);
           expect(isTabOpened).to.eq(true);
         });
 
         it('should delete the note', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'deleteNote', baseContext);
 
-          const textResult = await orderPageTabListBlock.setDocumentNote(page, '', 1);
-          expect(textResult).to.equal(orderPageTabListBlock.updateSuccessfullMessage);
+          const textResult = await boOrdersViewBlockTabListPage.setDocumentNote(page, '', 1);
+          expect(textResult).to.equal(boOrdersViewBlockTabListPage.updateSuccessfullMessage);
         });
 
         it('should click on \'View invoice\' button and check that the file is downloaded', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'viewInvoiceToCheckNote2', baseContext);
 
-          filePath = await orderPageTabListBlock.viewInvoice(page);
+          filePath = await boOrdersViewBlockTabListPage.viewInvoice(page);
           expect(filePath).to.not.eq(null);
 
           const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);
@@ -1378,14 +1378,14 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should click on \'Carriers\' tab', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'displayCarriersTab', baseContext);
 
-          const isTabOpened = await orderPageTabListBlock.goToCarriersTab(page);
+          const isTabOpened = await boOrdersViewBlockTabListPage.goToCarriersTab(page);
           expect(isTabOpened).to.eq(true);
         });
 
         it('should click on \'Edit\' link and check the modal', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'clickOnEditLink', baseContext);
 
-          const isModalVisible = await orderPageTabListBlock.clickOnEditLink(page);
+          const isModalVisible = await boOrdersViewBlockTabListPage.clickOnEditLink(page);
           expect(isModalVisible, 'Edit shipping modal is not visible!').to.eq(true);
         });
 
@@ -1398,14 +1398,14 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             carrierID: 1,
           });
 
-          const textResult = await orderPageTabListBlock.setShippingDetails(page, shippingDetailsData);
-          expect(textResult).to.equal(orderPageTabListBlock.successfulUpdateMessage);
+          const textResult = await boOrdersViewBlockTabListPage.setShippingDetails(page, shippingDetailsData);
+          expect(textResult).to.equal(boOrdersViewBlockTabListPage.successfulUpdateMessage);
         });
 
         it('should click on \'View invoice\' button and check that the file is downloaded', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'clickOnViewInvoice7', baseContext);
 
-          filePath = await orderPageTabListBlock.viewInvoice(page);
+          filePath = await boOrdersViewBlockTabListPage.viewInvoice(page);
           expect(filePath).to.not.eq(null);
 
           const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);
@@ -1444,15 +1444,15 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should add discount', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'addDiscountPercent', baseContext);
 
-          const validationMessage = await orderPageProductsBlock.addDiscount(page, discountData);
+          const validationMessage = await boOrdersViewBlockProductsPage.addDiscount(page, discountData);
           expect(validationMessage, 'Validation message is not correct!')
-            .to.equal(orderPageTabListBlock.successfulUpdateMessage);
+            .to.equal(boOrdersViewBlockTabListPage.successfulUpdateMessage);
         });
 
         it('should click on \'View invoice\' button and check that the file is downloaded', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'clickOnViewInvoice8', baseContext);
 
-          filePath = await orderPageTabListBlock.viewInvoice(page);
+          filePath = await boOrdersViewBlockTabListPage.viewInvoice(page);
           expect(filePath).to.not.eq(null);
 
           const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);
@@ -1493,15 +1493,15 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should delete the discount', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'deleteDiscount', baseContext);
 
-          const validationMessage = await orderPageProductsBlock.deleteDiscount(page);
+          const validationMessage = await boOrdersViewBlockProductsPage.deleteDiscount(page);
           expect(validationMessage, 'Successful delete alert is not correct')
-            .to.equal(orderPageTabListBlock.successfulUpdateMessage);
+            .to.equal(boOrdersViewBlockTabListPage.successfulUpdateMessage);
         });
 
         it('should click on \'View invoice\' button and check that the file is downloaded', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'viewInvoiceToCheckDiscount', baseContext);
 
-          filePath = await orderPageTabListBlock.viewInvoice(page);
+          filePath = await boOrdersViewBlockTabListPage.viewInvoice(page);
           expect(filePath).to.not.eq(null);
 
           const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);
@@ -1537,7 +1537,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should click on \'View invoice\' button and check that the file is downloaded', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'viewInvoiceToCheckPayment', baseContext);
 
-          filePath = await orderPageTabListBlock.viewInvoice(page);
+          filePath = await boOrdersViewBlockTabListPage.viewInvoice(page);
           expect(filePath).to.not.eq(null);
 
           const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);

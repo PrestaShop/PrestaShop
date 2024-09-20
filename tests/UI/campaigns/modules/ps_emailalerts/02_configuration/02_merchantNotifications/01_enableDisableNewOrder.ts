@@ -7,15 +7,12 @@ import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advanced
 
 // Import pages
 // Import BO pages
-import ordersPage from '@pages/BO/orders';
-import emailAlertsPage from '@pages/BO/modules/psEmailAlerts';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
-// Import FO pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
   boDashboardPage,
   boModuleManagerPage,
+  boOrdersPage,
   dataCustomers,
   dataModules,
   dataPaymentMethods,
@@ -23,11 +20,13 @@ import {
   FakerOrder,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicProductPage,
   type MailDev,
   type MailDevEmail,
+  modPsEmailAlertsBoMain,
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -128,15 +127,15 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
 
       await boModuleManagerPage.goToConfigurationPage(page, dataModules.psEmailAlerts.tag);
 
-      const pageTitle = await emailAlertsPage.getPageSubtitle(page);
-      expect(pageTitle).to.equal(emailAlertsPage.pageTitle);
+      const pageTitle = await modPsEmailAlertsBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.equal(modPsEmailAlertsBoMain.pageTitle);
     });
 
     it('should enable new order and set email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableNewOrder', baseContext);
 
-      const successMessage = await emailAlertsPage.setNewOrder(page, true, 'demo@prestashop.com');
-      expect(successMessage).to.contains(emailAlertsPage.successfulUpdateMessage);
+      const successMessage = await modPsEmailAlertsBoMain.setNewOrder(page, true, 'demo@prestashop.com');
+      expect(successMessage).to.contains(modPsEmailAlertsBoMain.successfulUpdateMessage);
     });
   });
 
@@ -199,17 +198,17 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
       await foClassicCheckoutPage.choosePaymentAndOrder(page, orderData.paymentMethod.moduleName);
 
       // Check the confirmation message
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+      expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
 
     it('should close the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeShop', baseContext);
 
-      page = await orderConfirmationPage.closePage(browserContext, page, 0);
+      page = await foClassicCheckoutOrderConfirmationPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await emailAlertsPage.getPageSubtitle(page);
-      expect(pageTitle).to.equal(emailAlertsPage.pageTitle);
+      const pageTitle = await modPsEmailAlertsBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.equal(modPsEmailAlertsBoMain.pageTitle);
     });
   });
 
@@ -223,21 +222,21 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
         boDashboardPage.ordersLink,
       );
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should get the first order ID', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getOrderID', baseContext);
 
-      orderID = await ordersPage.getOrderIDNumber(page);
+      orderID = await boOrdersPage.getOrderIDNumber(page);
       expect(orderID).to.not.equal(1);
     });
 
     it('should get the first Order reference', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getOrderReference', baseContext);
 
-      orderReference = await ordersPage.getTextColumn(page, 'reference', 1);
+      orderReference = await boOrdersPage.getTextColumn(page, 'reference', 1);
       expect(orderReference).to.not.eq(null);
     });
   });
@@ -297,15 +296,15 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
 
       await boModuleManagerPage.goToConfigurationPage(page, dataModules.psEmailAlerts.tag);
 
-      const pageTitle = await emailAlertsPage.getPageSubtitle(page);
-      expect(pageTitle).to.equal(emailAlertsPage.pageTitle);
+      const pageTitle = await modPsEmailAlertsBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.equal(modPsEmailAlertsBoMain.pageTitle);
     });
 
     it('should disable new order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableReturns2', baseContext);
 
-      const successMessage = await emailAlertsPage.setNewOrder(page, false);
-      expect(successMessage).to.contains(emailAlertsPage.successfulUpdateMessage);
+      const successMessage = await modPsEmailAlertsBoMain.setNewOrder(page, false);
+      expect(successMessage).to.contains(modPsEmailAlertsBoMain.successfulUpdateMessage);
     });
   });
 
@@ -360,8 +359,8 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
       await foClassicCheckoutPage.choosePaymentAndOrder(page, orderData.paymentMethod.moduleName);
 
       // Check the confirmation message
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+      expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
   });
 

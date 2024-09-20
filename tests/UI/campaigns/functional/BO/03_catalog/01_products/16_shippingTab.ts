@@ -6,13 +6,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
 import createProductPage from '@pages/BO/catalog/products/add';
-import stocksTab from '@pages/BO/catalog/products/add/stocksTab';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 
 import {
   boDashboardPage,
   boProductsPage,
   boProductsCreateTabShippingPage,
+  boProductsCreateTabStocksPage,
   dataCarriers,
   dataCustomers,
   FakerProduct,
@@ -253,7 +253,7 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
     it('should update the product quantity to 0', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityTo0', baseContext);
 
-      await stocksTab.setProductStock(page, editProductData);
+      await boProductsCreateTabStocksPage.setProductStock(page, editProductData);
 
       const message = await createProductPage.saveProduct(page);
       expect(message).to.eq(createProductPage.successfulUpdateMessage);
@@ -262,7 +262,7 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
     it('should allow order when out of stock', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'allowOrderWhenOutOfStock', baseContext);
 
-      await stocksTab.setOptionWhenOutOfStock(page, 'Allow orders');
+      await boProductsCreateTabStocksPage.setOptionWhenOutOfStock(page, 'Allow orders');
 
       const message = await createProductPage.saveProduct(page);
       expect(message).to.eq(createProductPage.successfulUpdateMessage);

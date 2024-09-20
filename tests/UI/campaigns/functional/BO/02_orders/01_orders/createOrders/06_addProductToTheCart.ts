@@ -12,13 +12,13 @@ import deleteNonOrderedShoppingCarts from '@commonTests/BO/orders/shoppingCarts'
 // Import BO pages
 import addProductPage from '@pages/BO/catalog/products/add';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
-import stocksPage from '@pages/BO/catalog/stocks';
-import ordersPage from '@pages/BO/orders';
 import addOrderPage from '@pages/BO/orders/add';
 
 import {
   boDashboardPage,
+  boOrdersPage,
   boProductsPage,
+  boStockPage,
   dataCurrencies,
   dataCustomers,
   dataProducts,
@@ -315,64 +315,64 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
         boDashboardPage.stocksLink,
       );
 
-      const pageTitle = await stocksPage.getPageTitle(page);
-      expect(pageTitle).to.contains(stocksPage.pageTitle);
+      const pageTitle = await boStockPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boStockPage.pageTitle);
     });
 
     it('should get the Available stock of the simple product \'demo_11\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getAvailableStockOfDemo11', baseContext);
 
-      await stocksPage.simpleFilter(page, dataProducts.demo_11.name);
+      await boStockPage.simpleFilter(page, dataProducts.demo_11.name);
 
-      availableStockSimpleProduct = parseInt(await stocksPage.getTextColumnFromTableStocks(page, 1, 'available'), 10);
+      availableStockSimpleProduct = parseInt(await boStockPage.getTextColumnFromTableStocks(page, 1, 'available'), 10);
       expect(availableStockSimpleProduct).to.be.above(0);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter1', baseContext);
 
-      const numberOfProductsAfterReset = await stocksPage.resetFilter(page);
+      const numberOfProductsAfterReset = await boStockPage.resetFilter(page);
       expect(numberOfProductsAfterReset).to.be.above(1);
     });
 
     it('should get the Available stock of the product with combinations \'demo_1\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getAvailableStockDemo1', baseContext);
 
-      await stocksPage.simpleFilter(page, dataProducts.demo_1.name);
+      await boStockPage.simpleFilter(page, dataProducts.demo_1.name);
 
-      availableStockCombinationProduct = parseInt(await stocksPage.getTextColumnFromTableStocks(page, 1, 'available'), 10);
+      availableStockCombinationProduct = parseInt(await boStockPage.getTextColumnFromTableStocks(page, 1, 'available'), 10);
       expect(availableStockCombinationProduct).to.be.above(0);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter2', baseContext);
 
-      const numberOfProductsAfterReset = await stocksPage.resetFilter(page);
+      const numberOfProductsAfterReset = await boStockPage.resetFilter(page);
       expect(numberOfProductsAfterReset).to.be.above(1);
     });
 
     it('should get the Available stock of the virtual product \'demo_18\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getAvailableStockDemo18', baseContext);
 
-      await stocksPage.simpleFilter(page, dataProducts.demo_18.name);
+      await boStockPage.simpleFilter(page, dataProducts.demo_18.name);
 
-      availableStockVirtualProduct = parseInt(await stocksPage.getTextColumnFromTableStocks(page, 1, 'available'), 10);
+      availableStockVirtualProduct = parseInt(await boStockPage.getTextColumnFromTableStocks(page, 1, 'available'), 10);
       expect(availableStockVirtualProduct).to.be.above(0);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter3', baseContext);
 
-      const numberOfProductsAfterReset = await stocksPage.resetFilter(page);
+      const numberOfProductsAfterReset = await boStockPage.resetFilter(page);
       expect(numberOfProductsAfterReset).to.be.above(1);
     });
 
     it('should get the Available stock of the customized product \'demo_14\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getAvailableStockDemo14', baseContext);
 
-      await stocksPage.simpleFilter(page, dataProducts.demo_14.name);
+      await boStockPage.simpleFilter(page, dataProducts.demo_14.name);
 
-      availableStockCustomizedProduct = parseInt(await stocksPage.getTextColumnFromTableStocks(page, 1, 'available'), 10);
+      availableStockCustomizedProduct = parseInt(await boStockPage.getTextColumnFromTableStocks(page, 1, 'available'), 10);
       expect(availableStockCustomizedProduct).to.be.above(0);
     });
   });
@@ -387,16 +387,16 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
         boDashboardPage.ordersParentLink,
         boDashboardPage.ordersLink,
       );
-      await ordersPage.closeSfToolBar(page);
+      await boOrdersPage.closeSfToolBar(page);
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should go to create order page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreateOrderPage', baseContext);
 
-      await ordersPage.goToCreateOrderPage(page);
+      await boOrdersPage.goToCreateOrderPage(page);
 
       const pageTitle = await addOrderPage.getPageTitle(page);
       expect(pageTitle).to.contains(addOrderPage.pageTitle);

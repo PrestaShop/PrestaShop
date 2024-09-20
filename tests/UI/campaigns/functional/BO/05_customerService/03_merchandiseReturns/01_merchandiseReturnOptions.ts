@@ -7,21 +7,21 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import boMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns';
-import ordersPage from '@pages/BO/orders';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {merchandiseReturnsPage as foMerchandiseReturnsPage} from '@pages/FO/classic/myAccount/merchandiseReturns';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
 import {
   boDashboardPage,
+  boOrdersPage,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
@@ -130,16 +130,16 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
       await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       // Check the confirmation message
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+      expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
 
     it('should sign out from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighOutFO', baseContext);
 
-      await orderConfirmationPage.logout(page);
+      await foClassicCheckoutOrderConfirmationPage.logout(page);
 
-      const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicCheckoutOrderConfirmationPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
   });
@@ -190,16 +190,16 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
           boDashboardPage.ordersLink,
         );
 
-        const pageTitle = await ordersPage.getPageTitle(page);
-        expect(pageTitle).to.contains(ordersPage.pageTitle);
+        const pageTitle = await boOrdersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersPage.pageTitle);
       });
 
       it('should filter the Orders table by the default customer and check the result', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterOrder${index}`, baseContext);
 
-        await ordersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
+        await boOrdersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
 
-        const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
+        const textColumn = await boOrdersPage.getTextColumn(page, 'customer', 1);
         expect(textColumn).to.contains(dataCustomers.johnDoe.lastName);
       });
 
@@ -207,7 +207,7 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
         await testContext.addContextItem(this, 'testIdentifier', `goToOrderPage${index}`, baseContext);
 
         // View order
-        await ordersPage.goToOrder(page, 1);
+        await boOrdersPage.goToOrder(page, 1);
 
         const pageTitle = await viewOrderBasePage.getPageTitle(page);
         expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);

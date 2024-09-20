@@ -7,12 +7,12 @@ import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
 import creditSlipsPage from '@pages/BO/orders/creditSlips';
-import ordersPage from '@pages/BO/orders';
-import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 import {
   boDashboardPage,
+  boOrdersPage,
+  boOrdersViewBlockProductsPage,
+  boOrdersViewBlockTabListPage,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
@@ -81,23 +81,23 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
         boDashboardPage.ordersLink,
       );
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should go to the first order page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreatedOrderPage', baseContext);
 
-      await ordersPage.goToOrder(page, 1);
+      await boOrdersPage.goToOrder(page, 1);
 
-      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      const pageTitle = await boOrdersViewBlockTabListPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);
     });
 
     it(`should change the order status to '${dataOrderStatuses.shipped.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateCreatedOrderStatus', baseContext);
 
-      const result = await orderPageTabListBlock.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
+      const result = await boOrdersViewBlockTabListPage.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
       expect(result).to.equal(dataOrderStatuses.shipped.name);
     });
 
@@ -110,21 +110,21 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
       it(`should create the partial refund n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `addPartialRefund${index + 1}`, baseContext);
 
-        await orderPageTabListBlock.clickOnPartialRefund(page);
+        await boOrdersViewBlockTabListPage.clickOnPartialRefund(page);
 
-        const textMessage = await orderPageProductsBlock.addPartialRefundProduct(
+        const textMessage = await boOrdersViewBlockProductsPage.addPartialRefundProduct(
           page,
           test.args.productID,
           test.args.quantity,
         );
-        expect(textMessage).to.contains(orderPageProductsBlock.partialRefundValidationMessage);
+        expect(textMessage).to.contains(boOrdersViewBlockProductsPage.partialRefundValidationMessage);
       });
 
       it('should check the existence of the Credit slip document', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkCreditSlipDocument${index + 1}`, baseContext);
 
         // Get document name
-        const documentType = await orderPageTabListBlock.getDocumentType(page, test.args.documentRow);
+        const documentType = await boOrdersViewBlockTabListPage.getDocumentType(page, test.args.documentRow);
         expect(documentType).to.be.equal('Credit slip');
       });
     });

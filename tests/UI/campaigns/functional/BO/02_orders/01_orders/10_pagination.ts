@@ -5,11 +5,9 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
-// Import pages
-import ordersPage from '@pages/BO/orders';
-
 import {
   boDashboardPage,
+  boOrdersPage,
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
@@ -86,21 +84,21 @@ describe('BO - Orders : Pagination of orders table', async () => {
         boDashboardPage.ordersLink,
       );
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should reset all filters and get number of orders', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
 
-      numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+      numberOfOrders = await boOrdersPage.resetAndGetNumberOfLines(page);
       expect(numberOfOrders).to.be.above(0);
     });
 
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemssNumberTo10', baseContext);
 
-      const paginationNumber = await ordersPage.selectPaginationLimit(page, 10);
+      const paginationNumber = await boOrdersPage.selectPaginationLimit(page, 10);
       expect(paginationNumber, `Number of pages is not correct (page 1 / ${Math.ceil(numberOfOrders / 10)})`)
         .to.contains(`(page 1 / ${Math.ceil(numberOfOrders / 10)})`);
     });
@@ -108,7 +106,7 @@ describe('BO - Orders : Pagination of orders table', async () => {
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await ordersPage.paginationNext(page);
+      const paginationNumber = await boOrdersPage.paginationNext(page);
       expect(paginationNumber, `Number of pages is not (page 2 / ${Math.ceil(numberOfOrders / 10)})`)
         .to.contains(`(page 2 / ${Math.ceil(numberOfOrders / 10)})`);
     });
@@ -116,7 +114,7 @@ describe('BO - Orders : Pagination of orders table', async () => {
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await ordersPage.paginationPrevious(page);
+      const paginationNumber = await boOrdersPage.paginationPrevious(page);
       expect(paginationNumber, `Number of pages is not (page 1 / ${Math.ceil(numberOfOrders / 10)})`)
         .to.contains(`(page 1 / ${Math.ceil(numberOfOrders / 10)})`);
     });
@@ -124,19 +122,19 @@ describe('BO - Orders : Pagination of orders table', async () => {
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
-      const paginationNumber = await ordersPage.selectPaginationLimit(page, 50);
+      const paginationNumber = await boOrdersPage.selectPaginationLimit(page, 50);
       expect(paginationNumber, 'Number of pages is not correct').to.contains('(page 1 / 1)');
     });
 
     it('should sort orders by total desc', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sortOrdersDesc', baseContext);
 
-      const nonSortedTable = await ordersPage.getAllRowsColumnContent(page, 'total_paid_tax_incl');
+      const nonSortedTable = await boOrdersPage.getAllRowsColumnContent(page, 'total_paid_tax_incl');
       const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
 
-      await ordersPage.sortTable(page, 'total_paid_tax_incl', 'desc');
+      await boOrdersPage.sortTable(page, 'total_paid_tax_incl', 'desc');
 
-      sortedTable = await ordersPage.getAllRowsColumnContent(page, 'total_paid_tax_incl');
+      sortedTable = await boOrdersPage.getAllRowsColumnContent(page, 'total_paid_tax_incl');
       const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
       const expectedResult = await utilsCore.sortArrayNumber(nonSortedTableFloat);
@@ -146,14 +144,14 @@ describe('BO - Orders : Pagination of orders table', async () => {
     it('should check that the orders table is sorted by total desc', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'CheckSortDesc', baseContext);
 
-      const allOrdersTable = await ordersPage.getAllRowsColumnContent(page, 'total_paid_tax_incl');
+      const allOrdersTable = await boOrdersPage.getAllRowsColumnContent(page, 'total_paid_tax_incl');
       expect(allOrdersTable).to.deep.equal(sortedTable);
     });
 
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo10', baseContext);
 
-      const paginationNumber = await ordersPage.selectPaginationLimit(page, 10);
+      const paginationNumber = await boOrdersPage.selectPaginationLimit(page, 10);
       expect(paginationNumber, `Number of pages is not correct (page 1 / ${Math.ceil(numberOfOrders / 10)})`)
         .to.contains(`(page 1 / ${Math.ceil(numberOfOrders / 10)})`);
     });
@@ -161,14 +159,14 @@ describe('BO - Orders : Pagination of orders table', async () => {
     it('should check that the first page is sorted by total desc', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkFirstPageSortDesc', baseContext);
 
-      const firstTable = await ordersPage.getAllRowsColumnContent(page, 'total_paid_tax_incl');
+      const firstTable = await boOrdersPage.getAllRowsColumnContent(page, 'total_paid_tax_incl');
       expect(firstTable).to.deep.equal(sortedTable.slice(0, 10));
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext2', baseContext);
 
-      const paginationNumber = await ordersPage.paginationNext(page);
+      const paginationNumber = await boOrdersPage.paginationNext(page);
       expect(paginationNumber, `Number of pages is not (page 2 / ${Math.ceil(numberOfOrders / 10)})`)
         .to.contains(`(page 2 / ${Math.ceil(numberOfOrders / 10)})`);
     });
@@ -176,8 +174,8 @@ describe('BO - Orders : Pagination of orders table', async () => {
     it('should check that the second page is sorted by total desc', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSecondPageSortDesc', baseContext);
 
-      const secondTable = await ordersPage.getAllRowsColumnContent(page, 'total_paid_tax_incl');
-      const numberOfOrdersInPage = await ordersPage.getNumberOfOrdersInPage(page);
+      const secondTable = await boOrdersPage.getAllRowsColumnContent(page, 'total_paid_tax_incl');
+      const numberOfOrdersInPage = await boOrdersPage.getNumberOfOrdersInPage(page);
 
       expect(secondTable).to.deep.equal(sortedTable.slice(10, 10 + numberOfOrdersInPage));
     });
@@ -185,19 +183,19 @@ describe('BO - Orders : Pagination of orders table', async () => {
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50_2', baseContext);
 
-      const paginationNumber = await ordersPage.selectPaginationLimit(page, 50);
+      const paginationNumber = await boOrdersPage.selectPaginationLimit(page, 50);
       expect(paginationNumber, 'Number of pages is not correct').to.contains('(page 1 / 1)');
     });
 
     it('should go back to default sort', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackDefaultSort', baseContext);
 
-      const nonSortedTable = await ordersPage.getAllRowsColumnContent(page, 'id_order');
+      const nonSortedTable = await boOrdersPage.getAllRowsColumnContent(page, 'id_order');
       const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
 
-      await ordersPage.sortTable(page, 'id_order', 'desc');
+      await boOrdersPage.sortTable(page, 'id_order', 'desc');
 
-      sortedTable = await ordersPage.getAllRowsColumnContent(page, 'id_order');
+      sortedTable = await boOrdersPage.getAllRowsColumnContent(page, 'id_order');
       const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
       const expectedResult = await utilsCore.sortArrayNumber(nonSortedTableFloat);
@@ -207,9 +205,9 @@ describe('BO - Orders : Pagination of orders table', async () => {
     it('should filter by customer \'J.DOE\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer', baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', 'J. DOE');
+      await boOrdersPage.filterOrders(page, 'input', 'customer', 'J. DOE');
 
-      numberOfOrdersAfterFilter = await ordersPage.getNumberOfElementInGrid(page);
+      numberOfOrdersAfterFilter = await boOrdersPage.getNumberOfElementInGrid(page);
       expect(numberOfOrdersAfterFilter).to.be.at.most(numberOfOrders);
     });
 
@@ -217,7 +215,7 @@ describe('BO - Orders : Pagination of orders table', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'CheckFilterByCustomer', baseContext);
 
       for (let row = 1; row <= numberOfOrdersAfterFilter; row++) {
-        const textColumn = await ordersPage.getTextColumn(page, 'customer', row);
+        const textColumn = await boOrdersPage.getTextColumn(page, 'customer', row);
         expect(textColumn).to.equal('J. DOE');
       }
     });
@@ -225,7 +223,7 @@ describe('BO - Orders : Pagination of orders table', async () => {
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo10AfterFilter', baseContext);
 
-      const paginationNumber = await ordersPage.selectPaginationLimit(page, 10);
+      const paginationNumber = await boOrdersPage.selectPaginationLimit(page, 10);
       expect(paginationNumber, `Number of pages is not correct (page 1 / ${Math.ceil(numberOfOrders / 10)})`)
         .to.contains(`(page 1 / ${Math.ceil(numberOfOrders / 10)})`);
     });
@@ -234,7 +232,7 @@ describe('BO - Orders : Pagination of orders table', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkFilterInFirstPage', baseContext);
 
       for (let row = 1; row <= 10; row++) {
-        const textColumn = await ordersPage.getTextColumn(page, 'customer', row);
+        const textColumn = await boOrdersPage.getTextColumn(page, 'customer', row);
         expect(textColumn).to.equal('J. DOE');
       }
     });
@@ -242,7 +240,7 @@ describe('BO - Orders : Pagination of orders table', async () => {
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext3', baseContext);
 
-      const paginationNumber = await ordersPage.paginationNext(page);
+      const paginationNumber = await boOrdersPage.paginationNext(page);
       expect(paginationNumber, `Number of pages is not (page 2 / ${Math.ceil(numberOfOrders / 10)})`)
         .to.contains(`(page 2 / ${Math.ceil(numberOfOrders / 10)})`);
     });
@@ -250,10 +248,10 @@ describe('BO - Orders : Pagination of orders table', async () => {
     it('should check that the second page is filtered by Customer \'J.DOE\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkFilterInSecondPage', baseContext);
 
-      const numberOfOrdersInPage = await ordersPage.getNumberOfOrdersInPage(page);
+      const numberOfOrdersInPage = await boOrdersPage.getNumberOfOrdersInPage(page);
 
       for (let row = 1; row <= numberOfOrdersInPage; row++) {
-        const textColumn = await ordersPage.getTextColumn(page, 'customer', row);
+        const textColumn = await boOrdersPage.getTextColumn(page, 'customer', row);
         expect(textColumn).to.equal('J. DOE');
       }
     });
@@ -261,7 +259,7 @@ describe('BO - Orders : Pagination of orders table', async () => {
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
-      const numberOfOrdersAfterReset = await ordersPage.resetAndGetNumberOfLines(page);
+      const numberOfOrdersAfterReset = await boOrdersPage.resetAndGetNumberOfLines(page);
       expect(numberOfOrdersAfterReset).to.be.equal(numberOfOrders);
     });
   });

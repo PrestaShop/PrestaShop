@@ -1,15 +1,13 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import FO pages
-import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   FakerOrder,
   foHummingbirdCartPage,
   foHummingbirdCheckoutPage,
+  foHummingbirdCheckoutOrderConfirmationPage,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdProductPage,
@@ -107,8 +105,8 @@ function createOrderByCustomerTest(orderData: FakerOrder, baseContext: string = 
       await foHummingbirdCheckoutPage.choosePaymentAndOrder(page, orderData.paymentMethod.moduleName);
 
       // Check the confirmation message
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      const cardTitle = await foHummingbirdCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+      expect(cardTitle).to.contains(foHummingbirdCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
   });
 }
@@ -208,8 +206,8 @@ function createOrderSpecificProductTest(
       await foHummingbirdCheckoutPage.choosePaymentAndOrder(page, orderData.paymentMethod.moduleName);
 
       // Check the confirmation message
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      const cardTitle = await foHummingbirdCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+      expect(cardTitle).to.contains(foHummingbirdCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
   });
 }
@@ -281,10 +279,10 @@ function createOrderByGuestTest(orderData: FakerOrder, baseContext: string = 'co
 
       // Payment step - Choose payment step
       await foHummingbirdCheckoutPage.choosePaymentAndOrder(page, orderData.paymentMethod.moduleName);
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
+      const cardTitle = await foHummingbirdCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
 
       // Check the confirmation message
-      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      expect(cardTitle).to.contains(foHummingbirdCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
   });
 }

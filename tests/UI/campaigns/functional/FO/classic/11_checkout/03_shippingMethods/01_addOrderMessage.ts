@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 
@@ -12,6 +11,7 @@ import {
   dataPaymentMethods,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
@@ -145,8 +145,8 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
     await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
     // Check the confirmation message
-    const cardTitle: string = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-    expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+    const cardTitle: string = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+    expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
   });
 
   it('should go to order history and details page', async function () {

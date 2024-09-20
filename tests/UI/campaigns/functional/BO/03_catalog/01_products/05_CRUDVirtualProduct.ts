@@ -7,13 +7,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import createProductsPage from '@pages/BO/catalog/products/add';
-import ordersPage from '@pages/BO/orders';
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 
 import {
   boDashboardPage,
+  boOrdersPage,
   boProductsPage,
   dataCustomers,
   dataOrderStatuses,
@@ -21,6 +20,7 @@ import {
   FakerProduct,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicMyAccountPage,
   foClassicProductPage,
@@ -256,8 +256,8 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
         await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
         // Check the confirmation message
-        const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-        expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+        const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+        expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
       });
 
       it('should go back to BO', async function () {
@@ -279,22 +279,22 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
           boDashboardPage.ordersLink,
         );
 
-        const pageTitle = await ordersPage.getPageTitle(page);
-        expect(pageTitle).to.contains(ordersPage.pageTitle);
+        const pageTitle = await boOrdersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersPage.pageTitle);
       });
 
       it('should update order status', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-        const textResult = await ordersPage.setOrderStatus(page, 1, dataOrderStatuses.paymentAccepted);
-        expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
+        const textResult = await boOrdersPage.setOrderStatus(page, 1, dataOrderStatuses.paymentAccepted);
+        expect(textResult).to.equal(boOrdersPage.successfulUpdateMessage);
       });
 
       it('should view my shop', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFO1', baseContext);
 
         // Click on view my shop
-        page = await ordersPage.viewMyShop(page);
+        page = await boOrdersPage.viewMyShop(page);
 
         const isHomePage = await foClassicHomePage.isHomePage(page);
         expect(isHomePage, 'Home page is not displayed').eq(true);
@@ -360,8 +360,8 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
       // Go back to BO
       page = await foClassicProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should go to \'Catalog > Products\' page', async function () {

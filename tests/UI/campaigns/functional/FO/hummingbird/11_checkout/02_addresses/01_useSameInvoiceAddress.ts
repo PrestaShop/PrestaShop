@@ -4,9 +4,6 @@ import testContext from '@utils/testContext';
 // Import common tests
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
-// Import FO pages
-import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
-
 import {
   dataPaymentMethods,
   dataProducts,
@@ -14,6 +11,7 @@ import {
   FakerCustomer,
   foHummingbirdCartPage,
   foHummingbirdCheckoutPage,
+  foHummingbirdCheckoutOrderConfirmationPage,
   foHummingbirdHomePage,
   foHummingbirdProductPage,
   utilsPlaywright,
@@ -123,8 +121,8 @@ describe('FO - Checkout - Addresses: Use same invoice address', async () => {
       // Payment step - Choose payment step
       await foHummingbirdCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      const cardTitle = await foHummingbirdCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+      expect(cardTitle).to.contains(foHummingbirdCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
   });
 

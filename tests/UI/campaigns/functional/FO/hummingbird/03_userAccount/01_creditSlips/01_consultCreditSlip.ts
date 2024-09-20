@@ -12,9 +12,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 
 // Import pages
 // Import BO pages
-import ordersPage from '@pages/BO/orders';
-import viewOrderProductsBlockPage from '@pages/BO/orders/view/productsBlock';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
 import creditSlipPage from '@pages/FO/hummingbird/myAccount/creditSlips';
@@ -22,6 +19,9 @@ import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
 
 import {
   boDashboardPage,
+  boOrdersPage,
+  boOrdersViewBlockProductsPage,
+  boOrdersViewBlockTabListPage,
   dataOrderStatuses,
   dataPaymentMethods,
   dataProducts,
@@ -184,15 +184,15 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
           boDashboardPage.ordersLink,
         );
 
-        const pageTitle = await ordersPage.getPageTitle(page);
-        expect(pageTitle).to.contains(ordersPage.pageTitle);
+        const pageTitle = await boOrdersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersPage.pageTitle);
       });
 
       it('should go to the first order page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrderPage', baseContext);
 
         // View order
-        await ordersPage.goToOrder(page, 1);
+        await boOrdersPage.goToOrder(page, 1);
 
         const pageTitle = await viewOrderBasePage.getPageTitle(page);
         expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
@@ -217,8 +217,8 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
 
         await viewOrderBasePage.clickOnPartialRefund(page);
 
-        const textMessage = await viewOrderProductsBlockPage.addPartialRefundProduct(page, 1, 1);
-        expect(textMessage).to.contains(viewOrderProductsBlockPage.partialRefundValidationMessage);
+        const textMessage = await boOrdersViewBlockProductsPage.addPartialRefundProduct(page, 1, 1);
+        expect(textMessage).to.contains(boOrdersViewBlockProductsPage.partialRefundValidationMessage);
       });
 
       it('should check if the mail is in mailbox', async function () {
@@ -232,7 +232,7 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
         await testContext.addContextItem(this, 'testIdentifier', 'checkCreditSlipDocument', baseContext);
 
         // Get document name
-        const documentType = await orderPageTabListBlock.getDocumentType(page, 3);
+        const documentType = await boOrdersViewBlockTabListPage.getDocumentType(page, 3);
         expect(documentType).to.be.equal('Credit slip');
       });
 
@@ -248,11 +248,11 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
         await testContext.addContextItem(this, 'testIdentifier', 'getIdentifierDateIssued', baseContext);
 
         // Get Credit Slip ID
-        creditSlipID = await orderPageTabListBlock.getFileName(page, 3);
+        creditSlipID = await boOrdersViewBlockTabListPage.getFileName(page, 3);
         expect(creditSlipID).is.not.equal('');
 
         // Get Date Issued
-        dateIssued = await orderPageTabListBlock.getDocumentDate(page, 3);
+        dateIssued = await boOrdersViewBlockTabListPage.getDocumentDate(page, 3);
         expect(dateIssued).is.not.equal('');
       });
     });

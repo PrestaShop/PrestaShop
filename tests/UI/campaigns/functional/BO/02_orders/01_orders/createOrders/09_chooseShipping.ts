@@ -6,14 +6,14 @@ import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
-import ordersPage from '@pages/BO/orders';
 import addOrderPage from '@pages/BO/orders/add';
-import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 
 import {
   boDashboardPage,
+  boOrdersPage,
+  boOrdersViewBlockProductsPage,
+  boOrdersViewBlockTabListPage,
   dataCarriers,
   dataCustomers,
   dataOrderStatuses,
@@ -119,16 +119,16 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
         boDashboardPage.ordersParentLink,
         boDashboardPage.ordersLink,
       );
-      await ordersPage.closeSfToolBar(page);
+      await boOrdersPage.closeSfToolBar(page);
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should go to create order page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreateOrderPage', baseContext);
 
-      await ordersPage.goToCreateOrderPage(page);
+      await boOrdersPage.goToCreateOrderPage(page);
 
       const pageTitle = await addOrderPage.getPageTitle(page);
       expect(pageTitle).to.contains(addOrderPage.pageTitle);
@@ -246,14 +246,14 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
 
       await addOrderPage.setSummaryAndCreateOrder(page, paymentMethodModuleName, orderStatus);
 
-      const pageTitle = await orderPageProductsBlock.getPageTitle(page);
-      expect(pageTitle).to.contain(orderPageProductsBlock.pageTitle);
+      const pageTitle = await boOrdersViewBlockProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contain(boOrdersViewBlockProductsPage.pageTitle);
     });
 
     it('should check \'Recycled packaging\' and \'gift wrapping\' badges', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkBadges', baseContext);
 
-      const recyclePackagingBadge = await orderPageTabListBlock.getSuccessBadge(page, 2);
+      const recyclePackagingBadge = await boOrdersViewBlockTabListPage.getSuccessBadge(page, 2);
       expect(recyclePackagingBadge).to.contain('Recycled packaging')
         .and.to.contain('Gift wrapping');
     });
@@ -261,7 +261,7 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
     it('should check the gift message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkGiftMessage', baseContext);
 
-      const giftMessageText = await orderPageTabListBlock.getGiftMessage(page);
+      const giftMessageText = await boOrdersViewBlockTabListPage.getGiftMessage(page);
       expect(giftMessageText).to.be.equal(giftMessage);
     });
   });

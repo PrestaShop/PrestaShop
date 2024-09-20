@@ -8,10 +8,10 @@ import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import pages
 import outstandingPage from '@pages/BO/customers/outstanding';
-import ordersPage from '@pages/BO/orders';
 
 import {
   boDashboardPage,
+  boOrdersPage,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
@@ -87,30 +87,30 @@ describe('BO - Customers - Outstanding : View invoice', async () => {
         boDashboardPage.ordersLink,
       );
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should reset filter and get the last reference', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterOrder', baseContext);
 
-      await ordersPage.resetFilter(page);
+      await boOrdersPage.resetFilter(page);
 
-      orderReference = await ordersPage.getTextColumn(page, 'reference', 1);
+      orderReference = await boOrdersPage.getTextColumn(page, 'reference', 1);
       expect(orderReference).to.not.equal(null);
     });
 
     it('should update order status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const textResult = await ordersPage.setOrderStatus(page, 1, dataOrderStatuses.paymentAccepted);
-      expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
+      const textResult = await boOrdersPage.setOrderStatus(page, 1, dataOrderStatuses.paymentAccepted);
+      expect(textResult).to.equal(boOrdersPage.successfulUpdateMessage);
     });
 
     it('should check that the status is updated successfully', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkStatusBO', baseContext);
 
-      const orderStatus = await ordersPage.getTextColumn(page, 'osname', 1);
+      const orderStatus = await boOrdersPage.getTextColumn(page, 'osname', 1);
       expect(orderStatus, 'Order status was not updated').to.equal(dataOrderStatuses.paymentAccepted.name);
     });
   });

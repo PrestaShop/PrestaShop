@@ -7,19 +7,18 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
-import ordersPage from '@pages/BO/orders';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
-import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
-// Import FO pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
   boDashboardPage,
+  boOrdersPage,
+  boOrdersViewBlockProductsPage,
+  boOrdersViewBlockTabListPage,
   dataCustomers,
   dataPaymentMethods,
   dataTaxes,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicProductPage,
@@ -268,15 +267,15 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
 
           await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
-          const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-          expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+          const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+          expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
         });
 
         if (test.args.giftWrappingPrice !== 0) {
           it('should check the gift wrapping price', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkGiftWrappingPrice${index}`, baseContext);
 
-            const giftWrappingValue = await orderConfirmationPage.getGiftWrappingValue(page);
+            const giftWrappingValue = await foClassicCheckoutOrderConfirmationPage.getGiftWrappingValue(page);
             expect(giftWrappingValue).to.equal(
               test.args.giftWrappingPrice * (test.args.isGiftWrappingTax === 'None' ? 1 : (1 + test.args.taxValue)),
             );
@@ -308,60 +307,60 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           await testContext.addContextItem(this, 'testIdentifier', `goToOrdersPage${index}`, baseContext);
 
           await boDashboardPage.goToSubMenu(page, boDashboardPage.ordersParentLink, boDashboardPage.ordersLink);
-          await ordersPage.closeSfToolBar(page);
+          await boOrdersPage.closeSfToolBar(page);
 
-          const pageTitle = await ordersPage.getPageTitle(page);
-          expect(pageTitle).to.contains(ordersPage.pageTitle);
+          const pageTitle = await boOrdersPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boOrdersPage.pageTitle);
         });
 
         it('should reset all filters', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `resetOrderTableFilters${index}`, baseContext);
 
-          const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+          const numberOfOrders = await boOrdersPage.resetAndGetNumberOfLines(page);
           expect(numberOfOrders).to.be.above(5);
         });
 
         it('should view the first order in the list', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `viewFirstOrder${index}`, baseContext);
 
-          await ordersPage.goToOrder(page, 1);
+          await boOrdersPage.goToOrder(page, 1);
 
-          const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-          expect(pageTitle, 'View order page is not visible!').to.contains(orderPageTabListBlock.pageTitle);
+          const pageTitle = await boOrdersViewBlockTabListPage.getPageTitle(page);
+          expect(pageTitle, 'View order page is not visible!').to.contains(boOrdersViewBlockTabListPage.pageTitle);
         });
 
         if (test.args.isGiftWrapping && !test.args.isRecycledPackaging) {
           it('should check \'gift wrapping\' badge on status tab', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkGiftOnStatusTab${index}`, baseContext);
 
-            const isGiftWrapping = await orderPageTabListBlock.getSuccessBadge(page, 1);
+            const isGiftWrapping = await boOrdersViewBlockTabListPage.getSuccessBadge(page, 1);
             expect(isGiftWrapping).to.be.equal('Gift wrapping');
           });
 
           it('should check \'gift wrapping\' badge on documents tab', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkGiftOnDocTab${index}`, baseContext);
 
-            const isTabOpened = await orderPageTabListBlock.goToDocumentsTab(page);
+            const isTabOpened = await boOrdersViewBlockTabListPage.goToDocumentsTab(page);
             expect(isTabOpened, 'Documents tab is not opened!').to.eq(true);
 
-            const isGiftWrapping = await orderPageTabListBlock.getSuccessBadge(page, 1);
+            const isGiftWrapping = await boOrdersViewBlockTabListPage.getSuccessBadge(page, 1);
             expect(isGiftWrapping).to.be.equal('Gift wrapping');
           });
 
           it('should check \'gift wrapping\' badge on carriers tab', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkGiftOnCarriersTab${index}`, baseContext);
 
-            const isTabOpened = await orderPageTabListBlock.goToCarriersTab(page);
+            const isTabOpened = await boOrdersViewBlockTabListPage.goToCarriersTab(page);
             expect(isTabOpened, 'Carriers tab is not opened!').to.eq(true);
 
-            const isGiftWrapping = await orderPageTabListBlock.getSuccessBadge(page, 1);
+            const isGiftWrapping = await boOrdersViewBlockTabListPage.getSuccessBadge(page, 1);
             expect(isGiftWrapping).to.be.equal('Gift wrapping');
           });
 
           it('should check the gift message', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkGiftMessage${index}`, baseContext);
 
-            const giftMessageText = await orderPageTabListBlock.getGiftMessage(page);
+            const giftMessageText = await boOrdersViewBlockTabListPage.getGiftMessage(page);
             expect(giftMessageText).to.be.equal('This is your gift');
           });
         }
@@ -370,7 +369,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           it('should check the \'Wrapping\' amount on products block', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkWrappingAmount${index}`, baseContext);
 
-            const wrappingAmount = await orderPageProductsBlock.getOrderWrappingTotal(page);
+            const wrappingAmount = await boOrdersViewBlockProductsPage.getOrderWrappingTotal(page);
             expect(wrappingAmount).to.be.equal(
               test.args.giftWrappingPrice * (test.args.isGiftWrappingTax === 'None' ? 1 : (1 + test.args.taxValue)));
           });
@@ -380,7 +379,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           it('should check \'Recycled packaging\' and \'gift wrapping\' badges on status tab', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkBadgesOnStatusTab${index}`, baseContext);
 
-            const isRecycledPackaging = await orderPageTabListBlock.getSuccessBadge(page, 2);
+            const isRecycledPackaging = await boOrdersViewBlockTabListPage.getSuccessBadge(page, 2);
             expect(isRecycledPackaging).to.contain('Recycled packaging')
               .and.to.contain('Gift wrapping');
           });
@@ -388,10 +387,10 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           it('should check \'Recycled packaging\' and \'gift wrapping\' badges on documents tab', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkBadgesOnDocTab${index}`, baseContext);
 
-            const isTabOpened = await orderPageTabListBlock.goToDocumentsTab(page);
+            const isTabOpened = await boOrdersViewBlockTabListPage.goToDocumentsTab(page);
             expect(isTabOpened, 'Documents tab is not opened!').to.eq(true);
 
-            const isRecycledPackaging = await orderPageTabListBlock.getSuccessBadge(page, 2);
+            const isRecycledPackaging = await boOrdersViewBlockTabListPage.getSuccessBadge(page, 2);
             expect(isRecycledPackaging).to.contain('Recycled packaging')
               .and.to.contain('Gift wrapping');
           });
@@ -399,10 +398,10 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           it('should check \'Recycled packaging\' and \'gift wrapping\' badges on carriers tab', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkBadgesOnCarriersTab${index}`, baseContext);
 
-            const isTabOpened = await orderPageTabListBlock.goToCarriersTab(page);
+            const isTabOpened = await boOrdersViewBlockTabListPage.goToCarriersTab(page);
             expect(isTabOpened, 'Carriers tab is not opened!').to.eq(true);
 
-            const isRecycledPackaging = await orderPageTabListBlock.getSuccessBadge(page, 2);
+            const isRecycledPackaging = await boOrdersViewBlockTabListPage.getSuccessBadge(page, 2);
             expect(isRecycledPackaging).to.be.contain('Recycled packaging')
               .and.to.contain('Gift wrapping');
           });

@@ -4,13 +4,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import stocksPage from '@pages/BO/catalog/stocks';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boStockPage,
   dataProducts,
   dataSuppliers,
   utilsPlaywright,
@@ -46,16 +44,16 @@ describe('BO - Catalog - Stocks : Simple filter stocks', async () => {
       boDashboardPage.catalogParentLink,
       boDashboardPage.stocksLink,
     );
-    await stocksPage.closeSfToolBar(page);
+    await boStockPage.closeSfToolBar(page);
 
-    const pageTitle = await stocksPage.getPageTitle(page);
-    expect(pageTitle).to.contains(stocksPage.pageTitle);
+    const pageTitle = await boStockPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boStockPage.pageTitle);
   });
 
   it('should get number of products in list', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProductsInList', baseContext);
 
-    numberOfProducts = await stocksPage.getTotalNumberOfProducts(page);
+    numberOfProducts = await boStockPage.getTotalNumberOfProducts(page);
     expect(numberOfProducts).to.be.above(0);
   });
 
@@ -69,13 +67,13 @@ describe('BO - Catalog - Stocks : Simple filter stocks', async () => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        await stocksPage.simpleFilter(page, test.args.filterValue);
+        await boStockPage.simpleFilter(page, test.args.filterValue);
 
-        const numberOfProductsAfterFilter = await stocksPage.getNumberOfProductsFromList(page);
+        const numberOfProductsAfterFilter = await boStockPage.getNumberOfProductsFromList(page);
         expect(numberOfProductsAfterFilter).to.be.at.most(numberOfProducts);
 
         for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
-          const textColumn = await stocksPage.getTextColumnFromTableStocks(page, i, test.args.filterBy);
+          const textColumn = await boStockPage.getTextColumnFromTableStocks(page, i, test.args.filterBy);
           expect(textColumn).to.contains(test.args.filterValue);
         }
       });
@@ -83,7 +81,7 @@ describe('BO - Catalog - Stocks : Simple filter stocks', async () => {
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfProductsAfterReset = await stocksPage.resetFilter(page);
+        const numberOfProductsAfterReset = await boStockPage.resetFilter(page);
         expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
       });
     });

@@ -7,11 +7,11 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByGuestTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
-import ordersPage from '@pages/BO/orders';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 
 import {
   boDashboardPage,
+  boOrdersPage,
   dataPaymentMethods,
   dataProducts,
   FakerAddress,
@@ -95,21 +95,21 @@ describe('BO - Orders : Bulk open on new tab', async () => {
         boDashboardPage.ordersLink,
       );
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
 
-      const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+      const numberOfOrders = await boOrdersPage.resetAndGetNumberOfLines(page);
       expect(numberOfOrders).to.be.above(0);
     });
 
     it('should click on \'Open in new tabs\' with bulk actions', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkOpenInNewTabs', baseContext);
 
-      page = await ordersPage.bulkOpenInNewTabs(page, false, [1, 2]);
+      page = await boOrdersPage.bulkOpenInNewTabs(page, false, [1, 2]);
 
       const pageTitle = await orderPageCustomerBlock.getPageTitle(page);
       expect(pageTitle).to.contains(orderPageCustomerBlock.pageTitle);

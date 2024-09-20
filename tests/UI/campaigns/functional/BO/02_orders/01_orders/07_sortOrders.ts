@@ -4,13 +4,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import ordersPage from '@pages/BO/orders';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boOrdersPage,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -47,10 +45,10 @@ describe('BO - Orders : Sort orders', async () => {
       boDashboardPage.ordersParentLink,
       boDashboardPage.ordersLink,
     );
-    await ordersPage.closeSfToolBar(page);
+    await boOrdersPage.closeSfToolBar(page);
 
-    const pageTitle = await ordersPage.getPageTitle(page);
-    expect(pageTitle).to.contains(ordersPage.pageTitle);
+    const pageTitle = await boOrdersPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boOrdersPage.pageTitle);
   });
 
   const tests = [
@@ -102,10 +100,10 @@ describe('BO - Orders : Sort orders', async () => {
     it(`should sort by ${test.args.sortBy} ${test.args.sortDirection}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-      const nonSortedTable = await ordersPage.getAllRowsColumnContent(page, test.args.sortBy);
+      const nonSortedTable = await boOrdersPage.getAllRowsColumnContent(page, test.args.sortBy);
 
-      await ordersPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
-      const sortedTable = await ordersPage.getAllRowsColumnContent(page, test.args.sortBy);
+      await boOrdersPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+      const sortedTable = await boOrdersPage.getAllRowsColumnContent(page, test.args.sortBy);
 
       if (test.args.isFloat) {
         const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));

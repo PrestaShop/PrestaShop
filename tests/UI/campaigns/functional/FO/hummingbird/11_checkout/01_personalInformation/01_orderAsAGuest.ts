@@ -4,15 +4,13 @@ import testContext from '@utils/testContext';
 // Import common tests
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
-// Import pages
-import orderConfirmationPage from '@pages/FO/hummingbird/checkout/orderConfirmation';
-
 import {
   dataPaymentMethods,
   FakerAddress,
   FakerCustomer,
   foHummingbirdCartPage,
   foHummingbirdCheckoutPage,
+  foHummingbirdCheckoutOrderConfirmationPage,
   foHummingbirdHomePage,
   foHummingbirdProductPage,
   utilsPlaywright,
@@ -119,10 +117,10 @@ describe('FO - Checkout - Personal information : Order as a guest', async () => 
 
       // Payment step - Choose payment step
       await foHummingbirdCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
+      const cardTitle = await foHummingbirdCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
 
       // Check the confirmation message
-      expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      expect(cardTitle).to.contains(foHummingbirdCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
   });
 

@@ -7,8 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import addProductPage from '@pages/BO/catalog/products/add';
-// Import FO pages
-import {orderConfirmationPage} from '@pages/FO/classic/checkout/orderConfirmation';
 
 import {
   boDashboardPage,
@@ -18,6 +16,7 @@ import {
   FakerProduct,
   foClassicCartPage,
   foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicProductPage,
@@ -244,16 +243,16 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
           await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
           // Check the confirmation message
-          const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-          expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+          const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+          expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
         });
 
         it('should sign out from FO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `sighOutFO${index}`, baseContext);
 
-          await orderConfirmationPage.logout(page);
+          await foClassicCheckoutOrderConfirmationPage.logout(page);
 
-          const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
+          const isCustomerConnected = await foClassicCheckoutOrderConfirmationPage.isCustomerConnected(page);
           expect(isCustomerConnected, 'Customer is connected').to.eq(false);
         });
 
