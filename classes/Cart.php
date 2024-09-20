@@ -480,8 +480,10 @@ class CartCore extends ObjectModel
                 WHERE `id_cart` = ' . (int) $this->id . '
                 ' . ($filter == CartRule::FILTER_ACTION_SHIPPING ? 'AND free_shipping = 1' : '') . '
                 ' . ($filter == CartRule::FILTER_ACTION_GIFT ? 'AND gift_product != 0' : '') . '
-                ' . ($filter == CartRule::FILTER_ACTION_REDUCTION ? 'AND (reduction_percent != 0 OR reduction_amount != 0)' : '')
-                . ' ORDER by cr.priority ASC, cr.gift_product DESC'
+                ' . ($filter == CartRule::FILTER_ACTION_REDUCTION ? 'AND (reduction_percent != 0 OR reduction_amount != 0)' : '') . '
+                AND `active` = 1
+                AND NOW() BETWEEN `date_from` AND `date_to`
+                ORDER by cr.priority ASC, cr.gift_product DESC'
             );
             Cache::store($cache_key, $result);
         } else {
