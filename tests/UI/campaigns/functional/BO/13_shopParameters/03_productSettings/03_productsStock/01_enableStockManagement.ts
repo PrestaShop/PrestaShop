@@ -6,7 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import addProductPage from '@pages/BO/catalog/products/add';
-import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -14,6 +13,7 @@ import {
   boDashboardPage,
   boProductsPage,
   boProductsCreateTabStocksPage,
+  boProductSettingsPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -53,24 +53,24 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable stock managem
           boDashboardPage.productSettingsLink,
         );
 
-        const pageTitle = await productSettingsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+        const pageTitle = await boProductSettingsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
       });
 
       it(`should ${test.args.action} stock management`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}StockManagement`, baseContext);
 
-        const result = await productSettingsPage.setEnableStockManagementStatus(page, test.args.enable);
-        expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+        const result = await boProductSettingsPage.setEnableStockManagementStatus(page, test.args.enable);
+        expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
       });
 
       it('should go to \'Catalog > Products\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToProductsPage${index}`, baseContext);
 
-        await productSettingsPage.goToSubMenu(
+        await boProductSettingsPage.goToSubMenu(
           page,
-          productSettingsPage.catalogParentLink,
-          productSettingsPage.productsLink,
+          boProductSettingsPage.catalogParentLink,
+          boProductSettingsPage.productsLink,
         );
         await boProductsPage.closeSfToolBar(page);
 

@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import addProductPage from '@pages/BO/catalog/products/add';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
@@ -14,6 +13,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boProductsPage,
+  boProductSettingsPage,
   FakerProduct,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -63,26 +63,26 @@ describe('BO - Shop Parameters - Product Settings : Update max size of short des
           boDashboardPage.shopParametersParentLink,
           boDashboardPage.productSettingsLink,
         );
-        await productSettingsPage.closeSfToolBar(page);
+        await boProductSettingsPage.closeSfToolBar(page);
 
-        const pageTitle = await productSettingsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+        const pageTitle = await boProductSettingsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
       });
 
       it(`should update max size of short description to ${test.args.descriptionSize}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `updateMaxSizeSummaryValue${index}`, baseContext);
 
-        const result = await productSettingsPage.UpdateMaxSizeOfSummary(page, test.args.descriptionSize);
-        expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+        const result = await boProductSettingsPage.setMaxSizeOfSummaryValue(page, test.args.descriptionSize);
+        expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
       });
 
       it('should go to \'Catalog > Products\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToCatalogProductsPage${index}`, baseContext);
 
-        await productSettingsPage.goToSubMenu(
+        await boProductSettingsPage.goToSubMenu(
           page,
-          productSettingsPage.catalogParentLink,
-          productSettingsPage.productsLink,
+          boProductSettingsPage.catalogParentLink,
+          boProductSettingsPage.productsLink,
         );
 
         const pageTitle = await boProductsPage.getPageTitle(page);

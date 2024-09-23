@@ -8,7 +8,6 @@ import {deleteProductTest} from '@commonTests/BO/catalog/product';
 // Import pages
 import addProductPage from '@pages/BO/catalog/products/add';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
-import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -16,6 +15,7 @@ import {
   boDashboardPage,
   boProductsPage,
   boProductsCreateTabStocksPage,
+  boProductSettingsPage,
   dataProducts,
   FakerProduct,
   foClassicHomePage,
@@ -146,15 +146,15 @@ describe('FO - Navigation and display : Display tags', async () => {
         boDashboardPage.productSettingsLink,
       );
 
-      const pageTitle = await productSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      const pageTitle = await boProductSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
     });
 
     it('should change the number of days to 0', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeNumberOfDays0', baseContext);
 
-      const result = await productSettingsPage.updateNumberOfDays(page, 0);
-      expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      const result = await boProductSettingsPage.updateNumberOfDays(page, 0);
+      expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
     });
   });
 
@@ -396,15 +396,15 @@ describe('FO - Navigation and display : Display tags', async () => {
         boDashboardPage.productSettingsLink,
       );
 
-      const pageTitle = await productSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      const pageTitle = await boProductSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
     });
 
     it('should change the number of days to 12', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeNumberOfDays', baseContext);
 
-      const result = await productSettingsPage.updateNumberOfDays(page, 12);
-      expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      const result = await boProductSettingsPage.updateNumberOfDays(page, 12);
+      expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
     });
   });
 

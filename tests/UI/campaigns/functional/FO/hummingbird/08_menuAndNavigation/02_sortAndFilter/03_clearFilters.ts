@@ -5,14 +5,12 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
-// Import BO pages
-import productSettingsPage from '@pages/BO/shopParameters/productSettings';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boProductsPage,
+  boProductSettingsPage,
   foHummingbirdCategoryPage,
   foHummingbirdHomePage,
   utilsPlaywright,
@@ -83,7 +81,7 @@ describe('FO - Menu and navigation : Clear filters', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
       // Click on view my shop
-      page = await productSettingsPage.viewMyShop(page);
+      page = await boProductSettingsPage.viewMyShop(page);
       await foHummingbirdHomePage.changeLanguage(page, 'en');
 
       const result = await foHummingbirdHomePage.isHomePage(page);

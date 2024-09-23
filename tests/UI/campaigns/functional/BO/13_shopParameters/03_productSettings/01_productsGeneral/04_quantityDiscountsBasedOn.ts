@@ -9,13 +9,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 import addProductPage from '@pages/BO/catalog/products/add';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
-import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boProductsPage,
+  boProductSettingsPage,
   FakerProduct,
   foClassicCartPage,
   foClassicProductPage,
@@ -106,26 +106,26 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
         boDashboardPage.shopParametersParentLink,
         boDashboardPage.productSettingsLink,
       );
-      await productSettingsPage.closeSfToolBar(page);
+      await boProductSettingsPage.closeSfToolBar(page);
 
-      const pageTitle = await productSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      const pageTitle = await boProductSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
     });
 
     it('should choose quantity discounts based on \'Products\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseQuantityDiscountsBasedOnProducts', baseContext);
 
-      const result = await productSettingsPage.chooseQuantityDiscountsBasedOn(page, 'Products');
-      expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      const result = await boProductSettingsPage.chooseQuantityDiscountsBasedOn(page, 'Products');
+      expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
     });
 
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-      await productSettingsPage.goToSubMenu(
+      await boProductSettingsPage.goToSubMenu(
         page,
-        productSettingsPage.catalogParentLink,
-        productSettingsPage.productsLink,
+        boProductSettingsPage.catalogParentLink,
+        boProductSettingsPage.productsLink,
       );
       await boProductsPage.closeSfToolBar(page);
 
@@ -218,21 +218,21 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
         addProductPage.productSettingsLink,
       );
 
-      const pageTitle = await productSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      const pageTitle = await boProductSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
     });
 
     it('should choose quantity discounts based on \'Combinations\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseQuantityDiscountsBasedOnCombinations', baseContext);
 
-      const result = await productSettingsPage.chooseQuantityDiscountsBasedOn(page, 'Combinations');
-      expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      const result = await boProductSettingsPage.chooseQuantityDiscountsBasedOn(page, 'Combinations');
+      expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
     });
 
     it('should view my shop and check ATI price in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'ViewMyShopAndCheckPriceATI', baseContext);
 
-      page = await productSettingsPage.viewMyShop(page);
+      page = await boProductSettingsPage.viewMyShop(page);
       await foClassicProductPage.goToCartPage(page);
 
       const priceATI = await foClassicCartPage.getATIPrice(page);
@@ -244,17 +244,17 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
 
       page = await foClassicCartPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await productSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      const pageTitle = await boProductSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
     });
 
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageToDeleteProduct', baseContext);
 
-      await productSettingsPage.goToSubMenu(
+      await boProductSettingsPage.goToSubMenu(
         page,
-        productSettingsPage.catalogParentLink,
-        productSettingsPage.productsLink,
+        boProductSettingsPage.catalogParentLink,
+        boProductSettingsPage.productsLink,
       );
 
       const pageTitle = await boProductsPage.getPageTitle(page);

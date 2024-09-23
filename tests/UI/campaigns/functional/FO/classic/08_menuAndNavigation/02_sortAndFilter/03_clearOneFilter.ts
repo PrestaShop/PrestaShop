@@ -4,14 +4,12 @@ import testContext from '@utils/testContext';
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import BO pages
-import productSettingsPage from '@pages/BO/shopParameters/productSettings';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boProductsPage,
+  boProductSettingsPage,
   foClassicHomePage,
   foClassicCategoryPage,
   utilsPlaywright,
@@ -79,7 +77,7 @@ describe('FO - Menu and navigation : Clear one filter', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
       // Click on view my shop
-      page = await productSettingsPage.viewMyShop(page);
+      page = await boProductSettingsPage.viewMyShop(page);
       await foClassicHomePage.changeLanguage(page, 'en');
 
       const result = await foClassicHomePage.isHomePage(page);

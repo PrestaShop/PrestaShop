@@ -8,13 +8,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import addProductPage from '@pages/BO/catalog/products/add';
 import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
-import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boProductsPage,
+  boProductSettingsPage,
   FakerProduct,
   foClassicHomePage,
   foClassicProductPage,
@@ -132,8 +132,8 @@ describe('BO - Shop Parameters - Product Settings : Display unavailable product 
         addProductPage.productSettingsLink,
       );
 
-      const pageTitle = await productSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      const pageTitle = await boProductSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
     });
 
     const tests = [
@@ -149,14 +149,14 @@ describe('BO - Shop Parameters - Product Settings : Display unavailable product 
           baseContext,
         );
 
-        const result = await productSettingsPage.setDisplayUnavailableProductAttributesStatus(page, test.args.enable);
-        expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+        const result = await boProductSettingsPage.setDisplayUnavailableProductAttributesStatus(page, test.args.enable);
+        expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
       });
 
       it('should view my shop', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
-        page = await productSettingsPage.viewMyShop(page);
+        page = await boProductSettingsPage.viewMyShop(page);
         await foClassicHomePage.changeLanguage(page, 'en');
 
         const isHomePage = await foClassicHomePage.isHomePage(page);
@@ -194,18 +194,18 @@ describe('BO - Shop Parameters - Product Settings : Display unavailable product 
 
         page = await foClassicProductPage.closePage(browserContext, page, 0);
 
-        const pageTitle = await productSettingsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+        const pageTitle = await boProductSettingsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
       });
     });
 
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageToDeleteProduct', baseContext);
 
-      await productSettingsPage.goToSubMenu(
+      await boProductSettingsPage.goToSubMenu(
         page,
-        productSettingsPage.catalogParentLink,
-        productSettingsPage.productsLink,
+        boProductSettingsPage.catalogParentLink,
+        boProductSettingsPage.productsLink,
       );
 
       const pageTitle = await boProductsPage.getPageTitle(page);

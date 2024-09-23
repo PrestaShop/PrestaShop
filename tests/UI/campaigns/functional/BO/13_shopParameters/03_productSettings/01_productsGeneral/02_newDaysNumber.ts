@@ -4,14 +4,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-// Import BO pages
-import productSettingsPage from '@pages/BO/shopParameters/productSettings';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boProductSettingsPage,
   foClassicHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -51,10 +48,10 @@ describe('BO - Shop Parameters - Product Settings : Update Number of days for wh
       boDashboardPage.shopParametersParentLink,
       boDashboardPage.productSettingsLink,
     );
-    await productSettingsPage.closeSfToolBar(page);
+    await boProductSettingsPage.closeSfToolBar(page);
 
-    const pageTitle = await productSettingsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+    const pageTitle = await boProductSettingsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
   });
 
   const tests = [
@@ -66,14 +63,14 @@ describe('BO - Shop Parameters - Product Settings : Update Number of days for wh
     it(`should update Number of days to ${test.args.value}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `updateNumberOfDaysTo${test.args.value}`, baseContext);
 
-      const result = await productSettingsPage.updateNumberOfDays(page, test.args.value);
-      expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      const result = await boProductSettingsPage.updateNumberOfDays(page, test.args.value);
+      expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
     });
 
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${test.args.state}`, baseContext);
 
-      page = await productSettingsPage.viewMyShop(page);
+      page = await boProductSettingsPage.viewMyShop(page);
       await foClassicHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foClassicHomePage.isHomePage(page);
@@ -92,8 +89,8 @@ describe('BO - Shop Parameters - Product Settings : Update Number of days for wh
 
       page = await foClassicHomePage.closePage(browserContext, page, 0);
 
-      const pageTitle = await productSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      const pageTitle = await boProductSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
     });
   });
 });

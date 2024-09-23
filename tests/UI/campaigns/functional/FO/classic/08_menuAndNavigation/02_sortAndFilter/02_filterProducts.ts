@@ -4,14 +4,12 @@ import testContext from '@utils/testContext';
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import BO pages
-import productSettingsPage from '@pages/BO/shopParameters/productSettings';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boProductsPage,
+  boProductSettingsPage,
   foClassicHomePage,
   foClassicCategoryPage,
   utilsPlaywright,
@@ -86,15 +84,15 @@ describe('FO - Menu and navigation : Filter products', async () => {
         boDashboardPage.productSettingsLink,
       );
 
-      const pageTitle = await productSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      const pageTitle = await boProductSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
     });
 
     it('should change the value of products per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeProductPerPage', baseContext);
 
-      const result = await productSettingsPage.setProductsDisplayedPerPage(page, numberOfActiveProducts);
-      expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      const result = await boProductSettingsPage.setProductsDisplayedPerPage(page, numberOfActiveProducts);
+      expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
     });
   });
 
@@ -104,7 +102,7 @@ describe('FO - Menu and navigation : Filter products', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
       // Click on view my shop
-      page = await productSettingsPage.viewMyShop(page);
+      page = await boProductSettingsPage.viewMyShop(page);
       await foClassicHomePage.changeLanguage(page, 'en');
 
       const result = await foClassicHomePage.isHomePage(page);
@@ -473,15 +471,15 @@ describe('FO - Menu and navigation : Filter products', async () => {
 
       page = await foClassicCategoryPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await productSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      const pageTitle = await boProductSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
     });
 
     it('should change the value of products per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'ResetProductPerPage', baseContext);
 
-      const result = await productSettingsPage.setProductsDisplayedPerPage(page, 12);
-      expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      const result = await boProductSettingsPage.setProductsDisplayedPerPage(page, 12);
+      expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
     });
   });
 });
