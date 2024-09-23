@@ -89,6 +89,7 @@ class LanguageContextBuilderTest extends TestCase
         $builder->setLanguageId($objectModelLanguage->getId());
 
         $contextManagerMock->expects(static::once())->method('setLanguage')->with($objectModelLanguage);
+        $contextManagerMock->expects(static::once())->method('setCurrentLocale')->with($this->mockObjectModelLanguageRepository($objectModelLanguage));
 
         $builder->buildLegacyContext();
     }
