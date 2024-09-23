@@ -433,6 +433,7 @@ GitHub contributors:
 - Jónatan Núñez
 - Jonathan Danse
 - Jonathan Lelievre
+- Jonathan Renard
 - Jonathan SAHM
 - Jonathan Vollebregt
 - jordiweblidera
@@ -508,6 +509,7 @@ GitHub contributors:
 - Lucas CERDAN
 - Lucas Rolff
 - LucasC
+- Ludovic Cardinale
 - Ludovic CHEVRAUX
 - Lunyyx
 - Luis David de la Fuente
@@ -572,6 +574,7 @@ GitHub contributors:
 - MatthieuB
 - mauglee
 - MaX3315
+- Max Azan
 - Maxence
 - Maxence de Flotte
 - Maxim Krizhanovsky
@@ -623,6 +626,7 @@ GitHub contributors:
 - moncef102
 - montes
 - Morgan Pichat
+- Mouleeswaran Ganapathi
 - mplh
 - mRaigne
 - mrAKAR
