@@ -27,87 +27,74 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Controller responsible of "Configure > Shop Parameters > Order Settings" page.
+ * Controller responsible for "Configure > Shop Parameters > Order Settings" page.
  */
-class OrderPreferencesController extends FrameworkBundleAdminController
+class OrderPreferencesController extends PrestaShopAdminController
 {
-    /**
-     * @param Request $request
-     *
-     * @return Response
-     */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
-    public function indexAction(Request $request)
-    {
+    public function indexAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.admin.order_preferences.general.form_handler')]
+        FormHandlerInterface $generalFormHandler,
+        #[Autowire(service: 'prestashop.admin.order_preferences.gift_options.form_handler')]
+        FormHandlerInterface $giftOptionsFormHandler,
+    ) {
         $legacyController = $request->attributes->get('_legacy_controller');
 
-        $generalForm = $this->getGeneralFormHandler()->getForm();
-        $giftOptionsForm = $this->getGiftOptionsFormHandler()->getForm();
+        $generalForm = $generalFormHandler->getForm();
+        $giftOptionsForm = $giftOptionsFormHandler->getForm();
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/OrderPreferences/order_preferences.html.twig', [
-            'layoutTitle' => $this->trans('Order settings', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Order settings', [], 'Admin.Navigation.Menu'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'generalForm' => $generalForm->createView(),
             'giftOptionsForm' => $giftOptionsForm->createView(),
-            'isAtcpShipWrapEnabled' => $this->getConfiguration()->getBoolean('PS_ATCP_SHIPWRAP'),
+            'isAtcpShipWrapEnabled' => (bool) $this->getConfiguration()->get('PS_ATCP_SHIPWRAP'),
         ]);
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.', redirectRoute: 'admin_order_preferences')]
-    public function processGeneralFormAction(Request $request)
-    {
+    public function processGeneralFormAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.admin.order_preferences.general.form_handler')]
+        FormHandlerInterface $generalFormHandler,
+    ): RedirectResponse {
         return $this->processForm(
             $request,
-            $this->getGeneralFormHandler(),
+            $generalFormHandler,
             'General'
         );
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.', redirectRoute: 'admin_order_preferences')]
-    public function processGiftOptionsFormAction(Request $request)
-    {
+    public function processGiftOptionsFormAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.admin.order_preferences.gift_options.form_handler')]
+        FormHandlerInterface $giftOptionsFormHandler,
+    ): RedirectResponse {
         return $this->processForm(
             $request,
-            $this->getGiftOptionsFormHandler(),
+            $giftOptionsFormHandler,
             'GiftOptions'
         );
     }
 
-    /**
-     * Process the Order Preferences configuration form.
-     *
-     * @param Request $request
-     * @param FormHandlerInterface $formHandler
-     * @param string $hookName
-     *
-     * @return RedirectResponse
-     */
-    protected function processForm(Request $request, FormHandlerInterface $formHandler, string $hookName)
+    protected function processForm(Request $request, FormHandlerInterface $formHandler, string $hookName): RedirectResponse
     {
-        $this->dispatchHook(
+        $this->dispatchHookWithParameters(
             'actionAdminShopParametersOrderPreferencesControllerPostProcess' . $hookName . 'Before',
             ['controller' => $this]
         );
 
-        $this->dispatchHook('actionAdminShopParametersOrderPreferencesControllerPostProcessBefore', ['controller' => $this]);
+        $this->dispatchHookWithParameters('actionAdminShopParametersOrderPreferencesControllerPostProcessBefore', ['controller' => $this]);
 
         $form = $formHandler->getForm();
         $form->handleRequest($request);
@@ -117,28 +104,12 @@ class OrderPreferencesController extends FrameworkBundleAdminController
             $saveErrors = $formHandler->save($data);
 
             if (0 === count($saveErrors)) {
-                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Update successful', [], 'Admin.Notifications.Success'));
             } else {
-                $this->flashErrors($saveErrors);
+                $this->addFlashErrors($saveErrors);
             }
         }
 
         return $this->redirectToRoute('admin_order_preferences');
-    }
-
-    /**
-     * @return FormHandlerInterface
-     */
-    protected function getGeneralFormHandler(): FormHandlerInterface
-    {
-        return $this->get('prestashop.admin.order_preferences.general.form_handler');
-    }
-
-    /**
-     * @return FormHandlerInterface
-     */
-    protected function getGiftOptionsFormHandler(): FormHandlerInterface
-    {
-        return $this->get('prestashop.admin.order_preferences.gift_options.form_handler');
     }
 }
