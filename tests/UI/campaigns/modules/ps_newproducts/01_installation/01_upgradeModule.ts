@@ -4,13 +4,12 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 import {installModule, uninstallModule} from '@commonTests/BO/modules/moduleManager';
-// Import BO pages
-import maintenancePage from '@pages/BO/shopParameters/general/maintenance';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boMaintenancePage,
   boModuleManagerPage,
   boShopParametersPage,
   dataModules,
@@ -64,27 +63,27 @@ describe('New products block module: Upgrade module', async () => {
 
       await boShopParametersPage.goToSubTabMaintenance(page);
 
-      const pageTitle = await maintenancePage.getPageTitle(page);
-      expect(pageTitle).to.contains(maintenancePage.pageTitle);
+      const pageTitle = await boMaintenancePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boMaintenancePage.pageTitle);
     });
 
     it('should disable the shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableShop', baseContext);
 
-      const resultStatus = await maintenancePage.changeShopStatus(page, false);
-      expect(resultStatus).to.contains(maintenancePage.successfulUpdateMessage);
+      const resultStatus = await boMaintenancePage.changeShopStatus(page, false);
+      expect(resultStatus).to.contains(boMaintenancePage.successfulUpdateMessage);
 
-      const resultLoggedInEmployees = await maintenancePage.changeStoreForLoggedInEmployees(page, false);
-      expect(resultLoggedInEmployees).to.contains(maintenancePage.successfulUpdateMessage);
+      const resultLoggedInEmployees = await boMaintenancePage.changeStoreForLoggedInEmployees(page, false);
+      expect(resultLoggedInEmployees).to.contains(boMaintenancePage.successfulUpdateMessage);
     });
 
     it('should verify the existence of the maintenance text', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'verifyMaintenanceText', baseContext);
 
-      page = await maintenancePage.viewMyShop(page);
+      page = await boMaintenancePage.viewMyShop(page);
 
       const pageContent = await foClassicHomePage.getTextContent(page, foClassicHomePage.content);
-      expect(pageContent).to.equal(maintenancePage.maintenanceText);
+      expect(pageContent).to.equal(boMaintenancePage.maintenanceText);
     });
 
     it('should go to \'Modules > Module Manager\' page', async function () {
@@ -164,15 +163,15 @@ describe('New products block module: Upgrade module', async () => {
 
       await boShopParametersPage.goToSubTabMaintenance(page);
 
-      const pageTitle = await maintenancePage.getPageTitle(page);
-      expect(pageTitle).to.contains(maintenancePage.pageTitle);
+      const pageTitle = await boMaintenancePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boMaintenancePage.pageTitle);
     });
 
     it('should enable the shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableShop', baseContext);
 
-      const result = await maintenancePage.changeShopStatus(page, true);
-      expect(result).to.contains(maintenancePage.successfulUpdateMessage);
+      const result = await boMaintenancePage.changeShopStatus(page, true);
+      expect(result).to.contains(boMaintenancePage.successfulUpdateMessage);
     });
 
     it('should go to the front office', async function () {
