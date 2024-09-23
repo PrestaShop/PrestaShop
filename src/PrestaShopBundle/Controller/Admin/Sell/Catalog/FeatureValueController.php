@@ -38,17 +38,21 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureValueNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Feature\QueryResult\EditableFeature;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Factory\FeatureValueGridFactory;
+use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\FeatureValueFilters;
 use PrestaShopBundle\Component\CsvResponse;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Controller\BulkActionsTrait;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class FeatureValueController extends FrameworkBundleAdminController
+class FeatureValueController extends PrestaShopAdminController
 {
     use BulkActionsTrait;
 
@@ -59,13 +63,16 @@ class FeatureValueController extends FrameworkBundleAdminController
     private const SAVE_AND_ADD_BUTTON_NAME = 'save-and-add-new';
 
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
-    public function indexAction(int $featureId, Request $request, FeatureValueFilters $filters): Response
-    {
-        $featureValueGridFactory = $this->get(FeatureValueGridFactory::class);
-
+    public function indexAction(
+        int $featureId,
+        Request $request,
+        FeatureValueFilters $filters,
+        #[Autowire(service: FeatureValueGridFactory::class)]
+        GridFactoryInterface $featureValueGridFactory,
+    ): Response {
         try {
             /** @var EditableFeature $editableFeature */
-            $editableFeature = $this->getQueryBus()->handle(new GetFeatureForEditing($featureId));
+            $editableFeature = $this->dispatchQuery(new GetFeatureForEditing($featureId));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
@@ -76,11 +83,11 @@ class FeatureValueController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'featureValueGrid' => $this->presentGrid($featureValueGridFactory->getGrid($filters)),
-            'layoutTitle' => $editableFeature->getName()[$this->getContextLangId()],
+            'layoutTitle' => $editableFeature->getName()[$this->getLanguageContext()->getId()],
             'layoutHeaderToolbarBtn' => [
                 'add_feature_value' => [
                     'href' => $this->generateUrl('admin_feature_values_add', ['featureId' => $filters->getFeatureId()]),
-                    'desc' => $this->trans('Add new feature value', 'Admin.Catalog.Feature'),
+                    'desc' => $this->trans('Add new feature value', [], 'Admin.Catalog.Feature'),
                     'icon' => 'add_circle_outline',
                 ],
             ],
@@ -93,10 +100,13 @@ class FeatureValueController extends FrameworkBundleAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
-    public function createAction(Request $request): Response
-    {
-        $featureValueFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.feature_value_form_builder');
-        $featureValueFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.feature_value_form_handler');
+    public function createAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.feature_value_form_builder')]
+        FormBuilderInterface $featureValueFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.feature_value_form_handler')]
+        FormHandlerInterface $featureValueFormHandler
+    ): Response {
         $featureId = $request->query->getInt('featureId');
 
         try {
@@ -105,7 +115,7 @@ class FeatureValueController extends FrameworkBundleAdminController
             $handlerResult = $featureValueFormHandler->handle($featureValueForm);
 
             if (null !== $handlerResult->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', [], 'Admin.Notifications.Success'));
 
                 // Case 1 - save and stay, user entered the form from feature value list
                 if ($request->request->has(self::SAVE_AND_ADD_BUTTON_NAME) && $featureId) {
@@ -137,7 +147,7 @@ class FeatureValueController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/FeatureValue/create.html.twig', [
             'featureId' => $featureId,
             'featureValueForm' => $featureValueForm->createView(),
-            'layoutTitle' => $this->trans('New Feature Value', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('New Feature Value', [], 'Admin.Navigation.Menu'),
             'cancelLink' => $cancelLink,
         ]);
     }
@@ -150,18 +160,22 @@ class FeatureValueController extends FrameworkBundleAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
-    public function editAction(int $featureId, int $featureValueId, Request $request): Response
-    {
-        $featureValueFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.feature_value_form_builder');
-        $featureValueFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.feature_value_form_handler');
-
+    public function editAction(
+        int $featureId,
+        int $featureValueId,
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.feature_value_form_builder')]
+        FormBuilderInterface $featureValueFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.feature_value_form_handler')]
+        FormHandlerInterface $featureValueFormHandler
+    ): Response {
         try {
             $featureValueForm = $featureValueFormBuilder->getFormFor($featureValueId);
             $featureValueForm->handleRequest($request);
             $handlerResult = $featureValueFormHandler->handleFor((int) $featureValueId, $featureValueForm);
 
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
 
                 if ($request->request->has(self::SAVE_AND_ADD_BUTTON_NAME)) {
                     return $this->redirectToRoute('admin_feature_values_add', [
@@ -184,6 +198,7 @@ class FeatureValueController extends FrameworkBundleAdminController
             'featureValueForm' => $featureValueForm->createView(),
             'layoutTitle' => $this->trans(
                 'Feature value',
+                [],
                 'Admin.Navigation.Menu',
             ),
             'cancelLink' => $this->generateUrl('admin_feature_values_index', ['featureId' => $featureId]),
@@ -196,19 +211,20 @@ class FeatureValueController extends FrameworkBundleAdminController
      * @return CsvResponse
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
-    public function exportAction(FeatureValueFilters $filters): CsvResponse
-    {
+    public function exportAction(
+        FeatureValueFilters $filters,
+        #[Autowire(service: FeatureValueGridFactory::class)]
+        GridFactoryInterface $gridFactory
+    ): CsvResponse {
         $filtersParameters = $filters->all();
         $filtersParameters['filters']['feature_id'] = $filters->getFeatureId();
         $filtersParameters['filters']['language_id'] = $filters->getLanguageId();
         $filters = new FeatureValueFilters(['limit' => null] + $filtersParameters);
         $filters->setNeedsToBePersisted(false);
 
-        $gridFactory = $this->get(FeatureValueGridFactory::class);
-
         $headers = [
-            'id_feature_value' => $this->trans('ID', 'Admin.Global'),
-            'value' => $this->trans('Value', 'Admin.Global'),
+            'id_feature_value' => $this->trans('ID', [], 'Admin.Global'),
+            'value' => $this->trans('Value', [], 'Admin.Global'),
         ];
 
         $data = [];
@@ -236,12 +252,12 @@ class FeatureValueController extends FrameworkBundleAdminController
     public function deleteAction(int $featureId, int $featureValueId): Response
     {
         try {
-            $this->getCommandBus()->handle(new DeleteFeatureValueCommand($featureValueId));
+            $this->dispatchCommand(new DeleteFeatureValueCommand($featureValueId));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+        $this->addFlash('success', $this->trans('Successful deletion', [], 'Admin.Notifications.Success'));
 
         return $this->redirectToRoute('admin_feature_values_index', [
             'featureId' => $featureId,
@@ -258,12 +274,12 @@ class FeatureValueController extends FrameworkBundleAdminController
     public function bulkDeleteAction(int $featureId, Request $request): Response
     {
         try {
-            $this->getCommandBus()->handle(new BulkDeleteFeatureValueCommand($this->getBulkActionIds($request, 'feature_value_bulk')));
+            $this->dispatchCommand(new BulkDeleteFeatureValueCommand($this->getBulkActionIds($request, 'feature_value_bulk')));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+        $this->addFlash('success', $this->trans('Successful deletion', [], 'Admin.Notifications.Success'));
 
         return $this->redirectToRoute('admin_feature_values_index', [
             'featureId' => $featureId,
@@ -278,19 +294,21 @@ class FeatureValueController extends FrameworkBundleAdminController
      * @return JsonResponse features list
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('read', 'AdminProducts')")]
-    public function getFeatureValuesAction($featureId)
-    {
+    public function getFeatureValuesAction(
+        int $featureId,
+        FeatureValuesChoiceProvider $featureValuesChoiceProvider
+    ): JsonResponse {
         if ($featureId == 0) {
             return new JsonResponse();
         }
 
-        $featuresChoices = $this->get(FeatureValuesChoiceProvider::class)->getChoices(['feature_id' => $featureId, 'custom' => false]);
+        $featuresChoices = $featureValuesChoiceProvider->getChoices(['feature_id' => $featureId, 'custom' => false]);
 
         $data = [];
         if (count($featuresChoices) !== 0) {
             $data[] = [
                 'id' => 0,
-                'value' => $this->trans('Choose a value', 'Admin.Catalog.Feature'),
+                'value' => $this->trans('Choose a value', [], 'Admin.Catalog.Feature'),
             ];
         }
 
@@ -312,20 +330,24 @@ class FeatureValueController extends FrameworkBundleAdminController
         return [
             FeatureNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found).',
+                [],
                 'Admin.Notifications.Error'
             ),
             FeatureValueNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found).',
+                [],
                 'Admin.Notifications.Error'
             ),
             BulkFeatureValueException::class => [
                 BulkFeatureValueException::FAILED_BULK_DELETE => $this->trans(
                     'An error occurred while deleting this selection.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
             ],
             CannotDeleteFeatureValueException::class => $this->trans(
                 'An error occurred while deleting the object.',
+                [],
                 'Admin.Notifications.Error'
             ),
         ];
