@@ -27,13 +27,18 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Support\ContactDeleter;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ContactFilters;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,20 +47,15 @@ use Symfony\Component\HttpFoundation\Response;
  * ContactsController is responsible for actions and rendering
  * of "Shop Parameters > Contact > Contacts" page.
  */
-class ContactsController extends FrameworkBundleAdminController
+class ContactsController extends PrestaShopAdminController
 {
-    /**
-     * Shows page content.
-     *
-     * @param Request $request
-     * @param ContactFilters $filters
-     *
-     * @return Response
-     */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
-    public function indexAction(Request $request, ContactFilters $filters)
-    {
-        $contactGridFactory = $this->get('prestashop.core.grid.factory.contacts');
+    public function indexAction(
+        Request $request,
+        ContactFilters $filters,
+        #[Autowire(service: 'prestashop.core.grid.factory.contacts')]
+        GridFactoryInterface $contactGridFactory,
+    ): Response {
         $contactGrid = $contactGridFactory->getGrid($filters);
 
         return $this->render(
@@ -63,10 +63,10 @@ class ContactsController extends FrameworkBundleAdminController
             [
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'enableSidebar' => true,
-                'layoutTitle' => $this->trans('Contacts', 'Admin.Navigation.Menu'),
+                'layoutTitle' => $this->trans('Contacts', [], 'Admin.Navigation.Menu'),
                 'layoutHeaderToolbarBtn' => [
                     'add' => [
-                        'desc' => $this->trans('Add new contact', 'Admin.Shopparameters.Feature'),
+                        'desc' => $this->trans('Add new contact', [], 'Admin.Shopparameters.Feature'),
                         'icon' => 'add_circle_outline',
                         'href' => $this->generateUrl('admin_contacts_create'),
                     ],
@@ -76,28 +76,24 @@ class ContactsController extends FrameworkBundleAdminController
         );
     }
 
-    /**
-     * Display the Contact creation form.
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_contacts_index', message: 'You do not have permission to add this.')]
-    public function createAction(Request $request)
-    {
-        $contactFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.contact_form_builder');
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message: 'You do not have permission to add this.', redirectRoute: 'admin_contacts_index')]
+    public function createAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.contact_form_builder')]
+        FormBuilderInterface $contactFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.contact_form_handler')]
+        FormHandlerInterface $contactFormHandler,
+    ): Response {
         $contactForm = $contactFormBuilder->getForm();
         $contactForm->handleRequest($request);
 
         try {
-            $contactFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.contact_form_handler');
             $result = $contactFormHandler->handle($contactForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
                 $this->addFlash(
                     'success',
-                    $this->trans('Successful creation', 'Admin.Notifications.Success')
+                    $this->trans('Successful creation', [], 'Admin.Notifications.Success')
                 );
 
                 return $this->redirectToRoute('admin_contacts_index');
@@ -113,32 +109,28 @@ class ContactsController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'contactForm' => $contactForm->createView(),
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('New contact', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('New contact', [], 'Admin.Navigation.Menu'),
         ]);
     }
 
-    /**
-     * Display the contact edit form.
-     *
-     * @param int $contactId
-     * @param Request $request
-     *
-     * @return Response
-     */
-    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_contacts_index', message: 'You do not have permission to edit this.')]
-    public function editAction($contactId, Request $request)
-    {
-        $contactFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.contact_form_builder');
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.', redirectRoute: 'admin_contacts_index')]
+    public function editAction(
+        int $contactId,
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.contact_form_builder')]
+        FormBuilderInterface $contactFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.contact_form_handler')]
+        FormHandlerInterface $contactFormHandler,
+    ): Response {
         $contactForm = $contactFormBuilder->getFormFor((int) $contactId);
 
         $contactForm->handleRequest($request);
 
         try {
-            $contactFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.contact_form_handler');
             $result = $contactFormHandler->handleFor((int) $contactId, $contactForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_contacts_index');
             }
@@ -155,126 +147,109 @@ class ContactsController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'layoutTitle' => $this->trans(
                 'Editing %name%',
-                'Admin.Navigation.Menu',
                 [
-                    '%name%' => $contactForm->getData()['title'][$this->getContextLangId()],
-                ]
+                    '%name%' => $contactForm->getData()['title'][$this->getLanguageContext()->getId()],
+                ],
+                'Admin.Navigation.Menu',
             ),
         ]);
     }
 
-    /**
-     * Delete a contact.
-     *
-     * @param int $contactId
-     *
-     * @return RedirectResponse
-     */
     #[DemoRestricted(redirectRoute: 'admin_contacts_index')]
-    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_contacts_index', message: 'You do not have permission to delete this.')]
-    public function deleteAction($contactId)
-    {
-        $contactDeleter = $this->get('prestashop.adapter.contact.deleter');
-
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to delete this.', redirectRoute: 'admin_contacts_index')]
+    public function deleteAction(
+        int $contactId,
+        ContactDeleter $contactDeleter,
+    ): RedirectResponse {
         if ($errors = $contactDeleter->delete([$contactId])) {
-            $this->flashErrors($errors);
+            $this->addFlashErrors($errors);
         } else {
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
             );
         }
 
         return $this->redirectToRoute('admin_contacts_index');
     }
 
-    /**
-     * Bulk delete contacts.
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
     #[DemoRestricted(redirectRoute: 'admin_contacts_index')]
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_contacts_index', message: 'You do not have permission to delete this.')]
-    public function deleteBulkAction(Request $request)
-    {
+    public function deleteBulkAction(
+        Request $request,
+        ContactDeleter $contactDeleter,
+    ): RedirectResponse {
         $contactIds = $request->request->all('contact_bulk');
-        $contactDeleter = $this->get('prestashop.adapter.contact.deleter');
 
         if ($errors = $contactDeleter->delete($contactIds)) {
-            $this->flashErrors($errors);
+            $this->addFlashErrors($errors);
         } else {
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted.', [], 'Admin.Notifications.Success')
             );
         }
 
         return $this->redirectToRoute('admin_contacts_index');
     }
 
-    /**
-     * @param Exception $e
-     *
-     * @return array
-     */
-    private function getErrorMessages(Exception $e)
+    private function getErrorMessages(Exception $e): array
     {
         return [
             ContactNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found).',
+                [],
                 'Admin.Notifications.Error'
             ),
             ContactConstraintException::class => [
                 ContactConstraintException::INVALID_SHOP_ASSOCIATION => $this->trans(
                     'The %s field is not valid',
-                    'Admin.Notifications.Error',
                     [
                         sprintf(
                             '"%s"',
-                            $this->trans('Store association', 'Admin.Global')
+                            $this->trans('Store association', [], 'Admin.Global')
                         ),
-                    ]
+                    ],
+                    'Admin.Notifications.Error',
                 ),
                 ContactConstraintException::INVALID_TITLE => $this->trans(
                     'The %s field is not valid',
-                    'Admin.Notifications.Error',
                     [
                         sprintf(
                             '"%s"',
-                            $this->trans('Title', 'Admin.Global')
+                            $this->trans('Title', [], 'Admin.Global')
                         ),
-                    ]
+                    ],
+                    'Admin.Notifications.Error',
                 ),
                 ContactConstraintException::MISSING_TITLE_FOR_DEFAULT_LANGUAGE => $this->trans(
                     'The field %field_name% is required at least in your default language.',
-                    'Admin.Notifications.Error',
                     [
-                        '%field_name%' => $this->trans('Title', 'Admin.Global'),
-                    ]
+                        '%field_name%' => $this->trans('Title', [], 'Admin.Global'),
+                    ],
+                    'Admin.Notifications.Error',
                 ),
                 ContactConstraintException::INVALID_DESCRIPTION => $this->trans(
                     'The %s field is not valid',
-                    'Admin.Notifications.Error',
                     [
                         sprintf(
                             '"%s"',
-                            $this->trans('Description', 'Admin.Global')
+                            $this->trans('Description', [], 'Admin.Global')
                         ),
-                    ]
+                    ],
+                    'Admin.Notifications.Error',
                 ),
             ],
             DomainConstraintException::class => [
                 DomainConstraintException::INVALID_EMAIL => $this->trans(
                     'The %s field is not valid',
-                    'Admin.Notifications.Error',
                     [
                         sprintf(
                             '"%s"',
-                            $this->trans('Email address', 'Admin.Global')
+                            $this->trans('Email address', [], 'Admin.Global')
                         ),
-                    ]
+                    ],
+                    'Admin.Notifications.Error',
                 ),
             ],
         ];
