@@ -64,3 +64,8 @@ services:
     autowire: true
     tags:
       - 'console.command'
+
+  PrestaShopBundle\Command\GenerateAPIDocCommand:
+    autowire: true
+    tags:
+      - 'console.command'
