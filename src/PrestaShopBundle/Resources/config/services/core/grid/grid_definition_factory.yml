@@ -299,19 +299,31 @@ services:
       - '@=service("prestashop.adapter.legacy.context").getLanguage().date_format_lite'
     public: true
 
-  prestashop.core.grid.definition.factory.order_states:
-    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderStatesGridDefinitionFactory'
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderStatesGridDefinitionFactory:
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
       - '@prestashop.core.grid.action.row.accessibility_checker.delete_order_states'
-    public: true
+    public: false
 
-  prestashop.core.grid.definition.factory.order_return_states:
-    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderReturnStatesGridDefinitionFactory'
+  prestashop.core.grid.definition.factory.order_states:
+    alias: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderStatesGridDefinitionFactory'
+    public: true
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderReturnStatesGridDefinitionFactory:
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
       - '@prestashop.core.grid.action.row.accessibility_checker.delete_order_return_states'
+    public: false
+
+  prestashop.core.grid.definition.factory.order_return_states:
+    alias: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderReturnStatesGridDefinitionFactory'
     public: true
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.grid.definition.factory.outstanding:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OutstandingGridDefinitionFactory'

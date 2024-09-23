@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Command\BulkDeleteOrderReturnStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Command\DeleteOrderReturnStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Exception\OrderReturnStateException;
@@ -42,36 +43,46 @@ use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\OrderStateException;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\OrderStateNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Query\GetOrderStateForEditing;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\QueryResult\EditableOrderState;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderReturnStatesGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderStatesGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderReturnStatesFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderStatesFilters;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Controller\Attribute\AllShopContext;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Controller responsible of "Configure > Shop Parameters > Order states Settings" page.
+ * Controller responsible for "Configure > Shop Parameters > Order states Settings" page.
  */
 #[AllShopContext]
-class OrderStateController extends FrameworkBundleAdminController
+class OrderStateController extends PrestaShopAdminController
 {
-    /**
-     * @return Response
-     */
+    public static function getSubscribedServices(): array
+    {
+        return parent::getSubscribedServices() + [
+            OrderStatesGridDefinitionFactory::GRID_ID => OrderStatesGridDefinitionFactory::class,
+            OrderReturnStatesGridDefinitionFactory::GRID_ID => OrderReturnStatesGridDefinitionFactory::class,
+        ];
+    }
+
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(
         Request $request,
         OrderStatesFilters $orderStatesFilters,
-        OrderReturnStatesFilters $orderReturnStatesFilters
-    ) {
-        $orderStatesGridFactory = $this->get('prestashop.core.grid.factory.order_states');
+        OrderReturnStatesFilters $orderReturnStatesFilters,
+        #[Autowire(service: 'prestashop.core.grid.factory.order_states')]
+        GridFactoryInterface $orderStatesGridFactory,
+        #[Autowire(service: 'prestashop.core.grid.factory.order_return_states')]
+        GridFactoryInterface $orderReturnStatesGridFactory,
+    ): Response {
         $orderStatesGrid = $orderStatesGridFactory->getGrid($orderStatesFilters);
-
-        $orderReturnStatesGridFactory = $this->get('prestashop.core.grid.factory.order_return_states');
         $orderReturnStatesGrid = $orderReturnStatesGridFactory->getGrid($orderReturnStatesFilters);
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/OrderStates/index.html.twig', [
@@ -80,57 +91,51 @@ class OrderStateController extends FrameworkBundleAdminController
             'orderReturnStatesGrid' => $this->presentGrid($orderReturnStatesGrid),
             'multistoreInfoTip' => $this->trans(
                 'Note that this page is available in all shops context only, this is why your context has just switched.',
+                [],
                 'Admin.Notifications.Info'
             ),
-            'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
+            'multistoreIsUsed' => $this->getShopContext()->isMultiShopUsed(),
             'enableSidebar' => true,
         ]);
     }
 
-    /**
-     * Process Grid search.
-     *
-     * @return RedirectResponse
-     */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
-    public function searchGridAction(Request $request)
-    {
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
-
-        $gridDefinitionFactory = 'prestashop.core.grid.definition.factory.order_states';
-
-        $filterId = OrderStatesGridDefinitionFactory::GRID_ID;
+    public function searchGridAction(
+        Request $request
+    ): RedirectResponse {
         if ($request->request->has(OrderReturnStatesGridDefinitionFactory::GRID_ID)) {
-            $gridDefinitionFactory = 'prestashop.core.grid.definition.factory.order_return_states';
+            $gridDefinitionFactory = $this->container->get(OrderReturnStatesGridDefinitionFactory::GRID_ID);
             $filterId = OrderReturnStatesGridDefinitionFactory::GRID_ID;
+        } else {
+            $gridDefinitionFactory = $this->container->get(OrderStatesGridDefinitionFactory::GRID_ID);
+            $filterId = OrderStatesGridDefinitionFactory::GRID_ID;
         }
 
-        return $responseBuilder->buildSearchResponse(
-            $this->get($gridDefinitionFactory),
+        return $this->buildSearchResponse(
+            $gridDefinitionFactory,
             $request,
             $filterId,
             'admin_order_states'
         );
     }
 
-    /**
-     * Show order_state create form & handle processing of it.
-     *
-     * @return Response
-     */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
-    public function createAction(Request $request)
-    {
-        $orderStateForm = $this->get('prestashop.core.form.identifiable_object.builder.order_state_form_builder')->getForm();
+    public function createAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.order_state_form_builder')]
+        FormBuilderInterface $orderStateFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.order_state_form_handler')]
+        FormHandlerInterface $orderStateFormHandler,
+        LegacyContext $context,
+    ): Response {
+        $orderStateForm = $orderStateFormBuilder->getForm();
         $orderStateForm->handleRequest($request);
-
-        $orderStateFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.order_state_form_handler');
 
         try {
             $result = $orderStateFormHandler->handle($orderStateForm);
 
-            if ($orderStateId = $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
+            if ($result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful creation', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_order_states');
             }
@@ -141,7 +146,7 @@ class OrderStateController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/OrderStates/create.html.twig', [
             'orderStateForm' => $orderStateForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'contextLangId' => $this->getContextLangId(),
+            'contextLangId' => $this->getLanguageContext()->getId(),
             'templatesPreviewUrl' => _MAIL_DIR_,
             'enableSidebar' => true,
             'languages' => array_map(
@@ -149,35 +154,36 @@ class OrderStateController extends FrameworkBundleAdminController
                     return [
                         'id' => $language['iso_code'],
                         'value' => sprintf('%s - %s', $language['iso_code'], $language['name']), ];
-                }, $this->get('prestashop.adapter.legacy.context')->getLanguages()),
+                }, $context->getLanguages()),
             'multistoreInfoTip' => $this->trans(
                 'Note that this feature is only available in the "all stores" context. It will be added to all your stores.',
+                [],
                 'Admin.Notifications.Info'
             ),
-            'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
-            'layoutTitle' => $this->trans('New order status', 'Admin.Navigation.Menu'),
+            'multistoreIsUsed' => $this->getShopContext()->isMultiShopUsed(),
+            'layoutTitle' => $this->trans('New order status', [], 'Admin.Navigation.Menu'),
         ]);
     }
 
-    /**
-     * Show order_state edit form & handle processing of it.
-     *
-     * @return Response
-     */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
-    public function editAction(int $orderStateId, Request $request)
-    {
-        $orderStateForm = $this->get('prestashop.core.form.identifiable_object.builder.order_state_form_builder')->getFormFor($orderStateId);
+    public function editAction(
+        int $orderStateId,
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.order_state_form_builder')]
+        FormBuilderInterface $orderStateFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.order_state_form_handler')]
+        FormHandlerInterface $orderStateFormHandler,
+        LegacyContext $context,
+    ): Response {
+        $orderStateForm = $orderStateFormBuilder->getFormFor($orderStateId);
         $orderStateForm->handleRequest($request);
-
-        $orderStateFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.order_state_form_handler');
 
         try {
             $result = $orderStateFormHandler->handleFor($orderStateId, $orderStateForm);
 
             if ($result->isSubmitted()) {
                 if ($result->isValid()) {
-                    $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+                    $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
                 } else {
                     $this->addFlashFormErrors($orderStateForm);
                 }
@@ -188,13 +194,13 @@ class OrderStateController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        $editableOrderState = $this->getQueryBus()->handle(new GetOrderStateForEditing((int) $orderStateId));
+        $editableOrderState = $this->dispatchQuery(new GetOrderStateForEditing((int) $orderStateId));
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/OrderStates/edit.html.twig', [
             'orderStateForm' => $orderStateForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'editableOrderState' => $editableOrderState,
-            'contextLangId' => $this->getContextLangId(),
+            'contextLangId' => $this->getLanguageContext()->getId(),
             'templatesPreviewUrl' => _MAIL_DIR_,
             'enableSidebar' => true,
             'languages' => array_map(
@@ -202,35 +208,33 @@ class OrderStateController extends FrameworkBundleAdminController
                     return [
                         'id' => $language['iso_code'],
                         'value' => sprintf('%s - %s', $language['iso_code'], $language['name']), ];
-                }, $this->get('prestashop.adapter.legacy.context')->getLanguages()),
+                }, $context->getLanguages()),
             'layoutTitle' => $this->trans(
                 'Editing order status %name%',
-                'Admin.Navigation.Menu',
                 [
-                    '%name%' => $editableOrderState->getLocalizedNames()[$this->getContextLangId()],
-                ]
+                    '%name%' => $editableOrderState->getLocalizedNames()[$this->getLanguageContext()->getId()],
+                ],
+                'Admin.Navigation.Menu',
             ),
         ]);
     }
 
-    /**
-     * Show order return state create form & handle processing of it.
-     *
-     * @return Response
-     */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
-    public function createOrderReturnStateAction(Request $request)
-    {
-        $orderReturnStateForm = $this->get('prestashop.core.form.identifiable_object.builder.order_return_state_form_builder')->getForm();
+    public function createOrderReturnStateAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.order_return_state_form_builder')]
+        FormBuilderInterface $orderReturnStateFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.order_return_state_form_handler')]
+        FormHandlerInterface $orderReturnStateFormHandler,
+    ): Response {
+        $orderReturnStateForm = $orderReturnStateFormBuilder->getForm();
         $orderReturnStateForm->handleRequest($request);
-
-        $orderReturnStateFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.order_return_state_form_handler');
 
         try {
             $result = $orderReturnStateFormHandler->handle($orderReturnStateForm);
 
-            if ($orderReturnStateId = $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
+            if ($result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful creation', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_order_states');
             }
@@ -243,33 +247,33 @@ class OrderStateController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'multistoreInfoTip' => $this->trans(
                 'Note that this feature is only available in the "all stores" context. It will be added to all your stores.',
+                [],
                 'Admin.Notifications.Info'
             ),
-            'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
+            'multistoreIsUsed' => $this->getShopContext()->isMultiShopUsed(),
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('New return status', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('New return status', [], 'Admin.Navigation.Menu'),
         ]);
     }
 
-    /**
-     * Show order return state edit form & handle processing of it.
-     *
-     * @return Response
-     */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
-    public function editOrderReturnStateAction(int $orderReturnStateId, Request $request)
-    {
-        $orderReturnStateForm = $this->get('prestashop.core.form.identifiable_object.builder.order_return_state_form_builder')->getFormFor($orderReturnStateId);
+    public function editOrderReturnStateAction(
+        int $orderReturnStateId,
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.order_return_state_form_builder')]
+        FormBuilderInterface $orderReturnStateFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.order_return_state_form_handler')]
+        FormHandlerInterface $orderReturnStateFormHandler,
+    ): Response {
+        $orderReturnStateForm = $orderReturnStateFormBuilder->getFormFor($orderReturnStateId);
         $orderReturnStateForm->handleRequest($request);
-
-        $orderReturnStateFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.order_return_state_form_handler');
 
         try {
             $result = $orderReturnStateFormHandler->handleFor($orderReturnStateId, $orderReturnStateForm);
 
             if ($result->isSubmitted()) {
                 if ($result->isValid()) {
-                    $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+                    $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
                 } else {
                     $this->addFlashFormErrors($orderReturnStateForm);
                 }
@@ -280,39 +284,32 @@ class OrderStateController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        $editableOrderReturnState = $this->getQueryBus()->handle(new GetOrderReturnStateForEditing((int) $orderReturnStateId));
+        $editableOrderReturnState = $this->dispatchQuery(new GetOrderReturnStateForEditing((int) $orderReturnStateId));
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/OrderReturnStates/edit.html.twig', [
             'orderReturnStateForm' => $orderReturnStateForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'editableOrderReturnState' => $editableOrderReturnState,
-            'contextLangId' => $this->getContextLangId(),
+            'contextLangId' => $this->getLanguageContext()->getId(),
             'enableSidebar' => true,
             'layoutTitle' => $this->trans(
                 'Editing return status %name%',
-                'Admin.Navigation.Menu',
                 [
-                    '%name%' => $editableOrderReturnState->getLocalizedNames()[$this->getContextLangId()],
-                ]
+                    '%name%' => $editableOrderReturnState->getLocalizedNames()[$this->getLanguageContext()->getId()],
+                ],
+                'Admin.Navigation.Menu',
             ),
         ]);
     }
 
-    /**
-     * Deletes order return state
-     *
-     * @param int $orderReturnStateId
-     *
-     * @return RedirectResponse
-     */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_order_states')]
     public function deleteOrderReturnStateAction(Request $request, int $orderReturnStateId): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(new DeleteOrderReturnStateCommand($orderReturnStateId));
+            $this->dispatchCommand(new DeleteOrderReturnStateCommand($orderReturnStateId));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
             );
         } catch (OrderReturnStateException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -323,23 +320,16 @@ class OrderStateController extends FrameworkBundleAdminController
             $this->redirectToRoute('admin_order_states');
     }
 
-    /**
-     * Delete order return states in bulk action.
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_order_states', message: 'You do not have permission to delete this.')]
     public function deleteOrderReturnStateBulkAction(Request $request): RedirectResponse
     {
         $orderReturnStateIds = $this->getBulkOrderReturnStatesFromRequest($request);
 
         try {
-            $this->getCommandBus()->handle(new BulkDeleteOrderReturnStateCommand($orderReturnStateIds));
+            $this->dispatchCommand(new BulkDeleteOrderReturnStateCommand($orderReturnStateIds));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
             );
         } catch (OrderReturnStateException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -348,28 +338,21 @@ class OrderStateController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_order_states');
     }
 
-    /**
-     * Toggle order state delivery option.
-     *
-     * @param int $orderStateId
-     *
-     * @return RedirectResponse
-     */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_order_states', message: 'You do not have permission to edit this.')]
-    public function toggleDeliveryAction($orderStateId)
+    public function toggleDeliveryAction(int $orderStateId): RedirectResponse
     {
         try {
             /** @var EditableOrderState $editableOrderState */
-            $editableOrderState = $this->getQueryBus()->handle(new GetOrderStateForEditing((int) $orderStateId));
+            $editableOrderState = $this->dispatchQuery(new GetOrderStateForEditing((int) $orderStateId));
 
             $editOrderStateCommand = new EditOrderStateCommand((int) $orderStateId);
             $editOrderStateCommand->setDelivery(!$editableOrderState->isDelivery());
 
-            $this->getCommandBus()->handle($editOrderStateCommand);
+            $this->dispatchCommand($editOrderStateCommand);
 
             $this->addFlash(
                 'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
             );
         } catch (OrderStateException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -378,28 +361,21 @@ class OrderStateController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_order_states');
     }
 
-    /**
-     * Toggle order state invoice option.
-     *
-     * @param int $orderStateId
-     *
-     * @return RedirectResponse
-     */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_order_states', message: 'You do not have permission to edit this.')]
-    public function toggleInvoiceAction($orderStateId)
+    public function toggleInvoiceAction(int $orderStateId): RedirectResponse
     {
         try {
             /** @var EditableOrderState $editableOrderState */
-            $editableOrderState = $this->getQueryBus()->handle(new GetOrderStateForEditing((int) $orderStateId));
+            $editableOrderState = $this->dispatchQuery(new GetOrderStateForEditing((int) $orderStateId));
 
             $editOrderStateCommand = new EditOrderStateCommand((int) $orderStateId);
             $editOrderStateCommand->setInvoice(!$editableOrderState->isInvoice());
 
-            $this->getCommandBus()->handle($editOrderStateCommand);
+            $this->dispatchCommand($editOrderStateCommand);
 
             $this->addFlash(
                 'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
             );
         } catch (OrderStateException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -408,28 +384,21 @@ class OrderStateController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_order_states');
     }
 
-    /**
-     * Toggle order state send_email option.
-     *
-     * @param int $orderStateId
-     *
-     * @return RedirectResponse
-     */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_order_states', message: 'You do not have permission to edit this.')]
-    public function toggleSendEmailAction($orderStateId)
+    public function toggleSendEmailAction(int $orderStateId): RedirectResponse
     {
         try {
             /** @var EditableOrderState $editableOrderState */
-            $editableOrderState = $this->getQueryBus()->handle(new GetOrderStateForEditing((int) $orderStateId));
+            $editableOrderState = $this->dispatchQuery(new GetOrderStateForEditing((int) $orderStateId));
 
             $editOrderStateCommand = new EditOrderStateCommand((int) $orderStateId);
             $editOrderStateCommand->setSendEmail(!$editableOrderState->isSendEmailEnabled());
 
-            $this->getCommandBus()->handle($editOrderStateCommand);
+            $this->dispatchCommand($editOrderStateCommand);
 
             $this->addFlash(
                 'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
             );
         } catch (OrderStateException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -438,21 +407,14 @@ class OrderStateController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_order_states');
     }
 
-    /**
-     * Deletes order state
-     *
-     * @param int $orderStateId
-     *
-     * @return RedirectResponse
-     */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_order_states')]
     public function deleteAction(Request $request, int $orderStateId): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(new DeleteOrderStateCommand($orderStateId));
+            $this->dispatchCommand(new DeleteOrderStateCommand($orderStateId));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
             );
         } catch (OrderStateException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -463,23 +425,16 @@ class OrderStateController extends FrameworkBundleAdminController
             $this->redirectToRoute('admin_order_states');
     }
 
-    /**
-     * Delete order states in bulk action.
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_order_states', message: 'You do not have permission to delete this.')]
     public function deleteBulkAction(Request $request): RedirectResponse
     {
         $orderStateIds = $this->getBulkOrderStatesFromRequest($request);
 
         try {
-            $this->getCommandBus()->handle(new BulkDeleteOrderStateCommand($orderStateIds));
+            $this->dispatchCommand(new BulkDeleteOrderStateCommand($orderStateIds));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
             );
         } catch (OrderStateException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -488,16 +443,10 @@ class OrderStateController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_order_states');
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return array
-     */
     private function getBulkOrderStatesFromRequest(Request $request): array
     {
         $orderStateIds = $request->request->all('order_states_order_states_bulk');
-
-        if (!is_array($orderStateIds)) {
+        if (empty($orderStateIds)) {
             return [];
         }
 
@@ -506,11 +455,6 @@ class OrderStateController extends FrameworkBundleAdminController
         }, $orderStateIds);
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return array
-     */
     private function getBulkOrderReturnStatesFromRequest(Request $request): array
     {
         $orderReturnStateIds = $request->request->all('order_return_states_order_return_states_bulk');
@@ -521,7 +465,7 @@ class OrderStateController extends FrameworkBundleAdminController
     }
 
     /**
-     * Get errors that can be used to translate exceptions into user friendly messages
+     * Get errors that can be used to translate exceptions into user-friendly messages
      *
      * @return array
      */
@@ -530,29 +474,30 @@ class OrderStateController extends FrameworkBundleAdminController
         return [
             OrderStateNotFoundException::class => $this->trans(
                 'This order status does not exist.',
+                [],
                 'Admin.Notifications.Error'
             ),
             DuplicateOrderStateNameException::class => $this->trans(
                 'An order status with the same name already exists: %s',
+                [$e instanceof DuplicateOrderStateNameException ? $e->getName()->getValue() : ''],
                 'Admin.Shopparameters.Notification',
-                [$e instanceof DuplicateOrderStateNameException ? $e->getName()->getValue() : '']
             ),
             OrderStateConstraintException::class => [
                 OrderStateConstraintException::INVALID_NAME => $this->trans(
                     'The %s field is invalid.',
+                    [sprintf('"%s"', $this->trans('Name', [], 'Admin.Global'))],
                     'Admin.Notifications.Error',
-                    [sprintf('"%s"', $this->trans('Name', 'Admin.Global'))]
                 ),
             ],
             MissingOrderStateRequiredFieldsException::class => $this->trans(
                 'The %s field is required.',
-                'Admin.Notifications.Error',
                 [
                     implode(
                         ',',
                         $e instanceof MissingOrderStateRequiredFieldsException ? $e->getMissingRequiredFields() : []
                     ),
-                ]
+                ],
+                'Admin.Notifications.Error',
             ),
         ];
     }
