@@ -16,9 +16,9 @@ import type {BrowserContext, Page} from 'playwright';
 /**
  *
  * @param module {FakerModule}
- * @param useVersion {boolean|string} 
+ * @param useVersion {boolean|string}
  *  If string, use as source of the module ;
- *  If boolean, 
+ *  If boolean,
  *    If true, use the current version
  *    If false, use the last version
  * @param baseContext {string}
@@ -50,7 +50,8 @@ function installModule(
       await testContext.addContextItem(this, 'testIdentifier', 'downloadModule', baseContext);
 
       let urlModule: string = '';
-      if (typeof(useVersion) === 'string') {
+
+      if (typeof (useVersion) === 'string') {
         urlModule = useVersion;
       } else {
         urlModule = module.releaseZip(useVersion ? module.versionCurrent : module.versionOld);
