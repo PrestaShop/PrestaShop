@@ -24,6 +24,52 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Changelog for PrestaShop 8
 
 ####################################
+#   v8.2.0 - (2024-09-23)
+####################################
+- Back Office:
+  - Improvement:
+    - #36171: Remove email "Preview" from BO section "Statutes" (by @ShaiMagal)
+    - #36386: Fix typo in pack wording that doesn't make sense (by @Hlavtox)
+    - #36172: Input type "number" is not styled properly (by @ShaiMagal)
+    - #36714: Order modules on translation page alphabetically (by @Hlavtox)
+    - #36936: Remove redirection on cms exception (by @Hlavtox)
+  - Bug fix:
+    - #36457: Fix: Pass correct language ID to getAttributesName instead of hardcoded 1 (by @mouleeg)
+    - #36454: Prevent creating duplicate customers in some scenarios (by @Hlavtox)
+    - #36287: Fix issue with Product Customizations (by @Codencode)
+    - #36802: Fix: Error occurs when navigating new admin controllers with empty quick access links (by @Codencode)
+    - #36639: Check override conflicts at module install (by @ludoviccardinale & @matthieu-rolland)
+    - #36895: Update AdminCartsController.php (by @Codencode)
+    - #36914: Added management of the 'addedByModule' field in the "CustomizationField" object (by @Codencode)
+- Front Office:
+  - Improvement:
+    - #36359: Match URLs with a trailing slash (by @Hlavtox)
+    - #36451: Enhance TemplateVarShop Function with Shop Group ID for Improved Multi-Shop Support (by @ChronoBrake)
+  - Bug fix:
+    - #36454: Prevent creating duplicate customers in some scenarios (by @Hlavtox)
+    - #36521: Handle hook prefix to allow dashboard module to be saved (by @PrestaEdit)
+    - #36664: Use attribute public name instead of private name in URL anchors (by @maxldn5)
+    - #36834: Fix: problems with product customizations issue 1 (by @Codencode)
+    - #36905: Fix: Cart.php class method _deleteCustomization not deleting all image files from same customization but only first (by @Codencode)
+- Core:
+  - Improvement:
+    - #36398: Updated PrestaShop Packages (by @github-actions)
+    - #36417: Updated PrestaShop Packages (by @github-actions)
+    - #36576: Mail - Reply-To can be the same as the To address (spam indicator - negative points) (by @ShaiMagal)
+    - #36764: Version number 8.2.0 (by @matks)
+    - #36657: Add hook for assigning general purpose variables before the core does it (by @matthieu-rolland)
+    - #36575: Migrate lazy array improvements and cart presenter decoupling from develop to 8.2.x (by @matthieu-rolland)
+    - #36955: Use basename on user given filename in legacy uploadcontroller (by @matthieu-rolland)
+    - #36972: Update default catalog 8.2.x (by @ps-jarvis)
+  - Bug fix:
+    - #36662: Cast OrderProductForViewing - location to string for Memcached (by @ShaiMagal)
+    - #36840: Use PHP constants for doctrine config (by @matks)
+    - #36875: Add attr_stringify_fetches to PDO init config to avoid BC Break (by @fox-john)
+    - #36689: Can't transformToCustomer while password max length is shorter than default 16 length (by @ShaiMagal)
+  - Refactoring:
+    - #36882: Comment search process (by @Hlavtox)
+
+####################################
 #   v8.1.7 - (2024-06-14)
 ####################################
 
