@@ -51,6 +51,7 @@ class ShopContext
         protected bool $secured,
         protected array $associatedShopIds,
         protected bool $isMultiShopEnabled,
+        protected bool $isMultiShopUsed,
     ) {
     }
 
@@ -141,5 +142,10 @@ class ShopContext
     public function isMultiShopEnabled(): bool
     {
         return $this->isMultiShopEnabled;
+    }
+
+    public function isMultiShopUsed(): bool
+    {
+        return $this->isMultiShopUsed;
     }
 }

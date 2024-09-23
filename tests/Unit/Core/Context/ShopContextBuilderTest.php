@@ -66,7 +66,8 @@ class ShopContextBuilderTest extends TestCase
         $this->assertEquals($shop->domain_ssl, $shopContext->getDomainSSL());
         $this->assertEquals($shop->active, $shopContext->isActive());
         $this->assertEquals([1, 3], $shopContext->getAssociatedShopIds());
-        $this->assertEquals(false, $shopContext->isMultiShopEnabled());
+        $this->assertFalse($shopContext->isMultiShopEnabled());
+        $this->assertFalse($shopContext->isMultiShopUsed());
     }
 
     public function testNoShopId(): void
@@ -102,13 +103,14 @@ class ShopContextBuilderTest extends TestCase
         $builder = new ShopContextBuilder(
             $this->mockShopRepository(),
             $this->createMock(ContextStateManager::class),
-            $this->mockMultistoreFeature(true)
+            $this->mockMultistoreFeature(true, true)
         );
         $builder->setShopId(42);
         $builder->setShopConstraint(ShopConstraint::shop(42));
 
         $shopContext = $builder->build();
-        $this->assertEquals(true, $shopContext->isMultiShopEnabled());
+        $this->assertTrue($shopContext->isMultiShopEnabled());
+        $this->assertTrue($shopContext->isMultiShopUsed());
     }
 
     private function mockShop(): Shop|MockObject
@@ -144,12 +146,16 @@ class ShopContextBuilderTest extends TestCase
         return $repository;
     }
 
-    private function mockMultistoreFeature(bool $isActive = false): MultistoreFeature|MockObject
+    private function mockMultistoreFeature(bool $isActive = false, bool $isUsed = false): MultistoreFeature|MockObject
     {
         $feature = $this->createMock(MultistoreFeature::class);
         $feature
             ->method('isActive')
             ->willReturn($isActive)
+        ;
+        $feature
+            ->method('isUsed')
+            ->willReturn($isUsed)
         ;
 
         return $feature;

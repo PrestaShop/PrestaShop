@@ -74,6 +74,7 @@ class ShopContextBuilder implements LegacyContextBuilderInterface
             secured: $this->secureMode,
             associatedShopIds: $this->shopRepository->getAssociatedShopIds($this->shopConstraint),
             isMultiShopEnabled: $this->multistoreFeature->isActive(),
+            isMultiShopUsed: $this->multistoreFeature->isUsed(),
         );
     }
 
