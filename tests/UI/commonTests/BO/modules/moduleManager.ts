@@ -16,12 +16,16 @@ import type {BrowserContext, Page} from 'playwright';
 /**
  *
  * @param module {FakerModule}
- * @param versionCurrent {boolean}
+ * @param useVersion {boolean|string} 
+ *  If string, use as source of the module ;
+ *  If boolean, 
+ *    If true, use the current version
+ *    If false, use the last version
  * @param baseContext {string}
  */
 function installModule(
   module: FakerModule,
-  versionCurrent: boolean = true,
+  useVersion: boolean|string = true,
   baseContext: string = 'commonTests-installModule',
 ): void {
   describe(`Install module ${module.name}`, async () => {
@@ -45,7 +49,14 @@ function installModule(
     it(`should download the zip of the module '${module.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'downloadModule', baseContext);
 
-      await utilsFile.downloadFile(module.releaseZip(versionCurrent ? module.versionCurrent : module.versionOld), 'module.zip');
+      let urlModule: string = '';
+      if (typeof(useVersion) === 'string') {
+        urlModule = useVersion;
+      } else {
+        urlModule = module.releaseZip(useVersion ? module.versionCurrent : module.versionOld);
+      }
+
+      await utilsFile.downloadFile(urlModule, 'module.zip');
 
       const found = await utilsFile.doesFileExist('module.zip');
       expect(found).to.eq(true);
