@@ -34,27 +34,31 @@ use PrestaShop\PrestaShop\Core\Domain\Store\Command\DeleteStoreCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\ToggleStoreStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\CannotDeleteStoreException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\CannotToggleStoreStatusException;
+use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\StoreFilters;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Controller\BulkActionsTrait;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class StoreController extends FrameworkBundleAdminController
+/**
+ * StoreController is responsible for actions and rendering
+ * of "Shop Parameters > Contact > Stores" page.
+ */
+class StoreController extends PrestaShopAdminController
 {
     use BulkActionsTrait;
 
-    /**
-     * @return Response
-     */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(
         Request $request,
-        StoreFilters $storeFilters
-    ) {
-        $storeGridFactory = $this->get('prestashop.core.grid.grid_factory.store');
+        StoreFilters $storeFilters,
+        #[Autowire(service: 'prestashop.core.grid.grid_factory.store')]
+        GridFactoryInterface $storeGridFactory,
+    ): Response {
         $storeGrid = $storeGridFactory->getGrid($storeFilters);
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Contact/Stores/index.html.twig', [
@@ -72,16 +76,16 @@ class StoreController extends FrameworkBundleAdminController
         ]);
     }
 
-    /**
-     * @param int $storeId
-     *
-     * @return Response
-     */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
-    public function toggleStatusAction(int $storeId): Response
+    public function toggleStatusAction(int $storeId): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(new ToggleStoreStatusCommand($storeId));
+            $this->dispatchCommand(new ToggleStoreStatusCommand($storeId));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
+            );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
@@ -89,17 +93,13 @@ class StoreController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_stores_index');
     }
 
-    //    public function bulkEnableStoreAction():
-    /**
-     * @param int $storeId
-     *
-     * @return Response
-     */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
-    public function deleteAction(int $storeId): Response
+    public function deleteAction(int $storeId): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(new DeleteStoreCommand($storeId));
+            $this->dispatchCommand(new DeleteStoreCommand($storeId));
+
+            $this->addFlash('success', $this->trans('Successful deletion', [], 'Admin.Notifications.Success'));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
@@ -107,16 +107,16 @@ class StoreController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_stores_index');
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return Response
-     */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
-    public function bulkDeleteAction(Request $request): Response
+    public function bulkDeleteAction(Request $request): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(new BulkDeleteStoreCommand($this->getBulkActionIds($request, 'store_bulk')));
+            $this->dispatchCommand(new BulkDeleteStoreCommand($this->getBulkActionIds($request, 'store_bulk')));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The selection has been successfully deleted.', [], 'Admin.Notifications.Success')
+            );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
@@ -124,40 +124,29 @@ class StoreController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_stores_index');
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function bulkEnableAction(Request $request): RedirectResponse
     {
         return $this->bulkUpdateStatus($request, true);
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function bulkDisableAction(Request $request): RedirectResponse
     {
         return $this->bulkUpdateStatus($request, false);
     }
 
-    /**
-     * @param Request $request
-     * @param bool $newStatus
-     *
-     * @return RedirectResponse
-     */
     private function bulkUpdateStatus(Request $request, bool $newStatus): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(new BulkUpdateStoreStatusCommand(
+            $this->dispatchCommand(new BulkUpdateStoreStatusCommand(
                 $newStatus,
                 $this->getBulkActionIds($request, 'store_bulk'))
+            );
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status of the selection has been successfully updated.', [], 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -174,15 +163,18 @@ class StoreController extends FrameworkBundleAdminController
         return [
             CannotToggleStoreStatusException::class => $this->trans(
                 'An error occurred while updating the status.',
+                [],
                 'Admin.Notifications.Error'
             ),
             CannotDeleteStoreException::class => [
                 CannotDeleteStoreException::FAILED_DELETE => $this->trans(
                     'An error occurred while deleting the object.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
                 CannotDeleteStoreException::FAILED_BULK_DELETE => $this->trans(
                     'An error occurred while deleting this selection.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
             ],
