@@ -36,9 +36,13 @@ use PrestaShop\PrestaShop\Core\Domain\SearchEngine\Exception\SearchEngineExcepti
 use PrestaShop\PrestaShop\Core\Domain\SearchEngine\Exception\SearchEngineNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\SearchEngine\Query\GetSearchEngineForEditing;
 use PrestaShop\PrestaShop\Core\Domain\SearchEngine\QueryResult\SearchEngineForEditing;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\SearchEngineFilters;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,20 +50,15 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Responsible for handling "Configure > Shop Parameters > Traffic & SEO > Search Engines" page.
  */
-class SearchEnginesController extends FrameworkBundleAdminController
+class SearchEnginesController extends PrestaShopAdminController
 {
-    /**
-     * Show search engines listing page.
-     *
-     * @param Request $request
-     * @param SearchEngineFilters $filters
-     *
-     * @return Response
-     */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
-    public function indexAction(Request $request, SearchEngineFilters $filters): Response
-    {
-        $searchEngineGridFactory = $this->get('prestashop.core.grid.factory.search_engines');
+    public function indexAction(
+        Request $request,
+        SearchEngineFilters $filters,
+        #[Autowire(service: 'prestashop.core.grid.factory.search_engines')]
+        GridFactoryInterface $searchEngineGridFactory,
+    ): Response {
         $searchEnginesGrid = $searchEngineGridFactory->getGrid($filters);
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/SearchEngines/index.html.twig', [
@@ -69,19 +68,14 @@ class SearchEnginesController extends FrameworkBundleAdminController
         ]);
     }
 
-    /**
-     * Shows search engine creation form page and handle its submit.
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
-    public function createAction(Request $request): Response
-    {
-        $searchEngineFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.search_engine_form_handler');
-        $searchEngineFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.search_engine_form_builder');
-
+    public function createAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.search_engine_form_builder')]
+        FormBuilderInterface $searchEngineFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.search_engine_form_handler')]
+        FormHandlerInterface $searchEngineFormHandler,
+    ): Response {
         $searchEngineForm = $searchEngineFormBuilder->getForm();
         $searchEngineForm->handleRequest($request);
 
@@ -89,7 +83,7 @@ class SearchEnginesController extends FrameworkBundleAdminController
             $result = $searchEngineFormHandler->handle($searchEngineForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_search_engines_index');
             }
@@ -103,26 +97,22 @@ class SearchEnginesController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'multistoreInfoTip' => $this->trans(
                 'Note that this feature is only available in the "all stores" context. It will be added to all your stores.',
+                [],
                 'Admin.Notifications.Info'
             ),
-            'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
+            'multistoreIsUsed' => $this->getShopContext()->isMultiShopUsed(),
         ]);
     }
 
-    /**
-     * Show search engine edit form page and handles its submit.
-     *
-     * @param int $searchEngineId
-     * @param Request $request
-     *
-     * @return Response
-     */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
-    public function editAction(int $searchEngineId, Request $request): Response
-    {
-        $searchEngineFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.search_engine_form_handler');
-        $searchEngineFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.search_engine_form_builder');
-
+    public function editAction(
+        int $searchEngineId,
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.search_engine_form_builder')]
+        FormBuilderInterface $searchEngineFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.search_engine_form_handler')]
+        FormHandlerInterface $searchEngineFormHandler,
+    ): Response {
         try {
             $searchEngineForm = $searchEngineFormBuilder->getFormFor($searchEngineId);
         } catch (Exception $e) {
@@ -136,7 +126,7 @@ class SearchEnginesController extends FrameworkBundleAdminController
             $result = $searchEngineFormHandler->handleFor($searchEngineId, $searchEngineForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_search_engines_index');
             }
@@ -149,7 +139,7 @@ class SearchEnginesController extends FrameworkBundleAdminController
         }
 
         /** @var SearchEngineForEditing $editableSearchEngine */
-        $editableSearchEngine = $this->getQueryBus()->handle(new GetSearchEngineForEditing($searchEngineId));
+        $editableSearchEngine = $this->dispatchQuery(new GetSearchEngineForEditing($searchEngineId));
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/SearchEngines/edit.html.twig', [
             'searchEngineForm' => $searchEngineForm->createView(),
@@ -158,28 +148,21 @@ class SearchEnginesController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'layoutTitle' => $this->trans(
                 'Editing search engine %name%',
-                'Admin.Navigation.Menu',
                 [
                     '%name%' => $editableSearchEngine->getServer(),
-                ]
+                ],
+                'Admin.Navigation.Menu',
             ),
         ]);
     }
 
-    /**
-     * Deletes search engine.
-     *
-     * @param int $searchEngineId
-     *
-     * @return RedirectResponse
-     */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_search_engines_index')]
     public function deleteAction(int $searchEngineId): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(new DeleteSearchEngineCommand($searchEngineId));
+            $this->dispatchCommand(new DeleteSearchEngineCommand($searchEngineId));
 
-            $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful deletion', [], 'Admin.Notifications.Success'));
         } catch (SearchEngineException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
@@ -187,24 +170,17 @@ class SearchEnginesController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_search_engines_index');
     }
 
-    /**
-     * Deletes search engines in bulk action.
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_search_engines_index')]
     public function bulkDeleteAction(Request $request): RedirectResponse
     {
         $searchEngineIds = $this->getBulkSearchEnginesFromRequest($request);
 
         try {
-            $this->getCommandBus()->handle(new BulkDeleteSearchEngineCommand($searchEngineIds));
+            $this->dispatchCommand(new BulkDeleteSearchEngineCommand($searchEngineIds));
 
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted.', [], 'Admin.Notifications.Success')
             );
         } catch (SearchEngineException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -223,15 +199,18 @@ class SearchEnginesController extends FrameworkBundleAdminController
         return [
             SearchEngineNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found).',
+                [],
                 'Admin.Notifications.Error'
             ),
             DeleteSearchEngineException::class => [
                 DeleteSearchEngineException::FAILED_DELETE => $this->trans(
                     'An error occurred while deleting the object.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
                 DeleteSearchEngineException::FAILED_BULK_DELETE => $this->trans(
                     'An error occurred while deleting this selection.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
             ],
