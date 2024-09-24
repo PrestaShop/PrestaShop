@@ -434,8 +434,7 @@ class ProductLazyArrayTest extends TestCase
 
         // Product out stock, backorders disabled
         // Product labels filled
-        // Should return not available label from PS configuration
-        // (this label is not configurable per product or per combination)
+        // Should return available later label from product
         yield [
             array_merge(
                 $product,
@@ -448,6 +447,27 @@ class ProductLazyArrayTest extends TestCase
                     'available_date' => false,
                     'available_now' => self::PRODUCT_AVAILABLE_NOW,
                     'available_later' => self::PRODUCT_AVAILABLE_LATER,
+                    'allow_oosp' => OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE,
+                ]
+            ),
+            self::PRODUCT_AVAILABLE_LATER,
+        ];
+
+        // Product out stock, backorders disabled
+        // Product labels NOT filled
+        // Should return available later label from PS configuration
+        yield [
+            array_merge(
+                $product,
+                [
+                    'cache_default_attribute' => 0,
+                    'quantity_wanted' => 1,
+                    'stock_quantity' => 0,
+                    'quantity' => 0,
+                    'show_availability' => 1,
+                    'available_date' => false,
+                    'available_now' => [],
+                    'available_later' => [],
                     'allow_oosp' => OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE,
                 ]
             ),
