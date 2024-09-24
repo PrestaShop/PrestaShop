@@ -428,7 +428,8 @@ services:
 
   PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AliasGridDefinitionFactory:
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
-    public: false
+    # must remain public to be accessed by CommonController:searchGridAction
+    public: true
     autowire: true
 
   PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FeatureGridDefinitionFactory:

@@ -12,7 +12,7 @@ admin_alias_search:
   methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
-    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.alias
+    gridDefinitionFactoryServiceId: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AliasGridDefinitionFactory
     redirectRoute: admin_search_index
     _legacy_controller: AdminSearchConf
     _legacy_link: AdminSearchConf:submitFilteralias
