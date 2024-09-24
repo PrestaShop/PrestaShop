@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractor;
 use RuntimeException;
 use Tests\Integration\ApiPlatform\EndPoint\ApiTestCase;
+use Tests\Resources\DatabaseDump;
 
 /**
  * These tests muste be executed independently because their variants have impact on the cache,
@@ -44,9 +45,17 @@ class DisabledEndpointsTest extends ApiTestCase
 {
     private FeatureFlagManager $featureFlagManager;
 
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        DatabaseDump::restoreTables(['feature_flag']);
+        self::clearCache();
+    }
+
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
+        DatabaseDump::restoreTables(['feature_flag']);
         self::clearCache();
     }
 
@@ -63,8 +72,7 @@ class DisabledEndpointsTest extends ApiTestCase
      */
     protected static function clearCache(): void
     {
-        $kernel = static::bootKernel();
-        $baseCommandLine = 'php -d memory_limit=-1 ' . $kernel->getProjectDir() . '/bin/console ';
+        $baseCommandLine = 'php -d memory_limit=-1 ' . __DIR__ . '/../../../bin/console ';
         $commandLine = $baseCommandLine . 'cache:clear --no-warmup --no-interaction --env=test --app-id=admin-api --quiet';
         $result = 0;
         system($commandLine, $result);
