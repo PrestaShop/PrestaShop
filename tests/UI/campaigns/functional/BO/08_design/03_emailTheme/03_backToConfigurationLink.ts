@@ -4,6 +4,9 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
+// Import pages
+import previewEmailThemesPage from '@pages/BO/design/emailThemes/preview';
+
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
@@ -12,13 +15,12 @@ import {
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
-const baseContext: string = 'functional_BO_design_emailTheme_selectDefaultEmailTheme';
+const baseContext: string = 'functional_BO_design_emailTheme_backToConfigurationLink';
 
-describe('BO - Design - Email Theme : Select default email theme', async () => {
+describe('BO - Design - Email Theme : Back to configuration link', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -46,17 +48,21 @@ describe('BO - Design - Email Theme : Select default email theme', async () => {
     expect(pageTitle).to.contains(boDesignEmailThemesPage.pageTitle);
   });
 
-  ['classic', 'modern'].forEach((emailTheme: string) => {
-    it(`should select '${emailTheme}' as default email theme`, async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `${emailTheme}AsDefaultEmailTheme`,
-        baseContext,
-      );
+  it('should preview email theme \'classic\'', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'previewEmailTheme', baseContext);
 
-      const textMessage = await boDesignEmailThemesPage.selectDefaultEmailTheme(page, emailTheme);
-      expect(textMessage).to.contains(boDesignEmailThemesPage.emailThemeConfigurationSuccessfulMessage);
-    });
+    await boDesignEmailThemesPage.previewEmailTheme(page, 'classic');
+
+    const pageTitle = await previewEmailThemesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(`${previewEmailThemesPage.pageTitle} classic`);
+  });
+
+  it('should go back to email themes page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'backToEmailThemePage', baseContext);
+
+    await previewEmailThemesPage.goBackToEmailThemesPage(page);
+
+    const pageTitle = await boDesignEmailThemesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDesignEmailThemesPage.pageTitle);
   });
 });
