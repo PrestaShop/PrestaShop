@@ -142,7 +142,7 @@ class GuestCore extends ObjectModel
 				FROM `' . _DB_PREFIX_ . 'web_browser` wb
 				WHERE wb.`name` = \'' . pSQL($k) . '\'');
 
-                return $result['id_web_browser'];
+                return $result['id_web_browser'] ?? null;
             }
         }
 
@@ -175,7 +175,7 @@ class GuestCore extends ObjectModel
 				FROM `' . _DB_PREFIX_ . 'operating_system` os
 				WHERE os.`name` = \'' . pSQL($k) . '\'');
 
-                return $result['id_operating_system'];
+                return $result['id_operating_system'] ?? null;
             }
         }
 
