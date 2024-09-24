@@ -4,13 +4,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import emailThemesPage from '@pages/BO/design/emailThemes';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boDesignEmailThemesPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -42,10 +40,10 @@ describe('BO - Design - Email Theme : Select default email theme', async () => {
       boDashboardPage.designParentLink,
       boDashboardPage.emailThemeLink,
     );
-    await emailThemesPage.closeSfToolBar(page);
+    await boDesignEmailThemesPage.closeSfToolBar(page);
 
-    const pageTitle = await emailThemesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(emailThemesPage.pageTitle);
+    const pageTitle = await boDesignEmailThemesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDesignEmailThemesPage.pageTitle);
   });
 
   ['classic', 'modern'].forEach((emailTheme: string) => {
@@ -57,8 +55,8 @@ describe('BO - Design - Email Theme : Select default email theme', async () => {
         baseContext,
       );
 
-      const textMessage = await emailThemesPage.selectDefaultEmailTheme(page, emailTheme);
-      expect(textMessage).to.contains(emailThemesPage.emailThemeConfigurationSuccessfulMessage);
+      const textMessage = await boDesignEmailThemesPage.selectDefaultEmailTheme(page, emailTheme);
+      expect(textMessage).to.contains(boDesignEmailThemesPage.emailThemeConfigurationSuccessfulMessage);
     });
   });
 });

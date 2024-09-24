@@ -5,13 +5,13 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import emailThemesPage from '@pages/BO/design/emailThemes';
 import previewEmailThemesPage from '@pages/BO/design/emailThemes/preview';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boDesignEmailThemesPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -43,10 +43,10 @@ describe('BO - Design - Email Theme : Preview email theme', async () => {
       boDashboardPage.designParentLink,
       boDashboardPage.emailThemeLink,
     );
-    await emailThemesPage.closeSfToolBar(page);
+    await boDesignEmailThemesPage.closeSfToolBar(page);
 
-    const pageTitle = await emailThemesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(emailThemesPage.pageTitle);
+    const pageTitle = await boDesignEmailThemesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDesignEmailThemesPage.pageTitle);
   });
 
   describe('Preview email theme', async () => {
@@ -62,7 +62,7 @@ describe('BO - Design - Email Theme : Preview email theme', async () => {
           baseContext,
         );
 
-        await emailThemesPage.previewEmailTheme(page, test.args.emailThemeName);
+        await boDesignEmailThemesPage.previewEmailTheme(page, test.args.emailThemeName);
 
         const pageTitle = await previewEmailThemesPage.getPageTitle(page);
         expect(pageTitle).to.contains(
@@ -92,8 +92,8 @@ describe('BO - Design - Email Theme : Preview email theme', async () => {
 
         await previewEmailThemesPage.goBackToEmailThemesPage(page);
 
-        const pageTitle = await emailThemesPage.getPageTitle(page);
-        expect(pageTitle).to.contains(emailThemesPage.pageTitle);
+        const pageTitle = await boDesignEmailThemesPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boDesignEmailThemesPage.pageTitle);
       });
     });
   });
