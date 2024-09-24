@@ -48,7 +48,7 @@ describe('BO - Design - Email Theme : Back to configuration link', async () => {
     expect(pageTitle).to.contains(boDesignEmailThemesPage.pageTitle);
   });
 
-  it(`should preview email theme 'classic'`, async function () {
+  it('should preview email theme \'classic\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'previewEmailTheme', baseContext);
 
     await boDesignEmailThemesPage.previewEmailTheme(page, 'classic');
