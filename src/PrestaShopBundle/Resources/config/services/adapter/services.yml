@@ -102,10 +102,17 @@ services:
       - '@=service("PrestaShop\\PrestaShop\\Adapter\\LegacyContext").getContext().link'
       - '@PrestaShop\PrestaShop\Core\Module\ModuleRepository'
 
-  prestashop.adapter.shop.shop_url:
-    class: 'PrestaShop\PrestaShop\Adapter\Shop\ShopUrlDataProvider'
+  PrestaShop\PrestaShop\Adapter\Shop\ShopUrlDataProvider:
+    public: false
     arguments:
       - '@=service("PrestaShop\\PrestaShop\\Adapter\\LegacyContext").getContext().shop.id'
+
+  prestashop.adapter.shop.shop_url:
+    alias: 'PrestaShop\PrestaShop\Adapter\Shop\ShopUrlDataProvider'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+    public: true
 
   prestashop.adapter.file.htaccess_file_generator:
     class: 'PrestaShop\PrestaShop\Adapter\File\HtaccessFileGenerator'
@@ -114,8 +121,15 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Tools'
       - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_HTACCESS_DISABLE_MULTIVIEWS')"
 
+  PrestaShop\PrestaShop\Adapter\File\RobotsTextFileGenerator:
+    public: false
+
   prestashop.adapter.file.robots_text_file_generator:
-    class: 'PrestaShop\PrestaShop\Adapter\File\RobotsTextFileGenerator'
+    alias: 'PrestaShop\PrestaShop\Adapter\File\RobotsTextFileGenerator'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+    public: true
 
   PrestaShop\PrestaShop\Adapter\ImageThumbnailsRegenerator:
     autowire: true

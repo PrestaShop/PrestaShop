@@ -98,8 +98,15 @@ services:
       version: 9.0
     public: true
 
+  PrestaShop\PrestaShop\Adapter\Routes\DefaultRouteProvider:
+    public: false
+
   prestashop.adapter.data_provider.default_route:
-    class: PrestaShop\PrestaShop\Adapter\Routes\DefaultRouteProvider
+    alias: PrestaShop\PrestaShop\Adapter\Routes\DefaultRouteProvider
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+    public: true
 
   prestashop.adapter.data_provider.employee:
     class: PrestaShop\PrestaShop\Adapter\Employee\ContextEmployeeProvider
