@@ -5060,25 +5060,23 @@
         },
         {
             "name": "prestashop/classic",
-            "version": "dev-develop",
+            "version": "dev-update-for-node-iron-lts",
             "source": {
                 "type": "git",
-                "url": "https://github.com/PrestaShop/classic-theme.git",
-                "reference": "8e98738eac76dd565af0313425c65154a818f45e"
+                "url": "https://github.com/mattgoud/classic-theme.git",
+                "reference": "436d8a5811bf658f0afeaae5e260fac678e477eb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/classic-theme/zipball/8e98738eac76dd565af0313425c65154a818f45e",
-                "reference": "8e98738eac76dd565af0313425c65154a818f45e",
+                "url": "https://api.github.com/repos/mattgoud/classic-theme/zipball/436d8a5811bf658f0afeaae5e260fac678e477eb",
+                "reference": "436d8a5811bf658f0afeaae5e260fac678e477eb",
                 "shasum": ""
             },
             "require-dev": {
                 "symfony/console": "~4.4 || ^5.0",
                 "symfony/yaml": "~4.4 || ^5.0"
             },
-            "default-branch": true,
             "type": "prestashop-theme",
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "AFL-3.0"
             ],
@@ -5094,9 +5092,9 @@
             ],
             "description": "Classic theme for develop PrestaShop version",
             "support": {
-                "source": "https://github.com/PrestaShop/classic-theme/tree/develop"
+                "source": "https://github.com/mattgoud/classic-theme/tree/update-for-node-iron-lts"
             },
-            "time": "2024-04-30T08:31:00+00:00"
+            "time": "2024-09-23T17:32:20+00:00"
         },
         {
             "name": "prestashop/contactform",

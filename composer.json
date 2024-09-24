@@ -59,7 +59,7 @@
         "prestashop/blockreassurance": "^5",
         "prestashop/blockwishlist": "^3.0",
         "prestashop/circuit-breaker": "^4.0",
-        "prestashop/classic": "dev-develop",
+        "prestashop/classic": "dev-update-for-node-iron-lts",
         "prestashop/contactform": "^4",
         "prestashop/dashactivity": "^2",
         "prestashop/dashgoals": "^2",
@@ -258,6 +258,10 @@
         "ps_apiresources": {
             "type": "vcs",
             "url": "https://github.com/PrestaShop/ps_apiresources.git"
+        },
+        "classic": {
+            "type": "vcs",
+            "url": "https://github.com/mattgoud/classic-theme.git"
         }
     },
     "minimum-stability": "dev",
