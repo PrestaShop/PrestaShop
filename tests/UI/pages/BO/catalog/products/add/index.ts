@@ -1,5 +1,4 @@
 // Import pages
-import virtualProductTab from '@pages/BO/catalog/products/add/virtualProductTab';
 import BOBasePage from '@pages/BO/BObasePage';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 import detailsTab from '@pages/BO/catalog/products/add/detailsTab';
@@ -10,6 +9,7 @@ import type {Frame, Page} from 'playwright';
 import {
   boProductsCreateTabShippingPage,
   boProductsCreateTabStocksPage,
+  boProductsCreateTabVirtualProductPage,
   boProductsPage,
   type FakerProduct,
   type ProductHeaderSummary,
@@ -361,7 +361,7 @@ class CreateProduct extends BOBasePage {
     await detailsTab.setProductDetails(page, productData);
 
     if (productData.type === 'virtual') {
-      await virtualProductTab.setVirtualProduct(page, productData);
+      await boProductsCreateTabVirtualProductPage.setVirtualProduct(page, productData);
     } else if (productData.type !== 'combinations') {
       await boProductsCreateTabStocksPage.setProductStock(page, productData);
     }
