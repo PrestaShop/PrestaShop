@@ -68,11 +68,16 @@ services:
       - '@prestashop.adapter.data_provider.employee'
       - '@=service("prestashop.adapter.legacy.configuration").getInt("_PS_ADMIN_PROFILE_")'
 
-  prestashop.adapter.data_provider.module:
-    class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider
+  PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider:
     arguments: [ "@prestashop.adapter.legacy.logger", "@translator", "@doctrine.orm.entity_manager" ]
     calls:
       - [ "setEmployeeId", [ "@=service('prestashop.adapter.legacy.context').getContext().employee?service('prestashop.adapter.legacy.context').getContext().employee.id:0" ] ]
+
+  prestashop.adapter.data_provider.module:
+    alias: PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   PrestaShop\PrestaShop\Adapter\Category\CategoriesProviderBuilder:
     arguments:

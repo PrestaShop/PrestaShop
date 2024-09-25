@@ -52,6 +52,7 @@ use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -227,6 +228,57 @@ class PrestaShopAdminController extends AbstractController
             ],
             'Admin.Notifications.Error',
         );
+    }
+
+    /**
+     * Returns form errors for JS implementation.
+     *
+     * Parse all errors mapped by id html field
+     *
+     * @param FormInterface $form
+     *
+     * @return array<array<string>> Errors
+     *
+     * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
+     */
+    protected function getFormErrorsForJS(FormInterface $form): array
+    {
+        $errors = [];
+
+        if ($form->count() === 0) {
+            return $errors;
+        }
+
+        foreach ($form->getErrors(true) as $error) {
+            if ($error->getCause() && method_exists($error->getCause(), 'getPropertyPath')) {
+                $formId = str_replace(
+                    ['.', 'children[', ']', '_data'],
+                    ['_', '', '', ''],
+                    $error->getCause()->getPropertyPath()
+                );
+            } else {
+                $formId = 'bubbling_errors';
+            }
+
+            if ($error->getMessagePluralization()) {
+                $errors[$formId][] = $this->trans(
+                    $error->getMessageTemplate(),
+                    array_merge(
+                        $error->getMessageParameters(),
+                        ['%count%' => $error->getMessagePluralization()]
+                    ),
+                    'validators'
+                );
+            } else {
+                $errors[$formId][] = $this->trans(
+                    $error->getMessageTemplate(),
+                    $error->getMessageParameters(),
+                    'validators'
+                );
+            }
+        }
+
+        return $errors;
     }
 
     /**
