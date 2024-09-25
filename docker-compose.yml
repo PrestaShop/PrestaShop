@@ -26,7 +26,7 @@ services:
         - VERSION=${VERSION:-8.1-apache}
         - USER_ID=${USER_ID:-1000}
         - GROUP_ID=${GROUP_ID:-1000}
-        - NODE_VERSION=${NODE_VERSION:-16.20.1}
+        - NODE_VERSION=${NODE_VERSION:-20.17.0}
         - INSTALL_XDEBUG=${INSTALL_XDEBUG:-false}
     environment:
       DISABLE_MAKE: ${DISABLE_MAKE:-0}
