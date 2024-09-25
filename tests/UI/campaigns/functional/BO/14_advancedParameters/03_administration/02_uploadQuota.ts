@@ -6,7 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
-import virtualProductTab from '@pages/BO/catalog/products/add/virtualProductTab';
 import createProductPage from '@pages/BO/catalog/products/add';
 import filesPage from '@pages/BO/catalog/files';
 import addFilePage from '@pages/BO/catalog/files/add';
@@ -17,6 +16,7 @@ import {
   boAdministrationPage,
   boDashboardPage,
   boProductsPage,
+  boProductsCreateTabVirtualProductPage,
   FakerFile,
   FakerProduct,
   utilsFile,
@@ -217,10 +217,10 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'createVirtualProduct1', baseContext);
 
       await createProductPage.setProductName(page, firstVirtualProductData.name, 'en');
-      await virtualProductTab.setVirtualProduct(page, firstVirtualProductData);
+      await boProductsCreateTabVirtualProductPage.setVirtualProduct(page, firstVirtualProductData);
       await createProductPage.clickOnSaveProductButton(page);
 
-      const errorMessage = await virtualProductTab.getErrorMessageInDownloadFileInput(page);
+      const errorMessage = await boProductsCreateTabVirtualProductPage.getErrorMessageInDownloadFileInput(page);
       expect(errorMessage).to.contains('The file is too large')
         .and.to.contains('Allowed maximum size is 2 MB.');
     });
@@ -228,7 +228,7 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
     it('should try to add a file in virtual tab < 2 MB', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createVirtualProduct2', baseContext);
 
-      await virtualProductTab.setVirtualProduct(page, secondVirtualProductData);
+      await boProductsCreateTabVirtualProductPage.setVirtualProduct(page, secondVirtualProductData);
 
       const createProductMessage = await createProductPage.saveProduct(page);
       expect(createProductMessage).to.equal(createProductPage.successfulUpdateMessage);

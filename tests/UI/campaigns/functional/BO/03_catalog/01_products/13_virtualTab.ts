@@ -6,7 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
 import createProductsPage from '@pages/BO/catalog/products/add';
-import virtualProductTab from '@pages/BO/catalog/products/add/virtualProductTab';
 
 // Import FO pages
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
@@ -16,6 +15,7 @@ import {
   boDashboardPage,
   boProductsPage,
   boProductSettingsPage,
+  boProductsCreateTabVirtualProductPage,
   dataCustomers,
   dataPaymentMethods,
   FakerProduct,
@@ -218,7 +218,7 @@ describe('BO - Catalog - Products : Virtual tab', async () => {
     it('should set the product quantity to 0', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setProductQuantity', baseContext);
 
-      await virtualProductTab.setProductQuantity(page, -100);
+      await boProductsCreateTabVirtualProductPage.setProductQuantity(page, -100);
 
       const createProductMessage = await createProductsPage.saveProduct(page);
       expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
@@ -232,7 +232,7 @@ describe('BO - Catalog - Products : Virtual tab', async () => {
       it(`should check the '${test.args.option}' option`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkOrderOption${index}`, baseContext);
 
-        await virtualProductTab.setOptionWhenOutOfStock(page, test.args.option);
+        await boProductsCreateTabVirtualProductPage.setOptionWhenOutOfStock(page, test.args.option);
 
         const createProductMessage = await createProductsPage.saveProduct(page);
         expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
@@ -271,7 +271,7 @@ describe('BO - Catalog - Products : Virtual tab', async () => {
     it('should click on edit default behaviour link', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editBehaviour', baseContext);
 
-      page = await virtualProductTab.clickOnEditDefaultBehaviourLink(page);
+      page = await boProductsCreateTabVirtualProductPage.clickOnEditDefaultBehaviourLink(page);
 
       const pageTitle = await boProductSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
@@ -289,8 +289,8 @@ describe('BO - Catalog - Products : Virtual tab', async () => {
     it('should set label when in stock', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setLabelWhenInStock', baseContext);
 
-      await virtualProductTab.setProductQuantity(page, 100);
-      await virtualProductTab.setLabelWhenInStock(page, 'Product available');
+      await boProductsCreateTabVirtualProductPage.setProductQuantity(page, 100);
+      await boProductsCreateTabVirtualProductPage.setLabelWhenInStock(page, 'Product available');
 
       const createProductMessage = await createProductsPage.saveProduct(page);
       expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
@@ -327,10 +327,9 @@ describe('BO - Catalog - Products : Virtual tab', async () => {
     it('should check the allow orders option and set Label when out of stock', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDenyOrder', baseContext);
 
-      await virtualProductTab.setProductQuantity(page, -100);
-      await virtualProductTab.setOptionWhenOutOfStock(page, 'Allow orders');
-
-      await virtualProductTab.setLabelWhenOutOfStock(page, 'Out of stock');
+      await boProductsCreateTabVirtualProductPage.setProductQuantity(page, -100);
+      await boProductsCreateTabVirtualProductPage.setOptionWhenOutOfStock(page, 'Allow orders');
+      await boProductsCreateTabVirtualProductPage.setLabelWhenOutOfStock(page, 'Out of stock');
 
       const createProductMessage = await createProductsPage.saveProduct(page);
       expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
