@@ -32,7 +32,7 @@
   <meta charset="utf-8">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <link rel="icon" type="image/x-icon" href="{$img_dir}favicon.ico" />
   <link rel="apple-touch-icon" href="{$img_dir}app_icon.png" />
 
