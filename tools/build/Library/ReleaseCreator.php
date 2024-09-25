@@ -482,6 +482,8 @@ class ReleaseCreator
         }
 
         if (!file_put_contents($this->tempProjectPath . '/LICENSES', $content)) {
+            $this->consoleWriter->displayText(" FAILED{$this->lineSeparator}", ConsoleWriter::COLOR_RED);
+
             throw new BuildException('Unable to create LICENSES file.');
         }
         $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
@@ -515,6 +517,8 @@ class ReleaseCreator
         foreach ($fileLocations as $fileLocation) {
             $filePath = $this->tempProjectPath . $fileLocation . 'CACHEDIR.TAG';
             if (!file_put_contents($filePath, $fileContent)) {
+                $this->consoleWriter->displayText(" FAILED{$this->lineSeparator}", ConsoleWriter::COLOR_RED);
+
                 throw new BuildException('Unable to create ' . $filePath);
             }
         }
@@ -541,6 +545,8 @@ class ReleaseCreator
         exec($command, $output, $returnCode);
 
         if ($returnCode !== 0) {
+            $this->consoleWriter->displayText(" FAILED{$this->lineSeparator}", ConsoleWriter::COLOR_RED);
+            $this->consoleWriter->displayText(implode($this->lineSeparator, $output));
             throw new BuildException('Unable to run composer install.');
         }
 
@@ -563,6 +569,8 @@ class ReleaseCreator
         exec($command, $output, $returnCode);
 
         if ($returnCode !== 0) {
+            $this->consoleWriter->displayText(" FAILED{$this->lineSeparator}", ConsoleWriter::COLOR_RED);
+            $this->consoleWriter->displayText(implode($this->lineSeparator, $output));
             throw new BuildException('Unable to build assets.');
         }
 
@@ -862,6 +870,7 @@ class ReleaseCreator
             . "</checksum_list>{$this->lineSeparator}";
 
         if (!file_put_contents($xmlPath, $content)) {
+            $this->consoleWriter->displayText(" FAILED{$this->lineSeparator}", ConsoleWriter::COLOR_RED);
             throw new BuildException('Unable to generate XML checksum.');
         }
         $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
