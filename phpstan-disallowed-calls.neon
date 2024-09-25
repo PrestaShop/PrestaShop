@@ -291,6 +291,8 @@ parameters:
                 - src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ImageController.php
                 - src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/CombinationController.php
                 - src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php
+                - src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/MetaController.php
+                - src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/OrderStateController.php
   disallowedConstants:
         -
             constant:

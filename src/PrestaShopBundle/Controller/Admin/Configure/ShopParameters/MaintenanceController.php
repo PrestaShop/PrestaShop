@@ -26,37 +26,32 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
-use Symfony\Component\Form\FormInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Responsible of "Configure > Shop Parameters > General > Maintenance" page.
+ * Responsible for "Configure > Shop Parameters > General > Maintenance" page.
  */
-class MaintenanceController extends FrameworkBundleAdminController
+class MaintenanceController extends PrestaShopAdminController
 {
     public const CONTROLLER_NAME = 'AdminMaintenance';
 
-    /**
-     * @param Request $request
-     * @param FormInterface $form
-     *
-     * @return Response
-     */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
-    public function indexAction(Request $request, ?FormInterface $form = null)
-    {
-        if (null === $form) {
-            $form = $this->get('prestashop.adapter.maintenance.form_handler')->getForm();
-        }
+    public function indexAction(
+        #[Autowire(service: 'prestashop.adapter.maintenance.form_handler')]
+        FormHandlerInterface $maintenanceFormHandler,
+    ): Response {
+        $form = $maintenanceFormHandler->getForm();
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/maintenance.html.twig', [
             'layoutHeaderToolbarBtn' => [],
-            'layoutTitle' => $this->trans('Maintenance', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Maintenance', [], 'Admin.Navigation.Menu'),
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'enableSidebar' => true,
@@ -66,19 +61,17 @@ class MaintenanceController extends FrameworkBundleAdminController
         ]);
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
     #[DemoRestricted(redirectRoute: 'admin_maintenance')]
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.', redirectRoute: 'admin_maintenance')]
-    public function processFormAction(Request $request)
-    {
+    public function processFormAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.adapter.maintenance.form_handler')]
+        FormHandlerInterface $maintenanceFormHandler,
+    ): RedirectResponse {
         $redirectResponse = $this->redirectToRoute('admin_maintenance');
 
-        $this->dispatchHook('actionAdminMaintenanceControllerPostProcessBefore', ['controller' => $this]);
-        $form = $this->get('prestashop.adapter.maintenance.form_handler')->getForm();
+        $this->dispatchHookWithParameters('actionAdminMaintenanceControllerPostProcessBefore', ['controller' => $this]);
+        $form = $maintenanceFormHandler->getForm();
         $form->handleRequest($request);
 
         if (!$form->isSubmitted()) {
@@ -86,15 +79,15 @@ class MaintenanceController extends FrameworkBundleAdminController
         }
 
         $data = $form->getData();
-        $saveErrors = $this->get('prestashop.adapter.maintenance.form_handler')->save($data);
+        $saveErrors = $maintenanceFormHandler->save($data);
 
         if (0 === count($saveErrors)) {
-            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
 
             return $redirectResponse;
         }
 
-        $this->flashErrors($saveErrors);
+        $this->addFlashErrors($saveErrors);
 
         return $redirectResponse;
     }

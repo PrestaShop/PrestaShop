@@ -52,6 +52,7 @@ use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -335,6 +336,14 @@ class PrestaShopAdminController extends AbstractController
         foreach ($errorMessages as $error) {
             $message = is_array($error) ? $this->trans($error['key'], $error['parameters'], $error['domain']) : $error;
             $this->addFlash('error', $message);
+        }
+    }
+
+    protected function addFlashFormErrors(FormInterface $form): void
+    {
+        /** @var FormError $formError */
+        foreach ($form->getErrors() as $formError) {
+            $this->addFlash('error', $formError->getMessage());
         }
     }
 

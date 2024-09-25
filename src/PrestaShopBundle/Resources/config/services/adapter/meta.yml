@@ -2,11 +2,27 @@ services:
   _defaults:
     public: true
 
+  PrestaShop\PrestaShop\Adapter\Meta\MetaEraser:
+    public: false
+
   prestashop.adapter.meta.meta_eraser:
-    class: 'PrestaShop\PrestaShop\Adapter\Meta\MetaEraser'
+    alias: 'PrestaShop\PrestaShop\Adapter\Meta\MetaEraser'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+    public: true
+
+  PrestaShop\PrestaShop\Adapter\Meta\MetaDataProvider:
+    public: false
+
+  PrestaShop\PrestaShop\Core\Meta\MetaDataProviderInterface: '@PrestaShop\PrestaShop\Adapter\Meta\MetaDataProvider'
 
   prestashop.adapter.meta.data_provider:
-    class: 'PrestaShop\PrestaShop\Adapter\Meta\MetaDataProvider'
+    alias: 'PrestaShop\PrestaShop\Adapter\Meta\MetaDataProvider'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+    public: true
 
   # COMMAND HANDLERS
 
