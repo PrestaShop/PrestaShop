@@ -36,7 +36,6 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
 
   const tableName: string = 'order_return';
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -83,37 +82,37 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
   describe('Filter order return statuses table', async () => {
     const tests = [
       {
-        args:
-          {
-            testIdentifier: 'filterById',
-            filterType: 'input',
-            filterBy: 'id_order_return_state',
-            filterValue: dataOrderReturnStatuses.packageReceived.id.toString(),
-            idColumn: 1,
-          },
+        testIdentifier: 'filterById',
+        filterType: 'input',
+        filterBy: 'id_order_return_state',
+        filterValue: dataOrderReturnStatuses.packageReceived.id.toString(),
+        idColumn: 1,
       },
       {
-        args:
-          {
-            testIdentifier: 'filterByName',
-            filterType: 'input',
-            filterBy: 'name',
-            filterValue: dataOrderReturnStatuses.returnCompleted.name,
-            idColumn: 2,
-          },
+        testIdentifier: 'filterByName',
+        filterType: 'input',
+        filterBy: 'name',
+        filterValue: dataOrderReturnStatuses.returnCompleted.name,
+        idColumn: 2,
       },
     ];
 
-    tests.forEach((test) => {
-      it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+    tests.forEach((test: {
+      testIdentifier: string,
+      filterType: string,
+      filterBy: string,
+      filterValue: string,
+      idColumn: number
+    }) => {
+      it(`should filter by ${test.filterBy} '${test.filterValue}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.testIdentifier, baseContext);
 
         await statusesPage.filterTable(
           page,
           tableName,
-          test.args.filterType,
-          test.args.filterBy,
-          test.args.filterValue,
+          test.filterType,
+          test.filterBy,
+          test.filterValue,
         );
 
         const numberOfLinesAfterFilter = await statusesPage.getNumberOfElementInGrid(page, tableName);
@@ -124,14 +123,14 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
             page,
             tableName,
             row,
-            test.args.filterBy,
+            test.filterBy,
           );
-          expect(textColumn).to.contains(test.args.filterValue);
+          expect(textColumn).to.contains(test.filterValue);
         }
       });
 
       it('should reset all filters', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `${test.testIdentifier}Reset`, baseContext);
 
         const numberOfLinesAfterReset = await statusesPage.resetAndGetNumberOfLines(page, tableName);
         expect(numberOfLinesAfterReset).to.equal(numberOfOrderReturnStatuses);
@@ -141,62 +140,64 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
 
   // 2 - Sort order return statuses table
   describe('Sort order return statuses table', async () => {
-    const sortTests = [
+    [
       {
-        args: {
-          testIdentifier: 'sortByIdDesc',
-          sortBy: 'id_order_return_state',
-          columnID: 2,
-          sortDirection: 'desc',
-          isFloat: true,
-        },
+        testIdentifier: 'sortByIdDesc',
+        sortBy: 'id_order_return_state',
+        columnID: 2,
+        sortDirection: 'desc',
+        isFloat: true,
       },
       {
-        args: {
-          testIdentifier: 'sortByNameAsc', sortBy: 'name', columnID: 3, sortDirection: 'asc',
-        },
+        testIdentifier: 'sortByNameAsc',
+        sortBy: 'name',
+        columnID: 3,
+        sortDirection: 'asc',
       },
       {
-        args: {
-          testIdentifier: 'sortByNameDesc', sortBy: 'name', columnID: 3, sortDirection: 'desc',
-        },
+        testIdentifier: 'sortByNameDesc',
+        sortBy: 'name',
+        columnID: 3,
+        sortDirection: 'desc',
       },
       {
-        args: {
-          testIdentifier: 'sortByIdAsc',
-          sortBy: 'id_order_return_state',
-          columnID: 2,
-          sortDirection: 'asc',
-          isFloat: true,
-        },
+        testIdentifier: 'sortByIdAsc',
+        sortBy: 'id_order_return_state',
+        columnID: 2,
+        sortDirection: 'asc',
+        isFloat: true,
       },
-    ];
-
-    sortTests.forEach((test) => {
-      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+    ].forEach((test: {
+      testIdentifier: string,
+      sortBy: string
+      columnID: number,
+      sortDirection: string
+      isFloat?: boolean,
+    }) => {
+      it(`should sort by '${test.sortBy}' '${test.sortDirection}' and check result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.testIdentifier, baseContext);
 
         const nonSortedTable = await statusesPage.getAllRowsColumnContent(
           page,
           tableName,
-          test.args.sortBy,
+          test.sortBy,
         );
 
-        await statusesPage.sortTable(page, tableName, test.args.sortBy, test.args.columnID, test.args.sortDirection);
+        await statusesPage.sortTable(page, tableName, test.sortBy, test.columnID, test.sortDirection);
 
         const sortedTable = await statusesPage.getAllRowsColumnContent(
           page,
           tableName,
-          test.args.sortBy,
+          test.sortBy,
         );
 
-        if (test.args.isFloat) {
+        if (test.isFloat) {
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
           const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
           const expectedResult = await utilsCore.sortArrayNumber(nonSortedTableFloat);
 
-          if (test.args.sortDirection === 'asc') {
+          if (test.sortDirection === 'asc') {
             expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
             expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
@@ -204,7 +205,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
         } else {
           const expectedResult = await utilsCore.sortArray(nonSortedTable);
 
-          if (test.args.sortDirection === 'asc') {
+          if (test.sortDirection === 'asc') {
             expect(sortedTable).to.deep.equal(expectedResult);
           } else {
             expect(sortedTable).to.deep.equal(expectedResult.reverse());
