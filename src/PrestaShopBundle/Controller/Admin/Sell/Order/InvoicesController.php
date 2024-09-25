@@ -26,11 +26,9 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
-use PrestaShop\PrestaShop\Adapter\PDF\InvoicePdfGenerator;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
-use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceByDateFormHandler;
-use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceByStatusFormHandler;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -78,7 +76,7 @@ class InvoicesController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'Access denied.')]
     public function generatePdfByDateAction(
         Request $request,
-        InvoiceByDateFormHandler $formHandler
+        #[Autowire(service: 'prestashop.admin.order.invoices.by_date.form_handler')] FormHandlerInterface $formHandler
     ) {
         $this->processForm($formHandler, $request);
 
@@ -95,7 +93,7 @@ class InvoicesController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'Access denied.')]
     public function generatePdfByStatusAction(
         Request $request,
-        InvoiceByStatusFormHandler $formHandler
+        #[Autowire(service: 'prestashop.admin.order.invoices.by_status.form_handler')] FormHandlerInterface $formHandler
     ) {
         $this->processForm($formHandler, $request);
 
@@ -153,7 +151,7 @@ class InvoicesController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'Access denied.')]
     public function generatePdfByIdAction(
         int $invoiceId,
-        InvoicePdfGenerator $invoicePdfGenerator
+        #[Autowire(service: 'prestashop.adapter.pdf.generator.single_invoice')] PDFGeneratorInterface $invoicePdfGenerator
     ) {
         $invoicePdfGenerator->generatePDF([$invoiceId]);
 

@@ -113,7 +113,6 @@ use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderShippingType;
 use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderStatusType;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
-use PrestaShopBundle\Service\Routing\Router;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -123,6 +122,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Manages "Sell > Orders" page
@@ -182,7 +182,7 @@ class OrderController extends PrestaShopAdminController
     {
         $toolbarButtons = [];
 
-        $isSingleShopContext = $this->getShopContext()->getShopConstraint()->getShopId() !== null;
+        $isSingleShopContext = $this->getShopContext()->getShopConstraint()->isSingleShopContext();
 
         $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_orders_create'),
@@ -250,7 +250,7 @@ class OrderController extends PrestaShopAdminController
         LanguageByIdChoiceProvider $languageChoiceProvider,
         #[Autowire(service: 'prestashop.core.form.choice_provider.currency_by_id')] FormChoiceProviderInterface $currencyChoiceProvider,
     ) {
-        $isSingleShopContext = $this->getShopContext()->getShopConstraint()->getShopId() !== null;
+        $isSingleShopContext = $this->getShopContext()->getShopConstraint()->isSingleShopContext();
         if (!$isSingleShopContext) {
             $this->addFlash('error', $this->trans(
                 'You have to select a shop before creating new orders.',
@@ -264,7 +264,7 @@ class OrderController extends PrestaShopAdminController
         $summaryForm = $this->createForm(CartSummaryType::class);
         $languages = $languageChoiceProvider->getChoices(
             [
-                'shop_id' => $this->getShopContext()->getShopConstraint()->getShopId(),
+                'shop_id' => $this->getShopContext()->getShopConstraint()->getShopId()?->getValue(),
             ]
         );
 
@@ -530,7 +530,7 @@ class OrderController extends PrestaShopAdminController
 
         $merchandiseReturnEnabled = (bool) $this->getConfiguration()->get('PS_ORDER_RETURN');
 
-        $paginationNum = (int) $this->getConfiguration()->get('PS_ORDER_PRODUCTS_NB_PER_PAGE');
+        $paginationNum = ($this->getConfiguration()->get('PS_ORDER_PRODUCTS_NB_PER_PAGE') ?? self::DEFAULT_PRODUCTS_NUMBER);
         $paginationNumOptions = self::PRODUCTS_PAGINATION_OPTIONS;
         if (!in_array($paginationNum, $paginationNumOptions)) {
             $paginationNumOptions[] = $paginationNum;
@@ -629,7 +629,7 @@ class OrderController extends PrestaShopAdminController
         int $orderId,
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilderInterface $formBuilder,
-        #[Autowire(service: 'prestashop.core.form.identifiable_object.partial_refund_form_handler')] FormHandlerInterface $formHandler,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.standard_refund_form_handler')] FormHandlerInterface $formHandler,
     ) {
         $form = $formBuilder->getFormFor($orderId);
 
@@ -663,7 +663,7 @@ class OrderController extends PrestaShopAdminController
         int $orderId,
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilderInterface $formBuilder,
-        #[Autowire(service: 'prestashop.core.form.identifiable_object.partial_refund_form_handler')] FormHandlerInterface $formHandler,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.return_product_form_handler')] FormHandlerInterface $formHandler,
     ) {
         $form = $formBuilder->getFormFor($orderId);
 
@@ -1242,7 +1242,7 @@ class OrderController extends PrestaShopAdminController
     public function sendMessageAction(
         Request $request,
         int $orderId,
-        Router $router
+        RouterInterface $router
     ): Response {
         $orderMessageForm = $this->createForm(OrderMessageType::class);
 
@@ -1521,7 +1521,7 @@ class OrderController extends PrestaShopAdminController
 
         $cancelProductForm = $formBuilder->getFormFor($orderId);
 
-        $paginationNum = (int) $this->getConfiguration()->get('PS_ORDER_PRODUCTS_NB_PER_PAGE');
+        $paginationNum = ($this->getConfiguration()->get('PS_ORDER_PRODUCTS_NB_PER_PAGE') ?? self::DEFAULT_PRODUCTS_NUMBER);
         $paginationNumOptions = self::PRODUCTS_PAGINATION_OPTIONS;
         if (!in_array($paginationNum, $paginationNumOptions)) {
             $paginationNumOptions[] = $paginationNum;
@@ -1609,7 +1609,7 @@ class OrderController extends PrestaShopAdminController
         int $orderId,
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilderInterface $formBuilder,
-        #[Autowire(service: 'prestashop.core.form.identifiable_object.partial_refund_form_handler')] FormHandlerInterface $formHandler,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.cancellation_form_handler')] FormHandlerInterface $formHandler,
     ) {
         $form = $formBuilder->getFormFor($orderId);
         try {

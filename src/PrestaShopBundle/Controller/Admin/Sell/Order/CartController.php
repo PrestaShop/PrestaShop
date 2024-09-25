@@ -218,7 +218,7 @@ class CartController extends PrestaShopAdminController
     public function viewAction(
         Request $request,
         int $cartId,
-        #[Autowire(service: 'prestashop.core.kpi_row.factory.carts')] HookableKpiRowFactory $kpiRowFactory,
+        #[Autowire(service: 'prestashop.core.kpi_row.factory.cart')] HookableKpiRowFactory $kpiRowFactory,
         IniConfiguration $iniConfiguration
     ) {
         try {

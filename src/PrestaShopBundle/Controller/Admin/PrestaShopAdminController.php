@@ -348,17 +348,6 @@ class PrestaShopAdminController extends AbstractController
     }
 
     /**
-     * @param FormInterface $form
-     */
-    protected function addFlashFormErrors(FormInterface $form)
-    {
-        /** @var FormError $formError */
-        foreach ($form->getErrors() as $formError) {
-            $this->addFlash('error', $formError->getMessage());
-        }
-    }
-
-    /**
      * Return the authorization level of the current employee for the request controller.
      *
      * @param string $legacyControllerName Name of the legacy controller of which the level is requested
