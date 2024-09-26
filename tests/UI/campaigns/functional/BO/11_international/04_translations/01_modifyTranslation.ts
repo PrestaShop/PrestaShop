@@ -265,7 +265,7 @@ describe('BO - International - Translation : Modify translation', async () => {
 
       await foHummingbirdHomePage.clickAddWishListProduct(page, 1);
 
-      //@todo : Move to foHummingbirdModalWishlistPage
+      // @todo : Move to foHummingbirdModalWishlistPage
       const wishlistModalTitle = await foClassicModalWishlistPage.getModalAddToTitle(page);
       expect(wishlistModalTitle).to.equal('Add to wishlist now');
     });

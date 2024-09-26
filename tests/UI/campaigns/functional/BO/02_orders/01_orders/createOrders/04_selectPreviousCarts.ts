@@ -196,7 +196,8 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
     });
   });
 
-  // To delete when this issue: https://github.com/PrestaShop/PrestaShop/issues/9589 is fixed
+  // @todo : https://github.com/PrestaShop/PrestaShop/issues/9589
+  // Delete when fixed
   describe('Delete the Non ordered shopping carts', async () => {
     it('should go to \'Orders > Shopping carts\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage2', baseContext);

@@ -162,7 +162,7 @@ describe('FO - Menu and navigation : Sort products', async () => {
           sortDirection: 'asc',
         },
       },
-      // @todo https://github.com/PrestaShop/PrestaShop/issues/19810
+      // @todo : https://github.com/PrestaShop/PrestaShop/issues/19810
       /*{
         args: {
           testIdentifier: 'sortByPriceDesc',

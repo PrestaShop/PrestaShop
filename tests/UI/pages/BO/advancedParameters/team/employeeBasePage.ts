@@ -10,6 +10,8 @@ import type {Page} from 'playwright';
 export default class EmployeeBasePage extends BOBasePage {
   public readonly pageTitleEdit: (firstName: string, lastName: string) => string;
 
+  public readonly pageTitleEditFr: (firstName: string, lastName: string) => string;
+
   protected readonly firstNameInput: string;
 
   protected readonly lastNameInput: string;
@@ -37,8 +39,10 @@ export default class EmployeeBasePage extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitleEdit = (firstName: string, lastName: string) => `Editing ${firstName} ${lastName}'s profile • `
-      + `${global.INSTALL.SHOP_NAME}`;
+    this.pageTitleEdit = (firstName: string, lastName: string) => `Editing ${firstName} ${lastName}'s profile`
+      + ` • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitleEditFr = (firstName: string, lastName: string) => `Modification du profil de ${firstName} ${lastName}`
+      + ` • ${global.INSTALL.SHOP_NAME}`;
 
     // Selectors
     this.firstNameInput = '#employee_firstname';
