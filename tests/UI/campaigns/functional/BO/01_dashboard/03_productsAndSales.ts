@@ -124,7 +124,7 @@ describe('BO - Dashboard : Products and sales', async () => {
         expect(isConfigureFormVisible).to.eq(true);
       });
 
-      // @todo https://github.com/PrestaShop/PrestaShop/issues/34326
+      // @todo : https://github.com/PrestaShop/PrestaShop/issues/34326
     });
   });
 });

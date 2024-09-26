@@ -354,7 +354,7 @@ describe('BO - Dashboard : Activity overview', async () => {
         expect(pageTitle).to.contains(boDashboardPage.pageTitle);
       });
 
-      // @todo https://github.com/PrestaShop/PrestaShop/issues/34321
+      // @todo : https://github.com/PrestaShop/PrestaShop/issues/34321
       it('should check Return/Exchange number', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkReturnExchangeNumber', baseContext);
 
@@ -711,7 +711,7 @@ describe('BO - Dashboard : Activity overview', async () => {
       expect(isConfigureFormVisible).to.eq(true);
     });
 
-    // @todo https://github.com/PrestaShop/PrestaShop/issues/34326
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/34326
   });
 
   // Post-condition : Delete created customer

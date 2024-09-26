@@ -56,7 +56,7 @@ describe('FO - Home Page : Select color', async () => {
 
       const pageURL = await foHummingbirdProductPage.getCurrentURL(page);
       expect(pageURL).to.contains('color-white');
-      // @todo https://github.com/PrestaShop/PrestaShop/issues/35481
+      // @todo : https://github.com/PrestaShop/PrestaShop/issues/35481
       // .and.to.contains('size-m');
     });
 
@@ -83,7 +83,7 @@ describe('FO - Home Page : Select color', async () => {
 
       const pageURL = await foHummingbirdProductPage.getCurrentURL(page);
       expect(pageURL).to.contains('color-black');
-      // @todo https://github.com/PrestaShop/PrestaShop/issues/35481
+      // @todo : https://github.com/PrestaShop/PrestaShop/issues/35481
       // .and.to.contains('size-m');
     });
   });
