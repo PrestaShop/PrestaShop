@@ -4,13 +4,12 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-import myProfilePage from '@pages/BO/advancedParameters/team/myProfile';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boModuleManagerPage,
+  boMyProfilePage,
   dataEmployees,
   dataModules,
   FakerEmployee,
@@ -120,11 +119,11 @@ describe('BO - Modules - GDPR: Help', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'goToMyProfilePage', baseContext);
 
     await boDashboardPage.goToMyProfile(page);
-    await myProfilePage.closeSfToolBar(page);
+    await boMyProfilePage.closeSfToolBar(page);
 
-    const pageTitle = await myProfilePage.getPageTitle(page);
+    const pageTitle = await boMyProfilePage.getPageTitle(page);
     expect(pageTitle).to.contains(
-      myProfilePage.pageTitleEdit(dataEmployees.defaultEmployee.lastName, dataEmployees.defaultEmployee.firstName),
+      boMyProfilePage.pageTitleEdit(dataEmployees.defaultEmployee.lastName, dataEmployees.defaultEmployee.firstName),
     );
   });
 
@@ -132,10 +131,10 @@ describe('BO - Modules - GDPR: Help', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'updateLanguage', baseContext);
     
     employeeData.language = 'Français (French)';
-    await myProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
+    await boMyProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
 
-    const textResult = await myProfilePage.getAlertSuccess(page);
-    expect(textResult).to.equal(myProfilePage.successfulUpdateMessage);
+    const textResult = await boMyProfilePage.getAlertSuccess(page);
+    expect(textResult).to.equal(boMyProfilePage.successfulUpdateMessage);
   });
 
   it('should go to \'Modules > Module Manager\' page', async function () {
@@ -197,20 +196,20 @@ describe('BO - Modules - GDPR: Help', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'returnToMyProfilePage', baseContext);
 
     await boDashboardPage.goToMyProfile(page);
-    await myProfilePage.closeSfToolBar(page);
+    await boMyProfilePage.closeSfToolBar(page);
 
-    const pageTitle = await myProfilePage.getPageTitle(page);
+    const pageTitle = await boMyProfilePage.getPageTitle(page);
     expect(pageTitle).to.contains(
-      myProfilePage.pageTitleEditFr(dataEmployees.defaultEmployee.lastName, dataEmployees.defaultEmployee.firstName),
+      boMyProfilePage.pageTitleEditFr(dataEmployees.defaultEmployee.lastName, dataEmployees.defaultEmployee.firstName),
     );
   });
 
   it('should reset the language', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetLanguage', baseContext);
     
-    await myProfilePage.updateEditEmployee(page, dataEmployees.defaultEmployee.password, dataEmployees.defaultEmployee);
+    await boMyProfilePage.updateEditEmployee(page, dataEmployees.defaultEmployee.password, dataEmployees.defaultEmployee);
 
-    const textResult = await myProfilePage.getAlertSuccess(page);
-    expect(textResult).to.equal(myProfilePage.successfulUpdateMessageFR);
+    const textResult = await boMyProfilePage.getAlertSuccess(page);
+    expect(textResult).to.equal(boMyProfilePage.successfulUpdateMessageFR);
   });
 });
