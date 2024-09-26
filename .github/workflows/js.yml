@@ -14,7 +14,7 @@ jobs:
     name: Run unit tests
     strategy:
       matrix:
-        js: [ '16' ]
+        js: [ '20' ]
     steps:
       - name: Setup Node
         uses: actions/setup-node@v4

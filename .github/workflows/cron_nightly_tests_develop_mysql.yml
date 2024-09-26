@@ -14,7 +14,7 @@ jobs:
     with:
       BRANCH: develop
       PHP_VERSION: '8.2'
-      NODE_VERSION: '16'
+      NODE_VERSION: '20'
       DB_SERVER: 'mysql'
     secrets:
       GC_PROJECT_ID: ${{ secrets.GC_PROJECT_ID }}
