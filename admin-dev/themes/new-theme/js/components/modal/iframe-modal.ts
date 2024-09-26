@@ -30,7 +30,7 @@ import {
   ModalContainerType, ModalContainer, ModalType, ModalParams, Modal,
 } from '@components/modal/modal';
 import IframeEvent from '@components/modal/iframe-event';
-import {isUndefined} from '@PSTypes/typeguard';
+import {isUndefined} from '@js/@types/typeguard';
 
 export interface IframeModalContainerType extends ModalContainerType {
   iframe: HTMLIFrameElement;

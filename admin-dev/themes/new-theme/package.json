@@ -64,6 +64,7 @@
     "@types/photoswipe": "^4.1.6",
     "@types/sprintf-js": "^1.1.4",
     "@types/typeahead.js": "^0.11.6",
+    "@types/vue-i18n": "^6.1.3",
     "@types/zxcvbn": "^4.4.5",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
