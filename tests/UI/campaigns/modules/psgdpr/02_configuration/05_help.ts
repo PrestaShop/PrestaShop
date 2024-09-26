@@ -85,8 +85,8 @@ describe('BO - Modules - GDPR: Help', async () => {
       await testContext.addContextItem(this, 'testIdentifier', `expandShrinkQuestions${index}`, baseContext);
 
       const numQuestions = await modPsGdprBoTabHelp.getCountQuestions(page, test);
-      expect(numQuestions).to.gt(0)
-  
+      expect(numQuestions).to.gt(0);
+
       for (let numQuestion = 1; numQuestion <= numQuestions; numQuestion++) {
         const isQuestionVisibleAfterOpen = await modPsGdprBoTabHelp.clickQuestion(page, test, numQuestion);
         expect(isQuestionVisibleAfterOpen).to.be.equals(true);
@@ -129,7 +129,7 @@ describe('BO - Modules - GDPR: Help', async () => {
 
   it('should update the language in French', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'updateLanguage', baseContext);
-    
+
     employeeData.language = 'Français (French)';
     await boMyProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
 
@@ -206,7 +206,7 @@ describe('BO - Modules - GDPR: Help', async () => {
 
   it('should reset the language', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetLanguage', baseContext);
-    
+
     await boMyProfilePage.updateEditEmployee(page, dataEmployees.defaultEmployee.password, dataEmployees.defaultEmployee);
 
     const textResult = await boMyProfilePage.getAlertSuccess(page);

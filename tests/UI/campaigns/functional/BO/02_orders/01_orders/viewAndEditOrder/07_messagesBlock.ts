@@ -41,7 +41,7 @@ Pre-condition :
 Scenario :
 - Go to view order page
 - Send message and check message block( messages number, employee icon, date, sender)
-- Check message in FO -> Issue https://github.com/PrestaShop/PrestaShop/issues/26532
+- Check message in FO
 - Uncheck display to customer and send message then check( messages number, message text, employee icon, date, sender)
 - Check that the message is not visible in FO
 - Send message from FO and check it on BO ( messages number, Message text, employee icon, date, sender)

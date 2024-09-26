@@ -126,7 +126,7 @@ describe('BO - Modules - GDPR: Personal data manager for guest', async () => {
       expect(numCustomerDataResults).to.equal(1);
     });
 
-    //@todo : https://github.com/PrestaShop/PrestaShop/issues/36848
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/36848
     it('should click on the card', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickResultCard', baseContext);
 
@@ -146,7 +146,7 @@ describe('BO - Modules - GDPR: Personal data manager for guest', async () => {
        */
     });
 
-    //@todo : https://github.com/PrestaShop/PrestaShop/issues/36848
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/36848
     it('should click on details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickDetails', baseContext);
 
@@ -236,7 +236,7 @@ describe('BO - Modules - GDPR: Personal data manager for guest', async () => {
       expect(numCustomerDataResults).to.equal(1);
     });
 
-    //@todo : https://github.com/PrestaShop/PrestaShop/issues/36848
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/36848
     it('should click on the card', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickResultCardAfterOrder', baseContext);
 
@@ -256,7 +256,7 @@ describe('BO - Modules - GDPR: Personal data manager for guest', async () => {
        */
     });
 
-    //@todo : https://github.com/PrestaShop/PrestaShop/issues/36848
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/36848
     it('should click on Download Invoices', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickDownloadInvoices', baseContext);
 
@@ -282,7 +282,7 @@ describe('BO - Modules - GDPR: Personal data manager for guest', async () => {
       expect(textResult).to.equal(modPsGdprBoTabDataConfig.messageCustomerDataDeleted);
     });
 
-    //@todo : https://github.com/PrestaShop/PrestaShop/issues/36865
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/36865
     it(`should return if there is a customer named "${customerData.email}"`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchCustomerGuestAfterDelete', baseContext);
 
