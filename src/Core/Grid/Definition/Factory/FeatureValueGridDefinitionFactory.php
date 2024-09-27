@@ -188,6 +188,15 @@ class FeatureValueGridDefinitionFactory extends AbstractFilterableGridDefinition
                     ],
                 ])
                 ->setAssociatedColumn('value')
+            )
+            ->add((new Filter('position', NumberType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search position', [], 'Admin.Actions'),
+                    ],
+                ])
+                ->setAssociatedColumn('position')
             );
     }
 

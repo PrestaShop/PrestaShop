@@ -84,7 +84,7 @@ class FeatureValueQueryBuilder extends AbstractDoctrineQueryBuilder
         }
 
         $filters = $searchCriteria->getFilters();
-        $allowedFilters = ['id_feature_value', 'value'];
+        $allowedFilters = ['id_feature_value', 'value', 'position'];
 
         $qb = $this->connection
             ->createQueryBuilder()
@@ -108,6 +108,19 @@ class FeatureValueQueryBuilder extends AbstractDoctrineQueryBuilder
             if ('value' === $filterName) {
                 $qb->andWhere('fvl.value LIKE :' . $filterName)
                     ->setParameter($filterName, '%' . $value . '%');
+                continue;
+            }
+
+            if ('position' === $filterName) {
+                // Position in DB is 0-based, but in UI it is 1-based,
+                // so we need to decrement the value
+                if (is_numeric($value)) {
+                    --$value;
+                } else {
+                    $value = null;
+                }
+                $qb->andWhere('fv.`position` = :' . $filterName)
+                    ->setParameter($filterName, $value);
                 continue;
             }
 
