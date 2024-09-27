@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import {Grid} from '@PSTypes/grid';
+import {Grid} from 'js/@types/grid';
 import ProgressModal from '@components/modal/progress-modal';
 import ConfirmModal from '@components/modal/confirm-modal';
 import GridMap from '@components/grid/grid-map';
