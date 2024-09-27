@@ -64,3 +64,12 @@ services:
       $table: 'feature'
       $idField: 'id_feature'
       $positionField: 'position'
+
+  prestashop.core.grid.feature_value.position_definition:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition'
+    arguments:
+      $table: 'feature_value'
+      $idField: 'id_feature_value'
+      $positionField: 'position'
+      $parentIdField: 'id_feature'
+      $firstPosition: 1
