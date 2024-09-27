@@ -40,6 +40,9 @@ class FeatureValueCore extends ObjectModel
     /** @var bool Custom */
     public $custom = false;
 
+    /** @var int Position */
+    public $position;
+
     /**
      * @see ObjectModel::$definition
      */
@@ -50,6 +53,7 @@ class FeatureValueCore extends ObjectModel
         'fields' => [
             'id_feature' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'custom' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'position' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
 
             /* Lang fields */
             'value' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => FeatureValueSettings::VALUE_MAX_LENGTH],
