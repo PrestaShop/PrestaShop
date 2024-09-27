@@ -69,7 +69,7 @@
         "prestashop/graphnvd3": "^2",
         "prestashop/gridhtml": "^2",
         "prestashop/gsitemap": "^4",
-        "prestashop/hummingbird": "dev-develop",
+        "prestashop/hummingbird": "dev-update-for-node-iron-lts",
         "prestashop/pagesnotfound": "^2",
         "prestashop/productcomments": "^7.0",
         "prestashop/ps_apiresources": "dev-dev",
@@ -262,6 +262,10 @@
         "classic": {
             "type": "vcs",
             "url": "https://github.com/mattgoud/classic-theme.git"
+        },
+        "hummingbird": {
+            "type": "vcs",
+            "url": "https://github.com/mattgoud/hummingbird.git"
         }
     },
     "minimum-stability": "dev",

@@ -5064,12 +5064,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mattgoud/classic-theme.git",
-                "reference": "f1aa9b43bc3f73d9021308e3f6ed92267e9bbbd8"
+                "reference": "57c64e0fc80c319be5a2a9bf294d06baba4750c7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mattgoud/classic-theme/zipball/f1aa9b43bc3f73d9021308e3f6ed92267e9bbbd8",
-                "reference": "f1aa9b43bc3f73d9021308e3f6ed92267e9bbbd8",
+                "url": "https://api.github.com/repos/mattgoud/classic-theme/zipball/57c64e0fc80c319be5a2a9bf294d06baba4750c7",
+                "reference": "57c64e0fc80c319be5a2a9bf294d06baba4750c7",
                 "shasum": ""
             },
             "require-dev": {
@@ -5094,7 +5094,7 @@
             "support": {
                 "source": "https://github.com/mattgoud/classic-theme/tree/update-for-node-iron-lts"
             },
-            "time": "2024-09-26T12:19:46+00:00"
+            "time": "2024-09-26T20:29:58+00:00"
         },
         {
             "name": "prestashop/contactform",
@@ -5478,25 +5478,23 @@
         },
         {
             "name": "prestashop/hummingbird",
-            "version": "dev-develop",
+            "version": "dev-update-for-node-iron-lts",
             "source": {
                 "type": "git",
-                "url": "https://github.com/PrestaShop/hummingbird.git",
-                "reference": "063b4dc24cf1c3cea93f1f7329281d3e6e7d79f3"
+                "url": "https://github.com/mattgoud/hummingbird.git",
+                "reference": "46d0ed187b2d832f6ca3987776a1af012184c54b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/hummingbird/zipball/063b4dc24cf1c3cea93f1f7329281d3e6e7d79f3",
-                "reference": "063b4dc24cf1c3cea93f1f7329281d3e6e7d79f3",
+                "url": "https://api.github.com/repos/mattgoud/hummingbird/zipball/46d0ed187b2d832f6ca3987776a1af012184c54b",
+                "reference": "46d0ed187b2d832f6ca3987776a1af012184c54b",
                 "shasum": ""
             },
             "require-dev": {
                 "symfony/console": "~4.4 || ^5.0 || ^6.4",
                 "symfony/yaml": "~4.4 || ^5.0 || ^6.4"
             },
-            "default-branch": true,
             "type": "prestashop-theme",
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "AFL-3.0"
             ],
@@ -5512,10 +5510,9 @@
             ],
             "description": "Hummingbird theme for develop PrestaShop version",
             "support": {
-                "issues": "https://github.com/PrestaShop/hummingbird/issues",
-                "source": "https://github.com/PrestaShop/hummingbird/tree/develop"
+                "source": "https://github.com/mattgoud/hummingbird/tree/update-for-node-iron-lts"
             },
-            "time": "2024-07-04T14:05:52+00:00"
+            "time": "2024-09-27T08:43:07+00:00"
         },
         {
             "name": "prestashop/laminas-code-lts",
