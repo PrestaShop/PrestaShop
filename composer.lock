@@ -5064,12 +5064,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mattgoud/classic-theme.git",
-                "reference": "57c64e0fc80c319be5a2a9bf294d06baba4750c7"
+                "reference": "c660d7cc15ec04d293e5fab6fdba2ed8401e4f5e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mattgoud/classic-theme/zipball/57c64e0fc80c319be5a2a9bf294d06baba4750c7",
-                "reference": "57c64e0fc80c319be5a2a9bf294d06baba4750c7",
+                "url": "https://api.github.com/repos/mattgoud/classic-theme/zipball/c660d7cc15ec04d293e5fab6fdba2ed8401e4f5e",
+                "reference": "c660d7cc15ec04d293e5fab6fdba2ed8401e4f5e",
                 "shasum": ""
             },
             "require-dev": {
@@ -5094,7 +5094,7 @@
             "support": {
                 "source": "https://github.com/mattgoud/classic-theme/tree/update-for-node-iron-lts"
             },
-            "time": "2024-09-26T20:29:58+00:00"
+            "time": "2024-09-27T15:57:03+00:00"
         },
         {
             "name": "prestashop/contactform",
@@ -5482,12 +5482,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mattgoud/hummingbird.git",
-                "reference": "46d0ed187b2d832f6ca3987776a1af012184c54b"
+                "reference": "d45be6bba97e08fd33e21b03263aa802bd036515"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mattgoud/hummingbird/zipball/46d0ed187b2d832f6ca3987776a1af012184c54b",
-                "reference": "46d0ed187b2d832f6ca3987776a1af012184c54b",
+                "url": "https://api.github.com/repos/mattgoud/hummingbird/zipball/d45be6bba97e08fd33e21b03263aa802bd036515",
+                "reference": "d45be6bba97e08fd33e21b03263aa802bd036515",
                 "shasum": ""
             },
             "require-dev": {
@@ -5512,7 +5512,7 @@
             "support": {
                 "source": "https://github.com/mattgoud/hummingbird/tree/update-for-node-iron-lts"
             },
-            "time": "2024-09-27T08:43:07+00:00"
+            "time": "2024-09-27T15:53:28+00:00"
         },
         {
             "name": "prestashop/laminas-code-lts",
