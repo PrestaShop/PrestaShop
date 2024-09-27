@@ -115,7 +115,9 @@ class ShopContextListener implements EventSubscriberInterface
             return;
         }
 
-        if (!$this->multistoreFeature->isUsed()) {
+        $legacyControllerIsMultishopContext = $event->getRequest()->attributes->get(LegacyControllerConstants::IS_ALL_SHOP_CONTEXT_ATTRIBUTE, false);
+
+        if (!$this->multistoreFeature->isUsed() && !$legacyControllerIsMultishopContext) {
             $shopConstraint = ShopConstraint::shop($this->getConfiguredDefaultShopId());
         } else {
             $shopConstraint = $this->getMultiShopConstraint($event->getRequest());
