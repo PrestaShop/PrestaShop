@@ -157,6 +157,16 @@ admin_feature_values_bulk_delete:
     featureId: \d+
     featureValueId: \d+
 
+admin_feature_values_update_position:
+  path: /{featureId}/values/update-position
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureValueController::updatePositionAction
+    _legacy_controller: AdminFeatures
+    _legacy_link: AdminFeatures:updateFeatureValuesPositions
+  requirements:
+    featureId: \d+
+
 admin_feature_get_feature_values:
   path: /values/{featureId}
   methods: [ GET ]
