@@ -72,4 +72,3 @@ services:
       $idField: 'id_feature_value'
       $positionField: 'position'
       $parentIdField: 'id_feature'
-      $firstPosition: 1
