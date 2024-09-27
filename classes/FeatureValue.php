@@ -213,6 +213,10 @@ class FeatureValueCore extends ObjectModel
      */
     public function add($autoDate = true, $nullValues = false)
     {
+        if ($this->position <= 0) {
+            $this->position = static::getHighestPosition($this->id_feature) + 1;
+        }
+
         $return = parent::add($autoDate, $nullValues);
         if ($return) {
             Hook::exec('actionFeatureValueSave', ['id_feature_value' => $this->id]);
@@ -256,6 +260,10 @@ class FeatureValueCore extends ObjectModel
 			DELETE FROM `' . _DB_PREFIX_ . 'feature_product`
 			WHERE `id_feature_value` = ' . (int) $this->id
         );
+
+        /* Reinitializing position */
+        $this->cleanPositions((int) $this->id_feature);
+
         $return = parent::delete();
 
         if ($return) {
@@ -263,5 +271,46 @@ class FeatureValueCore extends ObjectModel
         }
 
         return $return;
+    }
+
+    /**
+     * Get the highest feature value position of given feature.
+     *
+     * @param int $idFeature
+     *
+     * @return int
+     */
+    public static function getHighestPosition($idFeature)
+    {
+        $sql = 'SELECT MAX(`position`)
+                FROM `' . _DB_PREFIX_ . 'feature_value`
+                WHERE `id_feature` = ' . (int) $idFeature;
+
+        $position = Db::getInstance()->getValue($sql);
+
+        return is_numeric($position) ? $position : -1;
+    }
+
+    /**
+     * Reorder feature values within single feature.
+     * Use it after deleting a feature value.
+     *
+     * @param int $idFeature
+     * @param bool $includeCurrentFeatureValue
+     *
+     * @return bool Whether the result was successfully updated
+     */
+    public function cleanPositions($idFeature, $includeCurrentFeatureValue = false)
+    {
+        Db::getInstance()->execute('SET @i = -1', false);
+        $sql = 'UPDATE `' . _DB_PREFIX_ . 'feature_value` SET `position` = @i:=@i+1 WHERE';
+
+        if (!$includeCurrentFeatureValue) {
+            $sql .= ' `id_feature_value` != ' . (int) $this->id . ' AND';
+        }
+
+        $sql .= ' `id_feature` = ' . (int) $idFeature . ' ORDER BY `position` ASC';
+
+        return Db::getInstance()->execute($sql);
     }
 }
