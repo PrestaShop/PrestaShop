@@ -24,7 +24,7 @@
  */
 import {EventEmitter} from 'events';
 import ProductMap from '@pages/product/product-map';
-import RendererType from '@PSTypes/renderers';
+import RendererType from '@js/@types/renderers';
 import {CatalogPriceRuleForListing} from '@pages/product/catalog-price-rule/types';
 
 const CatalogPriceRuleMap = ProductMap.catalogPriceRule;
