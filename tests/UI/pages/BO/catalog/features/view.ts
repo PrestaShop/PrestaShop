@@ -42,9 +42,13 @@ class ViewFeature extends BOBasePage {
 
   private readonly tableBodyColumn: (row: number) => string;
 
+  private readonly tableColumnHandle: (row: number) => string;
+
   private readonly tableColumnId: (row: number) => string;
 
   private readonly tableColumnValue: (row: number) => string;
+
+  private readonly tableColumnPosition: (row: number) => string;
 
   private readonly tableColumnActions: (row: number) => string;
 
@@ -115,8 +119,10 @@ class ViewFeature extends BOBasePage {
     this.tableBodyColumn = (row: number) => `${this.tableBodyRow(row)} td`;
 
     // Columns selectors
-    this.tableColumnId = (row: number) => `${this.tableBodyColumn(row)}:nth-child(2)`;
-    this.tableColumnValue = (row: number) => `${this.tableBodyColumn(row)}:nth-child(3)`;
+    this.tableColumnHandle = (row: number) => `${this.tableBodyColumn(row)}.column-position_handle div i`;
+    this.tableColumnId = (row: number) => `${this.tableBodyColumn(row)}.column-id_feature_value`;
+    this.tableColumnValue = (row: number) => `${this.tableBodyColumn(row)}.column-value`;
+    this.tableColumnPosition = (row: number) => `${this.tableBodyColumn(row)}.column-position`;
 
     // Row actions selectors
     this.tableColumnActions = (row: number) => `${this.tableBodyColumn(row)} .btn-group-action`;
@@ -391,6 +397,26 @@ class ViewFeature extends BOBasePage {
     }
 
     return allRowsContentTable;
+  }
+
+  /**
+   * Change position of a feature value
+   *
+   * @param page {Page} Browser tab
+   * @param actualPosition {number} Actual position of the feature value
+   * @param newPosition {number} New position of the feature value
+   *
+   * @return {Promise<string|null>}
+   */
+  async changePosition(page: Page, actualPosition: number, newPosition: number): Promise<string|null> {
+    await this.dragAndDrop(
+      page,
+      this.tableColumnHandle(actualPosition),
+      this.tableColumnHandle(newPosition),
+      true,
+    );
+
+    return this.getAlertDangerBlockParagraphContent(page);
   }
 }
 
