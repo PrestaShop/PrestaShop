@@ -2282,6 +2282,10 @@ class ToolsCore
                     fwrite($write_fd, $domain_rewrite_cond);
                 }
                 fwrite($write_fd, 'RewriteRule ^images_ie/?([^/]+)\.(jpe?g|png|gif)$ %{ENV:REWRITEBASE}js/jquery/plugins/fancybox/images/$1.$2 [L]' . PHP_EOL);
+
+                fwrite($write_fd, "# non-existent image to 403\n");
+                fwrite($write_fd, "RewriteCond %{REQUEST_FILENAME} !-f\n");
+                fwrite($write_fd, "RewriteRule \.(?:jpe?g|webp|png|avif)$ - [F,L]\n");
             }
             // Redirections to dispatcher
             if ($rewrite_settings) {
