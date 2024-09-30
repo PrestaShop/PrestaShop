@@ -58,3 +58,22 @@ services:
     deprecated:
       package: PrestaShop\PrestaShop
       version: 8.1
+
+  prestashop.module.sourcehandler.zip:
+    alias: PrestaShop\PrestaShop\Core\Module\SourceHandler\ZipSourceHandler
+    public: true
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 8.1
+
+  prestashop.module.manager:
+    alias: PrestaShop\PrestaShop\Core\Module\ModuleManager
+    public: true
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 8.1
+
+  PrestaShop\PrestaShop\Core\Module\ModuleOverrideChecker:
+    arguments:
+      - '@translator'
+      - !php/const _PS_OVERRIDE_DIR_
