@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4355e35a30f699c8d01df385dde20371",
+    "content-hash": "1fa9eb0e8a3f6afe8fd1af0913a61bf3",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5060,23 +5060,25 @@
         },
         {
             "name": "prestashop/classic",
-            "version": "dev-update-for-node-iron-lts",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
-                "url": "https://github.com/mattgoud/classic-theme.git",
-                "reference": "9150d1ab32d13284b80bcea158eb93dd4aa5b20a"
+                "url": "https://github.com/PrestaShop/classic-theme.git",
+                "reference": "fb07f25f88ec7423519a9ebc72080c092d6d7a02"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mattgoud/classic-theme/zipball/9150d1ab32d13284b80bcea158eb93dd4aa5b20a",
-                "reference": "9150d1ab32d13284b80bcea158eb93dd4aa5b20a",
+                "url": "https://api.github.com/repos/PrestaShop/classic-theme/zipball/fb07f25f88ec7423519a9ebc72080c092d6d7a02",
+                "reference": "fb07f25f88ec7423519a9ebc72080c092d6d7a02",
                 "shasum": ""
             },
             "require-dev": {
                 "symfony/console": "~4.4 || ^5.0",
                 "symfony/yaml": "~4.4 || ^5.0"
             },
+            "default-branch": true,
             "type": "prestashop-theme",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "AFL-3.0"
             ],
@@ -5092,9 +5094,9 @@
             ],
             "description": "Classic theme for develop PrestaShop version",
             "support": {
-                "source": "https://github.com/mattgoud/classic-theme/tree/update-for-node-iron-lts"
+                "source": "https://github.com/PrestaShop/classic-theme/tree/develop"
             },
-            "time": "2024-09-30T10:51:53+00:00"
+            "time": "2024-09-30T15:02:54+00:00"
         },
         {
             "name": "prestashop/contactform",
@@ -5478,23 +5480,25 @@
         },
         {
             "name": "prestashop/hummingbird",
-            "version": "dev-update-for-node-iron-lts",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
-                "url": "https://github.com/mattgoud/hummingbird.git",
-                "reference": "5f0be62e7249e67027f70dd08afbb93531b7815e"
+                "url": "https://github.com/PrestaShop/hummingbird.git",
+                "reference": "48a6a85a39356e4c3a3641ce16e47f9005c5ae33"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mattgoud/hummingbird/zipball/5f0be62e7249e67027f70dd08afbb93531b7815e",
-                "reference": "5f0be62e7249e67027f70dd08afbb93531b7815e",
+                "url": "https://api.github.com/repos/PrestaShop/hummingbird/zipball/48a6a85a39356e4c3a3641ce16e47f9005c5ae33",
+                "reference": "48a6a85a39356e4c3a3641ce16e47f9005c5ae33",
                 "shasum": ""
             },
             "require-dev": {
                 "symfony/console": "~4.4 || ^5.0 || ^6.4",
                 "symfony/yaml": "~4.4 || ^5.0 || ^6.4"
             },
+            "default-branch": true,
             "type": "prestashop-theme",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "AFL-3.0"
             ],
@@ -5510,9 +5514,10 @@
             ],
             "description": "Hummingbird theme for develop PrestaShop version",
             "support": {
-                "source": "https://github.com/mattgoud/hummingbird/tree/update-for-node-iron-lts"
+                "issues": "https://github.com/PrestaShop/hummingbird/issues",
+                "source": "https://github.com/PrestaShop/hummingbird/tree/develop"
             },
-            "time": "2024-09-30T10:01:09+00:00"
+            "time": "2024-09-30T15:03:15+00:00"
         },
         {
             "name": "prestashop/laminas-code-lts",
