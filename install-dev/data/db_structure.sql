@@ -1563,7 +1563,7 @@ CREATE TABLE `PREFIX_page_viewed` (
 /* Payment info (see payment_invoice) */
 CREATE TABLE `PREFIX_order_payment` (
   `id_order_payment` INT NOT NULL auto_increment,
-  `order_reference` VARCHAR(9),
+  `order_reference` VARCHAR(255),
   `id_currency` INT UNSIGNED NOT NULL,
   `amount` DECIMAL(20, 6) NOT NULL,
   `payment_method` varchar(255) NOT NULL,
