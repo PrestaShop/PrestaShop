@@ -483,7 +483,6 @@ class CartCore extends ObjectModel
                 ' . ($filter == CartRule::FILTER_ACTION_REDUCTION ? 'AND (reduction_percent != 0 OR reduction_amount != 0)' : '') . '
                 AND cr.`active` = 1
                 AND cr.`quantity` > 0
-                AND cr.`deleted` = 0
                 AND cr.`date_from` <= "' . date('Y-m-d H:i:s') . '"
                 AND cr.`date_to` >= "' . date('Y-m-d H:i:s') . '"
                 ORDER by cr.`priority` ASC, cr.`gift_product` DESC'
