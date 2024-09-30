@@ -37,7 +37,7 @@ export default class ShowcaseCardCloseExtension {
    */
   extend(helperBlock: ShowcaseCard): void {
     const container = helperBlock.getContainer();
-    container.on('click', '.js-remove-helper-block', (evt: JQuery.Event) => {
+    container.on('click', '.js-remove-helper-block', (evt: JQuery.ClickEvent) => {
       container.remove();
 
       const $btn = $(evt.target);
