@@ -268,7 +268,13 @@ describe('BO - Catalog - Products : Header', async () => {
   it('should set image information', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setImageInformation', baseContext);
 
-    const message = await boProductsCreateTabDescriptionPage.setProductImageInformation(page, 2, true, 'Caption EN', 'Caption FR');
+    const message = await boProductsCreateTabDescriptionPage.setProductImageInformation(
+      page,
+      2,
+      true,
+      'Caption EN',
+      'Caption FR',
+    );
     expect(message).to.be.eq(boProductsCreateTabDescriptionPage.settingUpdatedMessage);
   });
 

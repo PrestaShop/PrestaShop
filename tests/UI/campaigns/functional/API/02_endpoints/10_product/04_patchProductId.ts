@@ -244,8 +244,16 @@ describe('API : PATCH /product/{productId}', async () => {
               [dataLanguages.french.id]: valuePropertyFR,
             }).to.deep.equal(data.propertyValue);
           } else if (data.propertyName === 'descriptions') {
-            const valuePropertyEN = await boProductsCreateTabDescriptionPage.getValue(page, 'description', dataLanguages.english.id.toString());
-            const valuePropertyFR = await boProductsCreateTabDescriptionPage.getValue(page, 'description', dataLanguages.french.id.toString());
+            const valuePropertyEN = await boProductsCreateTabDescriptionPage.getValue(
+              page,
+              'description',
+              dataLanguages.english.id.toString(),
+            );
+            const valuePropertyFR = await boProductsCreateTabDescriptionPage.getValue(
+              page,
+              'description',
+              dataLanguages.french.id.toString(),
+            );
             expect({
               [dataLanguages.english.id]: valuePropertyEN,
               [dataLanguages.french.id]: valuePropertyFR,

@@ -186,10 +186,18 @@ describe('API : GET /product/{productId}', async () => {
       productNameFr = await createProductsPage.getProductName(page, dataLanguages.french.isoCode);
       expect(productNameFr).to.be.a('string');
 
-      productDescriptionEn = await boProductsCreateTabDescriptionPage.getValue(page, 'description', dataLanguages.english.id.toString());
+      productDescriptionEn = await boProductsCreateTabDescriptionPage.getValue(
+        page,
+        'description',
+        dataLanguages.english.id.toString(),
+      );
       expect(productDescriptionEn).to.be.a('string');
 
-      productDescriptionFr = await boProductsCreateTabDescriptionPage.getValue(page, 'description', dataLanguages.french.id.toString());
+      productDescriptionFr = await boProductsCreateTabDescriptionPage.getValue(
+        page,
+        'description',
+        dataLanguages.french.id.toString(),
+      );
       expect(productDescriptionFr).to.be.a('string');
     });
   });

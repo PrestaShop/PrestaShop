@@ -114,7 +114,10 @@ describe('BO - Catalog - Products : Description tab', async () => {
     it('should add 3 images', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addImage', baseContext);
 
-      await boProductsCreateTabDescriptionPage.addProductImages(page, [productData.coverImage, productCoverImage, replaceProductCoverImage]);
+      await boProductsCreateTabDescriptionPage.addProductImages(
+        page,
+        [productData.coverImage, productCoverImage, replaceProductCoverImage],
+      );
 
       const numOfImages = await boProductsCreateTabDescriptionPage.getNumberOfImages(page);
       expect(numOfImages).to.eq(3);
@@ -123,7 +126,13 @@ describe('BO - Catalog - Products : Description tab', async () => {
     it('should set image information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setImageInformation', baseContext);
 
-      const message = await boProductsCreateTabDescriptionPage.setProductImageInformation(page, 2, true, 'Caption EN', 'Caption FR');
+      const message = await boProductsCreateTabDescriptionPage.setProductImageInformation(
+        page,
+        2,
+        true,
+        'Caption EN',
+        'Caption FR',
+      );
       expect(message).to.be.eq(boProductsCreateTabDescriptionPage.settingUpdatedMessage);
     });
 

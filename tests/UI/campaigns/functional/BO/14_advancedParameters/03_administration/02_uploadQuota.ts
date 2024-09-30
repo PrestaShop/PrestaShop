@@ -307,7 +307,10 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'addImageAndCheckErrorMessage', baseContext);
 
       await createProductPage.setProductName(page, firstVirtualProductData.name, 'en');
-      await boProductsCreateTabDescriptionPage.uploadProductImages(page, [firstStandardProductData.coverImage, firstStandardProductData.thumbImage]);
+      await boProductsCreateTabDescriptionPage.uploadProductImages(
+        page,
+        [firstStandardProductData.coverImage, firstStandardProductData.thumbImage],
+      );
 
       const message = await createProductPage.getGrowlMessageContent(page);
       expect(message).to.eq('Max file size allowed is "1048576" bytes.');
