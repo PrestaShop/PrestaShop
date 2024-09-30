@@ -77,7 +77,7 @@ class GeneralSettings extends TranslatorAwareType
             ])
             ->add('active', SwitchType::class, [
                 'label' => $this->trans('Active', 'Admin.Global'),
-                'required' => true,
+                'required' => false,
             ])
             ->add('grade', NumberType::class, [
                 'label' => $this->trans('Speed grade', 'Admin.Shipping.Feature'),

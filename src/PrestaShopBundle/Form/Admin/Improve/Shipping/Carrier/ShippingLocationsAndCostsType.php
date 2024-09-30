@@ -79,6 +79,7 @@ class ShippingLocationsAndCostsType extends TranslatorAwareType
             ])
             ->add('is_free', SwitchType::class, [
                 'label' => $this->trans('Free Shipping', 'Admin.Shipping.Feature'),
+                'required' => false,
             ])
             ->add('id_tax_rule_group', TaxGroupChoiceType::class, [
                 'label' => $this->trans('Tax', 'Admin.Shipping.Feature'),
@@ -93,6 +94,7 @@ class ShippingLocationsAndCostsType extends TranslatorAwareType
             ])
             ->add('has_additional_handling_fee', SwitchType::class, [
                 'label' => $this->trans('Handling costs', 'Admin.Shipping.Feature'),
+                'required' => false,
                 'label_help_box' => $this->trans('Does the carrier have additional fees', 'Admin.Shipping.Help'),
                 'external_link' => [
                     'text' => $this->trans('[1]Manage handling costs[/1]', 'Admin.Shipping.Feature'),
@@ -128,8 +130,8 @@ class ShippingLocationsAndCostsType extends TranslatorAwareType
                 'default_empty_data' => OutOfRangeBehavior::USE_HIGHEST_RANGE,
             ])
             ->add('ranges', CarrierRangesType::class, [
+                'required' => false,
                 'label' => $this->trans('Set ranges and prices', 'Admin.Shipping.Feature'),
-                'required' => true,
                 'row_attr' => [
                     'class' => 'carrier-ranges-edit-row',
                 ],
