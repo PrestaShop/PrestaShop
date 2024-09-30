@@ -30,6 +30,7 @@ function build {
   fi
 
   touch buildLock
+  chmod 664 buildLock
   npm ci
   npm run build
   rm buildLock

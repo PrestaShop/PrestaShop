@@ -43,16 +43,16 @@ $component-name: delta-quantity;
 
   label {
     min-width: 150px;
-
-    @media screen and (min-width: 768px) {
-      min-width: 240px;
-    }
-
     margin: 0 0.3125rem;
     overflow: hidden;
     line-height: 39px;
     text-overflow: ellipsis;
     white-space: nowrap;
+
+    @media screen and (min-width: 768px) {
+      min-width: 240px;
+    }
+
   }
 
   .modify-all-shops {

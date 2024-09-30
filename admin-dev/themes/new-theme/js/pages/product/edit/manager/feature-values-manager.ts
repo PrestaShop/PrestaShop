@@ -28,7 +28,7 @@ import EventEmitter from '@components/event-emitter';
 import Router from '@components/router';
 import ConfirmModal from '@components/modal';
 import ProductEventMap from '@pages/product/product-event-map';
-import {isUndefined} from '@PSTypes/typeguard';
+import {isUndefined} from '@components/typeguard';
 
 const {$} = window;
 

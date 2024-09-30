@@ -27,7 +27,7 @@ import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
 import CombinationsListRenderer from '@pages/product/combination/combination-list/combinations-list-renderer';
 import {EventEmitter} from 'events';
-import {isUndefined} from '@PSTypes/typeguard';
+import {isUndefined} from '@components/typeguard';
 import BigNumber from '@node_modules/bignumber.js';
 import {notifyFormErrors} from '@components/form/helpers';
 import {updateCombinationList} from '@pages/product/service/combination';

@@ -156,7 +156,7 @@
     td {
       color: var(--#{$cdk}white);
       background-color: $brand-primary !important;
-      @include transform(translate(5px,10px));
+      transform: translate(5px, 10px);
     }
   }
 

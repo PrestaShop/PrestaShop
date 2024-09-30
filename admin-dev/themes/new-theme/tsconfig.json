@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "rootDir": ".",
     "outDir": "./public/",
     "noImplicitAny": true,
     "noImplicitThis": true,
@@ -20,9 +21,8 @@
       "@scss/*": ["scss/*"],
       "@node_modules/*": ["node_modules/*"],
       "@PSVue/*": ["js/vue/*"],
-      "@PSTypes/*": ["js/types/*"]
+      "@PSTypes/*": ["js/@types/*"],
     },
-    "typeRoots": ["js/types", "node_modules/@types"],
   },
   "ts-node": {
     "compilerOptions": {

@@ -185,8 +185,9 @@ export class Modal implements ModalType {
     this.$modal.modal({
       backdrop: closable ? true : 'static',
       keyboard: closable !== undefined ? closable : true,
-      show: false,
     });
+
+    this.$modal.modal('hide');
 
     this.$modal.on('hidden.bs.modal', () => {
       const modal = document.querySelector(`#${id}`);

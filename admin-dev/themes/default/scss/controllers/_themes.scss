@@ -33,7 +33,7 @@
       .action-overlay {
         width: 100%;
         height: 260px;
-        @include background-image(linear-gradient(rgba(#4D576E,0.5),#4D576E));
+        background-image: linear-gradient(rgba(77, 87, 110, 0.5), "#4d576e");
       }
 
       .action-buttons {

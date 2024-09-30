@@ -32,7 +32,7 @@ import {EventEmitter} from 'events';
 import SpecificPriceListRenderer from '@pages/product/specific-price/specific-price-list-renderer';
 import Router from '@components/router';
 import FormFieldToggler from '@components/form/form-field-toggler';
-import {isUndefined} from '@PSTypes/typeguard';
+import {isUndefined} from '@components/typeguard';
 import PaginatedSpecificPricesService from '@pages/product/service/paginated-specific-prices-service';
 import DynamicPaginator from '@components/pagination/dynamic-paginator';
 

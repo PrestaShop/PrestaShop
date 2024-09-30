@@ -5064,12 +5064,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/classic-theme.git",
-                "reference": "8e98738eac76dd565af0313425c65154a818f45e"
+                "reference": "fb07f25f88ec7423519a9ebc72080c092d6d7a02"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/classic-theme/zipball/8e98738eac76dd565af0313425c65154a818f45e",
-                "reference": "8e98738eac76dd565af0313425c65154a818f45e",
+                "url": "https://api.github.com/repos/PrestaShop/classic-theme/zipball/fb07f25f88ec7423519a9ebc72080c092d6d7a02",
+                "reference": "fb07f25f88ec7423519a9ebc72080c092d6d7a02",
                 "shasum": ""
             },
             "require-dev": {
@@ -5096,7 +5096,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/classic-theme/tree/develop"
             },
-            "time": "2024-04-30T08:31:00+00:00"
+            "time": "2024-09-30T15:02:54+00:00"
         },
         {
             "name": "prestashop/contactform",
@@ -5484,12 +5484,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/hummingbird.git",
-                "reference": "063b4dc24cf1c3cea93f1f7329281d3e6e7d79f3"
+                "reference": "48a6a85a39356e4c3a3641ce16e47f9005c5ae33"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/hummingbird/zipball/063b4dc24cf1c3cea93f1f7329281d3e6e7d79f3",
-                "reference": "063b4dc24cf1c3cea93f1f7329281d3e6e7d79f3",
+                "url": "https://api.github.com/repos/PrestaShop/hummingbird/zipball/48a6a85a39356e4c3a3641ce16e47f9005c5ae33",
+                "reference": "48a6a85a39356e4c3a3641ce16e47f9005c5ae33",
                 "shasum": ""
             },
             "require-dev": {
@@ -5517,7 +5517,7 @@
                 "issues": "https://github.com/PrestaShop/hummingbird/issues",
                 "source": "https://github.com/PrestaShop/hummingbird/tree/develop"
             },
-            "time": "2024-07-04T14:05:52+00:00"
+            "time": "2024-09-30T15:03:15+00:00"
         },
         {
             "name": "prestashop/laminas-code-lts",
