@@ -28,7 +28,7 @@ import ProductEventMap from '@pages/product/product-event-map';
 import {EventEmitter} from 'events';
 import ProductFormModel from '@pages/product/edit/product-form-model';
 import BigNumber from '@node_modules/bignumber.js';
-import {isUndefined} from '@js/@types/typeguard';
+import {isUndefined} from '@components/typeguard';
 
 import ChangeEvent = JQuery.ChangeEvent;
 

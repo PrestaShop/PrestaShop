@@ -26,7 +26,7 @@
 import ProductFormModel from '@pages/product/edit/product-form-model';
 import ProductMap from '@pages/product/product-map';
 import BigNumber from '@node_modules/bignumber.js';
-import {isUndefined} from '@js/@types/typeguard';
+import {isUndefined} from '@components/typeguard';
 
 /**
  * This component watches for product form changes in inputs related to price and display them in a summary block.

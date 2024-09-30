@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import {isUndefined} from '@js/@types/typeguard';
+import {isUndefined} from '@components/typeguard';
 
 const {$} = window;
 

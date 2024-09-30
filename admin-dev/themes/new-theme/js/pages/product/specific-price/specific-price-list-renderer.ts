@@ -27,9 +27,9 @@ import {EventEmitter} from 'events';
 import ProductMap from '@pages/product/product-map';
 import ConfirmModal from '@components/modal/confirm-modal';
 import ProductEventMap from '@pages/product/product-event-map';
-import RendererType from '@js/@types/renderers';
+import RendererType from '@PSTypes/renderers';
 import {SpecificPriceForListing} from '@pages/product/specific-price/types';
-import {isUndefined} from '@js/@types/typeguard';
+import {isUndefined} from '@components/typeguard';
 
 const SpecificPriceMap = ProductMap.specificPrice;
 

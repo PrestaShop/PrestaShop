@@ -227,3 +227,6 @@ docker-compose.override.yml
 /.env.local
 /.env.local.php
 /.env.*.local
+
+# config vscode
+.hintrc

@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import {GridExtension} from '@js/@types/grid';
+import {GridExtension} from '@PSTypes/grid';
 import GridMap from '@components/grid/grid-map';
 
 const {$}: Window = window;

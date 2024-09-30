@@ -22,7 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import {ShowcaseCard} from '@js/@types/showcase';
+import {ShowcaseCard} from '@PSTypes/showcase';
 
 const {$} = window;
 
@@ -37,7 +37,7 @@ export default class ShowcaseCardCloseExtension {
    */
   extend(helperBlock: ShowcaseCard): void {
     const container = helperBlock.getContainer();
-    container.on('click', '.js-remove-helper-block', (evt: { target: any; }) => {
+    container.on('click', '.js-remove-helper-block', (evt: JQuery.Event) => {
       container.remove();
 
       const $btn = $(evt.target);

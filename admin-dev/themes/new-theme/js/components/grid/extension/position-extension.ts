@@ -23,9 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import {Grid} from '@js/@types/grid';
+import {Grid} from '@PSTypes/grid';
 import GridMap from '@components/grid/grid-map';
-import {isUndefined} from '@js/@types/typeguard';
+import {isUndefined} from '@components/typeguard';
 import 'tablednd/dist/jquery.tablednd.min';
 
 const {$} = window;
