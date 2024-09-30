@@ -5064,12 +5064,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mattgoud/classic-theme.git",
-                "reference": "cbcd0b0d3dcdbb1cb8a8e46ae235ab69f6876b96"
+                "reference": "9150d1ab32d13284b80bcea158eb93dd4aa5b20a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mattgoud/classic-theme/zipball/cbcd0b0d3dcdbb1cb8a8e46ae235ab69f6876b96",
-                "reference": "cbcd0b0d3dcdbb1cb8a8e46ae235ab69f6876b96",
+                "url": "https://api.github.com/repos/mattgoud/classic-theme/zipball/9150d1ab32d13284b80bcea158eb93dd4aa5b20a",
+                "reference": "9150d1ab32d13284b80bcea158eb93dd4aa5b20a",
                 "shasum": ""
             },
             "require-dev": {
@@ -5094,7 +5094,7 @@
             "support": {
                 "source": "https://github.com/mattgoud/classic-theme/tree/update-for-node-iron-lts"
             },
-            "time": "2024-09-30T10:18:43+00:00"
+            "time": "2024-09-30T10:51:53+00:00"
         },
         {
             "name": "prestashop/contactform",
