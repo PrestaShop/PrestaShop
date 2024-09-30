@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import createProductsPage from '@pages/BO/catalog/products/add';
-import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
@@ -16,6 +15,7 @@ import {
   boApiClientsCreatePage,
   boDashboardPage,
   boProductsPage,
+  boProductsCreateTabDescriptionPage,
   dataLanguages,
   dataProducts,
   FakerAPIClient,
@@ -186,10 +186,10 @@ describe('API : GET /product/{productId}', async () => {
       productNameFr = await createProductsPage.getProductName(page, dataLanguages.french.isoCode);
       expect(productNameFr).to.be.a('string');
 
-      productDescriptionEn = await descriptionTab.getValue(page, 'description', dataLanguages.english.id.toString());
+      productDescriptionEn = await boProductsCreateTabDescriptionPage.getValue(page, 'description', dataLanguages.english.id.toString());
       expect(productDescriptionEn).to.be.a('string');
 
-      productDescriptionFr = await descriptionTab.getValue(page, 'description', dataLanguages.french.id.toString());
+      productDescriptionFr = await boProductsCreateTabDescriptionPage.getValue(page, 'description', dataLanguages.french.id.toString());
       expect(productDescriptionFr).to.be.a('string');
     });
   });

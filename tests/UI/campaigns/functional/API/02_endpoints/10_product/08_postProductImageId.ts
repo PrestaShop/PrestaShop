@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import createProductsPage from '@pages/BO/catalog/products/add';
-import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
 import {expect} from 'chai';
 import fs from 'fs';
@@ -18,6 +17,7 @@ import {
   boApiClientsCreatePage,
   boDashboardPage,
   boProductsPage,
+  boProductsCreateTabDescriptionPage,
   dataLanguages,
   FakerAPIClient,
   FakerProduct,
@@ -188,23 +188,23 @@ describe('API : POST /product/image/{imageId}', async () => {
         const pageTitle: string = await createProductsPage.getPageTitle(page);
         expect(pageTitle).to.contains(createProductsPage.pageTitle);
 
-        const numImages = await descriptionTab.getNumberOfImages(page);
+        const numImages = await boProductsCreateTabDescriptionPage.getNumberOfImages(page);
         expect(numImages).to.be.equals(0);
       });
 
       it('should add image', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addImage', baseContext);
 
-        await descriptionTab.addProductImages(page, [productImageCreated]);
+        await boProductsCreateTabDescriptionPage.addProductImages(page, [productImageCreated]);
 
-        const numOfImages = await descriptionTab.getNumberOfImages(page);
+        const numOfImages = await boProductsCreateTabDescriptionPage.getNumberOfImages(page);
         expect(numOfImages).to.eq(1);
       });
 
       it('should set image information', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'setImageInformation', baseContext);
 
-        const message = await descriptionTab.setProductImageInformation(
+        const message = await boProductsCreateTabDescriptionPage.setProductImageInformation(
           page,
           1,
           true,
@@ -214,9 +214,9 @@ describe('API : POST /product/image/{imageId}', async () => {
           true,
           true,
         );
-        expect(message).to.be.eq(descriptionTab.settingUpdatedMessage);
+        expect(message).to.be.eq(boProductsCreateTabDescriptionPage.settingUpdatedMessage);
 
-        productImageInformation = await descriptionTab.getProductImageInformation(page, 1);
+        productImageInformation = await boProductsCreateTabDescriptionPage.getProductImageInformation(page, 1);
       });
     });
 
@@ -294,7 +294,7 @@ describe('API : POST /product/image/{imageId}', async () => {
 
         await boProductsPage.reloadPage(page);
 
-        productImageInformation = await descriptionTab.getProductImageInformation(page, 1);
+        productImageInformation = await boProductsCreateTabDescriptionPage.getProductImageInformation(page, 1);
       });
 
       it('should check the JSON Response : `imageId`', async function () {

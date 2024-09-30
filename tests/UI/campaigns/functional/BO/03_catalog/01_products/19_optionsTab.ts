@@ -6,13 +6,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import createProductPage from '@pages/BO/catalog/products/add';
 import optionsTab from '@pages/BO/catalog/products/add/optionsTab';
-import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 import {
   boDashboardPage,
   boProductsPage,
+  boProductsCreateTabDescriptionPage,
   FakerProduct,
   foClassicHomePage,
   foClassicCategoryPage,
@@ -109,7 +109,7 @@ describe('BO - Catalog - Products : Options tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addCategory', baseContext);
 
       await createProductPage.goToTab(page, 'description');
-      await descriptionTab.addNewCategory(page, ['Clothes']);
+      await boProductsCreateTabDescriptionPage.addNewCategory(page, ['Clothes']);
 
       const createProductMessage = await createProductPage.saveProduct(page);
       expect(createProductMessage).to.equal(createProductPage.successfulUpdateMessage);
@@ -118,7 +118,7 @@ describe('BO - Catalog - Products : Options tab', async () => {
     it('should choose \'Clothes\' as default category', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseDefaultCategory', baseContext);
 
-      await descriptionTab.chooseDefaultCategory(page, 2);
+      await boProductsCreateTabDescriptionPage.chooseDefaultCategory(page, 2);
 
       const createProductMessage = await createProductPage.saveProduct(page);
       expect(createProductMessage).to.equal(createProductPage.successfulUpdateMessage);

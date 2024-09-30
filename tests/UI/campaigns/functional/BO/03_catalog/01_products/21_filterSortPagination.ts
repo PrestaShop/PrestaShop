@@ -6,13 +6,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import createProductsPage from '@pages/BO/catalog/products/add';
-import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boProductsPage,
+  boProductsCreateTabDescriptionPage,
   dataCategories,
   type ProductFilterMinMax,
   utilsCore,
@@ -225,7 +225,7 @@ describe('BO - Catalog - Products list : Filter & Sort, Pagination, Filter by ca
               baseContext,
             );
 
-            const selectedCategories: string = await descriptionTab.getSelectedCategories(page);
+            const selectedCategories: string = await boProductsCreateTabDescriptionPage.getSelectedCategories(page);
             expect(selectedCategories).to.contains(arg.categoryName);
           });
 

@@ -7,13 +7,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import createProductsPage from '@pages/BO/catalog/products/add';
-import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 import {
   boDashboardPage,
   boProductsPage,
+  boProductsCreateTabDescriptionPage,
   FakerProduct,
   utilsFile,
   utilsPlaywright,
@@ -114,57 +114,57 @@ describe('BO - Catalog - Products : Description tab', async () => {
     it('should add 3 images', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addImage', baseContext);
 
-      await descriptionTab.addProductImages(page, [productData.coverImage, productCoverImage, replaceProductCoverImage]);
+      await boProductsCreateTabDescriptionPage.addProductImages(page, [productData.coverImage, productCoverImage, replaceProductCoverImage]);
 
-      const numOfImages = await descriptionTab.getNumberOfImages(page);
+      const numOfImages = await boProductsCreateTabDescriptionPage.getNumberOfImages(page);
       expect(numOfImages).to.eq(3);
     });
 
     it('should set image information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setImageInformation', baseContext);
 
-      const message = await descriptionTab.setProductImageInformation(page, 2, true, 'Caption EN', 'Caption FR');
-      expect(message).to.be.eq(descriptionTab.settingUpdatedMessage);
+      const message = await boProductsCreateTabDescriptionPage.setProductImageInformation(page, 2, true, 'Caption EN', 'Caption FR');
+      expect(message).to.be.eq(boProductsCreateTabDescriptionPage.settingUpdatedMessage);
     });
 
     it('should click on the magnifying glass', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'zoomImage', baseContext);
 
-      const isImageZoomed = await descriptionTab.clickOnMagnifyingGlass(page);
+      const isImageZoomed = await boProductsCreateTabDescriptionPage.clickOnMagnifyingGlass(page);
       expect(isImageZoomed).to.eq(true);
     });
 
     it('should close the image zoom', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeZoom', baseContext);
 
-      const isZoomClosed = await descriptionTab.closeImageZoom(page);
+      const isZoomClosed = await boProductsCreateTabDescriptionPage.closeImageZoom(page);
       expect(isZoomClosed).to.eq(true);
     });
 
     it('should replace image selection', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'replaceImageSelection', baseContext);
 
-      const message = await descriptionTab.replaceImageSelection(page, replaceProductCoverImage);
-      expect(message).to.be.eq(descriptionTab.settingUpdatedMessage);
+      const message = await boProductsCreateTabDescriptionPage.replaceImageSelection(page, replaceProductCoverImage);
+      expect(message).to.be.eq(boProductsCreateTabDescriptionPage.settingUpdatedMessage);
     });
 
     it('should delete the image', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteImage', baseContext);
 
-      const message = await descriptionTab.deleteImage(page);
-      expect(message).to.be.eq(descriptionTab.successfulMultiDeleteMessage);
+      const message = await boProductsCreateTabDescriptionPage.deleteImage(page);
+      expect(message).to.be.eq(boProductsCreateTabDescriptionPage.successfulMultiDeleteMessage);
     });
 
     it('should select the first image and click on select all products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectProduct', baseContext);
 
-      await descriptionTab.setProductImageInformation(page, 1, undefined, undefined, undefined, true, false);
+      await boProductsCreateTabDescriptionPage.setProductImageInformation(page, 1, undefined, undefined, undefined, true, false);
     });
 
     it('should set product description and summary', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setProductDescription', baseContext);
 
-      await descriptionTab.setProductDescription(page, productData);
+      await boProductsCreateTabDescriptionPage.setProductDescription(page, productData);
 
       const createProductMessage = await createProductsPage.saveProduct(page);
       expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
@@ -173,32 +173,32 @@ describe('BO - Catalog - Products : Description tab', async () => {
     it('should add category', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addCategory', baseContext);
 
-      await descriptionTab.addNewCategory(page, ['Clothes', 'Men']);
+      await boProductsCreateTabDescriptionPage.addNewCategory(page, ['Clothes', 'Men']);
 
       const createProductMessage = await createProductsPage.saveProduct(page);
       expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
 
-      const selectedCategories = await descriptionTab.getSelectedCategories(page);
+      const selectedCategories = await boProductsCreateTabDescriptionPage.getSelectedCategories(page);
       expect(selectedCategories).to.eq('Home x Clothes x Men x');
     });
 
     it('should check that we can delete the 2 categories', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDeleteIcon', baseContext);
 
-      let isDeleteIconVisible = await descriptionTab.isDeleteCategoryIconVisible(page, 0);
+      let isDeleteIconVisible = await boProductsCreateTabDescriptionPage.isDeleteCategoryIconVisible(page, 0);
       expect(isDeleteIconVisible).to.eq(false);
 
-      isDeleteIconVisible = await descriptionTab.isDeleteCategoryIconVisible(page, 1);
+      isDeleteIconVisible = await boProductsCreateTabDescriptionPage.isDeleteCategoryIconVisible(page, 1);
       expect(isDeleteIconVisible).to.eq(true);
 
-      isDeleteIconVisible = await descriptionTab.isDeleteCategoryIconVisible(page, 2);
+      isDeleteIconVisible = await boProductsCreateTabDescriptionPage.isDeleteCategoryIconVisible(page, 2);
       expect(isDeleteIconVisible).to.eq(true);
     });
 
     it('should choose default category', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseDefaultCategory', baseContext);
 
-      await descriptionTab.chooseDefaultCategory(page, 2);
+      await boProductsCreateTabDescriptionPage.chooseDefaultCategory(page, 2);
 
       const createProductMessage = await createProductsPage.saveProduct(page);
       expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
@@ -207,20 +207,20 @@ describe('BO - Catalog - Products : Description tab', async () => {
     it('should check that we can delete the first and the last category', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDeleteIcon2', baseContext);
 
-      let isDeleteIconVisible = await descriptionTab.isDeleteCategoryIconVisible(page, 0);
+      let isDeleteIconVisible = await boProductsCreateTabDescriptionPage.isDeleteCategoryIconVisible(page, 0);
       expect(isDeleteIconVisible).to.eq(true);
 
-      isDeleteIconVisible = await descriptionTab.isDeleteCategoryIconVisible(page, 1);
+      isDeleteIconVisible = await boProductsCreateTabDescriptionPage.isDeleteCategoryIconVisible(page, 1);
       expect(isDeleteIconVisible).to.eq(false);
 
-      isDeleteIconVisible = await descriptionTab.isDeleteCategoryIconVisible(page, 2);
+      isDeleteIconVisible = await boProductsCreateTabDescriptionPage.isDeleteCategoryIconVisible(page, 2);
       expect(isDeleteIconVisible).to.eq(true);
     });
 
     it('should choose brand', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseBrand', baseContext);
 
-      await descriptionTab.chooseBrand(page, 2);
+      await boProductsCreateTabDescriptionPage.chooseBrand(page, 2);
 
       const createProductMessage = await createProductsPage.saveProduct(page);
       expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
@@ -229,7 +229,7 @@ describe('BO - Catalog - Products : Description tab', async () => {
     it('should add related product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addRelatedProduct', baseContext);
 
-      await descriptionTab.addRelatedProduct(page, 't-shirt');
+      await boProductsCreateTabDescriptionPage.addRelatedProduct(page, 't-shirt');
 
       const createProductMessage = await createProductsPage.saveProduct(page);
       expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);

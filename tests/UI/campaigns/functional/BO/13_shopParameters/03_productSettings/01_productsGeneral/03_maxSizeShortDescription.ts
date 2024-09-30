@@ -6,13 +6,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import addProductPage from '@pages/BO/catalog/products/add';
-import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boProductsPage,
+  boProductsCreateTabDescriptionPage,
   boProductSettingsPage,
   FakerProduct,
   utilsPlaywright,
@@ -107,7 +107,7 @@ describe('BO - Shop Parameters - Product Settings : Update max size of short des
       and check the error message`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `testSummarySize${index}`, baseContext);
 
-          await descriptionTab.setProductDescription(page, productData);
+          await boProductsCreateTabDescriptionPage.setProductDescription(page, productData);
 
           const errorMessage = await addProductPage.getErrorMessageWhenSummaryIsTooLong(page);
           expect(errorMessage).to.contains(

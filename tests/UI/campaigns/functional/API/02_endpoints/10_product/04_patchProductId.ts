@@ -8,7 +8,6 @@ import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/prod
 
 // Import pages
 import createProductsPage from '@pages/BO/catalog/products/add';
-import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
@@ -17,6 +16,7 @@ import {
   boApiClientsCreatePage,
   boDashboardPage,
   boProductsPage,
+  boProductsCreateTabDescriptionPage,
   dataLanguages,
   FakerAPIClient,
   FakerProduct,
@@ -244,8 +244,8 @@ describe('API : PATCH /product/{productId}', async () => {
               [dataLanguages.french.id]: valuePropertyFR,
             }).to.deep.equal(data.propertyValue);
           } else if (data.propertyName === 'descriptions') {
-            const valuePropertyEN = await descriptionTab.getValue(page, 'description', dataLanguages.english.id.toString());
-            const valuePropertyFR = await descriptionTab.getValue(page, 'description', dataLanguages.french.id.toString());
+            const valuePropertyEN = await boProductsCreateTabDescriptionPage.getValue(page, 'description', dataLanguages.english.id.toString());
+            const valuePropertyFR = await boProductsCreateTabDescriptionPage.getValue(page, 'description', dataLanguages.french.id.toString());
             expect({
               [dataLanguages.english.id]: valuePropertyEN,
               [dataLanguages.french.id]: valuePropertyFR,

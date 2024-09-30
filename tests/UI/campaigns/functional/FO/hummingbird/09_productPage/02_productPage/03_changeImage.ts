@@ -4,17 +4,17 @@ import testContext from '@utils/testContext';
 // Import common tests
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
-import loginCommon from '@commonTests/BO/loginBO';
 import createProductsPage from '@pages/BO/catalog/products/add';
-import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boProductsPage,
+  boProductsCreateTabDescriptionPage,
   FakerProduct,
   foHummingbirdHomePage,
   foHummingbirdProductPage,
@@ -124,11 +124,11 @@ describe('FO - Product page - Quick view : Change image', async () => {
     it('should add 7 images', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addImage', baseContext);
 
-      await descriptionTab.addProductImages(page,
+      await boProductsCreateTabDescriptionPage.addProductImages(page,
         [newProductData.coverImage, newProductData.thumbImage, 'secondThumbImage.jpg', 'thirdThumbImage.jpg',
           'fourthThumbImage.jpg', 'fifthThumbImage.jpg', 'sixthThumbImage.jpg']);
 
-      const numOfImages = await descriptionTab.getNumberOfImages(page);
+      const numOfImages = await boProductsCreateTabDescriptionPage.getNumberOfImages(page);
       expect(numOfImages).to.equal(7);
     });
   });

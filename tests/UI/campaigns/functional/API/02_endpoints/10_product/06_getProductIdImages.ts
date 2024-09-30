@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import createProductsPage from '@pages/BO/catalog/products/add';
-import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
@@ -16,6 +15,7 @@ import {
   boApiClientsCreatePage,
   boDashboardPage,
   boProductsPage,
+  boProductsCreateTabDescriptionPage,
   dataLanguages,
   dataProducts,
   FakerAPIClient,
@@ -206,7 +206,7 @@ describe('API : GET /product/{productId}/images', async () => {
         const pageTitle: string = await createProductsPage.getPageTitle(page);
         expect(pageTitle).to.contains(createProductsPage.pageTitle);
 
-        const numImages = await descriptionTab.getNumberOfImages(page);
+        const numImages = await boProductsCreateTabDescriptionPage.getNumberOfImages(page);
         expect(numImages).to.be.equals(jsonResponse.length);
       });
 
@@ -214,7 +214,7 @@ describe('API : GET /product/{productId}/images', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkJSONItems', baseContext);
 
         for (let idxItem: number = 0; idxItem < jsonResponse.length; idxItem++) {
-          const productImageInformation = await descriptionTab.getProductImageInformation(page, idxItem + 1);
+          const productImageInformation = await boProductsCreateTabDescriptionPage.getProductImageInformation(page, idxItem + 1);
 
           expect(productImageInformation.id).to.equal(jsonResponse[idxItem].imageId);
 
