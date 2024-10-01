@@ -704,9 +704,10 @@ describe('BO - Dashboard : Activity overview', async () => {
 
         const trafficSources = await boDashboardPage.getTrafficSources(page);
 
-        expect(trafficSources.length).to.equals(2);
-        expect(trafficSources[0].label).to.equals('prestashop.com');
-        expect(trafficSources[1].label).to.equals('Direct link');
+        expect(trafficSources.length).to.equals(3);
+        expect(trafficSources[0].label).to.equals('Direct link');
+        expect(trafficSources[1].label).to.equals('prestashop.com');
+        expect(trafficSources[2].label).to.equals('localhost');
       });
     });
   });
