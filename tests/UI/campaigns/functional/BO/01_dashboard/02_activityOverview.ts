@@ -353,11 +353,8 @@ describe('BO - Dashboard : Activity overview', async () => {
         expect(pageTitle).to.contains(boDashboardPage.pageTitle);
       });
 
-      // @todo : https://github.com/PrestaShop/PrestaShop/issues/34321
       it('should check Return/Exchange number', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkReturnExchangeNumber', baseContext);
-
-        this.skip();
 
         const newNumberOfReturnExchanges = await boDashboardPage.getNumberOfReturnExchange(page);
         expect(newNumberOfReturnExchanges).to.eq(numberOfReturnExchanges + 1);
