@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import createProductsPage from '@pages/BO/catalog/products/add';
-import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 import detailsTab from '@pages/BO/catalog/products/add/detailsTab';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 
@@ -17,6 +16,7 @@ import {faker} from '@faker-js/faker';
 import {
   boDashboardPage,
   boProductsPage,
+  boProductsCreateTabDescriptionPage,
   boProductsCreateTabStocksPage,
   FakerProduct,
   type ProductHeaderSummary,
@@ -259,23 +259,29 @@ describe('BO - Catalog - Products : Header', async () => {
   it('should add image', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'addImage', baseContext);
 
-    await descriptionTab.addProductImages(page, [productCoverImage]);
+    await boProductsCreateTabDescriptionPage.addProductImages(page, [productCoverImage]);
 
-    const numOfImages = await descriptionTab.getNumberOfImages(page);
+    const numOfImages = await boProductsCreateTabDescriptionPage.getNumberOfImages(page);
     expect(numOfImages).to.eq(2);
   });
 
   it('should set image information', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setImageInformation', baseContext);
 
-    const message = await descriptionTab.setProductImageInformation(page, 2, true, 'Caption EN', 'Caption FR');
-    expect(message).to.be.eq(descriptionTab.settingUpdatedMessage);
+    const message = await boProductsCreateTabDescriptionPage.setProductImageInformation(
+      page,
+      2,
+      true,
+      'Caption EN',
+      'Caption FR',
+    );
+    expect(message).to.be.eq(boProductsCreateTabDescriptionPage.settingUpdatedMessage);
   });
 
   it('should check image has changed', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkImageHasChanged', baseContext);
 
-    await descriptionTab.reloadPage(page);
+    await boProductsCreateTabDescriptionPage.reloadPage(page);
     const productHeaderSummary = await createProductsPage.getProductHeaderSummary(page);
 
     expect(productHeaderSummary.imageUrl).to.be.not.eq(productHeaderSummaryInitial.imageUrl);

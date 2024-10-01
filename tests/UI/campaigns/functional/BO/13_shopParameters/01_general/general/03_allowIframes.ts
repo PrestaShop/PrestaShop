@@ -7,13 +7,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import addProductPage from '@pages/BO/catalog/products/add';
-import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boProductsPage,
+  boProductsCreateTabDescriptionPage,
   boShopParametersPage,
   dataProducts,
   foClassicProductPage,
@@ -103,7 +103,7 @@ describe('BO - Shop Parameters - General : Enable/Disable Allow iframes on HTML 
       it('should add an iframe in the product description', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `editDescription${index}`, baseContext);
 
-        await descriptionTab.setIframeInDescription(page, description);
+        await boProductsCreateTabDescriptionPage.setIframeInDescription(page, description);
 
         // @todo : https://github.com/PrestaShop/PrestaShop/issues/33921
         // To delete after the fix of the issue
@@ -176,8 +176,8 @@ describe('BO - Shop Parameters - General : Enable/Disable Allow iframes on HTML 
     it('should reset the product description', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetDescription', baseContext);
 
-      await descriptionTab.setIframeInDescription(page, '');
-      await descriptionTab.setDescription(page, dataProducts.demo_14.description);
+      await boProductsCreateTabDescriptionPage.setIframeInDescription(page, '');
+      await boProductsCreateTabDescriptionPage.setDescription(page, dataProducts.demo_14.description);
 
       const message = await addProductPage.saveProduct(page);
       expect(message).to.eq(addProductPage.successfulUpdateMessage);

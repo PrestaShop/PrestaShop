@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import createProductsPage from '@pages/BO/catalog/products/add';
-import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
@@ -16,6 +15,7 @@ import {
   boApiClientsPage,
   boApiClientsCreatePage,
   boProductsPage,
+  boProductsCreateTabDescriptionPage,
   boDashboardPage,
   dataLanguages,
   FakerAPIClient,
@@ -251,14 +251,14 @@ describe('API : POST /product', async () => {
     it('should check the JSON Response : `description` (EN)', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseDescriptionsEN', baseContext);
 
-      const value = await descriptionTab.getValue(page, 'description', dataLanguages.english.id.toString());
+      const value = await boProductsCreateTabDescriptionPage.getValue(page, 'description', dataLanguages.english.id.toString());
       expect(value).to.equal(jsonResponse.descriptions[dataLanguages.english.id]);
     });
 
     it('should check the JSON Response : `description` (FR)', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseDescriptionsFR', baseContext);
 
-      const value = await descriptionTab.getValue(page, 'description', dataLanguages.french.id.toString());
+      const value = await boProductsCreateTabDescriptionPage.getValue(page, 'description', dataLanguages.french.id.toString());
       expect(value).to.equal(jsonResponse.descriptions[dataLanguages.french.id]);
     });
   });

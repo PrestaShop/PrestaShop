@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import createProductsPage from '@pages/BO/catalog/products/add';
-import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 import imageSettingsPage from '@pages/BO/design/imageSettings';
 
 import {expect} from 'chai';
@@ -15,6 +14,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boProductsPage,
+  boProductsCreateTabDescriptionPage,
   FakerProduct,
   foClassicCategoryPage,
   foClassicHomePage,
@@ -220,7 +220,7 @@ describe('BO - Design - Image Settings - Check product image format', async () =
         expect(saveButtonName).to.equal('Save and publish');
 
         idProduct = await createProductsPage.getProductID(page);
-        idProductImage = await descriptionTab.getProductIDImageCover(page);
+        idProductImage = await boProductsCreateTabDescriptionPage.getProductIDImageCover(page);
         expect(idProduct).to.be.gt(0);
       });
 

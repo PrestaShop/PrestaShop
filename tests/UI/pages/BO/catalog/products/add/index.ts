@@ -1,12 +1,12 @@
 // Import pages
 import BOBasePage from '@pages/BO/BObasePage';
-import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 import detailsTab from '@pages/BO/catalog/products/add/detailsTab';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import packTab from '@pages/BO/catalog/products/add/packTab';
 
 import type {Frame, Page} from 'playwright';
 import {
+  boProductsCreateTabDescriptionPage,
   boProductsCreateTabShippingPage,
   boProductsCreateTabStocksPage,
   boProductsCreateTabVirtualProductPage,
@@ -353,7 +353,7 @@ class CreateProduct extends BOBasePage {
     // Set status
     await this.setProductStatus(page, productData.status);
     // Set description
-    await descriptionTab.setProductDescription(page, productData);
+    await boProductsCreateTabDescriptionPage.setProductDescription(page, productData);
     // Set name
     await this.setProductName(page, productData.name, 'en');
     await this.setProductName(page, productData.nameFR, 'fr');

@@ -13,7 +13,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import webservicePage from '@pages/BO/advancedParameters/webservice';
 import createProductsPage from '@pages/BO/catalog/products/add';
-import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 import detailsTab from '@pages/BO/catalog/products/add/detailsTab';
 import optionsTab from '@pages/BO/catalog/products/add/optionsTab';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
@@ -29,6 +28,7 @@ import type {
 import {
   boDashboardPage,
   boProductsPage,
+  boProductsCreateTabDescriptionPage,
   boProductsCreateTabShippingPage,
   boProductsCreateTabStocksPage,
   utilsPlaywright,
@@ -539,11 +539,11 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'postCheckShortDescription', baseContext);
 
             const xmlValueEn = productXml.getAttributeLangValue(xmlCreate, 'description_short', '1');
-            const valueEn = (await descriptionTab.getValue(page, 'summary', '1'));
+            const valueEn = (await boProductsCreateTabDescriptionPage.getValue(page, 'summary', '1'));
             expect(valueEn).to.eq(xmlValueEn);
 
             const xmlValueFr = productXml.getAttributeLangValue(xmlCreate, 'description_short', '2');
-            const valueFr = (await descriptionTab.getValue(page, 'summary', '2'));
+            const valueFr = (await boProductsCreateTabDescriptionPage.getValue(page, 'summary', '2'));
             expect(valueFr).to.eq(xmlValueFr);
           });
 
@@ -551,11 +551,11 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'postCheckDescription', baseContext);
 
             const xmlValueEn = productXml.getAttributeLangValue(xmlCreate, 'description', '1');
-            const valueEn = (await descriptionTab.getValue(page, 'description', '1'));
+            const valueEn = (await boProductsCreateTabDescriptionPage.getValue(page, 'description', '1'));
             expect(valueEn).to.eq(xmlValueEn);
 
             const xmlValueFr = productXml.getAttributeLangValue(xmlCreate, 'description', '2');
-            const valueFr = (await descriptionTab.getValue(page, 'description', '2'));
+            const valueFr = (await boProductsCreateTabDescriptionPage.getValue(page, 'description', '2'));
             expect(valueFr).to.eq(xmlValueFr);
           });
 
@@ -563,7 +563,7 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'postCheckDefaultCategory', baseContext);
 
             const xmlValue = productXml.getAttributeValue(xmlCreate, 'id_category_default');
-            const value = (await descriptionTab.getValue(page, 'id_category_default', '1'));
+            const value = (await boProductsCreateTabDescriptionPage.getValue(page, 'id_category_default', '1'));
             expect(value).to.eq(xmlValue);
           });
 
@@ -571,7 +571,7 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'postCheckManufacturer', baseContext);
 
             const xmlValue = productXml.getAttributeValue(xmlCreate, 'id_manufacturer');
-            const value = (await descriptionTab.getValue(page, 'manufacturer', '1'));
+            const value = (await boProductsCreateTabDescriptionPage.getValue(page, 'manufacturer', '1'));
             expect(value).to.eq(xmlValue);
           });
         });
@@ -1213,11 +1213,11 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'putCheckShortDescription', baseContext);
 
             const xmlValueEn = productXml.getAttributeLangValue(xmlUpdate, 'description_short', '1');
-            const valueEn = (await descriptionTab.getValue(page, 'summary', '1'));
+            const valueEn = (await boProductsCreateTabDescriptionPage.getValue(page, 'summary', '1'));
             expect(valueEn).to.eq(xmlValueEn);
 
             const xmlValueFr = productXml.getAttributeLangValue(xmlUpdate, 'description_short', '2');
-            const valueFr = (await descriptionTab.getValue(page, 'summary', '2'));
+            const valueFr = (await boProductsCreateTabDescriptionPage.getValue(page, 'summary', '2'));
             expect(valueFr).to.eq(xmlValueFr);
           });
 
@@ -1225,11 +1225,11 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'putCheckDescription', baseContext);
 
             const xmlValueEn = productXml.getAttributeLangValue(xmlUpdate, 'description', '1');
-            const valueEn = (await descriptionTab.getValue(page, 'description', '1'));
+            const valueEn = (await boProductsCreateTabDescriptionPage.getValue(page, 'description', '1'));
             expect(valueEn).to.eq(xmlValueEn);
 
             const xmlValueFr = productXml.getAttributeLangValue(xmlUpdate, 'description', '2');
-            const valueFr = (await descriptionTab.getValue(page, 'description', '2'));
+            const valueFr = (await boProductsCreateTabDescriptionPage.getValue(page, 'description', '2'));
             expect(valueFr).to.eq(xmlValueFr);
           });
 
@@ -1237,7 +1237,7 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'putCheckDefaultCategory', baseContext);
 
             const xmlValue = productXml.getAttributeValue(xmlUpdate, 'id_category_default');
-            const value = (await descriptionTab.getValue(page, 'id_category_default', '1'));
+            const value = (await boProductsCreateTabDescriptionPage.getValue(page, 'id_category_default', '1'));
             expect(value).to.eq(xmlValue);
           });
 
@@ -1245,7 +1245,7 @@ describe('WS - Products : CRUD', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'putCheckManufacturer', baseContext);
 
             const xmlValue = productXml.getAttributeValue(xmlUpdate, 'id_manufacturer');
-            const value = (await descriptionTab.getValue(page, 'manufacturer', '1'));
+            const value = (await boProductsCreateTabDescriptionPage.getValue(page, 'manufacturer', '1'));
             expect(value).to.eq(xmlValue);
           });
         });

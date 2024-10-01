@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 import createProductPage from '@pages/BO/catalog/products/add';
 import filesPage from '@pages/BO/catalog/files';
 import addFilePage from '@pages/BO/catalog/files/add';
@@ -16,6 +15,7 @@ import {
   boAdministrationPage,
   boDashboardPage,
   boProductsPage,
+  boProductsCreateTabDescriptionPage,
   boProductsCreateTabVirtualProductPage,
   FakerFile,
   FakerProduct,
@@ -307,7 +307,10 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'addImageAndCheckErrorMessage', baseContext);
 
       await createProductPage.setProductName(page, firstVirtualProductData.name, 'en');
-      await descriptionTab.uploadProductImages(page, [firstStandardProductData.coverImage, firstStandardProductData.thumbImage]);
+      await boProductsCreateTabDescriptionPage.uploadProductImages(
+        page,
+        [firstStandardProductData.coverImage, firstStandardProductData.thumbImage],
+      );
 
       const message = await createProductPage.getGrowlMessageContent(page);
       expect(message).to.eq('Max file size allowed is "1048576" bytes.');
@@ -317,7 +320,7 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'addImageAndCheckSuccessMessage', baseContext);
 
       await createProductPage.setProductName(page, firstVirtualProductData.name, 'en');
-      await descriptionTab.uploadProductImages(page,
+      await boProductsCreateTabDescriptionPage.uploadProductImages(page,
         [secondStandardProductData.coverImage, secondStandardProductData.thumbImage]);
 
       const message = await createProductPage.saveProduct(page);

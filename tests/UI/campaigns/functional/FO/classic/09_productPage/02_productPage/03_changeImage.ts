@@ -3,17 +3,17 @@ import testContext from '@utils/testContext';
 
 // Import common tests
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
-import loginCommon from '@commonTests/BO/loginBO';
 import createProductsPage from '@pages/BO/catalog/products/add';
-import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boProductsPage,
+  boProductsCreateTabDescriptionPage,
   FakerProduct,
   foClassicHomePage,
   foClassicProductPage,
@@ -112,10 +112,10 @@ describe('FO - Product page - Quick view : Change image', async () => {
     it('should add 4 images', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addImage', baseContext);
 
-      await descriptionTab.addProductImages(page,
+      await boProductsCreateTabDescriptionPage.addProductImages(page,
         [newProductData.coverImage, newProductData.thumbImage, 'secondThumbImage.jpg', 'thirdThumbImage.jpg']);
 
-      const numOfImages = await descriptionTab.getNumberOfImages(page);
+      const numOfImages = await boProductsCreateTabDescriptionPage.getNumberOfImages(page);
       expect(numOfImages).to.equal(4);
     });
   });

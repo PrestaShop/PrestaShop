@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import createProductsPage from '@pages/BO/catalog/products/add';
-import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
 
 import {expect} from 'chai';
 import fs from 'fs';
@@ -18,6 +17,7 @@ import {
   boApiClientsCreatePage,
   boDashboardPage,
   boProductsPage,
+  boProductsCreateTabDescriptionPage,
   dataLanguages,
   FakerAPIClient,
   FakerProduct,
@@ -239,10 +239,10 @@ describe('API : POST /product/{productId}/image', async () => {
         const pageTitle: string = await createProductsPage.getPageTitle(page);
         expect(pageTitle).to.contains(createProductsPage.pageTitle);
 
-        const numImages = await descriptionTab.getNumberOfImages(page);
+        const numImages = await boProductsCreateTabDescriptionPage.getNumberOfImages(page);
         expect(numImages).to.be.equals(1);
 
-        productImageInformation = await descriptionTab.getProductImageInformation(page, 1);
+        productImageInformation = await boProductsCreateTabDescriptionPage.getProductImageInformation(page, 1);
       });
 
       it('should check the JSON Response : `imageId`', async function () {
