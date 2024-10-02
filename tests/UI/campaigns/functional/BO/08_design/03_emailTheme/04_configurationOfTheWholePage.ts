@@ -7,7 +7,6 @@ import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advanced
 
 // Import pages
 import translationsPage from '@pages/BO/international/translations';
-import myProfilePage from '@pages/BO/advancedParameters/team/myProfile';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -15,6 +14,7 @@ import {
   boDashboardPage,
   boDesignEmailThemesPage,
   boDesignEmailThemesPreviewPage,
+  boMyProfilePage,
   type MailDev,
   type MailDevEmail,
   utilsMail,
@@ -28,6 +28,8 @@ describe('BO - Design - Email Theme : Configuration of the whole page', async ()
   let page: Page;
   let newMail: MailDevEmail;
   let mailListener: MailDev;
+  const textToSearch : string = 'Thank you for creating a customer account at {shop_name}.';
+  const newTranslation: string = 'Merci d\'avoir créé votre compte client sur {shop_name}.bonjour';
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -168,7 +170,7 @@ describe('BO - Design - Email Theme : Configuration of the whole page', async ()
         'classic',
         true,
       );
-      expect(successMessage).to.contains('Successfully overwrote email templates for theme classic with locale en');
+      expect(successMessage).to.contains(boDesignEmailThemesPage.generateEmailsSuccessMessage('classic', 'en'));
     });
 
     it('should preview email theme \'classic\'', async function () {
@@ -273,11 +275,11 @@ describe('BO - Design - Email Theme : Configuration of the whole page', async ()
         'classic',
         true,
       );
-      expect(successMessage).to.contains('Successfully overwrote email templates for theme modern with locale en');
+      expect(successMessage).to.contains(boDesignEmailThemesPage.generateEmailsSuccessMessage('modern', 'en'));
     });
 
     it('should preview email theme \'modern\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'previewEmailTheme', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'previewEmailTheme3', baseContext);
 
       await boDesignEmailThemesPage.previewEmailTheme(page, 'modern');
 
@@ -335,17 +337,17 @@ describe('BO - Design - Email Theme : Configuration of the whole page', async ()
     it('should search \'Generate\' expression and modify the translation to \'Generate code\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'translateExpression', baseContext);
 
-      await translationsPage.searchTranslation(page, 'Thank you for creating a customer account at {shop_name}.');
+      await translationsPage.searchTranslation(page, textToSearch);
 
       const textResult = await translationsPage.translateExpression(
         page,
-        'Merci d\'avoir créé votre compte client sur {shop_name}.bonjour',
+        newTranslation,
       );
       expect(textResult).to.equal(translationsPage.validationMessage);
     });
 
     it('should go to \'Design > Email Theme\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToEmailThemePage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEmailThemePage2', baseContext);
 
       await boDashboardPage.goToSubMenu(
         page,
@@ -368,21 +370,21 @@ describe('BO - Design - Email Theme : Configuration of the whole page', async ()
         'Core (no theme selected)',
         true,
       );
-      expect(successMessage).to.contains('Successfully overwrote email templates for theme modern with locale fr');
+      expect(successMessage).to.contains(boDesignEmailThemesPage.generateEmailsSuccessMessage('modern', 'fr'));
     });
 
     it('should go to \'Your profile\' page and update the language to French', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMyProfilePage', baseContext);
 
       await boDashboardPage.goToMyProfile(page);
-      await myProfilePage.editLanguage(page, 'Français (French)');
+      await boMyProfilePage.editLanguage(page, 'Français (French)');
 
-      const textResult = await myProfilePage.getAlertSuccess(page);
-      expect(textResult).to.equal(myProfilePage.successfulUpdateMessage);
+      const textResult = await boMyProfilePage.getAlertSuccess(page);
+      expect(textResult).to.equal(boMyProfilePage.successfulUpdateMessage);
     });
 
     it('should go to \'Design > Email Theme\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToEmailThemePage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEmailThemePage3', baseContext);
 
       await boDashboardPage.goToSubMenu(
         page,
@@ -396,7 +398,7 @@ describe('BO - Design - Email Theme : Configuration of the whole page', async ()
     });
 
     it('should preview email theme \'modern\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'previewEmailTheme', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'previewEmailTheme4', baseContext);
 
       await boDesignEmailThemesPage.previewEmailTheme(page, 'modern');
 
@@ -414,17 +416,17 @@ describe('BO - Design - Email Theme : Configuration of the whole page', async ()
     it('should check if mail is in mailbox', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkEmail', baseContext);
 
-      expect(newMail.text).to.contains('Merci d\'avoir créé votre compte client sur PrestaShop.bonjour');
+      expect(newMail.text).to.contains(newTranslation);
     });
 
     it('should go to \'Your profile\' page and update the language to English', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMyProfilePage', baseContext);
 
       await boDashboardPage.goToMyProfile(page);
-      await myProfilePage.editLanguage(page, 'English (English)');
+      await boMyProfilePage.editLanguage(page, 'English (English)');
 
-      const textResult = await myProfilePage.getAlertSuccess(page);
-      expect(textResult).to.equal(myProfilePage.successfulUpdateMessageFR);
+      const textResult = await boMyProfilePage.getAlertSuccess(page);
+      expect(textResult).to.equal(boMyProfilePage.successfulUpdateMessageFR);
     });
   });
 
