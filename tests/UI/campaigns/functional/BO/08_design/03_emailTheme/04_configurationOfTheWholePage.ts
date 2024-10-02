@@ -3,60 +3,431 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
 // Import pages
-import emailThemesPage from '@pages/BO/design/emailThemes';
-import previewEmailThemesPage from '@pages/BO/design/emailThemes/preview';
+import translationsPage from '@pages/BO/international/translations';
+import myProfilePage from '@pages/BO/advancedParameters/team/myProfile';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boDesignEmailThemesPage,
+  boDesignEmailThemesPreviewPage,
+  type MailDev,
+  type MailDevEmail,
+  utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
-const baseContext: string = 'functional_BO_design_emailTheme_previewEmailThemes';
+const baseContext: string = 'functional_BO_design_emailTheme_configurationOfTheWholePage';
 
-describe('BO - Design - Email Theme : Preview email theme', async () => {
+describe('BO - Design - Email Theme : Configuration of the whole page', async () => {
   let browserContext: BrowserContext;
   let page: Page;
+  let newMail: MailDevEmail;
+  let mailListener: MailDev;
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
+
+    // Start listening to maildev server
+    mailListener = utilsMail.createMailListener();
+    utilsMail.startListener(mailListener);
+
+    // Handle every new email
+    mailListener.on('new', (email: MailDevEmail) => {
+      newMail = email;
+    });
   });
 
   after(async () => {
     await utilsPlaywright.closeBrowserContext(browserContext);
+
+    // Stop listening to maildev server
+    utilsMail.stopListener(mailListener);
   });
 
-  it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
-  });
+  // Pre-Condition: Setup config SMTP
+  setupSmtpConfigTest(baseContext);
 
-  it('should go to \'Design > Email Theme\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToEmailThemePage', baseContext);
+  describe('Configuration of the whole page', async () => {
+    it('should login in BO', async function () {
+      await loginCommon.loginBO(this, page);
+    });
 
-    await boDashboardPage.goToSubMenu(
-      page,
-      boDashboardPage.designParentLink,
-      boDashboardPage.emailThemeLink,
-    );
-    await emailThemesPage.closeSfToolBar(page);
+    it('should go to \'Design > Email Theme\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEmailThemePage', baseContext);
 
-    const pageTitle = await emailThemesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(emailThemesPage.pageTitle);
-  });
+      await boDashboardPage.goToSubMenu(
+        page,
+        boDashboardPage.designParentLink,
+        boDashboardPage.emailThemeLink,
+      );
+      await boDesignEmailThemesPage.closeSfToolBar(page);
 
-  describe('Preview email theme', async () => {
+      const pageTitle = await boDesignEmailThemesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDesignEmailThemesPage.pageTitle);
+    });
+
     it('should preview email theme \'classic\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'previewEmailThemeClassic', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'previewEmailTheme', baseContext);
 
-      await emailThemesPage.previewEmailTheme(page, 'classic');
+      await boDesignEmailThemesPage.previewEmailTheme(page, 'classic');
 
-      const pageTitle = await previewEmailThemesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(`${previewEmailThemesPage.pageTitle} 'classic'`);
+      const pageTitle = await boDesignEmailThemesPreviewPage.getPageTitle(page);
+      expect(pageTitle).to.contains(`${boDesignEmailThemesPreviewPage.pageTitle} classic`);
+    });
+
+    it('should click on HTTPS button for the email account', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickHTTPSButton', baseContext);
+
+      page = await boDesignEmailThemesPreviewPage.viewHTTPLink(page, 1);
+      expect(page.url()).to.contain('classic');
+    });
+
+    it('should close the page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'closePage', baseContext);
+
+      page = await boDesignEmailThemesPreviewPage.closePage(browserContext, page, 1);
+
+      const pageTitle = await boDesignEmailThemesPreviewPage.getPageTitle(page);
+      expect(pageTitle).to.contains(`${boDesignEmailThemesPreviewPage.pageTitle} classic`);
+    });
+
+    it('should view raw html', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'viewRawHtml', baseContext);
+
+      page = await boDesignEmailThemesPreviewPage.viewRawHtml(page, 1);
+      expect(page.url())
+        .to.contain('classic')
+        .and.to.contain('raw')
+        .and.to.contain('.html');
+    });
+
+    it('should close the page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'closePage2', baseContext);
+
+      page = await boDesignEmailThemesPreviewPage.closePage(browserContext, page, 1);
+
+      const pageTitle = await boDesignEmailThemesPreviewPage.getPageTitle(page);
+      expect(pageTitle).to.contains(`${boDesignEmailThemesPreviewPage.pageTitle} classic`);
+    });
+
+    it('should click on text', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'viewRawText', baseContext);
+
+      page = await boDesignEmailThemesPreviewPage.viewRawText(page, 1);
+      expect(page.url())
+        .to.contain('classic')
+        .and.to.contain('raw')
+        .and.to.contain('.txt');
+    });
+
+    it('should close the page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'closePage3', baseContext);
+
+      page = await boDesignEmailThemesPreviewPage.closePage(browserContext, page, 1);
+
+      const pageTitle = await boDesignEmailThemesPreviewPage.getPageTitle(page);
+      expect(pageTitle).to.contains(`${boDesignEmailThemesPreviewPage.pageTitle} classic`);
+    });
+
+    it('should click on send a test email and check the error message', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'sendTestEmail', baseContext);
+
+      const successMessage = await boDesignEmailThemesPreviewPage.sendTestEmail(page, 1);
+      expect(successMessage).to.contains(boDesignEmailThemesPreviewPage.errorMessageSendEmail);
+    });
+
+    it('should go back to configuration page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToConfigurationPage', baseContext);
+
+      await boDesignEmailThemesPreviewPage.goBackToEmailThemesPage(page);
+
+      const pageTitle = await boDesignEmailThemesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDesignEmailThemesPage.pageTitle);
+    });
+
+    it('should select \'classic\' as default email theme', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'classicAsDefaultEmailTheme', baseContext);
+
+      const textMessage = await boDesignEmailThemesPage.selectDefaultEmailTheme(page, 'classic');
+      expect(textMessage).to.contains(boDesignEmailThemesPage.emailThemeConfigurationSuccessfulMessage);
+    });
+
+    it('should configure generate emails form', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'generateEmails', baseContext);
+
+      const successMessage = await boDesignEmailThemesPage.configureGenerateEmails(
+        page,
+        'classic',
+        'English (English)',
+        'classic',
+        true,
+      );
+      expect(successMessage).to.contains('Successfully overwrote email templates for theme classic with locale en');
+    });
+
+    it('should preview email theme \'classic\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'previewEmailTheme2', baseContext);
+
+      await boDesignEmailThemesPage.previewEmailTheme(page, 'classic');
+
+      const pageTitle = await boDesignEmailThemesPreviewPage.getPageTitle(page);
+      expect(pageTitle).to.contains(`${boDesignEmailThemesPreviewPage.pageTitle} classic`);
+    });
+
+    it('should click on send a test email and check the validation', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'sendTestEmail2', baseContext);
+
+      const successMessage = await boDesignEmailThemesPreviewPage.sendTestEmail(page, 1);
+      expect(successMessage).to.contains(boDesignEmailThemesPreviewPage.successMessageSendEmail('account'));
+    });
+
+    it('should check if mail is in mailbox', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkEmail', baseContext);
+
+      expect(newMail.subject).to.contains(`[${global.INSTALL.SHOP_NAME}] Test email account`);
+    });
+
+    it('should click on HTTPS button for customer_qty', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickHTTPSButtonCustomerQty', baseContext);
+
+      page = await boDesignEmailThemesPreviewPage.viewHTTPLink(page, 35);
+      expect(page.url()).to.contain('classic');
+    });
+
+    it('should close the page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'closePage4', baseContext);
+
+      page = await boDesignEmailThemesPreviewPage.closePage(browserContext, page, 1);
+
+      const pageTitle = await boDesignEmailThemesPreviewPage.getPageTitle(page);
+      expect(pageTitle).to.contains(`${boDesignEmailThemesPreviewPage.pageTitle} classic`);
+    });
+
+    it('should view raw html', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'viewRawHtml2', baseContext);
+
+      page = await boDesignEmailThemesPreviewPage.viewRawHtml(page, 1);
+      expect(page.url())
+        .to.contain('classic')
+        .and.to.contain('raw')
+        .and.to.contain('.html');
+    });
+
+    it('should close the page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'closePage5', baseContext);
+
+      page = await boDesignEmailThemesPreviewPage.closePage(browserContext, page, 1);
+
+      const pageTitle = await boDesignEmailThemesPreviewPage.getPageTitle(page);
+      expect(pageTitle).to.contains(`${boDesignEmailThemesPreviewPage.pageTitle} classic`);
+    });
+
+    it('should click on text', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'viewRawText2', baseContext);
+
+      page = await boDesignEmailThemesPreviewPage.viewRawText(page, 1);
+      expect(page.url())
+        .to.contain('classic')
+        .and.to.contain('raw')
+        .and.to.contain('.txt');
+    });
+
+    it('should close the page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'closePage6', baseContext);
+
+      page = await boDesignEmailThemesPreviewPage.closePage(browserContext, page, 1);
+
+      const pageTitle = await boDesignEmailThemesPreviewPage.getPageTitle(page);
+      expect(pageTitle).to.contains(`${boDesignEmailThemesPreviewPage.pageTitle} classic`);
+    });
+
+    it('should go back to configuration page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToConfigurationPage', baseContext);
+
+      await boDesignEmailThemesPreviewPage.goBackToEmailThemesPage(page);
+
+      const pageTitle = await boDesignEmailThemesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDesignEmailThemesPage.pageTitle);
+    });
+
+    it('should select \'modern\' as default email theme', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'modernAsDefaultEmailTheme', baseContext);
+
+      const textMessage = await boDesignEmailThemesPage.selectDefaultEmailTheme(page, 'modern');
+      expect(textMessage).to.contains(boDesignEmailThemesPage.emailThemeConfigurationSuccessfulMessage);
+    });
+
+    it('should configure generate emails form', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'generateEmails', baseContext);
+
+      const successMessage = await boDesignEmailThemesPage.configureGenerateEmails(
+        page,
+        'modern',
+        'English (English)',
+        'classic',
+        true,
+      );
+      expect(successMessage).to.contains('Successfully overwrote email templates for theme modern with locale en');
+    });
+
+    it('should preview email theme \'modern\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'previewEmailTheme', baseContext);
+
+      await boDesignEmailThemesPage.previewEmailTheme(page, 'modern');
+
+      const pageTitle = await boDesignEmailThemesPreviewPage.getPageTitle(page);
+      expect(pageTitle).to.contains(`${boDesignEmailThemesPreviewPage.pageTitle} modern`);
+    });
+
+    it('should click on HTTPS button for the backoffice_order', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickHTTPSButton', baseContext);
+
+      page = await boDesignEmailThemesPreviewPage.viewHTTPLink(page, 2);
+      expect(page.url()).to.contain('modern');
+    });
+
+    it('should close the page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'closePage6', baseContext);
+
+      page = await boDesignEmailThemesPreviewPage.closePage(browserContext, page, 1);
+
+      const pageTitle = await boDesignEmailThemesPreviewPage.getPageTitle(page);
+      expect(pageTitle).to.contains(`${boDesignEmailThemesPreviewPage.pageTitle} modern`);
+    });
+
+    it('should click on send a test email and check the validation', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'sendTestEmail2', baseContext);
+
+      const successMessage = await boDesignEmailThemesPreviewPage.sendTestEmail(page, 2);
+      expect(successMessage).to.contains(boDesignEmailThemesPreviewPage.successMessageSendEmail('backoffice_order'));
+    });
+
+    it('should check if mail is in mailbox', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkEmail', baseContext);
+
+      expect(newMail.subject).to.contains(`[${global.INSTALL.SHOP_NAME}] Test email backoffice_order`);
+    });
+
+    it('should go back to configuration page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToConfigurationPage', baseContext);
+
+      await boDesignEmailThemesPreviewPage.goBackToEmailThemesPage(page);
+
+      const pageTitle = await boDesignEmailThemesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDesignEmailThemesPage.pageTitle);
+    });
+
+    it('should choose French in translate emails form', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'translateEmailsToFrench', baseContext);
+
+      await boDesignEmailThemesPage.selectTranslateEmailLanguage(page, 'Français (French)');
+
+      const pageTitle = await translationsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(translationsPage.pageTitle);
+    });
+
+    it('should search \'Generate\' expression and modify the translation to \'Generate code\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'translateExpression', baseContext);
+
+      await translationsPage.searchTranslation(page, 'Thank you for creating a customer account at {shop_name}.');
+
+      const textResult = await translationsPage.translateExpression(
+        page,
+        'Merci d\'avoir créé votre compte client sur {shop_name}.bonjour',
+      );
+      expect(textResult).to.equal(translationsPage.validationMessage);
+    });
+
+    it('should go to \'Design > Email Theme\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEmailThemePage', baseContext);
+
+      await boDashboardPage.goToSubMenu(
+        page,
+        boDashboardPage.designParentLink,
+        boDashboardPage.emailThemeLink,
+      );
+      await boDesignEmailThemesPage.closeSfToolBar(page);
+
+      const pageTitle = await boDesignEmailThemesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDesignEmailThemesPage.pageTitle);
+    });
+
+    it('should configure generate emails form', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'generateEmails', baseContext);
+
+      const successMessage = await boDesignEmailThemesPage.configureGenerateEmails(
+        page,
+        'modern',
+        'Français (French)',
+        'Core (no theme selected)',
+        true,
+      );
+      expect(successMessage).to.contains('Successfully overwrote email templates for theme modern with locale fr');
+    });
+
+    it('should go to \'Your profile\' page and update the language to French', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToMyProfilePage', baseContext);
+
+      await boDashboardPage.goToMyProfile(page);
+      await myProfilePage.editLanguage(page, 'Français (French)');
+
+      const textResult = await myProfilePage.getAlertSuccess(page);
+      expect(textResult).to.equal(myProfilePage.successfulUpdateMessage);
+    });
+
+    it('should go to \'Design > Email Theme\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEmailThemePage', baseContext);
+
+      await boDashboardPage.goToSubMenu(
+        page,
+        boDashboardPage.designParentLink,
+        boDashboardPage.emailThemeLink,
+      );
+      await boDesignEmailThemesPage.closeSfToolBar(page);
+
+      const pageTitle = await boDesignEmailThemesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDesignEmailThemesPage.pageTitleFR);
+    });
+
+    it('should preview email theme \'modern\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'previewEmailTheme', baseContext);
+
+      await boDesignEmailThemesPage.previewEmailTheme(page, 'modern');
+
+      const pageTitle = await boDesignEmailThemesPreviewPage.getPageTitle(page);
+      expect(pageTitle).to.contains(`${boDesignEmailThemesPreviewPage.pageTitleFR} modern`);
+    });
+
+    it('should click on send a test email and check the validation', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'sendTestEmail2', baseContext);
+
+      const successMessage = await boDesignEmailThemesPreviewPage.sendTestEmail(page, 1);
+      expect(successMessage).to.contains(boDesignEmailThemesPreviewPage.successMessageSendEmailFR('account'));
+    });
+
+    it('should check if mail is in mailbox', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkEmail', baseContext);
+
+      expect(newMail.text).to.contains('Merci d\'avoir créé votre compte client sur PrestaShop.bonjour');
+    });
+
+    it('should go to \'Your profile\' page and update the language to English', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToMyProfilePage', baseContext);
+
+      await boDashboardPage.goToMyProfile(page);
+      await myProfilePage.editLanguage(page, 'English (English)');
+
+      const textResult = await myProfilePage.getAlertSuccess(page);
+      expect(textResult).to.equal(myProfilePage.successfulUpdateMessageFR);
     });
   });
+
+  // Post-Condition: Reset config SMTP
+  resetSmtpConfigTest(baseContext);
 });
