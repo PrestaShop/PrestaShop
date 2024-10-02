@@ -180,7 +180,7 @@ export default class CommonPage {
     try {
       await this.waitForVisibleSelector(page, selector, timeout);
       return true;
-    } catch (error) {
+    } catch (error) { // eslint-disable-line @typescript-eslint/no-unused-vars
       return false;
     }
   }
@@ -196,7 +196,7 @@ export default class CommonPage {
     try {
       await this.waitForHiddenSelector(page, selector, timeout);
       return true;
-    } catch (error) {
+    } catch (error) { // eslint-disable-line @typescript-eslint/no-unused-vars
       return false;
     }
   }

@@ -1075,7 +1075,7 @@ export default class BOBasePage extends CommonPage {
     while (!growlNotVisible) {
       try {
         await page.locator(this.growlCloseButton).click();
-      } catch (e) {
+      } catch (e) { // eslint-disable-line @typescript-eslint/no-unused-vars
         // If element does not exist it's already not visible
       }
 

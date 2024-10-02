@@ -57,7 +57,9 @@ function exec(command: string, output: string): void {
   console.log(`${output} > Execute the \`test:${command}\` campaign`);
   try {
     execSync(commandTest(command, output));
-  } catch (e) { /* empty */ }
+  } catch (e) { // eslint-disable-line @typescript-eslint/no-unused-vars
+    /* empty */
+  }
 }
 
 // Init
