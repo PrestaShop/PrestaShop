@@ -1094,7 +1094,7 @@ class ProductLazyArray extends AbstractLazyArray
                     'Shop.Theme.Catalog'
                 );
             } else {
-                $this->product['availability'] = 'available';
+                $this->product['availability'] = 'in_stock';
 
                 // We will primarily use label from combination if set, then label on product, then the default label from PS settings
                 if (!empty($combinationData['available_now'])) {
