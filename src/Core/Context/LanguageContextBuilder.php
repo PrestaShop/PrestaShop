@@ -99,9 +99,14 @@ class LanguageContextBuilder implements LegacyContextBuilderInterface
         }
     }
 
+    private function getLocaleByLanguage(LanguageInterface $language)
+    {
+        return $this->localeRepository->getLocale($language->getLocale());
+    }
+
     private function buildLanguageContext(LanguageInterface $language): LanguageContext
     {
-        $localizationLocale = $this->localeRepository->getLocale($language->getLocale());
+        $localizationLocale = $this->getLocaleByLanguage($language);
 
         return new LanguageContext(
             id: $language->getId(),
@@ -121,5 +126,6 @@ class LanguageContextBuilder implements LegacyContextBuilderInterface
         $this->assertArguments();
         $language = $this->objectModelLanguageRepository->get(new LanguageId($this->languageId));
         $this->contextStateManager->setLanguage($language);
+        $this->contextStateManager->setCurrentLocale($this->getLocaleByLanguage($language));
     }
 }
