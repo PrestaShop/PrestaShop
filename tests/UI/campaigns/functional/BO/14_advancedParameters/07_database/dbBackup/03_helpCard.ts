@@ -4,14 +4,12 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import sqlManagerPage from '@pages/BO/advancedParameters/database/sqlManager';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boDbBackupPage,
+  boSqlManagerPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -45,16 +43,16 @@ describe('BO - Advanced Parameters - Database : Help card in DB Backup page', as
       boDashboardPage.databaseLink,
     );
 
-    await sqlManagerPage.closeSfToolBar(page);
+    await boSqlManagerPage.closeSfToolBar(page);
 
-    const pageTitle = await sqlManagerPage.getPageTitle(page);
-    expect(pageTitle).to.contains(sqlManagerPage.pageTitle);
+    const pageTitle = await boSqlManagerPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boSqlManagerPage.pageTitle);
   });
 
   it('should go to \'DB Backup\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToDbBackupPage', baseContext);
 
-    await sqlManagerPage.goToDbBackupPage(page);
+    await boSqlManagerPage.goToDbBackupPage(page);
 
     const pageTitle = await boDbBackupPage.getPageTitle(page);
     expect(pageTitle).to.contains(boDbBackupPage.pageTitle);

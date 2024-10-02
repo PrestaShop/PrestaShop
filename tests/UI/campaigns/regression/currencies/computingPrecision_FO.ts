@@ -6,9 +6,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import sqlManagerPage from '@pages/BO/advancedParameters/database/sqlManager';
-import addSqlQueryPage from '@pages/BO/advancedParameters/database/sqlManager/add';
-import viewSqlQueryPage from '@pages/BO/advancedParameters/database/sqlManager/view';
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 
@@ -18,6 +15,9 @@ import {
   boCurrenciesPage,
   boCurrenciesCreatePage,
   boOrdersPage,
+  boSqlManagerPage,
+  boSqlManagerCreatePage,
+  boSqlManagerViewPage,
   dataCurrencies,
   dataCustomers,
   dataPaymentMethods,
@@ -354,27 +354,27 @@ describe(
           boOrdersPage.databaseLink,
         );
 
-        const pageTitle = await sqlManagerPage.getPageTitle(page);
-        expect(pageTitle).to.contains(sqlManagerPage.pageTitle);
+        const pageTitle = await boSqlManagerPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boSqlManagerPage.pageTitle);
       });
 
       describe('Create new SQL query to get last order total price', async () => {
         it('should go to \'New SQL query\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToCreateSqlQueryPage', baseContext);
 
-          await sqlManagerPage.goToNewSQLQueryPage(page);
+          await boSqlManagerPage.goToNewSQLQueryPage(page);
           // Adding order reference to sql query
           sqlQueryData.sqlQuery = sqlQueryTemplate(orderToMake.reference);
 
-          const pageTitle = await addSqlQueryPage.getPageTitle(page);
-          expect(pageTitle).to.contains(addSqlQueryPage.pageTitle);
+          const pageTitle = await boSqlManagerCreatePage.getPageTitle(page);
+          expect(pageTitle).to.contains(boSqlManagerCreatePage.pageTitle);
         });
 
         it('should create new SQL query', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'createSqlQuery', baseContext);
 
-          const textResult = await addSqlQueryPage.createEditSQLQuery(page, sqlQueryData);
-          expect(textResult).to.equal(addSqlQueryPage.successfulCreationMessage);
+          const textResult = await boSqlManagerCreatePage.createEditSQLQuery(page, sqlQueryData);
+          expect(textResult).to.equal(boSqlManagerCreatePage.successfulCreationMessage);
         });
       });
 
@@ -382,27 +382,27 @@ describe(
         it('should filter list by name', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'filterSqlQueriesToView', baseContext);
 
-          await sqlManagerPage.resetFilter(page);
-          await sqlManagerPage.filterSQLQuery(page, 'name', sqlQueryData.name);
+          await boSqlManagerPage.resetFilter(page);
+          await boSqlManagerPage.filterSQLQuery(page, 'name', sqlQueryData.name);
 
-          const sqlQueryName = await sqlManagerPage.getTextColumnFromTable(page, 1, 'name');
+          const sqlQueryName = await boSqlManagerPage.getTextColumnFromTable(page, 1, 'name');
           expect(sqlQueryName).to.contains(sqlQueryData.name);
         });
 
         it('should click on view button', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'viewSqlQuery', baseContext);
 
-          await sqlManagerPage.goToViewSQLQueryPage(page, 1);
+          await boSqlManagerPage.goToViewSQLQueryPage(page, 1);
 
-          const pageTitle = await viewSqlQueryPage.getPageTitle(page);
-          expect(pageTitle).to.contains(viewSqlQueryPage.pageTitle);
+          const pageTitle = await boSqlManagerViewPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boSqlManagerViewPage.pageTitle);
         });
 
         it('should check order discount in database', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkLastOrderDiscountInDatabase', baseContext);
 
           // Get total discount from first column of the first row
-          const discountInDatabase = await viewSqlQueryPage.getTextColumn(page, 1, 'total_discounts');
+          const discountInDatabase = await boSqlManagerViewPage.getTextColumn(page, 1, 'total_discounts');
           expect(parseFloat(discountInDatabase), 'Discount price is incorrect in database')
             .to.equal(orderToMake.discountPercentValue + orderToMake.discountGiftValue);
         });
@@ -410,7 +410,7 @@ describe(
           await testContext.addContextItem(this, 'testIdentifier', 'checkToTalPriceInDatabase', baseContext);
 
           // Get total discount from second column of the first row
-          const totalPriceInDatabase = await viewSqlQueryPage.getTextColumn(page, 1, 'total_paid_tax_incl');
+          const totalPriceInDatabase = await boSqlManagerViewPage.getTextColumn(page, 1, 'total_paid_tax_incl');
           expect(parseFloat(totalPriceInDatabase), 'Total price is incorrect in database')
             .to.equal(orderToMake.totalPrice);
         });
@@ -427,10 +427,10 @@ describe(
         it('should go to localization page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPageToReset', baseContext);
 
-          await sqlManagerPage.goToSubMenu(
+          await boSqlManagerPage.goToSubMenu(
             page,
-            sqlManagerPage.internationalParentLink,
-            sqlManagerPage.localizationLink,
+            boSqlManagerPage.internationalParentLink,
+            boSqlManagerPage.localizationLink,
           );
 
           const pageTitle = await boLocalizationPage.getPageTitle(page);
@@ -507,25 +507,25 @@ describe(
             cartRulesPage.databaseLink,
           );
 
-          const pageTitle = await sqlManagerPage.getPageTitle(page);
-          expect(pageTitle).to.contains(sqlManagerPage.pageTitle);
+          const pageTitle = await boSqlManagerPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boSqlManagerPage.pageTitle);
         });
 
         it('should filter list by name', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'filterSQLQueriesToDelete', baseContext);
 
-          await sqlManagerPage.resetFilter(page);
-          await sqlManagerPage.filterSQLQuery(page, 'name', sqlQueryData.name);
+          await boSqlManagerPage.resetFilter(page);
+          await boSqlManagerPage.filterSQLQuery(page, 'name', sqlQueryData.name);
 
-          const sqlQueryName = await sqlManagerPage.getTextColumnFromTable(page, 1, 'name');
+          const sqlQueryName = await boSqlManagerPage.getTextColumnFromTable(page, 1, 'name');
           expect(sqlQueryName).to.contains(sqlQueryData.name);
         });
 
         it('should delete SQL query', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'deleteSQLQuery', baseContext);
 
-          const textResult = await sqlManagerPage.deleteSQLQuery(page, 1);
-          expect(textResult).to.equal(sqlManagerPage.successfulDeleteMessage);
+          const textResult = await boSqlManagerPage.deleteSQLQuery(page, 1);
+          expect(textResult).to.equal(boSqlManagerPage.successfulDeleteMessage);
         });
       });
     });

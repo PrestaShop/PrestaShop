@@ -4,14 +4,12 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import sqlManagerPage from '@pages/BO/advancedParameters/database/sqlManager';
-import addSqlQueryPage from '@pages/BO/advancedParameters/database/sqlManager/add';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boSqlManagerPage,
+  boSqlManagerCreatePage,
   FakerSqlQuery,
   utilsCore,
   utilsPlaywright,
@@ -57,14 +55,14 @@ describe('BO - Advanced Parameters - Database : Filter, sort and pagination SQL 
     );
     await boDashboardPage.closeSfToolBar(page);
 
-    const pageTitle = await sqlManagerPage.getPageTitle(page);
-    expect(pageTitle).to.contains(sqlManagerPage.pageTitle);
+    const pageTitle = await boSqlManagerPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boSqlManagerPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'firstResetFilter', baseContext);
 
-    numberOfSQLQueries = await sqlManagerPage.resetAndGetNumberOfLines(page);
+    numberOfSQLQueries = await boSqlManagerPage.resetAndGetNumberOfLines(page);
 
     if (numberOfSQLQueries !== 0) {
       expect(numberOfSQLQueries).to.be.above(0);
@@ -80,19 +78,19 @@ describe('BO - Advanced Parameters - Database : Filter, sort and pagination SQL 
       it('should go to add new SQL query page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddSqlQueryPage${index}`, baseContext);
 
-        await sqlManagerPage.goToNewSQLQueryPage(page);
+        await boSqlManagerPage.goToNewSQLQueryPage(page);
 
-        const pageTitle = await addSqlQueryPage.getPageTitle(page);
-        expect(pageTitle).to.contains(addSqlQueryPage.pageTitle);
+        const pageTitle = await boSqlManagerCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boSqlManagerCreatePage.pageTitle);
       });
 
       it(`should create SQL query n°${index + 1} and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createOrderStatus${index}`, baseContext);
 
-        const textResult = await addSqlQueryPage.createEditSQLQuery(page, sqlQueryData);
-        expect(textResult).to.contains(sqlManagerPage.successfulCreationMessage);
+        const textResult = await boSqlManagerCreatePage.createEditSQLQuery(page, sqlQueryData);
+        expect(textResult).to.contains(boSqlManagerPage.successfulCreationMessage);
 
-        const numberOfLinesAfterCreation = await sqlManagerPage.getNumberOfElementInGrid(page);
+        const numberOfLinesAfterCreation = await boSqlManagerPage.getNumberOfElementInGrid(page);
         expect(numberOfLinesAfterCreation).to.be.equal(numberOfSQLQueries + index + 1);
       });
     });
@@ -103,28 +101,28 @@ describe('BO - Advanced Parameters - Database : Filter, sort and pagination SQL 
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
-      const paginationNumber = await sqlManagerPage.selectPaginationLimit(page, 10);
+      const paginationNumber = await boSqlManagerPage.selectPaginationLimit(page, 10);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await sqlManagerPage.paginationNext(page);
+      const paginationNumber = await boSqlManagerPage.paginationNext(page);
       expect(paginationNumber).to.contains('(page 2 / 2)');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await sqlManagerPage.paginationPrevious(page);
+      const paginationNumber = await boSqlManagerPage.paginationPrevious(page);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
-      const paginationNumber = await sqlManagerPage.selectPaginationLimit(page, 50);
+      const paginationNumber = await boSqlManagerPage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
@@ -162,13 +160,13 @@ describe('BO - Advanced Parameters - Database : Filter, sort and pagination SQL 
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        await sqlManagerPage.filterSQLQuery(page, test.args.filterBy, test.args.filterValue);
+        await boSqlManagerPage.filterSQLQuery(page, test.args.filterBy, test.args.filterValue);
 
-        const numberOfLinesAfterFilter = await sqlManagerPage.getNumberOfElementInGrid(page);
+        const numberOfLinesAfterFilter = await boSqlManagerPage.getNumberOfElementInGrid(page);
         expect(numberOfLinesAfterFilter).to.be.at.most(numberOfSQLQueries + 11);
 
         for (let row = 1; row <= numberOfLinesAfterFilter; row++) {
-          const textColumn = await sqlManagerPage.getTextColumnFromTable(page, row, test.args.filterBy);
+          const textColumn = await boSqlManagerPage.getTextColumnFromTable(page, row, test.args.filterBy);
           expect(textColumn).to.contains(test.args.filterValue);
         }
       });
@@ -176,7 +174,7 @@ describe('BO - Advanced Parameters - Database : Filter, sort and pagination SQL 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `resetFilter${index}`, baseContext);
 
-        numberOfSQLQueries = await sqlManagerPage.resetAndGetNumberOfLines(page);
+        numberOfSQLQueries = await boSqlManagerPage.resetAndGetNumberOfLines(page);
         expect(numberOfSQLQueries).to.be.above(0);
       });
     });
@@ -220,10 +218,10 @@ describe('BO - Advanced Parameters - Database : Filter, sort and pagination SQL 
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await sqlManagerPage.getAllRowsColumnContent(page, test.args.sortBy);
-        await sqlManagerPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+        const nonSortedTable = await boSqlManagerPage.getAllRowsColumnContent(page, test.args.sortBy);
+        await boSqlManagerPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        const sortedTable = await sqlManagerPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await boSqlManagerPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
@@ -254,23 +252,23 @@ describe('BO - Advanced Parameters - Database : Filter, sort and pagination SQL 
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDelete', baseContext);
 
-      await sqlManagerPage.filterSQLQuery(page, 'name', 'todelete');
+      await boSqlManagerPage.filterSQLQuery(page, 'name', 'todelete');
 
-      const textResult = await sqlManagerPage.getTextColumnFromTable(page, 1, 'name');
+      const textResult = await boSqlManagerPage.getTextColumnFromTable(page, 1, 'name');
       expect(textResult).to.contains('todelete');
     });
 
     it('should delete categories with Bulk Actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDelete', baseContext);
 
-      const deleteTextResult = await sqlManagerPage.deleteWithBulkActions(page);
-      expect(deleteTextResult).to.be.equal(sqlManagerPage.successfulMultiDeleteMessage);
+      const deleteTextResult = await boSqlManagerPage.deleteWithBulkActions(page);
+      expect(deleteTextResult).to.be.equal(boSqlManagerPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
-      const numberOfLinesAfterReset = await sqlManagerPage.resetAndGetNumberOfLines(page);
+      const numberOfLinesAfterReset = await boSqlManagerPage.resetAndGetNumberOfLines(page);
       expect(numberOfLinesAfterReset).to.equal(numberOfSQLQueries - 11);
     });
   });
