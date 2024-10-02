@@ -196,69 +196,6 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
     });
   });
 
-  // @todo : https://github.com/PrestaShop/PrestaShop/issues/9589
-  // Delete when fixed
-  describe('Delete the Non ordered shopping carts', async () => {
-    it('should go to \'Orders > Shopping carts\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage2', baseContext);
-
-      await boDashboardPage.goToSubMenu(
-        page,
-        boDashboardPage.ordersParentLink,
-        boDashboardPage.shoppingCartsLink,
-      );
-
-      const pageTitle = await boShoppingCartsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(boShoppingCartsPage.pageTitle);
-    });
-
-    it('should reset all filters and get number of shopping carts', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst2', baseContext);
-
-      numberOfShoppingCarts = await boShoppingCartsPage.resetAndGetNumberOfLines(page);
-      expect(numberOfShoppingCarts).to.be.above(0);
-    });
-
-    it('should search the non ordered shopping carts', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'searchNonOrderedShoppingCarts2', baseContext);
-
-      await boShoppingCartsPage.filterTable(page, 'select', 'status', 'Non ordered');
-
-      numberOfNonOrderedShoppingCarts = await boShoppingCartsPage.getNumberOfElementInGrid(page);
-      expect(numberOfNonOrderedShoppingCarts).to.be.at.most(numberOfShoppingCarts);
-
-      numberOfShoppingCarts -= numberOfNonOrderedShoppingCarts;
-
-      for (let row = 1; row <= numberOfNonOrderedShoppingCarts; row++) {
-        const textColumn = await boShoppingCartsPage.getTextColumn(page, row, 'status');
-        expect(textColumn).to.contains('Non ordered');
-      }
-    });
-
-    it('should delete the non ordered shopping carts if exist', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'deleteNonOrderedShoppingCartsIfExists2', baseContext);
-
-      if (numberOfNonOrderedShoppingCarts > 0) {
-        const deleteTextResult = await boShoppingCartsPage.bulkDeleteShoppingCarts(page);
-        expect(deleteTextResult).to.be.contains(boShoppingCartsPage.successfulDeleteMessage);
-      }
-    });
-
-    it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDeleteNonOrderedCarts2', baseContext);
-
-      const numberOfShoppingCartsAfterReset = await boShoppingCartsPage.resetAndGetNumberOfLines(page);
-      expect(numberOfShoppingCartsAfterReset).to.be.equal(numberOfShoppingCarts);
-    });
-
-    it('should get the last shopping cart ID', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'getIdOfLastShoppingCart2', baseContext);
-
-      lastShoppingCartId = parseInt(await boShoppingCartsPage.getTextColumn(page, 1, 'id_cart'), 10);
-      expect(lastShoppingCartId).to.be.above(0);
-    });
-  });
-
   // 3 - Create a Shopping cart from the FO by the default customer
   describe('Create a Shopping cart from the FO by the default customer', async () => {
     it('should click on view my shop', async function () {
@@ -329,10 +266,22 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
 
       page = await foClassicCheckoutPage.closePage(browserContext, page, 0);
 
+      const pageTitle = await addOrderPage.getPageTitle(page);
+      expect(pageTitle).to.contains(addOrderPage.pageTitle);
+    });
+
+    it('should go to \'Orders > Shopping carts\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage2', baseContext);
+
+      await boDashboardPage.goToSubMenu(
+        page,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.shoppingCartsLink,
+      );
+
       const pageTitle = await boShoppingCartsPage.getPageTitle(page);
       expect(pageTitle).to.contains(boShoppingCartsPage.pageTitle);
 
-      await boShoppingCartsPage.reloadPage(page);
       lastShoppingCartId = parseInt(await boShoppingCartsPage.getTextColumn(page, 1, 'id_cart'), 10);
     });
   });

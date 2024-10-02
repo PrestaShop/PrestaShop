@@ -80,7 +80,6 @@ describe('BO - Dashboard : Activity overview', async () => {
 
   enableMerchandiseReturns(baseContext);
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -354,11 +353,8 @@ describe('BO - Dashboard : Activity overview', async () => {
         expect(pageTitle).to.contains(boDashboardPage.pageTitle);
       });
 
-      // @todo : https://github.com/PrestaShop/PrestaShop/issues/34321
       it('should check Return/Exchange number', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkReturnExchangeNumber', baseContext);
-
-        this.skip();
 
         const newNumberOfReturnExchanges = await boDashboardPage.getNumberOfReturnExchange(page);
         expect(newNumberOfReturnExchanges).to.eq(numberOfReturnExchanges + 1);
@@ -701,17 +697,89 @@ describe('BO - Dashboard : Activity overview', async () => {
         expect(pageTitle).to.eq(boDashboardPage.pageTitle);
       });
     });
+
+    describe('Check Traffic Sources', async () => {
+      it('should check traffic sources', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkTrafficSources', baseContext);
+
+        const trafficSources = await boDashboardPage.getTrafficSources(page);
+
+        expect(trafficSources.length).to.equals(3);
+        expect(trafficSources[0].label).to.equals('Direct link');
+        expect(trafficSources[1].label).to.equals('prestashop.com');
+        expect(trafficSources[2].label).to.equals('localhost');
+      });
+    });
   });
 
   describe('Configuration', async () => {
     it('should click on configure link', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnConfigureLink', baseContext);
 
-      const isConfigureFormVisible = await boDashboardPage.clickOnConfigureLink(page);
+      const isConfigureFormVisible = await boDashboardPage.clickOnConfigureActivityOverviewLink(page);
       expect(isConfigureFormVisible).to.eq(true);
     });
 
-    // @todo : https://github.com/PrestaShop/PrestaShop/issues/34326
+    it('should update the form', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'setFormActivityOverview', baseContext);
+
+      await boDashboardPage.setFormActivityOverview(page, 45, 45, 12, 96);
+      await boDashboardPage.reloadPage(page);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.eq(boDashboardPage.pageTitle);
+    });
+
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/37033
+    it('should update the form', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkFormActivityOverview', baseContext);
+
+      const isConfigureFormVisible = await boDashboardPage.clickOnConfigureActivityOverviewLink(page);
+      expect(isConfigureFormVisible).to.eq(true);
+
+      this.skip();
+
+      const numActiveCarts = parseInt(await boDashboardPage.getFormActivityOverviewValue(page, 'active_cart'), 10);
+      expect(numActiveCarts).to.equals(45);
+
+      const numOnlineVisitor = parseInt(await boDashboardPage.getFormActivityOverviewValue(page, 'online_visitor'), 10);
+      expect(numOnlineVisitor).to.equals(45);
+
+      const numAbandonedCartMin = parseInt(await boDashboardPage.getFormActivityOverviewValue(page, 'abandoned_cart_min'), 10);
+      expect(numAbandonedCartMin).to.equals(12);
+
+      const numAbandonedCartMax = parseInt(await boDashboardPage.getFormActivityOverviewValue(page, 'abandoned_cart_max'), 10);
+      expect(numAbandonedCartMax).to.equals(96);
+    });
+
+    it('should reset the form', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFormActivityOverview', baseContext);
+
+      await boDashboardPage.setFormActivityOverview(page, 30, 30, 24, 48);
+      await boDashboardPage.reloadPage(page);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.eq(boDashboardPage.pageTitle);
+    });
+
+    it('should update the form', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkFormActivityOverviewReset', baseContext);
+
+      const isConfigureFormVisible = await boDashboardPage.clickOnConfigureActivityOverviewLink(page);
+      expect(isConfigureFormVisible).to.eq(true);
+
+      const numActiveCarts = parseInt(await boDashboardPage.getFormActivityOverviewValue(page, 'active_cart'), 10);
+      expect(numActiveCarts).to.equals(30);
+
+      const numOnlineVisitor = parseInt(await boDashboardPage.getFormActivityOverviewValue(page, 'online_visitor'), 10);
+      expect(numOnlineVisitor).to.equals(30);
+
+      const numAbandonedCartMin = parseInt(await boDashboardPage.getFormActivityOverviewValue(page, 'abandoned_cart_min'), 10);
+      expect(numAbandonedCartMin).to.equals(24);
+
+      const numAbandonedCartMax = parseInt(await boDashboardPage.getFormActivityOverviewValue(page, 'abandoned_cart_max'), 10);
+      expect(numAbandonedCartMax).to.equals(48);
+    });
   });
 
   // Post-condition : Delete created customer
