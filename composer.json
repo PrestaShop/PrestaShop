@@ -287,8 +287,8 @@
             "@php -d date.timezone=UTC -d memory_limit=-1 ./vendor/phpunit/phpunit/phpunit -c tests/Integration/phpunit.xml",
             "@php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c tests/Integration/phpunit-isolated.xml"
         ],
-        "php-cs-fixer": "@php ./vendor/bin/php-cs-fixer fix --path-mode=intersection",
-        "php-cs-fixer:dry": "@php ./vendor/bin/php-cs-fixer fix --dry-run --diff --path-mode=intersection",
+        "php-cs-fixer": "@php ./vendor/bin/php-cs-fixer fix",
+        "php-cs-fixer:dry": "@php ./vendor/bin/php-cs-fixer fix --dry-run --diff",
         "phpstan": "@php -d memory_limit=-1 ./vendor/bin/phpstan analyze -c phpstan.neon.dist",
         "phpstan:generate-baseline": "@php -d memory_limit=-1 ./vendor/bin/phpstan analyze -c phpstan.neon.dist --generate-baseline",
         "restore-test-db": [
