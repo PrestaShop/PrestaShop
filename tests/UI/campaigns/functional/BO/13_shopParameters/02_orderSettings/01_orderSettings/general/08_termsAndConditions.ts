@@ -4,12 +4,9 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-// Import BO pages
-import boOrderSettingsPage from '@pages/BO/shopParameters/orderSettings';
-
 import {
   boDashboardPage,
+  boOrderSettingsPage,
   dataCMSPages,
   dataCustomers,
   foClassicCartPage,
@@ -56,7 +53,7 @@ describe('BO - Shop Parameters - Order Settings : Terms and conditions', async (
     expect(pageTitle).to.contains(boOrderSettingsPage.pageTitle);
   });
 
-  it(`should check terms and conditions page`, async function () {
+  it('should check terms and conditions page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkTermsAndConditionsPage', baseContext);
 
     const result = await boOrderSettingsPage.getTermsAndConditionsPage(page);
@@ -129,7 +126,7 @@ describe('BO - Shop Parameters - Order Settings : Terms and conditions', async (
     expect(pageTitle).to.contains(boOrderSettingsPage.pageTitle);
   });
 
-  it(`should change terms and conditions page`, async function () {
+  it('should change terms and conditions page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setTermsAndConditionsPage', baseContext);
 
     const result = await boOrderSettingsPage.setTermsOfService(page, true, dataCMSPages.legalNotice.title);
@@ -149,7 +146,7 @@ describe('BO - Shop Parameters - Order Settings : Terms and conditions', async (
     expect(pageName).to.contains('Legal');
   });
 
-  it(`should reset terms and conditions page`, async function () {
+  it('should reset terms and conditions page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetTermsAndConditionsPage', baseContext);
 
     page = await foClassicCheckoutPage.closePage(browserContext, page, 0);

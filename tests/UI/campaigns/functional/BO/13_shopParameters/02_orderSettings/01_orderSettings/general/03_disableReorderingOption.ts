@@ -5,13 +5,12 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-// Import BO pages
-import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 // Import FO pages
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
 import {
   boDashboardPage,
+  boOrderSettingsPage,
   dataCustomers,
   foClassicHomePage,
   foClassicLoginPage,
@@ -54,10 +53,10 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable reordering opti
       boDashboardPage.shopParametersParentLink,
       boDashboardPage.orderSettingsLink,
     );
-    await orderSettingsPage.closeSfToolBar(page);
+    await boOrderSettingsPage.closeSfToolBar(page);
 
-    const pageTitle = await orderSettingsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+    const pageTitle = await boOrderSettingsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boOrderSettingsPage.pageTitle);
   });
 
   const tests = [
@@ -69,15 +68,15 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable reordering opti
     it(`should ${test.args.action} reordering option`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `setReorderingOption${index}`, baseContext);
 
-      const result = await orderSettingsPage.setReorderOptionStatus(page, test.args.status);
-      expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
+      const result = await boOrderSettingsPage.setReorderOptionStatus(page, test.args.status);
+      expect(result).to.contains(boOrderSettingsPage.successfulUpdateMessage);
     });
 
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
       // Click on view my shop
-      page = await orderSettingsPage.viewMyShop(page);
+      page = await boOrderSettingsPage.viewMyShop(page);
       // Change language
       await foClassicHomePage.changeLanguage(page, 'en');
 
@@ -111,8 +110,8 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable reordering opti
       await orderHistoryPage.logout(page);
       page = await orderHistoryPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await orderSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+      const pageTitle = await boOrderSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrderSettingsPage.pageTitle);
     });
   });
 });

@@ -7,12 +7,12 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
-import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 // Import FO pages
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
   boDashboardPage,
+  boOrderSettingsPage,
   FakerAddress,
   FakerCartRule,
   FakerCustomer,
@@ -113,15 +113,15 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
           boDashboardPage.orderSettingsLink,
         );
 
-        const pageTitle = await orderSettingsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+        const pageTitle = await boOrderSettingsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrderSettingsPage.pageTitle);
       });
 
       it('should change the terms and conditions back to disabled', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'disableTermAndConditions', baseContext);
 
-        const result = await orderSettingsPage.setTermsOfService(page, false);
-        expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
+        const result = await boOrderSettingsPage.setTermsOfService(page, false);
+        expect(result).to.contains(boOrderSettingsPage.successfulUpdateMessage);
       });
     });
   });
@@ -236,8 +236,8 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
 
       page = await foClassicCheckoutPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await orderSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+      const pageTitle = await boOrderSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrderSettingsPage.pageTitle);
     });
 
     describe('Delete created cart rules', async () => {
@@ -274,15 +274,15 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
           boDashboardPage.orderSettingsLink,
         );
 
-        const pageTitle = await orderSettingsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+        const pageTitle = await boOrderSettingsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrderSettingsPage.pageTitle);
       });
 
       it('should change the terms and conditions back to enabled', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'resetTermsAndConditionsValue', baseContext);
 
-        const result = await orderSettingsPage.setTermsOfService(page, true, 'Terms and conditions of use');
-        expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
+        const result = await boOrderSettingsPage.setTermsOfService(page, true, 'Terms and conditions of use');
+        expect(result).to.contains(boOrderSettingsPage.successfulUpdateMessage);
       });
     });
   });
