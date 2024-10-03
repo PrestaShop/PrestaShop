@@ -32,6 +32,7 @@ use AppKernel;
 use FrontKernel;
 use Hook;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
+use PrestaShop\PrestaShop\Core\Util\CacheClearLocker;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Throwable;
@@ -67,7 +68,7 @@ final class SymfonyCacheClearer implements CacheClearerInterface
         }
         $this->clearCacheRequested = true;
 
-        $cacheClearLocked = $kernel->locksCacheClear();
+        $cacheClearLocked = CacheClearLocker::lock($kernel->getEnvironment(), $kernel->getAppId());
         if (false === $cacheClearLocked) {
             // The lock was not possible for some reason we should exit
             return;
@@ -141,7 +142,7 @@ final class SymfonyCacheClearer implements CacheClearerInterface
                 $this->logger->error('SymfonyCacheClearer: Something went wrong while clearing cache: ' . $e->getMessage());
             } finally {
                 Hook::exec('actionClearSf2Cache');
-                $kernel->unlocksCacheClear();
+                CacheClearLocker::unlock($kernel->getEnvironment(), $kernel->getAppId());
             }
         });
     }
