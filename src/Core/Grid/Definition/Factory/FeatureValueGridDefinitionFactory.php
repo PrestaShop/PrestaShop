@@ -45,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Grid\Factory\FeatureValueGridFactory;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
+use PrestaShopBundle\Form\Admin\Type\ReorderPositionsButtonType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -189,13 +190,7 @@ class FeatureValueGridDefinitionFactory extends AbstractFilterableGridDefinition
                 ])
                 ->setAssociatedColumn('value')
             )
-            ->add((new Filter('position', NumberType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Search position', [], 'Admin.Actions'),
-                    ],
-                ])
+            ->add((new Filter('position', ReorderPositionsButtonType::class))
                 ->setAssociatedColumn('position')
             );
     }
