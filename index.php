@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Core\Util\CacheClearLocker;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,6 +50,10 @@ if (isset($_ENV['PS_FF_FRONT_CONTAINER_V2']) && filter_var($_ENV['PS_FF_FRONT_CO
     if (_PS_MODE_DEV_) {
         Debug::enable();
     }
+
+    // Block the process until the cache clear is in progress, this must be done before the kernel is created so it doesn't
+    // try to use the old container
+    CacheClearLocker::waitUntilUnlocked(_PS_ENV_, _PS_APP_ID_);
 
     // Starting Kernel
     $kernel = new FrontKernel(_PS_ENV_, _PS_MODE_DEV_);

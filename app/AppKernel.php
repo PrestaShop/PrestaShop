@@ -27,7 +27,6 @@
 use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShop\PrestaShop\Core\Util\CacheClearLocker;
 use PrestaShop\PrestaShop\Core\Version;
 use PrestaShop\TranslationToolsBundle\TranslationToolsBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -94,7 +93,6 @@ abstract class AppKernel extends Kernel
      */
     public function boot()
     {
-        CacheClearLocker::waitUntilUnlocked($this->environment, $this->getAppId());
         parent::boot();
         $this->cleanKernelReferences();
     }
