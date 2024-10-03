@@ -33,6 +33,7 @@ use FrontKernel;
 use Hook;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Throwable;
 
 /**
@@ -46,6 +47,7 @@ final class SymfonyCacheClearer implements CacheClearerInterface
 
     public function __construct(
         private readonly LoggerInterface $logger,
+        private readonly Filesystem $filesystem,
     ) {
     }
 
@@ -101,6 +103,9 @@ final class SymfonyCacheClearer implements CacheClearerInterface
 
                             if ($result !== 0) {
                                 $this->logger->error('SymfonyCacheClearer: Could not clear cache for ' . $applicationKernel->getAppId() . ' env ' . $environment . 'output: ' . var_export($output, true));
+                                $this->logger->info('SymfonyCacheClearer: Trying manual removal of cache folder ' . $cacheDir);
+                                $this->filesystem->remove($cacheDir);
+                                continue;
                             } else {
                                 $this->logger->info('SymfonyCacheClearer: Successfully cleared cache for ' . $applicationKernel->getAppId() . ' env ' . $environment);
                             }
