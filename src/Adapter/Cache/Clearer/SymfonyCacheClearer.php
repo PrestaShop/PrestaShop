@@ -57,7 +57,7 @@ final class SymfonyCacheClearer implements CacheClearerInterface
      */
     public function clear()
     {
-        /* @var AdminKernel */
+        /* @var AppKernel */
         global $kernel;
         if (!$kernel) {
             return;
@@ -95,6 +95,9 @@ final class SymfonyCacheClearer implements CacheClearerInterface
                             continue;
                         }
 
+                        // Lock the cache for this particular environment and app
+                        CacheClearLocker::lock($applicationKernel->getEnvironment(), $applicationKernel->getAppId());
+
                         try {
                             // Clear cache without warmup so it's faster to execute
                             $commandLine = $baseCommandLine . 'cache:clear --no-warmup --no-interaction --env=' . $environment . ' --app-id=' . $applicationKernel->getAppId();
@@ -104,8 +107,8 @@ final class SymfonyCacheClearer implements CacheClearerInterface
 
                             if ($result !== 0) {
                                 $this->logger->error('SymfonyCacheClearer: Could not clear cache for ' . $applicationKernel->getAppId() . ' env ' . $environment . 'output: ' . var_export($output, true));
-                                $this->logger->info('SymfonyCacheClearer: Trying manual removal of cache folder ' . $cacheDir);
-                                $this->filesystem->remove($cacheDir);
+                                $this->manualClearCache($cacheDir);
+                                $this->unlockOtherCache($kernel, $applicationKernel->getEnvironment(), $applicationKernel->getAppId());
                                 continue;
                             } else {
                                 $this->logger->info('SymfonyCacheClearer: Successfully cleared cache for ' . $applicationKernel->getAppId() . ' env ' . $environment);
@@ -113,11 +116,15 @@ final class SymfonyCacheClearer implements CacheClearerInterface
                         } catch (Throwable $e) {
                             // Leave this loop instance since cache warmup is likely to fail as well
                             $this->logger->error('SymfonyCacheClearer: Error while clearing cache for ' . $applicationKernel->getAppId() . ' env ' . $environment . ': ' . $e->getMessage());
+                            $this->manualClearCache($cacheDir);
+                            $this->unlockOtherCache($kernel, $applicationKernel->getEnvironment(), $applicationKernel->getAppId());
                             continue;
                         }
 
                         // We only warmup cache for prod environment
                         if ($environment !== 'prod') {
+                            // No warmup needed so we can unlock the cache
+                            $this->unlockOtherCache($kernel, $applicationKernel->getEnvironment(), $applicationKernel->getAppId());
                             continue;
                         }
 
@@ -136,6 +143,8 @@ final class SymfonyCacheClearer implements CacheClearerInterface
                         } catch (Throwable $e) {
                             $this->logger->error('SymfonyCacheClearer: Error while warming up cache for ' . $applicationKernel->getAppId() . ' env ' . $environment . ': ' . $e->getMessage());
                         }
+
+                        $this->unlockOtherCache($kernel, $applicationKernel->getEnvironment(), $applicationKernel->getAppId());
                     }
                 }
             } catch (Throwable $e) {
@@ -145,5 +154,25 @@ final class SymfonyCacheClearer implements CacheClearerInterface
                 CacheClearLocker::unlock($kernel->getEnvironment(), $kernel->getAppId());
             }
         });
+    }
+
+    protected function manualClearCache(string $cacheDir): void
+    {
+        try {
+            $this->logger->info('SymfonyCacheClearer: Trying manual removal of cache folder ' . $cacheDir);
+            $this->filesystem->remove($cacheDir);
+        } catch (Throwable) {
+            // Do nothing just prevent the whole loop from failing
+        }
+    }
+
+    protected function unlockOtherCache(AppKernel $currentKernel, string $otherEnvironment, string $otherAppId): void
+    {
+        // We don't unlock the current process during the loop, this will be done in the "finally" block at the end of the loop
+        if ($otherEnvironment === $currentKernel->getEnvironment() && $otherAppId === $currentKernel->getAppId()) {
+            return;
+        }
+
+        CacheClearLocker::unlock($otherEnvironment, $otherAppId);
     }
 }

@@ -153,7 +153,7 @@ class CacheClearLocker
 
         // Also remove the lock file so that the lock check is ignored right away
         if (file_exists($lockPath)) {
-            unlink($lockPath);
+            @unlink($lockPath);
         }
     }
 
