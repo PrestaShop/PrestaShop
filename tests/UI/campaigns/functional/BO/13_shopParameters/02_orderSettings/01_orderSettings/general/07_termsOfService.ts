@@ -195,4 +195,11 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable terms of servic
       expect(pageTitle).to.contains(boOrderSettingsPage.pageTitle);
     });
   });
+
+  it('should reset terms of service', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetTermsOfService$', baseContext);
+
+    const result = await boOrderSettingsPage.setTermsOfService(page, true, dataCMSPages.termsAndCondition.title);
+    expect(result).to.contains(boOrderSettingsPage.successfulUpdateMessage);
+  });
 });

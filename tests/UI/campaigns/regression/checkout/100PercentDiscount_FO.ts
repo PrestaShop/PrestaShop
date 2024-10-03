@@ -13,6 +13,7 @@ import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 import {
   boDashboardPage,
   boOrderSettingsPage,
+  dataCMSPages,
   FakerAddress,
   FakerCartRule,
   FakerCustomer,
@@ -281,7 +282,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
       it('should change the terms and conditions back to enabled', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'resetTermsAndConditionsValue', baseContext);
 
-        const result = await boOrderSettingsPage.setTermsOfService(page, true, 'Terms and conditions of use');
+        const result = await boOrderSettingsPage.setTermsOfService(page, true, dataCMSPages.termsAndCondition.title);
         expect(result).to.contains(boOrderSettingsPage.successfulUpdateMessage);
       });
     });
