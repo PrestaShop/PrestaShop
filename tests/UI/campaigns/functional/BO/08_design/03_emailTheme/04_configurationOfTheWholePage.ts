@@ -5,9 +5,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
-// Import pages
-import translationsPage from '@pages/BO/international/translations';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
@@ -15,6 +12,7 @@ import {
   boDesignEmailThemesPage,
   boDesignEmailThemesPreviewPage,
   boMyProfilePage,
+  boTranslationsPage,
   type MailDev,
   type MailDevEmail,
   utilsMail,
@@ -28,8 +26,8 @@ describe('BO - Design - Email Theme : Configuration of the whole page', async ()
   let page: Page;
   let newMail: MailDevEmail;
   let mailListener: MailDev;
-  const textToSearch : string = 'Thank you for creating a customer account at {shop_name}.';
-  const newTranslation: string = 'Merci d\'avoir créé votre compte client sur {shop_name}.bonjour';
+  const textToSearch: string = 'Thank you for creating a customer account at {shop_name}.';
+  const newTranslation: string = "Merci d'avoir créé votre compte client sur {shop_name}.bonjour";
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -84,14 +82,14 @@ describe('BO - Design - Email Theme : Configuration of the whole page', async ()
     });
 
     it('should click on HTTPS button for the email account', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickHTTPSButton', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'clickHTTPSButton2', baseContext);
 
       page = await boDesignEmailThemesPreviewPage.viewHTTPLink(page, 1);
       expect(page.url()).to.contain('classic');
     });
 
     it('should close the page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'closePage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'closePage8', baseContext);
 
       page = await boDesignEmailThemesPreviewPage.closePage(browserContext, page, 1);
 
@@ -138,7 +136,7 @@ describe('BO - Design - Email Theme : Configuration of the whole page', async ()
     });
 
     it('should click on send a test email and check the error message', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'sendTestEmail', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'sendTestEmail5', baseContext);
 
       const successMessage = await boDesignEmailThemesPreviewPage.sendTestEmail(page, 1);
       expect(successMessage).to.contains(boDesignEmailThemesPreviewPage.errorMessageSendEmail);
@@ -250,7 +248,7 @@ describe('BO - Design - Email Theme : Configuration of the whole page', async ()
     });
 
     it('should go back to configuration page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goBackToConfigurationPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToConfigurationPage2', baseContext);
 
       await boDesignEmailThemesPreviewPage.goBackToEmailThemesPage(page);
 
@@ -266,7 +264,7 @@ describe('BO - Design - Email Theme : Configuration of the whole page', async ()
     });
 
     it('should configure generate emails form', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'generateEmails', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'generateEmails2', baseContext);
 
       const successMessage = await boDesignEmailThemesPage.configureGenerateEmails(
         page,
@@ -295,7 +293,7 @@ describe('BO - Design - Email Theme : Configuration of the whole page', async ()
     });
 
     it('should close the page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'closePage6', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'closePage7', baseContext);
 
       page = await boDesignEmailThemesPreviewPage.closePage(browserContext, page, 1);
 
@@ -304,20 +302,20 @@ describe('BO - Design - Email Theme : Configuration of the whole page', async ()
     });
 
     it('should click on send a test email and check the validation', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'sendTestEmail2', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'sendTestEmail3', baseContext);
 
       const successMessage = await boDesignEmailThemesPreviewPage.sendTestEmail(page, 2);
       expect(successMessage).to.contains(boDesignEmailThemesPreviewPage.successMessageSendEmail('backoffice_order'));
     });
 
     it('should check if mail is in mailbox', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkEmail', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkEmail2', baseContext);
 
       expect(newMail.subject).to.contains(`[${global.INSTALL.SHOP_NAME}] Test email backoffice_order`);
     });
 
     it('should go back to configuration page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goBackToConfigurationPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToConfigurationPage3', baseContext);
 
       await boDesignEmailThemesPreviewPage.goBackToEmailThemesPage(page);
 
@@ -330,20 +328,17 @@ describe('BO - Design - Email Theme : Configuration of the whole page', async ()
 
       await boDesignEmailThemesPage.selectTranslateEmailLanguage(page, 'Français (French)');
 
-      const pageTitle = await translationsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(translationsPage.pageTitle);
+      const pageTitle = await boTranslationsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boTranslationsPage.pageTitle);
     });
 
-    it('should search \'Generate\' expression and modify the translation to \'Generate code\'', async function () {
+    it('should search an expression and modify the translation', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'translateExpression', baseContext);
 
-      await translationsPage.searchTranslation(page, textToSearch);
+      await boTranslationsPage.searchTranslation(page, textToSearch);
 
-      const textResult = await translationsPage.translateExpression(
-        page,
-        newTranslation,
-      );
-      expect(textResult).to.equal(translationsPage.validationMessage);
+      const textResult = await boTranslationsPage.translateExpression(page, newTranslation);
+      expect(textResult).to.equal(boTranslationsPage.validationMessage);
     });
 
     it('should go to \'Design > Email Theme\' page', async function () {
@@ -361,7 +356,7 @@ describe('BO - Design - Email Theme : Configuration of the whole page', async ()
     });
 
     it('should configure generate emails form', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'generateEmails', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'generateEmails3', baseContext);
 
       const successMessage = await boDesignEmailThemesPage.configureGenerateEmails(
         page,
@@ -407,20 +402,21 @@ describe('BO - Design - Email Theme : Configuration of the whole page', async ()
     });
 
     it('should click on send a test email and check the validation', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'sendTestEmail2', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'sendTestEmail4', baseContext);
 
       const successMessage = await boDesignEmailThemesPreviewPage.sendTestEmail(page, 1);
       expect(successMessage).to.contains(boDesignEmailThemesPreviewPage.successMessageSendEmailFR('account'));
     });
 
     it('should check if mail is in mailbox', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkEmail', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkEmail3', baseContext);
 
-      expect(newMail.text).to.contains(newTranslation);
+      console.log(newMail.text);
+      expect(newMail.text).to.contains(`Merci d'avoir créé votre compte client sur ${global.INSTALL.SHOP_NAME}.bonjour`);
     });
 
     it('should go to \'Your profile\' page and update the language to English', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToMyProfilePage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToMyProfilePage2', baseContext);
 
       await boDashboardPage.goToMyProfile(page);
       await boMyProfilePage.editLanguage(page, 'English (English)');
