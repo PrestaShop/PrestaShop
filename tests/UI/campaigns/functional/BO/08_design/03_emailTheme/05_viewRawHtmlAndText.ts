@@ -4,14 +4,12 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import previewEmailThemesPage from '@pages/BO/design/emailThemes/preview';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boDesignEmailThemesPage,
+  boDesignEmailThemesPreviewPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -63,9 +61,9 @@ describe('BO - Design - Email Theme : View raw html and text', async () => {
 
     await boDesignEmailThemesPage.previewEmailTheme(page, emailThemeName);
 
-    const pageTitle = await previewEmailThemesPage.getPageTitle(page);
+    const pageTitle = await boDesignEmailThemesPreviewPage.getPageTitle(page);
     expect(pageTitle).to.contains(
-      `${previewEmailThemesPage.pageTitle} ${emailThemeName}`,
+      `${boDesignEmailThemesPreviewPage.pageTitle} ${emailThemeName}`,
     );
   });
 
@@ -73,7 +71,7 @@ describe('BO - Design - Email Theme : View raw html and text', async () => {
     it('should view raw html and check its URL', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewRawHtml', baseContext);
 
-      newPage = await previewEmailThemesPage.viewRawHtml(page, 1);
+      newPage = await boDesignEmailThemesPreviewPage.viewRawHtml(page, 1);
       expect(newPage.url())
         .to.contain(emailThemeName)
         .and.to.contain('raw')
@@ -83,7 +81,7 @@ describe('BO - Design - Email Theme : View raw html and text', async () => {
     it('should get text from page and check email format', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkRawHtmlText', baseContext);
 
-      const pageText = await previewEmailThemesPage.getTextFromViewLayoutPage(newPage);
+      const pageText = await boDesignEmailThemesPreviewPage.getTextFromViewLayoutPage(newPage);
       expect(pageText)
         .to.contain(global.FO.URL)
         .and.to.contain('<html')
@@ -99,7 +97,7 @@ describe('BO - Design - Email Theme : View raw html and text', async () => {
     it('should view raw text and check its URL', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewRawText', baseContext);
 
-      newPage = await previewEmailThemesPage.viewRawText(page, 1);
+      newPage = await boDesignEmailThemesPreviewPage.viewRawText(page, 1);
       expect(newPage.url())
         .to.contain(emailThemeName)
         .and.to.contain('raw')
@@ -109,7 +107,7 @@ describe('BO - Design - Email Theme : View raw html and text', async () => {
     it('should get text from page and check format', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkRawTextPage', baseContext);
 
-      const pageText = await previewEmailThemesPage.getTextFromViewLayoutPage(newPage);
+      const pageText = await boDesignEmailThemesPreviewPage.getTextFromViewLayoutPage(newPage);
       expect(pageText)
         .to.contain(global.FO.URL)
         .and.to.contain('Hi');
