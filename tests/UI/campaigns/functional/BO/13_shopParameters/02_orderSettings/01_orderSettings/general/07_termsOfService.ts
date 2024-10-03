@@ -10,6 +10,7 @@ import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 
 import {
   boDashboardPage,
+  dataCMSPages,
   dataCustomers,
   foClassicCartPage,
   foClassicCheckoutPage,
@@ -60,30 +61,51 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable terms of servic
   });
 
   const tests = [
-    {args: {action: 'disable', enable: false, pageName: ''}},
     {
       args: {
-        action: 'enable', enable: true, pageName: 'Delivery', title: 'Shipments and returns',
+        action: 'disable',
+        enable: false,
+        pageName: '',
+      }
+    },
+    {
+      args: {
+        action: 'enable',
+        enable: true,
+        pageName: dataCMSPages.delivery.title,
+        title: 'Shipments and returns',
       },
     },
     {
       args: {
-        action: 'enable', enable: true, pageName: 'Legal Notice', title: 'Legal',
+        action: 'enable',
+        enable: true,
+        pageName: dataCMSPages.legalNotice.title,
+        title: 'Legal',
       },
     },
     {
       args: {
-        action: 'enable', enable: true, pageName: 'Terms and conditions of use', title: 'Terms and conditions of use',
+        action: 'enable',
+        enable: true,
+        pageName: dataCMSPages.termsAndCondition.title,
+        title: dataCMSPages.termsAndCondition.title,
       },
     },
     {
       args: {
-        action: 'enable', enable: true, pageName: 'About us', title: 'About us',
+        action: 'enable',
+        enable: true,
+        pageName: dataCMSPages.aboutUs.title,
+        title: dataCMSPages.aboutUs.title,
       },
     },
     {
       args: {
-        action: 'enable', enable: true, pageName: 'Secure payment', title: 'Secure payment',
+        action: 'enable',
+        enable: true,
+        pageName: dataCMSPages.securePayment.title,
+        title: dataCMSPages.securePayment.title,
       },
     },
   ];

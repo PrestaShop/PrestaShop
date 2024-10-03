@@ -149,6 +149,17 @@ class OrderSettings extends BOBasePage {
   }
 
   /**
+   * Get terms of service page
+   * @param page {Page} Browser tab
+   * @returns {Promise<string|null>}
+   */
+  async getTermsAndConditionsPage(page: Page): Promise<string|null> {
+    return page
+      .locator(`${this.pageForTermsAndConditionsSelect} option[selected="selected"]`)
+      .evaluate((node: HTMLSelectElement) => node.textContent);
+  }
+
+  /**
    * Set terms of service
    * @param page {Page} Browser tab
    * @param toEnable {boolean} True if we need to enable terms of service
