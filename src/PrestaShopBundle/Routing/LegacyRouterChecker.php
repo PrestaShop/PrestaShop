@@ -120,7 +120,7 @@ class LegacyRouterChecker
 
         $request->attributes->set(LegacyControllerConstants::INSTANCE_ATTRIBUTE, $adminController);
         $request->attributes->set(RequestAttributes::ANONYMOUS_CONTROLLER_ATTRIBUTE, $adminController->isAnonymousAllowed());
-        $request->attributes->set(LegacyControllerConstants::IS_ALL_SHOP_CONTEXT_ATTRIBUTE, $adminController->multishop_context === ShopConstraint::ALL_SHOPS);
+        $request->attributes->set(LegacyControllerConstants::MULTISHOP_CONTEXT_ATTRIBUTE, $adminController->multishop_context);
         $request->attributes->set(LegacyControllerConstants::CONTROLLER_CLASS_ATTRIBUTE, $controllerClass);
         $request->attributes->set(LegacyControllerConstants::IS_MODULE_ATTRIBUTE, $isModule);
 
