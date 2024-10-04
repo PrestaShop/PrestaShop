@@ -59,6 +59,9 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
     public static function getMigratedControllers(): array
     {
         return [
+            'admin_module_configure_action' => ['/improve/modules/manage/action/configure/ps_linklist', 'AdminModules', 'configure', ['module_name' => 'ps_linklist']],
+            'admin_module_configure_action_legacy' => ['/improve/modules/manage/action/configure/ps_linklist', 'AdminModules', 'configure', ['configure' => 'ps_linklist']],
+
             'admin_administration' => ['/configure/advanced/administration/', 'AdminAdminPreferences'],
             'admin_administration_general_save' => ['/configure/advanced/administration/general', 'AdminAdminPreferences', 'update'],
 
@@ -178,9 +181,6 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
             // 'admin_permissions_update_tab_permissions' => ['/configure/advanced/permissions/update/permissions/tab', 'AdminAccess', 'updateAccess'],
             // 'admin_permissions_update_module_permissions' => ['/configure/advanced/permissions/update/permissions/module', 'AdminAccess', 'updateModuleAccess'],
 
-            // 'admin_module_configure_action' => ['/improve/modules/manage/action/configure/ps_linklist', 'AdminModules', 'configure', ['module_name' => 'ps_linklist']],
-            // 'admin_module_configure_action_legacy' => ['/improve/modules/manage/action/configure/ps_linklist', 'AdminModules', 'configure', ['configure' => 'ps_linklist']],
-
             'admin_sql_request' => ['/configure/advanced/sql-requests/', 'AdminRequestSql'],
             'admin_sql_request_search' => ['/configure/advanced/sql-requests/', 'AdminRequestSql', 'search'],
             'admin_sql_request_process' => ['/configure/advanced/sql-requests/process-settings', 'AdminRequestSql', 'update'],
@@ -262,7 +262,6 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
             ['/admin-dev/index.php?controller=AdminDashboard', 'AdminDashboard'],
             ['/admin-dev/index.php?controller=AdminModulesPositions&addToHook=', 'AdminModulesPositions', ['addToHook' => '']],
             ['/admin-dev/index.php?controller=AdminModules', 'AdminModules'],
-            ['/admin-dev/index.php?controller=AdminModules&configure=ps_linklist', 'AdminModules', ['configure' => 'ps_linklist']],
         ];
     }
 
@@ -386,7 +385,7 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
         ?array $params = null
     ): void {
         $parameters = null !== $params ? $params : [];
-        if (null != $action) {
+        if (null != $action && !isset($parameters[$action])) {
             $parameters[$action] = '';
         }
         $linkUrl = $this->link->getAdminLink($controller, true, [], $parameters);

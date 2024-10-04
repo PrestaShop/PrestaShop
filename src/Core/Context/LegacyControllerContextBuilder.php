@@ -29,10 +29,13 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Context;
 
 use Doctrine\ORM\NoResultException;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\Inflector;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Tools;
 
 class LegacyControllerContextBuilder
@@ -41,10 +44,16 @@ class LegacyControllerContextBuilder
     private ?string $redirectionUrl = null;
 
     public function __construct(
-        private readonly EmployeeContext $employeeContext,
-        private readonly array $controllersLockedToAllShopContext,
-        private readonly TabRepository $tabRepository,
-        private readonly ContainerInterface $container,
+        protected readonly EmployeeContext $employeeContext,
+        protected readonly array $controllersLockedToAllShopContext,
+        protected readonly TabRepository $tabRepository,
+        protected readonly ContainerInterface $container,
+        protected readonly ConfigurationInterface $configuration,
+        protected readonly RequestStack $requestStack,
+        protected readonly ShopContext $shopContext,
+        protected readonly LanguageContext $languageContext,
+        protected readonly string $adminFolderName,
+        protected string $psVersion,
     ) {
     }
 
@@ -53,8 +62,12 @@ class LegacyControllerContextBuilder
         $multiShopContext = $this->getMultiShopContext($this->getControllerName());
         $id = $this->getTabId($this->getControllerName());
         $employeeId = '';
+        $employeeLanguageId = (int) $this->configuration->get('PS_LANG_DEFAULT');
         if ($this->employeeContext->getEmployee()) {
             $employeeId = $this->employeeContext->getEmployee()->getId();
+            if ($this->configuration->get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG')) {
+                $employeeLanguageId = $this->employeeContext->getEmployee()->getLanguageId();
+            }
         }
         $token = Tools::getAdminToken($this->getControllerName() . $id . $employeeId);
         $overrideFolder = Tools::toUnderscoreCase(substr($this->getControllerName(), 5)) . '/';
@@ -73,6 +86,12 @@ class LegacyControllerContextBuilder
             $overrideFolder,
             $this->getCurrentIndex(),
             $table,
+            $this->requestStack->getCurrentRequest() ?: Request::createFromGlobals(),
+            $employeeLanguageId,
+            $this->shopContext->getBaseURI(),
+            $this->adminFolderName,
+            $this->languageContext->isRTL(),
+            $this->psVersion,
         );
     }
 

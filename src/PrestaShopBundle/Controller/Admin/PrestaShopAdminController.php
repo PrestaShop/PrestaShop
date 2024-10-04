@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdaterInterface;
@@ -84,6 +85,7 @@ class PrestaShopAdminController extends AbstractController
             ResponseBuilder::class => ResponseBuilder::class,
             PositionUpdateFactoryInterface::class => PositionUpdateFactoryInterface::class,
             GridPositionUpdaterInterface::class => GridPositionUpdaterInterface::class,
+            FeatureFlagStateCheckerInterface::class => FeatureFlagStateCheckerInterface::class,
         ];
     }
 
@@ -95,6 +97,11 @@ class PrestaShopAdminController extends AbstractController
     protected function getConfiguration(): ConfigurationInterface
     {
         return $this->container->get(ConfigurationInterface::class);
+    }
+
+    protected function getFeatureFlagStateChecker(): FeatureFlagStateCheckerInterface
+    {
+        return $this->container->get(FeatureFlagStateCheckerInterface::class);
     }
 
     protected function getApiClientContext(): ApiClientContext

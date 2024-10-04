@@ -51,29 +51,32 @@ class LegacyToolbar extends Toolbar
         parent::__construct($hookDispatcher, $menuBuilder);
     }
 
-    /**
-     * No parameters are passed to this component but we must respect the method signature.
-     *
-     * @param string $layoutTitle
-     * @param string $helpLink
-     * @param bool $enableSidebar
-     */
-    public function mount(string $layoutTitle = '', string $helpLink = '', bool $enableSidebar = false): void
+    public function mount(string $layoutTitle = '', string $helpLink = '', bool $enableSidebar = false, string $layoutSubTitle = '', array $layoutHeaderToolbarBtn = [], array $breadcrumbLinks = []): void
     {
+        if (empty($helpLink) && $this->hasLegacyController()) {
+            $helpLink = urldecode($this->helpDocumentation->generateLink($this->getLegacyController()->controller_name, $this->languageContext->getIsoCode()));
+        }
+
+        if (empty($layoutHeaderToolbarBtn) && $this->hasLegacyController()) {
+            $layoutHeaderToolbarBtn = $this->getLegacyController()->page_header_toolbar_btn;
+        }
+
         parent::mount(
             $layoutTitle,
-            urldecode($this->helpDocumentation->generateLink($this->getLegacyController()->controller_name, $this->languageContext->getIsoCode())),
-            $enableSidebar
+            $helpLink,
+            $enableSidebar,
+            $layoutSubTitle,
+            $layoutHeaderToolbarBtn,
+            $breadcrumbLinks,
         );
-    }
-
-    public function getLayoutHeaderToolbarBtn(): array
-    {
-        return $this->getLegacyController()->page_header_toolbar_btn;
     }
 
     public function getTable(): string
     {
-        return $this->getLegacyController()->table;
+        if ($this->hasLegacyController()) {
+            return $this->getLegacyController()->table;
+        }
+
+        return 'configuration';
     }
 }

@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Shop;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Tests\TestCase\ContextStateTestCase;
 
 class ContextStateManagerTest extends ContextStateTestCase
@@ -73,7 +74,13 @@ class ContextStateManagerTest extends ContextStateTestCase
             'token',
             'override_folder/',
             'index.php?controller=AdminProducts',
-            'product'
+            'product',
+            $this->createMock(Request::class),
+            1,
+            'http://localhost',
+            'admin-dev',
+            false,
+            '9.0.0',
         );
 
         $this->legacyControllerContext2 = new LegacyControllerContext(
@@ -86,7 +93,13 @@ class ContextStateManagerTest extends ContextStateTestCase
             'token',
             'override_folder/',
             'index.php?controller=AdminCarts',
-            'cart'
+            'cart',
+            $this->createMock(Request::class),
+            1,
+            'http://localhost',
+            'admin-dev',
+            false,
+            '9.0.0',
         );
     }
 
@@ -102,17 +115,20 @@ class ContextStateManagerTest extends ContextStateTestCase
     {
         $this->legacyContext->getContext()->controller = $this->legacyControllerContext1;
         $this->assertEquals($this->legacyControllerContext1->controller_name, $this->legacyContext->getContext()->controller->controller_name);
+        $this->assertEquals($this->legacyControllerContext1->ajax, $this->legacyContext->getContext()->controller->ajax);
 
         $contextStateManager = new ContextStateManager($this->legacyContext);
         $this->assertNull($contextStateManager->getContextFieldsStack());
 
         $contextStateManager->setController($this->legacyControllerContext2);
         $this->assertEquals($this->legacyControllerContext2->controller_name, $this->legacyContext->getContext()->controller->controller_name);
+        $this->assertEquals($this->legacyControllerContext2->ajax, $this->legacyContext->getContext()->controller->ajax);
         $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->restorePreviousContext();
         $this->assertEquals($this->legacyControllerContext1->controller_name, $this->legacyContext->getContext()->controller->controller_name);
+        $this->assertEquals($this->legacyControllerContext1->ajax, $this->legacyContext->getContext()->controller->ajax);
         $this->assertNull($contextStateManager->getContextFieldsStack());
     }
 

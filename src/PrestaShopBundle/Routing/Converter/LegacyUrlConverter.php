@@ -141,7 +141,7 @@ final class LegacyUrlConverter
         $legacyAction = $this->getActionFromParameters($parameters);
 
         foreach ($legacyRoute->getRouteParameters() as $legacyParameter => $parameter) {
-            if (isset($parameters[$legacyParameter])) {
+            if (isset($parameters[$legacyParameter]) && !isset($parameters[$parameter])) {
                 $parameters[$parameter] = $parameters[$legacyParameter];
                 unset($parameters[$legacyParameter]);
             }

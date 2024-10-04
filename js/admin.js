@@ -1089,11 +1089,16 @@ function ajaxStates(id_state_selected)
 }
 
 function dniRequired() {
+  var countryId = $('#id_country').val();
+  if (!countryId) {
+    return;
+  }
+
   $.ajax({
     url: 'index.php',
     dataType: 'json',
     cache: false,
-    data: 'token=' + address_token + '&ajax=1&dni_required=1&controller=AdminAddresses&id_country=' + $('#id_country').val(),
+    data: 'token=' + address_token + '&ajax=1&dni_required=1&controller=AdminAddresses&id_country=' + countryId,
     success: function(resp) {
       if (resp && resp.dni_required) {
         $("#dni_required").fadeIn();

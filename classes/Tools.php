@@ -186,8 +186,32 @@ class ToolsCore
      */
     public static function redirectAdmin($url)
     {
-        header('Location: ' . $url);
+        header('Location: ' . self::sanitizeAdminUrl($url));
         exit;
+    }
+
+    /**
+     * Sanitize an url used in the Admin (back office context) to make sure it is correctly written to be
+     * used for redirection. If the provided URL is not absolute the shop url is prepended, if the admin
+     * folder is absent it is also prepended. Absolute urls are left untouched.
+     *
+     * @param string $url
+     *
+     * @return string
+     */
+    public static function sanitizeAdminUrl(string $url): string
+    {
+        $link = Context::getContext()->link;
+        if (!preg_match('@^https?://@i', $url) && $link) {
+            $baseUrl = rtrim($link->getAdminBaseLink(), '/');
+            if (!str_contains($url, basename(_PS_ADMIN_DIR_))) {
+                $baseUrl .= '/' . basename(_PS_ADMIN_DIR_);
+            }
+
+            $url = $baseUrl . '/' . trim($url, '/');
+        }
+
+        return $url;
     }
 
     /**

@@ -6,6 +6,8 @@ services:
     bind:
       $controllersLockedToAllShopContext: '%prestashop.controllers_all_shop_context%'
       $container: "@service_container"
+      $adminFolderName: '%prestashop.admin_folder_name%'
+      $psVersion: !php/const _PS_VERSION_
   _instanceof:
     PrestaShop\PrestaShop\Core\Context\LegacyContextBuilderInterface:
       tags: [ 'core.legacy_context_builder' ]

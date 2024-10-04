@@ -30,10 +30,11 @@ use DateTime;
 use Db;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module as ModuleAdapter;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
-use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\ZipSourceHandler;
@@ -42,12 +43,11 @@ use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Entity\ModuleHistory;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use PrestaShopBundle\Twig\Layout\MenuLink;
 use Symfony\Component\Form\Util\ServerParams;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Twig\Environment;
@@ -122,46 +122,72 @@ class ModuleController extends ModuleAbstractController
     #[AdminSecurity("is_granted('read', 'ADMINMODULESSF_') || is_granted('create', 'ADMINMODULESSF_') || is_granted('update', 'ADMINMODULESSF_') || is_granted('delete', 'ADMINMODULESSF_')")]
     public function configureModuleAction(
         string $module_name,
-        #[Autowire(service: 'prestashop.core.admin.url_generator_legacy')]
-        UrlGeneratorInterface $legacyUrlGenerator,
+        LegacyContext $legacyContext,
     ): Response {
         // Get accessed module object
-        $moduleAccessed = $this->getModuleRepository()->getModule($module_name);
-
-        // Get current employee Id
-        $currentEmployeeId = $this->getEmployeeContext()->getEmployee()->getId();
-        // Get accessed module DB Id
-        $moduleAccessedId = (int) $moduleAccessed->database->get('id');
-
-        // Save history for this module
-        $moduleHistory = $this->entityManager
-            ->getRepository(ModuleHistory::class)
-            ->findOneBy(
-                [
-                    'idEmployee' => $currentEmployeeId,
-                    'idModule' => $moduleAccessedId,
-                ]
-            );
-
-        if (null === $moduleHistory) {
-            $moduleHistory = new ModuleHistory();
+        /** @var ModuleAdapter $module */
+        $module = $this->getModuleRepository()->getModule($module_name);
+        if (!$module->getInstance()) {
+            $this->addFlash('error', $this->trans(
+                'The module "%modulename%" cannot be found',
+                ['%modulename%' => $module_name],
+                'Admin.Modules.Notification'
+            ));
+            $layoutSubTitle = null;
+        } else {
+            $this->saveModuleHistory($module);
+            $layoutSubTitle = $module->getInstance()->displayName;
         }
 
-        $moduleHistory->setIdEmployee($currentEmployeeId);
-        $moduleHistory->setIdModule($moduleAccessedId);
-        $moduleHistory->setDateUpd(new DateTime());
+        if ($this->getFeatureFlagStateChecker()->isDisabled(FeatureFlagSettings::FEATURE_FLAG_MODULE_CONFIGURATION)) {
+            return $this->redirect($legacyContext->getAdminLink('AdminModules', true, ['configure' => $module_name]));
+        }
 
-        $this->entityManager->persist($moduleHistory);
-        $this->entityManager->flush();
+        // This controller is not purely migrated, in the sense that it still relies on the legacy layout because module implementing
+        // getContent need the default theme to be working as expected
+        $smarty = $legacyContext->getSmarty();
+        $smarty->setTemplateDir([
+            _PS_BO_ALL_THEMES_DIR_ . 'default/template/',
+            _PS_OVERRIDE_DIR_ . 'controllers/admin/templates',
+        ]);
 
-        return $this->redirect(
-            $legacyUrlGenerator->generate(
-                'admin_module_configure_action',
-                [
-                    // do not transmit limit & offset: go to the first page when redirecting
-                    'configure' => $module_name,
-                ]
-            )
+        // Force legacy layout to load legacy assets like AdminController::setMedia does
+        $this->getLegacyControllerContext()->loadLegacyMedia();
+        // Only after can we add additional plugins (to be sure jquery is loaded before the plugins)
+        $this->getLegacyControllerContext()->addJqueryPlugin(['autocomplete', 'fancybox', 'tablefilter']);
+
+        if (method_exists($module->getInstance(), 'getContent')) {
+            $moduleContent = $module->getInstance()->getContent();
+        } else {
+            $moduleContent = null;
+            $this->addFlash('error', $this->trans('Module %s has no getContent() method', [$module->getInstance()->name], 'Admin.Modules.Notification'));
+        }
+
+        return $this->render(
+            '@PrestaShop/Admin/Module/configure.html.twig',
+            [
+                'moduleContent' => $moduleContent,
+                'showContentHeader' => true,
+                'layoutHeaderToolbarBtn' => $this->getConfigureToolbarButtons($module),
+                'translationLinks' => $this->getTranslationLinks($module, $legacyContext),
+                'layoutTitle' => $this->trans('Configure', [], 'Admin.Modules.Feature'),
+                // Force metaTitle to match the legacy page one (based on the parent)
+                'metaTitle' => $this->trans('Module Manager', [], 'Admin.Navigation.Menu'),
+                'layoutSubTitle' => $layoutSubTitle,
+                'breadcrumbLinks' => [
+                    'container' => new MenuLink(
+                        $this->trans('Modules', [], 'Admin.Modules.Feature'),
+                        $this->generateUrl('admin_module_manage'),
+                    ),
+                    'tab' => new MenuLink(
+                        $this->trans('Configure', [], 'Admin.Modules.Feature'),
+                        $this->generateUrl('admin_module_configure_action', ['module_name' => $module_name]),
+                        'build',
+                    ),
+                ],
+                'enableSidebar' => true,
+                'help_link' => $this->generateSidebarLink('AdminModules'),
+            ]
         );
     }
 
@@ -223,6 +249,7 @@ class ModuleController extends ModuleAbstractController
             }
             if ($action === ModuleAdapter::ACTION_UNINSTALL) {
                 $args[] = (bool) ($request->request->all('actionParams')['deletion'] ?? false);
+                /** @var ModuleAdapter $moduleInstance */
                 $moduleInstance = $this->getModuleRepository()->getModule($moduleName);
                 $response[$moduleName]['refresh_needed'] = $this->moduleNeedsReload($moduleInstance);
                 $response[$moduleName]['has_download_url'] = $moduleInstance->attributes->has('download_url');
@@ -249,6 +276,7 @@ class ModuleController extends ModuleAbstractController
             return new JsonResponse($response);
         }
 
+        /** @var ModuleAdapter $moduleInstance */
         $moduleInstance = $this->getModuleRepository()->getModule($moduleName);
         if ($response[$moduleName]['status'] === true) {
             if (!isset($response[$moduleName]['refresh_needed'])) {
@@ -440,7 +468,36 @@ class ModuleController extends ModuleAbstractController
         return new JsonResponse($installationResponse);
     }
 
-    private function moduleNeedsReload(ModuleInterface $module): bool
+    private function saveModuleHistory(ModuleAdapter $module): void
+    {
+        // Get current employee Id
+        $currentEmployeeId = $this->getEmployeeContext()->getEmployee()->getId();
+        // Get accessed module DB ID
+        $moduleAccessedId = (int) $module->database->get('id');
+
+        // Save history for this module
+        $moduleHistory = $this->entityManager
+            ->getRepository(ModuleHistory::class)
+            ->findOneBy(
+                [
+                    'idEmployee' => $currentEmployeeId,
+                    'idModule' => $moduleAccessedId,
+                ]
+            );
+
+        if (null === $moduleHistory) {
+            $moduleHistory = new ModuleHistory();
+        }
+
+        $moduleHistory->setIdEmployee($currentEmployeeId);
+        $moduleHistory->setIdModule($moduleAccessedId);
+        $moduleHistory->setDateUpd(new DateTime());
+
+        $this->entityManager->persist($moduleHistory);
+        $this->entityManager->flush();
+    }
+
+    private function moduleNeedsReload(ModuleAdapter $module): bool
     {
         $instance = $module->getInstance();
         if (!empty($instance->getTabs())) {
@@ -488,5 +545,67 @@ class ModuleController extends ModuleAbstractController
         }
 
         return $categories;
+    }
+
+    protected function getTranslationLinks(ModuleAdapter $module, LegacyContext $legacyContext): array
+    {
+        $translationLinks = [];
+        $isNewTranslateSystem = $module->getInstance()->isUsingNewTranslationSystem();
+        foreach ($this->getLegacyControllerContext()->getLanguages() as $lang) {
+            if ($isNewTranslateSystem) {
+                $translationLinks[$lang['name']] = $this->generateUrl('admin_international_translation_overview', [
+                    'lang' => $lang['iso_code'],
+                    'type' => 'modules',
+                    'selected' => $module->getInstance()->name,
+                    'locale' => $lang['locale'],
+                ]);
+            } else {
+                $translationLinks[$lang['name']] = $legacyContext->getAdminLink('AdminTranslations', true, [
+                    'type' => 'modules',
+                    'module' => $module->getInstance()->name,
+                    'lang' => $lang['iso_code'],
+                ]);
+            }
+        }
+
+        return $translationLinks;
+    }
+
+    /**
+     * Common method for all module related controller for getting the header buttons.
+     *
+     * @return array
+     */
+    protected function getConfigureToolbarButtons(?ModuleAdapter $module): array
+    {
+        $toolbarButtons = [
+            'module-back' => [
+                'href' => $this->generateUrl('admin_module_manage'),
+                'desc' => $this->trans('Back', [], 'Admin.Global'),
+                'icon' => 'arrow_back',
+                'help' => $this->trans('Module Manager', [], 'Admin.Navigation.Menu'),
+            ],
+        ];
+
+        if ($this->isGranted(Permission::CREATE, self::CONTROLLER_NAME) || $this->isGranted(Permission::DELETE, self::CONTROLLER_NAME)) {
+            $toolbarButtons['module-translate'] = [
+                'href' => '#',
+                'desc' => $this->trans('Translate', [], 'Admin.Modules.Feature'),
+                'icon' => 'flag',
+                'help' => $this->trans('Translate', [], 'Admin.Modules.Feature'),
+                'modal_target' => '#moduleTradLangSelect',
+            ];
+
+            if ($module !== null) {
+                $toolbarButtons['module-hook'] = [
+                    'href' => $this->generateUrl('admin_modules_positions', ['show_modules' => (int) $module->database->get('id')]),
+                    'desc' => $this->trans('Manage hooks', [], 'Admin.Modules.Feature'),
+                    'icon' => 'anchor',
+                    'help' => $this->trans('Manage hooks', [], 'Admin.Modules.Feature'),
+                ];
+            }
+        }
+
+        return $toolbarButtons;
     }
 }

@@ -141,7 +141,7 @@ class MenuBuilder
         return new MenuLink(
             name: $this->getBreadcrumbLabel($tab),
             href: $this->getLinkFromTab($tab),
-            icon: 'icon-' . $tab->getClassName(),
+            icon: $tab->getIcon(),
         );
     }
 

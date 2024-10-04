@@ -26,6 +26,7 @@
 
 namespace Tests\Unit\Adapter;
 
+use AdminController;
 use Cart;
 use Country;
 use Currency;
@@ -79,22 +80,30 @@ class ContextStateManagerTest extends ContextStateTestCase
             'controller' => $this->createLegacyControllerContextMock('AdminProductsController'),
         ]);
         $this->assertEquals('AdminProductsController', $context->controller->controller_name);
+        $this->assertEquals('index.php?controller=AdminProductsController', $context->controller->currentIndex);
+        $this->assertEquals(null, AdminController::$currentIndex);
 
         $contextStateManager = new ContextStateManager($this->legacyContext);
         $this->assertNull($contextStateManager->getContextFieldsStack());
 
         $contextStateManager->setController($this->createLegacyControllerContextMock('AdminOrdersController'));
         $this->assertEquals('AdminOrdersController', $context->controller->controller_name);
+        $this->assertEquals('index.php?controller=AdminOrdersController', $context->controller->currentIndex);
+        $this->assertEquals('index.php?controller=AdminOrdersController', AdminController::$currentIndex);
         $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->setController($this->createLegacyControllerContextMock('AdminCartsController'));
         $this->assertEquals('AdminCartsController', $context->controller->controller_name);
+        $this->assertEquals('index.php?controller=AdminCartsController', $context->controller->currentIndex);
+        $this->assertEquals('index.php?controller=AdminCartsController', AdminController::$currentIndex);
         $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->restorePreviousContext();
         $this->assertEquals('AdminProductsController', $context->controller->controller_name);
+        $this->assertEquals('index.php?controller=AdminProductsController', $context->controller->currentIndex);
+        $this->assertEquals(null, AdminController::$currentIndex);
         $this->assertNull($contextStateManager->getContextFieldsStack());
     }
 

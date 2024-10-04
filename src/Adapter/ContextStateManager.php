@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter;
 
+use AdminController;
 use Cart;
 use Context;
 use Controller;
@@ -54,6 +55,7 @@ class ContextStateManager
     private const MANAGED_FIELDS = [
         'cart',
         'controller',
+        'currentIndex',
         'country',
         'currency',
         'employee',
@@ -113,7 +115,11 @@ class ContextStateManager
     public function setController(LegacyControllerContext|Controller|null $legacyController): self
     {
         $this->saveContextField('controller');
+        $this->saveContextField('currentIndex');
         $this->getContext()->controller = $legacyController;
+
+        // This static field must be set on the class
+        AdminController::$currentIndex = $legacyController->currentIndex;
 
         return $this;
     }
@@ -322,6 +328,9 @@ class ContextStateManager
                     $this->contextFieldsStack[$currentStashIndex]['shop'] = $this->getContext()->shop;
                     $this->contextFieldsStack[$currentStashIndex]['shopContext'] = Shop::getContext();
                     break;
+                case 'currentIndex':
+                    $this->contextFieldsStack[$currentStashIndex]['currentIndex'] = AdminController::$currentIndex;
+                    break;
                 default:
                     $this->contextFieldsStack[$currentStashIndex][$fieldName] = $this->getContext()->$fieldName;
             }
@@ -344,7 +353,12 @@ class ContextStateManager
             if ('language' === $fieldName && $this->contextFieldsStack[$currentStashIndex][$fieldName] instanceof Language) {
                 $this->getContext()->getTranslator()->setLocale($this->contextFieldsStack[$currentStashIndex][$fieldName]->locale);
             }
-            $this->getContext()->$fieldName = $this->contextFieldsStack[$currentStashIndex][$fieldName];
+
+            if ('currentIndex' === $fieldName) {
+                AdminController::$currentIndex = $this->contextFieldsStack[$currentStashIndex][$fieldName];
+            } else {
+                $this->getContext()->$fieldName = $this->contextFieldsStack[$currentStashIndex][$fieldName];
+            }
             unset($this->contextFieldsStack[$currentStashIndex][$fieldName]);
         }
     }

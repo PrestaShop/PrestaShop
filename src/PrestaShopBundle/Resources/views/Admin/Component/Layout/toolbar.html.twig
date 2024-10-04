@@ -31,11 +31,15 @@
         <nav aria-label="Breadcrumb">
           <ol class="breadcrumb">
             {% if this.breadcrumbs.container is defined and this.breadcrumbs.container.name != '' %}
-              <li class="breadcrumb-item">{{ this.breadcrumbs.container.name|escape }}</li>
+              <li class="breadcrumb-item">
+                {% if this.breadcrumbs.container.icon is not empty %}<i class="material-icons">{{ this.breadcrumbs.container.icon }}</i>{% endif %}
+                {{ this.breadcrumbs.container.name|escape }}
+              </li>
             {% endif %}
 
             {% if this.breadcrumbs.container is defined and this.breadcrumbs.tab is defined and this.breadcrumbs.tab.name != '' and this.breadcrumbs.container.name != this.breadcrumbs.tab.name and this.breadcrumbs.tab.href != '' %}
               <li class="breadcrumb-item active">
+                {% if this.breadcrumbs.tab.icon is not empty %}<i class="material-icons">{{ this.breadcrumbs.tab.icon }}</i>{% endif %}
                 <a href="{{ this.breadcrumbs.tab.href|escape }}" aria-current="page">{{ this.breadcrumbs.tab.name|escape }}</a>
               </li>
             {% endif %}
@@ -44,7 +48,7 @@
       {% endif %}
     {% endblock %}
 
-    {% set persistent_help_btn = help_link is defined and help_link is not same as (false) and layoutHeaderToolbarBtn is empty %}
+    {% set persistent_help_btn = help_link is defined and help_link is not same as (false) and this.layoutHeaderToolbarBtn is empty %}
     <div class="title-row {% if persistent_help_btn %}flex-nowrap flex-md-wrap{% endif %}">
       {% block pageTitle %}
           <h1 class="title">
@@ -55,7 +59,7 @@
         <div class="toolbar-icons{% if persistent_help_btn %} toolbar-icons--persistent{% endif %}">
           <div class="wrapper">
             {{ renderhook('displayDashboardToolbarTopMenu') }}
-            {% for k, btn in layoutHeaderToolbarBtn %}
+            {% for k, btn in this.layoutHeaderToolbarBtn %}
               {% if k != 'back' and k != 'modules-list' %}
                 {#TODO: REFACTOR ALL THIS THINGS#}
                 <a
@@ -85,16 +89,16 @@
                 </a>
               {% endif %}
             {% endfor %}
-            {% if layoutHeaderToolbarBtn['modules-list'] is defined %}
+            {% if this.layoutHeaderToolbarBtn['modules-list'] is defined %}
               {#TODO: REFACTOR ALL THIS THINGS#}
               <a
-                class="btn btn-outline-secondary {% if layoutHeaderToolbarBtn['modules-list'].target is defined and layoutHeaderToolbarBtn['modules-list'].target %} _blank{% endif %}"
-                id="page-header-desc-{{ table|default('configuration') }}-{% if layoutHeaderToolbarBtn['modules-list'].imgclass is defined %}{{ layoutHeaderToolbarBtn['modules-list'].imgclass }}{% else %}modules-list{% endif %}"
-                {% if layoutHeaderToolbarBtn['modules-list'].href is defined %}href="{{ layoutHeaderToolbarBtn['modules-list'].href }}"{% endif %}
-                title="{{ layoutHeaderToolbarBtn['modules-list'].desc }}"
-                {% if layoutHeaderToolbarBtn['modules-list'].js is defined and layoutHeaderToolbarBtn['modules-list'].js %}onclick="{{ layoutHeaderToolbarBtn['modules-list'].js }}"{% endif %}
+                class="btn btn-outline-secondary {% if this.layoutHeaderToolbarBtn['modules-list'].target is defined and this.layoutHeaderToolbarBtn['modules-list'].target %} _blank{% endif %}"
+                id="page-header-desc-{{ table|default('configuration') }}-{% if this.layoutHeaderToolbarBtn['modules-list'].imgclass is defined %}{{ this.layoutHeaderToolbarBtn['modules-list'].imgclass }}{% else %}modules-list{% endif %}"
+                {% if this.layoutHeaderToolbarBtn['modules-list'].href is defined %}href="{{ this.layoutHeaderToolbarBtn['modules-list'].href }}"{% endif %}
+                title="{{ this.layoutHeaderToolbarBtn['modules-list'].desc }}"
+                {% if this.layoutHeaderToolbarBtn['modules-list'].js is defined and this.layoutHeaderToolbarBtn['modules-list'].js %}onclick="{{ this.layoutHeaderToolbarBtn['modules-list'].js }}"{% endif %}
               >
-                {{ layoutHeaderToolbarBtn['modules-list'].desc }}
+                {{ this.layoutHeaderToolbarBtn['modules-list'].desc }}
               </a>
             {% endif %}
 
@@ -131,6 +135,13 @@
           </div>
         </div>
       {% endblock %}
+      {% block pageSubTitle %}
+        {% if this.subTitle is not empty %}
+          <h4 class="page-subtitle">
+            {{ this.subTitle }}
+          </h4>
+        {% endif %}
+      {% endblock %}
     </div>
   </div>
 
@@ -163,7 +174,7 @@
     </div>
   {% endif %}
 
-  {% if layoutHeaderToolbarBtn is defined and layoutHeaderToolbarBtn is not empty %}
+  {% if this.layoutHeaderToolbarBtn is defined and this.layoutHeaderToolbarBtn is not empty %}
     <div class="btn-floating">
       <button class="btn btn-primary collapsed" data-toggle="collapse" data-target=".btn-floating-container"
               aria-expanded="false">
@@ -173,7 +184,7 @@
         <div class="btn-floating-menu">
           {{ renderhook('displayDashboardToolbarTopMenu') }}
 
-          {% for k, btn in layoutHeaderToolbarBtn %}
+          {% for k, btn in this.layoutHeaderToolbarBtn %}
             {% if k != 'back' and k != 'modules-list' %}
               <a
                 class="btn btn-floating-item {% if btn.floating_class is defined and btn.floating_class %}{{ btn.floating_class|escape }}{% endif %} {% if btn.target is defined and btn.target %} _blank{% endif %} pointer"{% if btn.href is defined %}

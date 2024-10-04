@@ -7,7 +7,7 @@ $local-font: true;
 
 @mixin setFont() {
   @if $local-font {
-    
+
     // IBM Plex Sans
     @include IBM.faces(
       $subsets: all,
@@ -25,6 +25,14 @@ $local-font: true;
     // Material Symbols Outlined
     @font-face {
       font-family: "Material Symbols Outlined";
+      font-style: normal;
+      font-display: swap;
+      src: url("#{$material-symbols-font-path}material-symbols-outlined.woff2") format("woff2");
+    }
+
+    // This is a fallback for old buttons relying on Material Icons
+    @font-face {
+      font-family: "Material Icons";
       font-style: normal;
       font-display: swap;
       src: url("#{$material-symbols-font-path}material-symbols-outlined.woff2") format("woff2");

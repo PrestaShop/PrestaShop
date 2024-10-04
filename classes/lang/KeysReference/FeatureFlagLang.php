@@ -90,3 +90,6 @@ trans('Enable / Disable the search configuration page.', 'Admin.Advparameters.He
 
 trans('Merchandise return', 'Admin.Advparameters.Feature');
 trans('Enable / Disable the merchandise return page.', 'Admin.Advparameters.Help');
+
+trans('Module configuration', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the module configuration page.', 'Admin.Advparameters.Help');

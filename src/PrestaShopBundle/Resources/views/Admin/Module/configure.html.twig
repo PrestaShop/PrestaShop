@@ -1,5 +1,4 @@
-<?php
-/**
+{#**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -22,30 +21,14 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- */
+ *#}
 
-declare(strict_types=1);
+{% extends '@PrestaShop/Admin/Layout/legacy_layout.html.twig' %}
 
-namespace PrestaShopBundle\Twig\Component\Legacy;
+{% block content %}
+  {% if moduleContent is not empty %}
+    {{ moduleContent|raw }}
+  {% endif %}
 
-use AdminController;
-
-/**
- * For legacy pages based on legacy admin controller we don't use the LegacyControllerContext which purpose is to replace
- * the legacy controller for backward compatibility. In this case a real legacy controller is already accessible via the
- * legacy context and should be preferred.
- *
- * Its data, and especially the CSS, JS files and JS definitions are more likely to be up-to-date.
- */
-trait LegacyControllerTrait
-{
-    protected function getLegacyController(): AdminController
-    {
-        return $this->context->getContext()->controller;
-    }
-
-    protected function hasLegacyController(): bool
-    {
-        return $this->context->getContext()->controller instanceof AdminController;
-    }
-}
+  {% include '@PrestaShop/Admin/Module/Includes/modal_translation_language_selector.html.twig' with { 'translationLinks' : translationLinks } %}
+{% endblock %}
