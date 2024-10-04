@@ -4,14 +4,12 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import previewEmailThemesPage from '@pages/BO/design/emailThemes/preview';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boDesignEmailThemesPage,
+  boDesignEmailThemesPreviewPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -53,14 +51,14 @@ describe('BO - Design - Email Theme : Back to configuration link', async () => {
 
     await boDesignEmailThemesPage.previewEmailTheme(page, 'classic');
 
-    const pageTitle = await previewEmailThemesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(`${previewEmailThemesPage.pageTitle} classic`);
+    const pageTitle = await boDesignEmailThemesPreviewPage.getPageTitle(page);
+    expect(pageTitle).to.contains(`${boDesignEmailThemesPreviewPage.pageTitle} classic`);
   });
 
   it('should go back to email themes page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'backToEmailThemePage', baseContext);
 
-    await previewEmailThemesPage.goBackToEmailThemesPage(page);
+    await boDesignEmailThemesPreviewPage.goBackToEmailThemesPage(page);
 
     const pageTitle = await boDesignEmailThemesPage.getPageTitle(page);
     expect(pageTitle).to.contains(boDesignEmailThemesPage.pageTitle);
