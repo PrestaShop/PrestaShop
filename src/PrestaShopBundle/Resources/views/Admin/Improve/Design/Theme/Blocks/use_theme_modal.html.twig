@@ -32,6 +32,12 @@
       </div>
   {% endblock %}
 
+  {% block content %}
+    <div class="alert alert-info m-2">
+      {{ 'When applying a new theme to your store, make sure that the modules you are using are still compatible.'|trans({}, 'Admin.Design.Feature')|raw }}
+    </div>
+  {% endblock %}
+
   {% block footer %}
     <div class="modal-footer">
       <button
