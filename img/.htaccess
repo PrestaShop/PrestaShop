@@ -1,16 +1,6 @@
-# Apache 2.2
-<IfModule !mod_authz_core.c>
-    Order deny,allow
-    Deny from all
-    <Files ~ "(?i)^.*\.(jpg|jpeg|gif|png|bmp|tiff|svg|pdf|mov|mpeg|mp4|avi|mpg|wma|flv|webm|ico|webp|avif)$">
-        Allow from all
-    </Files>
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_URI} !((?i)^.*\.(jpg|jpeg|gif|png|bmp|tiff|svg|pdf|mov|mpeg|mp4|avi|mpg|wma|flv|webm|ico|webp|avif)$) [NC]
+    RewriteRule .* /index.php  [L,R=404]
 </IfModule>
 
-# Apache 2.4
-<IfModule mod_authz_core.c>
-    Require all denied
-    <Files ~ "(?i)^.*\.(jpg|jpeg|gif|png|bmp|tiff|svg|pdf|mov|mpeg|mp4|avi|mpg|wma|flv|webm|ico|webp|avif)$">
-        Require all granted
-    </Files>
-</IfModule>
