@@ -54,6 +54,11 @@ class DeliveryCore extends ObjectModel
     public $price;
 
     /**
+     * @var float
+     */
+    public $package_weight;
+
+    /**
      * @see ObjectModel::$definition
      */
     public static $definition = [
@@ -67,6 +72,7 @@ class DeliveryCore extends ObjectModel
             'id_shop' => ['type' => self::TYPE_INT],
             'id_shop_group' => ['type' => self::TYPE_INT],
             'price' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true],
+            'package_weight' => ['type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat', 'required' => false],
         ],
     ];
 

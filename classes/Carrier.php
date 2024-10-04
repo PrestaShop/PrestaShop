@@ -156,6 +156,7 @@ class CarrierCore extends ObjectModel
 
     protected static $price_by_weight = [];
     protected static $price_by_weight2 = [];
+    protected static $package_weight_by_weight = [];
     protected static $price_by_price = [];
     protected static $price_by_price2 = [];
 
@@ -276,6 +277,68 @@ class CarrierCore extends ObjectModel
     }
 
     /**
+     * Adds package weight searching into range
+     *
+     * @param int $id_carrier Carrier ID
+     * @param float $total_weight Total weight
+     *
+     * @return float
+     */
+    public static function addPackingWeight(int $id_carrier, float $total_weight): float
+    {
+        $cache_key = $id_carrier . '_package_weight_' . $total_weight;
+
+        if (!isset(self::$package_weight_by_weight[$cache_key])) {
+            $sql = 'SELECT d.`package_weight`
+                    FROM `' . _DB_PREFIX_ . 'delivery` d
+                    LEFT JOIN `' . _DB_PREFIX_ . 'range_weight` w ON (d.`id_range_weight` = w.`id_range_weight`)
+                    WHERE ' . $total_weight . ' >= w.`delimiter1`
+                        AND ' . $total_weight . ' < w.`delimiter2`
+                        AND d.`id_carrier` = ' . $id_carrier . '
+                        ' . Carrier::sqlDeliveryRangeShop('range_weight') . '
+                    ORDER BY w.`delimiter1` ASC';
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
+            if (!isset($result['package_weight'])) {
+                self::$package_weight_by_weight[$cache_key] = self::getMaxPackageWeightByWeight($id_carrier);
+            } else {
+                self::$package_weight_by_weight[$cache_key] = $result['package_weight'];
+            }
+        }
+
+        if (self::$package_weight_by_weight[$cache_key] > 0) {
+            $total_weight += self::$package_weight_by_weight[$cache_key];
+        }
+
+        return $total_weight;
+    }
+
+    /**
+     * Get maximum package weight when range weight is used.
+     *
+     * @param int $id_carrier Carrier ID
+     *
+     * @return false|string|null Maximum package weight
+     */
+    public static function getMaxPackageWeightByWeight(int $id_carrier)
+    {
+        $cache_id = 'Carrier::getMaxPackageWeightByWeight_' . $id_carrier;
+        if (!Cache::isStored($cache_id)) {
+            $sql = 'SELECT d.`package_weight`
+                    FROM `' . _DB_PREFIX_ . 'delivery` d
+                    INNER JOIN `' . _DB_PREFIX_ . 'range_weight` w ON d.`id_range_weight` = w.`id_range_weight`
+                    WHERE d.`id_carrier` = ' . $id_carrier . '
+                        ' . Carrier::sqlDeliveryRangeShop('range_weight') . '
+                    ORDER BY w.`delimiter2` DESC';
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
+            Cache::store($cache_id, $result);
+
+            return $result;
+        }
+
+        return Cache::retrieve($cache_id);
+    }
+
+    /**
      * Get delivery price for a given order.
      *
      * @param float $total_weight Total order weight
@@ -286,6 +349,7 @@ class CarrierCore extends ObjectModel
     public function getDeliveryPriceByWeight($total_weight, $id_zone)
     {
         $id_carrier = (int) $this->id;
+        $total_weight = self::addPackingWeight($id_carrier, $total_weight);
         $cache_key = $id_carrier . '_' . $total_weight . '_' . $id_zone;
         if (!isset(self::$price_by_weight[$cache_key])) {
             $sql = 'SELECT d.`price`
@@ -325,6 +389,7 @@ class CarrierCore extends ObjectModel
     public static function checkDeliveryPriceByWeight($id_carrier, $total_weight, $id_zone)
     {
         $id_carrier = (int) $id_carrier;
+        $total_weight = self::addPackingWeight($id_carrier, $total_weight);
         $cache_key = $id_carrier . '_' . $total_weight . '_' . $id_zone;
         if (!isset(self::$price_by_weight2[$cache_key])) {
             $sql = 'SELECT d.`price`

@@ -28,10 +28,12 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\Type;
 
+use Configuration;
 use PrestaShopBundle\Form\Admin\Type\MoneyWithSuffixType;
 use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -50,6 +52,12 @@ class CostsRangeType extends TranslatorAwareType
             ->add('to', HiddenType::class)
             ->add('price', MoneyWithSuffixType::class, [
                 'label' => $this->trans('Price (VAT excl.)', 'Admin.Shipping.Feature'),
+                'empty_data' => '0.0', // string instead number needed for DecimalNumber.php validation
+            ])
+            ->add('package_weight', NumberType::class, [
+                'label' => $this->trans('Package weight', 'Admin.Shipping.Feature'),
+                'required' => false,
+                'unit' => Configuration::get('PS_WEIGHT_UNIT'),
                 'empty_data' => '0.0', // string instead number needed for DecimalNumber.php validation
             ])
         ;

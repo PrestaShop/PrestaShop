@@ -53,6 +53,7 @@
     <tr>
       <th>{{ form.vars.prototype.range.vars.label }}</th>
       <th>{{ form.vars.prototype.price.vars.label }}</th>
+      <th class="package-weight">{{ form.vars.prototype.package_weight.vars.label }}</th>
     </tr>
     </thead>
     <tbody class="js-carrier-range-container-body">
@@ -69,6 +70,9 @@
     </td>
     <td>
       {{ form_widget(form.price) }}
+    </td>
+    <td class="package-weight">
+      {{ form_widget(form.package_weight) }}
     </td>
     {{ form_rest(form) }}
   </tr>

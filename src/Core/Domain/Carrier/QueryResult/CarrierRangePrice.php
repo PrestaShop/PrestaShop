@@ -38,15 +38,21 @@ class CarrierRangePrice
     private DecimalNumber $from;
     private DecimalNumber $to;
     private DecimalNumber $price;
-
+    private DecimalNumber $packageWeight;
     public function __construct(
         string $from,
         string $to,
-        string $price
+        string $price,
+        string $packageWeight = ''
     ) {
         $this->from = new DecimalNumber($from);
         $this->to = new DecimalNumber($to);
         $this->price = new DecimalNumber($price);
+        if (!empty($packageWeight)) {
+            $this->packageWeight = new DecimalNumber($packageWeight);
+        } else {
+            $this->packageWeight = new DecimalNumber('0');
+        }
     }
 
     public function getFrom(): DecimalNumber
@@ -62,5 +68,10 @@ class CarrierRangePrice
     public function getPrice(): DecimalNumber
     {
         return $this->price;
+    }
+
+    public function getPackageWeight(): DecimalNumber
+    {
+        return $this->packageWeight;
     }
 }
