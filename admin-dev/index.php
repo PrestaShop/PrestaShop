@@ -23,11 +23,11 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShop\PrestaShop\Core\Util\CacheClearLocker;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 if (!defined('_PS_ADMIN_DIR_')) {
@@ -69,6 +69,10 @@ $dotEnvFile = dirname(__FILE__, 2) . '/.env';
     ->usePutenv(false)
     ->loadEnv($dotEnvFile)
 ;
+
+// Block the process until the cache clear is in progress, this must be done before the kernel is created so it doesn't
+// try to use the old container
+CacheClearLocker::waitUntilUnlocked(_PS_ENV_, _PS_APP_ID_);
 
 $kernel = new AdminKernel(_PS_ENV_, _PS_MODE_DEV_);
 // When using the HttpCache, you need to call the method in your front controller instead of relying on the configuration parameter

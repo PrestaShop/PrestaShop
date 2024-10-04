@@ -13,9 +13,9 @@ $finder = PhpCsFixer\Finder::create()->in([
     __DIR__.'/app/parameters.php',
     'Unit/Resources/config/params.php',
     'Unit/Resources/config/params_modified.php',
-    'tests/Resources/modules_tests/testtrickyconflict/override/classes/Cart.php',
+    'Resources/modules_tests/testtrickyconflict/override/classes/Cart.php',
+    'Resources/modules_tests/override_for_unit_test/classes/Cart.php',
 ]);
-
 
 return (new PhpCsFixer\Config())
     ->setRiskyAllowed(true)
