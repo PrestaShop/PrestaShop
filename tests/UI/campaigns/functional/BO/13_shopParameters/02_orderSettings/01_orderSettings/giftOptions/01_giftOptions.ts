@@ -4,15 +4,12 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-// Import BO pages
-import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
-
 import {
   boDashboardPage,
   boOrdersPage,
   boOrdersViewBlockProductsPage,
   boOrdersViewBlockTabListPage,
+  boOrderSettingsPage,
   dataCustomers,
   dataPaymentMethods,
   dataTaxes,
@@ -119,16 +116,16 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
             boDashboardPage.shopParametersParentLink,
             boDashboardPage.orderSettingsLink,
           );
-          await orderSettingsPage.closeSfToolBar(page);
+          await boOrderSettingsPage.closeSfToolBar(page);
 
-          const pageTitle = await orderSettingsPage.getPageTitle(page);
-          expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+          const pageTitle = await boOrderSettingsPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boOrderSettingsPage.pageTitle);
         });
 
         it('should set gift options', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `setOptions${index}`, baseContext);
 
-          const result = await orderSettingsPage.setGiftOptions(
+          const result = await boOrderSettingsPage.setGiftOptions(
             page,
             test.args.isGiftWrapping,
             test.args.giftWrappingPrice,
@@ -136,7 +133,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
             test.args.isRecycledPackaging,
           );
           expect(result, 'Success message is not displayed!')
-            .to.contains(orderSettingsPage.successfulUpdateMessage);
+            .to.contains(boOrderSettingsPage.successfulUpdateMessage);
         });
       });
 
@@ -144,7 +141,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
         it('should view my shop', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
-          page = await orderSettingsPage.viewMyShop(page);
+          page = await boOrderSettingsPage.viewMyShop(page);
           await foClassicHomePage.changeLanguage(page, 'en');
 
           const isHomePage = await foClassicHomePage.isHomePage(page);
@@ -299,8 +296,8 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
 
           page = await foClassicCheckoutPage.closePage(browserContext, page, 0);
 
-          const pageTitle = await orderSettingsPage.getPageTitle(page);
-          expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+          const pageTitle = await boOrderSettingsPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boOrderSettingsPage.pageTitle);
         });
 
         it('should go to \'Orders > Orders\' page', async function () {
@@ -417,15 +414,15 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
 
       await boDashboardPage.goToSubMenu(page, boDashboardPage.shopParametersParentLink, boDashboardPage.orderSettingsLink);
 
-      const pageTitle = await orderSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+      const pageTitle = await boOrderSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrderSettingsPage.pageTitle);
     });
 
     it('should go back to the default configuration', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'backToDefaultConfig', baseContext);
 
-      const result = await orderSettingsPage.setGiftOptions(page, false, 0, 'None', false);
-      expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
+      const result = await boOrderSettingsPage.setGiftOptions(page, false, 0, 'None', false);
+      expect(result).to.contains(boOrderSettingsPage.successfulUpdateMessage);
     });
   });
 });

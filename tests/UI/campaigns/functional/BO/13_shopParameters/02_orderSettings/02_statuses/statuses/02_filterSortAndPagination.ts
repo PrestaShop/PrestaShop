@@ -5,11 +5,11 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 import statusesPage from '@pages/BO/shopParameters/orderSettings/statuses';
 
 import {
   boDashboardPage,
+  boOrderSettingsPage,
   dataOrderStatuses,
   utilsCore,
   utilsPlaywright,
@@ -55,14 +55,14 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
       boDashboardPage.orderSettingsLink,
     );
 
-    const pageTitle = await orderSettingsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+    const pageTitle = await boOrderSettingsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boOrderSettingsPage.pageTitle);
   });
 
   it('should go to \'Statuses\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToStatusesPage', baseContext);
 
-    await orderSettingsPage.goToStatusesPage(page);
+    await boOrderSettingsPage.goToStatusesPage(page);
 
     const pageTitle = await statusesPage.getPageTitle(page);
     expect(pageTitle).to.contains(statusesPage.pageTitle);

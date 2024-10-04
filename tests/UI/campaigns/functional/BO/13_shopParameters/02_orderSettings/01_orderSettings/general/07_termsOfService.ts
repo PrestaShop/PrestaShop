@@ -4,12 +4,10 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-// Import BO pages
-import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
-
 import {
   boDashboardPage,
+  boOrderSettingsPage,
+  dataCMSPages,
   dataCustomers,
   foClassicCartPage,
   foClassicCheckoutPage,
@@ -53,37 +51,58 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable terms of servic
       boDashboardPage.shopParametersParentLink,
       boDashboardPage.orderSettingsLink,
     );
-    await orderSettingsPage.closeSfToolBar(page);
+    await boOrderSettingsPage.closeSfToolBar(page);
 
-    const pageTitle = await orderSettingsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+    const pageTitle = await boOrderSettingsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boOrderSettingsPage.pageTitle);
   });
 
   const tests = [
-    {args: {action: 'disable', enable: false, pageName: ''}},
     {
       args: {
-        action: 'enable', enable: true, pageName: 'Delivery', title: 'Shipments and returns',
+        action: 'disable',
+        enable: false,
+        pageName: '',
       },
     },
     {
       args: {
-        action: 'enable', enable: true, pageName: 'Legal Notice', title: 'Legal',
+        action: 'enable',
+        enable: true,
+        pageName: dataCMSPages.delivery.title,
+        title: 'Shipments and returns',
       },
     },
     {
       args: {
-        action: 'enable', enable: true, pageName: 'Terms and conditions of use', title: 'Terms and conditions of use',
+        action: 'enable',
+        enable: true,
+        pageName: dataCMSPages.legalNotice.title,
+        title: 'Legal',
       },
     },
     {
       args: {
-        action: 'enable', enable: true, pageName: 'About us', title: 'About us',
+        action: 'enable',
+        enable: true,
+        pageName: dataCMSPages.termsAndCondition.title,
+        title: dataCMSPages.termsAndCondition.title,
       },
     },
     {
       args: {
-        action: 'enable', enable: true, pageName: 'Secure payment', title: 'Secure payment',
+        action: 'enable',
+        enable: true,
+        pageName: dataCMSPages.aboutUs.title,
+        title: dataCMSPages.aboutUs.title,
+      },
+    },
+    {
+      args: {
+        action: 'enable',
+        enable: true,
+        pageName: dataCMSPages.securePayment.title,
+        title: dataCMSPages.securePayment.title,
       },
     },
   ];
@@ -97,15 +116,15 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable terms of servic
         baseContext,
       );
 
-      const result = await orderSettingsPage.setTermsOfService(page, test.args.enable, test.args.pageName);
-      expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
+      const result = await boOrderSettingsPage.setTermsOfService(page, test.args.enable, test.args.pageName);
+      expect(result).to.contains(boOrderSettingsPage.successfulUpdateMessage);
     });
 
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `viewMyShop_${index}`, baseContext);
 
       // Click on view my shop
-      page = await orderSettingsPage.viewMyShop(page);
+      page = await boOrderSettingsPage.viewMyShop(page);
       // Change FO language
       await foClassicHomePage.changeLanguage(page, 'en');
 
@@ -172,8 +191,15 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable terms of servic
 
       page = await foClassicCheckoutPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await orderSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+      const pageTitle = await boOrderSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrderSettingsPage.pageTitle);
     });
+  });
+
+  it('should reset terms of service', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetTermsOfService$', baseContext);
+
+    const result = await boOrderSettingsPage.setTermsOfService(page, true, dataCMSPages.termsAndCondition.title);
+    expect(result).to.contains(boOrderSettingsPage.successfulUpdateMessage);
   });
 });

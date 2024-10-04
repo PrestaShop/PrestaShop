@@ -7,13 +7,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
 import addOrderPage from '@pages/BO/orders/add';
-import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 
 import {
   boDashboardPage,
   boOrdersPage,
   boOrdersViewBlockProductsPage,
   boOrdersViewBlockTabListPage,
+  boOrderSettingsPage,
   dataCarriers,
   dataCustomers,
   dataOrderStatuses,
@@ -89,23 +89,23 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
         boDashboardPage.shopParametersParentLink,
         boDashboardPage.orderSettingsLink,
       );
-      await orderSettingsPage.closeSfToolBar(page);
+      await boOrderSettingsPage.closeSfToolBar(page);
 
-      const pageTitle = await orderSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+      const pageTitle = await boOrderSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrderSettingsPage.pageTitle);
     });
 
     it(`should configure gift options: price '€${giftOptions.price}' and tax '${giftOptions.tax}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'configureGiftOptions', baseContext);
 
-      const result = await orderSettingsPage.setGiftOptions(
+      const result = await boOrderSettingsPage.setGiftOptions(
         page,
         giftOptions.wantedStatus,
         giftOptions.price,
         giftOptions.tax,
         giftOptions.isRecyclablePackage,
       );
-      expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(boOrderSettingsPage.successfulUpdateMessage);
     });
   });
 
@@ -276,23 +276,23 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
         boDashboardPage.shopParametersParentLink,
         boDashboardPage.orderSettingsLink,
       );
-      await orderSettingsPage.closeSfToolBar(page);
+      await boOrderSettingsPage.closeSfToolBar(page);
 
-      const pageTitle = await orderSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+      const pageTitle = await boOrderSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrderSettingsPage.pageTitle);
     });
 
     it('should go back to default configuration', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackDefaultConfigureGiftOptions', baseContext);
 
-      const result = await orderSettingsPage.setGiftOptions(
+      const result = await boOrderSettingsPage.setGiftOptions(
         page,
         defaultGiftOptions.wantedStatus,
         defaultGiftOptions.price,
         defaultGiftOptions.tax,
         defaultGiftOptions.isRecyclablePackage,
       );
-      expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(boOrderSettingsPage.successfulUpdateMessage);
     });
   });
 

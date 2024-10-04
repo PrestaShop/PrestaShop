@@ -5,13 +5,11 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
-// Import BO pages
-import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
-
 import {
   boDashboardPage,
   boOrdersPage,
   boOrdersViewBlockTabListPage,
+  boOrderSettingsPage,
   dataCarriers,
   dataCustomers,
   dataPaymentMethods,
@@ -99,17 +97,17 @@ describe('BO - Shop Parameters - Order Settings : Recalculate shipping costs aft
           boDashboardPage.shopParametersParentLink,
           boDashboardPage.orderSettingsLink,
         );
-        await orderSettingsPage.closeSfToolBar(page);
+        await boOrderSettingsPage.closeSfToolBar(page);
 
-        const pageTitle = await orderSettingsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+        const pageTitle = await boOrderSettingsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrderSettingsPage.pageTitle);
       });
 
       it(`should ${test.args.action} final summary`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}FinalSummary`, baseContext);
 
-        const result = await orderSettingsPage.recalculateShippingCostAfterEditingOrder(page, test.args.toEnable);
-        expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
+        const result = await boOrderSettingsPage.recalculateShippingCostAfterEditingOrder(page, test.args.toEnable);
+        expect(result).to.contains(boOrderSettingsPage.successfulUpdateMessage);
       });
 
       it('should go to \'Orders > Orders\' page', async function () {

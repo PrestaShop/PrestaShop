@@ -4,14 +4,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-// Import BO pages
-import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boOrderSettingsPage,
   foClassicCartPage,
   foClassicHomePage,
   foClassicProductPage,
@@ -56,10 +53,10 @@ describe('BO - Shop Parameters - Order Settings : Test minimum purchase total re
       boDashboardPage.shopParametersParentLink,
       boDashboardPage.orderSettingsLink,
     );
-    await orderSettingsPage.closeSfToolBar(page);
+    await boOrderSettingsPage.closeSfToolBar(page);
 
-    const pageTitle = await orderSettingsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+    const pageTitle = await boOrderSettingsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boOrderSettingsPage.pageTitle);
   });
 
   const tests = [
@@ -71,15 +68,15 @@ describe('BO - Shop Parameters - Order Settings : Test minimum purchase total re
     it('should update Minimum purchase total required in order to validate the order value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `updateMinimumPurchaseTotal_${index}`, baseContext);
 
-      const result = await orderSettingsPage.setMinimumPurchaseRequiredTotal(page, test.args.value);
-      expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
+      const result = await boOrderSettingsPage.setMinimumPurchaseRequiredTotal(page, test.args.value);
+      expect(result).to.contains(boOrderSettingsPage.successfulUpdateMessage);
     });
 
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
       // Click on view my shop
-      page = await orderSettingsPage.viewMyShop(page);
+      page = await boOrderSettingsPage.viewMyShop(page);
 
       // Change Fo language
       await foClassicHomePage.changeLanguage(page, 'en');
@@ -123,8 +120,8 @@ describe('BO - Shop Parameters - Order Settings : Test minimum purchase total re
 
       page = await foClassicCartPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await orderSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+      const pageTitle = await boOrderSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrderSettingsPage.pageTitle);
     });
   });
 });
