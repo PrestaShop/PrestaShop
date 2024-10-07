@@ -5,10 +5,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
-// Import pages
-// Import BO pages
-import emailPage from '@pages/BO/advancedParameters/email';
-
 // Import FO pages
 import {createAccountPage} from '@pages/FO/classic/myAccount/add';
 
@@ -16,6 +12,7 @@ import {
   boCustomersPage,
   boCustomerSettingsPage,
   boDashboardPage,
+  boEmailPage,
   FakerCustomer,
   foClassicHomePage,
   foClassicLoginPage,
@@ -176,16 +173,16 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
           boCustomerSettingsPage.emailLink,
         );
 
-        const pageTitle = await emailPage.getPageTitle(page);
-        expect(pageTitle).to.contains(emailPage.pageTitle);
+        const pageTitle = await boEmailPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boEmailPage.pageTitle);
       });
 
       it('should check if there is a welcome email for the new customer', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `searchNewCustomerEmail${index}`, baseContext);
 
-        await emailPage.filterEmailLogs(page, 'input', 'recipient', test.args.customer.email);
+        await boEmailPage.filterEmailLogs(page, 'input', 'recipient', test.args.customer.email);
 
-        const numberOfEmailAfterFilter = await emailPage.getNumberOfElementInGrid(page);
+        const numberOfEmailAfterFilter = await boEmailPage.getNumberOfElementInGrid(page);
         expect(numberOfEmailAfterFilter).to.be.equal(test.args.nbrAfterFilter);
       });
     });
@@ -195,10 +192,10 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
     it('should go to \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPageToDelete', baseContext);
 
-      await emailPage.goToSubMenu(
+      await boEmailPage.goToSubMenu(
         page,
-        emailPage.customersParentLink,
-        emailPage.customersLink,
+        boEmailPage.customersParentLink,
+        boEmailPage.customersLink,
       );
 
       const pageTitle = await boCustomersPage.getPageTitle(page);
