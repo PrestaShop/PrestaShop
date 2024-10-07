@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Routing;
 
 use Dispatcher;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Entity\Repository\TabRepository;

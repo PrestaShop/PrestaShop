@@ -111,6 +111,7 @@ class ShopContextListener implements EventSubscriberInterface
         $redirectResponse = $this->redirectShopContext($event);
         if ($redirectResponse) {
             $event->setResponse($redirectResponse);
+
             return;
         }
 

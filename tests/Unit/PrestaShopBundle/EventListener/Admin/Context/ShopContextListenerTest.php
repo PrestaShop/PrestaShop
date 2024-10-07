@@ -34,7 +34,9 @@ use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\EventListener\Admin\Context\ShopContextListener;
+use PrestaShopBundle\Routing\LegacyControllerConstants;
 use PrestaShopBundle\Security\Admin\TokenAttributes;
+use Shop;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,8 +45,6 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Tests\Unit\PrestaShopBundle\EventListener\ContextEventListenerTestCase;
-use PrestaShopBundle\Routing\LegacyControllerConstants;
-use Shop;
 
 class ShopContextListenerTest extends ContextEventListenerTestCase
 {
