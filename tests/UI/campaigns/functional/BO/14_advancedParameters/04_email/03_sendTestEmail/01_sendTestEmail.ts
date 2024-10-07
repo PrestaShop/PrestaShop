@@ -4,13 +4,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import emailPage from '@pages/BO/advancedParameters/email';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boEmailPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -46,14 +44,14 @@ describe('BO - Advanced Parameters - Email : Send test email', async () => {
       boDashboardPage.emailLink,
     );
 
-    const pageTitle = await emailPage.getPageTitle(page);
-    expect(pageTitle).to.contains(emailPage.pageTitle);
+    const pageTitle = await boEmailPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boEmailPage.pageTitle);
   });
 
   it('should check successful message after sending test email', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'sendTestEmail', baseContext);
 
-    const textResult = await emailPage.sendTestEmail(page, global.BO.EMAIL);
-    expect(textResult).to.contains(emailPage.sendTestEmailSuccessfulMessage);
+    const textResult = await boEmailPage.sendTestEmail(page, global.BO.EMAIL);
+    expect(textResult).to.contains(boEmailPage.sendTestEmailSuccessfulMessage);
   });
 });

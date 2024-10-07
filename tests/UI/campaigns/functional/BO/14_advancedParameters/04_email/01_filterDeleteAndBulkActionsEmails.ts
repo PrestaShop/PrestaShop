@@ -4,12 +4,9 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-// Import BO pages
-import emailPage from '@pages/BO/advancedParameters/email';
-
 import {
   boDashboardPage,
+  boEmailPage,
   dataCustomers,
   dataLanguages,
   dataPaymentMethods,
@@ -150,14 +147,14 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
         boDashboardPage.emailLink,
       );
 
-      const pageTitle = await emailPage.getPageTitle(page);
-      expect(pageTitle).to.contains(emailPage.pageTitle);
+      const pageTitle = await boEmailPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boEmailPage.pageTitle);
     });
 
     it('should reset all filters and get number of email logs', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
 
-      numberOfEmails = await emailPage.resetAndGetNumberOfLines(page);
+      numberOfEmails = await boEmailPage.resetAndGetNumberOfLines(page);
       expect(numberOfEmails).to.be.above(0);
     });
     const tests = [
@@ -212,18 +209,18 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
       it(`should filter E-mail table by '${test.args.filterBy}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.identifier, baseContext);
 
-        await emailPage.filterEmailLogs(
+        await boEmailPage.filterEmailLogs(
           page,
           test.args.filterType,
           test.args.filterBy,
           test.args.filterValue,
         );
 
-        const numberOfEmailsAfterFilter = await emailPage.getNumberOfElementInGrid(page);
+        const numberOfEmailsAfterFilter = await boEmailPage.getNumberOfElementInGrid(page);
         expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfEmails);
 
         for (let row = 1; row <= numberOfEmailsAfterFilter; row++) {
-          const textColumn = await emailPage.getTextColumn(page, test.args.filterBy, row);
+          const textColumn = await boEmailPage.getTextColumn(page, test.args.filterBy, row);
           expect(textColumn).to.contains(test.args.filterValue);
         }
       });
@@ -231,7 +228,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.identifier}Reset`, baseContext);
 
-        const numberOfEmailsAfterReset = await emailPage.resetAndGetNumberOfLines(page);
+        const numberOfEmailsAfterReset = await boEmailPage.resetAndGetNumberOfLines(page);
         expect(numberOfEmailsAfterReset).to.be.equal(numberOfEmails);
       });
     });
@@ -239,13 +236,13 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
     it('should filter E-mail table by date sent \'From\' and \'To\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByDateSent', baseContext);
 
-      await emailPage.filterEmailLogsByDate(page, today, today);
+      await boEmailPage.filterEmailLogsByDate(page, today, today);
 
-      const numberOfEmailsAfterFilter = await emailPage.getNumberOfElementInGrid(page);
+      const numberOfEmailsAfterFilter = await boEmailPage.getNumberOfElementInGrid(page);
       expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfEmails);
 
       for (let row = 1; row <= numberOfEmailsAfterFilter; row++) {
-        const textColumn = await emailPage.getTextColumn(page, 'date_add', row);
+        const textColumn = await boEmailPage.getTextColumn(page, 'date_add', row);
         expect(textColumn).to.contains(today);
       }
     });
@@ -253,7 +250,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'dateSentReset', baseContext);
 
-      const numberOfEmailsAfterReset = await emailPage.resetAndGetNumberOfLines(page);
+      const numberOfEmailsAfterReset = await boEmailPage.resetAndGetNumberOfLines(page);
       expect(numberOfEmailsAfterReset).to.be.equal(numberOfEmails);
     });
   });
@@ -262,23 +259,23 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
     it('should filter email list by \'subject\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterBySubjectToDelete', baseContext);
 
-      await emailPage.filterEmailLogs(page, 'input', 'subject', dataPaymentMethods.wirePayment.name);
+      await boEmailPage.filterEmailLogs(page, 'input', 'subject', dataPaymentMethods.wirePayment.name);
 
-      const numberOfEmailsAfterFilter = await emailPage.getNumberOfElementInGrid(page);
+      const numberOfEmailsAfterFilter = await boEmailPage.getNumberOfElementInGrid(page);
       expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfEmails);
     });
 
     it('should delete email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteEmail', baseContext);
 
-      const textResult = await emailPage.deleteEmailLog(page, 1);
-      expect(textResult).to.equal(emailPage.successfulMultiDeleteMessage);
+      const textResult = await boEmailPage.deleteEmailLog(page, 1);
+      expect(textResult).to.equal(boEmailPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
-      const numberOfEmailsAfterReset = await emailPage.resetAndGetNumberOfLines(page);
+      const numberOfEmailsAfterReset = await boEmailPage.resetAndGetNumberOfLines(page);
       expect(numberOfEmailsAfterReset).to.be.equal(numberOfEmails - 1);
     });
   });
@@ -287,8 +284,8 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
     it('should delete all emails', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'BulkDelete', baseContext);
 
-      const deleteTextResult = await emailPage.deleteEmailLogsBulkActions(page);
-      expect(deleteTextResult).to.be.equal(emailPage.successfulMultiDeleteMessage);
+      const deleteTextResult = await boEmailPage.deleteEmailLogsBulkActions(page);
+      expect(deleteTextResult).to.be.equal(boEmailPage.successfulMultiDeleteMessage);
     });
   });
 });
