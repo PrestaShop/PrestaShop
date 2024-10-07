@@ -99,8 +99,8 @@ describe('Wishlist module - Reset module', async () => {
     expect(wishlistPageName).to.equals(modBlockwishlistBoMain.defaultValueWishlistPageName);
   });
 
-  it(`should update the label`, async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage', baseContext);
+  it('should update the label', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'updateLabel', baseContext);
 
     const textResult = await modBlockwishlistBoMain.setFormWording(page, undefined, labelButton);
     expect(textResult).to.contains(modBlockwishlistBoMain.successfulUpdateMessage);
