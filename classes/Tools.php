@@ -2283,9 +2283,9 @@ class ToolsCore
                 }
                 fwrite($write_fd, 'RewriteRule ^images_ie/?([^/]+)\.(jpe?g|png|gif)$ %{ENV:REWRITEBASE}js/jquery/plugins/fancybox/images/$1.$2 [L]' . PHP_EOL);
 
-                fwrite($write_fd, "# non-existent image to 403\n");
+                fwrite($write_fd, "# non-existent image to 404\n");
                 fwrite($write_fd, "RewriteCond %{REQUEST_FILENAME} !-f\n");
-                fwrite($write_fd, "RewriteRule \.(?:jpe?g|webp|png|avif)$ - [F,L]\n");
+                fwrite($write_fd, "RewriteRule \.(?:jpe?g|webp|png|avif)$ - [R=404,L]\n");
             }
             // Redirections to dispatcher
             if ($rewrite_settings) {
@@ -2375,7 +2375,9 @@ FileETag none
         // Do not remove ($domains is already iterated upper)
         reset($domains);
         $domain = current($domains);
-        fwrite($write_fd, 'ErrorDocument 404 ' . $domain[0]['physical'] . "index.php?controller=404\n\n");
+        fwrite($write_fd, "<IfModule !mod_rewrite.c>\n");
+        fwrite($write_fd, 'ErrorDocument 404 ' . $domain[0]['physical'] . "index.php?controller=404\n");
+        fwrite($write_fd, "</IfModule>\n\n");
 
         fwrite($write_fd, '# ~~end~~ Do not remove this comment, Prestashop will keep automatically the code outside this comment when .htaccess will be generated again');
         if ($specific_after) {
