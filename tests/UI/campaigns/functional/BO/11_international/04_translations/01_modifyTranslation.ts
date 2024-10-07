@@ -7,7 +7,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
 // Import BO pages
-import translationsPage from '@pages/BO/international/translations';
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import storesPage from '@pages/BO/shopParameters/stores';
@@ -18,6 +17,7 @@ import {createAccountPage as foCreateAccountPage} from '@pages/FO/classic/myAcco
 import {
   boDashboardPage,
   boModuleManagerPage,
+  boTranslationsPage,
   dataCustomers,
   dataLanguages,
   dataModules,
@@ -84,26 +84,26 @@ describe('BO - International - Translation : Modify translation', async () => {
         boDashboardPage.translationsLink,
       );
 
-      const pageTitle = await translationsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(translationsPage.pageTitle);
+      const pageTitle = await boTranslationsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boTranslationsPage.pageTitle);
     });
 
     it(`should choose the translation 'Back office' and the language ${dataLanguages.english.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'modifyTranslation', baseContext);
 
-      await translationsPage.modifyTranslation(page, 'Back office translations', 'classic', dataLanguages.english.name);
+      await boTranslationsPage.modifyTranslation(page, 'Back office translations', 'classic', dataLanguages.english.name);
 
-      const pageTitle = await translationsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(translationsPage.pageTitle);
+      const pageTitle = await boTranslationsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boTranslationsPage.pageTitle);
     });
 
     it('should search \'Generate\' expression and modify the translation to \'Generate code\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'translateExpression', baseContext);
 
-      await translationsPage.searchTranslation(page, 'Generate');
+      await boTranslationsPage.searchTranslation(page, 'Generate');
 
-      const textResult = await translationsPage.translateExpression(page, 'Generate code');
-      expect(textResult).to.equal(translationsPage.validationMessage);
+      const textResult = await boTranslationsPage.translateExpression(page, 'Generate code');
+      expect(textResult).to.equal(boTranslationsPage.validationMessage);
     });
 
     it('should go to \'Catalog > Discounts\' page', async function () {
@@ -146,32 +146,32 @@ describe('BO - International - Translation : Modify translation', async () => {
         boDashboardPage.translationsLink,
       );
 
-      const pageTitle = await translationsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(translationsPage.pageTitle);
+      const pageTitle = await boTranslationsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boTranslationsPage.pageTitle);
     });
 
     it(`should choose the translation 'Front office' and the language '${dataLanguages.french.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'modifyTranslation2', baseContext);
 
-      await translationsPage.modifyTranslation(page, 'Front office Translations', 'classic', dataLanguages.french.name);
+      await boTranslationsPage.modifyTranslation(page, 'Front office Translations', 'classic', dataLanguages.french.name);
 
-      const pageTitle = await translationsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(translationsPage.pageTitle);
+      const pageTitle = await boTranslationsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boTranslationsPage.pageTitle);
     });
 
     it('should search \'Popular Products\' expression and modify the french translation', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'translateExpression2', baseContext);
 
-      await translationsPage.searchTranslation(page, 'Popular Products');
+      await boTranslationsPage.searchTranslation(page, 'Popular Products');
 
-      const textResult = await translationsPage.translateExpression(page, 'translate');
-      expect(textResult).to.equal(translationsPage.validationMessage);
+      const textResult = await boTranslationsPage.translateExpression(page, 'translate');
+      expect(textResult).to.equal(boTranslationsPage.validationMessage);
     });
 
     it('should go to FO page and change the language to French', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO1', baseContext);
 
-      page = await translationsPage.viewMyShop(page);
+      page = await boTranslationsPage.viewMyShop(page);
       await foClassicHomePage.changeLanguage(page, 'fr');
 
       const isHomePage = await foClassicHomePage.isHomePage(page);
@@ -196,8 +196,8 @@ describe('BO - International - Translation : Modify translation', async () => {
       // Close tab and init other page objects with new current tab
       page = await foClassicHomePage.closePage(browserContext, page, 0);
 
-      const pageTitle = await translationsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(translationsPage.pageTitle);
+      const pageTitle = await boTranslationsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boTranslationsPage.pageTitle);
     });
 
     it('should go to \'International > Translations\' page', async function () {
@@ -209,33 +209,33 @@ describe('BO - International - Translation : Modify translation', async () => {
         boDashboardPage.translationsLink,
       );
 
-      const pageTitle = await translationsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(translationsPage.pageTitle);
+      const pageTitle = await boTranslationsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boTranslationsPage.pageTitle);
     });
 
     it(`should choose the translation 'Front office with hummingbird theme' and the language '${dataLanguages.english.name}'`,
       async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'modifyTranslation3', baseContext);
 
-        await translationsPage.modifyTranslation(page, 'Front office Translations', 'hummingbird', dataLanguages.english.name);
+        await boTranslationsPage.modifyTranslation(page, 'Front office Translations', 'hummingbird', dataLanguages.english.name);
 
-        const pageTitle = await translationsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(translationsPage.pageTitle);
+        const pageTitle = await boTranslationsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boTranslationsPage.pageTitle);
       });
 
     it('should search \'Popular Products\' expression and modify the french translation', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'translateExpression3', baseContext);
 
-      await translationsPage.searchTranslation(page, 'Add to wishlist');
+      await boTranslationsPage.searchTranslation(page, 'Add to wishlist');
 
-      const textResult = await translationsPage.translateExpression(page, 'Add to wishlist now');
-      expect(textResult).to.equal(translationsPage.validationMessage);
+      const textResult = await boTranslationsPage.translateExpression(page, 'Add to wishlist now');
+      expect(textResult).to.equal(boTranslationsPage.validationMessage);
     });
 
     it('should go to FO page and change the language to English', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO2', baseContext);
 
-      page = await translationsPage.viewMyShop(page);
+      page = await boTranslationsPage.viewMyShop(page);
       await foHummingbirdHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foHummingbirdHomePage.isHomePage(page);
@@ -281,8 +281,8 @@ describe('BO - International - Translation : Modify translation', async () => {
       // Close tab and init other page objects with new current tab
       page = await foClassicHomePage.closePage(browserContext, page, 0);
 
-      const pageTitle = await translationsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(translationsPage.pageTitle);
+      const pageTitle = await boTranslationsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boTranslationsPage.pageTitle);
     });
 
     it('should go to \'International > Translations\' page', async function () {
@@ -294,14 +294,14 @@ describe('BO - International - Translation : Modify translation', async () => {
         boDashboardPage.translationsLink,
       );
 
-      const pageTitle = await translationsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(translationsPage.pageTitle);
+      const pageTitle = await boTranslationsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boTranslationsPage.pageTitle);
     });
 
     it(`should choose the translation 'Installed modules' and the language '${dataLanguages.english.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'modifyTranslation4', baseContext);
 
-      await translationsPage.modifyTranslation(
+      await boTranslationsPage.modifyTranslation(
         page,
         'Installed modules translations',
         'classic',
@@ -309,17 +309,17 @@ describe('BO - International - Translation : Modify translation', async () => {
         dataModules.contactForm.name,
       );
 
-      const pageTitle = await translationsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(translationsPage.pageTitle);
+      const pageTitle = await boTranslationsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boTranslationsPage.pageTitle);
     });
 
     it('should search \'Contact form\' expression and modify the english translation', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'translateExpression4', baseContext);
 
-      await translationsPage.searchTranslation(page, 'Contact form');
+      await boTranslationsPage.searchTranslation(page, 'Contact form');
 
-      const textResult = await translationsPage.translateExpression(page, 'Contact form Module Edited');
-      expect(textResult).to.equal(translationsPage.validationMessage);
+      const textResult = await boTranslationsPage.translateExpression(page, 'Contact form Module Edited');
+      expect(textResult).to.equal(boTranslationsPage.validationMessage);
     });
 
     it('should go to \'Modules > Module Manager\' page', async function () {
@@ -361,14 +361,14 @@ describe('BO - International - Translation : Modify translation', async () => {
         boDashboardPage.translationsLink,
       );
 
-      const pageTitle = await translationsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(translationsPage.pageTitle);
+      const pageTitle = await boTranslationsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boTranslationsPage.pageTitle);
     });
 
     it(`should choose the translation 'Email translations' and the language '${dataLanguages.english.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'modifyTranslation5', baseContext);
 
-      await translationsPage.modifyTranslation(
+      await boTranslationsPage.modifyTranslation(
         page,
         'Email translations',
         'classic',
@@ -377,17 +377,17 @@ describe('BO - International - Translation : Modify translation', async () => {
         'Subject',
       );
 
-      const pageTitle = await translationsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(translationsPage.pageTitle);
+      const pageTitle = await boTranslationsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boTranslationsPage.pageTitle);
     });
 
     it('should search \'Welcome!\' expression and modify the english translation', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'translateExpression5', baseContext);
 
-      await translationsPage.searchTranslation(page, 'Welcome!');
+      await boTranslationsPage.searchTranslation(page, 'Welcome!');
 
-      const textResult = await translationsPage.translateExpression(page, 'You"re welcome');
-      expect(textResult).to.equal(translationsPage.validationMessage);
+      const textResult = await boTranslationsPage.translateExpression(page, 'You"re welcome');
+      expect(textResult).to.equal(boTranslationsPage.validationMessage);
     });
 
     it('should view my shop', async function () {
@@ -455,8 +455,8 @@ describe('BO - International - Translation : Modify translation', async () => {
       // Close tab and init other page objects with new current tab
       page = await foClassicHomePage.closePage(browserContext, page, 0);
 
-      const pageTitle = await translationsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(translationsPage.pageTitle);
+      const pageTitle = await boTranslationsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boTranslationsPage.pageTitle);
     });
 
     it('should go to \'International > Translations\' page', async function () {
@@ -468,27 +468,27 @@ describe('BO - International - Translation : Modify translation', async () => {
         boDashboardPage.translationsLink,
       );
 
-      const pageTitle = await translationsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(translationsPage.pageTitle);
+      const pageTitle = await boTranslationsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boTranslationsPage.pageTitle);
     });
 
     it(`should choose the translation 'Other' and the language '${dataLanguages.english.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'modifyTranslation6', baseContext);
 
-      await translationsPage.modifyTranslation(page, 'Other translations', 'classic', dataLanguages.english.name);
+      await boTranslationsPage.modifyTranslation(page, 'Other translations', 'classic', dataLanguages.english.name);
 
-      const pageTitle = await translationsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(translationsPage.pageTitle);
+      const pageTitle = await boTranslationsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boTranslationsPage.pageTitle);
     });
 
     it('should search an expression and modify the english translation', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'translateExpression6', baseContext);
 
-      await translationsPage.searchTranslation(page, 'If enabled, the voucher will not apply to products already on sale.');
+      await boTranslationsPage.searchTranslation(page, 'If enabled, the voucher will not apply to products already on sale.');
 
-      const textResult = await translationsPage.translateExpression(page,
+      const textResult = await boTranslationsPage.translateExpression(page,
         'The voucher is available only for new products');
-      expect(textResult).to.equal(translationsPage.validationMessage);
+      expect(textResult).to.equal(boTranslationsPage.validationMessage);
     });
 
     it('should go to \'Catalog > Discounts\' page', async function () {

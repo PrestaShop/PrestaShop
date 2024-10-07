@@ -4,16 +4,13 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-// Import BO pages
-import languagesPage from '@pages/BO/international/languages';
-import addLanguagePage from '@pages/BO/international/languages/add';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLocalizationPage,
+  boLanguagesPage,
+  boLanguagesCreatePage,
   FakerLanguage,
   foClassicHomePage,
   utilsFile,
@@ -84,14 +81,14 @@ describe('BO - International - Languages : CRUD language', async () => {
 
     await boLocalizationPage.goToSubTabLanguages(page);
 
-    const pageTitle = await languagesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(languagesPage.pageTitle);
+    const pageTitle = await boLanguagesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boLanguagesPage.pageTitle);
   });
 
   it('should reset all filters and get number of languages in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfLanguages = await languagesPage.resetAndGetNumberOfLines(page);
+    numberOfLanguages = await boLanguagesPage.resetAndGetNumberOfLines(page);
     expect(numberOfLanguages).to.be.above(0);
   });
 
@@ -99,19 +96,19 @@ describe('BO - International - Languages : CRUD language', async () => {
     it('should go to add new language page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewLanguages', baseContext);
 
-      await languagesPage.goToAddNewLanguage(page);
+      await boLanguagesPage.goToAddNewLanguage(page);
 
-      const pageTitle = await addLanguagePage.getPageTitle(page);
-      expect(pageTitle).to.contains(addLanguagePage.pageTitle);
+      const pageTitle = await boLanguagesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boLanguagesCreatePage.pageTitle);
     });
 
     it('should create new language', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createNewLanguages', baseContext);
 
-      const textResult = await addLanguagePage.createEditLanguage(page, createLanguageData);
-      expect(textResult).to.to.contains(languagesPage.successfulCreationMessage);
+      const textResult = await boLanguagesCreatePage.createEditLanguage(page, createLanguageData);
+      expect(textResult).to.to.contains(boLanguagesPage.successfulCreationMessage);
 
-      const numberOfLanguagesAfterCreation = await languagesPage.getNumberOfElementInGrid(page);
+      const numberOfLanguagesAfterCreation = await boLanguagesPage.getNumberOfElementInGrid(page);
       expect(numberOfLanguagesAfterCreation).to.be.equal(numberOfLanguages + 1);
     });
 
@@ -119,7 +116,7 @@ describe('BO - International - Languages : CRUD language', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFo1', baseContext);
 
       // View my shop and get the new tab
-      page = await languagesPage.viewMyShop(page);
+      page = await boLanguagesPage.viewMyShop(page);
 
       const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
@@ -137,8 +134,8 @@ describe('BO - International - Languages : CRUD language', async () => {
 
       page = await foClassicHomePage.closePage(browserContext, page, 0);
 
-      const pageTitle = await languagesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(languagesPage.pageTitle);
+      const pageTitle = await boLanguagesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boLanguagesPage.pageTitle);
     });
   });
 
@@ -147,32 +144,32 @@ describe('BO - International - Languages : CRUD language', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdate', baseContext);
 
       // Filter
-      await languagesPage.filterTable(page, 'input', 'name', createLanguageData.name);
+      await boLanguagesPage.filterTable(page, 'input', 'name', createLanguageData.name);
 
       // Check number of languages
-      const numberOfLanguagesAfterFilter = await languagesPage.getNumberOfElementInGrid(page);
+      const numberOfLanguagesAfterFilter = await boLanguagesPage.getNumberOfElementInGrid(page);
       expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
 
-      const textColumn = await languagesPage.getTextColumnFromTable(page, 1, 'name');
+      const textColumn = await boLanguagesPage.getTextColumnFromTable(page, 1, 'name');
       expect(textColumn).to.contains(createLanguageData.name);
     });
 
     it('should go to edit language page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditLanguagePage', baseContext);
 
-      await languagesPage.goToEditLanguage(page, 1);
+      await boLanguagesPage.goToEditLanguage(page, 1);
 
-      const pageTitle = await addLanguagePage.getPageTitle(page);
-      expect(pageTitle).to.contains(addLanguagePage.pageEditTitle);
+      const pageTitle = await boLanguagesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boLanguagesCreatePage.pageEditTitle);
     });
 
     it('should edit language', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editLanguage', baseContext);
 
-      const textResult = await addLanguagePage.createEditLanguage(page, editLanguageData);
-      expect(textResult).to.to.contains(languagesPage.successfulUpdateMessage);
+      const textResult = await boLanguagesCreatePage.createEditLanguage(page, editLanguageData);
+      expect(textResult).to.to.contains(boLanguagesPage.successfulUpdateMessage);
 
-      const numberOfLanguagesAfterReset = await languagesPage.resetAndGetNumberOfLines(page);
+      const numberOfLanguagesAfterReset = await boLanguagesPage.resetAndGetNumberOfLines(page);
       expect(numberOfLanguagesAfterReset).to.be.equal(numberOfLanguages + 1);
     });
 
@@ -180,7 +177,7 @@ describe('BO - International - Languages : CRUD language', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFo2', baseContext);
 
       // View my shop and get the new tab
-      page = await languagesPage.viewMyShop(page);
+      page = await boLanguagesPage.viewMyShop(page);
 
       const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
@@ -198,8 +195,8 @@ describe('BO - International - Languages : CRUD language', async () => {
 
       page = await foClassicHomePage.closePage(browserContext, page, 0);
 
-      const pageTitle = await languagesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(languagesPage.pageTitle);
+      const pageTitle = await boLanguagesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boLanguagesPage.pageTitle);
     });
   });
 
@@ -208,27 +205,27 @@ describe('BO - International - Languages : CRUD language', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
       // Filter
-      await languagesPage.filterTable(page, 'input', 'name', editLanguageData.name);
+      await boLanguagesPage.filterTable(page, 'input', 'name', editLanguageData.name);
 
       // Check number of languages
-      const numberOfLanguagesAfterFilter = await languagesPage.getNumberOfElementInGrid(page);
+      const numberOfLanguagesAfterFilter = await boLanguagesPage.getNumberOfElementInGrid(page);
       expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
 
-      const textColumn = await languagesPage.getTextColumnFromTable(page, 1, 'name');
+      const textColumn = await boLanguagesPage.getTextColumnFromTable(page, 1, 'name');
       expect(textColumn).to.contains(editLanguageData.name);
     });
 
     it('should delete language', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteLanguage', baseContext);
 
-      const textResult = await languagesPage.deleteLanguage(page, 1);
-      expect(textResult).to.to.contains(languagesPage.successfulDeleteMessage);
+      const textResult = await boLanguagesPage.deleteLanguage(page, 1);
+      expect(textResult).to.to.contains(boLanguagesPage.successfulDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
-      const numberOfLanguagesAfterReset = await languagesPage.resetAndGetNumberOfLines(page);
+      const numberOfLanguagesAfterReset = await boLanguagesPage.resetAndGetNumberOfLines(page);
       expect(numberOfLanguagesAfterReset).to.be.equal(numberOfLanguages);
     });
   });

@@ -4,14 +4,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-// Import BO pages
-import languagesPage from '@pages/BO/international/languages';
-
 import {
   boDashboardPage,
   boLocalizationPage,
   boCurrenciesPage,
+  boLanguagesPage,
   dataCurrencies,
   dataLanguages,
   foClassicHomePage,
@@ -191,33 +188,33 @@ describe('BO - International - Localization : Update default currency', async ()
 
             await boLocalizationPage.goToSubTabLanguages(page);
 
-            const pageTitle = await languagesPage.getPageTitle(page);
-            expect(pageTitle).to.contains(languagesPage.pageTitle);
+            const pageTitle = await boLanguagesPage.getPageTitle(page);
+            expect(pageTitle).to.contains(boLanguagesPage.pageTitle);
           });
 
           it(`should filter language by name '${dataLanguages.spanish.name}'`, async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'filterLanguages', baseContext);
 
-            await languagesPage.filterTable(page, 'input', 'name', dataLanguages.spanish.name);
+            await boLanguagesPage.filterTable(page, 'input', 'name', dataLanguages.spanish.name);
 
-            const numberOfLanguagesAfterFilter = await languagesPage.getNumberOfElementInGrid(page);
+            const numberOfLanguagesAfterFilter = await boLanguagesPage.getNumberOfElementInGrid(page);
             expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
 
-            const textColumn = await languagesPage.getTextColumnFromTable(page, 1, 'name');
+            const textColumn = await boLanguagesPage.getTextColumnFromTable(page, 1, 'name');
             expect(textColumn).to.contains(dataLanguages.spanish.name);
           });
 
           it('should delete language', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'deleteLanguage', baseContext);
 
-            const textResult = await languagesPage.deleteLanguage(page, 1);
-            expect(textResult).to.to.contains(languagesPage.successfulDeleteMessage);
+            const textResult = await boLanguagesPage.deleteLanguage(page, 1);
+            expect(textResult).to.to.contains(boLanguagesPage.successfulDeleteMessage);
           });
 
           it('should reset all filters', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'resetLanguages', baseContext);
 
-            const numberOfLanguagesAfterReset = await languagesPage.resetAndGetNumberOfLines(page);
+            const numberOfLanguagesAfterReset = await boLanguagesPage.resetAndGetNumberOfLines(page);
             expect(numberOfLanguagesAfterReset).to.be.at.least(1);
           });
         });
