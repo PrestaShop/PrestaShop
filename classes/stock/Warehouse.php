@@ -317,8 +317,8 @@ class WarehouseCore extends ObjectModel
             }
             $share_stock = $shop_group->share_stock;
         } else {
-            $shop_group = Shop::getGroupFromShop($id_shop);
-            $share_stock = $shop_group['share_stock'];
+            $shop_group = new ShopGroup(Shop::getGroupFromShop($id_shop));
+            $share_stock = $shop_group->share_stock;
         }
 
         if ($share_stock) {
