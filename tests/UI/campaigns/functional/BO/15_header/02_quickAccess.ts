@@ -172,8 +172,8 @@ describe('BO - Header : Quick access links', async () => {
 
     it('should return to dashboard page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDashboardPage', baseContext);
-  
-      await boQuickAccessPage.goToDashboardPage(page)
+
+      await boQuickAccessPage.goToDashboardPage(page);
 
       const pageTitle = await boDashboardPage.getPageTitle(page);
       expect(pageTitle).to.eq(boDashboardPage.pageTitle);
