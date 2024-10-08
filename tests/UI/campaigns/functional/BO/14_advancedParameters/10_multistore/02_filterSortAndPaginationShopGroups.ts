@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
 import setMultiStoreStatus from '@commonTests/BO/advancedParameters/multistore';
 
 // Import pages
@@ -13,6 +12,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boLoginPage,
   FakerShopGroup,
   utilsCore,
   utilsPlaywright,
@@ -51,7 +51,13 @@ describe('BO - Advanced Parameters - MultiStore : Filter, sort and pagination sh
   // 2 : Go to multistore page
   describe('Go to \'Advanced Parameters > Multistore\' page', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Advanced Parameters > Multistore\' page', async function () {

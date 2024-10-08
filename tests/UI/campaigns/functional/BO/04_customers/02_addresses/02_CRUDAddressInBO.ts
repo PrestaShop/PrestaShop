@@ -1,15 +1,13 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
 // Import pages
 import addressesPage from '@pages/BO/customers/addresses';
 import addAddressPage from '@pages/BO/customers/addresses/add';
 
 import {
   boDashboardPage,
+  boLoginPage,
   FakerAddress,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -39,7 +37,13 @@ describe('BO - Customers - Addresses : CRUD Address in BO', async () => {
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'Customers > Addresses\' page', async function () {

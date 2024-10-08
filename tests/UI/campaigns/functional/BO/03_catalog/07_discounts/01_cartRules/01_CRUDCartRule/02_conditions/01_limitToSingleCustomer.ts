@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 
 // Import BO pages
-import loginCommon from '@commonTests/BO/loginBO';
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 
@@ -15,6 +14,7 @@ import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
   boDashboardPage,
+  boLoginPage,
   dataCustomers,
   FakerCartRule,
   foClassicCartPage,
@@ -71,7 +71,13 @@ describe('BO - Catalog - Cart rules : Limit to single customer', async () => {
 
   describe('BO : Create new cart rule', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Catalog > Discounts\' page', async function () {

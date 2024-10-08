@@ -3,7 +3,6 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
-import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
 import cartRulesPage from '@pages/BO/catalog/discounts';
@@ -11,6 +10,7 @@ import addCartRulePage from '@pages/BO/catalog/discounts/add';
 
 import {
   boDashboardPage,
+  boLoginPage,
   dataCustomers,
   dataProducts,
   FakerCartRule,
@@ -64,7 +64,13 @@ describe('BO - Catalog - Cart rules : Customer Group selection', async () => {
 
   describe('B0 : Create new cart rule', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Catalog > Discounts\' page', async function () {

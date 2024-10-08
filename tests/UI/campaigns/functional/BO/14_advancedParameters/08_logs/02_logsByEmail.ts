@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import common
-import loginCommon from '@commonTests/BO/loginBO';
 import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 import {createProductTest} from '@commonTests/BO/catalog/product';
 
@@ -15,6 +14,7 @@ import {expect} from 'chai';
 import {faker} from '@faker-js/faker';
 import {
   boDashboardPage,
+  boLoginPage,
   boProductsPage,
   dataEmployees,
   FakerProduct,
@@ -70,7 +70,13 @@ describe('BO - Advanced Parameters - Logs : Logs by email', async () => {
 
   describe('Logs by email', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Advanced Parameters > Logs\' page', async function () {

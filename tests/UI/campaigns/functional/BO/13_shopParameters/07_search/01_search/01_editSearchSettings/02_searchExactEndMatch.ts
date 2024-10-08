@@ -3,12 +3,12 @@ import testContext from '@utils/testContext';
 
 // Import login steps
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
-import loginCommon from '@commonTests/BO/loginBO';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boLoginPage,
   boSearchPage,
   dataProducts,
   FakerProduct,
@@ -43,7 +43,13 @@ describe('BO - Shop Parameters - Search : Search exact end match', async () => {
     });
 
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Shop Parameters > Search\' page', async function () {

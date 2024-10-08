@@ -3,7 +3,6 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import {enableMerchandiseReturns, disableMerchandiseReturns} from '@commonTests/BO/customerService/merchandiseReturns';
-import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import pages
@@ -19,6 +18,7 @@ import {returnDetailsPage} from '@pages/FO/classic/myAccount/returnDetails';
 
 import {
   boDashboardPage,
+  boLoginPage,
   boOrdersPage,
   dataAddresses,
   dataCustomers,
@@ -91,7 +91,13 @@ describe('FO - Account : Check order return PDF', async () => {
 
   describe(`Change the created orders status to '${dataOrderStatuses.shipped.name}'`, async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Orders > Orders\' page', async function () {

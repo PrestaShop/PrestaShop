@@ -3,7 +3,6 @@ import testContext from '@utils/testContext';
 
 // Import common tests
 import {createCurrencyTest, deleteCurrencyTest} from '@commonTests/BO/international/currency';
-import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
@@ -11,6 +10,7 @@ import orderPageMessagesBlock from '@pages/BO/orders/view/paymentBlock';
 
 import {
   boDashboardPage,
+  boLoginPage,
   boOrdersPage,
   boOrdersViewBlockProductsPage,
   boOrdersViewBlockTabListPage,
@@ -125,7 +125,13 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
   // 1 - Go to view order page
   describe('Go to view order page', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Orders > Orders\' page', async function () {

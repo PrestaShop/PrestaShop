@@ -1,15 +1,13 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
 // Import pages
 // Import BO pages
 import preferencesPage from '@pages/BO/payment/preferences';
 
 import {
   boDashboardPage,
+  boLoginPage,
   dataCustomers,
   foClassicCartPage,
   foClassicCheckoutPage,
@@ -70,7 +68,13 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
 
   describe('Configure carrier restrictions', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Payment > Preferences\' page', async function () {

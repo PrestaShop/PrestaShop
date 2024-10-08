@@ -1,15 +1,13 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
 // Import pages
 import zonesPage from '@pages/BO/international/locations';
 import statesPage from '@pages/BO/international/locations/states';
 
 import {
   boDashboardPage,
+  boLoginPage,
   dataStates,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -39,7 +37,13 @@ describe('BO - International - States : Filter and quick edit', async () => {
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'International > Locations\' page', async function () {

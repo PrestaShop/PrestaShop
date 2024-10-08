@@ -3,7 +3,6 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
-import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
@@ -14,6 +13,7 @@ import zonesPage from '@pages/BO/international/locations';
 import {
   boCountriesPage,
   boDashboardPage,
+  boLoginPage,
   dataCarriers,
   dataCountries,
   dataCustomers,
@@ -73,7 +73,13 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   describe(`BO : Enable the country '${dataCountries.unitedStates.name}'`, async () => {

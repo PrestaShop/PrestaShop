@@ -3,7 +3,6 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
-import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import importPage from '@pages/BO/advancedParameters/import';
@@ -12,6 +11,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boLoginPage,
   type MailDev,
   type MailDevEmail,
   utilsFile,
@@ -61,7 +61,13 @@ describe('BO - Advanced Parameters - Import : Import file', async () => {
 
   describe('Import : Import file', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Advanced Parameters > Import\' page', async function () {

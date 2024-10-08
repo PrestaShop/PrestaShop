@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
@@ -14,6 +13,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boLoginPage,
   boProductsPage,
   boProductsCreateTabStocksPage,
   boProductSettingsPage,
@@ -147,7 +147,13 @@ describe('FO - Navigation and display : Display tags', async () => {
 
   describe('BO - Edit \'Number of days for which the product is considered \'New\'\'', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Shop parameters > Product Settings\' page', async function () {

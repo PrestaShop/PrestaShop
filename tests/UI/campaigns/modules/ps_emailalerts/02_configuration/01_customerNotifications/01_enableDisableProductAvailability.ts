@@ -3,7 +3,6 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
-import loginCommon from '@commonTests/BO/loginBO';
 import {disableMerchandiseReturns, enableMerchandiseReturns} from '@commonTests/BO/customerService/merchandiseReturns';
 import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
@@ -13,6 +12,7 @@ import addProductPage from '@pages/BO/catalog/products/add';
 
 import {
   boDashboardPage,
+  boLoginPage,
   boModuleManagerPage,
   boOrdersPage,
   boOrdersViewBlockProductsPage,
@@ -94,7 +94,13 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
 
   describe('BO - Check Configure page', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Modules > Module Manager\' page', async function () {

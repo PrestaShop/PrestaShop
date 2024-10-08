@@ -7,7 +7,6 @@ import testContext from '@utils/testContext';
 // Import BO commons tests
 import {createEmployeeTest, deleteEmployeeTest} from '@commonTests/BO/advancedParameters/employee';
 import setPermissions from '@commonTests/BO/advancedParameters/setPermissions';
-import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import creditSlipsPage from '@pages/BO/orders/creditSlips';
@@ -210,7 +209,12 @@ describe('BO - Header : My profile', async () => {
     });
 
     it('should logout from BO', async function () {
-      await loginCommon.logoutBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'logoutBO', baseContext);
+
+      await boDashboardPage.logoutBO(page);
+
+      const pageTitle = await boLoginPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boLoginPage.pageTitle);
     });
 
     it('should check the password and the default page', async function () {

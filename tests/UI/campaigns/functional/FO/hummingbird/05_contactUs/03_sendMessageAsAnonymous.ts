@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
 import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
@@ -16,6 +15,7 @@ import contactUsPage from '@pages/FO/hummingbird/contactUs';
 
 import {
   boDashboardPage,
+  boLoginPage,
   boModuleManagerPage,
   dataCustomers,
   dataModules,
@@ -115,7 +115,13 @@ describe('FO - Contact us : Send message from contact us page with customer not 
 
   describe('PRE-TEST: Configure Contact form module', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Modules > Module Manager\' page', async function () {
@@ -165,7 +171,10 @@ describe('FO - Contact us : Send message from contact us page with customer not 
     it('should logout from BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'logOutBO', baseContext);
 
-      await loginCommon.logoutBO(this, page);
+      await boDashboardPage.logoutBO(page);
+
+      const pageTitle = await boLoginPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boLoginPage.pageTitle);
     });
   });
 
@@ -244,7 +253,13 @@ describe('FO - Contact us : Send message from contact us page with customer not 
 
   describe('BO - Check in Customer Service Page the received message and delete it', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to customer service page', async function () {

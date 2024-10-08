@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import BO pages
@@ -13,6 +12,7 @@ import gdprPersonalDataPage from '@pages/FO/hummingbird/myAccount/gdprPersonalDa
 
 import {
   boDashboardPage,
+  boLoginPage,
   dataCustomers,
   dataOrders,
   FakerContactMessage,
@@ -122,7 +122,13 @@ describe('FO - Account : Contact us on GDPR page', async () => {
     });
 
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to customer service page', async function () {

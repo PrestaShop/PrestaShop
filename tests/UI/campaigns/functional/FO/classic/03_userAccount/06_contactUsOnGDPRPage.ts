@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
 // Import pages
 // Import BO pages
 import customerServicePage from '@pages/BO/customerService/customerService';
@@ -13,6 +10,7 @@ import {gdprPersonalDataPage} from '@pages/FO/classic/myAccount/gdprPersonalData
 
 import {
   boDashboardPage,
+  boLoginPage,
   dataCustomers,
   dataOrders,
   FakerContactMessage,
@@ -118,7 +116,13 @@ describe('FO - Account : Contact us on GDPR page', async () => {
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to customer service page', async function () {

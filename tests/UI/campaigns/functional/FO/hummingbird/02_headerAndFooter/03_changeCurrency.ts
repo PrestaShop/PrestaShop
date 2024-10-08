@@ -4,11 +4,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 import {createCurrencyTest, deleteCurrencyTest} from '@commonTests/BO/international/currency';
-import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import {
   boDashboardPage,
+  boLoginPage,
   boLocalizationPage,
   boCurrenciesPage,
   dataCurrencies,
@@ -78,7 +78,13 @@ describe('FO - Header and Footer : Change currency', async () => {
 
     describe('Filter by iso code of currency and get the exchange rate value ', async () => {
       it('should login in BO', async function () {
-        await loginCommon.loginBO(this, page);
+        await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+        await boLoginPage.goTo(page, global.BO.URL);
+        await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boDashboardPage.pageTitle);
       });
 
       it('should go to \'International > Localization\' page', async function () {

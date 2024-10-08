@@ -7,7 +7,6 @@ import {
   enableMerchandiseReturns,
   disableMerchandiseReturns,
 } from '@commonTests/BO/customerService/merchandiseReturns';
-import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
@@ -16,6 +15,8 @@ import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {merchandiseReturnsPage as foMerchandiseReturnsPage} from '@pages/FO/classic/myAccount/merchandiseReturns';
 
 import {
+  boDashboardPage,
+  boLoginPage,
   boOrdersPage,
   boOrdersViewBlockTabListPage,
   dataCustomers,
@@ -83,7 +84,13 @@ describe('FO - Account - Order details : Request merchandise return', async () =
 
   describe('Change the created order status to \'Delivered\'', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Orders > Orders\' page', async function () {

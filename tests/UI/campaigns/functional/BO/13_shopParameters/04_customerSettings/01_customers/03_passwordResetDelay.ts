@@ -2,12 +2,12 @@
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
 import {
   boCustomerSettingsPage,
   boDashboardPage,
+  boLoginPage,
   dataCustomers,
   foClassicHomePage,
   foClassicLoginPage,
@@ -60,7 +60,13 @@ describe('BO - Shop Parameters - Customer Settings : Password reset delay', asyn
 
   describe('Password reset delay', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Shop parameters > Customer Settings\' page', async function () {

@@ -3,7 +3,6 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
-import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import addEmployeePage from '@pages/BO/advancedParameters/team/add';
@@ -75,7 +74,13 @@ describe('BO - Login : Password reminder', async () => {
 
   describe('Go to BO and create a new employee', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Advanced Parameters > Team\' page', async function () {
@@ -115,7 +120,12 @@ describe('BO - Login : Password reminder', async () => {
     });
 
     it('should logout from BO', async function () {
-      await loginCommon.logoutBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'logoutBO', baseContext);
+
+      await boDashboardPage.logoutBO(page);
+
+      const pageTitle = await boLoginPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boLoginPage.pageTitle);
     });
   });
 
@@ -147,7 +157,13 @@ describe('BO - Login : Password reminder', async () => {
 
   describe('Go to BO and delete previously created employee', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Advanced Parameters > Team\' page', async function () {

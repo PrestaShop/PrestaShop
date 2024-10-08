@@ -4,11 +4,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 import {createProductTest, bulkDeleteProductsTest} from '@commonTests/BO/catalog/product';
-import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderSpecificProductTest} from '@commonTests/FO/classic/order';
 
 import {
   boDashboardPage,
+  boLoginPage,
   boOrdersPage,
   boOrdersViewBlockProductsPage,
   boOrdersViewBlockTabListPage,
@@ -105,7 +105,13 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   // 1 - Go to view order page

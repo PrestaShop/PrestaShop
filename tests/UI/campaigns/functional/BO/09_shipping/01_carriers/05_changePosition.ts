@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
 // Import BO pages
 import preferencesPage from '@pages/BO/shipping/preferences';
 
@@ -14,6 +11,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boCarriersPage,
   boDashboardPage,
+  boLoginPage,
   dataCarriers,
   dataCustomers,
   foClassicCartPage,
@@ -94,7 +92,8 @@ describe('BO - Shipping - Carriers : Change carrier position', async () => {
       page = await utilsPlaywright.newTab(browserContext);
       await foClassicCheckoutPage.goToBO(page);
 
-      await loginCommon.loginBO(this, page);
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
 
       const pageTitle = await boDashboardPage.getPageTitle(page);
       expect(pageTitle).to.contains(boDashboardPage.pageTitle);

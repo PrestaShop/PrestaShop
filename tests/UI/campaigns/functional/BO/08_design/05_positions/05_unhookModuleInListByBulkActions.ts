@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
 import hookModule from '@commonTests/BO/design/positions';
 
 // Import pages
@@ -10,6 +9,7 @@ import positionsPage from '@pages/BO/design/positions';
 
 import {
   boDashboardPage,
+  boLoginPage,
   dataModules,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -37,7 +37,13 @@ describe('BO - Design - Positions : Unhook module in list by Bulk actions', asyn
     });
 
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Design > Positions\' page', async function () {

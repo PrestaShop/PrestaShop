@@ -1,9 +1,8 @@
 import testContext from '@utils/testContext';
 
-import loginCommon from '@commonTests/BO/loginBO';
-
 import {
   boDashboardPage,
+  boLoginPage,
   boModuleManagerPage,
   type FakerModule,
   utilsFile,
@@ -43,7 +42,13 @@ function installModule(
     });
 
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it(`should download the zip of the module '${module.name}'`, async function () {
@@ -116,7 +121,13 @@ function uninstallModule(module: FakerModule, baseContext: string = 'commonTests
     });
 
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Modules > Module Manager\' page', async function () {
@@ -165,7 +176,13 @@ function resetModule(module: FakerModule, baseContext: string = 'commonTests-res
     });
 
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Modules > Module Manager\' page', async function () {

@@ -1,19 +1,17 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Common tests login BO
-import loginCommon from '@commonTests/BO/loginBO';
-
 // Import pages
 // Import BO pages
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 
 import {
-  boDashboardPage,
-  boLocalizationPage,
   boCurrenciesPage,
   boCurrenciesCreatePage,
+  boDashboardPage,
+  boLocalizationPage,
+  boLoginPage,
   boOrdersPage,
   boSqlManagerPage,
   boSqlManagerCreatePage,
@@ -105,7 +103,13 @@ describe(
     });
 
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     describe('Create cart rules', async () => {

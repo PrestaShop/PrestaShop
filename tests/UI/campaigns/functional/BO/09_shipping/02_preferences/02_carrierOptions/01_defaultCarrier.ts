@@ -1,15 +1,13 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
 // Import pages
 // Import BO pages
 import preferencesPage from '@pages/BO/shipping/preferences';
 
 import {
   boDashboardPage,
+  boLoginPage,
   dataCarriers,
   dataCustomers,
   FakerCarrier,
@@ -47,7 +45,13 @@ describe('BO - Shipping - Preferences : Update default carrier and check it in F
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'Shipping > Preferences\' page', async function () {

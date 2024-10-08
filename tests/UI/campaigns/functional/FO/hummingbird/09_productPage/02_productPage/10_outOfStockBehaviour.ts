@@ -6,7 +6,6 @@ import {deleteProductTest} from '@commonTests/BO/catalog/product';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import BO pages
-import loginCommon from '@commonTests/BO/loginBO';
 import createProductPage from '@pages/BO/catalog/products/add';
 import movementsPage from '@pages/BO/catalog/stocks/movements';
 
@@ -17,6 +16,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boLoginPage,
   boProductsPage,
   boProductsCreateTabStocksPage,
   FakerProduct,
@@ -71,7 +71,13 @@ describe('FO - Product page - Product page : Out of stock behaviour', async () =
 
   describe('Check out of stock behaviour', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Catalog > Products\' page', async function () {

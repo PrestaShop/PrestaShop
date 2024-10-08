@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 import {bulkDeleteProductsTest} from '@commonTests/BO/catalog/product';
 import {enableEcoTaxTest, disableEcoTaxTest} from '@commonTests/BO/international/ecoTax';
-import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByCustomerTest, createOrderSpecificProductTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
@@ -17,6 +16,7 @@ import orderPagePaymentBlock from '@pages/BO/orders/view/paymentBlock';
 
 import {
   boDashboardPage,
+  boLoginPage,
   boOrdersPage,
   boOrdersViewBlockProductsPage,
   boOrdersViewBlockTabListPage,
@@ -177,7 +177,13 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'Catalog > Products\' page', async function () {

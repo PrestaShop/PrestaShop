@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
 // Import pages
 import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
@@ -11,6 +8,7 @@ import {vouchersPage as foVouchersPage} from '@pages/FO/classic/myAccount/vouche
 
 import {
   boDashboardPage,
+  boLoginPage,
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
@@ -73,7 +71,13 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
   describe('case 1 : Create cart rule with enabled partial use then check it on FO', async () => {
     describe('Create cart rule in BO', async () => {
       it('should login in BO', async function () {
-        await loginCommon.loginBO(this, page);
+        await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+        await boLoginPage.goTo(page, global.BO.URL);
+        await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boDashboardPage.pageTitle);
       });
 
       it('should go to \'Catalog > Discounts\' page', async function () {

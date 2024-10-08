@@ -4,7 +4,6 @@ import testContext from '@utils/testContext';
 // Import common tests
 import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 import {createCartRuleTest, deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
-import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
 import addOrderPage from '@pages/BO/orders/add';
@@ -12,6 +11,7 @@ import orderPageMessagesBlock from '@pages/BO/orders/view/messagesBlock';
 
 import {
   boDashboardPage,
+  boLoginPage,
   boOrdersPage,
   dataCarriers,
   dataCustomers,
@@ -94,7 +94,13 @@ describe('BO - Orders - Create order : Check summary', async () => {
   // 1 - Go to create order page and add product to cart
   describe('Go to create order page and add a product to the cart', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Orders > Orders\' page', async function () {

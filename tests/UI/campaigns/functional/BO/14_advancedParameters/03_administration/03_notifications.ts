@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 
 // Import BO pages
@@ -16,6 +15,7 @@ import {
   boAdministrationPage,
   boCustomersPage,
   boDashboardPage,
+  boLoginPage,
   boShoppingCartsPage,
   dataCustomers,
   dataPaymentMethods,
@@ -56,7 +56,13 @@ describe('BO - Advanced Parameters - Administration : Check notifications', asyn
 
   describe('Disable all notifications', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should click on notifications icon', async function () {

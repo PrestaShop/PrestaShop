@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
 // Import pages
 // Import BO pages
 import customerServicePage from '@pages/BO/customerService/customerService';
@@ -13,6 +10,7 @@ import {contactUsPage} from '@pages/FO/classic/contactUs';
 
 import {
   boDashboardPage,
+  boLoginPage,
   dataCustomers,
   dataEmployees,
   FakerContactMessage,
@@ -106,7 +104,13 @@ describe('BO - Customer Service : Change status', async () => {
 
   describe('BO : Change message status and check it', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Customer Service > Customer Service\' page', async function () {

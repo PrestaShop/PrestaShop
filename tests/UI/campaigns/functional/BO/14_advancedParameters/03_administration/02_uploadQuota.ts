@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
 // Import pages
 import createProductPage from '@pages/BO/catalog/products/add';
 import filesPage from '@pages/BO/catalog/files';
@@ -14,6 +11,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boAdministrationPage,
   boDashboardPage,
+  boLoginPage,
   boProductsPage,
   boProductsCreateTabDescriptionPage,
   boProductsCreateTabVirtualProductPage,
@@ -82,7 +80,13 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
 
   describe('Check \'Maximum size for attached files\'', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Advanced Parameters > Administration\' page', async function () {

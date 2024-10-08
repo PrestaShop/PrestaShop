@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
 import {createAddressTest} from '@commonTests/BO/customers/address';
 import {createCustomerB2BTest, bulkDeleteCustomersTest} from '@commonTests/BO/customers/customer';
 import {disableB2BTest, enableB2BTest} from '@commonTests/BO/shopParameters/b2b';
@@ -13,6 +12,7 @@ import outstandingPage from '@pages/BO/customers/outstanding';
 
 import {
   boDashboardPage,
+  boLoginPage,
   boOrdersPage,
   dataOrderStatuses,
   dataPaymentMethods,
@@ -76,7 +76,13 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
 
   describe('PRE-TEST: Create outstanding', async () => {
     it('should login to BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
     customersData.forEach((customerData: FakerCustomer, index: number) => {
       const addressData: FakerAddress = new FakerAddress({

@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
 // Import pages
 // Import BO pages
 import preferencesPage from '@pages/BO/shipping/preferences';
@@ -15,6 +12,7 @@ import {
   boCustomerGroupsCreatePage,
   boCustomerSettingsPage,
   boDashboardPage,
+  boLoginPage,
   dataCustomers,
   dataGroups,
   FakerCarrier,
@@ -90,7 +88,13 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   // 1 - Choose display tax excluded in FO

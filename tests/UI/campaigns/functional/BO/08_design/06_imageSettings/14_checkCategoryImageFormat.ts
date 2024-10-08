@@ -3,7 +3,6 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import bulkDeleteCategoriesTest from '@commonTests/BO/catalog/category';
-import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import categoriesPage from '@pages/BO/catalog/categories';
@@ -14,6 +13,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boLoginPage,
   FakerCategory,
   foClassicCategoryPage,
   foClassicHomePage,
@@ -79,7 +79,13 @@ describe('BO - Design - Image Settings - Check category image format', async () 
 
   describe('Enable WebP for image generation', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Design > Image Settings\' page', async function () {

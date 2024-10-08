@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
 // Import pages
 // Import BO pages
 import boMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns';
@@ -15,6 +12,7 @@ import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
 import {
   boDashboardPage,
+  boLoginPage,
   boOrdersPage,
   dataCustomers,
   dataOrderStatuses,
@@ -146,7 +144,13 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
 
   describe('BO : Enable/Disable and update the prefix', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     [

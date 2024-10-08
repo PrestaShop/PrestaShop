@@ -110,8 +110,11 @@ const checkDoubles = (jsonFile: string): boolean => {
   const contextExisting: string[] = [];
   const contextDoubles: string[] = [];
   reportContexts.forEach((value: string): void => {
-    if (['loginBO', 'logoutBO', 'loginFO', 'logoutFO'].indexOf(value) !== -1) {
-      return;
+    // eslint-disable-next-line no-restricted-syntax
+    for (const exception of ['loginBO', 'logoutBO', 'loginFO', 'logoutFO']) {
+      if (value.endsWith(exception)) {
+        return;
+      }
     }
     if (contextExisting.indexOf(value) !== -1) {
       contextDoubles.push(value);

@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
 import {installModule} from '@commonTests/BO/modules/moduleManager';
 
@@ -10,6 +9,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boLoginPage,
   boModuleManagerPage,
   boProductsPage,
   dataModules,
@@ -53,7 +53,13 @@ describe('Mail alerts module - Uninstall and delete module', async () => {
 
   describe('BackOffice - Fetch the ID of the product', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Catalog > Products\' page', async function () {

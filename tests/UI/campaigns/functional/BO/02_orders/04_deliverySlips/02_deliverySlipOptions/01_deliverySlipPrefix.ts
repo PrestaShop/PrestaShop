@@ -1,14 +1,12 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
 // Import pages
 import deliverySlipsPage from '@pages/BO/orders/deliverySlips';
 
 import {
   boDashboardPage,
+  boLoginPage,
   boOrdersPage,
   boOrdersViewBlockTabListPage,
   dataOrderStatuses,
@@ -46,7 +44,13 @@ describe('BO - Orders - Delivery slips : Update delivery slip prefix and check t
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   describe('Update the delivery slip prefix', async () => {

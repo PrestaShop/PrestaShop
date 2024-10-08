@@ -3,7 +3,6 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByGuestTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
@@ -11,6 +10,7 @@ import viewCustomerPage from '@pages/BO/customers/view';
 
 import {
   boDashboardPage,
+  boLoginPage,
   boOrdersPage,
   dataPaymentMethods,
   dataProducts,
@@ -69,7 +69,13 @@ describe('BO - Orders : View guest from orders page', async () => {
 
   describe('View guest from orders page', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Orders > Orders\' page', async function () {

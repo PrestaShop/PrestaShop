@@ -1,5 +1,3 @@
-import loginCommon from '@commonTests/BO/loginBO';
-
 import testContext from '@utils/testContext';
 
 import {expect} from 'chai';
@@ -8,6 +6,7 @@ import {
   boDashboardPage,
   boDesignPositionsHookModulePage,
   boDesignPositionsPage,
+  boLoginPage,
   type FakerModule,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -32,7 +31,13 @@ function hookModule(
     });
 
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Design > Positions\' page', async function () {

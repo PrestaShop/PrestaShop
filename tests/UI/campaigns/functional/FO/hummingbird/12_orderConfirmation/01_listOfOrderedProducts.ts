@@ -3,13 +3,13 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-import loginCommon from '@commonTests/BO/loginBO';
 
 // Import FO pages
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {
   boDashboardPage,
+  boLoginPage,
   boOrdersPage,
   dataCarriers,
   dataCustomers,
@@ -180,7 +180,13 @@ describe('FO - Order confirmation : List of ordered products', async () => {
   describe('Get the order reference from the BO', async () => {
     it('should login in BO', async function () {
       page = await utilsPlaywright.newTab(browserContext);
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Orders > Orders\' page', async function () {

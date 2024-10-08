@@ -1,14 +1,12 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import login steps
-import loginCommon from '@commonTests/BO/loginBO';
-
 // Import pages
 import deliverySlipsPage from '@pages/BO/orders/deliverySlips';
 
 import {
   boDashboardPage,
+  boLoginPage,
   boOrdersPage,
   boOrdersViewBlockTabListPage,
   dataOrderStatuses,
@@ -44,7 +42,13 @@ describe('BO - Orders - Delivery slips : Generate Delivery slip file by date', a
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   describe('Create delivery slip', async () => {

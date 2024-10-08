@@ -1,11 +1,9 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
 import {
   boDashboardPage,
+  boLoginPage,
   boOrdersPage,
   boOrdersViewBlockProductsPage,
   dataOrderStatuses,
@@ -38,7 +36,13 @@ describe('BO - Orders - Orders : Edit Order BO', async () => {
 
   // Steps
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to the \'Orders > Orders\' page', async function () {
@@ -80,6 +84,11 @@ describe('BO - Orders - Orders : Edit Order BO', async () => {
 
   // Logout from BO
   it('should log out from BO', async function () {
-    await loginCommon.logoutBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'logoutBO', baseContext);
+
+    await boDashboardPage.logoutBO(page);
+
+    const pageTitle = await boLoginPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boLoginPage.pageTitle);
   });
 });
