@@ -1,6 +1,6 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteCond %{REQUEST_URI} !((?i)^.*\.(jpg|jpeg|gif|png|bmp|tiff|svg|pdf|mov|mpeg|mp4|avi|mpg|wma|flv|webm|ico|webp|avif)$) [NC]
-    RewriteRule .* /index.php  [L,R=404]
+    RewriteRule .* [R=404]
 </IfModule>
-
+ErrorDocument 404 /img/404.gif
