@@ -12,6 +12,10 @@ class QuickAccess extends BOBasePage {
 
   private readonly addNewQuickAccessButton: string;
 
+  private readonly gridPanel: string;
+
+  private readonly gridTitle: string;
+
   private readonly gridTable: string;
 
   private readonly filterRow: string;
@@ -60,6 +64,10 @@ class QuickAccess extends BOBasePage {
     // Selectors
     // Header selectors
     this.addNewQuickAccessButton = 'a[data-role=page-header-desc-quick_access-link]';
+
+    // Panel
+    this.gridPanel = '#form-quick_access .panel'
+    this.gridTitle = `${this.gridPanel} div.panel-heading span.badge`;
 
     // Table selectors
     this.gridTable = '#table-quick_access';
@@ -196,6 +204,26 @@ class QuickAccess extends BOBasePage {
 
     // Return successful message
     return this.getAlertSuccessBlockContent(page);
+  }
+
+  /**
+   * Reset input filters
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async resetFilter(page: Page): Promise<void> {
+    if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
+      await this.clickAndWaitForURL(page, this.filterResetButton);
+    }
+  }
+
+  /**
+   * Get number of elements in grid
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getNumberOfElementInGrid(page: Page): Promise<number> {
+    return this.getNumberFromText(page, this.gridTitle);
   }
 }
 

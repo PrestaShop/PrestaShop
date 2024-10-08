@@ -153,5 +153,30 @@ describe('BO - Header : Quick access links', async () => {
       const textColumn = await quickAccessPage.bulkDeleteQuickAccessLink(page);
       expect(textColumn).to.be.contains(quickAccessPage.successfulMultiDeleteMessage);
     });
+
+    it('should reset the filter', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
+
+      await quickAccessPage.resetFilter(page);
+
+      const numberEnabledCurrencies = await quickAccessPage.getNumberOfElementInGrid(page);
+      expect(numberEnabledCurrencies).to.be.gt(1);
+    });
+
+    it('should delete all quick access link by bulk actions', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteAllByBulkActions', baseContext);
+
+      const textColumn = await quickAccessPage.bulkDeleteQuickAccessLink(page);
+      expect(textColumn).to.be.contains(quickAccessPage.successfulMultiDeleteMessage);
+    });
+
+    it('should return to dashboard page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToDashboardPage', baseContext);
+  
+      await quickAccessPage.goToDashboardPage(page)
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.eq(boDashboardPage.pageTitle);
+    });
   });
 });
