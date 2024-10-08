@@ -5,10 +5,6 @@ import testContext from '@utils/testContext';
 import {deleteAPIClientTest} from '@commonTests/BO/advancedParameters/authServer';
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import languagesPage from '@pages/BO/international/languages';
-import addLanguagePage from '@pages/BO/international/languages/add';
-
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 import {
@@ -16,6 +12,8 @@ import {
   boApiClientsCreatePage,
   boDashboardPage,
   boLocalizationPage,
+  boLanguagesPage,
+  boLanguagesCreatePage,
   FakerAPIClient,
   utilsAPI,
   utilsPlaywright,
@@ -187,10 +185,10 @@ describe('API : GET /languages', async () => {
 
       await boLocalizationPage.goToSubTabLanguages(page);
 
-      const pageTitle = await languagesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(languagesPage.pageTitle);
+      const pageTitle = await boLanguagesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boLanguagesPage.pageTitle);
 
-      const numLanguages = await languagesPage.resetAndGetNumberOfLines(page);
+      const numLanguages = await boLanguagesPage.resetAndGetNumberOfLines(page);
       expect(numLanguages).to.eq(jsonResponse.totalItems);
     });
 
@@ -199,62 +197,62 @@ describe('API : GET /languages', async () => {
 
       for (let idxItem: number = 0; idxItem < jsonResponse.totalItems; idxItem++) {
         // eslint-disable-next-line no-loop-func
-        await languagesPage.resetFilter(page);
-        await languagesPage.filterTable(page, 'input', 'id_lang', jsonResponse.items[idxItem].langId);
+        await boLanguagesPage.resetFilter(page);
+        await boLanguagesPage.filterTable(page, 'input', 'id_lang', jsonResponse.items[idxItem].langId);
 
-        const numLanguages = await languagesPage.getNumberOfElementInGrid(page);
+        const numLanguages = await boLanguagesPage.getNumberOfElementInGrid(page);
         expect(numLanguages).to.be.equal(1);
 
-        const langId = parseInt((await languagesPage.getTextColumnFromTable(page, 1, 'id_lang')).toString(), 10);
+        const langId = parseInt((await boLanguagesPage.getTextColumnFromTable(page, 1, 'id_lang')).toString(), 10);
         expect(langId).to.equal(jsonResponse.items[idxItem].langId);
 
-        const langName = await languagesPage.getTextColumnFromTable(page, 1, 'name');
+        const langName = await boLanguagesPage.getTextColumnFromTable(page, 1, 'name');
         expect(langName).to.equal(jsonResponse.items[idxItem].name);
 
-        const langIsoCode = await languagesPage.getTextColumnFromTable(page, 1, 'iso_code');
+        const langIsoCode = await boLanguagesPage.getTextColumnFromTable(page, 1, 'iso_code');
         expect(langIsoCode).to.equal(jsonResponse.items[idxItem].isoCode);
 
-        const langLanguageCode = await languagesPage.getTextColumnFromTable(page, 1, 'language_code');
+        const langLanguageCode = await boLanguagesPage.getTextColumnFromTable(page, 1, 'language_code');
         expect(langLanguageCode).to.equal(jsonResponse.items[idxItem].languageCode);
 
         // @todo : https://github.com/PrestaShop/PrestaShop/issues/35860
         // Check `jsonResponse.items[idxItem].locale`
 
-        const langDateFormat = await languagesPage.getTextColumnFromTable(page, 1, 'date_format_lite');
+        const langDateFormat = await boLanguagesPage.getTextColumnFromTable(page, 1, 'date_format_lite');
         expect(langDateFormat).to.equal(jsonResponse.items[idxItem].dateFormat);
 
-        const langDateTimeFormat = await languagesPage.getTextColumnFromTable(page, 1, 'date_format_full');
+        const langDateTimeFormat = await boLanguagesPage.getTextColumnFromTable(page, 1, 'date_format_full');
         expect(langDateTimeFormat).to.equal(jsonResponse.items[idxItem].dateTimeFormat);
 
-        const langActive = await languagesPage.getStatus(page, 1);
+        const langActive = await boLanguagesPage.getStatus(page, 1);
         expect(langActive).to.equal(jsonResponse.items[idxItem].active);
 
-        const langFlag = await languagesPage.getImgSrc(page, 1);
+        const langFlag = await boLanguagesPage.getImgSrc(page, 1);
         expect(langFlag.split('?')[0]).to.equal(jsonResponse.items[idxItem].flag.split('?')[0]);
 
         // Go the edit page
-        await languagesPage.goToEditLanguage(page, 1);
+        await boLanguagesPage.goToEditLanguage(page, 1);
 
-        const pageTitleEdit = await addLanguagePage.getPageTitle(page);
-        expect(pageTitleEdit).to.contains(addLanguagePage.pageEditTitle);
+        const pageTitleEdit = await boLanguagesCreatePage.getPageTitle(page);
+        expect(pageTitleEdit).to.contains(boLanguagesCreatePage.pageEditTitle);
 
-        const langIsRTL = await addLanguagePage.isRTL(page);
+        const langIsRTL = await boLanguagesCreatePage.isRTL(page);
         expect(langIsRTL).to.equal(jsonResponse.items[idxItem].isRtl);
 
         // Return languages tab
         await boLocalizationPage.goToSubTabLanguages(page);
 
-        const pageTitle = await languagesPage.getPageTitle(page);
-        expect(pageTitle).to.contains(languagesPage.pageTitle);
+        const pageTitle = await boLanguagesPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boLanguagesPage.pageTitle);
       }
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
-      await languagesPage.resetFilter(page);
+      await boLanguagesPage.resetFilter(page);
 
-      const numberOfLanguages = await languagesPage.resetAndGetNumberOfLines(page);
+      const numberOfLanguages = await boLanguagesPage.resetAndGetNumberOfLines(page);
       expect(numberOfLanguages).to.be.above(0);
     });
   });

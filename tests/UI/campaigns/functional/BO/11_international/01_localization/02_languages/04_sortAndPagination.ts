@@ -4,15 +4,13 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import languagesPage from '@pages/BO/international/languages';
-import addLanguagePage from '@pages/BO/international/languages/add';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLocalizationPage,
+  boLanguagesPage,
+  boLanguagesCreatePage,
   dataLanguages,
   utilsCore,
   utilsFile,
@@ -70,14 +68,14 @@ describe('BO - International - Languages : Sort and pagination', async () => {
 
     await boLocalizationPage.goToSubTabLanguages(page);
 
-    const pageTitle = await languagesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(languagesPage.pageTitle);
+    const pageTitle = await boLanguagesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boLanguagesPage.pageTitle);
   });
 
   it('should reset all filters and get number of languages in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfLanguages = await languagesPage.resetAndGetNumberOfLines(page);
+    numberOfLanguages = await boLanguagesPage.resetAndGetNumberOfLines(page);
     expect(numberOfLanguages).to.be.above(0);
   });
 
@@ -109,11 +107,11 @@ describe('BO - International - Languages : Sort and pagination', async () => {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
         // Get non sorted elements
-        const nonSortedTable = await languagesPage.getAllRowsColumnContent(page, test.args.sortBy);
-        await languagesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+        const nonSortedTable = await boLanguagesPage.getAllRowsColumnContent(page, test.args.sortBy);
+        await boLanguagesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
         // Get sorted elements
-        const sortedTable = await languagesPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await boLanguagesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
           const nonSortedTableFloat = nonSortedTable.map((text: string): number => parseFloat(text));
@@ -157,19 +155,19 @@ describe('BO - International - Languages : Sort and pagination', async () => {
         it('should go to add new language page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToAddNewLanguagePage${index}`, baseContext);
 
-          await languagesPage.goToAddNewLanguage(page);
+          await boLanguagesPage.goToAddNewLanguage(page);
 
-          const pageTitle = await addLanguagePage.getPageTitle(page);
-          expect(pageTitle).to.contains(addLanguagePage.pageTitle);
+          const pageTitle = await boLanguagesCreatePage.getPageTitle(page);
+          expect(pageTitle).to.contains(boLanguagesCreatePage.pageTitle);
         });
 
         it(`Create language n°${index + 1} in BO`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `createNewLanguage${index}`, baseContext);
 
-          const textResult = await addLanguagePage.createEditLanguage(page, test.args.languageData);
-          expect(textResult).to.to.contains(languagesPage.successfulCreationMessage);
+          const textResult = await boLanguagesCreatePage.createEditLanguage(page, test.args.languageData);
+          expect(textResult).to.to.contains(boLanguagesPage.successfulCreationMessage);
 
-          const numberOfLanguagesAfterCreation = await languagesPage.getNumberOfElementInGrid(page);
+          const numberOfLanguagesAfterCreation = await boLanguagesPage.getNumberOfElementInGrid(page);
           expect(numberOfLanguagesAfterCreation).to.be.equal(numberOfLanguages + 1 + index);
         });
       });
@@ -179,28 +177,28 @@ describe('BO - International - Languages : Sort and pagination', async () => {
       it('should change the item number to 10 per page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
-        const paginationNumber = await languagesPage.selectPaginationLimit(page, 10);
+        const paginationNumber = await boLanguagesPage.selectPaginationLimit(page, 10);
         expect(paginationNumber).to.contains('(page 1 / 2)');
       });
 
       it('should click on next', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-        const paginationNumber = await languagesPage.paginationNext(page);
+        const paginationNumber = await boLanguagesPage.paginationNext(page);
         expect(paginationNumber).to.contains('(page 2 / 2)');
       });
 
       it('should click on previous', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-        const paginationNumber = await languagesPage.paginationPrevious(page);
+        const paginationNumber = await boLanguagesPage.paginationPrevious(page);
         expect(paginationNumber).to.contains('(page 1 / 2)');
       });
 
       it('should change the item number to 50 per page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
-        const paginationNumber = await languagesPage.selectPaginationLimit(page, 50);
+        const paginationNumber = await boLanguagesPage.selectPaginationLimit(page, 50);
         expect(paginationNumber).to.contains('(page 1 / 1)');
       });
     });
@@ -211,27 +209,27 @@ describe('BO - International - Languages : Sort and pagination', async () => {
           await testContext.addContextItem(this, 'testIdentifier', `filterToDelete${index}`, baseContext);
 
           // Filter
-          await languagesPage.filterTable(page, 'input', 'name', test.args.languageData.name);
+          await boLanguagesPage.filterTable(page, 'input', 'name', test.args.languageData.name);
 
           // Check number of languages
-          const numberOfLanguagesAfterFilter = await languagesPage.getNumberOfElementInGrid(page);
+          const numberOfLanguagesAfterFilter = await boLanguagesPage.getNumberOfElementInGrid(page);
           expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
 
-          const textColumn = await languagesPage.getTextColumnFromTable(page, 1, 'name');
+          const textColumn = await boLanguagesPage.getTextColumnFromTable(page, 1, 'name');
           expect(textColumn).to.contains(test.args.languageData.name);
         });
 
         it('should delete language', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `deleteLanguage${index}`, baseContext);
 
-          const textResult = await languagesPage.deleteLanguage(page, 1);
-          expect(textResult).to.to.contains(languagesPage.successfulDeleteMessage);
+          const textResult = await boLanguagesPage.deleteLanguage(page, 1);
+          expect(textResult).to.to.contains(boLanguagesPage.successfulDeleteMessage);
         });
 
         it('should reset all filters', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `resetAfterDelete${index}`, baseContext);
 
-          const numberOfLanguagesAfterReset = await languagesPage.resetAndGetNumberOfLines(page);
+          const numberOfLanguagesAfterReset = await boLanguagesPage.resetAndGetNumberOfLines(page);
           expect(numberOfLanguagesAfterReset).to.be.equal(numberOfLanguages + 8 - index);
         });
       });

@@ -4,16 +4,13 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-// Import BO pages
-import translationsPage from '@pages/BO/international/translations';
-import languagesPage from '@pages/BO/international/languages';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLocalizationPage,
+  boTranslationsPage,
+  boLanguagesPage,
   dataLanguages,
   foClassicHomePage,
   utilsPlaywright,
@@ -48,30 +45,30 @@ describe('BO - International - Translation : Add update a language', async () =>
       boDashboardPage.internationalParentLink,
       boDashboardPage.translationsLink,
     );
-    await translationsPage.closeSfToolBar(page);
+    await boTranslationsPage.closeSfToolBar(page);
 
-    const pageTitle = await translationsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(translationsPage.pageTitle);
+    const pageTitle = await boTranslationsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boTranslationsPage.pageTitle);
   });
 
   it(`should select from update language the '${dataLanguages.english.name}' language`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'chooseLanguage1', baseContext);
 
-    const textResult = await translationsPage.addUpdateLanguage(page, dataLanguages.english.name);
-    expect(textResult).to.equal(translationsPage.successAlertMessage);
+    const textResult = await boTranslationsPage.addUpdateLanguage(page, dataLanguages.english.name);
+    expect(textResult).to.equal(boTranslationsPage.successAlertMessage);
   });
 
   it(`should select from add language the '${dataLanguages.deutsch.name}' language`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'chooseLanguage2', baseContext);
 
-    const textResult = await translationsPage.addUpdateLanguage(page, dataLanguages.deutsch.name);
-    expect(textResult).to.equal(translationsPage.successAlertMessage);
+    const textResult = await boTranslationsPage.addUpdateLanguage(page, dataLanguages.deutsch.name);
+    expect(textResult).to.equal(boTranslationsPage.successAlertMessage);
   });
 
   it('should go to FO page and check the new language', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFOAndCheckLanguage', baseContext);
 
-    page = await translationsPage.viewMyShop(page);
+    page = await boTranslationsPage.viewMyShop(page);
     await foClassicHomePage.changeLanguage(page, dataLanguages.deutsch.isoCode);
 
     const isHomePage = await foClassicHomePage.isHomePage(page);
@@ -84,14 +81,14 @@ describe('BO - International - Translation : Add update a language', async () =>
     // Close tab and init other page objects with new current tab
     page = await foClassicHomePage.closePage(browserContext, page, 0);
 
-    const pageTitle = await translationsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(translationsPage.pageTitle);
+    const pageTitle = await boTranslationsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boTranslationsPage.pageTitle);
   });
 
   it(`should check that the language '${dataLanguages.deutsch.name}' is visible in update a language list`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkLanguage', baseContext);
 
-    const languagesInUpdateSection = await translationsPage.getLanguagesFromUpdateResult(page);
+    const languagesInUpdateSection = await boTranslationsPage.getLanguagesFromUpdateResult(page);
     expect(languagesInUpdateSection).to.contains(dataLanguages.deutsch.name);
   });
 
@@ -115,14 +112,14 @@ describe('BO - International - Translation : Add update a language', async () =>
 
       await boLocalizationPage.goToSubTabLanguages(page);
 
-      const pageTitle = await languagesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(languagesPage.pageTitle);
+      const pageTitle = await boLanguagesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boLanguagesPage.pageTitle);
     });
 
     it('should reset all filters and get number of languages in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-      numberOfLanguages = await languagesPage.resetAndGetNumberOfLines(page);
+      numberOfLanguages = await boLanguagesPage.resetAndGetNumberOfLines(page);
       expect(numberOfLanguages).to.be.above(0);
     });
 
@@ -130,23 +127,23 @@ describe('BO - International - Translation : Add update a language', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdate', baseContext);
 
       // Filter
-      await languagesPage.filterTable(page, 'input', 'name', dataLanguages.deutsch.name);
+      await boLanguagesPage.filterTable(page, 'input', 'name', dataLanguages.deutsch.name);
 
-      const textColumn = await languagesPage.getTextColumnFromTable(page, 1, 'name');
+      const textColumn = await boLanguagesPage.getTextColumnFromTable(page, 1, 'name');
       expect(textColumn).to.contains(dataLanguages.deutsch.name);
     });
 
     it('should delete language', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteLanguage', baseContext);
 
-      const textResult = await languagesPage.deleteLanguage(page, 1);
-      expect(textResult).to.to.contains(languagesPage.successfulDeleteMessage);
+      const textResult = await boLanguagesPage.deleteLanguage(page, 1);
+      expect(textResult).to.to.contains(boLanguagesPage.successfulDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
-      const numberOfLanguagesAfterReset = await languagesPage.resetAndGetNumberOfLines(page);
+      const numberOfLanguagesAfterReset = await boLanguagesPage.resetAndGetNumberOfLines(page);
       expect(numberOfLanguagesAfterReset).to.be.equal(numberOfLanguages - 1);
     });
   });

@@ -4,14 +4,12 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import languagesPage from '@pages/BO/international/languages';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLocalizationPage,
+  boLanguagesPage,
   dataLanguages,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -61,14 +59,14 @@ describe('BO - International - Languages : Filter and quick edit languages', asy
 
     await boLocalizationPage.goToSubTabLanguages(page);
 
-    const pageTitle = await languagesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(languagesPage.pageTitle);
+    const pageTitle = await boLanguagesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boLanguagesPage.pageTitle);
   });
 
   it('should reset all filters and get number of languages in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfLanguages = await languagesPage.resetAndGetNumberOfLines(page);
+    numberOfLanguages = await boLanguagesPage.resetAndGetNumberOfLines(page);
     expect(numberOfLanguages).to.be.above(0);
   });
 
@@ -143,7 +141,7 @@ describe('BO - International - Languages : Filter and quick edit languages', asy
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        await languagesPage.filterTable(
+        await boLanguagesPage.filterTable(
           page,
           test.args.filterType,
           test.args.filterBy,
@@ -151,16 +149,16 @@ describe('BO - International - Languages : Filter and quick edit languages', asy
         );
 
         // Check number of languages
-        const numberOfLanguagesAfterFilter = await languagesPage.getNumberOfElementInGrid(page);
+        const numberOfLanguagesAfterFilter = await boLanguagesPage.getNumberOfElementInGrid(page);
         expect(numberOfLanguagesAfterFilter).to.be.at.most(numberOfLanguages);
         expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
 
         for (let i = 1; i <= numberOfLanguagesAfterFilter; i++) {
           if (test.args.filterBy === 'active') {
-            const languageStatus = await languagesPage.getStatus(page, i);
+            const languageStatus = await boLanguagesPage.getStatus(page, i);
             expect(languageStatus).to.equal(test.args.filterValue === '1');
           } else {
-            const textColumn = await languagesPage.getTextColumnFromTable(
+            const textColumn = await boLanguagesPage.getTextColumnFromTable(
               page,
               i,
               test.args.filterBy,
@@ -173,7 +171,7 @@ describe('BO - International - Languages : Filter and quick edit languages', asy
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfLanguagesAfterReset = await languagesPage.resetAndGetNumberOfLines(page);
+        const numberOfLanguagesAfterReset = await boLanguagesPage.resetAndGetNumberOfLines(page);
         expect(numberOfLanguagesAfterReset).to.equal(numberOfLanguages);
       });
     });
@@ -183,29 +181,29 @@ describe('BO - International - Languages : Filter and quick edit languages', asy
     it('should filter by iso_code \'en\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDisableDefaultLanguage', baseContext);
 
-      await languagesPage.filterTable(page, 'input', 'iso_code', dataLanguages.english.isoCode);
+      await boLanguagesPage.filterTable(page, 'input', 'iso_code', dataLanguages.english.isoCode);
 
       // Check number of languages
-      const numberOfLanguagesAfterFilter = await languagesPage.getNumberOfElementInGrid(page);
+      const numberOfLanguagesAfterFilter = await boLanguagesPage.getNumberOfElementInGrid(page);
       expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
 
-      const textColumn = await languagesPage.getTextColumnFromTable(page, 1, 'iso_code');
+      const textColumn = await boLanguagesPage.getTextColumnFromTable(page, 1, 'iso_code');
       expect(textColumn).to.contains(dataLanguages.english.isoCode);
     });
 
     it('should disable \'en\' language and check error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableMainLanguage', baseContext);
 
-      await languagesPage.setStatus(page, 1, false);
+      await boLanguagesPage.setStatus(page, 1, false);
 
-      const textError = await languagesPage.getAlertDangerBlockParagraphContent(page);
-      expect(textError).to.equal(languagesPage.unSuccessfulUpdateDefaultLanguageStatusMessage);
+      const textError = await boLanguagesPage.getAlertDangerBlockParagraphContent(page);
+      expect(textError).to.equal(boLanguagesPage.unSuccessfulUpdateDefaultLanguageStatusMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableDefaultLanguageReset', baseContext);
 
-      const numberOfLanguagesAfterReset = await languagesPage.resetAndGetNumberOfLines(page);
+      const numberOfLanguagesAfterReset = await boLanguagesPage.resetAndGetNumberOfLines(page);
       expect(numberOfLanguagesAfterReset).to.equal(numberOfLanguages);
     });
   });
@@ -215,13 +213,13 @@ describe('BO - International - Languages : Filter and quick edit languages', asy
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
       // Filter table
-      await languagesPage.filterTable(page, 'input', 'iso_code', dataLanguages.french.isoCode);
+      await boLanguagesPage.filterTable(page, 'input', 'iso_code', dataLanguages.french.isoCode);
 
       // Check number od languages
-      const numberOfLanguagesAfterFilter = await languagesPage.getNumberOfElementInGrid(page);
+      const numberOfLanguagesAfterFilter = await boLanguagesPage.getNumberOfElementInGrid(page);
       expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
 
-      const textColumn = await languagesPage.getTextColumnFromTable(page, 1, 'iso_code');
+      const textColumn = await boLanguagesPage.getTextColumnFromTable(page, 1, 'iso_code');
       expect(textColumn).to.contains(dataLanguages.french.isoCode);
     });
 
@@ -234,13 +232,13 @@ describe('BO - International - Languages : Filter and quick edit languages', asy
       it(`should ${test.args.action} first language`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Language`, baseContext);
 
-        const isActionPerformed = await languagesPage.setStatus(page, 1, test.args.enabledValue);
+        const isActionPerformed = await boLanguagesPage.setStatus(page, 1, test.args.enabledValue);
 
         if (isActionPerformed) {
-          const resultMessage = await languagesPage.getAlertSuccessBlockParagraphContent(page);
-          expect(resultMessage).to.contains(languagesPage.successfulUpdateStatusMessage);
+          const resultMessage = await boLanguagesPage.getAlertSuccessBlockParagraphContent(page);
+          expect(resultMessage).to.contains(boLanguagesPage.successfulUpdateStatusMessage);
         }
-        const languageStatus = await languagesPage.getStatus(page, 1);
+        const languageStatus = await boLanguagesPage.getStatus(page, 1);
         expect(languageStatus).to.be.equal(test.args.enabledValue);
       });
     });
@@ -248,7 +246,7 @@ describe('BO - International - Languages : Filter and quick edit languages', asy
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickEditReset', baseContext);
 
-      const numberOfLanguagesAfterReset = await languagesPage.resetAndGetNumberOfLines(page);
+      const numberOfLanguagesAfterReset = await boLanguagesPage.resetAndGetNumberOfLines(page);
       expect(numberOfLanguagesAfterReset).to.equal(numberOfLanguages);
     });
   });
