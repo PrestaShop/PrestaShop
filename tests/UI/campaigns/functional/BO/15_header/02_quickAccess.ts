@@ -8,7 +8,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import statsPage from '@pages/BO/stats';
 import newCategoryPage from '@pages/BO/catalog/categories/add';
 import newVoucherPage from '@pages/BO/catalog/discounts/add';
-import quickAccessPage from '@pages/BO/quickAccess';
 import addNewQuickAccessPage from '@pages/BO/quickAccess/add';
 import newCustomerPage from '@pages/BO/customers/add';
 
@@ -19,6 +18,7 @@ import {
   boOrdersPage,
   boModuleManagerPage,
   boProductsPage,
+  boQuickAccessPage,
   FakerQuickAccess,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -100,14 +100,14 @@ describe('BO - Header : Quick access links', async () => {
       await newVoucherPage.reloadPage(page);
       await newVoucherPage.goToManageQuickAccessPage(page);
 
-      const pageTitle = await quickAccessPage.getPageTitle(page);
-      expect(pageTitle).to.contains(quickAccessPage.pageTitle);
+      const pageTitle = await boQuickAccessPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boQuickAccessPage.pageTitle);
     });
 
     it('should go to \'Add new quick access\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddQuickAccessPage', baseContext);
 
-      await quickAccessPage.goToAddNewQuickAccessPage(page);
+      await boQuickAccessPage.goToAddNewQuickAccessPage(page);
 
       const pageTitle = await addNewQuickAccessPage.getPageTitle(page);
       expect(pageTitle).to.contains(addNewQuickAccessPage.pageTitle);
@@ -134,24 +134,49 @@ describe('BO - Header : Quick access links', async () => {
 
       await newCustomerPage.goToManageQuickAccessPage(page);
 
-      const pageTitle = await quickAccessPage.getPageTitle(page);
-      expect(pageTitle).to.contains(quickAccessPage.pageTitle);
+      const pageTitle = await boQuickAccessPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boQuickAccessPage.pageTitle);
     });
 
     it('should filter quick access table by link name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchByName', baseContext);
 
-      await quickAccessPage.filterTable(page, 'input', 'name', quickAccessLinkData.name);
+      await boQuickAccessPage.filterTable(page, 'input', 'name', quickAccessLinkData.name);
 
-      const textColumn = await quickAccessPage.getTextColumn(page, 1, 'name');
+      const textColumn = await boQuickAccessPage.getTextColumn(page, 1, 'name');
       expect(textColumn).to.contains(quickAccessLinkData.name);
     });
 
     it('should delete the created quick access link by bulk actions', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteByBulkActions', baseContext);
 
-      const textColumn = await quickAccessPage.bulkDeleteQuickAccessLink(page);
-      expect(textColumn).to.be.contains(quickAccessPage.successfulMultiDeleteMessage);
+      const textColumn = await boQuickAccessPage.bulkDeleteQuickAccessLink(page);
+      expect(textColumn).to.be.contains(boQuickAccessPage.successfulMultiDeleteMessage);
+    });
+
+    it('should reset the filter', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
+
+      await boQuickAccessPage.resetFilter(page);
+
+      const numberEnabledCurrencies = await boQuickAccessPage.getNumberOfElementInGrid(page);
+      expect(numberEnabledCurrencies).to.be.gt(1);
+    });
+
+    it('should delete all quick access link by bulk actions', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteAllByBulkActions', baseContext);
+
+      const textColumn = await boQuickAccessPage.bulkDeleteQuickAccessLink(page);
+      expect(textColumn).to.be.contains(boQuickAccessPage.successfulMultiDeleteMessage);
+    });
+
+    it('should return to dashboard page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToDashboardPage', baseContext);
+
+      await boQuickAccessPage.goToDashboardPage(page);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.eq(boDashboardPage.pageTitle);
     });
   });
 });
