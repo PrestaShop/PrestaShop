@@ -1,12 +1,10 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
 import {
   boCarriersPage,
   boDashboardPage,
+  boLoginPage,
   dataCarriers,
   dataCustomers,
   foClassicCartPage,
@@ -37,7 +35,13 @@ describe('BO - Shipping - Carriers : Quick edit status and free shipping', async
 
   describe('Go to \'Shipping > Carriers\' page', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Shipping > Carriers\' page', async function () {

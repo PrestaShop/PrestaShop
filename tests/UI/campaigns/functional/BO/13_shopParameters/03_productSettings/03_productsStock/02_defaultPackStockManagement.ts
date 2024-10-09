@@ -1,14 +1,12 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
 // Import BO pages
 import addProductPage from '@pages/BO/catalog/products/add';
 
 import {
   boDashboardPage,
+  boLoginPage,
   boProductsPage,
   boProductSettingsPage,
   dataCustomers,
@@ -61,7 +59,13 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   describe('Create 3 products', async () => {

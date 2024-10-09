@@ -4,7 +4,6 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {createAddressTest} from '@commonTests/BO/customers/address';
 import {createCustomerTest, deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import loginCommon from '@commonTests/BO/loginBO';
 import createShoppingCart from '@commonTests/FO/classic/shoppingCart';
 
 // Import BO pages
@@ -13,6 +12,7 @@ import shoppingCartViewPage from '@pages/BO/orders/shoppingCarts/view';
 
 import {
   boDashboardPage,
+  boLoginPage,
   boOrdersViewBlockProductsPage,
   boShoppingCartsPage,
   dataOrderStatuses,
@@ -85,7 +85,13 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
 
   describe('View carts', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Orders > Shopping carts\' page', async function () {

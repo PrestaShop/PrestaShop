@@ -4,7 +4,6 @@ import testContext from '@utils/testContext';
 // Import common tests
 import importFileTest from '@commonTests/BO/advancedParameters/importFile';
 import bulkDeleteCategoriesTest from '@commonTests/BO/catalog/category';
-import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import categoriesPage from '@pages/BO/catalog/categories';
@@ -17,6 +16,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boLoginPage,
   type CategoryFilter,
   utilsCore,
   utilsFile,
@@ -65,7 +65,13 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of empty categori
   // 1 - Sort list of empty categories
   describe('Sort list of empty categories', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Catalog > Monitoring\' page', async function () {

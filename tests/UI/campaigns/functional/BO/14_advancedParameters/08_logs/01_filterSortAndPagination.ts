@@ -2,15 +2,13 @@
 import {expect} from 'chai';
 import testContext from '@utils/testContext';
 
-// Import common
-import loginCommon from '@commonTests/BO/loginBO';
-
 // Import pages
 import logsPage from '@pages/BO/advancedParameters/logs';
 
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boLoginPage,
   dataEmployees,
   utilsCore,
   utilsDate,
@@ -45,7 +43,13 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'Advanced Parameters > Logs\' page', async function () {
@@ -74,11 +78,22 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
 
     tests.forEach((test: number, index: number) => {
       it(`should logout from BO n°${index + 1}`, async function () {
-        await loginCommon.logoutBO(this, page);
+        await testContext.addContextItem(this, 'testIdentifier', 'logoutBO', baseContext);
+
+        await boDashboardPage.logoutBO(page);
+
+        const pageTitle = await boLoginPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boLoginPage.pageTitle);
       });
 
       it(`should login in BO n°${index + 1}`, async function () {
-        await loginCommon.loginBO(this, page);
+        await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+        await boLoginPage.goTo(page, global.BO.URL);
+        await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boDashboardPage.pageTitle);
       });
     });
 

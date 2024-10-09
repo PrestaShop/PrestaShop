@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
 // Import pages
 import employeesPage from '@pages/BO/advancedParameters/team';
 import addEmployeePage from '@pages/BO/advancedParameters/team/add';
@@ -55,7 +52,13 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'Advanced Parameters > Team\' page', async function () {
@@ -101,7 +104,12 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
     });
 
     it('should logout from BO', async function () {
-      await loginCommon.logoutBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'logoutBO', baseContext);
+
+      await boDashboardPage.logoutBO(page);
+
+      const pageTitle = await boLoginPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boLoginPage.pageTitle);
     });
 
     it('should sign in with new account and verify the default page', async function () {
@@ -114,14 +122,25 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
     });
 
     it('should logout from BO', async function () {
-      await loginCommon.logoutBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'logoutBO', baseContext);
+
+      await boDashboardPage.logoutBO(page);
+
+      const pageTitle = await boLoginPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boLoginPage.pageTitle);
     });
   });
 
   // 2 : Update employee and check that employee can't sign in in BO (enabled = false)
   describe('Update employee', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     describe('Update the password and the default page', async () => {
@@ -174,7 +193,12 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
       });
 
       it('should logout from BO', async function () {
-        await loginCommon.logoutBO(this, page);
+        await testContext.addContextItem(this, 'testIdentifier', 'logoutBO', baseContext);
+
+        await boDashboardPage.logoutBO(page);
+
+        const pageTitle = await boLoginPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boLoginPage.pageTitle);
       });
 
       it('should sign in with edited account and verify the default page', async function () {
@@ -187,13 +211,24 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
       });
 
       it('should logout from BO', async function () {
-        await loginCommon.logoutBO(this, page);
+        await testContext.addContextItem(this, 'testIdentifier', 'logoutBO', baseContext);
+
+        await boDashboardPage.logoutBO(page);
+
+        const pageTitle = await boLoginPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boLoginPage.pageTitle);
       });
     });
 
     describe('Disable the employee and check it', async () => {
       it('should login in BO', async function () {
-        await loginCommon.loginBO(this, page);
+        await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+        await boLoginPage.goTo(page, global.BO.URL);
+        await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boDashboardPage.pageTitle);
       });
 
       it('should go to \'Advanced Parameters > Team\' page', async function () {
@@ -236,7 +271,12 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
       });
 
       it('should logout from BO', async function () {
-        await loginCommon.logoutBO(this, page);
+        await testContext.addContextItem(this, 'testIdentifier', 'logoutBO', baseContext);
+
+        await boDashboardPage.logoutBO(page);
+
+        const pageTitle = await boLoginPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boLoginPage.pageTitle);
       });
 
       it('should test sign in with the disabled employee', async function () {
@@ -253,7 +293,13 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
   // 3 : Delete employee
   describe('Delete employee', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Advanced Parameters > Team\' page', async function () {

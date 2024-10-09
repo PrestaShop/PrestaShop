@@ -7,7 +7,6 @@ import OrderWS from '@webservices/order/orderWs';
 
 // Import commonTests
 import {addWebserviceKey, removeWebserviceKey, setWebserviceStatus} from '@commonTests/BO/advancedParameters/ws';
-import loginCommon from '@commonTests/BO/loginBO';
 import createShoppingCart from '@commonTests/FO/classic/shoppingCart';
 
 // Import BO pages
@@ -21,6 +20,7 @@ import getOrderXml from '@data/xml/order';
 
 import {
   boDashboardPage,
+  boLoginPage,
   boOrdersPage,
   boOrdersViewBlockProductsPage,
   boOrdersViewBlockTabListPage,
@@ -102,7 +102,13 @@ describe('WS - Orders : CRUD', async () => {
 
     describe('Fetch informations', () => {
       it('should login in BO', async function () {
-        await loginCommon.loginBO(this, page);
+        await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+        await boLoginPage.goTo(page, global.BO.URL);
+        await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boDashboardPage.pageTitle);
       });
 
       describe('Fetch the Webservice Key', () => {

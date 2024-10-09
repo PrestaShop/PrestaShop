@@ -6,7 +6,6 @@ import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 import {bulkDeleteProductsTest} from '@commonTests/BO/catalog/product';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {enableEcoTaxTest, disableEcoTaxTest} from '@commonTests/BO/international/ecoTax';
-import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByGuestTest} from '@commonTests/FO/classic/order';
 
 // Import BO pages
@@ -18,6 +17,7 @@ import addProductPage from '@pages/BO/catalog/products/add';
 
 import {
   boDashboardPage,
+  boLoginPage,
   boOrdersPage,
   boOrdersViewBlockProductsPage,
   boProductsPage,
@@ -222,7 +222,13 @@ describe('BO - Orders - View and edit order : Check product block in view order 
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   // Pre-condition: Create 9 products, Enable ecoTax, Create cart rule

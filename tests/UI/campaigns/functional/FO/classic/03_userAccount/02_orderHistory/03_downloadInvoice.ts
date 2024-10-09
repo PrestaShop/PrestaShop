@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import common tests
-import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import pages
@@ -10,6 +9,8 @@ import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import invoicesPage from '@pages/BO/orders/invoices';
 
 import {
+  boDashboardPage,
+  boLoginPage,
   boOrdersPage,
   boOrdersViewBlockTabListPage,
   dataCustomers,
@@ -72,7 +73,13 @@ describe('FO - Account - Order history : download invoice', async () => {
 
   describe('Change the first order status to \'Delivered\'', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Orders > Orders\' page', async function () {

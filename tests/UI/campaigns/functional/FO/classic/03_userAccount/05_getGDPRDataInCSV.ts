@@ -3,7 +3,6 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import loginCommon from '@commonTests/BO/loginBO';
 
 // Import FO pages
 import {contactUsPage} from '@pages/FO/classic/contactUs';
@@ -15,6 +14,7 @@ import {gdprPersonalDataPage} from '@pages/FO/classic/myAccount/gdprPersonalData
 import {
   boCustomersPage,
   boDashboardPage,
+  boLoginPage,
   boOrdersPage,
   boShoppingCartsPage,
   dataPaymentMethods,
@@ -165,7 +165,13 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
     describe('Get personal information from BO', async () => {
       it('should login in BO', async function () {
-        await loginCommon.loginBO(this, page);
+        await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+        await boLoginPage.goTo(page, global.BO.URL);
+        await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boDashboardPage.pageTitle);
       });
 
       it('should go to \'Customers > Customers\' page', async function () {

@@ -3,7 +3,6 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import {createAddressTest, bulkDeleteAddressesTest} from '@commonTests/BO/customers/address';
-import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
@@ -16,6 +15,7 @@ import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
 import {
   boDashboardPage,
+  boLoginPage,
   boOrdersPage,
   dataCustomers,
   dataOrderStatuses,
@@ -84,7 +84,13 @@ describe('BO - Orders - Create order : Choose address', async () => {
   // 1 - Create new order
   describe('Create first order and choose the created address in PRE-TEST', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Orders > Orders\' page', async function () {

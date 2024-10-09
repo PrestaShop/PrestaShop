@@ -1,8 +1,5 @@
 import testContext from '@utils/testContext';
 
-// Import common tests
-import loginCommon from '@commonTests/BO/loginBO';
-
 // Import BO pages
 import createProductPage from '@pages/BO/catalog/products/add';
 import optionsTab from '@pages/BO/catalog/products/add/optionsTab';
@@ -11,6 +8,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 import {
   boDashboardPage,
+  boLoginPage,
   boProductsPage,
   boProductsCreateTabDescriptionPage,
   FakerProduct,
@@ -61,7 +59,13 @@ describe('BO - Catalog - Products : Options tab', async () => {
   // 1 - Create product
   describe('Create product', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Catalog > Products\' page', async function () {

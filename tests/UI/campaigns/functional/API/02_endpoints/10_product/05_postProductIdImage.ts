@@ -4,7 +4,6 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {deleteAPIClientTest} from '@commonTests/BO/advancedParameters/authServer';
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
-import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import createProductsPage from '@pages/BO/catalog/products/add';
@@ -16,6 +15,7 @@ import {
   boApiClientsPage,
   boApiClientsCreatePage,
   boDashboardPage,
+  boLoginPage,
   boProductsPage,
   boProductsCreateTabDescriptionPage,
   dataLanguages,
@@ -68,7 +68,13 @@ describe('API : POST /product/{productId}/image', async () => {
 
     describe('BackOffice : Fetch the access token', async () => {
       it('should login in BO', async function () {
-        await loginCommon.loginBO(this, page);
+        await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+        await boLoginPage.goTo(page, global.BO.URL);
+        await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boDashboardPage.pageTitle);
       });
 
       it('should go to \'Advanced Parameters > API Client\' page', async function () {

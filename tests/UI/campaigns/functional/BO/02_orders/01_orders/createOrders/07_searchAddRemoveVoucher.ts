@@ -3,7 +3,6 @@ import testContext from '@utils/testContext';
 
 // Import common tests
 import {createCartRuleTest, bulkDeleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
-import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
 import cartRulesPage from '@pages/BO/catalog/discounts';
@@ -12,6 +11,7 @@ import addOrderPage from '@pages/BO/orders/add';
 
 import {
   boDashboardPage,
+  boLoginPage,
   boOrdersPage,
   dataCarriers,
   dataCustomers,
@@ -108,7 +108,13 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
   // 1 - Go to create order page
   describe('Go to create order page', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Orders > Orders\' page', async function () {

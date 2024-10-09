@@ -1,13 +1,11 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import common tests
-import loginCommon from '@commonTests/BO/loginBO';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boLoginPage,
   boProductsPage,
   dataCategories,
   dataProducts,
@@ -33,7 +31,13 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
 
   describe('Filter products table by : ID, Name, Reference, Category, Price, Quantity and Status', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Catalog > Products\' page', async function () {

@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import common tests
-import loginCommon from '@commonTests/BO/loginBO';
-
 // Import pages
 import statsPage from '@pages/BO/stats';
 import newCategoryPage from '@pages/BO/catalog/categories/add';
@@ -15,6 +12,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boLoginPage,
   boOrdersPage,
   boModuleManagerPage,
   boProductsPage,
@@ -47,7 +45,13 @@ describe('BO - Header : Quick access links', async () => {
 
   describe('Check quick access links', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     [

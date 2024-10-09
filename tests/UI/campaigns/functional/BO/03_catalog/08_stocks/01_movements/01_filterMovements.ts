@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
 import {createEmployeeTest, deleteEmployeeTest} from '@commonTests/BO/advancedParameters/employee';
 import cleanTableStockMovements from '@commonTests/BO/catalog/stock';
 
@@ -87,7 +86,13 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
   describe('Check all filters', async () => {
     describe('BO - Bulk edit quantity by setting input value', async () => {
       it('should login in BO', async function () {
-        await loginCommon.loginBO(this, page);
+        await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+        await boLoginPage.goTo(page, global.BO.URL);
+        await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boDashboardPage.pageTitle);
       });
 
       it('should go to \'Catalog > Stocks\' page', async function () {
@@ -342,7 +347,7 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
       it(`should logout from the employee "${global.BO.EMAIL}"`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'logoutFromBOPage', baseContext);
 
-        await loginCommon.logoutBO(this, page);
+        await boDashboardPage.logoutBO(page);
 
         const pageTitle = await boLoginPage.getPageTitle(page);
         expect(pageTitle).to.contains(boLoginPage.pageTitle);
@@ -351,7 +356,8 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
       it(`should login from the employee "${employeeData.email}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'loginBOPageWithEmployee', baseContext);
 
-        await loginCommon.loginBO(this, page, employeeData.email, employeeData.password);
+        await boLoginPage.goTo(page, global.BO.URL);
+        await boLoginPage.successLogin(page, employeeData.email, employeeData.password);
 
         const pageTitle = await boDashboardPage.getPageTitle(page);
         expect(pageTitle).to.contains(boDashboardPage.pageTitle);
@@ -414,7 +420,7 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
       it(`should logout from the employee "${employeeData.email}"`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'logoutFromBOPageWithEmployee', baseContext);
 
-        await loginCommon.logoutBO(this, page);
+        await boDashboardPage.logoutBO(page);
 
         const pageTitle = await boLoginPage.getPageTitle(page);
         expect(pageTitle).to.contains(boLoginPage.pageTitle);
@@ -423,7 +429,8 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
       it(`should login from the employee "${global.BO.EMAIL}"`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'loginBOPage', baseContext);
 
-        await loginCommon.loginBO(this, page);
+        await boLoginPage.goTo(page, global.BO.URL);
+        await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
 
         const pageTitle = await boDashboardPage.getPageTitle(page);
         expect(pageTitle).to.contains(boDashboardPage.pageTitle);

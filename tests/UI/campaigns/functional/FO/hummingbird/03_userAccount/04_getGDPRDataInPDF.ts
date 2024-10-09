@@ -3,7 +3,6 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import loginCommon from '@commonTests/BO/loginBO';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import BO pages
@@ -19,6 +18,7 @@ import type {BrowserContext, Page} from 'playwright';
 import {
   boCustomersPage,
   boDashboardPage,
+  boLoginPage,
   boOrdersPage,
   boShoppingCartsPage,
   dataPaymentMethods,
@@ -175,7 +175,13 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
 
     describe('Get personal information from BO', async () => {
       it('should login in BO', async function () {
-        await loginCommon.loginBO(this, page);
+        await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+        await boLoginPage.goTo(page, global.BO.URL);
+        await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boDashboardPage.pageTitle);
       });
 
       it('should go to \'Customers > Customers\' page', async function () {

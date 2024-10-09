@@ -1,13 +1,12 @@
 import testContext from '@utils/testContext';
 
-import loginCommon from '@commonTests/BO/loginBO';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boApiClientsPage,
   boApiClientsCreatePage,
   boDashboardPage,
+  boLoginPage,
   type FakerAPIClient,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -34,7 +33,13 @@ function createAPIClientTest(apiClient: FakerAPIClient, baseContext: string = 'c
     });
 
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Advanced Parameters > API Client\' page', async function () {
@@ -108,7 +113,13 @@ function deleteAPIClientTest(baseContext: string = 'commonTests-deleteAPIClientT
     });
 
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Advanced Parameters > API Client\' page', async function () {

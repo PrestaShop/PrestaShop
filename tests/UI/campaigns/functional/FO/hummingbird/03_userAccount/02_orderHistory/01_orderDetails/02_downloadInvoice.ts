@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import common tests
-import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByCustomerTest} from '@commonTests/FO/hummingbird/order';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
@@ -14,6 +13,8 @@ import orderHistoryPage from '@pages/FO/hummingbird/myAccount/orderHistory';
 import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
 
 import {
+  boDashboardPage,
+  boLoginPage,
   boOrdersPage,
   boOrdersViewBlockTabListPage,
   dataCustomers,
@@ -82,7 +83,13 @@ describe('FO - Account - Order details : Download invoice', async () => {
 
   describe('Change the first order status to \'Delivered\'', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Orders > Orders\' page', async function () {

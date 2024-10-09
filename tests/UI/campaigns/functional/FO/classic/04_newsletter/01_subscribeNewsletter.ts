@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
 // Import pages
 // Import BO pages
 import {moduleConfigurationPage} from '@pages/BO/modules/moduleConfiguration';
@@ -12,6 +9,7 @@ import {accountIdentityPage} from '@pages/FO/classic/myAccount/identity';
 
 import {
   boDashboardPage,
+  boLoginPage,
   boModuleManagerPage,
   dataCustomers,
   FakerModule,
@@ -113,7 +111,13 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
 
   describe('Go to BO to check if correctly unsubscribed', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to module manager page', async function () {
@@ -155,7 +159,12 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
     });
 
     it('should logout from BO', async function () {
-      await loginCommon.logoutBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'logoutBO', baseContext);
+
+      await boDashboardPage.logoutBO(page);
+
+      const pageTitle = await boLoginPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boLoginPage.pageTitle);
     });
   });
 
@@ -179,7 +188,13 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
 
   describe('Go to BO to check if correctly subscribed', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to module manager page', async function () {
@@ -214,7 +229,12 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
     });
 
     it('should logout from BO', async function () {
-      await loginCommon.logoutBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'logoutBO', baseContext);
+
+      await boDashboardPage.logoutBO(page);
+
+      const pageTitle = await boLoginPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boLoginPage.pageTitle);
     });
   });
 });

@@ -4,7 +4,6 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import importFileTest from '@commonTests/BO/advancedParameters/importFile';
 import {bulkDeleteAddressesTest} from '@commonTests/BO/customers/address';
-import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import addressesPage from '@pages/BO/customers/addresses';
@@ -16,6 +15,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boLoginPage,
   utilsCore,
   utilsFile,
   utilsPlaywright,
@@ -60,7 +60,13 @@ describe('BO - Customers - Addresses : Pagination and sort addresses table', asy
   // 1 : Go to addresses page
   describe('Go to \'Customers > Addresses\' page', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Customers > Addresses\' page', async function () {

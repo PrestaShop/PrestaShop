@@ -3,7 +3,6 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import loginCommon from '@commonTests/BO/loginBO';
 import {createAccountTest, createAddressTest} from '@commonTests/FO/classic/account';
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
@@ -15,6 +14,7 @@ import viewCustomerPage from '@pages/BO/customers/view';
 import {
   boCustomersPage,
   boDashboardPage,
+  boLoginPage,
   boOrdersPage,
   dataCustomers,
   dataPaymentMethods,
@@ -101,7 +101,13 @@ describe('BO - Orders - View and edit order : Check and edit customer block', as
   // Pre-condition: Get customer ID and address ID
   describe('Get customer ID and second address ID', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go \'Customers > Customers\' page', async function () {

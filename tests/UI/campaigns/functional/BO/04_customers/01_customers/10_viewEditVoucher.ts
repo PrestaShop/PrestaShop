@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
 import {createCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 
 // Import pages
@@ -12,6 +11,7 @@ import editRulesPage from '@pages/BO/catalog/discounts/add';
 import {
   boCustomersPage,
   boDashboardPage,
+  boLoginPage,
   dataCustomers,
   FakerCartRule,
   utilsPlaywright,
@@ -64,7 +64,13 @@ describe('BO - Customers - Customers : View/edit voucher', async () => {
 
   describe('View voucher', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Customers > Customers\' page', async function () {

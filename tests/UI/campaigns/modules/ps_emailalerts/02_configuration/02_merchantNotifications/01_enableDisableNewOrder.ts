@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import common tests
-import loginCommon from '@commonTests/BO/loginBO';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
 // Import pages
@@ -11,6 +10,7 @@ import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 
 import {
   boDashboardPage,
+  boLoginPage,
   boModuleManagerPage,
   boOrdersPage,
   dataCustomers,
@@ -98,7 +98,13 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
 
   describe(`BO: case 1 - Enable 'New order' in the module '${dataModules.psEmailAlerts.name}'`, async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Modules > Module Manager\' page', async function () {

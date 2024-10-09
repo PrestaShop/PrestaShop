@@ -8,7 +8,6 @@ import ProductWS from '@webservices/product/productWs';
 // Import commonTests
 import {addWebserviceKey, removeWebserviceKey, setWebserviceStatus} from '@commonTests/BO/advancedParameters/ws';
 import {enableEcoTaxTest, disableEcoTaxTest} from '@commonTests/BO/international/ecoTax';
-import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
 import webservicePage from '@pages/BO/advancedParameters/webservice';
@@ -27,6 +26,7 @@ import type {
 } from 'playwright';
 import {
   boDashboardPage,
+  boLoginPage,
   boProductsPage,
   boProductsCreateTabDescriptionPage,
   boProductsCreateTabShippingPage,
@@ -80,7 +80,13 @@ describe('WS - Products : CRUD', async () => {
     let productNodeID: number;
     describe('Fetch the Webservice Key', () => {
       it('should login in BO', async function () {
-        await loginCommon.loginBO(this, page);
+        await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+        await boLoginPage.goTo(page, global.BO.URL);
+        await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boDashboardPage.pageTitle);
       });
 
       it('should go to \'Advanced Parameters > Webservice\' page', async function () {

@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
 import {resetModule} from '@commonTests/BO/modules/moduleManager';
 
 // Import pages
@@ -11,6 +10,7 @@ import psCheckPayment from '@pages/BO/modules/psCheckPayment';
 
 import {
   boDashboardPage,
+  boLoginPage,
   boPaymentMethodsPage,
   dataModules,
   dataPaymentMethods,
@@ -38,7 +38,13 @@ describe('BO - Payments - Payment methods: Configure module link', async () => {
     });
 
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Payment > Payment Methods\' page', async function () {

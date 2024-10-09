@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
 // Import pages
 import titlesPage from '@pages/BO/shopParameters/customerSettings/titles';
 import addTitlePage from '@pages/BO/shopParameters/customerSettings/titles/add';
@@ -11,6 +8,7 @@ import addTitlePage from '@pages/BO/shopParameters/customerSettings/titles/add';
 import {
   boCustomerSettingsPage,
   boDashboardPage,
+  boLoginPage,
   FakerTitle,
   utilsFile,
   utilsPlaywright,
@@ -47,7 +45,13 @@ describe('BO - Shop Parameters - Customer Settings : Bulk actions', async () => 
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'Shop Parameters > Customer Settings\' page', async function () {

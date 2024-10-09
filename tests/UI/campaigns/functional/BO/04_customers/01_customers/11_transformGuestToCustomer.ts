@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByGuestTest} from '@commonTests/FO/classic/order';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
@@ -13,6 +12,7 @@ import viewCustomerPage from '@pages/BO/customers/view';
 import {
   boCustomersPage,
   boDashboardPage,
+  boLoginPage,
   dataPaymentMethods,
   dataProducts,
   FakerAddress,
@@ -81,7 +81,13 @@ describe('BO - Customers _ Customers : Transform guest to customer account', asy
 
   describe('Transform a guest to customer account', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Customers > Customers\' page', async function () {

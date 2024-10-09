@@ -1,12 +1,10 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
+  boDashboardPage,
   boLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -35,13 +33,19 @@ describe('BO - logout : log out from BO', async () => {
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should logout from BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'logoutFromBOPage', baseContext);
 
-    await loginCommon.logoutBO(this, page);
+    await boDashboardPage.logoutBO(page);
 
     const pageTitle = await boLoginPage.getPageTitle(page);
     expect(pageTitle).to.contains(boLoginPage.pageTitle);
