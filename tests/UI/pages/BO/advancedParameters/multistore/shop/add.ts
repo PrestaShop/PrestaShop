@@ -25,6 +25,8 @@ class AddShop extends BOBasePage {
 
   private readonly categoryRootSelect: string;
 
+  private readonly themeRadio: (themeName: string) => string;
+
   private readonly saveButton: string;
 
   private readonly sourceStoreSelect: string;
@@ -45,6 +47,7 @@ class AddShop extends BOBasePage {
     this.colorInput = '#color_0';
     this.shopGroupSelect = '#id_shop_group';
     this.categoryRootSelect = '#id_category';
+    this.themeRadio = (themeName: string) => `div.form-group div.select_theme input[name="theme_name"][value="${themeName}"]`;
     this.saveButton = `${this.storeForm} #fieldset_0 #shop_form_submit_btn`;
     this.sourceStoreSelect = '#importFromShop';
   }
@@ -66,6 +69,7 @@ class AddShop extends BOBasePage {
     await this.selectByVisibleText(page, this.shopGroupSelect, shopData.shopGroup);
     await this.setValue(page, this.colorInput, shopData.color);
     await this.selectByVisibleText(page, this.categoryRootSelect, shopData.categoryRoot);
+    await page.locator(this.themeRadio(shopData.theme)).click();
 
     await Promise.all([
       page.locator(this.saveButton).evaluate((el: HTMLElement) => el.click()),
