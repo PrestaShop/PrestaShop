@@ -665,6 +665,15 @@ class ImageCore extends ObjectModel
             }
         }
 
+        // We need to delete old thumbnails (if exists) from variant images as well
+        $old_thumbnails = glob(_PS_TMP_IMG_DIR_ . 'product_mini_' . $this->id_product . '_*.' . $this->image_format);
+        if (!empty($old_thumbnails)) {
+            foreach ($old_thumbnails as $file) {
+                // we don't care, if it exists, because glob will handle this
+                @unlink($file);
+            }
+        }
+
         // Can we delete the image folder?
         if (is_dir($this->image_dir . $this->getImgFolder())) {
             $deleteFolder = true;
