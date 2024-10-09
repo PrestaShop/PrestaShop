@@ -10,9 +10,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 import customerServicePage from '@pages/BO/customerService/customerService';
 import contactFormPage from '@pages/BO/modules/contactForm';
 
-// Import FO pages
-import contactUsPage from '@pages/FO/hummingbird/contactUs';
-
 import {
   boDashboardPage,
   boLoginPage,
@@ -21,6 +18,7 @@ import {
   dataModules,
   dataOrders,
   FakerContactMessage,
+  foHummingbirdContactUsPage,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   type MailDev,
@@ -196,17 +194,17 @@ describe('FO - Contact us : Send message from contact us page with customer logg
       // Go to contact us page
       await foHummingbirdLoginPage.goToFooterLink(page, 'Contact us');
 
-      const pageTitle = await contactUsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(contactUsPage.pageTitle);
+      const pageTitle = await foHummingbirdContactUsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdContactUsPage.pageTitle);
     });
 
     it('should send message to customer service', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
 
-      await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.txt`);
+      await foHummingbirdContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.txt`);
 
-      const validationMessage = await contactUsPage.getAlertSuccess(page);
-      expect(validationMessage).to.equal(contactUsPage.validationMessage);
+      const validationMessage = await foHummingbirdContactUsPage.getAlertSuccess(page);
+      expect(validationMessage).to.equal(foHummingbirdContactUsPage.validationMessage);
     });
 
     it('should check that the confirmation mail is in mailbox', async function () {

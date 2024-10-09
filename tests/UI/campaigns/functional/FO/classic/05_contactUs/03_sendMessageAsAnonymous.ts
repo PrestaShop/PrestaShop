@@ -8,8 +8,6 @@ import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advanced
 // Import BO pages
 import customerServicePage from '@pages/BO/customerService/customerService';
 import contactFormPage from '@pages/BO/modules/contactForm';
-// Import FO pages
-import {contactUsPage} from '@pages/FO/classic/contactUs';
 
 import {
   boDashboardPage,
@@ -18,6 +16,7 @@ import {
   dataCustomers,
   dataModules,
   FakerContactMessage,
+  foClassicContactUsPage,
   foClassicHomePage,
   foClassicLoginPage,
   type MailDev,
@@ -196,44 +195,44 @@ describe('FO - Contact us : Send message from contact us page with customer not 
       // Go to contact us page
       await foClassicLoginPage.goToFooterLink(page, 'Contact us');
 
-      const pageTitle = await contactUsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(contactUsPage.pageTitle);
+      const pageTitle = await foClassicContactUsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicContactUsPage.pageTitle);
     });
 
     it('should check if the email is empty', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkEmptyEmail', baseContext);
 
-      await contactUsPage.sendMessage(page, contactUsEmptyEmail);
+      await foClassicContactUsPage.sendMessage(page, contactUsEmptyEmail);
 
-      const invalidEmailError = await contactUsPage.getAlertError(page);
-      expect(invalidEmailError).to.contains(contactUsPage.invalidEmail);
+      const invalidEmailError = await foClassicContactUsPage.getAlertError(page);
+      expect(invalidEmailError).to.contains(foClassicContactUsPage.invalidEmail);
     });
 
     it('should check if the email is invalid', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkInvalidEmail', baseContext);
 
-      await contactUsPage.sendMessage(page, contactUsInvalidEmail);
+      await foClassicContactUsPage.sendMessage(page, contactUsInvalidEmail);
 
-      const invalidEmailError = await contactUsPage.getAlertError(page);
-      expect(invalidEmailError).to.contains(contactUsPage.invalidEmail);
+      const invalidEmailError = await foClassicContactUsPage.getAlertError(page);
+      expect(invalidEmailError).to.contains(foClassicContactUsPage.invalidEmail);
     });
 
     it('should check if the content is empty', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkEmptyContent', baseContext);
 
-      await contactUsPage.sendMessage(page, contactUsEmptyContent);
+      await foClassicContactUsPage.sendMessage(page, contactUsEmptyContent);
 
-      const invalidEmailError = await contactUsPage.getAlertError(page);
-      expect(invalidEmailError).to.contains(contactUsPage.invalidContent);
+      const invalidEmailError = await foClassicContactUsPage.getAlertError(page);
+      expect(invalidEmailError).to.contains(foClassicContactUsPage.invalidContent);
     });
 
     it('should send message to customer service', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
 
-      await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.txt`);
+      await foClassicContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.txt`);
 
-      const validationMessage = await contactUsPage.getAlertSuccess(page);
-      expect(validationMessage).to.equal(contactUsPage.validationMessage);
+      const validationMessage = await foClassicContactUsPage.getAlertSuccess(page);
+      expect(validationMessage).to.equal(foClassicContactUsPage.validationMessage);
     });
 
     it('should check that the confirmation mail is in mailbox', async function () {

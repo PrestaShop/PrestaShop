@@ -7,7 +7,6 @@ import {resetModule} from '@commonTests/BO/modules/moduleManager';
 
 // Import pages
 // Import FO pages
-import {contactUsPage} from '@pages/FO/classic/contactUs';
 import {createAccountPage as foCreateAccountPage} from '@pages/FO/classic/myAccount/add';
 import {accountIdentityPage} from '@pages/FO/classic/myAccount/identity';
 // Import BO pages
@@ -26,6 +25,7 @@ import {
   dataProducts,
   FakerCustomer,
   FakerProduct,
+  foClassicContactUsPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
@@ -464,13 +464,13 @@ describe('GDPR : Consent checkbox customization', async () => {
       page = await modPsGdprBoTabDataConsent.changePage(browserContext, 1);
       await foClassicProductPage.goToFooterLink(page, 'Contact us');
 
-      const pageTitle = await contactUsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(contactUsPage.pageTitle);
+      const pageTitle = await foClassicContactUsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicContactUsPage.pageTitle);
 
-      const hasGDPRLabel = await contactUsPage.hasGDPRLabel(page);
+      const hasGDPRLabel = await foClassicContactUsPage.hasGDPRLabel(page);
       expect(hasGDPRLabel).to.equal(true);
 
-      const gdprLabel = await contactUsPage.getGDPRLabel(page);
+      const gdprLabel = await foClassicContactUsPage.getGDPRLabel(page);
       expect(gdprLabel).to.equal(messageContactForm);
     });
 
@@ -488,9 +488,9 @@ describe('GDPR : Consent checkbox customization', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'hasGDPRLabelFalse', baseContext);
 
       page = await modPsGdprBoTabDataConsent.changePage(browserContext, 1);
-      await contactUsPage.reloadPage(page);
+      await foClassicContactUsPage.reloadPage(page);
 
-      const hasGDPRLabel = await contactUsPage.hasGDPRLabel(page);
+      const hasGDPRLabel = await foClassicContactUsPage.hasGDPRLabel(page);
       expect(hasGDPRLabel).to.equal(false);
     });
 
@@ -508,7 +508,7 @@ describe('GDPR : Consent checkbox customization', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkMailAlertsFormGDPRLabel', baseContext);
 
       page = await modPsGdprBoTabDataConsent.changePage(browserContext, 1);
-      await contactUsPage.searchProduct(page, productOutOfStock.name);
+      await foClassicContactUsPage.searchProduct(page, productOutOfStock.name);
 
       const pageTitleSearchResults = await foClassicSearchResultsPage.getPageTitle(page);
       expect(pageTitleSearchResults).to.equal(foClassicSearchResultsPage.pageTitle);

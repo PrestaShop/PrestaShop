@@ -2,12 +2,12 @@
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import {contactUsPage} from '@pages/FO/classic/contactUs';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
   dataCustomers,
   foClassicCartPage,
+  foClassicContactUsPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicModalQuickViewPage,
@@ -59,8 +59,8 @@ describe('FO - Header and Footer : Check links in header page', async () => {
     // Check Contact us
     await foClassicHomePage.clickOnHeaderLink(page, 'Contact us');
 
-    const pageTitle = await contactUsPage.getPageTitle(page);
-    expect(pageTitle, 'Fail to open FO login page').to.contains(contactUsPage.pageTitle);
+    const pageTitle = await foClassicContactUsPage.getPageTitle(page);
+    expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicContactUsPage.pageTitle);
   });
 
   it('should check \'sign in\' link', async function () {

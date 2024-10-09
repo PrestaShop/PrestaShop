@@ -5,8 +5,6 @@ import testContext from '@utils/testContext';
 // Import BO pages
 import customerServicePage from '@pages/BO/customerService/customerService';
 import viewPage from '@pages/BO/customerService/customerService/view';
-// Import FO pages
-import {contactUsPage} from '@pages/FO/classic/contactUs';
 
 import {
   boDashboardPage,
@@ -14,6 +12,7 @@ import {
   dataCustomers,
   dataOrders,
   FakerContactMessage,
+  foClassicContactUsPage,
   foClassicHomePage,
   foClassicLoginPage,
   utilsFile,
@@ -95,26 +94,26 @@ describe('FO - Contact us : Add attachment', async () => {
     // Go to contact us page
     await foClassicLoginPage.goToFooterLink(page, 'Contact us');
 
-    const pageTitle = await contactUsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(contactUsPage.pageTitle);
+    const pageTitle = await foClassicContactUsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicContactUsPage.pageTitle);
   });
 
   it('should try to send message with csv file to customer service and check error message', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'sendCSVFile', baseContext);
 
-    await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.csv`);
+    await foClassicContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.csv`);
 
-    const validationMessage = await contactUsPage.getAlertError(page);
-    expect(validationMessage).to.equal(contactUsPage.badFileExtensionErrorMessage);
+    const validationMessage = await foClassicContactUsPage.getAlertError(page);
+    expect(validationMessage).to.equal(foClassicContactUsPage.badFileExtensionErrorMessage);
   });
 
   it('should send message with PNG file to customer service and check validation message', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'sendPNGFile', baseContext);
 
-    await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.png`);
+    await foClassicContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.png`);
 
-    const validationMessage = await contactUsPage.getAlertSuccess(page);
-    expect(validationMessage).to.equal(contactUsPage.validationMessage);
+    const validationMessage = await foClassicContactUsPage.getAlertSuccess(page);
+    expect(validationMessage).to.equal(foClassicContactUsPage.validationMessage);
   });
 
   it('should login in BO', async function () {

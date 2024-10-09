@@ -7,8 +7,6 @@ import multiStorePage from '@pages/BO/advancedParameters/multistore';
 import shopPage from '@pages/BO/advancedParameters/multistore/shop';
 import addShopPage from '@pages/BO/advancedParameters/multistore/shop/add';
 import addShopUrlPage from '@pages/BO/advancedParameters/multistore/url/addURL';
-// Import FO pages
-import {contactUsPage} from '@pages/FO/classic/contactUs';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -19,6 +17,7 @@ import {
   boShopParametersPage,
   dataModules,
   FakerShop,
+  foClassicContactUsPage,
   foClassicHomePage,
   modPsGdprBoMain,
   modPsGdprBoTabDataConsent,
@@ -121,17 +120,17 @@ describe('BO - Modules - GDPR : Multistore', async () => {
 
       await foClassicHomePage.goToFooterLink(page, 'Contact us');
 
-      const pageTitle = await contactUsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(contactUsPage.pageTitle);
+      const pageTitle = await foClassicContactUsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicContactUsPage.pageTitle);
 
-      const hasGDPRLabel = await contactUsPage.hasGDPRLabel(page);
+      const hasGDPRLabel = await foClassicContactUsPage.hasGDPRLabel(page);
       expect(hasGDPRLabel).to.equal(false);
     });
 
     it('should go to \'Shop parameters > General\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToGeneralPage', baseContext);
 
-      page = await contactUsPage.changePage(browserContext, 0);
+      page = await foClassicContactUsPage.changePage(browserContext, 0);
       await boDashboardPage.goToSubMenu(
         page,
         boDashboardPage.shopParametersParentLink,

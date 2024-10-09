@@ -10,7 +10,6 @@ import {createAccountTest} from '@commonTests/FO/classic/account';
 // Import BO pages
 // Import FO pages
 import {bestSalesPage} from '@pages/FO/classic/bestSales';
-import {contactUsPage} from '@pages/FO/classic/contactUs';
 import {deliveryPage} from '@pages/FO/classic/delivery';
 import {legalNoticePage} from '@pages/FO/classic/legalNotice';
 import {createAccountPage} from '@pages/FO/classic/myAccount/add';
@@ -31,6 +30,7 @@ import {
   dataCustomers,
   FakerCustomer,
   foClassicAboutUsPage,
+  foClassicContactUsPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyWishlistsPage,
@@ -116,7 +116,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
       {linkSelector: 'Terms and conditions of use', pageTitle: termsAndConditionsOfUsePage.pageTitle},
       {linkSelector: 'About us', pageTitle: foClassicAboutUsPage.pageTitle},
       {linkSelector: 'Secure payment', pageTitle: securePaymentPage.pageTitle},
-      {linkSelector: 'Contact us', pageTitle: contactUsPage.pageTitle},
+      {linkSelector: 'Contact us', pageTitle: foClassicContactUsPage.pageTitle},
       {linkSelector: 'Sitemap', pageTitle: siteMapPage.pageTitle},
       {linkSelector: 'Stores', pageTitle: storesPage.pageTitle},
     ].forEach((args, index: number) => {

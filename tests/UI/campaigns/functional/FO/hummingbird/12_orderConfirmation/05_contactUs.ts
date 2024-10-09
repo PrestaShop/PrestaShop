@@ -9,7 +9,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 import customerServiceMainPage from '@pages/BO/customerService/customerService';
 import customerServiceMessageViewPage from '@pages/BO/customerService/customerService/view';
 // FO pages
-import contactUsPage from '@pages/FO/hummingbird/contactUs';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {
@@ -22,6 +21,7 @@ import {
   foHummingbirdCartPage,
   foHummingbirdCheckoutPage,
   foHummingbirdCheckoutOrderConfirmationPage,
+  foHummingbirdContactUsPage,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdModalQuickViewPage,
@@ -193,8 +193,8 @@ describe('FO - Order confirmation : Contact us', async () => {
 
       await foHummingbirdCheckoutOrderConfirmationPage.goToContactUsPage(page);
 
-      const pageTitle = await contactUsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(contactUsPage.pageTitle);
+      const pageTitle = await foHummingbirdContactUsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foHummingbirdContactUsPage.pageTitle);
     });
   });
 
@@ -202,17 +202,17 @@ describe('FO - Order confirmation : Contact us', async () => {
     it('should check the pre-filled email field', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTheFormInfos', baseContext);
 
-      const emailFieldValue = await contactUsPage.getEmailFieldValue(page);
+      const emailFieldValue = await foHummingbirdContactUsPage.getEmailFieldValue(page);
       expect(emailFieldValue).to.contains(dataCustomers.johnDoe.email);
     });
 
     it('should send the message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sendTheMessage', baseContext);
 
-      await contactUsPage.sendMessage(page, contactUsData, filename);
+      await foHummingbirdContactUsPage.sendMessage(page, contactUsData, filename);
 
-      const sendMessageSuccessAlert = await contactUsPage.getAlertSuccess(page);
-      expect(sendMessageSuccessAlert).to.contains(contactUsPage.validationMessage);
+      const sendMessageSuccessAlert = await foHummingbirdContactUsPage.getAlertSuccess(page);
+      expect(sendMessageSuccessAlert).to.contains(foHummingbirdContactUsPage.validationMessage);
     });
   });
 

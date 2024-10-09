@@ -9,15 +9,13 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 import customerServicePage from '@pages/BO/customerService/customerService';
 import viewPage from '@pages/BO/customerService/customerService/view';
 
-// Import FO pages
-import contactUsPage from '@pages/FO/hummingbird/contactUs';
-
 import {
   boDashboardPage,
   boLoginPage,
   dataCustomers,
   dataOrders,
   FakerContactMessage,
+  foHummingbirdContactUsPage,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   utilsFile,
@@ -108,26 +106,26 @@ describe('FO - Contact us : Add attachment', async () => {
       // Go to contact us page
       await foHummingbirdLoginPage.goToFooterLink(page, 'Contact us');
 
-      const pageTitle = await contactUsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(contactUsPage.pageTitle);
+      const pageTitle = await foHummingbirdContactUsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdContactUsPage.pageTitle);
     });
 
     it('should try to send message with csv file to customer service and check error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sendCSVFile', baseContext);
 
-      await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.csv`);
+      await foHummingbirdContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.csv`);
 
-      const validationMessage = await contactUsPage.getAlertError(page);
-      expect(validationMessage).to.equal(contactUsPage.badFileExtensionErrorMessage);
+      const validationMessage = await foHummingbirdContactUsPage.getAlertError(page);
+      expect(validationMessage).to.equal(foHummingbirdContactUsPage.badFileExtensionErrorMessage);
     });
 
     it('should send message with PNG file to customer service and check validation message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sendPNGFile', baseContext);
 
-      await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.png`);
+      await foHummingbirdContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.png`);
 
-      const validationMessage = await contactUsPage.getAlertSuccess(page);
-      expect(validationMessage).to.equal(contactUsPage.validationMessage);
+      const validationMessage = await foHummingbirdContactUsPage.getAlertSuccess(page);
+      expect(validationMessage).to.equal(foHummingbirdContactUsPage.validationMessage);
     });
 
     it('should login in BO', async function () {

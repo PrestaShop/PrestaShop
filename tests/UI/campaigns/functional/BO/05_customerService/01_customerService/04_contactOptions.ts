@@ -4,8 +4,6 @@ import testContext from '@utils/testContext';
 // Import BO pages
 import customerServicePage from '@pages/BO/customerService/customerService';
 import viewPage from '@pages/BO/customerService/customerService/view';
-// Import FO pages
-import {contactUsPage} from '@pages/FO/classic/contactUs';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -13,6 +11,7 @@ import {
   boDashboardPage,
   boLoginPage,
   FakerContactMessage,
+  foClassicContactUsPage,
   foClassicHomePage,
   utilsFile,
   utilsPlaywright,
@@ -93,19 +92,19 @@ describe('BO - Customer Service : Contact options', async () => {
       // Go to contact us page
       await foClassicHomePage.goToFooterLink(page, 'Contact us');
 
-      const pageTitle = await contactUsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(contactUsPage.pageTitle);
+      const pageTitle = await foClassicContactUsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicContactUsPage.pageTitle);
     });
 
     it('should send message to customer service then close the page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
 
-      await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.jpg`);
+      await foClassicContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.jpg`);
 
-      const validationMessage = await contactUsPage.getAlertSuccess(page);
-      expect(validationMessage).to.equal(contactUsPage.validationMessage);
+      const validationMessage = await foClassicContactUsPage.getAlertSuccess(page);
+      expect(validationMessage).to.equal(foClassicContactUsPage.validationMessage);
 
-      page = await contactUsPage.closePage(browserContext, page, 0);
+      page = await foClassicContactUsPage.closePage(browserContext, page, 0);
     });
   });
 
@@ -174,21 +173,21 @@ describe('BO - Customer Service : Contact options', async () => {
 
         await foClassicHomePage.clickOnHeaderLink(page, 'Contact us');
 
-        const pageTitle = await contactUsPage.getPageTitle(page);
-        expect(pageTitle).to.equal(contactUsPage.pageTitle);
+        const pageTitle = await foClassicContactUsPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foClassicContactUsPage.pageTitle);
       });
 
       it('should check the existence of attachment input in contact us form', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkUploadFile${index}`, baseContext);
 
-        const isVisible = await contactUsPage.isAttachmentInputVisible(page);
+        const isVisible = await foClassicContactUsPage.isAttachmentInputVisible(page);
         expect(isVisible).to.be.equal(test.args.enable);
       });
 
       it('should go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index}`, baseContext);
 
-        page = await contactUsPage.closePage(browserContext, page, 0);
+        page = await foClassicContactUsPage.closePage(browserContext, page, 0);
 
         const pageTitle = await customerServicePage.getPageTitle(page);
         expect(pageTitle).to.contains(customerServicePage.pageTitle);

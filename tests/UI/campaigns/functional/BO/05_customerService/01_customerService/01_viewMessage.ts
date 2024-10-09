@@ -5,8 +5,6 @@ import testContext from '@utils/testContext';
 // Import BO pages
 import customerServicePage from '@pages/BO/customerService/customerService';
 import viewPage from '@pages/BO/customerService/customerService/view';
-// Import FO pages
-import {contactUsPage} from '@pages/FO/classic/contactUs';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -14,6 +12,7 @@ import {
   boDashboardPage,
   boLoginPage,
   FakerContactMessage,
+  foClassicContactUsPage,
   foClassicHomePage,
   utilsFile,
   utilsPlaywright,
@@ -63,17 +62,17 @@ describe('BO - Customer Service : View message', async () => {
       // Go to contact us page
       await foClassicHomePage.goToFooterLink(page, 'Contact us');
 
-      const pageTitle = await contactUsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(contactUsPage.pageTitle);
+      const pageTitle = await foClassicContactUsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicContactUsPage.pageTitle);
     });
 
     it('should send message to customer service', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
 
-      await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.jpg`);
+      await foClassicContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.jpg`);
 
-      const validationMessage = await contactUsPage.getAlertSuccess(page);
-      expect(validationMessage).to.equal(contactUsPage.validationMessage);
+      const validationMessage = await foClassicContactUsPage.getAlertSuccess(page);
+      expect(validationMessage).to.equal(foClassicContactUsPage.validationMessage);
     });
   });
 

@@ -8,8 +8,6 @@ import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advanced
 // Import BO pages
 import customerServicePage from '@pages/BO/customerService/customerService';
 import contactFormPage from '@pages/BO/modules/contactForm';
-// Import FO pages
-import {contactUsPage} from '@pages/FO/classic/contactUs';
 
 import {
   boDashboardPage,
@@ -19,6 +17,7 @@ import {
   dataModules,
   dataOrders,
   FakerContactMessage,
+  foClassicContactUsPage,
   foClassicHomePage,
   foClassicLoginPage,
   type MailDev,
@@ -189,17 +188,17 @@ describe('FO - Contact us : Send message from contact us page with customer logg
       // Go to contact us page
       await foClassicLoginPage.goToFooterLink(page, 'Contact us');
 
-      const pageTitle = await contactUsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(contactUsPage.pageTitle);
+      const pageTitle = await foClassicContactUsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicContactUsPage.pageTitle);
     });
 
     it('should send message to customer service', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
 
-      await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.txt`);
+      await foClassicContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.txt`);
 
-      const validationMessage = await contactUsPage.getAlertSuccess(page);
-      expect(validationMessage).to.equal(contactUsPage.validationMessage);
+      const validationMessage = await foClassicContactUsPage.getAlertSuccess(page);
+      expect(validationMessage).to.equal(foClassicContactUsPage.validationMessage);
     });
 
     it('should check that the confirmation mail is in mailbox', async function () {
