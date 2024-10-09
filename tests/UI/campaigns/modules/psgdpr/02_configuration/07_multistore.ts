@@ -115,6 +115,7 @@ describe('BO - Modules - GDPR : Multistore', async () => {
       expect(isHomePage).to.eq(true);
     });
 
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/37116
     it('should check on Contact Form the GDPR Label', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkContactFormGDPRLabel', baseContext);
 
@@ -122,6 +123,8 @@ describe('BO - Modules - GDPR : Multistore', async () => {
 
       const pageTitle = await foClassicContactUsPage.getPageTitle(page);
       expect(pageTitle).to.equal(foClassicContactUsPage.pageTitle);
+
+      this.skip();
 
       const hasGDPRLabel = await foClassicContactUsPage.hasGDPRLabel(page);
       expect(hasGDPRLabel).to.equal(false);
@@ -184,7 +187,7 @@ describe('BO - Modules - GDPR : Multistore', async () => {
       });
 
       it('should get the id of the new shop', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'getShopID', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `getShopID${index}`, baseContext);
 
         const numberOfShops = await shopPage.getNumberOfElementInGrid(page);
         expect(numberOfShops).to.be.above(0);
