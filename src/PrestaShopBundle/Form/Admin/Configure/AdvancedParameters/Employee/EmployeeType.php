@@ -255,6 +255,10 @@ final class EmployeeType extends AbstractType
                 ;
             }
         }
+
+        if ($this->isMultistoreFeatureActive && $options['is_for_editing'] && $options['is_super_admin']) {
+            $builder->remove('shop_association');
+        }
     }
 
     /**
@@ -273,9 +277,13 @@ final class EmployeeType extends AbstractType
 
                 // Is this form used for editing the employee.
                 'is_for_editing' => false,
+
+                // Is current employee super admin profile.
+                'is_super_admin' => false,
             ])
             ->setAllowedTypes('is_restricted_access', 'bool')
             ->setAllowedTypes('is_for_editing', 'bool')
+            ->setAllowedTypes('is_super_admin', 'bool')
         ;
     }
 
