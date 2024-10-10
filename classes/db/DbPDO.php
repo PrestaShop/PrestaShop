@@ -491,6 +491,58 @@ class DbPDOCore extends Db
     }
 
     /**
+     * Initiate a new transaction.
+     *
+     * @return bool
+     */
+    protected function _beginTransaction(): bool
+    {
+        return $this->link->beginTransaction();
+    }
+
+    /**
+     * Set a named savepoint that transaction can be rolled back to.
+     *
+     * @param string $name Name of savepoint to set
+     *
+     * @return bool
+     */
+    protected function _savepoint($name): bool
+    {
+        $result = $this->link->exec('SAVEPOINT `' . str_replace('`', '\\`', $name) . '`');
+
+        return $result !== false;
+    }
+
+    /**
+     * Commit a transaction.
+     *
+     * @return bool
+     */
+    protected function _commit(): bool
+    {
+        return $this->link->commit();
+    }
+
+    /**
+     * Rollback a transaction.
+     *
+     * @param string $name Optional savepoint to rollback to
+     *
+     * @return bool
+     */
+    protected function _rollback($name = null): bool
+    {
+        if ($name) {
+            $result = $this->link->exec('ROLLBACK TO SAVEPOINT `' . str_replace('`', '\\`', $name) . '`');
+
+            return $result !== false;
+        }
+
+        return $this->link->rollBack();
+    }
+
+    /**
      * Try a connection to the database and set names to UTF-8.
      *
      * @see Db::checkEncoding()
