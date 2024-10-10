@@ -45,9 +45,7 @@ class AddEmployee extends EmployeeBasePage {
     await this.setValue(page, this.passwordInput, employeeData.password);
     await this.selectByVisibleText(page, this.permissionProfileSelect, employeeData.permissionProfile);
     await this.selectByVisibleText(page, this.languageSelect, employeeData.language);
-    if (employeeData.permissionProfile !== 'Translator') {
-      await this.selectDefaultPage(page, employeeData.defaultPage);
-    }
+    await this.selectDefaultPage(page, employeeData.defaultPage);
     // replace toggle by 1 in the selector if active = YES / 0 if active = NO
     await this.setChecked(page, this.statusToggleInput(employeeData.active ? 1 : 0));
     await this.clickAndWaitForLoadState(page, this.saveButton);
