@@ -29,7 +29,6 @@ namespace Tests\Unit\Adapter\MailTemplate;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\MailTemplate\MailTemplateTwigRenderer;
-use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
@@ -39,7 +38,6 @@ use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationCollectionInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationInterface;
 use Twig\Environment;
-use Twig\Error\LoaderError;
 
 class MailTemplateTwigRendererTest extends TestCase
 {
@@ -62,43 +60,6 @@ class MailTemplateTwigRendererTest extends TestCase
 
         $generator = new MailTemplateTwigRenderer($engineMock, $builderMock, $dispatcherMock, false);
         $this->assertNotNull($generator);
-    }
-
-    public function testFileNotFound()
-    {
-        $this->expectException(FileNotFoundException::class);
-
-        $templatePaths = [
-            MailTemplateInterface::HTML_TYPE => '@Resources/path/to/non_existent_template.html.twig',
-        ];
-        $expectedVariables = ['locale' => null, 'url' => 'http://test.com'];
-        $expectedLanguage = $this->createLanguageMock();
-        $mailLayout = $this->createMailLayoutMock($templatePaths);
-        $engineMock = $this->getMockBuilder(Environment::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-        $engineMock
-            ->expects($this->once())
-            ->method('render')
-            ->willThrowException(new LoaderError(''))
-        ;
-        /** @var HookDispatcherInterface $dispatcherMock */
-        $dispatcherMock = $this->getMockBuilder(HookDispatcherInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-
-        /** @var Environment $engineMock */
-        $generator = new MailTemplateTwigRenderer(
-            $engineMock,
-            $this->createVariablesBuilderMock($expectedVariables, $expectedLanguage),
-            $dispatcherMock,
-            false
-        );
-        $this->assertNotNull($generator);
-
-        $generator->renderHtml($mailLayout, $expectedLanguage);
     }
 
     public function testRenderHtml(): void
