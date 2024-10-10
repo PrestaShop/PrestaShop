@@ -2618,7 +2618,7 @@ class AdminControllerCore extends Controller
         $helper->override_folder = $this->tpl_folder;
         $helper->currentIndex = self::$currentIndex;
         $helper->table = $this->table;
-        if ($helper->name_controller === null) {
+        if ($helper->name_controller === null || empty($helper->name_controller)) {
             $helper->name_controller = Tools::getValue('controller');
         }
         $helper->identifier = $this->identifier;
