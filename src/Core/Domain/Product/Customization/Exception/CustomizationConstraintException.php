@@ -45,4 +45,9 @@ class CustomizationConstraintException extends CustomizationException
      * When customization id is invalid
      */
     public const INVALID_ID = 3;
+
+    /**
+     * When message is invalid
+     */
+    public const FIELD_MESSAGE_IS_INVALID = 4;
 }
