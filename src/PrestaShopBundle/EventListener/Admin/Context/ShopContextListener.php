@@ -104,9 +104,9 @@ class ShopContextListener implements EventSubscriberInterface
             return;
         }
 
+        $request = $event->getRequest();
         $psSslEnabled = (bool) $this->configuration->get('PS_SSL_ENABLED', null, ShopConstraint::allShops());
-
-        $this->shopContextBuilder->setSecureMode($psSslEnabled && $event->getRequest()->isSecure());
+        $this->shopContextBuilder->setSecureMode($psSslEnabled && $request->isSecure());
 
         $redirectResponse = $this->redirectShopContext($event);
         if ($redirectResponse) {
@@ -115,27 +115,49 @@ class ShopContextListener implements EventSubscriberInterface
             return;
         }
 
-        if (!$this->multistoreFeature->isUsed()) {
-            $shopConstraint = ShopConstraint::shop($this->getConfiguredDefaultShopId());
-        } else {
-            $shopConstraint = $this->getMultiShopConstraint($event->getRequest());
-        }
+        $shopConstraint = $this->determineShopConstraint($request);
         $this->shopContextBuilder->setShopConstraint($shopConstraint);
 
-        // In all cases a shop must be set for the context even if it's the default one
-        if (!$shopConstraint->getShopId()) {
-            $this->shopContextBuilder->setShopId($this->getConfiguredDefaultShopId());
-        } else {
-            $this->shopContextBuilder->setShopId($shopConstraint->getShopId()->getValue());
-        }
+        // Always set a shop ID for the context
+        $shopId = $shopConstraint->getShopId() ? $shopConstraint->getShopId()->getValue() : $this->getConfiguredDefaultShopId();
+        $this->shopContextBuilder->setShopId($shopId);
 
-        // Set shop constraint easily accessible via request attribute
-        $event->getRequest()->attributes->set('shopConstraint', $shopConstraint);
+        // Set shop constraint as request attribute
+        $request->attributes->set('shopConstraint', $shopConstraint);
     }
 
     private function getConfiguredDefaultShopId(): int
     {
         return (int) $this->configuration->get('PS_SHOP_DEFAULT', null, ShopConstraint::allShops());
+    }
+
+    private function determineShopConstraint(Request $request): ShopConstraint
+    {
+        // firstly check if the displayed legacy controller forces All shops mode
+        $legacyConstraint = $this->getLegacyMultiShopConstraint($request);
+        if ($legacyConstraint) {
+            return $legacyConstraint;
+        }
+
+        if ($this->multistoreFeature->isUsed()) {
+            return $this->getMultiShopConstraint($request);
+        }
+
+        return ShopConstraint::shop($this->getConfiguredDefaultShopId());
+    }
+
+    /**
+     * @return ShopConstraint|null
+     */
+    private function getLegacyMultiShopConstraint(Request $request)
+    {
+        $multishopContext = $request->attributes->get(LegacyControllerConstants::MULTISHOP_CONTEXT_ATTRIBUTE);
+
+        if ($multishopContext === ShopConstraint::ALL_SHOPS) {
+            return ShopConstraint::allShops();
+        }
+
+        return null;
     }
 
     /**
@@ -147,13 +169,6 @@ class ShopContextListener implements EventSubscriberInterface
         $shopConstraint = $this->getShopConstraintFromRouteAttribute($request);
         if ($shopConstraint) {
             return $shopConstraint;
-        }
-
-        // Check if the displayed legacy controller forces All shops mode (check already performed by LegacyRouterChecker)
-        $isAllShopContext = $request->attributes->get(LegacyControllerConstants::IS_ALL_SHOP_CONTEXT_ATTRIBUTE);
-
-        if ($isAllShopContext) {
-            return ShopConstraint::allShops();
         }
 
         $shopConstraint = ShopConstraint::allShops();

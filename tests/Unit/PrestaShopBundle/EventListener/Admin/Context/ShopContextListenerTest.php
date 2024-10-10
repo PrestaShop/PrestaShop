@@ -34,7 +34,9 @@ use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\EventListener\Admin\Context\ShopContextListener;
+use PrestaShopBundle\Routing\LegacyControllerConstants;
 use PrestaShopBundle\Security\Admin\TokenAttributes;
+use Shop;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -105,6 +107,34 @@ class ShopContextListenerTest extends ContextEventListenerTestCase
         $listener->initShopContext($event);
 
         $this->assertEquals($expectedShopId, $this->getPrivateField($shopContextBuilder, 'shopId'));
+        $this->assertEquals($expectedShopConstraint, $this->getPrivateField($shopContextBuilder, 'shopConstraint'));
+        $this->assertEquals($expectedShopConstraint, $event->getRequest()->attributes->get('shopConstraint'));
+    }
+
+    public function testLegacyControllerForceMultiShop(): void
+    {
+        $request = new Request();
+        $request->attributes->set(LegacyControllerConstants::MULTISHOP_CONTEXT_ATTRIBUTE, Shop::CONTEXT_ALL);
+        $event = $this->createRequestEvent($request);
+
+        $shopContextBuilder = new ShopContextBuilder(
+            $this->mockShopRepository(self::DEFAULT_SHOP_ID),
+            $this->mockContextStateManager(),
+            $this->mockMultistoreFeature(false),
+        );
+
+        $listener = new ShopContextListener(
+            $shopContextBuilder,
+            $this->mockEmployeeContext(),
+            $this->mockConfiguration(['PS_SHOP_DEFAULT' => self::DEFAULT_SHOP_ID, 'PS_SSL_ENABLED' => self::PS_SSL_ENABLED]),
+            $this->mockMultistoreFeature(false),
+            $this->mockRouter(),
+            $this->mockSecurity(),
+        );
+        $listener->initShopContext($event);
+
+        $expectedShopConstraint = ShopConstraint::allShops();
+        $this->assertEquals(self::DEFAULT_SHOP_ID, $this->getPrivateField($shopContextBuilder, 'shopId'));
         $this->assertEquals($expectedShopConstraint, $this->getPrivateField($shopContextBuilder, 'shopConstraint'));
         $this->assertEquals($expectedShopConstraint, $event->getRequest()->attributes->get('shopConstraint'));
     }
