@@ -126,9 +126,6 @@ describe('BO - Catalog - Attributes & Features : Change feature position', async
     it('should change second feature position to 3', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFeaturePosition', baseContext);
 
-      // Close alert
-      await featuresPage.closeAlertBlock(page);
-
       // Get third row feature name
       const secondRowFeatureName = await featuresPage.getTextColumn(page, 2, 'name', 'position');
 

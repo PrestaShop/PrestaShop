@@ -27,7 +27,7 @@ Delete the non ordered shopping carts
 Filter shopping carts By :
 Id, order id, customer, carrier, date and online
 */
-describe('BO - Orders - Shopping carts: Filter & sort table', async () => {
+describe('BO - Orders - Shopping carts: Filter shopping cart table', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfShoppingCarts: number;
@@ -153,7 +153,7 @@ describe('BO - Orders - Shopping carts: Filter & sort table', async () => {
         testIdentifier: 'filterCustomerLastName',
         filterType: 'input',
         filterBy: 'customer_name',
-        filterValue: dataShoppingCarts[3].customer.lastName.substring(0, 2),
+        filterValue: dataShoppingCarts[3].customer.lastName.substring(0, 3),
       },
       {
         testIdentifier: 'filterCarrier',
