@@ -1,13 +1,10 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import BO pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+
 import {
   boDashboardPage,
+  boFeatureFlagPage,
   boLoginPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -19,7 +16,7 @@ function setFeatureFlag(featureFlag: string, expectedStatus: boolean, baseContex
   let title: string;
 
   switch (featureFlag) {
-    case featureFlagPage.featureFlagAdminAPI:
+    case boFeatureFlagPage.featureFlagAdminAPI:
       title = 'Authorization server';
       break;
     default:
@@ -55,17 +52,17 @@ function setFeatureFlag(featureFlag: string, expectedStatus: boolean, baseContex
         boDashboardPage.advancedParametersLink,
         boDashboardPage.featureFlagLink,
       );
-      await featureFlagPage.closeSfToolBar(page);
+      await boFeatureFlagPage.closeSfToolBar(page);
 
-      const pageTitle = await featureFlagPage.getPageTitle(page);
-      expect(pageTitle).to.contains(featureFlagPage.pageTitle);
+      const pageTitle = await boFeatureFlagPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boFeatureFlagPage.pageTitle);
     });
 
     it(`should ${expectedStatus ? 'enable' : 'disable'} "${title}"`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setFeatureFlag', baseContext);
 
-      const successMessage = await featureFlagPage.setFeatureFlag(page, featureFlag, expectedStatus);
-      expect(successMessage).to.be.contain(featureFlagPage.successfulUpdateMessage);
+      const successMessage = await boFeatureFlagPage.setFeatureFlag(page, featureFlag, expectedStatus);
+      expect(successMessage).to.be.contain(boFeatureFlagPage.successfulUpdateMessage);
     });
   });
 }
