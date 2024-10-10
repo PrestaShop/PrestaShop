@@ -1479,6 +1479,9 @@ class CarrierCore extends ObjectModel
 
         if ($ps_country_default === null) {
             $ps_country_default = Configuration::get('PS_COUNTRY_DEFAULT');
+            if (!empty(Context::getContext()->cookie->iso_code_country) && (int) Country::getByIso(Context::getContext()->cookie->iso_code_country) > 0) {
+    $ps_country_default = Country::getByIso(Context::getContext()->cookie->iso_code_country);
+            }
         }
 
         if (null === $id_shop) {
