@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 // Import BO pages
 import customerServicePage from '@pages/BO/customerService/customerService';
 // Import FO pages
-import {contactUsPage} from '@pages/FO/classic/contactUs';
 import {gdprPersonalDataPage} from '@pages/FO/classic/myAccount/gdprPersonalData';
 
 import {
@@ -14,6 +13,7 @@ import {
   dataCustomers,
   dataOrders,
   FakerContactMessage,
+  foClassicContactUsPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
@@ -102,17 +102,17 @@ describe('FO - Account : Contact us on GDPR page', async () => {
 
     await gdprPersonalDataPage.goToContactUsPage(page);
 
-    const pageTitle = await contactUsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(contactUsPage.pageTitle);
+    const pageTitle = await foClassicContactUsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicContactUsPage.pageTitle);
   });
 
   it('should send message to customer service', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
 
-    await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.txt`);
+    await foClassicContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.txt`);
 
-    const validationMessage = await contactUsPage.getAlertSuccess(page);
-    expect(validationMessage).to.equal(contactUsPage.validationMessage);
+    const validationMessage = await foClassicContactUsPage.getAlertSuccess(page);
+    expect(validationMessage).to.equal(foClassicContactUsPage.validationMessage);
   });
 
   it('should login in BO', async function () {

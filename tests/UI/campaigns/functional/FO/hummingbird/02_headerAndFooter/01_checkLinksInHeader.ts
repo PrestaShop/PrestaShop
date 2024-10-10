@@ -5,12 +5,12 @@ import testContext from '@utils/testContext';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
-import contactUsPage from '@pages/FO/hummingbird/contactUs';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {
   dataCustomers,
   foHummingbirdCartPage,
+  foHummingbirdContactUsPage,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdModalQuickViewPage,
@@ -66,8 +66,8 @@ describe('FO - Header and Footer : Check links in header page', async () => {
       // Check Contact us
       await foHummingbirdHomePage.clickOnHeaderLink(page, 'Contact us');
 
-      const pageTitle = await contactUsPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(contactUsPage.pageTitle);
+      const pageTitle = await foHummingbirdContactUsPage.getPageTitle(page);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foHummingbirdContactUsPage.pageTitle);
     });
 
     it('should check \'sign in\' link', async function () {

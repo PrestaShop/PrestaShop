@@ -11,7 +11,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 // Import BO pages
 // Import FO pages
 import bestSalesPage from '@pages/FO/hummingbird/bestSales';
-import contactUsPage from '@pages/FO/hummingbird/contactUs';
 import deliveryPage from '@pages/FO/hummingbird/delivery';
 import legalNoticePage from '@pages/FO/hummingbird/legalNotice';
 import createAccountPage from '@pages/FO/hummingbird/myAccount/add';
@@ -32,6 +31,7 @@ import {
   dataCustomers,
   FakerCustomer,
   foHummingbirdAboutUsPage,
+  foHummingbirdContactUsPage,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyWishlistsPage,
@@ -120,7 +120,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
       {linkSelector: 'Terms and conditions of use', pageTitle: termsAndConditionsOfUsePage.pageTitle},
       {linkSelector: 'About us', pageTitle: foHummingbirdAboutUsPage.pageTitle},
       {linkSelector: 'Secure payment', pageTitle: securePaymentPage.pageTitle},
-      {linkSelector: 'Contact us', pageTitle: contactUsPage.pageTitle},
+      {linkSelector: 'Contact us', pageTitle: foHummingbirdContactUsPage.pageTitle},
       {linkSelector: 'Sitemap', pageTitle: siteMapPage.pageTitle},
       {linkSelector: 'Stores', pageTitle: storesPage.pageTitle},
     ].forEach((args, index: number) => {

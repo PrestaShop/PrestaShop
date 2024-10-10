@@ -6,7 +6,6 @@ import testContext from '@utils/testContext';
 import customerServiceMainPage from '@pages/BO/customerService/customerService';
 import customerServiceMessageViewPage from '@pages/BO/customerService/customerService/view';
 // FO pages
-import {contactUsPage} from '@pages/FO/classic/contactUs';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
@@ -19,6 +18,7 @@ import {
   foClassicCartPage,
   foClassicCheckoutPage,
   foClassicCheckoutOrderConfirmationPage,
+  foClassicContactUsPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicModalQuickViewPage,
@@ -186,8 +186,8 @@ describe('FO - Order confirmation : Contact us', async () => {
 
       await foClassicCheckoutOrderConfirmationPage.goToContactUsPage(page);
 
-      const pageTitle = await contactUsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(contactUsPage.pageTitle);
+      const pageTitle = await foClassicContactUsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foClassicContactUsPage.pageTitle);
     });
   });
 
@@ -195,17 +195,17 @@ describe('FO - Order confirmation : Contact us', async () => {
     it('should check the pre-filled email field', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTheFormInfos', baseContext);
 
-      const emailFieldValue = await contactUsPage.getEmailFieldValue(page);
+      const emailFieldValue = await foClassicContactUsPage.getEmailFieldValue(page);
       expect(emailFieldValue).to.contains(dataCustomers.johnDoe.email);
     });
 
     it('should send the message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sendTheMessage', baseContext);
 
-      await contactUsPage.sendMessage(page, contactUsData, filename);
+      await foClassicContactUsPage.sendMessage(page, contactUsData, filename);
 
-      const sendMessageSuccessAlert = await contactUsPage.getAlertSuccess(page);
-      expect(sendMessageSuccessAlert).to.contains(contactUsPage.validationMessage);
+      const sendMessageSuccessAlert = await foClassicContactUsPage.getAlertSuccess(page);
+      expect(sendMessageSuccessAlert).to.contains(foClassicContactUsPage.validationMessage);
     });
   });
 

@@ -10,7 +10,6 @@ import viewCustomerPage from '@pages/BO/customers/view';
 import customerServicePage from '@pages/BO/customerService/customerService';
 
 // Import FO pages
-import contactUsPage from '@pages/FO/hummingbird/contactUs';
 import createAccountPage from '@pages/FO/hummingbird/myAccount/add';
 import gdprPersonalDataPage from '@pages/FO/hummingbird/myAccount/gdprPersonalData';
 
@@ -28,6 +27,7 @@ import {
   foHummingbirdCartPage,
   foHummingbirdCheckoutPage,
   foHummingbirdCheckoutOrderConfirmationPage,
+  foHummingbirdContactUsPage,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
@@ -683,17 +683,17 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         // Go to contact us page
         await foHummingbirdLoginPage.goToFooterLink(page, 'Contact us');
 
-        const pageTitle = await contactUsPage.getPageTitle(page);
-        expect(pageTitle).to.equal(contactUsPage.pageTitle);
+        const pageTitle = await foHummingbirdContactUsPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foHummingbirdContactUsPage.pageTitle);
       });
 
       it('should send message to customer service', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
 
-        await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.txt`);
+        await foHummingbirdContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.txt`);
 
-        const validationMessage = await contactUsPage.getAlertSuccess(page);
-        expect(validationMessage).to.equal(contactUsPage.validationMessage);
+        const validationMessage = await foHummingbirdContactUsPage.getAlertSuccess(page);
+        expect(validationMessage).to.equal(foHummingbirdContactUsPage.validationMessage);
       });
 
       it('should go to my account page', async function () {

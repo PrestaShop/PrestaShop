@@ -7,7 +7,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 // Import BO pages
 import customerServicePage from '@pages/BO/customerService/customerService';
 // Import FO pages
-import contactUsPage from '@pages/FO/hummingbird/contactUs';
 import gdprPersonalDataPage from '@pages/FO/hummingbird/myAccount/gdprPersonalData';
 
 import {
@@ -16,6 +15,7 @@ import {
   dataCustomers,
   dataOrders,
   FakerContactMessage,
+  foHummingbirdContactUsPage,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
@@ -108,17 +108,17 @@ describe('FO - Account : Contact us on GDPR page', async () => {
 
       await gdprPersonalDataPage.goToContactUsPage(page);
 
-      const pageTitle = await contactUsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(contactUsPage.pageTitle);
+      const pageTitle = await foHummingbirdContactUsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdContactUsPage.pageTitle);
     });
 
     it('should send message to customer service', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
 
-      await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.txt`);
+      await foHummingbirdContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.txt`);
 
-      const validationMessage = await contactUsPage.getAlertSuccess(page);
-      expect(validationMessage).to.equal(contactUsPage.validationMessage);
+      const validationMessage = await foHummingbirdContactUsPage.getAlertSuccess(page);
+      expect(validationMessage).to.equal(foHummingbirdContactUsPage.validationMessage);
     });
 
     it('should login in BO', async function () {

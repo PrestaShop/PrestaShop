@@ -14,7 +14,6 @@ import productCommentsPage from '@pages/BO/modules/productComments';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {merchandiseReturnsPage as foMerchandiseReturnsPage} from '@pages/FO/classic/myAccount/merchandiseReturns';
-import {contactUsPage} from '@pages/FO/classic/contactUs';
 import addCustomerPage from '@pages/BO/customers/add';
 
 // Import common tests
@@ -39,6 +38,7 @@ import {
   foClassicCartPage,
   foClassicCheckoutPage,
   foClassicCheckoutOrderConfirmationPage,
+  foClassicContactUsPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
@@ -498,23 +498,23 @@ describe('BO - Dashboard : Activity overview', async () => {
 
         await foClassicHomePage.goToFooterLink(page, 'Contact us');
 
-        const pageTitle = await contactUsPage.getPageTitle(page);
-        expect(pageTitle).to.equal(contactUsPage.pageTitle);
+        const pageTitle = await foClassicContactUsPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foClassicContactUsPage.pageTitle);
       });
 
       it('should send message to customer service', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
 
-        await contactUsPage.sendMessage(page, contactUsData);
+        await foClassicContactUsPage.sendMessage(page, contactUsData);
 
-        const validationMessage = await contactUsPage.getAlertSuccess(page);
-        expect(validationMessage).to.equal(contactUsPage.validationMessage);
+        const validationMessage = await foClassicContactUsPage.getAlertSuccess(page);
+        expect(validationMessage).to.equal(foClassicContactUsPage.validationMessage);
       });
 
       it('should go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo3', baseContext);
 
-        page = await contactUsPage.closePage(browserContext, page, 0);
+        page = await foClassicContactUsPage.closePage(browserContext, page, 0);
 
         const pageTitle = await customerServicePage.getPageTitle(page);
         expect(pageTitle).to.contains(customerServicePage.pageTitle);

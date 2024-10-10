@@ -10,9 +10,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 import customerServicePage from '@pages/BO/customerService/customerService';
 import contactFormPage from '@pages/BO/modules/contactForm';
 
-// Import FO pages
-import contactUsPage from '@pages/FO/hummingbird/contactUs';
-
 import {
   boDashboardPage,
   boLoginPage,
@@ -20,6 +17,7 @@ import {
   dataCustomers,
   dataModules,
   FakerContactMessage,
+  foHummingbirdContactUsPage,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   type MailDev,
@@ -201,44 +199,44 @@ describe('FO - Contact us : Send message from contact us page with customer not 
       // Go to contact us page
       await foHummingbirdLoginPage.goToFooterLink(page, 'Contact us');
 
-      const pageTitle = await contactUsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(contactUsPage.pageTitle);
+      const pageTitle = await foHummingbirdContactUsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdContactUsPage.pageTitle);
     });
 
     it('should check if the email is empty', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkEmptyEmail', baseContext);
 
-      await contactUsPage.sendMessage(page, contactUsEmptyEmail);
+      await foHummingbirdContactUsPage.sendMessage(page, contactUsEmptyEmail);
 
-      const invalidEmailError = await contactUsPage.getAlertError(page);
-      expect(invalidEmailError).to.contains(contactUsPage.invalidEmail);
+      const invalidEmailError = await foHummingbirdContactUsPage.getAlertError(page);
+      expect(invalidEmailError).to.contains(foHummingbirdContactUsPage.invalidEmail);
     });
 
     it('should check if the email is invalid', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkInvalidEmail', baseContext);
 
-      await contactUsPage.sendMessage(page, contactUsInvalidEmail);
+      await foHummingbirdContactUsPage.sendMessage(page, contactUsInvalidEmail);
 
-      const invalidEmailError = await contactUsPage.getAlertError(page);
-      expect(invalidEmailError).to.contains(contactUsPage.invalidEmail);
+      const invalidEmailError = await foHummingbirdContactUsPage.getAlertError(page);
+      expect(invalidEmailError).to.contains(foHummingbirdContactUsPage.invalidEmail);
     });
 
     it('should check if the content is empty', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkEmptyContent', baseContext);
 
-      await contactUsPage.sendMessage(page, contactUsEmptyContent);
+      await foHummingbirdContactUsPage.sendMessage(page, contactUsEmptyContent);
 
-      const invalidEmailError = await contactUsPage.getAlertError(page);
-      expect(invalidEmailError).to.contains(contactUsPage.invalidContent);
+      const invalidEmailError = await foHummingbirdContactUsPage.getAlertError(page);
+      expect(invalidEmailError).to.contains(foHummingbirdContactUsPage.invalidContent);
     });
 
     it('should send message to customer service', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
 
-      await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.txt`);
+      await foHummingbirdContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.txt`);
 
-      const validationMessage = await contactUsPage.getAlertSuccess(page);
-      expect(validationMessage).to.equal(contactUsPage.validationMessage);
+      const validationMessage = await foHummingbirdContactUsPage.getAlertSuccess(page);
+      expect(validationMessage).to.equal(foHummingbirdContactUsPage.validationMessage);
     });
 
     it('should check that the confirmation mail is in mailbox', async function () {

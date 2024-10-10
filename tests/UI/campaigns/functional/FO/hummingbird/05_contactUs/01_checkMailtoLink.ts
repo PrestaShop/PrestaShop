@@ -4,13 +4,11 @@ import testContext from '@utils/testContext';
 // Import common tests
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
-// Import FO pages
-import contactUsPage from '@pages/FO/hummingbird/contactUs';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   dataEmployees,
+  foHummingbirdContactUsPage,
   foHummingbirdHomePage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -59,14 +57,14 @@ describe('FO - Contact us : Check mail link on contact us page', async () => {
 
       await foHummingbirdHomePage.clickOnHeaderLink(page, 'Contact us');
 
-      const pageTitle = await contactUsPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(contactUsPage.pageTitle);
+      const pageTitle = await foHummingbirdContactUsPage.getPageTitle(page);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foHummingbirdContactUsPage.pageTitle);
     });
 
     it('should check email us link', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkEmailUsLink', baseContext);
 
-      const emailUsLinkHref = await contactUsPage.getEmailUsLink(page);
+      const emailUsLinkHref = await foHummingbirdContactUsPage.getEmailUsLink(page);
       expect(emailUsLinkHref).to.equal(`mailto:${dataEmployees.defaultEmployee.email}`);
     });
   });
