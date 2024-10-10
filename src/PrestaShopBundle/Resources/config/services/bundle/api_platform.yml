@@ -44,6 +44,12 @@ services:
       $innerFactory: '@.inner'
       $isDebug: '%kernel.debug%'
 
+  PrestaShopBundle\ApiPlatform\Metadata\Resource\Factory\OpenApiMetadataCollectionFactoryDecorator:
+    decorates: api_platform.metadata.resource.metadata_collection_factory
+    autowire: true
+    arguments:
+      $innerFactory: '@.inner'
+
   # This service depends on ResourceMetadataCollectionFactoryInterface (auto wired) and can extract the scopes defined on operations
   PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractor:
     autowire: true
@@ -58,3 +64,6 @@ services:
     decorates: PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractor
 
   PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractorInterface: '@PrestaShopBundle\ApiPlatform\Scopes\CachedApiResourceScopesExtractor'
+
+  PrestaShopBundle\ApiPlatform\OpenApi\RequestBodyFactory:
+    autowire: true
