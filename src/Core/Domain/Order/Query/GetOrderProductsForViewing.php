@@ -63,23 +63,25 @@ class GetOrderProductsForViewing
      * @param int $orderId
      * @param int $offset
      * @param int $limit
-     * @param string $productsSorting
+     * @param array $productsSortingFields
+     * @param string $productsSortingOrder
      *
      * @return GetOrderProductsForViewing
      *
-     * @throws OrderException
      * @throws InvalidSortingException
+     * @throws OrderException
      */
     public static function paginated(
         int $orderId,
         int $offset,
         int $limit,
-        string $productsSorting = QuerySorting::ASC
-    ) {
+        array $productsSortingFields = ['date_add'],
+        string $productsSortingOrder = QuerySorting::DESC
+    ): GetOrderProductsForViewing {
         $query = new self();
 
         $query->orderId = new OrderId($orderId);
-        $query->productsSorting = new QuerySorting($productsSorting);
+        $query->productsSorting = new QuerySorting($productsSortingFields, $productsSortingOrder);
         $query->offset = $offset;
         $query->limit = $limit;
 
@@ -90,18 +92,19 @@ class GetOrderProductsForViewing
      * Builds query for getting all results
      *
      * @param int $orderId
-     * @param string $productsSorting
+     * @param array $productsSortingFields
+     * @param string $productsSortingOrder
      *
      * @return GetOrderProductsForViewing
      *
-     * @throws OrderException
      * @throws InvalidSortingException
+     * @throws OrderException
      */
-    public static function all(int $orderId, string $productsSorting = QuerySorting::ASC)
+    public static function all(int $orderId, array $productsSortingFields, string $productsSortingOrder = QuerySorting::DESC): GetOrderProductsForViewing
     {
         $query = new self();
         $query->orderId = new OrderId($orderId);
-        $query->productsSorting = new QuerySorting($productsSorting);
+        $query->productsSorting = new QuerySorting($productsSortingFields, $productsSortingOrder);
 
         return $query;
     }
