@@ -47,10 +47,10 @@ function tinySetup(config) {
 
   var default_config = {
     selector: '.rte',
-    plugins: 'align colorpicker link image filemanager table media placeholder lists advlist code table autoresize',
+    plugins: 'align colorpicker link image filemanager table media placeholder lists advlist code table autoresize paste',
     browser_spellcheck: true,
     toolbar1:
-      'code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect',
+      'code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect,pastetext',
     toolbar2: '',
     external_filemanager_path: baseAdminDir + 'filemanager/',
     filemanager_title: 'File manager',
@@ -62,9 +62,9 @@ function tinySetup(config) {
     skin: 'prestashop',
     mobile: {
       theme: 'mobile',
-      plugins: ['lists', 'align', 'link', 'table', 'placeholder', 'advlist', 'code'],
+      plugins: ['lists', 'align', 'link', 'table', 'placeholder', 'advlist', 'code', 'paste'],
       toolbar:
-        'undo code colorpicker bold italic underline strikethrough blockquote link align bullist numlist table formatselect styleselect',
+        'undo code colorpicker bold italic underline strikethrough blockquote link align bullist numlist table formatselect styleselect pastetext',
     },
     menubar: false,
     statusbar: false,
