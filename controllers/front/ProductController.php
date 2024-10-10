@@ -433,11 +433,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 'filterProductContent',
                 ['object' => $product_for_template],
                 null,
-                false,
+                true,
                 true,
                 false,
                 null,
-                true
+                false
             );
             if (!empty($filteredProduct['object'])) {
                 $product_for_template = $filteredProduct['object'];
