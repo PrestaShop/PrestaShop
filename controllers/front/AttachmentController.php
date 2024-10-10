@@ -43,7 +43,7 @@ class AttachmentControllerCore extends FrontController
         header('Content-Length: ' . filesize(_PS_DOWNLOAD_DIR_ . $attachment->file));
         header('Content-Disposition: attachment; filename="' . utf8_decode($attachment->file_name) . '"');
         @set_time_limit(0);
-        $this->readfileChunked(_PS_DOWNLOAD_DIR_ . $attachment->file);
+        $this->readfileChunked(_PS_DOWNLOAD_DIR_ . basename($attachment->file));
         exit;
     }
 
