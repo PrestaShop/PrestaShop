@@ -207,7 +207,13 @@ class ConfigurationTestCore
 
     public static function test_gd()
     {
-        return function_exists('imagecreatetruecolor');
+        if (function_exists('gd_info')) {
+            $gd = gd_info();
+
+            return !empty($gd['JPEG Support']);
+        }
+
+        return false;
     }
 
     public static function test_json()
