@@ -2895,7 +2895,8 @@ class AdminControllerCore extends Controller
         // Replace existing shop if necessary
         if (!$shop_id) {
             $this->context->shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
-        } elseif ($this->context->shop->id != $shop_id) {
+        } else {
+            Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
             $this->context->shop = new Shop((int) $shop_id);
         }
 
