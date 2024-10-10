@@ -375,6 +375,11 @@ abstract class ModuleCore implements ModuleInterface
     public function install()
     {
         Hook::exec('actionModuleInstallBefore', ['object' => $this]);
+
+        if ($this->_errors) {
+            return false;
+        }
+
         // Check module name validation
         if (!Validate::isModuleName($this->name)) {
             $this->_errors[] = Context::getContext()->getTranslator()->trans('Unable to install the module (Module name is not valid).', [], 'Admin.Modules.Notification');
