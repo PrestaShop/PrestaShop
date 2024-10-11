@@ -57,11 +57,14 @@
 			success: function (data, status) {
 				data = data.getElementsByTagName('return')[0];
 				var message = data.getAttribute("message");
+        var size = data.getAttribute("data-size");
+
 				if (data.getAttribute("result") == "success")
 				{
 					$('#carrier_logo_img').attr('src', message);
 					$('#logo').val(message);
 					$('#carrier_logo_remove').show();
+          $('#carrier_logo_size').text(size);
 				}
 				else
 					alert(message);
