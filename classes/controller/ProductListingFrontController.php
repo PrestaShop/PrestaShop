@@ -565,6 +565,23 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     }
 
     /**
+     * Do not index filtered pages or when sorting was used.
+     * This should correlate with robots.txt content. Make sure to update it also,
+     * if you change anything here.
+     */
+    public function getTemplateVarPage()
+    {
+        $page = parent::getTemplateVarPage();
+
+        // If some search parameters are submitted, or user selected some custom sorting,
+        if (Tools::isSubmit('q') || Tools::isSubmit('order')) {
+            $page['meta']['robots'] = 'noindex';
+        }
+
+        return $page;
+    }
+
+    /**
      * Similar to "getProductSearchVariables" but used in AJAX queries.
      *
      * It returns an array with the HTML for the products and facets,

@@ -2586,9 +2586,11 @@ FileETag none
             }
         }
 
+        // We prevent indexing some standardized parameters from the URL
+        // For example, "q" is a filter query, "order" is sorting etc.
         $tab['GB'] = [
-            '?order=', '?tag=', '?id_currency=', '?search_query=', '?back=', '?n=',
-            '&order=', '&tag=', '&id_currency=', '&search_query=', '&back=', '&n=',
+            '?order=', '?tag=', '?id_currency=', '?search_query=', '?back=', '?n=', '?q=',
+            '&order=', '&tag=', '&id_currency=', '&search_query=', '&back=', '&n=', '&q=',
         ];
 
         foreach ($disallow_controllers as $controller) {
