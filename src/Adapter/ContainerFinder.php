@@ -75,12 +75,12 @@ class ContainerFinder
             return $container;
         }
 
-        $container = CustomContainerBuilder::getContainer('front', _PS_MODE_DEV_);
-
-        if (null !== $container) {
-            return $container;
+        try {
+            $container = CustomContainerBuilder::getContainer('front', _PS_MODE_DEV_);
+        } catch (\Exception $e) {
+            throw new ContainerNotFoundException('Kernel Container is not available');
         }
 
-        throw new ContainerNotFoundException('Kernel Container is not available');
+        return $container;
     }
 }
