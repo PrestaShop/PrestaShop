@@ -27,7 +27,7 @@ describe('BO - Payment - Preferences : Configure country restrictions', async ()
   let browserContext: BrowserContext;
   let page: Page;
 
-  const countryID: number = 74;
+  const countryID: number = 73;
 
   // before and after functions
   before(async function () {
