@@ -505,6 +505,7 @@ CREATE TABLE `PREFIX_connections` (
   `ip_address` BIGINT NULL DEFAULT NULL,
   `date_add` datetime NOT NULL,
   `http_referer` varchar(255) DEFAULT NULL,
+  `debug_referer` varchar(2550) DEFAULT NULL,
   PRIMARY KEY (`id_connections`),
   KEY `id_guest` (`id_guest`),
   KEY `date_add` (`date_add`),
