@@ -24,13 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
+use PrestaShop\PrestaShop\Core\Hook\HookModuleFilter;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
-use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 
 class HookCore extends ObjectModel
 {
@@ -76,8 +76,8 @@ class HookCore extends ObjectModel
         'primary' => 'id_hook',
         'fields' => [
             'name' => ['type' => self::TYPE_STRING, 'validate' => 'isHookName', 'required' => true, 'size' => 191],
-            'title' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 255],
-            'description' => ['type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4],
+            'title' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName'],
+            'description' => ['type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => 4194303],
             'position' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
         ],
@@ -115,6 +115,7 @@ class HookCore extends ObjectModel
         'displayAdminOrderContentShip' => ['from' => '1.7.7.0'],
 
         // Controller
+        'actionAjaxDieBefore' => ['from' => '1.6.1.1'],
         'actionGetProductPropertiesAfter' => ['from' => '1.7.8.0'],
     ];
 
@@ -426,9 +427,6 @@ class HookCore extends ObjectModel
                     return static::coreCallHook($module, $methodName, $hookArgs);
                 }
             }
-        } catch (ModuleErrorInterface $e) {
-            // Exceptions that implements ModuleErrorInterface are usefull to display error messages
-            throw $e;
         } catch (Exception $e) {
             $environment = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Environment');
             if ($environment->isDebug()) {
@@ -765,6 +763,12 @@ class HookCore extends ObjectModel
             }
         }
 
+        $hookModuleFilter = self::getHookModuleFilter();
+
+        if (!empty($hookModuleFilter) && !empty($modulesToInvoke)) {
+            $modulesToInvoke = $hookModuleFilter->filterHookModuleExecList($modulesToInvoke, $hookName);
+        }
+
         return !empty($modulesToInvoke) ? $modulesToInvoke : false;
     }
 
@@ -793,9 +797,9 @@ class HookCore extends ObjectModel
      * @param int|null $id_shop If specified, hook will be execute the shop with this ID
      * @param bool $chain If specified, each module on this hook will receive the result of the previous one
      *
-     * @return mixed|null Module's output
-     *
      * @throws PrestaShopException
+     *
+     * @return mixed|null Module's output
      */
     public static function exec(
         $hook_name,
@@ -857,7 +861,7 @@ class HookCore extends ObjectModel
                 $hookRegistry->collect();
             }
 
-            return ($array_return) ? [] : null;
+            return ($array_return) ? [] : false;
         }
 
         // Store list of executed hooks on this page
@@ -1054,7 +1058,7 @@ class HookCore extends ObjectModel
 
         if ($different_shop
             && isset($old_shop, $old_context, $shop->id)
-        ) {
+             ) {
             $context->shop = $old_shop;
             $context->shop->setContext($old_context, $shop->id);
         }
@@ -1084,7 +1088,7 @@ class HookCore extends ObjectModel
     public static function coreRenderWidget($module, $hook_name, $params)
     {
         $context = Context::getContext();
-        if (!Module::isEnabled($module->name)) {
+        if (!Module::isEnabled($module->name) || $context->isMobile() && !Module::isEnabledForMobileDevices($module->name)) {
             return null;
         }
 
@@ -1101,7 +1105,7 @@ class HookCore extends ObjectModel
     }
 
     /**
-     * @return PrestaShopBundle\DataCollector\HookRegistry|null
+     * @return \PrestaShopBundle\DataCollector\HookRegistry|null
      */
     private static function getHookRegistry()
     {
@@ -1111,6 +1115,25 @@ class HookCore extends ObjectModel
         }
 
         return null;
+    }
+
+    /**
+     * @return HookModuleFilter|null
+     * @throws \PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException
+     */
+    private static function getHookModuleFilter()
+    {
+        $context = Context::getContext();
+        $containerFinder = new ContainerFinder($context);
+        $serviceContainer = $containerFinder->getContainer();
+
+        try {
+            $hookModuleFilter = $serviceContainer->get('prestashop.hook.module.filter');
+        } catch (Exception $e) {
+            return null;
+        }
+
+        return $hookModuleFilter;
     }
 
     /**
@@ -1184,7 +1207,8 @@ class HookCore extends ObjectModel
                 Shop::addSqlAssociation(
                     'module',
                     'm',
-                    true
+                    true,
+                    'module_shop.enable_device & ' . (int) Context::getContext()->getDevice()
                 )
             );
         } else {
@@ -1304,7 +1328,7 @@ class HookCore extends ObjectModel
     {
         $cacheId = 'hook_idsbyname';
         if ($withAliases) {
-            $cacheId = 'hook_idsbyname_withalias';
+            $cacheId .= 'hook_idsbyname_withalias';
         }
 
         if (!$refreshCache && Cache::isStored($cacheId)) {

@@ -1,5 +1,6 @@
 imports:
     - { resource: ../common.yml }
+    - { resource: ../../../modules/*/config/front_services.yml }
 
 services:
     _defaults:
@@ -58,18 +59,7 @@ services:
       arguments:
         - '@prestashop.adapter.module.repository.module_repository'
 
-   # Special definition for legacy environments since they don't initialize the request stack, which is a dependency for the feature flag checker
-    Symfony\Component\HttpFoundation\RequestStack:
-      factory: [ 'PrestaShopBundle\Http\RequestStackFactory', 'buildRequestStack' ]
-      lazy: true
-
-    request_stack:
-      alias: Symfony\Component\HttpFoundation\RequestStack
-
-    # Special validator to validate tokens from admin in the front environment
-    PrestaShopBundle\Security\Admin\LegacyAdminTokenValidator:
-      public: true
-      lazy: true
+    prestashop.hook.module.filter:
+      class: PrestaShop\PrestaShop\Core\Hook\HookModuleFilter
       arguments:
-        $employeeRepository: '@PrestaShop\PrestaShop\Adapter\Employee\EmployeeRepository'
-        $requestStack: '@request_stack'
+        - !tagged core.hook_module_exec_filter
