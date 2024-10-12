@@ -75,12 +75,6 @@ class ContainerFinder
             return $container;
         }
 
-        try {
-            $container = CustomContainerBuilder::getContainer('front', _PS_MODE_DEV_);
-        } catch (\Exception $e) {
-            throw new ContainerNotFoundException('Kernel Container is not available');
-        }
-
-        return $container;
+        throw new ContainerNotFoundException('Kernel Container is not available');
     }
 }

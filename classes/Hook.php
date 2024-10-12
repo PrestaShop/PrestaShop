@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
@@ -1123,9 +1124,7 @@ class HookCore extends ObjectModel
      */
     private static function getHookModuleFilter()
     {
-        $context = Context::getContext();
-        $containerFinder = new ContainerFinder($context);
-        $serviceContainer = $containerFinder->getContainer();
+        $serviceContainer = ContainerBuilder::getContainer('front', _PS_MODE_DEV_);
 
         try {
             $hookModuleFilter = $serviceContainer->get('prestashop.hook.module.filter');
