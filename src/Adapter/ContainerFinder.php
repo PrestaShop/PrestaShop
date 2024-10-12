@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 use Context;
 use Controller;
-use PrestaShop\PrestaShop\Adapter\ContainerBuilder as CustomContainerBuilder;
 use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;

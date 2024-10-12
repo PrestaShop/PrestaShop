@@ -25,7 +25,6 @@
  */
 
 use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
-use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
