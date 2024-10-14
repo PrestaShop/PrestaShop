@@ -113,7 +113,7 @@
     "mocha": "^10.7.3",
     "mochawesome": "^7.1.3",
     "mysql2": "^3.11.3",
-    "playwright": "^1.42.1"
+    "playwright": "^1.48.0"
   },
   "devDependencies": {
     "@types/chai": "^4.3.11",
