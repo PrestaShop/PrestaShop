@@ -19,7 +19,7 @@ jobs:
       matrix:
         BRANCH:
           - develop
-          - 8.1.x
+          - 8.2.x
     env:
       GH_BRANCH: ${{ matrix.BRANCH }}
 
