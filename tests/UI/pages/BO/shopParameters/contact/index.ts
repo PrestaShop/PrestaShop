@@ -122,7 +122,8 @@ class Contacts extends BOBasePage {
   async resetFilter(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.filterResetButton, 2000)) {
       await page.locator(this.filterResetButton).click();
-      await this.elementNotVisible(page, this.filterResetButton, 2000);
+      await page.mouse.move(0, 0);
+      await this.waitForHiddenSelector(page, this.filterResetButton, 2000);
     }
   }
 
@@ -155,7 +156,8 @@ class Contacts extends BOBasePage {
   async filterContacts(page: Page, filterBy: string, value: string = ''): Promise<void> {
     await this.setValue(page, this.contactFilterInput(filterBy), value.toString());
     // click on search
-    await this.clickAndWaitForURL(page, this.filterSearchButton);
+    await page.locator(this.filterSearchButton).click();
+    await this.waitForVisibleSelector(page, this.filterResetButton);
   }
 
   /**

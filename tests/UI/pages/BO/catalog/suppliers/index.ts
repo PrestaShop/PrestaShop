@@ -163,6 +163,8 @@ class Suppliers extends BOBasePage {
    */
   async viewSupplier(page: Page, row: number = 1): Promise<void> {
     await this.clickAndWaitForURL(page, this.viewRowLink(row));
+    // Move the mouse to avoid the tooltip on first row
+    await page.mouse.move(0, 0);
   }
 
   /**
@@ -252,8 +254,10 @@ class Suppliers extends BOBasePage {
    */
   async resetFilter(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.filterResetButton, 2000)) {
-      await this.clickAndWaitForLoadState(page, this.filterResetButton);
-      await this.elementNotVisible(page, this.filterResetButton, 2000);
+      await page.locator(this.filterResetButton).click();
+      // Move the mouse to avoid the tooltip on first row
+      await page.mouse.move(0, 0);
+      await this.waitForHiddenSelector(page, this.filterResetButton, 5000);
     }
   }
 
@@ -297,7 +301,8 @@ class Suppliers extends BOBasePage {
       // Do nothing
     }
     // click on search
-    await this.clickAndWaitForURL(page, this.filterSearchButton);
+    await page.locator(this.filterSearchButton).click();
+    await this.waitForVisibleSelector(page, this.filterResetButton);
   }
 
   /**
