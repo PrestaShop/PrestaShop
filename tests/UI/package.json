@@ -118,7 +118,7 @@
   "devDependencies": {
     "@types/chai": "^4.3.11",
     "@types/chai-string": "^1.4.5",
-    "@types/mocha": "^10.0.8",
+    "@types/mocha": "^10.0.9",
     "@types/mochawesome": "^6.2.4",
     "@typescript-eslint/eslint-plugin": "^8.8.0",
     "@typescript-eslint/parser": "^8.8.0",
