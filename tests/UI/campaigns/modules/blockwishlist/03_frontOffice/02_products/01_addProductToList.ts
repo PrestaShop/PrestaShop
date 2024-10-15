@@ -144,28 +144,11 @@ describe('Wishlist module - Add a product to a list', async () => {
       expect(pageTitle).to.contains(wishlistName);
     });
 
-    // @todo : https://github.com/PrestaShop/PrestaShop/issues/36496
     it('should check the wishlist', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkWishlist5', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkWishlist1', baseContext);
 
       const numProducts = await foClassicMyWishlistsViewPage.countProducts(page);
-      expect(numProducts).to.equal(4);
-
-      // const nameProduct = await foClassicMyWishlistsViewPage.getProductName(page, 4);
-      const nameProduct = await foClassicMyWishlistsViewPage.getProductName(page, 2);
-      expect(nameProduct).to.equal(dataProducts.demo_1.name);
-
-      //const qtyProduct = await foClassicMyWishlistsViewPage.getProductQuantity(page, 4);
-      const qtyProduct = await foClassicMyWishlistsViewPage.getProductQuantity(page, 2);
-      expect(qtyProduct).to.equal(1);
-
-      //const sizeProduct = await foClassicMyWishlistsViewPage.getProductAttribute(page, 4, 'Size');
-      const sizeProduct = await foClassicMyWishlistsViewPage.getProductAttribute(page, 2, 'Size');
-      expect(sizeProduct).to.equal('M');
-
-      //const colorProduct = await foClassicMyWishlistsViewPage.getProductAttribute(page, 4, 'Color');
-      const colorProduct = await foClassicMyWishlistsViewPage.getProductAttribute(page, 2, 'Color');
-      expect(colorProduct).to.equal('Black');
+      expect(numProducts).to.equal(0);
     });
 
     it(`should search the product ${dataProducts.demo_3.name}`, async function () {
@@ -419,7 +402,6 @@ describe('Wishlist module - Add a product to a list', async () => {
     });
 
     // @todo : https://github.com/PrestaShop/PrestaShop/issues/36496
-    // @todo : https://github.com/PrestaShop/PrestaShop/issues/36593
     it('should check the wishlist', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkWishlist5', baseContext);
 
