@@ -476,7 +476,7 @@ class CartRuleCore extends ObjectModel
             foreach ($result as $key => $cart_rule) {
                 if ($cart_rule['product_restriction']) {
                     $cr = new CartRule((int) $cart_rule['id_cart_rule']);
-                    $r = $cr->checkProductRestrictionsFromCart(Context::getContext()->cart, false, false);
+                    $r = $cr->checkProductRestrictionsFromCart($cart, false, false);
                     if ($r !== false) {
                         continue;
                     }
