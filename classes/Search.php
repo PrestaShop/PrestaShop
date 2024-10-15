@@ -1042,6 +1042,10 @@ class SearchCore
         $queryArray3 = [];
     }
 
+    /**
+     * @deprecated since 8.2.0 and will be removed in 9.0.0, searching products by tags
+     * is already included in Search::find method. Tags are indexed for each product.
+     */
     public static function searchTag(
         $id_lang,
         $tag,
