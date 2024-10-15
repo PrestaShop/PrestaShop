@@ -169,8 +169,6 @@ describe('Wishlist module - Statistics tab settings', async () => {
     it('should click on the refresh button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnRefreshButton', baseContext);
 
-      this.skip();
-
       await modBlockwishlistBoStatistics.refreshStatistics(page);
 
       // Check statistics
