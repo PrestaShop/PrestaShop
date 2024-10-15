@@ -27,7 +27,6 @@ admin_module_configure_action:
     _legacy_link: AdminModules:configure
     _legacy_parameters:
       configure: module_name
-    _legacy_feature_flag: module_configuration
 
 admin_module_manage_action_bulk:
   path: /manage/bulk/{action}
