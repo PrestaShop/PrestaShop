@@ -24,43 +24,27 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Module\ValueObject;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Module\QueryResult;
+use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleConstraintException;
 
-class ModuleInfos
+class ModuleTechnicalName
 {
     public function __construct(
-        private readonly int $moduleId,
-        private readonly string $technicalName,
-        private readonly string $version,
-        private readonly bool $enabled,
-        private readonly bool $installed,
+        protected string $value,
     ) {
+        $this->assertNotEmpty($value);
     }
 
-    public function getModuleId(): int
+    public function getValue(): string
     {
-        return $this->moduleId;
+        return $this->value;
     }
 
-    public function getTechnicalName(): string
+    private function assertNotEmpty(string $value): void
     {
-        return $this->technicalName;
-    }
-
-    public function getVersion(): string
-    {
-        return $this->version;
-    }
-
-    public function isEnabled(): bool
-    {
-        return $this->enabled;
-    }
-
-    public function isInstalled(): bool
-    {
-        return $this->installed;
+        if (empty($value)) {
+            throw new ModuleConstraintException('Technical name cannot be empty', ModuleConstraintException::EMPTY_TECHNICAL_NAME);
+        }
     }
 }

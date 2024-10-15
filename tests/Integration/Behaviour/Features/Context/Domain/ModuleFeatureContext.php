@@ -32,6 +32,8 @@ use Behat\Gherkin\Node\TableNode;
 use Module;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkToggleModuleStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Module\Command\UpdateModuleStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Module\Query\GetModuleInfos;
 use PrestaShop\PrestaShop\Core\Domain\Module\QueryResult\ModuleInfos;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -39,17 +41,38 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 class ModuleFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @Given module :moduleReference has following infos:
+     * @Given module :technicalName has following infos:
      */
-    public function assertModuleInfos(string $moduleReference, TableNode $tableNode): void
+    public function assertModuleInfos(string $technicalName, TableNode $tableNode): void
     {
-        /** @var ModuleInfos $moduleInfos */
-        $moduleInfos = $this->getQueryBus()->handle(new GetModuleInfos($this->referenceToId($moduleReference)));
+        try {
+            /** @var ModuleInfos $moduleInfos */
+            $moduleInfos = $this->getQueryBus()->handle(new GetModuleInfos($technicalName));
 
-        $data = $tableNode->getRowsHash();
-        Assert::assertEquals($data['technical_name'], $moduleInfos->getTechnicalName());
-        Assert::assertEquals($data['version'], $moduleInfos->getVersion());
-        Assert::assertEquals(PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']), $moduleInfos->isEnabled());
+            $data = $tableNode->getRowsHash();
+            if (isset($data['technical_name'])) {
+                Assert::assertEquals($data['technical_name'], $moduleInfos->getTechnicalName());
+            }
+            if (isset($data['version'])) {
+                Assert::assertEquals($data['version'], $moduleInfos->getVersion());
+            }
+            if (isset($data['enabled'])) {
+                Assert::assertEquals(PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']), $moduleInfos->isEnabled());
+            }
+            if (isset($data['installed'])) {
+                Assert::assertEquals(PrimitiveUtils::castStringBooleanIntoBoolean($data['installed']), $moduleInfos->isInstalled());
+            }
+        } catch (ModuleNotFoundException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then I should have an exception that module is not found
+     */
+    public function assertModuleNotFound(): void
+    {
+        $this->assertLastErrorIs(ModuleNotFoundException::class);
     }
 
     /**
@@ -65,6 +88,20 @@ class ModuleFeatureContext extends AbstractDomainFeatureContext
         $this->getQueryBus()->handle(new BulkToggleModuleStatusCommand(
             $modules,
             'enable' === $action
+        ));
+
+        // Clean the cache
+        Module::resetStaticCache();
+    }
+
+    /**
+     * @When /^I (enable|disable) module "(.+)"$/
+     */
+    public function updateModuleStatus(string $action, string $technicalName): void
+    {
+        $this->getCommandBus()->handle(new UpdateModuleStatusCommand(
+            $technicalName,
+            $action === 'enable'
         ));
 
         // Clean the cache

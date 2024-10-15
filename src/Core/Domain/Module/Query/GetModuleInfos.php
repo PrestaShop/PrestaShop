@@ -28,23 +28,23 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Module\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\Module\ValueObject\ModuleId;
+use PrestaShop\PrestaShop\Core\Domain\Module\ValueObject\ModuleTechnicalName;
 
 /**
  * Get module information
  */
 class GetModuleInfos
 {
-    private ModuleId $moduleId;
+    protected ModuleTechnicalName $technicalName;
 
     public function __construct(
-        int $moduleId,
+        string $technicalName,
     ) {
-        $this->moduleId = new ModuleId($moduleId);
+        $this->technicalName = new ModuleTechnicalName($technicalName);
     }
 
-    public function getModuleId(): ModuleId
+    public function getTechnicalName(): ModuleTechnicalName
     {
-        return $this->moduleId;
+        return $this->technicalName;
     }
 }

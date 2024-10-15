@@ -24,40 +24,40 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Adapter\Module\CommandHandler;
 
-namespace PrestaShop\PrestaShop\Adapter\Module\QueryHandler;
-
-use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
+use PrestaShop\PrestaShop\Core\Domain\Module\Command\UpdateModuleStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Module\CommandHandler\UpdateModuleStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Module\Exception\CannotToggleModuleStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Module\Query\GetModuleInfos;
-use PrestaShop\PrestaShop\Core\Domain\Module\QueryHandler\GetModuleInfosHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Module\QueryResult\ModuleInfos;
+use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 
-#[AsQueryHandler]
-class GetModuleInfosHandler implements GetModuleInfosHandlerInterface
+#[AsCommandHandler]
+class UpdateModuleStatusHandler implements UpdateModuleStatusHandlerInterface
 {
     public function __construct(
+        protected ModuleManager $moduleManager,
         protected ModuleRepository $moduleRepository,
     ) {
     }
 
-    public function handle(GetModuleInfos $query): ModuleInfos
+    public function handle(UpdateModuleStatusCommand $command): void
     {
-        $module = $this->moduleRepository->getModule($query->getTechnicalName()->getValue());
+        $module = $this->moduleRepository->getModule($command->getTechnicalName()->getValue());
         if (!$module->disk->get('is_present')) {
-            throw new ModuleNotFoundException('Cannot find Module with name ' . $query->getTechnicalName()->getValue());
+            throw new ModuleNotFoundException();
         }
 
-        $moduleInstance = $module->getInstance();
+        if ($command->isEnabled()) {
+            $result = $this->moduleManager->enable($command->getTechnicalName()->getValue());
+        } else {
+            $result = $this->moduleManager->disable($command->getTechnicalName()->getValue());
+        }
 
-        return new ModuleInfos(
-            $moduleInstance->id,
-            $module->get('name'),
-            $module->get('version'),
-            $module->database->get('active'),
-            $module->database->get('installed'),
-        );
+        if (!$result) {
+            throw new CannotToggleModuleStatusException('Technical error occurred while toggling module status.');
+        }
     }
 }

@@ -6,27 +6,54 @@ Feature: Module
   As a BO user
   I must be able to enable/disable modules
 
-  Background:
-    Given shop "shop1" with name "test_shop" exists
-    And the module "ps_featuredproducts" is installed
-    And the module "ps_emailsubscription" is installed
-
   Scenario: Bulk Status
-    Given the module "ps_featuredproducts" is enabled
-    And the module "ps_emailsubscription" is enabled
+    Given module ps_featuredproducts has following infos:
+      | technical_name | ps_featuredproducts |
+      | version        | 1.0.0               |
+      | enabled        | true                |
+      | installed      | true                |
+    Given module ps_emailsubscription has following infos:
+      | technical_name | ps_emailsubscription |
+      | version        | 1.0.0                |
+      | enabled        | true                 |
+      | installed      | true                 |
     When I bulk disable modules: "ps_featuredproducts,ps_emailsubscription"
-    Then the module "ps_featuredproducts" is disabled
-    And the module "ps_emailsubscription" is disabled
+    Then module ps_featuredproducts has following infos:
+      | enabled | false |
+    And module ps_emailsubscription has following infos:
+      | enabled | false |
     When I bulk enable modules: "ps_emailsubscription"
-    Then the module "ps_featuredproducts" is disabled
-    And the module "ps_emailsubscription" is enabled
+    Then module ps_featuredproducts has following infos:
+      | enabled | false |
+    And module ps_emailsubscription has following infos:
+      | enabled | true |
     When I bulk enable modules: "ps_featuredproducts"
-    Then the module "ps_featuredproducts" is enabled
-    And the module "ps_emailsubscription" is enabled
+    Then module ps_featuredproducts has following infos:
+      | enabled | true |
+    And module ps_emailsubscription has following infos:
+      | enabled | true |
+
+  Scenario: Update module status
+    Given module ps_featuredproducts has following infos:
+      | enabled | true |
+    When I disable module "ps_featuredproducts"
+    Then module ps_featuredproducts has following infos:
+      | enabled | false |
+    When I enable module "ps_featuredproducts"
+    Given module ps_featuredproducts has following infos:
+      | enabled | true |
 
   Scenario: Get module infos
-    Given the module with technical name ps_emailsubscription exists
     Then module ps_emailsubscription has following infos:
       | technical_name | ps_emailsubscription |
       | version        | 1.0.0                |
       | enabled        | true                 |
+      | installed      | true                 |
+
+  Scenario: Get module not present
+    When module ps_notthere has following infos:
+      | technical_name | ps_notthere |
+      | version        | 1.0.0       |
+      | enabled        | true        |
+      | installed      | true        |
+    Then I should have an exception that module is not found

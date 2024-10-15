@@ -72,10 +72,7 @@ default:
                 - "%paths.base%/Features/Scenario/Module"
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\ModuleFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\ModuleFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
         category:
             paths:
                 - "%paths.base%/Features/Scenario/Category"
