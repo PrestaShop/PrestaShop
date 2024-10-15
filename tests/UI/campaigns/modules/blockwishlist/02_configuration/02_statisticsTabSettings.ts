@@ -165,15 +165,17 @@ describe('Wishlist module - Statistics tab settings', async () => {
       const pageTitle = await modBlockwishlistBoStatistics.getPageTitle(page);
       expect(pageTitle).to.contains(modBlockwishlistBoStatistics.pageTitle);
     });
-    // @todo : https://github.com/PrestaShop/PrestaShop/issues/33374
+
     it('should click on the refresh button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnRefreshButton', baseContext);
 
       await modBlockwishlistBoStatistics.refreshStatistics(page);
 
-      // Check statistics
       const pageTitle = await modBlockwishlistBoStatistics.getPageTitle(page);
       expect(pageTitle).to.contains(modBlockwishlistBoStatistics.pageTitle);
+
+      const numProductsInTable = await modBlockwishlistBoStatistics.getNumProducts(page);
+      expect(numProductsInTable).to.equals(3);
     });
   });
 
