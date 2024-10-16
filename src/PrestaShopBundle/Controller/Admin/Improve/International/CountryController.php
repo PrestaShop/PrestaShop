@@ -37,10 +37,14 @@ use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\DeleteCountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryForEditing;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CountryFilters;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,7 +52,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * CountryController is responsible for handling "Improve > International > Locations > Countries"
  */
-class CountryController extends FrameworkBundleAdminController
+class CountryController extends PrestaShopAdminController
 {
     /**
      * Show countries listing page
@@ -59,9 +63,12 @@ class CountryController extends FrameworkBundleAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
-    public function indexAction(Request $request, CountryFilters $filters): Response
-    {
-        $countryGridFactory = $this->get('prestashop.core.grid.factory.country');
+    public function indexAction(
+        Request $request,
+        CountryFilters $filters,
+        #[Autowire(service: 'prestashop.core.grid.factory.country')]
+        GridFactoryInterface $countryGridFactory
+    ): Response {
         $countryGrid = $countryGridFactory->getGrid($filters);
 
         return $this->render('@PrestaShop/Admin/Improve/International/Country/index.html.twig', [
@@ -80,11 +87,13 @@ class CountryController extends FrameworkBundleAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_countries_index', message: 'You need permission to create new country.')]
-    public function createAction(Request $request): Response
-    {
-        $countryFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.country_form_builder');
-        $countryFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.country_form_handler');
-
+    public function createAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.country_form_builder')]
+        FormBuilderInterface $countryFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.country_form_handler')]
+        FormHandlerInterface $countryFormHandler
+    ): Response {
         $countryForm = $countryFormBuilder->getForm();
         $countryForm->handleRequest($request);
 
@@ -92,7 +101,7 @@ class CountryController extends FrameworkBundleAdminController
             $handleResult = $countryFormHandler->handle($countryForm);
 
             if (null !== $handleResult->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_countries_index');
             }
@@ -104,7 +113,7 @@ class CountryController extends FrameworkBundleAdminController
             'countryForm' => $countryForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('New country', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('New country', [], 'Admin.Navigation.Menu'),
         ]);
     }
 
@@ -117,25 +126,24 @@ class CountryController extends FrameworkBundleAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_countries_index', message: 'You need permission to edit this.')]
-    public function editAction(int $countryId, Request $request): Response
-    {
+    public function editAction(
+        int $countryId,
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.country_form_builder')]
+        FormBuilderInterface $countryFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.country_form_handler')]
+        FormHandlerInterface $countryFormHandler
+    ): Response {
         try {
             /** @var CountryForEditing $editableCountry */
-            $editableCountry = $this->getQueryBus()->handle(new GetCountryForEditing($countryId));
-
-            $countryFormBuilder = $this->get(
-                'prestashop.core.form.identifiable_object.builder.country_form_builder'
-            );
-            $countryFormHandler = $this->get(
-                'prestashop.core.form.identifiable_object.handler.country_form_handler'
-            );
+            $editableCountry = $this->dispatchQuery(new GetCountryForEditing($countryId));
 
             $countryForm = $countryFormBuilder->getFormFor($countryId);
             $countryForm->handleRequest($request);
             $result = $countryFormHandler->handleFor($countryId, $countryForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_countries_index');
             }
@@ -149,7 +157,7 @@ class CountryController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'countryForm' => $countryForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'countryName' => $editableCountry->getLocalizedNames()[$this->getContextLangId()],
+            'countryName' => $editableCountry->getLocalizedNames()[$this->getLanguageContext()->getId()],
         ]);
     }
 
@@ -165,8 +173,8 @@ class CountryController extends FrameworkBundleAdminController
     public function deleteAction(int $countryId): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(new DeleteCountryCommand($countryId));
-            $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
+            $this->dispatchCommand(new DeleteCountryCommand($countryId));
+            $this->addFlash('success', $this->trans('Successful deletion.', [], 'Admin.Notifications.Success'));
         } catch (CountryException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
@@ -184,7 +192,7 @@ class CountryController extends FrameworkBundleAdminController
         return [
             'add' => [
                 'href' => $this->generateUrl('admin_countries_create'),
-                'desc' => $this->trans('Add new country', 'Admin.International.Feature'),
+                'desc' => $this->trans('Add new country', [], 'Admin.International.Feature'),
                 'icon' => 'add_circle_outline',
             ],
         ];
@@ -202,24 +210,29 @@ class CountryController extends FrameworkBundleAdminController
         return [
             CountryNotFoundException::class => $this->trans(
                 'This country does not exist.',
+                [],
                 'Admin.International.Feature'
             ),
             CannotEditCountryException::class => [
                 CannotEditCountryException::FAILED_TO_UPDATE_COUNTRY => $this->trans(
                     'Failed to update country.',
+                    [],
                     'Admin.International.Feature'
                 ),
                 CannotEditCountryException::UNKNOWN_EXCEPTION => $this->trans(
                     'Failed to update country. An unexpected error occurred.',
+                    [],
                     'Admin.International.Feature'
                 ),
             ],
             CountryConstraintException::class => $this->trans(
                 'Country contains invalid field values.',
+                [],
                 'Admin.International.Feature'
             ),
             DeleteCountryException::class => $this->trans(
                 'Country cannot be deleted.',
+                [],
                 'Admin.International.Feature'
             ),
         ];
