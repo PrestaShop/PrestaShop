@@ -40,12 +40,12 @@ class GetSqlRequestSettingsHandlerTest extends TestCase
     /**
      * @dataProvider getInvalidConfiguration
      */
-    public function testItReturnsCorrectSettings(?int $configuredValue, string $expectedValue): void
+    public function testItReturnsCorrectSettings(?int $configuredValue, string $configuredSeparatorValue, string $expectedValue): void
     {
         $configuration = $this->createMock(ConfigurationInterface::class);
-        $configuration->method('get')
-            ->with('PS_ENCODING_FILE_MANAGER_SQL')
-            ->willReturn($configuredValue);
+        $configuration
+            ->method('get')
+            ->willReturnOnConsecutiveCalls($configuredValue, $configuredSeparatorValue);
 
         $getSqlRequestSettingsHandler = new GetSqlRequestSettingsHandler($configuration);
         $sqlRequestSettings = $getSqlRequestSettingsHandler->handle(new GetSqlRequestSettings());
@@ -59,18 +59,22 @@ class GetSqlRequestSettingsHandlerTest extends TestCase
         return [
             [
                 null,
+                ';',
                 CharsetEncoding::UTF_8,
             ],
             [
                 1,
+                ';',
                 CharsetEncoding::UTF_8,
             ],
             [
                 2,
+                ';',
                 CharsetEncoding::ISO_8859_1,
             ],
             [
                 9999,
+                ';',
                 CharsetEncoding::UTF_8,
             ],
         ];
