@@ -33,7 +33,6 @@ use Exception;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module as ModuleAdapter;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
@@ -137,10 +136,6 @@ class ModuleController extends ModuleAbstractController
         } else {
             $this->saveModuleHistory($module);
             $layoutSubTitle = $module->getInstance()->displayName;
-        }
-
-        if ($this->getFeatureFlagStateChecker()->isDisabled(FeatureFlagSettings::FEATURE_FLAG_MODULE_CONFIGURATION)) {
-            return $this->redirect($legacyContext->getAdminLink('AdminModules', true, ['configure' => $module_name]));
         }
 
         // This controller is not purely migrated, in the sense that it still relies on the legacy layout because module implementing
