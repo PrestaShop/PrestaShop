@@ -308,7 +308,7 @@ class AdminShopGroupControllerCore extends AdminController
         ];
 
         $this->fields_value = [
-            'active' => true,
+            'active' => $obj->id ? (bool) $obj->active : true,
         ];
 
         return parent::renderForm();
