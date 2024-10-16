@@ -113,6 +113,22 @@ if [ $PS_DEMO_MODE -ne 0 ]; then
     sed -ie "s/define('_PS_MODE_DEMO_', false);/define('_PS_MODE_DEMO_',\ true);/g" /var/www/html/config/defines.inc.php
 fi
 
+if [ $BLACKFIRE_ENABLE -eq 1 ]; then
+    if [ "$BLACKFIRE_SERVER_ID" = "0" ] || [ "$BLACKFIRE_SERVER_TOKEN" = "0" ]; then
+            echo "\n* BLACKFIRE_SERVER_ID and BLACKFIRE_SERVER_TOKEN environment variables missing."
+            echo "\n* Skipping blackfire install..."
+    else
+      echo "\n* Installing Blackfire..."
+      wget -q -O - https://packages.blackfire.io/gpg.key | dd of=/usr/share/keyrings/blackfire-archive-keyring.asc
+      echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/blackfire-archive-keyring.asc] http://packages.blackfire.io/debian any main" | tee /etc/apt/sources.list.d/blackfire.list
+      apt update
+      apt install -y blackfire
+      blackfire agent:config --server-id=$BLACKFIRE_SERVER_ID --server-token=$BLACKFIRE_SERVER_TOKEN
+      service blackfire-agent restart
+      apt install -y blackfire-php
+    fi
+fi
+
 echo "\n* Almost ! Starting web server now\n";
 
 exec apache2-foreground
