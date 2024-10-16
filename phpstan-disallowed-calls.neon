@@ -267,6 +267,7 @@ parameters:
             allowIn:
                 - src/Adapter/*
                 - src/PrestaShopBundle/Install/*
+                - src/PrestaShopBundle/Controller/Admin/Improve/Design/PositionsController.php
         -
             class: 'Symfony\Component\Translation\TranslatorInterface'
             message: 'use Symfony\Contracts\Translation\TranslatorInterface instead'
@@ -293,6 +294,8 @@ parameters:
                 - src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php
                 - src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/MetaController.php
                 - src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/OrderStateController.php
+                - src/PrestaShopBundle/Controller/Admin/Improve/Design/CmsPageController.php
+                - src/PrestaShopBundle/Controller/Admin/Improve/Design/MailThemeController.php
   disallowedConstants:
         -
             constant:
@@ -423,3 +426,8 @@ parameters:
                 - src/*
                 - classes/*
                 - controllers/*
+  ignoreErrors:
+        -
+            message: "#^Namespace Module is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+            count: 1
+            path: src/PrestaShopBundle/Controller/Admin/Improve/Design/PositionsController.php

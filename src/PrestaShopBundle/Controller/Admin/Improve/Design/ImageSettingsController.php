@@ -36,11 +36,16 @@ use PrestaShop\PrestaShop\Core\Domain\ImageSettings\Command\RegenerateThumbnails
 use PrestaShop\PrestaShop\Core\Domain\ImageSettings\Exception\ImageTypeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\ImageSettings\Query\GetImageTypeForEditing;
 use PrestaShop\PrestaShop\Core\Domain\ImageSettings\QueryResult\EditableImageType;
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface as ConfigurationFormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ImageTypeFilters;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\DeleteImageTypeType;
 use PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\RegenerateThumbnailsType;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,7 +53,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Responsible for Image Settings actions in Back Office
  */
-class ImageSettingsController extends FrameworkBundleAdminController
+class ImageSettingsController extends PrestaShopAdminController
 {
     /**
      * Displays image settings listing page.
@@ -59,18 +64,22 @@ class ImageSettingsController extends FrameworkBundleAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
-    public function indexAction(Request $request, ImageTypeFilters $filters): Response
-    {
+    public function indexAction(
+        Request $request,
+        ImageTypeFilters $filters,
+        #[Autowire(service: 'prestashop.core.grid.factory.image_type')]
+        GridFactoryInterface $imageTypeGridFactory,
+        #[Autowire(service: 'prestashop.admin.image_settings.form_handler')]
+        ConfigurationFormHandlerInterface $configFormHandler
+    ): Response {
         // Get image type grid
-        $imageTypeGridFactory = $this->get('prestashop.core.grid.factory.image_type');
         $imageTypeGrid = $imageTypeGridFactory->getGrid($filters);
 
         // Create form for deleting image type if needed (in modal)
         $deleteForm = $this->createForm(DeleteImageTypeType::class);
 
         // Create form to set some image settings
-        $configFormBuilder = $this->get('prestashop.admin.image_settings.form_handler');
-        $configForm = $configFormBuilder->getForm();
+        $configForm = $configFormHandler->getForm();
 
         // Create form to regenerate thumbnails
         $regenThumbnailsForm = $this->createForm(RegenerateThumbnailsType::class);
@@ -83,7 +92,7 @@ class ImageSettingsController extends FrameworkBundleAdminController
             'layoutHeaderToolbarBtn' => [
                 'add' => [
                     'href' => $this->generateUrl('admin_image_settings_create'),
-                    'desc' => $this->trans('Add new image type', 'Admin.Design.Feature'),
+                    'desc' => $this->trans('Add new image type', [], 'Admin.Design.Feature'),
                     'icon' => 'add_circle_outline',
                 ],
             ],
@@ -93,18 +102,20 @@ class ImageSettingsController extends FrameworkBundleAdminController
     }
 
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
-    public function saveSettingsAction(Request $request): Response
-    {
+    public function saveSettingsAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.admin.image_settings.form_handler')]
+        ConfigurationFormHandlerInterface $configFormHandler
+    ): Response {
         try {
             // Create form to set some image settings
-            $configFormHandler = $this->get('prestashop.admin.image_settings.form_handler');
             $configForm = $configFormHandler->getForm();
             $configForm->handleRequest($request);
 
             if ($configForm->isSubmitted()) {
                 if ($configForm->isValid()) {
                     $configFormHandler->save($configForm->getData());
-                    $this->addFlash('success', $this->trans('The settings have been successfully updated.', 'Admin.Notifications.Success'));
+                    $this->addFlash('success', $this->trans('The settings have been successfully updated.', [], 'Admin.Notifications.Success'));
                 } else {
                     $this->addFlashFormErrors($configForm);
                 }
@@ -124,11 +135,13 @@ class ImageSettingsController extends FrameworkBundleAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_image_settings_index')]
-    public function createAction(Request $request): Response
-    {
-        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.image_type_form_builder');
-        $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.image_type_form_handler');
-
+    public function createAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.image_type_form_builder')]
+        FormBuilderInterface $formBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.image_type_form_handler')]
+        FormHandlerInterface $formHandler,
+    ): Response {
         $form = $formBuilder->getForm();
         $form->handleRequest($request);
 
@@ -136,7 +149,7 @@ class ImageSettingsController extends FrameworkBundleAdminController
             $handleResult = $formHandler->handle($form);
 
             if ($handleResult->isSubmitted() && $handleResult->isValid()) {
-                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_image_settings_index');
             }
@@ -148,7 +161,7 @@ class ImageSettingsController extends FrameworkBundleAdminController
             'form' => $form->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('Add new', 'Admin.Actions'),
+            'layoutTitle' => $this->trans('Add new', [], 'Admin.Actions'),
         ]);
     }
 
@@ -161,14 +174,17 @@ class ImageSettingsController extends FrameworkBundleAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_image_settings_index')]
-    public function editAction(int $imageTypeId, Request $request): Response
-    {
+    public function editAction(
+        int $imageTypeId,
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.image_type_form_builder')]
+        FormBuilderInterface $formBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.image_type_form_handler')]
+        FormHandlerInterface $formHandler,
+    ): Response {
         try {
             /** @var EditableImageType $editableImageType */
-            $editableImageType = $this->getQueryBus()->handle(new GetImageTypeForEditing($imageTypeId));
-
-            $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.image_type_form_builder');
-            $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.image_type_form_handler');
+            $editableImageType = $this->dispatchQuery(new GetImageTypeForEditing($imageTypeId));
 
             $form = $formBuilder->getFormFor($imageTypeId);
             $form->handleRequest($request);
@@ -176,7 +192,7 @@ class ImageSettingsController extends FrameworkBundleAdminController
             $result = $formHandler->handleFor($imageTypeId, $form);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Update successful', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_image_settings_index');
             }
@@ -192,7 +208,7 @@ class ImageSettingsController extends FrameworkBundleAdminController
             'form' => $form->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('Edit: %value%', 'Admin.Actions', ['%value%' => $editableImageType->getName()]),
+            'layoutTitle' => $this->trans('Edit: %value%', ['%value%' => $editableImageType->getName()], 'Admin.Actions'),
         ]);
     }
 
@@ -212,12 +228,12 @@ class ImageSettingsController extends FrameworkBundleAdminController
 
             // If we need to delete images files too
             if ($deleteForm->get('delete_images_files_too')->getNormData()) {
-                $this->getCommandBus()->handle(new DeleteImagesFromTypeCommand($imageTypeId));
+                $this->dispatchCommand(new DeleteImagesFromTypeCommand($imageTypeId));
             }
 
             // Delete image type
-            $this->getCommandBus()->handle(new DeleteImageTypeCommand($imageTypeId));
-            $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+            $this->dispatchCommand(new DeleteImageTypeCommand($imageTypeId));
+            $this->addFlash('success', $this->trans('Successful deletion', [], 'Admin.Notifications.Success'));
         } catch (Exception $e) {
             $this->addFlash('error', $e->getMessage());
         }
@@ -238,11 +254,11 @@ class ImageSettingsController extends FrameworkBundleAdminController
         $ids = $this->getBulkIdsFromRequest($request);
 
         try {
-            $this->getCommandBus()->handle(new BulkDeleteImageTypeCommand($ids));
+            $this->dispatchCommand(new BulkDeleteImageTypeCommand($ids));
 
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted.', [], 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $e->getMessage());
@@ -279,12 +295,12 @@ class ImageSettingsController extends FrameworkBundleAdminController
             $regenThumbnailsForm = $this->createForm(RegenerateThumbnailsType::class);
             $regenThumbnailsForm->handleRequest($request);
 
-            $this->getCommandBus()->handle(new RegenerateThumbnailsCommand(
+            $this->dispatchCommand(new RegenerateThumbnailsCommand(
                 $regenThumbnailsForm->get('image')->getData(),
                 $regenThumbnailsForm->get('image-type')->getData(),
                 $regenThumbnailsForm->get('erase-previous-images')->getData()
             ));
-            $this->addFlash('success', $this->trans('The thumbnails were successfully regenerated.', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('The thumbnails were successfully regenerated.', [], 'Admin.Notifications.Success'));
         } catch (Exception $e) {
             $this->addFlash('error', $e->getMessage());
         }
