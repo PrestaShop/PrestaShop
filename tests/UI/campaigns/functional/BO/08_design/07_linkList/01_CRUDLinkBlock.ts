@@ -181,7 +181,7 @@ describe('BO - Design - Link block : CRUD link block', async () => {
 
   describe('Go to FO and check existence of updated link Block just before the footer', async () => {
     it('should view my shop', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop2', baseContext);
 
       // View shop
       page = await boDesignLinkListPage.viewMyShop(page);
@@ -193,7 +193,7 @@ describe('BO - Design - Link block : CRUD link block', async () => {
     });
 
     it('should check link block before the footer of home page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkLinBlockInFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkLinBlockInFO2', baseContext);
 
       const linksTitle = await foClassicHomePage.getFooterLinksBlockTitle(page, 1);
       await expect(linksTitle).to.equal(updateLinkBlockData.name);
@@ -209,7 +209,7 @@ describe('BO - Design - Link block : CRUD link block', async () => {
     });
 
     it('should go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
 
       // Go back to BO
       page = await foClassicHomePage.closePage(browserContext, page, 0);
@@ -221,7 +221,7 @@ describe('BO - Design - Link block : CRUD link block', async () => {
 
   describe('Update link block', async () => {
     it('should click on edit block product', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToUpdatePage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToUpdatePage2', baseContext);
 
       await boDesignLinkListPage.goToEditBlock(page, dataHooks.displayFooterBefore.name, 1);
 
@@ -230,7 +230,7 @@ describe('BO - Design - Link block : CRUD link block', async () => {
     });
 
     it('should update link block', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updateBlockProduct', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'updateBlockProduct2', baseContext);
 
       await boDesignLinkListCreatePage.addCustomPages(page, secondUpdateLinkBlockData.customPages, 3);
 
@@ -251,7 +251,7 @@ describe('BO - Design - Link block : CRUD link block', async () => {
     });
 
     it('should view my shop', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop3', baseContext);
 
       // View shop
       page = await boDesignLinkListPage.viewMyShop(page);
@@ -263,7 +263,7 @@ describe('BO - Design - Link block : CRUD link block', async () => {
     });
 
     it('should check the first link block in the footer of home page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkLinBlockInFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkLinBlockInFO3', baseContext);
 
       const linksTitle = await foClassicHomePage.getFooterLinksBlockTitle(page, 1);
       await expect(linksTitle).to.not.equal(updateLinkBlockData.name);
