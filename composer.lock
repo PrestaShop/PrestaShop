@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c50df65a803d5e04ca56802fff8b6c92",
+    "content-hash": "51b0d194a4a0a2135a38b85d0f072e34",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5676,16 +5676,16 @@
         },
         {
             "name": "prestashop/ps_apiresources",
-            "version": "dev-update-module",
+            "version": "dev-reset-module",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jolelievre/ps_apiresources.git",
-                "reference": "5f9091dfda268c0b5250f4957196ddb05b7acb6f"
+                "url": "https://github.com/jinpresta/ps_apiresources.git",
+                "reference": "aec9dcfcd51f7766885bbe8143174abf1e9be77f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jolelievre/ps_apiresources/zipball/5f9091dfda268c0b5250f4957196ddb05b7acb6f",
-                "reference": "5f9091dfda268c0b5250f4957196ddb05b7acb6f",
+                "url": "https://api.github.com/repos/jinpresta/ps_apiresources/zipball/aec9dcfcd51f7766885bbe8143174abf1e9be77f",
+                "reference": "aec9dcfcd51f7766885bbe8143174abf1e9be77f",
                 "shasum": ""
             },
             "require": {
@@ -5737,9 +5737,9 @@
             "description": "PrestaShop - API Resources",
             "homepage": "https://github.com/PrestaShop/ps_apiresources",
             "support": {
-                "source": "https://github.com/jolelievre/ps_apiresources/tree/update-module"
+                "source": "https://github.com/jinpresta/ps_apiresources/tree/reset-module"
             },
-            "time": "2024-10-03T12:59:06+00:00"
+            "time": "2024-10-21T16:46:05+00:00"
         },
         {
             "name": "prestashop/ps_banner",
