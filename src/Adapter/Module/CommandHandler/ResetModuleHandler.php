@@ -1,0 +1,59 @@
+<?php
+/**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ */
+
+namespace PrestaShop\PrestaShop\Adapter\Module\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
+use PrestaShop\PrestaShop\Core\Domain\Module\Command\ResetModuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\Module\CommandHandler\ResetModuleHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Module\Exception\CannotResetModuleException;
+use PrestaShop\PrestaShop\Core\Module\ModuleManager;
+use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
+
+#[AsCommandHandler]
+class ResetModuleStatusHandler implements ResetModuleHandlerInterface
+{
+    public function __construct(
+        protected ModuleManager $moduleManager,
+        protected ModuleRepository $moduleRepository,
+    ) {
+    }
+
+    public function handle(ResetModuleCommand $command): void
+    {
+        if (!$this->moduleManager->isInstalled($command->getTechnicalName()->getValue())) {
+            throw new CannotResetModuleException('Module not installed', CannotResetModuleException::NOT_INSTALLED);
+        }
+
+        if (!$this->moduleManager->isEnabled($command->getTechnicalName()->getValue())) {
+            throw new CannotResetModuleException('Module not enabled', CannotResetModuleException::IS_DISABLED);
+        }
+        
+        if (!$this->moduleManager->reset($command->getTechnicalName()->getValue(), $command->isKeepData())) {
+            throw new CannotResetModuleException('Technical error occurred while resetting module status.');
+        }
+    }
+}

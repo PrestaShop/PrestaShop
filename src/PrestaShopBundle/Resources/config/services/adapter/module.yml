@@ -15,6 +15,11 @@ services:
     autowire: true
     public: false
 
+  PrestaShop\PrestaShop\Adapter\Module\CommandHandler\ResetModuleHandler:
+    autoconfigure: true
+    autowire: true
+    public: false
+
   PrestaShop\PrestaShop\Adapter\Module\QueryHandler\GetModuleInfosHandler:
     autowire: true
     autoconfigure: true

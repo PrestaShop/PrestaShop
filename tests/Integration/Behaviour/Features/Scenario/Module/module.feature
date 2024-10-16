@@ -43,6 +43,24 @@ Feature: Module
     Given module ps_featuredproducts has following infos:
       | enabled | true |
 
+  Scenario: Reset module status
+    Given module ps_featuredproducts has following infos:
+      | technical_name | ps_featuredproducts |
+      | enabled        | true |
+      | installed      | true |
+    When I reset module "ps_featuredproducts"
+    Given module ps_featuredproducts has following infos:
+      | technical_name | ps_featuredproducts |
+      | enabled        | true |
+      | installed      | false |
+    Then I should have an exception that module is not installed
+    When I reset module "ps_featuredproducts"
+    Given module ps_featuredproducts has following infos:
+      | technical_name | ps_featuredproducts |
+      | enabled        | false |
+      | installed      | true |
+    Then I should have an exception that module is not enabled
+
   Scenario: Get module infos
     Then module ps_emailsubscription has following infos:
       | technical_name | ps_emailsubscription |
