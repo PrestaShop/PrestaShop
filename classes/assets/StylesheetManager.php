@@ -72,6 +72,9 @@ class StylesheetManagerCore extends AbstractAssetManager
         $isRTL = is_object($context->language) && $context->language->is_rtl;
         if ('remote' === $server) {
             $this->add($id, $relativePath, $media, $priority, $inline, $server, $version);
+        } elseif ($inline && $fullPath) {
+          $fullPath = _PS_CORE_DIR_ . $fullPath;
+          $this->add($id, $fullPath, $media, $priority, $inline, $server);
         } elseif ($needRtl && $isRTL && $rtlFullPath) {
             $this->add($id, $rtlFullPath, $media, $priority, $inline, $server, $version);
         } elseif ($fullPath) {
