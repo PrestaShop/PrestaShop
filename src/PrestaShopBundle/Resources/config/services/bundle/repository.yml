@@ -97,11 +97,17 @@ services:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
 
-  prestashop.core.admin.import_match.repository:
-    class: PrestaShopBundle\Entity\Repository\ImportMatchRepository
+  PrestaShopBundle\Entity\Repository\ImportMatchRepository:
+    public: false
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
+
+  prestashop.core.admin.import_match.repository:
+    alias: PrestaShopBundle\Entity\Repository\ImportMatchRepository
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.bundle.repository.module:
     class: PrestaShopBundle\Entity\Repository\ModuleRepository
