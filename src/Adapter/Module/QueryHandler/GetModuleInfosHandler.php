@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Module\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotInstalledException;
 use PrestaShop\PrestaShop\Core\Domain\Module\Query\GetModuleInfos;
 use PrestaShop\PrestaShop\Core\Domain\Module\QueryHandler\GetModuleInfosHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Module\QueryResult\ModuleInfos;
@@ -48,6 +49,10 @@ class GetModuleInfosHandler implements GetModuleInfosHandlerInterface
         $module = $this->moduleRepository->getModule($query->getTechnicalName()->getValue());
         if (!$module->disk->get('is_present')) {
             throw new ModuleNotFoundException('Cannot find Module with name ' . $query->getTechnicalName()->getValue());
+        }
+
+        if (!$module->database->get('installed')) {
+            throw new ModuleNotInstalledException('Module ' . $query->getTechnicalName()->getValue() . ' not installed');
         }
 
         $moduleInstance = $module->getInstance();
