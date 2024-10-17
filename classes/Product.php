@@ -2896,36 +2896,25 @@ class ProductCore extends ObjectModel
             return false;
         }
 
-        $product_attributes = Db::getInstance()->executeS(
-            'SELECT `id_product_attribute`
-            FROM `' . _DB_PREFIX_ . 'product_attribute`
-            WHERE `id_product` = ' . (int) $this->id
-        );
+        $product_attributes = $this->cacheProductAttribute();
 
         if (!$product_attributes) {
             return false;
         }
 
-        $ids = [];
+        $ids = array();
 
         foreach ($product_attributes as $product_attribute) {
             $ids[] = (int) $product_attribute['id_product_attribute'];
         }
 
-        $result = Db::getInstance()->executeS(
-            '
-            SELECT pai.`id_image`, pai.`id_product_attribute`, il.`legend`
-            FROM `' . _DB_PREFIX_ . 'product_attribute_image` pai
-            LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (il.`id_image` = pai.`id_image`)
-            LEFT JOIN `' . _DB_PREFIX_ . 'image` i ON (i.`id_image` = pai.`id_image`)
-            WHERE pai.`id_product_attribute` IN (' . implode(', ', $ids) . ') AND il.`id_lang` = ' . (int) $id_lang . ' ORDER by i.`position`'
-        );
+        $result = $this->cacheCombinationImages($ids,$id_lang);
 
         if (!$result) {
             return false;
         }
 
-        $images = [];
+        $images = array();
 
         foreach ($result as $row) {
             $images[$row['id_product_attribute']][] = $row;
@@ -4559,43 +4548,14 @@ class ProductCore extends ObjectModel
      *
      * @return array Attribute groups
      */
-    public function getAttributesGroups($id_lang, $id_product_attribute = null)
+    public function getAttributesGroups($id_lang)
     {
         if (!Combination::isFeatureActive()) {
-            return [];
+            return array();
         }
-        $sql = 'SELECT ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, agl.`public_name` AS public_group_name,
-                    a.`id_attribute`, al.`name` AS attribute_name, a.`color` AS attribute_color, product_attribute_shop.`id_product_attribute`,
-                    IFNULL(stock.quantity, 0) as quantity, product_attribute_shop.`price`, product_attribute_shop.`ecotax`, product_attribute_shop.`weight`,
-                    product_attribute_shop.`default_on`, pa.`reference`, pa.`ean13`, pa.`mpn`, pa.`upc`, pa.`isbn`, product_attribute_shop.`unit_price_impact`,
-                    product_attribute_shop.`minimal_quantity`, product_attribute_shop.`available_date`, ag.`group_type`,
-                    pal.`available_now`, pal.`available_later`
-                FROM `' . _DB_PREFIX_ . 'product_attribute` pa
-                ' . Shop::addSqlAssociation('product_attribute', 'pa') . '
-                ' . Product::sqlStock('pa', 'pa') . '
-                LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_lang` pal
-                    ON (
-                        pa.`id_product_attribute` = pal.`id_product_attribute` AND
-                        pal.`id_lang` = ' . (int) Context::getContext()->language->id . ')
-                LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_combination` pac ON (pac.`id_product_attribute` = pa.`id_product_attribute`)
-                LEFT JOIN `' . _DB_PREFIX_ . 'attribute` a ON (a.`id_attribute` = pac.`id_attribute`)
-                LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group` ag ON (ag.`id_attribute_group` = a.`id_attribute_group`)
-                LEFT JOIN `' . _DB_PREFIX_ . 'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute`)
-                LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group`)
-                ' . Shop::addSqlAssociation('attribute', 'a') . '
-                WHERE pa.`id_product` = ' . (int) $this->id . '
-                    AND al.`id_lang` = ' . (int) $id_lang . '
-                    AND agl.`id_lang` = ' . (int) $id_lang . '
-                ';
+        $return = $this->cachegetAttributesGroups($id_lang);
+        return $return;
 
-        if ($id_product_attribute !== null) {
-            $sql .= ' AND product_attribute_shop.`id_product_attribute` = ' . (int) $id_product_attribute . ' ';
-        }
-
-        $sql .= 'GROUP BY id_attribute_group, id_product_attribute
-                ORDER BY ag.`position` ASC, a.`position` ASC, agl.`name` ASC';
-
-        return Db::getInstance()->executeS($sql);
     }
 
     /**
@@ -8481,4 +8441,72 @@ class ProductCore extends ObjectModel
             $this->id_shop_default = $firstAssociatedShop;
         }
     }
+    public function cachegetAttributesGroups($id_lang){
+    	$cache_id = '_cachegetAttributesGroups'.$id_lang;
+		if (!Cache::isStored($cache_id)){
+	    	$sql = 'SELECT ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, agl.`public_name` AS public_group_name,
+	                    a.`id_attribute`, al.`name` AS attribute_name, a.`color` AS attribute_color, product_attribute_shop.`id_product_attribute`,
+	                    IFNULL(stock.quantity, 0) as quantity, product_attribute_shop.`price`, product_attribute_shop.`ecotax`, product_attribute_shop.`weight`,
+	                    product_attribute_shop.`default_on`, pa.`reference`, product_attribute_shop.`unit_price_impact`,
+	                    product_attribute_shop.`minimal_quantity`, product_attribute_shop.`available_date`, ag.`group_type`
+	                FROM `' . _DB_PREFIX_ . 'product_attribute` pa
+	                ' . Shop::addSqlAssociation('product_attribute', 'pa') . '
+	                ' . Product::sqlStock('pa', 'pa') . '
+	                LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_combination` pac ON (pac.`id_product_attribute` = pa.`id_product_attribute`)
+	                LEFT JOIN `' . _DB_PREFIX_ . 'attribute` a ON (a.`id_attribute` = pac.`id_attribute`)
+	                LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group` ag ON (ag.`id_attribute_group` = a.`id_attribute_group`)
+	                LEFT JOIN `' . _DB_PREFIX_ . 'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute`)
+	                LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group`)
+	                ' . Shop::addSqlAssociation('attribute', 'a') . '
+	                WHERE pa.`id_product` = ' . (int) $this->id . '
+	                    AND al.`id_lang` = ' . (int) $id_lang . '
+	                    AND agl.`id_lang` = ' . (int) $id_lang . '
+	                GROUP BY id_attribute_group, id_product_attribute
+	                ORDER BY ag.`position` ASC, a.`position` ASC, agl.`name` ASC';
+	        $result = Db::getInstance()->executeS($sql);
+	        $json = Tools::jsonEncode($result);
+	        $cache = Cache::store($cache_id, $json);
+	        return $result;
+        }
+        $return = Tools::jsonDecode(Cache::retrieve($cache_id),true);
+        return $return;
+    }
+    function cacheCombinationImages($id_product_attributes,$id_lang){
+
+		$ids = implode(', ', $id_product_attributes);
+		$ids_md5 = md5($ids);
+		$cache_id = '_cacheCombinationImages_'.$ids_md5.'_'.$id_lang;
+		if (!Cache::isStored($cache_id)){
+			$result = Db::getInstance()->executeS(
+	            '
+	            SELECT pai.`id_image`, pai.`id_product_attribute`, il.`legend`
+	            FROM `' . _DB_PREFIX_ . 'product_attribute_image` pai
+	            LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (il.`id_image` = pai.`id_image`)
+	            LEFT JOIN `' . _DB_PREFIX_ . 'image` i ON (i.`id_image` = pai.`id_image`)
+	            WHERE pai.`id_product_attribute` IN (' .$ids. ') AND il.`id_lang` = ' . (int) $id_lang . ' ORDER by i.`position`'
+	        );
+	        $json = Tools::jsonEncode($result);
+	        $cache = Cache::store($cache_id, $json);
+	        return $result;
+		}
+		$return = Tools::jsonDecode(Cache::retrieve($cache_id),true);
+		return $return;
+
+	}
+    function cacheProductAttribute(){
+		$cache_id = 'cacheProductAttribute_'.$this->id;
+		if (!Cache::isStored($cache_id)){
+			$product_attributes = Db::getInstance()->executeS(
+	            'SELECT `id_product_attribute`
+	            FROM `' . _DB_PREFIX_ . 'product_attribute`
+	            WHERE `id_product` = ' . (int) $this->id
+	        );
+	        $json = Tools::jsonEncode($product_attributes);
+	        $cache = Cache::store($cache_id, $json);
+	        return $product_attributes;
+		}
+		$return = Tools::jsonDecode(Cache::retrieve($cache_id),true);
+		return $return;
+
+	}
 }
