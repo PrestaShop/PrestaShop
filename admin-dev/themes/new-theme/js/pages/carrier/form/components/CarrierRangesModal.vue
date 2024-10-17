@@ -30,6 +30,7 @@
       :confirm-label="$t('modal.apply')"
       :cancel-label="$t('modal.cancel')"
       :confirmation="true"
+      :close-on-click-outside="false"
       @close="cancelChanges"
       @confirm="applyChanges"
       @mouseleave="mouseLeave"
