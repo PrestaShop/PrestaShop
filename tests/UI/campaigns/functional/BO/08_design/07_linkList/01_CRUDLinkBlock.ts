@@ -11,7 +11,6 @@ import {
   boDesignLinkListPage,
   boDesignLinkListCreatePage,
   dataHooks,
-  dataLinkWidgets,
   FakerLinkWidget,
   foClassicHomePage,
   type LinkWidgetPage,
