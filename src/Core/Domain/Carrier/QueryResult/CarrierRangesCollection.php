@@ -37,6 +37,7 @@ class CarrierRangesCollection
          *     range_from: float,
          *     range_to: float,
          *     range_price: string,
+         *     range_package_weight: string|null,
          * }[] $carrierRanges,
          */
         array $carrierRanges,

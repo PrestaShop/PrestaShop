@@ -156,12 +156,22 @@ class CarrierFormDataProvider implements FormDataProviderInterface
         foreach ($carrierRangesCollection->getZones() as $zone) {
             $zoneRanges = [];
             foreach ($zone->getRanges() as $range) {
-                $zoneRanges[] = [
-                    'range' => $range->getFrom()->__toString() . $rangeSymbol . ' - ' . $range->getTo()->__toString() . $rangeSymbol,
-                    'from' => $range->getFrom(),
-                    'to' => $range->getTo(),
-                    'price' => $range->getPrice()->__toString(),
-                ];
+                if ($carrier->getShippingMethod() == ShippingMethod::BY_WEIGHT) {
+                    $zoneRanges[] = [
+                        'range' => $range->getFrom()->__toString() . $rangeSymbol . ' - ' . $range->getTo()->__toString() . $rangeSymbol,
+                        'from' => $range->getFrom(),
+                        'to' => $range->getTo(),
+                        'price' => $range->getPrice()->__toString(),
+                        'package_weight' => $range->getPackageWeight()->__toString(),
+                    ];
+                } else {
+                    $zoneRanges[] = [
+                        'range' => $range->getFrom()->__toString() . $rangeSymbol . ' - ' . $range->getTo()->__toString() . $rangeSymbol,
+                        'from' => $range->getFrom(),
+                        'to' => $range->getTo(),
+                        'price' => $range->getPrice()->__toString(),
+                    ];
+                }
             }
 
             $ranges[] = [

@@ -105,6 +105,12 @@ export default class CarrierFormManager {
     const shippingMethodValue = <number> this.$shippingMethodInput.filter(':checked').first().val() || -1;
     this.currentShippingSymbol = shippingMethodUnits[shippingMethodValue] || '?';
 
+    if (shippingMethodValue == 1) {
+      $(CarrierFormMap.rangePackageWeightClass).show();
+    } else {
+      $(CarrierFormMap.rangePackageWeightClass).hide();
+    }
+
     // Then, we need to emit an event to update this symbol to other components
     this.eventEmitter.emit(CarrierFormEventMap.shippingMethodChange, this.currentShippingSymbol);
 
