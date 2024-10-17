@@ -30,7 +30,6 @@
       :confirm-label="$t('modal.apply')"
       :cancel-label="$t('modal.cancel')"
       :confirmation="true"
-      :close-on-click-outside="false"
       @close="cancelChanges"
       @confirm="applyChanges"
       @mouseleave="mouseLeave"
@@ -82,7 +81,7 @@
                         type="number"
                         class="form-control form-from"
                         inputmode="decimal"
-                        v-model="r.from"
+                        v-model.number="r.from"
                       >
                     </div>
                   </td>
@@ -95,7 +94,7 @@
                         type="number"
                         class="form-control form-to"
                         inputmode="decimal"
-                        v-model="r.to"
+                        v-model.number="r.to"
                       >
                     </div>
                   </td>
@@ -236,14 +235,14 @@
         let saveMax: null | number = null;
         this.ranges.forEach((range, index) => {
           // Check if all fields are filled
-          if (range.from === null) {
+          if (range.from === null || typeof range.from === 'string' || range.from < 0) {
             table.querySelectorAll(`tr[data-row="${index}"] input.form-from`)
               .forEach((input) => {
                 input.classList.add('is-invalid');
               });
             this.errors = true;
           }
-          if (range.to === null) {
+          if (range.to === null || typeof range.to === 'string' || range.to < 0) {
             table.querySelectorAll(`tr[data-row="${index}"] input.form-to`)
               .forEach((input) => {
                 input.classList.add('is-invalid');
