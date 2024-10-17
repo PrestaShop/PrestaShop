@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Hook\Extractor;
 
 use PhpParser\Node;
-use PhpParser\NodeTraverser;
-use PhpParser\NodeVisitorAbstract;
-use PhpParser\ParserFactory;
-use PhpParser\PrettyPrinter\Standard;
 use RuntimeException;
+use PhpParser\NodeTraverser;
+use PhpParser\ParserFactory;
+use PhpParser\Error;
+use PhpParser\NodeVisitorAbstract;
 use Symfony\Component\Finder\Finder;
+use PhpParser\PrettyPrinter\Standard;
 
 final class HookExtractor
 {
@@ -155,22 +156,25 @@ final class HookExtractor
                 $this->code = $code;
             }
 
-            public function enterNode(Node $node)
+            public function enterNode(Node $node): void
             {
                 if ($node instanceof Node\Expr\StaticCall && $node->class instanceof Node\Name && $node->name instanceof Node\Identifier) {
                     if ($node->class->toString() === 'Hook' && $node->name->toString() === 'exec') {
+                        /** @phpstan-ignore property.undefined */
                         $this->processHookCall($node, $node->args[0]->value, 'action');
                     }
                 }
 
                 if ($node instanceof Node\Expr\MethodCall && $node->var instanceof Node\Expr\PropertyFetch && $node->name instanceof Node\Identifier) {
                     if ($node->name->toString() === 'dispatchWithParameters') {
+                        /** @phpstan-ignore property.undefined */
                         $this->processHookCall($node, $node->args[0]->value, 'action');
                     }
                 }
 
                 if ($node instanceof Node\Expr\MethodCall && $node->name instanceof Node\Identifier) {
                     if ($node->name->toString() === 'dispatchHook') {
+                        /** @phpstan-ignore property.undefined */
                         $this->processHookCall($node, $node->args[0]->value, 'action');
                     }
                 }
@@ -440,7 +444,7 @@ final class HookExtractor
                     return substr($this->code, $startPos, $endPos - $startPos + 1);
                 } else {
                     // Fallback to pretty printer if positions are not available
-                    $prettyPrinter = new PhpParser\PrettyPrinter\Standard();
+                    $prettyPrinter = new Standard();
 
                     return $prettyPrinter->prettyPrintExpr($node);
                 }
