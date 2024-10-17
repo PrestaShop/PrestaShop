@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Adapter\HookManager;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
+use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotFoundException;
 use Symfony\Component\Finder\Finder;
 use Throwable;
 
@@ -121,6 +122,15 @@ class ModuleRepository implements ModuleRepositoryInterface
         return $this->getList()->filter(static function (Module $module) {
             return $module->isInstalled();
         });
+    }
+
+    public function getPresentModule(string $technicalName): ModuleInterface 
+    {
+        $module = $this->getModule($technicalName);
+        if (!$module->disk->get('is_present')) {
+            throw new ModuleNotFoundException();
+        }
+        return $module;
     }
 
     public function getMustBeConfiguredModules(): ModuleCollection
