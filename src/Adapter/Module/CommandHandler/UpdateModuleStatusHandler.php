@@ -45,10 +45,7 @@ class UpdateModuleStatusHandler implements UpdateModuleStatusHandlerInterface
 
     public function handle(UpdateModuleStatusCommand $command): void
     {
-        $module = $this->moduleRepository->getModule($command->getTechnicalName()->getValue());
-        if (!$module->disk->get('is_present')) {
-            throw new ModuleNotFoundException();
-        }
+        $this->moduleRepository->getPresentModule($command->getTechnicalName()->getValue());
 
         if ($command->isEnabled()) {
             $result = $this->moduleManager->enable($command->getTechnicalName()->getValue());

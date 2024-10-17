@@ -44,15 +44,13 @@ class ResetModuleStatusHandler implements ResetModuleHandlerInterface
 
     public function handle(ResetModuleCommand $command): void
     {
-        if (!$this->moduleManager->isInstalled($command->getTechnicalName()->getValue())) {
-            throw new CannotResetModuleException('Module not installed', CannotResetModuleException::NOT_INSTALLED);
-        }
+        $this->moduleRepository->getPresentModule($command->getTechnicalName()->getValue());
 
-        if (!$this->moduleManager->isEnabled($command->getTechnicalName()->getValue())) {
-            throw new CannotResetModuleException('Module not enabled', CannotResetModuleException::IS_DISABLED);
+        if (!$this->moduleManager->isInstalledAndActive($command->getTechnicalName()->getValue())) {
+            throw new CannotResetModuleException('Module not installed or not enabled', CannotResetModuleException::NOT_ACTIVE);
         }
         
-        if (!$this->moduleManager->reset($command->getTechnicalName()->getValue(), $command->isKeepData())) {
+        if (!$this->moduleManager->reset($command->getTechnicalName()->getValue(), $command->keepData())) {
             throw new CannotResetModuleException('Technical error occurred while resetting module status.');
         }
     }

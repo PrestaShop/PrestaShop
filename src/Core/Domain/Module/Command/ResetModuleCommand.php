@@ -44,7 +44,7 @@ class ResetModuleCommand
         return $this->technicalName;
     }
 
-    public function isKeepData(): bool
+    public function keepData(): bool
     {
         return $this->keepData;
     }

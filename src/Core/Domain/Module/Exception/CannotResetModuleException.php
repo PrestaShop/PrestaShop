@@ -32,6 +32,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Module\Exception;
  */
 class CannotResetModuleException extends ModuleException
 {
-    public const NOT_INSTALLED = 3;
+    public const NOT_ACTIVE = 1;
 
 }

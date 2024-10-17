@@ -49,16 +49,12 @@ Feature: Module
       | enabled        | true |
       | installed      | true |
     When I reset module "ps_featuredproducts"
-    Given module ps_featuredproducts has following infos:
+    Then module ps_featuredproducts has following infos:
       | technical_name | ps_featuredproducts |
       | enabled        | true |
-      | installed      | false |
-    Then I should have an exception that module is not installed
-    When I reset module "ps_featuredproducts"
-    Given module ps_featuredproducts has following infos:
-      | technical_name | ps_featuredproducts |
-      | enabled        | false |
       | installed      | true |
+    When I disable module "ps_featuredproducts"
+    And I reset module "ps_featuredproducts"
     Then I should have an exception that module is not enabled
 
   Scenario: Get module infos
