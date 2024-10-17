@@ -32,8 +32,10 @@ use Behat\Gherkin\Node\TableNode;
 use Module;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkToggleModuleStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkUninstallModuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\UpdateModuleStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotInstalledException;
 use PrestaShop\PrestaShop\Core\Domain\Module\Query\GetModuleInfos;
 use PrestaShop\PrestaShop\Core\Domain\Module\QueryResult\ModuleInfos;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -62,7 +64,7 @@ class ModuleFeatureContext extends AbstractDomainFeatureContext
             if (isset($data['installed'])) {
                 Assert::assertEquals(PrimitiveUtils::castStringBooleanIntoBoolean($data['installed']), $moduleInfos->isInstalled());
             }
-        } catch (ModuleNotFoundException $e) {
+        } catch (ModuleNotFoundException | ModuleNotInstalledException $e) {
             $this->setLastException($e);
         }
     }
@@ -73,6 +75,15 @@ class ModuleFeatureContext extends AbstractDomainFeatureContext
     public function assertModuleNotFound(): void
     {
         $this->assertLastErrorIs(ModuleNotFoundException::class);
+    }
+
+
+    /**
+     * @Then I should have an exception that module is not installed
+     */
+    public function assertModuleNotInstalled(): void
+    {
+        $this->assertLastErrorIs(ModuleNotInstalledException::class);
     }
 
     /**
@@ -107,4 +118,20 @@ class ModuleFeatureContext extends AbstractDomainFeatureContext
         // Clean the cache
         Module::resetStaticCache();
     }
+
+    /**
+    * @When /^I bulk uninstall modules: "(.+)"$/
+    */
+   public function bulkUninstall(string $modulesRef): void
+   {
+       $modules = [];
+       foreach (PrimitiveUtils::castStringArrayIntoArray($modulesRef) as $modulesReference) {
+           $modules[] = $modulesReference;
+       }
+
+       $this->getQueryBus()->handle(new BulkUninstallModuleCommand($modules));
+
+       // Clean the cache
+       Module::resetStaticCache();
+   }
 }
