@@ -78,6 +78,7 @@ npm-debug.log.*
 !/upload/.htaccess
 
 /docs/phpdoc-sf/
+/docs/hooks/
 *.hot-update.js
 *.hot-update.json
 

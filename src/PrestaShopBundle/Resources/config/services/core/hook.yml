@@ -27,6 +27,9 @@ services:
     arguments:
       $hookDescriptions: '%hook_descriptions%'
 
+  prestashop.core.hook.extractor.hook_extractor:
+    class: 'PrestaShop\PrestaShop\Core\Hook\Extractor\HookExtractor'
+
 parameters:
   hook_descriptions:
     'grid_definition_modifier':

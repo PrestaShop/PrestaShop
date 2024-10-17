@@ -51,7 +51,7 @@
         "matthiasmullie/minify": "~1.3.0",
         "mobiledetect/mobiledetectlib": "^3.74.0",
         "mrclay/minify": "^3.0.11",
-        "nikic/php-parser": "^4.0",
+        "nikic/php-parser": "^4",
         "nyholm/psr7": "^1.5",
         "pelago/emogrifier": "^v7.0.0",
         "phpoffice/phpspreadsheet": "^1.19",
