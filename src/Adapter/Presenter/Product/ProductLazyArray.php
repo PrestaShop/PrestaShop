@@ -1138,17 +1138,23 @@ class ProductLazyArray extends AbstractLazyArray
             $this->product['availability_date'] = $product['available_date'];
             $this->product['availability'] = 'unavailable';
 
+            // We will primarily use label from combination if set, then label on product, then the default label from PS settings
+            if (!empty($combinationData['available_later'])) {
+                $this->product['availability_message'] = $combinationData['available_later'];
+            } elseif (!empty($product['available_later'])) {
+                $this->product['availability_message'] = $product['available_later'];
+            } else {
+                $config = $this->configuration->get('PS_LABEL_OOS_PRODUCTS_BOD');
+                $this->product['availability_message'] = $config[$language->id] ?? null;
+            }
+
             // If the product has combinations and other combination is in stock, we show a small hint about it
             if ($product['cache_default_attribute'] && $product['quantity_all_versions'] > 0) {
-                $this->product['availability_message'] = $this->translator->trans(
+                $this->product['availability_submessage'] = $this->translator->trans(
                     'Product available with different options',
                     [],
                     'Shop.Theme.Catalog'
                 );
-            } else {
-                // We use label set in PS configuration - label is not customizable per product
-                $config = $this->configuration->get('PS_LABEL_OOS_PRODUCTS_BOD');
-                $this->product['availability_message'] = $config[$language->id] ?? null;
             }
         }
     }

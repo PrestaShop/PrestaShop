@@ -106,11 +106,18 @@ class AvailabilityType extends TranslatorAwareType
                         ]),
                     ],
                 ],
+                'help' => $this->trans('This will be the displayed availability of the product, if there is at least 1 in stock. If you don\'t enter anything, value from [1]Shop Parameters > Product Settings[/1] will be used.',
+                    'Admin.Catalog.Help',
+                    [
+                        '[1]' => '<a href="' . $this->router->generate('admin_product_preferences') . '#configuration_fieldset_stock">',
+                        '[/1]' => '</a>',
+                    ]
+                ),
             ])
             ->add('available_later_label', TranslatableType::class, [
                 'type' => TextType::class,
                 'label' => $this->trans(
-                    'Label when out of stock (and backorders allowed)',
+                    'Label when out of stock',
                     'Admin.Catalog.Feature'
                 ),
                 'required' => false,
@@ -128,6 +135,13 @@ class AvailabilityType extends TranslatorAwareType
                         ]),
                     ],
                 ],
+                'help' => $this->trans('This will be the displayed availability of the product, if it\'s not in stock. If you don\'t enter anything, value from [1]Shop Parameters > Product Settings[/1] will be used.',
+                    'Admin.Catalog.Help',
+                    [
+                        '[1]' => '<a href="' . $this->router->generate('admin_product_preferences') . '#configuration_fieldset_stock">',
+                        '[/1]' => '</a>',
+                    ]
+                ),
             ])
             ->add('available_date', DatePickerType::class, [
                 'label' => $this->trans('Availability date', 'Admin.Catalog.Feature'),
