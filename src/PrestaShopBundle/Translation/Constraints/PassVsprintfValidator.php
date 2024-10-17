@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -45,7 +46,10 @@ class PassVsprintfValidator extends ConstraintValidator
             throw new UnexpectedTypeException($translation, 'PrestaShopBundle\Entity\Translation');
         }
 
-        if ($this->countArgumentsOfTranslation($translation->getKey()) != $this->countArgumentsOfTranslation($translation->getTranslation())) {
+        if (
+            $this->countArgumentsOfTranslation($translation->getKey()) !=
+            $this->countArgumentsOfTranslation($translation->getTranslation())
+        ) {
             $this->context->buildViolation($constraint->message)
                 ->addViolation();
         }
@@ -56,7 +60,13 @@ class PassVsprintfValidator extends ConstraintValidator
         if (empty($property)) {
             return 0;
         }
+
         $matches = [];
+
+        // First we remove all classic parameters (%var%)
+        $property = preg_replace(Translator::$regexClassicParams, '~', $property);
+
+        // Then we count the number of sprintf parameters
         if (preg_match_all(Translator::$regexSprintfParams, $property, $matches) === false) {
             throw new Exception('Preg_match failed');
         }
