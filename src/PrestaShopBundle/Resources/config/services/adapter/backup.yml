@@ -2,7 +2,7 @@ services:
   _defaults:
     autowire: true
 
-  PrestaShop\PrestaShop\Core\Backup\BackupInterface:
+  PrestaShop\PrestaShop\Core\Backup\Manager\BackupCreatorInterface:
     class: PrestaShop\PrestaShop\Adapter\Backup\DatabaseBackupCreator
     public: true
 
