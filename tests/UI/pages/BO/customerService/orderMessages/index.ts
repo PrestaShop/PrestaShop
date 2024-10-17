@@ -167,7 +167,9 @@ class OrderMessages extends BOBasePage {
    */
   async filterTable(page: Page, filterBy: string, value: string): Promise<void> {
     await this.setValue(page, this.filterColumn(filterBy), value);
-    await this.clickAndWaitForURL(page, this.filterSearchButton);
+    // click on search
+    await page.locator(this.filterSearchButton).click();
+    await this.waitForVisibleSelector(page, this.filterResetButton);
   }
 
   /* Column Methods */

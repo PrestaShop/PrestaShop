@@ -1,13 +1,11 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import pages
-import importPage from '@pages/BO/advancedParameters/import';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boImportPage,
   boLoginPage,
   utilsFile,
   utilsPlaywright,
@@ -48,10 +46,10 @@ describe('BO - Advanced Parameters - Import : Download sample csv files', async 
       boDashboardPage.advancedParametersLink,
       boDashboardPage.importLink,
     );
-    await importPage.closeSfToolBar(page);
+    await boImportPage.closeSfToolBar(page);
 
-    const pageTitle = await importPage.getPageTitle(page);
-    expect(pageTitle).to.contains(importPage.pageTitle);
+    const pageTitle = await boImportPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boImportPage.pageTitle);
   });
 
   const sampleFiles = [
@@ -139,7 +137,7 @@ describe('BO - Advanced Parameters - Import : Download sample csv files', async 
       it(`should download ${sampleFile.args.type} sample file`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${sampleFile.args.type}DownloadFile`, baseContext);
 
-        filePath = await importPage.downloadSampleFile(page, sampleFile.args.type);
+        filePath = await boImportPage.downloadSampleFile(page, sampleFile.args.type);
 
         const doesFileExist = await utilsFile.doesFileExist(filePath);
         expect(doesFileExist, `${sampleFile.args.type} sample file was not downloaded`).to.eq(true);

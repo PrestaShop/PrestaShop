@@ -137,7 +137,9 @@ class Addresses extends BOBasePage {
   async resetFilter(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.filterResetButton, 2000)) {
       await page.locator(this.filterResetButton).click();
-      await this.elementNotVisible(page, this.filterResetButton, 2000);
+      // Move the mouse to avoid the tooltip on first row
+      await page.mouse.move(0, 0);
+      await this.waitForHiddenSelector(page, this.filterResetButton, 2000);
     }
   }
 
@@ -180,7 +182,8 @@ class Addresses extends BOBasePage {
       // Do nothing
     }
     // click on search
-    await this.clickAndWaitForURL(page, this.filterSearchButton);
+    await page.locator(this.filterSearchButton).click();
+    await this.waitForVisibleSelector(page, this.filterResetButton);
   }
 
   /**
