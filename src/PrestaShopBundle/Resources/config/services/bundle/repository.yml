@@ -35,11 +35,17 @@ services:
 
   PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface: '@prestashop.core.admin.lang.repository'
 
-  prestashop.core.admin.log.repository:
-    class: PrestaShopBundle\Entity\Repository\LogRepository
+  PrestaShopBundle\Entity\Repository\LogRepository:
+    public: false
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
+
+  prestashop.core.admin.log.repository:
+    alias: PrestaShopBundle\Entity\Repository\LogRepository
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.api.stock.repository:
     class: PrestaShopBundle\Entity\Repository\StockRepository
