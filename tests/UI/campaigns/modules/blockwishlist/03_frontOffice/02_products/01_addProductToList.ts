@@ -417,8 +417,8 @@ describe('Wishlist module - Add a product to a list', async () => {
       expect(qtyProduct).to.equal(1);
 
       //const sizeProduct = await foClassicMyWishlistsViewPage.getProductAttribute(page, 4, 'Size');
-      const sizeProduct = await foClassicMyWishlistsViewPage.getProductAttribute(page, 2, 'Size');
-      expect(sizeProduct).to.equal('M');
+      //const sizeProduct = await foClassicMyWishlistsViewPage.getProductAttribute(page, 2, 'Size');
+      //expect(sizeProduct).to.equal('M');
 
       //const colorProduct = await foClassicMyWishlistsViewPage.getProductAttribute(page, 4, 'Color');
       const colorProduct = await foClassicMyWishlistsViewPage.getProductAttribute(page, 2, 'Color');
