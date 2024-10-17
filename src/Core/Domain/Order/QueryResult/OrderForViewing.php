@@ -251,7 +251,7 @@ class OrderForViewing
         DateTimeImmutable $createdAt,
         ?OrderCustomerForViewing $customer,
         OrderShippingAddressForViewing $shippingAddress,
-        OrderInvoiceAddressForViewing $invoiceAddress,
+        ?OrderInvoiceAddressForViewing $invoiceAddress,
         OrderProductsForViewing $products,
         OrderHistoryForViewing $history,
         OrderDocumentsForViewing $documents,
@@ -374,7 +374,7 @@ class OrderForViewing
     /**
      * @return OrderInvoiceAddressForViewing
      */
-    public function getInvoiceAddress(): OrderInvoiceAddressForViewing
+    public function getInvoiceAddress(): ?OrderInvoiceAddressForViewing
     {
         return $this->invoiceAddress;
     }
