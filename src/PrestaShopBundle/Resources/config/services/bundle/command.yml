@@ -69,3 +69,8 @@ services:
     autowire: true
     tags:
       - 'console.command'
+
+  PrestaShopBundle\Command\ExtractListOfHooksCommand:
+    autowire: true
+    tags:
+      - 'console.command'
