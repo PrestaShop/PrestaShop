@@ -122,7 +122,7 @@ class ModuleFeatureContext extends AbstractDomainFeatureContext
     /**
     * @When /^I bulk uninstall modules: "(.+)"$/
     */
-   public function bulkUninstall(string $modulesRef): void
+   public function bulkUninstallModule(string $modulesRef): void
    {
        $modules = [];
        foreach (PrimitiveUtils::castStringArrayIntoArray($modulesRef) as $modulesReference) {

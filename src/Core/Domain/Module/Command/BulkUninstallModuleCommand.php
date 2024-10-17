@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Module\Command;
 
 /**
- * Bulk toggles module status
+ * Bulk uninstall module
  */
 class BulkUninstallModuleCommand
 {
