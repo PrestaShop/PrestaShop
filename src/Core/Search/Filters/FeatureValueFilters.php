@@ -79,7 +79,7 @@ class FeatureValueFilters extends Filters
         return [
             'limit' => self::LIST_LIMIT,
             'offset' => 0,
-            'orderBy' => 'value',
+            'orderBy' => 'position',
             'sortOrder' => 'asc',
             'filters' => [],
         ];
