@@ -179,6 +179,7 @@ class MailCore extends ObjectModel
                 'idShop' => &$idShop,
                 'bcc' => &$bcc,
                 'replyTo' => &$replyTo,
+                'replyToName' => &$replyToName,
             ],
             null,
             true
