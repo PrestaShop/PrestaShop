@@ -43,6 +43,7 @@ export default {
   rangeNamePreview: '.js-carrier-range-name .text-preview-value',
   rangeNameInput: '.js-carrier-range-name input[type="hidden"]',
   rangeRow: '.js-carrier-range-row',
+  rangePackageWeightClass: '.package-weight',
   zoneNamePreview: '.card-title .text-preview-value',
   rangeFromInput: 'input[name$="[from]"]',
   rangeToInput: 'input[name$="[to]"]',

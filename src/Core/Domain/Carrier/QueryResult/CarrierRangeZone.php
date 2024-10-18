@@ -43,6 +43,7 @@ class CarrierRangeZone
          *     range_from: float,
          *     range_to: float,
          *     range_price: string,
+         *     package_weight: float|null,
          * }[] $ranges,
          */
         array $ranges,
@@ -53,7 +54,8 @@ class CarrierRangeZone
             $this->ranges[] = new CarrierRangePrice(
                 (string) $range['range_from'],
                 (string) $range['range_to'],
-                (string) $range['range_price']
+                (string) $range['range_price'],
+                isset($range['range_package_weight']) ? (string) $range['range_package_weight'] : ''
             );
         }
     }

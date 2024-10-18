@@ -59,7 +59,8 @@ class CarrierRangeZone
             $this->ranges[] = new CarrierRangePrice(
                 (string) $range['range_from'],
                 (string) $range['range_to'],
-                (string) $range['range_price']
+                (string) $range['range_price'],
+                isset($range['range_package_weight']) ? (string) $range['range_package_weight'] : ''
             );
         }
     }
