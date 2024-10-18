@@ -114,6 +114,23 @@ class PageType extends TranslatorAwareType
                     'Admin.Shopparameters.Help'
                 ),
                 'required' => false,
+            ])
+            ->add('feature_values_order', ChoiceType::class, [
+                'label' => $this->trans(
+                    'Order of feature values',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'help' => $this->trans(
+                    'In the product page, feature values can be sorted alphabetically by value or by position.',
+                    'Admin.Shopparameters.Help'
+                ),
+                'choices' => [
+                    'Alphabetical' => 0,
+                    'Position' => 1,
+                ],
+                'choice_translation_domain' => 'Admin.Shopparameters.Feature',
+                'placeholder' => false,
+                'required' => false,
             ]);
     }
 
