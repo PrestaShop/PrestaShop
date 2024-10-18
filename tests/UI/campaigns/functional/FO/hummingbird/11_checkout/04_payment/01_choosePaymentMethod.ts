@@ -9,6 +9,7 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {
+  type BrowserContext,
   dataCustomers,
   dataPaymentMethods,
   type FakerPaymentMethod,
@@ -19,12 +20,12 @@ import {
   foHummingbirdModalQuickViewPage,
   type MailDev,
   type MailDevEmail,
+  type Page,
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_hummingbird_checkout_payment_choosePaymentMethod';
 

@@ -9,16 +9,17 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {
+  type BrowserContext,
   dataCustomers,
   foHummingbirdCartPage,
   foHummingbirdCheckoutPage,
   foHummingbirdHomePage,
   foHummingbirdModalQuickViewPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_hummingbird_checkout_addresses_billingAdressWhenLoggedIn';
 

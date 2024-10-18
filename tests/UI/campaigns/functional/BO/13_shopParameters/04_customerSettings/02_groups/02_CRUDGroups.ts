@@ -7,12 +7,13 @@ import {
   boCustomerSettingsPage,
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   FakerGroup,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_shopParameters_customerSettings_groups_CRUDGroups';
 

@@ -2,9 +2,9 @@ import BOBasePage from '@pages/BO/BObasePage';
 
 import {
   type FakerAddress,
+  type Frame,
+  type Page,
 } from '@prestashop-core/ui-testing';
-
-import type {Frame, Page} from 'playwright';
 
 /**
  * Add address page, contains functions that can be used on the page

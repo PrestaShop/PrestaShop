@@ -14,6 +14,7 @@ import {
   boDashboardPage,
   boLoginPage,
   boOrdersPage,
+  type BrowserContext,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
@@ -24,11 +25,11 @@ import {
   foClassicLoginPage,
   foClassicMyAccountPage,
   foClassicProductPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_customerService_merchandiseReturns_merchandiseReturnOptions';
 

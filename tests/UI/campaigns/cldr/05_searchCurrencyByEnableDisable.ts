@@ -11,13 +11,14 @@ import {
   boCurrenciesPage,
   boCurrenciesCreatePage,
   boLoginPage,
+  type BrowserContext,
   dataCurrencies,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {use, expect} from 'chai';
 import chaiString from 'chai-string';
-import type {BrowserContext, Page} from 'playwright';
 
 use(chaiString);
 

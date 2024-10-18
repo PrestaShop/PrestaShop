@@ -8,10 +8,11 @@ import {disableB2BTest, enableB2BTest} from '@commonTests/BO/shopParameters/b2b'
 import outstandingPage from '@pages/BO/customers/outstanding';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 

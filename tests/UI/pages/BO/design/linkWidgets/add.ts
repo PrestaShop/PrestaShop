@@ -1,7 +1,8 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type {Page} from 'playwright';
 import {
+  type Page,
+
   type FakerLinkWidget,
   type LinkWidgetPage,
 } from '@prestashop-core/ui-testing';

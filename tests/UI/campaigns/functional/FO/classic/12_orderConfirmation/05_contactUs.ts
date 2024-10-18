@@ -11,6 +11,7 @@ import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
@@ -23,12 +24,12 @@ import {
   foClassicLoginPage,
   foClassicModalQuickViewPage,
   foClassicMyAccountPage,
+  type Page,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 // context
 const baseContext: string = 'functional_FO_classic_orderConfirmation_contactUs';

@@ -9,12 +9,13 @@ import viewFeaturePage from '@pages/BO/catalog/features/view';
 import addValuePage from '@pages/BO/catalog/features/addValue';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   FakerFeature,
   FakerFeatureValue,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 

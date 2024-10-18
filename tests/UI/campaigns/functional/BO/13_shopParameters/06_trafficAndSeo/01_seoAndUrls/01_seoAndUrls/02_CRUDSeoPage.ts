@@ -6,12 +6,13 @@ import seoAndUrlsPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls';
 import addSeoAndUrlPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls/add';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   dataSeoPages,
   FakerSeoPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 

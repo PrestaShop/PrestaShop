@@ -7,14 +7,15 @@ import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
 import attributesPage from '@pages/BO/catalog/attributes';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
   boProductSettingsPage,
+  type BrowserContext,
   FakerProduct,
   foClassicProductPage,
+  type Page,
   type ProductAttribute,
   type ProductCombinationOptions,
   utilsFile,

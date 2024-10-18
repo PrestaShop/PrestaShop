@@ -10,12 +10,13 @@ import createStoresPage from '@pages/BO/shopParameters/stores/add';
 import {storesPage as storePage} from '@pages/FO/classic/stores';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   FakerStore,
   foClassicHomePage,
+  type Page,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

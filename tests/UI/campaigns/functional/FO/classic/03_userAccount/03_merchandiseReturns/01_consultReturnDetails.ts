@@ -20,6 +20,7 @@ import {
   boDashboardPage,
   boLoginPage,
   boOrdersPage,
+  type BrowserContext,
   dataCustomers,
   dataOrderReturnStatuses,
   dataOrderStatuses,
@@ -29,11 +30,11 @@ import {
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_classic_userAccount_merchandiseReturns_consultReturnDetails';
 

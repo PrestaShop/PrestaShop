@@ -4,14 +4,15 @@ import testContext from '@utils/testContext';
 // Import pages
 import createProductsPage from '@pages/BO/catalog/products/add';
 
-import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  type BrowserContext,
   FakerProduct,
   foClassicProductPage,
+  type Page,
   utilsCore,
   utilsFile,
   utilsPlaywright,

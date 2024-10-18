@@ -21,16 +21,17 @@ import seoTab from '@pages/BO/catalog/products/add/seoTab';
 import getProductXml from '@data/xml/product';
 
 import {expect} from 'chai';
-import type {
-  APIResponse, APIRequestContext, BrowserContext, Page,
-} from 'playwright';
 import {
+  type APIRequestContext,
+  type APIResponse,
   boDashboardPage,
   boLoginPage,
   boProductsPage,
   boProductsCreateTabDescriptionPage,
   boProductsCreateTabShippingPage,
   boProductsCreateTabStocksPage,
+  type BrowserContext,
+  type Page,
   utilsPlaywright,
   utilsXML,
   type WebservicePermission,

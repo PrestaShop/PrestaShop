@@ -5,6 +5,7 @@ import testContext from '@utils/testContext';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 import {
+  type BrowserContext,
   dataCarriers,
   dataCustomers,
   dataPaymentMethods,
@@ -14,11 +15,11 @@ import {
   foHummingbirdCheckoutOrderConfirmationPage,
   foHummingbirdHomePage,
   foHummingbirdProductPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 // context
 const baseContext: string = 'functional_FO_hummingbird_orderConfirmation_displayOfProductCustomization';

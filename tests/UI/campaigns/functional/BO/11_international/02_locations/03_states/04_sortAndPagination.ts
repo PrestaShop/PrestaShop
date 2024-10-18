@@ -8,13 +8,14 @@ import statesPage from '@pages/BO/international/locations/states';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   dataCountries,
+  type Page,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_international_locations_states_sortAndPagination';
 

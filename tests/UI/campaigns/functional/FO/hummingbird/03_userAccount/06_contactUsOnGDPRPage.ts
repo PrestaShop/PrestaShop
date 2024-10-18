@@ -12,6 +12,7 @@ import gdprPersonalDataPage from '@pages/FO/hummingbird/myAccount/gdprPersonalDa
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   dataCustomers,
   dataOrders,
   FakerContactMessage,
@@ -19,12 +20,12 @@ import {
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
+  type Page,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_hummingbird_userAccount_contactUsOnGDPRPage';
 

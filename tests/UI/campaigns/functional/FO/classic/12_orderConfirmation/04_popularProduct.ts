@@ -5,6 +5,7 @@ import testContext from '@utils/testContext';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
+  type BrowserContext,
   dataCarriers,
   dataCustomers,
   dataPaymentMethods,
@@ -16,11 +17,11 @@ import {
   foClassicHomePage,
   foClassicModalQuickViewPage,
   foClassicSearchResultsPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 // context
 const baseContext: string = 'functional_FO_classic_orderConfirmation_popularProduct';

@@ -4,8 +4,10 @@ import 'module-alias/register';
 import urlsList from '@tools/urls';
 
 import {expect} from 'chai';
-import {Browser, BrowserContext, Page} from 'playwright';
 import {
+  type Browser,
+  type BrowserContext,
+  type Page,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

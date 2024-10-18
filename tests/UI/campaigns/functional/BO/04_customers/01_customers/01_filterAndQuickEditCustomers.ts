@@ -5,14 +5,15 @@ import {
   boCustomersPage,
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   dataCustomers,
   dataGroups,
+  type Page,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_customers_customers_filterAndQuickEditCustomers';
 

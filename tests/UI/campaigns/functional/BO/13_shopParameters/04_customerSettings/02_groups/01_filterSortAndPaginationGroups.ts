@@ -7,14 +7,15 @@ import {
   boCustomerSettingsPage,
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   dataGroups,
   FakerGroup,
+  type Page,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_shopParameters_customerSettings_groups_filterSortAndPaginationGroups';
 

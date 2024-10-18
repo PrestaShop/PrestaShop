@@ -6,13 +6,14 @@ import testContext from '@utils/testContext';
 import {createAccountPage as foCreateAccountPage} from '@pages/FO/classic/myAccount/add';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boCustomersPage,
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   foClassicHomePage,
   foClassicLoginPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 

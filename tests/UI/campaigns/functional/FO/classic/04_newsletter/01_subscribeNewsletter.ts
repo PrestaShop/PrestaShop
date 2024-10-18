@@ -11,17 +11,18 @@ import {
   boDashboardPage,
   boLoginPage,
   boModuleManagerPage,
+  type BrowserContext,
   dataCustomers,
   FakerModule,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
   modPsEmailSubscriptionBoMain,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 // context
 const baseContext: string = 'functional_FO_classic_newsletter_subscribeNewsletter';

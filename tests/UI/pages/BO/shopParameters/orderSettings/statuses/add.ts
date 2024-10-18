@@ -2,9 +2,9 @@ import BOBasePage from '@pages/BO/BObasePage';
 
 import {
   type FakerOrderStatus,
-} from '@prestashop-core/ui-testing';
 
-import type {Page} from 'playwright';
+  type Page,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Add order status page, contains selectors and functions for the page

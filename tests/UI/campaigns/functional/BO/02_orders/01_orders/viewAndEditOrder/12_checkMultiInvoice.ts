@@ -12,6 +12,7 @@ import {
   boOrdersPage,
   boOrdersViewBlockProductsPage,
   boOrdersViewBlockTabListPage,
+  type BrowserContext,
   dataCarriers,
   dataCustomers,
   dataOrderStatuses,
@@ -19,12 +20,12 @@ import {
   FakerOrder,
   FakerOrderShipping,
   FakerProduct,
+  type Page,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_orders_orders_viewAndEditOrder_checkMultiInvoice';
 

@@ -9,7 +9,6 @@ import addNewQuickAccessPage from '@pages/BO/quickAccess/add';
 import newCustomerPage from '@pages/BO/customers/add';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
@@ -17,7 +16,9 @@ import {
   boModuleManagerPage,
   boProductsPage,
   boQuickAccessPage,
+  type BrowserContext,
   FakerQuickAccess,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 

@@ -8,18 +8,19 @@ import {
   boDashboardPage,
   boLoginPage,
   boModuleManagerPage,
+  type BrowserContext,
+  dataCustomers,
+  dataModules,
   foClassicCategoryPage,
   foClassicHomePage,
   foClassicLoginPage,
   modBlockwishlistBoMain,
   modBlockwishlistBoStatistics,
-  dataCustomers,
-  dataModules,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'modules_blockwishlist_configuration_statisticsTabSettings';
 

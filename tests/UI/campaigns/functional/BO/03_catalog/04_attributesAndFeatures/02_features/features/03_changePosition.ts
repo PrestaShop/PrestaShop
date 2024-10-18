@@ -7,11 +7,12 @@ import featuresPage from '@pages/BO/catalog/features';
 import addFeaturePage from '@pages/BO/catalog/features/addFeature';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   FakerFeature,
+  type Page,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

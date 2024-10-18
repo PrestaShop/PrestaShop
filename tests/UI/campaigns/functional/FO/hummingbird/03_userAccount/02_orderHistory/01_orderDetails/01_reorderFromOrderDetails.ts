@@ -10,6 +10,7 @@ import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
 import orderHistoryPage from '@pages/FO/hummingbird/myAccount/orderHistory';
 
 import {
+  type BrowserContext,
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
@@ -19,11 +20,11 @@ import {
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 // context
 const baseContext: string = 'functional_FO_hummingbird_userAccount_orderHistory_orderDetails_reorderFromOrderDetails';

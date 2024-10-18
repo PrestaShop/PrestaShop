@@ -7,6 +7,7 @@ import createAccountTest from '@commonTests/FO/hummingbird/account';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 import {
+  type BrowserContext,
   dataCarriers,
   dataProducts,
   FakerAddress,
@@ -15,11 +16,11 @@ import {
   foHummingbirdCheckoutPage,
   foHummingbirdHomePage,
   foHummingbirdProductPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_hummingbird_checkout_shippingMethods_selectCarrier';
 

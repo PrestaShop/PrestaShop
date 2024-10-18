@@ -6,11 +6,11 @@ import testContext from '@utils/testContext';
 import {createAccountPage as foCreateAccountPage} from '@pages/FO/classic/myAccount/add';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
   boModuleManagerPage,
+  type BrowserContext,
   dataCustomers,
   dataModules,
   FakerCustomer,
@@ -19,6 +19,7 @@ import {
   foClassicMyAccountPage,
   modPsGdprBoMain,
   modPsGdprBoTabCustomerActivity,
+  type Page,
   utilsCore,
   utilsFile,
   utilsPlaywright,

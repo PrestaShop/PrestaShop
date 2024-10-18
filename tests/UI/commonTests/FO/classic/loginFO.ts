@@ -5,11 +5,11 @@ import {
   FakerCustomer,
   foClassicLoginPage,
   foClassicMyAccountPage,
+  type Page,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import type {Context} from 'mocha';
-import type {Page} from 'playwright';
 
 export default {
   async loginFO(mochaContext: Context, page: Page, customer: FakerCustomer): Promise<void> {

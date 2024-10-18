@@ -7,12 +7,13 @@ import suppliersPage from '@pages/BO/catalog/suppliers';
 import viewSupplierPage from '@pages/BO/catalog/suppliers/view';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
   boSuppliersCreate,
+  type BrowserContext,
   FakerSupplier,
+  type Page,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

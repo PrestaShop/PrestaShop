@@ -8,14 +8,15 @@ import {
   boDashboardPage,
   boLoginPage,
   boShoppingCartsPage,
+  type BrowserContext,
   dataCustomers,
   dataProducts,
   FakerOrder,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_orders_shoppingCarts_deleteAbandonedCarts';
 

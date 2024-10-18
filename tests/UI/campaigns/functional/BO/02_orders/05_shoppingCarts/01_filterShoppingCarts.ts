@@ -6,15 +6,16 @@ import createShoppingCart from '@commonTests/FO/classic/shoppingCart';
 import {createCustomerTest, deleteCustomerTest} from '@commonTests/BO/customers/customer';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
   boShoppingCartsPage,
+  type BrowserContext,
   dataProducts,
   dataShoppingCarts,
   FakerCustomer,
   FakerOrder,
+  type Page,
   utilsCore,
   utilsDate,
   utilsPlaywright,

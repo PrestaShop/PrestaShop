@@ -8,12 +8,13 @@ import addBrandAddressPage from '@pages/BO/catalog/brands/addAddress';
 import viewBrandPage from '@pages/BO/catalog/brands/view';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   FakerBrand,
   FakerBrandAddress,
+  type Page,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

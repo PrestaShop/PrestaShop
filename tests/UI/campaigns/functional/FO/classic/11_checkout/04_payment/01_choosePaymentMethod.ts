@@ -8,7 +8,7 @@ import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advanced
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
-  // Import data
+  type BrowserContext,
   dataCustomers,
   dataPaymentMethods,
   type FakerPaymentMethod,
@@ -19,12 +19,12 @@ import {
   foClassicModalQuickViewPage,
   type MailDev,
   type MailDevEmail,
+  type Page,
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_classic_checkout_payment_choosePaymentMethod';
 

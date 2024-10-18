@@ -1,7 +1,8 @@
 import EmployeeBasePage from '@pages/BO/advancedParameters/team/employeeBasePage';
 
-import type {Page} from 'playwright';
 import {
+  type Page,
+
   type FakerEmployee,
 } from '@prestashop-core/ui-testing';
 

@@ -5,12 +5,13 @@ import testContext from '@utils/testContext';
 import webservicePage from '@pages/BO/advancedParameters/webservice';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import addWebservicePage from '@pages/BO/advancedParameters/webservice/add';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   FakerWebservice,
+  type Page,
   utilsPlaywright,
   type WebservicePermission,
 } from '@prestashop-core/ui-testing';

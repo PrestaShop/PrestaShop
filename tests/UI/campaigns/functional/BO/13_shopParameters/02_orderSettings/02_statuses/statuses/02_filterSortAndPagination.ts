@@ -8,13 +8,14 @@ import {
   boDashboardPage,
   boLoginPage,
   boOrderSettingsPage,
+  type BrowserContext,
   dataOrderStatuses,
+  type Page,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_shopParameters_orderSettings_statuses_statuses_filterSortAndPagination';
 

@@ -6,15 +6,16 @@ import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   dataProducts,
   FakerCartRule,
   foClassicCartPage,
   foClassicHomePage,
   foClassicProductPage,
+  type Page,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

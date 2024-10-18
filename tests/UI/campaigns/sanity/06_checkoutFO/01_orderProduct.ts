@@ -5,6 +5,7 @@ import testContext from '@utils/testContext';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
+  type BrowserContext,
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
@@ -14,11 +15,11 @@ import {
   foClassicHomePage,
   foClassicLoginPage,
   foClassicModalQuickViewPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'sanity_checkoutFO_orderProduct';
 

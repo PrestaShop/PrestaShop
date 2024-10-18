@@ -5,14 +5,15 @@ import testContext from '@utils/testContext';
 import foCreateAccountPage from '@pages/FO/hummingbird/myAccount/add';
 
 import {
+  type BrowserContext,
   FakerCustomer,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 let browserContext: BrowserContext;
 let page: Page;

@@ -1,7 +1,9 @@
 // Import pages
 import CommonPage from '@pages/commonPage';
 
-import type {Page} from 'playwright';
+import {
+  type Page,
+} from '@prestashop-core/ui-testing';
 
 /**
  * FO parent page, contains functions that can be used on all FO page
