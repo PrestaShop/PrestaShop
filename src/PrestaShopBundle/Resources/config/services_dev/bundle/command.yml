@@ -17,16 +17,10 @@ services:
       - 'console.command'
 
   PrestaShopBundle\Command\AppendHooksListForSqlUpgradeFileCommand:
+    autowire: true
     arguments:
-      - '%kernel.environment%'
-      - '@prestashop.adapter.legacy.context'
-      - '@prestashop.core.hook.provider.grid_definition_hook_by_service_ids_provider'
-      - '@prestashop.core.hook.provider.identifiable_object_hook_by_form_type_provider'
-      - '@prestashop.adapter.legacy.hook'
-      - '@prestashop.core.hook.generator.hook_description_generator'
-      - '%prestashop.core.grid.definition.service_ids%'
-      - '%prestashop.hook.option_form_hook_names%'
-      - '%prestashop.core.form.identifiable_object.form_types%'
+      $env: '%kernel.environment%'
+      $projectDir: '%kernel.project_dir%'
     tags:
       - 'console.command'
 
