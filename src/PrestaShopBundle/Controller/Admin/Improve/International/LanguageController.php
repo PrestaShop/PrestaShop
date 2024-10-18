@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Configuration\IniConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\BulkDeleteLanguagesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\BulkToggleLanguagesStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\DeleteLanguageCommand;
@@ -40,13 +41,17 @@ use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageImageUploadingE
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Query\GetLanguageForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Language\QueryResult\EditableLanguage;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\LanguageFilters;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlFileCheckerInterface;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Controller\Attribute\AllShopContext;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,7 +60,7 @@ use Symfony\Component\HttpFoundation\Response;
  * Class LanguageController manages "Improve > International > Localization > Languages".
  */
 #[AllShopContext]
-class LanguageController extends FrameworkBundleAdminController
+class LanguageController extends PrestaShopAdminController
 {
     /**
      * Show languages listing page.
@@ -66,20 +71,25 @@ class LanguageController extends FrameworkBundleAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
-    public function indexAction(Request $request, LanguageFilters $filters)
-    {
-        $languageGridFactory = $this->get('prestashop.core.grid.factory.language');
+    public function indexAction(
+        Request $request,
+        LanguageFilters $filters,
+        #[Autowire(service: 'prestashop.core.grid.factory.language')]
+        GridFactoryInterface $languageGridFactory,
+        UrlFileCheckerInterface $urlFileChecker
+    ): Response {
         $languageGrid = $languageGridFactory->getGrid($filters);
 
         return $this->render('@PrestaShop/Admin/Improve/International/Language/index.html.twig', [
             'languageGrid' => $this->presentGrid($languageGrid),
-            'isHtaccessFileWriter' => $this->get(UrlFileCheckerInterface::class)->isHtaccessFileWritable(),
+            'isHtaccessFileWriter' => $urlFileChecker->isHtaccessFileWritable(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'multistoreInfoTip' => $this->trans(
                 'Note that this page is available in all shops context only, this is why your context has just switched.',
+                [],
                 'Admin.Notifications.Info'
             ),
-            'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
+            'multistoreIsUsed' => $this->getShopContext()->isMultiShopUsed(),
             'enableSidebar' => true,
         ]);
     }
@@ -92,11 +102,13 @@ class LanguageController extends FrameworkBundleAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
-    public function createAction(Request $request)
-    {
-        $languageFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.language_form_handler');
-        $languageFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.language_form_builder');
-
+    public function createAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.language_form_builder')]
+        FormBuilderInterface $languageFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.language_form_handler')]
+        FormHandlerInterface $languageFormHandler
+    ): Response {
         $languageForm = $languageFormBuilder->getForm();
         $languageForm->handleRequest($request);
 
@@ -104,7 +116,7 @@ class LanguageController extends FrameworkBundleAdminController
             $result = $languageFormHandler->handle($languageForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_languages_index');
             }
@@ -116,7 +128,7 @@ class LanguageController extends FrameworkBundleAdminController
             'languageForm' => $languageForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('New language', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('New language', [], 'Admin.Navigation.Menu'),
         ]);
     }
 
@@ -129,11 +141,14 @@ class LanguageController extends FrameworkBundleAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
-    public function editAction($languageId, Request $request)
-    {
-        $languageFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.language_form_handler');
-        $languageFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.language_form_builder');
-
+    public function editAction(
+        int $languageId,
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.language_form_builder')]
+        FormBuilderInterface $languageFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.language_form_handler')]
+        FormHandlerInterface $languageFormHandler
+    ): Response {
         try {
             $languageForm = $languageFormBuilder->getFormFor((int) $languageId, [], [
                 'is_for_editing' => true,
@@ -154,7 +169,7 @@ class LanguageController extends FrameworkBundleAdminController
             if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash(
                     'success',
-                    $this->trans('Successful update', 'Admin.Notifications.Success')
+                    $this->trans('Successful update', [], 'Admin.Notifications.Success')
                 );
 
                 return $this->redirectToRoute('admin_languages_index');
@@ -168,7 +183,7 @@ class LanguageController extends FrameworkBundleAdminController
         }
 
         /** @var EditableLanguage $editableLanguage */
-        $editableLanguage = $this->getQueryBus()->handle(new GetLanguageForEditing((int) $languageId));
+        $editableLanguage = $this->dispatchQuery(new GetLanguageForEditing((int) $languageId));
 
         return $this->render('@PrestaShop/Admin/Improve/International/Language/edit.html.twig', [
             'languageForm' => $languageForm->createView(),
@@ -177,10 +192,10 @@ class LanguageController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'layoutTitle' => $this->trans(
                 'Editing language %name%',
-                'Admin.Navigation.Menu',
                 [
                     '%name%' => $editableLanguage->getName(),
-                ]
+                ],
+                'Admin.Navigation.Menu'
             ),
         ]);
     }
@@ -194,12 +209,12 @@ class LanguageController extends FrameworkBundleAdminController
      */
     #[DemoRestricted(redirectRoute: 'admin_languages_index')]
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_languages_index')]
-    public function deleteAction($languageId)
+    public function deleteAction(int $languageId): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(new DeleteLanguageCommand((int) $languageId));
+            $this->dispatchCommand(new DeleteLanguageCommand((int) $languageId));
 
-            $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful deletion', [], 'Admin.Notifications.Success'));
         } catch (LanguageException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
@@ -216,16 +231,16 @@ class LanguageController extends FrameworkBundleAdminController
      */
     #[DemoRestricted(redirectRoute: 'admin_languages_index')]
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_languages_index')]
-    public function bulkDeleteAction(Request $request)
+    public function bulkDeleteAction(Request $request): RedirectResponse
     {
         $languageIds = $this->getBulkLanguagesFromRequest($request);
 
         try {
-            $this->getCommandBus()->handle(new BulkDeleteLanguagesCommand($languageIds));
+            $this->dispatchCommand(new BulkDeleteLanguagesCommand($languageIds));
 
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted.', [], 'Admin.Notifications.Success')
             );
         } catch (LanguageException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -243,20 +258,20 @@ class LanguageController extends FrameworkBundleAdminController
      */
     #[DemoRestricted(redirectRoute: 'admin_languages_index')]
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_languages_index')]
-    public function toggleStatusAction($languageId)
+    public function toggleStatusAction(int $languageId): RedirectResponse
     {
         try {
             /** @var EditableLanguage $editableLanguage */
-            $editableLanguage = $this->getQueryBus()->handle(new GetLanguageForEditing((int) $languageId));
+            $editableLanguage = $this->dispatchQuery(new GetLanguageForEditing((int) $languageId));
 
-            $this->getCommandBus()->handle(new ToggleLanguageStatusCommand(
+            $this->dispatchCommand(new ToggleLanguageStatusCommand(
                 (int) $languageId,
                 !$editableLanguage->isActive()
             ));
 
             $this->addFlash(
                 'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
             );
         } catch (LanguageException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -275,20 +290,20 @@ class LanguageController extends FrameworkBundleAdminController
      */
     #[DemoRestricted(redirectRoute: 'admin_languages_index')]
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_languages_index')]
-    public function bulkToggleStatusAction(Request $request, $status)
+    public function bulkToggleStatusAction(Request $request, string $status): RedirectResponse
     {
         $languageIds = $this->getBulkLanguagesFromRequest($request);
         $expectedStatus = 'enable' === $status;
 
         try {
-            $this->getCommandBus()->handle(new BulkToggleLanguagesStatusCommand(
+            $this->dispatchCommand(new BulkToggleLanguagesStatusCommand(
                 $languageIds,
                 $expectedStatus
             ));
 
             $this->addFlash(
                 'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
             );
         } catch (LanguageException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -304,86 +319,103 @@ class LanguageController extends FrameworkBundleAdminController
      */
     private function getErrorMessages(Exception $e)
     {
-        $iniConfig = $this->get('prestashop.core.configuration.ini_configuration');
+        $iniConfig = $this->container->get(IniConfiguration::class);
 
         return [
             LanguageNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found).',
+                [],
                 'Admin.Notifications.Error'
             ),
             CannotDisableDefaultLanguageException::class => $this->trans(
                 'You cannot change the status of the default language.',
+                [],
                 'Admin.International.Notification'
             ),
             UploadedImageConstraintException::class => [
                 UploadedImageConstraintException::EXCEEDED_SIZE => $this->trans(
-                    'Max file size allowed is "%s" bytes.', 'Admin.Notifications.Error', [
+                    'Max file size allowed is "%s" bytes.',
+                    [
                         $iniConfig->getUploadMaxSizeInBytes(),
-                    ]),
+                    ],
+                    'Admin.Notifications.Error'
+                ),
                 UploadedImageConstraintException::UNRECOGNIZED_FORMAT => $this->trans(
                     'Image format not recognized, allowed formats are: .gif, .jpg, .png',
+                    [],
                     'Admin.Notifications.Error'
                 ),
             ],
             CopyingNoPictureException::class => [
                 CopyingNoPictureException::PRODUCT_IMAGE_COPY_ERROR => $this->trans(
                     'An error occurred while copying "No Picture" image to your product folder.',
+                    [],
                     'Admin.International.Notification'
                 ),
                 CopyingNoPictureException::CATEGORY_IMAGE_COPY_ERROR => $this->trans(
                     'An error occurred while copying "No picture" image to your category folder.',
+                    [],
                     'Admin.International.Notification'
                 ),
                 CopyingNoPictureException::BRAND_IMAGE_COPY_ERROR => $this->trans(
                     'An error occurred while copying "No picture" image to your brand folder.',
+                    [],
                     'Admin.International.Notification'
                 ),
             ],
             LanguageImageUploadingException::class => [
                 LanguageImageUploadingException::MEMORY_LIMIT_RESTRICTION => $this->trans(
                     'Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
                 LanguageImageUploadingException::UNEXPECTED_ERROR => $this->trans(
                     'An error occurred while uploading the image.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
             ],
             LanguageConstraintException::class => [
                 LanguageConstraintException::INVALID_ISO_CODE => $this->trans(
                     'The %s field is invalid.',
-                    'Admin.Notifications.Error',
-                    [sprintf('"%s"', $this->trans('ISO code', 'Admin.International.Feature'))]
+                    [sprintf('"%s"', $this->trans('ISO code', [], 'Admin.International.Feature'))],
+                    'Admin.Notifications.Error'
                 ),
                 LanguageConstraintException::INVALID_IETF_TAG => $this->trans(
                     'The %s field is invalid.',
-                    'Admin.Notifications.Error',
-                    [sprintf('"%s"', $this->trans('Language code', 'Admin.International.Feature'))]
+                    [sprintf('"%s"', $this->trans('Language code', [], 'Admin.International.Feature'))],
+                    'Admin.Notifications.Error'
                 ),
                 LanguageConstraintException::DUPLICATE_ISO_CODE => $this->trans(
                     'This ISO code is already linked to another language.',
+                    [],
                     'Admin.International.Notification'
                 ),
                 LanguageConstraintException::EMPTY_BULK_DELETE => $this->trans(
                     'You must select at least one element to delete.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
             ],
             DefaultLanguageException::class => [
                 DefaultLanguageException::CANNOT_DELETE_ERROR => $this->trans(
                     'You cannot delete the default language.',
+                    [],
                     'Admin.International.Notification'
                 ),
                 DefaultLanguageException::CANNOT_DISABLE_ERROR => $this->trans(
                     'You cannot change the status of the default language.',
+                    [],
                     'Admin.International.Notification'
                 ),
                 DefaultLanguageException::CANNOT_DELETE_DEFAULT_ERROR => $this->trans(
                     'You cannot delete the default language.',
+                    [],
                     'Admin.International.Notification'
                 ),
                 DefaultLanguageException::CANNOT_DELETE_IN_USE_ERROR => $this->trans(
                     'You cannot delete the language currently in use. Please select a different language.',
+                    [],
                     'Admin.International.Notification'
                 ),
             ],
