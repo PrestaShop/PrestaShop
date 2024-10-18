@@ -39,8 +39,9 @@ interface FileWriterInterface
      *
      * @param string $fileName
      * @param ExportableDataInterface $data
+     * @param string $separator
      *
      * @return SplFileInfo
      */
-    public function write($fileName, ExportableDataInterface $data);
+    public function write(string $fileName, ExportableDataInterface $data, string $separator): SplFileInfo;
 }

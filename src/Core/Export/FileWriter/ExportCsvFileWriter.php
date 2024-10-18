@@ -30,6 +30,7 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Export\Data\ExportableDataInterface;
 use PrestaShop\PrestaShop\Core\Export\Exception\FileWritingException;
 use PrestaShop\PrestaShop\Core\Export\ExportDirectory;
+use SplFileInfo;
 use SplFileObject;
 
 /**
@@ -37,10 +38,7 @@ use SplFileObject;
  */
 final class ExportCsvFileWriter implements FileWriterInterface
 {
-    /**
-     * @var ExportDirectory
-     */
-    private $exportDirectory;
+    private ExportDirectory $exportDirectory;
 
     /**
      * @param ExportDirectory $exportDirectory
@@ -55,20 +53,23 @@ final class ExportCsvFileWriter implements FileWriterInterface
      *
      * @throws FileWritingException
      */
-    public function write($fileName, ExportableDataInterface $data)
+    public function write(string $fileName, ExportableDataInterface $data, $separator = ';'): SplFileInfo|SplFileObject
     {
         $filePath = $this->exportDirectory . $fileName;
 
         try {
             $exportFile = new SplFileObject($filePath, 'w');
-        } catch (Exception $e) {
-            throw new FileWritingException(sprintf('Cannot open export file for writing'), FileWritingException::CANNOT_OPEN_FILE_FOR_WRITING);
+        } catch (Exception) {
+            throw new FileWritingException(
+                'Cannot open export file for writing',
+                FileWritingException::CANNOT_OPEN_FILE_FOR_WRITING
+            );
         }
 
-        $exportFile->fputcsv($data->getTitles(), ';');
+        $exportFile->fputcsv($data->getTitles(), $separator);
 
         foreach ($data->getRows() as $row) {
-            $exportFile->fputcsv($row, ';');
+            $exportFile->fputcsv($row, $separator);
         }
 
         return $exportFile;
