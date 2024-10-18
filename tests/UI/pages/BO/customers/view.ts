@@ -1,6 +1,9 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type {Frame, Page} from 'playwright';
+import {
+  type Frame,
+  type Page,
+} from '@prestashop-core/ui-testing';
 
 /**
  * View customer page, contains functions that can be used on the page

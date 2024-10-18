@@ -5,11 +5,12 @@ import testContext from '@utils/testContext';
 import imageSettingsPage from '@pages/BO/design/imageSettings';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   dataImageTypes,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 

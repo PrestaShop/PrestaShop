@@ -6,11 +6,12 @@ import {expect} from 'chai';
 // Import pages
 import contactsPage from '@pages/BO/shopParameters/contact';
 
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   dataContacts,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 

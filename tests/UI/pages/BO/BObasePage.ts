@@ -1,8 +1,12 @@
 // Import pages
 import CommonPage from '@pages/commonPage';
 
-import {Frame, FrameLocator, Page} from 'playwright';
-import type {PageFunction} from 'playwright-core/types/structs';
+import {
+  type Frame,
+  type FrameLocator,
+  type Page,
+  type PageFunction,
+} from '@prestashop-core/ui-testing';
 
 /**
  * BO parent page, contains functions that can be used on all BO page

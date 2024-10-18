@@ -7,7 +7,6 @@ import filesPage from '@pages/BO/catalog/files';
 import addFilePage from '@pages/BO/catalog/files/add';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boAdministrationPage,
   boDashboardPage,
@@ -15,8 +14,10 @@ import {
   boProductsPage,
   boProductsCreateTabDescriptionPage,
   boProductsCreateTabVirtualProductPage,
+  type BrowserContext,
   FakerFile,
   FakerProduct,
+  type Page,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

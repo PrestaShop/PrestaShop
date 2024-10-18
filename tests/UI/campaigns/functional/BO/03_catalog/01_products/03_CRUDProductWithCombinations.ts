@@ -8,13 +8,14 @@ import attributesPage from '@pages/BO/catalog/attributes';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  type BrowserContext,
   FakerProduct,
   foClassicProductPage,
+  type Page,
   type ProductAttributes,
   type ProductCombinationBulk,
   type ProductCombinationOptions,

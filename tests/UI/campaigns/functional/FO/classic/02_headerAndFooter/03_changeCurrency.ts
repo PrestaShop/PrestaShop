@@ -10,16 +10,17 @@ import {
   boLocalizationPage,
   boLoginPage,
   boCurrenciesPage,
+  type BrowserContext,
   dataCurrencies,
   dataProducts,
   foClassicHomePage,
   foClassicSearchResultsPage,
+  type Page,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_classic_headerAndFooter_changeCurrency';
 

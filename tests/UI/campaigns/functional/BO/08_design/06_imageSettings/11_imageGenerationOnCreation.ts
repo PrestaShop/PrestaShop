@@ -8,13 +8,14 @@ import createProductsPage from '@pages/BO/catalog/products/add';
 import imageSettingsPage from '@pages/BO/design/imageSettings';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  type BrowserContext,
   FakerCategory,
   FakerProduct,
+  type Page,
   utilsCore,
   utilsFile,
   utilsPlaywright,

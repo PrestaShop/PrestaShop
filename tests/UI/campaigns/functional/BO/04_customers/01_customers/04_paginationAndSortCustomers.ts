@@ -8,12 +8,13 @@ import {bulkDeleteCustomersTest} from '@commonTests/BO/customers/customer';
 // Import data
 import ImportCustomers from '@data/import/customers';
 
-import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 import {
   boCustomersPage,
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
+  type Page,
   utilsCore,
   utilsFile,
   utilsPlaywright,

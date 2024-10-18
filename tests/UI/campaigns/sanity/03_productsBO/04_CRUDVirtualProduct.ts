@@ -1,4 +1,3 @@
-import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 
 // Import utils
@@ -12,8 +11,10 @@ import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  type BrowserContext,
   FakerProduct,
   foClassicProductPage,
+  type Page,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

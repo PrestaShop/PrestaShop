@@ -1,6 +1,8 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
-import type {Page} from 'playwright';
+import {
+  type Page,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Site map page, contains functions that can be used on the page

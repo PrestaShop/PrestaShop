@@ -5,18 +5,19 @@ import testContext from '@utils/testContext';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
+  type BrowserContext,
   type CartProductDetails,
   dataProducts,
   foClassicCartPage,
   foClassicHomePage,
   foClassicModalQuickViewPage,
   foClassicSearchResultsPage,
+  type Page,
   type ProductAttribute,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_classic_productPage_quickView_addToCart';
 

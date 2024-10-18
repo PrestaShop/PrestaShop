@@ -9,13 +9,14 @@ import addEmployeePage from '@pages/BO/advancedParameters/team/add';
 import employeesPage from '@pages/BO/advancedParameters/team';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   FakerEmployee,
   type MailDev,
   type MailDevEmail,
+  type Page,
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

@@ -11,17 +11,18 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 import foVouchersPage from '@pages/FO/hummingbird/myAccount/vouchers';
 
 import {
+  type BrowserContext,
   FakerCartRule,
   FakerCustomer,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
+  type Page,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_hummingbird_userAccount_viewVouchers';
 

@@ -8,9 +8,9 @@ import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 import {createCartRuleTest, deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 import {
+  type BrowserContext,
   dataProducts,
   FakerCartRule,
   foClassicCartPage,
@@ -18,6 +18,7 @@ import {
   foClassicHomePage,
   foClassicModalQuickViewPage,
   foClassicSearchResultsPage,
+  type Page,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

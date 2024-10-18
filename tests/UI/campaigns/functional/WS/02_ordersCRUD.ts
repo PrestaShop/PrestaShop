@@ -19,16 +19,20 @@ import orderPagePaymentBlock from '@pages/BO/orders/view/paymentBlock';
 import getOrderXml from '@data/xml/order';
 
 import {
+  type APIRequestContext,
+  type APIResponse,
   boDashboardPage,
   boLoginPage,
   boOrdersPage,
   boOrdersViewBlockProductsPage,
   boOrdersViewBlockTabListPage,
   boShoppingCartsPage,
+  type BrowserContext,
   dataAddresses,
   dataCustomers,
   dataProducts,
   FakerOrder,
+  type Page,
   utilsDate,
   utilsPlaywright,
   utilsXML,
@@ -37,9 +41,6 @@ import {
 
 import {use, expect} from 'chai';
 import chaiString from 'chai-string';
-import type {
-  APIResponse, APIRequestContext, BrowserContext, Page,
-} from 'playwright';
 
 use(chaiString);
 

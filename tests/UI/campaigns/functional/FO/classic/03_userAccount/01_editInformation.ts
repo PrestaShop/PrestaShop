@@ -9,15 +9,16 @@ import {createAccountTest} from '@commonTests/FO/classic/account';
 import {accountIdentityPage} from '@pages/FO/classic/myAccount/identity';
 
 import {
+  type BrowserContext,
   FakerCustomer,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_classic_userAccount_editInformation';
 

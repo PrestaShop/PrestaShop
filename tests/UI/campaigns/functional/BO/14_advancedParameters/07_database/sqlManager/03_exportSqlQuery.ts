@@ -2,14 +2,15 @@
 import testContext from '@utils/testContext';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
   boSqlManagerPage,
   boSqlManagerCreatePage,
+  type BrowserContext,
   dataSqlTables,
   FakerSqlQuery,
+  type Page,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

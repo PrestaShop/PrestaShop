@@ -8,13 +8,14 @@ import {
   boDashboardPage,
   boLocalizationPage,
   boLoginPage,
+  type BrowserContext,
   dataCurrencies,
   FakerCurrency,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'cldr_enableDisableCurrency';
 

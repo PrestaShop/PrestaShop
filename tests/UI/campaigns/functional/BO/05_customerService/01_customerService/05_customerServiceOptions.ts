@@ -4,12 +4,13 @@ import testContext from '@utils/testContext';
 // Import pages
 import customerServicePage from '@pages/BO/customerService/customerService';
 
-import {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   FakerCustomerServiceOptions,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 

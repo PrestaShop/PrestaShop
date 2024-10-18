@@ -5,6 +5,7 @@ import testContext from '@utils/testContext';
 import {deleteAPIClientTest} from '@commonTests/BO/advancedParameters/authServer';
 
 import {
+  type APIRequestContext,
   boApiClientsPage,
   boApiClientsCreatePage,
   boCustomerGroupsPage,
@@ -12,14 +13,15 @@ import {
   boCustomerSettingsPage,
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   FakerAPIClient,
   FakerGroup,
+  type Page,
   utilsAPI,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_API_endpoints_customerGroup_deleteCustomerGroupsId';
 

@@ -9,6 +9,7 @@ import {vouchersPage as foVouchersPage} from '@pages/FO/classic/myAccount/vouche
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
@@ -19,12 +20,12 @@ import {
   foClassicHomePage,
   foClassicMyAccountPage,
   foClassicProductPage,
+  type Page,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_information_enableDisablePartialUse';
 

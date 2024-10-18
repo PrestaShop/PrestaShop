@@ -5,13 +5,14 @@ import testContext from '@utils/testContext';
 import {moduleConfigurationPage} from '@pages/BO/modules/moduleConfiguration';
 
 import {expect} from 'chai';
-import {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
   boModuleManagerPage,
   boModuleManagerAlertsPage,
+  type BrowserContext,
   dataModules,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 

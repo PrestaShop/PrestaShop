@@ -19,18 +19,19 @@ import {
   boOrdersPage,
   boProductsPage,
   boStockPage,
+  type BrowserContext,
   dataCurrencies,
   dataCustomers,
   dataProducts,
   FakerCartRule,
   FakerProduct,
+  type Page,
   utilsCore,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_orders_orders_createOrders_addProductToTheCart';
 

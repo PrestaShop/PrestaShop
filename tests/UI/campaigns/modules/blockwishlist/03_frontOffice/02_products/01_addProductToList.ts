@@ -5,6 +5,7 @@ import testContext from '@utils/testContext';
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
 
 import {
+  type BrowserContext,
   dataCustomers,
   dataProducts,
   FakerProduct,
@@ -16,11 +17,11 @@ import {
   foClassicMyWishlistsViewPage,
   foClassicProductPage,
   foClassicSearchResultsPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'modules_blockwishlist_frontOffice_products_addProductToList';
 

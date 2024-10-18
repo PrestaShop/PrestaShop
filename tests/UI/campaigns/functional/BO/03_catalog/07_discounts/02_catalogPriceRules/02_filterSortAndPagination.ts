@@ -7,11 +7,12 @@ import catalogPriceRulesPage from '@pages/BO/catalog/discounts/catalogPriceRules
 import addCatalogPriceRulePage from '@pages/BO/catalog/discounts/catalogPriceRules/add';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   FakerCatalogPriceRule,
+  type Page,
   utilsCore,
   utilsDate,
   utilsPlaywright,
