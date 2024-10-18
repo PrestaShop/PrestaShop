@@ -1,0 +1,19 @@
+{
+    "name": "prestashop",
+    "version": "1.0.0",
+    "description": "Frontend assets for PrestaShop",
+    "scripts": {
+        "build": "webpack --mode production",
+        "watch": "webpack --watch"
+    },
+    "devDependencies": {
+        "@babel/preset-env": "^7.25.8",
+        "babel-loader": "^8.0.0",
+        "css-loader": "^6.0.0",
+        "sass": "^1.80.2",
+        "sass-loader": "^12.0.0",
+        "style-loader": "^3.0.0",
+        "webpack": "^5.0.0",
+        "webpack-cli": "^4.0.0"
+    }
+}
