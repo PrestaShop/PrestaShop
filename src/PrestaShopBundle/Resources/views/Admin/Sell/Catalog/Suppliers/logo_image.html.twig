@@ -28,7 +28,6 @@
     <p>{{ 'File size'|trans({}, 'Admin.Advparameters.Feature') }} {{ logoImage.size }}</p>
     <button class="btn btn-outline-danger btn-sm js-form-submit-btn"
             data-form-submit-url="{{ path('admin_suppliers_delete_logo_image', {'supplierId': app.request.get('supplierId')}) }}"
-            data-form-csrf-token="{{ csrf_token('delete-logo-thumbnail') }}"
     >
       <i class="material-icons">
         delete_forever

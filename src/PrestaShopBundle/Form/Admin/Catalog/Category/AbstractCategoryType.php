@@ -180,13 +180,12 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 'required' => false,
                 'can_be_deleted' => true,
                 'show_size' => true,
-                'csrf_delete_token_id' => 'delete-cover-image',
             ])
             ->add('thumbnail_image', ImageWithPreviewType::class, [
                 'label' => $this->trans('Category thumbnail', 'Admin.Catalog.Feature'),
                 'help' => $this->trans('It will display a thumbnail on the parent category\'s page, if the theme allows it.', 'Admin.Catalog.Help'),
                 'required' => false,
-                'can_be_deleted' => false,
+                'can_be_deleted' => true,
                 'show_size' => true,
             ])
             ->add('seo_preview', CategorySeoPreviewType::class,

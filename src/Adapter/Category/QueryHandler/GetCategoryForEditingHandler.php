@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Adapter\Category\QueryHandler;
 use Category;
 use Db;
 use ImageManager;
-use ImageType;
 use PDO;
 use PrestaShop\PrestaShop\Adapter\SEO\RedirectTargetProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
@@ -153,55 +152,27 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
      */
     private function getThumbnailImage(CategoryId $categoryId)
     {
-        $image = _PS_CAT_IMG_DIR_ . $categoryId->getValue() . '.jpg';
-        $imageTypes = ImageType::getImagesTypes('categories');
+        $imageType = 'jpg';
+        $image = _PS_CAT_IMG_DIR_ . $categoryId->getValue() . '_thumb.' . $imageType;
 
-        if (count($imageTypes) > 0) {
-            $thumb = '';
-            $imageTag = '';
-            $formattedSmall = ImageType::getFormattedName('small');
-            $imageType = new ImageType();
-            foreach ($imageTypes as $k => $imageType) {
-                if ($formattedSmall == $imageType['name']) {
-                    $thumb = _PS_CAT_IMG_DIR_ . $categoryId->getValue() . '-' . $imageType['name'] . '.jpg';
-                    if (is_file($thumb)) {
-                        $imageTag = ImageManager::thumbnail(
-                            $thumb,
-                            'category_' . (int) $categoryId->getValue() . '-thumb.jpg',
-                            (int) $imageType['width'],
-                            'jpg',
-                            true,
-                            true
-                        );
-                    }
-                }
-            }
+        $imageTag = ImageManager::thumbnail(
+            $image,
+            'category_' . $categoryId->getValue() . '_thumb.' . $imageType,
+            350,
+            $imageType,
+            true,
+            true
+        );
 
-            if (!is_file($thumb)) {
-                $thumb = $image;
-                $imageName = 'category_' . $categoryId->getValue() . '-thumb.jpg';
+        $imageSize = file_exists($image) ? filesize($image) / 1000 : '';
 
-                $imageTag = ImageManager::thumbnail($image, $imageName, 125, 'jpg', true, true);
-                ImageManager::resize(
-                    _PS_TMP_IMG_DIR_ . $imageName,
-                    _PS_TMP_IMG_DIR_ . $imageName,
-                    (int) $imageType['width'],
-                    (int) $imageType['height']
-                );
-            }
-
-            $thumbSize = file_exists($thumb) ? filesize($thumb) / 1000 : false;
-
-            if (empty($imageTag) || false === $thumbSize) {
-                return null;
-            }
-
-            return [
-                'size' => sprintf('%skB', $thumbSize),
-                'path' => $this->imageTagSourceParser->parse($imageTag),
-            ];
+        if (empty($imageTag) || empty($imageSize)) {
+            return null;
         }
 
-        return null;
+        return [
+            'size' => sprintf('%skB', $imageSize),
+            'path' => $this->imageTagSourceParser->parse($imageTag),
+        ];
     }
 }
