@@ -49,9 +49,7 @@ class AdminAccessControllerCore extends AdminController
     }
 
     /**
-     * AdminController::renderForm() override.
-     *
-     * @see AdminController::renderForm()
+     * Render the access form.
      */
     public function renderForm()
     {
@@ -64,26 +62,21 @@ class AdminAccessControllerCore extends AdminController
             $accesses[$profile['id_profile']] = Profile::getProfileAccesses($profile['id_profile']);
         }
 
-        // Deleted id_tab that do not have access
+        // Remove tabs without names and those in the blacklist
         foreach ($tabs as $key => $tab) {
-            // Don't allow permissions for unnamed tabs (ie. AdminLogin)
-            if (empty($tab['name'])) {
+            if (empty($tab['name']) || in_array($tab['id_tab'], $this->accesses_black_list)) {
                 unset($tabs[$key]);
-            }
-
-            foreach ($this->accesses_black_list as $id_tab) {
-                if ($tab['id_tab'] == (int) $id_tab) {
-                    unset($tabs[$key]);
-                }
             }
         }
 
+        // Get module access for each profile
         $modules = [];
         foreach ($profiles as $profile) {
             $modules[$profile['id_profile']] = Module::getModulesAccessesByIdProfile($profile['id_profile']);
             uasort($modules[$profile['id_profile']], [$this, 'sortModuleByName']);
         }
 
+        // Prepare form variables
         $this->fields_form = [''];
         $this->tpl_form_vars = [
             'profiles' => $profiles,
@@ -91,7 +84,7 @@ class AdminAccessControllerCore extends AdminController
             'id_tab_parentmodule' => (int) Tab::getIdFromClassName('AdminParentModules'),
             'id_tab_module' => (int) Tab::getIdFromClassName('AdminModules'),
             'tabs' => $this->displayTabs($tabs),
-            'current_profile' => (int) $current_profile,
+            'current_profile' => $current_profile,
             'admin_profile' => (int) _PS_ADMIN_PROFILE_,
             'access_edit' => $this->access('edit'),
             'perms' => ['view', 'add', 'edit', 'delete'],
@@ -105,9 +98,7 @@ class AdminAccessControllerCore extends AdminController
     }
 
     /**
-     * AdminController::initContent() override.
-     *
-     * @see AdminController::initContent()
+     * Initialize content for the access management page.
      */
     public function initContent()
     {
@@ -119,22 +110,30 @@ class AdminAccessControllerCore extends AdminController
 
         $this->content .= $this->renderForm();
 
-        $this->context->smarty->assign([
-            'content' => $this->content,
-        ]);
+        // Assign content to Smarty template
+        $this->context->smarty->assign(['content' => $this->content]);
     }
 
+    /**
+     * Set the toolbar title for the admin page.
+     */
     public function initToolbarTitle()
     {
         $this->toolbar_title = array_unique($this->breadcrumbs);
     }
 
+    /**
+     * Initialize the page header toolbar.
+     */
     public function initPageHeaderToolbar()
     {
         parent::initPageHeaderToolbar();
         unset($this->page_header_toolbar_btn['cancel']);
     }
 
+    /**
+     * Process AJAX request to update access permissions.
+     */
     public function ajaxProcessUpdateAccess()
     {
         if (_PS_MODE_DEMO_) {
@@ -147,19 +146,26 @@ class AdminAccessControllerCore extends AdminController
         if (Tools::isSubmit('submitAddAccess')) {
             $access = new Access();
             $perm = Tools::getValue('perm');
+
+            // Validate the permission value
             if (!in_array($perm, ['view', 'add', 'edit', 'delete', 'all'])) {
-                throw new PrestaShopException('permission does not exist');
+                throw new PrestaShopException('Permission does not exist.');
             }
 
+            // Retrieve parameters
             $enabled = (bool) Tools::getValue('enabled');
             $id_tab = (int) Tools::getValue('id_tab');
             $id_profile = (int) Tools::getValue('id_profile');
             $addFromParent = (bool) Tools::getValue('addFromParent');
 
-            die($access->updateLgcAccess((int) $id_profile, $id_tab, $perm, $enabled, $addFromParent));
+            // Update access and return result
+            die($access->updateLgcAccess($id_profile, $id_tab, $perm, $enabled, $addFromParent));
         }
     }
 
+    /**
+     * Process AJAX request to update module access permissions.
+     */
     public function ajaxProcessUpdateModuleAccess()
     {
         if (_PS_MODE_DEMO_) {
@@ -176,18 +182,20 @@ class AdminAccessControllerCore extends AdminController
             $id_module = (int) Tools::getValue('id_module');
             $id_profile = (int) Tools::getValue('id_profile');
 
+            // Validate the permission value
             if (!in_array($perm, ['view', 'configure', 'uninstall'])) {
-                throw new PrestaShopException('permission does not exist');
+                throw new PrestaShopException('Permission does not exist.');
             }
 
-            die($access->updateLgcModuleAccess((int) $id_profile, $id_module, $perm, $enabled));
+            // Update module access and return result
+            die($access->updateLgcModuleAccess($id_profile, $id_module, $perm, $enabled));
         }
     }
 
     /**
-     * Get the current profile id.
+     * Get the current profile ID from the request.
      *
-     * @return int the $_GET['profile'] if valid, else 1 (the first profile id)
+     * @return int the $_GET['id_profile'] if valid, else 1 (the first profile ID)
      */
     public function getCurrentProfileId()
     {
@@ -195,6 +203,8 @@ class AdminAccessControllerCore extends AdminController
     }
 
     /**
+     * Sort modules by their name.
+     *
      * @param array $a module data
      * @param array $b module data
      *
@@ -209,15 +219,23 @@ class AdminAccessControllerCore extends AdminController
     }
 
     /**
-     * return human readable Tabs hierarchy for display.
+     * Return human-readable tabs hierarchy for display.
+     *
+     * @param array $tabs
+     * @return array
      */
     protected function displayTabs(array $tabs)
     {
-        $tabsTree = $this->getChildrenTab($tabs);
-
-        return $tabsTree;
+        return $this->getChildrenTab($tabs);
     }
 
+    /**
+     * Get child tabs for the given parent tab ID.
+     *
+     * @param array $tabs
+     * @param int $id_parent
+     * @return array
+     */
     protected function getChildrenTab(array &$tabs, int $id_parent = 0)
     {
         $children = [];
