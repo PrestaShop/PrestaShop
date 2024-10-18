@@ -27,42 +27,43 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LogGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\LogsFilters;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Entity\Repository\LogRepository;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Responsible of "Configure > Advanced Parameters > Logs" page display.
+ * Responsible for "Configure > Advanced Parameters > Logs" page display.
  */
-class LogsController extends FrameworkBundleAdminController
+class LogsController extends PrestaShopAdminController
 {
-    /**
-     * @var string the controller name for routing
-     */
-    public const CONTROLLER_NAME = 'AdminLogs';
-
     /**
      * @param LogsFilters $filters the list of filters from the request
      *
      * @return Response
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'Access denied.')]
-    public function indexAction(LogsFilters $filters)
-    {
-        $gridLogFactory = $this->get('prestashop.core.grid.log_factory');
+    public function indexAction(
+        LogsFilters $filters,
+        #[Autowire(service: 'prestashop.core.grid.log_factory')]
+        GridFactoryInterface $gridLogFactory,
+        #[Autowire(service: 'prestashop.adapter.logs.form_handler')]
+        FormHandlerInterface $formHandler,
+    ): Response {
         $grid = $gridLogFactory->getGrid($filters);
-
-        $logsByEmailForm = $this->getFormHandler()->getForm();
+        $logsByEmailForm = $formHandler->getForm();
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/LogsPage/index.html.twig', [
             'layoutHeaderToolbarBtn' => [],
-            'layoutTitle' => $this->trans('Logs', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Logs', [], 'Admin.Navigation.Menu'),
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'enableSidebar' => true,
@@ -79,17 +80,18 @@ class LogsController extends FrameworkBundleAdminController
      */
     #[DemoRestricted(redirectRoute: 'admin_logs_index')]
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_logs_index')]
-    public function searchAction(Request $request)
-    {
-        $this->dispatchHook('actionAdminLogsControllerPostProcessBefore', ['controller' => $this]);
+    public function searchAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.grid.definition.factory.logs')]
+        GridDefinitionFactoryInterface $definitionFactory
+    ): RedirectResponse {
+        $this->dispatchHookWithParameters('actionAdminLogsControllerPostProcessBefore', ['controller' => $this]);
 
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
-
-        return $responseBuilder->buildSearchResponse(
-            $this->get('prestashop.core.grid.definition.factory.logs'),
+        return $this->buildSearchResponse(
+            $definitionFactory,
             $request,
             LogGridDefinitionFactory::GRID_ID,
-            'admin_logs_index'
+            'admin_logs_index',
         );
     }
 
@@ -100,25 +102,28 @@ class LogsController extends FrameworkBundleAdminController
      */
     #[DemoRestricted(redirectRoute: 'admin_logs_index')]
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_logs_index')]
-    public function saveSettingsAction(Request $request)
-    {
-        $logsByEmailForm = $this->getFormHandler()->getForm();
+    public function saveSettingsAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.adapter.logs.form_handler')]
+        FormHandlerInterface $formHandler,
+    ) {
+        $logsByEmailForm = $formHandler->getForm();
         $logsByEmailForm->handleRequest($request);
 
-        $this->dispatchHook('actionAdminLogsControllerPostProcessBefore', ['controller' => $this]);
+        $this->dispatchHookWithParameters('actionAdminLogsControllerPostProcessBefore', ['controller' => $this]);
 
         if ($logsByEmailForm->isSubmitted()) {
             $data = $logsByEmailForm->getData();
 
-            $saveErrors = $this->getFormHandler()->save($data);
+            $saveErrors = $formHandler->save($data);
 
             if (0 === count($saveErrors)) {
-                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_logs_index');
             }
 
-            $this->flashErrors($saveErrors);
+            $this->addFlashErrors($saveErrors);
         }
 
         return $this->redirectToRoute('admin_logs_index');
@@ -130,28 +135,13 @@ class LogsController extends FrameworkBundleAdminController
      * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_logs_index')]
-    public function deleteAllAction()
-    {
-        $this->getLogRepository()->deleteAll();
+    public function deleteAllAction(
+        LogRepository $logRepository,
+    ): RedirectResponse {
+        $logRepository->deleteAll();
 
-        $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+        $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
 
         return $this->redirectToRoute('admin_logs_index');
-    }
-
-    /**
-     * @return FormHandlerInterface the form handler to set the severity level
-     */
-    private function getFormHandler(): FormHandlerInterface
-    {
-        return $this->get('prestashop.adapter.logs.form_handler');
-    }
-
-    /**
-     * @return LogRepository the repository to retrieve logs from database
-     */
-    private function getLogRepository()
-    {
-        return $this->get('prestashop.core.admin.log.repository');
     }
 }

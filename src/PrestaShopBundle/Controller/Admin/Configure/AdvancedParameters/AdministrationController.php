@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Http\CookieOptions;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Controller\Exception\FieldNotFoundException;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\FormDataProvider;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralType;
@@ -38,33 +38,32 @@ use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
 use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Responsible of "Configure > Advanced Parameters > Administration" page display.
+ * Responsible for "Configure > Advanced Parameters > Administration" page display.
  */
-class AdministrationController extends FrameworkBundleAdminController
+class AdministrationController extends PrestaShopAdminController
 {
-    public const CONTROLLER_NAME = 'AdminAdminPreferences';
-
-    /**
-     * Show Administration page.
-     *
-     * @return Response
-     */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'Access denied.')]
-    public function indexAction()
-    {
-        $generalForm = $this->getGeneralFormHandler()->getForm();
-        $uploadQuotaForm = $this->getUploadQuotaFormHandler()->getForm();
-        $notificationsForm = $this->getNotificationsFormHandler()->getForm();
-        $isDebug = $this->get('prestashop.adapter.environment')->isDebug();
+    public function indexAction(
+        #[Autowire(service: 'prestashop.adapter.administration.general.form_handler')]
+        FormHandlerInterface $generalFormHandler,
+        #[Autowire(service: 'prestashop.adapter.administration.upload_quota.form_handler')]
+        FormHandlerInterface $uploadQuotaFormHandler,
+        #[Autowire(service: 'prestashop.adapter.administration.notifications.form_handler')]
+        FormHandlerInterface $notificationsFormHandler,
+    ): Response {
+        $generalForm = $generalFormHandler->getForm();
+        $uploadQuotaForm = $uploadQuotaFormHandler->getForm();
+        $notificationsForm = $notificationsFormHandler->getForm();
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/administration.html.twig', [
             'layoutHeaderToolbarBtn' => [],
-            'layoutTitle' => $this->trans('Administration', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Administration', [], 'Admin.Navigation.Menu'),
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'enableSidebar' => true,
@@ -73,7 +72,7 @@ class AdministrationController extends FrameworkBundleAdminController
             'generalForm' => $generalForm->createView(),
             'uploadQuotaForm' => $uploadQuotaForm->createView(),
             'notificationsForm' => $notificationsForm->createView(),
-            'isDebug' => $isDebug,
+            'isDebug' => $this->getEnvironment()->isDebug(),
         ]);
     }
 
@@ -86,47 +85,42 @@ class AdministrationController extends FrameworkBundleAdminController
      */
     #[DemoRestricted(redirectRoute: 'admin_administration')]
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_administration')]
-    public function processGeneralFormAction(Request $request)
-    {
+    public function processGeneralFormAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.adapter.administration.general.form_handler')]
+        FormHandlerInterface $generalFormHandler,
+    ): RedirectResponse {
         return $this->processForm(
             $request,
-            $this->getGeneralFormHandler(),
+            $generalFormHandler,
             'General'
         );
     }
 
-    /**
-     * Process the Administration upload quota configuration form.
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
     #[DemoRestricted(redirectRoute: 'admin_administration')]
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_administration')]
-    public function processUploadQuotaFormAction(Request $request)
-    {
+    public function processUploadQuotaFormAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.adapter.administration.upload_quota.form_handler')]
+        FormHandlerInterface $uploadQuotaFormHandler,
+    ): RedirectResponse {
         return $this->processForm(
             $request,
-            $this->getUploadQuotaFormHandler(),
+            $uploadQuotaFormHandler,
             'UploadQuota'
         );
     }
 
-    /**
-     * Process the Administration notifications configuration form.
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
     #[DemoRestricted(redirectRoute: 'admin_administration')]
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_administration')]
-    public function processNotificationsFormAction(Request $request)
-    {
+    public function processNotificationsFormAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.adapter.administration.notifications.form_handler')]
+        FormHandlerInterface $notificationsFormHandler,
+    ): RedirectResponse {
         return $this->processForm(
             $request,
-            $this->getNotificationsFormHandler(),
+            $notificationsFormHandler,
             'Notifications'
         );
     }
@@ -140,14 +134,14 @@ class AdministrationController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    protected function processForm(Request $request, FormHandlerInterface $formHandler, string $hookName)
+    protected function processForm(Request $request, FormHandlerInterface $formHandler, string $hookName): RedirectResponse
     {
-        $this->dispatchHook(
+        $this->dispatchHookWithParameters(
             'actionAdminAdministrationControllerPostProcess' . $hookName . 'Before',
             ['controller' => $this]
         );
 
-        $this->dispatchHook('actionAdminAdministrationControllerPostProcessBefore', ['controller' => $this]);
+        $this->dispatchHookWithParameters('actionAdminAdministrationControllerPostProcessBefore', ['controller' => $this]);
 
         $form = $formHandler->getForm();
         $form->handleRequest($request);
@@ -157,39 +151,15 @@ class AdministrationController extends FrameworkBundleAdminController
             try {
                 $formHandler->save($data);
             } catch (DataProviderException $e) {
-                $this->flashErrors($this->getErrorMessages($e->getInvalidConfigurationDataErrors()));
+                $this->addFlashErrors($this->getErrorMessages($e->getInvalidConfigurationDataErrors()));
 
                 return $this->redirectToRoute('admin_administration');
             }
 
-            $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Update successful', [], 'Admin.Notifications.Success'));
         }
 
         return $this->redirectToRoute('admin_administration');
-    }
-
-    /**
-     * @return FormHandlerInterface
-     */
-    protected function getGeneralFormHandler(): FormHandlerInterface
-    {
-        return $this->get('prestashop.adapter.administration.general.form_handler');
-    }
-
-    /**
-     * @return FormHandlerInterface
-     */
-    protected function getUploadQuotaFormHandler(): FormHandlerInterface
-    {
-        return $this->get('prestashop.adapter.administration.upload_quota.form_handler');
-    }
-
-    /**
-     * @return FormHandlerInterface
-     */
-    protected function getNotificationsFormHandler(): FormHandlerInterface
-    {
-        return $this->get('prestashop.adapter.administration.notifications.form_handler');
     }
 
     /**
@@ -221,32 +191,33 @@ class AdministrationController extends FrameworkBundleAdminController
             case FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO:
                 return $this->trans(
                     '%s is invalid. Please enter an integer greater than or equal to 0.',
+                    [$this->getFieldLabel($error->getFieldName())],
                     'Admin.Notifications.Error',
-                    [$this->getFieldLabel($error->getFieldName())]
                 );
             case FormDataProvider::ERROR_COOKIE_LIFETIME_MAX_VALUE_EXCEEDED:
                 return $this->trans(
                     '%s is invalid. Please enter an integer lower than %s.',
-                    'Admin.Notifications.Error',
                     [
                         $this->getFieldLabel($error->getFieldName()),
                         CookieOptions::MAX_COOKIE_VALUE,
-                    ]
+                    ],
+                    'Admin.Notifications.Error',
                 );
             case FormDataProvider::ERROR_COOKIE_SAMESITE_NONE:
                 return $this->trans(
                     'The SameSite=None attribute is only available in secure mode.',
+                    [],
                     'Admin.Advparameters.Notification'
                 );
         }
 
         return $this->trans(
             '%s is invalid.',
-            'Admin.Notifications.Error',
             [
                 $this->getFieldLabel($error->getFieldName()),
                 CookieOptions::MAX_COOKIE_VALUE,
-            ]
+            ],
+            'Admin.Notifications.Error',
         );
     }
 
@@ -267,26 +238,31 @@ class AdministrationController extends FrameworkBundleAdminController
             case UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES:
                 return $this->trans(
                     'Maximum size for attached files',
+                    [],
                     'Admin.Advparameters.Feature'
                 );
             case UploadQuotaType::FIELD_MAX_SIZE_DOWNLOADABLE_FILE:
                 return $this->trans(
                     'Maximum size for a downloadable product',
+                    [],
                     'Admin.Advparameters.Feature'
                 );
             case UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE:
                 return $this->trans(
                     'Maximum size for a product\'s image',
+                    [],
                     'Admin.Advparameters.Feature'
                 );
             case GeneralType::FIELD_FRONT_COOKIE_LIFETIME:
                 return $this->trans(
                     'Lifetime of front office cookies',
+                    [],
                     'Admin.Advparameters.Feature'
                 );
             case GeneralType::FIELD_BACK_COOKIE_LIFETIME:
                 return $this->trans(
                     'Lifetime of back office cookies',
+                    [],
                     'Admin.Advparameters.Feature'
                 );
         }
