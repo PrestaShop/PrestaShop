@@ -52,6 +52,10 @@ class SqlRequestSettingsType extends TranslatorAwareType
             ->add('default_file_separator', TextType::class, [
                 'label' => $this->trans('Select your default file separator', 'Admin.Advparameters.Feature'),
                 'translation_domain' => false,
+                'attr' => [
+                    'maxlength' => '1',
+                    'required',
+                ],
             ])
             ->add('enable_multi_statements', SwitchType::class, [
                 'label' => $this->trans('Enable multi-statements queries', 'Admin.Advparameters.Feature'),
