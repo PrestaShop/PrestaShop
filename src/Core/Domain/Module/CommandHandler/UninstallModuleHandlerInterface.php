@@ -24,8 +24,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Module\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Module\CommandHandler;
 
-class CannotUninstalledModuleException extends ModuleException
+use PrestaShop\PrestaShop\Core\Domain\Module\Command\UninstallModuleCommand;
+
+interface UninstallModuleHandlerInterface
 {
+    public function handle(UninstallModuleCommand $command): void;
 }
