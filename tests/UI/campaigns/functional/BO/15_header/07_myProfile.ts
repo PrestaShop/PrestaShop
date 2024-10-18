@@ -10,13 +10,13 @@ import setPermissions from '@commonTests/BO/advancedParameters/setPermissions';
 
 // Import pages
 import creditSlipsPage from '@pages/BO/orders/creditSlips';
-import employeesPage from '@pages/BO/advancedParameters/team';
 
 import {
   boDashboardPage,
   boLoginPage,
   boMyProfilePage,
   boProductsPage,
+  boEmployeesPage,
   type EmployeePermission,
   FakerEmployee,
   utilsFile,
@@ -251,24 +251,24 @@ describe('BO - Header : My profile', async () => {
         boDashboardPage.teamLink,
       );
 
-      const pageTitle = await employeesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(employeesPage.pageTitle);
+      const pageTitle = await boEmployeesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boEmployeesPage.pageTitle);
     });
 
     it('should filter list by email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterEmployeesToDelete', baseContext);
 
-      await employeesPage.filterEmployees(page, 'input', 'email', employeeData.email);
+      await boEmployeesPage.filterEmployees(page, 'input', 'email', employeeData.email);
 
-      const textEmail = await employeesPage.getTextColumnFromTable(page, 1, 'email');
+      const textEmail = await boEmployeesPage.getTextColumnFromTable(page, 1, 'email');
       expect(textEmail).to.contains(employeeData.email);
     });
 
     it('should delete employee and check error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteEmployee', baseContext);
 
-      const textResult = await employeesPage.deleteEmployeeAndFail(page, 1);
-      expect(textResult).to.equal(employeesPage.errorDeleteOwnAccountMessage);
+      const textResult = await boEmployeesPage.deleteEmployeeAndFail(page, 1);
+      expect(textResult).to.equal(boEmployeesPage.errorDeleteOwnAccountMessage);
     });
   });
 

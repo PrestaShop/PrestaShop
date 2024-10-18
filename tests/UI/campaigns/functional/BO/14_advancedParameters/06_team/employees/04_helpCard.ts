@@ -1,14 +1,12 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import pages
-import employeesPage from '@pages/BO/advancedParameters/team';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
+  boEmployeesPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -47,26 +45,26 @@ describe('BO - Advanced Parameters - Team : Help card in Employee page', async (
       boDashboardPage.advancedParametersLink,
       boDashboardPage.teamLink,
     );
-    await employeesPage.closeSfToolBar(page);
+    await boEmployeesPage.closeSfToolBar(page);
 
-    const pageTitle = await employeesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(employeesPage.pageTitle);
+    const pageTitle = await boEmployeesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boEmployeesPage.pageTitle);
   });
 
   it('should open the help side bar and check the document language', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openHelpSidebar', baseContext);
 
-    const isHelpSidebarVisible = await employeesPage.openHelpSideBar(page);
+    const isHelpSidebarVisible = await boEmployeesPage.openHelpSideBar(page);
     expect(isHelpSidebarVisible).to.eq(true);
 
-    const documentURL = await employeesPage.getHelpDocumentURL(page);
+    const documentURL = await boEmployeesPage.getHelpDocumentURL(page);
     expect(documentURL).to.contains('country=en');
   });
 
   it('should close the help side bar', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeHelpSidebar', baseContext);
 
-    const isHelpSidebarNotVisible = await employeesPage.closeHelpSideBar(page);
+    const isHelpSidebarNotVisible = await boEmployeesPage.closeHelpSideBar(page);
     expect(isHelpSidebarNotVisible).to.eq(true);
   });
 });

@@ -1,15 +1,13 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import pages
-import employeesPage from '@pages/BO/advancedParameters/team';
-import rolesPage from '@pages/BO/advancedParameters/team/roles';
-
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
+  boEmployeesPage,
+  boRolesPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -52,25 +50,25 @@ describe('BO - Advanced Parameters - Team : Filter roles table', async () => {
       boDashboardPage.advancedParametersLink,
       boDashboardPage.teamLink,
     );
-    await employeesPage.closeSfToolBar(page);
+    await boEmployeesPage.closeSfToolBar(page);
 
-    const pageTitle = await employeesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(employeesPage.pageTitle);
+    const pageTitle = await boEmployeesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boEmployeesPage.pageTitle);
   });
 
   it('should go to \'Roles\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToRolesPage', baseContext);
 
-    await employeesPage.goToRolesPage(page);
+    await boEmployeesPage.goToRolesPage(page);
 
-    const pageTitle = await rolesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(rolesPage.pageTitle);
+    const pageTitle = await boRolesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boRolesPage.pageTitle);
   });
 
   it('should reset all filters and get number of roles', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfProfiles = await rolesPage.resetAndGetNumberOfLines(page);
+    numberOfProfiles = await boRolesPage.resetAndGetNumberOfLines(page);
     expect(numberOfProfiles).to.be.above(0);
   });
 
@@ -93,13 +91,13 @@ describe('BO - Advanced Parameters - Team : Filter roles table', async () => {
       it(`should filter list by ${test.args.filterBy}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}`, baseContext);
 
-        await rolesPage.filterRoles(page, test.args.filterType, test.args.filterBy, test.args.filterValue);
+        await boRolesPage.filterRoles(page, test.args.filterType, test.args.filterBy, test.args.filterValue);
 
-        const numberOfProfilesAfterFilter = await rolesPage.getNumberOfElementInGrid(page);
+        const numberOfProfilesAfterFilter = await boRolesPage.getNumberOfElementInGrid(page);
         expect(numberOfProfilesAfterFilter).to.be.at.most(numberOfProfiles);
 
         for (let i = 1; i <= numberOfProfilesAfterFilter; i++) {
-          const textName = await rolesPage.getTextColumnFromTable(page, i, test.args.filterBy);
+          const textName = await boRolesPage.getTextColumnFromTable(page, i, test.args.filterBy);
           expect(textName).to.contains(test.args.filterValue);
         }
       });
@@ -107,7 +105,7 @@ describe('BO - Advanced Parameters - Team : Filter roles table', async () => {
       it('should reset filter', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfProfilesAfterDelete = await rolesPage.resetAndGetNumberOfLines(page);
+        const numberOfProfilesAfterDelete = await boRolesPage.resetAndGetNumberOfLines(page);
         expect(numberOfProfilesAfterDelete).to.be.equal(numberOfProfiles);
       });
     });
