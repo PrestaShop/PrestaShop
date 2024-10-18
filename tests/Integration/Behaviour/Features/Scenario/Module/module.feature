@@ -50,6 +50,25 @@ Feature: Module
       | enabled        | true                 |
       | installed      | true                 |
 
+  Scenario: Uninstall modules
+    Given module ps_featuredproducts has following infos:
+      | technical_name | ps_featuredproducts |
+      | version        | 1.0.0               |
+      | enabled        | true                |
+      | installed      | true                |
+    Given module ps_emailsubscription has following infos:
+      | technical_name | ps_emailsubscription |
+      | version        | 1.0.0                |
+      | enabled        | true                 |
+      | installed      | true                 |
+    When I bulk uninstall modules: "ps_featuredproducts,ps_emailsubscription"
+    And module ps_featuredproducts has following infos:
+      | installed      | false               |
+    Then I should have an exception that module is not installed
+    When module ps_emailsubscription has following infos:
+      | installed      | false               |
+    Then I should have an exception that module is not installed
+
   Scenario: Get module not present
     When module ps_notthere has following infos:
       | technical_name | ps_notthere |
