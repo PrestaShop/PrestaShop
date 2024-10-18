@@ -26,6 +26,10 @@ jobs:
             database: mysql
           - branch: 8.2.x
             database: mysql
+          - branch: 9.0.x
+            database: mysql
+          - branch: 9.0.x
+            database: mariadb
           - branch: develop
             database: mysql
           - branch: develop

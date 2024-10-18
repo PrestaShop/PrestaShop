@@ -176,6 +176,17 @@ jobs:
             CAMPAIGN: 'functional:FO:hummingbird:04-07'
           - BRANCH: 8.2.x
             CAMPAIGN: 'functional:FO:hummingbird:08-12'
+          ## 9.0.x
+          - BRANCH: 9.0.x
+            CAMPAIGN: 'functional:FO:01-03'
+          - BRANCH: 9.0.x
+            CAMPAIGN: 'functional:FO:04-07'
+          - BRANCH: 9.0.x
+            CAMPAIGN: 'functional:FO:08-12'
+          - BRANCH: 9.0.x
+            CAMPAIGN: 'sanity:productV2'
+          - BRANCH: 9.0.x
+            CAMPAIGN: 'functional:productV2'
           ## develop
           - BRANCH: develop
             CAMPAIGN: 'functional:FO:01-03'
