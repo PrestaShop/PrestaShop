@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import pages
-import employeesPage from '@pages/BO/advancedParameters/team';
 import permissionsPage from '@pages/BO/advancedParameters/team/permissions';
 
 import {expect} from 'chai';
@@ -11,6 +10,7 @@ import {
   boLoginPage,
   type BrowserContext,
   type Page,
+  boEmployeesPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
