@@ -385,7 +385,7 @@ class DispatcherCore
                 $controller_class = 'PageNotFoundController';
                 if (Validate::isLoadedObject($module) && $module->active) {
                     $controllers = Dispatcher::getControllers(_PS_MODULE_DIR_ . "$module_name/controllers/front/");
-                    if (isset($controllers[$this->controller])) {
+                    if (array_search($this->controller, $controllers)) {
                         include_once _PS_MODULE_DIR_ . "$module_name/controllers/front/{$this->controller}.php";
                         if (file_exists(
                             _PS_OVERRIDE_DIR_ . "modules/$module_name/controllers/front/{$this->controller}.php"
