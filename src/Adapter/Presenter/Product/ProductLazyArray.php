@@ -29,11 +29,13 @@ namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
 use Category;
 use Combination;
 use Context;
+use Customization;
 use DateTime;
 use Db;
 use Language;
 use Link;
 use Manufacturer;
+use Pack;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\Decimal\Operation\Rounding;
 use PrestaShop\PrestaShop\Adapter\Configuration;
@@ -50,6 +52,7 @@ use Product;
 use ReflectionException;
 use Symfony\Component\Translation\Exception\InvalidArgumentException;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Tax;
 use Tools;
 use Validate;
 
@@ -177,6 +180,29 @@ class ProductLazyArray extends AbstractLazyArray
         }
 
         return [];
+    }
+
+    /**
+     * Returns information, if a customization is required to purchase this product.
+     *
+     * @return bool
+     */
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getCustomizationRequired()
+    {
+        if (!isset($this->product['customization_required'])) {
+            $this->product['customization_required'] = false;
+            // If customizable property passed here was true and customization feature is enabled,
+            // We can further check the fields.
+            if (!empty($this->product['customizable']) && Customization::isFeatureActive()) {
+                //  Now, we fetch the customization fields and if we find some, the product requires customization.
+                if (count(Product::getRequiredCustomizableFieldsStatic((int) $this->product['id_product']))) {
+                    $this->product['customization_required'] = true;
+                }
+            }
+        }
+
+        return $this->product['customization_required'];
     }
 
     /**
@@ -476,11 +502,22 @@ class ProductLazyArray extends AbstractLazyArray
             return [
                 'value' => $this->priceFormatter->format($this->product['ecotax']),
                 'amount' => $this->product['ecotax'],
-                'rate' => $this->product['ecotax_rate'],
+                'rate' => $this->getEcotaxRate(),
             ];
         }
 
         return null;
+    }
+
+    /**
+     * @return float
+     */
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getEcotaxRate()
+    {
+        return (float) Tax::getProductEcotaxRate(
+            Context::getContext()->cart->{$this->configuration->get('PS_TAX_ADDRESS_TYPE')}
+        );
     }
 
     /**
@@ -928,6 +965,28 @@ class ProductLazyArray extends AbstractLazyArray
             $this->product['unit_price'] = '';
             $this->product['unit_price_full'] = '';
         }
+
+        // Assign no-pack prices in case of products that are packs
+        if ($this->product['pack']) {
+            $rawNoPackPrice = Pack::noPackPrice((int) $this->product['id_product']);
+            $this->product['nopackprice'] = $rawNoPackPrice;
+            $this->product['nopackprice_to_display'] = $this->priceFormatter->format($rawNoPackPrice);
+        } else {
+            $this->product['nopackprice'] = null;
+            $this->product['nopackprice_to_display'] = null;
+        }
+    }
+
+    /**
+     * @return float
+     */
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getRoundedDisplayPrice()
+    {
+        return Tools::ps_round(
+            $this->product['price_amount'],
+            Context::getContext()->currency->precision
+        );
     }
 
     /**
@@ -953,7 +1012,7 @@ class ProductLazyArray extends AbstractLazyArray
             return false;
         }
 
-        if ($product['customizable'] == ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION || !empty($product['customization_required'])) {
+        if ($product['customizable'] == ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION || $this->getCustomizationRequired()) {
             $shouldEnable = false;
 
             if (isset($product['customizations'])) {
@@ -1047,9 +1106,6 @@ class ProductLazyArray extends AbstractLazyArray
             $product['quantity_wanted'] = $this->getQuantityWanted();
         }
 
-        // Validate and format availability date
-        $product['available_date'] = $this->prepareAvailabilityDate($product);
-
         // Default data
         $this->product['availability_message'] = null;
         $this->product['availability_submessage'] = null;
@@ -1074,7 +1130,7 @@ class ProductLazyArray extends AbstractLazyArray
         }
 
         // Quantity available we will display is reduced by amount we want to add to cart
-        $availableQuantity = $product['quantity'] - $product['quantity_wanted'];
+        $availableQuantity = $this->product['quantity'] - $product['quantity_wanted'];
         if (isset($product['stock_quantity'])) {
             $availableQuantity = $product['stock_quantity'] - $product['quantity_wanted'];
         }
@@ -1109,7 +1165,7 @@ class ProductLazyArray extends AbstractLazyArray
 
         // Case 2 - Product not in stock, available for order
         } elseif ($product['allow_oosp']) {
-            $this->product['availability_date'] = $product['available_date'];
+            $this->product['availability_date'] = $this->getAvailableDate();
             $this->product['availability'] = 'available';
 
             // We will primarily use label from combination if set, then label on product, then the default label from PS settings
@@ -1123,8 +1179,8 @@ class ProductLazyArray extends AbstractLazyArray
             }
 
         // Case 3 - OOSP disabled and customer wants to add more items to cart than are in stock
-        } elseif ($product['quantity'] > 0) {
-            $this->product['availability_date'] = $product['available_date'];
+        } elseif ($this->product['quantity'] > 0) {
+            $this->product['availability_date'] = $this->getAvailableDate();
             $this->product['availability'] = 'unavailable';
 
             $this->product['availability_message'] = $this->translator->trans(
@@ -1135,11 +1191,11 @@ class ProductLazyArray extends AbstractLazyArray
 
         // Case 4 - Product not in stock, not available for order
         } else {
-            $this->product['availability_date'] = $product['available_date'];
+            $this->product['availability_date'] = $this->getAvailableDate();
             $this->product['availability'] = 'unavailable';
 
             // If the product has combinations and other combination is in stock, we show a small hint about it
-            if ($product['cache_default_attribute'] && $product['quantity_all_versions'] > 0) {
+            if ($product['cache_default_attribute'] && $this->product['quantity_all_versions'] > 0) {
                 $this->product['availability_message'] = $this->translator->trans(
                     'Product available with different options',
                     [],
@@ -1151,6 +1207,46 @@ class ProductLazyArray extends AbstractLazyArray
                 $this->product['availability_message'] = $config[$language->id] ?? null;
             }
         }
+    }
+
+    /**
+     * Returns information, if a precise quantity should be displayed. Used on product page.
+     *
+     * @return bool
+     */
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getShowQuantities()
+    {
+        if (!isset($this->product['show_quantities'])) {
+            $this->product['show_quantities'] = (bool) (
+                $this->configuration->get('PS_DISPLAY_QTIES')
+                && $this->configuration->get('PS_STOCK_MANAGEMENT')
+                && $this->product['quantity'] > 0
+                && (bool) $this->product['available_for_order']
+                && !$this->settings->catalog_mode
+            );
+        }
+
+        return $this->product['show_quantities'];
+    }
+
+    /**
+     * Returns a quantity label to use, that is displayed after precise quantity. Used on product page.
+     *
+     * @return string
+     */
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getQuantityLabel()
+    {
+        if (!isset($this->product['quantity_label'])) {
+            $this->product['quantity_label'] = (
+                $this->product['quantity'] > 1 ?
+                $this->translator->trans('Items', [], 'Shop.Theme.Catalog') :
+                $this->translator->trans('Item', [], 'Shop.Theme.Catalog')
+            );
+        }
+
+        return $this->product['quantity_label'];
     }
 
     /**
@@ -1173,28 +1269,38 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
-     * Validates and formats available_date property passed into the lazy array.
+     * Returns product availability date.
      * It will return the date back only if it's a valid date in the future.
-     * Also handles the case when the date was not passed at all.
-     *
-     * @param array $product
      *
      * @return string|null
      */
-    private function prepareAvailabilityDate($product)
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getAvailableDate()
     {
+        /*
+         * Basic available date is passed here from the product object. We will get it
+         * manually in two cases. If we need it for specific combination, or if it was
+         * not passed for some reason.
+         */
+        if (!isset($this->product['available_date'])) {
+            $this->product['available_date'] = Product::getAvailableDate((int) $this->product['id_product']);
+        }
+        if (!empty($this->product['id_product_attribute'])) {
+            $this->product['available_date'] = Product::getAvailableDate((int) $this->product['id_product'], (int) $this->product['id_product_attribute']);
+        }
+
         // Check if the date is valid
-        if (empty($product['available_date']) || $product['available_date'] == '0000-00-00' || !Validate::isDate($product['available_date'])) {
+        if (empty($this->product['available_date']) || $this->product['available_date'] == '0000-00-00' || !Validate::isDate($this->product['available_date'])) {
             return null;
         }
 
         // Check if it didn't already pass
-        $date = new DateTime($product['available_date']);
+        $date = new DateTime($this->product['available_date']);
         if ($date < new DateTime()) {
             return null;
         }
 
-        return $product['available_date'];
+        return $this->product['available_date'];
     }
 
     /**
@@ -1244,7 +1350,6 @@ class ProductLazyArray extends AbstractLazyArray
             'category_name',
             'condition',
             'cover',
-            'customer_group_discount',
             'customizable',
             'customization_required',
             'customizations',
@@ -1260,7 +1365,6 @@ class ProductLazyArray extends AbstractLazyArray
             'discount_percentage_absolute',
             'discount_type',
             'ecotax',
-            'ecotax_rate',
             'extraContent',
             'features',
             'flags',
