@@ -38,12 +38,14 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinition;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Factory\FeatureValueGridFactory;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
+use PrestaShopBundle\Form\Admin\Type\ReorderPositionsButtonType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -108,6 +110,18 @@ class FeatureValueGridDefinitionFactory extends AbstractFilterableGridDefinition
                 ->setName($this->trans('Value', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'value',
+                ])
+            )
+            ->add((new PositionColumn('position'))
+                ->setName($this->trans('Position', [], 'Admin.Global'))
+                ->setOptions([
+                    'id_field' => 'id_feature_value',
+                    'position_field' => 'position',
+                    'update_method' => 'POST',
+                    'update_route' => 'admin_feature_values_update_position',
+                    'record_route_params' => [
+                        'id_feature' => 'featureId',
+                    ],
                 ])
             )
             ->add((new ActionColumn('actions'))
@@ -175,6 +189,9 @@ class FeatureValueGridDefinitionFactory extends AbstractFilterableGridDefinition
                     ],
                 ])
                 ->setAssociatedColumn('value')
+            )
+            ->add((new Filter('position', ReorderPositionsButtonType::class))
+                ->setAssociatedColumn('position')
             );
     }
 
