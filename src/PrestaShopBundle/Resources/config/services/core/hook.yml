@@ -11,21 +11,39 @@ services:
   prestashop.core.hook.dispatcher:
     alias: 'PrestaShop\PrestaShop\Core\Hook\HookDispatcher'
 
-  prestashop.core.hook.provider.grid_definition_hook_by_service_ids_provider:
-    class: PrestaShop\PrestaShop\Core\Hook\Provider\GridDefinitionHookByServiceIdsProvider
+  PrestaShop\PrestaShop\Core\Hook\Provider\GridDefinitionHookByServiceIdsProvider:
+    public: false
     arguments:
       - '@service_container'
 
-  prestashop.core.hook.provider.identifiable_object_hook_by_form_type_provider:
-    class: PrestaShop\PrestaShop\Core\Hook\Provider\IdentifiableObjectHookByFormTypeProvider
+  prestashop.core.hook.provider.grid_definition_hook_by_service_ids_provider:
+    alias: PrestaShop\PrestaShop\Core\Hook\Provider\GridDefinitionHookByServiceIdsProvider
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+
+  PrestaShop\PrestaShop\Core\Hook\Provider\IdentifiableObjectHookByFormTypeProvider:
+    public: false
     arguments:
       - '@form.factory'
 
-  prestashop.core.hook.generator.hook_description_generator:
-    class: 'PrestaShop\PrestaShop\Core\Hook\Generator\HookDescriptionGenerator'
+  prestashop.core.hook.provider.identifiable_object_hook_by_form_type_provider:
+    alias: PrestaShop\PrestaShop\Core\Hook\Provider\IdentifiableObjectHookByFormTypeProvider
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+
+  PrestaShop\PrestaShop\Core\Hook\Generator\HookDescriptionGenerator:
+    public: false
     autowire: true
     arguments:
       $hookDescriptions: '%hook_descriptions%'
+
+  prestashop.core.hook.generator.hook_description_generator:
+    alias: 'PrestaShop\PrestaShop\Core\Hook\Generator\HookDescriptionGenerator'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
 parameters:
   hook_descriptions:
