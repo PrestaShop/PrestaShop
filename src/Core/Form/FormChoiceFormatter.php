@@ -101,10 +101,11 @@ class FormChoiceFormatter
      *
      * @return array Array with changed key
      */
-    public static function replaceArrayKey($array, $oldKey, $newKey) {
+    public static function replaceArrayKey($array, $oldKey, $newKey): array
+    {
         $keys = array_keys($array);
         $keys[array_search($oldKey, $keys)] = $newKey;
 
-        return array_combine($keys, $array);	
+        return array_combine($keys, $array);
     }
 }
