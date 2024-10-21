@@ -200,7 +200,7 @@ class PrestaShopAdminController extends AbstractController
      *
      * @return string
      */
-    protected function getErrorMessageForException(Throwable $e, array $messages): string
+    protected function getErrorMessageForException(Throwable $e, array $messages = []): string
     {
         if ($e instanceof ModuleErrorInterface) {
             return $e->getMessage();
