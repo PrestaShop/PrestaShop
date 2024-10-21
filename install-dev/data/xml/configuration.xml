@@ -900,5 +900,8 @@ Country</value>
     <configuration id="PS_SEPARATOR_FILE_MANAGER_SQL" name="PS_SEPARATOR_FILE_MANAGER_SQL">
       <value>;</value>
     </configuration>
+    <configuration id="PS_FEATURE_VALUES_ORDER" name="PS_FEATURE_VALUES_ORDER">
+      <value>name</value>
+    </configuration>
   </entities>
 </entity_configuration>
