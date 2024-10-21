@@ -223,10 +223,8 @@ function updateProduct(event, eventType, updateUrl) {
           );
         }
         $(prestashop.selectors.product.prices)
-          .first()
           .replaceWith(data.product_prices);
         $(prestashop.selectors.product.customization)
-          .first()
           .replaceWith(data.product_customization);
 
         // refill customizationId input value when updating quantity or combination
@@ -240,19 +238,15 @@ function updateProduct(event, eventType, updateUrl) {
         }
 
         $(prestashop.selectors.product.variantsUpdate)
-          .first()
           .replaceWith(data.product_variants);
         $(prestashop.selectors.product.discounts)
-          .first()
           .replaceWith(data.product_discounts);
         $(prestashop.selectors.product.additionalInfos)
-          .first()
           .replaceWith(data.product_additional_info);
         $(prestashop.selectors.product.details).replaceWith(
           data.product_details,
         );
         $(prestashop.selectors.product.flags)
-          .first()
           .replaceWith(data.product_flags);
         replaceAddToCartSections(data);
         const minimalProductQuantity = parseInt(
