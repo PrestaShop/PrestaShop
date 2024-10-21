@@ -5718,7 +5718,7 @@ class ProductCore extends ObjectModel
             return [];
         }
         if (!array_key_exists($id_product . '-' . $id_lang, self::$_frontFeaturesCache)) {
-            if ((int) Configuration::get('PS_FEATURE_VALUES_ORDER') === 0) {
+            if (Configuration::get('PS_FEATURE_VALUES_ORDER') === 'name') {
                 $secondaryOrder = 'fvl.value';
             } else {
                 $secondaryOrder = 'fv.position';
