@@ -464,6 +464,14 @@ abstract class PaymentModuleCore extends Module
                         $customization_text = '';
                         if (isset($customization['datas'][Product::CUSTOMIZE_TEXTFIELD])) {
                             foreach ($customization['datas'][Product::CUSTOMIZE_TEXTFIELD] as $text) {
+                                if (!Validate::isCleanHtml($text['value'], false)) {
+                                    $text['value'] = strip_tags($text['value']);
+                                }
+
+                                if (!Validate::isCleanHtml($text['name'], false)) {
+                                    $text['name'] = strip_tags($text['name']);
+                                }
+
                                 $customization_text .= '<strong>' . $text['name'] . '</strong>: ' . $text['value'] . '<br />';
                             }
                         }
