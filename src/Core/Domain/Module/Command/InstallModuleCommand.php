@@ -26,32 +26,46 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Module\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Module\Command;
 
-use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
-use PrestaShop\PrestaShop\Core\Domain\Module\Query\GetModuleInfos;
-use PrestaShop\PrestaShop\Core\Domain\Module\QueryHandler\GetModuleInfosHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Module\QueryResult\ModuleInfos;
-use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
-
-#[AsQueryHandler]
-class GetModuleInfosHandler implements GetModuleInfosHandlerInterface
+/**
+ * Install module
+ */
+class InstallModuleCommand
 {
-    public function __construct(
-        protected ModuleRepository $moduleRepository,
-    ) {
+    /**
+     * @var string
+     */
+    private $module;
+
+    /**
+     * @var string | null
+     */
+    private $source;
+
+    /**
+     * @param string $module Technical name for module
+     * @param string $source source for module
+     */
+    public function __construct(string $module, string $source=null)
+    {
+        $this->module = $module;
+        $this->source = $source;
     }
 
-    public function handle(GetModuleInfos $query): ModuleInfos
+    /**
+     * @return string
+     */
+    public function getModule(): string
     {
-        $module = $this->moduleRepository->getPresentModule($query->getTechnicalName()->getValue());
+        return $this->module;
+    }
 
-        return new ModuleInfos(
-            $module->get( 'id'),
-            $module->get('name'),
-            $module->get('version'),
-            $module->isActive(),
-            $module->IsInstalled(),
-        );
+    /**
+     * @return string
+     */
+    public function getSource(): string | null
+    {
+        return $this->source;
     }
 }

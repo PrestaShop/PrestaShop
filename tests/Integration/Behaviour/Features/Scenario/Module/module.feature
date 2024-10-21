@@ -1,5 +1,7 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s module --tags module
-@reset-database-before-feature
+@restore-all-tables-before-feature
+@clear-cache-before-feature
+@reset-test-modules-after-feature
 @module
 Feature: Module
   PrestaShop allows BO users to manage modules
@@ -49,6 +51,59 @@ Feature: Module
       | version        | 1.0.0                |
       | enabled        | true                 |
       | installed      | true                 |
+
+  Scenario: Uninstall modules
+    Given module ps_featuredproducts has following infos:
+      | technical_name | ps_featuredproducts |
+      | version        | 1.0.0               |
+      | enabled        | true                |
+      | installed      | true                |
+    Given module ps_emailsubscription has following infos:
+      | technical_name | ps_emailsubscription |
+      | version        | 1.0.0                |
+      | enabled        | true                 |
+      | installed      | true                 |
+    When I bulk uninstall modules: "ps_featuredproducts,ps_emailsubscription" with deleteFile false
+    Then module ps_featuredproducts has following infos:
+      | installed      | false               |
+    And module ps_emailsubscription has following infos:
+      | installed      | false               |
+
+  Scenario: Uninstall module
+    Given module bankwire has following infos:
+      | technical_name | bankwire            |
+      | version        | 2.0.0               |
+      | enabled        | true                |
+      | installed      | true                |
+    When I uninstall module "bankwire" with deleteFile true
+    And module bankwire has following infos:
+      | installed      | false               |
+    Then I should have an exception that module is not found
+
+  Scenario: Install module with files in folder modules
+    When I install module "ps_featuredproducts" from "folder"
+    Then module ps_featuredproducts has following infos:
+      | technical_name | ps_featuredproducts  |
+      | version        | 1.0.0                |
+      | enabled        | true                 |
+      | installed      | true                 |
+
+  Scenario: Install module with zip file on disk
+    When I install module "test_install_cqrs_command" from "zip" "test_install_cqrs_command.zip"
+    Then module test_install_cqrs_command has following infos:
+      | technical_name | test_install_cqrs_command |
+      | version        | 1.0.0                     |
+      | enabled        | true                      |
+      | installed      | true                      |
+
+  Scenario: Install module with zip file on remote
+    When I uninstall module "ps_featuredproducts" with deleteFile true
+    And I install module "ps_featuredproducts" from "url" "https://api-addons.prestashop.com/?method=module&format=json&channel=stable&iso_code=fr&iso_lang=fr&version=8.1.0&id_module=22319"
+    Then module ps_featuredproducts has following infos:
+      | technical_name | ps_featuredproducts |
+      | version        | 1.0.0               |
+      | enabled        | true                |
+      | installed      | true                |
 
   Scenario: Get module not present
     When module ps_notthere has following infos:
