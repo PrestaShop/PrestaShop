@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,15 +22,29 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-{% extends '@PrestaShop/Admin/Common/Grid/grid.html.twig' %}
+ */
 
-{% block grid_bulk_actions_block %}
-  {# When grid is not in empty state we show the extra category filter #}
-  {% if not grid.attributes.is_empty_state %}
-  {{ form_start(categoryFilterForm, {attr: {class: 'd-inline-block'}}) }}
-    {{ form_row(categoryFilterForm) }}
-  {{ form_end(categoryFilterForm) }}
-  {% endif %}
-  {{ parent() }}
-{% endblock %}
+namespace PrestaShopBundle\Form\Admin\Sell\Product;
+
+use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
+
+/**
+ * Special search and reset button for product grid, the reset button is not shown when
+ * category is the only filter selected.
+ */
+class ProductSearchAndResetType extends SearchAndResetType
+{
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        parent::buildView($view, $form, $options);
+        if (null !== $form->getParent()) {
+            $selectedFilters = array_keys($form->getParent()->getData());
+
+            if (count($selectedFilters) === 1 && $selectedFilters[0] === 'id_category') {
+                $view->vars['show_reset_button'] = false;
+            }
+        }
+    }
+}
