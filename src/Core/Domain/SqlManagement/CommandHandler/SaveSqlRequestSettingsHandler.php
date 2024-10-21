@@ -73,16 +73,4 @@ final class SaveSqlRequestSettingsHandler implements SaveSqlRequestSettingsHandl
 
         return $valuesMapping[$command->getFileEncoding()];
     }
-
-    /**
-     * Retrieves the file separator value from the SaveSqlRequestSettingsCommand object.
-     *
-     * @param SaveSqlRequestSettingsCommand $command the command containing the file separator value
-     *
-     * @return string the file separator value
-     */
-    private function getFileSeparatorValue(SaveSqlRequestSettingsCommand $command): string
-    {
-        return $command->getFileSeparator();
-    }
 }
