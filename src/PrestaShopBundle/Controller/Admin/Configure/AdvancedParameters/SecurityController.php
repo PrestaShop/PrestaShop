@@ -44,11 +44,13 @@ use PrestaShop\PrestaShop\Core\Domain\Security\Exception\CannotDeleteEmployeeSes
 use PrestaShop\PrestaShop\Core\Domain\Security\Exception\SessionNotFoundException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\Security\Session\CustomerFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\Security\Session\EmployeeFilters;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Controller\Attribute\AllShopContext;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -58,7 +60,7 @@ use Symfony\Component\HttpFoundation\Response;
  * "Configure > Advanced parameters > Security" page.
  */
 #[AllShopContext]
-class SecurityController extends FrameworkBundleAdminController
+class SecurityController extends PrestaShopAdminController
 {
     /**
      * Show sessions listing page.
@@ -66,26 +68,31 @@ class SecurityController extends FrameworkBundleAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
-    public function indexAction(Request $request): Response
-    {
-        $generalForm = $this->getGeneralFormHandler()->getForm();
-        $passwordPolicyForm = $this->getPasswordPolicyFormHandler()->getForm();
+    public function indexAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.adapter.security.general.form_handler')]
+        FormHandlerInterface $generalFormHandler,
+        #[Autowire(service: 'prestashop.adapter.security.password_policy.form_handler')]
+        FormHandlerInterface $passwordPolicyFormHandler,
+    ): Response {
+        $generalForm = $generalFormHandler->getForm();
+        $passwordPolicyForm = $passwordPolicyFormHandler->getForm();
 
         return $this->render(
             '@PrestaShop/Admin/Configure/AdvancedParameters/Security/index.html.twig',
             [
                 'enableSidebar' => true,
                 'layoutHeaderToolbarBtn' => [],
-                'layoutTitle' => $this->trans('Security', 'Admin.Navigation.Menu'),
+                'layoutTitle' => $this->trans('Security', [], 'Admin.Navigation.Menu'),
                 'passwordPolicyForm' => $passwordPolicyForm->createView(),
                 'generalForm' => $generalForm->createView(),
                 'multistoreInfoTip' => $this->trans(
                     'Note that this page is available in all shops context only, this is why your context has just switched.',
+                    [],
                     'Admin.Notifications.Info'
                 ),
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-                'multistoreIsUsed' => ($this->get('prestashop.adapter.multistore_feature')->isUsed()
-                                       && $this->get('prestashop.adapter.shop.context')->isShopContext()),
+                'multistoreIsUsed' => $this->getShopContext()->isMultiShopUsed() && $this->getShopContext()->getShopConstraint()->getShopId() !== null,
             ]
         );
     }
@@ -98,11 +105,14 @@ class SecurityController extends FrameworkBundleAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))")]
-    public function processGeneralFormAction(Request $request): RedirectResponse
-    {
+    public function processGeneralFormAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.adapter.security.general.form_handler')]
+        FormHandlerInterface $generalFormHandler,
+    ): RedirectResponse {
         return $this->processForm(
             $request,
-            $this->getGeneralFormHandler(),
+            $generalFormHandler,
             'actionAdminSecurityControllerPostProcessGeneralBefore'
         );
     }
@@ -115,11 +125,14 @@ class SecurityController extends FrameworkBundleAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))")]
-    public function processPasswordPolicyFormAction(Request $request): RedirectResponse
-    {
+    public function processPasswordPolicyFormAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.adapter.security.password_policy.form_handler')]
+        FormHandlerInterface $passwordPolicyFormHandler,
+    ): RedirectResponse {
         return $this->processForm(
             $request,
-            $this->getPasswordPolicyFormHandler(),
+            $passwordPolicyFormHandler,
             'actionAdminSecurityControllerPostProcessPasswordPolicyBefore'
         );
     }
@@ -135,12 +148,12 @@ class SecurityController extends FrameworkBundleAdminController
      */
     protected function processForm(Request $request, FormHandlerInterface $formHandler, string $hookName): RedirectResponse
     {
-        $this->dispatchHook(
+        $this->dispatchHookWithParameters(
             $hookName,
             ['controller' => $this]
         );
 
-        $this->dispatchHook('actionAdminSecurityControllerPostProcessBefore', ['controller' => $this]);
+        $this->dispatchHookWithParameters('actionAdminSecurityControllerPostProcessBefore', ['controller' => $this]);
 
         $form = $formHandler->getForm();
         $form->handleRequest($request);
@@ -150,9 +163,9 @@ class SecurityController extends FrameworkBundleAdminController
             $saveErrors = $formHandler->save($data);
 
             if (0 === count($saveErrors)) {
-                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Update successful', [], 'Admin.Notifications.Success'));
             } else {
-                $this->flashErrors($saveErrors);
+                $this->addFlashErrors($saveErrors);
             }
         }
 
@@ -167,23 +180,25 @@ class SecurityController extends FrameworkBundleAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
-    public function employeeSessionAction(Request $request, EmployeeFilters $filters): Response
-    {
-        $sessionsEmployeesGridFactory = $this->get('prestashop.core.grid.factory.security.session.employee');
-
+    public function employeeSessionAction(
+        Request $request,
+        EmployeeFilters $filters,
+        #[Autowire(service: 'prestashop.core.grid.factory.security.session.employee')]
+        GridFactoryInterface $sessionsEmployeesGridFactory,
+    ): Response {
         return $this->render(
             '@PrestaShop/Admin/Configure/AdvancedParameters/Security/employees.html.twig',
             [
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-                'layoutTitle' => $this->trans('Employee sessions', 'Admin.Navigation.Menu'),
+                'layoutTitle' => $this->trans('Employee sessions', [], 'Admin.Navigation.Menu'),
                 'grid' => $this->presentGrid($sessionsEmployeesGridFactory->getGrid($filters)),
                 'multistoreInfoTip' => $this->trans(
                     'Note that this page is available in all shops context only, this is why your context has just switched.',
+                    [],
                     'Admin.Notifications.Info'
                 ),
-                'multistoreIsUsed' => ($this->get('prestashop.adapter.multistore_feature')->isUsed()
-                                       && $this->get('prestashop.adapter.shop.context')->isShopContext()),
+                'multistoreIsUsed' => $this->getShopContext()->isMultiShopUsed() && $this->getShopContext()->getShopConstraint()->getShopId() !== null,
             ]
         );
     }
@@ -196,23 +211,25 @@ class SecurityController extends FrameworkBundleAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
-    public function customerSessionAction(Request $request, CustomerFilters $filters): Response
-    {
-        $sessionsCustomersGridFactory = $this->get('prestashop.core.grid.factory.security.session.customer');
-
+    public function customerSessionAction(
+        Request $request,
+        CustomerFilters $filters,
+        #[Autowire(service: 'prestashop.core.grid.factory.security.session.customer')]
+        GridFactoryInterface $sessionsCustomersGridFactory,
+    ): Response {
         return $this->render(
             '@PrestaShop/Admin/Configure/AdvancedParameters/Security/customers.html.twig',
             [
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-                'layoutTitle' => $this->trans('Customer sessions', 'Admin.Navigation.Menu'),
+                'layoutTitle' => $this->trans('Customer sessions', [], 'Admin.Navigation.Menu'),
                 'grid' => $this->presentGrid($sessionsCustomersGridFactory->getGrid($filters)),
                 'multistoreInfoTip' => $this->trans(
                     'Note that this page is available in all shops context only, this is why your context has just switched.',
+                    [],
                     'Admin.Notifications.Info'
                 ),
-                'multistoreIsUsed' => ($this->get('prestashop.adapter.multistore_feature')->isUsed()
-                                       && $this->get('prestashop.adapter.shop.context')->isShopContext()),
+                'multistoreIsUsed' => $this->getShopContext()->isMultiShopUsed() && $this->getShopContext()->getShopConstraint()->getShopId() !== null,
             ]
         );
     }
@@ -226,9 +243,9 @@ class SecurityController extends FrameworkBundleAdminController
         try {
             $clearSessionCommand = new ClearOutdatedCustomerSessionCommand();
 
-            $this->getCommandBus()->handle($clearSessionCommand);
+            $this->dispatchCommand($clearSessionCommand);
 
-            $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful deletion', [], 'Admin.Notifications.Success'));
         } catch (CoreException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
@@ -245,9 +262,9 @@ class SecurityController extends FrameworkBundleAdminController
         try {
             $clearSessionCommand = new ClearOutdatedEmployeeSessionCommand();
 
-            $this->getCommandBus()->handle($clearSessionCommand);
+            $this->dispatchCommand($clearSessionCommand);
 
-            $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful deletion', [], 'Admin.Notifications.Success'));
         } catch (CoreException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
@@ -268,9 +285,9 @@ class SecurityController extends FrameworkBundleAdminController
         try {
             $deleteSessionCommand = new DeleteEmployeeSessionCommand($sessionId);
 
-            $this->getCommandBus()->handle($deleteSessionCommand);
+            $this->dispatchCommand($deleteSessionCommand);
 
-            $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful deletion', [], 'Admin.Notifications.Success'));
         } catch (CoreException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
@@ -291,9 +308,9 @@ class SecurityController extends FrameworkBundleAdminController
         try {
             $deleteSessionCommand = new DeleteCustomerSessionCommand($sessionId);
 
-            $this->getCommandBus()->handle($deleteSessionCommand);
+            $this->dispatchCommand($deleteSessionCommand);
 
-            $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful deletion', [], 'Admin.Notifications.Success'));
         } catch (CoreException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
@@ -316,9 +333,9 @@ class SecurityController extends FrameworkBundleAdminController
         try {
             $deleteSessionsCommand = new BulkDeleteCustomerSessionsCommand($sessionIds);
 
-            $this->getCommandBus()->handle($deleteSessionsCommand);
+            $this->dispatchCommand($deleteSessionsCommand);
 
-            $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful deletion', [], 'Admin.Notifications.Success'));
         } catch (CoreException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
@@ -341,9 +358,9 @@ class SecurityController extends FrameworkBundleAdminController
         try {
             $deleteSessionsCommand = new BulkDeleteEmployeeSessionsCommand($sessionIds);
 
-            $this->getCommandBus()->handle($deleteSessionsCommand);
+            $this->dispatchCommand($deleteSessionsCommand);
 
-            $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful deletion', [], 'Admin.Notifications.Success'));
         } catch (CoreException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
@@ -352,7 +369,7 @@ class SecurityController extends FrameworkBundleAdminController
     }
 
     /**
-     * Get human readable error for exception.
+     * Get human-readable error for exception.
      *
      * @param Exception $e
      *
@@ -363,62 +380,53 @@ class SecurityController extends FrameworkBundleAdminController
         return [
             SessionNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found).',
+                [],
                 'Admin.Notifications.Error'
             ),
             CannotDeleteCustomerSessionException::class => $this->trans(
                 'An error occurred while deleting the object.',
+                [],
                 'Admin.Notifications.Error'
             ),
             CannotClearCustomerSessionException::class => $this->trans(
                 'An error occurred while clearing objects.',
+                [],
                 'Admin.Notifications.Error'
             ),
             CannotBulkDeleteCustomerSessionException::class => $this->trans(
                 '%s: %s',
-                'Admin.Global',
                 [
                     $this->trans(
                         'An error occurred while deleting this selection.',
+                        [],
                         'Admin.Notifications.Error'
                     ),
                     $e instanceof CannotBulkDeleteCustomerSessionException ? implode(', ', $e->getSessionIds()) : '',
-                ]
+                ],
+                'Admin.Global',
             ),
             CannotDeleteEmployeeSessionException::class => $this->trans(
                 'An error occurred while deleting the object.',
+                [],
                 'Admin.Notifications.Error'
             ),
             CannotClearEmployeeSessionException::class => $this->trans(
                 'An error occurred while clearing objects.',
+                [],
                 'Admin.Notifications.Error'
             ),
             CannotBulkDeleteEmployeeSessionException::class => $this->trans(
                 '%s: %s',
-                'Admin.Global',
                 [
                     $this->trans(
                         'An error occurred while deleting this selection.',
+                        [],
                         'Admin.Notifications.Error'
                     ),
                     $e instanceof CannotBulkDeleteEmployeeSessionException ? implode(', ', $e->getSessionIds()) : '',
-                ]
+                ],
+                'Admin.Global',
             ),
         ];
-    }
-
-    /**
-     * @return FormHandlerInterface
-     */
-    protected function getGeneralFormHandler(): FormHandlerInterface
-    {
-        return $this->get('prestashop.adapter.security.general.form_handler');
-    }
-
-    /**
-     * @return FormHandlerInterface
-     */
-    protected function getPasswordPolicyFormHandler(): FormHandlerInterface
-    {
-        return $this->get('prestashop.adapter.security.password_policy.form_handler');
     }
 }
