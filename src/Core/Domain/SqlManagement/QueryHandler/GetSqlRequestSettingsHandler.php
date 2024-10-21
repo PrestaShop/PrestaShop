@@ -82,16 +82,4 @@ final class GetSqlRequestSettingsHandler implements GetSqlRequestSettingsHandler
 
         return CharsetEncoding::UTF_8;
     }
-
-    /**
-     * Returns the file separator specified in $rawValue or defaults to ';'.
-     *
-     * @param string|null $rawValue The raw value of the file separator
-     *
-     * @return string The file separator
-     */
-    private function getFileSeparator(?string $rawValue): string
-    {
-        return $rawValue ?? ';';
-    }
 }
