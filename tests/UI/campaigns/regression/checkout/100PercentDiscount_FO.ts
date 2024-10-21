@@ -11,6 +11,7 @@ import {
   boDashboardPage,
   boLoginPage,
   boOrderSettingsPage,
+  type BrowserContext,
   dataCMSPages,
   FakerAddress,
   FakerCartRule,
@@ -20,11 +21,11 @@ import {
   foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicModalQuickViewPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'regression_checkout_100PercentDiscount_FO';
 

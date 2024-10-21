@@ -10,18 +10,19 @@ import addProductPage from '@pages/BO/catalog/products/add';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
   boProductsCreateTabStocksPage,
   boProductSettingsPage,
+  type BrowserContext,
   dataProducts,
   FakerProduct,
   foHummingbirdHomePage,
   foHummingbirdProductPage,
   foHummingbirdSearchResultsPage,
+  type Page,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

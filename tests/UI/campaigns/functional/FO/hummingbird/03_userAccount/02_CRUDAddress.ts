@@ -11,6 +11,7 @@ import addAddressPage from '@pages/FO/hummingbird/myAccount/addAddress';
 import addressesPage from '@pages/FO/hummingbird/myAccount/addresses';
 
 import {
+  type BrowserContext,
   dataProducts,
   FakerAddress,
   FakerCustomer,
@@ -20,11 +21,11 @@ import {
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
   foHummingbirdProductPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_hummingbird_userAccount_CRUDAddress';
 

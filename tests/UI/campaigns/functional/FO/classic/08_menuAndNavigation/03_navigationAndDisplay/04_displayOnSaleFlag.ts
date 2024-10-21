@@ -8,13 +8,14 @@ import {deleteProductTest} from '@commonTests/BO/catalog/product';
 import addProductPage from '@pages/BO/catalog/products/add';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  type BrowserContext,
   FakerProduct,
   foClassicProductPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 

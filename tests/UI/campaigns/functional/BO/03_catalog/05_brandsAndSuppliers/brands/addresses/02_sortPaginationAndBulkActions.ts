@@ -6,11 +6,12 @@ import brandsPage from '@pages/BO/catalog/brands';
 import addBrandAddressPage from '@pages/BO/catalog/brands/addAddress';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   FakerBrandAddress,
+  type Page,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

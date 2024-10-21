@@ -9,6 +9,7 @@ import {
   boLoginPage,
   boPerformancePage,
   boProductsPage,
+  type BrowserContext,
   dataCustomers,
   dataGroups,
   dataProducts,
@@ -17,12 +18,12 @@ import {
   foClassicLoginPage,
   foClassicProductPage,
   foClassicSearchResultsPage,
+  type Page,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_advancedParameters_performance_optionalFeatures';
 

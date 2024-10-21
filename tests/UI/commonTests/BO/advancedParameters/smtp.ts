@@ -5,12 +5,13 @@ import {
   boDashboardPage,
   boEmailPage,
   boLoginPage,
+  type BrowserContext,
   dataCustomers,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 let browserContext: BrowserContext;
 let page: Page;

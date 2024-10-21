@@ -1,12 +1,16 @@
 // Import data
 import {
+  type BrowserContext,
+  type ElementHandle,
+  type FileChooser,
+  type Frame,
+  type JSHandle,
+  type Locator,
+  type Page,
+  type Response,
   type PageWaitForSelectorOptionsState,
   type WaitForNavigationWaitUntil,
 } from '@prestashop-core/ui-testing';
-
-import type {
-  BrowserContext, ElementHandle, JSHandle, FileChooser, Frame, Page, Locator, Response,
-} from 'playwright';
 
 /**
  * Parent page, contains functions that can be used in every page (BO, FO ...)

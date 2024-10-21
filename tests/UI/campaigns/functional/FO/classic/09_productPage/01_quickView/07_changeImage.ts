@@ -5,12 +5,13 @@ import testContext from '@utils/testContext';
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
+  type BrowserContext,
   FakerProduct,
   foClassicHomePage,
   foClassicModalQuickViewPage,
   foClassicSearchResultsPage,
+  type Page,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

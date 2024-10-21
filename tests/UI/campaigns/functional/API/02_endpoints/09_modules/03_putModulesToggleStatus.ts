@@ -5,21 +5,23 @@ import testContext from '@utils/testContext';
 import {deleteAPIClientTest} from '@commonTests/BO/advancedParameters/authServer';
 
 import {
+  type APIRequestContext,
   boApiClientsPage,
   boApiClientsCreatePage,
   boDashboardPage,
   boLoginPage,
   boModuleManagerPage,
+  type BrowserContext,
   FakerAPIClient,
   FakerModule,
   type ModuleInfo,
+  type Page,
   utilsAPI,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_API_endpoints_modules_putModulesToggleStatus';
 

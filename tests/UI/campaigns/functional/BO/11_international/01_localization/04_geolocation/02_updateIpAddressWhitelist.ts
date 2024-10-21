@@ -6,12 +6,13 @@ import testContext from '@utils/testContext';
 import geolocationPage from '@pages/BO/international/localization/geolocation';
 
 import {expect} from 'chai';
-import {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLocalizationPage,
   boLoginPage,
+  type BrowserContext,
   foClassicHomePage,
+  type Page,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

@@ -10,15 +10,16 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 import accountIdentityPage from '@pages/FO/hummingbird/myAccount/identity';
 
 import {
+  type BrowserContext,
   FakerCustomer,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_hummingbird_userAccount_editInformation';
 

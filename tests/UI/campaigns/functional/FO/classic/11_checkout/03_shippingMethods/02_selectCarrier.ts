@@ -6,6 +6,7 @@ import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {createAccountTest} from '@commonTests/FO/classic/account';
 
 import {
+  type BrowserContext,
   dataCarriers,
   dataProducts,
   FakerAddress,
@@ -14,11 +15,11 @@ import {
   foClassicCheckoutPage,
   foClassicHomePage,
   foClassicProductPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_classic_checkout_shippingMethods_selectCarrier';
 

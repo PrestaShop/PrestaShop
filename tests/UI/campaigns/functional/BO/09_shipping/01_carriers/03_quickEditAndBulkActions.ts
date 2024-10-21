@@ -2,12 +2,12 @@
 import testContext from '@utils/testContext';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boCarriersPage,
   boCarriersCreatePage,
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   dataCarriers,
   dataCustomers,
   FakerCarrier,
@@ -15,6 +15,7 @@ import {
   foClassicCheckoutPage,
   foClassicHomePage,
   foClassicProductPage,
+  type Page,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

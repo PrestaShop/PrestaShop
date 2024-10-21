@@ -7,15 +7,16 @@ import {
   boLocalizationPage,
   boLoginPage,
   boCurrenciesPage,
+  type BrowserContext,
   dataCurrencies,
   dataLanguages,
   foClassicHomePage,
   type ImportContent,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_international_localization_localization_importLocalizationPack';
 

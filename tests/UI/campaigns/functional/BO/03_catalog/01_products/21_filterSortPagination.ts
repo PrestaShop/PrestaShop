@@ -5,13 +5,14 @@ import testContext from '@utils/testContext';
 import createProductsPage from '@pages/BO/catalog/products/add';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
   boProductsCreateTabDescriptionPage,
+  type BrowserContext,
   dataCategories,
+  type Page,
   type ProductFilterMinMax,
   utilsCore,
   utilsPlaywright,

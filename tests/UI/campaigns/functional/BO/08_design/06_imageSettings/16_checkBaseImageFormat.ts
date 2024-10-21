@@ -9,13 +9,14 @@ import createProductsPage from '@pages/BO/catalog/products/add';
 import imageSettingsPage from '@pages/BO/design/imageSettings';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
   boProductsCreateTabDescriptionPage,
+  type BrowserContext,
   FakerProduct,
+  type Page,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

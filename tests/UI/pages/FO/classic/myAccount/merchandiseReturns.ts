@@ -1,7 +1,8 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
-import type {Page} from 'playwright';
 import {
+  type Page,
+
   type OrderMerchandiseReturns,
 } from '@prestashop-core/ui-testing';
 

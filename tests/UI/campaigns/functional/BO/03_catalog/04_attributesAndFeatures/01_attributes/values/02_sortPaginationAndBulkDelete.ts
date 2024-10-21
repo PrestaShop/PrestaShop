@@ -7,11 +7,12 @@ import addValuePage from '@pages/BO/catalog/attributes/addValue';
 import viewAttributePage from '@pages/BO/catalog/attributes/view';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   FakerAttributeValue,
+  type Page,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

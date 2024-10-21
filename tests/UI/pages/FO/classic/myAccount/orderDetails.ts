@@ -2,9 +2,9 @@ import FOBasePage from '@pages/FO/FObasePage';
 
 import {
   type OrderMerchandiseProductReturn,
-} from '@prestashop-core/ui-testing';
 
-import type {Page} from 'playwright';
+  type Page,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Order details page, contains functions that can be used on the page

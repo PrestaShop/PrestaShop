@@ -8,6 +8,7 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {
+  type BrowserContext,
   dataCustomers,
   foHummingbirdCartPage,
   foHummingbirdContactUsPage,
@@ -15,11 +16,11 @@ import {
   foHummingbirdLoginPage,
   foHummingbirdModalQuickViewPage,
   foHummingbirdMyAccountPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_hummingbird_headerAndFooter_checkLinksInHeader';
 

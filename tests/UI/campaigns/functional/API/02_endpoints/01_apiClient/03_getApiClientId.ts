@@ -5,13 +5,15 @@ import testContext from '@utils/testContext';
 import {deleteAPIClientTest} from '@commonTests/BO/advancedParameters/authServer';
 
 import {expect} from 'chai';
-import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 import {
+  type APIRequestContext,
   boApiClientsPage,
   boApiClientsCreatePage,
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   FakerAPIClient,
+  type Page,
   utilsAPI,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

@@ -7,11 +7,12 @@ import taxRulesPage from '@pages/BO/international/taxes/taxRules';
 import addTaxRulesPage from '@pages/BO/international/taxes/taxRules/add';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   FakerTaxRulesGroup,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 

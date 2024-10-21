@@ -7,11 +7,12 @@ import storesPage from '@pages/BO/shopParameters/stores';
 import addStorePage from '@pages/BO/shopParameters/stores/add';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   FakerStore,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 

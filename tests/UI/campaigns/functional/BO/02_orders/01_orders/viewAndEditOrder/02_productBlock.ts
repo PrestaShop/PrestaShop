@@ -21,6 +21,7 @@ import {
   boOrdersPage,
   boOrdersViewBlockProductsPage,
   boProductsPage,
+  type BrowserContext,
   dataPaymentMethods,
   dataProducts,
   FakerAddress,
@@ -28,11 +29,11 @@ import {
   FakerCustomer,
   FakerOrder,
   FakerProduct,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_orders_orders_viewAndEditOrder_productBlock';
 

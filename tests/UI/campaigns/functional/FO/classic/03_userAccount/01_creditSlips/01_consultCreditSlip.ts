@@ -21,6 +21,7 @@ import {
   boOrdersPage,
   boOrdersViewBlockProductsPage,
   boOrdersViewBlockTabListPage,
+  type BrowserContext,
   dataOrderStatuses,
   dataPaymentMethods,
   dataProducts,
@@ -32,13 +33,13 @@ import {
   foClassicMyAccountPage,
   type MailDev,
   type MailDevEmail,
+  type Page,
   utilsFile,
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_classic_userAccount_creditSlips_consultCreditSlip';
 

@@ -6,7 +6,9 @@ import {
   FakerAddress,
 } from '@prestashop-core/ui-testing';
 
-import type {Page} from 'playwright';
+import {
+  type Page,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Add address page, contains functions that can be used on the page

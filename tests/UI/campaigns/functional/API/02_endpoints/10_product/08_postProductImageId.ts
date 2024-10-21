@@ -10,17 +10,19 @@ import createProductsPage from '@pages/BO/catalog/products/add';
 
 import {expect} from 'chai';
 import fs from 'fs';
-import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 import {
+  type APIRequestContext,
   boApiClientsPage,
   boApiClientsCreatePage,
   boDashboardPage,
   boLoginPage,
   boProductsPage,
   boProductsCreateTabDescriptionPage,
+  type BrowserContext,
   dataLanguages,
   FakerAPIClient,
   FakerProduct,
+  type Page,
   type ProductImageInformation,
   utilsAPI,
   utilsFile,

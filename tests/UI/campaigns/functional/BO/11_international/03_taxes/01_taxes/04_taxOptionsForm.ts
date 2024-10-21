@@ -5,12 +5,13 @@ import testContext from '@utils/testContext';
 import taxesPage from '@pages/BO/international/taxes';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   dataTaxOptions,
   FakerTaxOption,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 

@@ -9,9 +9,9 @@ import {createCartRuleTest, deleteCartRuleTest} from '@commonTests/BO/catalog/ca
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 import {
+  type BrowserContext,
   dataProducts,
   FakerCartRule,
   foHummingbirdCartPage,
@@ -19,6 +19,7 @@ import {
   foHummingbirdHomePage,
   foHummingbirdModalQuickViewPage,
   foHummingbirdSearchResultsPage,
+  type Page,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

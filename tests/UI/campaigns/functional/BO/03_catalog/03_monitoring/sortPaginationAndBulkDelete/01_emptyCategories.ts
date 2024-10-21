@@ -13,11 +13,12 @@ import monitoringPage from '@pages/BO/catalog/monitoring';
 import ImportCategories from '@data/import/categories';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   type CategoryFilter,
+  type Page,
   utilsCore,
   utilsFile,
   utilsPlaywright,

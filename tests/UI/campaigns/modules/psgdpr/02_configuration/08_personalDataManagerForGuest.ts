@@ -9,12 +9,12 @@ import {createOrderByGuestTest} from '@commonTests/FO/classic/order';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
   boModuleManagerPage,
   boOrdersPage,
+  type BrowserContext,
   dataModules,
   dataOrderStatuses,
   dataPaymentMethods,
@@ -24,6 +24,7 @@ import {
   FakerOrder,
   modPsGdprBoMain,
   modPsGdprBoTabDataConfig,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 

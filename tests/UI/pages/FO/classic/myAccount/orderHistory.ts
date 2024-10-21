@@ -1,8 +1,8 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
-import type {Page} from 'playwright';
-
 import {
+  type Page,
+
   type OrderHistory,
   type OrderHistoryMessage,
 } from '@prestashop-core/ui-testing';
