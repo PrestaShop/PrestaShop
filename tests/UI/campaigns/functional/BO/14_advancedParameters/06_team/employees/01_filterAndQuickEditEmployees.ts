@@ -1,17 +1,15 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import pages
-import employeesPage from '@pages/BO/advancedParameters/team';
-import addEmployeePage from '@pages/BO/advancedParameters/team/add';
-
 import {expect} from 'chai';
 import {
   boDashboardPage,
   boLoginPage,
-  type BrowserContext,
+  boEmployeesPage,
+  boEmployeesCreatePage,
   dataEmployees,
   FakerEmployee,
+  type BrowserContext,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -59,16 +57,16 @@ describe('BO - Advanced Parameters - Team : Filter and quick edit Employees', as
       boDashboardPage.advancedParametersLink,
       boDashboardPage.teamLink,
     );
-    await employeesPage.closeSfToolBar(page);
+    await boEmployeesPage.closeSfToolBar(page);
 
-    const pageTitle = await employeesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(employeesPage.pageTitle);
+    const pageTitle = await boEmployeesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boEmployeesPage.pageTitle);
   });
 
   it('should reset all filters and get number of employees', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfEmployees = await employeesPage.resetAndGetNumberOfLines(page);
+    numberOfEmployees = await boEmployeesPage.resetAndGetNumberOfLines(page);
     expect(numberOfEmployees).to.be.above(0);
   });
 
@@ -77,19 +75,19 @@ describe('BO - Advanced Parameters - Team : Filter and quick edit Employees', as
     it('should go to add new employee page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewEmployeePage', baseContext);
 
-      await employeesPage.goToAddNewEmployeePage(page);
+      await boEmployeesPage.goToAddNewEmployeePage(page);
 
-      const pageTitle = await addEmployeePage.getPageTitle(page);
-      expect(pageTitle).to.contains(addEmployeePage.pageTitleCreate);
+      const pageTitle = await boEmployeesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boEmployeesCreatePage.pageTitleCreate);
     });
 
     it('should create employee', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createEmployee', baseContext);
 
-      const textResult = await addEmployeePage.createEditEmployee(page, createEmployeeData);
-      expect(textResult).to.equal(employeesPage.successfulCreationMessage);
+      const textResult = await boEmployeesCreatePage.createEditEmployee(page, createEmployeeData);
+      expect(textResult).to.equal(boEmployeesPage.successfulCreationMessage);
 
-      const numberOfEmployeesAfterCreation = await employeesPage.getNumberOfElementInGrid(page);
+      const numberOfEmployeesAfterCreation = await boEmployeesPage.getNumberOfElementInGrid(page);
       expect(numberOfEmployeesAfterCreation).to.be.equal(numberOfEmployees + 1);
     });
   });
@@ -146,22 +144,22 @@ describe('BO - Advanced Parameters - Team : Filter and quick edit Employees', as
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}`, baseContext);
 
-        await employeesPage.filterEmployees(
+        await boEmployeesPage.filterEmployees(
           page,
           test.args.filterType,
           test.args.filterBy,
           test.args.filterValue,
         );
 
-        const numberOfEmployeesAfterFilter = await employeesPage.getNumberOfElementInGrid(page);
+        const numberOfEmployeesAfterFilter = await boEmployeesPage.getNumberOfElementInGrid(page);
         expect(numberOfEmployeesAfterFilter).to.be.at.most(numberOfEmployees);
 
         for (let i = 1; i <= numberOfEmployeesAfterFilter; i++) {
           if (test.args.filterBy === 'active') {
-            const employeeStatus = await employeesPage.getStatus(page, i);
+            const employeeStatus = await boEmployeesPage.getStatus(page, i);
             expect(employeeStatus).to.equal(test.args.filterValue === '1');
           } else {
-            const textColumn = await employeesPage.getTextColumnFromTable(page, i, test.args.filterBy);
+            const textColumn = await boEmployeesPage.getTextColumnFromTable(page, i, test.args.filterBy);
             expect(textColumn).to.contains(test.args.filterValue);
           }
         }
@@ -170,7 +168,7 @@ describe('BO - Advanced Parameters - Team : Filter and quick edit Employees', as
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfEmployeesAfterCreation = await employeesPage.resetAndGetNumberOfLines(page);
+        const numberOfEmployeesAfterCreation = await boEmployeesPage.resetAndGetNumberOfLines(page);
         expect(numberOfEmployeesAfterCreation).to.be.above(numberOfEmployees);
       });
     });
@@ -181,13 +179,13 @@ describe('BO - Advanced Parameters - Team : Filter and quick edit Employees', as
     it('should filter by Email address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForQuickEdit', baseContext);
 
-      await employeesPage.filterEmployees(page, 'input', 'email', createEmployeeData.email);
+      await boEmployeesPage.filterEmployees(page, 'input', 'email', createEmployeeData.email);
 
-      const numberOfEmployeesAfterFilter = await employeesPage.getNumberOfElementInGrid(page);
+      const numberOfEmployeesAfterFilter = await boEmployeesPage.getNumberOfElementInGrid(page);
       expect(numberOfEmployeesAfterFilter).to.be.at.most(numberOfEmployees);
 
       for (let i = 1; i <= numberOfEmployeesAfterFilter; i++) {
-        const textColumn = await employeesPage.getTextColumnFromTable(page, i, 'email');
+        const textColumn = await boEmployeesPage.getTextColumnFromTable(page, i, 'email');
         expect(textColumn).to.contains(createEmployeeData.email);
       }
     });
@@ -204,18 +202,18 @@ describe('BO - Advanced Parameters - Team : Filter and quick edit Employees', as
           baseContext,
         );
 
-        const isActionPerformed = await employeesPage.setStatus(
+        const isActionPerformed = await boEmployeesPage.setStatus(
           page,
           1,
           employeeStatus.args.enable,
         );
 
         if (isActionPerformed) {
-          const resultMessage = await employeesPage.getAlertSuccessBlockParagraphContent(page);
-          expect(resultMessage).to.contains(employeesPage.successfulUpdateStatusMessage);
+          const resultMessage = await boEmployeesPage.getAlertSuccessBlockParagraphContent(page);
+          expect(resultMessage).to.contains(boEmployeesPage.successfulUpdateStatusMessage);
         }
 
-        const currentStatus = await employeesPage.getStatus(page, 1);
+        const currentStatus = await boEmployeesPage.getStatus(page, 1);
         expect(currentStatus).to.be.equal(employeeStatus.args.enable);
       });
     });
@@ -226,23 +224,23 @@ describe('BO - Advanced Parameters - Team : Filter and quick edit Employees', as
     it('should filter list by email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForDelete', baseContext);
 
-      await employeesPage.filterEmployees(page, 'input', 'email', createEmployeeData.email);
+      await boEmployeesPage.filterEmployees(page, 'input', 'email', createEmployeeData.email);
 
-      const textEmail = await employeesPage.getTextColumnFromTable(page, 1, 'email');
+      const textEmail = await boEmployeesPage.getTextColumnFromTable(page, 1, 'email');
       expect(textEmail).to.contains(createEmployeeData.email);
     });
 
     it('should delete employee', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteEmployee', baseContext);
 
-      const textResult = await employeesPage.deleteEmployee(page, 1);
-      expect(textResult).to.equal(employeesPage.successfulDeleteMessage);
+      const textResult = await boEmployeesPage.deleteEmployee(page, 1);
+      expect(textResult).to.equal(boEmployeesPage.successfulDeleteMessage);
     });
 
     it('should reset filter and check the number of employees', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
-      const numberOfEmployeesAfterDelete = await employeesPage.resetAndGetNumberOfLines(page);
+      const numberOfEmployeesAfterDelete = await boEmployeesPage.resetAndGetNumberOfLines(page);
       expect(numberOfEmployeesAfterDelete).to.be.equal(numberOfEmployees);
     });
   });
