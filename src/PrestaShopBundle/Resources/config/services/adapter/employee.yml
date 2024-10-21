@@ -30,6 +30,8 @@ services:
       - '@prestashop.adapter.data_provider.employee'
       - '@prestashop.adapter.employee.data_provider'
 
+  PrestaShop\PrestaShop\Core\Employee\Access\EmployeeFormAccessCheckerInterface: '@prestashop.adapter.employee.form_access_checker'
+
   prestashop.adapter.employee.command_handler.add_employee_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\AddEmployeeHandler'
     autoconfigure: true
@@ -60,10 +62,14 @@ services:
     arguments:
       - '@prestashop.adapter.legacy.context'
 
+  PrestaShop\PrestaShop\Core\Employee\NavigationMenuTogglerInterface: '@prestashop.adapter.employee.navigation_menu_toggler'
+
   prestashop.adapter.employee.form_language_changer:
     class: 'PrestaShop\PrestaShop\Adapter\Employee\FormLanguageChanger'
     arguments:
       - '@prestashop.adapter.legacy.context'
+
+  PrestaShop\PrestaShop\Core\Employee\FormLanguageChangerInterface: '@prestashop.adapter.employee.form_language_changer'
 
   prestashop.adapter.employee.query_handler.get_employee_email_by_id_handler:
     class: PrestaShop\PrestaShop\Adapter\Profile\Employee\QueryHandler\GetEmployeeEmailByIdHandler

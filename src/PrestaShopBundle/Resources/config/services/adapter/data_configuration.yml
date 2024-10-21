@@ -52,6 +52,7 @@ services:
       - '%ps_config_dir%/defines.inc.php'
       - '@prestashop.adapter.cache.clearer.class_index_cache_clearer'
       - '@prestashop.adapter.debug_profiling'
+      - '@prestashop.core.cache.clearer.cache_clearer_chain'
 
   prestashop.adapter.optional_features.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\OptionalFeatures\OptionalFeaturesConfiguration'
@@ -215,12 +216,18 @@ services:
     arguments:
       - '@prestashop.adapter.legacy.configuration'
 
-  prestashop.adapter.webservice.configuration:
-    class: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceConfiguration'
+  PrestaShop\PrestaShop\Adapter\Webservice\WebserviceConfiguration:
+    public: false
     arguments:
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.adapter.shop.context'
       - '@prestashop.adapter.multistore_feature'
+
+  prestashop.adapter.webservice.configuration:
+    alias: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceConfiguration'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.adapter.meta.set_up_urls.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Meta\SetUpUrlsDataConfiguration'

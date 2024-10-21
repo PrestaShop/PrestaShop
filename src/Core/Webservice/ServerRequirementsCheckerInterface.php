@@ -36,5 +36,5 @@ interface ServerRequirementsCheckerInterface
      *
      * @return array Errors if any
      */
-    public function checkForErrors();
+    public function checkForErrors(): array;
 }

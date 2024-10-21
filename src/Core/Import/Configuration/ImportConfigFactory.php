@@ -37,7 +37,7 @@ final class ImportConfigFactory implements ImportConfigFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function buildFromRequest(Request $request)
+    public function buildFromRequest(Request $request): ImportConfigInterface
     {
         $separator = $request->request->get(
             'separator',
