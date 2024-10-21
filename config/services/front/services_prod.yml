@@ -1,5 +1,6 @@
 imports:
     - { resource: ../common.yml }
+    - { resource: ../../../modules/*/config/front_services.yml }
 
 services:
     _defaults:
@@ -57,3 +58,8 @@ services:
       class: PrestaShopBundle\Translation\TranslatorLanguageLoader
       arguments:
         - '@prestashop.adapter.module.repository.module_repository'
+
+    prestashop.hook.module.filter:
+      class: PrestaShop\PrestaShop\Core\Hook\HookModuleFilter
+      arguments:
+        - !tagged core.hook_module_exec_filter

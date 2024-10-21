@@ -24,10 +24,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Hook\HookModuleFilter;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 
 class HookCore extends ObjectModel
@@ -761,6 +763,12 @@ class HookCore extends ObjectModel
             }
         }
 
+        $hookModuleFilter = self::getHookModuleFilter();
+
+        if (!empty($hookModuleFilter) && !empty($modulesToInvoke)) {
+            $modulesToInvoke = $hookModuleFilter->filterHookModuleExecList($modulesToInvoke, $hookName);
+        }
+
         return !empty($modulesToInvoke) ? $modulesToInvoke : false;
     }
 
@@ -1107,6 +1115,23 @@ class HookCore extends ObjectModel
         }
 
         return null;
+    }
+
+    /**
+     * @return HookModuleFilter|null
+     * @throws \PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException
+     */
+    private static function getHookModuleFilter()
+    {
+        $serviceContainer = ContainerBuilder::getContainer('front', _PS_MODE_DEV_);
+
+        try {
+            $hookModuleFilter = $serviceContainer->get('prestashop.hook.module.filter');
+        } catch (Exception $e) {
+            return null;
+        }
+
+        return $hookModuleFilter;
     }
 
     /**
