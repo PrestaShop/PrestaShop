@@ -41,6 +41,9 @@ class ConnectionCore extends ObjectModel
     /** @var string */
     public $http_referer;
 
+    /** @var string */
+    public $debug_referer;
+
     /** @var int */
     public $id_shop;
 
@@ -61,6 +64,7 @@ class ConnectionCore extends ObjectModel
             'id_page' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'ip_address' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
             'http_referer' => ['type' => self::TYPE_STRING, 'validate' => 'isAbsoluteUrl', 'size' => 255],
+            'debug_referer' => ['type' => self::TYPE_STRING, 'size' => 2550],
             'id_shop' => ['type' => self::TYPE_INT, 'required' => true],
             'id_shop_group' => ['type' => self::TYPE_INT, 'required' => true],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
@@ -171,7 +175,11 @@ class ConnectionCore extends ObjectModel
             Connection::cleanConnectionsPages();
 
             $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
+            $initialReferer = $referer;
             $arrayUrl = parse_url($referer);
+            $cleanRequestHost = preg_replace('/^www./', '', $arrayUrl['host']);
+            $cleanToolHost = preg_replace('/^www./', '', Tools::getHttpHost(false, false));
+            $sameHost = preg_replace('/^www./', '', $arrayUrl['host']) == preg_replace('/^www./', '', Tools::getHttpHost(false, false));
             if (!isset($arrayUrl['host']) || preg_replace('/^www./', '', $arrayUrl['host']) == preg_replace('/^www./', '', Tools::getHttpHost(false, false))) {
                 $referer = '';
             }
@@ -185,6 +193,14 @@ class ConnectionCore extends ObjectModel
             if (Validate::isAbsoluteUrl($referer)) {
                 $connection->http_referer = substr($referer, 0, 254);
             }
+            $connection->debug_referer = sprintf(
+                'Request host %s Tools host %s Initial referer: %s SAme host: %s Array url: %s',
+                $cleanRequestHost,
+                $cleanToolHost,
+                $initialReferer,
+                $sameHost ? 'true' : 'false',
+                var_export($arrayUrl, true),
+            );
             $connection->add();
             $cookie->id_connections = (int) $connection->id;
 
