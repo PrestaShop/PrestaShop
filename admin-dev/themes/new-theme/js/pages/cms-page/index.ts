@@ -63,13 +63,6 @@ $(() => {
   const shopChoiceTree = new window.prestashop.component.ChoiceTree('#cms_page_category_shop_association');
   shopChoiceTree.enableAutoCheckChildren();
 
-  new window.prestashop.component.TaggableField({
-    tokenFieldSelector: 'input[name^="cms_page_category[meta_keywords]"]',
-    options: {
-      createTokensOnBlur: true,
-    },
-  });
-
   const cmsGrid = new window.prestashop.component.Grid('cms_page');
   cmsGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
   cmsGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());

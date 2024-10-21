@@ -54,9 +54,6 @@ class CMSCategoryCore extends ObjectModel
     /** @var string|array<int, string> Meta title */
     public $meta_title;
 
-    /** @var string|array<int, string> Meta keywords */
-    public $meta_keywords;
-
     /** @var string|array<int, string> Meta description */
     public $meta_description;
 
@@ -90,7 +87,6 @@ class CMSCategoryCore extends ObjectModel
             'description' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 4194303],
             'meta_title' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
             'meta_description' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 512],
-            'meta_keywords' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
         ],
     ];
 
@@ -381,7 +377,7 @@ class CMSCategoryCore extends ObjectModel
     public function getSubCategories(int $id_lang, bool $active = true)
     {
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT c.*, cl.id_lang, cl.name, cl.description, cl.link_rewrite, cl.meta_title, cl.meta_keywords, cl.meta_description
+		SELECT c.*, cl.id_lang, cl.name, cl.description, cl.link_rewrite, cl.meta_title, cl.meta_description
 		FROM `' . _DB_PREFIX_ . 'cms_category` c
 		LEFT JOIN `' . _DB_PREFIX_ . 'cms_category_lang` cl ON (c.`id_cms_category` = cl.`id_cms_category` AND `id_lang` = ' . (int) $id_lang . ')
 		WHERE `id_parent` = ' . (int) $this->id . '

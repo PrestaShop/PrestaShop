@@ -79,7 +79,6 @@ final class AddCmsPageHandler extends AbstractCmsPageHandler implements AddCmsPa
         $cms->meta_title = $command->getLocalizedTitle();
         $cms->head_seo_title = $command->getLocalizedMetaTitle();
         $cms->meta_description = $command->getLocalizedMetaDescription();
-        $cms->meta_keywords = $command->getLocalizedMetaKeyword();
         $cms->link_rewrite = $command->getLocalizedFriendlyUrl();
         $cms->content = $command->getLocalizedContent();
         $cms->indexation = $command->isIndexedForSearch();

@@ -52,9 +52,6 @@ class SupplierCore extends ObjectModel
     /** @var string|array<int, string> Meta title */
     public $meta_title;
 
-    /** @var string|array<int, string> Meta keywords */
-    public $meta_keywords;
-
     /** @var string|array<int, string> Meta description */
     public $meta_description;
 
@@ -78,7 +75,6 @@ class SupplierCore extends ObjectModel
             'description' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 4194303],
             'meta_title' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
             'meta_description' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 512],
-            'meta_keywords' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
         ],
     ];
 
@@ -352,7 +348,6 @@ class SupplierCore extends ObjectModel
 					pl.`description_short`,
 					pl.`link_rewrite`,
 					pl.`meta_description`,
-					pl.`meta_keywords`,
 					pl.`meta_title`,
 					pl.`name`,
 					image_shop.`id_image` id_image,

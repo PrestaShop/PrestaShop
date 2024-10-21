@@ -98,10 +98,6 @@ final class EditCmsPageHandler extends AbstractCmsPageHandler implements EditCms
             $cms->meta_description = $command->getLocalizedMetaDescription();
         }
 
-        if (null !== $command->getLocalizedMetaKeyword()) {
-            $cms->meta_keywords = $command->getLocalizedMetaKeyword();
-        }
-
         if (null !== $command->getLocalizedFriendlyUrl()) {
             $cms->link_rewrite = $command->getLocalizedFriendlyUrl();
         }

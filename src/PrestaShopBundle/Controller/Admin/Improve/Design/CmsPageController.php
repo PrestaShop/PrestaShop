@@ -1047,13 +1047,6 @@ class CmsPageController extends PrestaShopAdminController
                     ],
                     'Admin.Notifications.Error'
                 ),
-                CmsPageCategoryConstraintException::INVALID_META_KEYWORDS => $this->trans(
-                    'The %s field is not valid',
-                    [
-                        sprintf('"%s"', $this->trans('Meta keywords', [], 'Admin.Global')),
-                    ],
-                    'Admin.Notifications.Error',
-                ),
             ],
             CmsPageCategoryNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found).',

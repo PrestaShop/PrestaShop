@@ -166,7 +166,6 @@ Feature: List catalog price rules for product in Back Office (BO)
       | description[en-US]      | just a supplier    |
       | meta title[en-US]       | my supplier nr one |
       | meta description[en-US] |                    |
-      | meta keywords[en-US]    | sup,1              |
       | shops                   | [testShop]         |
     And I associate suppliers to product "product1"
       | supplier  | product_supplier  |

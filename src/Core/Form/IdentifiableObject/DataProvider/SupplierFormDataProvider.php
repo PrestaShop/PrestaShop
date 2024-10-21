@@ -98,7 +98,6 @@ final class SupplierFormDataProvider implements FormDataProviderInterface
             'id_state' => $editableSupplier->getStateId(),
             'meta_title' => $editableSupplier->getLocalizedMetaTitles(),
             'meta_description' => $editableSupplier->getLocalizedMetaDescriptions(),
-            'meta_keyword' => $editableSupplier->getLocalizedMetaKeywords(),
             'is_enabled' => $editableSupplier->isEnabled(),
             'dni' => $editableSupplier->getDni(),
         ];

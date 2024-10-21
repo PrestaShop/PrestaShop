@@ -38,7 +38,6 @@ use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TextWithRecommendedLengthType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
@@ -52,7 +51,6 @@ class CmsPageType extends TranslatorAwareType
 {
     public const TITLE_MAX_CHARS = 255;
     public const META_DESCRIPTION_MAX_CHARS = 512;
-    public const META_KEYWORD_MAX_CHARS = 512;
     public const FRIENDLY_URL_MAX_CHARS = 128;
     public const RECOMMENDED_TITLE_LENGTH = 70;
     public const RECOMMENDED_DESCRIPTION_LENGTH = 160;
@@ -195,35 +193,6 @@ class CmsPageType extends TranslatorAwareType
                                 'This field cannot be longer than %limit% characters',
                                 'Admin.Notifications.Error',
                                 ['%limit%' => self::META_DESCRIPTION_MAX_CHARS]
-                            ),
-                        ]),
-                    ],
-                ],
-            ])
-            ->add('meta_keyword', TranslatableType::class, [
-                'label' => $this->trans('Meta keywords', 'Admin.Global'),
-                'help' => sprintf(
-                    '%s %s',
-                    $this->trans('To add tags, click in the field, write something, and then press the "Enter" key.', 'Admin.Shopparameters.Help'),
-                    $invalidCharsText
-                ),
-                'type' => TextType::class,
-                'required' => false,
-                'options' => [
-                    'attr' => [
-                        'class' => 'js-taggable-field',
-                        'placeholder' => $this->trans('Add tag', 'Admin.Actions'),
-                    ],
-                    'constraints' => [
-                        new TypedRegex([
-                            'type' => 'generic_name',
-                        ]),
-                        new Length([
-                            'max' => self::META_KEYWORD_MAX_CHARS,
-                            'maxMessage' => $this->trans(
-                                'This field cannot be longer than %limit% characters',
-                                'Admin.Notifications.Error',
-                                ['%limit%' => self::META_KEYWORD_MAX_CHARS]
                             ),
                         ]),
                     ],

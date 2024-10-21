@@ -155,7 +155,6 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
             'localisedPageTitle',
             'localisedMetaDescriptions',
             'localisedMetaDescription',
-            'localisedMetaKeywords',
             'localisedRewriteUrls',
         ];
 
@@ -206,10 +205,6 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
                 break;
             case 'description':
                 $actualValue = $editableMeta->getLocalisedMetaDescriptions()[$defaultLanguageId];
-
-                break;
-            case 'keywords':
-                $actualValue = $editableMeta->getLocalisedMetaKeywords()[$defaultLanguageId];
 
                 break;
             case 'url_rewrite':

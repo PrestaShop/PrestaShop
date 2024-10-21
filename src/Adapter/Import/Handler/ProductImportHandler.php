@@ -771,19 +771,6 @@ final class ProductImportHandler extends AbstractImportHandler
         } else {
             $product->link_rewrite[(int) $this->languageId] = $linkRewrite;
         }
-
-        $multipleValueSeparator = $importConfig->getMultipleValueSeparator();
-
-        // replace the value of separator by coma
-        if ($multipleValueSeparator != ',') {
-            if (is_array($product->meta_keywords)) {
-                foreach ($product->meta_keywords as &$metaKeyword) {
-                    if (!empty($metaKeyword)) {
-                        $metaKeyword = str_replace($multipleValueSeparator, ',', $metaKeyword);
-                    }
-                }
-            }
-        }
     }
 
     /**
