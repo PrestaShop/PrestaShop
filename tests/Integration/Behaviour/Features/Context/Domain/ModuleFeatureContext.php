@@ -150,16 +150,27 @@ class ModuleFeatureContext extends AbstractDomainFeatureContext
    }
 
    /**
-    * @When I install module :technicalName from :sourceType
+    * @When I install module :technicalName from "folder"
     */
-    public function installModule(string $technicalName, string $sourceType): void
+    public function installModuleFromFolder(string $technicalName): void
+    {
+        $this->getQueryBus()->handle(new InstallModuleCommand($technicalName));
+
+        // Clean the cache
+        Module::resetStaticCache();
+    }
+
+   /**
+    * @When /^I install module "(.+)" from "(zip|url)" "(.+)"$/
+    */
+    public function installModule(string $technicalName, string $sourceType, string $sourceGiven): void
     {
         switch ($sourceType) {
             case 'zip':
-                $source = _PS_MODULE_DIR_ . 'test_install_cqrs_command.zip';
+                $source = _PS_MODULE_DIR_ . $sourceGiven;
                 break;
             case 'url':
-                $source = 'https://api-addons.prestashop.com/?method=module&format=json&channel=stable&iso_code=fr&iso_lang=fr&version=8.1.0&id_module=39574';
+                $source = $sourceGiven;
                 break;
             default:
                 $source = null;
