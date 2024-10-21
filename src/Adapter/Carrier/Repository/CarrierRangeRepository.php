@@ -136,18 +136,34 @@ class CarrierRangeRepository
                 }
 
                 // Insert price in delivery table
-                $this->connection->insert(
-                    $this->dbPrefix . 'delivery',
-                    [
-                        'id_carrier' => $carrierId->getValue(),
-                        'id_' . $rangeTable => $rangeId,
-                        'id_zone' => $idZone,
-                        'price' => $range->getPrice(),
-                        // Only all shops is handled for now
-                        'id_shop' => null,
-                        'id_shop_group' => null,
-                    ]
-                );
+                if ($carrier->shipping_method == ShippingMethod::BY_WEIGHT) {
+                    $this->connection->insert(
+                        $this->dbPrefix . 'delivery',
+                        [
+                            'id_carrier' => $carrierId->getValue(),
+                            'id_' . $rangeTable => $rangeId,
+                            'id_zone' => $idZone,
+                            'price' => $range->getPrice(),
+                            'package_weight' => $range->getPackageWeight(),
+                            // Only all shops is handled for now
+                            'id_shop' => null,
+                            'id_shop_group' => null,
+                        ]
+                    );
+                } else {
+                    $this->connection->insert(
+                        $this->dbPrefix . 'delivery',
+                        [
+                            'id_carrier' => $carrierId->getValue(),
+                            'id_' . $rangeTable => $rangeId,
+                            'id_zone' => $idZone,
+                            'price' => $range->getPrice(),
+                            // Only all shops is handled for now
+                            'id_shop' => null,
+                            'id_shop_group' => null,
+                        ]
+                    );
+                }
             }
         }
 
@@ -205,6 +221,9 @@ class CarrierRangeRepository
         // Define which table to join based on carrier shipping method
         $tableRange = $this->getRangeMethodTable($carrier->shipping_method);
 
+        if ($carrier->shipping_method == ShippingMethod::BY_WEIGHT) {
+            $queryBuilder->addSelect('cd.package_weight AS range_package_weight');
+        }
         // Join the range table and order by range
         $queryBuilder->innerJoin(
             'cd',

@@ -131,6 +131,7 @@ class CarrierFormDataHandler implements FormDataHandlerInterface
                     'range_from' => $range['from'],
                     'range_to' => $range['to'],
                     'range_price' => $range['price'],
+                    'range_package_weight' => $range['package_weight'],
                 ];
             }
         }
