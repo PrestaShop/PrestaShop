@@ -120,7 +120,7 @@
     "@types/chai-string": "^1.4.5",
     "@types/mocha": "^10.0.9",
     "@types/mochawesome": "^6.2.4",
-    "@typescript-eslint/eslint-plugin": "^8.8.1",
+    "@typescript-eslint/eslint-plugin": "^8.10.0",
     "@typescript-eslint/parser": "^8.8.1",
     "babel-eslint": "^10.1.0",
     "eslint": "^8.57.1",
