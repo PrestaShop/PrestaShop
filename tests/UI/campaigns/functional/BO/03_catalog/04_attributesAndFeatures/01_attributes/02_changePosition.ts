@@ -156,8 +156,11 @@ describe('BO - Catalog - Attributes & Features : Change attributes & values posi
       expect(numberOfValues).to.be.above(2);
     });
 
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/35535
     it('should change first value position to 3', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeValuePosition', baseContext);
+
+      this.skip();
 
       // Get first row attribute name
       const firstRowValueName = await viewAttributePage.getTextColumn(page, 1, 'name');

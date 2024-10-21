@@ -86,6 +86,8 @@ jobs:
 
       - name: Run Tests
         uses: ./.github/actions/ui-test
+        env:
+          SLOW_MO: 100
         with:
           TEST_CAMPAIGN: ${{ env.TEST_CAMPAIGN }}
           BROWSER: ${{ matrix.browser }}
