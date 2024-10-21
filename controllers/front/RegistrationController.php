@@ -78,16 +78,16 @@ class RegistrationControllerCore extends FrontController
                 // Before that, we need to check if 'back' is legit URL that is on OUR domain, with the right protocol
                 $back = rawurldecode(Tools::getValue('back'));
                 if (Tools::urlBelongsToShop($back)) {
-                    return $this->redirectWithNotifications($back);
+                    $this->redirectWithNotifications($back);
                 }
 
                 // Second option - we will redirect him to authRedirection if set
                 if ($this->authRedirection) {
-                    return $this->redirectWithNotifications($this->authRedirection);
+                    $this->redirectWithNotifications($this->authRedirection);
                 }
 
                 // Third option - we will redirect him to home URL
-                return $this->redirectWithNotifications(__PS_BASE_URI__);
+                $this->redirectWithNotifications(__PS_BASE_URI__);
             }
         }
 

@@ -57,7 +57,7 @@ class AuthControllerCore extends FrontController
     public function initContent(): void
     {
         if (Tools::isSubmit('create_account')) {
-            return $this->redirectWithNotifications('registration');
+            $this->redirectWithNotifications('registration');
         }
 
         $should_redirect = false;
@@ -85,18 +85,18 @@ class AuthControllerCore extends FrontController
             if (Tools::urlBelongsToShop($back)) {
                 // Checks to see if "back" is a fully qualified
                 // URL that is on OUR domain, with the right protocol
-                return $this->redirectWithNotifications($back);
+                $this->redirectWithNotifications($back);
             }
 
             // Well we're not redirecting to a URL,
             // so...
             if ($this->authRedirection) {
                 // We may need to go there if defined
-                return $this->redirectWithNotifications($this->authRedirection);
+                $this->redirectWithNotifications($this->authRedirection);
             }
 
             // go home
-            return $this->redirectWithNotifications(__PS_BASE_URI__);
+            $this->redirectWithNotifications(__PS_BASE_URI__);
         }
     }
 

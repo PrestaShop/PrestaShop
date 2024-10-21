@@ -33,7 +33,6 @@ use Hook;
 use Language;
 use Link;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
-use PrestaShop\PrestaShop\Adapter\Presenter\Category\CategoryLazyArray;
 
 class CategoryPresenter
 {
