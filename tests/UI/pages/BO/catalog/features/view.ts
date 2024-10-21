@@ -261,6 +261,10 @@ class ViewFeature extends BOBasePage {
         columnSelector = this.tableColumnValue(row);
         break;
 
+      case 'position':
+        columnSelector = this.tableColumnPosition(row);
+        break;
+
       default:
         throw new Error(`Column ${columnName} was not found`);
     }
