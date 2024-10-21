@@ -27,15 +27,15 @@
 namespace PrestaShop\PrestaShop\Adapter\Module\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
-use PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkUninstallModuleCommand;
-use PrestaShop\PrestaShop\Core\Domain\Module\CommandHandler\BulkUninstallModuleHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Module\Command\UninstallModuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\Module\CommandHandler\UninstallModuleHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Module\Exception\CannotUninstallModuleException;
 use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotInstalledException;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 
 #[AsCommandHandler]
-class BulkUninstallModuleHandler implements BulkUninstallModuleHandlerInterface
+class UninstallModuleHandler implements UninstallModuleHandlerInterface
 {
     public function __construct(
         protected ModuleManager $moduleManager,
@@ -43,22 +43,22 @@ class BulkUninstallModuleHandler implements BulkUninstallModuleHandlerInterface
     ) {
     }
 
-    public function handle(BulkUninstallModuleCommand $command): void
+    public function handle(UninstallModuleCommand $command): void
     {    
+        $moduleName = $command->getTechnicalName();
         $deleteFile = $command->getDeteleFile();
-        foreach ($command->getModules() as $moduleName) {
-            $module = $this->moduleRepository->getPresentModule($moduleName->getValue());
 
-            if(!$module->isInstalled())
-            {
-                throw new ModuleNotInstalledException('Module ' .$moduleName.' not installed.');
-            }
+        $module = $this->moduleRepository->getPresentModule($moduleName->getValue());
 
-            $result = $this->moduleManager->uninstall($moduleName->getValue(), $deleteFile);
+        if(!$module->isInstalled())
+        {
+            throw new ModuleNotInstalledException('Module ' .$moduleName->getValue().' not installed.');
+        }
 
-            if (!$result) {
-                throw new CannotUninstallModuleException('Technical error occurred while uninstalling module.');
-            }
+        $result = $this->moduleManager->uninstall($moduleName->getValue(), $deleteFile);
+
+        if (!$result) {
+            throw new CannotUninstallModuleException('Technical error occurred while uninstalling module.');
         }
     }
 }

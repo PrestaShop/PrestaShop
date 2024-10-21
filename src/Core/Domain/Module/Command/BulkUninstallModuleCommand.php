@@ -27,30 +27,46 @@
 declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Module\Command;
+use PrestaShop\PrestaShop\Core\Domain\Module\ValueObject\ModuleTechnicalName;
 
 /**
- * Bulk toggles module status
+ * Bulk uninstall module
  */
 class BulkUninstallModuleCommand
 {
     /**
-     * @var array<string>
+     * @var array<ModuleTechnicalName>
      */
     private $modules;
 
     /**
-     * @param array<string> $modules Array of technical names for modules
+     * @var bool
      */
-    public function __construct(array $modules)
+    private $deleteFile;
+
+     /**
+     * @param array<string> $modules Array of technical names for modules
+     * @param bool $deleteFile Boolean for delete modules files
+     */
+    public function __construct(array $modules, bool $deleteFile = false)
     {
-        $this->modules = $modules;
+        $this->modules = array_map(fn(string $technicalName)=>new ModuleTechnicalName($technicalName), $modules);
+        $this->deleteFile = $deleteFile;
     }
 
     /**
-     * @return array<string>
+     * @return array<ModuleTechnicalName>
      */
     public function getModules(): array
     {
         return $this->modules;
+    }
+
+     /**
+     * @return bool
+     */
+    public function getDeteleFile(): bool
+    {
+        return $this->deleteFile;
     }
 }

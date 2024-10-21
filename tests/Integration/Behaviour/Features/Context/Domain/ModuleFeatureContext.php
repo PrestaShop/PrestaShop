@@ -32,6 +32,7 @@ use Behat\Gherkin\Node\TableNode;
 use Module;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkToggleModuleStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Module\Command\UninstallModuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkUninstallModuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\InstallModuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\UpdateModuleStatusCommand;
@@ -60,12 +61,12 @@ class ModuleFeatureContext extends AbstractDomainFeatureContext
                 Assert::assertEquals($data['version'], $moduleInfos->getVersion());
             }
             if (isset($data['enabled'])) {
-                Assert::assertEquals(PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']), $moduleInfos->isEnabled());
+                Assert::assertEquals(PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']), $moduleInfos->isEnabled(), "invalid enabled value");
             }
             if (isset($data['installed'])) {
-                Assert::assertEquals(PrimitiveUtils::castStringBooleanIntoBoolean($data['installed']), $moduleInfos->isInstalled());
+                Assert::assertEquals(PrimitiveUtils::castStringBooleanIntoBoolean($data['installed']), $moduleInfos->isInstalled(), "invalid installed value");
             }
-        } catch (ModuleNotFoundException | ModuleNotInstalledException $e) {
+        } catch (ModuleNotFoundException $e) {
             $this->setLastException($e);
         }
     }
@@ -121,16 +122,28 @@ class ModuleFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-    * @When /^I bulk uninstall modules: "(.+)"$/
+    * @When /^I uninstall module "(.+)" with deleteFile (true|false)$/
     */
-   public function bulkUninstall(string $modulesRef): void
+    public function uninstallModule(string $module, string $deleteFile): void
+    {
+
+        $this->getQueryBus()->handle(new UninstallModuleCommand($module, $deleteFile == "true"));
+
+        // Clean the cache
+        Module::resetStaticCache();
+    }
+
+    /**
+    * @When /^I bulk uninstall modules: "(.+)" with deleteFile (true|false)$/
+    */
+   public function bulkUninstallModule(string $modulesRef, string $deleteFile): void
    {
        $modules = [];
        foreach (PrimitiveUtils::castStringArrayIntoArray($modulesRef) as $modulesReference) {
            $modules[] = $modulesReference;
        }
 
-       $this->getQueryBus()->handle(new BulkUninstallModuleCommand($modules));
+       $this->getQueryBus()->handle(new BulkUninstallModuleCommand($modules, $deleteFile == "true"));
 
        // Clean the cache
        Module::resetStaticCache();
