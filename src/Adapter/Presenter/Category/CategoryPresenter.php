@@ -33,6 +33,7 @@ use Hook;
 use Language;
 use Link;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
+use PrestaShop\PrestaShop\Adapter\Presenter\Category\CategoryLazyArray;
 
 class CategoryPresenter
 {
@@ -58,7 +59,7 @@ class CategoryPresenter
      *
      * @return CategoryLazyArray
      */
-    public function present(array|Category $category, Language $language)
+    public function present(array|Category $category, Language $language): CategoryLazyArray
     {
         // Convert to array if a Category object was passed
         if (is_object($category)) {

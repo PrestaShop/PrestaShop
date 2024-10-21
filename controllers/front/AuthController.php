@@ -39,7 +39,7 @@ class AuthControllerCore extends FrontController
      *
      * @return bool
      */
-    public function checkAccess()
+    public function checkAccess(): bool
     {
         if ($this->context->customer->isLogged() && !$this->ajax) {
             $this->redirect_after = $this->authRedirection ? urlencode($this->authRedirection) : 'my-account';
@@ -54,7 +54,7 @@ class AuthControllerCore extends FrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         if (Tools::isSubmit('create_account')) {
             return $this->redirectWithNotifications('registration');
@@ -100,7 +100,7 @@ class AuthControllerCore extends FrontController
         }
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 
@@ -115,7 +115,7 @@ class AuthControllerCore extends FrontController
     /**
      * {@inheritdoc}
      */
-    public function getCanonicalURL()
+    public function getCanonicalURL(): string
     {
         return $this->context->link->getPageLink('authentication');
     }

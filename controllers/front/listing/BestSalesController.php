@@ -49,7 +49,7 @@ class BestSalesControllerCore extends ProductListingFrontController
      *
      * @throws PrestaShopException
      */
-    public function init()
+    public function init(): void
     {
         if (Configuration::get('PS_DISPLAY_BEST_SELLERS')) {
             parent::init();
@@ -63,7 +63,7 @@ class BestSalesControllerCore extends ProductListingFrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         parent::initContent();
 
@@ -76,7 +76,7 @@ class BestSalesControllerCore extends ProductListingFrontController
      *
      * @return ProductSearchQuery
      */
-    protected function getProductSearchQuery()
+    protected function getProductSearchQuery(): ProductSearchQuery
     {
         $query = new ProductSearchQuery();
         $query
@@ -91,19 +91,19 @@ class BestSalesControllerCore extends ProductListingFrontController
      *
      * @return BestSalesProductSearchProvider
      */
-    protected function getDefaultProductSearchProvider()
+    protected function getDefaultProductSearchProvider(): BestSalesProductSearchProvider
     {
         return new BestSalesProductSearchProvider(
             $this->getTranslator()
         );
     }
 
-    public function getListingLabel()
+    public function getListingLabel(): string
     {
         return $this->getTranslator()->trans('Best sellers', [], 'Shop.Theme.Catalog');
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 

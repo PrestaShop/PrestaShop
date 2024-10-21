@@ -41,7 +41,7 @@ class GuestTrackingControllerCore extends FrontController
      *
      * @see FrontController::init()
      */
-    public function init()
+    public function init(): void
     {
         if ($this->context->customer->isLogged()) {
             Tools::redirect('history.php');
@@ -55,7 +55,7 @@ class GuestTrackingControllerCore extends FrontController
      *
      * @see FrontController::postProcess()
      */
-    public function postProcess()
+    public function postProcess(): void
     {
         $order_reference = current(explode('#', Tools::getValue('order_reference')));
         $email = Tools::getValue('email');
@@ -142,7 +142,7 @@ class GuestTrackingControllerCore extends FrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         parent::initContent();
 
@@ -172,7 +172,7 @@ class GuestTrackingControllerCore extends FrontController
         return $this->setTemplate('customer/guest-tracking');
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumbLinks = parent::getBreadcrumbLinks();
 
@@ -194,7 +194,7 @@ class GuestTrackingControllerCore extends FrontController
     /**
      * {@inheritdoc}
      */
-    public function getCanonicalURL()
+    public function getCanonicalURL(): string
     {
         return $this->context->link->getPageLink('guest-tracking');
     }

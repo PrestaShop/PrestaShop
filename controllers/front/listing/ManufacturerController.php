@@ -40,7 +40,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
     /** @var ManufacturerPresenter */
     protected $manufacturerPresenter;
 
-    public function canonicalRedirection(string $canonicalURL = '')
+    public function canonicalRedirection(string $canonicalURL = ''): void
     {
         if (Validate::isLoadedObject($this->manufacturer)) {
             parent::canonicalRedirection($this->context->link->getManufacturerLink($this->manufacturer));
@@ -68,7 +68,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
      *
      * @see FrontController::init()
      */
-    public function init()
+    public function init(): void
     {
         if ($id_manufacturer = Tools::getValue('id_manufacturer')) {
             $this->manufacturer = new Manufacturer((int) $id_manufacturer, $this->context->language->id);
@@ -92,7 +92,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         if (Configuration::get('PS_DISPLAY_MANUFACTURERS')) {
             parent::initContent();
@@ -133,7 +133,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
      *
      * @throws PrestaShop\PrestaShop\Core\Product\Search\Exception\InvalidSortOrderDirectionException
      */
-    protected function getProductSearchQuery()
+    protected function getProductSearchQuery(): ProductSearchQuery
     {
         $query = new ProductSearchQuery();
         $query
@@ -149,7 +149,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
      *
      * @return ManufacturerProductSearchProvider
      */
-    protected function getDefaultProductSearchProvider()
+    protected function getDefaultProductSearchProvider(): ManufacturerProductSearchProvider
     {
         return new ManufacturerProductSearchProvider(
             $this->getTranslator(),
@@ -160,7 +160,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
     /**
      * Assign template vars if displaying one manufacturer.
      */
-    protected function assignManufacturer()
+    protected function assignManufacturer(): void
     {
         $manufacturerVar = $this->manufacturerPresenter->present(
             $this->manufacturer,
@@ -190,7 +190,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
     /**
      * Assign template vars if displaying the manufacturer list.
      */
-    protected function assignAll()
+    protected function assignAll(): void
     {
         $manufacturersVar = $this->getTemplateVarManufacturers();
 
@@ -218,7 +218,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
         ]);
     }
 
-    public function getTemplateVarManufacturers()
+    public function getTemplateVarManufacturers(): array
     {
         $manufacturers = Manufacturer::getManufacturers(true, $this->context->language->id);
 
@@ -232,12 +232,12 @@ class ManufacturerControllerCore extends ProductListingFrontController
         return $manufacturers;
     }
 
-    public function getListingLabel()
+    public function getListingLabel(): string
     {
         return $this->label;
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
         $breadcrumb['links'][] = [
@@ -261,7 +261,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
      *
      * @return array
      */
-    public function getTemplateVarPage()
+    public function getTemplateVarPage(): array
     {
         $page = parent::getTemplateVarPage();
 
@@ -276,7 +276,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
     /**
      * @return Manufacturer
      */
-    public function getManufacturer()
+    public function getManufacturer(): Manufacturer
     {
         return $this->manufacturer;
     }

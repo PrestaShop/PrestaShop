@@ -39,7 +39,7 @@ class RegistrationControllerCore extends FrontController
      *
      * @return bool
      */
-    public function checkAccess()
+    public function checkAccess(): bool
     {
         // If the customer is already logged and he got here by 'accident', we will redirect him away
         if ($this->context->customer->isLogged() && !$this->ajax) {
@@ -55,7 +55,7 @@ class RegistrationControllerCore extends FrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         $register_form = $this
             ->makeCustomerForm()
@@ -100,7 +100,7 @@ class RegistrationControllerCore extends FrontController
         parent::initContent();
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 
@@ -115,7 +115,7 @@ class RegistrationControllerCore extends FrontController
     /**
      * {@inheritdoc}
      */
-    public function getCanonicalURL()
+    public function getCanonicalURL(): string
     {
         return $this->context->link->getPageLink('registration');
     }

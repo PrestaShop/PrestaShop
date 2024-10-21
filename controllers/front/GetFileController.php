@@ -165,7 +165,7 @@ class GetFileControllerCore extends FrontController
      *
      * @see FrontController::init()
      */
-    public function init()
+    public function init(): void
     {
         if (isset($this->context->employee) && $this->context->employee->isLoggedBack() && Tools::getValue('file')) {
             // Admin can directly access to file
