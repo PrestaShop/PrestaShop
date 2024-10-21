@@ -263,6 +263,7 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
       expect(isVisible).to.eq(true);
     });
 
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/37202
     it('should reset filter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterByPosition', baseContext);
 
