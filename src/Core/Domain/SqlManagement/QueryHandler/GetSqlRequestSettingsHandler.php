@@ -58,7 +58,7 @@ final class GetSqlRequestSettingsHandler implements GetSqlRequestSettingsHandler
 
         return new SqlRequestSettings(
             $this->getFileEncoding($fileEncodingIntValue),
-            $this->getFileSeparator($fileSeparatorValue ?? ';')
+            $fileSeparatorValue ?? ';'
         );
     }
 
