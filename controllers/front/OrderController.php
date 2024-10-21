@@ -68,13 +68,13 @@ class OrderControllerCore extends FrontController
      *
      * @see FrontController::init()
      */
-    public function init()
+    public function init(): void
     {
         parent::init();
         $this->cartChecksum = new CartChecksum(new AddressChecksum());
     }
 
-    public function postProcess()
+    public function postProcess(): void
     {
         parent::postProcess();
 
@@ -108,7 +108,7 @@ class OrderControllerCore extends FrontController
     /**
      * @return CheckoutProcess
      */
-    public function getCheckoutProcess()
+    public function getCheckoutProcess(): CheckoutProcess
     {
         return $this->checkoutProcess;
     }
@@ -116,7 +116,7 @@ class OrderControllerCore extends FrontController
     /**
      * @return CheckoutSession
      */
-    public function getCheckoutSession()
+    public function getCheckoutSession(): CheckoutSession
     {
         $deliveryOptionsFinder = new DeliveryOptionsFinder(
             $this->context,
@@ -133,7 +133,7 @@ class OrderControllerCore extends FrontController
         return $session;
     }
 
-    protected function bootstrap()
+    protected function bootstrap(): void
     {
         $translator = $this->getTranslator();
         $session = $this->getCheckoutSession();
@@ -205,7 +205,7 @@ class OrderControllerCore extends FrontController
         }
     }
 
-    public function displayAjaxselectDeliveryOption()
+    public function displayAjaxselectDeliveryOption(): void
     {
         $cart = $this->cart_presenter->present(
             $this->context->cart,
@@ -245,7 +245,7 @@ class OrderControllerCore extends FrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         if (Configuration::isCatalogMode()) {
             Tools::redirect('index.php');
@@ -289,7 +289,7 @@ class OrderControllerCore extends FrontController
 
         if (!$this->checkoutProcess->hasErrors()) {
             if ($_SERVER['REQUEST_METHOD'] !== 'GET' && !$this->ajax) {
-                return $this->redirectWithNotifications(
+                $this->redirectWithNotifications(
                     $this->checkoutProcess->getCheckoutSession()->getCheckoutURL()
                 );
             }
@@ -305,7 +305,7 @@ class OrderControllerCore extends FrontController
         $this->setTemplate('checkout/checkout');
     }
 
-    public function displayAjaxAddressForm()
+    public function displayAjaxAddressForm(): void
     {
         $addressForm = $this->makeAddressForm();
 
@@ -346,7 +346,7 @@ class OrderControllerCore extends FrontController
      *
      * @return string|bool
      */
-    protected function getDefaultTermsAndConditions()
+    protected function getDefaultTermsAndConditions(): string|bool
     {
         $cms = new CMS((int) Configuration::get('PS_CONDITIONS_CMS_ID'), $this->context->language->id);
 

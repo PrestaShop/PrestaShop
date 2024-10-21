@@ -52,7 +52,7 @@ class OrderConfirmationControllerCore extends FrontController
      *
      * @see FrontController::init()
      */
-    public function init()
+    public function init(): void
     {
         // Test below to prevent unnecessary logs from "parent::init()"
         $this->id_cart = (int) Tools::getValue('id_cart', 0);
@@ -123,7 +123,7 @@ class OrderConfirmationControllerCore extends FrontController
      *
      * @see FrontController::postProcess()
      */
-    public function postProcess()
+    public function postProcess(): void
     {
         if (Tools::isSubmit('submitTransformGuestToCustomer')) {
             // Only variable we need is the password
@@ -223,7 +223,7 @@ class OrderConfirmationControllerCore extends FrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         parent::initContent();
 
@@ -266,7 +266,7 @@ class OrderConfirmationControllerCore extends FrontController
     /**
      * Check if an order is free and create it.
      */
-    protected function checkFreeOrder()
+    protected function checkFreeOrder(): void
     {
         $cart = $this->context->cart;
         if ($cart->id_customer == 0 || $cart->id_address_delivery == 0 || $cart->id_address_invoice == 0) {
@@ -313,7 +313,7 @@ class OrderConfirmationControllerCore extends FrontController
         ));
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 
@@ -328,7 +328,7 @@ class OrderConfirmationControllerCore extends FrontController
     /**
      * @return Order
      */
-    public function getOrder()
+    public function getOrder(): Order
     {
         return $this->order;
     }
@@ -336,7 +336,7 @@ class OrderConfirmationControllerCore extends FrontController
     /**
      * @return Customer
      */
-    public function getCustomer()
+    public function getCustomer(): Customer
     {
         return $this->customer;
     }

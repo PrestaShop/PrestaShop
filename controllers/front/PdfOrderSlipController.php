@@ -34,7 +34,7 @@ class PdfOrderSlipControllerCore extends FrontController
 
     protected $order_slip;
 
-    public function postProcess()
+    public function postProcess(): void
     {
         if (!$this->context->customer->isLogged()) {
             Tools::redirect($this->context->link->getPageLink(
@@ -61,7 +61,7 @@ class PdfOrderSlipControllerCore extends FrontController
      *
      * @throws PrestaShopException
      */
-    public function display()
+    public function display(): void
     {
         $pdf = new PDF($this->order_slip, PDF::TEMPLATE_ORDER_SLIP, $this->context->smarty);
         $pdf->render();

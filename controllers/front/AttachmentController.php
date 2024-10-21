@@ -25,7 +25,7 @@
  */
 class AttachmentControllerCore extends FrontController
 {
-    public function postProcess()
+    public function postProcess(): void
     {
         $attachment = new Attachment(Tools::getValue('id_attachment'), $this->context->language->id);
         if (!$attachment->id) {
