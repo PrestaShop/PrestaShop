@@ -199,10 +199,15 @@ services:
     arguments:
       - '@prestashop.core.sql_manager.configuration.sql_request_configuration'
 
+  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice\WebserviceFormDataProvider:
+    public: false
+    autowire: true
+
   prestashop.admin.webservice.form_data_provider:
-    class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice\WebserviceFormDataProvider'
-    arguments:
-      - '@prestashop.adapter.webservice.configuration'
+    alias: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice\WebserviceFormDataProvider'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.admin.backup.form_data_provider:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Backup\BackupDataProvider'

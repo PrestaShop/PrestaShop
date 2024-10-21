@@ -15,19 +15,37 @@ services:
   prestashop.adapter.mailing_information:
     class: 'PrestaShop\PrestaShop\Adapter\Mail\MailingInformation'
 
-  prestashop.adapter.check_requirements:
-    class: 'PrestaShop\PrestaShop\Adapter\Requirement\CheckRequirements'
+  PrestaShop\PrestaShop\Adapter\Requirement\CheckRequirements:
+    public: false
     arguments: [ '@translator' ]
 
-  prestashop.adapter.system_information:
-    class: 'PrestaShop\PrestaShop\Adapter\System\SystemInformation'
+  prestashop.adapter.check_requirements:
+    alias: 'PrestaShop\PrestaShop\Adapter\Requirement\CheckRequirements'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+
+  PrestaShop\PrestaShop\Adapter\System\SystemInformation:
+    public: false
     arguments:
       - '@prestashop.adapter.hosting_information'
       - '@prestashop.adapter.mailing_information'
       - '@prestashop.adapter.shop_information'
 
+  prestashop.adapter.system_information:
+    alias: 'PrestaShop\PrestaShop\Adapter\System\SystemInformation'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+
+  PrestaShop\PrestaShop\Adapter\Requirement\CheckMissingOrUpdatedFiles:
+    public: false
+
   prestashop.adapter.check_missing_files:
-    class: 'PrestaShop\PrestaShop\Adapter\Requirement\CheckMissingOrUpdatedFiles'
+    alias: 'PrestaShop\PrestaShop\Adapter\Requirement\CheckMissingOrUpdatedFiles'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.adapter.debug_mode:
     class: 'PrestaShop\PrestaShop\Adapter\Debug\DebugMode'

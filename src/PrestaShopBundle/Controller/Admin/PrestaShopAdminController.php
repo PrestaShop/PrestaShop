@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
+use PrestaShop\PrestaShop\Core\EnvironmentInterface;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
@@ -86,6 +87,7 @@ class PrestaShopAdminController extends AbstractController
             PositionUpdateFactoryInterface::class => PositionUpdateFactoryInterface::class,
             GridPositionUpdaterInterface::class => GridPositionUpdaterInterface::class,
             FeatureFlagStateCheckerInterface::class => FeatureFlagStateCheckerInterface::class,
+            EnvironmentInterface::class => EnvironmentInterface::class,
         ];
     }
 
@@ -137,6 +139,11 @@ class PrestaShopAdminController extends AbstractController
     protected function getShopContext(): ShopContext
     {
         return $this->container->get(ShopContext::class);
+    }
+
+    protected function getEnvironment(): EnvironmentInterface
+    {
+        return $this->container->get(EnvironmentInterface::class);
     }
 
     /**
@@ -193,7 +200,7 @@ class PrestaShopAdminController extends AbstractController
      *
      * @return string
      */
-    protected function getErrorMessageForException(Throwable $e, array $messages): string
+    protected function getErrorMessageForException(Throwable $e, array $messages = []): string
     {
         if ($e instanceof ModuleErrorInterface) {
             return $e->getMessage();

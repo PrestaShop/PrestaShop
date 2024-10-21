@@ -43,12 +43,16 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestExecutionResult;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestSettings;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 use PrestaShop\PrestaShop\Core\Export\Exception\FileWritingException;
-use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface as ConfigurationFormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\RequestSqlFilters;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShop\PrestaShop\Core\SqlManager\Exporter\SqlRequestExporter;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\Stream;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -60,7 +64,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 /**
  * Responsible of "Configure > Advanced Parameters > Database -> SQL Manager" page.
  */
-class SqlManagerController extends FrameworkBundleAdminController
+class SqlManagerController extends PrestaShopAdminController
 {
     /**
      * Show list of saved SQL's.
@@ -71,27 +75,31 @@ class SqlManagerController extends FrameworkBundleAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
-    public function indexAction(Request $request, RequestSqlFilters $filters)
-    {
+    public function indexAction(
+        Request $request,
+        RequestSqlFilters $filters,
+        #[Autowire(service: 'prestashop.core.grid.factory.request_sql')]
+        GridFactoryInterface $gridLogFactory,
+        #[Autowire(service: 'prestashop.admin.request_sql_settings.form_handler')]
+        ConfigurationFormHandlerInterface $settingsFormHandler,
+    ): Response {
         // handle "Export to SQL manager" action from legacy pages
         if ($request->query->has('addrequest_sql')) {
             return $this->forward('PrestaShopBundle:Admin\Configure\AdvancedParameters\RequestSql:create');
         }
 
-        $gridLogFactory = $this->get('prestashop.core.grid.factory.request_sql');
         $grid = $gridLogFactory->getGrid($filters);
-
-        $settingsForm = $this->getSettingsFormHandler()->getForm();
+        $settingsForm = $settingsFormHandler->getForm();
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/index.html.twig', [
             'layoutHeaderToolbarBtn' => [
                 'add' => [
                     'href' => $this->generateUrl('admin_sql_requests_create'),
-                    'desc' => $this->trans('Add new SQL query', 'Admin.Advparameters.Feature'),
+                    'desc' => $this->trans('Add new SQL query', [], 'Admin.Advparameters.Feature'),
                     'icon' => 'add_circle_outline',
                 ],
             ],
-            'layoutTitle' => $this->trans('SQL manager', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('SQL manager', [], 'Admin.Navigation.Menu'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'requestSqlSettingsForm' => $settingsForm->createView(),
@@ -108,17 +116,19 @@ class SqlManagerController extends FrameworkBundleAdminController
      */
     #[DemoRestricted(redirectRoute: 'admin_sql_requests_index')]
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_sql_requests_index')]
-    public function processFormAction(Request $request)
-    {
-        $handler = $this->getSettingsFormHandler();
-        $settingForm = $handler->getForm();
+    public function processFormAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.admin.request_sql_settings.form_handler')]
+        ConfigurationFormHandlerInterface $settingsFormHandler,
+    ): RedirectResponse {
+        $settingForm = $settingsFormHandler->getForm();
         $settingForm->handleRequest($request);
 
         if ($settingForm->isSubmitted()) {
-            if (!$errors = $handler->save($settingForm->getData())) {
-                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+            if (!$errors = $settingsFormHandler->save($settingForm->getData())) {
+                $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
             } else {
-                $this->flashErrors($errors);
+                $this->addFlashErrors($errors);
             }
         }
 
@@ -130,21 +140,26 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return Response
+     * @return Response|RedirectResponse
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message: 'You do not have permission to create this.', redirectRoute: 'admin_sql_requests_index')]
-    public function createAction(Request $request)
-    {
+    public function createAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.builder.sql_request_form_builder')]
+        FormBuilderInterface $formBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.sql_request_form_handler')]
+        FormHandlerInterface $formHandler,
+    ): Response|RedirectResponse {
         $data = $this->getSqlRequestDataFromRequest($request);
 
-        $sqlRequestForm = $this->getSqlRequestFormBuilder()->getForm($data);
+        $sqlRequestForm = $formBuilder->getForm($data);
         $sqlRequestForm->handleRequest($request);
 
         try {
-            $result = $this->getSqlRequestFormHandler()->handle($sqlRequestForm);
+            $result = $formHandler->handle($sqlRequestForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_sql_requests_index');
             }
@@ -153,16 +168,17 @@ class SqlManagerController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/create.html.twig', [
-            'layoutTitle' => $this->trans('New SQL query', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('New SQL query', [], 'Admin.Navigation.Menu'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'requestSqlForm' => $sqlRequestForm->createView(),
             'dbTableNames' => $this->getDatabaseTables(),
             'multistoreInfoTip' => $this->trans(
                 'Note that this feature is only available in the "all stores" context. It will be added to all your stores.',
+                [],
                 'Admin.Notifications.Info'
             ),
-            'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
+            'multistoreIsUsed' => $this->getShopContext()->isMultiShopUsed(),
         ]);
     }
 
@@ -172,27 +188,33 @@ class SqlManagerController extends FrameworkBundleAdminController
      * @param int $sqlRequestId
      * @param Request $request
      *
-     * @return Response
+     * @return Response|RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_sql_requests_index')]
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.', redirectRoute: 'admin_sql_requests_index')]
-    public function editAction(int $sqlRequestId, Request $request)
-    {
-        $sqlRequestForm = $this->getSqlRequestFormBuilder()->getFormFor($sqlRequestId);
+    public function editAction(
+        int $sqlRequestId,
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.builder.sql_request_form_builder')]
+        FormBuilderInterface $formBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.sql_request_form_handler')]
+        FormHandlerInterface $formHandler,
+    ): Response|RedirectResponse {
+        $sqlRequestForm = $formBuilder->getFormFor($sqlRequestId);
         $sqlRequestForm->handleRequest($request);
 
         try {
-            $result = $this->getSqlRequestFormHandler()->handleFor($sqlRequestId, $sqlRequestForm);
+            $result = $formHandler->handleFor($sqlRequestId, $sqlRequestForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_sql_requests_index');
             }
         } catch (SqlRequestNotFoundException $e) {
             $this->addFlash(
                 'error',
-                $this->trans('The object cannot be loaded (or found).', 'Admin.Notifications.Error')
+                $this->trans('The object cannot be loaded (or found).', [], 'Admin.Notifications.Error')
             );
 
             return $this->redirectToRoute('admin_sql_requests_index');
@@ -201,7 +223,7 @@ class SqlManagerController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/edit.html.twig', [
-            'layoutTitle' => $this->trans('Editing SQL query %query%', 'Admin.Navigation.Menu', ['%query%' => $sqlRequestForm->getData()['name']]),
+            'layoutTitle' => $this->trans('Editing SQL query %query%', ['%query%' => $sqlRequestForm->getData()['name']], 'Admin.Navigation.Menu'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'requestSqlForm' => $sqlRequestForm->createView(),
@@ -218,16 +240,16 @@ class SqlManagerController extends FrameworkBundleAdminController
      */
     #[DemoRestricted(redirectRoute: 'admin_sql_requests_index')]
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to delete this.', redirectRoute: 'admin_sql_requests_index')]
-    public function deleteAction(int $sqlRequestId)
+    public function deleteAction(int $sqlRequestId): RedirectResponse
     {
         try {
             $deleteSqlRequestCommand = new DeleteSqlRequestCommand(
                 new SqlRequestId($sqlRequestId)
             );
 
-            $this->getCommandBus()->handle($deleteSqlRequestCommand);
+            $this->dispatchCommand($deleteSqlRequestCommand);
 
-            $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful deletion', [], 'Admin.Notifications.Success'));
         } catch (SqlRequestException $e) {
             $this->addFlash('error', $this->handleException($e));
         }
@@ -244,17 +266,17 @@ class SqlManagerController extends FrameworkBundleAdminController
      */
     #[DemoRestricted(redirectRoute: 'admin_sql_requests_index')]
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to delete this.', redirectRoute: 'admin_sql_requests_index')]
-    public function deleteBulkAction(Request $request)
+    public function deleteBulkAction(Request $request): RedirectResponse
     {
         try {
             $requestSqlIds = $this->getBulkSqlRequestFromRequest($request);
             $bulkDeleteSqlRequestCommand = new BulkDeleteSqlRequestCommand($requestSqlIds);
 
-            $this->getCommandBus()->handle($bulkDeleteSqlRequestCommand);
+            $this->dispatchCommand($bulkDeleteSqlRequestCommand);
 
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted.', [], 'Admin.Notifications.Success')
             );
         } catch (SqlRequestException $e) {
             $this->addFlash('error', $this->handleException($e));
@@ -272,12 +294,12 @@ class SqlManagerController extends FrameworkBundleAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'You do not have permission to view this.', redirectRoute: 'admin_sql_requests_index')]
-    public function viewAction(Request $request, int $sqlRequestId)
+    public function viewAction(Request $request, int $sqlRequestId): Response
     {
         try {
             $query = new GetSqlRequestExecutionResult($sqlRequestId);
 
-            $sqlRequestExecutionResult = $this->getQueryBus()->handle($query);
+            $sqlRequestExecutionResult = $this->dispatchQuery($query);
         } catch (SqlRequestException $e) {
             $this->addFlash('error', $this->handleViewException($e));
 
@@ -286,7 +308,7 @@ class SqlManagerController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/view.html.twig', [
             'layoutHeaderToolbarBtn' => [],
-            'layoutTitle' => $this->trans('Result of SQL query', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Result of SQL query', [], 'Admin.Navigation.Menu'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'sqlRequestResult' => $sqlRequestExecutionResult,
@@ -302,22 +324,22 @@ class SqlManagerController extends FrameworkBundleAdminController
      */
     #[DemoRestricted(redirectRoute: 'admin_sql_requests_index')]
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_sql_requests_index')]
-    public function exportAction(int $sqlRequestId)
-    {
-        $requestSqlExporter = $this->get('prestashop.core.sql_manager.exporter.sql_request_exporter');
-
+    public function exportAction(
+        int $sqlRequestId,
+        SqlRequestExporter $sqlRequestExporter,
+    ): RedirectResponse|BinaryFileResponse {
         try {
             $query = new GetSqlRequestExecutionResult($sqlRequestId);
             /** @var SqlRequestExecutionResult $sqlRequestExecutionResult */
-            $sqlRequestExecutionResult = $this->getQueryBus()->handle($query);
+            $sqlRequestExecutionResult = $this->dispatchQuery($query);
 
-            $exportedFile = $requestSqlExporter->exportToFile(
+            $exportedFile = $sqlRequestExporter->exportToFile(
                 $query->getSqlRequestId(),
                 $sqlRequestExecutionResult
             );
 
             /** @var SqlRequestSettings $sqlRequestSettings */
-            $sqlRequestSettings = $this->getQueryBus()->handle(new GetSqlRequestSettings());
+            $sqlRequestSettings = $this->dispatchQuery(new GetSqlRequestSettings());
         } catch (SqlRequestException $e) {
             $this->addFlash('error', $this->handleExportException($e));
 
@@ -340,49 +362,13 @@ class SqlManagerController extends FrameworkBundleAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_sql_requests_index')]
-    public function ajaxTableColumnsAction($mySqlTableName)
+    public function ajaxTableColumnsAction(string $mySqlTableName): JsonResponse
     {
         $query = new GetDatabaseTableFieldsList($mySqlTableName);
         /** @var DatabaseTableFields $databaseFields */
-        $databaseFields = $this->getQueryBus()->handle($query);
+        $databaseFields = $this->dispatchQuery($query);
 
         return $this->json(['columns' => $databaseFields->getFields()]);
-    }
-
-    /**
-     * Get request SQL repository.
-     *
-     * @return \PrestaShopBundle\Entity\Repository\RequestSqlRepository
-     */
-    protected function getRepository()
-    {
-        return $this->get('prestashop.core.admin.request_sql.repository');
-    }
-
-    /**
-     * Get Request SQL settings form handler.
-     *
-     * @return FormHandlerInterface
-     */
-    protected function getSettingsFormHandler(): FormHandlerInterface
-    {
-        return $this->get('prestashop.admin.request_sql_settings.form_handler');
-    }
-
-    /**
-     * @return \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface
-     */
-    protected function getSqlRequestFormHandler()
-    {
-        return $this->get('prestashop.core.form.identifiable_object.sql_request_form_handler');
-    }
-
-    /**
-     * @return FormBuilderInterface
-     */
-    protected function getSqlRequestFormBuilder()
-    {
-        return $this->get('prestashop.core.form.builder.sql_request_form_builder');
     }
 
     /**
@@ -395,7 +381,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @return array
      */
-    protected function getSqlRequestDataFromRequest(Request $request)
+    protected function getSqlRequestDataFromRequest(Request $request): array
     {
         if ($request->request->has('sql') || $request->request->has('name')) {
             return [
@@ -414,20 +400,20 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @return string Error message
      */
-    protected function handleException(SqlRequestException $e)
+    protected function handleException(SqlRequestException $e): string
     {
         $code = $e->getCode();
         $type = $e::class;
 
         $exceptionMessages = [
-            SqlRequestNotFoundException::class => $this->trans('The object cannot be loaded (or found).', 'Admin.Notifications.Error'),
+            SqlRequestNotFoundException::class => $this->trans('The object cannot be loaded (or found).', [], 'Admin.Notifications.Error'),
             SqlRequestConstraintException::class => $e->getMessage(),
-            SqlRequestException::class => $this->trans('An error occurred while deleting the object.', 'Admin.Notifications.Error'),
+            SqlRequestException::class => $this->trans('An error occurred while deleting the object.', [], 'Admin.Notifications.Error'),
         ];
 
         $deleteExceptionMessages = [
-            CannotDeleteSqlRequestException::CANNOT_SINGLE_DELETE => $this->trans('An error occurred while deleting the object.', 'Admin.Notifications.Error'),
-            CannotDeleteSqlRequestException::CANNOT_BULK_DELETE => $this->trans('An error occurred while deleting this selection.', 'Admin.Notifications.Error'),
+            CannotDeleteSqlRequestException::CANNOT_SINGLE_DELETE => $this->trans('An error occurred while deleting the object.', [], 'Admin.Notifications.Error'),
+            CannotDeleteSqlRequestException::CANNOT_BULK_DELETE => $this->trans('An error occurred while deleting this selection.', [], 'Admin.Notifications.Error'),
         ];
 
         if (CannotDeleteSqlRequestException::class === $type
@@ -440,7 +426,7 @@ class SqlManagerController extends FrameworkBundleAdminController
             return $exceptionMessages[$type];
         }
 
-        return $this->getFallbackErrorMessage($type, $code);
+        return $this->getErrorMessageForException($e);
     }
 
     /**
@@ -450,19 +436,19 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @return string
      */
-    protected function handleViewException(SqlRequestException $e)
+    protected function handleViewException(SqlRequestException $e): string
     {
         $type = $e::class;
 
         $exceptionMessages = [
-            SqlRequestNotFoundException::class => $this->trans('The object cannot be loaded (or found).', 'Admin.Notifications.Error'),
+            SqlRequestNotFoundException::class => $this->trans('The object cannot be loaded (or found).', [], 'Admin.Notifications.Error'),
         ];
 
         if (isset($exceptionMessages[$type])) {
             return $exceptionMessages[$type];
         }
 
-        return $this->getFallbackErrorMessage($type, $e->getCode());
+        return $this->getErrorMessageForException($e);
     }
 
     /**
@@ -470,7 +456,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @return string Error message
      */
-    protected function handleExportException(Exception $e)
+    protected function handleExportException(Exception $e): string
     {
         $type = $e::class;
 
@@ -482,7 +468,7 @@ class SqlManagerController extends FrameworkBundleAdminController
             return $this->handleDomainExportException($e);
         }
 
-        return $this->getFallbackErrorMessage($type, $e->getCode());
+        return $this->getErrorMessageForException($e);
     }
 
     /**
@@ -490,19 +476,19 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @return string Error message
      */
-    protected function handleApplicationExportException(FileWritingException $e)
+    protected function handleApplicationExportException(FileWritingException $e): string
     {
         $code = $e->getCode();
 
         $applicationErrors = [
-            FileWritingException::CANNOT_OPEN_FILE_FOR_WRITING => $this->trans('Cannot open export file for writing', 'Admin.Notifications.Error'),
+            FileWritingException::CANNOT_OPEN_FILE_FOR_WRITING => $this->trans('Cannot open export file for writing', [], 'Admin.Notifications.Error'),
         ];
 
         if (isset($applicationErrors[$code])) {
             return $applicationErrors[$code];
         }
 
-        return $this->getFallbackErrorMessage($e::class, $code);
+        return $this->getErrorMessageForException($e);
     }
 
     /**
@@ -510,28 +496,28 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @return string
      */
-    protected function handleDomainExportException(SqlRequestException $e)
+    protected function handleDomainExportException(SqlRequestException $e): string
     {
         $type = $e::class;
 
         $domainErrors = [
-            SqlRequestNotFoundException::class => $this->trans('The object cannot be loaded (or found).', 'Admin.Notifications.Error'),
+            SqlRequestNotFoundException::class => $this->trans('The object cannot be loaded (or found).', [], 'Admin.Notifications.Error'),
         ];
 
         if (isset($domainErrors[$type])) {
             return $domainErrors[$type];
         }
 
-        return $this->getFallbackErrorMessage($type, $e->getCode());
+        return $this->getErrorMessageForException($e);
     }
 
     /**
      * @return string[] Array of database tables
      */
-    protected function getDatabaseTables()
+    protected function getDatabaseTables(): array
     {
         /** @var DatabaseTablesList $databaseTablesList */
-        $databaseTablesList = $this->getQueryBus()->handle(new GetDatabaseTablesList());
+        $databaseTablesList = $this->dispatchQuery(new GetDatabaseTablesList());
 
         return $databaseTablesList->getTables();
     }

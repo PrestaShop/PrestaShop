@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateModulePer
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateTabPermissionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsForConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryResult\ConfigurablePermissions;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Controller\Attribute\AllShopContext;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -44,7 +44,7 @@ use Symfony\Component\HttpFoundation\Response;
  * Allows permissions configuration for employee profiles in "Configure > Advanced Parameters > Team > Permissions"
  */
 #[AllShopContext]
-class PermissionController extends FrameworkBundleAdminController
+class PermissionController extends PrestaShopAdminController
 {
     /**
      * Show permissions configuration page
@@ -55,9 +55,9 @@ class PermissionController extends FrameworkBundleAdminController
     public function indexAction(): Response
     {
         /** @var ConfigurablePermissions $configurablePermissions */
-        $configurablePermissions = $this->getQueryBus()->handle(
+        $configurablePermissions = $this->dispatchQuery(
             new GetPermissionsForConfiguration(
-                (int) $this->getContext()->employee->id_profile
+                $this->getEmployeeContext()->getEmployee()->getProfileId()
             )
         );
 
@@ -66,14 +66,14 @@ class PermissionController extends FrameworkBundleAdminController
             [
                 'help_link' => $this->generateSidebarLink('AdminAccess'),
                 'enableSidebar' => true,
-                'layoutTitle' => $this->trans('Permissions', 'Admin.Navigation.Menu'),
+                'layoutTitle' => $this->trans('Permissions', [], 'Admin.Navigation.Menu'),
                 'configurablePermissions' => $configurablePermissions,
                 'multistoreInfoTip' => $this->trans(
                     'Note that this page is available in all shops context only, this is why your context has just switched.',
+                    [],
                     'Admin.Notifications.Info'
                 ),
-                'multistoreIsUsed' => ($this->get('prestashop.adapter.multistore_feature')->isUsed()
-                                       && $this->get('prestashop.adapter.shop.context')->isShopContext()),
+                'multistoreIsUsed' => $this->getShopContext()->isMultiShopUsed() && $this->getShopContext()->getShopConstraint()->getShopId() !== null,
             ]
         );
     }
@@ -93,7 +93,7 @@ class PermissionController extends FrameworkBundleAdminController
         }
 
         try {
-            $this->getQueryBus()->handle(
+            $this->dispatchCommand(
                 new UpdateTabPermissionsCommand(
                     $request->request->getInt('profile_id'),
                     $request->request->getInt('tab_id'),
@@ -127,7 +127,7 @@ class PermissionController extends FrameworkBundleAdminController
         }
 
         try {
-            $this->getQueryBus()->handle(
+            $this->dispatchCommand(
                 new UpdateModulePermissionsCommand(
                     $request->request->getInt('profile_id'),
                     $request->request->getInt('id_module'),

@@ -86,7 +86,7 @@ final class ServerRequirementsChecker implements ServerRequirementsCheckerInterf
      *
      * @return array empty if no errors
      */
-    public function checkForErrors()
+    public function checkForErrors(): array
     {
         $issues = $this->lookForIssues();
 

@@ -61,7 +61,7 @@ final class EmployeeFormAccessChecker implements EmployeeFormAccessCheckerInterf
     /**
      * {@inheritdoc}
      */
-    public function isRestrictedAccess($employeeId)
+    public function isRestrictedAccess(int $employeeId): bool
     {
         if (!is_int($employeeId)) {
             throw new InvalidArgumentException(sprintf('Employee ID must be an integer, %s given', gettype($employeeId)));
@@ -73,7 +73,7 @@ final class EmployeeFormAccessChecker implements EmployeeFormAccessCheckerInterf
     /**
      * {@inheritdoc}
      */
-    public function canAccessEditFormFor($employeeId)
+    public function canAccessEditFormFor(int $employeeId): bool
     {
         // To access super admin edit form you must be a super admin.
         if ($this->employeeDataProvider->isSuperAdmin($employeeId)) {

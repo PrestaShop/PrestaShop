@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\ApiClientSettings;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\Command\DeleteApiClientCommand;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\Command\EditApiClientCommand;
@@ -41,40 +40,46 @@ use PrestaShop\PrestaShop\Core\Domain\ApiClient\Exception\CannotUpdateApiClientE
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\Query\GetApiClientForEditing;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\QueryResult\EditableApiClient;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\ValueObject\CreatedApiClient;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface as ConfigurationFormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ApiClientFilters;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Manages the "Configure > Advanced Parameters > Admin API" page.
  */
-class AdminAPIController extends FrameworkBundleAdminController
+class AdminAPIController extends PrestaShopAdminController
 {
-    public function __construct(
-        private readonly FeatureFlagManager $featureFlagManager,
-        private readonly MultistoreFeature $multiStoreFeature,
-    ) {
-    }
-
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")]
-    public function indexAction(ApiClientFilters $apiClientFilters, Request $request): Response
-    {
-        return $this->renderIndex($apiClientFilters, $request);
+    public function indexAction(
+        ApiClientFilters $apiClientFilters,
+        #[Autowire(service: 'prestashop.adapter.admin_api.form_handler')]
+        ConfigurationFormHandlerInterface $formHandler,
+        #[Autowire(service: 'prestashop.core.grid.factory.api_client')]
+        GridFactoryInterface $gridFactory,
+    ): Response {
+        return $this->renderIndex($apiClientFilters, $formHandler->getForm(), $gridFactory);
     }
 
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
-    public function processConfigurationAction(ApiClientFilters $apiClientFilters, Request $request): Response
-    {
-        $formHandler = $this->getConfigurationFormHandler();
+    public function processConfigurationAction(
+        ApiClientFilters $apiClientFilters,
+        Request $request,
+        #[Autowire(service: 'prestashop.adapter.admin_api.form_handler')]
+        ConfigurationFormHandlerInterface $formHandler,
+        #[Autowire(service: 'prestashop.core.grid.factory.api_client')]
+        GridFactoryInterface $gridFactory,
+    ): Response {
         $configurationForm = $formHandler->getForm();
         $configurationForm->handleRequest($request);
 
@@ -83,34 +88,39 @@ class AdminAPIController extends FrameworkBundleAdminController
             $configurationErrors = $formHandler->save($data);
 
             if (empty($configurationErrors)) {
-                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_api_index');
             }
 
-            $this->flashErrors($configurationErrors);
+            $this->addFlashErrors($configurationErrors);
         }
 
-        return $this->renderIndex($apiClientFilters, $request, $configurationForm);
+        return $this->renderIndex($apiClientFilters, $configurationForm, $gridFactory);
     }
 
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_api_index')]
-    public function createAction(Request $request): Response
-    {
+    public function createAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.api_client_form_builder')]
+        FormBuilderInterface $formBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.api_client_form_handler')]
+        FormHandlerInterface $formHandler,
+    ): Response {
         if ($this->isAdminAPIMultistoreDisabled()) {
             return $this->redirectToRoute('admin_api_index');
         }
 
-        $apiClientForm = $this->getFormBuilder()->getForm();
+        $apiClientForm = $formBuilder->getForm();
         $apiClientForm->handleRequest($request);
 
         try {
-            $handlerResult = $this->getFormHandler()->handle($apiClientForm);
+            $handlerResult = $formHandler->handle($apiClientForm);
             if (null !== $handlerResult->getIdentifiableObjectId()) {
                 /** @var CreatedApiClient $createdApiClient */
                 $createdApiClient = $handlerResult->getIdentifiableObjectId();
                 $this->displayTemporarySecret(
-                    $this->trans('The API Client and client secret have been generated successfully.', 'Admin.Notifications.Success'),
+                    $this->trans('The API Client and client secret have been generated successfully.', [], 'Admin.Notifications.Success'),
                     $createdApiClient->getSecret()
                 );
 
@@ -123,42 +133,33 @@ class AdminAPIController extends FrameworkBundleAdminController
         return $this->render(
             '@PrestaShop/Admin/Configure/AdvancedParameters/AdminAPI/ApiClient/create.html.twig',
             [
-                'layoutTitle' => $this->trans('New API Client', 'Admin.Navigation.Menu'),
+                'layoutTitle' => $this->trans('New API Client', [], 'Admin.Navigation.Menu'),
                 'apiClientForm' => $apiClientForm->createView(),
             ]
         );
     }
 
-    private function displayTemporarySecret(string $successMessage, string $secret): void
-    {
-        $this->addFlash(
-            'info',
-            sprintf(
-                '%s <strong>%s</strong>',
-                $successMessage,
-                $this->trans('This secret value will only be displayed once. Don\'t forget to make a copy in a secure location.', 'Admin.Notifications.Info'),
-            )
-        );
-
-        // Pass generated secret via flash message
-        $this->addFlash('client_secret', $secret);
-    }
-
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_api_index')]
-    public function editAction(Request $request, int $apiClientId): Response
-    {
+    public function editAction(
+        Request $request,
+        int $apiClientId,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.api_client_form_builder')]
+        FormBuilderInterface $formBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.api_client_form_handler')]
+        FormHandlerInterface $formHandler,
+    ): Response {
         if ($this->isAdminAPIMultistoreDisabled()) {
             return $this->redirectToRoute('admin_api_index');
         }
 
-        $apiClientForm = $this->getFormBuilder()->getFormFor($apiClientId);
+        $apiClientForm = $formBuilder->getFormFor($apiClientId);
         $apiClientForm->handleRequest($request);
 
         try {
-            $handlerResult = $this->getFormHandler()->handleFor($apiClientId, $apiClientForm);
+            $handlerResult = $formHandler->handleFor($apiClientId, $apiClientForm);
 
             if (null !== $handlerResult->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_api_clients_edit', ['apiClientId' => $apiClientId]);
             }
@@ -169,18 +170,18 @@ class AdminAPIController extends FrameworkBundleAdminController
         $formData = $apiClientForm->getData();
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AdminAPI/ApiClient/edit.html.twig', [
-            'layoutTitle' => $this->trans('Editing API Client "%name%"', 'Admin.Navigation.Menu', ['%name%' => $formData['client_name']]),
+            'layoutTitle' => $this->trans('Editing API Client "%name%"', ['%name%' => $formData['client_name']], 'Admin.Navigation.Menu'),
             'apiClientForm' => $apiClientForm->createView(),
         ]);
     }
 
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_api_clients_edit')]
-    public function regenerateSecretAction(Request $request, int $apiClientId): Response
+    public function regenerateSecretAction(int $apiClientId): RedirectResponse
     {
         try {
-            $newSecret = $this->getCommandBus()->handle(new GenerateApiClientSecretCommand($apiClientId));
+            $newSecret = $this->dispatchCommand(new GenerateApiClientSecretCommand($apiClientId));
             $this->displayTemporarySecret(
-                $this->trans('Your new client secret has been generated successfully. Your former client secret is now obsolete.', 'Admin.Notifications.Success'),
+                $this->trans('Your new client secret has been generated successfully. Your former client secret is now obsolete.', [], 'Admin.Notifications.Success'),
                 $newSecret
             );
         } catch (Exception $e) {
@@ -190,21 +191,16 @@ class AdminAPIController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_api_clients_edit', ['apiClientId' => $apiClientId]);
     }
 
-    /**
-     * @param int $apiClientId
-     *
-     * @return JsonResponse
-     */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_api_index')]
     public function toggleStatusAction(int $apiClientId): JsonResponse
     {
         /** @var EditableApiClient $editableApiClient */
-        $editableApiClient = $this->getQueryBus()->handle(new GetApiClientForEditing($apiClientId));
+        $editableApiClient = $this->dispatchQuery(new GetApiClientForEditing($apiClientId));
 
         try {
             $command = new EditApiClientCommand($apiClientId);
             $command->setEnabled(!$editableApiClient->isEnabled());
-            $this->getCommandBus()->handle($command);
+            $this->dispatchCommand($command);
         } catch (Exception $e) {
             return $this->json([
                 'status' => false,
@@ -214,23 +210,18 @@ class AdminAPIController extends FrameworkBundleAdminController
 
         return $this->json([
             'status' => true,
-            'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
+            'message' => $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success'),
         ]);
     }
 
-    /**
-     * @param int $apiClientId
-     *
-     * @return Response
-     */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to delete this.', redirectRoute: 'admin_api_index')]
-    public function deleteAction(int $apiClientId): Response
+    public function deleteAction(int $apiClientId): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(new DeleteApiClientCommand($apiClientId));
+            $this->dispatchCommand(new DeleteApiClientCommand($apiClientId));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -239,39 +230,34 @@ class AdminAPIController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_api_index');
     }
 
-    private function renderIndex(ApiClientFilters $apiClientFilters, Request $request, ?FormInterface $configurationForm = null): Response
+    private function renderIndex(ApiClientFilters $apiClientFilters, FormInterface $configurationForm, GridFactoryInterface $gridFactory): Response
     {
-        $apiClientGridFactory = $this->get('prestashop.core.grid.factory.api_client');
-        $apiClientGrid = $apiClientGridFactory->getGrid($apiClientFilters);
+        $apiClientGrid = $gridFactory->getGrid($apiClientFilters);
         $isAdminAPIMultistoreDisabled = $this->isAdminAPIMultistoreDisabled();
-
-        if (null === $configurationForm) {
-            $configurationForm = $this->getConfigurationFormHandler()->getForm();
-        }
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AdminAPI/index.html.twig', [
             'apiClientGrid' => $this->presentGrid($apiClientGrid),
             'help_link' => $this->generateSidebarLink('AdminAdminAPI'),
-            'layoutTitle' => $this->trans('Admin API', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Admin API', [], 'Admin.Navigation.Menu'),
             'layoutHeaderToolbarBtn' => $this->getApiClientsToolbarButtons(),
             'isAdminAPIMultistoreDisabled' => $isAdminAPIMultistoreDisabled,
             'configurationForm' => $configurationForm,
         ]);
     }
 
-    private function getFormHandler(): FormHandlerInterface
+    private function displayTemporarySecret(string $successMessage, string $secret): void
     {
-        return $this->get('prestashop.core.form.identifiable_object.api_client_form_handler');
-    }
+        $this->addFlash(
+            'info',
+            sprintf(
+                '%s <strong>%s</strong>',
+                $successMessage,
+                $this->trans('This secret value will only be displayed once. Don\'t forget to make a copy in a secure location.', [], 'Admin.Notifications.Info'),
+            )
+        );
 
-    private function getFormBuilder(): FormBuilderInterface
-    {
-        return $this->get('prestashop.core.form.identifiable_object.builder.api_client_form_builder');
-    }
-
-    private function getConfigurationFormHandler(): ConfigurationFormHandlerInterface
-    {
-        return $this->get('prestashop.adapter.admin_api.form_handler');
+        // Pass generated secret via flash message
+        $this->addFlash('client_secret', $secret);
     }
 
     /**
@@ -283,7 +269,7 @@ class AdminAPIController extends FrameworkBundleAdminController
 
         $toolbarButtons['addApiClient'] = [
             'href' => $this->generateUrl('admin_api_clients_create'),
-            'desc' => $this->trans('Add new API Client', 'Admin.Actions'),
+            'desc' => $this->trans('Add new API Client', [], 'Admin.Actions'),
             'icon' => 'add_circle_outline',
             'class' => 'btn-primary',
         ];
@@ -301,65 +287,68 @@ class AdminAPIController extends FrameworkBundleAdminController
         return [
             ApiClientNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found).',
+                [],
                 'Admin.Notifications.Error'
             ),
             ApiClientConstraintException::class => [
                 ApiClientConstraintException::CLIENT_ID_ALREADY_USED => $this->trans(
                     'This value for "%field%" is already used and must be unique.',
+                    ['%field%' => $this->trans('Client ID', [], 'Admin.Advparameters.Feature')],
                     'Admin.Notifications.Error',
-                    ['%field%' => $this->trans('Client ID', 'Admin.Advparameters.Feature')]
                 ),
                 ApiClientConstraintException::CLIENT_NAME_ALREADY_USED => $this->trans(
                     'This value for "%field%" is already used and must be unique.',
+                    ['%field%' => $this->trans('Client Name', [], 'Admin.Advparameters.Feature')],
                     'Admin.Notifications.Error',
-                    ['%field%' => $this->trans('Client Name', 'Admin.Advparameters.Feature')]
                 ),
                 ApiClientConstraintException::INVALID_CLIENT_ID => $this->trans(
                     'The %s field is invalid.',
+                    [sprintf('"%s"', $this->trans('Client ID', [], 'Admin.Advparameters.Feature'))],
                     'Admin.Notifications.Error',
-                    [sprintf('"%s"', $this->trans('Client ID', 'Admin.Advparameters.Feature'))]
                 ),
                 ApiClientConstraintException::INVALID_CLIENT_NAME => $this->trans(
                     'The %s field is invalid.',
+                    [sprintf('"%s"', $this->trans('Client Name', [], 'Admin.Advparameters.Feature'))],
                     'Admin.Notifications.Error',
-                    [sprintf('"%s"', $this->trans('Client Name', 'Admin.Advparameters.Feature'))]
                 ),
                 ApiClientConstraintException::INVALID_DESCRIPTION => $this->trans(
                     'The %s field is invalid.',
+                    [sprintf('"%s"', $this->trans('Description', [], 'Admin.Global'))],
                     'Admin.Notifications.Error',
-                    [sprintf('"%s"', $this->trans('Description', 'Admin.Global'))]
                 ),
                 ApiClientConstraintException::CLIENT_ID_TOO_LARGE => $this->trans(
                     'The field "%field%" cannot be longer than %limit% characters.',
-                    'Admin.Notifications.Error',
                     [
-                        '%field%' => $this->trans('Client ID', 'Admin.Advparameters.Feature'),
+                        '%field%' => $this->trans('Client ID', [], 'Admin.Advparameters.Feature'),
                         '%limit%' => ApiClientSettings::MAX_CLIENT_ID_LENGTH,
-                    ]
+                    ],
+                    'Admin.Notifications.Error',
                 ),
                 ApiClientConstraintException::CLIENT_NAME_TOO_LARGE => $this->trans(
                     'The field "%field%" cannot be longer than %limit% characters.',
-                    'Admin.Notifications.Error',
                     [
-                        '%field%' => $this->trans('Client Name', 'Admin.Advparameters.Feature'),
+                        '%field%' => $this->trans('Client Name', [], 'Admin.Advparameters.Feature'),
                         '%limit%' => ApiClientSettings::MAX_CLIENT_NAME_LENGTH,
-                    ]
+                    ],
+                    'Admin.Notifications.Error',
                 ),
                 ApiClientConstraintException::DESCRIPTION_TOO_LARGE => $this->trans(
                     'The field "%field%" cannot be longer than %limit% characters.',
-                    'Admin.Notifications.Error',
                     [
-                        '%field%' => $this->trans('Description', 'Admin.Global'),
+                        '%field%' => $this->trans('Description', [], 'Admin.Global'),
                         '%limit%' => ApiClientSettings::MAX_DESCRIPTION_LENGTH,
-                    ]
+                    ],
+                    'Admin.Notifications.Error',
                 ),
             ],
             CannotAddApiClientException::class => $this->trans(
                 'An error occurred while creating the API Client.',
+                [],
                 'Admin.Advparameters.Notification'
             ),
             CannotUpdateApiClientException::class => $this->trans(
                 'An error occurred while creating the API Client.',
+                [],
                 'Admin.Advparameters.Notification'
             ),
         ];
@@ -367,7 +356,8 @@ class AdminAPIController extends FrameworkBundleAdminController
 
     private function isAdminAPIMultistoreDisabled(): bool
     {
-        return !$this->featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_ADMIN_API_MULTISTORE)
-            && $this->multiStoreFeature->isActive();
+        return !$this->getFeatureFlagStateChecker()->isEnabled(FeatureFlagSettings::FEATURE_FLAG_ADMIN_API_MULTISTORE)
+            && $this->getShopContext()->isMultiShopEnabled()
+        ;
     }
 }
