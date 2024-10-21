@@ -24,7 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
-use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\Manufacturer\ManufacturerPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
@@ -75,7 +74,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      */
     protected $isPreview = false;
 
-    public function canonicalRedirection(string $canonical_url = '')
+    public function canonicalRedirection(string $canonical_url = ''): void
     {
         // This is there to prevent error, because this function is also called
         // in parent front controller before we have even loaded our data.
@@ -123,7 +122,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      *
      * @see FrontController::init()
      */
-    public function init()
+    public function init(): void
     {
         parent::init();
 
@@ -177,7 +176,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     /**
      * Performs multiple checks and redirects user to error page if needed
      */
-    public function checkPermissionsToViewProduct()
+    public function checkPermissionsToViewProduct(): void
     {
         // If the person accessing the product page is admin with proper token, we only do limited checks
         if ($this->isPreview()) {
@@ -278,7 +277,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      * Loads related category to current visit. First it tries to get a category the user came from - it uses HTTP referer for this.
      * If no category is found (or it's invalid), we use product's default category.
      */
-    public function initializeCategory()
+    public function initializeCategory(): void
     {
         $id_category = false;
         if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] == Tools::secureReferrer($_SERVER['HTTP_REFERER']) // Assure us the previous page was one of the shop
@@ -313,7 +312,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         if (!$this->errors) {
             if (Pack::isPack((int) $this->product->id)
@@ -485,7 +484,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      *
      * @see FrontController::postProcess()
      */
-    public function postProcess()
+    public function postProcess(): void
     {
         if (Tools::isSubmit('submitCustomizedData')) {
             // If cart has not been saved, we need to do it so that customization fields can have an id_cart
@@ -501,7 +500,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
     }
 
-    public function displayAjaxQuickview()
+    public function displayAjaxQuickview(): void
     {
         $productForTemplate = $this->getTemplateVarProduct();
         ob_end_clean();
@@ -510,17 +509,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $this->setQuickViewMode();
 
         $this->ajaxRender(json_encode([
-            'quickview_html' => $this->render(
-                'catalog/_partials/quickview',
-                $productForTemplate instanceof AbstractLazyArray ?
-                $productForTemplate->jsonSerialize() :
-                $productForTemplate
-            ),
+            'quickview_html' => $this->render('catalog/_partials/quickview', $productForTemplate->jsonSerialize()),
             'product' => $productForTemplate,
         ]));
     }
 
-    public function displayAjaxRefresh()
+    public function displayAjaxRefresh(): void
     {
         $product = $this->getTemplateVarProduct();
         $minimalProductQuantity = $this->getProductMinimalQuantity($product);
@@ -573,7 +567,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     /**
      * Displays information, if the customer has this product in cart already.
      */
-    protected function addCartQuantityNotification()
+    protected function addCartQuantityNotification(): void
     {
         if ((bool) Configuration::get('PS_DISPLAY_AMOUNT_IN_CART') !== true) {
             return;
@@ -610,7 +604,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     /**
      * Assign price and tax to the template.
      */
-    protected function assignPriceAndTax()
+    protected function assignPriceAndTax(): void
     {
         $id_customer = (isset($this->context->customer) ? (int) $this->context->customer->id : 0);
         $id_group = (int) Group::getCurrent()->id;
@@ -887,7 +881,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     /**
      * Get and assign attributes combinations informations.
      */
-    protected function assignAttributesCombinations()
+    protected function assignAttributesCombinations(): void
     {
         $attributes_combinations = Product::getAttributesInformationsByProduct($this->product->id);
         if (is_array($attributes_combinations) && count($attributes_combinations)) {
@@ -908,7 +902,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     /**
      * Assign template vars related to category.
      */
-    protected function assignCategory()
+    protected function assignCategory(): void
     {
         // Assign category to the template
         if (
@@ -948,10 +942,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         return $desc;
     }
 
-    protected function pictureUpload()
+    protected function pictureUpload(): void
     {
         if (!$field_ids = $this->product->getCustomizationFieldIds()) {
-            return false;
+            return;
         }
         $authorized_file_fields = [];
         foreach ($field_ids as $field_id) {
@@ -971,7 +965,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $product_picture_height = (int) Configuration::get('PS_PRODUCT_PICTURE_HEIGHT');
                 $tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
                 if ($error || (!$tmp_name || !move_uploaded_file($file['tmp_name'], $tmp_name))) {
-                    return false;
+                    return;
                 }
                 /* Original file */
                 if (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_ . $file_name)) {
@@ -984,14 +978,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 unlink($tmp_name);
             }
         }
-
-        return true;
     }
 
-    protected function textRecord()
+    protected function textRecord(): void
     {
         if (!$field_ids = $this->product->getCustomizationFieldIds()) {
-            return false;
+            return;
         }
 
         $authorized_text_fields = [];
@@ -1051,7 +1043,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     /**
      * @return Product
      */
-    public function getProduct()
+    public function getProduct(): Product
     {
         return $this->product;
     }
@@ -1059,7 +1051,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     /**
      * @return Category|null
      */
-    public function getCategory()
+    public function getCategory(): ?Category
     {
         return $this->category;
     }
@@ -1069,7 +1061,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      *
      * @return int
      */
-    protected function getIdProductAttributeByRequest()
+    protected function getIdProductAttributeByRequest(): int
     {
         $requestedIdProductAttribute = (int) Tools::getValue('id_product_attribute');
 
@@ -1084,7 +1076,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      *
      * @throws PrestaShopException
      */
-    private function getIdProductAttributeByGroupOrRequestOrDefault()
+    private function getIdProductAttributeByGroupOrRequestOrDefault(): ?int
     {
         // If the product has no combinations, we return early
         if (!$this->product->hasCombinations()) {
@@ -1193,7 +1185,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      *
      * @throws PrestaShopException
      */
-    private function getIdProductAttributeByGroup()
+    private function getIdProductAttributeByGroup(): ?int
     {
         try {
             $groups = Tools::getValue('group');
@@ -1218,7 +1210,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         return 0;
     }
 
-    public function getTemplateVarProduct()
+    public function getTemplateVarProduct(): ProductLazyArray
     {
         $productSettings = $this->getProductPresentationSettings();
         // Hook displayProductExtraContent
@@ -1500,7 +1492,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      *
      * @return array
      */
-    public function getTemplateVarPage()
+    public function getTemplateVarPage(): array
     {
         $page = parent::getTemplateVarPage();
 

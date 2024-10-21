@@ -30,7 +30,7 @@
  */
 class TranslationtestBarModuleFrontController extends ModuleFrontController
 {
-    public function initContent()
+    public function initContent(): void
     {
         parent::initContent();
 

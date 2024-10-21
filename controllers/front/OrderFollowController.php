@@ -41,7 +41,7 @@ class OrderFollowControllerCore extends FrontController
      *
      * @see FrontController::postProcess()
      */
-    public function postProcess()
+    public function postProcess(): void
     {
         if (Tools::isSubmit('submitReturnMerchandise')) {
             $order_qte_input = Tools::getValue('order_qte_input');
@@ -138,7 +138,7 @@ class OrderFollowControllerCore extends FrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         if ((bool) Configuration::get('PS_ORDER_RETURN') === false) {
             $this->redirect_after = '404';
@@ -155,7 +155,7 @@ class OrderFollowControllerCore extends FrontController
         $this->setTemplate('customer/order-follow');
     }
 
-    public function getTemplateVarOrdersReturns()
+    public function getTemplateVarOrdersReturns(): array
     {
         $orders_returns = [];
         $orders_return = OrderReturn::getOrdersReturn($this->context->customer->id);
@@ -172,7 +172,7 @@ class OrderFollowControllerCore extends FrontController
         return $orders_returns;
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 

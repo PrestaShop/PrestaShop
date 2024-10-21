@@ -47,7 +47,7 @@ class PricesDropControllerCore extends ProductListingFrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         parent::initContent();
 
@@ -60,7 +60,7 @@ class PricesDropControllerCore extends ProductListingFrontController
      *
      * @return ProductSearchQuery
      */
-    protected function getProductSearchQuery()
+    protected function getProductSearchQuery(): ProductSearchQuery
     {
         $query = new ProductSearchQuery();
         $query
@@ -75,14 +75,14 @@ class PricesDropControllerCore extends ProductListingFrontController
      *
      * @return PricesDropProductSearchProvider
      */
-    protected function getDefaultProductSearchProvider()
+    protected function getDefaultProductSearchProvider(): PricesDropProductSearchProvider
     {
         return new PricesDropProductSearchProvider(
             $this->getTranslator()
         );
     }
 
-    public function getListingLabel()
+    public function getListingLabel(): string
     {
         return $this->trans(
             'Prices drop',
@@ -91,7 +91,7 @@ class PricesDropControllerCore extends ProductListingFrontController
         );
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 

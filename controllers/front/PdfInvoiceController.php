@@ -39,7 +39,7 @@ class PdfInvoiceControllerCore extends FrontController
     /** @var Order */
     public $order;
 
-    public function postProcess()
+    public function postProcess(): void
     {
         // If the customer is not logged in AND no secure key was passed
         if (!$this->context->customer->isLogged() && !Tools::getValue('secure_key')) {
@@ -84,11 +84,11 @@ class PdfInvoiceControllerCore extends FrontController
     }
 
     /**
-     * @return bool|void
+     * @return void
      *
      * @throws PrestaShopException
      */
-    public function display()
+    public function display(): void
     {
         $order_invoice_list = $this->order->getInvoicesCollection();
         Hook::exec('actionPDFInvoiceRender', ['order_invoice_list' => $order_invoice_list]);

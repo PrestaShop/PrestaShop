@@ -700,7 +700,7 @@ class FrontControllerCore extends Controller
     /**
      * Compiles and outputs full page content.
      *
-     * @return bool
+     * @return void
      *
      * @throws Exception
      * @throws SmartyException
@@ -716,8 +716,6 @@ class FrontControllerCore extends Controller
         ]);
 
         $this->smartyOutputContent($this->template);
-
-        return true;
     }
 
     protected function smartyOutputContent($content)

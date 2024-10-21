@@ -51,7 +51,7 @@ class PasswordControllerCore extends FrontController
      *
      * @see FrontController::postProcess()
      */
-    public function postProcess()
+    public function postProcess(): void
     {
         $this->setTemplate('customer/password-email');
 
@@ -64,7 +64,7 @@ class PasswordControllerCore extends FrontController
         }
     }
 
-    protected function sendRenewPasswordLink()
+    protected function sendRenewPasswordLink(): void
     {
         if (!($email = $this->IDNConverter->emailToUtf8(trim(Tools::getValue('email')))) || !Validate::isEmail($email)) {
             $this->errors[] = $this->trans('Invalid email address.', [], 'Shop.Notifications.Error');
@@ -122,7 +122,7 @@ class PasswordControllerCore extends FrontController
         }
     }
 
-    protected function changePassword()
+    protected function changePassword(): void
     {
         $token = Tools::getValue('token');
         $id_customer = (int) Tools::getValue('id_customer');
@@ -263,9 +263,9 @@ class PasswordControllerCore extends FrontController
     }
 
     /**
-     * @return bool
+     * @return void
      */
-    public function display()
+    public function display(): void
     {
         $this->context->smarty->assign(
             [
@@ -279,14 +279,12 @@ class PasswordControllerCore extends FrontController
         );
 
         $this->smartyOutputContent($this->template);
-
-        return true;
     }
 
     /**
      * @return array
      */
-    protected function getErrors()
+    protected function getErrors(): array
     {
         $notifications = $this->prepareNotifications();
 
@@ -301,7 +299,7 @@ class PasswordControllerCore extends FrontController
     /**
      * @return array
      */
-    protected function getSuccesses()
+    protected function getSuccesses(): array
     {
         $notifications = $this->prepareNotifications();
 
@@ -314,7 +312,7 @@ class PasswordControllerCore extends FrontController
         return $successes;
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 
@@ -329,7 +327,7 @@ class PasswordControllerCore extends FrontController
     /**
      * {@inheritdoc}
      */
-    public function getCanonicalURL()
+    public function getCanonicalURL(): string
     {
         return $this->context->link->getPageLink('password');
     }

@@ -47,7 +47,7 @@ class NewProductsControllerCore extends ProductListingFrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         parent::initContent();
 
@@ -60,7 +60,7 @@ class NewProductsControllerCore extends ProductListingFrontController
      *
      * @return ProductSearchQuery
      */
-    protected function getProductSearchQuery()
+    protected function getProductSearchQuery(): ProductSearchQuery
     {
         $query = new ProductSearchQuery();
         $query
@@ -75,14 +75,14 @@ class NewProductsControllerCore extends ProductListingFrontController
      *
      * @return NewProductsProductSearchProvider
      */
-    protected function getDefaultProductSearchProvider()
+    protected function getDefaultProductSearchProvider(): NewProductsProductSearchProvider
     {
         return new NewProductsProductSearchProvider(
             $this->getTranslator()
         );
     }
 
-    public function getListingLabel()
+    public function getListingLabel(): string
     {
         return $this->trans(
             'New products',
@@ -91,7 +91,7 @@ class NewProductsControllerCore extends ProductListingFrontController
         );
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 

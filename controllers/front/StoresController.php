@@ -38,7 +38,7 @@ class StoresControllerCore extends FrontController
      *
      * @see FrontController::init()
      */
-    public function init()
+    public function init(): void
     {
         // Initialize presenter, we will use it for all cases
         $this->storePresenter = new StorePresenter(
@@ -54,7 +54,7 @@ class StoresControllerCore extends FrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         $distance_unit = Configuration::get('PS_DISTANCE_UNIT');
         if (!in_array($distance_unit, ['km', 'mi'])) {
@@ -80,7 +80,7 @@ class StoresControllerCore extends FrontController
         }
     }
 
-    public function getTemplateVarStores()
+    public function getTemplateVarStores(): array
     {
         $stores = Store::getStores($this->context->language->id);
 
@@ -94,7 +94,7 @@ class StoresControllerCore extends FrontController
         return $stores;
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 
@@ -109,7 +109,7 @@ class StoresControllerCore extends FrontController
     /**
      * {@inheritdoc}
      */
-    public function getCanonicalURL()
+    public function getCanonicalURL(): string
     {
         return $this->context->link->getPageLink('stores');
     }
