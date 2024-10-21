@@ -2,13 +2,25 @@ services:
   _defaults:
     public: true
 
-  prestashop.adapter.webservice.webservice_key_eraser:
-    class: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceKeyEraser'
+  PrestaShop\PrestaShop\Adapter\Webservice\WebserviceKeyEraser:
+    public: false
 
-  prestashop.adapter.webservice.webservice_key_status_modifier:
-    class: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceKeyStatusModifier'
+  prestashop.adapter.webservice.webservice_key_eraser:
+    alias: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceKeyEraser'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+
+  PrestaShop\PrestaShop\Adapter\Webservice\WebserviceKeyStatusModifier:
+    public: false
     arguments:
       - '@translator'
+
+  prestashop.adapter.webservice.webservice_key_status_modifier:
+    alias: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceKeyStatusModifier'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.adapter.webservice.query_handler.get_webservice_key_for_editing_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Webservice\QueryHandler\GetWebserviceKeyForEditingHandler'
