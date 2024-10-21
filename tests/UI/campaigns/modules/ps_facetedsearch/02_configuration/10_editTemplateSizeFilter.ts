@@ -197,8 +197,8 @@ describe('Faceted search module - Edit template - Size filter', async () => {
       const isSearchFilterDropdown = await foClassicCategoryPage.isSearchFilterDropdown(page, 'attribute_group', 'Size');
       expect(isSearchFilterDropdown).to.be.eq(test.expectedIsSearchFilterDropdown);
 
-      const isSearchFiltersCheckbox = await foClassicCategoryPage.isSearchFiltersCheckbox(page, 'attribute_group', 'Size');
-      expect(isSearchFiltersCheckbox).to.be.eq(test.expectedIsSearchFilterCheckbox);
+      const isSearchFilterCheckbox = await foClassicCategoryPage.isSearchFilterCheckbox(page, 'attribute_group', 'Size');
+      expect(isSearchFilterCheckbox).to.be.eq(test.expectedIsSearchFilterCheckbox);
 
       if (test.filterLimit !== '') {
         const numSearchFiltersCheckbox = await foClassicCategoryPage.getNumSearchFiltersCheckbox(

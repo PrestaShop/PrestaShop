@@ -599,10 +599,10 @@ export default class CommonPage {
    * Get parent element from selector
    * @param page {Frame|Page} Browser tab
    * @param selector {string} String to locate the child element
-   * @return {Promise<ElementHandle>}
+   * @return {Promise<ElementHandle<HTMLElement> | JSHandle<HTMLElement | null | undefined>>>}
    */
-  getParentElement(page: Frame | Page, selector: string)
-    : Promise<ElementHandle<HTMLElement> | JSHandle<undefined> | JSHandle<null>> {
+  async getParentElement(page: Frame | Page, selector: string)
+    : Promise<ElementHandle<HTMLElement> | JSHandle<HTMLElement | null | undefined>> {
     return page.evaluateHandle((sl: string) => document.querySelector(sl)?.parentElement, selector);
   }
 

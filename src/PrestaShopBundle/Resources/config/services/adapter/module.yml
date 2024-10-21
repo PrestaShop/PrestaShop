@@ -68,11 +68,16 @@ services:
       version: 9.0
     public: true
 
-  prestashop.adapter.presenter.module.payment:
-    class: PrestaShop\PrestaShop\Adapter\Presenter\Module\PaymentModulesPresenter
+  PrestaShop\PrestaShop\Adapter\Presenter\Module\PaymentModulesPresenter:
     arguments:
       - '@prestashop.adapter.presenter.module'
       - '@prestashop.adapter.module.payment_module_provider'
+
+  prestashop.adapter.presenter.module.payment:
+    alias: PrestaShop\PrestaShop\Adapter\Presenter\Module\PaymentModulesPresenter
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.adapter.module.payment_module_provider:
     class: PrestaShop\PrestaShop\Adapter\Module\PaymentModuleListProvider

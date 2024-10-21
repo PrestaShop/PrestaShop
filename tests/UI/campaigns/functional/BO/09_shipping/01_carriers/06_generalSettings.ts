@@ -148,6 +148,7 @@ describe('BO - Shipping - Carriers : General Settings', async () => {
     // Create images
     await Promise.all([
       utilsFile.generateImage(`${carrierData.name}.jpg`),
+      utilsFile.generateImage(`${carrierDataName.name}.jpg`),
     ]);
   });
 
@@ -157,6 +158,7 @@ describe('BO - Shipping - Carriers : General Settings', async () => {
     // Delete the generated images
     await Promise.all([
       utilsFile.deleteFile(`${carrierData.name}.jpg`),
+      utilsFile.deleteFile(`${carrierDataName.name}.jpg`),
     ]);
   });
 

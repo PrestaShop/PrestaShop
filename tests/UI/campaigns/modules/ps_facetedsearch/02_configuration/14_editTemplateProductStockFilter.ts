@@ -166,8 +166,8 @@ describe('Faceted search module - Edit template - Product stock filter', async (
       const isSearchFilterDropdown = await foClassicCategoryPage.isSearchFilterDropdown(page, 'availability');
       expect(isSearchFilterDropdown).to.be.eq(test.expectedIsSearchFilterDropdown);
 
-      const isSearchFiltersCheckbox = await foClassicCategoryPage.isSearchFiltersCheckbox(page, 'availability');
-      expect(isSearchFiltersCheckbox).to.be.eq(test.expectedIsSearchFilterCheckbox);
+      const isSearchFilterCheckbox = await foClassicCategoryPage.isSearchFilterCheckbox(page, 'availability');
+      expect(isSearchFilterCheckbox).to.be.eq(test.expectedIsSearchFilterCheckbox);
     });
 
     it('should close the page and return to the backOffice', async function () {

@@ -19,9 +19,9 @@ import {
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
-const baseContext: string = 'functional_API_endpoints_module_getModuleId';
+const baseContext: string = 'functional_API_endpoints_module_getModuleTechnicalName';
 
-describe('API : GET /module/{moduleId}', async () => {
+describe('API : GET /module/{technicalName}', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
@@ -153,10 +153,10 @@ describe('API : GET /module/{moduleId}', async () => {
   });
 
   describe('API : Check Data', async () => {
-    it('should request the endpoint /module/{moduleId}', async function () {
+    it('should request the endpoint /module/{technicalName}', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
-      const apiResponse = await apiContext.get(`module/${moduleInfo.moduleId}`, {
+      const apiResponse = await apiContext.get(`module/${moduleInfo.technicalName}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -175,6 +175,7 @@ describe('API : GET /module/{moduleId}', async () => {
         'technicalName',
         'version',
         'enabled',
+        'installed',
       );
     });
 
@@ -208,6 +209,15 @@ describe('API : GET /module/{moduleId}', async () => {
       expect(jsonResponse).to.have.property('enabled');
       expect(jsonResponse.enabled).to.be.a('boolean');
       expect(jsonResponse.enabled).to.be.equal(moduleInfo.enabled);
+    });
+
+    it('should check the JSON Response : `installed`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseInstalled', baseContext);
+
+      expect(jsonResponse).to.have.property('installed');
+      expect(jsonResponse.installed).to.be.a('boolean');
+      // todo: https://github.com/PrestaShop/PrestaShop/issues/36953
+      // expect(jsonResponse.installed).to.be.equal(moduleInfo.installed);
     });
   });
 

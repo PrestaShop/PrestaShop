@@ -21,7 +21,7 @@ import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_shopParameters_customerSettings_titles_filterSortAndPaginationTitles';
 
-describe('BO _ Shop Parameters - Customer Settings : Filter, sort and pagination titles', async () => {
+describe('BO - Shop Parameters - Customer Settings : Filter, sort and pagination titles', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfTitles: number = 0;

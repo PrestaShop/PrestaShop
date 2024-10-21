@@ -171,17 +171,18 @@ class Titles extends BOBasePage {
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(filterBy), value);
-        await this.clickAndWaitForURL(page, this.filterSearchButton);
         break;
 
       case 'select':
         await this.selectByVisibleText(page, this.filterColumn(filterBy), value);
-        await this.clickAndWaitForURL(page, this.filterSearchButton);
         break;
 
       default:
         throw new Error(`Filter ${filterBy} was not found`);
     }
+    // click on search
+    await page.locator(this.filterSearchButton).click();
+    await this.elementVisible(page, this.filterResetButton);
   }
 
   /**
@@ -191,7 +192,10 @@ class Titles extends BOBasePage {
    */
   async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
-      await this.clickAndWaitForURL(page, this.filterResetButton);
+      await page.locator(this.filterResetButton).click();
+      // Move the mouse to avoid the tooltip on first row
+      await page.mouse.move(0, 0);
+      await this.waitForHiddenSelector(page, this.filterResetButton, 5000);
     }
     await this.waitForVisibleSelector(page, this.filterSearchButton, 2000);
   }

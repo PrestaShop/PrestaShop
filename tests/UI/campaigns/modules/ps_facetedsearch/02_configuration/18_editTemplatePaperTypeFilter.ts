@@ -206,8 +206,8 @@ describe('Faceted search module - Edit template - Paper type filter', async () =
       );
       expect(isSearchFilterDropdown).to.be.eq(test.expectedIsSearchFilterDropdown);
 
-      const isSearchFiltersCheckbox = await foClassicCategoryPage.isSearchFiltersCheckbox(page, 'attribute_group', 'Paper Type');
-      expect(isSearchFiltersCheckbox).to.be.eq(test.expectedIsSearchFilterCheckbox);
+      const isSearchFilterCheckbox = await foClassicCategoryPage.isSearchFilterCheckbox(page, 'attribute_group', 'Paper Type');
+      expect(isSearchFilterCheckbox).to.be.eq(test.expectedIsSearchFilterCheckbox);
 
       if (test.filterLimit !== '') {
         const numSearchFiltersCheckbox = await foClassicCategoryPage.getNumSearchFiltersCheckbox(

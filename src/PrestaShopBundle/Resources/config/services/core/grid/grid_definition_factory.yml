@@ -131,14 +131,19 @@ services:
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
-  prestashop.core.grid.definition.factory.cms_page_category:
-    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageCategoryDefinitionFactory'
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageCategoryDefinitionFactory:
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
       - '@request_stack'
       - '@prestashop.adapter.shop.context'
       - '@=service("prestashop.adapter.multistore_feature").isUsed()'
     public: true
+
+  prestashop.core.grid.definition.factory.cms_page_category:
+    alias: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageCategoryDefinitionFactory'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.grid.definition.factory.tax:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\TaxGridDefinitionFactory'
@@ -155,8 +160,7 @@ services:
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
-  prestashop.core.grid.definition.factory.cms_page:
-    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageDefinitionFactory'
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageDefinitionFactory:
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
       - '@prestashop.core.query_bus'
@@ -164,6 +168,12 @@ services:
       - '@prestashop.adapter.shop.context'
       - '@=service("prestashop.adapter.multistore_feature").isUsed()'
     public: true
+
+  prestashop.core.grid.definition.factory.cms_page:
+    alias: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageDefinitionFactory'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\EmptyCategoryGridDefinitionFactory:
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
