@@ -402,10 +402,11 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | total_price_tax_incl   | 252.28 |
       | total_price_tax_excl   | 238.00 |
 
-  @reset-database-before-scenario
+  @reset-all-tables-before-scenario
     # We reset database before this scenario to be sure only default_carrier is enabled
   Scenario: I add the product with associated gift when the order already has the gift
-    Given there is a product in the catalog named "Test Product With Auto Gift" with a price of 12.0 and 100 items in stock
+    Given a carrier "default_carrier" with name "My carrier" exists
+    And there is a product in the catalog named "Test Product With Auto Gift" with a price of 12.0 and 100 items in stock
     And there is a product in the catalog named "Test Product Gifted" with a price of 15.0 and 100 items in stock
     And there is a cart rule MultiGiftAutoCartRule with following properties:
       | name[en-US]               | MultiGiftAutoCartRule       |

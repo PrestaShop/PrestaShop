@@ -23,44 +23,16 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Module\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\Module\Exception;
 
-class ModuleInfos
+/**
+ * Is thrown when required module cannot be found
+ */
+class CannotResetModuleException extends ModuleException
 {
-    public function __construct(
-        private readonly ?int $moduleId,
-        private readonly string $technicalName,
-        private readonly string $version,
-        private readonly bool $enabled,
-        private readonly bool $installed,
-    ) {
-    }
+    public const NOT_INSTALLED = 1;
 
-    public function getModuleId(): ?int
-    {
-        return $this->moduleId;
-    }
-
-    public function getTechnicalName(): string
-    {
-        return $this->technicalName;
-    }
-
-    public function getVersion(): string
-    {
-        return $this->version;
-    }
-
-    public function isEnabled(): bool
-    {
-        return $this->enabled;
-    }
-
-    public function isInstalled(): bool
-    {
-        return $this->installed;
-    }
+    public const NOT_ACTIVE = 1;
 }

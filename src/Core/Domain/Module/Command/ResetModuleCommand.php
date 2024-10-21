@@ -24,43 +24,28 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Module\Command;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Module\QueryResult;
+use PrestaShop\PrestaShop\Core\Domain\Module\ValueObject\ModuleTechnicalName;
 
-class ModuleInfos
+class ResetModuleCommand
 {
+    protected ModuleTechnicalName $technicalName;
+
     public function __construct(
-        private readonly ?int $moduleId,
-        private readonly string $technicalName,
-        private readonly string $version,
-        private readonly bool $enabled,
-        private readonly bool $installed,
+        string $technicalName,
+        protected bool $keepData = true
     ) {
+        $this->technicalName = new ModuleTechnicalName($technicalName);
     }
 
-    public function getModuleId(): ?int
-    {
-        return $this->moduleId;
-    }
-
-    public function getTechnicalName(): string
+    public function getTechnicalName(): ModuleTechnicalName
     {
         return $this->technicalName;
     }
 
-    public function getVersion(): string
+    public function keepData(): bool
     {
-        return $this->version;
-    }
-
-    public function isEnabled(): bool
-    {
-        return $this->enabled;
-    }
-
-    public function isInstalled(): bool
-    {
-        return $this->installed;
+        return $this->keepData;
     }
 }
