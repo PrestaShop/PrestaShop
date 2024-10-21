@@ -5,11 +5,11 @@ import {expect} from 'chai';
 import {
   boDashboardPage,
   boLoginPage,
-  type BrowserContext,
   boEmployeesPage,
   boEmployeesCreatePage,
   dataEmployees,
   FakerEmployee,
+  type BrowserContext,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

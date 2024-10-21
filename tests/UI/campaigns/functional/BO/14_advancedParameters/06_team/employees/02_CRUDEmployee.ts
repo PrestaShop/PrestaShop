@@ -9,8 +9,8 @@ import {
   boProductsPage,
   boEmployeesPage,
   boEmployeesCreatePage,
-  type BrowserContext,
   FakerEmployee,
+  type BrowserContext,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

@@ -8,8 +8,8 @@ import {
   boEmployeesPage,
   boRolesPage,
   boRolesCreatePage,
-  type BrowserContext,
   FakerEmployeeRole,
+  type BrowserContext,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
