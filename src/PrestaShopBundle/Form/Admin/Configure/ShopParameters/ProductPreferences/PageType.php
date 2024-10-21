@@ -125,8 +125,8 @@ class PageType extends TranslatorAwareType
                     'Admin.Shopparameters.Help'
                 ),
                 'choices' => [
-                    'Alphabetical' => 0,
-                    'Position' => 1,
+                    'Alphabetical' => 'name',
+                    'Position' => 'position',
                 ],
                 'choice_translation_domain' => 'Admin.Shopparameters.Feature',
                 'placeholder' => false,

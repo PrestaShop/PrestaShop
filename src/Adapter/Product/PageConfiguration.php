@@ -75,7 +75,7 @@ class PageConfiguration implements DataConfigurationInterface
             $this->configuration->set('PS_ATTRIBUTE_ANCHOR_SEPARATOR', $config['attribute_anchor_separator']);
             $this->configuration->set('PS_DISPLAY_DISCOUNT_PRICE', (int) $config['display_discount_price']);
             $this->configuration->set('PS_DISPLAY_AMOUNT_IN_CART', (int) $config['display_amount_in_cart']);
-            $this->configuration->set('PS_FEATURE_VALUES_ORDER', (int) $config['feature_values_order']);
+            $this->configuration->set('PS_FEATURE_VALUES_ORDER', $config['feature_values_order']);
         }
 
         return $errors;
