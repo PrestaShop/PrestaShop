@@ -128,7 +128,7 @@
     "eslint-plugin-deprecation": "^3.0.0",
     "eslint-plugin-html": "^8.1.2",
     "eslint-plugin-import": "^2.31.0",
-    "jsdoc-to-markdown": "^9.0.2",
+    "jsdoc-to-markdown": "^9.0.4",
     "mochawesome-merge": "^4.3.0",
     "ts-mocha": "^10.0.0",
     "tsconfig-paths": "^4.2.0",
