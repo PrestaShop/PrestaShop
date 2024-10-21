@@ -15,6 +15,11 @@ services:
     autowire: true
     public: false
 
+  PrestaShop\PrestaShop\Adapter\Module\CommandHandler\InstallModuleHandler:
+    autoconfigure: true
+    autowire: true
+    public: false
+
   PrestaShop\PrestaShop\Adapter\Module\CommandHandler\BulkUninstallModuleHandler:
     autoconfigure: true
     autowire: true

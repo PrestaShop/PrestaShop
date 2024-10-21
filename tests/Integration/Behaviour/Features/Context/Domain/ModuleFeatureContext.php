@@ -33,6 +33,7 @@ use Module;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkToggleModuleStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkUninstallModuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\Module\Command\InstallModuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\UpdateModuleStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotInstalledException;
@@ -134,4 +135,27 @@ class ModuleFeatureContext extends AbstractDomainFeatureContext
        // Clean the cache
        Module::resetStaticCache();
    }
+
+   /**
+    * @When I install module :technicalName from :sourceType
+    */
+    public function installModule(string $technicalName, string $sourceType): void
+    {
+        switch ($sourceType) {
+            case 'zip':
+                $source = _PS_MODULE_DIR_ . 'test_install_cqrs_command.zip';
+                break;
+            case 'url':
+                $source = 'https://api-addons.prestashop.com/?method=module&format=json&channel=stable&iso_code=fr&iso_lang=fr&version=8.1.0&id_module=39574';
+                break;
+            default:
+                $source = null;
+                break;
+        }
+
+        $this->getQueryBus()->handle(new InstallModuleCommand($technicalName, $source));
+
+        // Clean the cache
+        Module::resetStaticCache();
+    }
 }

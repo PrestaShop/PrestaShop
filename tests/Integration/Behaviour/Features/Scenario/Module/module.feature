@@ -69,6 +69,30 @@ Feature: Module
       | installed      | false               |
     Then I should have an exception that module is not installed
 
+  Scenario: Install module with files in folder modules
+    When I install module ps_featuredproducts from folder
+    Then module ps_featuredproducts has following infos:
+      | technical_name | ps_featuredproducts  |
+      | version        | 1.0.0                |
+      | enabled        | true                 |
+      | installed      | true                 |
+
+  Scenario: Install module with zip file on disk
+    When I install module test_install_cqrs_command from zip
+    Then module test_install_cqrs_command has following infos:
+      | technical_name | test_install_cqrs_command |
+      | version        | 1.0.0                     |
+      | enabled        | true                      |
+      | installed      | true                      |
+
+  Scenario: Install module with zip file on remote
+    When I install module keycloak_connector_demo from url
+    Then module keycloak_connector_demo has following infos:
+      | technical_name | keycloak_connector_demo |
+      | version        | 1.0.0                   |
+      | enabled        | true                    |
+      | installed      | true                    |
+
   Scenario: Get module not present
     When module ps_notthere has following infos:
       | technical_name | ps_notthere |
