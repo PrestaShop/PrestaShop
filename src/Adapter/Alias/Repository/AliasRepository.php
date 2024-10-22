@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Alias\Repository;
 
 use Alias;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\Alias\Validate\AliasValidator;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasNotFoundException;
@@ -36,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\BulkAliasException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\CannotAddAliasException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\CannotDeleteAliasException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
+use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\SearchTerm;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\BulkFeatureException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
@@ -164,9 +166,9 @@ class AliasRepository extends AbstractObjectModelRepository
     /**
      * Deletes all related aliases
      *
-     * @param string $searchTerm
+     * @param SearchTerm $searchTerm
      */
-    public function deleteAliasesBySearchTerm(string $searchTerm): void
+    public function deleteAliasesBySearchTerm(SearchTerm $searchTerm): void
     {
         $exceptions = [];
 
@@ -174,7 +176,7 @@ class AliasRepository extends AbstractObjectModelRepository
             ->addSelect('a.id_alias')
             ->from($this->dbPrefix . 'alias', 'a')
             ->where('a.search = :searchTerm')
-            ->setParameter('searchTerm', $searchTerm)
+            ->setParameter('searchTerm', $searchTerm->getValue())
             ->executeQuery()
             ->fetchFirstColumn()
         ;
@@ -218,5 +220,19 @@ class AliasRepository extends AbstractObjectModelRepository
             ->setParameter('searchPhrase', '%' . $searchPhrase . '%')
             ->executeQuery()
             ->fetchAllAssociative();
+    }
+
+    public function getAliasesBySearchTerms(array $searchTerms): array
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->addSelect('a.id_alias, a.search, a.alias, a.active')
+            ->from($this->dbPrefix . 'alias', 'a')
+            ->where('a.search IN (:searchTerms)')
+            ->setParameter('searchTerms', $searchTerms, ArrayParameterType::STRING)
+            ->addOrderBy('a.search', 'ASC')
+            ->addOrderBy('a.alias', 'ASC')
+        ;
+
+        return $qb->executeQuery()->fetchAllAssociative();
     }
 }
