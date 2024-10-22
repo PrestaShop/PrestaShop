@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Module\Command\UninstallModuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkUninstallModuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\InstallModuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\UpdateModuleStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Module\Exception\AlreadyInstalledModuleException;
 use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotInstalledException;
 use PrestaShop\PrestaShop\Core\Domain\Module\Query\GetModuleInfos;
@@ -79,13 +80,20 @@ class ModuleFeatureContext extends AbstractDomainFeatureContext
         $this->assertLastErrorIs(ModuleNotFoundException::class);
     }
 
-
     /**
      * @Then I should have an exception that module is not installed
      */
     public function assertModuleNotInstalled(): void
     {
         $this->assertLastErrorIs(ModuleNotInstalledException::class);
+    }
+
+    /**
+     * @Then I should have an exception that module is already installed
+     */
+    public function assertModuleAlreadyInstalled(): void
+    {
+        $this->assertLastErrorIs(AlreadyInstalledModuleException::class);
     }
 
     /**
@@ -154,8 +162,11 @@ class ModuleFeatureContext extends AbstractDomainFeatureContext
     */
     public function installModuleFromFolder(string $technicalName): void
     {
-        $this->getQueryBus()->handle(new InstallModuleCommand($technicalName));
-
+        try{
+            $this->getQueryBus()->handle(new InstallModuleCommand($technicalName));
+        } catch (AlreadyInstalledModuleException $e) {
+            $this->setLastException($e);
+        }
         // Clean the cache
         Module::resetStaticCache();
     }
@@ -176,8 +187,11 @@ class ModuleFeatureContext extends AbstractDomainFeatureContext
                 $source = null;
                 break;
         }
-
-        $this->getQueryBus()->handle(new InstallModuleCommand($technicalName, $source));
+        try{
+            $this->getQueryBus()->handle(new InstallModuleCommand($technicalName, $source));
+        } catch (ModuleNotFoundException $e) {
+            $this->setLastException($e);
+        }
 
         // Clean the cache
         Module::resetStaticCache();

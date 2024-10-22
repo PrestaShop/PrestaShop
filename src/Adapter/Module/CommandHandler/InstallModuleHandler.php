@@ -29,22 +29,32 @@ namespace PrestaShop\PrestaShop\Adapter\Module\CommandHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\InstallModuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\CommandHandler\InstallModuleHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Module\Exception\AlreadyInstalledModuleException;
 use PrestaShop\PrestaShop\Core\Domain\Module\Exception\CannotInstalledModuleException;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
+use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 
 #[AsCommandHandler]
 class InstallModuleHandler implements InstallModuleHandlerInterface
 {
     public function __construct(
         protected ModuleManager $moduleManager,
+        protected ModuleRepository $moduleRepository,
     ) {
     }
 
     public function handle(InstallModuleCommand $command): void
     {
-        $moduleName = $command->getModule();
+        $technical_name = $command->getTechnicalName()->getValue();
         $source = $command->getSource();
-        $result = $this->moduleManager->install($moduleName, $source);
+
+        $module = $this->moduleRepository->getModule($technical_name);
+
+        if($module->isInstalled()) {
+            throw new AlreadyInstalledModuleException('Module is already installed.');
+        }
+
+        $result = $this->moduleManager->install($technical_name, $source);
 
         if (!$result) {
             throw new CannotInstalledModuleException('Technical error occurred while installing module.');

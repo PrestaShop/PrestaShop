@@ -88,6 +88,10 @@ Feature: Module
       | enabled        | true                 |
       | installed      | true                 |
 
+  Scenario: Install already installed module
+    When I install module "ps_featuredproducts" from "folder"
+    Then I should have an exception that module is already installed
+
   Scenario: Install module with zip file on disk
     When I install module "test_install_cqrs_command" from "zip" "test_install_cqrs_command.zip"
     Then module test_install_cqrs_command has following infos:
@@ -98,7 +102,7 @@ Feature: Module
 
   Scenario: Install module with zip file on remote
     When I uninstall module "ps_featuredproducts" with deleteFile true
-    And I install module "ps_featuredproducts" from "url" "https://api-addons.prestashop.com/?method=module&format=json&channel=stable&iso_code=fr&iso_lang=fr&version=8.1.0&id_module=22319"
+    And I install module "ps_featuredproducts" from "url" "https://github.com/PrestaShop/ps_featuredproducts/releases/download/v2.1.5/ps_featuredproducts.zip"
     Then module ps_featuredproducts has following infos:
       | technical_name | ps_featuredproducts |
       | version        | 1.0.0               |
