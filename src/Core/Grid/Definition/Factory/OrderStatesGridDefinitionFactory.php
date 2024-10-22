@@ -98,7 +98,6 @@ final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFacto
                 (new BulkActionColumn('order_states_bulk'))
                     ->setOptions([
                         'bulk_field' => 'id_order_state',
-                        'disabled_field' => 'unremovable',
                     ])
             )
             ->add(
