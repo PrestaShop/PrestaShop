@@ -53,3 +53,7 @@ services:
   PrestaShop\PrestaShop\Core\Context\ApiClientContext:
     lazy: true
     factory: [ '@PrestaShop\PrestaShop\Core\Context\ApiClientContextBuilder', 'build' ]
+
+  PrestaShop\PrestaShop\Core\Context\ContextBuilderPreparer:
+    public: true
+    lazy: true

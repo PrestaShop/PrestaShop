@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Adapter\HookManager;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 
 class ModuleRepositoryTest extends TestCase
@@ -75,7 +76,7 @@ class ModuleRepositoryTest extends TestCase
                 $this->createMock(CacheProvider::class),
                 $this->createMock(HookManager::class),
                 dirname(__DIR__, 3) . '/Resources/modules',
-                1,
+                $this->createMock(LanguageContext::class),
             ])
             ->onlyMethods(['getModule'])
             ->getMock()

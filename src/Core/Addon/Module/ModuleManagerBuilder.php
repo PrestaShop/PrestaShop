@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Context;
 use Doctrine\Common\Cache\Psr6\DoctrineProvider;
+use Language;
+use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\HookManager;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
@@ -35,6 +38,16 @@ use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Context\ApiClientContext;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\DataLayer\LocaleReference;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleDataSource;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\Reader;
+use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyDataSource;
+use PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyInstalled;
+use PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyReference;
+use PrestaShop\PrestaShop\Core\Localization\Currency\Repository;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory;
@@ -64,7 +77,14 @@ class ModuleManagerBuilder
     protected static $translator = null;
     protected static $instance = null;
     protected static $cacheProvider = null;
+    /**
+     * @var ApiClientContext
+     */
     protected static $apiClientContext;
+    /**
+     * @var LanguageContext|null
+     */
+    protected static $languageContext = null;
 
     /**
      * @var bool
@@ -128,7 +148,7 @@ class ModuleManagerBuilder
                     self::$cacheProvider,
                     new HookManager(),
                     _PS_MODULE_DIR_,
-                    Context::getContext()->language->id
+                    $this->getLanguageContext(),
                 );
             }
         }
@@ -195,6 +215,50 @@ class ModuleManagerBuilder
         $loader = new YamlFileLoader($locator);
 
         return new Router($loader, $routeFileName);
+    }
+
+    private function getLanguageContext(): LanguageContext
+    {
+        if (self::$languageContext) {
+            return self::$languageContext;
+        }
+
+        /** @var Language $language */
+        $language = Context::getContext()->language;
+
+        $localeRepository = $this->getLocaleRepository();
+        self::$languageContext = new LanguageContext(
+            $language->id,
+            $language->name,
+            $language->iso_code,
+            $language->locale,
+            $language->language_code,
+            $language->is_rtl,
+            $language->date_format_lite,
+            $language->date_format_full,
+            $localeRepository->getLocale($language->locale)
+        );
+
+        return self::$languageContext;
+    }
+
+    private function getLocaleRepository(): Locale\Repository
+    {
+        $localeDataReference = new LocaleReference(new Reader());
+        $localeDataSource = new LocaleDataSource($localeDataReference);
+        $cldrLocaleRepository = new LocaleRepository($localeDataSource);
+
+        $configuration = new Configuration();
+        $currencyReference = new CurrencyReference($cldrLocaleRepository);
+        $currencyDataProvider = new CurrencyDataProvider($configuration, (int) $configuration->get('PS_SHOP_DEFAULT'));
+        $currencyInstalled = new CurrencyInstalled($currencyDataProvider);
+        $currencyDataSource = new CurrencyDataSource($currencyReference, $currencyInstalled);
+        $currencyRepository = new Repository($currencyDataSource);
+
+        return new Locale\Repository(
+            $cldrLocaleRepository,
+            $currencyRepository,
+        );
     }
 
     protected function getConfigDir()

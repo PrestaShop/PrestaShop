@@ -26,6 +26,8 @@
 
 use PrestaShopBundle\Install\Database;
 use PrestaShopBundle\Install\Install;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Context\ContextBuilderPreparer;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -111,6 +113,11 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         require_once _PS_ROOT_DIR_ . '/config/smarty.config.inc.php';
 
         Context::getContext()->smarty = $smarty;
+
+        $container = SymfonyContainer::getInstance();
+        /** @var ContextBuilderPreparer $preparer */
+        $preparer = $container->get(ContextBuilderPreparer::class);
+        $preparer->prepareFromLegacyContext(Context::getContext());
     }
 
     public function process()

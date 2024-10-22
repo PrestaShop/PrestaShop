@@ -35,6 +35,7 @@ use Employee;
 use Hook;
 use Module;
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Core\Context\ContextBuilderPreparer;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -103,6 +104,11 @@ class PositionsControllerTest extends TestCase
         ]));
 
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
+
+        // Language context must be initialized because ModuleRepository depends on it
+        /** @var ContextBuilderPreparer $preparer */
+        $preparer = self::$kernel->getContainer()->get(ContextBuilderPreparer::class);
+        $preparer->prepareLanguageId(1);
 
         /** @var ModuleManager */
         $moduleManager = self::$kernel->getContainer()->get(ModuleManager::class);

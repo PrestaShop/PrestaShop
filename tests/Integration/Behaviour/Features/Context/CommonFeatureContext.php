@@ -88,6 +88,7 @@ use Pack;
 use Page;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Context\ContextBuilderPreparer;
 use Product;
 use ProductAttribute;
 use ProductDownload;
@@ -175,6 +176,9 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
 
         // Disable legacy object model cache to prevent conflicts between scenarios.
         ObjectModel::disableCache();
+        /** @var ContextBuilderPreparer $preparer */
+        $preparer = static::getContainer()->get(ContextBuilderPreparer::class);
+        $preparer->prepareFromLegacyContext(Context::getContext());
     }
 
     /**
