@@ -51,18 +51,13 @@ class StockManager
         $stockAvailable = $this->newStockAvailable($this->getStockAvailableIdByProductId($product->id, $id_product_attribute, $id_shop));
 
         if (!$stockAvailable->id) {
-            $shopAdapter = new ShopAdapter();
+            $shop_group = $this->getShopGroup($id_shop);
+
             $stockAvailable->id_product = (int) $product->id;
             $stockAvailable->id_product_attribute = (int) $id_product_attribute;
 
             $outOfStock = $this->outOfStock((int) $product->id, $id_shop);
             $stockAvailable->out_of_stock = (int) $outOfStock;
-
-            if ($id_shop === null) {
-                $shop_group = $shopAdapter->getContextShopGroup();
-            } else {
-                $shop_group = $shopAdapter->ShopGroup((int) $shopAdapter->getGroupFromShop((int) $id_shop));
-            }
 
             // if quantities are shared between shops of the group
             if ($shop_group->share_stock) {
@@ -107,6 +102,12 @@ class StockManager
     public function updatePhysicalProductQuantity($shopId, $errorState, $cancellationState, $idProduct = null, $idOrder = null)
     {
         $this->updateReservedProductQuantity($shopId, $errorState, $cancellationState, $idProduct, $idOrder);
+        $whereShopIdCond = $shopId;
+        $shop_group = $this->getShopGroup($shopId);
+
+        if ($shop_group->share_stock) {
+            $whereShopIdCond = 0;
+        }
 
         $updatePhysicalQuantityQuery = 'UPDATE {table_prefix}stock_available sa';
 
@@ -123,7 +124,7 @@ class StockManager
 
         $updatePhysicalQuantityQuery .= '
             SET sa.physical_quantity = sa.quantity + sa.reserved_quantity
-            WHERE sa.id_shop = ' . (int) $shopId . '
+            WHERE sa.id_shop = ' . $whereShopIdCond . '
         ';
 
         if ($idProduct) {
@@ -146,6 +147,16 @@ class StockManager
      */
     private function updateReservedProductQuantity($shopId, $errorState, $cancellationState, $idProduct = null, $idOrder = null)
     {
+        $shop_group = $this->getShopGroup($shopId);
+
+        $whereShopIdCond = $shopId;
+        $whereCondition = 'o.id_shop = :shop_id AND ';
+
+        if ($shop_group->share_stock) {
+            $whereShopIdCond = 0;
+            $whereCondition = 'o.id_shop_group = ' . $shop_group->id . ' AND ';
+        }
+
         $updateReservedQuantityQuery = 'UPDATE {table_prefix}stock_available sa';
 
         if ($idOrder) {
@@ -165,7 +176,7 @@ class StockManager
                 FROM {table_prefix}orders o
                 INNER JOIN {table_prefix}order_detail od ON od.id_order = o.id_order
                 INNER JOIN {table_prefix}order_state os ON os.id_order_state = o.current_state
-                WHERE o.id_shop = :shop_id AND
+                WHERE ' . $whereCondition . '
                 os.shipped != 1 AND (
                     o.valid = 1 OR (
                         os.id_order_state != :error_state AND
@@ -175,7 +186,7 @@ class StockManager
                 sa.id_product_attribute = od.product_attribute_id
                 GROUP BY od.product_id, od.product_attribute_id
             )
-            WHERE sa.id_shop = :shop_id
+            WHERE sa.id_shop = ' . $whereShopIdCond . '
         ';
 
         $strParams = [
@@ -197,6 +208,26 @@ class StockManager
         $updateReservedQuantityQuery = strtr($updateReservedQuantityQuery, $strParams);
 
         return Db::getInstance()->execute($updateReservedQuantityQuery);
+    }
+
+     /**
+     * return shop_group from current shop.
+     *
+     * @param int $shopId
+     *
+     * @return ShopGroup
+     */
+    private function getShopGroup($shopId)
+    {
+        $shopAdapter = new ShopAdapter();
+
+        if ($shopId === null) {
+            $shop_group = $shopAdapter->getContextShopGroup();
+        } else {
+            $shop_group = $shopAdapter->ShopGroup((int) $shopAdapter->getGroupFromShop((int) $shopId));
+        }
+
+        return $shop_group;
     }
 
     /**
