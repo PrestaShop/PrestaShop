@@ -198,6 +198,11 @@ class OrderForViewing
     private $note;
 
     /**
+     * @var bool
+     */
+    private $invoice;
+
+    /**
      * @param int $orderId
      * @param int $currencyId
      * @param int $carrierId
@@ -231,6 +236,7 @@ class OrderForViewing
      * @param string $shippingAddressFormatted
      * @param string $invoiceAddressFormatted
      * @param string $note
+     * @param bool $invoice
      */
     public function __construct(
         int $orderId,
@@ -265,7 +271,8 @@ class OrderForViewing
         LinkedOrdersForViewing $linkedOrders,
         string $shippingAddressFormatted = '',
         string $invoiceAddressFormatted = '',
-        string $note = ''
+        string $note = '',
+        bool $invoice = true
     ) {
         $this->reference = $reference;
         $this->customer = $customer;
@@ -300,6 +307,7 @@ class OrderForViewing
         $this->shippingAddressFormatted = $shippingAddressFormatted;
         $this->invoiceAddressFormatted = $invoiceAddressFormatted;
         $this->note = $note;
+        $this->invoice = $invoice;
     }
 
     /**
@@ -584,5 +592,13 @@ class OrderForViewing
     public function getNote(): string
     {
         return $this->note;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getInvoice(): bool
+    {
+        return $this->invoice;
     }
 }
