@@ -71,6 +71,26 @@ class SearchAliasController extends PrestaShopAdminController
         ]);
     }
 
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_search_alias_index', message: 'You need permission to create new aliases.')]
+    public function createAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.alias_search_term_form_builder')]
+        FormBuilderInterface $formBuilder,
+    ): Response {
+        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Search/create.html.twig', [
+            'form' => $formBuilder->getForm()->createView(),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
+            'layoutTitle' => $this->trans('New aliases', [], 'Admin.Shopparameters.Feature'),
+        ]);
+    }
+
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_search_alias_index', message: 'You need permission to edit this.')]
+    public function editAction(string $searchTerm, Request $request): Response
+    {
+        dd('editAction', $searchTerm);
+    }
+
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function searchAliasesForAssociationAction(Request $request): JsonResponse
     {
