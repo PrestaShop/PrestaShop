@@ -227,9 +227,9 @@ class CategoryCore extends ObjectModel
                 $this->addPosition($position, $idShop);
             }
         } else {
-            foreach (Shop::getShops(true) as $shop) {
-                $position = (int) Category::getLastPosition((int) $this->id_parent, $shop['id_shop']);
-                $this->addPosition($position, $shop['id_shop']);
+            foreach ($this->getShopIdsList() as $idAssociatedShop) {
+                $position = (int) Category::getLastPosition((int) $this->id_parent, $idAssociatedShop);
+                $this->addPosition($position, $idAssociatedShop);
             }
         }
 
@@ -286,8 +286,8 @@ class CategoryCore extends ObjectModel
                     $this->addPosition($this->position, (int) $idShop);
                 }
             } else {
-                foreach (Shop::getShops(true) as $shop) {
-                    $this->addPosition($this->position, $shop['id_shop']);
+                foreach ($this->getShopIdsList() as $idAssociatedShop) {
+                    $this->addPosition($this->position, $idAssociatedShop);
                 }
             }
         }
