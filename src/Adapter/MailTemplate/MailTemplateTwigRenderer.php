@@ -37,7 +37,6 @@ use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationCollection;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationInterface;
 use Twig\Environment;
-use Twig\Error\LoaderError;
 
 /**
  * MailTemplateTwigRenderer is a basic implementation of MailTemplateRendererInterface
@@ -134,11 +133,7 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
             $layoutPath = !empty($layout->getTxtPath()) ? $layout->getTxtPath() : $layout->getHtmlPath();
         }
 
-        try {
-            $renderedTemplate = $this->twig->render($layoutPath, $layoutVariables);
-        } catch (LoaderError $e) {
-            throw new FileNotFoundException(sprintf('Could not find layout file: %s', $layoutPath));
-        }
+        $renderedTemplate = $this->twig->render($layoutPath, $layoutVariables);
 
         $templateTransformations = $this->getMailLayoutTransformations($layout, $templateType);
         /** @var TransformationInterface $transformation */
