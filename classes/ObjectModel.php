@@ -714,12 +714,13 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
      *
      * @param bool $null_values
      * @param ObjectModelComparator|null $comparator
+     *
      * @return bool
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    protected function processUpdateAction(bool $null_values = false, ObjectModelComparator $comparator = null): bool
+    protected function processUpdateAction(bool $null_values = false, ?ObjectModelComparator $comparator = null): bool
     {
         // @hook actionObject<ObjectClassName>UpdateBefore
         Hook::exec('actionObjectUpdateBefore', ['object' => $this, 'objectComparator' => $comparator]);
