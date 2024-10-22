@@ -24,39 +24,67 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace Tests\Integration\PrestaShopBundle;
+namespace Tests\Unit\PrestaShopBundle\Translation;
 
-use PrestaShopBundle\Translation\PrestaShopTranslatorTrait;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use PHPUnit\Framework\TestCase;
+use PrestaShopBundle\Translation\Translator;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\Translation\Formatter\MessageFormatter;
+use Symfony\Component\Translation\Loader\ArrayLoader;
+use Symfony\Component\Translation\Loader\LoaderInterface;
+use Symfony\Component\Translation\MessageCatalogue;
 
-/**
- * The purpose of this test is not to test that translation works for a specific language, but to check
- * that the different type of wordings (with parameters, plural, legacy placeholders, ...) can all be used
- * with the Symfony translator. It also validates that the modification from the PrestaShopTranslatorTrait
- * that handle the legacy use case don't break the native Symfony translator behaviour.
- */
-class TranslationIntegrationTest extends KernelTestCase
+class TranslatorTest extends TestCase
 {
+    /**
+     * Notice the use of underscores. Using hyphens WILL NOT WORK with transChoice.
+     *
+     * @see https://github.com/symfony/translation/blob/4.4/PluralizationRules.php#L46
+     */
+    private const LOCALE = 'en_US';
+
     private $translator;
 
     public function setUp(): void
     {
-        self::bootKernel();
-        $this->translator = self::$kernel->getContainer()->get('translator');
+        $this->translator = $this->buildTranslator();
+        $this->translator->addLoader('array', new ArrayLoader());
+        $this->translator->addLoader('db', $this->buildMockDbLoader());
     }
 
     /**
+     * The purpose of this test is not to test that translation works for a specific language, but to check
+     * that the different type of wordings (with parameters, plural, legacy placeholders, ...) can all be used
+     * with the Symfony translator. It also validates that the modification from the PrestaShopTranslatorTrait
+     * that handle the legacy use case don't break the native Symfony translator behaviour.
+     *
      * @dataProvider getExpectedTranslations
      *
      * @param string $expectedTranslatedMessage
      * @param string $message
      * @param string $domain
      * @param array $parameters
-     * @param ?string $locale
+     * @param bool $isIcuCatalog
      */
-    public function testTranslator(string $expectedTranslatedMessage, string $message, string $domain, array $parameters, ?string $locale = null): void
-    {
-        self::assertEquals($expectedTranslatedMessage, $this->translator->trans($message, $parameters, $domain, $locale));
+    public function testTranslatorReplacements(
+        string $expectedTranslatedMessage,
+        string $message,
+        string $domain,
+        array $parameters,
+        bool $isIcuCatalog = false
+    ): void {
+        // ICU domain names for resources needs to have an ICU suffix (otherwise symfony falls back to "traditional" parsing
+        // @see https://symfony.com/doc/4.4/translation/message_format.html#using-the-icu-message-format
+        $resourceDomainName = ($isIcuCatalog) ? $domain . '+intl-icu' : $domain;
+
+        // we add the translation because the translator behaves differently depending on
+        // whether the message is found on its catalog or not
+        $this->translator->addResource('array', [$message => $message], self::LOCALE, $resourceDomainName);
+
+        self::assertEquals(
+            $expectedTranslatedMessage,
+            $this->translator->trans($message, $parameters, $domain)
+        );
     }
 
     public function getExpectedTranslations(): iterable
@@ -104,6 +132,27 @@ class TranslationIntegrationTest extends KernelTestCase
             'validators',
             ['{{ limit }}' => 1, '%count%' => 1],
         ];
+        yield 'translations in ICU plural format, 0' => [
+            'No items',
+            '{items, plural, =0 {No items} one {1 item} other {# items}}',
+            'test',
+            ['items' => 0],
+            true,
+        ];
+        yield 'translations in ICU plural format, 1' => [
+            '1 item',
+            '{items, plural, =0 {No items} one {1 item} other {# items}}',
+            'test',
+            ['items' => 1],
+            true,
+        ];
+        yield 'translations in ICU plural format, 2' => [
+            '2 items',
+            '{items, plural, =0 {No items} one {1 item} other {# items}}',
+            'test',
+            ['items' => 2],
+            true,
+        ];
         yield 'translation fallback to legacy system' => [
             'This is a bad idea',
             'This is a %message%',
@@ -122,7 +171,11 @@ class TranslationIntegrationTest extends KernelTestCase
      */
     public function testTranslatorChoice(string $expectedTranslatedMessage, string $message, int $number, string $domain, array $parameters): void
     {
-        self::assertEquals($expectedTranslatedMessage, $this->translator->transChoice($message, $number, $parameters, $domain));
+        $this->translator->addResource('array', [$message => $message], self::LOCALE, $domain);
+        self::assertEquals(
+            $expectedTranslatedMessage,
+            $this->translator->transChoice($message, $number, $parameters, $domain)
+        );
     }
 
     public function getExpectedTransChoices(): iterable
@@ -141,5 +194,20 @@ class TranslationIntegrationTest extends KernelTestCase
             'validators',
             ['{{ limit }}' => 1],
         ];
+    }
+
+    private function buildTranslator(): Translator
+    {
+        return new Translator($this->createMock(ContainerInterface::class), new MessageFormatter(), self::LOCALE);
+    }
+
+    private function buildMockDbLoader(): LoaderInterface
+    {
+        return new class() implements LoaderInterface {
+            public function load($resource, $locale, $domain = 'messages')
+            {
+                return new MessageCatalogue($locale);
+            }
+        };
     }
 }
