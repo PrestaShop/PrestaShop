@@ -384,16 +384,14 @@ class DispatcherCore
                 $module = Module::getInstanceByName($module_name);
                 $controller_class = 'PageNotFoundController';
                 if (Validate::isLoadedObject($module) && $module->active) {
-                    $controllers = Dispatcher::getControllers(_PS_MODULE_DIR_ . "$module_name/controllers/front/");
-                    if (array_search($this->controller, $controllers)) {
-                        include_once _PS_MODULE_DIR_ . "$module_name/controllers/front/{$this->controller}.php";
-                        if (file_exists(
-                            _PS_OVERRIDE_DIR_ . "modules/$module_name/controllers/front/{$this->controller}.php"
-                        )) {
-                            include_once _PS_OVERRIDE_DIR_ . "modules/$module_name/controllers/front/{$this->controller}.php";
-                            $controller_class = $module_name . $this->controller . 'ModuleFrontControllerOverride';
-                        } else {
-                            $controller_class = $module_name . $this->controller . 'ModuleFrontController';
+                    $controllers = Dispatcher::getControllers(_PS_MODULE_DIR_ . $module_name . '/controllers/front/');
+                    if ($controller_name = $controllers[strtolower($this->controller)] ?? null) {
+                        $controller_file = $module_name . '/controllers/front/' . $controller_name . '.php';
+                        include_once(_PS_MODULE_DIR_ . $controller_file);
+                        $controller_class = $module_name . $controller_name . 'ModuleFrontController';
+                        if (file_exists(_PS_OVERRIDE_DIR_ . 'modules/' . $controller_file)) {
+                            include_once(_PS_OVERRIDE_DIR_ . 'modules/' . $controller_file);
+                            $controller_class = $module_name . $controller_name . 'ModuleFrontControllerOverride';
                         }
                     }
                 }
