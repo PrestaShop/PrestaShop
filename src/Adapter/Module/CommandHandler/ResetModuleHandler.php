@@ -27,14 +27,14 @@
 namespace PrestaShop\PrestaShop\Adapter\Module\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
-use PrestaShop\PrestaShop\Core\Domain\Module\Command\UpdateModuleStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Module\CommandHandler\UpdateModuleStatusHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Module\Exception\CannotToggleModuleStatusException;
+use PrestaShop\PrestaShop\Core\Domain\Module\Command\ResetModuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\Module\CommandHandler\ResetModuleHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Module\Exception\CannotResetModuleException;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 
 #[AsCommandHandler]
-class UpdateModuleStatusHandler implements UpdateModuleStatusHandlerInterface
+class ResetModuleHandler implements ResetModuleHandlerInterface
 {
     public function __construct(
         protected ModuleManager $moduleManager,
@@ -42,18 +42,20 @@ class UpdateModuleStatusHandler implements UpdateModuleStatusHandlerInterface
     ) {
     }
 
-    public function handle(UpdateModuleStatusCommand $command): void
+    public function handle(ResetModuleCommand $command): void
     {
-        $this->moduleRepository->getPresentModule($command->getTechnicalName()->getValue());
+        $module = $this->moduleRepository->getPresentModule($command->getTechnicalName()->getValue());
 
-        if ($command->isEnabled()) {
-            $result = $this->moduleManager->enable($command->getTechnicalName()->getValue());
-        } else {
-            $result = $this->moduleManager->disable($command->getTechnicalName()->getValue());
+        if (!$module->isInstalled()) {
+            throw new CannotResetModuleException('Cannot reset module that is not installed', CannotResetModuleException::NOT_INSTALLED);
         }
 
-        if (!$result) {
-            throw new CannotToggleModuleStatusException('Technical error occurred while toggling module status.');
+        if (!$module->isActive()) {
+            throw new CannotResetModuleException('Cannot reset module that is disabled', CannotResetModuleException::NOT_ACTIVE);
+        }
+
+        if (!$this->moduleManager->reset($command->getTechnicalName()->getValue(), $command->keepData())) {
+            throw new CannotResetModuleException('Technical error occurred while resetting module status.');
         }
     }
 }
