@@ -886,7 +886,7 @@ class CustomerController extends AbstractAdminController
             return;
         }
 
-        $customerData = $request->request->get('customer');
+        $customerData = $request->request->all('customer');
         $customerData['group_ids'] = [];
 
         $request->request->set('customer', $customerData);
