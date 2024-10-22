@@ -162,6 +162,10 @@ if (!defined('_PS_IMG_DIR_')) {
     define('_PS_IMG_DIR_', _PS_ROOT_DIR_.$dir);
 }
 
+if (!defined('_PS_TESTS_DIR_')) {
+    define('_PS_TESTS_DIR_', _PS_ROOT_DIR_.'/tests/');
+}
+
 define('_PS_CORE_IMG_DIR_', _PS_CORE_DIR_.'/img/');
 define('_PS_CAT_IMG_DIR_', _PS_IMG_DIR_.'c/');
 define('_PS_COL_IMG_DIR_', _PS_IMG_DIR_.'co/');
