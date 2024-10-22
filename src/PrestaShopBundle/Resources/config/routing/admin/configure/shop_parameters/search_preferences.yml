@@ -1,19 +1,19 @@
-admin_search_index:
+admin_search_alias_index:
   path: /
   methods: [ GET ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchController::indexAction
+    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchAliasController::indexAction
     _legacy_controller: AdminSearchConf
     _legacy_link: AdminSearchConf
     _legacy_feature_flag: search_conf
 
-admin_alias_search:
+admin_search_alias_search:
   path: /
   methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
     gridDefinitionFactoryServiceId: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AliasGridDefinitionFactory
-    redirectRoute: admin_search_index
+    redirectRoute: admin_search_alias_index
     _legacy_controller: AdminSearchConf
     _legacy_link: AdminSearchConf:submitFilteralias
     _legacy_feature_flag: search_conf
@@ -22,5 +22,24 @@ admin_alias_search_search_term_action:
   path: /
   methods: [ GET, POST ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchController::searchAliasesForAssociationAction
+    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchAliasController::searchAliasesForAssociationAction
     _legacy_controller: AdminSearchConf
+
+admin_search_alias_delete:
+  path: /{searchTerm}/delete
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchAliasController::deleteAction
+    _legacy_controller: AdminSearchConf
+    _legacy_feature_flag: search_conf
+  requirements:
+    searchTerm: \w+
+
+admin_search_alias_bulk_delete:
+  path: /bulk-delete
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchAliasController::bulkDeleteAction
+    _legacy_controller: AdminSearchConf
+    _legacy_feature_flag: search_conf
+
