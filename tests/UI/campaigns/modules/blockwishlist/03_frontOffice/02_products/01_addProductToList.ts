@@ -403,14 +403,11 @@ describe('Wishlist module - Add a product to a list', async () => {
     });
 
     // @todo : https://github.com/PrestaShop/PrestaShop/issues/36496
-    // @todo : https://github.com/PrestaShop/PrestaShop/issues/36593
     it('should check the wishlist', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkWishlist5', baseContext);
 
       const numProducts = await foClassicMyWishlistsViewPage.countProducts(page);
       expect(numProducts).to.equal(4);
-
-      this.skip();
 
       // const nameProduct = await foClassicMyWishlistsViewPage.getProductName(page, 4);
       const nameProduct = await foClassicMyWishlistsViewPage.getProductName(page, 2);
@@ -421,12 +418,12 @@ describe('Wishlist module - Add a product to a list', async () => {
       expect(qtyProduct).to.equal(1);
 
       //const sizeProduct = await foClassicMyWishlistsViewPage.getProductAttribute(page, 4, 'Size');
-      const sizeProduct = await foClassicMyWishlistsViewPage.getProductAttribute(page, 2, 'Size');
-      expect(sizeProduct).to.equal('M');
+      //const sizeProduct = await foClassicMyWishlistsViewPage.getProductAttribute(page, 2, 'Size');
+      //expect(sizeProduct).to.equal('M');
 
       //const colorProduct = await foClassicMyWishlistsViewPage.getProductAttribute(page, 4, 'Color');
-      const colorProduct = await foClassicMyWishlistsViewPage.getProductAttribute(page, 2, 'Color');
-      expect(colorProduct).to.equal('Black');
+      //const colorProduct = await foClassicMyWishlistsViewPage.getProductAttribute(page, 2, 'Color');
+      //expect(colorProduct).to.equal('Black');
     });
 
     it('should empty the wishlist', async function () {
