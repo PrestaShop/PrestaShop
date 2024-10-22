@@ -96,7 +96,7 @@ class DbQueryCore
             if ($table instanceof DbQuery) {
                 $query = '(' . $table->build() . ')';
             } else {
-                $query = '`' . _DB_PREFIX_ . $table . '`';
+                $query = '`' . bqSQL(_DB_PREFIX_ . $table) . '`';
             }
 
             $this->query['from'][] = $query . ($alias ? ' ' . $alias : '');
