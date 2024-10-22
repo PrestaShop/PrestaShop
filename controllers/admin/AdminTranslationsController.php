@@ -780,7 +780,7 @@ class AdminTranslationsControllerCore extends AdminController
      *
      * @throws PrestaShopException
      */
-    protected function findAndWriteTranslationsIntoFile(string $file_name, array $files, string $theme_name, string $module_name, string|bool $dir = false)
+    protected function findAndWriteTranslationsIntoFile(string $file_name, array $files, ?string $theme_name, string $module_name, string|bool $dir = false)
     {
         // These static vars allow to use file to write just one time.
         static $cache_file = [];
@@ -892,7 +892,7 @@ class AdminTranslationsControllerCore extends AdminController
      * @param string $module_name
      * @param string|bool $dir
      */
-    protected function findAndFillTranslations(array $files, string $theme_name, string $module_name, string|bool $dir = false)
+    protected function findAndFillTranslations(array $files, ?string $theme_name, string $module_name, string|bool $dir = false)
     {
         $name_var = (empty($this->translations_informations[$this->type_selected]['var']) ? false : $this->translations_informations[$this->type_selected]['var']);
 
