@@ -72,7 +72,6 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Manages "Sell > Catalog > Brands & Suppliers > Brands" page
@@ -452,14 +451,6 @@ class ManufacturerController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.', redirectQueryParamsToKeep: ['manufacturerId'], redirectRoute: 'admin_manufacturers_edit')]
     public function deleteLogoImageAction(Request $request, int $manufacturerId): RedirectResponse
     {
-        if (!$this->isCsrfTokenValid('delete-logo-thumbnail', $request->request->get('_csrf_token'))) {
-            return $this->redirectToRoute('admin_security_compromised', [
-                'uri' => $this->generateUrl('admin_manufacturers_edit', [
-                    'manufacturerId' => $manufacturerId,
-                ], UrlGeneratorInterface::ABSOLUTE_URL),
-            ]);
-        }
-
         try {
             $this->dispatchCommand(new DeleteManufacturerLogoImageCommand($manufacturerId));
             $this->addFlash(

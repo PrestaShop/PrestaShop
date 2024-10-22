@@ -60,7 +60,6 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Class SupplierController is responsible for "Sell > Catalog > Brands & Suppliers > Suppliers" page.
@@ -441,14 +440,6 @@ class SupplierController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.', redirectRoute: 'admin_suppliers_edit', redirectQueryParamsToKeep: ['supplierId'])]
     public function deleteLogoImageAction(Request $request, int $supplierId): RedirectResponse
     {
-        if (!$this->isCsrfTokenValid('delete-logo-thumbnail', $request->request->get('_csrf_token'))) {
-            return $this->redirectToRoute('admin_security_compromised', [
-                'uri' => $this->generateUrl('admin_suppliers_edit', [
-                    'supplierId' => $supplierId,
-                ], UrlGeneratorInterface::ABSOLUTE_URL),
-            ]);
-        }
-
         try {
             $this->dispatchCommand(new DeleteSupplierLogoImageCommand($supplierId));
             $this->addFlash(
