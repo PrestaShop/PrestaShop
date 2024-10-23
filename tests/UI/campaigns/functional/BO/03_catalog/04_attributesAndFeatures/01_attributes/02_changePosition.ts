@@ -108,11 +108,8 @@ describe('BO - Catalog - Attributes & Features : Change attributes & values posi
       expect(thirdRowAttributeName, 'Changing position was done wrongly').to.equal(firstRowAttributeName);
     });
 
-    // @todo : https://github.com/PrestaShop/PrestaShop/issues/35535
     it('should reset third attribute position to 1', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAttributePosition', baseContext);
-
-      this.skip();
 
       // Get third row attribute name
       const thirdRowAttributeName = await attributesPage.getTextColumn(page, 3, 'name');
@@ -173,11 +170,8 @@ describe('BO - Catalog - Attributes & Features : Change attributes & values posi
       expect(thirdRowValueName, 'Changing position was done wrongly').to.equal(firstRowValueName);
     });
 
-    // @todo : https://github.com/PrestaShop/PrestaShop/issues/35535
     it('should reset third value position to 1', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetValuePosition', baseContext);
-
-      this.skip();
 
       // Get third row attribute name
       const thirdRowValueName = await viewAttributePage.getTextColumn(page, 3, 'name');
