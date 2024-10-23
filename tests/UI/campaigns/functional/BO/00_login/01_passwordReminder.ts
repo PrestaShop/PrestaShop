@@ -4,16 +4,14 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
-// Import pages
-import addEmployeePage from '@pages/BO/advancedParameters/team/add';
-import employeesPage from '@pages/BO/advancedParameters/team';
-
 import {expect} from 'chai';
 import {
   boDashboardPage,
   boLoginPage,
-  type BrowserContext,
+  boEmployeesPage,
+  boEmployeesCreatePage,
   FakerEmployee,
+  type BrowserContext,
   type MailDev,
   type MailDevEmail,
   type Page,
@@ -93,31 +91,31 @@ describe('BO - Login : Password reminder', async () => {
         boDashboardPage.teamLink,
       );
 
-      const pageTitle = await employeesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(employeesPage.pageTitle);
+      const pageTitle = await boEmployeesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boEmployeesPage.pageTitle);
     });
 
     it('should reset all filters and get number of employees', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-      numberOfEmployees = await employeesPage.resetAndGetNumberOfLines(page);
+      numberOfEmployees = await boEmployeesPage.resetAndGetNumberOfLines(page);
       expect(numberOfEmployees).to.be.above(0);
     });
 
     it('should go to add new employee page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewEmployeePage', baseContext);
 
-      await employeesPage.goToAddNewEmployeePage(page);
+      await boEmployeesPage.goToAddNewEmployeePage(page);
 
-      const pageTitle = await addEmployeePage.getPageTitle(page);
-      expect(pageTitle).to.contains(addEmployeePage.pageTitleCreate);
+      const pageTitle = await boEmployeesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boEmployeesCreatePage.pageTitleCreate);
     });
 
     it('should create employee and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createEmployee', baseContext);
 
-      const textResult = await addEmployeePage.createEditEmployee(page, createEmployeeData);
-      expect(textResult).to.equal(employeesPage.successfulCreationMessage);
+      const textResult = await boEmployeesCreatePage.createEditEmployee(page, createEmployeeData);
+      expect(textResult).to.equal(boEmployeesPage.successfulCreationMessage);
     });
 
     it('should logout from BO', async function () {
@@ -176,35 +174,35 @@ describe('BO - Login : Password reminder', async () => {
         boDashboardPage.teamLink,
       );
 
-      const pageTitle = await employeesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(employeesPage.pageTitle);
+      const pageTitle = await boEmployeesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boEmployeesPage.pageTitle);
     });
 
     it('should filter list of employees by email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterEmployeesToDelete', baseContext);
 
-      await employeesPage.filterEmployees(
+      await boEmployeesPage.filterEmployees(
         page,
         'input',
         'email',
         createEmployeeData.email,
       );
 
-      const textEmail = await employeesPage.getTextColumnFromTable(page, 1, 'email');
+      const textEmail = await boEmployeesPage.getTextColumnFromTable(page, 1, 'email');
       expect(textEmail).to.contains(createEmployeeData.email);
     });
 
     it('should delete employee', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteEmployee', baseContext);
 
-      const textResult = await employeesPage.deleteEmployee(page, 1);
-      expect(textResult).to.equal(employeesPage.successfulDeleteMessage);
+      const textResult = await boEmployeesPage.deleteEmployee(page, 1);
+      expect(textResult).to.equal(boEmployeesPage.successfulDeleteMessage);
     });
 
     it('should reset filter and check the number of employees', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
-      const numberOfEmployeesAfterDelete = await employeesPage.resetAndGetNumberOfLines(page);
+      const numberOfEmployeesAfterDelete = await boEmployeesPage.resetAndGetNumberOfLines(page);
       expect(numberOfEmployeesAfterDelete).to.be.equal(numberOfEmployees);
     });
   });

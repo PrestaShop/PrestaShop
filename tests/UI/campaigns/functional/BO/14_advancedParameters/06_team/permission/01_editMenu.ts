@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import pages
-import employeesPage from '@pages/BO/advancedParameters/team';
 import permissionsPage from '@pages/BO/advancedParameters/team/permissions';
 
 import {expect} from 'chai';
@@ -11,6 +10,7 @@ import {
   boLoginPage,
   type BrowserContext,
   type Page,
+  boEmployeesPage,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -49,16 +49,16 @@ describe('BO - Advanced Parameters - Team - Permission : Edit menu', async () =>
         boDashboardPage.advancedParametersLink,
         boDashboardPage.teamLink,
       );
-      await employeesPage.closeSfToolBar(page);
+      await boEmployeesPage.closeSfToolBar(page);
 
-      const pageTitle = await employeesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(employeesPage.pageTitle);
+      const pageTitle = await boEmployeesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boEmployeesPage.pageTitle);
     });
 
     it('should go to \'Permissions\' tab', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToPermissionsTab', baseContext);
 
-      const isTabOpened = await employeesPage.goToPermissionsTab(page);
+      const isTabOpened = await boEmployeesPage.goToPermissionsTab(page);
       expect(isTabOpened, 'Permissions tab is not opened!').to.eq(true);
     });
 
