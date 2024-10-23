@@ -136,7 +136,9 @@ class OrderMessages extends BOBasePage {
   async resetFilter(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.filterResetButton, 2000)) {
       await this.clickAndWaitForLoadState(page, this.filterResetButton);
-      await this.elementNotVisible(page, this.filterResetButton, 2000);
+      // Move the mouse to avoid the tooltip on first row
+      await page.mouse.move(0, 0);
+      await this.waitForHiddenSelector(page, this.filterResetButton, 2000);
     }
   }
 
