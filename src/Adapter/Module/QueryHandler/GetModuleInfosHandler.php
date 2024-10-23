@@ -47,7 +47,7 @@ class GetModuleInfosHandler implements GetModuleInfosHandlerInterface
         $module = $this->moduleRepository->getPresentModule($query->getTechnicalName()->getValue());
 
         return new ModuleInfos(
-            $module->get( 'id'),
+            $module->database->get('id'),
             $module->get('name'),
             $module->get('version'),
             $module->isActive(),
