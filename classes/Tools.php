@@ -3743,7 +3743,7 @@ exit;
                 $adjustment_factor += $sign * 1 / $unit;
             }
 
-            if (isset($row[$column])) {
+            if (is_array($row)) {
                 $row[$column] += $adjustment_factor;
             } else {
                 $row += $adjustment_factor;
