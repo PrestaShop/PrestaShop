@@ -131,7 +131,7 @@ class Attributes extends BOBasePage {
 
     // Columns selectors
     this.tableColumnSelectRowCheckbox = (row: number) => `${this.tableBodyColumn(row)} input[name='attribute_groupBox[]']`;
-    this.tableColumnHandle = (row: number) => `${this.tableBodyColumn(row)}.column-position_handle div i`;
+    this.tableColumnHandle = (row: number) => `${this.tableBodyColumn(row)}.column-position_handle .position-drag-handle`;
     this.tableColumnId = (row: number) => `${this.tableBodyColumn(row)}.column-id_attribute_group`;
     this.tableColumnName = (row: number) => `${this.tableBodyColumn(row)}.column-name`;
     this.tableColumnValues = (row: number) => `${this.tableBodyColumn(row)}.column-values`;
@@ -335,12 +335,7 @@ class Attributes extends BOBasePage {
    * @return {Promise<string>}
    */
   async changePosition(page: Page, actualPosition: number, newPosition: number): Promise<string> {
-    await this.dragAndDrop(
-      page,
-      this.tableColumnHandle(actualPosition),
-      this.tableColumnHandle(newPosition),
-      true,
-    );
+    await this.dragAndDropSlowly(page, this.tableColumnHandle(actualPosition), this.tableBodyRow(newPosition));
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }

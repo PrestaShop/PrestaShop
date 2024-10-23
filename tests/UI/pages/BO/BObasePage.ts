@@ -1106,6 +1106,7 @@ export default class BOBasePage extends CommonPage {
   async closeAlertBlock(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.alertBlockCloseButton, 1000)) {
       await this.waitForSelectorAndClick(page, this.alertBlockCloseButton);
+      await this.elementNotVisible(page, this.alertBlockCloseButton);
     }
   }
 
