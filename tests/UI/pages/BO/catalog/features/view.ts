@@ -119,7 +119,7 @@ class ViewFeature extends BOBasePage {
     this.tableBodyColumn = (row: number) => `${this.tableBodyRow(row)} td`;
 
     // Columns selectors
-    this.tableColumnHandle = (row: number) => `${this.tableBodyColumn(row)}.column-position_handle div i`;
+    this.tableColumnHandle = (row: number) => `${this.tableBodyColumn(row)}.column-position_handle .position-drag-handle`;
     this.tableColumnId = (row: number) => `${this.tableBodyColumn(row)}.column-id_feature_value`;
     this.tableColumnValue = (row: number) => `${this.tableBodyColumn(row)}.column-value`;
     this.tableColumnPosition = (row: number) => `${this.tableBodyColumn(row)}.column-position`;
@@ -413,14 +413,9 @@ class ViewFeature extends BOBasePage {
    * @return {Promise<string|null>}
    */
   async changePosition(page: Page, actualPosition: number, newPosition: number): Promise<string|null> {
-    await this.dragAndDrop(
-      page,
-      this.tableColumnHandle(actualPosition),
-      this.tableColumnHandle(newPosition),
-      true,
-    );
+    await this.dragAndDropSlowly(page, this.tableColumnHandle(actualPosition), this.tableBodyRow(newPosition));
 
-    return this.getAlertDangerBlockParagraphContent(page);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

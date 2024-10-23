@@ -1,19 +1,18 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
 // Import pages
 import attributesPage from '@pages/BO/catalog/attributes';
 import featuresPage from '@pages/BO/catalog/features';
 import viewFeaturePage from '@pages/BO/catalog/features/view';
 
 import {expect} from 'chai';
-import {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boLoginPage,
+  type BrowserContext,
   dataFeatures,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -41,7 +40,13 @@ describe('BO - Catalog - Attributes & Features : Change features values position
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'Catalog > Attributes & Features\' page', async function () {
@@ -53,8 +58,8 @@ describe('BO - Catalog - Attributes & Features : Change features values position
       boDashboardPage.attributesAndFeaturesLink,
     );
 
-    const pageTitle = await featuresPage.getPageTitle(page);
-    expect(pageTitle).to.contains(featuresPage.pageTitle);
+    const pageTitle = await attributesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(attributesPage.pageTitle);
   });
 
   it('should go to \'Features\' page', async function () {
