@@ -16,6 +16,7 @@ import {
   boDashboardPage,
   boLoginPage,
   boOrdersPage,
+  type BrowserContext,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
@@ -29,13 +30,13 @@ import {
   foHummingbirdProductPage,
   type MailDev,
   type MailDevEmail,
+  type Page,
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import {faker} from '@faker-js/faker';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_hummingbird_userAccount_orderHistory_orderDetails_sendMessage';
 

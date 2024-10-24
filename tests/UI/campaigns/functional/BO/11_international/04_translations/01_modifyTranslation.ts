@@ -18,6 +18,7 @@ import {
   boLoginPage,
   boModuleManagerPage,
   boTranslationsPage,
+  type BrowserContext,
   dataCustomers,
   dataLanguages,
   dataModules,
@@ -29,12 +30,12 @@ import {
   foHummingbirdLoginPage,
   type MailDev,
   type MailDevEmail,
+  type Page,
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_international_translations_modifyTranslation';
 

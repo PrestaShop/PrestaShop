@@ -3,9 +3,9 @@ import BOBasePage from '@pages/BO/BObasePage';
 
 import {
   type FakerTitle,
-} from '@prestashop-core/ui-testing';
 
-import type {Page} from 'playwright';
+  type Page,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Add title page, contains functions that can be used on the page

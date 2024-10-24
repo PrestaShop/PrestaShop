@@ -8,10 +8,11 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 import newProductsPage from '@pages/FO/hummingbird/newProducts';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
+  type BrowserContext,
   foHummingbirdCategoryPage,
   foHummingbirdHomePage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 

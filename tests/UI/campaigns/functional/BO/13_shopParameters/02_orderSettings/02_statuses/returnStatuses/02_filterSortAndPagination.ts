@@ -6,13 +6,14 @@ import statusesPage from '@pages/BO/shopParameters/orderSettings/statuses';
 import addOrderReturnStatusPage from '@pages/BO/shopParameters/orderSettings/statuses/returnStatus/add';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
   boOrderSettingsPage,
+  type BrowserContext,
   dataOrderReturnStatuses,
   FakerOrderReturnStatus,
+  type Page,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

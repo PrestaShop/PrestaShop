@@ -10,17 +10,18 @@ import {createAccountTest} from '@commonTests/FO/classic/account';
 import {vouchersPage as foVouchersPage} from '@pages/FO/classic/myAccount/vouchers';
 
 import {
+  type BrowserContext,
   FakerCartRule,
   FakerCustomer,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
+  type Page,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_classic_userAccount_viewVouchers';
 

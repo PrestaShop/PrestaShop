@@ -6,17 +6,18 @@ import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/prod
 import {installModule} from '@commonTests/BO/modules/moduleManager';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
   boModuleManagerPage,
   boProductsPage,
+  type BrowserContext,
   dataModules,
   FakerProduct,
   foClassicCategoryPage,
   foClassicHomePage,
   foClassicProductPage,
+  type Page,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

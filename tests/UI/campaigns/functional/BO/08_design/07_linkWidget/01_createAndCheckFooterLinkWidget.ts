@@ -7,14 +7,15 @@ import linkWidgetsPage from '@pages/BO/design/linkWidgets';
 import addLinkWidgetPage from '@pages/BO/design/linkWidgets/add';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   dataHooks,
   dataLinkWidgets,
   foClassicHomePage,
   type LinkWidgetPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 

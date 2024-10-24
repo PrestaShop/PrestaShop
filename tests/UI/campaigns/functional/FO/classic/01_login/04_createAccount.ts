@@ -9,17 +9,18 @@ import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {createAccountPage} from '@pages/FO/classic/myAccount/add';
 
 import {
+  type BrowserContext,
   FakerCustomer,
   foClassicHomePage,
   foClassicLoginPage,
   type MailDev,
   type MailDevEmail,
+  type Page,
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_classic_login_createAccount';
 

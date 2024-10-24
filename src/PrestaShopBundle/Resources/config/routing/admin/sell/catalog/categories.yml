@@ -127,6 +127,15 @@ admin_categories_delete_cover_image:
   requirements:
     categoryId: \d+
 
+admin_categories_delete_thumbnail_image:
+  path: /{categoryId}/delete-thumbnail-image
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\CategoryController::deleteThumbnailImageAction
+    _legacy_controller: AdminCategories
+  requirements:
+    categoryId: \d+
+
 admin_categories_update_position:
   path: /update-positions
   methods: [ POST ]

@@ -9,6 +9,7 @@ import {
   boDashboardPage,
   boLoginPage,
   boModuleManagerPage,
+  type BrowserContext,
   dataCustomers,
   dataModules,
   foClassicCartPage,
@@ -16,11 +17,11 @@ import {
   foClassicHomePage,
   foClassicLoginPage,
   foClassicModalQuickViewPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'modules_ps_cashondelivery_installation_resetModule';
 

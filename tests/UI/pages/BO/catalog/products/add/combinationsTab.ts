@@ -2,6 +2,8 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
 import {
+  type Frame,
+  type Page,
   type ProductAttributes,
   type ProductCombinationBulk,
   type ProductCombinationBulkRetailPrice,
@@ -11,7 +13,6 @@ import {
   type ProductStockMovement,
 } from '@prestashop-core/ui-testing';
 
-import type {Frame, Page} from 'playwright';
 import {expect} from 'chai';
 
 /**

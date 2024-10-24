@@ -9,6 +9,7 @@ import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
 import {
+  type BrowserContext,
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
@@ -18,11 +19,11 @@ import {
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 // context
 const baseContext: string = 'functional_FO_classic_userAccount_orderHistory_orderDetails_reorderFromOrderDetails';

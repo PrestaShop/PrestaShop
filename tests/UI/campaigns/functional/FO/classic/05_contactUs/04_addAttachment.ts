@@ -9,18 +9,19 @@ import viewPage from '@pages/BO/customerService/customerService/view';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   dataCustomers,
   dataOrders,
   FakerContactMessage,
   foClassicContactUsPage,
   foClassicHomePage,
   foClassicLoginPage,
+  type Page,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_classic_contactUs_addAttachment';
 

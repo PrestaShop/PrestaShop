@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 use Db;
 use ImageManager as LegacyImageManager;
-use ImageType as LegacyImageType;
 use Module as LegacyModule;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
@@ -73,34 +72,40 @@ class ImageThumbnailsRegenerator
         if (!is_dir($dir)) {
             return false;
         }
-        $toDel = scandir($dir, SCANDIR_SORT_NONE);
 
-        foreach ($toDel as $d) {
-            foreach ($types as $imageType) {
-                if (preg_match('/^[0-9]+\-' . ($isProduct ? '[0-9]+\-' : '') . $imageType->getName() . '(|2x)\.(jpg|png|webp|avif)$/', $d)
-                    || (count($types) > 1 && preg_match('/^[0-9]+\-[_a-zA-Z0-9-]*\.(jpg|png|webp|avif)$/', $d))
-                    || preg_match('/^([[:lower:]]{2})\-default\-' . $imageType->getName() . '(|2x)\.(jpg|png|webp|avif)$/', $d)) {
-                    if (file_exists($dir . $d)) {
-                        unlink($dir . $d);
-                    }
-                }
+        // Prepare regular expression to use when deleting thumbnails
+        $regexTypes = [];
+        foreach ($types as $type) {
+            $regexTypes[] = $type->getName();
+        }
+        $regexStandard = '/^[0-9]+(|_thumb)\-(' . implode('|', $regexTypes) . ')(|2x)\.(' . implode('|', ImageFormatConfiguration::SUPPORTED_FORMATS) . ')$/';
+        $regexPlaceholders = '/^([[:lower:]]{2})\-default\-(' . implode('|', $regexTypes) . ')(|2x)\.(' . implode('|', ImageFormatConfiguration::SUPPORTED_FORMATS) . ')$/';
+        $regexProducts = '/^[0-9]+\-(' . implode('|', $regexTypes) . ')(|2x)\.(' . implode('|', ImageFormatConfiguration::SUPPORTED_FORMATS) . ')$/';
+
+        /*
+         * Scan all files in the given folder.
+         * We do this also in case of products, because it will take care of placeholder thumbnails, hence the second regex.
+         */
+        $filesToDelete = scandir($dir, SCANDIR_SORT_NONE);
+        foreach ($filesToDelete as $file) {
+            if ((preg_match($regexStandard, $file) || preg_match($regexPlaceholders, $file)) && file_exists($dir . $file)) {
+                unlink($dir . $file);
             }
         }
 
-        // Delete product images using new filesystem.
+        // Delete product images
         if ($isProduct) {
+            // Get all product images in the shop
             $productsImages = $this->productImageRepository->getAllImages();
             foreach ($productsImages as $image) {
-                if (file_exists($dir . $image->getImgFolder())) {
-                    $toDel = scandir($dir . $image->getImgFolder(), SCANDIR_SORT_NONE);
-                    foreach ($toDel as $d) {
-                        foreach ($types as $imageType) {
-                            if (preg_match('/^[0-9]+\-' . $imageType->getName() . '(|2x)\.(jpg|png|webp|avif)$/', $d)
-                                || (count($types) > 1 && preg_match('/^[0-9]+\-[_a-zA-Z0-9-]*\.(jpg|png|webp|avif)$/', $d))) {
-                                if (file_exists($dir . $image->getImgFolder() . $d)) {
-                                    unlink($dir . $image->getImgFolder() . $d);
-                                }
-                            }
+                // Get path to current image folder, example: /img/p/1/2/3
+                $pathToImageFolder = $dir . $image->getImgFolder();
+                if (file_exists($pathToImageFolder)) {
+                    // Scan all files in the given folder
+                    $filesToDelete = scandir($pathToImageFolder, SCANDIR_SORT_NONE);
+                    foreach ($filesToDelete as $d) {
+                        if (preg_match($regexProducts, $d) && file_exists($pathToImageFolder . $d)) {
+                            unlink($pathToImageFolder . $d);
                         }
                     }
                 }
@@ -135,9 +140,12 @@ class ImageThumbnailsRegenerator
         $configuredImageFormats = $this->imageFormatConfiguration->getGenerationFormats();
 
         if (!$productsImages) {
-            $formated_medium = LegacyImageType::getFormattedName('medium');
-            foreach (scandir($dir, SCANDIR_SORT_NONE) as $image) {
-                if (preg_match('/^[0-9]*\.jpg$/', $image)) {
+            foreach (scandir($dir, SCANDIR_SORT_NONE) as $originalImageName) {
+                /*
+                 * Let's find all original image files in this folder.
+                 * They are either ID.jpg or ID_thumb.jpg in case of category thumbnails
+                 */
+                if (preg_match('/^[0-9]*(|_thumb)\.jpg$/', $originalImageName)) {
                     foreach ($type as $k => $imageType) {
                         // Customizable writing dir
                         $newDir = $dir;
@@ -145,25 +153,22 @@ class ImageThumbnailsRegenerator
                             continue;
                         }
 
-                        if (($dir == _PS_CAT_IMG_DIR_) && ($imageType->getName() == $formated_medium) && is_file(_PS_CAT_IMG_DIR_ . str_replace('.', '_thumb.', $image))) {
-                            $image = str_replace('.', '_thumb.', $image);
-                        }
-
                         foreach ($configuredImageFormats as $imageFormat) {
+                            $thumbnailName = substr($originalImageName, 0, -4) . '-' . stripslashes($imageType->getName()) . '.' . $imageFormat;
                             // If thumbnail does not exist
-                            if (!file_exists($newDir . substr($image, 0, -4) . '-' . stripslashes($imageType->getName()) . '.' . $imageFormat)) {
+                            if (!file_exists($newDir . $thumbnailName)) {
                                 // Check if original image exists
-                                if (!file_exists($dir . $image) || !filesize($dir . $image)) {
-                                    $errors[] = $this->translator->trans('Source file does not exist or is empty (%filepath%)', ['%filepath%' => $dir . $image], 'Admin.Design.Notification');
+                                if (!file_exists($dir . $originalImageName) || !filesize($dir . $originalImageName)) {
+                                    $errors[] = $this->translator->trans('Source file does not exist or is empty (%filepath%)', ['%filepath%' => $dir . $originalImageName], 'Admin.Design.Notification');
                                 } else {
                                     if (!LegacyImageManager::resize(
-                                        $dir . $image,
-                                        $newDir . substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType->getName()) . '.' . $imageFormat,
+                                        $dir . $originalImageName,
+                                        $newDir . $thumbnailName,
                                         (int) $imageType->getWidth(),
                                         (int) $imageType->getHeight(),
                                         $imageFormat
                                     )) {
-                                        $errors[] = $this->translator->trans('Failed to resize image file (%filepath%)', ['%filepath%' => $dir . $image], 'Admin.Design.Notification');
+                                        $errors[] = $this->translator->trans('Failed to resize image file (%filepath%)', ['%filepath%' => $dir . $originalImageName], 'Admin.Design.Notification');
                                     }
                                 }
                             }
@@ -178,14 +183,16 @@ class ImageThumbnailsRegenerator
             }
         } else {
             foreach ($this->productImageRepository->getAllImages() as $imageObj) {
-                $existing_img = $dir . $imageObj->getExistingImgPath() . '.jpg';
-                if (file_exists($existing_img) && filesize($existing_img)) {
+                $originalImageName = $dir . $imageObj->getExistingImgPath() . '.jpg';
+                if (file_exists($originalImageName) && filesize($originalImageName)) {
                     foreach ($type as $imageType) {
                         foreach ($configuredImageFormats as $imageFormat) {
-                            if (!file_exists($dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType->getName()) . '.' . $imageFormat)) {
+                            $thumbnailName = $imageObj->getExistingImgPath() . '-' . stripslashes($imageType->getName()) . '.' . $imageFormat;
+
+                            if (!file_exists($dir . $thumbnailName)) {
                                 if (!LegacyImageManager::resize(
-                                    $existing_img,
-                                    $dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType->getName()) . '.' . $imageFormat,
+                                    $originalImageName,
+                                    $dir . $thumbnailName,
                                     (int) $imageType->getWidth(),
                                     (int) $imageType->getHeight(),
                                     $imageFormat
@@ -193,7 +200,7 @@ class ImageThumbnailsRegenerator
                                     $errors[] = $this->translator->trans(
                                         'Original image is corrupt (%filename%) for product ID %id% or bad permission on folder.',
                                         [
-                                            '%filename%' => $existing_img,
+                                            '%filename%' => $originalImageName,
                                             '%id%' => (int) $imageObj->id_product,
                                         ],
                                         'Admin.Design.Notification'
@@ -206,7 +213,7 @@ class ImageThumbnailsRegenerator
                     $errors[] = $this->translator->trans(
                         'Original image is missing or empty (%filename%) for product ID %id%',
                         [
-                            '%filename%' => $existing_img,
+                            '%filename%' => $originalImageName,
                             '%id%' => (int) $imageObj->id_product,
                         ],
                         'Admin.Design.Notification'

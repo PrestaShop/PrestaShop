@@ -7,12 +7,13 @@ import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
 import monitoringPage from '@pages/BO/catalog/monitoring';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  type BrowserContext,
   FakerProduct,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 

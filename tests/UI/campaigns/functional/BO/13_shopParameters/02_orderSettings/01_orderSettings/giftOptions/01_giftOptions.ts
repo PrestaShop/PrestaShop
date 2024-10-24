@@ -8,6 +8,7 @@ import {
   boOrdersViewBlockProductsPage,
   boOrdersViewBlockTabListPage,
   boOrderSettingsPage,
+  type BrowserContext,
   dataCustomers,
   dataPaymentMethods,
   dataTaxes,
@@ -17,11 +18,11 @@ import {
   foClassicHomePage,
   foClassicLoginPage,
   foClassicProductPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_shopParameters_orderSettings_orderSettings_giftOptions_giftOptions';
 

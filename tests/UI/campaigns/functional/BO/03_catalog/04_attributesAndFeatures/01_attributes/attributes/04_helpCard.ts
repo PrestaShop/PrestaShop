@@ -1,14 +1,13 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import pages
-import attributesPage from '@pages/BO/catalog/attributes';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
+  boAttributesPage,
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -51,30 +50,30 @@ describe('BO - Catalog - Attributes & Features : Help card on attributes page', 
       boDashboardPage.catalogParentLink,
       boDashboardPage.attributesAndFeaturesLink,
     );
-    await attributesPage.closeSfToolBar(page);
+    await boAttributesPage.closeSfToolBar(page);
 
-    const pageTitle = await attributesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(attributesPage.pageTitle);
+    const pageTitle = await boAttributesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boAttributesPage.pageTitle);
   });
 
   it('should open the help side bar', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openHelpSidebar', baseContext);
 
-    const isHelpSidebarVisible = await attributesPage.openHelpSideBar(page);
+    const isHelpSidebarVisible = await boAttributesPage.openHelpSideBar(page);
     expect(isHelpSidebarVisible).to.eq(true);
   });
 
   it('should check the document language', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentLanguage', baseContext);
 
-    const documentURL = await attributesPage.getHelpDocumentURL(page);
+    const documentURL = await boAttributesPage.getHelpDocumentURL(page);
     expect(documentURL).to.contains('country=en');
   });
 
   it('should close the help side bar', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeHelpSidebar', baseContext);
 
-    const isHelpSidebarClosed = await attributesPage.closeHelpSideBar(page);
+    const isHelpSidebarClosed = await boAttributesPage.closeHelpSideBar(page);
     expect(isHelpSidebarClosed).to.eq(true);
   });
 });

@@ -6,12 +6,13 @@ import brandsPage from '@pages/BO/catalog/brands';
 import {siteMapPage} from '@pages/FO/classic/siteMap';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
   boShopParametersPage,
+  type BrowserContext,
   foClassicHomePage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 

@@ -6,6 +6,7 @@ import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advanced
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 
 import {
+  type BrowserContext,
   dataPaymentMethods,
   FakerAddress,
   FakerCustomer,
@@ -16,12 +17,12 @@ import {
   foClassicProductPage,
   type MailDev,
   type MailDevEmail,
+  type Page,
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_classic_checkout_personalInformation_createAccount';
 

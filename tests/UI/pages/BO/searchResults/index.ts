@@ -1,5 +1,7 @@
 import BOBasePage from '@pages/BO/BObasePage';
-import type {Page} from 'playwright';
+import {
+  type Page,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Search page, contains functions that can be used on the page

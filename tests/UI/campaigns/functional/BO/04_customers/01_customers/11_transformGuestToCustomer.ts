@@ -13,6 +13,7 @@ import {
   boCustomersPage,
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   dataPaymentMethods,
   dataProducts,
   FakerAddress,
@@ -20,12 +21,12 @@ import {
   FakerOrder,
   type MailDev,
   type MailDevEmail,
+  type Page,
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext = 'functional_BO_customers_customers_transformGuestToCustomer';
 

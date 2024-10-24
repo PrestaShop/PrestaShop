@@ -13,14 +13,15 @@ import movementsPage from '@pages/BO/catalog/stocks/movements';
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
   boProductsCreateTabStocksPage,
+  type BrowserContext,
   FakerProduct,
   foHummingbirdProductPage,
+  type Page,
   utilsDate,
   utilsFile,
   utilsPlaywright,

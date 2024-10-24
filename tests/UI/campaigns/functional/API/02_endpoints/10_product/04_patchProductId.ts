@@ -9,17 +9,19 @@ import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/prod
 import createProductsPage from '@pages/BO/catalog/products/add';
 
 import {expect} from 'chai';
-import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 import {
+  type APIRequestContext,
   boApiClientsPage,
   boApiClientsCreatePage,
   boDashboardPage,
   boLoginPage,
   boProductsPage,
   boProductsCreateTabDescriptionPage,
+  type BrowserContext,
   dataLanguages,
   FakerAPIClient,
   FakerProduct,
+  type Page,
   utilsAPI,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

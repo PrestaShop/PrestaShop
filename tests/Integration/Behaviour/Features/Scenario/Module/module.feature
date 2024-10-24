@@ -45,6 +45,21 @@ Feature: Module
     Given module ps_featuredproducts has following infos:
       | enabled | true |
 
+  Scenario: Reset module status
+    Given module ps_featuredproducts has following infos:
+      | technical_name | ps_featuredproducts |
+      | enabled        | true |
+      | installed      | true |
+    When I disable module "ps_featuredproducts"
+    And I reset module "ps_featuredproducts"
+    Then I should have an exception that disabled module cannot be reset
+    When I enable module "ps_featuredproducts"
+    When I reset module "ps_featuredproducts"
+    Then module ps_featuredproducts has following infos:
+      | technical_name | ps_featuredproducts |
+      | enabled        | true |
+      | installed      | true |
+
   Scenario: Get module infos
     Then module ps_emailsubscription has following infos:
       | technical_name | ps_emailsubscription |
@@ -105,7 +120,7 @@ Feature: Module
     And I install module "ps_featuredproducts" from "url" "https://github.com/PrestaShop/ps_featuredproducts/releases/download/v2.1.4/ps_featuredproducts.zip"
     Then module ps_featuredproducts has following infos:
       | technical_name | ps_featuredproducts |
-      | version        | 1.0.0               |
+      | version        | 2.1.5               |
       | enabled        | true                |
       | installed      | true                |
 

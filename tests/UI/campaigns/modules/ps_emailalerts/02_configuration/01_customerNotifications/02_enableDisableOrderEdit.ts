@@ -11,6 +11,7 @@ import {
   boModuleManagerPage,
   boOrdersPage,
   boOrdersViewBlockProductsPage,
+  type BrowserContext,
   dataCustomers,
   dataModules,
   dataPaymentMethods,
@@ -19,12 +20,12 @@ import {
   type MailDev,
   type MailDevEmail,
   modPsEmailAlertsBoMain,
+  type Page,
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'modules_ps_emailalerts_configuration_customerNotifications_enableDisableOrderEdit';
 

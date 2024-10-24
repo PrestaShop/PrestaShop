@@ -55,10 +55,10 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\Filter\HiddenFilter;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Shop\ShopConstraintContextInterface;
+use PrestaShopBundle\Form\Admin\Sell\Product\ProductSearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\IntegerMinMaxFilterType;
 use PrestaShopBundle\Form\Admin\Type\NumberMinMaxFilterType;
 use PrestaShopBundle\Form\Admin\Type\ReorderPositionsButtonType;
-use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\ShopSelectorType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -582,7 +582,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setAssociatedColumn('position')
             )
             ->add(
-                (new Filter('actions', SearchAndResetType::class))
+                (new Filter('actions', ProductSearchAndResetType::class))
                     ->setTypeOptions([
                         'reset_route' => 'admin_products_reset_grid_search',
                         'redirect_route' => 'admin_products_index',

@@ -6,16 +6,17 @@ import createProductsPage from '@pages/BO/catalog/products/add';
 import packTab from '@pages/BO/catalog/products/add/packTab';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 
-import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  type BrowserContext,
   dataEmployees,
   dataProducts,
   FakerProduct,
   foClassicProductPage,
+  type Page,
   type ProductPackOptions,
   utilsCore,
   utilsDate,

@@ -2,9 +2,9 @@ import {ViewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 
 import {
   type OrderPayment,
-} from '@prestashop-core/ui-testing';
 
-import type {Page} from 'playwright';
+  type Page,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Payment block, contains functions that can be used on view/edit payment block on view order page

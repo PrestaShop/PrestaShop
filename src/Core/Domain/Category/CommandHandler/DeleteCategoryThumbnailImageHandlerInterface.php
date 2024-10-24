@@ -1,4 +1,5 @@
-{**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,20 +22,19 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *}
-<div class="modal-body">
-	<div class="input-group">
-		<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
-			<i class="icon-flag"></i>
-			{l s='Manage translations'}
-			<span class="caret"></span>
-		</button>
-		<ul class="dropdown-menu">
-			{foreach from=$module_languages item=language}
-				<li>
-					<a href="{$translateLinks[$language.iso_code]|escape:'html':'UTF-8'}">{$language.name|escape:'html':'UTF-8'}</a>
-				</li>
-			{/foreach}
-		</ul>
-	</div>
-</div>
+ */
+
+namespace PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryThumbnailImageCommand;
+
+/**
+ * Defines contract for service which handles thumbnail image delete command.
+ */
+interface DeleteCategoryThumbnailImageHandlerInterface
+{
+    /**
+     * @param DeleteCategoryThumbnailImageCommand $command
+     */
+    public function handle(DeleteCategoryThumbnailImageCommand $command);
+}

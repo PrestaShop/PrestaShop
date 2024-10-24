@@ -8,12 +8,13 @@ import addAddressPage from '@pages/BO/customers/addresses/add';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   FakerAddress,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_customers_addresses_CRUDAddressInBO';
 

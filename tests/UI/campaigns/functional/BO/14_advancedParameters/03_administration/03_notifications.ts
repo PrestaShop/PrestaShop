@@ -17,6 +17,7 @@ import {
   boDashboardPage,
   boLoginPage,
   boShoppingCartsPage,
+  type BrowserContext,
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
@@ -28,12 +29,12 @@ import {
   foClassicLoginPage,
   foClassicMyAccountPage,
   foClassicProductPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
 import {faker} from '@faker-js/faker';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_advancedParameters_administration_notifications';
 

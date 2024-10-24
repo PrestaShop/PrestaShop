@@ -17,6 +17,7 @@ import {
   boOrdersPage,
   boOrdersViewBlockProductsPage,
   boOrdersViewBlockTabListPage,
+  type BrowserContext,
   dataOrderStatuses,
   dataPaymentMethods,
   dataProducts,
@@ -24,12 +25,13 @@ import {
   FakerCustomer,
   FakerOrder,
   type FakerOrderStatus,
+  type Frame,
+  type Page,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Frame, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_orders_orders_createOrders_selectPreviousOrders';
 

@@ -12,14 +12,15 @@ import {
   boDashboardPage,
   boLoginPage,
   boPaymentMethodsPage,
+  type BrowserContext,
   dataModules,
   dataPaymentMethods,
   modPsWirepaymentBoMain,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_payment_paymentMethods_configureModuleLink';
 

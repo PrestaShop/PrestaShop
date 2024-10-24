@@ -59,7 +59,7 @@ final class OptionsChecker implements OptionsCheckerInterface
     /**
      * {@inheritdoc}
      */
-    public function canBeChanged()
+    public function canBeChanged(): bool
     {
         if (!$this->multistoreFeature->isUsed()
             && $this->multistoreContextChecker->isSingleShopContext()

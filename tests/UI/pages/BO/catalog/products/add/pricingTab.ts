@@ -1,8 +1,9 @@
 // Import pages
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type {Page} from 'playwright';
 import {
+  type Page,
+
   type FakerProduct,
   type ProductSpecificPrice,
 } from '@prestashop-core/ui-testing';

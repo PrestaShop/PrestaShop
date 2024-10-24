@@ -10,11 +10,12 @@ import positionsPage from '@pages/BO/design/positions';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   dataModules,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_design_positions_unhookModuleInListByBulkActions';
 

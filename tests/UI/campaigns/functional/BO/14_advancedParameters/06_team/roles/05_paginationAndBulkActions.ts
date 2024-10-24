@@ -7,11 +7,12 @@ import rolesPage from '@pages/BO/advancedParameters/team/roles';
 import addProfilePage from '@pages/BO/advancedParameters/team/roles/add';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   FakerEmployeeRole,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 

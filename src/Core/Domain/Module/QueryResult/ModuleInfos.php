@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Module\QueryResult;
 class ModuleInfos
 {
     public function __construct(
-        private readonly int | null $moduleId,
+        private readonly ?int $moduleId,
         private readonly string $technicalName,
         private readonly string $version,
         private readonly bool $enabled,
@@ -39,7 +39,7 @@ class ModuleInfos
     ) {
     }
 
-    public function getModuleId(): int | null
+    public function getModuleId(): ?int
     {
         return $this->moduleId;
     }

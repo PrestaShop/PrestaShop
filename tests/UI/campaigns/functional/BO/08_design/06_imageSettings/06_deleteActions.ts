@@ -6,12 +6,13 @@ import imageSettingsPage from '@pages/BO/design/imageSettings';
 import addImageTypePage from '@pages/BO/design/imageSettings/add';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   dataProducts,
   FakerImageType,
+  type Page,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

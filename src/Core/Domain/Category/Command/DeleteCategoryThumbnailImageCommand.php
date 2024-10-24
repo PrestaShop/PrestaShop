@@ -1,4 +1,5 @@
-{**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,8 +22,35 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *}
+ */
 
-{if isset($module_content)}
-	{$module_content}
-{/if}
+namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+
+/**
+ * Deletes thumbnail image for given category.
+ */
+class DeleteCategoryThumbnailImageCommand
+{
+    /**
+     * @var CategoryId
+     */
+    private $categoryId;
+
+    /**
+     * @param int $categoryId
+     */
+    public function __construct($categoryId)
+    {
+        $this->categoryId = new CategoryId($categoryId);
+    }
+
+    /**
+     * @return CategoryId
+     */
+    public function getCategoryId()
+    {
+        return $this->categoryId;
+    }
+}

@@ -13,13 +13,13 @@ import createAccountPage from '@pages/FO/hummingbird/myAccount/add';
 import gdprPersonalDataPage from '@pages/FO/hummingbird/myAccount/gdprPersonalData';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boCustomersPage,
   boDashboardPage,
   boLoginPage,
   boOrdersPage,
   boShoppingCartsPage,
+  type BrowserContext,
   dataPaymentMethods,
   dataProducts,
   FakerContactMessage,
@@ -33,6 +33,7 @@ import {
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
   foHummingbirdProductPage,
+  type Page,
   utilsCore,
   utilsDate,
   utilsFile,

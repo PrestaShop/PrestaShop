@@ -10,13 +10,14 @@ import addCategoryPage from '@pages/BO/catalog/categories/add';
 import imageSettingsPage from '@pages/BO/design/imageSettings';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   FakerCategory,
   foClassicCategoryPage,
   foClassicHomePage,
+  type Page,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

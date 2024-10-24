@@ -1,8 +1,8 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type {Page} from 'playwright';
-
 import {
+  type Page,
+
   FakerWebservice,
   type WebserviceMethod,
   type WebservicePermission,

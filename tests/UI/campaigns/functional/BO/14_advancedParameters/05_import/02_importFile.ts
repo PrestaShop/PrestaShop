@@ -4,16 +4,15 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
-// Import pages
-import importPage from '@pages/BO/advancedParameters/import';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
+  boImportPage,
   boLoginPage,
+  type BrowserContext,
   type MailDev,
   type MailDevEmail,
+  type Page,
   utilsFile,
   utilsMail,
   utilsPlaywright,
@@ -78,17 +77,17 @@ describe('BO - Advanced Parameters - Import : Import file', async () => {
         boDashboardPage.advancedParametersLink,
         boDashboardPage.importLink,
       );
-      await importPage.closeSfToolBar(page);
+      await boImportPage.closeSfToolBar(page);
 
-      const pageTitle = await importPage.getPageTitle(page);
-      expect(pageTitle).to.contains(importPage.pageTitle);
+      const pageTitle = await boImportPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boImportPage.pageTitle);
     });
 
     describe('Download then import alias simple file', async () => {
       it('should download \'Sample alias file\' file', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'downloadFile', baseContext);
 
-        filePath = await importPage.downloadSampleFile(page, 'alias_import');
+        filePath = await boImportPage.downloadSampleFile(page, 'alias_import');
 
         const doesFileExist = await utilsFile.doesFileExist(filePath);
         expect(doesFileExist, 'alias_import sample file was not downloaded').to.be.eq(true);
@@ -99,28 +98,28 @@ describe('BO - Advanced Parameters - Import : Import file', async () => {
 
         await utilsFile.renameFile(filePath, 'alias.csv');
 
-        const uploadSuccessText = await importPage.uploadImportFile(page, 'Alias', firstFile);
+        const uploadSuccessText = await boImportPage.uploadImportFile(page, 'Alias', firstFile);
         expect(uploadSuccessText).to.contains(firstFile);
       });
 
       it('should go to next import file step', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'nextStep', baseContext);
 
-        const panelTitle = await importPage.goToImportNextStep(page);
-        expect(panelTitle).to.contains(importPage.importPanelTitle);
+        const panelTitle = await boImportPage.goToImportNextStep(page);
+        expect(panelTitle).to.contains(boImportPage.importPanelTitle);
       });
 
       it('should start import file', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'confirmImport', baseContext);
 
-        const modalTitle = await importPage.startFileImport(page);
-        expect(modalTitle).to.contains(importPage.importModalTitle);
+        const modalTitle = await boImportPage.startFileImport(page);
+        expect(modalTitle).to.contains(boImportPage.importModalTitle);
       });
 
       it('should check that the import is completed', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'waitForImport', baseContext);
 
-        const isCompleted = await importPage.getImportValidationMessage(page);
+        const isCompleted = await boImportPage.getImportValidationMessage(page);
         expect(isCompleted, 'The import is not completed!')
           .to.contains('Data imported')
           .and.to.contains('Look at your listings to make sure it\'s all there as you wished.');
@@ -129,7 +128,7 @@ describe('BO - Advanced Parameters - Import : Import file', async () => {
       it('should close import progress modal', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'closeImportModal', baseContext);
 
-        const isModalClosed = await importPage.closeImportModal(page);
+        const isModalClosed = await boImportPage.closeImportModal(page);
         expect(isModalClosed).to.be.eq(true);
       });
 
@@ -144,7 +143,7 @@ describe('BO - Advanced Parameters - Import : Import file', async () => {
       it('should download \'Sample suppliers file\' file', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'downloadFile2', baseContext);
 
-        secondFilePath = await importPage.downloadSampleFile(page, 'suppliers_import');
+        secondFilePath = await boImportPage.downloadSampleFile(page, 'suppliers_import');
 
         const doesFileExist = await utilsFile.doesFileExist(secondFilePath);
         expect(doesFileExist, 'suppliers sample file was not downloaded').to.be.eq(true);
@@ -155,30 +154,30 @@ describe('BO - Advanced Parameters - Import : Import file', async () => {
 
         await utilsFile.renameFile(secondFilePath, 'suppliers.csv');
 
-        const uploadSuccessText = await importPage.uploadImportFile(page, 'Suppliers', secondFile);
+        const uploadSuccessText = await boImportPage.uploadImportFile(page, 'Suppliers', secondFile);
         expect(uploadSuccessText).contain('suppliers.csv');
       });
 
       it('should click on the downloaded file and check the existence of the button choose from history', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnDownloadedFile', baseContext);
 
-        await importPage.clickOnDownloadedFile(page);
+        await boImportPage.clickOnDownloadedFile(page);
 
-        const isButtonVisible = await importPage.isChooseFromHistoryButtonVisible(page);
+        const isButtonVisible = await boImportPage.isChooseFromHistoryButtonVisible(page);
         expect(isButtonVisible).to.be.eq(true);
       });
 
       it('should click on \'Choose from history / FTP\'', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnChooseFromHistory', baseContext);
 
-        const isFilesListTableVisible = await importPage.chooseFromHistoryFTP(page);
+        const isFilesListTableVisible = await boImportPage.chooseFromHistoryFTP(page);
         expect(isFilesListTableVisible).to.be.eq(true);
       });
 
       it('should check the imported files list', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkImportedFilesList', baseContext);
 
-        const importedFilesList = await importPage.getImportedFilesList(page);
+        const importedFilesList = await boImportPage.getImportedFilesList(page);
         expect(importedFilesList).to.contains(firstFile)
           .and.to.contains(secondFile);
       });
@@ -187,39 +186,39 @@ describe('BO - Advanced Parameters - Import : Import file', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'deleteFirstFile', baseContext);
 
         // Delete file and check that choose from history button is visible
-        const isButtonVisible = await importPage.deleteFile(page);
+        const isButtonVisible = await boImportPage.deleteFile(page);
         expect(isButtonVisible).to.be.eq(true);
       });
 
       it('should use the second imported file', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'useSecondFile', baseContext);
 
-        await importPage.chooseFromHistoryFTP(page);
+        await boImportPage.chooseFromHistoryFTP(page);
 
-        const uploadSuccessText = await importPage.useFile(page, 1);
+        const uploadSuccessText = await boImportPage.useFile(page, 1);
         expect(uploadSuccessText).to.contains(secondFile);
       });
 
       it('should go to next import file step', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'nextStep2', baseContext);
 
-        await importPage.selectFileType(page, 'Suppliers');
+        await boImportPage.selectFileType(page, 'Suppliers');
 
-        const panelTitle = await importPage.goToImportNextStep(page);
-        expect(panelTitle).to.contains(importPage.importPanelTitle);
+        const panelTitle = await boImportPage.goToImportNextStep(page);
+        expect(panelTitle).to.contains(boImportPage.importPanelTitle);
       });
 
       it('should start import file', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'confirmImport2', baseContext);
 
-        const modalTitle = await importPage.startFileImport(page);
-        expect(modalTitle).to.contains(importPage.importModalTitle);
+        const modalTitle = await boImportPage.startFileImport(page);
+        expect(modalTitle).to.contains(boImportPage.importModalTitle);
       });
 
       it('should check that the import is completed', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'waitForImport2', baseContext);
 
-        const isCompleted = await importPage.getImportValidationMessage(page);
+        const isCompleted = await boImportPage.getImportValidationMessage(page);
         expect(isCompleted, 'The import is not completed!')
           .to.contains('Data imported')
           .and.to.contains('Look at your listings to make sure it\'s all there as you wished.');
@@ -228,7 +227,7 @@ describe('BO - Advanced Parameters - Import : Import file', async () => {
       it('should close import progress modal', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'closeImportModal2', baseContext);
 
-        const isModalClosed = await importPage.closeImportModal(page);
+        const isModalClosed = await boImportPage.closeImportModal(page);
         expect(isModalClosed).to.be.eq(true);
       });
 

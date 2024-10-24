@@ -13,6 +13,7 @@ import {
   boCustomerSettingsPage,
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   dataCustomers,
   dataGroups,
   FakerCarrier,
@@ -21,12 +22,12 @@ import {
   foClassicHomePage,
   foClassicLoginPage,
   foClassicProductPage,
+  type Page,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_shipping_preferences_handling_handlingCharges';
 

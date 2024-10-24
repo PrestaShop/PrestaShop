@@ -2,8 +2,8 @@
 import testContext from '@utils/testContext';
 
 import {expect} from 'chai';
-import type {APIRequestContext} from 'playwright';
 import {
+  type APIRequestContext,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 

@@ -5,6 +5,7 @@ import {
   boDashboardPage,
   boEmailPage,
   boLoginPage,
+  type BrowserContext,
   dataCustomers,
   dataLanguages,
   dataPaymentMethods,
@@ -13,12 +14,12 @@ import {
   foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicProductPage,
+  type Page,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_advancedParameters_email_filterDeleteAndBulkActionsEmails';
 

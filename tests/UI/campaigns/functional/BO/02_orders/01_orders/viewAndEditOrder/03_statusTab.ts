@@ -12,6 +12,7 @@ import {
   boLoginPage,
   boOrdersPage,
   boOrdersViewBlockTabListPage,
+  type BrowserContext,
   dataCustomers,
   dataEmployees,
   dataOrderStatuses,
@@ -23,13 +24,13 @@ import {
   FakerOrder,
   type MailDev,
   type MailDevEmail,
+  type Page,
   utilsDate,
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_statusTab';
 

@@ -16,6 +16,7 @@ import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
@@ -30,13 +31,13 @@ import {
   foClassicMyAccountPage,
   type MailDev,
   type MailDevEmail,
+  type Page,
   utilsFile,
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_customerService_customerService_forwardMessage';
 
