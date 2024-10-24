@@ -32,10 +32,15 @@ use Behat\Gherkin\Node\TableNode;
 use Module;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkToggleModuleStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Module\Command\UninstallModuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkUninstallModuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\ResetModuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\Module\Command\InstallModuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\UpdateModuleStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\Exception\CannotResetModuleException;
+use PrestaShop\PrestaShop\Core\Domain\Module\Exception\AlreadyInstalledModuleException;
 use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotInstalledException;
 use PrestaShop\PrestaShop\Core\Domain\Module\Query\GetModuleInfos;
 use PrestaShop\PrestaShop\Core\Domain\Module\QueryResult\ModuleInfos;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -59,10 +64,10 @@ class ModuleFeatureContext extends AbstractDomainFeatureContext
                 Assert::assertEquals($data['version'], $moduleInfos->getVersion());
             }
             if (isset($data['enabled'])) {
-                Assert::assertEquals(PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']), $moduleInfos->isEnabled());
+                Assert::assertEquals(PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']), $moduleInfos->isEnabled(), "invalid enabled value");
             }
             if (isset($data['installed'])) {
-                Assert::assertEquals(PrimitiveUtils::castStringBooleanIntoBoolean($data['installed']), $moduleInfos->isInstalled());
+                Assert::assertEquals(PrimitiveUtils::castStringBooleanIntoBoolean($data['installed']), $moduleInfos->isInstalled(), "invalid installed value");
             }
         } catch (ModuleNotFoundException $e) {
             $this->setLastException($e);
@@ -83,6 +88,23 @@ class ModuleFeatureContext extends AbstractDomainFeatureContext
     public function assertDisabledError(): void
     {
         $this->assertLastErrorIs(CannotResetModuleException::class, CannotResetModuleException::NOT_ACTIVE);
+    }
+
+
+    /**
+     * @Then I should have an exception that module is not installed
+     */
+    public function assertModuleNotInstalled(): void
+    {
+        $this->assertLastErrorIs(ModuleNotInstalledException::class);
+    }
+
+    /**
+     * @Then I should have an exception that module is already installed
+     */
+    public function assertModuleAlreadyInstalled(): void
+    {
+        $this->assertLastErrorIs(AlreadyInstalledModuleException::class);
     }
 
     /**
@@ -119,6 +141,35 @@ class ModuleFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+    * @When /^I uninstall module "(.+)" with deleteFile (true|false)$/
+    */
+    public function uninstallModule(string $module, string $deleteFile): void
+    {
+
+        $this->getQueryBus()->handle(new UninstallModuleCommand($module, $deleteFile == "true"));
+
+        // Clean the cache
+        Module::resetStaticCache();
+    }
+
+    /**
+    * @When /^I bulk uninstall modules: "(.+)" with deleteFile (true|false)$/
+    */
+   public function bulkUninstallModule(string $modulesRef, string $deleteFile): void
+   {
+       $modules = [];
+       foreach (PrimitiveUtils::castStringArrayIntoArray($modulesRef) as $modulesReference) {
+           $modules[] = $modulesReference;
+       }
+
+       $this->getQueryBus()->handle(new BulkUninstallModuleCommand($modules, $deleteFile == "true"));
+
+       // Clean the cache
+       Module::resetStaticCache();
+   }
+
+
+    /**
      * @When I reset module :technicalName
      */
     public function resetModule(string $technicalName): void
@@ -129,6 +180,46 @@ class ModuleFeatureContext extends AbstractDomainFeatureContext
                 false
             ));
         } catch (CannotResetModuleException $e) {
+            $this->setLastException($e);
+        }
+
+        // Clean the cache
+        Module::resetStaticCache();
+    }
+
+   /**
+    * @When I install module :technicalName from "folder"
+    */
+    public function installModuleFromFolder(string $technicalName): void
+    {
+        try{
+            $this->getQueryBus()->handle(new InstallModuleCommand($technicalName));
+        } catch (AlreadyInstalledModuleException $e) {
+            $this->setLastException($e);
+        }
+        // Clean the cache
+        Module::resetStaticCache();
+    }
+
+   /**
+    * @When /^I install module "(.+)" from "(zip|url)" "(.+)"$/
+    */
+    public function installModule(string $technicalName, string $sourceType, string $sourceGiven): void
+    {
+        switch ($sourceType) {
+            case 'zip':
+                $source = _PS_MODULE_DIR_ . $sourceGiven;
+                break;
+            case 'url':
+                $source = $sourceGiven;
+                break;
+            default:
+                $source = null;
+                break;
+        }
+        try{
+            $this->getQueryBus()->handle(new InstallModuleCommand($technicalName, $source));
+        } catch (ModuleNotFoundException $e) {
             $this->setLastException($e);
         }
 

@@ -26,32 +26,47 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Module\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Module\Command;
+use PrestaShop\PrestaShop\Core\Domain\Module\ValueObject\ModuleTechnicalName;
 
-use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
-use PrestaShop\PrestaShop\Core\Domain\Module\Query\GetModuleInfos;
-use PrestaShop\PrestaShop\Core\Domain\Module\QueryHandler\GetModuleInfosHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Module\QueryResult\ModuleInfos;
-use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
-
-#[AsQueryHandler]
-class GetModuleInfosHandler implements GetModuleInfosHandlerInterface
+/**
+ * Bulk uninstall module
+ */
+class BulkUninstallModuleCommand
 {
-    public function __construct(
-        protected ModuleRepository $moduleRepository,
-    ) {
+    /**
+     * @var array<ModuleTechnicalName>
+     */
+    private $modules;
+
+    /**
+     * @var bool
+     */
+    private $deleteFile;
+
+     /**
+     * @param array<string> $modules Array of technical names for modules
+     * @param bool $deleteFile Boolean for delete modules files
+     */
+    public function __construct(array $modules, bool $deleteFile = false)
+    {
+        $this->modules = array_map(fn(string $technicalName)=>new ModuleTechnicalName($technicalName), $modules);
+        $this->deleteFile = $deleteFile;
     }
 
-    public function handle(GetModuleInfos $query): ModuleInfos
+    /**
+     * @return array<ModuleTechnicalName>
+     */
+    public function getModules(): array
     {
-        $module = $this->moduleRepository->getPresentModule($query->getTechnicalName()->getValue());
+        return $this->modules;
+    }
 
-        return new ModuleInfos(
-            $module->database->get('id'),
-            $module->get('name'),
-            $module->get('version'),
-            $module->isActive(),
-            $module->IsInstalled(),
-        );
+     /**
+     * @return bool
+     */
+    public function getDeteleFile(): bool
+    {
+        return $this->deleteFile;
     }
 }

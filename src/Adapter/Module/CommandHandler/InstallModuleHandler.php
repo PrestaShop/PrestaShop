@@ -24,34 +24,34 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Adapter\Module\CommandHandler;
 
-namespace PrestaShop\PrestaShop\Adapter\Module\QueryHandler;
-
-use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
-use PrestaShop\PrestaShop\Core\Domain\Module\Query\GetModuleInfos;
-use PrestaShop\PrestaShop\Core\Domain\Module\QueryHandler\GetModuleInfosHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Module\QueryResult\ModuleInfos;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
+use PrestaShop\PrestaShop\Core\Domain\Module\Command\InstallModuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\Module\CommandHandler\InstallModuleHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Module\Exception\AlreadyInstalledModuleException;
+use PrestaShop\PrestaShop\Core\Domain\Module\Exception\CannotInstalledModuleException;
+use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 
-#[AsQueryHandler]
-class GetModuleInfosHandler implements GetModuleInfosHandlerInterface
+#[AsCommandHandler]
+class InstallModuleHandler implements InstallModuleHandlerInterface
 {
     public function __construct(
+        protected ModuleManager $moduleManager,
         protected ModuleRepository $moduleRepository,
     ) {
     }
 
-    public function handle(GetModuleInfos $query): ModuleInfos
+    public function handle(InstallModuleCommand $command): void
     {
-        $module = $this->moduleRepository->getPresentModule($query->getTechnicalName()->getValue());
+        $technical_name = $command->getTechnicalName()->getValue();
+        $source = $command->getSource();
 
-        return new ModuleInfos(
-            $module->database->get('id'),
-            $module->get('name'),
-            $module->get('version'),
-            $module->isActive(),
-            $module->IsInstalled(),
-        );
+        $result = $this->moduleManager->install($technical_name, $source);
+
+        if (!$result) {
+            throw new CannotInstalledModuleException('Technical error occurred while installing module.');
+        }
     }
 }
