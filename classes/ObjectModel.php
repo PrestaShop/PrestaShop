@@ -23,6 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+use PrestaShop\PrestaShop\Adapter\ObjectModelComparator;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 use PrestaShopBundle\Translation\TranslatorComponent;
@@ -152,6 +153,13 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
      * @var bool if true, objects are cached in memory
      */
     protected static $cache_objects = true;
+
+    /**
+     * Skip the update process when no change detected to improve performances
+     *
+     * @var bool
+     */
+    public $skipUpdateIfUnchanged = false;
 
     /**
      * @return null
@@ -686,12 +694,37 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     * @throws PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException
      */
     public function update($null_values = false)
     {
+        $currentClassName = $this->getObjectName();
+        $oldObject = new $currentClassName($this->id, $this->id_lang, $this->id_shop);
+        $comparator = new ObjectModelComparator($oldObject, $this);
+
+        if ($this->skipUpdateIfUnchanged && !$comparator->hasChanges()) {
+            return true;
+        }
+
+        return $this->processUpdateAction((bool) $null_values, $comparator);
+    }
+
+    /**
+     * Updates the current object in the database.
+     *
+     * @param bool $null_values
+     * @param ObjectModelComparator|null $comparator
+     *
+     * @return bool
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    protected function processUpdateAction(bool $null_values = false, ?ObjectModelComparator $comparator = null): bool
+    {
         // @hook actionObject<ObjectClassName>UpdateBefore
-        Hook::exec('actionObjectUpdateBefore', ['object' => $this]);
-        Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'UpdateBefore', ['object' => $this]);
+        Hook::exec('actionObjectUpdateBefore', ['object' => $this, 'objectComparator' => $comparator]);
+        Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'UpdateBefore', ['object' => $this, 'objectComparator' => $comparator]);
 
         $this->clearCache();
 
@@ -779,8 +812,8 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
                         foreach ($id_shop_list as $id_shop) {
                             $field['id_shop'] = (int) $id_shop;
                             $where = pSQL($this->def['primary']) . ' = ' . (int) $this->id
-                                        . ' AND id_lang = ' . (int) $field['id_lang']
-                                        . ' AND id_shop = ' . (int) $id_shop;
+                                . ' AND id_lang = ' . (int) $field['id_lang']
+                                . ' AND id_shop = ' . (int) $id_shop;
 
                             if (Db::getInstance()->getValue('SELECT COUNT(*) FROM ' . pSQL(_DB_PREFIX_ . $this->def['table']) . '_lang WHERE ' . $where)) {
                                 $result &= Db::getInstance()->update($this->def['table'] . '_lang', $field, $where);
@@ -791,7 +824,7 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
                     } else {
                         // If this table is not linked to multishop system ...
                         $where = pSQL($this->def['primary']) . ' = ' . (int) $this->id
-                                    . ' AND id_lang = ' . (int) $field['id_lang'];
+                            . ' AND id_lang = ' . (int) $field['id_lang'];
                         if (Db::getInstance()->getValue('SELECT COUNT(*) FROM ' . pSQL(_DB_PREFIX_ . $this->def['table']) . '_lang WHERE ' . $where)) {
                             $result &= Db::getInstance()->update($this->def['table'] . '_lang', $field, $where);
                         } else {
@@ -803,8 +836,8 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
         }
 
         // @hook actionObject<ObjectClassName>UpdateAfter
-        Hook::exec('actionObjectUpdateAfter', ['object' => $this]);
-        Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'UpdateAfter', ['object' => $this]);
+        Hook::exec('actionObjectUpdateAfter', ['object' => $this, 'objectComparator' => $comparator]);
+        Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'UpdateAfter', ['object' => $this, 'objectComparator' => $comparator]);
 
         return $result;
     }
