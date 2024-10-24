@@ -108,6 +108,14 @@ class SetUpUrlType extends TranslatorAwareType
                 'help' => $friendlyUrlHelp,
                 'multistore_configuration_key' => 'PS_REWRITING_SETTINGS',
             ])
+            ->add('default_language_url_prefix', SwitchType::class, [
+                'label' => $this->trans('Use prefix for default language', 'Admin.Global'),
+                'help' => $this->trans(
+                    'If there are multiple languages enabled on the shop, all URLs are prefixed with the ISO code of the language. Do you want to do this also for the default language, or keep it un-prefixed? If adding a language to a well established single language shop, it\'s a good idea to disable this and avoid changing the URLs.',
+                    'Admin.Shopparameters.Help'
+                ),
+                'multistore_configuration_key' => 'PS_DEFAULT_LANGUAGE_URL_PREFIX',
+            ])
             ->add('accented_url', SwitchType::class, [
                 'label' => $this->trans('Accented URL', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans(

@@ -1315,6 +1315,8 @@ class LinkCore
     }
 
     /**
+     * Returns a language prefix for the URL if needed.
+     *
      * @param int|null $idLang
      * @param Context|null $context
      * @param int|null $idShop
@@ -1323,21 +1325,35 @@ class LinkCore
      */
     protected function getLangLink($idLang = null, ?Context $context = null, $idShop = null)
     {
-        static $psRewritingSettings = null;
-        if ($psRewritingSettings === null) {
-            $psRewritingSettings = (int) Configuration::get('PS_REWRITING_SETTINGS', null, null, $idShop);
-        }
-
+        // Get context if none was passed
         if (!$context) {
             $context = Context::getContext();
         }
 
-        if ((!$this->allow && in_array($idShop, [$context->shop->id,  null])) || !Language::isMultiLanguageActivated($idShop) || !$psRewritingSettings) {
+        // If rewriting is disabled, no prefix needed
+        if ((bool) Configuration::get('PS_REWRITING_SETTINGS', null, null, $idShop) === false) {
+            return '';
+        }
+
+        // If there is just one language, no prefix needed
+        if ((bool) Language::isMultiLanguageActivated($idShop) === false) {
+            return '';
+        }
+
+        if (!$this->allow && in_array($idShop, [$context->shop->id,  null])) {
             return '';
         }
 
         if (!$idLang) {
             $idLang = $context->language->id;
+        }
+
+        // If the language is our default language, no prefix needed
+        if (
+            $idLang == Configuration::get('PS_LANG_DEFAULT')
+            && (bool) Configuration::get('PS_DEFAULT_LANGUAGE_URL_PREFIX', null, null, $idShop) === false
+        ) {
+            return '';
         }
 
         return Language::getIsoById($idLang) . '/';

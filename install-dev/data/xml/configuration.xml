@@ -20,6 +20,9 @@
   <configuration id="PS_REWRITING_SETTINGS" name="PS_REWRITING_SETTINGS">
     <value>0</value>
   </configuration>
+  <configuration id="PS_DEFAULT_LANGUAGE_URL_PREFIX" name="PS_DEFAULT_LANGUAGE_URL_PREFIX">
+    <value>1</value>
+  </configuration>
   <configuration id="PS_ORDER_OUT_OF_STOCK" name="PS_ORDER_OUT_OF_STOCK">
     <value>0</value>
   </configuration>
