@@ -70,8 +70,14 @@ services:
   prestashop.adapter.legacy.logger:
     class: PrestaShop\PrestaShop\Adapter\LegacyLogger
 
+  PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider:
+    public: false
+
   prestashop.adapter.legacy.hook:
-    class: PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider
+    alias: PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   # Legacy Hooks registrator
   prestashop.adapter.legacy.hook.subscriber:
