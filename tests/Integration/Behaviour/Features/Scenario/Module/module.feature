@@ -93,19 +93,35 @@ Feature: Module
     Then I should have an exception that module is already installed
 
   Scenario: Install module with zip file on disk
-    When I install module "test_install_cqrs_command" from "zip" "test_install_cqrs_command.zip"
-    Then module test_install_cqrs_command has following infos:
-      | technical_name | test_install_cqrs_command |
+    When I install module "test_cqrs_command" from "zip" "test_cqrs_command.zip"
+    Then module test_cqrs_command has following infos:
+      | technical_name | test_cqrs_command |
       | version        | 1.0.0                     |
       | enabled        | true                      |
       | installed      | true                      |
 
   Scenario: Install module with zip file on remote
     When I uninstall module "ps_featuredproducts" with deleteFile true
-    And I install module "ps_featuredproducts" from "url" "https://github.com/PrestaShop/ps_featuredproducts/releases/download/v2.1.5/ps_featuredproducts.zip"
+    And I install module "ps_featuredproducts" from "url" "https://github.com/PrestaShop/ps_featuredproducts/releases/download/v2.1.4/ps_featuredproducts.zip"
     Then module ps_featuredproducts has following infos:
       | technical_name | ps_featuredproducts |
       | version        | 1.0.0               |
+      | enabled        | true                |
+      | installed      | true                |
+
+  Scenario: Update module with zip file on disk
+    When I update module "test_cqrs_command" from "zip" "test_cqrs_command_1.0.1.zip"
+    Then module test_cqrs_command has following infos:
+      | technical_name | test_cqrs_command |
+      | version        | 1.0.1                     |
+      | enabled        | true                      |
+      | installed      | true                      |
+
+  Scenario: Update module with zip file on remote
+    When I update module "ps_featuredproducts" from "url" "https://github.com/PrestaShop/ps_featuredproducts/releases/download/v2.1.5/ps_featuredproducts.zip"
+    Then module ps_featuredproducts has following infos:
+      | technical_name | ps_featuredproducts |
+      | version        | 2.1.5               |
       | enabled        | true                |
       | installed      | true                |
 

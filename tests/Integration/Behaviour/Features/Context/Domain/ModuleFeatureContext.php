@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkToggleModuleStatusComma
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\UninstallModuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkUninstallModuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\InstallModuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\Module\Command\UpdateModuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\UpdateModuleStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\Exception\AlreadyInstalledModuleException;
 use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotFoundException;
@@ -189,6 +190,46 @@ class ModuleFeatureContext extends AbstractDomainFeatureContext
         }
         try{
             $this->getQueryBus()->handle(new InstallModuleCommand($technicalName, $source));
+        } catch (ModuleNotFoundException $e) {
+            $this->setLastException($e);
+        }
+
+        // Clean the cache
+        Module::resetStaticCache();
+    }
+
+    /**
+    * @When I update module :technicalName from "folder"
+    */
+    public function updateModuleFromFolder(string $technicalName): void
+    {
+        try{
+            $this->getQueryBus()->handle(new UpdateModuleCommand($technicalName));
+        } catch (AlreadyInstalledModuleException $e) {
+            $this->setLastException($e);
+        }
+        // Clean the cache
+        Module::resetStaticCache();
+    }
+
+   /**
+    * @When /^I update module "(.+)" from "(zip|url)" "(.+)"$/
+    */
+    public function updateModule(string $technicalName, string $sourceType, string $sourceGiven): void
+    {
+        switch ($sourceType) {
+            case 'zip':
+                $source = _PS_MODULE_DIR_ . $sourceGiven;
+                break;
+            case 'url':
+                $source = $sourceGiven;
+                break;
+            default:
+                $source = null;
+                break;
+        }
+        try{
+            $this->getQueryBus()->handle(new UpdateModuleCommand($technicalName, $source));
         } catch (ModuleNotFoundException $e) {
             $this->setLastException($e);
         }
