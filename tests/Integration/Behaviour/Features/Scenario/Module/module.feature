@@ -105,7 +105,7 @@ Feature: Module
     And I install module "ps_featuredproducts" from "url" "https://github.com/PrestaShop/ps_featuredproducts/releases/download/v2.1.5/ps_featuredproducts.zip"
     Then module ps_featuredproducts has following infos:
       | technical_name | ps_featuredproducts |
-      | version        | 1.0.0               |
+      | version        | 2.1.5               |
       | enabled        | true                |
       | installed      | true                |
 
