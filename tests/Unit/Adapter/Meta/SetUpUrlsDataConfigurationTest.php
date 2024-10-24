@@ -42,6 +42,7 @@ class SetUpUrlsDataConfigurationTest extends AbstractConfigurationTestCase
 
     private const VALID_CONFIGURATION = [
         'friendly_url' => true,
+        'default_language_url_prefix' => true,
         'accented_url' => true,
         'canonical_url_redirection' => 2,
         'disable_apache_multiview' => true,
@@ -155,6 +156,7 @@ class SetUpUrlsDataConfigurationTest extends AbstractConfigurationTestCase
         return [
             [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['friendly_url' => 'wrong_type'])],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['default_language_url_prefix' => 'wrong_type'])],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['accented_url' => 'wrong_type'])],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['canonical_url_redirection' => 'wrong_type'])],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['disable_apache_multiview' => 'wrong_type'])],
