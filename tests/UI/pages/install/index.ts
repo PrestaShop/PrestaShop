@@ -1,4 +1,6 @@
-import type {Page} from 'playwright';
+import {
+  type Page,
+} from '@prestashop-core/ui-testing';
 
 // Import pages
 import CommonPage from '@pages/commonPage';

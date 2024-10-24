@@ -1,11 +1,10 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
 import {
-  // Import data
   type FakerCustomer,
+  type Frame,
+  type Page,
 } from '@prestashop-core/ui-testing';
-
-import type {Frame, Page} from 'playwright';
 
 /**
  * Add customer page, contains functions that can be used on the page

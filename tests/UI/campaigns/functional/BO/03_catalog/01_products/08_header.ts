@@ -9,7 +9,6 @@ import createProductsPage from '@pages/BO/catalog/products/add';
 import detailsTab from '@pages/BO/catalog/products/add/detailsTab';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 
-import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 import {faker} from '@faker-js/faker';
 import {
@@ -18,7 +17,9 @@ import {
   boProductsPage,
   boProductsCreateTabDescriptionPage,
   boProductsCreateTabStocksPage,
+  type BrowserContext,
   FakerProduct,
+  type Page,
   type ProductHeaderSummary,
   utilsFile,
   utilsPlaywright,

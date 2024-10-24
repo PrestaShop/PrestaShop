@@ -14,19 +14,20 @@ import {
   boDashboardPage,
   boLoginPage,
   boOrdersPage,
+  type BrowserContext,
   dataOrderStatuses,
   dataPaymentMethods,
   dataProducts,
   FakerAddress,
   FakerCustomer,
   FakerOrder,
+  type Page,
   utilsCore,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_customers_outstanding_sortFilterOutstanding';
 

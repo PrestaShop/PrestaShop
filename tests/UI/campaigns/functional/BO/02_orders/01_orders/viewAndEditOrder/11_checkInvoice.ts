@@ -21,6 +21,7 @@ import {
   boOrdersViewBlockProductsPage,
   boOrdersViewBlockTabListPage,
   boProductsPage,
+  type BrowserContext,
   dataAddresses,
   dataCarriers,
   dataCustomers,
@@ -31,6 +32,7 @@ import {
   FakerOrderShipping,
   FakerProduct,
   type OrderPayment,
+  type Page,
   type ProductDiscount,
   utilsCore,
   utilsDate,
@@ -39,7 +41,6 @@ import {
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_checkInvoice';
 

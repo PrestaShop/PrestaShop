@@ -8,13 +8,14 @@ import {
   boDashboardPage,
   boLocalizationPage,
   boLoginPage,
+  type BrowserContext,
   dataCurrencies,
   foClassicHomePage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_international_localization_currencies_createOfficialCurrency';
 

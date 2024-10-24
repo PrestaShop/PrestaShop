@@ -1,8 +1,9 @@
 // Import pages
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type {Locator, Page} from 'playwright';
 import {
+  type Locator,
+  type Page,
   type ProductPackInformation,
   type ProductPackItem,
   type ProductPackOptions,

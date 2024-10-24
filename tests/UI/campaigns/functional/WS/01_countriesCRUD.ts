@@ -16,14 +16,15 @@ import zonesPage from '@pages/BO/international/locations';
 import getCountryXml from '@data/xml/country';
 
 import {expect} from 'chai';
-import type {
-  APIResponse, APIRequestContext, BrowserContext, Page,
-} from 'playwright';
 import {
+  type APIRequestContext,
+  type APIResponse,
   boCountriesPage,
   boCountriesCreatePage,
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
+  type Page,
   utilsPlaywright,
   utilsXML,
   type WebservicePermission,

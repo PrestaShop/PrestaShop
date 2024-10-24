@@ -34,8 +34,10 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkToggleModuleStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\UninstallModuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkUninstallModuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\Module\Command\ResetModuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\InstallModuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\UpdateModuleStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Module\Exception\CannotResetModuleException;
 use PrestaShop\PrestaShop\Core\Domain\Module\Exception\AlreadyInstalledModuleException;
 use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotInstalledException;
@@ -79,6 +81,15 @@ class ModuleFeatureContext extends AbstractDomainFeatureContext
     {
         $this->assertLastErrorIs(ModuleNotFoundException::class);
     }
+
+    /**
+     * @Then I should have an exception that disabled module cannot be reset
+     */
+    public function assertDisabledError(): void
+    {
+        $this->assertLastErrorIs(CannotResetModuleException::class, CannotResetModuleException::NOT_ACTIVE);
+    }
+
 
     /**
      * @Then I should have an exception that module is not installed
@@ -156,6 +167,25 @@ class ModuleFeatureContext extends AbstractDomainFeatureContext
        // Clean the cache
        Module::resetStaticCache();
    }
+
+
+    /**
+     * @When I reset module :technicalName
+     */
+    public function resetModule(string $technicalName): void
+    {
+        try {
+            $this->getCommandBus()->handle(new ResetModuleCommand(
+                $technicalName,
+                false
+            ));
+        } catch (CannotResetModuleException $e) {
+            $this->setLastException($e);
+        }
+
+        // Clean the cache
+        Module::resetStaticCache();
+    }
 
    /**
     * @When I install module :technicalName from "folder"

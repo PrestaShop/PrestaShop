@@ -38,10 +38,7 @@ use PrestaShop\PrestaShop\Core\Encoding\CharsetEncoding;
 #[AsCommandHandler]
 final class SaveSqlRequestSettingsHandler implements SaveSqlRequestSettingsHandlerInterface
 {
-    /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
+    private ConfigurationInterface $configuration;
 
     /**
      * @param ConfigurationInterface $configuration
@@ -57,6 +54,7 @@ final class SaveSqlRequestSettingsHandler implements SaveSqlRequestSettingsHandl
     public function handle(SaveSqlRequestSettingsCommand $command)
     {
         $this->configuration->set(SqlRequestSettings::FILE_ENCODING, $this->getEncodingFileValue($command));
+        $this->configuration->set(SqlRequestSettings::FILE_SEPARATOR, $command->getFileSeparator());
     }
 
     /**
@@ -66,7 +64,7 @@ final class SaveSqlRequestSettingsHandler implements SaveSqlRequestSettingsHandl
      *
      * @return int
      */
-    private function getEncodingFileValue(SaveSqlRequestSettingsCommand $command)
+    private function getEncodingFileValue(SaveSqlRequestSettingsCommand $command): int
     {
         $valuesMapping = [
             CharsetEncoding::UTF_8 => 1,

@@ -27,6 +27,7 @@ import {storesPage} from '@pages/FO/classic/stores';
 import {termsAndConditionsOfUsePage} from '@pages/FO/classic/termsAndConditionsOfUse';
 
 import {
+  type BrowserContext,
   dataCustomers,
   FakerCustomer,
   foClassicAboutUsPage,
@@ -34,11 +35,11 @@ import {
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyWishlistsPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_classic_headerAndFooter_checkLinksInFooter';
 

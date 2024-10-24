@@ -1,5 +1,4 @@
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 // Import utils
 import testContext from '@utils/testContext';
@@ -8,8 +7,10 @@ import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  type BrowserContext,
   dataProducts,
   dataCategories,
+  type Page,
   type ProductFilterMinMax,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

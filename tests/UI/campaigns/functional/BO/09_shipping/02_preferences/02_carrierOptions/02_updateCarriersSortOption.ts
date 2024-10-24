@@ -9,18 +9,19 @@ import {
   boCarriersPage,
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   dataCarriers,
   dataCustomers,
   foClassicCartPage,
   foClassicCheckoutPage,
   foClassicHomePage,
   foClassicProductPage,
+  type Page,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_shipping_preferences_carrierOptions_updateCarriersSortOption';
 

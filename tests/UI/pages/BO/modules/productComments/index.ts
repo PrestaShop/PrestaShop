@@ -1,6 +1,8 @@
 import {ModuleConfiguration} from '@pages/BO/modules/moduleConfiguration';
 
-import type {Page} from 'playwright';
+import {
+  type Page,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Module configuration page for module : Product comments, contains selectors and functions for the page

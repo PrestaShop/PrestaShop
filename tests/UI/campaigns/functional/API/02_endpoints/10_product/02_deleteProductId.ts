@@ -6,15 +6,17 @@ import {deleteAPIClientTest} from '@commonTests/BO/advancedParameters/authServer
 import {createProductTest} from '@commonTests/BO/catalog/product';
 
 import {expect} from 'chai';
-import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 import {
+  type APIRequestContext,
   boApiClientsPage,
   boApiClientsCreatePage,
   boProductsPage,
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   FakerAPIClient,
   FakerProduct,
+  type Page,
   utilsAPI,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

@@ -28,6 +28,7 @@ import storesPage from '@pages/FO/hummingbird/stores';
 import termsAndConditionsOfUsePage from '@pages/FO/hummingbird/termsAndConditionsOfUse';
 
 import {
+  type BrowserContext,
   dataCustomers,
   FakerCustomer,
   foHummingbirdAboutUsPage,
@@ -35,11 +36,11 @@ import {
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyWishlistsPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_hummingbird_headerAndFooter_checkLinksInFooter';
 

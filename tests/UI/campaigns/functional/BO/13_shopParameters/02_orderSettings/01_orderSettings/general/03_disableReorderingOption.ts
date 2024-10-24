@@ -9,15 +9,16 @@ import {
   boDashboardPage,
   boLoginPage,
   boOrderSettingsPage,
+  type BrowserContext,
   dataCustomers,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_shopParameters_orderSettings_orderSettings_general_disableReorderingOption';
 

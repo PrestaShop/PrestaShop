@@ -14,6 +14,7 @@ import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
@@ -26,12 +27,12 @@ import {
   foHummingbirdLoginPage,
   foHummingbirdModalQuickViewPage,
   foHummingbirdMyAccountPage,
+  type Page,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 // context
 const baseContext: string = 'functional_FO_hummingbird_orderConfirmation_contactUs';

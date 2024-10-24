@@ -8,16 +8,17 @@ import preferencesPage from '@pages/BO/payment/preferences';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   dataCustomers,
   foClassicCartPage,
   foClassicCheckoutPage,
   foClassicHomePage,
   foClassicProductPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_payment_preferences_countryRestrictions';
 
@@ -25,7 +26,7 @@ describe('BO - Payment - Preferences : Configure country restrictions', async ()
   let browserContext: BrowserContext;
   let page: Page;
 
-  const countryID: number = 74;
+  const countryID: number = 73;
 
   // before and after functions
   before(async function () {

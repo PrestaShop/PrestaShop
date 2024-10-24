@@ -11,6 +11,7 @@ import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
 
 import {
+  type BrowserContext,
   dataOrderStatuses,
   dataPaymentMethods,
   dataProducts,
@@ -21,12 +22,12 @@ import {
   foClassicLoginPage,
   foClassicMyAccountPage,
   type OrderHistory,
+  type Page,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_classic_userAccount_orderHistory_consultOrderList';
 

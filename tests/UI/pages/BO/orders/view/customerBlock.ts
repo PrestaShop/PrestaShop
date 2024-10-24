@@ -2,11 +2,11 @@ import addAddressPage from '@pages/BO/customers/addresses/add';
 import {ViewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 
 import {
-  // Import data
   FakerAddress,
+  type Frame,
+  type Page,
 } from '@prestashop-core/ui-testing';
 
-import type {Frame, Page} from 'playwright';
 /**
  * Customer block, contains functions that can be used on view/edit customer block
  * @class

@@ -9,15 +9,16 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 import createProductPage from '@pages/BO/catalog/products/add';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  type BrowserContext,
   FakerProduct,
   foHummingbirdCategoryPage,
   foHummingbirdHomePage,
   foHummingbirdProductPage,
+  type Page,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

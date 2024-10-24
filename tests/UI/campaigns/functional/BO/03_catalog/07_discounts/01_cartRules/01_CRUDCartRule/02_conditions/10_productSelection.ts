@@ -14,6 +14,7 @@ import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   dataCustomers,
   dataProducts,
   FakerCartRule,
@@ -23,12 +24,12 @@ import {
   foClassicModalQuickViewPage,
   foClassicProductPage,
   foClassicSearchResultsPage,
+  type Page,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_conditions_productSelection';
 

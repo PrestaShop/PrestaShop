@@ -12,10 +12,11 @@ import addressesPage from '@pages/BO/customers/addresses';
 import ImportAddresses from '@data/import/addresses';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
+  type Page,
   utilsCore,
   utilsFile,
   utilsPlaywright,

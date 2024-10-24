@@ -12,6 +12,7 @@ import {
   boOrdersViewBlockProductsPage,
   boShoppingCartsPage,
   boStockPage,
+  type BrowserContext,
   dataCarriers,
   dataCustomers,
   dataOrderStatuses,
@@ -22,12 +23,13 @@ import {
   foClassicHomePage,
   foClassicLoginPage,
   foClassicProductPage,
+  type Frame,
+  type Page,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Frame, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_orders_orders_createOrders_selectPreviousCarts';
 

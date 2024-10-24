@@ -22,6 +22,7 @@ import {
   boOrdersPage,
   boOrdersViewBlockProductsPage,
   boOrdersViewBlockTabListPage,
+  type BrowserContext,
   dataOrderStatuses,
   dataPaymentMethods,
   dataProducts,
@@ -33,13 +34,13 @@ import {
   foHummingbirdMyAccountPage,
   type MailDev,
   type MailDevEmail,
+  type Page,
   utilsFile,
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_hummingbird_userAccount_creditSlips_consultCreditSlip';
 

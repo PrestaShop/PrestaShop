@@ -1,6 +1,8 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type {Page} from 'playwright';
+import {
+  type Page,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Order messages listing page, contains selectors and functions for the page
@@ -134,7 +136,9 @@ class OrderMessages extends BOBasePage {
   async resetFilter(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.filterResetButton, 2000)) {
       await this.clickAndWaitForLoadState(page, this.filterResetButton);
-      await this.elementNotVisible(page, this.filterResetButton, 2000);
+      // Move the mouse to avoid the tooltip on first row
+      await page.mouse.move(0, 0);
+      await this.waitForHiddenSelector(page, this.filterResetButton, 2000);
     }
   }
 
@@ -167,7 +171,9 @@ class OrderMessages extends BOBasePage {
    */
   async filterTable(page: Page, filterBy: string, value: string): Promise<void> {
     await this.setValue(page, this.filterColumn(filterBy), value);
-    await this.clickAndWaitForURL(page, this.filterSearchButton);
+    // click on search
+    await page.locator(this.filterSearchButton).click();
+    await this.waitForVisibleSelector(page, this.filterResetButton);
   }
 
   /* Column Methods */

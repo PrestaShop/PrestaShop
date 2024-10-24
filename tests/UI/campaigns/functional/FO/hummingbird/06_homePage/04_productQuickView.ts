@@ -9,13 +9,14 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
+  type BrowserContext,
   dataProducts,
   FakerProduct,
   foHummingbirdCategoryPage,
   foHummingbirdHomePage,
   foHummingbirdModalQuickViewPage,
+  type Page,
   type ProductAttribute,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

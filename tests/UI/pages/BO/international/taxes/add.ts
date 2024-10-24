@@ -2,9 +2,8 @@ import BOBasePage from '@pages/BO/BObasePage';
 
 import {
   FakerTax,
+  type Page,
 } from '@prestashop-core/ui-testing';
-
-import {Page} from 'playwright';
 
 /**
  * Add tax page, contains functions that can be used on the page

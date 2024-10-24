@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import createProductsPage from '@pages/BO/catalog/products/add';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 // Import data
 import {
@@ -15,6 +14,7 @@ import {
   boLoginPage,
   boProductsPage,
   boProductsCreateTabShippingPage,
+  type BrowserContext,
   dataCarriers,
   dataCustomers,
   dataProducts,
@@ -26,6 +26,7 @@ import {
   foClassicHomePage,
   foClassicProductPage,
   foClassicSearchResultsPage,
+  type Page,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

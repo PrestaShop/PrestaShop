@@ -2,16 +2,17 @@
 import testContext from '@utils/testContext';
 
 // Import pages
-import attributesPage from '@pages/BO/catalog/attributes';
 import addValuePage from '@pages/BO/catalog/attributes/addValue';
 import viewAttributePage from '@pages/BO/catalog/attributes/view';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
+  boAttributesPage,
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   FakerAttributeValue,
+  type Page,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -60,35 +61,35 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
       boDashboardPage.catalogParentLink,
       boDashboardPage.attributesAndFeaturesLink,
     );
-    await attributesPage.closeSfToolBar(page);
+    await boAttributesPage.closeSfToolBar(page);
 
-    const pageTitle = await attributesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(attributesPage.pageTitle);
+    const pageTitle = await boAttributesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boAttributesPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetAttributeFilter', baseContext);
 
-    const numberOfAttributesAfterReset = await attributesPage.resetAndGetNumberOfLines(page);
+    const numberOfAttributesAfterReset = await boAttributesPage.resetAndGetNumberOfLines(page);
     expect(numberOfAttributesAfterReset).to.be.above(0);
   });
 
   it('should filter list of attributes by name \'Color\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDeleteAttributes', baseContext);
 
-    await attributesPage.filterTable(page, 'name', 'Color');
+    await boAttributesPage.filterTable(page, 'name', 'Color');
 
-    const textColumn = await attributesPage.getTextColumn(page, 1, 'name');
+    const textColumn = await boAttributesPage.getTextColumn(page, 1, 'name');
     expect(textColumn).to.contains('Color');
 
-    idAttribute = parseInt(await attributesPage.getTextColumn(page, 1, 'id_attribute_group'), 10);
+    idAttribute = parseInt(await boAttributesPage.getTextColumn(page, 1, 'id_attribute_group'), 10);
     expect(idAttribute).to.be.gt(0);
   });
 
   it('should view attribute \'Color\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'viewAttributeColor1', baseContext);
 
-    await attributesPage.viewAttribute(page, 1);
+    await boAttributesPage.viewAttribute(page, 1);
 
     const pageTitle = await viewAttributePage.getPageTitle(page);
     expect(pageTitle).to.equal(viewAttributePage.pageTitle('Color'));
@@ -120,7 +121,7 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
         });
 
         const textResult = await addValuePage.addEditValue(page, createValueData, index !== 6);
-        expect(textResult).to.contains(attributesPage.successfulCreationMessage);
+        expect(textResult).to.contains(boAttributesPage.successfulCreationMessage);
       });
     });
 

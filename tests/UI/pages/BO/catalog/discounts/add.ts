@@ -1,8 +1,9 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type {Frame, Page} from 'playwright';
 import {
   type FakerCartRule,
+  type Frame,
+  type Page,
 } from '@prestashop-core/ui-testing';
 
 /**

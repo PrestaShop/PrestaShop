@@ -1,6 +1,8 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type {Page} from 'playwright';
+import {
+  type Page,
+} from '@prestashop-core/ui-testing';
 
 /**
  * View attribute page, contains functions that can be used on the page
@@ -118,7 +120,7 @@ class ViewAttribute extends BOBasePage {
     this.tableBodyColumn = (row: number) => `${this.tableBodyRow(row)} td`;
 
     // Columns selectors
-    this.tableColumnHandle = (row: number) => `${this.tableBodyColumn(row)}.column-position_handle div i`;
+    this.tableColumnHandle = (row: number) => `${this.tableBodyColumn(row)}.column-position_handle .position-drag-handle`;
     this.tableColumnId = (row: number) => `${this.tableBodyColumn(row)}.column-id_attribute`;
     this.tableColumnValue = (row: number) => `${this.tableBodyColumn(row)}.column-name`;
     this.tableColumnColor = (row: number) => `${this.tableBodyColumn(row)}.column-color div`;
@@ -297,12 +299,7 @@ class ViewAttribute extends BOBasePage {
    * @return {Promise<string|null>}
    */
   async changePosition(page: Page, actualPosition: number, newPosition: number): Promise<string|null> {
-    await this.dragAndDrop(
-      page,
-      this.tableColumnHandle(actualPosition),
-      this.tableColumnHandle(newPosition),
-      true,
-    );
+    await this.dragAndDropSlowly(page, this.tableColumnHandle(actualPosition), this.tableBodyRow(newPosition));
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }

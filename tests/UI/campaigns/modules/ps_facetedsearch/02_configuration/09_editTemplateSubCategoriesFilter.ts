@@ -2,16 +2,17 @@
 import testContext from '@utils/testContext';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
   boModuleManagerPage,
+  type BrowserContext,
   dataModules,
   foClassicCategoryPage,
   foClassicHomePage,
   modPsFacetedsearchBoFilterTemplate,
   modPsFacetedsearchBoMain,
+  type Page,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -196,8 +197,8 @@ describe('Faceted search module - Edit template - Sub-categories filter', async 
       const isSearchFilterDropdown = await foClassicCategoryPage.isSearchFilterDropdown(page, 'category');
       expect(isSearchFilterDropdown).to.be.eq(test.expectedIsSearchFilterDropdown);
 
-      const isSearchFiltersCheckbox = await foClassicCategoryPage.isSearchFiltersCheckbox(page, 'category');
-      expect(isSearchFiltersCheckbox).to.be.eq(test.expectedIsSearchFilterCheckbox);
+      const isSearchFilterCheckbox = await foClassicCategoryPage.isSearchFilterCheckbox(page, 'category');
+      expect(isSearchFilterCheckbox).to.be.eq(test.expectedIsSearchFilterCheckbox);
 
       if (test.filterLimit !== '') {
         const numSearchFiltersCheckbox = await foClassicCategoryPage.getNumSearchFiltersCheckbox(

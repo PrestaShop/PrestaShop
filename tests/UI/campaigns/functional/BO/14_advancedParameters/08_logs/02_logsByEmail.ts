@@ -9,17 +9,18 @@ import {createProductTest} from '@commonTests/BO/catalog/product';
 import logsPage from '@pages/BO/advancedParameters/logs';
 import createProductsPage from '@pages/BO/catalog/products/add';
 
-import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 import {faker} from '@faker-js/faker';
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  type BrowserContext,
   dataEmployees,
   FakerProduct,
   type MailDev,
   type MailDevEmail,
+  type Page,
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

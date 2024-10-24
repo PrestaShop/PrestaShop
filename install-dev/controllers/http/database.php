@@ -206,7 +206,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
             $this->database_login = $parameters['parameters']['database_user'];
             $this->database_password = $parameters['parameters']['database_password'];
             $this->database_engine = $parameters['parameters']['database_engine'];
-            $this->database_prefix = substr(str_shuffle(str_repeat('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', mt_rand(1,10))), 0, 5).'_';
+            $this->database_prefix = substr(str_shuffle(str_repeat('0123456789abcdefghijklmnopqrstuvwxyz', mt_rand(1,10))), 0, 5).'_';
 
             $this->database_clear = true;
             $this->use_smtp = false;

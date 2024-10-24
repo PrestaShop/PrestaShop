@@ -8,14 +8,15 @@ import {
   boDashboardPage,
   boLocalizationPage,
   boLoginPage,
+  type BrowserContext,
   dataCurrencies,
   FakerCurrency,
   foClassicHomePage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect, use} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import chaiString from 'chai-string';
 
 use(chaiString);

@@ -10,13 +10,14 @@ import {
   boDashboardPage,
   boLoginPage,
   dataTaxRules,
+  type BrowserContext,
   FakerTaxRulesGroup,
+  type Page,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_international_taxes_taxRules_filterSortAndPagination';
 

@@ -9,11 +9,12 @@ import multiStorePage from '@pages/BO/advancedParameters/multistore';
 import addShopGroupPage from '@pages/BO/advancedParameters/multistore/add';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   FakerShopGroup,
+  type Page,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

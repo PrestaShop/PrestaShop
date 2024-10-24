@@ -1,7 +1,8 @@
 import LocalizationBasePage from '@pages/BO/international/localization/localizationBasePage';
 
-import type {Page} from 'playwright';
 import {
+  type Page,
+
   type FakerLanguage,
 } from '@prestashop-core/ui-testing';
 

@@ -25,6 +25,7 @@
 {% extends '@PrestaShop/Admin/Common/Grid/grid.html.twig' %}
 
 {% block grid_bulk_actions_block %}
+  {# When grid is not in empty state we show the extra category filter #}
   {% if not grid.attributes.is_empty_state %}
   {{ form_start(categoryFilterForm, {attr: {class: 'd-inline-block'}}) }}
     {{ form_row(categoryFilterForm) }}

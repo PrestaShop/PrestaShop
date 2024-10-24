@@ -6,15 +6,16 @@ import testContext from '@utils/testContext';
 import boProductsCreatePage from '@pages/BO/catalog/products/add';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
   boSearchPage,
+  type BrowserContext,
   dataLanguages,
   foClassicHomePage,
   foClassicSearchResultsPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 

@@ -18,12 +18,13 @@ import addStorePage from '@pages/BO/shopParameters/stores/add';
 import {getStoreXml, getUpdateStoreXml} from '@data/xml/store';
 
 import {expect} from 'chai';
-import type {
-  APIResponse, APIRequestContext, BrowserContext, Page,
-} from 'playwright';
 import {
+  type APIRequestContext,
+  type APIResponse,
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
+  type Page,
   utilsPlaywright,
   utilsXML,
   type WebservicePermission,

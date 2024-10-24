@@ -6,11 +6,13 @@ import webservicePage from '@pages/BO/advancedParameters/webservice';
 import addWebservicePage from '@pages/BO/advancedParameters/webservice/add';
 
 import {expect} from 'chai';
-import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 import {
+  type APIRequestContext,
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   FakerWebservice,
+  type Page,
   utilsPlaywright,
   utilsXML,
 } from '@prestashop-core/ui-testing';
