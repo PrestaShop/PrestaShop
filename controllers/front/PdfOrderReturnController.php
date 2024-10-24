@@ -39,7 +39,7 @@ class PdfOrderReturnControllerCore extends FrontController
      */
     public $orderReturn;
 
-    public function postProcess()
+    public function postProcess(): void
     {
         $adminToken = Tools::getValue('adtoken');
         if (!empty($adminToken)) {
@@ -72,11 +72,11 @@ class PdfOrderReturnControllerCore extends FrontController
     }
 
     /**
-     * @return bool|void
+     * @return void
      *
      * @throws PrestaShopException
      */
-    public function display()
+    public function display(): void
     {
         $pdf = new PDF($this->orderReturn, PDF::TEMPLATE_ORDER_RETURN, $this->context->smarty);
         $pdf->render();

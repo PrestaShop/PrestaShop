@@ -39,7 +39,7 @@ class OrderSlipControllerCore extends FrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         if (Configuration::isCatalogMode()) {
             Tools::redirect('index.php');
@@ -53,7 +53,7 @@ class OrderSlipControllerCore extends FrontController
         $this->setTemplate('customer/order-slip');
     }
 
-    public function getTemplateVarCreditSlips()
+    public function getTemplateVarCreditSlips(): array
     {
         $credit_slips = [];
         $orders_slip = OrderSlip::getOrdersSlip((int) $this->context->cookie->id_customer);
@@ -72,7 +72,7 @@ class OrderSlipControllerCore extends FrontController
         return $credit_slips;
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 

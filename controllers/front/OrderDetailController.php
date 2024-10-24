@@ -45,7 +45,7 @@ class OrderDetailControllerCore extends FrontController
      *
      * @see FrontController::postProcess()
      */
-    public function postProcess()
+    public function postProcess(): void
     {
         if (Tools::isSubmit('submitMessage')) {
             $idOrder = (int) Tools::getValue('id_order');
@@ -159,7 +159,7 @@ class OrderDetailControllerCore extends FrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         parent::initContent();
         if (Configuration::isCatalogMode()) {
@@ -222,7 +222,7 @@ class OrderDetailControllerCore extends FrontController
         $this->setTemplate('customer/order-detail');
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 

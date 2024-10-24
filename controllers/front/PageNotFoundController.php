@@ -37,7 +37,7 @@ class PageNotFoundControllerCore extends FrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         header('HTTP/1.1 404 Not Found');
         header('Status: 404 Not Found');
@@ -46,12 +46,12 @@ class PageNotFoundControllerCore extends FrontController
         $this->setTemplate('errors/404');
     }
 
-    protected function canonicalRedirection(string $canonical_url = '')
+    protected function canonicalRedirection(string $canonical_url = ''): void
     {
         // 404 - no need to redirect to the canonical url
     }
 
-    protected function sslRedirection()
+    protected function sslRedirection(): void
     {
         // 404 - no need to redirect
     }
@@ -62,7 +62,7 @@ class PageNotFoundControllerCore extends FrontController
      *
      * @return array
      */
-    public function getTemplateVarPage()
+    public function getTemplateVarPage(): array
     {
         $page = parent::getTemplateVarPage();
         $page['title'] = $this->trans('The page you are looking for was not found.', [], 'Shop.Theme.Global');
@@ -70,7 +70,7 @@ class PageNotFoundControllerCore extends FrontController
         return $page;
     }
 
-    public function displayAjax()
+    public function displayAjax(): void
     {
         header('Content-Type: application/json');
         echo json_encode($this->trans('The page you are looking for was not found.', [], 'Shop.Theme.Global'));

@@ -39,7 +39,7 @@ class DiscountControllerCore extends FrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         if (Configuration::isCatalogMode()) {
             Tools::redirect('index.php');
@@ -53,7 +53,7 @@ class DiscountControllerCore extends FrontController
         $this->setTemplate('customer/discount');
     }
 
-    public function getTemplateVarCartRules()
+    public function getTemplateVarCartRules(): array
     {
         $cart_rules = [];
         $customerId = $this->context->customer->id;
@@ -85,7 +85,7 @@ class DiscountControllerCore extends FrontController
         return $cart_rules;
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 

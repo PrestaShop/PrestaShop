@@ -43,7 +43,7 @@ class HistoryControllerCore extends FrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         if (Configuration::isCatalogMode()) {
             Tools::redirect('index.php');
@@ -65,7 +65,7 @@ class HistoryControllerCore extends FrontController
         $this->setTemplate('customer/history');
     }
 
-    public function getTemplateVarOrders()
+    public function getTemplateVarOrders(): array
     {
         $orders = [];
         $customer_orders = Order::getCustomerOrders($this->context->customer->id);
@@ -123,7 +123,7 @@ class HistoryControllerCore extends FrontController
         return $url_to_reorder;
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 

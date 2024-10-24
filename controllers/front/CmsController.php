@@ -47,7 +47,7 @@ class CmsControllerCore extends FrontController
     /** @var bool */
     public $ssl = false;
 
-    public function canonicalRedirection(string $canonicalURL = '')
+    public function canonicalRedirection(string $canonicalURL = ''): void
     {
         if (Validate::isLoadedObject($this->cms) && ($canonicalURL = $this->context->link->getCMSLink($this->cms, $this->cms->link_rewrite))) {
             parent::canonicalRedirection($canonicalURL);
@@ -61,7 +61,7 @@ class CmsControllerCore extends FrontController
      *
      * @see FrontController::init()
      */
-    public function init()
+    public function init(): void
     {
         if ($id_cms = (int) Tools::getValue('id_cms')) {
             $this->cms = new CMS($id_cms, $this->context->language->id, $this->context->shop->id);
@@ -105,7 +105,7 @@ class CmsControllerCore extends FrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         if ($this->assignCase == self::CMS_CASE_PAGE) {
             $cmsVar = $this->objectPresenter->present($this->cms);
@@ -168,12 +168,12 @@ class CmsControllerCore extends FrontController
      * Return an array of IDs of CMS pages, which shouldn't be forwared to their canonical URLs in SSL environment.
      * Required for pages which are shown in iframes.
      */
-    protected function getSSLCMSPageIds()
+    protected function getSSLCMSPageIds(): array
     {
         return [(int) Configuration::get('PS_CONDITIONS_CMS_ID'), (int) Configuration::get('LEGAL_CMS_ID_REVOCATION')];
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 
@@ -211,7 +211,7 @@ class CmsControllerCore extends FrontController
      *
      * @return array
      */
-    public function getTemplateVarPage()
+    public function getTemplateVarPage(): array
     {
         $page = parent::getTemplateVarPage();
 
@@ -227,7 +227,7 @@ class CmsControllerCore extends FrontController
         return $page;
     }
 
-    public function getTemplateVarCategoryCms()
+    public function getTemplateVarCategoryCms(): array
     {
         $categoryCms = [];
 
@@ -251,7 +251,7 @@ class CmsControllerCore extends FrontController
     /**
      * @return CMS|null
      */
-    public function getCms()
+    public function getCms(): ?CMS
     {
         return $this->cms;
     }
@@ -259,7 +259,7 @@ class CmsControllerCore extends FrontController
     /**
      * @return CMSCategory|null
      */
-    public function getCmsCategory()
+    public function getCmsCategory(): ?CMSCategory
     {
         return $this->cms_category;
     }
@@ -267,7 +267,7 @@ class CmsControllerCore extends FrontController
     /**
      * {@inheritdoc}
      */
-    public function getCanonicalURL()
+    public function getCanonicalURL(): string
     {
         if (Validate::isLoadedObject($this->cms)) {
             return $this->context->link->getCMSLink($this->cms, $this->cms->link_rewrite);
