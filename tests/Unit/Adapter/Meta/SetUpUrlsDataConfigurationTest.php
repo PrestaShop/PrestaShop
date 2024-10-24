@@ -117,6 +117,7 @@ class SetUpUrlsDataConfigurationTest extends AbstractConfigurationTestCase
             ->willReturnMap(
                 [
                     ['PS_REWRITING_SETTINGS', false, $shopConstraint, true],
+                    ['PS_DEFAULT_LANGUAGE_URL_PREFIX', false, $shopConstraint, true],
                     ['PS_ALLOW_ACCENTED_CHARS_URL', false, $shopConstraint, true],
                     ['PS_CANONICAL_REDIRECT', 0, $shopConstraint, 2],
                     ['PS_HTACCESS_DISABLE_MULTIVIEWS', false, $shopConstraint, true],
