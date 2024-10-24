@@ -2,12 +2,12 @@
 import testContext from '@utils/testContext';
 
 // Import pages
-import attributesPage from '@pages/BO/catalog/attributes';
 import featuresPage from '@pages/BO/catalog/features';
 import viewFeaturePage from '@pages/BO/catalog/features/view';
 
 import {expect} from 'chai';
 import {
+  boAttributesPage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -52,16 +52,16 @@ describe('BO - Catalog - Attributes & Features : Filter feature values table', a
       boDashboardPage.catalogParentLink,
       boDashboardPage.attributesAndFeaturesLink,
     );
-    await attributesPage.closeSfToolBar(page);
+    await boAttributesPage.closeSfToolBar(page);
 
-    const pageTitle = await attributesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(attributesPage.pageTitle);
+    const pageTitle = await boAttributesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boAttributesPage.pageTitle);
   });
 
   it('should go to Features page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFeaturesPage', baseContext);
 
-    await attributesPage.goToFeaturesPage(page);
+    await boAttributesPage.goToFeaturesPage(page);
 
     const pageTitle = await featuresPage.getPageTitle(page);
     expect(pageTitle).to.contains(featuresPage.pageTitle);

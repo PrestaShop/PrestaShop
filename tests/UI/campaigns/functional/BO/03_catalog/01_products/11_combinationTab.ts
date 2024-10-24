@@ -4,10 +4,10 @@ import testContext from '@utils/testContext';
 // Import pages
 import createProductsPage from '@pages/BO/catalog/products/add';
 import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
-import attributesPage from '@pages/BO/catalog/attributes';
 
 import {expect} from 'chai';
 import {
+  boAttributesPage,
   boDashboardPage,
   boLoginPage,
   boProductsPage,
@@ -133,14 +133,14 @@ describe('BO - Catalog - Products : Combination tab', async () => {
 
       page = await combinationsTab.clickOnAttributesAndFeaturesLink(page);
 
-      const pageTitle = await attributesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(attributesPage.pageTitle);
+      const pageTitle = await boAttributesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boAttributesPage.pageTitle);
     });
 
     it('should close \'Attributes & Features\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closePage', baseContext);
 
-      page = await attributesPage.closePage(browserContext, page, 0);
+      page = await boAttributesPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductsPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductsPage.pageTitle);

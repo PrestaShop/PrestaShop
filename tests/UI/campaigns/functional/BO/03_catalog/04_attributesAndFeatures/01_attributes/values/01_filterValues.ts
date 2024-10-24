@@ -2,11 +2,11 @@
 import testContext from '@utils/testContext';
 
 // Import pages
-import attributesPage from '@pages/BO/catalog/attributes';
 import viewAttributePage from '@pages/BO/catalog/attributes/view';
 
 import {expect} from 'chai';
 import {
+  boAttributesPage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -54,25 +54,25 @@ describe('BO - Catalog - Attributes & Features : Filter attribute values table',
       boDashboardPage.catalogParentLink,
       boDashboardPage.attributesAndFeaturesLink,
     );
-    await attributesPage.closeSfToolBar(page);
+    await boAttributesPage.closeSfToolBar(page);
 
-    const pageTitle = await attributesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(attributesPage.pageTitle);
+    const pageTitle = await boAttributesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boAttributesPage.pageTitle);
   });
 
   it('should filter attributes table by name \'Color\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterAttributes', baseContext);
 
-    await attributesPage.filterTable(page, 'name', dataAttributes.color.name);
+    await boAttributesPage.filterTable(page, 'name', dataAttributes.color.name);
 
-    const textColumn = await attributesPage.getTextColumn(page, 1, 'name');
+    const textColumn = await boAttributesPage.getTextColumn(page, 1, 'name');
     expect(textColumn).to.contains(dataAttributes.color.name);
   });
 
   it('should view attribute', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'viewAttribute', baseContext);
 
-    await attributesPage.viewAttribute(page, 1);
+    await boAttributesPage.viewAttribute(page, 1);
 
     const pageTitle = await viewAttributePage.getPageTitle(page);
     expect(pageTitle).to.equal(viewAttributePage.pageTitle(dataAttributes.color.name));

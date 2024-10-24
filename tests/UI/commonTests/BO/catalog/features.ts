@@ -4,10 +4,10 @@ import testContext from '@utils/testContext';
 // Import BO pages
 import featuresPage from '@pages/BO/catalog/features';
 import addFeaturePage from '@pages/BO/catalog/features/addFeature';
-import attributesPage from '@pages/BO/catalog/attributes';
 
 import {expect} from 'chai';
 import {
+  boAttributesPage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -56,16 +56,16 @@ function createFeatureTest(createFeatureData: FakerFeature, baseContext: string 
         boDashboardPage.catalogParentLink,
         boDashboardPage.attributesAndFeaturesLink,
       );
-      await attributesPage.closeSfToolBar(page);
+      await boAttributesPage.closeSfToolBar(page);
 
-      const pageTitle = await attributesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(attributesPage.pageTitle);
+      const pageTitle = await boAttributesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boAttributesPage.pageTitle);
     });
 
     it('should go to Features page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFeaturesPage', baseContext);
 
-      await attributesPage.goToFeaturesPage(page);
+      await boAttributesPage.goToFeaturesPage(page);
 
       const pageTitle = await featuresPage.getPageTitle(page);
       expect(pageTitle).to.contains(featuresPage.pageTitle);
@@ -127,16 +127,16 @@ function bulkDeleteFeaturesTest(featureName: string, baseContext: string = 'comm
         boDashboardPage.catalogParentLink,
         boDashboardPage.attributesAndFeaturesLink,
       );
-      await attributesPage.closeSfToolBar(page);
+      await boAttributesPage.closeSfToolBar(page);
 
-      const pageTitle = await attributesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(attributesPage.pageTitle);
+      const pageTitle = await boAttributesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boAttributesPage.pageTitle);
     });
 
     it('should go to Features page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFeaturesPage', baseContext);
 
-      await attributesPage.goToFeaturesPage(page);
+      await boAttributesPage.goToFeaturesPage(page);
 
       const pageTitle = await featuresPage.getPageTitle(page);
       expect(pageTitle).to.contains(featuresPage.pageTitle);
