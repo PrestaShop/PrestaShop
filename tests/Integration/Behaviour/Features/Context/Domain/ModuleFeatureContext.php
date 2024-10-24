@@ -32,7 +32,9 @@ use Behat\Gherkin\Node\TableNode;
 use Module;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkToggleModuleStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Module\Command\ResetModuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\UpdateModuleStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Module\Exception\CannotResetModuleException;
 use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Module\Query\GetModuleInfos;
 use PrestaShop\PrestaShop\Core\Domain\Module\QueryResult\ModuleInfos;
@@ -76,6 +78,14 @@ class ModuleFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then I should have an exception that disabled module cannot be reset
+     */
+    public function assertDisabledError(): void
+    {
+        $this->assertLastErrorIs(CannotResetModuleException::class, CannotResetModuleException::NOT_ACTIVE);
+    }
+
+    /**
      * @When /^I bulk (enable|disable) modules: "(.+)"$/
      */
     public function bulkToggleStatus(string $action, string $modulesRef): void
@@ -103,6 +113,24 @@ class ModuleFeatureContext extends AbstractDomainFeatureContext
             $technicalName,
             $action === 'enable'
         ));
+
+        // Clean the cache
+        Module::resetStaticCache();
+    }
+
+    /**
+     * @When I reset module :technicalName
+     */
+    public function resetModule(string $technicalName): void
+    {
+        try {
+            $this->getCommandBus()->handle(new ResetModuleCommand(
+                $technicalName,
+                false
+            ));
+        } catch (CannotResetModuleException $e) {
+            $this->setLastException($e);
+        }
 
         // Clean the cache
         Module::resetStaticCache();

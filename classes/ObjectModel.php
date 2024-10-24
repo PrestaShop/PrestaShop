@@ -1821,18 +1821,14 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
                 return false;
             }
 
-            // Get image formats we will be deleting. It would probably be easier to use ImageFormatConfiguration::SUPPORTED_FORMATS,
-            // but we want to avoid any behavior change in minor/patch version.
-            $configuredImageFormats = ServiceLocator::get(ImageFormatConfiguration::class)->getGenerationFormats();
             $types = ImageType::getImagesTypes();
-
             foreach ($types as $image_type) {
                 if (file_exists($this->image_dir . $this->id . '-' . stripslashes($image_type['name']) . '.' . $this->image_format)
                 && !unlink($this->image_dir . $this->id . '-' . stripslashes($image_type['name']) . '.' . $this->image_format)) {
                     return false;
                 }
 
-                foreach ($configuredImageFormats as $imageFormat) {
+                foreach (ImageFormatConfiguration::SUPPORTED_FORMATS as $imageFormat) {
                     $file = $this->image_dir . $this->id . '-' . stripslashes($image_type['name']) . '.' . $imageFormat;
                     if (file_exists($file)) {
                         unlink($file);

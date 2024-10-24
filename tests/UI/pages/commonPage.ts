@@ -554,6 +554,37 @@ export default class CommonPage {
   }
 
   /**
+   * Drag and drops an element slowly, we add extra steps, force the elements to be visible, ...
+   * This is used for sensitive drag and drop actions like checking the positions because the regular
+   * one was too unstable to work as expected.
+   *
+   * @param page {Page} Browser tab
+   * @param source {string} String to locate the element to drag
+   * @param target {string} String to locate the element where to drop
+   */
+  async dragAndDropSlowly(page: Page, source: string, target: string): Promise<void> {
+    // Hover on the row to display the column handle
+    await page.hover(source, {force: true});
+    await this.elementVisible(page, source);
+
+    const targetBox = await page.locator(target).boundingBox();
+    await page.locator(source).hover({force: true});
+    await page.mouse.down();
+
+    if (targetBox) {
+      // Force steps or else we lose the focus of the dragged element
+      await page.mouse.move(targetBox.x + targetBox.width / 2, targetBox.y + targetBox.height / 2, {steps: 10});
+    } else {
+      // targetBox should always be present, this is more to please check:typescript
+      await page.locator(target).hover({force: true});
+    }
+
+    // Wait a bit before dropping the element
+    await page.waitForTimeout(500);
+    await page.mouse.up();
+  }
+
+  /**
    * Upload file in input type=file selector
    * @param page {Page | Frame} Browser tab
    * @param selector {string} String to locate the file input

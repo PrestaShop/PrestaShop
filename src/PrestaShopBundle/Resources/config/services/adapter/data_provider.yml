@@ -34,7 +34,8 @@ services:
 
   prestashop.adapter.data_provider.carrier:
     class: PrestaShop\PrestaShop\Adapter\Carrier\CarrierDataProvider
-    arguments: [ '@prestashop.adapter.legacy.configuration' ]
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
 
   prestashop.adapter.data_provider.order_invoice:
     class: PrestaShop\PrestaShop\Adapter\Invoice\OrderInvoiceDataProvider
