@@ -180,7 +180,6 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         $this->assertProperty($data, 'additional description', $editableCategory->getAdditionalDescription());
         $this->assertProperty($data, 'group access', $editableCategory->getGroupAssociationIds(), self::PROPERTY_TYPE_REFERENCE_ARRAY);
         $this->assertProperty($data, 'associated shops', $editableCategory->getShopAssociationIds(), self::PROPERTY_TYPE_REFERENCE_ARRAY);
-        $this->assertProperty($data, 'meta keywords', $editableCategory->getMetaKeywords());
         $this->assertProperty($data, 'redirect type', $editableCategory->getRedirectType());
 
         $expectedRedirectTarget = isset($data['redirect target']) ?
@@ -367,9 +366,6 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['associated shops'])) {
             $command->setAssociatedShopIds($this->referencesToIds($data['associated shops']));
         }
-        if (isset($data['meta keywords'])) {
-            $command->setLocalizedMetaKeywords($data['meta keywords']);
-        }
         if (isset($data['redirect type'])) {
             $target = isset($data['redirect target']) ? $this->getSharedStorage()->get($data['redirect target']) : 0;
 
@@ -434,9 +430,6 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         }
         if (isset($data['associated shops'])) {
             $command->setAssociatedShopIds($this->referencesToIds($data['associated shops']));
-        }
-        if (isset($data['meta keywords'])) {
-            $command->setLocalizedMetaKeywords($data['meta keywords']);
         }
         if ($command instanceof EditCategoryCommand && isset($data['parent category'])) {
             $command->setParentCategoryId($this->getSharedStorage()->get($data['parent category']));

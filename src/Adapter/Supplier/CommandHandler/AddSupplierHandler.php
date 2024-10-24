@@ -104,7 +104,6 @@ final class AddSupplierHandler extends AbstractSupplierHandler implements AddSup
         $supplier->description = $command->getLocalizedDescriptions();
         $supplier->meta_description = $command->getLocalizedMetaDescriptions();
         $supplier->meta_title = $command->getLocalizedMetaTitles();
-        $supplier->meta_keywords = $command->getLocalizedMetaKeywords();
         $supplier->date_add = $currentDateTime;
         $supplier->date_upd = $currentDateTime;
         $supplier->active = $command->isEnabled();

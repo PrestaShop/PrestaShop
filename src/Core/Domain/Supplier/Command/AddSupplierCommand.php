@@ -73,11 +73,6 @@ class AddSupplierCommand
     private $localizedMetaDescriptions;
 
     /**
-     * @var string[]
-     */
-    private $localizedMetaKeywords;
-
-    /**
      * @var int[]
      */
     private $shopAssociation;
@@ -120,7 +115,6 @@ class AddSupplierCommand
      * @param string[] $localizedDescriptions
      * @param string[] $localizedMetaTitles
      * @param string[] $localizedMetaDescriptions
-     * @param string[] $localizedMetaKeywords
      * @param array $shopAssociation
      * @param string|null $address2
      * @param string|null $postCode
@@ -138,7 +132,6 @@ class AddSupplierCommand
         array $localizedDescriptions,
         array $localizedMetaTitles,
         array $localizedMetaDescriptions,
-        array $localizedMetaKeywords,
         array $shopAssociation,
         ?string $address2 = null,
         ?string $postCode = null,
@@ -155,7 +148,6 @@ class AddSupplierCommand
         $this->localizedDescriptions = $localizedDescriptions;
         $this->localizedMetaTitles = $localizedMetaTitles;
         $this->localizedMetaDescriptions = $localizedMetaDescriptions;
-        $this->localizedMetaKeywords = $localizedMetaKeywords;
         $this->shopAssociation = $shopAssociation;
         $this->address2 = $address2;
         $this->postCode = $postCode;
@@ -259,14 +251,6 @@ class AddSupplierCommand
     public function getLocalizedMetaDescriptions(): array
     {
         return $this->localizedMetaDescriptions;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getLocalizedMetaKeywords(): array
-    {
-        return $this->localizedMetaKeywords;
     }
 
     /**

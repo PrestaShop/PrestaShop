@@ -16,7 +16,7 @@ function createRecord(): ImportBrand[] {
       description: faker.lorem.sentence(),
       shortDescription: faker.lorem.sentence(),
       metaTitle: name,
-      metaKeywords: [faker.lorem.word(), faker.lorem.word()],
+      metaKeywords: [],
       metaDescription: faker.lorem.sentence(),
       imageURL: '',
     });

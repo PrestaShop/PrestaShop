@@ -101,10 +101,6 @@ final class EditMetaHandler implements EditMetaHandlerInterface
                 $entity->description = $command->getLocalisedMetaDescriptions();
             }
 
-            if (null !== $command->getLocalisedMetaKeywords()) {
-                $entity->keywords = $command->getLocalisedMetaKeywords();
-            }
-
             $this->assertUrlRewriteHasDefaultLanguage($entity);
             $this->assertIsUrlRewriteValid($entity);
 

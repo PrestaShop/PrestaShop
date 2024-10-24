@@ -35,7 +35,6 @@ class MetaCore extends ObjectModel
     public $configurable = 1;
     public $title;
     public $description;
-    public $keywords;
     public $url_rewrite;
 
     /**
@@ -53,7 +52,6 @@ class MetaCore extends ObjectModel
             /* Lang fields */
             'title' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128],
             'description' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
-            'keywords' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
             'url_rewrite' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isLinkRewrite', 'size' => 255],
         ],
     ];
@@ -329,7 +327,6 @@ class MetaCore extends ObjectModel
         $metas = Meta::getMetaByPage($pageName, $idLang);
         $ret['meta_title'] = (isset($metas['title']) && $metas['title']) ? $metas['title'] : Configuration::get('PS_SHOP_NAME');
         $ret['meta_description'] = (isset($metas['description']) && $metas['description']) ? $metas['description'] : '';
-        $ret['meta_keywords'] = (isset($metas['keywords']) && $metas['keywords']) ? $metas['keywords'] : '';
         $ret = Meta::completeMetaTags($ret, $ret['meta_title']);
 
         return $ret;

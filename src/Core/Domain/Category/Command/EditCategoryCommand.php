@@ -82,11 +82,6 @@ class EditCategoryCommand
     private $localizedMetaDescriptions;
 
     /**
-     * @var string[]
-     */
-    private $localizedMetaKeywords;
-
-    /**
      * @var int[]
      */
     private $associatedGroupIds;
@@ -308,26 +303,6 @@ class EditCategoryCommand
     public function setLocalizedMetaDescriptions(array $localizedMetaDescriptions)
     {
         $this->localizedMetaDescriptions = $localizedMetaDescriptions;
-
-        return $this;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getLocalizedMetaKeywords()
-    {
-        return $this->localizedMetaKeywords;
-    }
-
-    /**
-     * @param string[] $localizedMetaKeywords
-     *
-     * @return $this
-     */
-    public function setLocalizedMetaKeywords(array $localizedMetaKeywords)
-    {
-        $this->localizedMetaKeywords = $localizedMetaKeywords;
 
         return $this;
     }

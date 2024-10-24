@@ -98,7 +98,6 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
             (int) $category->id_parent,
             $category->meta_title,
             $category->meta_description,
-            $category->meta_keywords,
             $category->link_rewrite,
             $category->redirect_type,
             $categoryRedirectTarget,
