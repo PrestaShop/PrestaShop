@@ -62,16 +62,17 @@ class LoadServicesFromModulesPass implements CompilerPassInterface
     {
         $installedModules = $container->getParameter('prestashop.installed_modules');
         $moduleDir = $container->getParameter('prestashop.module_dir');
+        $env = $container->getParameter('kernel.environment');
 
         foreach ($installedModules as $moduleName) {
             $modulePath = $moduleDir . $moduleName;
             $moduleConfigPath = $modulePath . $this->configPath;
             if (file_exists($moduleConfigPath . 'services.yml')) {
                 $fileLocator = new FileLocator($moduleConfigPath);
-                $loader = new YamlFileLoader($container, $fileLocator);
+                $loader = new YamlFileLoader($container, $fileLocator, $env);
                 $loader->setResolver(new LoaderResolver([
-                    new PhpFileLoader($container, $fileLocator),
-                    new XmlFileLoader($container, $fileLocator),
+                    new PhpFileLoader($container, $fileLocator, $env),
+                    new XmlFileLoader($container, $fileLocator, $env),
                 ]));
                 $loader->load('services.yml');
             }
