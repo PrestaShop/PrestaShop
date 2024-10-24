@@ -674,6 +674,10 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
         $object_duplicated = new $definition['classname']((int) $object_id);
         $object_duplicated->duplicateShops((int) $this->id);
 
+        $hookParams = ['object' => $this, 'object_duplicated' => $object_duplicated];
+        Hook::exec('actionObjectDuplicateAfter', $hookParams);
+        Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'DuplicateAfter', $hookParams);
+
         return $object_duplicated;
     }
 
