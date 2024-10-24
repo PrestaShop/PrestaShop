@@ -38,7 +38,7 @@ services:
   PrestaShop\PrestaShop\Core\Module\SourceHandler\ZipSourceHandler:
     autowire: true
     arguments:
-      $modulePath: '%modules_dir%'
+      $modulePath: '%prestashop.module_dir%'
     tags: [ core.module.source_handler ]
 
   PrestaShop\PrestaShop\Core\Module\SourceHandler\RemoteZipSourceHandler:

@@ -26,32 +26,48 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Module\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Module\Command;
 
-use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
-use PrestaShop\PrestaShop\Core\Domain\Module\Query\GetModuleInfos;
-use PrestaShop\PrestaShop\Core\Domain\Module\QueryHandler\GetModuleInfosHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Module\QueryResult\ModuleInfos;
-use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
+use PrestaShop\PrestaShop\Core\Domain\Module\ValueObject\ModuleTechnicalName;
 
-#[AsQueryHandler]
-class GetModuleInfosHandler implements GetModuleInfosHandlerInterface
+/**
+ * Update module
+ */
+class UpdateModuleCommand
 {
-    public function __construct(
-        protected ModuleRepository $moduleRepository,
-    ) {
+    /**
+     * @var ModuleTechnicalName
+     */
+    private $technicalName;
+
+    /**
+     * @var string | null
+     */
+    private $source;
+
+    /**
+     * @param string $technicalName Technical name for module
+     * @param string $source source for module
+     */
+    public function __construct(string $technicalName, string $source=null)
+    {
+        $this->technicalName = new ModuleTechnicalName($technicalName);
+        $this->source = $source;
     }
 
-    public function handle(GetModuleInfos $query): ModuleInfos
+    /**
+     * @return ModuleTechnicalName
+     */
+    public function getTechnicalName(): ModuleTechnicalName
     {
-        $module = $this->moduleRepository->getPresentModule($query->getTechnicalName()->getValue());
+        return $this->technicalName;
+    }
 
-        return new ModuleInfos(
-            $module->database->get('id'),
-            $module->get('name'),
-            $module->get('version'),
-            $module->isActive(),
-            $module->IsInstalled(),
-        );
+    /**
+     * @return string
+     */
+    public function getSource(): string | null
+    {
+        return $this->source;
     }
 }

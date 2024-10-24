@@ -24,34 +24,40 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Adapter\Module\CommandHandler;
 
-namespace PrestaShop\PrestaShop\Adapter\Module\QueryHandler;
-
-use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
-use PrestaShop\PrestaShop\Core\Domain\Module\Query\GetModuleInfos;
-use PrestaShop\PrestaShop\Core\Domain\Module\QueryHandler\GetModuleInfosHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Module\QueryResult\ModuleInfos;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
+use PrestaShop\PrestaShop\Core\Domain\Module\Command\UpdateModuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\Module\CommandHandler\UpdateModuleHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotInstalledException;
+use PrestaShop\PrestaShop\Core\Domain\Module\Exception\CannotUpdateModuleException;
+use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 
-#[AsQueryHandler]
-class GetModuleInfosHandler implements GetModuleInfosHandlerInterface
+#[AsCommandHandler]
+class UpdateModuleHandler implements UpdateModuleHandlerInterface
 {
     public function __construct(
+        protected ModuleManager $moduleManager,
         protected ModuleRepository $moduleRepository,
     ) {
     }
 
-    public function handle(GetModuleInfos $query): ModuleInfos
+    public function handle(UpdateModuleCommand $command): void
     {
-        $module = $this->moduleRepository->getPresentModule($query->getTechnicalName()->getValue());
+        $technical_name = $command->getTechnicalName()->getValue();
+        $source = $command->getSource();
 
-        return new ModuleInfos(
-            $module->database->get('id'),
-            $module->get('name'),
-            $module->get('version'),
-            $module->isActive(),
-            $module->IsInstalled(),
-        );
+        $module = $this->moduleRepository->getModule($technical_name);
+
+        if(!$module->isInstalled()) {
+            throw new ModuleNotInstalledException('Module is not installed.');
+        }
+
+        $result = $this->moduleManager->upgrade($technical_name, $source);
+
+        if (!$result) {
+            throw new CannotUpdateModuleException('Technical error occurred while updating module.');
+        }
     }
 }

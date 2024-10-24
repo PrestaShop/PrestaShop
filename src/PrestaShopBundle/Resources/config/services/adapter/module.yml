@@ -15,6 +15,26 @@ services:
     autowire: true
     public: false
 
+  PrestaShop\PrestaShop\Adapter\Module\CommandHandler\InstallModuleHandler:
+    autoconfigure: true
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Adapter\Module\CommandHandler\UpdateModuleHandler:
+    autoconfigure: true
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Adapter\Module\CommandHandler\UninstallModuleHandler:
+    autoconfigure: true
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Adapter\Module\CommandHandler\BulkUninstallModuleHandler:
+    autoconfigure: true
+    autowire: true
+    public: false
+
   PrestaShop\PrestaShop\Adapter\Module\CommandHandler\ResetModuleHandler:
     autoconfigure: true
     autowire: true

@@ -258,6 +258,14 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @AfterFeature @reset-test-modules-after-feature
+     */
+    public static function resetTestModules(): void
+    {
+        (new ResourceResetter())->resetTestModules();
+    }
+
+    /**
      * @AfterFeature @clear-cache-after-feature
      */
     public static function clearCacheAfterFeature(): void

@@ -144,6 +144,18 @@ class ModuleRepository implements ModuleRepositoryInterface
         });
     }
 
+    /**
+     * Returns an instance of a present module, if the module is not in the modules folder an exception is thrown.
+     */
+    public function getPresentModule(string $technicalName): Module 
+    {
+        $module = $this->getModule($technicalName);
+        if (!$module->disk->get('is_present')) {
+            throw new ModuleNotFoundException();
+        }
+        return $module;
+    }
+
     public function getUpgradableModules(): ModuleCollection
     {
         return $this->getList()->filter(static function (Module $module) {
