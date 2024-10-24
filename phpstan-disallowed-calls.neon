@@ -296,6 +296,8 @@ parameters:
                 - src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/OrderStateController.php
                 - src/PrestaShopBundle/Controller/Admin/Improve/Design/CmsPageController.php
                 - src/PrestaShopBundle/Controller/Admin/Improve/Design/MailThemeController.php
+                - src/PrestaShopBundle/Controller/Admin/Improve/International/LanguageController.php
+                - src/PrestaShopBundle/Controller/Admin/Improve/International/CurrencyController.php
   disallowedConstants:
         -
             constant:

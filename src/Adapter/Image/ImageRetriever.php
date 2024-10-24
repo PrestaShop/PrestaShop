@@ -186,13 +186,13 @@ class ImageRetriever
             $imageFolderPath = rtrim(_PS_CAT_IMG_DIR_, DIRECTORY_SEPARATOR);
         }
 
-        $urls = [];
-
         // Get path of original uploaded image we will use to get thumbnails (original image extension is always .jpg)
         $originalImagePath = implode(DIRECTORY_SEPARATOR, [
             $imageFolderPath,
             $id_image . '.jpg',
         ]);
+
+        $urls = [];
 
         /*
          * Let's resolve which formats we will use for image generation.

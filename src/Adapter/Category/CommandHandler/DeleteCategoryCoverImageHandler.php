@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\DeleteCategoryCove
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotDeleteImageException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -79,7 +80,6 @@ final class DeleteCategoryCoverImageHandler implements DeleteCategoryCoverImageH
         $this->assertCategoryExists($categoryId, $category);
 
         $this->deleteCoverImage($category);
-        $this->deleteThumbnailImage($category);
         $this->deleteTemporaryThumbnailImage($category);
         $this->deleteImagesForAllTypes($category);
     }
@@ -114,24 +114,6 @@ final class DeleteCategoryCoverImageHandler implements DeleteCategoryCoverImageH
      *
      * @throws CannotDeleteImageException
      */
-    private function deleteThumbnailImage(Category $category)
-    {
-        $thumbnailPath = $this->configuration->get('_PS_CAT_IMG_DIR_') . $category->id . '_thumb.jpg';
-
-        try {
-            if ($this->filesystem->exists($thumbnailPath)) {
-                $this->filesystem->remove($thumbnailPath);
-            }
-        } catch (IOException $e) {
-            throw new CannotDeleteImageException(sprintf('Cannot delete thumbnail image for category with id "%s"', $category->id), CannotDeleteImageException::THUMBNAIL_IMAGE, $e);
-        }
-    }
-
-    /**
-     * @param Category $category
-     *
-     * @throws CannotDeleteImageException
-     */
     private function deleteTemporaryThumbnailImage(Category $category)
     {
         $temporaryThumbnailPath = $this->configuration->get('_PS_TMP_IMG_DIR_') . 'category_' . $category->id . '-thumb.jpg';
@@ -153,17 +135,15 @@ final class DeleteCategoryCoverImageHandler implements DeleteCategoryCoverImageH
     private function deleteImagesForAllTypes(Category $category)
     {
         $imageTypes = ImageType::getImagesTypes('categories');
-        $imageTypeFormattedName = ImageType::getFormattedName('small');
         $categoryImageDir = $this->configuration->get('_PS_CAT_IMG_DIR_');
 
         try {
             foreach ($imageTypes as $imageType) {
-                $imagePath = $categoryImageDir . $category->id . '-' . $imageType['name'] . '.jpg';
-
-                if ($imageTypeFormattedName === $imageType['name']
-                    && $this->filesystem->exists($imagePath)
-                ) {
-                    $this->filesystem->remove($imagePath);
+                foreach (ImageFormatConfiguration::SUPPORTED_FORMATS as $imageFormat) {
+                    $imagePath = $categoryImageDir . $category->id . '-' . $imageType['name'] . '.' . $imageFormat;
+                    if ($this->filesystem->exists($imagePath)) {
+                        $this->filesystem->remove($imagePath);
+                    }
                 }
             }
         } catch (IOException $e) {

@@ -86,6 +86,10 @@ jobs:
 
       - name: Run Tests
         uses: ./.github/actions/ui-test
+        env:
+          ## Improve Webkit stability
+          ## Link : https://github.com/microsoft/playwright/issues/23899
+          GDK_BACKEND: x11
         with:
           TEST_CAMPAIGN: ${{ env.TEST_CAMPAIGN }}
           BROWSER: ${{ matrix.browser }}

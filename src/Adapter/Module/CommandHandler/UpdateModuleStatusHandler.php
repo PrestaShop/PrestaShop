@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\UpdateModuleStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\CommandHandler\UpdateModuleStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Module\Exception\CannotToggleModuleStatusException;
-use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 
@@ -45,10 +44,7 @@ class UpdateModuleStatusHandler implements UpdateModuleStatusHandlerInterface
 
     public function handle(UpdateModuleStatusCommand $command): void
     {
-        $module = $this->moduleRepository->getModule($command->getTechnicalName()->getValue());
-        if (!$module->disk->get('is_present')) {
-            throw new ModuleNotFoundException();
-        }
+        $this->moduleRepository->getPresentModule($command->getTechnicalName()->getValue());
 
         if ($command->isEnabled()) {
             $result = $this->moduleManager->enable($command->getTechnicalName()->getValue());
