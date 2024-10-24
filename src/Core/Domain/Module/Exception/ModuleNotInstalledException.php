@@ -23,35 +23,13 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Module\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Module\Exception;
 
-use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
-use PrestaShop\PrestaShop\Core\Domain\Module\Query\GetModuleInfos;
-use PrestaShop\PrestaShop\Core\Domain\Module\QueryHandler\GetModuleInfosHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Module\QueryResult\ModuleInfos;
-use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
-
-#[AsQueryHandler]
-class GetModuleInfosHandler implements GetModuleInfosHandlerInterface
+/**
+ * Is thrown when required module cannot be found
+ */
+class ModuleNotInstalledException extends ModuleException
 {
-    public function __construct(
-        protected ModuleRepository $moduleRepository,
-    ) {
-    }
-
-    public function handle(GetModuleInfos $query): ModuleInfos
-    {
-        $module = $this->moduleRepository->getPresentModule($query->getTechnicalName()->getValue());
-
-        return new ModuleInfos(
-            $module->database->get('id'),
-            $module->get('name'),
-            $module->get('version'),
-            $module->isActive(),
-            $module->IsInstalled(),
-        );
-    }
 }
