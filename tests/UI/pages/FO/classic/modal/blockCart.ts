@@ -4,9 +4,9 @@ import FOBasePage from '@pages/FO/FObasePage';
 import {
   type CartProductDetails,
   type ProductAttribute,
-} from '@prestashop-core/ui-testing';
 
-import type {Page} from 'playwright';
+  type Page,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Block cart modal, contains functions that can be used on the modal

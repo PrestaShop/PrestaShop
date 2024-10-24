@@ -7,16 +7,17 @@ import {addressesPage} from '@pages/FO/classic/myAccount/addresses';
 import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
 
 import {
+  type BrowserContext,
   FakerAddress,
   FakerCustomer,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 let browserContext: BrowserContext;
 let page: Page;

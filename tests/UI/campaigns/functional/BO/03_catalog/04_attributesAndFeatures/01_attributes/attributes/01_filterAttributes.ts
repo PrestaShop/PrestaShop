@@ -1,15 +1,14 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import pages
-import attributesPage from '@pages/BO/catalog/attributes';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
+  boAttributesPage,
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   dataAttributes,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -52,16 +51,16 @@ describe('BO - Catalog - Attributes & Features : Filter attributes table', async
       boDashboardPage.catalogParentLink,
       boDashboardPage.attributesAndFeaturesLink,
     );
-    await attributesPage.closeSfToolBar(page);
+    await boAttributesPage.closeSfToolBar(page);
 
-    const pageTitle = await attributesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(attributesPage.pageTitle);
+    const pageTitle = await boAttributesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boAttributesPage.pageTitle);
   });
 
   it('should reset all filters and get number of attributes in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfAttributes = await attributesPage.resetAndGetNumberOfLines(page);
+    numberOfAttributes = await boAttributesPage.resetAndGetNumberOfLines(page);
     expect(numberOfAttributes).to.be.above(0);
   });
 
@@ -83,23 +82,23 @@ describe('BO - Catalog - Attributes & Features : Filter attributes table', async
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        await attributesPage.filterTable(
+        await boAttributesPage.filterTable(
           page,
           test.args.filterBy,
           test.args.filterValue,
         );
 
-        const numberOfAttributesAfterFilter = await attributesPage.getNumberOfElementInGrid(page);
+        const numberOfAttributesAfterFilter = await boAttributesPage.getNumberOfElementInGrid(page);
         expect(numberOfAttributesAfterFilter).to.be.at.most(numberOfAttributes);
 
-        const textColumn = await attributesPage.getTextColumn(page, 1, test.args.filterBy);
+        const textColumn = await boAttributesPage.getTextColumn(page, 1, test.args.filterBy);
         expect(textColumn).to.contains(test.args.filterValue);
       });
 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfAttributesAfterReset = await attributesPage.resetAndGetNumberOfLines(page);
+        const numberOfAttributesAfterReset = await boAttributesPage.resetAndGetNumberOfLines(page);
         expect(numberOfAttributesAfterReset).to.equal(numberOfAttributes);
       });
     });

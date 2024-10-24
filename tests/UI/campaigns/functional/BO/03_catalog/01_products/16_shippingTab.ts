@@ -11,16 +11,17 @@ import {
   boProductsCreateTabShippingPage,
   boProductsCreateTabStocksPage,
   boProductSettingsPage,
+  type BrowserContext,
   dataCarriers,
   dataCustomers,
   FakerProduct,
   foClassicCartPage,
   foClassicCheckoutPage,
   foClassicProductPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
-import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_catalog_products_shippingTab';

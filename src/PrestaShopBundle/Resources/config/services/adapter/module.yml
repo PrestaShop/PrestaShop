@@ -25,6 +25,11 @@ services:
     autowire: true
     public: false
 
+  PrestaShop\PrestaShop\Adapter\Module\CommandHandler\ResetModuleHandler:
+    autoconfigure: true
+    autowire: true
+    public: false
+
   PrestaShop\PrestaShop\Adapter\Module\QueryHandler\GetModuleInfosHandler:
     autowire: true
     autoconfigure: true
@@ -99,8 +104,15 @@ services:
   prestashop.adapter.legacy.module:
     class: PrestaShop\PrestaShop\Adapter\Module\Module
 
-  prestashop.adapter.module.repository.module_repository:
-    class: 'PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository'
+  PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository:
+    public: false
     arguments:
       - !php/const _PS_ROOT_DIR_
       - !php/const _PS_MODULE_DIR_
+
+  prestashop.adapter.module.repository.module_repository:
+    alias: 'PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+    public: true

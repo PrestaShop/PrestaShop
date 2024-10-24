@@ -5,10 +5,11 @@ import testContext from '@utils/testContext';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
+  type BrowserContext,
   foHummingbirdHomePage,
   foHummingbirdModalQuickViewPage,
+  type Page,
   type ProductAttribute,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

@@ -1,7 +1,9 @@
 // Import pages
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type {Page} from 'playwright';
+import {
+  type Page,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Options tab on new product V2 page, contains functions that can be used on the page

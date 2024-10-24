@@ -1,8 +1,7 @@
-import {Page} from 'playwright';
-
 import BOBasePage from '@pages/BO/BObasePage';
 import {
   type FakerFile,
+  type Page,
 } from '@prestashop-core/ui-testing';
 
 /**

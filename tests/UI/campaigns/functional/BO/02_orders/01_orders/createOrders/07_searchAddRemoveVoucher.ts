@@ -13,18 +13,19 @@ import {
   boDashboardPage,
   boLoginPage,
   boOrdersPage,
+  type BrowserContext,
   dataCarriers,
   dataCustomers,
   dataProducts,
   FakerCartRule,
+  type Frame,
+  type Page,
   utilsCore,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
-import {Frame} from 'playwright';
 
 const baseContext: string = 'functional_BO_orders_orders_createOrders_searchAddRemoveVoucher';
 

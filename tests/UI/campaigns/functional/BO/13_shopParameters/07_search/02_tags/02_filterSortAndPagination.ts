@@ -6,14 +6,15 @@ import tagsPage from '@pages/BO/shopParameters/search/tags';
 import addTagPage from '@pages/BO/shopParameters/search/tags/add';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
   boSearchPage,
+  type BrowserContext,
   dataLanguages,
   dataProducts,
   FakerSearchTag,
+  type Page,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

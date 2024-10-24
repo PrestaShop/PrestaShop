@@ -7,11 +7,12 @@ import searchEnginesPage from '@pages/BO/shopParameters/trafficAndSeo/searchEngi
 import addSearchEnginePage from '@pages/BO/shopParameters/trafficAndSeo/searchEngines/add';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   FakerSearchEngine,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 

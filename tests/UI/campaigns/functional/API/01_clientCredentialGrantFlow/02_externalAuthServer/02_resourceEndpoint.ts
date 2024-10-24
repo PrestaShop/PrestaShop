@@ -5,14 +5,15 @@ import {installModule, uninstallModule} from '@commonTests/BO/modules/moduleMana
 
 import {expect} from 'chai';
 import {
-  APIRequestContext, APIResponse, BrowserContext, Page,
-} from 'playwright';
-import {
+  type APIRequestContext,
+  type APIResponse,
   boDashboardPage,
   boLoginPage,
   boModuleManagerPage,
+  type BrowserContext,
   dataModules,
   modKeycloakConnectorDemoBoMain,
+  type Page,
   utilsAPI,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

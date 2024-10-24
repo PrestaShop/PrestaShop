@@ -1,7 +1,8 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type {Page} from 'playwright';
 import {
+  type Page,
+
   type ImageTypeRegeneration,
   type ImageTypeRegenerationSpecific,
 } from '@prestashop-core/ui-testing';

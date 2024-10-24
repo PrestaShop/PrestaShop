@@ -14,6 +14,7 @@ import {
   boLoginPage,
   boOrdersPage,
   boProductsPage,
+  type BrowserContext,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
@@ -26,13 +27,13 @@ import {
   foClassicProductPage,
   type MailDev,
   type MailDevEmail,
+  type Page,
   utilsCore,
   utilsFile,
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
-import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_catalog_products_CRUDVirtualProduct';

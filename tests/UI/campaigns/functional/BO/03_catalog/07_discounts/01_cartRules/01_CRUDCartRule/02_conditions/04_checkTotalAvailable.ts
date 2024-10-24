@@ -12,6 +12,7 @@ import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
@@ -21,12 +22,12 @@ import {
   foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicProductPage,
+  type Page,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_conditions_checkTotalAvailable';
 

@@ -8,6 +8,7 @@ import {
   boCustomerSettingsPage,
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   dataCustomers,
   foClassicHomePage,
   foClassicLoginPage,
@@ -15,12 +16,12 @@ import {
   foClassicPasswordReminderPage,
   type MailDev,
   type MailDevEmail,
+  type Page,
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_shopParameters_customerSettings_customers_passwordResetDelay';
 

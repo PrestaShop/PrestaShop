@@ -18,14 +18,16 @@ jobs:
       matrix:
         BRANCH:
           - develop
+          - 9.0.x
+          - 8.2.x
           - 8.1.x
           - 8.0.x
         include:
           - BRANCH: develop
-            node: 16
-          - BRANCH: 8.1.x
-            node: 16
-          - BRANCH: 8.0.x
+            node: 20
+          - BRANCH: 9.0.x
+            node: 20
+          - BRANCH: 8.2.x
             node: 16
 
     env:

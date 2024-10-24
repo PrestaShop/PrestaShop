@@ -11,6 +11,7 @@ import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   dataCustomers,
   dataProducts,
   FakerCartRule,
@@ -18,11 +19,11 @@ import {
   foClassicHomePage,
   foClassicLoginPage,
   foClassicProductPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_conditions_customerGroupSelection';
 

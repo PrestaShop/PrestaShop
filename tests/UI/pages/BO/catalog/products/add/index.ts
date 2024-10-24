@@ -4,7 +4,6 @@ import detailsTab from '@pages/BO/catalog/products/add/detailsTab';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import packTab from '@pages/BO/catalog/products/add/packTab';
 
-import type {Frame, Page} from 'playwright';
 import {
   boProductsCreateTabDescriptionPage,
   boProductsCreateTabShippingPage,
@@ -12,6 +11,8 @@ import {
   boProductsCreateTabVirtualProductPage,
   boProductsPage,
   type FakerProduct,
+  type Frame,
+  type Page,
   type ProductHeaderSummary,
 } from '@prestashop-core/ui-testing';
 

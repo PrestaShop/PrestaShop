@@ -8,14 +8,15 @@ import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/prod
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 import {
+  type BrowserContext,
   dataProducts,
   FakerProduct,
   foClassicCategoryPage,
   foClassicHomePage,
   foClassicModalQuickViewPage,
+  type Page,
   type ProductAttribute,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

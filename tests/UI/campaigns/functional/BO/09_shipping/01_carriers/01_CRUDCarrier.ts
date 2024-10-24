@@ -5,6 +5,7 @@ import {
   boCarriersPage,
   boCarriersCreatePage,
   boLoginPage,
+  type BrowserContext,
   dataCustomers,
   dataZones,
   FakerCarrier,
@@ -14,12 +15,12 @@ import {
   foClassicHomePage,
   foClassicLoginPage,
   foClassicProductPage,
+  type Page,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_shipping_carriers_CRUDCarrier';
 

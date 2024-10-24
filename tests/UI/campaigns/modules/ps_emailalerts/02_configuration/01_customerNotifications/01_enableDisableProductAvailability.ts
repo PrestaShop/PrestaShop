@@ -20,6 +20,7 @@ import {
   boProductsPage,
   boProductsCreateTabStocksPage,
   boStockPage,
+  type BrowserContext,
   dataCustomers,
   dataModules,
   dataOrderStatuses,
@@ -35,6 +36,7 @@ import {
   type MailDev,
   type MailDevEmail,
   modPsEmailAlertsBoMain,
+  type Page,
   utilsFile,
   utilsMail,
   utilsPlaywright,
@@ -42,7 +44,6 @@ import {
 
 import {expect} from 'chai';
 import {faker} from '@faker-js/faker';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'modules_ps_emailalerts_configuration_customerNotifications_enableDisableProductAvailability';
 

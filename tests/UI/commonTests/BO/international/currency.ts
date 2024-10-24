@@ -8,12 +8,13 @@ import {
   boDashboardPage,
   boLocalizationPage,
   boLoginPage,
+  type BrowserContext,
   type FakerCurrency,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 let browserContext: BrowserContext;
 let page: Page;

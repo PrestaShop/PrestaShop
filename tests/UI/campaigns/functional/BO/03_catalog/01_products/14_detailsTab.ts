@@ -7,14 +7,15 @@ import createProductPage from '@pages/BO/catalog/products/add';
 import detailsTab from '@pages/BO/catalog/products/add/detailsTab';
 import filesPage from '@pages/BO/catalog/files';
 
-import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  type BrowserContext,
   FakerProduct,
   foClassicProductPage,
+  type Page,
   type ProductFeatures,
   utilsFile,
   utilsPlaywright,

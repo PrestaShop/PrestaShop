@@ -20,6 +20,7 @@ import {
   boDashboardPage,
   boLoginPage,
   boOrdersPage,
+  type BrowserContext,
   dataAddresses,
   dataCustomers,
   dataOrderReturnStatuses,
@@ -32,6 +33,7 @@ import {
   foClassicMyAccountPage,
   type MailDev,
   type MailDevEmail,
+  type Page,
   utilsDate,
   utilsFile,
   utilsMail,
@@ -39,7 +41,6 @@ import {
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_customerService_merchandiseReturns_updateStatus';
 

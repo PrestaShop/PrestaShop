@@ -14,6 +14,7 @@ import {
   boProductsPage,
   boProductSettingsPage,
   boProductsCreateTabVirtualProductPage,
+  type BrowserContext,
   dataCustomers,
   dataPaymentMethods,
   FakerProduct,
@@ -23,12 +24,12 @@ import {
   foClassicHomePage,
   foClassicMyAccountPage,
   foClassicProductPage,
+  type Page,
   utilsDate,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
-import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_catalog_products_virtualTab';

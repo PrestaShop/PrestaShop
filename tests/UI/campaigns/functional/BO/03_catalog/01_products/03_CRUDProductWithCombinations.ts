@@ -4,17 +4,18 @@ import testContext from '@utils/testContext';
 // Import pages
 import createProductsPage from '@pages/BO/catalog/products/add';
 import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
-import attributesPage from '@pages/BO/catalog/attributes';
 import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
+  boAttributesPage,
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  type BrowserContext,
   FakerProduct,
   foClassicProductPage,
+  type Page,
   type ProductAttributes,
   type ProductCombinationBulk,
   type ProductCombinationOptions,
@@ -219,14 +220,14 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
 
       page = await combinationsTab.clickOnAttributesAndFeaturesLink(page);
 
-      const pageTitle = await attributesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(attributesPage.pageTitle);
+      const pageTitle = await boAttributesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boAttributesPage.pageTitle);
     });
 
     it('should close \'Attributes & Features\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closePage', baseContext);
 
-      page = await attributesPage.closePage(browserContext, page, 0);
+      page = await boAttributesPage.closePage(browserContext, page, 0);
 
       const pageTitle = await createProductsPage.getPageTitle(page);
       expect(pageTitle).to.contains(createProductsPage.pageTitle);

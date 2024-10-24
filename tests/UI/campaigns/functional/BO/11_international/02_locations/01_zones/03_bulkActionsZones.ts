@@ -8,12 +8,13 @@ import addZonePage from '@pages/BO/international/locations/add';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   FakerZone,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_international_locations_zones_bulkActionsZones';
 

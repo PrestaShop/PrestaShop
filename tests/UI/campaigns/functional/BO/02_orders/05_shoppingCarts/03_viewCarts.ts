@@ -15,18 +15,19 @@ import {
   boLoginPage,
   boOrdersViewBlockProductsPage,
   boShoppingCartsPage,
+  type BrowserContext,
   dataOrderStatuses,
   dataPaymentMethods,
   dataProducts,
   FakerAddress,
   FakerCustomer,
   FakerOrder,
+  type Page,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_orders_shoppingCarts_viewCarts';
 

@@ -4,11 +4,12 @@ import testContext from '@utils/testContext';
 // Import pages
 import searchResultsPage from '@pages/BO/searchResults';
 
-import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 

@@ -12,14 +12,15 @@ import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  type BrowserContext,
   FakerProduct,
   foClassicCartPage,
   foClassicProductPage,
+  type Page,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

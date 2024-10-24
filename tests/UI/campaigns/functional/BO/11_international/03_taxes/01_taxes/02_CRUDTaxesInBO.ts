@@ -8,12 +8,13 @@ import addTaxPage from '@pages/BO/international/taxes/add';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   FakerTax,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_international_taxes_taxes_CRUDTaxesInBO';
 

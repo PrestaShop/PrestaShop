@@ -13,6 +13,7 @@ import {
   boDashboardPage,
   boLoginPage,
   boOrdersPage,
+  type BrowserContext,
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
@@ -23,13 +24,13 @@ import {
   foClassicMyAccountPage,
   type MailDev,
   type MailDevEmail,
+  type Page,
   utilsFile,
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_orders_orders_updateStatus';
 

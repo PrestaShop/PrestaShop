@@ -9,15 +9,17 @@ import addCategoryPage from '@pages/BO/catalog/categories/add';
 import {siteMapPage} from '@pages/FO/classic/siteMap';
 
 import {expect} from 'chai';
-import type {APIRequestContext, BrowserContext, Page} from 'playwright';
 import {
+  type APIRequestContext,
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   type CategoryRedirection,
   dataCategories,
   FakerCategory,
   foClassicHomePage,
   foClassicCategoryPage,
+  type Page,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

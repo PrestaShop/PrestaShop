@@ -9,16 +9,17 @@ import pricingTab from '@pages/BO/catalog/products/add/pricingTab';
 import createProductsPage from '@pages/BO/catalog/products/add';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
   boShopParametersPage,
+  type BrowserContext,
   FakerProduct,
   foClassicHomePage,
   foClassicProductPage,
   foClassicSearchResultsPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 

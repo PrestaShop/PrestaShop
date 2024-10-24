@@ -6,11 +6,12 @@ import filesPage from '@pages/BO/catalog/files';
 import addFilePage from '@pages/BO/catalog/files/add';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   FakerFile,
+  type Page,
   utilsCore,
   utilsFile,
   utilsPlaywright,

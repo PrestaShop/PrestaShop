@@ -897,5 +897,8 @@ Country</value>
     <configuration id="PS_ADMIN_API_FORCE_DEBUG_SECURED" name="PS_ADMIN_API_FORCE_DEBUG_SECURED">
       <value>1</value>
     </configuration>
+    <configuration id="PS_SEPARATOR_FILE_MANAGER_SQL" name="PS_SEPARATOR_FILE_MANAGER_SQL">
+      <value>;</value>
+    </configuration>
   </entities>
 </entity_configuration>

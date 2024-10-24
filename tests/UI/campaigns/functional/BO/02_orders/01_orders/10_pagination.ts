@@ -8,16 +8,17 @@ import {
   boDashboardPage,
   boLoginPage,
   boOrdersPage,
+  type BrowserContext,
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
+  type Page,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext = 'functional_BO_orders_orders_pagination';
 

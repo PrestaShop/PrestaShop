@@ -19,6 +19,7 @@ import {
   boLoginPage,
   boOrdersPage,
   boShoppingCartsPage,
+  type BrowserContext,
   dataPaymentMethods,
   dataProducts,
   FakerAddress,
@@ -32,13 +33,13 @@ import {
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
   foHummingbirdProductPage,
+  type Page,
   utilsCore,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_hummingbird_userAccount_getGDPRDataInCSV';
 

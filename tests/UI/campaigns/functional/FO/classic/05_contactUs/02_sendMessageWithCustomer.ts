@@ -13,6 +13,7 @@ import {
   boDashboardPage,
   boLoginPage,
   boModuleManagerPage,
+  type BrowserContext,
   dataCustomers,
   dataModules,
   dataOrders,
@@ -22,13 +23,13 @@ import {
   foClassicLoginPage,
   type MailDev,
   type MailDevEmail,
+  type Page,
   utilsFile,
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_classic_contactUs_sendMessageWithCustomer';
 

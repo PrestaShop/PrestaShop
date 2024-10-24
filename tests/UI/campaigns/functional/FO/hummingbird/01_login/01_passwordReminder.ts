@@ -8,6 +8,7 @@ import createAccountTest from '@commonTests/FO/hummingbird/account';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 import {
+  type BrowserContext,
   FakerCustomer,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
@@ -15,12 +16,12 @@ import {
   foHummingbirdPasswordReminderPage,
   type MailDev,
   type MailDevEmail,
+  type Page,
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_hummingbird_login_passwordReminder';
 

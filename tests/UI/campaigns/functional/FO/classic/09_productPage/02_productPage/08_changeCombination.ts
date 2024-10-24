@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
 
 // Import BO pages
-import attributesPage from '@pages/BO/catalog/attributes';
 import addAttributePage from '@pages/BO/catalog/attributes/addAttribute';
 import viewAttributePage from '@pages/BO/catalog/attributes/view';
 import addValuePage from '@pages/BO/catalog/attributes/addValue';
@@ -13,17 +12,19 @@ import createProductsPage from '@pages/BO/catalog/products/add';
 import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
+  boAttributesPage,
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  type BrowserContext,
   FakerAttribute,
   FakerAttributeValue,
   FakerProduct,
   foClassicHomePage,
   foClassicProductPage,
   foClassicSearchResultsPage,
+  type Page,
   type ProductAttribute,
   utilsFile,
   utilsPlaywright,
@@ -105,23 +106,23 @@ describe('FO - Product page - Product page : Change combination', async () => {
         boDashboardPage.catalogParentLink,
         boDashboardPage.attributesAndFeaturesLink,
       );
-      await attributesPage.closeSfToolBar(page);
+      await boAttributesPage.closeSfToolBar(page);
 
-      const pageTitle = await attributesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(attributesPage.pageTitle);
+      const pageTitle = await boAttributesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boAttributesPage.pageTitle);
     });
 
     it('should reset all filters and get number of attributes in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-      numberOfAttributes = await attributesPage.resetAndGetNumberOfLines(page);
+      numberOfAttributes = await boAttributesPage.resetAndGetNumberOfLines(page);
       expect(numberOfAttributes).to.be.above(0);
     });
 
     it('should go to add new attribute page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewAttributePage', baseContext);
 
-      await attributesPage.goToAddAttributePage(page);
+      await boAttributesPage.goToAddAttributePage(page);
 
       const pageTitle = await addAttributePage.getPageTitle(page);
       expect(pageTitle).to.equal(addAttributePage.createPageTitle);
@@ -131,28 +132,28 @@ describe('FO - Product page - Product page : Change combination', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'createNewAttribute', baseContext);
 
       const textResult = await addAttributePage.addEditAttribute(page, createAttributeData);
-      expect(textResult).to.contains(attributesPage.successfulCreationMessage);
+      expect(textResult).to.contains(boAttributesPage.successfulCreationMessage);
 
-      const numberOfAttributesAfterCreation = await attributesPage.getNumberOfElementInGrid(page);
+      const numberOfAttributesAfterCreation = await boAttributesPage.getNumberOfElementInGrid(page);
       expect(numberOfAttributesAfterCreation).to.equal(numberOfAttributes + 1);
     });
 
     it('should filter list of attributes', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToViewCreatedAttribute', baseContext);
 
-      await attributesPage.filterTable(page, 'name', createAttributeData.name);
+      await boAttributesPage.filterTable(page, 'name', createAttributeData.name);
 
-      const textColumn = await attributesPage.getTextColumn(page, 1, 'name');
+      const textColumn = await boAttributesPage.getTextColumn(page, 1, 'name');
       expect(textColumn).to.contains(createAttributeData.name);
 
-      attributeId = parseInt(await attributesPage.getTextColumn(page, 1, 'id_attribute_group'), 10);
+      attributeId = parseInt(await boAttributesPage.getTextColumn(page, 1, 'id_attribute_group'), 10);
       expect(attributeId).to.be.gt(0);
     });
 
     it('should view attribute', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewCreatedAttribute', baseContext);
 
-      await attributesPage.viewAttribute(page, 1);
+      await boAttributesPage.viewAttribute(page, 1);
 
       const pageTitle = await viewAttributePage.getPageTitle(page);
       expect(pageTitle).to.equal(viewAttributePage.pageTitle(createAttributeData.name));
@@ -327,34 +328,34 @@ describe('FO - Product page - Product page : Change combination', async () => {
         boDashboardPage.attributesAndFeaturesLink,
       );
 
-      const pageTitle = await attributesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(attributesPage.pageTitle);
+      const pageTitle = await boAttributesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boAttributesPage.pageTitle);
     });
 
     it('should filter attributes', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterAttributesToDelete', baseContext);
 
-      await attributesPage.resetFilter(page);
-      await attributesPage.filterTable(page, 'name', createAttributeData.name);
+      await boAttributesPage.resetFilter(page);
+      await boAttributesPage.filterTable(page, 'name', createAttributeData.name);
 
-      const textColumn = await attributesPage.getTextColumn(page, 1, 'name');
+      const textColumn = await boAttributesPage.getTextColumn(page, 1, 'name');
       expect(textColumn).to.contains(createAttributeData.name);
     });
 
     it('should delete attribute', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteAttribute', baseContext);
 
-      const textResult = await attributesPage.deleteAttribute(page, 1);
-      expect(textResult).to.contains(attributesPage.successfulDeleteMessage);
+      const textResult = await boAttributesPage.deleteAttribute(page, 1);
+      expect(textResult).to.contains(boAttributesPage.successfulDeleteMessage);
 
-      const numberOfAttributesAfterDelete = await attributesPage.resetAndGetNumberOfLines(page);
+      const numberOfAttributesAfterDelete = await boAttributesPage.resetAndGetNumberOfLines(page);
       expect(numberOfAttributesAfterDelete).to.equal(numberOfAttributes);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
 
-      numberOfAttributes = await attributesPage.resetAndGetNumberOfLines(page);
+      numberOfAttributes = await boAttributesPage.resetAndGetNumberOfLines(page);
       expect(numberOfAttributes).to.be.above(1);
     });
   });

@@ -5,13 +5,14 @@ import {
   boDashboardPage,
   boLoginPage,
   boModuleManagerPage,
-  modBlockwishlistBoMain,
+  type BrowserContext,
   dataModules,
+  modBlockwishlistBoMain,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'modules_blockwishlist_configuration_helpHeaderButtons';
 

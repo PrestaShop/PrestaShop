@@ -10,14 +10,15 @@ import {
   boCustomersPage,
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   FakerCustomer,
   foClassicHomePage,
   foClassicLoginPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_customers_customers_CRUDCustomer';
 

@@ -16,6 +16,7 @@ import {
   boSqlManagerPage,
   boSqlManagerCreatePage,
   boSqlManagerViewPage,
+  type BrowserContext,
   dataCurrencies,
   dataCustomers,
   dataPaymentMethods,
@@ -30,11 +31,11 @@ import {
   foClassicLoginPage,
   foClassicProductPage,
   foClassicSearchResultsPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'regression_currencies_computingPrecision_FO';
 

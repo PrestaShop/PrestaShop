@@ -7,9 +7,9 @@ import {
   type FakerOrderStatus,
   type FakerProduct,
   type FakerOrder,
+  type Frame,
+  type Page,
 } from '@prestashop-core/ui-testing';
-
-import type {Frame, Page} from 'playwright';
 
 /**
  * Add order page, contains functions that can be used on create order page

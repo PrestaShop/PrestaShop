@@ -1,8 +1,7 @@
 import {
-  // Import data
   dataCustomers,
+  type Page,
 } from '@prestashop-core/ui-testing';
-import {Page} from 'playwright';
 
 /**
  * Login into BO to access BO Urls

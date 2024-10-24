@@ -9,18 +9,19 @@ import addShopPage from '@pages/BO/advancedParameters/multistore/shop/add';
 import addShopUrlPage from '@pages/BO/advancedParameters/multistore/url/addURL';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
   boModuleManagerPage,
   boShopParametersPage,
+  type BrowserContext,
   dataModules,
   FakerShop,
   foClassicContactUsPage,
   foClassicHomePage,
   modPsGdprBoMain,
   modPsGdprBoTabDataConsent,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 

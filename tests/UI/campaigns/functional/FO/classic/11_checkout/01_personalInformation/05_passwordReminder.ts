@@ -7,6 +7,7 @@ import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advanced
 import {createAccountTest} from '@commonTests/FO/classic/account';
 
 import {
+  type BrowserContext,
   FakerCustomer,
   foClassicCartPage,
   foClassicCheckoutPage,
@@ -16,12 +17,12 @@ import {
   foClassicProductPage,
   type MailDev,
   type MailDevEmail,
+  type Page,
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_classic_checkout_personalInformation_passwordReminder';
 

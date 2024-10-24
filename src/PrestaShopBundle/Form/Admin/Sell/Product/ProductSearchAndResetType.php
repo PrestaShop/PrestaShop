@@ -24,12 +24,27 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 
-header('Location: ../../../../../../');
-exit;
+/**
+ * Special search and reset button for product grid, the reset button is not shown when
+ * category is the only filter selected.
+ */
+class ProductSearchAndResetType extends SearchAndResetType
+{
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        parent::buildView($view, $form, $options);
+        if (null !== $form->getParent()) {
+            $selectedFilters = array_keys($form->getParent()->getData());
+
+            if (count($selectedFilters) === 1 && $selectedFilters[0] === 'id_category') {
+                $view->vars['show_reset_button'] = false;
+            }
+        }
+    }
+}

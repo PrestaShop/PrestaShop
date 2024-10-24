@@ -4,9 +4,9 @@ import FOBasePage from '@pages/FO/FObasePage';
 import {
   // Import data
   type FakerCustomer,
-} from '@prestashop-core/ui-testing';
 
-import type {Page} from 'playwright';
+  type Page,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Create account page, contains functions that can be used on the page

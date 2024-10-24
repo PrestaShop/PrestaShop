@@ -54,7 +54,7 @@ final class FormLanguageChanger implements FormLanguageChangerInterface
     /**
      * {@inheritdoc}
      */
-    public function changeLanguageInCookies($languageIsoCode)
+    public function changeLanguageInCookies(string $languageIsoCode): void
     {
         $this->legacyContext->getContext()->cookie->employee_form_lang = (int) Language::getIdByIso($languageIsoCode);
         $this->legacyContext->getContext()->cookie->write();

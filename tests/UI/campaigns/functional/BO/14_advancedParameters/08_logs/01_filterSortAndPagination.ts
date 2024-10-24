@@ -5,11 +5,12 @@ import testContext from '@utils/testContext';
 // Import pages
 import logsPage from '@pages/BO/advancedParameters/logs';
 
-import type {BrowserContext, Page} from 'playwright';
 import {
   boDashboardPage,
   boLoginPage,
+  type BrowserContext,
   dataEmployees,
+  type Page,
   utilsCore,
   utilsDate,
   utilsPlaywright,

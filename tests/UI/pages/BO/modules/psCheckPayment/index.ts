@@ -1,6 +1,6 @@
 import {ModuleConfiguration} from '@pages/BO/modules/moduleConfiguration';
 
-import {type Page} from 'playwright';
+import {type Page} from '@prestashop-core/ui-testing';
 
 /**
  * Module configuration page for module : ps_checkpayment, contains selectors and functions for the page

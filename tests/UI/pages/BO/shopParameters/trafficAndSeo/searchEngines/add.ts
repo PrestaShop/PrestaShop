@@ -1,7 +1,9 @@
 // Import BO pages
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type {Page} from 'playwright';
+import {
+  type Page,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Add search engine page, contains selectors and functions for the page

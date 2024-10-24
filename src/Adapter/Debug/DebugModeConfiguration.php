@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Debug;
 
 use PrestaShop\PrestaShop\Adapter\Cache\Clearer\ClassIndexCacheClearer;
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
 /**
@@ -36,49 +37,21 @@ use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 class DebugModeConfiguration implements DataConfigurationInterface
 {
     /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    /**
-     * @var DebugMode Debug mode manager
-     */
-    private $debugMode;
-
-    /**
-     * @var string Path to the application defines path
-     */
-    private $configDefinesPath;
-
-    /**
-     * @var ClassIndexCacheClearer
-     */
-    private $classIndexCacheClearer;
-
-    /**
-     * @var DebugProfiling Debug profiling manager
-     */
-    private $debugProfiling;
-
-    /**
-     * @param DebugMode $debugMode
+     * @param DebugMode $debugMode Debug mode manager
      * @param Configuration $configuration
-     * @param string $configDefinesPath
+     * @param string $configDefinesPath Path to the application defines path
      * @param ClassIndexCacheClearer $classIndexCacheClearer
-     * @param DebugProfiling $debugProfiling
+     * @param DebugProfiling $debugProfiling Debug profiling manager
+     * @param CacheClearerInterface $cacheClearer
      */
     public function __construct(
-        DebugMode $debugMode,
-        Configuration $configuration,
-        $configDefinesPath,
-        ClassIndexCacheClearer $classIndexCacheClearer,
-        DebugProfiling $debugProfiling
+        private DebugMode $debugMode,
+        private Configuration $configuration,
+        private string $configDefinesPath,
+        private ClassIndexCacheClearer $classIndexCacheClearer,
+        private DebugProfiling $debugProfiling,
+        private CacheClearerInterface $cacheClearer,
     ) {
-        $this->debugMode = $debugMode;
-        $this->configuration = $configuration;
-        $this->configDefinesPath = $configDefinesPath;
-        $this->classIndexCacheClearer = $classIndexCacheClearer;
-        $this->debugProfiling = $debugProfiling;
     }
 
     /**
@@ -212,7 +185,10 @@ class DebugModeConfiguration implements DataConfigurationInterface
         $newDebugMode = $this->debugMode->createDebugModeFromConfiguration($configuration);
 
         if ($newDebugMode !== $currentDebugMode) {
-            return $this->debugMode->changePsModeDevValue($newDebugMode);
+            $updated = $this->debugMode->changePsModeDevValue($newDebugMode);
+            $this->cacheClearer->clear();
+
+            return $updated;
         }
 
         return null;

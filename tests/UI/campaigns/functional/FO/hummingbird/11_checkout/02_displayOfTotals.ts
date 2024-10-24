@@ -9,6 +9,7 @@ import {createCartRuleTest, deleteCartRuleTest} from '@commonTests/BO/catalog/ca
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {
+  type BrowserContext,
   dataCarriers,
   dataCustomers,
   dataProducts,
@@ -19,12 +20,12 @@ import {
   foHummingbirdLoginPage,
   foHummingbirdModalQuickViewPage,
   foHummingbirdSearchResultsPage,
+  type Page,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_hummingbird_checkout_displayOfTotals';
 

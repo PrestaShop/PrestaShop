@@ -14,18 +14,19 @@ import {
   boOrdersPage,
   boOrdersViewBlockProductsPage,
   boOrdersViewBlockTabListPage,
+  type BrowserContext,
   dataCarriers,
   dataCustomers,
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
   FakerOrderShipping,
+  type Page,
   type ProductDiscount,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_orders_orders_viewAndEditOrder_addDiscount';
 

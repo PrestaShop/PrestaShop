@@ -5,17 +5,18 @@ import testContext from '@utils/testContext';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 import {
+  type BrowserContext,
   dataCustomers,
   FakerCustomer,
   foHummingbirdCartPage,
   foHummingbirdCheckoutPage,
   foHummingbirdHomePage,
   foHummingbirdProductPage,
+  type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_hummingbird_checkout_personalInformation_signIn';
 
