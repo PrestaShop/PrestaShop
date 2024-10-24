@@ -60,10 +60,7 @@ class AliasQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $builder = $this->getAliasQueryBuilder($searchCriteria);
 
-        $builder
-            ->select('a.id_alias, a.alias, a.search, a.active, COUNT(a.id_alias) as members')
-            ->groupBy('a.id_alias')
-        ;
+        $builder->select('a.search')->groupBy('search');
 
         $this->searchCriteriaApplicator
             ->applySorting($searchCriteria, $builder)
@@ -105,10 +102,8 @@ class AliasQueryBuilder extends AbstractDoctrineQueryBuilder
     private function applyFilters(QueryBuilder $builder, SearchCriteriaInterface $searchCriteria): void
     {
         $filtersMap = [
-            'id_alias' => 'a.id_alias',
             'alias' => 'a.alias',
             'search' => 'a.search',
-            'active' => 'a.active',
         ];
 
         foreach ($searchCriteria->getFilters() as $filterName => $filterValue) {
@@ -117,14 +112,6 @@ class AliasQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             $dbColumn = $filtersMap[$filterName];
-
-            // apply strict filtering only for certain fields
-            if ('id_alias' === $filterName || 'active' === $filterName) {
-                $builder->andWhere($dbColumn . ' = :' . $filterName)
-                    ->setParameter($filterName, $filterValue);
-
-                continue;
-            }
 
             $builder
                 ->andWhere($dbColumn . ' LIKE :' . $filterName)

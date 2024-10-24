@@ -37,15 +37,13 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\AliasesColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\StatusColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
-use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class AliasGridDefinitionFactory extends AbstractGridDefinitionFactory
@@ -78,39 +76,21 @@ class AliasGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new ColumnCollection())
             ->add(
-                (new BulkActionColumn('title_bulk'))
+                (new BulkActionColumn('term_bulk'))
                     ->setOptions([
-                        'bulk_field' => 'id_alias',
-                    ])
-            )
-            ->add(
-                (new DataColumn('id_alias'))
-                    ->setName($this->trans('ID', [], 'Admin.Global'))
-                    ->setOptions([
-                        'field' => 'id_alias',
-                    ])
-            )
-            ->add(
-                (new DataColumn('alias'))
-                    ->setName($this->trans('Aliases', [], 'Admin.Global'))
-                    ->setOptions([
-                        'field' => 'alias',
+                        'bulk_field' => 'search',
                     ])
             )
             ->add(
                 (new DataColumn('search'))
-                    ->setName($this->trans('Search', [], 'Admin.Shopparameters.Feature'))
+                    ->setName($this->trans('Search term', [], 'Admin.Shopparameters.Feature'))
                     ->setOptions([
                         'field' => 'search',
                     ])
             )
             ->add(
-                (new StatusColumn('active'))
-                    ->setName($this->trans('Status', [], 'Admin.Global'))
-                    ->setOptions([
-                        'field' => 'active',
-                        'sortable' => false,
-                    ])
+                (new AliasesColumn('aliases'))
+                    ->setName($this->trans('Aliases', [], 'Admin.Global'))
             )
             ->add(
                 (new ActionColumn('actions'))
@@ -122,17 +102,17 @@ class AliasGridDefinitionFactory extends AbstractGridDefinitionFactory
                                     ->setName($this->trans('Edit', [], 'Admin.Actions'))
                                     ->setIcon('edit')
                                     ->setOptions([
-                                        'route' => 'admin_search_index', // @TODO implement edit route
-                                        'route_param_name' => 'aliasId',
-                                        'route_param_field' => 'id_alias',
+                                        'route' => 'admin_search_alias_edit',
+                                        'route_param_name' => 'searchTerm',
+                                        'route_param_field' => 'search',
                                         'clickable_row' => true,
                                     ])
                             )
                             ->add(
                                 $this->buildDeleteAction(
-                                    'admin_search_index', // @TODO implement delete route
-                                    'aliasId',
-                                    'id_alias'
+                                    'admin_search_alias_delete',
+                                    'searchTerm',
+                                    'search'
                                 )
                             ),
                     ])
@@ -169,7 +149,7 @@ class AliasGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new BulkActionCollection())
             ->add(
-                $this->buildBulkDeleteAction('admin_search_index') // @TODO implement bulk delete action
+                $this->buildBulkDeleteAction('admin_search_alias_bulk_delete')
             );
     }
 
@@ -179,26 +159,6 @@ class AliasGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getFilters(): FilterCollectionInterface
     {
         return (new FilterCollection())
-            ->add(
-                (new Filter('id_alias', NumberType::class))
-                    ->setTypeOptions([
-                        'required' => false,
-                        'attr' => [
-                            'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
-                        ],
-                    ])
-                    ->setAssociatedColumn('id_alias')
-            )
-            ->add(
-                (new Filter('alias', TextType::class))
-                    ->setTypeOptions([
-                        'required' => false,
-                        'attr' => [
-                            'placeholder' => $this->trans('Search Aliases', [], 'Admin.Global'),
-                        ],
-                    ])
-                    ->setAssociatedColumn('alias')
-            )
             ->add(
                 (new Filter('search', TextType::class))
                     ->setTypeOptions([
@@ -210,8 +170,14 @@ class AliasGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setAssociatedColumn('search')
             )
             ->add(
-                (new Filter('active', YesAndNoChoiceType::class))
-                    ->setAssociatedColumn('active')
+                (new Filter('alias', TextType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->trans('Search Aliases', [], 'Admin.Global'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('aliases')
             )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
@@ -220,7 +186,7 @@ class AliasGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'reset_route_params' => [
                             'filterId' => self::GRID_ID,
                         ],
-                        'redirect_route' => 'admin_search_index',
+                        'redirect_route' => 'admin_search_alias_search',
                     ])
                     ->setAssociatedColumn('actions')
             );

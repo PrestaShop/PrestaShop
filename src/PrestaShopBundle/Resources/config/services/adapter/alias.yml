@@ -33,3 +33,11 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Alias\QueryHandler\SearchForSearchTermHandler:
     autoconfigure: true
+
+
+
+  PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\DeleteAliasSearchTermHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\BulkDeleteAliasSearchTermHandler:
+    autoconfigure: true
