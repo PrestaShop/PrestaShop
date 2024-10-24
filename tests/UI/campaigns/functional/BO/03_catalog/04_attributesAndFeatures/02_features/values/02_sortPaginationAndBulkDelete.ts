@@ -194,6 +194,16 @@ describe('BO - Catalog - Catalog > Attributes & Features : Sort, pagination and 
           testIdentifier: 'sortByIdAsc', sortBy: 'id_feature_value', sortDirection: 'asc', isFloat: true,
         },
       },
+      {
+        args: {
+          testIdentifier: 'sortByPositionAsc', sortBy: 'position', sortDirection: 'asc', isFloat: true,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByPositionDesc', sortBy: 'position', sortDirection: 'desc', isFloat: true,
+        },
+      },
     ];
 
     sortTests.forEach((test) => {

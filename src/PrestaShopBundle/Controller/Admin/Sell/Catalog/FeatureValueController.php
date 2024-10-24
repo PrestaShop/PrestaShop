@@ -42,6 +42,8 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterf
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Factory\FeatureValueGridFactory;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
+use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
+use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition;
 use PrestaShop\PrestaShop\Core\Search\Filters\FeatureValueFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
@@ -320,6 +322,36 @@ class FeatureValueController extends PrestaShopAdminController
         }
 
         return new JsonResponse($data);
+    }
+
+    /**
+     * Changes feature value position
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
+    public function updatePositionAction(
+        int $featureId,
+        Request $request,
+        #[Autowire(service: 'prestashop.core.grid.feature_value.position_definition')]
+        PositionDefinition $positionDefinition,
+    ): Response {
+        try {
+            $this->updateGridPosition($positionDefinition, [
+                'positions' => $request->request->all('positions'),
+                'parentId' => $featureId,
+            ]);
+            $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
+        } catch (PositionUpdateException $e) {
+            $errors = [$e->toArray()];
+            $this->addFlashErrors($errors);
+        }
+
+        return $this->redirectToRoute('admin_feature_values_index', [
+            'featureId' => $featureId,
+        ]);
     }
 
     /**

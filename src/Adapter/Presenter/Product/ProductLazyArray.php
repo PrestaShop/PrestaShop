@@ -1362,7 +1362,6 @@ class ProductLazyArray extends AbstractLazyArray
         // replace value from features that have multiple values with the ones we aggregated earlier
         foreach ($valuesByFeatureName as $featureName => $values) {
             if (count($values) > 1) {
-                sort($values, SORT_NATURAL);
                 $groupedFeatures[$featureName]['value'] = implode("\n", $values);
             }
         }

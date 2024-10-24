@@ -57,6 +57,7 @@ class PageConfiguration implements DataConfigurationInterface
             'attribute_anchor_separator' => $this->configuration->get('PS_ATTRIBUTE_ANCHOR_SEPARATOR'),
             'display_discount_price' => $this->configuration->getBoolean('PS_DISPLAY_DISCOUNT_PRICE'),
             'display_amount_in_cart' => $this->configuration->getBoolean('PS_DISPLAY_AMOUNT_IN_CART'),
+            'feature_values_order' => $this->configuration->get('PS_FEATURE_VALUES_ORDER'),
         ];
     }
 
@@ -74,6 +75,7 @@ class PageConfiguration implements DataConfigurationInterface
             $this->configuration->set('PS_ATTRIBUTE_ANCHOR_SEPARATOR', $config['attribute_anchor_separator']);
             $this->configuration->set('PS_DISPLAY_DISCOUNT_PRICE', (int) $config['display_discount_price']);
             $this->configuration->set('PS_DISPLAY_AMOUNT_IN_CART', (int) $config['display_amount_in_cart']);
+            $this->configuration->set('PS_FEATURE_VALUES_ORDER', $config['feature_values_order']);
         }
 
         return $errors;
@@ -92,6 +94,7 @@ class PageConfiguration implements DataConfigurationInterface
             'attribute_anchor_separator',
             'display_discount_price',
             'display_amount_in_cart',
+            'feature_values_order',
         ]);
 
         $resolver->resolve($config);
