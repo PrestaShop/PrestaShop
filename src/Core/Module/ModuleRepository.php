@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Adapter\HookManager;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotFoundException;
 use Symfony\Component\Finder\Finder;
 use Throwable;
@@ -75,25 +76,19 @@ class ModuleRepository implements ModuleRepositoryInterface
     /** @var Module[] */
     private $modulesFromHook;
 
-    /**
-     * @var int
-     */
-    private $contextLangId;
-
     public function __construct(
         ModuleDataProvider $moduleDataProvider,
         AdminModuleDataProvider $adminModuleDataProvider,
         CacheProvider $cacheProvider,
         HookManager $hookManager,
         string $modulePath,
-        int $contextLangId
+        private LanguageContext $languageContext,
     ) {
         $this->moduleDataProvider = $moduleDataProvider;
         $this->adminModuleDataProvider = $adminModuleDataProvider;
         $this->cacheProvider = $cacheProvider;
         $this->hookManager = $hookManager;
         $this->modulePath = $modulePath;
-        $this->contextLangId = $contextLangId;
     }
 
     public function getList(): ModuleCollection
@@ -246,7 +241,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     {
         $shop = $shopId ? [$shopId] : Shop::getContextListShopID();
 
-        return $moduleName . implode('-', $shop) . $this->contextLangId;
+        return $moduleName . implode('-', $shop) . $this->languageContext->getId();
     }
 
     private function getModuleAttributes(string $moduleName, bool $isValid): array

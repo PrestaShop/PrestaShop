@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Integration\PrestaShopBundle\Routing\Converter;
 
 use PrestaShop\PrestaShop\Adapter\Module\Module;
+use PrestaShop\PrestaShop\Core\Context\ContextBuilderPreparer;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Routing\Route;
@@ -57,6 +58,11 @@ class RoutingCacheKeyGeneratorTest extends KernelTestCase
         if (is_dir($dirResources . '/Resources/modules_tests/demo')) {
             Tools::recurseCopy($dirResources . '/Resources/modules_tests/demo', _PS_MODULE_DIR_ . '/demo');
         }
+
+        // Language context must be initialized because ModuleRepository depends on it
+        /** @var ContextBuilderPreparer $preparer */
+        $preparer = self::$kernel->getContainer()->get(ContextBuilderPreparer::class);
+        $preparer->prepareLanguageId(1);
 
         $this->module = self::$kernel->getContainer()->get(ModuleRepository::class)->getModule('demo');
         $this->module->onInstall();

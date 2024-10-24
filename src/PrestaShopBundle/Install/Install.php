@@ -56,8 +56,10 @@ use PrestaShop\PrestaShop\Adapter\Entity\ShopUrl;
 use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use PrestaShop\PrestaShop\Adapter\Entity\Validate;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
+use PrestaShop\PrestaShop\Core\Context\ContextBuilderPreparer;
 use PrestaShop\PrestaShop\Core\Module\ConfigReader as ModuleConfigReader;
 use PrestaShop\PrestaShop\Core\Theme\ConfigReader as ThemeConfigReader;
 use PrestaShop\PrestaShop\Core\Version;
@@ -409,6 +411,15 @@ class Install extends AbstractInstall
         require_once _PS_ROOT_DIR_ . '/config/smarty.config.inc.php';
 
         $context->smarty = $smarty;
+
+        $container = SymfonyContainer::getInstance();
+        /** @var ContextBuilderPreparer $preparer */
+        $preparer = $container->get(ContextBuilderPreparer::class);
+        $preparer->prepareFromLegacyContext(Context::getContext());
+        // No persisted language is available in the Context at the beginning of the process,
+        // so we hard-code it because it will become available later when LanguageContext is
+        // actually used
+        $preparer->prepareLanguageId(1);
     }
 
     /**

@@ -34,6 +34,8 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\HookManager;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
+use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Translation\Translator;
@@ -99,7 +101,17 @@ class ModuleRepositoryTest extends TestCase
             $cacheProvider,
             $hookManager,
             dirname(__DIR__, 3) . '/Resources/modules/',
-            1
+            new LanguageContext(
+                1,
+                'English',
+                'en',
+                'en-US',
+                'en-us',
+                false,
+                'm/d/Y',
+                'm/d/Y H:i:s',
+                $this->createMock(LocaleInterface::class),
+            ),
         );
     }
 

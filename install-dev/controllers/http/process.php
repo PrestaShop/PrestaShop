@@ -26,6 +26,8 @@
 
 use PrestaShopBundle\Install\Install;
 use PrestaShopBundle\Install\XmlLoader;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Context\ContextBuilderPreparer;
 
 class InstallControllerHttpProcess extends InstallControllerHttp implements HttpConfigureInterface
 {
@@ -71,6 +73,11 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         require_once _PS_ROOT_DIR_ . '/config/smarty.config.inc.php';
 
         Context::getContext()->smarty = $smarty;
+
+        $container = SymfonyContainer::getInstance();
+        /** @var ContextBuilderPreparer $preparer */
+        $preparer = $container->get(ContextBuilderPreparer::class);
+        $preparer->prepareFromLegacyContext(Context::getContext());
     }
 
     public function process(): void
