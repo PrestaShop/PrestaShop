@@ -46,7 +46,10 @@ const campaignsNightly: string[] = [
   'functional:FO:hummingbird:08-12',
   'functional:API',
   'functional:WS',
-  'modules',
+  'modules:01-09',
+  'modules:10-19',
+  'modules:20-29',
+  'modules:30-39',
   'regression',
 ];
 

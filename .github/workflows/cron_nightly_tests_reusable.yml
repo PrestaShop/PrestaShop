@@ -92,6 +92,10 @@ jobs:
           - 'functional:API'
           - 'functional:WS'
           - 'modules'
+          - 'modules:01-09'
+          - 'modules:10-19'
+          - 'modules:20-29'
+          - 'modules:30-39'
           - 'regression'
         exclude:
           ## 1.7.8.x
@@ -122,6 +126,14 @@ jobs:
           - BRANCH: 1.7.8.x
             CAMPAIGN: 'modules'
           - BRANCH: 1.7.8.x
+            CAMPAIGN: 'modules:01-09'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'modules:10-19'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'modules:20-29'
+          - BRANCH: 1.7.8.x
+            CAMPAIGN: 'modules:30-39'
+          - BRANCH: 1.7.8.x
             CAMPAIGN: 'sanity:productV2'
           ## 8.0.x
           - BRANCH: 8.0.x
@@ -150,6 +162,14 @@ jobs:
             CAMPAIGN: 'functional:WS'
           - BRANCH: 8.0.x
             CAMPAIGN: 'modules'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'modules:01-09'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'modules:10-19'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'modules:20-29'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'modules:30-39'
           ## 8.1.x
           - BRANCH: 8.1.x
             CAMPAIGN: 'functional:BO:advanced-parameters:11-12'
@@ -163,6 +183,14 @@ jobs:
             CAMPAIGN: 'functional:FO:hummingbird:04-07'
           - BRANCH: 8.1.x
             CAMPAIGN: 'functional:FO:hummingbird:08-12'
+          - BRANCH: 8.1.x
+            CAMPAIGN: 'modules:01-09'
+          - BRANCH: 8.1.x
+            CAMPAIGN: 'modules:10-19'
+          - BRANCH: 8.1.x
+            CAMPAIGN: 'modules:20-29'
+          - BRANCH: 8.1.x
+            CAMPAIGN: 'modules:30-39'
           ## 8.2.x
           - BRANCH: 8.2.x
             CAMPAIGN: 'functional:BO:advanced-parameters:11-12'
@@ -176,6 +204,14 @@ jobs:
             CAMPAIGN: 'functional:FO:hummingbird:04-07'
           - BRANCH: 8.2.x
             CAMPAIGN: 'functional:FO:hummingbird:08-12'
+          - BRANCH: 8.2.x
+            CAMPAIGN: 'modules:01-09'
+          - BRANCH: 8.2.x
+            CAMPAIGN: 'modules:10-19'
+          - BRANCH: 8.2.x
+            CAMPAIGN: 'modules:20-29'
+          - BRANCH: 8.2.x
+            CAMPAIGN: 'modules:30-39'
           ## 9.0.x
           - BRANCH: 9.0.x
             CAMPAIGN: 'functional:FO:01-03'
@@ -187,6 +223,8 @@ jobs:
             CAMPAIGN: 'sanity:productV2'
           - BRANCH: 9.0.x
             CAMPAIGN: 'functional:productV2'
+          - BRANCH: 9.0.x
+            CAMPAIGN: 'modules'
           ## develop
           - BRANCH: develop
             CAMPAIGN: 'functional:FO:01-03'
@@ -198,6 +236,8 @@ jobs:
             CAMPAIGN: 'sanity:productV2'
           - BRANCH: develop
             CAMPAIGN: 'functional:productV2'
+          - BRANCH: develop
+            CAMPAIGN: 'modules'
 
     env:
       GH_BRANCH: ${{ matrix.BRANCH }}  # Branch to test
