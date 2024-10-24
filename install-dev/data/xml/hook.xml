@@ -251,6 +251,11 @@
       <title>PDF Invoice - Legal Free Text</title>
       <description>This hook allows you to modify the legal free text on PDF invoices</description>
     </hook>
+    <hook id="actionPDFInvoiceRender">
+      <name>actionPDFInvoiceRender</name>
+      <title>PDF Invoice - Render</title>
+      <description>This hook is called when a PDF invoice is rendered from the Front Office and the Back Office</description>
+    </hook>
     <hook id="displayAdminCustomers">
       <name>displayAdminCustomers</name>
       <title>Display new elements in the Back Office, tab AdminCustomers</title>
