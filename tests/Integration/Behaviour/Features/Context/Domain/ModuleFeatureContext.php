@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Module\Command\ResetModuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\UninstallModuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\UpdateModuleStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\Exception\CannotResetModuleException;
+use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleException;
 use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotInstalledException;
 use PrestaShop\PrestaShop\Core\Domain\Module\Query\GetModuleInfos;
@@ -134,7 +135,11 @@ class ModuleFeatureContext extends AbstractDomainFeatureContext
      */
     public function uninstallModule(string $module, string $deleteFile): void
     {
-        $this->getQueryBus()->handle(new UninstallModuleCommand($module, $deleteFile == 'true'));
+        try {
+            $this->getQueryBus()->handle(new UninstallModuleCommand($module, $deleteFile == 'true'));
+        } catch (ModuleException $e) {
+            $this->setLastException($e);
+        }
 
         // Clean the cache
         Module::resetStaticCache();
@@ -145,12 +150,16 @@ class ModuleFeatureContext extends AbstractDomainFeatureContext
      */
     public function bulkUninstallModule(string $modulesRef, string $deleteFile): void
     {
-        $modules = [];
-        foreach (PrimitiveUtils::castStringArrayIntoArray($modulesRef) as $modulesReference) {
-            $modules[] = $modulesReference;
-        }
+        try {
+            $modules = [];
+            foreach (PrimitiveUtils::castStringArrayIntoArray($modulesRef) as $modulesReference) {
+                $modules[] = $modulesReference;
+            }
 
-        $this->getQueryBus()->handle(new BulkUninstallModuleCommand($modules, $deleteFile == 'true'));
+            $this->getQueryBus()->handle(new BulkUninstallModuleCommand($modules, $deleteFile == 'true'));
+        } catch (ModuleException $e) {
+            $this->setLastException($e);
+        }
 
         // Clean the cache
         Module::resetStaticCache();

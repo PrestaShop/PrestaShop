@@ -95,6 +95,15 @@ Feature: Module
       | installed      | false               |
     Then I should have an exception that module is not found
 
+  Scenario: Uninstall module are not installed
+    Given module ps_featuredproducts has following infos:
+      | technical_name | ps_featuredproducts |
+      | version        | 1.0.0               |
+      | enabled        | false                |
+      | installed      | false               |
+    When I uninstall module "ps_featuredproducts" with deleteFile false
+    Then I should have an exception that module is not installed
+
   Scenario: Get module not present
     When module ps_notthere has following infos:
       | technical_name | ps_notthere |
