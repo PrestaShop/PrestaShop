@@ -27,6 +27,7 @@
 declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Module\Command;
+
 use PrestaShop\PrestaShop\Core\Domain\Module\ValueObject\ModuleTechnicalName;
 
 /**
@@ -44,13 +45,13 @@ class BulkUninstallModuleCommand
      */
     private $deleteFile;
 
-     /**
+    /**
      * @param array<string> $modules Array of technical names for modules
      * @param bool $deleteFile Boolean for delete modules files
      */
     public function __construct(array $modules, bool $deleteFile = false)
     {
-        $this->modules = array_map(fn(string $technicalName)=>new ModuleTechnicalName($technicalName), $modules);
+        $this->modules = array_map(fn (string $technicalName) => new ModuleTechnicalName($technicalName), $modules);
         $this->deleteFile = $deleteFile;
     }
 
@@ -62,7 +63,7 @@ class BulkUninstallModuleCommand
         return $this->modules;
     }
 
-     /**
+    /**
      * @return bool
      */
     public function getDeteleFile(): bool

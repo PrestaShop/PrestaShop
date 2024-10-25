@@ -27,6 +27,7 @@
 declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Module\Command;
+
 use PrestaShop\PrestaShop\Core\Domain\Module\ValueObject\ModuleTechnicalName;
 
 /**
@@ -44,7 +45,7 @@ class UninstallModuleCommand
      */
     private $deleteFile;
 
-     /**
+    /**
      * @param string $technicalName Array of technical names for modules
      * @param bool $deleteFile Boolean for delete module files
      */
@@ -62,7 +63,7 @@ class UninstallModuleCommand
         return $this->technicalName;
     }
 
-     /**
+    /**
      * @return bool
      */
     public function getDeteleFile(): bool

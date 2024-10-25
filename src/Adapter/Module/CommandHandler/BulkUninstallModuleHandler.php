@@ -44,14 +44,13 @@ class BulkUninstallModuleHandler implements BulkUninstallModuleHandlerInterface
     }
 
     public function handle(BulkUninstallModuleCommand $command): void
-    {    
+    {
         $deleteFile = $command->getDeteleFile();
         foreach ($command->getModules() as $moduleName) {
             $module = $this->moduleRepository->getPresentModule($moduleName->getValue());
 
-            if(!$module->isInstalled())
-            {
-                throw new ModuleNotInstalledException('Module ' .$moduleName->getValue().' not installed.');
+            if (!$module->isInstalled()) {
+                throw new ModuleNotInstalledException('Module ' . $moduleName->getValue() . ' not installed.');
             }
 
             $result = $this->moduleManager->uninstall($moduleName->getValue(), $deleteFile);
