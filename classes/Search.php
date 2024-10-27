@@ -128,7 +128,7 @@ class SearchCore
     public const PS_SEARCH_ORDINATE_MAX = -1;
     public const PS_SEARCH_ABSCISSA_MIN = 0.5;
     public const PS_SEARCH_ABSCISSA_MAX = 2;
-    public const PS_DISTANCE_MAX = 8;
+    public const PS_DISTANCE_MAX = 5;
 
     /**
      * Method that takes a raw string (sentence) and extract all keywords it can find.
@@ -1175,6 +1175,7 @@ class SearchCore
         $distance = []; // cache levenshtein distance
         $searchMinWordLength = (int) Configuration::get('PS_SEARCH_MINWORDLEN');
         $psSearchMaxWordLength = (int) Configuration::get('PS_SEARCH_MAX_WORD_LENGTH');
+        $levenshteinMaxWordDifference = (int) Configuration::get('PS_SEARCH_FUZZY_MAX_DIFFERENCE');
 
         if (!self::$totalWordInSearchWordTable) {
             $sql = 'SELECT count(*) FROM `' . _DB_PREFIX_ . 'search_word`;';
@@ -1263,7 +1264,7 @@ class SearchCore
             ['word' => 'initial', 'weight' => 0, 'levenshtein' => 100]
         );
 
-        return $closestWord['levenshtein'] < static::PS_DISTANCE_MAX ? $closestWord['word'] : '';
+        return $closestWord['levenshtein'] <= $levenshteinMaxWordDifference ? $closestWord['word'] : '';
     }
 
     /**

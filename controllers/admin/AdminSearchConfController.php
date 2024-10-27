@@ -220,6 +220,21 @@ class AdminSearchConfControllerCore extends AdminController
                         'type' => 'text',
                         'cast' => 'intval',
                     ],
+                    'PS_SEARCH_FUZZY_MAX_DIFFERENCE' => [
+                        'title' => $this->trans(
+                            'Maximum acceptable word difference',
+                            [],
+                            'Admin.Shopparameters.Feature'
+                        ),
+                        'desc' => $this->trans(
+                            'This option defines how much different can the alternative words found by fuzzy search be. Or, how many characters can be different/missing/added. The default value is 5.',
+                            [],
+                            'Admin.Shopparameters.Help'
+                        ),
+                        'validation' => 'isUnsignedInt',
+                        'type' => 'text',
+                        'cast' => 'intval',
+                    ],
                     'PS_SEARCH_MAX_WORD_LENGTH' => [
                         'title' => $this->trans(
                             'Maximum word length (in characters)',

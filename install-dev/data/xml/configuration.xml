@@ -158,6 +158,9 @@
   <configuration id="PS_SEARCH_FUZZY_MAX_LOOP" name="PS_SEARCH_FUZZY_MAX_LOOP">
     <value>4</value>
   </configuration>
+  <configuration id="PS_SEARCH_FUZZY_MAX_DIFFERENCE" name="PS_SEARCH_FUZZY_MAX_DIFFERENCE">
+    <value>5</value>
+  </configuration>
   <configuration id="PS_SEARCH_MAX_WORD_LENGTH" name="PS_SEARCH_MAX_WORD_LENGTH">
     <value>15</value>
   </configuration>
