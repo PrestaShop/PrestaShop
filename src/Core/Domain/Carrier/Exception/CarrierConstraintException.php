@@ -142,4 +142,9 @@ class CarrierConstraintException extends CarrierException
      * Thrown when carrier is save without at least one zone
      */
     public const INVALID_ZONE_MISSING = 210;
+
+    /**
+     * Thrown when carrier range is a negative value
+     */
+    public const INVALID_RANGE_NEGATIVE = 220;
 }

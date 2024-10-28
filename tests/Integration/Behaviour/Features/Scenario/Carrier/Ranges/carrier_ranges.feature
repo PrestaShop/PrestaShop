@@ -154,3 +154,21 @@ Feature: Carrier ranges
       | shippingMethod   | weight                             |
       | zones            |                                    |
     Then carrier should throw an error with error code "INVALID_ZONE_MISSING"
+
+  Scenario: Adding negative ranges in carrier
+    When I create carrier "carrier1" with specified properties:
+      | name             | Carrier 1                          |
+      | shippingMethod   | weight                             |
+      | zones            | zone1, zone2                       |
+    Then I set ranges for carrier "carrier1" with specified properties for all shops:
+      | id_zone | range_from | range_to | range_price |
+      | zone1   | -5         | 100      | 10          |
+    Then carrier should throw an error with error code "INVALID_RANGE_NEGATIVE"
+    When I create carrier "carrier2" with specified properties:
+      | name             | Carrier 2                          |
+      | shippingMethod   | weight                             |
+      | zones            | zone1, zone2                       |
+    Then I set ranges for carrier "carrier2" with specified properties for all shops:
+      | id_zone | range_from | range_to | range_price |
+      | zone1   | 0         | -100      | 10          |
+    Then carrier should throw an error with error code "INVALID_RANGE_NEGATIVE"

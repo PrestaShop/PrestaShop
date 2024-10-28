@@ -66,6 +66,7 @@ class CarrierRangesType extends TranslatorAwareType
                         'modal.col.to' => $this->trans('Maximum', 'Admin.Shipping.Feature'),
                         'modal.col.action' => $this->trans('Action', 'Admin.Shipping.Feature'),
                         'modal.overlappingAlert' => $this->trans('Make sure there are no overlapping ranges. Remember, the minimum is part of the range, but the maximum isn\'t. So, the upper limit of a range is the lower limit of the next range.', 'Admin.Shipping.Feature'),
+                        'modal.negativeRangeAlert' => $this->trans('You can not add a negative range', 'Admin.Shipping.Feature'),
                     ]),
                 ],
             ])

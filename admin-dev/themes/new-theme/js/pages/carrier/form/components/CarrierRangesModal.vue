@@ -48,6 +48,13 @@
         >
           {{ $t('modal.overlappingAlert') }}
         </div>
+        <div
+          class="alert alert-danger"
+          v-if="negativeRangeAlert"
+          role="alert"
+        >
+          {{ $t('modal.negativeRangeAlert') }}
+        </div>
         <div class="table-container">
           <table class="table table-carrier-ranges-modal">
             <thead>
@@ -82,7 +89,7 @@
                         type="number"
                         class="form-control form-from"
                         inputmode="decimal"
-                        v-model="r.from"
+                        v-model.number="r.from"
                       >
                     </div>
                   </td>
@@ -95,7 +102,7 @@
                         type="number"
                         class="form-control form-to"
                         inputmode="decimal"
-                        v-model="r.to"
+                        v-model.number="r.to"
                       >
                     </div>
                   </td>
@@ -154,6 +161,7 @@
         refreshKey: 0,
         errors: false,
         overlappingAlert: false,
+        negativeRangeAlert: false,
         symbol: '',
       };
     },
@@ -190,6 +198,7 @@
         // We reset the errors
         this.errors = false;
         this.overlappingAlert = false;
+        this.negativeRangeAlert = false;
       },
       closeModal() {
         // We remove the class to allow scrolling
@@ -224,6 +233,7 @@
         // Reset errors
         this.errors = false;
         this.overlappingAlert = false;
+        this.negativeRangeAlert = false;
         // We remove the error class from all inputs already in error
         table.querySelectorAll('input.is-invalid').forEach((input) => {
           input.classList.remove('is-invalid');
@@ -235,20 +245,22 @@
         // We check ranges
         let saveMax: null | number = null;
         this.ranges.forEach((range, index) => {
-          // Check if all fields are filled
-          if (range.from === null) {
+          // Check if all fields are filled and are not negative
+          if (range.from === null || typeof range.from === 'string' || range.from < 0) {
             table.querySelectorAll(`tr[data-row="${index}"] input.form-from`)
               .forEach((input) => {
                 input.classList.add('is-invalid');
               });
             this.errors = true;
+            this.negativeRangeAlert = true;
           }
-          if (range.to === null) {
+          if (range.to === null || typeof range.to === 'string' || range.to < 0) {
             table.querySelectorAll(`tr[data-row="${index}"] input.form-to`)
               .forEach((input) => {
                 input.classList.add('is-invalid');
               });
             this.errors = true;
+            this.negativeRangeAlert = true;
           }
           // Check overlapping
           if (saveMax !== null && range.from !== null && range.from < saveMax) {

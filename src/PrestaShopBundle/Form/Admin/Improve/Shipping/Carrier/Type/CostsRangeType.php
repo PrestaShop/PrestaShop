@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\Type;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\PositiveOrZero;
 use PrestaShopBundle\Form\Admin\Type\MoneyWithSuffixType;
 use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -46,13 +47,24 @@ class CostsRangeType extends TranslatorAwareType
             ->add('range', TextPreviewType::class, [
                 'label' => $this->trans('Range', 'Admin.Shipping.Feature'),
             ])
-            ->add('from', HiddenType::class)
-            ->add('to', HiddenType::class)
+            ->add('from', HiddenType::class, [
+                'constraints' => [
+                    new PositiveOrZero([
+                        'message' => 'The value must be a positive number.',
+                    ]),
+                ],
+            ])
+            ->add('to', HiddenType::class, [
+                'constraints' => [
+                    new PositiveOrZero([
+                        'message' => 'The value must be a positive number.',
+                    ]),
+                ],
+            ])
             ->add('price', MoneyWithSuffixType::class, [
                 'label' => $this->trans('Price (VAT excl.)', 'Admin.Shipping.Feature'),
                 'empty_data' => '0.0', // string instead number needed for DecimalNumber.php validation
-            ])
-        ;
+            ]);
     }
 
     /**

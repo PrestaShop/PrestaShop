@@ -109,6 +109,12 @@ class CarrierRangeZone
 
         // Then, we can check if ranges are overlapping or not
         foreach ($ranges as $range) {
+            if ($range['range_from'] < 0 || $range['range_to'] < 0) {
+                throw new CarrierConstraintException(
+                    'Carrier range cannot be less than zero.',
+                    CarrierConstraintException::INVALID_RANGE_NEGATIVE
+                );
+            }
             if ($min > $range['range_from']) {
                 throw new CarrierConstraintException(
                     'Carrier ranges are overlapping',
