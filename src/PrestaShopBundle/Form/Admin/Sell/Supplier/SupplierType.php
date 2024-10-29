@@ -151,6 +151,7 @@ class SupplierType extends TranslatorAwareType
                 'required' => false,
                 'type' => FormattedTextareaType::class,
                 'options' => [
+                    'limit' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4,
                     'constraints' => [
                         new CleanHtml([
                             'message' => $this->trans(

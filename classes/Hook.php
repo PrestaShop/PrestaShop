@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 
 class HookCore extends ObjectModel
 {
@@ -76,7 +77,7 @@ class HookCore extends ObjectModel
         'fields' => [
             'name' => ['type' => self::TYPE_STRING, 'validate' => 'isHookName', 'required' => true, 'size' => 191],
             'title' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 255],
-            'description' => ['type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => 4194303],
+            'description' => ['type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4],
             'position' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
         ],

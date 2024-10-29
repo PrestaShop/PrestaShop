@@ -30,6 +30,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 
 /**
  * Class PrivateNoteType is used to add private notes about customer.
@@ -62,6 +63,9 @@ class PrivateNoteType extends AbstractType
                 'empty_data' => '',
                 'attr' => [
                     'placeholder' => $this->translator->trans('Add a note on this customer. It will only be visible to you.', [], 'Admin.Orderscustomers.Feature'),
+                ],
+                'options' => [
+                    'limit' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4,
                 ],
             ]);
     }

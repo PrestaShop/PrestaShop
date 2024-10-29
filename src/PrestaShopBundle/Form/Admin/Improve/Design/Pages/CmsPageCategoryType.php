@@ -41,6 +41,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 
 /**
  * Defines form for Improve > Design > Pages > Categories create/edit actions
@@ -120,6 +121,7 @@ class CmsPageCategoryType extends TranslatorAwareType
                 'required' => false,
                 'type' => TextareaType::class,
                 'options' => [
+                    'limit' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4,
                     'constraints' => [
                         new CleanHtml(),
                     ],

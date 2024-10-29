@@ -73,6 +73,9 @@ class SqlRequestType extends TranslatorAwareType
                         ),
                     ]),
                 ],
+                'options' => [
+                    'limit' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4,
+                ],
             ]);
     }
 }

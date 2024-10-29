@@ -40,14 +40,26 @@ class FormattedTextareaType extends TranslatorAwareType
 {
     /**
      * Max size of UTF-8 content in MySQL text columns
+     *
+     * To calculate these, we start from the raw byte limit of these fieds:
+     * TINYTEXT 255
+     * TEXT 65535
+     * MEDIUMTEXT 16777215
+     * LONGTEST 4294967295
      */
     public const LIMIT_TINYTEXT_UTF8 = 84;
     public const LIMIT_TEXT_UTF8 = 21844;
-    public const LIMIT_MEDIUMTEXT_UTF8 = 5592414;
+    public const LIMIT_MEDIUMTEXT_UTF8 = 5592404;
     public const LIMIT_LONGTEXT_UTF8 = 1431655764;
 
     /**
      * Max size of UTF-8 MB4 content in MySQL text columns
+     *
+     * To calculate these, we start from the raw byte limit of these fieds:
+     * TINYTEXT 255
+     * TEXT 65535
+     * MEDIUMTEXT 16777215
+     * LONGTEST 4294967295
      */
     public const LIMIT_TINYTEXT_UTF8_MB4 = 63;
     public const LIMIT_TEXT_UTF8_MB4 = 16383;

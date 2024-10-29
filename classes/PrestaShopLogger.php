@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
+
 /**
  * Class PrestaShopLoggerCore.
  */
@@ -88,7 +90,7 @@ class PrestaShopLoggerCore extends ObjectModel
         'fields' => [
             'severity' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true],
             'error_code' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
-            'message' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true, 'size' => 4194303],
+            'message' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true, 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4],
             'object_id' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
             'id_shop' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'allow_null' => true],
             'id_shop_group' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'allow_null' => true],

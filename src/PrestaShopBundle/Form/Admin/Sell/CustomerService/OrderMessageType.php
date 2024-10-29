@@ -69,6 +69,7 @@ class OrderMessageType extends TranslatorAwareType
                 'label' => $this->trans('Message', 'Admin.Global'),
                 'type' => TextareaType::class,
                 'options' => [
+                    'limit' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4,
                     'constraints' => [
                         new TypedRegex([
                             'type' => 'message',

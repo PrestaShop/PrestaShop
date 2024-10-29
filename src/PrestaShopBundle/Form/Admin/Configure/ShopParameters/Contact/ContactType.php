@@ -131,6 +131,7 @@ class ContactType extends TranslatorAwareType
                 'type' => TextareaType::class,
                 'required' => false,
                 'options' => [
+                    'limit' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4,
                     'constraints' => [
                         new NoTags([
                             'message' => $this->trans(

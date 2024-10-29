@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
+
 /**
  * Class CustomerMessageCore.
  */
@@ -71,7 +73,7 @@ class CustomerMessageCore extends ObjectModel
             'id_employee' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'id_customer_thread' => ['type' => self::TYPE_INT],
             'ip_address' => ['type' => self::TYPE_STRING, 'validate' => 'isIp2Long', 'size' => 16],
-            'message' => ['type' => self::TYPE_HTML, 'required' => true, 'size' => 4194303, 'validate' => 'isCleanHtml'],
+            'message' => ['type' => self::TYPE_HTML, 'required' => true, 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4, 'validate' => 'isCleanHtml'],
             'file_name' => ['type' => self::TYPE_STRING, 'size' => 18],
             'user_agent' => ['type' => self::TYPE_STRING, 'size' => 128],
             'private' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],

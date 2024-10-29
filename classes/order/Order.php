@@ -25,6 +25,7 @@
  */
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShopBundle\Entity\MutatorType;
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 
 class OrderCore extends ObjectModel
 {
@@ -207,7 +208,7 @@ class OrderCore extends ObjectModel
             'module' => ['type' => self::TYPE_STRING, 'validate' => 'isModuleName', 'required' => true, 'size' => 255],
             'recyclable' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'gift' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
-            'gift_message' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 4194303],
+            'gift_message' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4],
             'mobile_theme' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'total_discounts' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
             'total_discounts_tax_incl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
@@ -236,7 +237,7 @@ class OrderCore extends ObjectModel
             'reference' => ['type' => self::TYPE_STRING, 'size' => 255],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
-            'note' => ['type' => self::TYPE_HTML, 'size' => 4194303],
+            'note' => ['type' => self::TYPE_HTML, 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4],
         ],
     ];
 
