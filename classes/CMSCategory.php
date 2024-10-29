@@ -26,7 +26,7 @@
 
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 
-class CMSCategoryCore extends ObjectModel
+ class CMSCategoryCore extends ObjectModel
 {
     public $id;
 
@@ -241,7 +241,7 @@ class CMSCategoryCore extends ObjectModel
     protected function recursiveDelete(array &$to_delete, $id_cms_category)
     {
         if (!$id_cms_category) {
-            throw new PrestaShopException('Parameter "id_cms_category" is invalid.');
+            die(Tools::displayError('Parameter "id_cms_category" is invalid.'));
         }
 
         $result = Db::getInstance()->executeS('
@@ -658,20 +658,8 @@ class CMSCategoryCore extends ObjectModel
         return true;
     }
 
-    /**
-     * Returns the next position to use for a new CMS category.
-     * CMS category positions start with 0.
-     * Returns position of the last CMS category within that category + 1,
-     * 0 if there are no CMS categories.
-     *
-     * @param int $idParentCmsCategory ID of the parent CMS category
-     *
-     * @return int Position to use
-     */
-    public static function getLastPosition($idParentCmsCategory)
+    public static function getLastPosition($id_category_parent)
     {
-        return (int) Db::getInstance()->getValue('SELECT MAX(position) + 1
-            FROM `' . _DB_PREFIX_ . 'cms_category`
-            WHERE `id_parent` = ' . (int) $idParentCmsCategory);
+        return Db::getInstance()->getValue('SELECT MAX(position)+1 FROM `' . _DB_PREFIX_ . 'cms_category` WHERE `id_parent` = ' . (int) $id_category_parent);
     }
 }
