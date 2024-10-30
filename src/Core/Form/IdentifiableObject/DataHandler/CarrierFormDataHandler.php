@@ -126,6 +126,9 @@ class CarrierFormDataHandler implements FormDataHandlerInterface
 
         foreach ($data as $zone) {
             foreach ($zone['ranges'] as $range) {
+                if ($range['from'] === null || $range['to'] === null) {
+                    continue;
+                }
                 $ranges[] = [
                     'id_zone' => $zone['zoneId'],
                     'range_from' => $range['from'],
