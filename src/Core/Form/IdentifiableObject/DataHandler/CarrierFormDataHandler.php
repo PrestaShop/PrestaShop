@@ -126,6 +126,9 @@ class CarrierFormDataHandler implements FormDataHandlerInterface
 
         foreach ($data as $zone) {
             foreach ($zone['ranges'] as $range) {
+                // Due to this bug https://github.com/PrestaShop/PrestaShop/issues/37151,
+                // We have to do this quick and dirty fix.
+                // This bug is due to symfony request handle.
                 if ($range['from'] === null || $range['to'] === null) {
                     continue;
                 }
