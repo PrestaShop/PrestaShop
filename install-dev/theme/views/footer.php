@@ -25,17 +25,22 @@
  */
 ?>
 
-<ul id="footer">
-  <?php if (is_array($this->getConfig('footer.links'))): ?>
-    <?php foreach($this->getConfig('footer.links') as $link => $label): ?>
-      <li>
-        <a href="<?php echo $link ?>" target="_blank" rel="noopener noreferrer">
-          <?php echo $label; ?>
-        </a>
-        |
-      </li>
-    <?php endforeach ?>
-  <?php endif; ?>
+<div id="footer">
+  <ul>
+    <?php if (is_array($this->getConfig('footer.links'))): ?>
+      <?php foreach($this->getConfig('footer.links') as $link => $label): ?>
+        <li>
+          <a href="<?php echo $link ?>" target="_blank" rel="noopener noreferrer">
+            <?php echo $label; ?>
+          </a>
+          |
+        </li>
+      <?php endforeach ?>
+    <?php endif; ?>
 
-  <li>&copy; 2007-<?php echo date('Y'); ?></li>
-</ul>
+    <li>&copy; 2007-<?php echo date('Y'); ?></li>
+  </ul>
+  <p>
+    <?php echo $this->translator->trans('Any questions? We’re here to help. Visit the <a href="https://help-center.prestashop.com/" target="_blank" rel="noopener noreferrer">Help Center</a> or <a href="https://help-center.prestashop.com/en/contact" target="_blank" rel="noopener noreferrer">contact us</a>.', [], 'Install'); ?>
+  </p>
+</div>
