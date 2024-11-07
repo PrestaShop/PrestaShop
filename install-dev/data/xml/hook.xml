@@ -3579,6 +3579,11 @@
       <title>Show custom content before checkout confirmation</title>
       <description>This hook allows you to display custom content at the end of checkout process</description>
     </hook>
+    <hook id="displayOrderSummaryTable">
+      <name>displayOrderSummaryTable</name>
+      <title>Show custom row in order summary</title>
+      <description>This hook allows you to display custom content at the end of the order summary table</description>
+    </hook>
     <hook id="actionListModules">
       <name>actionListModules</name>
       <title>Add modules to the module manager list</title>
