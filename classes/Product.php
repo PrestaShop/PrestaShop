@@ -1080,7 +1080,8 @@ class ProductCore extends ObjectModel
         $sql = 'SELECT product_attribute_shop.id_product_attribute
                 FROM ' . _DB_PREFIX_ . 'product_attribute pa
                 ' . Shop::addSqlAssociation('product_attribute', 'pa') . '
-                WHERE pa.id_product = ' . (int) $id_product;
+                WHERE pa.id_product = ' . (int) $id_product . '
+                ORDER BY product_attribute_shop.id_product_attribute ASC';
 
         // If none are found, we exit right away
         $result_no_filter = (int) Db::getInstance()->getValue($sql);
@@ -1107,7 +1108,8 @@ class ProductCore extends ObjectModel
                     ' . Shop::addSqlAssociation('product_attribute', 'pa') . '
                     ' . ($minimum_quantity > 0 ? Product::sqlStock('pa', 'pa') : '') .
                     ' WHERE pa.id_product = ' . (int) $id_product
-                    . ($minimum_quantity > 0 ? ' AND IFNULL(stock.quantity, 0) >= ' . (int) $minimum_quantity : '');
+                    . ($minimum_quantity > 0 ? ' AND IFNULL(stock.quantity, 0) >= ' . (int) $minimum_quantity : '') . '
+                    ORDER BY product_attribute_shop.id_product_attribute ASC';
 
             $result = (int) Db::getInstance()->getValue($sql);
         }
@@ -5372,24 +5374,36 @@ class ProductCore extends ObjectModel
             );
         }
 
-        $id_product_attribute = $row['id_product_attribute'] = (!empty($row['id_product_attribute']) ? (int) $row['id_product_attribute'] : null);
-
-        // Product::getDefaultAttribute is only called if id_product_attribute is missing from the SQL query at the origin of it:
-        // consider adding it in order to avoid unnecessary queries
+        // Resolve if product is in stock
         $row['allow_oosp'] = Product::isAvailableWhenOutOfStock($row['out_of_stock']);
-        if (
-            Combination::isFeatureActive()
-            && $id_product_attribute === null
-            && (
-                (isset($row['cache_default_attribute']) && ($ipa_default = $row['cache_default_attribute']) !== null)
-                || ($ipa_default = Product::getDefaultAttribute($row['id_product'], (int) !$row['allow_oosp']))
-            )
-        ) {
-            $id_product_attribute = $row['id_product_attribute'] = $ipa_default;
+
+        /* 
+         * Resolve default product combination, if combinations are enabled on the shop.
+         */
+        $id_product_attribute = 0;
+        if (Combination::isFeatureActive()) {
+            /*
+             * If we have some specific combination ID passed, we will use it and don't ask other questions
+             * It doesn't have to be the default combination. For example, a filtering module can directly pass
+             * an id_product_attribute it wants to use and display to the user.
+             */
+            if (!empty($row['id_product_attribute'])) {
+                $id_product_attribute = (int) $row['id_product_attribute'];
+            /* 
+             * If nothing was passed, we will look for cache_default_attribute, this is a cached default combination
+             * ID on the product ID. Passing this or id_product_attribute above directly will save performance.
+             */
+            } elseif (!empty($row['cache_default_attribute'])) {
+                $id_product_attribute = (int) $row['cache_default_attribute'];
+            /* 
+             * If nothing was passed, we will get the combination to use manually.
+             * Product::getDefaultAttribute finds the best combination to use.
+             */
+            } else {
+                $id_product_attribute = (int) Product::getDefaultAttribute($row['id_product'], (int) !$row['allow_oosp']);
+            }
         }
-        if (!Combination::isFeatureActive() || !isset($row['id_product_attribute'])) {
-            $id_product_attribute = $row['id_product_attribute'] = 0;
-        }
+        $row['id_product_attribute'] = $id_product_attribute;
 
         // Tax
         $usetax = Configuration::get('PS_TAX');
