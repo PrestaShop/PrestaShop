@@ -58,11 +58,6 @@ describe('FO - Home Page : Select color on hover on product list', async () => {
   it('should check that the displayed product is white', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkDisplayedProduct', baseContext);
 
-    // @todo : https://github.com/PrestaShop/PrestaShop/issues/36356
-    if (global.INSTALL.DB_SERVER === 'mariadb') {
-      this.skip();
-    }
-
     const pageURL = await foClassicProductPage.getCurrentURL(page);
     expect(pageURL).to.contains('color-white')
       .and.to.contains('size-m');
