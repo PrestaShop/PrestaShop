@@ -144,24 +144,37 @@ class OrderInvoiceCore extends ObjectModel
         ' . ($this->id && $this->number ? ' AND od.`id_order_invoice` = ' . (int) $this->id : '') . ' ORDER BY od.`product_name`');
     }
 
-    public static function getInvoiceByNumber($id_invoice)
+    /**
+     * Returns OrderInvoice for a specific invoice number and order ID.
+     * It's highly recommended to also provide an order ID, because you
+     * may end up with a different invoice than you wanted.
+     *
+     * DO NOT CONFUSE the number with id_order_invoice, that's a different,
+     * unique identifier of the invoice.
+     *
+     * @param string|int $invoiceNumber
+     * @param int $orderId
+     *
+     * @return OrderInvoice|false
+     */
+    public static function getInvoiceByNumber($invoiceNumber, $orderId = null)
     {
-        if (is_numeric($id_invoice)) {
-            $id_invoice = (int) $id_invoice;
-        } elseif (is_string($id_invoice)) {
+        if (is_numeric($invoiceNumber)) {
+            $invoiceNumber = (int) $invoiceNumber;
+        } elseif (is_string($invoiceNumber)) {
             $matches = [];
-            if (preg_match('/^(?:' . Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id) . ')\s*([0-9]+)$/i', $id_invoice, $matches)) {
-                $id_invoice = $matches[1];
+            if (preg_match('/^(?:' . Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id) . ')\s*([0-9]+)$/i', $invoiceNumber, $matches)) {
+                $invoiceNumber = $matches[1];
             }
         }
-        if (!$id_invoice) {
+        if (!$invoiceNumber) {
             return false;
         }
 
         $id_order_invoice = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             'SELECT `id_order_invoice`
             FROM `' . _DB_PREFIX_ . 'order_invoice`
-            WHERE number = ' . (int) $id_invoice
+            WHERE `number` = ' . (int) $invoiceNumber . (!empty($orderId) ? ' AND `id_order` = ' . (int) $orderId : '')
         );
 
         return $id_order_invoice ? new OrderInvoice((int) $id_order_invoice) : false;

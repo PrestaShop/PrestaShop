@@ -691,10 +691,6 @@ class ProductLazyArray extends AbstractLazyArray
     #[LazyArrayAttribute(arrayAccess: true)]
     public function getSpecificReferences()
     {
-        if (isset($this->product['cart_quantity'])) {
-            return null;
-        }
-
         $specificReferences = null;
 
         // Get data of this combination, it contains other stuff, we will extract only what we need

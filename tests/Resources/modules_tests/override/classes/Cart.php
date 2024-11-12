@@ -2,6 +2,8 @@
 
 class Cart extends CartCore
 {
+    public const BOTH = 999;
+
     /*
     * module: pscsx32412
     * date: 2018-12-26 14:14:05
@@ -21,6 +23,15 @@ class Cart extends CartCore
         if ($to_update) {
             $this->update();
         }
+        $sql = 'UPDATE `' . _DB_PREFIX_ . 'cart_product`
+		SET `id_address_delivery` = ' . (int) $id_address_new . '
+		WHERE  `id_cart` = ' . (int) $this->id . '
+			AND `id_address_delivery` = ' . (int) $id_address;
+        Db::getInstance()->execute($sql);
+        $sql = 'UPDATE `' . _DB_PREFIX_ . 'customization`
+			SET `id_address_delivery` = ' . (int) $id_address_new . '
+			WHERE  `id_cart` = ' . (int) $this->id . '
+				AND `id_address_delivery` = ' . (int) $id_address;
         Db::getInstance()->execute($sql);
     }
 

@@ -1408,9 +1408,9 @@ class CartRuleCore extends ObjectModel
                         if ((in_array($product['id_product'] . '-' . $product['id_product_attribute'], $selected_products)
                                 || in_array($product['id_product'] . '-0', $selected_products))
                             && (($this->reduction_exclude_special && !$product['reduction_applies']) || !$this->reduction_exclude_special)) {
-                            $price = $product['price'];
+                            $price = $product['price_with_reduction_without_tax'];
                             if ($use_tax) {
-                                $price = $product['price_without_reduction'];
+                                $price = $product['price_with_reduction'];
                             }
 
                             $selected_products_reduction += $price * $product['cart_quantity'];

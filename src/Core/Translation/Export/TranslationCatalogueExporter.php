@@ -47,8 +47,6 @@ use Symfony\Component\Translation\MessageCatalogue;
  */
 class TranslationCatalogueExporter
 {
-    private const EXPORT_ZIP_FILENAME = '%s/translations_export_%s.zip';
-
     /**
      * @var TranslationCatalogueBuilder
      */
@@ -117,22 +115,25 @@ class TranslationCatalogueExporter
     {
         $this->validateParameters($selections);
 
+        // Create directory, where we will do our exports, if it doesn't exist
+        // This is var/cache/<env>/export
         if (!$this->filesystem->exists($this->exportDir)) {
             $this->filesystem->mkdir($this->exportDir);
         }
 
-        $zipFilename = sprintf(self::EXPORT_ZIP_FILENAME, $this->exportDir, $locale);
-        $path = dirname($zipFilename);
+        // Prepare unique export identifier so we don't interfere with other exports
+        $exportIdentifier = uniqid();
 
-        // Clean export folder
-        $this->filesystem->remove($path);
-        $this->filesystem->mkdir($path);
-        $dumpOptions = [
-            'path' => $path,
-            'default_locale' => $locale,
-            'root_dir' => _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR,
-        ];
+        // Create our working folder, this is a temporary folder inside var/cache/<env>/export
+        $workingFolder = $this->exportDir . '/' . $exportIdentifier;
+        if (!$this->filesystem->exists($workingFolder)) {
+            $this->filesystem->mkdir($workingFolder);
+        }
 
+        // Prepare the name of the final zip file we will return
+        $zipFilename = sprintf('%s/translations_export_%s.zip', $this->exportDir, $locale);
+
+        // Dump all XLF files into var/cache/<env>/export/<exportIdentifier>/<locale>
         foreach ($selections as $selection) {
             $providerDefinition = $this->providerDefinitionFactory->build($selection['type'], $selection['selected']);
 
@@ -142,14 +143,25 @@ class TranslationCatalogueExporter
             // Transform into messageCatalogue object
             $messageCatalogue = $this->transformCatalogueMapToMessageCatalogue($catalogue, $locale);
 
-            // Dump catalogue into XLF files
-            $this->dumper->dump($messageCatalogue, $dumpOptions);
+            // Dump catalogue into XLF files into our temporary folder
+            $this->dumper->dump(
+                $messageCatalogue,
+                [
+                    'path' => $workingFolder,
+                    'default_locale' => $locale,
+                    'root_dir' => _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR,
+                ]
+            );
         }
 
-        // Rename files to add locale in it
-        $this->renameCatalogues($locale, $path);
+        // Now, we append the locale to the names of the catalogues
+        $this->renameCatalogues($locale, $workingFolder);
 
-        $this->zipManager->createArchive($zipFilename, $path);
+        // Zip them
+        $this->zipManager->createArchive($zipFilename, $workingFolder);
+
+        // And clean after ourselves
+        $this->filesystem->remove($workingFolder);
 
         return $zipFilename;
     }
@@ -191,29 +203,21 @@ class TranslationCatalogueExporter
         return $messageCatalogue;
     }
 
+    /**
+     * After export, our files are named with their domain only, FullDomainName.xlf for example.
+     * This method will append the locale name to the end of the file, so the result is something like
+     * FullDomainName.ab-AB.xlf
+     *
+     * @param string $locale Locale to append to filenames
+     * @param string $path Folder to work in
+     */
     protected function renameCatalogues(string $locale, string $path): void
     {
         $finder = Finder::create();
-
         foreach ($finder->in($path . DIRECTORY_SEPARATOR . $locale)->files() as $file) {
-            $filenameParts = explode('.', $file->getFilename());
-            unset($filenameParts[count($filenameParts) - 1]); // Remove the extension
-            /*
-             * The destination file name will have the format
-             * DIRECTORY/ab-AB/FullDomainName.ab-AB.xlf
-             */
-            $destinationFilename = sprintf(
-                '%s' . DIRECTORY_SEPARATOR . '%s' . DIRECTORY_SEPARATOR . '%s.%s.%s',
-                $path,
-                $locale,
-                implode('.', $filenameParts),
-                $locale,
-                $file->getExtension()
-            );
-            if ($this->filesystem->exists($destinationFilename)) {
-                $this->filesystem->remove($destinationFilename);
-            }
-            $this->filesystem->rename($file->getPathname(), $destinationFilename);
+            $currentName = $file->getPathname();
+            $newName = rtrim($currentName, '.xlf') . '.' . $locale . '.xlf';
+            $this->filesystem->rename($currentName, $newName);
         }
     }
 }
