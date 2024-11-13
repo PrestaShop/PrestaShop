@@ -5377,7 +5377,7 @@ class ProductCore extends ObjectModel
         // Resolve if product is in stock
         $row['allow_oosp'] = Product::isAvailableWhenOutOfStock($row['out_of_stock']);
 
-        /* 
+        /*
          * Resolve default product combination, if combinations are enabled on the shop.
          */
         $id_product_attribute = 0;
@@ -5389,13 +5389,13 @@ class ProductCore extends ObjectModel
              */
             if (!empty($row['id_product_attribute'])) {
                 $id_product_attribute = (int) $row['id_product_attribute'];
-            /* 
+            /*
              * If nothing was passed, we will look for cache_default_attribute, this is a cached default combination
              * ID on the product ID. Passing this or id_product_attribute above directly will save performance.
              */
             } elseif (!empty($row['cache_default_attribute'])) {
                 $id_product_attribute = (int) $row['cache_default_attribute'];
-            /* 
+            /*
              * If nothing was passed, we will get the combination to use manually.
              * Product::getDefaultAttribute finds the best combination to use.
              */
