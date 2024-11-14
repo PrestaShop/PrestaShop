@@ -159,4 +159,9 @@ class FeatureFlagCommand extends Command
 
         return self::SUCCESS_RETURN_CODE;
     }
+
+    public static function getDefaultName(): string
+    {
+        return self::$defaultName;
+    }
 }
