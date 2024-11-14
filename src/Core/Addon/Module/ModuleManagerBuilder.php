@@ -29,8 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Addon\Module;
 use Context;
 use Doctrine\Common\Cache\Psr6\DoctrineProvider;
 use Language;
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
+use PrestaShop\Decimal\Operation\Rounding;
 use PrestaShop\PrestaShop\Adapter\HookManager;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
@@ -39,15 +38,12 @@ use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Context\ApiClientContext;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\DataLayer\LocaleReference;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleDataSource;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\Reader;
-use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyDataSource;
-use PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyInstalled;
-use PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyReference;
-use PrestaShop\PrestaShop\Core\Localization\Currency\Repository;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\Number\Formatter as NumberFormatter;
+use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
+use PrestaShop\PrestaShop\Core\Localization\Specification\NumberCollection;
+use PrestaShop\PrestaShop\Core\Localization\Specification\NumberSymbolList;
+use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory;
@@ -226,7 +222,47 @@ class ModuleManagerBuilder
         /** @var Language $language */
         $language = Context::getContext()->language;
 
-        $localeRepository = $this->getLocaleRepository();
+        // If locale is present in context we can use, if not we create a mock one
+        // the locale is not used by the ModuleRepository anyway only the language ID is relevant for its internal cache key generation
+        if (Context::getContext()->currentLocale) {
+            $locale = Context::getContext()->currentLocale;
+        } else {
+            $numberSymbolList = new NumberSymbolList(',', ' ', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN');
+            $priceSpecsCollection = new NumberCollection();
+            $priceSpecsCollection->add(
+                'EUR',
+                new PriceSpecification(
+                    '#,##0.## ¤',
+                    '-#,##0.## ¤',
+                    ['latn' => $numberSymbolList],
+                    2,
+                    2,
+                    true,
+                    3,
+                    3,
+                    'symbol',
+                    '€',
+                    'EUR'
+                )
+            );
+            $numberSpecification = new NumberSpecification(
+                '#,##0.###',
+                '-#,##0.###',
+                [$numberSymbolList],
+                3,
+                2,
+                true,
+                2,
+                3
+            );
+            $locale = new Locale(
+                $language->locale,
+                $numberSpecification,
+                $priceSpecsCollection,
+                new NumberFormatter(Rounding::ROUND_HALF_UP, 'latn')
+            );
+        }
+
         self::$languageContext = new LanguageContext(
             $language->id,
             $language->name,
@@ -236,29 +272,10 @@ class ModuleManagerBuilder
             $language->is_rtl,
             $language->date_format_lite,
             $language->date_format_full,
-            $localeRepository->getLocale($language->locale)
+            $locale
         );
 
         return self::$languageContext;
-    }
-
-    private function getLocaleRepository(): Locale\Repository
-    {
-        $localeDataReference = new LocaleReference(new Reader());
-        $localeDataSource = new LocaleDataSource($localeDataReference);
-        $cldrLocaleRepository = new LocaleRepository($localeDataSource);
-
-        $configuration = new Configuration();
-        $currencyReference = new CurrencyReference($cldrLocaleRepository);
-        $currencyDataProvider = new CurrencyDataProvider($configuration, (int) $configuration->get('PS_SHOP_DEFAULT'));
-        $currencyInstalled = new CurrencyInstalled($currencyDataProvider);
-        $currencyDataSource = new CurrencyDataSource($currencyReference, $currencyInstalled);
-        $currencyRepository = new Repository($currencyDataSource);
-
-        return new Locale\Repository(
-            $cldrLocaleRepository,
-            $currencyRepository,
-        );
     }
 
     protected function getConfigDir()
