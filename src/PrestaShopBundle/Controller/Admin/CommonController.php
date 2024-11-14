@@ -178,7 +178,7 @@ class CommonController extends PrestaShopAdminController
                 $limitParam => $limit,
             ]
         ));
-        $limitChoices = $request->attributes->get('limit_choices', [10, 20, 50, 100]);
+        $limitChoices = $request->attributes->get('limit_choices', [10, 20, 50, 100, 300, 1000]);
 
         // Template vars injection
         $vars = [
