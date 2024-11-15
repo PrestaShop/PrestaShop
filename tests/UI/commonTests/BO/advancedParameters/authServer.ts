@@ -22,7 +22,7 @@ function createAPIClientTest(apiClient: FakerAPIClient, baseContext: string = 'c
   let page: Page;
   let numberOfAPIClient: number = 0;
 
-  describe('PRE-TEST: Create an API Client', async () => {
+  describe('Create an API Client', async () => {
     // before and after functions
     before(async function () {
       browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -102,7 +102,7 @@ function deleteAPIClientTest(baseContext: string = 'commonTests-deleteAPIClientT
   let page: Page;
   let numberOfAPIClient: number = 0;
 
-  describe('PRE-TEST: Delete an API Client', async () => {
+  describe('Delete an API Client', async () => {
     // before and after functions
     before(async function () {
       browserContext = await utilsPlaywright.createBrowserContext(this.browser);
