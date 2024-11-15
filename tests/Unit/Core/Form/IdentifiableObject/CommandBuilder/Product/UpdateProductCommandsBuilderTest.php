@@ -476,12 +476,12 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
         ];
 
         $command = $this->getSingleShopCommand();
-        $command->setGtin('13');
+        $command->setGtin('98765432');
         yield [
             [
                 'details' => [
                     'references' => [
-                        'ean_13' => '13',
+                        'ean_13' => '98765432',
                     ],
                 ],
             ],
@@ -550,7 +550,7 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             ->setLocalizedLinkRewrites($localizedLinkRewrites)
             ->setRedirectOption(RedirectType::TYPE_PRODUCT_TEMPORARY, 42)
             ->setIsbn('0-8044-2957-X')
-            ->setGtin('13')
+            ->setGtin('98765432')
             ->setUpc('1345')
             ->setMpn('mpn')
             ->setReference('0123456789')
