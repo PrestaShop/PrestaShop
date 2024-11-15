@@ -610,7 +610,7 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
                 'details' => [
                     'references' => [
                         'isbn' => '0-8044-2957-X',
-                        'ean_13' => '13',
+                        'ean_13' => '98765432',
                         'upc' => '1345',
                         'mpn' => 'mpn',
                         'reference' => '0123456789',
