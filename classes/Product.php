@@ -2626,30 +2626,17 @@ class ProductCore extends ObjectModel
     }
 
     /**
+     * Returns information about product images that are paired to specific combination
+     *
      * @param int $id_lang Language identifier
      *
      * @return array|false
      */
     public function getCombinationImages($id_lang)
     {
+        // If combination feature is disabled, no need to do any queries
         if (!Combination::isFeatureActive()) {
             return false;
-        }
-
-        $product_attributes = Db::getInstance()->executeS(
-            'SELECT `id_product_attribute`
-            FROM `' . _DB_PREFIX_ . 'product_attribute`
-            WHERE `id_product` = ' . (int) $this->id
-        );
-
-        if (!$product_attributes) {
-            return false;
-        }
-
-        $ids = [];
-
-        foreach ($product_attributes as $product_attribute) {
-            $ids[] = (int) $product_attribute['id_product_attribute'];
         }
 
         $result = Db::getInstance()->executeS(
@@ -2658,7 +2645,7 @@ class ProductCore extends ObjectModel
             FROM `' . _DB_PREFIX_ . 'product_attribute_image` pai
             LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (il.`id_image` = pai.`id_image`)
             LEFT JOIN `' . _DB_PREFIX_ . 'image` i ON (i.`id_image` = pai.`id_image`)
-            WHERE pai.`id_product_attribute` IN (' . implode(', ', $ids) . ') AND il.`id_lang` = ' . (int) $id_lang . ' ORDER by i.`position`'
+            WHERE i.`id_product` = ' . (int) $this->id . ' AND il.`id_lang` = ' . (int) $id_lang . ' ORDER by i.`position`'
         );
 
         if (!$result) {
