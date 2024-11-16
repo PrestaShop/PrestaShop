@@ -2468,7 +2468,7 @@ class AdminImportControllerCore extends AdminController
                             $attribute_combinations = $product->getAttributeCombinations($default_language);
                             foreach ($attribute_combinations as $attribute_combination) {
                                 if (in_array($id_product_attribute, $attribute_combination)) {
-                                    // FIXME: ~3s/declinaison
+                                    // FIXME: ~3s/combination
                                     $product->updateAttribute(
                                         $id_product_attribute,
                                         (float) $info['wholesale_price'],

@@ -595,10 +595,10 @@ class PackCore extends Product
     }
 
     /**
-     * Returns Packs that contains the given product in the right declinaison.
+     * Returns Packs that contains the given product in the right combination.
      *
      * @param int $id_item Product item id that could be contained in a|many pack(s)
-     * @param int $id_attribute_item The declinaison of the product
+     * @param int $id_attribute_item The combination of the product
      * @param int $id_lang
      *
      * @return array[Product] Packs that contains the given product

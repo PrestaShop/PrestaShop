@@ -609,7 +609,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $groups = [];
         $this->combinations = [];
 
-        /** @todo (RM) should only get groups and not all declination ? */
+        /** @todo (RM) should only get groups and not all combinations ? */
         $attributes_groups = $this->product->getAttributesGroups($this->context->language->id);
         if (is_array($attributes_groups) && $attributes_groups) {
             $combination_images = $this->product->getCombinationImages($this->context->language->id);

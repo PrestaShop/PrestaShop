@@ -76,7 +76,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
     ];
 
     /**
-     * @var string The product image declination id
+     * @var string The product image combination id
      */
     protected $productImageDeclinationId = null;
 
@@ -869,11 +869,11 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
             if ($image_types) {
                 foreach ($image_types as $image_type) {
                     if ($this->defaultImage) { /** @todo products images too !! */
-                        $declination_path = $parent_path . $this->wsObject->urlSegment[3] . '-default-' . $image_type['name'] . '.jpg';
+                        $thumbnail_path = $parent_path . $this->wsObject->urlSegment[3] . '-default-' . $image_type['name'] . '.jpg';
                     } else {
-                        $declination_path = $parent_path . $this->wsObject->urlSegment[2] . '-' . $image_type['name'] . '.jpg';
+                        $thumbnail_path = $parent_path . $this->wsObject->urlSegment[2] . '-' . $image_type['name'] . '.jpg';
                     }
-                    if (!@unlink($declination_path)) {
+                    if (!@unlink($thumbnail_path)) {
                         $this->objOutput->setStatus(204);
 
                         return false;
@@ -1001,20 +1001,20 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
             throw new WebserviceException(sprintf('Unable to write the image "%s".', str_replace(_PS_ROOT_DIR_, '[SHOP_ROOT_DIR]', $new_path)), [70, 500]);
         }
 
-        // Write image declinations if present
+        // Write image thumbnails if present
         if ($image_types) {
             foreach ($image_types as $image_type) {
                 if ($this->defaultImage) {
-                    $declination_path = $parent_path . $this->wsObject->urlSegment[3] . '-default-' . $image_type['name'] . '.jpg';
+                    $thumbnail_path = $parent_path . $this->wsObject->urlSegment[3] . '-default-' . $image_type['name'] . '.jpg';
                 } else {
                     if ($this->imageType == 'products') {
-                        $declination_path = $parent_path . chunk_split($this->wsObject->urlSegment[3], 1, '/') . $this->wsObject->urlSegment[3] . '-' . $image_type['name'] . '.jpg';
+                        $thumbnail_path = $parent_path . chunk_split($this->wsObject->urlSegment[3], 1, '/') . $this->wsObject->urlSegment[3] . '-' . $image_type['name'] . '.jpg';
                     } else {
-                        $declination_path = $parent_path . $this->wsObject->urlSegment[2] . '-' . $image_type['name'] . '.jpg';
+                        $thumbnail_path = $parent_path . $this->wsObject->urlSegment[2] . '-' . $image_type['name'] . '.jpg';
                     }
                 }
-                if (!$this->writeImageOnDisk($base_path, $declination_path, $image_type['width'], $image_type['height'])) {
-                    throw new WebserviceException(sprintf('Unable to save the declination "%s" of this image.', $image_type['name']), [71, 500]);
+                if (!$this->writeImageOnDisk($base_path, $thumbnail_path, $image_type['width'], $image_type['height'])) {
+                    throw new WebserviceException(sprintf('Unable to save the thumbnail "%s" of this image.', $image_type['name']), [71, 500]);
                 }
             }
         }
