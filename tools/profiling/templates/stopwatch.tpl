@@ -28,26 +28,26 @@
       Stopwatch SQL - {$summary.nbQueries} queries
     </a>
   </h2>
-
-  <table class="table table-condensed table-bordered sortable">
+  <table class="table table-condensed table-bordered sortable table-hover">
     <thead>
       <tr>
         <th>#</th>
         <th>Query</th>
-        <th>Time (ms)</th>
+        <th class="min-width">Time (ms)</th>
         <th>Rows</th>
         <th>Filesort</th>
-        <th>Group By</th>
+        <th class="min-width">Group By</th>
         <th>Location</th>
       </tr>
     </thead>
     <tbody>
+
       {foreach $stopwatchQueries as $data}
         {$callstack = implode('<br>', $data['stack'])}
-        {$callstack_md5 = md5($callstack)}
+        {$callstack_md5 = md5($callstack|cat:rand())}
         <tr>
           <td>{$data['id']}</td>
-          <td class="pre" style="max-width: 60vw"><pre>{preg_replace("/(^[\s]*)/m", "", htmlspecialchars($data['query'], ENT_NOQUOTES, 'utf-8', false))}</pre></td>
+          <td class="pre" style="max-width: 50vw"><pre>{preg_replace("/(^[\s]*)/m", "", htmlspecialchars($data['query'], ENT_NOQUOTES, 'utf-8', false))}</pre></td>
           <td data-value="{$data['time']}">
             {load_time data=($data['time'])}
           </td>

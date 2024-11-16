@@ -45,7 +45,7 @@
           <td>
             {objectmodel data=count($info)}
           </td>
-          <td>
+          <td class="object-model-instances">
             {foreach $info as $trace}
               {str_replace([_PS_ROOT_DIR_, '\\'], ['', '/'], $trace['file'])}:{$trace['line']} ({$trace['function']}) [id: {$trace['id']}]
               <br />

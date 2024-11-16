@@ -74,7 +74,11 @@
     cursor:pointer;
   }
 
-  #prestashop-profiling .table td .pre {
+  #prestashop-profiling .table th.min-width {
+    min-width: 80px;
+  }
+
+  #prestashop-profiling .table td.pre {
     padding: 6px;
     margin-right: 10px;
     overflow: auto;
@@ -87,6 +91,18 @@
     background-color: whitesmoke;
     border: 1px solid #cccccc;
     max-width: 960px;
+    font-weight: normal;
+  }
+
+  #prestashop-profiling .table td.pre pre {
+    padding: 20px 0;
+  }
+
+  #prestashop-profiling .table td.object-model-instances {
+    max-height: 180px;
+    display: block;
+    overflow: auto;
+    padding: 20px 0;
   }
 
   #prestashop-profiling .row {
