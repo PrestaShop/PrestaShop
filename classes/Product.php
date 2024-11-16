@@ -4264,7 +4264,7 @@ class ProductCore extends ObjectModel
             WHERE pa.`id_product` IN (' . implode(',', array_map('intval', $products)) . ') AND ag.`is_color_group` = 1
             GROUP BY pa.`id_product`, a.`id_attribute`, `group_by`
             ' . ($check_stock ? 'HAVING qty > 0' : '') . '
-            ORDER BY a.`position` ASC;'
+            ORDER BY a.`position` ASC, pa.`id_product_attribute` ASC;'
         )) {
             return false;
         }
