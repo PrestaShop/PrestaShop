@@ -57,7 +57,7 @@ describe('FO - Home Page : Select color', async () => {
 
       const pageURL = await foHummingbirdProductPage.getCurrentURL(page);
       expect(pageURL).to.contains('color-white')
-      .and.to.contains('size-s');
+        .and.to.contains('size-s');
     });
 
     it('should go to Home page', async function () {
@@ -83,7 +83,7 @@ describe('FO - Home Page : Select color', async () => {
 
       const pageURL = await foHummingbirdProductPage.getCurrentURL(page);
       expect(pageURL).to.contains('color-black')
-      .and.to.contains('size-s');
+        .and.to.contains('size-s');
     });
   });
 
