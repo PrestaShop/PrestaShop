@@ -398,7 +398,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
         if ($this->arrayAccessList->offsetExists($offset)) {
             $offsetData = $this->arrayAccessList->offsetGet($offset);
 
-            if (!$force && !$offsetData['isRewritable'] && $offsetData['type'] !== 'variable') {
+            if (!$force && empty($offsetData['isRewritable']) && $offsetData['type'] !== 'variable') {
                 $errorMessage = sprintf(
                     'Trying to set the index %s of the LazyArray %s already defined by a method is not allowed.',
                     print_r($offset, true),

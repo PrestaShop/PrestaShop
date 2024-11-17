@@ -85,6 +85,10 @@ class CartPresenter implements PresenterInterface
         return array_map(function ($product) use ($cart) {
             $customizations = [];
 
+            if (!$product->customizable) {
+                return $product;
+            }
+
             $data = Product::getAllCustomizedDatas($cart->id, null, true, null, (int) $product['id_customization']);
 
             if (!$data) {
