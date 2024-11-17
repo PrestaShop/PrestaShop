@@ -56,9 +56,8 @@ describe('FO - Home Page : Select color', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDisplayedProduct', baseContext);
 
       const pageURL = await foHummingbirdProductPage.getCurrentURL(page);
-      expect(pageURL).to.contains('color-white');
-      // @todo : https://github.com/PrestaShop/PrestaShop/issues/35481
-      // .and.to.contains('size-m');
+      expect(pageURL).to.contains('color-white')
+      .and.to.contains('size-s');
     });
 
     it('should go to Home page', async function () {
@@ -83,9 +82,8 @@ describe('FO - Home Page : Select color', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDisplayedProduct2', baseContext);
 
       const pageURL = await foHummingbirdProductPage.getCurrentURL(page);
-      expect(pageURL).to.contains('color-black');
-      // @todo : https://github.com/PrestaShop/PrestaShop/issues/35481
-      // .and.to.contains('size-m');
+      expect(pageURL).to.contains('color-black')
+      .and.to.contains('size-s');
     });
   });
 

@@ -60,7 +60,7 @@ describe('FO - Home Page : Select color on hover on product list', async () => {
 
     const pageURL = await foClassicProductPage.getCurrentURL(page);
     expect(pageURL).to.contains('color-white')
-      .and.to.contains('size-m');
+      .and.to.contains('size-s');
   });
 
   it('should go to Home page', async function () {
