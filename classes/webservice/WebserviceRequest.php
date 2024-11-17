@@ -1662,6 +1662,11 @@ class WebserviceRequestCore
                     if (isset($this->resourceConfiguration['objectMethods']) && array_key_exists($objectMethod, $this->resourceConfiguration['objectMethods'])) {
                         $objectMethod = $this->resourceConfiguration['objectMethods'][$objectMethod];
                     }
+
+                    if ($this->method == 'PATCH') {
+                        $object->setFieldsToUpdate(array_fill_keys(array_keys((array) $attributes), true));
+                    }
+
                     $result = $object->{$objectMethod}();
                     if ($result) {
                         if (isset($attributes->associations)) {
