@@ -144,12 +144,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             }
         }
 
-        // Try to load product object
+        // Try to load product object, otherwise immediately redirect to 404
         if ($this->id_product) {
             $this->product = new Product($this->id_product, true, $this->context->language->id, $this->context->shop->id);
         }
-
-        // Otherwise immediately show 404
         if (!Validate::isLoadedObject($this->product)) {
             header('HTTP/1.1 404 Not Found');
             header('Status: 404 Not Found');
@@ -286,7 +284,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             && preg_match('~^.*(?<!\/content)\/([0-9]+)\-(.*[^\.])|(.*)id_(category|product)=([0-9]+)(.*)$~', $_SERVER['HTTP_REFERER'], $regs)) {
             // If the previous page was a category and is a parent category of the product use this category as parent category
             $id_object = false;
-            if (is_numeric($regs[1])) {
+            if (isset($regs[1]) && is_numeric($regs[1])) {
                 $id_object = (int) $regs[1];
             } elseif (isset($regs[5]) && is_numeric($regs[5])) {
                 $id_object = (int) $regs[5];
@@ -317,6 +315,20 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     public function initContent(): void
     {
         if (!$this->errors) {
+            $this->product->description = $this->transformDescriptionWithImg($this->product->description);
+
+            $priceDisplay = Product::getTaxCalculationMethod((int) $this->context->cookie->id_customer);
+            $productPrice = 0;
+            $productPriceWithoutReduction = 0;
+
+            if (!$priceDisplay || $priceDisplay == 2) {
+                $productPrice = $this->product->getPrice(true, null, 6);
+                $productPriceWithoutReduction = $this->product->getPriceWithoutReduct(false, null);
+            } elseif ($priceDisplay == 1) {
+                $productPrice = $this->product->getPrice(false, null, 6);
+                $productPriceWithoutReduction = $this->product->getPriceWithoutReduct(true, null);
+            }
+
             // Assign template vars related to the category + execute hooks related to the category
             $this->assignCategory();
 
@@ -332,8 +344,53 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             // Add notification about this product being in cart
             $this->addCartQuantityNotification();
 
-            // Get our product itself
-            // At this phase, it's already a presented lazy array, ready to go
+            // Prepare product presenter for related items like packs and accessories
+            $assembler = new ProductAssembler($this->context);
+            $presenter = new ProductListingPresenter(
+                new ImageRetriever(
+                    $this->context->link
+                ),
+                $this->context->link,
+                new PriceFormatter(),
+                new ProductColorsRetriever(),
+                $this->getTranslator()
+            );
+            $presentationSettings = $this->getProductPresentationSettings();
+
+            // Presenting pack items
+            $pack_items = Pack::isPack($this->product->id) ? Pack::getItemTable($this->product->id, $this->context->language->id, true) : [];
+            $pack_items = $assembler->assembleProducts($pack_items);
+            $presentedPackItems = [];
+            foreach ($pack_items as $item) {
+                $presentedPackItems[] = $presenter->present(
+                    $this->getProductPresentationSettings(),
+                    $item,
+                    $this->context->language
+                );
+            }
+
+            $this->context->smarty->assign('packItems', $presentedPackItems);
+            $this->context->smarty->assign('noPackPrice', $this->product->getNoPackPrice());
+            $this->context->smarty->assign('displayPackPrice', $pack_items && $productPrice < Pack::noPackPrice((int) $this->product->id));
+            $this->context->smarty->assign('priceDisplay', $priceDisplay);
+
+            // Variable containing information about a pack that this product belongs to
+            $this->context->smarty->assign('packs', Pack::getPacksTable($this->product->id, $this->context->language->id, true, 1));
+
+            // Assign accessories
+            $accessories = $this->product->getAccessories($this->context->language->id);
+            if (is_array($accessories)) {
+                $accessories = $assembler->assembleProducts($accessories);
+                foreach ($accessories as &$accessory) {
+                    $accessory = $presenter->present(
+                        $presentationSettings,
+                        $accessory,
+                        $this->context->language
+                    );
+                }
+                unset($accessory);
+            }
+
             $product_for_template = $this->getTemplateVarProduct();
 
             // Chained hook call - if multiple modules are hooked here, they will receive the result of the previous one as a parameter
@@ -351,64 +408,13 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $product_for_template = $filteredProduct['object'];
             }
 
-            // Prepare product presenter for related items like packs and accessories
-            $assembler = new ProductAssembler($this->context);
-            $presenter = new ProductListingPresenter(
-                new ImageRetriever(
-                    $this->context->link
-                ),
-                $this->context->link,
-                new PriceFormatter(),
-                new ProductColorsRetriever(),
-                $this->getTranslator()
-            );
-            $presentationSettings = $this->getProductPresentationSettings();
-
-            // Presenting pack items
-            $pack_items = $product_for_template['pack'] ? $product_for_template['packItems'] : [];
-            $pack_items = $assembler->assembleProducts($pack_items);
-            $presentedPackItems = [];
-            foreach ($pack_items as $item) {
-                $presentedPackItems[] = $presenter->present(
-                    $presentationSettings,
-                    $item,
-                    $this->context->language
-                );
-            }
-
-            // Assign accessories
-            $accessories = $this->product->getAccessories($this->context->language->id);
-            if (is_array($accessories)) {
-                $accessories = $assembler->assembleProducts($accessories);
-                foreach ($accessories as &$accessory) {
-                    $accessory = $presenter->present(
-                        $presentationSettings,
-                        $accessory,
-                        $this->context->language
-                    );
-                }
-                unset($accessory);
-            }
-
-            // Assign everything to the template
             $this->context->smarty->assign([
-                'product' => $product_for_template,
-                // How to display prices, tax or no tax?
-                'priceDisplay' => Product::getTaxCalculationMethod((int) $this->context->cookie->id_customer),
-                // If product is customized but not added to cart, ID of the customization
+                'priceDisplay' => $priceDisplay,
+                'productPriceWithoutReduction' => $productPriceWithoutReduction,
                 'id_customization' => empty($product_for_template['id_customization']) ? null : $product_for_template['id_customization'],
-                // Related products
                 'accessories' => $accessories,
-                // Should price per unit be displayed?
+                'product' => $product_for_template,
                 'displayUnitPrice' => !empty($product_for_template['unit_price_tax_excluded']),
-                // If product is a pack, pack contents
-                'packItems' => $presentedPackItems,
-                // Price of the product if it wasn't in the pack (should be migrated to lazy array)
-                'noPackPrice' => $product_for_template['nopackprice_to_display'],
-                // Should display the price of product if it wasn't in the pack?
-                'displayPackPrice' => !empty($product_for_template['pack']) && $product_for_template['price_amount'] < $product_for_template['nopackprice'],
-                // Variable containing information about a pack that this product belongs to
-                'packs' => Pack::getPacksTable($this->product->id, $this->context->language->id, true, 1),
             ]);
 
             // Assign attribute groups to the template
@@ -492,11 +498,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 false,
                 false,
                 true,
-                $this->isPreview() ? [
-                    'preview' => '1',
-                    'id_employee' => Tools::getValue('id_employee'),
-                    'adtoken' => Tools::getValue('adtoken'),
-                ] : []
+                $this->isPreview() ? ['preview' => '1'] : []
             ),
             'product_minimal_quantity' => $minimalProductQuantity,
             'product_has_combinations' => !empty($this->combinations),
@@ -589,7 +591,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         $this->context->smarty->assign([
             'no_tax' => !Configuration::get('PS_TAX') || !$tax,
-            'tax_enabled' => Configuration::get('PS_TAX'),
+            'tax_enabled' => Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC'),
             'customer_group_without_tax' => Group::getPriceDisplayMethod($this->context->customer->id_default_group),
         ]);
     }
@@ -1189,7 +1191,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $extraContentFinder = new ProductExtraContentFinder();
 
         $product = $this->objectPresenter->present($this->product);
-        $product['description'] = $this->transformDescriptionWithImg($this->product->description);
         $product['out_of_stock'] = (int) $this->product->out_of_stock;
         $product['id_product_attribute'] = $this->getIdProductAttributeByGroupOrRequestOrDefault();
         $product['minimal_quantity'] = $this->getProductMinimalQuantity($product);
@@ -1220,7 +1221,15 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product_full['customer_group_discount'] = $group_reduction;
         $product_full['title'] = $this->getProductPageTitle();
 
-        return $this->getProductPresenter()->present(
+        // round display price (without formatting, we don't want the currency symbol here, just the raw rounded value
+        $product_full['rounded_display_price'] = Tools::ps_round(
+            $product_full['price'],
+            Context::getContext()->currency->precision
+        );
+
+        $presenter = $this->getProductPresenter();
+
+        return $presenter->present(
             $productSettings,
             $product_full,
             $this->context->language
