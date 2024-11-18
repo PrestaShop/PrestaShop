@@ -124,6 +124,13 @@ class CartCore extends ObjectModel
     protected static $cacheMultiAddressDelivery = [];
 
     /**
+     * Variable that stores quantities for products in the cart for fast reuse.
+     * We usually query it many times, so it's good to just fetch it one time.
+     * Make sure to flush this when changing quantity of any product in the cart.
+     */
+    protected static $quantitiesCache = null;
+
+    /**
      * @see ObjectModel::$definition
      */
     public static $definition = [
@@ -245,6 +252,7 @@ class CartCore extends ObjectModel
         static::$cachePackageList = [];
         static::$cacheDeliveryOptionList = [];
         static::$cacheMultiAddressDelivery = [];
+        static::$quantitiesCache = null;
     }
 
     /**
@@ -302,6 +310,10 @@ class CartCore extends ObjectModel
 
         if (isset(self::$_totalWeight[$this->id])) {
             unset(self::$_totalWeight[$this->id]);
+        }
+
+        if (self::$quantitiesCache !== null) {
+            self::$quantitiesCache = null;
         }
 
         $this->_products = null;
@@ -1358,7 +1370,8 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * Check if the Cart contains the given Product (Attribute).
+     * Returns quantity of given product in the cart. Optionally, with specific combination or customization ID.
+     * It not only checks for the product itself, but also for how many pieces of this product are in packs.
      *
      * @param int $idProduct Product ID
      * @param int $idProductAttribute ProductAttribute ID
@@ -1370,55 +1383,97 @@ class CartCore extends ObjectModel
      */
     public function getProductQuantity($idProduct, $idProductAttribute = 0, $idCustomization = 0, $idAddressDelivery = 0)
     {
-        $defaultPackStockType = Configuration::get('PS_PACK_STOCK_TYPE');
-        $packStockTypesAllowed = [
-            Pack::STOCK_TYPE_PRODUCTS_ONLY,
-            Pack::STOCK_TYPE_PACK_BOTH,
-        ];
-        $packStockTypesDefaultSupported = (int) in_array($defaultPackStockType, $packStockTypesAllowed);
-        // We need to SUM up cp.`quantity` because multiple rows could be returned when id_customization filtering is skipped.
-        $firstUnionSql = 'SELECT SUM(cp.`quantity`) as first_level_quantity, 0 as pack_quantity
-          FROM `' . _DB_PREFIX_ . 'cart_product` cp';
-        $secondUnionSql = 'SELECT 0 as first_level_quantity, SUM(cp.`quantity` * p.`quantity`) as pack_quantity
-          FROM `' . _DB_PREFIX_ . 'cart_product` cp' .
-            ' JOIN `' . _DB_PREFIX_ . 'pack` p ON cp.`id_product` = p.`id_product_pack`' .
-            ' JOIN `' . _DB_PREFIX_ . 'product` pr ON p.`id_product_pack` = pr.`id_product`';
+        // If loading this for the first time, we need to load our data
+        if (self::$quantitiesCache === null) {
+            // Initialize array
+            self::$quantitiesCache = [];
 
-        if ($idCustomization) {
-            $customizationJoin = '
-                LEFT JOIN `' . _DB_PREFIX_ . 'customization` c ON (
-                    c.`id_product` = cp.`id_product`
-                    AND c.`id_product_attribute` = cp.`id_product_attribute`
-                )';
-            $firstUnionSql .= $customizationJoin;
-            $secondUnionSql .= $customizationJoin;
+            // First, standalone products
+            $standaloneProducts = Db::getInstance()->executeS('
+                SELECT cp.id_product, cp.id_product_attribute, cp.id_customization, cp.quantity
+                FROM `' . _DB_PREFIX_ . 'cart_product` cp
+                WHERE cp.`id_cart` = ' . (int) $this->id
+            );
+            if (!empty($standaloneProducts)) {
+                foreach ($standaloneProducts as $row) {
+                    // Save it with customization ID
+                    $key = (int) $row['id_product'] . '_' . (int) $row['id_product_attribute'] . '_' . (int) $row['id_customization'];
+                    self::$quantitiesCache[$key]['quantity'] = (int) $row['quantity'];
+                    self::$quantitiesCache[$key]['deep_quantity'] = self::$quantitiesCache[$key]['quantity'];
+
+                    // And globally, summed without customization ID
+                    $keyNoCustomization = (int) $row['id_product'] . '_' . (int) $row['id_product_attribute'];
+
+                    // If it's the first line, create the key
+                    if (!isset(self::$quantitiesCache[$keyNoCustomization])) {
+                        self::$quantitiesCache[$keyNoCustomization]['quantity'] = 0;
+                        self::$quantitiesCache[$keyNoCustomization]['deep_quantity'] = self::$quantitiesCache[$keyNoCustomization]['quantity'];
+                    }
+
+                    // Sum it
+                    self::$quantitiesCache[$keyNoCustomization]['quantity'] += (int) $row['quantity'];
+                    self::$quantitiesCache[$keyNoCustomization]['deep_quantity'] = self::$quantitiesCache[$keyNoCustomization]['quantity'];
+                }
+
+                /*
+                 * Next, products in packs. We do this only if something is in the cart.
+                 * If there are no standalone products, there can't be any products inside packs.
+                 */
+                $packStockTypesAllowed = [
+                    Pack::STOCK_TYPE_PRODUCTS_ONLY,
+                    Pack::STOCK_TYPE_PACK_BOTH,
+                ];
+
+                // If default PS_PACK_STOCK_TYPE is in them, we will also use it.
+                if (in_array((int) Configuration::get('PS_PACK_STOCK_TYPE'), $packStockTypesAllowed)) {
+                    $packStockTypesAllowed[] = Pack::STOCK_TYPE_DEFAULT;
+                }
+
+                $packProducts = Db::getInstance()->executeS('
+                    SELECT pa.id_product_item as id_product, pa.id_product_attribute_item as id_product_attribute, (cp.quantity * pa.quantity) as quantity
+                    FROM ' . _DB_PREFIX_ . 'cart_product cp
+                    INNER JOIN ' . _DB_PREFIX_ . 'product p ON cp.id_product = p.id_product
+                    INNER JOIN ' . _DB_PREFIX_ . 'pack pa ON cp.id_product = pa.id_product_pack
+                    WHERE cp.id_cart = ' . (int) $this->id . ' AND p.pack_stock_type IN (' . implode(',', $packStockTypesAllowed) . ')
+                ');
+
+                if (!empty($packProducts)) {
+                    foreach ($packProducts as $row) {
+                        // Save it with customization ID
+                        $key = (int) $row['id_product'] . '_' . (int) $row['id_product_attribute'] . '_0';
+                        if (!isset(self::$quantitiesCache[$key])) {
+                            self::$quantitiesCache[$key]['quantity'] = 0;
+                            self::$quantitiesCache[$key]['deep_quantity'] = 0;
+                        }
+                        self::$quantitiesCache[$key]['deep_quantity'] += (int) $row['quantity'];
+
+                        // And globally, summed without customization ID
+                        $keyNoCustomization = (int) $row['id_product'] . '_' . (int) $row['id_product_attribute'];
+                        if (!isset(self::$quantitiesCache[$keyNoCustomization])) {
+                            self::$quantitiesCache[$keyNoCustomization]['quantity'] = 0;
+                            self::$quantitiesCache[$keyNoCustomization]['deep_quantity'] = 0;
+                        }
+                        self::$quantitiesCache[$keyNoCustomization]['deep_quantity'] += (int) $row['quantity'];
+                    }
+                }
+            }
         }
-        // Ignore customizations if $idCustomization is set to false
-        // This is necessary to get products with or without customizations
-        $commonWhere = '
-            WHERE cp.`id_product_attribute` = ' . (int) $idProductAttribute . '
-              ' . ($idCustomization !== false ? ' AND cp.`id_customization` = ' . (int) $idCustomization : '') . '
-            AND cp.`id_cart` = ' . (int) $this->id;
 
-        if ($idCustomization) {
-            $commonWhere .= ' AND c.`id_customization` = ' . (int) $idCustomization;
+        // Get cache key
+        if ($idCustomization === false) {
+            $key = (int) $idProduct . '_' . (int) $idProductAttribute;
+        } else {
+            $key = (int) $idProduct . '_' . (int) $idProductAttribute . '_' . (int) $idCustomization;
         }
-        $firstUnionSql .= $commonWhere;
-        $firstUnionSql .= ' AND cp.`id_product` = ' . (int) $idProduct;
-        $secondUnionSql .= $commonWhere;
-        $secondUnionSql .= ' AND p.`id_product_item` = ' . (int) $idProduct;
-        $secondUnionSql .= ' AND (pr.`pack_stock_type` IN (' . implode(',', $packStockTypesAllowed) . ') OR (
-            pr.`pack_stock_type` = ' . Pack::STOCK_TYPE_DEFAULT . '
-            AND ' . $packStockTypesDefaultSupported . ' = 1
-        ))';
 
-        // Construct the final SQL that will join the results of these two queries
-        $parentSql = 'SELECT
-            COALESCE(SUM(first_level_quantity) + SUM(pack_quantity), 0) as deep_quantity,
-            COALESCE(SUM(first_level_quantity), 0) as quantity
-          FROM (' . $firstUnionSql . ' UNION ' . $secondUnionSql . ') as q';
+        if (!isset(self::$quantitiesCache[$key])) {
+            return [
+                'quantity' => 0,
+                'deep_quantity' => 0,
+            ];
+        }
 
-        return Db::getInstance()->getRow($parentSql);
+        return self::$quantitiesCache[$key];
     }
 
     /**
@@ -1485,6 +1540,10 @@ class CartCore extends ObjectModel
 
         if (isset(self::$_totalWeight[$this->id])) {
             unset(self::$_totalWeight[$this->id]);
+        }
+
+        if (self::$quantitiesCache !== null) {
+            self::$quantitiesCache = null;
         }
 
         $data = [
@@ -1759,6 +1818,10 @@ class CartCore extends ObjectModel
 
         if (isset(self::$_totalWeight[$this->id])) {
             unset(self::$_totalWeight[$this->id]);
+        }
+
+        if (self::$quantitiesCache !== null) {
+            self::$quantitiesCache = null;
         }
 
         // First, if we are deleting a product with customization, we delete it from the database
