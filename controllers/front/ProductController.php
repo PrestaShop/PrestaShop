@@ -315,12 +315,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     public function initContent(): void
     {
         if (!$this->errors) {
-            if (Pack::isPack((int) $this->product->id)
-                && !Pack::isInStock((int) $this->product->id, $this->product->minimal_quantity, $this->context->cart)
-            ) {
-                $this->product->quantity = 0;
-            }
-
             $this->product->description = $this->transformDescriptionWithImg($this->product->description);
 
             $priceDisplay = Product::getTaxCalculationMethod((int) $this->context->cookie->id_customer);
