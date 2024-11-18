@@ -103,14 +103,31 @@ class CartLazyArray extends AbstractLazyArray
     #[LazyArrayAttribute(arrayAccess: true)]
     public function getProducts(): array
     {
+        // Get raw products
         if ($this->shouldSeparateGifts) {
             $rawProducts = $this->cart->getProductsWithSeparatedGifts();
         } else {
             $rawProducts = $this->cart->getProducts(true);
         }
 
-        $products = array_map([$this, 'presentProduct'], $rawProducts);
-        $this->products = $this->cartPresenter->addCustomizedData($products, $this->cart);
+        /*
+         * Now, we will fetch additional product data by the assembler, like we do when presenting
+         * lists of products. With one exception. Assembler overwrites the previous data of the product,
+         * in our context, we need to keep it. That's why we will manually do array_merge and keep the data
+         * from rawProducts intact.
+         *
+         * We could possibly add something like $prioritizeOriginalData to ProductAssembler.
+         */
+        $assembledProducts = $this->cartPresenter->getProductAssembler()->assembleProducts($rawProducts);
+        foreach($rawProducts as $k => $v) {
+            $rawProducts[$k] = array_merge($assembledProducts[$k], $v);
+        }
+
+        // Present them
+        $presentedProducts = array_map([$this, 'presentProduct'], $rawProducts);
+
+        // And add customizations made
+        $this->products = $this->cartPresenter->addCustomizedData($presentedProducts, $this->cart);
 
         return $this->products;
     }
@@ -501,9 +518,6 @@ class CartLazyArray extends AbstractLazyArray
      */
     private function presentProduct(array $rawProduct)
     {
-        $assembledProduct = $this->cartPresenter->getProductAssembler()->assembleProduct($rawProduct);
-        $rawProduct = array_merge($assembledProduct, $rawProduct);
-
         if (isset($rawProduct['attributes']) && is_string($rawProduct['attributes'])) {
             $rawProduct['attributes'] = $this->cartPresenter->getAttributesArrayFromString($rawProduct['attributes']);
         }
