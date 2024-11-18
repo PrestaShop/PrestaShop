@@ -365,11 +365,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
             // Presenting pack items
             $pack_items = Pack::isPack($this->product->id) ? Pack::getItemTable($this->product->id, $this->context->language->id, true) : [];
+            $pack_items = $assembler->assembleProducts($pack_items);
             $presentedPackItems = [];
             foreach ($pack_items as $item) {
                 $presentedPackItems[] = $presenter->present(
                     $this->getProductPresentationSettings(),
-                    $assembler->assembleProduct($item),
+                    $item,
                     $this->context->language
                 );
             }
@@ -385,10 +386,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             // Assign accessories
             $accessories = $this->product->getAccessories($this->context->language->id);
             if (is_array($accessories)) {
+                $accessories = $assembler->assembleProducts($accessories);
                 foreach ($accessories as &$accessory) {
                     $accessory = $presenter->present(
                         $presentationSettings,
-                        $assembler->assembleProduct($accessory),
+                        $accessory,
                         $this->context->language
                     );
                 }
