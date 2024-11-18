@@ -17,6 +17,8 @@ class Logs extends BOBasePage {
 
   private readonly listForm: string;
 
+  private readonly listTableRows: string;
+
   private readonly listTableRow: (row: number) => string;
 
   private readonly listTableColumn: (row: number, column: string) => string;
@@ -64,6 +66,7 @@ class Logs extends BOBasePage {
     this.gridPanel = '#logs_grid_panel';
     this.gridTitle = `${this.gridPanel} h3.card-header-title`;
     this.listForm = '#logs_grid';
+    this.listTableRows = `${this.listForm} tbody tr:not(.empty_row)`;
     this.listTableRow = (row: number) => `${this.listForm} tbody tr:nth-child(${row})`;
     this.listTableColumn = (row: number, column: string) => `${this.listTableRow(row)} td.column-${column}`;
     this.gridActionButton = '#logs-grid-actions-button';
@@ -112,6 +115,17 @@ class Logs extends BOBasePage {
    */
   async getNumberOfElementInGrid(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.gridTitle);
+  }
+
+  /**
+   * Get number of rows currently displayed by the grid
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getNumberOfRowsInGrid(page: Page): Promise<number> {
+    const rows = page.locator(this.listTableRows);
+
+    return rows.count();
   }
 
   /**
@@ -185,7 +199,7 @@ class Logs extends BOBasePage {
    * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page: Page, column: string): Promise<string[]> {
-    const rowsNumber = await this.getNumberOfElementInGrid(page);
+    const rowsNumber = await this.getNumberOfRowsInGrid(page);
     const allRowsContentTable: string[] = [];
 
     for (let i = 1; i <= rowsNumber; i++) {

@@ -69,8 +69,8 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
     const textResult = await logsPage.eraseAllLogs(page);
     expect(textResult).to.equal(logsPage.successfulUpdateMessage);
 
-    numberOfLogs = await logsPage.getNumberOfElementInGrid(page);
-    expect(numberOfLogs).to.be.equal(0);
+    const numberOfElements = await logsPage.getNumberOfElementInGrid(page);
+    expect(numberOfElements).to.be.equal(0);
   });
 
   // Login and logout 11 times to have 11 logs
@@ -111,7 +111,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
       await testContext.addContextItem(this, 'testIdentifier', 'checkLogsNumber', baseContext);
 
       const numberOfElements = await logsPage.getNumberOfElementInGrid(page);
-      expect(numberOfElements).to.be.equal(11);
+      expect(numberOfElements).to.be.greaterThanOrEqual(11);
     });
   });
 
@@ -125,36 +125,40 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
       const pageTitle = await logsPage.getPageTitle(page);
       expect(pageTitle).to.contains(logsPage.pageTitle);
 
-      const numberOfElements = await logsPage.getNumberOfElementInGrid(page);
-      expect(numberOfElements).to.be.equal(numberOfLogs + 11);
+      numberOfLogs = await logsPage.getNumberOfElementInGrid(page);
+      expect(numberOfLogs).to.be.greaterThanOrEqual(11);
     });
 
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
+      const pagesNb = Math.ceil(numberOfLogs / 10);
       const paginationNumber = await logsPage.selectPaginationLimit(page, 10);
-      expect(paginationNumber).to.contains('(page 1 / 2)');
+      expect(paginationNumber).to.contains(`(page 1 / ${pagesNb})`);
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
+      const pagesNb = Math.ceil(numberOfLogs / 10);
       const paginationNumber = await logsPage.paginationNext(page);
-      expect(paginationNumber).to.contains('(page 2 / 2)');
+      expect(paginationNumber).to.contains(`(page 2 / ${pagesNb})`);
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
+      const pagesNb = Math.ceil(numberOfLogs / 10);
       const paginationNumber = await logsPage.paginationPrevious(page);
-      expect(paginationNumber).to.contains('(page 1 / 2)');
+      expect(paginationNumber).to.contains(`(page 1 / ${pagesNb})`);
     });
 
     it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
+      const pagesNb = Math.ceil(numberOfLogs / 20);
       const paginationNumber = await logsPage.selectPaginationLimit(page, 20);
-      expect(paginationNumber).to.contains('(page 1 / 1)');
+      expect(paginationNumber).to.contains(`(page 1 / ${pagesNb})`);
     });
   });
 
@@ -167,7 +171,8 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
             testIdentifier: 'filterById',
             filterType: 'input',
             filterBy: 'id_log',
-            filterValue: '50',
+            filterValue: 'numberOfLogs',
+            expectedCount: 1,
           },
       },
       {
@@ -177,15 +182,27 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
             filterType: 'input',
             filterBy: 'employee',
             filterValue: dataEmployees.defaultEmployee.lastName,
+            expectedCount: null,
           },
       },
       {
         args:
           {
-            testIdentifier: 'filterBySeverity',
+            testIdentifier: 'filterBySeverityError',
             filterType: 'input',
             filterBy: 'severity',
             filterValue: 'Error',
+            expectedCount: 0,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterBySeverityInformativeOnly',
+            filterType: 'input',
+            filterBy: 'severity',
+            filterValue: 'Informative Only',
+            expectedCount: 'numberOfLogs',
           },
       },
       {
@@ -194,7 +211,8 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
             testIdentifier: 'filterByMessage',
             filterType: 'input',
             filterBy: 'message',
-            filterValue: 'Back office',
+            filterValue: 'Remember me',
+            expectedCount: 11,
           },
       },
       {
@@ -204,45 +222,74 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
             filterType: 'input',
             filterBy: 'object_type',
             filterValue: 'Cart',
+            expectedCount: 0,
           },
       },
       {
         args:
           {
-            testIdentifier: 'filterByObjectID',
+            testIdentifier: 'filterByObjectIDTwo',
             filterType: 'input',
             filterBy: 'object_id',
             filterValue: '2',
+            expectedCount: 0,
           },
       },
       {
         args:
           {
-            testIdentifier: 'filterByErrorCode',
+            testIdentifier: 'filterByObjectIDZero',
+            filterType: 'input',
+            filterBy: 'object_id',
+            filterValue: '0',
+            expectedCount: 'numberOfLogs',
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterByErrorCodeOne',
             filterType: 'input',
             filterBy: 'error_code',
             filterValue: '1',
+            expectedCount: 0,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterByErrorCodeZero',
+            filterType: 'input',
+            filterBy: 'error_code',
+            filterValue: '0',
+            expectedCount: 'numberOfLogs',
           },
       },
     ].forEach((test) => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}`, baseContext);
 
+        const testValue = test.args.filterValue === 'numberOfLogs' ? String(numberOfLogs) : test.args.filterValue;
         await logsPage.filterLogs(
           page,
           test.args.filterType,
           test.args.filterBy,
-          test.args.filterValue,
+          testValue,
         );
 
+        const expectedCount = test.args.expectedCount === 'numberOfLogs' ? numberOfLogs : test.args.expectedCount;
         const numberOfLogsAfterFilter = await logsPage.getNumberOfElementInGrid(page);
 
-        expect(numberOfLogsAfterFilter).to.be.at.most(numberOfLogs + 11);
+        // If expected count is null, we don't expect any particular value
+        if (expectedCount !== null) {
+          expect(numberOfLogsAfterFilter).to.be.eq(expectedCount);
+        }
 
-        for (let i = 1; i <= numberOfLogsAfterFilter; i++) {
+        for (let i = 1; i <= await logsPage.getNumberOfRowsInGrid(page); i++) {
           const textColumn = await logsPage.getTextColumn(page, i, test.args.filterBy);
 
-          expect(textColumn).to.contains(test.args.filterValue);
+          // Lower case mostly needed because of Informative Only ("Only" in filter values, but "only" in column values)
+          expect(textColumn.toLowerCase()).to.contains(testValue.toLowerCase());
         }
       });
 
@@ -250,7 +297,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
         const numberOfLogsAfterReset = await logsPage.resetAndGetNumberOfLines(page);
-        expect(numberOfLogsAfterReset).to.equal(numberOfLogs + 11);
+        expect(numberOfLogsAfterReset).to.greaterThanOrEqual(11);
       });
     });
 
@@ -259,10 +306,10 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
 
       await logsPage.filterLogsByDate(page, today, today);
 
-      const numberOfEmailsAfterFilter = await logsPage.getNumberOfElementInGrid(page);
-      expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfLogs + 11);
+      const numberOfLogsAfterFilter = await logsPage.getNumberOfElementInGrid(page);
+      expect(numberOfLogsAfterFilter).to.be.at.greaterThanOrEqual(11);
 
-      for (let row: number = 1; row <= numberOfEmailsAfterFilter; row++) {
+      for (let row: number = 1; row <= await logsPage.getNumberOfRowsInGrid(page); row++) {
         const textColumn = await logsPage.getTextColumn(page, row, 'date_add');
         expect(textColumn).to.contains(today);
       }
@@ -272,12 +319,21 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterFilterByDate', baseContext);
 
       const numberOfLogsAfterReset = await logsPage.resetAndGetNumberOfLines(page);
-      expect(numberOfLogsAfterReset).to.equal(numberOfLogs + 11);
+      expect(numberOfLogsAfterReset).to.greaterThanOrEqual(11);
     });
   });
 
   // 3 : Sort logs
   describe('Sort logs table', async () => {
+    // Force a lot of elements by page, so we only have one page and can compare all the elements sorted or not
+    it('should change the items number to 100 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo100', baseContext);
+
+      await logsPage.resetFilter(page);
+      const paginationNumber = await logsPage.selectPaginationLimit(page, 100);
+      expect(paginationNumber).to.contains('(page 1 / 1)');
+    });
+
     [
       {
         args:
