@@ -119,7 +119,7 @@ class CartLazyArray extends AbstractLazyArray
          * We could possibly add something like $prioritizeOriginalData to ProductAssembler.
          */
         $assembledProducts = $this->cartPresenter->getProductAssembler()->assembleProducts($rawProducts);
-        foreach($rawProducts as $k => $v) {
+        foreach ($rawProducts as $k => $v) {
             $rawProducts[$k] = array_merge($assembledProducts[$k], $v);
         }
 
