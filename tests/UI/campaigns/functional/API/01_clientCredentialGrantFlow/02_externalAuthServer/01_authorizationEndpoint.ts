@@ -40,7 +40,10 @@ describe('API : External Auth Server - Authorization Endpoint', async () => {
         expect(jsonResponse).to.have.property('token_type');
         expect(jsonResponse.token_type).to.be.eq('Bearer');
         expect(jsonResponse).to.have.property('expires_in');
-        expect(jsonResponse.expires_in).to.be.eq(300);
+        expect(jsonResponse.expires_in).to.be.a('number');
+        // Value should be 300 but if the call took a bit longer it may be 299
+        // We don't need check the exact value anyway
+        expect(jsonResponse.expires_in).to.be.greaterThan(200);
         expect(jsonResponse).to.have.property('scope');
         expect(jsonResponse.scope).to.be.eq('profile email');
       },
