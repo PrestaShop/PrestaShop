@@ -44,7 +44,7 @@ class AddressesControllerCore extends FrontController
         parent::init();
 
         if (!Validate::isLoadedObject($this->context->customer)) {
-            die(Tools::displayError($this->trans('The customer could not be found.', [], 'Shop.Notifications.Error')));
+            throw new PrestaShopException($this->trans('The customer could not be found.', [], 'Shop.Notifications.Error'));
         }
     }
 

@@ -362,7 +362,7 @@ class ImageCore extends ObjectModel
     public static function deleteCover($idProduct)
     {
         if (!Validate::isUnsignedId($idProduct)) {
-            die(Tools::displayError('Product ID is invalid.'));
+            throw new PrestaShopException('Product ID is invalid.');
         }
 
         if (file_exists(_PS_TMP_IMG_DIR_ . 'product_' . $idProduct . '.jpg')) {

@@ -241,7 +241,7 @@ class CMSCategoryCore extends ObjectModel
     protected function recursiveDelete(array &$to_delete, $id_cms_category)
     {
         if (!$id_cms_category) {
-            die(Tools::displayError('Parameter "id_cms_category" is invalid.'));
+            throw new PrestaShopException('Parameter "id_cms_category" is invalid.');
         }
 
         $result = Db::getInstance()->executeS('
