@@ -175,10 +175,10 @@ class MessageCore extends ObjectModel
     public static function markAsReaded($idMessage, $idEmployee)
     {
         if (!Validate::isUnsignedId($idMessage)) {
-            die(Tools::displayError('Message ID is invalid.'));
+            throw new PrestaShopException('Message ID is invalid.');
         }
         if (!Validate::isUnsignedId($idEmployee)) {
-            die(Tools::displayError('Employee ID is invalid.'));
+            throw new PrestaShopException('Employee ID is invalid.');
         }
 
         $result = Db::getInstance()->execute('

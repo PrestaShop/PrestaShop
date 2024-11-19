@@ -32,6 +32,7 @@ use Configuration;
 use Context;
 use Order;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShopException;
 use Shop;
 use Tools;
 
@@ -94,7 +95,7 @@ class CartOld extends Cart
         $virtual_context->cart = $this;
 
         if (!in_array($type, $array_type)) {
-            die(Tools::displayError());
+            throw new PrestaShopException();
         }
 
         $with_shipping = in_array($type, [Cart::BOTH, Cart::ONLY_SHIPPING]);
