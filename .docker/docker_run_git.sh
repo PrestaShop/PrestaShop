@@ -106,7 +106,7 @@ else
   echo "error_log=/var/www/html/var/logs/php.log" >> /usr/local/etc/php/php.ini
 fi
 
-if [ ! -f ./config/settings.inc.php ]; then
+if [ ! -f ./app/config/parameters.php ]; then
     if [ $PS_INSTALL_AUTO = 1 ]; then
 
         echo "\n* Installing PrestaShop, this may take a while ...";
