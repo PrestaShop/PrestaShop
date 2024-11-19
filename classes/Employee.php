@@ -305,7 +305,7 @@ class EmployeeCore extends ObjectModel
     public function getByEmail($email, $plaintextPassword = null, $activeOnly = true)
     {
         if (!Validate::isEmail($email)) {
-            die(Tools::displayError('Email address is invalid.'));
+            throw new PrestaShopException('Email address is invalid.');
         }
 
         $sql = new DbQuery();
@@ -358,7 +358,7 @@ class EmployeeCore extends ObjectModel
     public static function employeeExists($email)
     {
         if (!Validate::isEmail($email)) {
-            die(Tools::displayError('Email address is invalid.'));
+            throw new PrestaShopException('Email address is invalid.');
         }
 
         return (bool) Db::getInstance()->getValue('
@@ -378,7 +378,7 @@ class EmployeeCore extends ObjectModel
     public static function checkPassword($idEmployee, $passwordHash)
     {
         if (!Validate::isUnsignedId($idEmployee)) {
-            die(Tools::displayError('Employee ID is invalid.'));
+            throw new PrestaShopException('Employee ID is invalid.');
         }
 
         $sql = new DbQuery();
