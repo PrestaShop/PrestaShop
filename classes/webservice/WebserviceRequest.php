@@ -729,7 +729,6 @@ class WebserviceRequestCore
             E_USER_ERROR => 'Error',
             E_USER_WARNING => 'User warning',
             E_USER_NOTICE => 'User notice',
-            E_STRICT => 'Runtime Notice',
             E_RECOVERABLE_ERROR => 'Recoverable error',
         ];
         $type = $errortype[$errno] ?? 'Unknown error';
