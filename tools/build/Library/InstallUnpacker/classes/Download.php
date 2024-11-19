@@ -43,7 +43,7 @@ class Download
     /**
      * @param BasicFileCache $cachingSystem optional FileCache
      */
-    public function __construct(BasicFileCache $cachingSystem = null)
+    public function __construct(?BasicFileCache $cachingSystem = null)
     {
         if (null === $cachingSystem) {
             $cachingSystem = new BasicFileCache();
