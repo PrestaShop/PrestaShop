@@ -73,7 +73,7 @@ use Symfony\Component\Yaml\Yaml;
 
 class Install extends AbstractInstall
 {
-    public const SETTINGS_FILE = 'config/settings.inc.php';
+    public const SETTINGS_FILE = 'app/config/parameters.php';
     public const BOOTSTRAP_FILE = 'config/bootstrap.php';
 
     public const DEFAULT_THEME = 'classic';
@@ -230,15 +230,6 @@ class Install extends AbstractInstall
             $parameters
         );
 
-        $settings_content = "<?php\n";
-        $settings_content .= '//@deprecated 1.7';
-
-        if (!file_put_contents(_PS_ROOT_DIR_ . '/' . $this->settingsFile, $settings_content)) {
-            $this->setError($this->translator->trans('Cannot write settings file', [], 'Install'));
-
-            return false;
-        }
-
         if (!$this->processParameters($parameters)) {
             return false;
         }
@@ -256,8 +247,8 @@ class Install extends AbstractInstall
     public function processParameters($parameters)
     {
         $parametersContent = sprintf('<?php return %s;', var_export($parameters, true));
-        if (!file_put_contents(_PS_ROOT_DIR_ . '/app/config/parameters.php', $parametersContent)) {
-            $this->setError($this->translator->trans('Cannot write app/config/parameters.php file', [], 'Install'));
+        if (!file_put_contents(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . $this->settingsFile, $parametersContent)) {
+            $this->setError($this->translator->trans('%file% file is not writable (check permissions)', ['%file%' => $this->settingsFile], 'Install'));
 
             return false;
         } else {
