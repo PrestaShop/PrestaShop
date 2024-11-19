@@ -884,7 +884,7 @@ class ProductCore extends ObjectModel
         if ((int) $id_customer > 0) {
             $customer = new Customer((int) $id_customer);
             if (!Validate::isLoadedObject($customer)) {
-                die(Tools::displayError(sprintf('Customer with ID "%s" could not be loaded.', $id_customer)));
+                throw new PrestaShopException(sprintf('Customer with ID "%s" could not be loaded.', $id_customer));
             }
             self::$_taxCalculationMethod = Group::getPriceDisplayMethod((int) $customer->id_default_group);
             $cur_cart = Context::getContext()->cart;
@@ -1589,7 +1589,7 @@ class ProductCore extends ObjectModel
         }
 
         if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way)) {
-            die(Tools::displayError('Invalid sorting parameters provided.'));
+            throw new PrestaShopException('Invalid sorting parameters provided.');
         }
         if ($order_by == 'id_product' || $order_by == 'price' || $order_by == 'date_add' || $order_by == 'date_upd') {
             $order_by_prefix = 'p';
@@ -2764,7 +2764,7 @@ class ProductCore extends ObjectModel
             $order_by_prefix = 'pl';
         }
         if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way)) {
-            die(Tools::displayError('Invalid sorting parameters provided.'));
+            throw new PrestaShopException('Invalid sorting parameters provided.');
         }
 
         $sql_groups = '';
@@ -3036,7 +3036,7 @@ class ProductCore extends ObjectModel
             $order_by_prefix = 'pl';
         }
         if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way)) {
-            die(Tools::displayError('Invalid sorting parameters provided.'));
+            throw new PrestaShopException('Invalid sorting parameters provided.');
         }
         $current_date = date('Y-m-d H:i:00');
         $ids_product = Product::_getProductIdByDate(!$beginning ? $current_date : $beginning, !$ending ? $current_date : $ending, $context);
@@ -3371,7 +3371,7 @@ class ProductCore extends ObjectModel
         }
 
         if (!Validate::isUnsignedId($id_product)) {
-            die(Tools::displayError('Product ID is invalid.'));
+            throw new PrestaShopException('Product ID is invalid.');
         }
 
         // Initializations
@@ -3391,7 +3391,7 @@ class ProductCore extends ObjectModel
             * When called from the back office, cart ID can be inexistant
             */
             if (!$id_cart && !isset($context->employee)) {
-                die(Tools::displayError('If no employee is assigned in the context, cart ID must be provided to this method.'));
+                throw new PrestaShopException('If no employee is assigned in the context, cart ID must be provided to this method.');
             }
             $cur_cart = new Cart($id_cart);
             // Store cart in context to avoid multiple instantiations in BO

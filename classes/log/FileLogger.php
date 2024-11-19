@@ -72,7 +72,7 @@ class FileLoggerCore extends AbstractLogger
     public function getFilename()
     {
         if (empty($this->filename)) {
-            die(Tools::displayError('Filename is empty.'));
+            throw new PrestaShopException('Filename is empty.');
         }
 
         return $this->filename;

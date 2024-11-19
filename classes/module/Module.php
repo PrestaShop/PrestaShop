@@ -1226,11 +1226,11 @@ abstract class ModuleCore implements ModuleInterface
                 return false;
             }
 
-            die(Tools::displayError(Context::getContext()->getTranslator()->trans(
+            throw new PrestaShopException(Context::getContext()->getTranslator()->trans(
                 '%1$s is not a valid module name.',
                 [Tools::safeOutput($module_name)],
                 'Admin.Modules.Notification'
-            )));
+            ));
         }
 
         if (!isset(static::$_INSTANCE[$module_name])) {

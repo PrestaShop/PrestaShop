@@ -252,7 +252,7 @@ abstract class PaymentModuleCore extends Module
 
         if (!$this->active) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Module is not active', 3, null, 'Cart', (int) $id_cart, true);
-            die(Tools::displayError('Error processing order. Payment module is not active.'));
+            throw new PrestaShopException('Error processing order. Payment module is not active.');
         }
 
         // Make sure cart is loaded and not related to an existing order
@@ -260,12 +260,12 @@ abstract class PaymentModuleCore extends Module
         if (!$cart_is_loaded || $this->context->cart->OrderExists()) {
             $error = $this->trans('Cart cannot be loaded or an order has already been placed using this cart', [], 'Admin.Payment.Notification');
             PrestaShopLogger::addLog($error, 4, 1, 'Cart', (int) $this->context->cart->id);
-            die(Tools::displayError($error));
+            throw new PrestaShopException($error);
         }
 
         if ($secure_key !== false && $secure_key != $this->context->cart->secure_key) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Secure key does not match', 3, null, 'Cart', (int) $id_cart, true);
-            die(Tools::displayError('Error processing order. Secure key does not match.'));
+            throw new PrestaShopException('Error processing order. Secure key does not match.');
         }
 
         // For each package, generate an order
@@ -417,7 +417,7 @@ abstract class PaymentModuleCore extends Module
             if (!isset($order->id)) {
                 $error = $this->trans('Order creation failed', [], 'Admin.Payment.Notification');
                 PrestaShopLogger::addLog($error, 4, 2, 'Cart', (int) $order->id_cart);
-                die(Tools::displayError($error));
+                throw new PrestaShopException($error);
             }
             if (!$secure_key) {
                 $message .= '<br />' . $this->trans('Warning: the secure key is empty, check your payment account before validation', [], 'Admin.Payment.Notification');
