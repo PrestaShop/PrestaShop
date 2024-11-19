@@ -296,15 +296,15 @@ class CartCore extends ObjectModel
      */
     public function update($nullValues = false)
     {
+        // Wipe all product-related caches, because something may just change
         if (isset(self::$_nbProducts[$this->id])) {
             unset(self::$_nbProducts[$this->id]);
         }
-
         if (isset(self::$_totalWeight[$this->id])) {
             unset(self::$_totalWeight[$this->id]);
         }
-
         $this->_products = null;
+
         $return = parent::update($nullValues);
         Hook::exec('actionCartSave', ['cart' => $this]);
 
@@ -1608,9 +1608,9 @@ class CartCore extends ObjectModel
             }
         }
 
-        // refresh cache of self::_products
-        $this->_products = $this->getProducts(true);
+        // Update the cart, it will automatically wipe all caches needed
         $this->update();
+
         $context = Context::getContext()->cloneContext();
         /* @phpstan-ignore-next-line */
         $context->cart = $this;
@@ -1814,9 +1814,9 @@ class CartCore extends ObjectModel
         AND `id_cart` = ' . (int) $this->id);
 
         if ($result) {
+            // Update the cart, it will automatically wipe all caches needed
             $return = $this->update();
-            // refresh cache of self::_products
-            $this->_products = $this->getProducts(true);
+
             if (!isset($preservedGifts[$giftKey]) || $preservedGifts[$giftKey] <= 0) {
                 CartRule::autoRemoveFromCart(null, $useOrderPrices);
                 CartRule::autoAddToCart(null, $useOrderPrices);
