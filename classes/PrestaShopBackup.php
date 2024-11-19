@@ -121,7 +121,7 @@ class PrestaShopBackupCore
         $backupdir = realpath(_PS_ADMIN_DIR_ . self::$backupDir);
 
         if ($backupdir === false) {
-            die(Tools::displayError(Context::getContext()->getTranslator()->trans('"Backup" directory does not exist.', [], 'Admin.Advparameters.Notification')));
+            throw new PrestaShopException(Context::getContext()->getTranslator()->trans('"Backup" directory does not exist.', [], 'Admin.Advparameters.Notification'));
         }
 
         // Check the realpath so we can validate the backup file is under the backup directory
@@ -132,7 +132,7 @@ class PrestaShopBackupCore
         }
 
         if ($backupfile === false || strncmp($backupdir, $backupfile, strlen($backupdir)) != 0) {
-            die(Tools::displayError('Invalid backup file.'));
+            throw new PrestaShopException('Invalid backup file.');
         }
 
         return $backupfile;
@@ -150,7 +150,7 @@ class PrestaShopBackupCore
         $backupdir = realpath(_PS_ADMIN_DIR_ . self::$backupDir);
 
         if ($backupdir === false) {
-            die(Tools::displayError(Context::getContext()->getTranslator()->trans('"Backup" directory does not exist.', [], 'Admin.Advparameters.Notification')));
+            throw new PrestaShopException(Context::getContext()->getTranslator()->trans('"Backup" directory does not exist.', [], 'Admin.Advparameters.Notification'));
         }
 
         return @filemtime($backupdir . DIRECTORY_SEPARATOR . $filename);

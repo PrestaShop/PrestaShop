@@ -362,7 +362,7 @@ class CategoryCore extends ObjectModel
     protected function recursiveDelete(array &$toDelete, $idCategory)
     {
         if (!$idCategory) {
-            die(Tools::displayError('Parameter "idCategory" is invalid.'));
+            throw new PrestaShopException('Parameter "idCategory" is invalid.');
         }
 
         $sql = new DbQuery();
@@ -692,7 +692,7 @@ class CategoryCore extends ObjectModel
         $limit = ''
     ) {
         if (isset($idRootCategory) && !Validate::isInt($idRootCategory)) {
-            die(Tools::displayError('Parameter "idRootCategory" was provided, but it\'s not a valid integer.'));
+            throw new PrestaShopException('Parameter "idRootCategory" was provided, but it\'s not a valid integer.');
         }
 
         if (isset($groups) && Group::isFeatureActive() && !is_array($groups)) {
@@ -763,7 +763,7 @@ class CategoryCore extends ObjectModel
         $limit = ''
     ) {
         if (isset($idRootCategory) && !Validate::isInt($idRootCategory)) {
-            die(Tools::displayError('Parameter "idRootCategory" was provided, but it\'s not a valid integer.'));
+            throw new PrestaShopException('Parameter "idRootCategory" was provided, but it\'s not a valid integer.');
         }
 
         if (isset($groups) && Group::isFeatureActive() && !is_array($groups)) {

@@ -556,11 +556,11 @@ class AdminCustomerThreadsControllerCore extends AdminController
         }
 
         if (!$extension) {
-            die(Tools::displayError('Invalid file extension.'));
+            throw new PrestaShopException('Invalid file extension.');
         }
 
         if (!Validate::isFileName($filename)) {
-            die(Tools::displayError('Invalid filename.'));
+            throw new PrestaShopException('Invalid filename.');
         }
 
         if (ob_get_level() && ob_get_length() > 0) {
