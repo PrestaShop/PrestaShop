@@ -77,6 +77,15 @@ class Router extends BaseRouter
             $url .= '#' . strtr(rawurlencode($components['fragment']), ['%2F' => '/', '%3F' => '?']);
         }
 
+        // Keep absolute urls absolute
+        if (!empty($components['scheme']) && !empty($components['host'])) {
+            $baseHost = $components['scheme'] . '://' . $components['host'];
+            if (!empty($components['port'])) {
+                $baseHost .= ':' . $components['port'];
+            }
+            $url = $baseHost . $url;
+        }
+
         return $url;
     }
 
