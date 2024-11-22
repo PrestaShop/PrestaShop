@@ -85,7 +85,7 @@ class CartPresenter implements PresenterInterface
         return array_map(function ($product) use ($cart) {
             $customizations = [];
 
-            if (!$product->customizable) {
+            if (empty($product['id_customization'])) {
                 return $product;
             }
 
