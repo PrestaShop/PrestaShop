@@ -86,6 +86,7 @@ class CartPresenter implements PresenterInterface
             $customizations = [];
 
             if (empty($product['id_customization'])) {
+                $product['customizations'] = [];
                 return $product;
             }
 
