@@ -503,31 +503,32 @@ class CMSCategoryCore extends ObjectModel
      *
      * @param int $idCMSCategory CMS Category ID
      * @param int $idLang Language ID
-     * @param int $idShop Shop id
+     * @param int $idShop Shop ID
      *
      * @return bool|mixed
      */
-
     public static function getLinkRewrite($idCMSCategory, $idLang, $idShop = null)
     {
         if (!Validate::isUnsignedId($idCMSCategory) || !Validate::isUnsignedId($idLang)) {
             return false;
         }
 
-        $idShop = $idShop ?: isset(Context::getContext()->shop->id)
-        ? (int) Context::getContext()->shop->id
-        : (int) Configuration::get('PS_SHOP_DEFAULT');
+        if(empty($idShop) || !Validate::isUnsignedInt($idShop)) {
+            $idShop = Context::getContext()->shop->id ? 
+                Context::getContext()->shop->id : 
+                Configuration::get('PS_SHOP_DEFAULT');
+        }
 
         if (isset(self::$_links[$idCMSCategory . '-' . $idLang . '-' . $idShop])) {
             return self::$_links[$idCMSCategory . '-' . $idLang . '-' . $idShop];
         }
 
         $result = Db::getInstance()->getRow('
-		SELECT cl.`link_rewrite`
-		FROM `' . _DB_PREFIX_ . 'cms_category` c
-		LEFT JOIN `' . _DB_PREFIX_ . 'cms_category_lang` cl ON c.`id_cms_category` = cl.`id_cms_category`
+		SELECT `link_rewrite`
+		FROM `' . _DB_PREFIX_ . 'cms_category_lang`
 		WHERE `id_lang` = ' . (int) $idLang . '
-		AND c.`id_cms_category` = ' . (int) $idCMSCategory);
+		' . Shop::addSqlRestrictionOnLang(null, (int) $idShop) . '
+		AND `id_cms_category` = ' . (int) $idCMSCategory);
         self::$_links[$idCMSCategory . '-' . $idLang  . '-' . $idShop] = $result['link_rewrite'];
 
         return $result['link_rewrite'];
