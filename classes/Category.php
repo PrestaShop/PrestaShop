@@ -1351,16 +1351,21 @@ class CategoryCore extends ObjectModel
      *
      * @param int $idCategory Category ID
      * @param int $idLang Language ID
+     * @param int $idShop Shop id
      *
      * @return bool|mixed
      */
-    public static function getLinkRewrite($idCategory, $idLang)
+    public static function getLinkRewrite($idCategory, $idLang, $idShop = null)
     {
         if (!Validate::isUnsignedId($idCategory) || !Validate::isUnsignedId($idLang)) {
             return false;
         }
 
-        if (!isset(self::$_links[$idCategory . '-' . $idLang])) {
+        $idShop = $idShop ?: isset(Context::getContext()->shop->id)
+        ? (int) Context::getContext()->shop->id
+        : (int) Configuration::get('PS_SHOP_DEFAULT');
+
+        if (!isset(self::$_links[$idCategory . '-' . $idLang] . '-' . $idShop)) {
             self::$_links[$idCategory . '-' . $idLang] = Db::getInstance()->getValue('
 			SELECT cl.`link_rewrite`
 			FROM `' . _DB_PREFIX_ . 'category_lang` cl
@@ -1369,7 +1374,7 @@ class CategoryCore extends ObjectModel
 			AND cl.`id_category` = ' . (int) $idCategory);
         }
 
-        return self::$_links[$idCategory . '-' . $idLang];
+        return self::$_links[$idCategory . '-' . $idLang . '-' .$idShop];
     }
 
     /**
