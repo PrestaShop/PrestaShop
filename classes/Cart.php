@@ -1493,13 +1493,15 @@ class CartCore extends ObjectModel
             die(Tools::displayError(sprintf('Product with ID "%s" could not be loaded.', $id_product)));
         }
 
+        // Wipe all product-related caches, because something will probably change
         if (isset(self::$_nbProducts[$this->id])) {
             unset(self::$_nbProducts[$this->id]);
         }
-
         if (isset(self::$_totalWeight[$this->id])) {
             unset(self::$_totalWeight[$this->id]);
         }
+        $this->_products = null;
+        $this->_products_with_separated_gifts = null;
 
         $data = [
             'cart' => $this,
@@ -1767,13 +1769,15 @@ class CartCore extends ObjectModel
         bool $preserveGiftsRemoval = true,
         bool $useOrderPrices = false
     ) {
+        // Wipe all product-related caches, because something will probably change
         if (isset(self::$_nbProducts[$this->id])) {
             unset(self::$_nbProducts[$this->id]);
         }
-
         if (isset(self::$_totalWeight[$this->id])) {
             unset(self::$_totalWeight[$this->id]);
         }
+        $this->_products = null;
+        $this->_products_with_separated_gifts = null;
 
         // First, if we are deleting a product with customization, we delete it from the database
         if ((int) $id_customization) {
