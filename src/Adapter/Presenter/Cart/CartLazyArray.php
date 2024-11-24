@@ -107,7 +107,7 @@ class CartLazyArray extends AbstractLazyArray
         if ($this->shouldSeparateGifts) {
             $rawProducts = $this->cart->getProductsWithSeparatedGifts();
         } else {
-            $rawProducts = $this->cart->getProducts(true);
+            $rawProducts = $this->cart->getProducts();
         }
 
         /*
