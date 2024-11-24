@@ -252,6 +252,18 @@ class CartCore extends ObjectModel
         static::$cacheMultiAddressDelivery = [];
     }
 
+    public function resetProductRelatedStaticCache()
+    {
+        if (isset(self::$_nbProducts[$this->id])) {
+            unset(self::$_nbProducts[$this->id]);
+        }
+        if (isset(self::$_totalWeight[$this->id])) {
+            unset(self::$_totalWeight[$this->id]);
+        }
+        $this->_products = null;
+        $this->_products_with_separated_gifts = null;
+    }
+
     /**
      * Set Tax calculation method.
      */
@@ -302,14 +314,7 @@ class CartCore extends ObjectModel
     public function update($nullValues = false)
     {
         // Wipe all product-related caches, because something may just change
-        if (isset(self::$_nbProducts[$this->id])) {
-            unset(self::$_nbProducts[$this->id]);
-        }
-        if (isset(self::$_totalWeight[$this->id])) {
-            unset(self::$_totalWeight[$this->id]);
-        }
-        $this->_products = null;
-        $this->_products_with_separated_gifts = null;
+        $this->resetProductRelatedStaticCache();
 
         $return = parent::update($nullValues);
         Hook::exec('actionCartSave', ['cart' => $this]);
@@ -1493,15 +1498,7 @@ class CartCore extends ObjectModel
             die(Tools::displayError(sprintf('Product with ID "%s" could not be loaded.', $id_product)));
         }
 
-        // Wipe all product-related caches, because something will probably change
-        if (isset(self::$_nbProducts[$this->id])) {
-            unset(self::$_nbProducts[$this->id]);
-        }
-        if (isset(self::$_totalWeight[$this->id])) {
-            unset(self::$_totalWeight[$this->id]);
-        }
-        $this->_products = null;
-        $this->_products_with_separated_gifts = null;
+        $this->resetProductRelatedStaticCache();
 
         $data = [
             'cart' => $this,
@@ -1769,15 +1766,7 @@ class CartCore extends ObjectModel
         bool $preserveGiftsRemoval = true,
         bool $useOrderPrices = false
     ) {
-        // Wipe all product-related caches, because something will probably change
-        if (isset(self::$_nbProducts[$this->id])) {
-            unset(self::$_nbProducts[$this->id]);
-        }
-        if (isset(self::$_totalWeight[$this->id])) {
-            unset(self::$_totalWeight[$this->id]);
-        }
-        $this->_products = null;
-        $this->_products_with_separated_gifts = null;
+        $this->resetProductRelatedStaticCache();
 
         // First, if we are deleting a product with customization, we delete it from the database
         if ((int) $id_customization) {
@@ -1812,6 +1801,7 @@ class CartCore extends ObjectModel
             // so they remain. We must specifically target the product ID, combination ID and customization ID.
             // If we didn't use these conditions, we would set all cart rows with this product ID to $preservedGifts[$giftKey].
             if (isset($preservedGifts[$giftKey]) && $preservedGifts[$giftKey] > 0) {
+                $this->resetProductRelatedStaticCache();
                 return Db::getInstance()->execute(
                     'UPDATE `' . _DB_PREFIX_ . 'cart_product`
                     SET `quantity` = ' . (int) $preservedGifts[$giftKey] . '
@@ -1824,6 +1814,7 @@ class CartCore extends ObjectModel
         }
 
         /* Product deletion */
+        $this->resetProductRelatedStaticCache();
         $result = Db::getInstance()->execute('
         DELETE FROM `' . _DB_PREFIX_ . 'cart_product`
         WHERE `id_product` = ' . (int) $id_product . '
