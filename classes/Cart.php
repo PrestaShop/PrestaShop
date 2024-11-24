@@ -4649,7 +4649,7 @@ class CartCore extends ObjectModel
     public function getProductsWithSeparatedGifts()
     {
         $products = $this->splitGiftsProductsQuantity()
-            ->getProducts($refresh = true);
+            ->getProducts();
         $this->mergeGiftsProductsQuantity();
 
         return $products;
