@@ -183,6 +183,9 @@ class CartCore extends ObjectModel
 
     protected $shouldSplitGiftProductsQuantity = false;
 
+    /**
+     * @deprecated since 9.0.0 - it doesn't do anything and will be removed
+     */
     protected $shouldExcludeGiftsDiscount = false;
 
     public const ONLY_PRODUCTS = 1;
