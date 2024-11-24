@@ -104,6 +104,7 @@ class CartCore extends ObjectModel
     protected static $_isVirtualCart = [];
 
     protected $_products = null;
+    protected $_products_with_separated_gifts = null;
     protected static $_totalWeight = [];
     protected $_taxCalculationMethod = PS_TAX_EXC;
     protected static $_carriers = null;
@@ -191,6 +192,7 @@ class CartCore extends ObjectModel
     public const ONLY_SHIPPING = 5;
     public const ONLY_WRAPPING = 6;
     public const ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING = 8;
+    public const ONLY_PRODUCTS_WITHOUT_GIFTS = 9;
 
     private const DEFAULT_ATTRIBUTES_KEYS = ['attributes' => '', 'attributes_small' => ''];
 
@@ -304,6 +306,7 @@ class CartCore extends ObjectModel
             unset(self::$_totalWeight[$this->id]);
         }
         $this->_products = null;
+        $this->_products_with_separated_gifts = null;
 
         $return = parent::update($nullValues);
         Hook::exec('actionCartSave', ['cart' => $this]);
@@ -625,11 +628,19 @@ class CartCore extends ObjectModel
         if (!$this->id) {
             return [];
         }
+
+        // Get cache key we will use
+        if ($this->shouldSplitGiftProductsQuantity) {
+            $cacheKey = '_products_with_separated_gifts';
+        } else {
+            $cacheKey = '_products';
+        }
+
         // Product cache must be strictly compared to NULL, or else an empty cart will add dozens of queries
-        if ($this->_products !== null && !$refresh) {
+        if ($this->{$cacheKey} !== null && !$refresh) {
             // Return product row with specified ID if it exists
             if (is_int($id_product)) {
-                foreach ($this->_products as $product) {
+                foreach ($this->{$cacheKey} as $product) {
                     if ($product['id_product'] == $id_product) {
                         return [$product];
                     }
@@ -638,7 +649,7 @@ class CartCore extends ObjectModel
                 return [];
             }
 
-            return $this->_products;
+            return $this->{$cacheKey};
         }
 
         // Build query
@@ -767,7 +778,7 @@ class CartCore extends ObjectModel
         Cart::cacheSomeAttributesLists($pa_ids, (int) $this->getAssociatedLanguage()->getId());
 
         if (empty($products)) {
-            $this->_products = [];
+            $this->{$cacheKey} = [];
 
             return [];
         }
@@ -806,7 +817,7 @@ class CartCore extends ObjectModel
                 }
             }
 
-            $this->_products = [];
+            $this->{$cacheKey} = [];
 
             foreach ($products as &$product) {
                 if (!array_key_exists('is_gift', $product)) {
@@ -834,7 +845,7 @@ class CartCore extends ObjectModel
                     $product = $this->applyProductCalculations($product, $cart_shop_context, null, $keepOrderPrices);
                 } else {
                     // Separate products given away from those manually added to cart
-                    $this->_products[] = $this->applyProductCalculations($product, $cart_shop_context, $givenAwayQuantity, $keepOrderPrices);
+                    $this->{$cacheKey}[] = $this->applyProductCalculations($product, $cart_shop_context, $givenAwayQuantity, $keepOrderPrices);
                     unset($product['is_gift']);
                     $product = $this->applyProductCalculations(
                         $product,
@@ -844,13 +855,13 @@ class CartCore extends ObjectModel
                     );
                 }
 
-                $this->_products[] = $product;
+                $this->{$cacheKey}[] = $product;
             }
         } else {
-            $this->_products = $products;
+            $this->{$cacheKey} = $products;
         }
 
-        return $this->_products;
+        return $this->{$cacheKey};
     }
 
     /**
@@ -1922,6 +1933,7 @@ class CartCore extends ObjectModel
      *                  - BOTH_WITHOUT_SHIPPING
      *                  - ONLY_SHIPPING
      *                  - ONLY_WRAPPING
+     *                  - ONLY_PRODUCTS_WITHOUT_GIFTS
      *
      * @return string Formatted amount in Cart
      */
@@ -1966,6 +1978,7 @@ class CartCore extends ObjectModel
      *                  - Cart::ONLY_SHIPPING
      *                  - Cart::ONLY_WRAPPING
      *                  - Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING
+     *                  - Cart::ONLY_PRODUCTS_WITHOUT_GIFTS
      * @param array $products
      * @param int $id_carrier
      * @param bool $use_cache @deprecated
@@ -1997,6 +2010,7 @@ class CartCore extends ObjectModel
             Cart::ONLY_SHIPPING,
             Cart::ONLY_WRAPPING,
             Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING,
+            Cart::ONLY_PRODUCTS_WITHOUT_GIFTS,
         ];
         if (!in_array($type, $allowedTypes)) {
             throw new Exception('Invalid calculation type: ' . $type);
@@ -2019,7 +2033,13 @@ class CartCore extends ObjectModel
 
         // filter products
         if (null === $products) {
-            $products = $this->getProducts(false, false, null, true, $keepOrderPrices);
+            if ($type == Cart::ONLY_PRODUCTS_WITHOUT_GIFTS) {
+                $this->splitGiftsProductsQuantity();
+                $products = $this->getProducts(false, false, null, true, $keepOrderPrices);
+                $this->mergeGiftsProductsQuantity();
+            } else {
+                $products = $this->getProducts(false, false, null, true, $keepOrderPrices);
+            }
         }
 
         if ($type == Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING) {
@@ -2028,10 +2048,9 @@ class CartCore extends ObjectModel
                     unset($products[$key]);
                 }
             }
-            $type = Cart::ONLY_PRODUCTS;
         }
 
-        if ($type == Cart::ONLY_PRODUCTS) {
+        if ($type == Cart::ONLY_PRODUCTS_WITHOUT_GIFTS) {
             foreach ($products as $key => $product) {
                 if (!empty($product['is_gift'])) {
                     unset($products[$key]);
@@ -2075,6 +2094,8 @@ class CartCore extends ObjectModel
                 $calculator->calculateCartRulesWithoutFreeShipping();
                 $amount = $calculator->getTotal(true);
                 break;
+            case Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING:
+            case Cart::ONLY_PRODUCTS_WITHOUT_GIFTS:
             case Cart::ONLY_PRODUCTS:
                 $calculator->calculateRows();
                 $amount = $calculator->getRowTotal();
@@ -2171,11 +2192,7 @@ class CartCore extends ObjectModel
      */
     public function getDiscountSubtotalWithoutGifts($withTaxes = true)
     {
-        $discountSubtotal = $this->excludeGiftsDiscountFromTotal()
-            ->getOrderTotal($withTaxes, self::ONLY_DISCOUNTS);
-        $this->includeGiftsDiscountInTotal();
-
-        return $discountSubtotal;
+        return $this->getOrderTotal($withTaxes, self::ONLY_DISCOUNTS);
     }
 
     /**
@@ -4607,7 +4624,6 @@ class CartCore extends ObjectModel
     protected function splitGiftsProductsQuantity()
     {
         $this->shouldSplitGiftProductsQuantity = true;
-        $this->_products = null;
 
         return $this;
     }
@@ -4618,23 +4634,6 @@ class CartCore extends ObjectModel
     protected function mergeGiftsProductsQuantity()
     {
         $this->shouldSplitGiftProductsQuantity = false;
-        $this->_products = null;
-
-        return $this;
-    }
-
-    protected function excludeGiftsDiscountFromTotal()
-    {
-        $this->shouldExcludeGiftsDiscount = true;
-        $this->_products = null;
-
-        return $this;
-    }
-
-    protected function includeGiftsDiscountInTotal()
-    {
-        $this->shouldExcludeGiftsDiscount = false;
-        $this->_products = null;
 
         return $this;
     }

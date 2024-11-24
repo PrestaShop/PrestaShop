@@ -901,7 +901,7 @@ class CartRuleCore extends ObjectModel
             // Let's get the full cart total first, add shipping price if the rule was configured like this.
             $cartTotal = $cart->getOrderTotal(
                 $this->minimum_amount_tax,
-                Cart::ONLY_PRODUCTS,
+                Cart::ONLY_PRODUCTS_WITHOUT_GIFTS,
                 null,
                 null,
                 false,
@@ -918,31 +918,7 @@ class CartRuleCore extends ObjectModel
                 );
             }
 
-            /*
-             * Now, we will reduce the cart total by all already applied gifts in the cart.
-             *
-             * This is big magic happening here, because it's subtracting the gifts from the cart total one by one, by matching it.
-             *
-             * It would be much better if $cart->getOrderTotal returned the total without the gifts, which it should actually do by the way.
-             * Check inside of that method, if 'is_gift' is not empty, it should skip that product.
-             * But, that would require calling getProducts inside that method with $cart->shouldSplitGiftProductsQuantity enabled.
-             * But, if that started to work, it would mess up all places in the code, where it expects Cart::ONLY_PRODUCTS to include gifts.
-             *
-             * A solution would be to create Cart::ONLY_PRODUCTS_WITHOUT_GIFTS, that we could use here.
-             */
-            $products = $cart->getProducts();
-            $cart_rules = $cart->getCartRules(CartRule::FILTER_ACTION_ALL, false);
-
-            foreach ($cart_rules as $cart_rule) {
-                if ($cart_rule['gift_product']) {
-                    foreach ($products as $key => &$product) {
-                        if (empty($product['is_gift']) && $product['id_product'] == $cart_rule['gift_product'] && $product['id_product_attribute'] == $cart_rule['gift_product_attribute'] && empty($product['id_customization'])) {
-                            $cartTotal = Tools::ps_round($cartTotal - $product[$this->minimum_amount_tax ? 'price_wt' : 'price'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
-                        }
-                    }
-                }
-            }
-
+            // And check if the cart meets our requirements
             if ($cartTotal < $minimum_amount) {
                 return (!$display_error) ? false : $this->trans('The minimum amount to benefit from this promo code is %s.', [Tools::getContextLocale($context)->formatPrice($minimum_amount, $context->currency->iso_code)], 'Shop.Notifications.Error');
             }
