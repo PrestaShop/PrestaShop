@@ -544,11 +544,8 @@ class CartLazyArray extends AbstractLazyArray
             'ecotax_rate',
             'specific_prices',
             'customizable',
-            'online_only',
             'reduction',
             'reduction_without_tax',
-            'new',
-            'condition',
             'pack',
         ];
         foreach ($resetFields as $field) {
