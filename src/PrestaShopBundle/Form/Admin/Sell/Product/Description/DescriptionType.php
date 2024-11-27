@@ -94,6 +94,8 @@ class DescriptionType extends TranslatorAwareType
 
         $builder
             ->add('images', ImageDropzoneType::class, [
+                'label' => $this->trans('Images', 'Admin.Global'),
+                'label_tag_name' => 'h3',
                 'product_id' => $productId,
                 'shop_id' => $shopId,
                 'update_form_type' => ProductImageType::class,

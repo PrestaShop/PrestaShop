@@ -100,94 +100,8 @@ class SEOType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        // Automatic update is only enabled when product is offline and the configuration is enabled
-        $automaticUrlUpdate = false;
-        if (!$options['active'] && (bool) $this->configuration->get('PS_FORCE_FRIENDLY_PRODUCT')) {
-            $automaticUrlUpdate = true;
-        }
-
         $builder
-            ->add('serp', SerpType::class)
-            ->add('meta_title', TranslatableType::class, [
-                'label' => $this->trans('Meta title', 'Admin.Catalog.Feature'),
-                'label_help_box' => $this->trans('Public title that may appear in the browser and search engines. The recommended length is about 60 characters (including spaces). If you leave it blank, the product name will be used.', 'Admin.Catalog.Help'),
-                'required' => false,
-                'type' => TextWithLengthCounterType::class,
-                'help' => $this->trans(
-                    'Public title that may appear in the browser and search engines. The recommended length is about 60 characters (including spaces). If you leave it blank, the product name will be used.',
-                    'Admin.Catalog.Help'
-                ),
-                'options' => [
-                    'input' => 'text',
-                    'input_attr' => [
-                        'class' => 'serp-watched-title',
-                    ],
-                    'max_length' => ProductSettings::MAX_META_TITLE_LENGTH,
-                    'position' => 'after',
-                    'constraints' => [
-                        new Length([
-                            'max' => ProductSettings::MAX_META_TITLE_LENGTH,
-                            'maxMessage' => $this->trans(
-                                'This field cannot be longer than %limit% characters.',
-                                'Admin.Notifications.Error',
-                                ['%limit%' => ProductSettings::MAX_META_TITLE_LENGTH]
-                            ),
-                        ]),
-                    ],
-                ],
-                'modify_all_shops' => true,
-            ])
-            ->add('meta_description', TranslatableType::class, [
-                'label' => $this->trans('Meta description', 'Admin.Catalog.Feature'),
-                'label_help_box' => $this->trans('Summary for robots, that could appear in search engines. The recommended length is about 160 characters (including spaces). If you leave it blank, an excerpt from the short description will be used.', 'Admin.Catalog.Help'),
-                'required' => false,
-                'type' => TextWithLengthCounterType::class,
-                'help' => $this->trans(
-                    'Summary for robots, that could appear in search engines. The recommended length is about 160 characters (including spaces). If you leave it blank, an excerpt from the short description will be used.',
-                    'Admin.Catalog.Help'
-                ),
-                'options' => [
-                    'input' => 'textarea',
-                    'input_attr' => [
-                        'class' => 'serp-watched-description',
-                    ],
-                    'max_length' => ProductSettings::MAX_META_DESCRIPTION_LENGTH,
-                    'position' => 'after',
-                    'constraints' => [
-                        new Length([
-                            'max' => ProductSettings::MAX_META_DESCRIPTION_LENGTH,
-                            'maxMessage' => $this->trans(
-                                'This field cannot be longer than %limit% characters.',
-                                'Admin.Notifications.Error',
-                                ['%limit%' => ProductSettings::MAX_META_DESCRIPTION_LENGTH]
-                            ),
-                        ]),
-                    ],
-                ],
-                'modify_all_shops' => true,
-            ])
-            ->add('link_rewrite', TranslatableType::class, [
-                'label' => $this->trans('Friendly URL', 'Admin.Catalog.Feature'),
-                'label_help_box' => $this->trans('This is the human-readable URL, as generated from the product\'s name. You can change it if you want.', 'Admin.Catalog.Help'),
-                'required' => false,
-                'type' => TextType::class,
-                'help' => $this->trans(
-                    'This is the human-readable URL, as generated from the product\'s name. You can change it if you want.',
-                    'Admin.Catalog.Help'
-                ),
-                'alert_message' => $this->getFriendlyAlterMessages(),
-                'options' => [
-                    'constraints' => [
-                        new TypedRegex(TypedRegex::TYPE_LINK_REWRITE),
-                        new Length(['max' => ProductSettings::MAX_LINK_REWRITE_LENGTH]),
-                    ],
-                    'attr' => [
-                        'class' => 'serp-watched-url',
-                        'data-automatic-update' => (int) $automaticUrlUpdate,
-                    ],
-                ],
-                'modify_all_shops' => true,
-            ])
+            ->add('meta_information', MetaInformationType::class)
             ->add('redirect_option', RedirectOptionType::class, [
                 'product_id' => $options['product_id'],
             ])
@@ -219,39 +133,6 @@ class SEOType extends TranslatorAwareType
     }
 
     /**
-     * @return string[]
-     */
-    private function getFriendlyAlterMessages(): array
-    {
-        $alertMessages = [];
-        $friendlyUrl = $this->router->generate('admin_metas_index') . '#meta_settings_set_up_urls_form';
-        $productPreferencesUrl = $this->router->generate('admin_product_preferences') . '#configuration_fieldset_products';
-
-        if (!$this->friendlyUrlEnabled) {
-            $alertMessages[] = sprintf(
-                '<strong>%s</strong> %s',
-                $this->trans('Friendly URLs are currently disabled.', 'Admin.Catalog.Notification'),
-                $this->trans('To enable it, go to [1]SEO and URLs[/1]', 'Admin.Catalog.Notification', [
-                    '[1]' => '<a target="_blank" href="' . $friendlyUrl . '">',
-                    '[/1]' => '</a>',
-                ])
-            );
-        }
-        if ($this->forceFriendlyUrl) {
-            $alertMessages[] = sprintf(
-                '<strong>%s</strong> %s',
-                $this->trans('The "Force update of friendly URL" option is currently enabled.', 'Admin.Catalog.Notification'),
-                $this->trans('To disable it, go to [1]Product Settings[/1]', 'Admin.Catalog.Notification', [
-                    '[1]' => '<a target="_blank" href="' . $productPreferencesUrl . '">',
-                    '[/1]' => '</a>',
-                ])
-            );
-        }
-
-        return $alertMessages;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function configureOptions(OptionsResolver $resolver)
@@ -260,11 +141,6 @@ class SEOType extends TranslatorAwareType
         $resolver
             ->setDefaults([
                 'label' => $this->trans('SEO', 'Admin.Catalog.Feature'),
-                'label_tab' => $this->trans('Search engine optimization', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h3',
-                'label_subtitle' => $this->trans('Improve your ranking and how your product page will appear in search engines results.', 'Admin.Catalog.Feature'),
-                'required' => false,
-                'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/product_seo.html.twig',
                 'active' => false,
             ])
             ->setRequired([

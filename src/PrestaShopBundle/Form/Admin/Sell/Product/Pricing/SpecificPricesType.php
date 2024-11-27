@@ -50,6 +50,15 @@ class SpecificPricesType extends TranslatorAwareType
                 ],
                 'icon' => 'add_circle',
             ])
+            ->add('show_catalog_price_rules', IconButtonType::class, [
+                'icon' => 'visibility',
+                'label' => $this->trans('Show catalog price rules', 'Admin.Catalog.Feature'),
+                'attr' => [
+                    'data-hide-label' => $this->trans('Hide catalog price rules', 'Admin.Catalog.Feature'),
+                    'data-show-label' => $this->trans('Show catalog price rules', 'Admin.Catalog.Feature'),
+                ],
+            ])
+            ->add('catalog_price_rules', CatalogPriceRulesType::class)
         ;
     }
 

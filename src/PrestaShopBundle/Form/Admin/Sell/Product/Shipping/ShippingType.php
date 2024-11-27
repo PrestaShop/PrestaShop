@@ -54,28 +54,20 @@ class ShippingType extends TranslatorAwareType
     private $carrierChoiceProvider;
 
     /**
-     * @var FormChoiceProviderInterface
-     */
-    private $deliveryTimeNoteTypesProvider;
-
-    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param string $currencyIsoCode
      * @param FormChoiceProviderInterface $carrierChoiceProvider
-     * @param FormChoiceProviderInterface $additionalDeliveryTimeNoteTypesProvider
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         string $currencyIsoCode,
-        FormChoiceProviderInterface $carrierChoiceProvider,
-        FormChoiceProviderInterface $additionalDeliveryTimeNoteTypesProvider
+        FormChoiceProviderInterface $carrierChoiceProvider
     ) {
         parent::__construct($translator, $locales);
         $this->currencyIsoCode = $currencyIsoCode;
         $this->carrierChoiceProvider = $carrierChoiceProvider;
-        $this->deliveryTimeNoteTypesProvider = $additionalDeliveryTimeNoteTypesProvider;
     }
 
     /**
@@ -85,17 +77,7 @@ class ShippingType extends TranslatorAwareType
     {
         $builder
             ->add('dimensions', DimensionsType::class)
-            ->add('delivery_time_note_type', ChoiceType::class, [
-                'choices' => $this->deliveryTimeNoteTypesProvider->getChoices(),
-                'placeholder' => false,
-                'expanded' => true,
-                'multiple' => false,
-                'required' => false,
-                'label' => $this->trans('Delivery time', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h3',
-                'label_help_box' => $this->trans('Display delivery time for a product is advised for merchants selling in Europe to comply with the local laws.', 'Admin.Catalog.Help'),
-            ])
-            ->add('delivery_time_notes', DeliveryTimeNotesType::class)
+            ->add('delivery_time', DeliveryTimeType::class)
             ->add('additional_shipping_cost', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Shipping fees', 'Admin.Catalog.Feature'),

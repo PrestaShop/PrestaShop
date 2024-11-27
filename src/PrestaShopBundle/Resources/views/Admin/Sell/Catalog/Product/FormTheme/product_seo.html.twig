@@ -26,7 +26,7 @@
 {# This form theme is the root one for all the product form so we define here which base theme is used for all the children #}
 {% use '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
 
-{% block _product_seo_link_rewrite_widget %}
+{% block _product_seo_meta_information_link_rewrite_widget %}
   {{ form_widget(form) }}
   {% set firstChildAttr = form.children|first.vars.attr %}
   <button

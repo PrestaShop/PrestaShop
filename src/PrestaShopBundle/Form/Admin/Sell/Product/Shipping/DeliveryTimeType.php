@@ -33,15 +33,48 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class DeliveryTimeNotesType extends TranslatorAwareType
+class DeliveryTimeType extends TranslatorAwareType
 {
+    /**
+     * @var FormChoiceProviderInterface
+     */
+    private $deliveryTimeNoteTypesProvider;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param FormChoiceProviderInterface $additionalDeliveryTimeNoteTypesProvider
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        FormChoiceProviderInterface $additionalDeliveryTimeNoteTypesProvider
+    ) {
+        parent::__construct($translator, $locales);
+        $this->deliveryTimeNoteTypesProvider = $additionalDeliveryTimeNoteTypesProvider;
+    }
+
     /**
      * {@inheritDoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('type', ChoiceType::class, [
+                'choices' => $this->deliveryTimeNoteTypesProvider->getChoices(),
+                'placeholder' => false,
+                'expanded' => true,
+                'multiple' => false,
+                'required' => false,
+                'label' => $this->trans('Delivery time', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h3',
+                'label_help_box' => $this->trans('Display delivery time for a product is advised for merchants selling in Europe to comply with the local laws.', 'Admin.Catalog.Help'),
+                'column_breaker' => true,
+            ])
             ->add('in_stock', TranslatableType::class, [
                 'label' => $this->trans('Delivery time of in-stock products:', 'Admin.Catalog.Feature'),
                 'type' => TextType::class,

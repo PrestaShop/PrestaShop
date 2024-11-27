@@ -266,9 +266,9 @@ class ProductFormDataProviderTest extends TestCase
             'meta_description' => $localizedValues,
             'link_rewrite' => $localizedValues,
         ];
-        $expectedOutputData['seo']['meta_title'] = $localizedValues;
-        $expectedOutputData['seo']['meta_description'] = $localizedValues;
-        $expectedOutputData['seo']['link_rewrite'] = $localizedValues;
+        $expectedOutputData['seo']['meta_information']['meta_title'] = $localizedValues;
+        $expectedOutputData['seo']['meta_information']['meta_description'] = $localizedValues;
+        $expectedOutputData['seo']['meta_information']['link_rewrite'] = $localizedValues;
 
         $datasets[] = [
             $productData,
@@ -706,9 +706,9 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['shipping']['dimensions']['depth'] = '47.87';
         $expectedOutputData['shipping']['dimensions']['weight'] = '48.87';
         $expectedOutputData['shipping']['additional_shipping_cost'] = '49.87';
-        $expectedOutputData['shipping']['delivery_time_note_type'] = DeliveryTimeNoteType::TYPE_SPECIFIC;
-        $expectedOutputData['shipping']['delivery_time_notes']['in_stock'] = $localizedValues;
-        $expectedOutputData['shipping']['delivery_time_notes']['out_of_stock'] = $localizedValues;
+        $expectedOutputData['shipping']['delivery_time']['type'] = DeliveryTimeNoteType::TYPE_SPECIFIC;
+        $expectedOutputData['shipping']['delivery_time']['in_stock'] = $localizedValues;
+        $expectedOutputData['shipping']['delivery_time']['out_of_stock'] = $localizedValues;
         $expectedOutputData['shipping']['carriers'] = [69, 99];
 
         $datasets[] = [
@@ -779,8 +779,8 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['details']['references']['mpn'] = 'mpn_2';
         $expectedOutputData['details']['references']['reference'] = 'reference_2';
 
-        $expectedOutputData['details']['condition'] = ProductCondition::USED;
-        $expectedOutputData['details']['show_condition'] = true;
+        $expectedOutputData['details']['condition']['condition'] = ProductCondition::USED;
+        $expectedOutputData['details']['condition']['show_condition'] = true;
 
         $expectedOutputData['details']['attachments']['attached_files'] = [
             [
@@ -1666,9 +1666,11 @@ class ProductFormDataProviderTest extends TestCase
                 ],
             ],
             'seo' => [
-                'meta_title' => [],
-                'meta_description' => [],
-                'link_rewrite' => [],
+                'meta_information' => [
+                    'meta_title' => [],
+                    'meta_description' => [],
+                    'link_rewrite' => [],
+                ],
                 'redirect_option' => [
                     'type' => RedirectType::TYPE_NOT_FOUND,
                     'target' => null,
@@ -1683,8 +1685,8 @@ class ProductFormDataProviderTest extends TestCase
                     'weight' => '19.86',
                 ],
                 'additional_shipping_cost' => '19.86',
-                'delivery_time_note_type' => DeliveryTimeNoteType::TYPE_DEFAULT,
-                'delivery_time_notes' => [
+                'delivery_time' => [
+                    'type' => DeliveryTimeNoteType::TYPE_DEFAULT,
                     'in_stock' => [],
                     'out_of_stock' => [],
                 ],

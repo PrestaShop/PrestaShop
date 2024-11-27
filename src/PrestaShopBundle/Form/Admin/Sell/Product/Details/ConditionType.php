@@ -23,54 +23,65 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Details;
 
-use PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductAttachmentsType;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use PrestaShopBundle\Form\Admin\Sell\Product\Details\ConditionType;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class DetailsType extends TranslatorAwareType
+class ConditionType extends TranslatorAwareType
 {
     /**
-     * @var bool
+     * @var FormChoiceProviderInterface
      */
-    protected $isFeatureEnabled;
+    private $productConditionChoiceProvider;
 
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param bool $isFeatureEnabled
+     * @param FormChoiceProviderInterface $productConditionChoiceProvider
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        bool $isFeatureEnabled
+        FormChoiceProviderInterface $productConditionChoiceProvider
     ) {
         parent::__construct($translator, $locales);
-        $this->isFeatureEnabled = $isFeatureEnabled;
+        $this->productConditionChoiceProvider = $productConditionChoiceProvider;
     }
 
     /**
-     * {@inheritDoc}
+     * @param FormBuilderInterface $builder
+     * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('references', ReferencesType::class);
-
-        if ($this->isFeatureEnabled) {
-            $builder->add('features', FeaturesType::class);
-        }
-
         $builder
-            ->add('attachments', ProductAttachmentsType::class)
-            ->add('condition', ConditionType::class)
-            ->add('customizations', CustomizationsType::class)
+            ->add('show_condition', SwitchType::class, [
+                'required' => false,
+                'label' => $this->trans('Display condition on product page', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h3',
+                'show_choices' => false,
+                'inline_switch' => true,
+                'modify_all_shops' => true,
+            ])
+            ->add('condition', ChoiceType::class, [
+                'choices' => $this->productConditionChoiceProvider->getChoices(),
+                'attr' => [
+                    'class' => 'custom-select',
+                ],
+                'required' => false,
+                // placeholder false is important to avoid empty option in select input despite required being false
+                'placeholder' => false,
+                'label' => false,
+                'modify_all_shops' => true,
+            ])
         ;
     }
 
@@ -82,8 +93,7 @@ class DetailsType extends TranslatorAwareType
         parent::configureOptions($resolver);
         $resolver
             ->setDefaults([
-                'required' => false,
-                'label' => $this->trans('Details', 'Admin.Catalog.Feature'),
+                'label' => false,
             ])
         ;
     }

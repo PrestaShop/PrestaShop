@@ -35,7 +35,15 @@ export default class ProductShippingManager {
       disablingInputSelector: ProductMap.shipping.deliveryTimeTypeInput,
       matchingValue: '2',
       disableOnMatch: false,
-      targetSelector: ProductMap.shipping.deliveryTimeNotesBlock,
+      targetSelector: ProductMap.shipping.deliveryTimeNoteInStock,
+      toggleType: ToggleType.availability,
+    });
+
+    new FormFieldToggler({
+      disablingInputSelector: ProductMap.shipping.deliveryTimeTypeInput,
+      matchingValue: '2',
+      disableOnMatch: false,
+      targetSelector: ProductMap.shipping.deliveryTimeNoteOutOfStock,
       toggleType: ToggleType.availability,
     });
   }

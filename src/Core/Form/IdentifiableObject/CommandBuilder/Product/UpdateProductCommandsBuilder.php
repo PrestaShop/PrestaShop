@@ -110,13 +110,13 @@ class UpdateProductCommandsBuilder implements ProductCommandsBuilderInterface
             ->addMultiShopField('[options][visibility][visibility]', 'setVisibility', DataField::TYPE_STRING)
             ->addMultiShopField('[options][visibility][available_for_order]', 'setAvailableForOrder', DataField::TYPE_BOOL)
             ->addMultiShopField('[options][visibility][show_price]', 'setShowPrice', DataField::TYPE_BOOL)
-            ->addMultiShopField('[details][show_condition]', 'setShowCondition', DataField::TYPE_BOOL)
+            ->addMultiShopField('[details][condition][show_condition]', 'setShowCondition', DataField::TYPE_BOOL)
         ;
 
         // based on show_condition value, the condition field can be disabled, in that case "condition" won't exist in request
         // and will end up being "" in command if added into config without this if, which causes constraint error
         if (!empty($formData['details']['condition'])) {
-            $config->addMultiShopField('[details][condition]', 'setCondition', DataField::TYPE_STRING);
+            $config->addMultiShopField('[details][condition][condition]', 'setCondition', DataField::TYPE_STRING);
         }
 
         return $this;
@@ -150,9 +150,9 @@ class UpdateProductCommandsBuilder implements ProductCommandsBuilderInterface
     private function configureSeo(CommandBuilderConfig $config): self
     {
         $config
-            ->addMultiShopField('[seo][meta_title]', 'setLocalizedMetaTitles', DataField::TYPE_ARRAY)
-            ->addMultiShopField('[seo][meta_description]', 'setLocalizedMetaDescriptions', DataField::TYPE_ARRAY)
-            ->addMultiShopField('[seo][link_rewrite]', 'setLocalizedLinkRewrites', DataField::TYPE_ARRAY)
+            ->addMultiShopField('[seo][meta_information][meta_title]', 'setLocalizedMetaTitles', DataField::TYPE_ARRAY)
+            ->addMultiShopField('[seo][meta_information][meta_description]', 'setLocalizedMetaDescriptions', DataField::TYPE_ARRAY)
+            ->addMultiShopField('[seo][meta_information][link_rewrite]', 'setLocalizedLinkRewrites', DataField::TYPE_ARRAY)
             ->addMultiShopCompoundField('setRedirectOption', [
                 '[seo][redirect_option][type]' => DataField::TYPE_STRING,
                 '[seo][redirect_option][target][id]' => [
@@ -195,10 +195,10 @@ class UpdateProductCommandsBuilder implements ProductCommandsBuilderInterface
             ->addField('[shipping][dimensions][height]', 'setHeight', DataField::TYPE_STRING)
             ->addField('[shipping][dimensions][depth]', 'setDepth', DataField::TYPE_STRING)
             ->addField('[shipping][dimensions][weight]', 'setWeight', DataField::TYPE_STRING)
-            ->addField('[shipping][delivery_time_note_type]', 'setDeliveryTimeNoteType', DataField::TYPE_INT)
             ->addMultiShopField('[shipping][additional_shipping_cost]', 'setAdditionalShippingCost', DataField::TYPE_STRING)
-            ->addMultiShopField('[shipping][delivery_time_notes][in_stock]', 'setLocalizedDeliveryTimeInStockNotes', DataField::TYPE_ARRAY)
-            ->addMultiShopField('[shipping][delivery_time_notes][out_of_stock]', 'setLocalizedDeliveryTimeOutOfStockNotes', DataField::TYPE_ARRAY)
+            ->addField('[shipping][delivery_time][type]', 'setDeliveryTimeNoteType', DataField::TYPE_INT)
+            ->addMultiShopField('[shipping][delivery_time][in_stock]', 'setLocalizedDeliveryTimeInStockNotes', DataField::TYPE_ARRAY)
+            ->addMultiShopField('[shipping][delivery_time][out_of_stock]', 'setLocalizedDeliveryTimeOutOfStockNotes', DataField::TYPE_ARRAY)
         ;
 
         return $this;

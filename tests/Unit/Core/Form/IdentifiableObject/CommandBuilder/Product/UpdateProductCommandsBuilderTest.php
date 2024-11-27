@@ -597,9 +597,11 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
                     ],
                 ],
                 'seo' => [
-                    'meta_title' => $localizedMetaTitles,
-                    'meta_description' => $localizedMetaDescriptions,
-                    'link_rewrite' => $localizedLinkRewrites,
+                    'meta_information' => [
+                        'meta_title' => $localizedMetaTitles,
+                        'meta_description' => $localizedMetaDescriptions,
+                        'link_rewrite' => $localizedLinkRewrites,
+                    ],
                     'redirect_option' => [
                         'type' => RedirectType::TYPE_PRODUCT_TEMPORARY,
                         'target' => [
@@ -623,9 +625,9 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
                         'depth' => '30.5',
                         'weight' => '2.2',
                     ],
-                    'delivery_time_note_type' => DeliveryTimeNoteType::TYPE_SPECIFIC,
                     'additional_shipping_cost' => '5.7',
-                    'delivery_time_notes' => [
+                    'delivery_time' => [
+                        'type' => DeliveryTimeNoteType::TYPE_SPECIFIC,
                         'in_stock' => [
                             1 => 'In stock',
                             2 => 'Yra sandelyje',
@@ -1196,10 +1198,10 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
                         'depth' => '30.5',
                         'weight' => '2.2',
                     ],
-                    'delivery_time_note_type' => DeliveryTimeNoteType::TYPE_SPECIFIC,
                     'additional_shipping_cost' => '5.7',
                     self::MODIFY_ALL_SHOPS_PREFIX . 'additional_shipping_cost' => true,
-                    'delivery_time_notes' => [
+                    'delivery_time' => [
+                        'type' => DeliveryTimeNoteType::TYPE_SPECIFIC,
                         'in_stock' => [
                             1 => 'In stock',
                             2 => 'Yra sandelyje',

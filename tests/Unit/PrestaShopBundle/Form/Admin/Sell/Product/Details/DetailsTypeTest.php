@@ -87,7 +87,6 @@ class DetailsTypeTest extends TestCase
                     'references',
                     'features',
                     'attachments',
-                    'show_condition',
                     'condition',
                     'customizations',
                 ],
@@ -97,7 +96,6 @@ class DetailsTypeTest extends TestCase
                 [
                     'references',
                     'attachments',
-                    'show_condition',
                     'condition',
                     'customizations',
                 ],

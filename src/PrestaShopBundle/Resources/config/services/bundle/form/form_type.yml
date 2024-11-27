@@ -434,8 +434,11 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\Product\Details\DetailsType:
     arguments:
-      $productConditionChoiceProvider: '@prestashop.core.form.choice_provider.product_condition_choice_provider'
       $isFeatureEnabled: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_FEATURE_FEATURE_ACTIVE')"
+
+  PrestaShopBundle\Form\Admin\Sell\Product\Details\ConditionType:
+    arguments:
+      $productConditionChoiceProvider: '@prestashop.core.form.choice_provider.product_condition_choice_provider'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Details\FeatureValueType:
 
@@ -456,6 +459,9 @@ services:
     arguments:
       $currencyIsoCode: "@=service('prestashop.adapter.legacy.context').getContext().currency.iso_code"
       $carrierChoiceProvider: '@prestashop.core.form.choice_provider.carrier_by_reference_id'
+
+  PrestaShopBundle\Form\Admin\Sell\Product\Shipping\DeliveryTimeType:
+    arguments:
       $additionalDeliveryTimeNoteTypesProvider: '@prestashop.core.form.choice_provider.delivery_time_note_types_provider'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Pricing\RetailPriceType:
@@ -480,6 +486,11 @@ services:
       $shopByIdChoiceProvider: '@prestashop.adapter.form.choice_provider.shop_name_by_id'
 
   PrestaShopBundle\Form\Admin\Sell\Product\SEO\SEOType:
+    arguments:
+      $friendlyUrlEnabled: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_REWRITING_SETTINGS')"
+      $forceFriendlyUrl: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_FORCE_FRIENDLY_PRODUCT')"
+
+  PrestaShopBundle\Form\Admin\Sell\Product\SEO\MetaInformationType:
     arguments:
       $friendlyUrlEnabled: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_REWRITING_SETTINGS')"
       $forceFriendlyUrl: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_FORCE_FRIENDLY_PRODUCT')"

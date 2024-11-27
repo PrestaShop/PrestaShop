@@ -335,8 +335,10 @@ class ProductFormDataProvider implements FormDataProviderInterface
             ],
             'features' => $this->extractFeatureValues($productForEditing->getProductId()),
             'attachments' => $this->extractAttachmentsData($productForEditing),
-            'show_condition' => $options->showCondition(),
-            'condition' => $options->getCondition(),
+            'condition' => [
+                'show_condition' => $options->showCondition(),
+                'condition' => $options->getCondition(),
+            ],
             'customizations' => $this->extractCustomizationsData($productForEditing, $shopConstraint),
         ];
     }
@@ -563,8 +565,8 @@ class ProductFormDataProvider implements FormDataProviderInterface
                 'weight' => (string) $shipping->getWeight(),
             ],
             'additional_shipping_cost' => (string) $shipping->getAdditionalShippingCost(),
-            'delivery_time_note_type' => $shipping->getDeliveryTimeNoteType(),
-            'delivery_time_notes' => [
+            'delivery_time' => [
+                'type' => $shipping->getDeliveryTimeNoteType(),
                 'in_stock' => $shipping->getLocalizedDeliveryTimeInStockNotes(),
                 'out_of_stock' => $shipping->getLocalizedDeliveryTimeOutOfStockNotes(),
             ],
