@@ -1373,7 +1373,7 @@ class CategoryCore extends ObjectModel
 			FROM `' . _DB_PREFIX_ . 'category_lang`
 			WHERE `id_lang` = ' . (int) $idLang . '
 			' . Shop::addSqlRestrictionOnLang(null, (int) $idShop) . '
-			AND cl.`id_category` = ' . (int) $idCategory);
+			AND `id_category` = ' . (int) $idCategory);
         }
 
         return self::$_links[$idCategory . '-' . $idLang . '-' . $idShop];
