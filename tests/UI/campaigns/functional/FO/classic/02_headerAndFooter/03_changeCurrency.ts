@@ -16,7 +16,6 @@ import {
   foClassicHomePage,
   foClassicSearchResultsPage,
   type Page,
-  utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -40,7 +39,6 @@ Post-condition:
 describe('FO - Header and Footer : Change currency', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let filePath: string;
   let exchangeRateValue: number = 0;
 
   before(async function () {
@@ -49,7 +47,6 @@ describe('FO - Header and Footer : Change currency', async () => {
   });
 
   after(async () => {
-    await utilsFile.deleteFile(filePath);
     await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
