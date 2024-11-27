@@ -1362,8 +1362,8 @@ class CategoryCore extends ObjectModel
         }
 
         if (empty($idShop) || !Validate::isUnsignedInt($idShop)) {
-            $idShop = Context::getContext()->shop->id ? 
-                Context::getContext()->shop->id : 
+            $idShop = Context::getContext()->shop->id ?
+                Context::getContext()->shop->id :
                 Configuration::get('PS_SHOP_DEFAULT');
         }
 
