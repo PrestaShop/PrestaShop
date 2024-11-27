@@ -115,7 +115,7 @@ class UpdateProductCommandsBuilder implements ProductCommandsBuilderInterface
 
         // based on show_condition value, the condition field can be disabled, in that case "condition" won't exist in request
         // and will end up being "" in command if added into config without this if, which causes constraint error
-        if (!empty($formData['details']['condition'])) {
+        if (!empty($formData['details']['condition']['condition'])) {
             $config->addMultiShopField('[details][condition][condition]', 'setCondition', DataField::TYPE_STRING);
         }
 

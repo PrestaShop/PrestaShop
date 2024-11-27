@@ -33,7 +33,6 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use PrestaShopBundle\Form\Admin\Sell\Product\Details\ConditionType;
 
 class DetailsType extends TranslatorAwareType
 {

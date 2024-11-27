@@ -66,7 +66,9 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
         yield [
             [
                 'details' => [
-                    'condition' => null,
+                    'condition' => [
+                        'condition' => null,
+                    ],
                 ],
             ],
             [],
@@ -149,7 +151,9 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
         yield [
             [
                 'details' => [
-                    'condition' => 'new',
+                    'condition' => [
+                        'condition' => 'new',
+                    ],
                 ],
             ],
             [$command],
@@ -161,7 +165,9 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [
                 'details' => [
                     'not_handled' => 0,
-                    'show_condition' => 1,
+                    'condition' => [
+                        'show_condition' => 1,
+                    ],
                 ],
             ],
             [$command],
@@ -366,7 +372,9 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
         yield 'meta title' => [
             [
                 'seo' => [
-                    'meta_title' => $localizedMetaTitles,
+                    'meta_information' => [
+                        'meta_title' => $localizedMetaTitles,
+                    ],
                 ],
             ],
             [$command],
@@ -379,7 +387,9 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
         yield 'meta description' => [
             [
                 'seo' => [
-                    'meta_description' => $localizedMetaDescriptions,
+                    'meta_information' => [
+                        'meta_description' => $localizedMetaDescriptions,
+                    ],
                 ],
             ],
             [$command],
@@ -392,7 +402,9 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
         yield 'link rewrite' => [
             [
                 'seo' => [
-                    'link_rewrite' => $localizedLinkRewrites,
+                    'meta_information' => [
+                        'link_rewrite' => $localizedLinkRewrites,
+                    ],
                 ],
             ],
             [$command],
@@ -897,8 +909,10 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
         yield [
             [
                 'details' => [
-                    'condition' => 'new',
-                    self::MODIFY_ALL_SHOPS_PREFIX . 'condition' => true,
+                    'condition' => [
+                        'condition' => 'new',
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'condition' => true,
+                    ],
                 ],
             ],
             [$command],
@@ -912,8 +926,10 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [
                 'details' => [
                     'not_handled' => 0,
-                    'show_condition' => 0,
-                    self::MODIFY_ALL_SHOPS_PREFIX . 'show_condition' => true,
+                    'condition' => [
+                        'show_condition' => 0,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'show_condition' => true,
+                    ],
                 ],
             ],
             [$command],
@@ -1023,7 +1039,9 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
         yield 'meta title multishop' => [
             [
                 'seo' => [
-                    'meta_title' => $localizedMetaTitles,
+                    'meta_information' => [
+                        'meta_title' => $localizedMetaTitles,
+                    ],
                 ],
             ],
             [$command],
@@ -1036,7 +1054,9 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
         yield 'meta description multishop' => [
             [
                 'seo' => [
-                    'meta_description' => $localizedMetaDescriptions,
+                    'meta_information' => [
+                        'meta_description' => $localizedMetaDescriptions,
+                    ],
                 ],
             ],
             [$command],
@@ -1053,7 +1073,9 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
         yield 'link rewrite multishop' => [
             [
                 'seo' => [
-                    'link_rewrite' => $localizedLinkRewrites,
+                    'meta_information' => [
+                        'link_rewrite' => $localizedLinkRewrites,
+                    ],
                 ],
             ],
             [$command],
@@ -1177,12 +1199,14 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
                     ],
                 ],
                 'seo' => [
-                    'meta_title' => $localizedMetaTitles,
-                    self::MODIFY_ALL_SHOPS_PREFIX . 'meta_title' => false,
-                    'meta_description' => $localizedMetaDescriptions,
-                    self::MODIFY_ALL_SHOPS_PREFIX . 'meta_description' => true,
-                    'link_rewrite' => $localizedLinkRewrites,
-                    self::MODIFY_ALL_SHOPS_PREFIX . 'link_rewrite' => false,
+                    'meta_information' => [
+                        'meta_title' => $localizedMetaTitles,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'meta_title' => false,
+                        'meta_description' => $localizedMetaDescriptions,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'meta_description' => true,
+                        'link_rewrite' => $localizedLinkRewrites,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'link_rewrite' => false,
+                    ],
                     'redirect_option' => [
                         'type' => RedirectType::TYPE_PRODUCT_TEMPORARY,
                         'target' => [

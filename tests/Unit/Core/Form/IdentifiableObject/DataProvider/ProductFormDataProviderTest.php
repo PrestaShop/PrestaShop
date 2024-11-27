@@ -1615,8 +1615,10 @@ class ProductFormDataProviderTest extends TestCase
                 ],
                 'features' => [],
                 'attachments' => [],
-                'show_condition' => false,
-                'condition' => ProductCondition::NEW,
+                'condition' => [
+                    'show_condition' => false,
+                    'condition' => ProductCondition::NEW,
+                ],
                 'customizations' => [],
             ],
             'stock' => [

@@ -514,9 +514,11 @@ class ProductFormDataProvider implements FormDataProviderInterface
         $seoOptions = $productForEditing->getProductSeoOptions();
 
         return [
-            'meta_title' => $seoOptions->getLocalizedMetaTitles(),
-            'meta_description' => $seoOptions->getLocalizedMetaDescriptions(),
-            'link_rewrite' => $seoOptions->getLocalizedLinkRewrites(),
+            'meta_information' => [
+                'meta_title' => $seoOptions->getLocalizedMetaTitles(),
+                'meta_description' => $seoOptions->getLocalizedMetaDescriptions(),
+                'link_rewrite' => $seoOptions->getLocalizedLinkRewrites(),
+            ],
             'redirect_option' => $this->extractRedirectOptionData($productForEditing),
             'tags' => $this->presentTags($productForEditing->getBasicInformation()->getLocalizedTags()),
         ];

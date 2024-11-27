@@ -37,33 +37,6 @@
       {% endblock %}
       {% block extra_stylesheets %}{% endblock %}
     {% endblock %}
-
-
-    <style>
-    /* Todo move to proper file */
-    .tab-content {
-      background-color: transparent;
-    }
-
-    .product-page-v2 #product-tabs-content>.form-contenttab {
-      background-color: transparent;
-    }
-
-    .product-page-v2 #product-tabs-content {
-      border: none;
-    }
-
-    #product-tabs-content .tab-pane > div > .form-group {
-      border: 1px solid var(--cdk-primary-400);
-      background: #ffffff;
-      padding: .9375rem;
-    }
-
-    .product-page .form-contenttab {
-      padding: 0 !important;
-    }
-
-    </style>
   </head>
 
   <body class="lang-{{ ps.isoUser }}{% if ps.isRtlLanguage %} lang-rtl{% endif %} {{ ps.controllerName|escape|lower }}{% if ps.menuCollapsed %} page-sidebar-closed{% endif %}{% if ps.multiShop|default(false) %} multishop-enabled{% endif %}{% if ps.debugMode|default(false) %} developer-mode{% endif %} ps-bo-rebrand"

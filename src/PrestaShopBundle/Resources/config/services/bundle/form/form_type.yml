@@ -485,11 +485,6 @@ services:
       $groupByIdChoiceProvider: '@prestashop.core.form.choice_provider.group_by_id'
       $shopByIdChoiceProvider: '@prestashop.adapter.form.choice_provider.shop_name_by_id'
 
-  PrestaShopBundle\Form\Admin\Sell\Product\SEO\SEOType:
-    arguments:
-      $friendlyUrlEnabled: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_REWRITING_SETTINGS')"
-      $forceFriendlyUrl: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_FORCE_FRIENDLY_PRODUCT')"
-
   PrestaShopBundle\Form\Admin\Sell\Product\SEO\MetaInformationType:
     arguments:
       $friendlyUrlEnabled: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_REWRITING_SETTINGS')"

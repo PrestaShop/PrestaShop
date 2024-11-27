@@ -28,10 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\SEO;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShopBundle\Form\Admin\Type\TextWithLengthCounterType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
@@ -61,11 +59,6 @@ class MetaInformationType extends TranslatorAwareType
     private $forceFriendlyUrl;
 
     /**
-     * @var LegacyContext
-     */
-    private $legacyContext;
-
-    /**
      * @var ConfigurationInterface
      */
     private $configuration;
@@ -76,7 +69,6 @@ class MetaInformationType extends TranslatorAwareType
      * @param RouterInterface $router
      * @param bool $friendlyUrlEnabled
      * @param bool $forceFriendlyUrl
-     * @param LegacyContext $legacyContext
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -84,14 +76,12 @@ class MetaInformationType extends TranslatorAwareType
         RouterInterface $router,
         bool $friendlyUrlEnabled,
         bool $forceFriendlyUrl,
-        LegacyContext $legacyContext,
         ConfigurationInterface $configuration
     ) {
         parent::__construct($translator, $locales);
         $this->router = $router;
         $this->friendlyUrlEnabled = $friendlyUrlEnabled;
         $this->forceFriendlyUrl = $forceFriendlyUrl;
-        $this->legacyContext = $legacyContext;
         $this->configuration = $configuration;
     }
 
@@ -224,7 +214,7 @@ class MetaInformationType extends TranslatorAwareType
         return $alertMessages;
     }
 
-        /**
+    /**
      * {@inheritDoc}
      */
     public function configureOptions(OptionsResolver $resolver)

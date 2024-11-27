@@ -1305,10 +1305,19 @@ $product-page-padding-bottom: 80px !default;
   }
 
   #product-tabs-content {
-    border: 1px solid var(--#{$cdk}primary-400);
+    background-color: transparent;
+    border: transparent;
 
     > .form-contenttab {
-      background-color: var(--#{$cdk}white);
+      padding: 0;
+      background-color: transparent;
+    }
+
+    // First level form groups on each tab will have a padding, border and white background
+    .tab-pane > div > .form-group {
+      padding: var(--#{$cdk}size-16);
+      background: var(--#{$cdk}white);
+      border: 1px solid var(--cdk-primary-400);
     }
 
     // First tab needs a straight top left corner when selected to avoid empty space under the tab button
