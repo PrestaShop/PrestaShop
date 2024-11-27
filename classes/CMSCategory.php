@@ -513,7 +513,7 @@ class CMSCategoryCore extends ObjectModel
             return false;
         }
 
-        if(empty($idShop) || !Validate::isUnsignedInt($idShop)) {
+        if (empty($idShop) || !Validate::isUnsignedInt($idShop)) {
             $idShop = Context::getContext()->shop->id ? 
                 Context::getContext()->shop->id : 
                 Configuration::get('PS_SHOP_DEFAULT');
@@ -529,7 +529,7 @@ class CMSCategoryCore extends ObjectModel
 		WHERE `id_lang` = ' . (int) $idLang . '
 		' . Shop::addSqlRestrictionOnLang(null, (int) $idShop) . '
 		AND `id_cms_category` = ' . (int) $idCMSCategory);
-        self::$_links[$idCMSCategory . '-' . $idLang  . '-' . $idShop] = $result['link_rewrite'];
+        self::$_links[$idCMSCategory . '-' . $idLang . '-' . $idShop] = $result['link_rewrite'];
 
         return $result['link_rewrite'];
     }
