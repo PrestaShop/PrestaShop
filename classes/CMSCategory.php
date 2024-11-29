@@ -519,7 +519,7 @@ class CMSCategoryCore extends ObjectModel
                 Configuration::get('PS_SHOP_DEFAULT');
         }
 
-        if (!isset(self::$_links[$idCategory . '-' . $idLang . '-' . $idShop])) {
+        if (!isset(self::$_links[$idCMSCategory . '-' . $idLang . '-' . $idShop])) {
             self::$_links[$idCMSCategory . '-' . $idLang . '-' . $idShop] = Db::getInstance()->getValue('
     		SELECT `link_rewrite`
     		FROM `' . _DB_PREFIX_ . 'cms_category_lang`
