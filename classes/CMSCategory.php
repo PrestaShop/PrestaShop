@@ -505,7 +505,7 @@ class CMSCategoryCore extends ObjectModel
      * @param int $idLang Language ID
      * @param int $idShop Shop ID
      *
-     * @return bool|mixed
+     * @return bool|string
      */
     public static function getLinkRewrite($idCMSCategory, $idLang, $idShop = null)
     {
