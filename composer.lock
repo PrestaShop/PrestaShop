@@ -5161,12 +5161,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/hummingbird.git",
-                "reference": "48a6a85a39356e4c3a3641ce16e47f9005c5ae33"
+                "reference": "fbb97bcfb0184b1620a959cf32fb9f0e428ae474"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/hummingbird/zipball/48a6a85a39356e4c3a3641ce16e47f9005c5ae33",
-                "reference": "48a6a85a39356e4c3a3641ce16e47f9005c5ae33",
+                "url": "https://api.github.com/repos/PrestaShop/hummingbird/zipball/fbb97bcfb0184b1620a959cf32fb9f0e428ae474",
+                "reference": "fbb97bcfb0184b1620a959cf32fb9f0e428ae474",
                 "shasum": ""
             },
             "require-dev": {
@@ -5192,9 +5192,9 @@
             "description": "Hummingbird theme for develop PrestaShop version",
             "support": {
                 "issues": "https://github.com/PrestaShop/hummingbird/issues",
-                "source": "https://github.com/PrestaShop/hummingbird/tree/develop"
+                "source": "https://github.com/PrestaShop/hummingbird/tree/v1.0.0"
             },
-            "time": "2024-09-30T15:03:15+00:00"
+            "time": "2024-11-29T13:23:35+00:00"
         },
         {
             "name": "prestashop/laminas-code-lts",
