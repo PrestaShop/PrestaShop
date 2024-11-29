@@ -519,19 +519,16 @@ class CMSCategoryCore extends ObjectModel
                 Configuration::get('PS_SHOP_DEFAULT');
         }
 
-        if (isset(self::$_links[$idCMSCategory . '-' . $idLang . '-' . $idShop])) {
-            return self::$_links[$idCMSCategory . '-' . $idLang . '-' . $idShop];
+        if (!isset(self::$_links[$idCategory . '-' . $idLang . '-' . $idShop])) {
+            self::$_links[$idCMSCategory . '-' . $idLang . '-' . $idShop] = Db::getInstance()->getValue('
+    		SELECT `link_rewrite`
+    		FROM `' . _DB_PREFIX_ . 'cms_category_lang`
+    		WHERE `id_lang` = ' . (int) $idLang . '
+    		' . Shop::addSqlRestrictionOnLang(null, (int) $idShop) . '
+    		AND `id_cms_category` = ' . (int) $idCMSCategory);
         }
 
-        $result = Db::getInstance()->getRow('
-		SELECT `link_rewrite`
-		FROM `' . _DB_PREFIX_ . 'cms_category_lang`
-		WHERE `id_lang` = ' . (int) $idLang . '
-		' . Shop::addSqlRestrictionOnLang(null, (int) $idShop) . '
-		AND `id_cms_category` = ' . (int) $idCMSCategory);
-        self::$_links[$idCMSCategory . '-' . $idLang . '-' . $idShop] = $result['link_rewrite'];
-
-        return $result['link_rewrite'];
+        return self::$_links[$idCMSCategory . '-' . $idLang . '-' . $idShop];
     }
 
     public function getLink(?Link $link = null)
