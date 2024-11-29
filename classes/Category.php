@@ -1353,7 +1353,7 @@ class CategoryCore extends ObjectModel
      * @param int $idLang Language ID
      * @param int $idShop Shop ID
      *
-     * @return bool|false
+     * @return bool|string
      */
     public static function getLinkRewrite($idCategory, $idLang, $idShop = null)
     {
