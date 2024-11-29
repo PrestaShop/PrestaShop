@@ -6304,16 +6304,16 @@
         },
         {
             "name": "prestashop/ps_linklist",
-            "version": "v7.0.0",
+            "version": "v7.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_linklist.git",
-                "reference": "d75fb386d1ee204fb0f5bf1fcbe64afd45cbbbdf"
+                "reference": "d68106a05a27d48ed64f178e093aca75f5cf9318"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/d75fb386d1ee204fb0f5bf1fcbe64afd45cbbbdf",
-                "reference": "d75fb386d1ee204fb0f5bf1fcbe64afd45cbbbdf",
+                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/d68106a05a27d48ed64f178e093aca75f5cf9318",
+                "reference": "d68106a05a27d48ed64f178e093aca75f5cf9318",
                 "shasum": ""
             },
             "require": {
@@ -6346,9 +6346,9 @@
             "description": "PrestaShop - Link list",
             "homepage": "https://github.com/PrestaShop/ps_linklist",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_linklist/tree/v7.0.0"
+                "source": "https://github.com/PrestaShop/ps_linklist/tree/v7.0.1"
             },
-            "time": "2024-09-09T14:00:31+00:00"
+            "time": "2024-11-29T15:31:17+00:00"
         },
         {
             "name": "prestashop/ps_mainmenu",
