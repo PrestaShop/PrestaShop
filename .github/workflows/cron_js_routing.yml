@@ -11,7 +11,7 @@ jobs:
       contents: write   #   to create branch (peter-evans/create-pull-request)
       pull-requests: write   #   to create a PR (peter-evans/create-pull-request)
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: Update JS Routing
     strategy:
       fail-fast: false

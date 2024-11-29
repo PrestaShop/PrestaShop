@@ -24,7 +24,7 @@ concurrency:
 jobs:
 
   ESLint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: ESLint
 
     steps:
@@ -49,7 +49,7 @@ jobs:
         run: npm run lint
 
   tscheck:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: TypeScript Check
 
     steps:
@@ -74,7 +74,7 @@ jobs:
         run: npm run check:typescript
 
   Steps-identifiers:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: Checking Steps identifiers
 
     steps:
@@ -106,7 +106,7 @@ jobs:
         run: npm run check:step-identifiers
 
   suites:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: Checking Suites Count
 
     steps:

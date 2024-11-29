@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   js-unit-tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: Run unit tests
     strategy:
       matrix:

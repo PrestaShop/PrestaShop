@@ -11,7 +11,7 @@ jobs:
   # Add pushed reports to GCP on nightly
   push-nightly-reports:
     name: Push reports to nightly.prestashop-project.org
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     strategy:
       fail-fast: false

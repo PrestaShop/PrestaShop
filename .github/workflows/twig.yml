@@ -12,7 +12,7 @@ concurrency:
 jobs:
   twig-cs-check:
     name: Twig CS Check
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Setup PHP

@@ -13,7 +13,7 @@ jobs:
     permissions:
       contents: read   #   to clone the repos and get release assets (shivammathur/setup-php)
     name: Behaviour tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         php: [ '8.1', '8.2', '8.3' ]

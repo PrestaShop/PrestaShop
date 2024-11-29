@@ -11,7 +11,7 @@ concurrency:
 jobs:
   stylelint:
     name: SCSS Lint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
@@ -28,7 +28,7 @@ jobs:
 
   eslint:
     name: ESLint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
@@ -51,7 +51,7 @@ jobs:
 
   yamllint_sf:
     name: YAML Lint (Symfony Check)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -87,7 +87,7 @@ jobs:
 
   yamllint:
     name: YAML Lint (YamlLint Check)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/setup-python@v5
         with:
@@ -111,7 +111,7 @@ jobs:
 
   legacy_link_lint:
     name: Legacy Link Lint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -141,7 +141,7 @@ jobs:
 
   security_attribute_lint:
     name: Admin Security Attribute Linter
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2

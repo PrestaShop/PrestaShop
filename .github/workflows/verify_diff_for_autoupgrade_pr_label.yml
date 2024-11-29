@@ -11,7 +11,7 @@ on:
 jobs:
   update_label:
     name: Update Needs autoupgrade PR label
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Download artifact
         uses: actions/github-script@v6

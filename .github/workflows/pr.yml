@@ -7,7 +7,7 @@ jobs:
   message-check:
     name: Block Merge Commits
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Check is merge PR

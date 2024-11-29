@@ -17,7 +17,7 @@ jobs:
     permissions:
       contents: read  # for actions/checkout to fetch code
     name: Symfony Console
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
