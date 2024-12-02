@@ -5,17 +5,17 @@
       <trans-unit id="350bfcb1e3cfb28ddff48ce525d4f139">
         <source>DD</source>
         <target>DD</target>
-        <note>Line: 839</note>
+        <note>Line: 863</note>
       </trans-unit>
       <trans-unit id="ad05f78187c942f9dd521605fa81f1ba">
         <source>MM</source>
         <target>MM</target>
-        <note>Line: 840</note>
+        <note>Line: 864</note>
       </trans-unit>
       <trans-unit id="8df34bb962577b90d574a51ed2ca757f">
         <source>YYYY</source>
         <target>YYYY</target>
-        <note>Line: 841</note>
+        <note>Line: 865</note>
       </trans-unit>
     </body>
   </file>
@@ -52,7 +52,7 @@
       <trans-unit id="4e46ead161638465b5f8cc4351e559a3">
         <source>Enter a password to transform your guest account into a customer account.</source>
         <target>Enter a password to transform your guest account into a customer account.</target>
-        <note>Line: 131</note>
+        <note>Line: 135</note>
       </trans-unit>
     </body>
   </file>
@@ -91,15 +91,15 @@
   </file>
   <file original="themes/classic/templates/catalog/_partials/product-customization.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="20f4168399201bd498e52bafeb59b478">
-        <source>Don't forget to save your customization to be able to add to cart</source>
-        <target>Don't forget to save your customization to be able to add to cart</target>
-        <note>Line: 29</note>
-      </trans-unit>
       <trans-unit id="6ba73729cf3b0503435d54870d993e8d">
         <source>Your message here</source>
         <target>Your message here</target>
         <note>Line: 38</note>
+      </trans-unit>
+      <trans-unit id="20f4168399201bd498e52bafeb59b478">
+        <source>Don't forget to save your customization to be able to add to cart</source>
+        <target>Don't forget to save your customization to be able to add to cart</target>
+        <note>Line: 29</note>
       </trans-unit>
       <trans-unit id="636d7f8a501e2fc7140c273c9d4e766d">
         <source>1024 char. max</source>
@@ -110,6 +110,25 @@
         <source>No selected file</source>
         <target>No selected file</target>
         <note>Line: 52</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/hummingbird/templates/catalog/_partials/product-customization.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7e8cfff1e4f6fbdc4d6f4149c84e17ed">
+        <source>250 char. max</source>
+        <target>250 char. max</target>
+        <note>Line: 52</note>
+      </trans-unit>
+      <trans-unit id="0da3c8b31e3e2d9d769a86cd3f31949c">
+        <source>.png .jpg .gif</source>
+        <target>.png .jpg .gif</target>
+        <note>Line: 54</note>
+      </trans-unit>
+      <trans-unit id="ebb061953c0454b2c8ee7b0ac615ebcd">
+        <source>Optional</source>
+        <target>Optional</target>
+        <note>Line: 58</note>
       </trans-unit>
     </body>
   </file>

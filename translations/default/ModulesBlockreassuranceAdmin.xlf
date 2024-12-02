@@ -151,15 +151,6 @@ Comment: Confirm uninstall</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/blockreassurance/views/templates/admin/tabs/content/config_elements/cms.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="87d49200bfc48e0bcfd3bae27d5616f3">
-        <source>CMS Page</source>
-        <target>CMS Page</target>
-        <note>Line: 24</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="modules/blockreassurance/views/templates/admin/tabs/content/config_elements/description.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="0ba3309bf076bf416d0bb498fdfcb77f">
@@ -245,6 +236,11 @@ Comment: Confirm uninstall</note>
   </file>
   <file original="modules/blockreassurance/views/templates/admin/tabs/content/listing.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="87d49200bfc48e0bcfd3bae27d5616f3">
+        <source>CMS Page</source>
+        <target>CMS Page</target>
+        <note>Line: 81</note>
+      </trans-unit>
       <trans-unit id="2fbc962c5748d8e3fb7ada6598049a67">
         <source>Block Content</source>
         <target>Block Content</target>
@@ -293,6 +289,16 @@ Comment: Confirm uninstall</note>
   </file>
   <file original="modules/blockreassurance/views/templates/admin/tabs/display/checkout.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="334c4a4c42fdb79d7ebc3e73b517e6f8">
+        <source>none</source>
+        <target>none</target>
+        <note>Line: 41</note>
+      </trans-unit>
+      <trans-unit id="3f01481a13daed04a03caaa1a28ab49f">
+        <source>Main column</source>
+        <target>Main column</target>
+        <note>Line: 30</note>
+      </trans-unit>
       <trans-unit id="e624b27335fc068f4fd8b0bb06cfd47c">
         <source>Specific position for cart page</source>
         <target>Specific position for cart page</target>
@@ -341,16 +347,6 @@ Comment: Confirm uninstall</note>
   </file>
   <file original="modules/blockreassurance/views/templates/admin/tabs/display/product.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="334c4a4c42fdb79d7ebc3e73b517e6f8">
-        <source>none</source>
-        <target>none</target>
-        <note>Line: 41</note>
-      </trans-unit>
-      <trans-unit id="3f01481a13daed04a03caaa1a28ab49f">
-        <source>Main column</source>
-        <target>Main column</target>
-        <note>Line: 30</note>
-      </trans-unit>
       <trans-unit id="56e152954e91d1d5caf567ec1ea12577">
         <source>Specific position for product page</source>
         <target>Specific position for product page</target>
