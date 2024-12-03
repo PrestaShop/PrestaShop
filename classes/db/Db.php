@@ -717,7 +717,9 @@ abstract class DbCore
      * @param string|DbQuery $sql The select query
      * @param string $column The column name
      * @param bool $use_cache Find it in cache first
+     *
      * @return array The array of values
+     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
