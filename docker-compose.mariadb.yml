@@ -1,5 +1,3 @@
-version: '2.1'
-
 volumes:
   db-data:
 
@@ -47,7 +45,7 @@ services:
       PS_COUNTRY: ${PS_COUNTRY:-fr}
       PS_LANGUAGE: ${PS_LANGUAGE:-en}
       PS_DEV_MODE: ${PS_DEV_MODE:-1}
-      PS_ENABLE_SSL: ${PS_ENABLE_SSL:-0}
+      PS_ENABLE_SSL: ${PS_ENABLE_SSL:-1}
       PS_ERASE_DB: ${PS_ERASE_DB:-0}
       PS_USE_DOCKER_MAILDEV: ${PS_USE_DOCKER_MAILDEV:-1}
       ADMIN_MAIL: ${ADMIN_MAIL:-demo@prestashop.com}

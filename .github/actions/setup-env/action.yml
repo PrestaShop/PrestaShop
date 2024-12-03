@@ -43,26 +43,6 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    # Certificate for SSL
-    - name: Generate a Certificate
-      if: inputs.ENABLE_SSL == 'true'
-      shell: bash
-      run: |
-        ## Install MkCert
-          sudo apt-get update
-          sudo apt install libnss3-tools
-          curl -JLO "https://dl.filippo.io/mkcert/latest?for=linux/amd64"
-          chmod +x mkcert-v*-linux-amd64
-          sudo cp mkcert-v*-linux-amd64 /usr/local/bin/mkcert
-          ## Generate certificate
-          mkcert -key-file ${{ inputs.PRESTASHOP_DIR }}/.docker/ssl.key -cert-file ${{ inputs.PRESTASHOP_DIR }}/.docker/ssl.crt localhost
-          ## Link certificate to Chrome Trust Store
-          mkdir -p $HOME/.pki/nssdb
-          certutil -d $HOME/.pki/nssdb -N
-          certutil -d sql:$HOME/.pki/nssdb -n localhost -A -t "TCu,Cu,Tu" -i ${{ inputs.PRESTASHOP_DIR }}/.docker/ssl.crt
-          ## Add self-signed certificate to Chrome Trust Store
-          mkcert -install
-
     # Run composer install outside of docker because inside it regularly has network issues
     - name: Composer Install
       if: inputs.DISABLE_MAKE != 'true'

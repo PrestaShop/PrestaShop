@@ -1,7 +1,17 @@
 #!/bin/sh
 
-if [ $PS_ENABLE_SSL = 1 ]; then
-  if [ -f ./.docker/ssl.key ]; then
+if [ "$PS_ENABLE_SSL" = "true" ] || [ "$PS_ENABLE_SSL" = "1" ]; then
+  if [ -f /tmp/ssl.crt ] && [ ! -f ./.docker/ssl.crt ]; then
+    echo "\n* Copy certificate file from tmp folder ...";
+    cp /tmp/ssl.crt ./.docker/ssl.crt
+  fi
+
+  if [ -f /tmp/ssl.key ] && [ ! -f ./.docker/ssl.key ]; then
+    echo "\n* Copy certificate key file from tmp folder ...";
+    cp /tmp/ssl.key ./.docker/ssl.key
+  fi
+
+  if [ -f ./.docker/ssl.key ] && [ -f ./.docker/ssl.crt ]; then
     echo "\n* Remove default-ssl.conf file ...";
     rm /etc/apache2/sites-available/default-ssl.conf
 
@@ -28,7 +38,8 @@ if [ $PS_ENABLE_SSL = 1 ]; then
     echo "\n* Stop apache ...";
     service apache2 stop
   else
-    echo "\n* The file .docker/ssl.key has not been found.";
+    echo "\n* The file .docker/ssl.key or .docker/ssl.crt have not been found.";
+    exit 1
   fi
 else
   echo "\n* HTTPS is not enabled.";
@@ -175,8 +186,13 @@ fi
 
 echo "\n***"
 echo "**"
-echo "** Front-office: http://${PS_DOMAIN}/"
-echo "**  Back-office: http://${PS_DOMAIN}/admin-dev"
+if [ "$PS_ENABLE_SSL" = "true" ] || [ "$PS_ENABLE_SSL" = "1" ]; then
+  echo "** Front-office: https://${PS_DOMAIN}/"
+  echo "**  Back-office: https://${PS_DOMAIN}/admin-dev"
+else
+  echo "** Front-office: http://${PS_DOMAIN}/"
+  echo "**  Back-office: http://${PS_DOMAIN}/admin-dev"
+fi
 echo "**   Login with:"
 echo "**     username: ${ADMIN_MAIL}"
 echo "**     password: ${ADMIN_PASSWD}"

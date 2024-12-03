@@ -1,5 +1,3 @@
-version: '2.1'
-
 volumes:
   db-data:
 
@@ -28,6 +26,7 @@ services:
         - GROUP_ID=${GROUP_ID:-1000}
         - NODE_VERSION=${NODE_VERSION:-20.17.0}
         - INSTALL_XDEBUG=${INSTALL_XDEBUG:-false}
+        - PS_ENABLE_SSL=${PS_ENABLE_SSL:-1}
     environment:
       DISABLE_MAKE: ${DISABLE_MAKE:-0}
       PS_INSTALL_AUTO: ${PS_INSTALL_AUTO:-1}
@@ -35,13 +34,13 @@ services:
       DB_NAME: ${DB_NAME:-prestashop}
       DB_SERVER: ${DB_SERVER:-mysql}
       DB_PREFIX: ${DB_PREFIX:-ps_}
-      PS_DOMAIN: ${PS_DOMAIN:-localhost:8001}
+      PS_DOMAIN: ${PS_DOMAIN:-localhost:8002}
       PS_FOLDER_INSTALL: ${PS_FOLDER_INSTALL:-install-dev}
       PS_FOLDER_ADMIN: ${PS_FOLDER_ADMIN:-admin-dev}
       PS_COUNTRY: ${PS_COUNTRY:-fr}
       PS_LANGUAGE: ${PS_LANGUAGE:-en}
       PS_DEV_MODE: ${PS_DEV_MODE:-1}
-      PS_ENABLE_SSL: ${PS_ENABLE_SSL:-0}
+      PS_ENABLE_SSL: ${PS_ENABLE_SSL:-1}
       PS_ERASE_DB: ${PS_ERASE_DB:-0}
       PS_USE_DOCKER_MAILDEV: ${PS_USE_DOCKER_MAILDEV:-1}
       ADMIN_MAIL: ${ADMIN_MAIL:-demo@prestashop.com}
