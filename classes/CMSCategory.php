@@ -503,7 +503,7 @@ class CMSCategoryCore extends ObjectModel
      *
      * @param int $idCMSCategory CMS Category ID
      * @param int $idLang Language ID
-     * @param int $idShop Shop ID
+     * @param int|null $idShop Shop ID
      *
      * @return bool|string
      */
