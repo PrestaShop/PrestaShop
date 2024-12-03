@@ -1351,7 +1351,7 @@ class CategoryCore extends ObjectModel
      *
      * @param int $idCategory Category ID
      * @param int $idLang Language ID
-     * @param int $idShop Shop ID
+     * @param int|null $idShop Shop ID
      *
      * @return bool|string
      */
