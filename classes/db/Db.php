@@ -708,6 +708,35 @@ abstract class DbCore
     }
 
     /**
+     * Return a numerical array of values from a column of a SELECT query without the field name as key.
+     * <code>
+     *     // Could return ['1', '2', '3', '4', '5'];
+     *     $products = Db::getInstance()->getColumn('SELECT * FROM ' . _DB_PREFIX_ . 'product', 'id_product');
+     * </code>
+     *
+     * @param string|DbQuery $sql The select query
+     * @param string $column The column name
+     * @param bool $use_cache Find it in cache first
+     * @return array The array of values
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    public function getColumn(string|DbQuery $sql, string $column, bool $use_cache = true): array
+    {
+        if ($sql instanceof DbQuery) {
+            $sql = $sql->build();
+        }
+
+        $result = $this->executeS($sql, $use_cache);
+
+        if (false === $result) {
+            return [];
+        }
+
+        return array_column($result, $column);
+    }
+
+    /**
      * Get number of rows for last result.
      *
      * @return int
