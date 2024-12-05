@@ -103,7 +103,7 @@ class FeatureValueListener implements EventSubscriberInterface
             return $hasPresentValue || !empty($customValue);
         }, false);
 
-        $featureValues = $this->featureValuesChoiceProvider->getChoices(['feature_id' => (int) $data['feature_id'], 'custom' => $hasCustomValue]);
+        $featureValues = $this->featureValuesChoiceProvider->getChoices(['feature_id' => (int) $data['feature_id'], 'custom' => false]);
         $options = $this->getOptions($hasCustomValue || empty($featureValues));
         $options['choices'] = $featureValues;
 
