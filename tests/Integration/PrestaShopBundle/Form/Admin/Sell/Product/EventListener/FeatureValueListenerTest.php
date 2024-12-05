@@ -136,7 +136,7 @@ class FeatureValueListenerTest extends FormListenerTestCase
                 'feature_id' => 42,
                 'custom_value' => [
                     1 => '',
-                    2 => null,
+                    2 => false,
                 ],
             ],
             [
@@ -200,7 +200,7 @@ class FeatureValueListenerTest extends FormListenerTestCase
                 'feature_id' => 42,
                 'custom_value' => [
                     1 => 'custom',
-                    2 => null,
+                    2 => false,
                 ],
             ],
             [],
