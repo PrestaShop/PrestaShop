@@ -138,7 +138,7 @@ export class IframeModalContainer extends ModalContainer implements IframeModalC
         this.closeButton.setAttribute('type', 'button');
         this.closeButton.classList.add('btn', 'btn-outline-secondary', 'btn-lg');
         this.closeButton.dataset.dismiss = 'modal';
-        this.closeButton.innerHTML = params.closeButtonLabel;
+        this.closeButton.innerText = params.closeButtonLabel;
         this.footer.append(this.closeButton);
       }
 
