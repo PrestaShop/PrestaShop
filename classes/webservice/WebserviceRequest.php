@@ -60,13 +60,6 @@ class WebserviceRequestCore
     public $wsUrl;
 
     /**
-     * PrestaShop Webservice Documentation URL.
-     *
-     * @var string
-     */
-    protected $_docUrl = 'https://devdocs.prestashop-project.org/9/webservice';
-
-    /**
      * Set if the authentication key was checked.
      *
      * @var bool
