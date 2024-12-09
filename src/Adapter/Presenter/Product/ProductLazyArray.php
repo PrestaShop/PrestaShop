@@ -1382,7 +1382,7 @@ class ProductLazyArray extends AbstractLazyArray
      *
      * @return array
      */
-    protected function buildGroupedFeatures(array $productFeatures)
+    public function buildGroupedFeatures(array $productFeatures)
     {
         $valuesByFeatureName = [];
         $groupedFeatures = [];
