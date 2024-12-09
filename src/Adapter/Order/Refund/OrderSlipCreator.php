@@ -323,6 +323,11 @@ class OrderSlipCreator
             $orderSlip->order_slip_type = VoucherRefundType::SPECIFIC_AMOUNT_REFUND;
         }
 
+        if ($amount && $orderSlip->order_slip_type == VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND) {
+            $orderSlip->amount -= $amount;
+            $orderSlip->total_products_tax_incl -= $amount;
+        }
+
         if (!$orderSlip->add()) {
             return false;
         }
