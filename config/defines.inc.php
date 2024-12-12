@@ -30,7 +30,8 @@
  * Change this to true to enable the display of notices and deprecations during development.
  * It's strongly recommended to use this mode when developing modules and themes, to avoid any hidden issues.
  * Don't forget to disable debug mode in production - produces a significant performance hit.
- * The code below can be also managed by settings in backoffice. The interface hardcodes the value into this file.
+ * The code below can be also managed by settings in backoffice.
+ * The interface hardcodes the value into this file or into the defines.inc.php if the `PS_MODE_DEV_` define exists.
  */
 if (!defined('_PS_MODE_DEV_')) {
     define('_PS_MODE_DEV_', true);
