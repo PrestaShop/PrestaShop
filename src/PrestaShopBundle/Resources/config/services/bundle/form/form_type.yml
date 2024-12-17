@@ -227,7 +227,8 @@ services:
 
   PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType:
     arguments:
-      $stringArrayToIntegerArrayDataTransformer: '@PrestaShopBundle\Form\DataTransformer\DefaultLanguageToFilledArrayDataTransformer'
+      $defaultLanguageToFilledArrayDataTransformer: '@PrestaShopBundle\Form\DataTransformer\DefaultLanguageToFilledArrayDataTransformer'
+      $stringArrayToIntegerArrayDataTransformer: '@PrestaShopBundle\Form\DataTransformer\StringArrayToIntegerArrayDataTransformer'
       $shopTreeChoiceProvider: '@PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ShopTreeChoiceProvider'
 
   PrestaShopBundle\Form\Admin\Type\ShopSelectorType:

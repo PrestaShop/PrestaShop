@@ -48,6 +48,11 @@ class ShopChoiceTreeType extends AbstractType
     /**
      * @var DataTransformerInterface
      */
+    private $defaultLanguageToFilledArrayDataTransformer;
+
+    /**
+     * @var DataTransformerInterface
+     */
     private $stringArrayToIntegerArrayDataTransformer;
 
     /**
@@ -68,11 +73,13 @@ class ShopChoiceTreeType extends AbstractType
      */
     public function __construct(
         FormChoiceProviderInterface $shopTreeChoiceProvider,
+        DataTransformerInterface $defaultLanguageToFilledArrayDataTransformer,
         DataTransformerInterface $stringArrayToIntegerArrayDataTransformer,
         ShopContextInterface $shopContext,
         FeatureInterface $multiStoreFeature
     ) {
         $this->shopTreeChoiceProvider = $shopTreeChoiceProvider;
+        $this->defaultLanguageToFilledArrayDataTransformer = $defaultLanguageToFilledArrayDataTransformer;
         $this->stringArrayToIntegerArrayDataTransformer = $stringArrayToIntegerArrayDataTransformer;
         $this->shopContext = $shopContext;
         $this->multiStoreFeature = $multiStoreFeature;
@@ -83,6 +90,7 @@ class ShopChoiceTreeType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $builder->addModelTransformer($this->defaultLanguageToFilledArrayDataTransformer);
         $builder->addModelTransformer($this->stringArrayToIntegerArrayDataTransformer);
 
         parent::buildForm($builder, $options);
