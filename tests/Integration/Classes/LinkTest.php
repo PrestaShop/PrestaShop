@@ -62,14 +62,14 @@ class LinkTest extends TestCase
     {
         $filename = basename($this->getProductLink(true, 1, 2)['path']);
 
-        $this->assertEquals('1-2-hummingbird-printed-t-shirt.html', $filename);
+        $this->assertEquals('1-2-hummingbird-printed-t-shirt', $filename);
     }
 
     public function testUrlIgnoresVariantIfNotSpecifiedWithUrlRewriting(): void
     {
         $filename = basename($this->getProductLink(true, 1, null)['path']);
 
-        $this->assertEquals('1-hummingbird-printed-t-shirt.html', $filename);
+        $this->assertEquals('1-hummingbird-printed-t-shirt', $filename);
     }
 
     public function testUrlTakesVariantIntoAccountWithoutUrlRewriting(): void
