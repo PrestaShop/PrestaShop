@@ -918,7 +918,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should check that the column \'Base price (Tax excl.)\' is visible', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkBasePriceColumnVisible', baseContext);
 
-          const basePriceColumnVisible = await utilsFile.isTextInPDF(filePath, 'Base,price,(Tax excl.)');
+          const basePriceColumnVisible = await utilsFile.isTextInPDF(filePath, 'Base price,(Tax excl.)');
           expect(basePriceColumnVisible, 'Base price is not visible!').to.eq(true);
         });
 
