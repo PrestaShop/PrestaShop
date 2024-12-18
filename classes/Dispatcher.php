@@ -118,7 +118,7 @@ class DispatcherCore
         ],
         'product_rule' => [
             'controller' => 'product',
-            'rule' => '{id}{-:id_product_attribute}-{rewrite}.html',
+            'rule' => 'product/{id}{-:id_product_attribute}-{rewrite}',
             'keywords' => [
                 'id' => ['regexp' => '[0-9]+', 'param' => 'id_product'],
                 'id_product_attribute' => ['regexp' => '[0-9]*+', 'param' => 'id_product_attribute'],
