@@ -78,7 +78,7 @@
         "prestashop/ps_brandlist": "^1.0",
         "prestashop/ps_cashondelivery": "^2.0",
         "prestashop/ps_categoryproducts": "^1.0",
-        "prestashop/ps_categorytree": "^2",
+        "prestashop/ps_categorytree": "^3",
         "prestashop/ps_checkpayment": "^2",
         "prestashop/ps_contactinfo": "^3.2",
         "prestashop/ps_crossselling": "^2.0",

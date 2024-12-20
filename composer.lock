@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2665f8f54a56c2e57c743d33a485c655",
+    "content-hash": "a437daf13df2ad2a93100ebe8685f931",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5470,16 +5470,16 @@
         },
         {
             "name": "prestashop/ps_categorytree",
-            "version": "v2.0.3",
+            "version": "v3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_categorytree.git",
-                "reference": "26a3caa0df0fc43933f50fdca829fd763badb8a0"
+                "reference": "83222e414ef3e2e2a20b1b9758f3a615ba917bf3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_categorytree/zipball/26a3caa0df0fc43933f50fdca829fd763badb8a0",
-                "reference": "26a3caa0df0fc43933f50fdca829fd763badb8a0",
+                "url": "https://api.github.com/repos/PrestaShop/ps_categorytree/zipball/83222e414ef3e2e2a20b1b9758f3a615ba917bf3",
+                "reference": "83222e414ef3e2e2a20b1b9758f3a615ba917bf3",
                 "shasum": ""
             },
             "require": {
@@ -5507,9 +5507,9 @@
             "description": "PrestaShop category tree links",
             "homepage": "https://github.com/PrestaShop/ps_categorytree",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_categorytree/tree/v2.0.3"
+                "source": "https://github.com/PrestaShop/ps_categorytree/tree/v3.0.1"
             },
-            "time": "2022-11-16T16:25:45+00:00"
+            "time": "2024-12-03T14:14:45+00:00"
         },
         {
             "name": "prestashop/ps_checkpayment",
