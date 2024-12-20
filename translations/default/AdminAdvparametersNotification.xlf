@@ -99,11 +99,6 @@
   </file>
   <file original="classes/PrestaShopBackup.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="4e0ac45de6bd848503ffa98ff6247f2f">
-        <source>Error deleting</source>
-        <target>Error deleting</target>
-        <note>Line: 192</note>
-      </trans-unit>
       <trans-unit id="47218fe85410a7029c216ef926cef044">
         <source>"Backup" directory does not exist.</source>
         <target>"Backup" directory does not exist.</target>
@@ -133,6 +128,161 @@
   </file>
   <file original="controllers/admin/AdminImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="197f1953efd11637a634a7f9b269eac3">
+        <source>To proceed, please upload a file first.</source>
+        <target>To proceed, please upload a file first.</target>
+        <note>Line: 4099</note>
+      </trans-unit>
+      <trans-unit id="8c9067e52e4440d8a20e74fdc745b0c6">
+        <source>No file was uploaded.</source>
+        <target>No file was uploaded.</target>
+        <note>Line: 704</note>
+      </trans-unit>
+      <trans-unit id="af395851b27882221a6df82c727bca3e">
+        <source>The import directory doesn't exist. Please check your file path.</source>
+        <target>The import directory doesn't exist. Please check your file path.</target>
+        <note>Line: 585</note>
+      </trans-unit>
+      <trans-unit id="c775530fad852632f78395a11820ba23">
+        <source>The import directory must be writable (CHMOD 755 / 777).</source>
+        <target>The import directory must be writable (CHMOD 755 / 777).</target>
+        <note>Line: 589</note>
+      </trans-unit>
+      <trans-unit id="50844c635a86264cc59d737d532df573">
+        <source>An error occurred while uploading / copying the file.</source>
+        <target>An error occurred while uploading / copying the file.</target>
+        <note>Line: 712</note>
+      </trans-unit>
+      <trans-unit id="68e8d36b17584f88614fb3201925a7ac">
+        <source>The uploaded file exceeds the upload_max_filesize directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess.</source>
+        <target>The uploaded file exceeds the upload_max_filesize directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess.</target>
+        <note>Line: 689</note>
+      </trans-unit>
+      <trans-unit id="0bedafc96db94da3f85caa7101944eb5">
+        <source>The uploaded file exceeds the post_max_size directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess, for example:</source>
+        <target>The uploaded file exceeds the post_max_size directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess, for example:</target>
+        <note>Line: 693</note>
+      </trans-unit>
+      <trans-unit id="4f12b222c9659d62afa795987259933f">
+        <source>The uploaded file was only partially uploaded.</source>
+        <target>The uploaded file was only partially uploaded.</target>
+        <note>Line: 700</note>
+      </trans-unit>
+      <trans-unit id="519a3cfe5400ef0f781671c700aaed05">
+        <source>The extension of your file should be ".csv".</source>
+        <target>The extension of your file should be ".csv".</target>
+        <note>Line: 709</note>
+      </trans-unit>
+      <trans-unit id="a080a85258618039d010a2136f85e69f">
+        <source>There is an empty row in the file that won't be imported.</source>
+        <target>There is an empty row in the file that won't be imported.</target>
+        <note>Line: 3518</note>
+      </trans-unit>
+      <trans-unit id="d165f0c742c272ed88dc27acc91e2642">
+        <source>%s import</source>
+        <target>%s import</target>
+        <note>Line: 4087</note>
+      </trans-unit>
+      <trans-unit id="02b5205ddff3073efc5c8b5b9cc165ba">
+        <source>(from %s to %s)</source>
+        <target>(from %s to %s)</target>
+        <note>Line: 4089</note>
+      </trans-unit>
+      <trans-unit id="b53b06c0e98a2db123f953f0059a0948">
+        <source>with truncate</source>
+        <target>with truncate</target>
+        <note>Line: 4092</note>
+      </trans-unit>
+      <trans-unit id="43bf950e043950e2da10f917b902c131">
+        <source>%1$s (ID: %2$s) cannot be saved</source>
+        <target>%1$s (ID: %2$s) cannot be saved</target>
+        <note>Line: 3663</note>
+      </trans-unit>
+      <trans-unit id="32fa1d06b5d0a192c9991c4bf038b30c">
+        <source>Shop is not valid</source>
+        <target>Shop is not valid</target>
+        <note>Line: 1878</note>
+      </trans-unit>
+      <trans-unit id="2666baaca25feea0b2dc641cfab50d8a">
+        <source>Unknown tax rule group ID. You need to create a group with this ID first.</source>
+        <target>Unknown tax rule group ID. You need to create a group with this ID first.</target>
+        <note>Line: 1604</note>
+      </trans-unit>
+      <trans-unit id="994e8f1b72a9fe7a9e8949343be6bde7">
+        <source>%data% cannot be saved</source>
+        <target>%data% cannot be saved</target>
+        <note>Line: 3635</note>
+      </trans-unit>
+      <trans-unit id="4798b868d51d8e259321deff0452c0f9">
+        <source>Rewrite link for %1$s (ID %2$s): re-written as %3$s.</source>
+        <target>Rewrite link for %1$s (ID %2$s): re-written as %3$s.</target>
+        <note>Line: 1762</note>
+      </trans-unit>
+      <trans-unit id="87aae49bd054f2cfa4b7b395dee5f2d3">
+        <source>Discount is invalid</source>
+        <target>Discount is invalid</target>
+        <note>Line: 1953</note>
+      </trans-unit>
+      <trans-unit id="664d4132fc8dc3a158be4692b4246528">
+        <source>Tags list is invalid</source>
+        <target>Tags list is invalid</target>
+        <note>Line: 1980</note>
+      </trans-unit>
+      <trans-unit id="6170902c7935d644e280e440a28d5975">
+        <source>Error copying image: %url%</source>
+        <target>Error copying image: %url%</target>
+        <note>Line: 2291</note>
+      </trans-unit>
+      <trans-unit id="61e49f62654858f3cd3d9b23bee90d06">
+        <source>Product #%id%: the picture (%url%) cannot be saved.</source>
+        <target>Product #%id%: the picture (%url%) cannot be saved.</target>
+        <note>Line: 2048</note>
+      </trans-unit>
+      <trans-unit id="53d9fc1aa79e85c0f845139c6358daee">
+        <source>The category ID must be unique. It can't be the same as the one for Root or Home category.</source>
+        <target>The category ID must be unique. It can't be the same as the one for Root or Home category.</target>
+        <note>Line: 1166</note>
+      </trans-unit>
+      <trans-unit id="7a1bebdbf5770873f8172ecf27b2aa50">
+        <source>The category ID must be unique. It can't be the same as the one for the parent category (ID: %1$s).</source>
+        <target>The category ID must be unique. It can't be the same as the one for the parent category (ID: %1$s).</target>
+        <note>Line: 1190</note>
+      </trans-unit>
+      <trans-unit id="521531266ae042d0725d7a4aa22a49f4">
+        <source>A category can't be its own parent. You should rename it (current name: %1$s).</source>
+        <target>A category can't be its own parent. You should rename it (current name: %1$s).</target>
+        <note>Line: 1207</note>
+      </trans-unit>
+      <trans-unit id="1123af3eab25b7475419fcaecc6c3beb">
+        <source>%category_name% (ID: %id%) cannot be saved</source>
+        <target>%category_name% (ID: %id%) cannot be saved</target>
+        <note>Line: 1234</note>
+      </trans-unit>
+      <trans-unit id="6c1e9fe2a61808296a44cee372124bcb">
+        <source>URL rewriting failed to auto-generate a friendly URL for: %category_name%</source>
+        <target>URL rewriting failed to auto-generate a friendly URL for: %category_name%</target>
+        <note>Line: 1267</note>
+      </trans-unit>
+      <trans-unit id="a118c8120ef45c8b1bed36f341fa45f1">
+        <source>A category cannot be its own parent. The parent category ID is either missing or unknown (ID: %1$s).</source>
+        <target>A category cannot be its own parent. The parent category ID is either missing or unknown (ID: %1$s).</target>
+        <note>Line: 1309</note>
+      </trans-unit>
+      <trans-unit id="7bc08d1a3178f4927b2c07a18f417b4b">
+        <source>The root category cannot be modified.</source>
+        <target>The root category cannot be modified.</target>
+        <note>Line: 1331</note>
+      </trans-unit>
+      <trans-unit id="50fe5f166bc7695a0c0db12ea8a346e7">
+        <source>cannot be copied.</source>
+        <target>cannot be copied.</target>
+        <note>Line: 3560</note>
+      </trans-unit>
+      <trans-unit id="87098ca5171ae766269f50b24ef3189d">
+        <source>%1$s (ID: %2$s) cannot be %3$s</source>
+        <target>%1$s (ID: %2$s) cannot be %3$s</target>
+        <note>Line: 1357</note>
+      </trans-unit>
       <trans-unit id="613260718349db00d0b7b9c1eb77c76c">
         <source>Your file has been successfully imported into your shop. Don't forget to re-build the products' search index.</source>
         <target>Your file has been successfully imported into your shop. Don't forget to re-build the products' search index.</target>
@@ -296,6 +446,11 @@
   </file>
   <file original="src/Adapter/Debug/DebugModeConfiguration.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="667685497be44ab0fc2d4334a512405b">
+        <source>Error: Could not write to file. Make sure that the correct permissions are set on the file %s</source>
+        <target>Error: Could not write to file. Make sure that the correct permissions are set on the file %s</target>
+        <note>Line: 129</note>
+      </trans-unit>
       <trans-unit id="cb2149fee22deb71d4eca9f25e4ab432">
         <source>Error: The cookie name is required when the cookie value is set.</source>
         <target>Error: The cookie name is required when the cookie value is set.</target>
@@ -313,125 +468,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/Adapter/Import/Handler/AbstractImportHandler.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/Adapter/GeneralConfiguration.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="a080a85258618039d010a2136f85e69f">
-        <source>There is an empty row in the file that won't be imported.</source>
-        <target>There is an empty row in the file that won't be imported.</target>
-        <note>Line: 293</note>
-      </trans-unit>
-      <trans-unit id="d165f0c742c272ed88dc27acc91e2642">
-        <source>%s import</source>
-        <target>%s import</target>
-        <note>Line: 319</note>
-      </trans-unit>
-      <trans-unit id="02b5205ddff3073efc5c8b5b9cc165ba">
-        <source>(from %s to %s)</source>
-        <target>(from %s to %s)</target>
-        <note>Line: 324</note>
-      </trans-unit>
-      <trans-unit id="b53b06c0e98a2db123f953f0059a0948">
-        <source>with truncate</source>
-        <target>with truncate</target>
-        <note>Line: 330</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Adapter/Import/Handler/CategoryImportHandler.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="53d9fc1aa79e85c0f845139c6358daee">
-        <source>The category ID must be unique. It can't be the same as the one for Root or Home category.</source>
-        <target>The category ID must be unique. It can't be the same as the one for Root or Home category.</target>
-        <note>Line: 219</note>
-      </trans-unit>
-      <trans-unit id="7a1bebdbf5770873f8172ecf27b2aa50">
-        <source>The category ID must be unique. It can't be the same as the one for the parent category (ID: %1$s).</source>
-        <target>The category ID must be unique. It can't be the same as the one for the parent category (ID: %1$s).</target>
-        <note>Line: 251</note>
-      </trans-unit>
-      <trans-unit id="521531266ae042d0725d7a4aa22a49f4">
-        <source>A category can't be its own parent. You should rename it (current name: %1$s).</source>
-        <target>A category can't be its own parent. You should rename it (current name: %1$s).</target>
-        <note>Line: 271</note>
-      </trans-unit>
-      <trans-unit id="1123af3eab25b7475419fcaecc6c3beb">
-        <source>%category_name% (ID: %id%) cannot be saved</source>
-        <target>%category_name% (ID: %id%) cannot be saved</target>
-        <note>Line: 305</note>
-      </trans-unit>
-      <trans-unit id="6c1e9fe2a61808296a44cee372124bcb">
-        <source>URL rewriting failed to auto-generate a friendly URL for: %category_name%</source>
-        <target>URL rewriting failed to auto-generate a friendly URL for: %category_name%</target>
-        <note>Line: 350</note>
-      </trans-unit>
-      <trans-unit id="a118c8120ef45c8b1bed36f341fa45f1">
-        <source>A category cannot be its own parent. The parent category ID is either missing or unknown (ID: %1$s).</source>
-        <target>A category cannot be its own parent. The parent category ID is either missing or unknown (ID: %1$s).</target>
-        <note>Line: 422</note>
-      </trans-unit>
-      <trans-unit id="7bc08d1a3178f4927b2c07a18f417b4b">
-        <source>The root category cannot be modified.</source>
-        <target>The root category cannot be modified.</target>
-        <note>Line: 447</note>
-      </trans-unit>
-      <trans-unit id="50fe5f166bc7695a0c0db12ea8a346e7">
-        <source>cannot be copied.</source>
-        <target>cannot be copied.</target>
-        <note>Line: 491</note>
-      </trans-unit>
-      <trans-unit id="87098ca5171ae766269f50b24ef3189d">
-        <source>%1$s (ID: %2$s) cannot be %3$s</source>
-        <target>%1$s (ID: %2$s) cannot be %3$s</target>
-        <note>Line: 500</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Adapter/Import/Handler/ProductImportHandler.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="4798b868d51d8e259321deff0452c0f9">
-        <source>Rewrite link for %1$s (ID %2$s): re-written as %3$s.</source>
-        <target>Rewrite link for %1$s (ID %2$s): re-written as %3$s.</target>
-        <note>Line: 759</note>
-      </trans-unit>
-      <trans-unit id="2666baaca25feea0b2dc641cfab50d8a">
-        <source>Unknown tax rule group ID. You need to create a group with this ID first.</source>
-        <target>Unknown tax rule group ID. You need to create a group with this ID first.</target>
-        <note>Line: 491</note>
-      </trans-unit>
-      <trans-unit id="43bf950e043950e2da10f917b902c131">
-        <source>%1$s (ID: %2$s) cannot be saved</source>
-        <target>%1$s (ID: %2$s) cannot be saved</target>
-        <note>Line: 676</note>
-      </trans-unit>
-      <trans-unit id="994e8f1b72a9fe7a9e8949343be6bde7">
-        <source>%data% cannot be saved</source>
-        <target>%data% cannot be saved</target>
-        <note>Line: 705</note>
-      </trans-unit>
-      <trans-unit id="32fa1d06b5d0a192c9991c4bf038b30c">
-        <source>Shop is not valid</source>
-        <target>Shop is not valid</target>
-        <note>Line: 464</note>
-      </trans-unit>
-      <trans-unit id="87aae49bd054f2cfa4b7b395dee5f2d3">
-        <source>Discount is invalid</source>
-        <target>Discount is invalid</target>
-        <note>Line: 970</note>
-      </trans-unit>
-      <trans-unit id="664d4132fc8dc3a158be4692b4246528">
-        <source>Tags list is invalid</source>
-        <target>Tags list is invalid</target>
-        <note>Line: 1019</note>
-      </trans-unit>
-      <trans-unit id="6170902c7935d644e280e440a28d5975">
-        <source>Error copying image: %url%</source>
-        <target>Error copying image: %url%</target>
-        <note>Line: 1108</note>
-      </trans-unit>
-      <trans-unit id="61e49f62654858f3cd3d9b23bee90d06">
-        <source>Product #%id%: the picture (%url%) cannot be saved.</source>
-        <target>Product #%id%: the picture (%url%) cannot be saved.</target>
-        <note>Line: 1126</note>
+      <trans-unit id="6234474f7c68eb4436d392ed9645136b">
+        <source>The SameSite=None attribute is only available in secure mode.</source>
+        <target>The SameSite=None attribute is only available in secure mode.</target>
+        <note>Line: 80</note>
       </trans-unit>
     </body>
   </file>
@@ -710,44 +752,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/Core/Import/File/FileUploader.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="68e8d36b17584f88614fb3201925a7ac">
-        <source>The uploaded file exceeds the upload_max_filesize directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess.</source>
-        <target>The uploaded file exceeds the upload_max_filesize directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess.</target>
-        <note>Line: 111</note>
-      </trans-unit>
-      <trans-unit id="0bedafc96db94da3f85caa7101944eb5">
-        <source>The uploaded file exceeds the post_max_size directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess, for example:</source>
-        <target>The uploaded file exceeds the post_max_size directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess, for example:</target>
-        <note>Line: 115</note>
-      </trans-unit>
-      <trans-unit id="4f12b222c9659d62afa795987259933f">
-        <source>The uploaded file was only partially uploaded.</source>
-        <target>The uploaded file was only partially uploaded.</target>
-        <note>Line: 120</note>
-      </trans-unit>
-      <trans-unit id="519a3cfe5400ef0f781671c700aaed05">
-        <source>The extension of your file should be ".csv".</source>
-        <target>The extension of your file should be ".csv".</target>
-        <note>Line: 134</note>
-      </trans-unit>
-      <trans-unit id="50844c635a86264cc59d737d532df573">
-        <source>An error occurred while uploading / copying the file.</source>
-        <target>An error occurred while uploading / copying the file.</target>
-        <note>Line: 90</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Core/SqlManager/Configuration/SqlRequestConfiguration.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="667685497be44ab0fc2d4334a512405b">
-        <source>Error: Could not write to file. Make sure that the correct permissions are set on the file %s</source>
-        <target>Error: Could not write to file. Make sure that the correct permissions are set on the file %s</target>
-        <note>Line: 98</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/AdminAPIController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="f0cd19d962eccf83b6da85a5c0754c11">
@@ -757,17 +761,13 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/AdministrationController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="6234474f7c68eb4436d392ed9645136b">
-        <source>The SameSite=None attribute is only available in secure mode.</source>
-        <target>The SameSite=None attribute is only available in secure mode.</target>
-        <note>Line: 208</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/BackupController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="4e0ac45de6bd848503ffa98ff6247f2f">
+        <source>Error deleting</source>
+        <target>Error deleting</target>
+        <note>Line: 190</note>
+      </trans-unit>
       <trans-unit id="f36c9a20c2ce51f491c944e41fde5ace">
         <source>It appears the backup was successful, however you must download and carefully verify the backup file before proceeding.</source>
         <target>It appears the backup was successful, however you must download and carefully verify the backup file before proceeding.</target>
@@ -819,25 +819,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="af395851b27882221a6df82c727bca3e">
-        <source>The import directory doesn't exist. Please check your file path.</source>
-        <target>The import directory doesn't exist. Please check your file path.</target>
-        <note>Line: 386</note>
-      </trans-unit>
-      <trans-unit id="c775530fad852632f78395a11820ba23">
-        <source>The import directory must be writable (CHMOD 755 / 777).</source>
-        <target>The import directory must be writable (CHMOD 755 / 777).</target>
-        <note>Line: 399</note>
-      </trans-unit>
-      <trans-unit id="8c9067e52e4440d8a20e74fdc745b0c6">
-        <source>No file was uploaded.</source>
-        <target>No file was uploaded.</target>
-        <note>Line: 158</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ImportDataConfigurationController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="1ffbb6a3722eb0c39784c1c646e104cd">
@@ -881,6 +862,11 @@
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/WebserviceController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="3a59a0e5e521300876d4f2c596d6aeca">
+        <source>Key length must be %length% characters long.</source>
+        <target>Key length must be %length% characters long.</target>
+        <note>Line: 374</note>
+      </trans-unit>
       <trans-unit id="441006dbdaef41a163047624fe1241ab">
         <source>This key already exists.</source>
         <target>This key already exists.</target>
@@ -912,15 +898,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Import/ImportFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="197f1953efd11637a634a7f9b269eac3">
-        <source>To proceed, please upload a file first.</source>
-        <target>To proceed, please upload a file first.</target>
-        <note>Line: 75</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Import/ImportType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e4cdcd51e6cf787d4ecc7d813f0c23cb">
@@ -932,11 +909,6 @@
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Webservice/WebserviceKeyType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="3a59a0e5e521300876d4f2c596d6aeca">
-        <source>Key length must be %length% characters long.</source>
-        <target>Key length must be %length% characters long.</target>
-        <note>Line: 111</note>
-      </trans-unit>
       <trans-unit id="2cb84ea6e832a3190d3ad11a3e1f415c">
         <source>Only non-accented characters, numbers, and the following special characters are allowed: %allowed_characters%</source>
         <target>Only non-accented characters, numbers, and the following special characters are allowed: %allowed_characters%</target>

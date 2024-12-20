@@ -250,11 +250,6 @@
   </file>
   <file original="themes/hummingbird/modules/blockwishlist/views/templates/components/modals/create.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="ea4788705e6873b424c65e91c2846b19">
-        <source>Cancel</source>
-        <target>Cancel</target>
-        <note>Line: 12</note>
-      </trans-unit>
       <trans-unit id="972d48662f3cf5d0514a3cbba209837a">
         <source>Wishlist name</source>
         <target>Wishlist name</target>
@@ -279,6 +274,11 @@
   </file>
   <file original="themes/hummingbird/modules/blockwishlist/views/templates/components/modals/delete.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="ea4788705e6873b424c65e91c2846b19">
+        <source>Cancel</source>
+        <target>Cancel</target>
+        <note>Line: 17</note>
+      </trans-unit>
       <trans-unit id="a1cfe7cbeafd513db812282da3f01704">
         <source>Remove product from wishlist</source>
         <target>Remove product from wishlist</target>

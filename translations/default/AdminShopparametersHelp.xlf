@@ -73,107 +73,107 @@
       <trans-unit id="12399d580627a1a5889cdc44e6e48b5a">
         <source>Enable the automatic indexing of products. If you enable this feature, the products will be indexed in the search automatically when they are saved. If the feature is disabled, you will have to index products manually by using the links provided in the field set.</source>
         <target>Enable the automatic indexing of products. If you enable this feature, the products will be indexed in the search automatically when they are saved. If the feature is disabled, you will have to index products manually by using the links provided in the field set.</target>
-        <note>Line: 120</note>
+        <note>Line: 97</note>
       </trans-unit>
       <trans-unit id="a5cb89e5bcb48c0708ee6837a5944d3e">
         <source>By default, to search for “blouse”, you have to enter “blous”, “blo”, etc (beginning of the word) – but not “lous” (within the word).</source>
         <target>By default, to search for “blouse”, you have to enter “blous”, “blo”, etc (beginning of the word) – but not “lous” (within the word).</target>
-        <note>Line: 135</note>
+        <note>Line: 112</note>
       </trans-unit>
       <trans-unit id="d2e38e24e467d35cc5881e083e05b823">
         <source>With this option enabled, it also gives the good result if you search for “lous”, “ouse”, or anything contained in the word.</source>
         <target>With this option enabled, it also gives the good result if you search for “lous”, “ouse”, or anything contained in the word.</target>
-        <note>Line: 140</note>
+        <note>Line: 117</note>
       </trans-unit>
       <trans-unit id="9110055bdc92744713baa237b26f8ac7">
         <source>Enable search within a whole word, rather than from its beginning only.</source>
         <target>Enable search within a whole word, rather than from its beginning only.</target>
-        <note>Line: 146</note>
+        <note>Line: 123</note>
       </trans-unit>
       <trans-unit id="0e665a9cf278d49f43c4bb4cb9a7c29f">
         <source>It checks if the searched term is contained in the indexed word. This may be resource-consuming.</source>
         <target>It checks if the searched term is contained in the indexed word. This may be resource-consuming.</target>
-        <note>Line: 151</note>
+        <note>Line: 128</note>
       </trans-unit>
       <trans-unit id="1122eba5946331d2709712f64fa1d66b">
         <source>By default, if you search "book", you will have "book", "bookcase" and "bookend".</source>
         <target>By default, if you search "book", you will have "book", "bookcase" and "bookend".</target>
-        <note>Line: 163</note>
+        <note>Line: 140</note>
       </trans-unit>
       <trans-unit id="0b1d71ac92f27198d2bd1e6cd49cec1b">
         <source>With this option enabled, it only gives one result “book”, as exact end of the indexed word is matching.</source>
         <target>With this option enabled, it only gives one result “book”, as exact end of the indexed word is matching.</target>
-        <note>Line: 168</note>
+        <note>Line: 145</note>
       </trans-unit>
       <trans-unit id="c4474326e7d8129b7c04ada10f34f5b1">
         <source>Enable more precise search with the end of the word.</source>
         <target>Enable more precise search with the end of the word.</target>
-        <note>Line: 174</note>
+        <note>Line: 151</note>
       </trans-unit>
       <trans-unit id="efb6bc8d1ee1c5527d494ba15ee3109d">
         <source>It checks if the searched term is the exact end of the indexed word.</source>
         <target>It checks if the searched term is the exact end of the indexed word.</target>
-        <note>Line: 179</note>
+        <note>Line: 156</note>
       </trans-unit>
       <trans-unit id="b080303b551112c7b9dcdf6a21051f42">
         <source>By default, the fuzzy search is enabled. It means spelling errors are allowed, e.g. you can search for "bird" with words like "burd", "bard" or "beerd".</source>
         <target>By default, the fuzzy search is enabled. It means spelling errors are allowed, e.g. you can search for "bird" with words like "burd", "bard" or "beerd".</target>
-        <note>Line: 191</note>
+        <note>Line: 168</note>
       </trans-unit>
       <trans-unit id="39e61e5c1261f090e3c56f494a315f07">
         <source>Disabling this option will require exact spelling for the search to match results.</source>
         <target>Disabling this option will require exact spelling for the search to match results.</target>
-        <note>Line: 196</note>
+        <note>Line: 173</note>
       </trans-unit>
       <trans-unit id="2324c421f8c5376051c024f15232cd80">
         <source>Enable approximate string matching.</source>
         <target>Enable approximate string matching.</target>
-        <note>Line: 202</note>
+        <note>Line: 179</note>
       </trans-unit>
       <trans-unit id="a4b432b49016cf0de70c747fde4f815b">
         <source>Note that this option is resource-consuming: the more you search, the longer it takes.</source>
         <target>Note that this option is resource-consuming: the more you search, the longer it takes.</target>
-        <note>Line: 215</note>
+        <note>Line: 192</note>
       </trans-unit>
       <trans-unit id="5f6092eeaf31414a503b747005ceedc5">
         <source>This option defines how much different can the alternative words found by fuzzy search be. Or, how many characters can be different/missing/added. The default value is 5.</source>
         <target>This option defines how much different can the alternative words found by fuzzy search be. Or, how many characters can be different/missing/added. The default value is 5.</target>
-        <note>Line: 230</note>
+        <note>Line: 207</note>
       </trans-unit>
       <trans-unit id="6392d16e9ae94967fe13716b69e1d0b2">
         <source>Only words fewer or equal to this maximum length will be searched.</source>
         <target>Only words fewer or equal to this maximum length will be searched.</target>
-        <note>Line: 245</note>
+        <note>Line: 222</note>
       </trans-unit>
       <trans-unit id="2b610a936a358875e6f5a01564a3a0e6">
         <source>This parameter will only be used if the fuzzy search is activated: the lower the value, the more tolerant your search will be.</source>
         <target>This parameter will only be used if the fuzzy search is activated: the lower the value, the more tolerant your search will be.</target>
-        <note>Line: 250</note>
+        <note>Line: 227</note>
       </trans-unit>
       <trans-unit id="645115aba5ef431a04da95c746477544">
         <source>Only words this size or larger will be indexed.</source>
         <target>Only words this size or larger will be indexed.</target>
-        <note>Line: 266</note>
+        <note>Line: 243</note>
       </trans-unit>
       <trans-unit id="2c2666c9eee818342b0aff77dda51990">
         <source>Please enter the index words separated by a "|".</source>
         <target>Please enter the index words separated by a "|".</target>
-        <note>Line: 278</note>
+        <note>Line: 255</note>
       </trans-unit>
       <trans-unit id="786471035f60ea5955fd93f6998e8637">
         <source>Enter each alias separated by a comma (e.g. 'prestshop,preztashop,prestasohp').</source>
         <target>Enter each alias separated by a comma (e.g. 'prestshop,preztashop,prestasohp').</target>
-        <note>Line: 440</note>
+        <note>Line: 417</note>
       </trans-unit>
       <trans-unit id="88851f53412ccb796508fd5f48e7a44f">
         <source><![CDATA[Forbidden characters: <>;=#{}]]></source>
         <target><![CDATA[Forbidden characters: <>;=#{}]]></target>
-        <note>Line: 441</note>
+        <note>Line: 418</note>
       </trans-unit>
       <trans-unit id="01d2aac5d20787a1e873f2bdc79b514a">
         <source>Search this word instead.</source>
         <target>Search this word instead.</target>
-        <note>Line: 449</note>
+        <note>Line: 426</note>
       </trans-unit>
     </body>
   </file>
@@ -448,17 +448,13 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderReturnStates/OrderReturnStateType.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="00b963b1cb1aad2142ae67ce65329944">
         <source>Status will be highlighted in this color. HTML colors only.</source>
         <target>Status will be highlighted in this color. HTML colors only.</target>
-        <note>Line: 86</note>
+        <note>Line: 161</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="83b262520a65657b95fd686817c56a09">
         <source>Order status (e.g. 'Pending').</source>
         <target>Order status (e.g. 'Pending').</target>
@@ -613,37 +609,37 @@
       <trans-unit id="bdd3f1e97760014483e852ca58e8f3c1">
         <source>On backorder</source>
         <target>On backorder</target>
-        <note>Line: 138</note>
+        <note>Line: 139</note>
       </trans-unit>
       <trans-unit id="b55197a49e8c4cd8c314bc2aa39d6feb">
         <source>Out of stock</source>
         <target>Out of stock</target>
-        <note>Line: 152</note>
+        <note>Line: 154</note>
       </trans-unit>
       <trans-unit id="4b7f36059725914c3abe3fe69a42d860">
         <source>Advised for European merchants to be legally compliant (eg: Delivered within 3-4 days)</source>
         <target>Advised for European merchants to be legally compliant (eg: Delivered within 3-4 days)</target>
-        <note>Line: 163</note>
+        <note>Line: 166</note>
       </trans-unit>
       <trans-unit id="777ca35e6f4ddd56c7b8c16d8f74ad13">
         <source>Delivered within 3-4 days</source>
         <target>Delivered within 3-4 days</target>
-        <note>Line: 173</note>
+        <note>Line: 176</note>
       </trans-unit>
       <trans-unit id="29474c2b0b3e4d053abd526ed118b420">
         <source>Advised for European merchants to be legally compliant (eg: Delivered within 5-7 days)</source>
         <target>Advised for European merchants to be legally compliant (eg: Delivered within 5-7 days)</target>
-        <note>Line: 184</note>
+        <note>Line: 187</note>
       </trans-unit>
       <trans-unit id="02746d0355a6c94c9ca770302e9da1ca">
         <source>Delivered within 5-7 days</source>
         <target>Delivered within 5-7 days</target>
-        <note>Line: 194</note>
+        <note>Line: 197</note>
       </trans-unit>
       <trans-unit id="6e39e91b64484f1b075287486b74a9a2">
         <source>Note that the label will be displayed only if backorders are denied.</source>
         <target>Note that the label will be displayed only if backorders are denied.</target>
-        <note>Line: 205</note>
+        <note>Line: 208</note>
       </trans-unit>
     </body>
   </file>

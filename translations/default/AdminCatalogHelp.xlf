@@ -161,12 +161,21 @@
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminShopController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5f4efe2735311bfd3e5784705fb0110f">
+        <source>Number of days this file can be accessed by customers. Set to zero for unlimited access.</source>
+        <target>Number of days this file can be accessed by customers. Set to zero for unlimited access.</target>
+        <note>Line: 300</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminShopGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="22cbf85c41427960736dc10cfec5faf4">
         <source>Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").</source>
         <target>Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").</target>
-        <note>Line: 438</note>
+        <note>Line: 207</note>
       </trans-unit>
     </body>
   </file>
@@ -248,6 +257,25 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="dbb5df5ca2112e0125b866522e062df5">
+        <source>This will be the default displayed availability of a product, if there is at least 1 in stock. If you don't enter anything, nothing will be displayed. Further customization is possible for each product.</source>
+        <target>This will be the default displayed availability of a product, if there is at least 1 in stock. If you don't enter anything, nothing will be displayed. Further customization is possible for each product.</target>
+        <note>Line: 128</note>
+      </trans-unit>
+      <trans-unit id="2b39a1e77e6bd2f3c0afe07f105c7f5a">
+        <source>This will be the default displayed availability of a product, if it's not in stock and backordering it is enabled. If you don't enter anything, nothing will be displayed. Further customization is possible for each product.</source>
+        <target>This will be the default displayed availability of a product, if it's not in stock and backordering it is enabled. If you don't enter anything, nothing will be displayed. Further customization is possible for each product.</target>
+        <note>Line: 143</note>
+      </trans-unit>
+      <trans-unit id="e997b584e38bc9e3a34f92c46ef737cf">
+        <source>This will be the default displayed availability of a product, if it's not in stock and backordering it is denied. If you don't enter anything, nothing will be displayed. Further customization is possible for each product.</source>
+        <target>This will be the default displayed availability of a product, if it's not in stock and backordering it is denied. If you don't enter anything, nothing will be displayed. Further customization is possible for each product.</target>
+        <note>Line: 158</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Improve/Design/Pages/CmsPageCategoryType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="461832a83a68a8e85f96044921b51704">
@@ -259,24 +287,20 @@
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeGroupType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="580de47d3bc3e99a0b6aba55066a983a">
+        <source>The way the attribute's values will be presented to the customers in the product's page.</source>
+        <target>The way the attribute's values will be presented to the customers in the product's page.</target>
+        <note>Line: 101</note>
+      </trans-unit>
+      <trans-unit id="f2d1c5443636295e9720caac90ea8d93">
+        <source>Your internal name for this attribute.</source>
+        <target>Your internal name for this attribute.</target>
+        <note>Line: 78</note>
+      </trans-unit>
       <trans-unit id="b5e6921c2d093fbcb0088c9466ee9983">
         <source>The public name for this attribute, displayed to the customers.</source>
         <target>The public name for this attribute, displayed to the customers.</target>
         <note>Line: 95</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f2d1c5443636295e9720caac90ea8d93">
-        <source>Your internal name for this attribute.</source>
-        <target>Your internal name for this attribute.</target>
-        <note>Line: 106</note>
-      </trans-unit>
-      <trans-unit id="580de47d3bc3e99a0b6aba55066a983a">
-        <source>The way the attribute's values will be presented to the customers in the product's page.</source>
-        <target>The way the attribute's values will be presented to the customers in the product's page.</target>
-        <note>Line: 89</note>
       </trans-unit>
     </body>
   </file>
@@ -321,12 +345,17 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Combination/LowStockThresholdType.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Combination/CombinationStockType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="1f24923e0351fff041635c7064d7d94c">
-        <source><![CDATA[The email will be sent to all users who have access to the Stock page. To modify permissions, go to [1]Advanced Parameters > Team[/1].]]></source>
-        <target><![CDATA[The email will be sent to all users who have access to the Stock page. To modify permissions, go to [1]Advanced Parameters > Team[/1].]]></target>
-        <note>Line: 65</note>
+      <trans-unit id="21ff177c36a5c41ca7d9ede46ceb5ac4">
+        <source>This will be the displayed availability of the combination, if there is at least 1 in stock. If you don't enter anything, the base value set on the product will be used.</source>
+        <target>This will be the displayed availability of the combination, if there is at least 1 in stock. If you don't enter anything, the base value set on the product will be used.</target>
+        <note>Line: 83</note>
+      </trans-unit>
+      <trans-unit id="4dae4d27021765208ae8fba5a45a9fde">
+        <source>This will be the displayed availability of the combination, if it's not in stock. If you don't enter anything, the base value set on the product will be used.</source>
+        <target>This will be the displayed availability of the combination, if it's not in stock. If you don't enter anything, the base value set on the product will be used.</target>
+        <note>Line: 106</note>
       </trans-unit>
     </body>
   </file>
@@ -524,12 +553,35 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Stock/AvailabilityType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2a06390040d49692fb8fa7584e1ea111">
+        <source><![CDATA[This will be the displayed availability of the product, if there is at least 1 in stock. If you don't enter anything, value from [1]Shop Parameters > Product Settings[/1] will be used.]]></source>
+        <target><![CDATA[This will be the displayed availability of the product, if there is at least 1 in stock. If you don't enter anything, value from [1]Shop Parameters > Product Settings[/1] will be used.]]></target>
+        <note>Line: 109</note>
+      </trans-unit>
+      <trans-unit id="84d1664447cfb64f77eb58f8ecc7ab42">
+        <source><![CDATA[This will be the displayed availability of the product, if it's not in stock. If you don't enter anything, value from [1]Shop Parameters > Product Settings[/1] will be used.]]></source>
+        <target><![CDATA[This will be the displayed availability of the product, if it's not in stock. If you don't enter anything, value from [1]Shop Parameters > Product Settings[/1] will be used.]]></target>
+        <note>Line: 138</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Stock/QuantityType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="ea8d1b4f32f86030683d8f9252c0a3e1">
         <source>The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity.</source>
         <target>The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity.</target>
         <note>Line: 127</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Stock/StockOptionsType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1f24923e0351fff041635c7064d7d94c">
+        <source><![CDATA[The email will be sent to all users who have access to the Stock page. To modify permissions, go to [1]Advanced Parameters > Team[/1].]]></source>
+        <target><![CDATA[The email will be sent to all users who have access to the Stock page. To modify permissions, go to [1]Advanced Parameters > Team[/1].]]></target>
+        <note>Line: 79</note>
       </trans-unit>
     </body>
   </file>
@@ -544,11 +596,6 @@
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Stock/VirtualProductFileType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="5f4efe2735311bfd3e5784705fb0110f">
-        <source>Number of days this file can be accessed by customers. Set to zero for unlimited access.</source>
-        <target>Number of days this file can be accessed by customers. Set to zero for unlimited access.</target>
-        <note>Line: 160</note>
-      </trans-unit>
       <trans-unit id="dbcf3c5f67528da5cf59dc0c042748da">
         <source>Upload a file from your computer (%maxUploadSize% max.)</source>
         <target>Upload a file from your computer (%maxUploadSize% max.)</target>

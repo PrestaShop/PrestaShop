@@ -137,10 +137,10 @@
   </file>
   <file original="src/Adapter/Category/CategoryProductSearchProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="ad24ffca4f9e9c0c7e80fe1512df6db9">
-        <source>Relevance</source>
-        <target>Relevance</target>
-        <note>Line: 133</note>
+      <trans-unit id="bd7929bc6bed5d8ec99db715a980ba04">
+        <source>Best sales</source>
+        <target>Best sales</target>
+        <note>Line: 136</note>
       </trans-unit>
     </body>
   </file>
@@ -198,32 +198,41 @@
       <trans-unit id="348325afced7f3da215310efbe21f1c1">
         <source>Last items in stock</source>
         <target>Last items in stock</target>
-        <note>Line: 1136</note>
+        <note>Line: 1147</note>
       </trans-unit>
       <trans-unit id="cb3c718c905f00adbb6735f55bfb38ef">
         <source>Product available with different options</source>
         <target>Product available with different options</target>
-        <note>Line: 1188</note>
+        <note>Line: 1209</note>
       </trans-unit>
       <trans-unit id="a3b6a4d0897451813950029a3066f219">
         <source>ean13</source>
         <target>ean13</target>
-        <note>Line: 1253</note>
+        <note>Line: 1270</note>
       </trans-unit>
       <trans-unit id="6496117322fd76fa12ac1b87d8a4db6c">
         <source>isbn</source>
         <target>isbn</target>
-        <note>Line: 1255</note>
+        <note>Line: 1272</note>
       </trans-unit>
       <trans-unit id="2f9e567efb6a38663162f65eaac2d73b">
         <source>upc</source>
         <target>upc</target>
-        <note>Line: 1257</note>
+        <note>Line: 1274</note>
       </trans-unit>
       <trans-unit id="294598238a4d88a9920c7e6fba9bb843">
         <source>MPN</source>
         <target>MPN</target>
-        <note>Line: 1259</note>
+        <note>Line: 1276</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Adapter/Search/SearchProductSearchProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ad24ffca4f9e9c0c7e80fe1512df6db9">
+        <source>Relevance</source>
+        <target>Relevance</target>
+        <note>Line: 146</note>
       </trans-unit>
     </body>
   </file>
@@ -466,11 +475,6 @@
   </file>
   <file original="themes/classic/templates/catalog/_partials/product-customization.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="54c02ba7929b1fda4847991a45b58a48">
-        <source>Product customization</source>
-        <target>Product customization</target>
-        <note>Line: 28</note>
-      </trans-unit>
       <trans-unit id="5d1190edfb16f1dcaaecc56570c864be">
         <source>Your customization:</source>
         <target>Your customization:</target>
@@ -480,11 +484,6 @@
   </file>
   <file original="themes/classic/templates/catalog/_partials/product-details.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="63d5049791d9d79d86e9a108b0a999ca">
-        <source>Reference</source>
-        <target>Reference</target>
-        <note>Line: 33</note>
-      </trans-unit>
       <trans-unit id="1be6f9eb563f3bf85c78b4219bf09de9">
         <source>Brand</source>
         <target>Brand</target>
@@ -519,11 +518,6 @@
   </file>
   <file original="themes/classic/templates/catalog/_partials/product-discounts.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="694e8d1f2ee056f98ee488bdc4982d73">
-        <source>Quantity</source>
-        <target>Quantity</target>
-        <note>Line: 32</note>
-      </trans-unit>
       <trans-unit id="861c0c6ef832cd96c5fe152f9d610973">
         <source>You Save</source>
         <target>You Save</target>
@@ -696,22 +690,37 @@
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/templates/customer/_partials/order-detail-return.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/classic/templates/customer/_partials/order-detail-no-return.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="6c957f72dc8cdacc75762f2cbdcdfaf2">
         <source>Unit price</source>
         <target>Unit price</target>
-        <note>Line: 36</note>
+        <note>Line: 32</note>
+      </trans-unit>
+      <trans-unit id="694e8d1f2ee056f98ee488bdc4982d73">
+        <source>Quantity</source>
+        <target>Quantity</target>
+        <note>Line: 31</note>
+      </trans-unit>
+      <trans-unit id="54c02ba7929b1fda4847991a45b58a48">
+        <source>Product customization</source>
+        <target>Product customization</target>
+        <note>Line: 134</note>
+      </trans-unit>
+      <trans-unit id="63d5049791d9d79d86e9a108b0a999ca">
+        <source>Reference</source>
+        <target>Reference</target>
+        <note>Line: 126</note>
       </trans-unit>
       <trans-unit id="deb10517653c255364175796ace3553f">
         <source>Product</source>
         <target>Product</target>
-        <note>Line: 33</note>
+        <note>Line: 30</note>
       </trans-unit>
       <trans-unit id="0eede552438475bdfe820c13f24c9399">
         <source>Total price</source>
         <target>Total price</target>
-        <note>Line: 37</note>
+        <note>Line: 33</note>
       </trans-unit>
     </body>
   </file>
@@ -758,15 +767,6 @@
         <source>Products pagination</source>
         <target>Products pagination</target>
         <note>Line: 16</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/hummingbird/templates/catalog/_partials/customization-modal.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="be53a0541a6d36f6ecb879fa2c584b08">
-        <source>Image</source>
-        <target>Image</target>
-        <note>Line: 17</note>
       </trans-unit>
     </body>
   </file>
@@ -836,6 +836,15 @@
         <source>%product_price% (x%product_quantity%)</source>
         <target>%product_price% (x%product_quantity%)</target>
         <note>Line: 95</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/hummingbird/templates/customer/_partials/order-detail-no-return.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="be53a0541a6d36f6ecb879fa2c584b08">
+        <source>Image</source>
+        <target>Image</target>
+        <note>Line: 10</note>
       </trans-unit>
     </body>
   </file>

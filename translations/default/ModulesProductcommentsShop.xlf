@@ -138,11 +138,6 @@
   </file>
   <file original="themes/hummingbird/modules/productcomments/views/templates/hook/post-comment-modal.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="7966126831926ad29c528b239d69f855">
-        <source>Write your review</source>
-        <target>Write your review</target>
-        <note>Line: 16</note>
-      </trans-unit>
       <trans-unit id="101d699ab80f40c7110be34095759b08">
         <source>Sorry, your review cannot be posted.</source>
         <target>Sorry, your review cannot be posted.</target>
@@ -225,6 +220,11 @@
   </file>
   <file original="themes/hummingbird/modules/productcomments/views/templates/hook/product-comments-list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="7966126831926ad29c528b239d69f855">
+        <source>Write your review</source>
+        <target>Write your review</target>
+        <note>Line: 22</note>
+      </trans-unit>
       <trans-unit id="926d083c719119e1a02ccab444ebb2bc">
         <source>Sorry, your review appreciation cannot be sent.</source>
         <target>Sorry, your review appreciation cannot be sent.</target>

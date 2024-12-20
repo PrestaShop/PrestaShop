@@ -2,11 +2,6 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="install-dev/classes/controllerHttp.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="0e8ea4263454e813a58e0f1bbad5958f">
-        <source>Content of your store</source>
-        <target>Content of your store</target>
-        <note>Line: 124</note>
-      </trans-unit>
       <trans-unit id="fa6724c724e5524034b09c9bbac81f07">
         <source>Choose your language</source>
         <target>Choose your language</target>
@@ -332,6 +327,16 @@ Comment: We fill the process step used for Ajax queries</note>
   </file>
   <file original="install-dev/theme/views/configure.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="93cba07454f06a4a960172bbd6e2a435">
+        <source>Yes</source>
+        <target>Yes</target>
+        <note>Line: 78</note>
+      </trans-unit>
+      <trans-unit id="bafd7322c6e97d25b6299b5d6fe8920b">
+        <source>No</source>
+        <target>No</target>
+        <note>Line: 82</note>
+      </trans-unit>
       <trans-unit id="c075a7d57ac5f08683a1a0a1d3425e94">
         <source>Information about your Store</source>
         <target>Information about your Store</target>
@@ -421,15 +426,10 @@ Comment: We fill the process step used for Ajax queries</note>
   </file>
   <file original="install-dev/theme/views/content.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="93cba07454f06a4a960172bbd6e2a435">
-        <source>Yes</source>
-        <target>Yes</target>
-        <note>Line: 67</note>
-      </trans-unit>
-      <trans-unit id="bafd7322c6e97d25b6299b5d6fe8920b">
-        <source>No</source>
-        <target>No</target>
-        <note>Line: 71</note>
+      <trans-unit id="0e8ea4263454e813a58e0f1bbad5958f">
+        <source>Content of your store</source>
+        <target>Content of your store</target>
+        <note>Line: 29</note>
       </trans-unit>
       <trans-unit id="82da52196edba4e07eb729fa3560027f">
         <source>Installation of theme</source>
@@ -845,92 +845,92 @@ Comment: We fill the process step used for Ajax queries</note>
       <trans-unit id="13cd0b09fa253a2b524ca2345638aacf">
         <source>%file% file is not writable (check permissions)</source>
         <target>%file% file is not writable (check permissions)</target>
-        <note>Line: 251</note>
+        <note>Line: 255</note>
       </trans-unit>
       <trans-unit id="5b0aceda64c33fa187bdd138c42de909">
         <source>%folder% folder is not writable (check permissions)</source>
         <target>%folder% folder is not writable (check permissions)</target>
-        <note>Line: 174</note>
+        <note>Line: 178</note>
       </trans-unit>
       <trans-unit id="da766b8e6f70454b5fdde126ba5c761c">
         <source>Cannot write app/config/parameters.yml file</source>
         <target>Cannot write app/config/parameters.yml file</target>
-        <note>Line: 265</note>
+        <note>Line: 269</note>
       </trans-unit>
       <trans-unit id="453faec2c85b2b9c0b9c2b474b30bd21">
         <source>Database structure file not found</source>
         <target>Database structure file not found</target>
-        <note>Line: 318</note>
+        <note>Line: 322</note>
       </trans-unit>
       <trans-unit id="f726c29f41d9b6ab3d61f6f4e41959a3">
         <source>Cannot create group shop</source>
         <target>Cannot create group shop</target>
-        <note>Line: 546</note>
+        <note>Line: 550</note>
       </trans-unit>
       <trans-unit id="19de782cabcc5cc12fa9730264cd5325">
         <source>Cannot create shop</source>
         <target>Cannot create shop</target>
-        <note>Line: 561</note>
+        <note>Line: 565</note>
       </trans-unit>
       <trans-unit id="90ae323fee3fa743290c6ebdbd7fea65">
         <source>Cannot create shop URL</source>
         <target>Cannot create shop URL</target>
-        <note>Line: 577</note>
+        <note>Line: 581</note>
       </trans-unit>
       <trans-unit id="53d7a51998faa87f513eb974a2a596f2">
         <source>File "language.xml" not found for language iso "%iso%"</source>
         <target>File "language.xml" not found for language iso "%iso%"</target>
-        <note>Line: 613</note>
+        <note>Line: 617</note>
       </trans-unit>
       <trans-unit id="9972ad1ade2906747dbb39490a96b191">
         <source>File "language.xml" not valid for language iso "%iso%"</source>
         <target>File "language.xml" not valid for language iso "%iso%"</target>
-        <note>Line: 617</note>
+        <note>Line: 621</note>
       </trans-unit>
       <trans-unit id="54c23cef7fbebba7ee1267cc0cf97b2a">
         <source>Cannot download language pack "%iso%"</source>
         <target>Cannot download language pack "%iso%"</target>
-        <note>Line: 644</note>
+        <note>Line: 648</note>
       </trans-unit>
       <trans-unit id="9d321a378efc308c33c5f345f623dd90">
         <source>Cannot install language "%iso%"</source>
         <target>Cannot install language "%iso%"</target>
-        <note>Line: 654</note>
+        <note>Line: 658</note>
       </trans-unit>
       <trans-unit id="258057c839ab36aa9e3bb60550348c5e">
         <source>Cannot copy flag language "%flag%"</source>
         <target>Cannot copy flag language "%flag%"</target>
-        <note>Line: 665</note>
+        <note>Line: 669</note>
       </trans-unit>
       <trans-unit id="27654955bc85150712aa0bc53bcc6224">
         <source>Cannot create admin account</source>
         <target>Cannot create admin account</target>
-        <note>Line: 875</note>
+        <note>Line: 879</note>
       </trans-unit>
       <trans-unit id="26b901ba3ecdcb91823f05ce15a70ce4">
         <source>Cannot install module "%module%"</source>
         <target>Cannot install module "%module%"</target>
-        <note>Line: 991</note>
+        <note>Line: 995</note>
       </trans-unit>
       <trans-unit id="c2c8925b8e5c7cfc0d83fa3f7342b48d">
         <source>Cannot execute post install on module "%module%"</source>
         <target>Cannot execute post install on module "%module%"</target>
-        <note>Line: 1017</note>
+        <note>Line: 1021</note>
       </trans-unit>
       <trans-unit id="4a85cd1d84d691a2e0b73a5f08cd3483">
         <source>Fixtures class "%class%" not found</source>
         <target>Fixtures class "%class%" not found</target>
-        <note>Line: 1095</note>
+        <note>Line: 1099</note>
       </trans-unit>
       <trans-unit id="e1120cceb6bcfd9596161e3912b2ad9d">
         <source>"%class%" must be an instance of "InstallXmlLoader"</source>
         <target>"%class%" must be an instance of "InstallXmlLoader"</target>
-        <note>Line: 1102</note>
+        <note>Line: 1106</note>
       </trans-unit>
       <trans-unit id="c331bfefd5fde2616161931bcc9e0c3c">
         <source>The admin folder could not be renamed into %folderName%</source>
         <target>The admin folder could not be renamed into %folderName%</target>
-        <note>Line: 1215</note>
+        <note>Line: 1216</note>
       </trans-unit>
     </body>
   </file>

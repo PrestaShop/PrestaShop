@@ -35,11 +35,6 @@
   </file>
   <file original="classes/checkout/DeliveryOptionsFinder.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="b24ce0cd392a5b0b8dedc66c25213594">
-        <source>Free</source>
-        <target>Free</target>
-        <note>Line: 92</note>
-      </trans-unit>
       <trans-unit id="464f47d6975750e4cbd91c90ccf1791e">
         <source>%price% tax incl.</source>
         <target>%price% tax incl.</target>
@@ -143,6 +138,15 @@
         <source>A minimum shopping cart total of %amount% (tax excl.) is required to validate your order. Current cart total is %total% (tax excl.).</source>
         <target>A minimum shopping cart total of %amount% (tax excl.) is required to validate your order. Current cart total is %total% (tax excl.).</target>
         <note>Line: 360</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Adapter/Presenter/Order/OrderDetailLazyArray.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b24ce0cd392a5b0b8dedc66c25213594">
+        <source>Free</source>
+        <target>Free</target>
+        <note>Line: 223</note>
       </trans-unit>
     </body>
   </file>
@@ -328,11 +332,6 @@
   </file>
   <file original="themes/classic/templates/checkout/_partials/order-confirmation-table.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="694e8d1f2ee056f98ee488bdc4982d73">
-        <source>Quantity</source>
-        <target>Quantity</target>
-        <note>Line: 30</note>
-      </trans-unit>
       <trans-unit id="2cee9edacddde0856a46d7db6aff9110">
         <source>Order items</source>
         <target>Order items</target>
@@ -366,20 +365,15 @@
   </file>
   <file original="themes/classic/templates/checkout/_partials/order-final-summary.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="284b47b0bb63ae2df3b29f0e691d6fcf">
-        <source>Addresses</source>
-        <target>Addresses</target>
-        <note>Line: 35</note>
-      </trans-unit>
       <trans-unit id="49ffd9480effff979143d2e8d38931c4">
         <source>Shipping Method</source>
         <target>Shipping Method</target>
         <note>Line: 63</note>
       </trans-unit>
-      <trans-unit id="baa63a898921164abe2d1d532ab27e79">
-        <source>Your Invoice Address</source>
-        <target>Your Invoice Address</target>
-        <note>Line: 52</note>
+      <trans-unit id="284b47b0bb63ae2df3b29f0e691d6fcf">
+        <source>Addresses</source>
+        <target>Addresses</target>
+        <note>Line: 35</note>
       </trans-unit>
       <trans-unit id="7ce3a11073ffba68bd1e83e243aaabf7">
         <source>Please check your order before payment</source>
@@ -395,6 +389,11 @@
   </file>
   <file original="themes/classic/templates/checkout/_partials/steps/addresses.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="baa63a898921164abe2d1d532ab27e79">
+        <source>Your Invoice Address</source>
+        <target>Your Invoice Address</target>
+        <note>Line: 90</note>
+      </trans-unit>
       <trans-unit id="dc024b376ebf01abd90cf4d5e4dca1c7">
         <source>The selected address will be used as your personal address (for invoice).</source>
         <target>The selected address will be used as your personal address (for invoice).</target>
@@ -668,7 +667,16 @@
       </trans-unit>
     </body>
   </file>
-  <file original="themes/hummingbird/modules/ps_checkpayment/views/templates/hook/payment_return.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/classic/templates/customer/order-return.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="694e8d1f2ee056f98ee488bdc4982d73">
+        <source>Quantity</source>
+        <target>Quantity</target>
+        <note>Line: 40</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/hummingbird/modules/ps_cashondelivery/views/templates/hook/payment_return.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="1ab1dfd9dc24ea4729d6c032f7f0342d">
         <source>Payment information</source>
@@ -746,15 +754,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="themes/hummingbird/templates/checkout/cart.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f1d3b424cd68795ecaa552883759aceb">
-        <source>Order summary</source>
-        <target>Order summary</target>
-        <note>Line: 38</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="themes/hummingbird/templates/checkout/checkout-navigation.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="61f1667518c8516a8a4fe18686a4e6fc">
@@ -801,6 +800,15 @@
         <source>Next: Payment</source>
         <target>Next: Payment</target>
         <note>Line: 115</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/hummingbird/templates/checkout/checkout.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f1d3b424cd68795ecaa552883759aceb">
+        <source>Order summary</source>
+        <target>Order summary</target>
+        <note>Line: 32</note>
       </trans-unit>
     </body>
   </file>

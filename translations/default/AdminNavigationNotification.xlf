@@ -2,21 +2,6 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="admin-dev/themes/new-theme/template/components/layout/notifications_center.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="00843f41bd87586508e233b4b4947cf2">
-        <source>Orders[1][/1]</source>
-        <target>Orders[1][/1]</target>
-        <note>Line: 44</note>
-      </trans-unit>
-      <trans-unit id="6ff813b90fea117cb8981d26b0df548c">
-        <source>Customers[1][/1]</source>
-        <target>Customers[1][/1]</target>
-        <note>Line: 59</note>
-      </trans-unit>
-      <trans-unit id="ced94ea851437be7264f84648dbe3c7d">
-        <source>Messages[1][/1]</source>
-        <target>Messages[1][/1]</target>
-        <note>Line: 74</note>
-      </trans-unit>
       <trans-unit id="91a52a2a855d5abd5597a481c20f3972">
         <source>No new order for now :(</source>
         <target>No new order for now :(</target>
@@ -31,6 +16,21 @@
         <source>No new message for now.</source>
         <target>No new message for now.</target>
         <note>Line: 107</note>
+      </trans-unit>
+      <trans-unit id="00843f41bd87586508e233b4b4947cf2">
+        <source>Orders[1][/1]</source>
+        <target>Orders[1][/1]</target>
+        <note>Line: 44</note>
+      </trans-unit>
+      <trans-unit id="6ff813b90fea117cb8981d26b0df548c">
+        <source>Customers[1][/1]</source>
+        <target>Customers[1][/1]</target>
+        <note>Line: 59</note>
+      </trans-unit>
+      <trans-unit id="ced94ea851437be7264f84648dbe3c7d">
+        <source>Messages[1][/1]</source>
+        <target>Messages[1][/1]</target>
+        <note>Line: 74</note>
       </trans-unit>
       <trans-unit id="d98a07f84921b24ee30f86fd8cd85c3c">
         <source>from</source>
@@ -78,25 +78,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="classes/controller/AdminController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="7c56f525288d680c6efa0c2d07d79d13">
-        <source>Have you checked your [1][2]abandoned carts[/2][/1]?[3]Your next order could be hiding there!</source>
-        <target>Have you checked your [1][2]abandoned carts[/2][/1]?[3]Your next order could be hiding there!</target>
-        <note>Line: 2103</note>
-      </trans-unit>
-      <trans-unit id="70821661a53b31c40fdd6c9f3bbff741">
-        <source>Are you active on social media these days?</source>
-        <target>Are you active on social media these days?</target>
-        <note>Line: 2121</note>
-      </trans-unit>
-      <trans-unit id="b5ffb1ab1fe4ad00831c65b8dab60c0c">
-        <source>Seems like all your customers are happy :)</source>
-        <target>Seems like all your customers are happy :)</target>
-        <note>Line: 2124</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/admin/AdminQuickAccessesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="c059561b30601ffaf8759ae84f2b44b9">
@@ -111,17 +92,36 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Layout/default_layout.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Layout/legacy_layout.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="c821206b336b401bccf058f664f8255d">
         <source>Your shop is in debug mode.</source>
         <target>Your shop is in debug mode.</target>
-        <note>Line: 79</note>
+        <note>Line: 62</note>
       </trans-unit>
       <trans-unit id="d62981b15048763100760d7e58f8722e">
         <source><![CDATA[To manage the maintenance settings, go to Shop Parameters > Maintenance tab.]]></source>
         <target><![CDATA[To manage the maintenance settings, go to Shop Parameters > Maintenance tab.]]></target>
-        <note>Line: 99</note>
+        <note>Line: 81</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Twig/Component/NotificationsCenter.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7c56f525288d680c6efa0c2d07d79d13">
+        <source>Have you checked your [1][2]abandoned carts[/2][/1]?[3]Your next order could be hiding there!</source>
+        <target>Have you checked your [1][2]abandoned carts[/2][/1]?[3]Your next order could be hiding there!</target>
+        <note>Line: 138</note>
+      </trans-unit>
+      <trans-unit id="70821661a53b31c40fdd6c9f3bbff741">
+        <source>Are you active on social media these days?</source>
+        <target>Are you active on social media these days?</target>
+        <note>Line: 150</note>
+      </trans-unit>
+      <trans-unit id="b5ffb1ab1fe4ad00831c65b8dab60c0c">
+        <source>Seems like all your customers are happy :)</source>
+        <target>Seems like all your customers are happy :)</target>
+        <note>Line: 153</note>
       </trans-unit>
     </body>
   </file>

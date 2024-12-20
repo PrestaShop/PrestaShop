@@ -104,15 +104,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="classes/checkout/CheckoutAddressesStep.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="2af64b8ece83492468fbc41f9b692556">
-        <source>Could not delete address.</source>
-        <target>Could not delete address.</target>
-        <note>Line: 159</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="classes/controller/FrontController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="914aabd65a536be202b28dc1ac5dd1af">
@@ -133,20 +124,6 @@
         <source>The %1$s field is too long (%2$d chars max).</source>
         <target>The %1$s field is too long (%2$d chars max).</target>
         <note>Line: 176</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/form/CustomerForm.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e74bbc67e02323a626ce95619ef42fd5">
-        <source>Password must be between %d and %d characters long</source>
-        <target>Password must be between %d and %d characters long</target>
-        <note>Line: 146</note>
-      </trans-unit>
-      <trans-unit id="f43333ea2272fed37fc121a2e09755c3">
-        <source>The minimum score must be: %s</source>
-        <target>The minimum score must be: %s</target>
-        <note>Line: 164</note>
       </trans-unit>
     </body>
   </file>
@@ -190,6 +167,11 @@
   </file>
   <file original="controllers/front/AddressController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="2af64b8ece83492468fbc41f9b692556">
+        <source>Could not delete address.</source>
+        <target>Could not delete address.</target>
+        <note>Line: 114</note>
+      </trans-unit>
       <trans-unit id="0adae640fffe5e6c0208e25f13aaa414">
         <source>Please fix the error below.</source>
         <target>Please fix the error below.</target>
@@ -421,6 +403,16 @@
   </file>
   <file original="controllers/front/PasswordController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="e74bbc67e02323a626ce95619ef42fd5">
+        <source>Password must be between %d and %d characters long</source>
+        <target>Password must be between %d and %d characters long</target>
+        <note>Line: 171</note>
+      </trans-unit>
+      <trans-unit id="f43333ea2272fed37fc121a2e09755c3">
+        <source>The minimum score must be: %s</source>
+        <target>The minimum score must be: %s</target>
+        <note>Line: 189</note>
+      </trans-unit>
       <trans-unit id="e267e2be02cf3e29f4ba53b5d97cf78a">
         <source>Invalid email address.</source>
         <target>Invalid email address.</target>
@@ -568,7 +560,7 @@
       <trans-unit id="dd6b089a49908d671c3e9cc8dc5899ae">
         <source>Invalid message</source>
         <target>Invalid message</target>
-        <note>Line: 423</note>
+        <note>Line: 419</note>
       </trans-unit>
     </body>
   </file>
@@ -577,12 +569,12 @@
       <trans-unit id="80d889c08e270f0016d61b963e13fec1">
         <source>This product is no longer available for sale.</source>
         <target>This product is no longer available for sale.</target>
-        <note>Line: 1111</note>
+        <note>Line: 1122</note>
       </trans-unit>
       <trans-unit id="a923575984949608ce04c4984806ec2a">
         <source>There are not enough products in stock</source>
         <target>There are not enough products in stock</target>
-        <note>Line: 1175</note>
+        <note>Line: 1186</note>
       </trans-unit>
     </body>
   </file>

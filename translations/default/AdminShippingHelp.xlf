@@ -2,11 +2,6 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="admin-dev/themes/default/template/controllers/carrier_wizard/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="5e543256c480ac577d30f76f9120eb74">
-        <source>undefined</source>
-        <target>undefined</target>
-        <note>Line: 58</note>
-      </trans-unit>
       <trans-unit id="fb2ea703b13d059f6b7ea5da806021df">
         <source>Format:</source>
         <target>Format:</target>
@@ -29,6 +24,15 @@
       </trans-unit>
     </body>
   </file>
+  <file original="admin-dev/themes/default/template/controllers/carrier_wizard/logo.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5e543256c480ac577d30f76f9120eb74">
+        <source>undefined</source>
+        <target>undefined</target>
+        <note>Line: 39</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="admin-dev/themes/default/template/controllers/carriers/helpers/list/list_header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="401c8f6635d231c5360f31ce548c4462">
@@ -45,10 +49,30 @@
   </file>
   <file original="controllers/admin/AdminCarrierWizardController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="1c6c9d089ce4b751673e3dd09e97b935">
-        <source>Enable the carrier in the front office.</source>
-        <target>Enable the carrier in the front office.</target>
-        <note>Line: 495</note>
+      <trans-unit id="95be6960ce35a5d972b7314203b312be">
+        <source>The carrier's name will be displayed during checkout.</source>
+        <target>The carrier's name will be displayed during checkout.</target>
+        <note>Line: 213</note>
+      </trans-unit>
+      <trans-unit id="d2eee8992bbabe7e76562a015ecf0d7f">
+        <source>The delivery time will be displayed during checkout.</source>
+        <target>The delivery time will be displayed during checkout.</target>
+        <note>Line: 224</note>
+      </trans-unit>
+      <trans-unit id="ff9058a791d671d3cb7ce3117b3f989d">
+        <source>Delivery tracking URL: Type '@' where the tracking number should appear. It will be automatically replaced by the tracking number.</source>
+        <target>Delivery tracking URL: Type '@' where the tracking number should appear. It will be automatically replaced by the tracking number.</target>
+        <note>Line: 243</note>
+      </trans-unit>
+      <trans-unit id="e4cb2dbfdc6b5b71c8aef1b781712b03">
+        <source>For example: 'http://example.com/track.php?num=@' with '@' where the tracking number should appear.</source>
+        <target>For example: 'http://example.com/track.php?num=@' with '@' where the tracking number should appear.</target>
+        <note>Line: 244</note>
+      </trans-unit>
+      <trans-unit id="497876c111e98a20564817545518f829">
+        <source>The value must be an integer.</source>
+        <target>The value must be an integer.</target>
+        <note>Line: 432</note>
       </trans-unit>
       <trans-unit id="0668ec4bb8d6bcb27d283b2af9bc5888">
         <source><![CDATA[Include the handling costs (as set in Shipping > Preferences) in the final carrier price.]]></source>
@@ -84,6 +108,31 @@
   </file>
   <file original="controllers/admin/AdminCarriersController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="07b693f09040dc64d3c36b5daf95caae">
+        <source>Allowed characters: letters, spaces and "%special_chars%".</source>
+        <target>Allowed characters: letters, spaces and "%special_chars%".</target>
+        <note>Line: 174</note>
+      </trans-unit>
+      <trans-unit id="a788f81b3aa0ef9c9efcb1fb67708d82">
+        <source>For in-store pickup, enter 0 to replace the carrier name with your shop name.</source>
+        <target>For in-store pickup, enter 0 to replace the carrier name with your shop name.</target>
+        <note>Line: 176</note>
+      </trans-unit>
+      <trans-unit id="4ca4a355318f45dac9fb0ee632d8dc3c">
+        <source>Enter "0" for a longest shipping delay, or "9" for the shortest shipping delay.</source>
+        <target>Enter "0" for a longest shipping delay, or "9" for the shortest shipping delay.</target>
+        <note>Line: 201</note>
+      </trans-unit>
+      <trans-unit id="d7049d8a068769eb32177e404639b8ce">
+        <source>Mark the groups that are allowed access to this carrier.</source>
+        <target>Mark the groups that are allowed access to this carrier.</target>
+        <note>Line: 225</note>
+      </trans-unit>
+      <trans-unit id="1c6c9d089ce4b751673e3dd09e97b935">
+        <source>Enable the carrier in the front office.</source>
+        <target>Enable the carrier in the front office.</target>
+        <note>Line: 246</note>
+      </trans-unit>
       <trans-unit id="3194ebe40c7a8c29c78ea79066b6e05c">
         <source>Carrier name displayed during checkout</source>
         <target>Carrier name displayed during checkout</target>
@@ -161,50 +210,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="07b693f09040dc64d3c36b5daf95caae">
-        <source>Allowed characters: letters, spaces and "%special_chars%".</source>
-        <target>Allowed characters: letters, spaces and "%special_chars%".</target>
-        <note>Line: 64</note>
-      </trans-unit>
-      <trans-unit id="a788f81b3aa0ef9c9efcb1fb67708d82">
-        <source>For in-store pickup, enter 0 to replace the carrier name with your shop name.</source>
-        <target>For in-store pickup, enter 0 to replace the carrier name with your shop name.</target>
-        <note>Line: 66</note>
-      </trans-unit>
-      <trans-unit id="4ca4a355318f45dac9fb0ee632d8dc3c">
-        <source>Enter "0" for a longest shipping delay, or "9" for the shortest shipping delay.</source>
-        <target>Enter "0" for a longest shipping delay, or "9" for the shortest shipping delay.</target>
-        <note>Line: 84</note>
-      </trans-unit>
-      <trans-unit id="d7049d8a068769eb32177e404639b8ce">
-        <source>Mark the groups that are allowed access to this carrier.</source>
-        <target>Mark the groups that are allowed access to this carrier.</target>
-        <note>Line: 117</note>
-      </trans-unit>
-      <trans-unit id="95be6960ce35a5d972b7314203b312be">
-        <source>The carrier's name will be displayed during checkout.</source>
-        <target>The carrier's name will be displayed during checkout.</target>
-        <note>Line: 65</note>
-      </trans-unit>
-      <trans-unit id="d2eee8992bbabe7e76562a015ecf0d7f">
-        <source>The delivery time will be displayed during checkout.</source>
-        <target>The delivery time will be displayed during checkout.</target>
-        <note>Line: 72</note>
-      </trans-unit>
-      <trans-unit id="ff9058a791d671d3cb7ce3117b3f989d">
-        <source>Delivery tracking URL: Type '@' where the tracking number should appear. It will be automatically replaced by the tracking number.</source>
-        <target>Delivery tracking URL: Type '@' where the tracking number should appear. It will be automatically replaced by the tracking number.</target>
-        <note>Line: 112</note>
-      </trans-unit>
-      <trans-unit id="e4cb2dbfdc6b5b71c8aef1b781712b03">
-        <source>For example: 'http://example.com/track.php?num=@' with '@' where the tracking number should appear.</source>
-        <target>For example: 'http://example.com/track.php?num=@' with '@' where the tracking number should appear.</target>
-        <note>Line: 113</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="52dbc6fa2418548ded20ae17862f4ca1">
@@ -221,11 +226,6 @@
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/SizeWeightSettings.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="497876c111e98a20564817545518f829">
-        <source>The value must be an integer.</source>
-        <target>The value must be an integer.</target>
-        <note>Line: 97</note>
-      </trans-unit>
       <trans-unit id="454d11876de277bf1744b37d3697f8bd">
         <source>Maximum width managed by this carrier. Set the value to "0" to ignore.</source>
         <target>Maximum width managed by this carrier. Set the value to "0" to ignore.</target>

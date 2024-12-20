@@ -2,11 +2,6 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="admin-dev/themes/default/template/controllers/images/content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="258606ef5a3ed5cd7e39da08435adec0">
-        <source>Regenerate thumbnails</source>
-        <target>Regenerate thumbnails</target>
-        <note>Line: 132</note>
-      </trans-unit>
       <trans-unit id="79750ba11832a44ccf92e15eb0e84ae4">
         <source>Select an image</source>
         <target>Select an image</target>
@@ -21,6 +16,11 @@
         <source>Erase previous images</source>
         <target>Erase previous images</target>
         <note>Line: 106</note>
+      </trans-unit>
+      <trans-unit id="258606ef5a3ed5cd7e39da08435adec0">
+        <source>Regenerate thumbnails</source>
+        <target>Regenerate thumbnails</target>
+        <note>Line: 132</note>
       </trans-unit>
       <trans-unit id="874d3deed67e503cac1d8bc00417794a">
         <source>Move images</source>
