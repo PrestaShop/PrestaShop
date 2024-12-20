@@ -125,9 +125,7 @@ final class LegacyUrlConverter
         $this->router->getContext()->fromRequest($request);
         $this->checkAlreadyMatchingRoute($request->getRequestUri());
 
-        $parameters = array_merge($request->query->all(), $request->request->all());
-
-        return $this->convertByParameters($parameters);
+        return $this->convertByParameters($request->query->all());
     }
 
     /**
