@@ -60,9 +60,9 @@ class OrderDetailControllerCore extends FrontController
             if (!count($this->errors)) {
                 $order = new Order($idOrder);
                 if (Validate::isLoadedObject($order) && $order->id_customer == $this->context->customer->id) {
-                    // check if a thread already exist
-                    $id_customer_thread = CustomerThread::getIdCustomerThreadByEmailAndIdOrder($this->context->customer->email, $order->id);
+                    // check if a thread already exist (for the same product and the same order)
                     $id_product = (int) Tools::getValue('id_product');
+                    $id_customer_thread = CustomerThread::getIdCustomerThreadByEmailAndIdOrderAndIdProduct($this->context->customer->email, $order->id, $id_product);
                     $cm = new CustomerMessage();
                     if (!$id_customer_thread) {
                         $ct = new CustomerThread();
