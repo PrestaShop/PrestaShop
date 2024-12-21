@@ -46,6 +46,8 @@ jobs:
       GH_BRANCH: ${{ matrix.BRANCH }}
       GC_PROJECT_ID: ${{ secrets.GC_PROJECT_ID }}
       GC_SERVICE_KEY: ${{ secrets.GC_SERVICE_KEY }}
+      XML_FILE: ${{ matrix.BRANCH == 'develop' && 'nightly.xml' || format('nightly_{0}.xml', matrix.BRANCH)}}
+      ZIP_FILE: ${{ matrix.BRANCH == 'develop' && 'nightly.zip' || format('nightly_{0}.zip', matrix.BRANCH)}}
 
     steps:
       - uses: actions/checkout@v4
@@ -76,11 +78,11 @@ jobs:
         run: today=`date +%Y-%m-%d`; for i in *; do mv $i $today-$GH_BRANCH-$i; done
         working-directory: ${{ env.RELEASE_DIR }}
 
-      - name: Create nightly.zip for develop
-        if: env.GH_BRANCH == 'develop'
+      - name: Create nightly.(zip & xml) for each branch
         run: |
           today=`date +%Y-%m-%d`
-          cp $today-$GH_BRANCH*.zip nightly.zip
+          cp $today-$GH_BRANCH*.zip ${{ env.ZIP_FILE }}
+          cp $today-$GH_BRANCH*.xml ${{ env.XML_FILE }}
         working-directory: ${{ env.RELEASE_DIR }}
 
       - name: Auth Cloud Sdk
@@ -92,9 +94,11 @@ jobs:
       - name: Setup Cloud Sdk
         uses: google-github-actions/setup-gcloud@v1
 
-      - name: Delete last Nightly zip from develop
-        if: env.GH_BRANCH == 'develop'
-        run: gsutil rm -rf gs://prestashop-core-nightly/nightly.zip
+      - name: Delete last Nightly zip for each branch
+        run: gsutil rm -rf gs://prestashop-core-nightly/${{ env.ZIP_FILE }}
+
+      - name: Delete last Nightly xml for each branch
+        run: gsutil rm -rf gs://prestashop-core-nightly/${{ env.XML_FILE }}
 
       - name: Upload to Google Cloud Storage (GCS)
         if: always()

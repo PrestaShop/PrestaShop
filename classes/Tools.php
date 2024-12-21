@@ -1001,6 +1001,9 @@ class ToolsCore
      * @return string
      *
      * @throws PrestaShopException If _PS_MODE_DEV_ is enabled
+     *
+     * @deprecated since 9.0.0 - Please throw an exception directly. It will be handled better and logged
+     * in all enviroments, to both PHP and our logs. This method will be eventually removed
      */
     public static function displayError($errorMessage = null, $htmlentities = null, ?Context $context = null)
     {

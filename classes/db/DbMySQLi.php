@@ -71,12 +71,23 @@ class DbMySQLiCore extends Db
 
         // Do not use object way for error because this work bad before PHP 5.2.9
         if (mysqli_connect_error()) {
-            throw new PrestaShopDatabaseException(sprintf(Tools::displayError('Link to database cannot be established: %s'), mysqli_connect_error()));
+            throw new PrestaShopDatabaseException(sprintf(
+                Context::getContext()->getTranslator()->trans(
+                    'Link to database cannot be established: %s',
+                    [],
+                    'Admin.Notifications.Error'
+                ),
+                mysqli_connect_error()
+            ));
         }
 
         // UTF-8 support
         if (!$this->link->query('SET NAMES utf8mb4')) {
-            throw new PrestaShopDatabaseException(Tools::displayError('PrestaShop Fatal error: no utf-8 support. Please check your server configuration.'));
+            throw new PrestaShopDatabaseException(Context::getContext()->getTranslator()->trans(
+                'PrestaShop Fatal error: no utf-8 support. Please check your server configuration.',
+                [],
+                'Admin.Notifications.Error'
+            ));
         }
 
         $this->link->query('SET SESSION sql_mode = \'\'');

@@ -25,7 +25,7 @@ The first stable version of PrestaShop 8.1 was released on June 26th, 2023. Furt
 About the `develop` branch
 --------
 
-The `develop` branch of this repository contains the work in progress source code for the next version of PrestaShop. Currently, the next version will be PrestaShop 9.0.
+The `develop` branch of this repository contains the work in progress source code for the next version of PrestaShop. Currently, it is exclusively for version 9.1.
 
 For more information on our branch system, read our guide on [installing PrestaShop for development][install-guide-dev].
 
