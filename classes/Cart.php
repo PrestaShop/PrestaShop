@@ -2694,7 +2694,7 @@ class CartCore extends ObjectModel
                 // Foreach carriers of the package, calculate his price, check if it the best price, position and grade
                 foreach ($package['carrier_list'] as $id_carrier) {
                     if (!isset($carriers_instance[$id_carrier])) {
-                        $carriers_instance[$id_carrier] = new Carrier($id_carrier);
+                        $carriers_instance[$id_carrier] = new Carrier($id_carrier, (int) Context::getContext()->language->id);
                     }
 
                     $price_with_tax = $this->getPackageShippingCost((int) $id_carrier, true, $country, $package['product_list']);
@@ -2889,7 +2889,7 @@ class CartCore extends ObjectModel
                     $total_price_without_tax_with_rules = (in_array($id_carrier, $free_carriers_rules)) ? 0 : $total_price_without_tax;
 
                     if (!isset($carrier_collection[$id_carrier])) {
-                        $carrier_collection[$id_carrier] = new Carrier($id_carrier);
+                        $carrier_collection[$id_carrier] = new Carrier($id_carrier, (int) Context::getContext()->language->id);
                     }
                     $delivery_option_list[$id_address][$key]['carrier_list'][$id_carrier]['instance'] = $carrier_collection[$id_carrier];
 
