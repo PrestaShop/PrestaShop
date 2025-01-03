@@ -42,7 +42,8 @@ Feature: Carrier management
       | zones            | zone1                              |
       | rangeBehavior    | disabled                           |
     Then carrier "carrier1" should have the following properties:
-      | name             | Carrier 1                          |
+      | name[en-US]      | Carrier 1                          |
+      | name[fr-FR]      | Carrier 1                          |
       | grade            | 1                                  |
       | trackingUrl      | http://example.com/track.php?num=@ |
       | position         | 4                                  |
@@ -133,7 +134,8 @@ Feature: Carrier management
     When I edit carrier "carrier1" with specified properties I get a similar carrier called "newCarrier1":
       | name[en-US] | Carrier 1 new |
     Then carrier "carrier1" should have the following properties:
-      | name             | Carrier 1 new                      |
+      | name[en-US]      | Carrier 1 new                      |
+      | name[fr-FR]      | Carrier 1 new                      |
       | grade            | 1                                  |
       | trackingUrl      | http://example.com/track.php?num=@ |
       | position         | 6                                  |
@@ -151,7 +153,8 @@ Feature: Carrier management
       | shippingMethod   | weight                             |
       | rangeBehavior    | disabled                           |
     Then carrier "newCarrier1" should have the following properties:
-      | name             | Carrier 1 new                      |
+      | name[en-US]      | Carrier 1 new                      |
+      | name[fr-FR]      | Carrier 1 new                      |
       | grade            | 1                                  |
       | trackingUrl      | http://example.com/track.php?num=@ |
       | position         | 6                                  |
@@ -370,7 +373,8 @@ Feature: Carrier management
       | delay[en-US] | Shipping delay new         |
       | delay[fr-FR] | Délai de livraison nouveau |
     Then carrier "carrier1" should have the following properties:
-      | name             | Carrier 1                          |
+      | name[en-US]      | Carrier 1                          |
+      | name[fr-FR]      | Carrier 1                          |
       | grade            | 1                                  |
       | trackingUrl      | http://example.com/track.php?num=@ |
       | position         | 10                                 |
@@ -492,8 +496,9 @@ Feature: Carrier management
     When I edit carrier "carrier1" with specified properties:
       | shippingHandling | true |
     Then carrier "carrier1" should have the following properties:
-      | name             | Carrier 1 |
-      | shippingHandling | true      |
+      | name[en-US]      | Carrier 1   |
+      | name[fr-FR]      | Carrier 1   |
+      | shippingHandling | true        |
 
   Scenario: Partially editing carrier with free shipping
     When I create carrier "carrier1" with specified properties:
@@ -517,8 +522,9 @@ Feature: Carrier management
     When I edit carrier "carrier1" with specified properties:
       | isFree | true |
     Then carrier "carrier1" should have the following properties:
-      | name   | Carrier 1 |
-      | isFree | true      |
+      | name[en-US]      | Carrier 1                          |
+      | name[fr-FR]      | Carrier 1                          |
+      | isFree           | true                               |
 
   Scenario: Partially editing carrier with shipping method
     When I create carrier "carrier1" with specified properties:
@@ -542,8 +548,9 @@ Feature: Carrier management
     When I edit carrier "carrier1" with specified properties:
       | shippingMethod | price |
     Then carrier "carrier1" should have the following properties:
-      | name           | Carrier 1 |
-      | shippingMethod | price     |
+      | name[en-US]    | Carrier 1                          |
+      | name[fr-FR]    | Carrier 1                          |
+      | shippingMethod | price                              |
 
   Scenario: Partially editing carrier with invalid shipping method
     When I create carrier "carrier1" with specified properties:
@@ -571,7 +578,8 @@ Feature: Carrier management
   # @debug
   # Scenario: Partially editing carrier with tax rule group
   #   When I create carrier "carrier1" with specified properties:
-  #     | name             | Carrier 1                          |
+  #     | name[en-US]      | Carrier 1                          |
+  #     | name[fr-FR]      | Carrier 1                          |
   #     | grade            | 1                                  |
   #     | trackingUrl      | http://example.com/track.php?num=@ |
   #     | position         | 2                                  |
@@ -591,7 +599,8 @@ Feature: Carrier management
   #   When I edit carrier "carrier1" with specified properties:
   #     | taxRuleGroup | US-AZ Rate (6.6%)              |
   #   Then carrier "carrier1" should have the following properties:
-  #     | name         | Carrier 1                       |
+  #     | name[en-US]      | Carrier 1                   |
+  #     | name[fr-FR]      | Carrier 1                   |
   #     | taxRuleGroup | US-AZ Rate (6.6%)               |
 
   Scenario: Partially editing carrier with range behavior
@@ -616,8 +625,9 @@ Feature: Carrier management
     When I edit carrier "carrier1" with specified properties:
       | rangeBehavior | highest_range |
     Then carrier "carrier1" should have the following properties:
-      | name          | Carrier 1     |
-      | rangeBehavior | highest_range |
+      | name[en-US]      | Carrier 1                          |
+      | name[fr-FR]      | Carrier 1                          |
+      | rangeBehavior    | highest_range                      |
 
   Scenario: Partially editing carrier with invalid range behavior
     When I create carrier "carrier1" with specified properties:
@@ -785,8 +795,9 @@ Feature: Carrier management
     When I edit carrier "carrier1" with specified properties:
       | zones     | zone1     |
     Then carrier "carrier1" should have the following properties:
-      | name      | Carrier 1 |
-      | zones     | zone1     |
+      | name[en-US]      | Carrier 1                          |
+      | name[fr-FR]      | Carrier 1                          |
+      | zones            | zone1                              |
 
   Scenario: Add a new carrier without any zone
     When I create carrier "carrier1" with specified properties:

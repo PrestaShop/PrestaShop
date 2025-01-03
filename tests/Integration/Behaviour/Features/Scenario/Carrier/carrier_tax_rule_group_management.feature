@@ -15,7 +15,6 @@ Feature: Carrier Tax Rule Group management
   Scenario: Partially editing carrier with tax rule group
     When I create carrier "carrier1" with specified properties:
       | name[en-US]      | Carrier 1                          |
-      | name[fr-FR]      | Carrier 1                          |
       | grade            | 1                                  |
       | trackingUrl      | http://example.com/track.php?num=@ |
       | position         | 2                                  |
@@ -33,13 +32,12 @@ Feature: Carrier Tax Rule Group management
     And I identify tax rules group named "US-AZ Rate (6.6%)" as "us-az-tax-rate"
     When I set tax rule "us-az-tax-rate" for carrier "carrier1"
     Then carrier "carrier1" should have the following properties:
-      | name         | Carrier 1         |
-      | taxRuleGroup | US-AZ Rate (6.6%) |
+      | name[en-US]      | Carrier 1                          |
+      | taxRuleGroup     | US-AZ Rate (6.6%)                  |
 
   Scenario: Partially editing carrier with wrong tax rule group
     When I create carrier "carrier1" with specified properties:
       | name[en-US]      | Carrier 1                          |
-      | name[fr-FR]      | Carrier 1                          |
       | grade            | 1                                  |
       | trackingUrl      | http://example.com/track.php?num=@ |
       | position         | 2                                  |

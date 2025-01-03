@@ -174,7 +174,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         }
 
         $customer = new Customer((int) $this->order->id_customer);
-        $carrier = new Carrier((int) $this->order->id_carrier);
+        $carrier = new Carrier((int) $this->order->id_carrier, (int) Context::getContext()->language->id);
 
         $order_details = $this->order_invoice->getProducts();
 
@@ -394,7 +394,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         $tax_exempt = Configuration::get('VATNUMBER_MANAGEMENT')
                             && !empty($address->vat_number)
                             && $address->id_country != Configuration::get('VATNUMBER_COUNTRY');
-        $carrier = new Carrier($this->order->id_carrier);
+        $carrier = new Carrier($this->order->id_carrier, (int) Context::getContext()->language->id);
 
         $data = [
             'tax_exempt' => $tax_exempt,

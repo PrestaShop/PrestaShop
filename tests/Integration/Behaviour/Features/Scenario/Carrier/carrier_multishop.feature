@@ -50,7 +50,8 @@ Feature: Carrier management
       | rangeBehavior    | disabled                           |
       | associatedShops  | shop1, shop3                       |
     Then carrier "carrier1" should have the following properties:
-      | name             | Carrier 1                          |
+      | name[en-US]      | Carrier 1                          |
+      | name[fr-FR]      | Carrier 1                          |
       | grade            | 1                                  |
       | trackingUrl      | http://example.com/track.php?num=@ |
       | position         | 2                                  |
@@ -72,7 +73,8 @@ Feature: Carrier management
     When I edit carrier "carrier1" with specified properties:
       | associatedShops | shop2, shop4 |
     And carrier "carrier1" should have the following properties:
-      | name             | Carrier 1                          |
+      | name[en-US]      | Carrier 1                          |
+      | name[fr-FR]      | Carrier 1                          |
       | grade            | 1                                  |
       | trackingUrl      | http://example.com/track.php?num=@ |
       | position         | 2                                  |
