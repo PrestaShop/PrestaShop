@@ -216,7 +216,7 @@ final class MailPreviewVariablesBuilder
             return [];
         }
 
-        $carrier = new Carrier($order->id_carrier);
+        $carrier = new Carrier($order->id_carrier, $this->context->language->getId());
         $delivery = new Address($order->id_address_delivery);
         $invoice = new Address($order->id_address_invoice);
 

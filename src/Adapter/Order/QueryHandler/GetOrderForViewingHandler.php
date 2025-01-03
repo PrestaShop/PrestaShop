@@ -534,7 +534,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         $carrierModuleInfo = null;
 
         $currency = new Currency($order->id_currency);
-        $carrier = new Carrier($order->id_carrier);
+        $carrier = new Carrier($order->id_carrier, $this->contextLanguageId);
         $carrierModuleInfo = null;
 
         if ($carrier->is_module) {

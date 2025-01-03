@@ -163,7 +163,7 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
     {
         $address = new Address($order->id_address_delivery);
         $country = new Country($address->id_country);
-        $carrier = new Carrier($order->id_carrier);
+        $carrier = new Carrier($order->id_carrier, (int) $order->getAssociatedLanguage()->getId());
         $state = new State($address->id_state);
 
         $carrierName = $trackingUrl = null;

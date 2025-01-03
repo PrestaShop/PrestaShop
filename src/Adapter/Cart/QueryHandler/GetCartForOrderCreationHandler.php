@@ -404,7 +404,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
                 // make sure there is no duplicate carrier
                 $deliveryOptions[(int) $carrier->id] = new CartDeliveryOption(
                     (int) $carrier->id,
-                    $carrier->name,
+                    $carrier->name[$this->contextLangId],
                     $carrier->delay[$this->contextLangId]
                 );
             }

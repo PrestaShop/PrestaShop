@@ -614,7 +614,7 @@ abstract class PaymentModuleCore extends Module
                 $delivery = new Address((int) $order->id_address_delivery);
                 $delivery_state = $delivery->id_state ? new State((int) $delivery->id_state) : false;
                 $invoice_state = $invoice->id_state ? new State((int) $invoice->id_state) : false;
-                $carrier = $order->id_carrier ? new Carrier($order->id_carrier) : false;
+                $carrier = $order->id_carrier ? new Carrier($order->id_carrier, (int) $this->context->language->id) : false;
                 $orderLanguage = new Language((int) $order->id_lang);
 
                 // Join PDF invoice
