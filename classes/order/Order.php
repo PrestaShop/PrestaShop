@@ -1929,7 +1929,7 @@ class OrderCore extends ObjectModel
     public function getShipping()
     {
         return Db::getInstance()->executeS(
-            'SELECT DISTINCT oc.`id_order_invoice`, oc.`weight`, oc.`shipping_cost_tax_excl`, oc.`shipping_cost_tax_incl`, c.`url`, oc.`id_carrier`, c.`name` as `carrier_name`, oc.`date_add`, "Delivery" as `type`, "true" as `can_edit`, oc.`tracking_number`, oc.`id_order_carrier`, osl.`name` as order_state_name, c.`name` as state_name
+            'SELECT DISTINCT oc.`id_order_invoice`, oc.`weight`, oc.`shipping_cost_tax_excl`, oc.`shipping_cost_tax_incl`, c.`url`, oc.`id_carrier`, cl.`name` as `carrier_name`, oc.`date_add`, "Delivery" as `type`, "true" as `can_edit`, oc.`tracking_number`, oc.`id_order_carrier`, osl.`name` as order_state_name
             FROM `' . _DB_PREFIX_ . 'orders` o
             LEFT JOIN `' . _DB_PREFIX_ . 'order_history` oh
                 ON (o.`id_order` = oh.`id_order`)
@@ -1937,6 +1937,8 @@ class OrderCore extends ObjectModel
                 ON (o.`id_order` = oc.`id_order`)
             LEFT JOIN `' . _DB_PREFIX_ . 'carrier` c
                 ON (oc.`id_carrier` = c.`id_carrier`)
+            LEFT JOIN `' . _DB_PREFIX_ . 'carrier_lang` cl
+                ON (oc.`id_carrier` = cl.`id_carrier` AND cl.`id_lang` = ' . (int) Context::getContext()->language->id . ')
             LEFT JOIN `' . _DB_PREFIX_ . 'order_state_lang` osl
                 ON (oh.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = ' . (int) Context::getContext()->language->id . ')
             WHERE o.`id_order` = ' . (int) $this->id . '

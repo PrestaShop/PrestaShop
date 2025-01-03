@@ -88,7 +88,7 @@ final class CarrierQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getCarrierQueryBuilder($searchCriteria)
-            ->select('c.id_carrier, c.name, cl.delay, c.active, c.is_free, c.position')
+            ->select('c.id_carrier, cl.name, cl.delay, c.active, c.is_free, c.position')
             ->groupBy('c.id_carrier');
 
         $this->searchCriteriaApplicator
@@ -133,7 +133,7 @@ final class CarrierQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ($filterName === 'name') {
-                $qb->andWhere('c.name LIKE :name');
+                $qb->andWhere('cl.name LIKE :name');
                 $qb->setParameter($filterName, '%' . $filterValue . '%');
 
                 continue;

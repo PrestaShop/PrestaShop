@@ -344,7 +344,7 @@ class OrderLazyArray extends AbstractLazyArray
     {
         $order = $this->order;
 
-        $carrier = new Carrier((int) $order->id_carrier, (int) $order->getAssociatedLanguage()->getId());
+        $carrier = new Carrier((int) $order->id_carrier, (int) Context::getContext()->language->id);
         $orderCarrier = $this->objectPresenter->present($carrier);
         $orderCarrier['name'] = ($carrier->name == '0') ? Configuration::get('PS_SHOP_NAME') : $carrier->name;
         $orderCarrier['delay'] = $carrier->delay;

@@ -45,18 +45,26 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
     private const CUSTOMER_ONLINE_TIME = 1800; // 30 min
 
     /**
+     * @var int
+     */
+    private $contextIdLang;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
      * @param MultistoreContextCheckerInterface $multistoreContextChecker
+     * @param int $contextIdLang
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
         private readonly DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
         private readonly MultistoreContextCheckerInterface $multistoreContextChecker,
+        $contextIdLang
     ) {
         parent::__construct($connection, $dbPrefix);
+        $this->contextIdLang = $contextIdLang;
     }
 
     /**
@@ -69,7 +77,7 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb
             ->select('c.`id_cart`')
             ->addSelect('c.`date_add`')
-            ->addSelect('ca.`name` AS carrier_name')
+            ->addSelect('cal.`name` AS carrier_name')
             ->addSelect('o.`id_order` AS id_order')
             ->addSelect('CONCAT(LEFT(cu.firstname, 1), ". ", cu.lastname) AS customer_name')
             ->addSelect('co.`id_guest` AS customer_online')
@@ -142,9 +150,9 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $qb->leftJoin(
             'c',
-            $this->dbPrefix . 'carrier',
-            'ca',
-            'c.`id_carrier` = ca.`id_carrier`'
+            $this->dbPrefix . 'carrier_lang',
+            'cal',
+            'c.`id_carrier` = cal.`id_carrier` AND cal.`id_lang` = :contextLangId'
         );
 
         $qb->leftJoin(
@@ -185,6 +193,7 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
         }
 
         $this->applyFilters($qb, $filters);
+        $qb->setParameter('contextLangId', $this->contextIdLang);
 
         return $qb;
     }
@@ -241,7 +250,7 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('carrier_name' === $filterName) {
-                $qb->andWhere('ca.name LIKE :' . $filterName);
+                $qb->andWhere('cal.name LIKE :' . $filterName);
                 $qb->setParameter($filterName, '%' . $filterValue . '%');
                 continue;
             }
