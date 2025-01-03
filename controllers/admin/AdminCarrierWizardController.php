@@ -207,6 +207,7 @@ class AdminCarrierWizardControllerCore extends AdminController
                         'type' => 'text',
                         'label' => $this->trans('Carrier name', [], 'Admin.Shipping.Feature'),
                         'name' => 'name',
+                        'lang' => true,
                         'required' => true,
                         'hint' => [
                             $this->trans('Allowed characters: letters, spaces and "%special_chars%".', ['%special_chars%' => '().-'], 'Admin.Shipping.Help'),

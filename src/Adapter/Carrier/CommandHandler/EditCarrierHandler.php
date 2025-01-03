@@ -62,8 +62,8 @@ class EditCarrierHandler implements EditCarrierHandlerInterface
         $newCarrierId = new CarrierId($newCarrier->id);
 
         // General information
-        if (null !== $command->getName()) {
-            $newCarrier->name = $command->getName();
+        if (null !== $command->getLocalizedName()) {
+            $newCarrier->name = $command->getLocalizedName();
         }
         if (null !== $command->getGrade()) {
             $newCarrier->grade = $command->getGrade();

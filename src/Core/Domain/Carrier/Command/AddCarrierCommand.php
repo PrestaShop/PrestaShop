@@ -52,7 +52,8 @@ class AddCarrierCommand
      * @throws CarrierConstraintException
      */
     public function __construct(
-        private string $name,
+        /** @var string[] $localizedName */
+        private array $localizedName,
         /** @var string[] $localizedDelay */
         private array $localizedDelay,
         private int $grade,
@@ -91,9 +92,10 @@ class AddCarrierCommand
         }
     }
 
-    public function getName(): string
+    /** @return string[] */
+    public function getLocalizedName(): array
     {
-        return $this->name;
+        return $this->localizedName;
     }
 
     /** @return string[] */

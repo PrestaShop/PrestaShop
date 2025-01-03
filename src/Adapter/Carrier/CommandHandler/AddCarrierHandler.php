@@ -59,7 +59,7 @@ class AddCarrierHandler implements AddCarrierHandlerInterface
     {
         $carrier = new Carrier();
         // General information
-        $carrier->name = $command->getName();
+        $carrier->name = $command->getLocalizedName();
         $carrier->grade = $command->getGrade();
         $carrier->url = $command->getTrackingUrl();
         $carrier->active = $command->getActive();

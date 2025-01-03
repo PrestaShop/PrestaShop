@@ -35,7 +35,8 @@ class EditableCarrier
 {
     public function __construct(
         private int $carrierId,
-        private string $name,
+        /** @var string[] $name */
+        private array $name,
         private int $grade,
         private string $trackingUrl,
         private int $position,
@@ -69,7 +70,10 @@ class EditableCarrier
         return $this->carrierId;
     }
 
-    public function getName(): string
+    /**
+     * @return string[]
+     */
+    public function getLocalizedName(): array
     {
         return $this->name;
     }

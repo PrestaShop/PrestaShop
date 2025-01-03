@@ -57,7 +57,7 @@ class CarrierFormDataProvider implements FormDataProviderInterface
 
         return [
             'general_settings' => [
-                'name' => $carrier->getName(),
+                'localized_name' => $carrier->getLocalizedName(),
                 'localized_delay' => $carrier->getLocalizedDelay(),
                 'active' => $carrier->isActive(),
                 'grade' => $carrier->getGrade(),

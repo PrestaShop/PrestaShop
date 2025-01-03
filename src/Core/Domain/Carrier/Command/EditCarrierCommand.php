@@ -41,7 +41,8 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 class EditCarrierCommand
 {
     private CarrierId $carrierId;
-    private ?string $name;
+    /** @var string[] */
+    private ?array $localizedName;
     /** @var string[] */
     private ?array $localizedDelay;
     private ?int $grade;
@@ -74,14 +75,20 @@ class EditCarrierCommand
         return $this->carrierId;
     }
 
-    public function getName(): ?string
+    /**
+     * @return string[]|null
+     */
+    public function getLocalizedName(): ?array
     {
-        return $this->name ?? null;
+        return $this->localizedName ?? null;
     }
 
-    public function setName(string $name): self
+    /**
+     * @param string[] $localizedName
+     */
+    public function setLocalizedName(array $localizedName): self
     {
-        $this->name = $name;
+        $this->localizedName = $localizedName;
 
         return $this;
     }

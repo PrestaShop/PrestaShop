@@ -53,7 +53,7 @@ class CarrierFormDataHandler implements FormDataHandlerInterface
 
         /** @var CarrierId $carrierId */
         $carrierId = $this->commandBus->handle(new AddCarrierCommand(
-            $data['general_settings']['name'],
+            $data['general_settings']['localized_name'],
             $data['general_settings']['localized_delay'],
             $data['general_settings']['grade'],
             $data['general_settings']['tracking_url'] ?? '',
@@ -83,7 +83,7 @@ class CarrierFormDataHandler implements FormDataHandlerInterface
         // First, we need to update the general settings of the carrier
         $command = new EditCarrierCommand($id);
         $command
-            ->setName($data['general_settings']['name'])
+            ->setLocalizedName($data['general_settings']['localized_name'])
             ->setLocalizedDelay($data['general_settings']['localized_delay'])
             ->setGrade($data['general_settings']['grade'])
             ->setActive((bool) $data['general_settings']['active'])

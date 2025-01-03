@@ -54,7 +54,10 @@ class CarrierFormDataProviderTest extends TestCase
 
                     return new EditableCarrier(
                         42,
-                        'Carrier name',
+                        [
+                            1 => 'Carrier name English',
+                            2 => 'Carrier name French',
+                        ],
                         5,
                         'http://track.to',
                         1,
@@ -128,7 +131,10 @@ class CarrierFormDataProviderTest extends TestCase
         $formData = $formDataProvider->getData(42);
         $this->assertEquals([
             'general_settings' => [
-                'name' => 'Carrier name',
+                'localized_name' => [
+                    1 => 'Carrier name English',
+                    2 => 'Carrier name French',
+                ],
                 'localized_delay' => [
                     1 => 'English delay',
                     2 => 'French delay',

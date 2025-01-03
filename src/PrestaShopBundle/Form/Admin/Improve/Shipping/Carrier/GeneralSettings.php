@@ -59,12 +59,15 @@ class GeneralSettings extends TranslatorAwareType
 
         parent::buildForm($builder, $options);
         $builder
-            ->add('name', TextType::class, [
+            ->add('localized_name', TranslatableType::class, [
+                'required' => true,
                 'label' => $this->trans('Carrier name', 'Admin.Shipping.Feature'),
                 'label_help_box' => $this->trans('Allowed characters: letters, spaces and "%special_chars%".', 'Admin.Shipping.Help', ['%special_chars%' => '().-']) . '<br/>' .
                     $this->trans('The carrier\'s name will be displayed during checkout.', 'Admin.Shipping.Help') . '<br/>' .
                     $this->trans('For in-store pickup, enter 0 to replace the carrier name with your shop name.', 'Admin.Shipping.Help'),
-                'required' => true,
+                'constraints' => [
+                    new DefaultLanguage(),
+                ],
             ])
             ->add('localized_delay', TranslatableType::class, [
                 'required' => true,

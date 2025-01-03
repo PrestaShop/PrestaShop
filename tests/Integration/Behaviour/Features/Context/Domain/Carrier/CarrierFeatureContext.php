@@ -77,6 +77,12 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
                 $associatedShops = [$this->getDefaultShopId()];
             }
 
+            if (!empty($properties['name'])) {
+                $name = $properties['name'];
+            } else {
+                $name = [$this->getDefaultLangId() => 'Name'];
+            }
+
             if (!empty($properties['delay'])) {
                 $delay = $properties['delay'];
             } else {
@@ -100,7 +106,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
             }
 
             $carrierId = $this->createCarrierUsingCommand(
-                $properties['name'],
+                $name,
                 $delay,
                 (int) ($properties['grade'] ?? 0),
                 $properties['trackingUrl'] ?? '',
@@ -197,7 +203,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         $command = new EditCarrierCommand($carrierId);
         // General information
         if (isset($properties['name'])) {
-            $command->setName($properties['name']);
+            $command->setLocalizedName($properties['name']);
         }
         if (isset($properties['delay'])) {
             $command->setLocalizedDelay($properties['delay']);
@@ -291,7 +297,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
 
         // General information
         if (isset($data['name'])) {
-            Assert::assertEquals($data['name'], $carrier->getName());
+            Assert::assertEquals($data['name'], $carrier->getLocalizedName());
         }
         if (isset($data['grade'])) {
             Assert::assertEquals($data['grade'], $carrier->getGrade());
