@@ -413,7 +413,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     }
 
     private function createCarrierUsingCommand(
-        string $name,
+        array $name,
         array $delay,
         int $grade,
         string $trackingUrl,
