@@ -101,7 +101,7 @@ class CarrierValidator extends AbstractObjectModelValidator
      */
     private function validateGeneral(Carrier $carrier): void
     {
-        $this->validateObjectModelProperty($carrier, 'name', CarrierConstraintException::class, CarrierConstraintException::INVALID_NAME);
+        $this->validateObjectModelLocalizedProperty($carrier, 'name', CarrierConstraintException::class, CarrierConstraintException::INVALID_NAME);
         $this->validateObjectModelProperty($carrier, 'grade', CarrierConstraintException::class, CarrierConstraintException::INVALID_GRADE);
         $this->validateObjectModelProperty($carrier, 'url', CarrierConstraintException::class, CarrierConstraintException::INVALID_TRACKING_URL);
         $this->validateObjectModelProperty($carrier, 'position', CarrierConstraintException::class, CarrierConstraintException::INVALID_POSITION);

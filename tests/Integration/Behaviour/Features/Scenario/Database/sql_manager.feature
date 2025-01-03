@@ -64,7 +64,6 @@ Feature: SQL Manager
     When I request the database fields from table carrier
     Then I should get a set of database fields that contain values:
       | id_carrier      |
-      | name            |
       | shipping_method |
 
   Scenario: Save a SQL request

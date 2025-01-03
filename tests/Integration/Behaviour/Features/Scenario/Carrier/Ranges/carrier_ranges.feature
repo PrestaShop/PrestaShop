@@ -22,7 +22,6 @@ Feature: Carrier ranges
   Scenario: Adding prices ranges in carrier
     When I create carrier "carrier1" with specified properties:
       | name[en-US]      | Carrier 1                          |
-      | name[fr-FR]      | Carrier 1                          |
       | shippingMethod   | price                              |
       | zones            | zone1, zone2                       |
     Then I set ranges for carrier "carrier1" with specified properties for all shops:
@@ -45,7 +44,6 @@ Feature: Carrier ranges
   Scenario: Adding weight ranges in carrier
     When I create carrier "carrier1" with specified properties:
       | name[en-US]      | Carrier 1                          |
-      | name[fr-FR]      | Carrier 1                          |
       | shippingMethod   | weight                             |
       | zones            | zone1, zone2                       |
     Then I set ranges for carrier "carrier1" with specified properties for all shops:
@@ -68,7 +66,6 @@ Feature: Carrier ranges
   Scenario: Adding overlapping ranges in carrier
     When I create carrier "carrier1" with specified properties:
       | name[en-US]      | Carrier 1                          |
-      | name[fr-FR]      | Carrier 1                          |
       | shippingMethod   | weight                             |
       | zones            | zone1, zone2                       |
     Then I set ranges for carrier "carrier1" with specified properties for all shops:
@@ -84,7 +81,6 @@ Feature: Carrier ranges
   Scenario: Get ranges for not all shops
     When I create carrier "carrier1" with specified properties:
       | name[en-US]      | Carrier 1                          |
-      | name[fr-FR]      | Carrier 1                          |
       | shippingMethod   | weight                             |
       | zones            | zone1                              |
     Then carrier "carrier1" should have the following ranges for shop "shop1":
@@ -95,7 +91,6 @@ Feature: Carrier ranges
   Scenario: Set ranges for not all shops
     When I create carrier "carrier1" with specified properties:
       | name[en-US]      | Carrier 1                          |
-      | name[fr-FR]      | Carrier 1                          |
       | shippingMethod   | weight                             |
       | zones            | zone1                              |
     Then I set ranges for carrier "carrier1" with specified properties for shop "shop1":
@@ -106,7 +101,6 @@ Feature: Carrier ranges
   Scenario: Set ranges with invalid zone
     When I create carrier "carrier1" with specified properties:
       | name[en-US]      | Carrier 1                          |
-      | name[fr-FR]      | Carrier 1                          |
       | shippingMethod   | weight                             |
       | zones            | zone1                              |
     Then I set ranges for carrier "carrier1" with specified properties for all shops:
@@ -117,7 +111,6 @@ Feature: Carrier ranges
   Scenario: Adding prices ranges in carrier with random sorting of ranges
     When I create carrier "carrier1" with specified properties:
       | name[en-US]      | Carrier 1                          |
-      | name[fr-FR]      | Carrier 1                          |
       | shippingMethod   | price                              |
       | zones            | zone1, zone2                       |
     Then I set ranges for carrier "carrier1" with specified properties for all shops:
@@ -140,7 +133,6 @@ Feature: Carrier ranges
   Scenario: Adding prices ranges in carrier with different ranges by zones
     When I create carrier "carrier1" with specified properties:
       | name[en-US]      | Carrier 1                          |
-      | name[fr-FR]      | Carrier 1                          |
       | shippingMethod   | price                              |
       | zones            | zone1, zone2                       |
     Then I set ranges for carrier "carrier1" with specified properties for all shops:
@@ -159,7 +151,6 @@ Feature: Carrier ranges
   Scenario: Adding prices ranges without zone
     When I create carrier "carrier1" with specified properties:
       | name[en-US]      | Carrier 1                          |
-      | name[fr-FR]      | Carrier 1                          |
       | shippingMethod   | weight                             |
       | zones            |                                    |
     Then carrier should throw an error with error code "INVALID_ZONE_MISSING"
@@ -167,7 +158,6 @@ Feature: Carrier ranges
   Scenario: Adding negative ranges in carrier
     When I create carrier "carrier1" with specified properties:
       | name[en-US]      | Carrier 1                          |
-      | name[fr-FR]      | Carrier 1                          |
       | shippingMethod   | weight                             |
       | zones            | zone1, zone2                       |
     Then I set ranges for carrier "carrier1" with specified properties for all shops:
@@ -176,7 +166,6 @@ Feature: Carrier ranges
     Then carrier should throw an error with error code "INVALID_RANGE_NEGATIVE"
     When I create carrier "carrier2" with specified properties:
       | name[en-US]      | Carrier 2                          |
-      | name[fr-FR]      | Carrier 2                          |
       | shippingMethod   | weight                             |
       | zones            | zone1, zone2                       |
     Then I set ranges for carrier "carrier2" with specified properties for all shops:
