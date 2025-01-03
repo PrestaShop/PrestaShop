@@ -54,7 +54,7 @@ class CarrierCore extends ObjectModel
     /** @var int common id for carrier historization */
     public $id_reference;
 
-    /** @var string Name */
+    /** @var string[]|string Name */
     public $name;
 
     /** @var string URL with a '@' for */
@@ -130,7 +130,6 @@ class CarrierCore extends ObjectModel
         'fields' => [
             /* Classic fields */
             'id_reference' => ['type' => self::TYPE_INT],
-            'name' => ['type' => self::TYPE_STRING, 'validate' => 'isCarrierName', 'required' => true, 'size' => 64],
             'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true],
             'is_free' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'url' => ['type' => self::TYPE_STRING, 'validate' => 'isAbsoluteUrl', 'size' => 255],
@@ -150,6 +149,7 @@ class CarrierCore extends ObjectModel
             'deleted' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
 
             /* Lang fields */
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCarrierName', 'required' => true, 'size' => 64],
             'delay' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 512],
         ],
     ];
