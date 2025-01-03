@@ -1706,8 +1706,8 @@ class CartRuleCore extends ObjectModel
 			' . (in_array($type, ['carrier', 'shop']) ? ' AND t.deleted = 0' : '') . '
 			' . ($type == 'cart_rule' ? 'AND t.id_cart_rule != ' . (int) $this->id : '') .
                 $shop_list .
-                (in_array($type, ['carrier', 'shop']) ? ' ORDER BY t.name ASC ' : '') .
-                (in_array($type, ['country', 'group', 'cart_rule']) && $i18n ? ' ORDER BY tl.name ASC ' : '') .
+                (in_array($type, ['shop']) ? ' ORDER BY t.name ASC ' : '') .
+                (in_array($type, ['carrier', 'country', 'group', 'cart_rule']) && $i18n ? ' ORDER BY tl.name ASC ' : '') .
                 $sql_limit);
         } else {
             if ($type == 'cart_rule') {
@@ -1722,8 +1722,8 @@ class CartRuleCore extends ObjectModel
 				WHERE 1 ' . ($active_only ? ' AND t.active = 1' : '') .
                     $shop_list
                     . (in_array($type, ['carrier', 'shop']) ? ' AND t.deleted = 0' : '') .
-                    (in_array($type, ['carrier', 'shop']) ? ' ORDER BY t.name ASC ' : '') .
-                    (in_array($type, ['country', 'group']) && $i18n ? ' ORDER BY tl.name ASC ' : '') .
+                    (in_array($type, ['shop']) ? ' ORDER BY t.name ASC ' : '') .
+                    (in_array($type, ['carrier', 'country', 'group']) && $i18n ? ' ORDER BY tl.name ASC ' : '') .
                     $sql_limit,
                     false
                 );
