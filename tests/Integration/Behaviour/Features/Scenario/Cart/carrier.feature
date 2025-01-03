@@ -13,14 +13,14 @@ Feature: Cart calculation with carriers
       | name    | zone2 |
       | enabled | true  |
     Given I create carrier "carrier1" with specified properties:
-      | name             | carrier 1                          |
+      | name[en-US]      | carrier 1                          |
       | zones            | zone1, zone2                       |
     Given I set ranges for carrier "carrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 10000    | 3.1         |
       | zone2   | 0          | 10000    | 4.3         |
     Given I create carrier "carrier2" with specified properties:
-      | name | carrier 2 |
+      | name[en-US]      | carrier 2 |
       | zones            | zone1, zone2                       |
     Given I set ranges for carrier "carrier2" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
@@ -122,7 +122,7 @@ Feature: Cart calculation with carriers
     Given I have an empty default cart
     Given there is a product in the catalog named "product1" with a price of 151.0 and 1000 items in stock
     Given I create carrier "carrier3" with specified properties:
-      | name | carrier 3 |
+      | name[en-US]      | carrier 3                          |
       | zones            | zone1, zone2                       |
     Given I set ranges for carrier "carrier3" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |

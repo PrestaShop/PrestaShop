@@ -20,9 +20,9 @@ Feature: Update product shipping options from Back Office (BO)
       | delivery time out of stock notes[en-US] |         |
       | carriers                                | []      |
     And I create carrier "carrier1" with specified properties:
-      | name        | ecoCarrier |
+      | name[en-US]        | ecoCarrier |
     And I create carrier "carrier2" with specified properties:
-      | name        | Fast carry |
+      | name[en-US]        | Fast carry |
     When I update product "product1" with following values:
       | width                                   | 10.5                 |
       | height                                  | 6                    |

@@ -14,7 +14,8 @@ Feature: Carrier Tax Rule Group management
 
   Scenario: Partially editing carrier with tax rule group
     When I create carrier "carrier1" with specified properties:
-      | name             | Carrier 1                          |
+      | name[en-US]      | Carrier 1                          |
+      | name[fr-FR]      | Carrier 1                          |
       | grade            | 1                                  |
       | trackingUrl      | http://example.com/track.php?num=@ |
       | position         | 2                                  |
@@ -37,7 +38,8 @@ Feature: Carrier Tax Rule Group management
 
   Scenario: Partially editing carrier with wrong tax rule group
     When I create carrier "carrier1" with specified properties:
-      | name             | Carrier 1                          |
+      | name[en-US]      | Carrier 1                          |
+      | name[fr-FR]      | Carrier 1                          |
       | grade            | 1                                  |
       | trackingUrl      | http://example.com/track.php?num=@ |
       | position         | 2                                  |

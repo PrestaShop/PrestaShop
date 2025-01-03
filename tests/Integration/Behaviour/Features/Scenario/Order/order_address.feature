@@ -158,7 +158,7 @@ Feature: Order from Back Office (BO)
 
   Scenario: Check shipping details after updating carrier tracking number & url
     And I create carrier "tracking-carrier" with specified properties:
-      | name        | tracking-carrier |
+      | name[en-US] | tracking-carrier |
       | trackingUrl |                  |
     And I add order "bo_order1" with the following details:
       | cart                | dummy_cart                 |

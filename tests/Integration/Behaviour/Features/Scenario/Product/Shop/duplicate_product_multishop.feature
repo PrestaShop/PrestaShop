@@ -54,9 +54,9 @@ Feature: Copy product from shop to shop.
     And single shop context is loaded
     And manufacturer studioDesign named "Studio Design" exists
     And I create carrier "carrier1" with specified properties:
-      | name | ecoCarrier |
+      | name[en-US] | ecoCarrier |
     And I create carrier "carrier2" with specified properties:
-      | name | Fast carry |
+      | name[en-US] | Fast carry |
     # Prepare a few data
     And I add new tax "us-tax-state-1" with following properties:
       | name       | US Tax (6%) |

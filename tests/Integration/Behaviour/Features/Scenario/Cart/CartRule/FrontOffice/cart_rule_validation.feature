@@ -70,8 +70,8 @@ Feature: Cart rule application is validated before it is applied to cart
       | code                | rule_carrier1 |
       | discount_percentage | 50            |
     And I create carrier "carrier1" with specified properties:
-      | name | Carrier 1 |
-      | zones| zone1     |
+      | name[en-US] | Carrier 1 |
+      | zones       | zone1     |
     And I restrict following carriers for cart rule cart_rule_4:
       | restricted carriers | carrier1 |
     And I save all the restrictions for cart rule cart_rule_4

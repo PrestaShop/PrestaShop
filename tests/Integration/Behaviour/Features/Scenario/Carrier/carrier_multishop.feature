@@ -30,7 +30,8 @@ Feature: Carrier management
 
   Scenario: I add carrier and define a selection of shops, I can also edit them
     When I create carrier "carrier1" with specified properties:
-      | name             | Carrier 1                          |
+      | name[en-US]      | Carrier 1                          |
+      | name[fr-FR]      | Carrier 1                          |
       | grade            | 1                                  |
       | trackingUrl      | http://example.com/track.php?num=@ |
       | position         | 2                                  |

@@ -13,9 +13,9 @@ Feature: Set cart rule carrier restrictions in BO
     And language "language1" with locale "en-US" exists
     And language with iso code "en" is the default one
     And I create carrier "carrier1" with specified properties:
-      | name             | Carrier 1                          |
+      | name[en-US]             | Carrier 1                          |
     And I create carrier "carrier2" with specified properties:
-      | name             | Carrier 2                          |
+      | name[en-US]             | Carrier 2                          |
     And I add product "product1" with following information:
       | name[en-US] | bottle of beer |
       | type        | virtual        |
