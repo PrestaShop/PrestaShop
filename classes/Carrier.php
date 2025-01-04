@@ -618,7 +618,7 @@ class CarrierCore extends ObjectModel
             ORDER BY s.`name` ASC');
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-            SELECT cl.*,c.*, cl.`name` AS country, zz.`name` AS zone
+            SELECT cl.*, c.*, cl.`name` AS country, zz.`name` AS zone
             FROM `' . _DB_PREFIX_ . 'country` c' .
             Shop::addSqlAssociation('country', 'c') . '
             LEFT JOIN `' . _DB_PREFIX_ . 'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = ' . (int) $id_lang . ')
