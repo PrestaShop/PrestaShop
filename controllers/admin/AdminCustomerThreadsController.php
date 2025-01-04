@@ -543,6 +543,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
             '.jpeg' => 'image/jpeg',
             '.gif' => 'image/gif',
             '.jpg' => 'image/jpeg',
+            '.webp' => 'image/webp',
         ];
 
         $extension = false;
