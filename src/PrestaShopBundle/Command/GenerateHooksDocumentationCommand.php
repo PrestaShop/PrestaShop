@@ -136,7 +136,7 @@ final class GenerateHooksDocumentationCommand extends Command
         }
 
         $githubBaseUrl = 'https://github.com/PrestaShop/PrestaShop/blob/9.0.x/';
-        foreach ($hooks as $hook) {
+        foreach ($hooks as $key => $hook) {
             $hookName = $hook['hook'];
             $fileName = $hookName . '.md';
             $filePath = $outputDir . $fileName;
@@ -205,8 +205,14 @@ final class GenerateHooksDocumentationCommand extends Command
 
         EOT;
 
-            // Write the content to the markdown file
-            file_put_contents($filePath, $content);
+            if (file_exists($filePath)) {
+                // if the file already exist, we unset it from the array to keep a correct count later but don't override it
+                // so if the file has been modified by hand we don't lose any data.
+                unset($hooks[$key]);
+            } else {
+                // Write the content to the markdown file
+                file_put_contents($filePath, $content);
+            }
         }
 
         $output->writeln('<info> ' . count($hooks) . ' hooks generated into ' . $mdDir . '</info>');
