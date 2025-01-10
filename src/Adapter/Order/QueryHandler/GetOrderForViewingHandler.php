@@ -486,10 +486,10 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
                     $document->id
                 );
                 $amount = $this->locale->formatPrice(
-                    $document->total_products_tax_incl + $document->total_shipping_tax_incl,
+                    $document->amount + $document->shipping_cost_amount,
                     $currency->iso_code
                 );
-                $numericAmount = $document->total_products_tax_incl + $document->total_shipping_tax_incl;
+                $numericAmount = $document->amount + $document->shipping_cost_amount;
             }
 
             $documentsForViewing[] = new OrderDocumentForViewing(
