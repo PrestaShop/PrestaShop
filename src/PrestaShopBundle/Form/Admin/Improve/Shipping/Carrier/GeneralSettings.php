@@ -39,6 +39,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Url;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class GeneralSettings extends TranslatorAwareType
@@ -111,6 +112,11 @@ class GeneralSettings extends TranslatorAwareType
                 'label' => $this->trans('Tracking URL', 'Admin.Shipping.Feature'),
                 'label_help_box' => $this->trans('Delivery tracking URL: Type \'@\' where the tracking number should appear. It will be automatically replaced by the tracking number.', 'Admin.Shipping.Help'),
                 'help' => $this->trans('For example: \'http://example.com/track.php?num=@\' with \'@\' where the tracking number should appear.', 'Admin.Shipping.Help'),
+                'constraints' => [
+                    new Url([
+                        'message' => $this->trans('Please enter a valid URL.', 'Admin.Notifications.Error'),
+                    ]),
+                ],
             ])
             ->add('group_access', MaterialChoiceTableType::class, [
                 'label' => $this->trans('Group access', 'Admin.Shipping.Feature'),
