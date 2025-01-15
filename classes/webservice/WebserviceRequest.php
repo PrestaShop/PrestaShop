@@ -1277,6 +1277,10 @@ class WebserviceRequestCore
                     $assoc = Shop::getAssoTable($this->resourceConfiguration['retrieveData']['table']);
                     if ($assoc !== false && $assoc['type'] == 'shop' && ($object->isMultiShopField($this->resourceConfiguration['fields'][$fieldName]['sqlId']) || $fieldName == 'id')) {
                         $table_alias = 'multi_shop_' . $this->resourceConfiguration['retrieveData']['table'];
+                    }
+                    // for sort on a field that has the same name on two tables (while using linked_tables)
+                    elseif (preg_match('#main\.#', $sql_join)) {
+                        $table_alias = 'main';
                     } else {
                         $table_alias = '';
                     }
