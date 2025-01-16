@@ -8,6 +8,11 @@ on:
       BRANCH:
         required: true
         type: string
+      UBUNTU_VERSION:
+        description: 'Ubuntu Version'
+        required: true
+        type: string
+        default: 'ubuntu-latest'
       PHP_VERSION:
         description: 'PHP Version'
         required: true
@@ -41,7 +46,7 @@ jobs:
   # First job: Run tests in parallel
   test:
     name: Nightly tests
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.UBUNTU_VERSION }}
     strategy:
       fail-fast: false
       matrix:
@@ -317,7 +322,7 @@ jobs:
     if: ${{ always() }}
     needs:
       - test
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.UBUNTU_VERSION }}
 
     strategy:
       fail-fast: false
