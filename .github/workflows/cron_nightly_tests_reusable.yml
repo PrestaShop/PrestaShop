@@ -304,10 +304,10 @@ jobs:
           FILENAME="$( echo -e '${{ env.TEST_CAMPAIGN }}' | tr  ':' '-'  )"
           mv ./mochawesome-report/mochawesome.json ${{ env.REPORTS_DIR_PATH }}/${FILENAME}.json
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         name: Upload report
         with:
-          name: reports_${{ env.GH_BRANCH }}
+          name: reports_${{ env.GH_BRANCH }}_${{ env.TEST_CAMPAIGN }}
           path: ${{ env.REPORTS_DIR }}
 
   # Second job: Merge Mochawesome reports and upload them on GCP
@@ -336,11 +336,12 @@ jobs:
           fetch-depth: 0
           ref: ${{ env.GH_BRANCH }}
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         name: Download reports
         with:
-          name: reports_${{ env.GH_BRANCH }}
           path: ${{ env.REPORTS_DIR }}
+          pattern: reports_${{ env.GH_BRANCH }}_*
+          merge-multiple: true
 
       - name: Setup Node
         uses: actions/setup-node@v4
