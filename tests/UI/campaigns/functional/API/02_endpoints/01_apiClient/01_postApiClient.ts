@@ -152,6 +152,8 @@ describe('API : POST /api-client', async () => {
           scopes: createClient.scopes,
         },
       });
+      console.log(createClient);
+      console.log((await apiResponse.body()).toString());
       expect(apiResponse.status()).to.eq(201);
       expect(utilsAPI.hasResponseHeader(apiResponse, 'Content-Type')).to.eq(true);
       expect(utilsAPI.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
