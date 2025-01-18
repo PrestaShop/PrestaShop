@@ -114,7 +114,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
         FormFactoryInterface $formFactory,
         AccessibilityCheckerInterface $singleShopChecker,
         AccessibilityCheckerInterface $multipleShopsChecker,
-        RequestStack $requestStack,
+        RequestStack $requestStack
     ) {
         parent::__construct($hookDispatcher);
         $this->configuration = $configuration;
