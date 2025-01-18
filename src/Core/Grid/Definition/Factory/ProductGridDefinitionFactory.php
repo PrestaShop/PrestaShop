@@ -63,6 +63,7 @@ use PrestaShopBundle\Form\Admin\Type\ShopSelectorType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Defines products grid name, its columns, actions, bulk actions and filters.
@@ -103,6 +104,8 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     private $multipleShopsChecker;
 
+    private $offset = 0;
+
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
         ConfigurationInterface $configuration,
@@ -110,7 +113,8 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
         ShopConstraintContextInterface $shopConstraintContext,
         FormFactoryInterface $formFactory,
         AccessibilityCheckerInterface $singleShopChecker,
-        AccessibilityCheckerInterface $multipleShopsChecker
+        AccessibilityCheckerInterface $multipleShopsChecker,
+        RequestStack $requestStack,
     ) {
         parent::__construct($hookDispatcher);
         $this->configuration = $configuration;
@@ -119,6 +123,12 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
         $this->formFactory = $formFactory;
         $this->singleShopChecker = $singleShopChecker;
         $this->multipleShopsChecker = $multipleShopsChecker;
+
+        $request = $requestStack->getCurrentRequest();
+
+        if ($request !== null && $request->query->has('product')) {
+            $this->offset = (int) $request->query->get('product')['offset'];
+        }
     }
 
     /**
@@ -639,6 +649,9 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setIcon('cloud_download')
                     ->setOptions([
                         'route' => 'admin_products_export',
+                        'route_params' => [
+                            'offset' => $this->offset
+                        ]
                     ])
             )
             ->add(

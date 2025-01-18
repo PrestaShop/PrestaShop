@@ -727,8 +727,9 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @return CsvResponse
      */
-    public function exportAction(ProductFilters $filters)
+    public function exportAction(ProductFilters $filters, int $offset)
     {
+        $filters->set('offset', $offset);
         $productGridFactory = $this->get('prestashop.core.grid.factory.product');
         $grid = $productGridFactory->getGrid($filters);
 

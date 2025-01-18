@@ -305,6 +305,7 @@ services:
       - '@form.factory'
       - '@PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\ProductSingleShopAssociatedAccessibilityChecker'
       - '@PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\ProductMultipleShopsAssociatedAccessibilityChecker'
+      - '@request_stack'
     public: true
 
   prestashop.core.grid.definition.factory.product.shops:
