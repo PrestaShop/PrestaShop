@@ -294,6 +294,9 @@ jobs:
           TESTS_DIR: ${{ inputs.TESTS_DIR }}
           DB_SERVER: ${{ inputs.DB_SERVER }}
 
+      - name: Clean environment variable
+        run: echo "TEST_CAMPAIGN_ARTIFACT=$( echo -e '${{ env.TEST_CAMPAIGN }}' | tr ':' '-' )" >> $GITHUB_ENV
+
       # Rename and upload report as artifact
       - name: Rename file reports
         working-directory: ${{ inputs.TESTS_DIR }}
@@ -301,13 +304,12 @@ jobs:
           REPORTS_DIR_PATH: ${{ github.workspace }}/${{ env.REPORTS_DIR }}
         run: |
           mkdir -p ${{ env.REPORTS_DIR_PATH }}
-          FILENAME="$( echo -e '${{ env.TEST_CAMPAIGN }}' | tr  ':' '-'  )"
-          mv ./mochawesome-report/mochawesome.json ${{ env.REPORTS_DIR_PATH }}/${FILENAME}.json
+          mv ./mochawesome-report/mochawesome.json ${{ env.REPORTS_DIR_PATH }}/${{ env.TEST_CAMPAIGN_ARTIFACT }}.json
 
-      - uses: actions/upload-artifact@v4
-        name: Upload report
+      - name: Upload report
+        uses: actions/upload-artifact@v4
         with:
-          name: reports_${{ env.GH_BRANCH }}_${{ env.TEST_CAMPAIGN }}
+          name: reports_${{ env.GH_BRANCH }}_${{ env.TEST_CAMPAIGN_ARTIFACT }}
           path: ${{ env.REPORTS_DIR }}
 
   # Second job: Merge Mochawesome reports and upload them on GCP
