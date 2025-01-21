@@ -20,6 +20,11 @@ on:
         description: 'Database Server (MySQL `mysql` / MariaDB `mariadb`)'
         required: true
         type: string
+      UBUNTU_VERSION:
+        description: 'Ubuntu Server'
+        required: false
+        type: string
+        default: 'ubuntu-latest'
       TESTS_DIR:
         description: 'Where UI tests are'
         required: false
@@ -41,7 +46,7 @@ jobs:
   # First job: Run tests in parallel
   test:
     name: Nightly tests
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.UBUNTU_VERSION }}
     strategy:
       fail-fast: false
       matrix:
@@ -319,7 +324,7 @@ jobs:
     if: ${{ always() }}
     needs:
       - test
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.UBUNTU_VERSION }}
 
     strategy:
       fail-fast: false
