@@ -74,7 +74,7 @@ jobs:
         run: npm run check:typescript
 
   Steps-identifiers:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     name: Checking Steps identifiers
 
     steps:
