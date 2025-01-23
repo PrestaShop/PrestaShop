@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceFormatter;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 class FeaturesChoiceProvider implements FormChoiceProviderInterface
@@ -60,24 +61,18 @@ class FeaturesChoiceProvider implements FormChoiceProviderInterface
 
         $contextLangId = (int) $this->legacyContext->getLanguage()->getId();
 
-        $features = $this->featureRepository->getFeaturesByLang($contextLangId);
-        $this->cacheFeatureChoices = [];
-        $uniqueNames = [];
-        foreach ($features as $feature) {
-            $featureName = $feature['localized_names'][$this->contextLanguageId];
-
-            // each feature name must be unique
-            $uniqueName = $featureName;
-            $occurrence = 1;
-            while (in_array($uniqueName, $uniqueNames)) {
-                $occurrence++;
-                $uniqueName = $featureName . ' (' . $occurrence . ')';
-            }
-            $uniqueNames[] = $uniqueName;
-
-            $this->cacheFeatureChoices[$uniqueName] = $feature['id_feature'];
+        $features = [];
+        foreach ($this->featureRepository->getFeaturesByLang($contextLangId) as $feature) {
+            $features[] = [
+                'id_feature' => $feature['id_feature'],
+                'name' => $feature['localized_names'][$contextLangId],
+            ];
         }
 
-        return $this->cacheFeatureChoices;
+        return $this->cacheFeatureChoices = FormChoiceFormatter::formatFormChoices(
+            $features,
+            'id_feature',
+            'name'
+        );
     }
 }
