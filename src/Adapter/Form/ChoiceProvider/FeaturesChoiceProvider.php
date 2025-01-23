@@ -62,8 +62,20 @@ class FeaturesChoiceProvider implements FormChoiceProviderInterface
 
         $features = $this->featureRepository->getFeaturesByLang($contextLangId);
         $this->cacheFeatureChoices = [];
+        $uniqueNames = [];
         foreach ($features as $feature) {
-            $this->cacheFeatureChoices[$feature['localized_names'][$contextLangId]] = $feature['id_feature'];
+            $featureName = $feature['localized_names'][$this->contextLanguageId];
+
+            // each feature name must be unique
+            $uniqueName = $featureName;
+            $occurrence = 1;
+            while (in_array($uniqueName, $uniqueNames)) {
+                $occurrence++;
+                $uniqueName = $featureName . ' (' . $occurrence . ')';
+            }
+            $uniqueNames[] = $uniqueName;
+
+            $this->cacheFeatureChoices[$uniqueName] = $feature['id_feature'];
         }
 
         return $this->cacheFeatureChoices;
