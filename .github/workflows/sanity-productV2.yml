@@ -46,7 +46,7 @@ jobs:
           docker logs my_prestashop_prestashop-git_1 > ./var/docker-logs/prestashop.log
 
       - name: Upload Screenshots and logs
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: sanity-${{ matrix.php }}
