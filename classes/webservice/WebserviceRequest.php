@@ -1600,6 +1600,7 @@ class WebserviceRequestCore
 
             $this->objects[] = $object;
             $i18n = false;
+            $fieldsToUpdate = [];
             // attributes
             foreach ($this->resourceConfiguration['fields'] as $fieldName => $fieldProperties) {
                 // only process fields actually in the input XML
@@ -1620,9 +1621,11 @@ class WebserviceRequestCore
                             return false;
                         } else {
                             $object->{$fieldProperties['setter']}((string) $attributes->$fieldName);
+                            $fieldsToUpdate[$fieldName] = true;
                         }
                     } elseif (property_exists($object, $sqlId)) {
                         $object->$sqlId = (string) $attributes->$fieldName;
+                        $fieldsToUpdate[$sqlId] = true;
                     } else {
                         $this->setError(400, 'Parameter "' . $fieldName . '" can\'t be set to the object "' . $this->resourceConfiguration['retrieveData']['className'] . '"', 123);
                     }
@@ -1632,16 +1635,20 @@ class WebserviceRequestCore
                     return false;
                 } elseif ((!isset($fieldProperties['required']) || !$fieldProperties['required']) && property_exists($object, $sqlId)) {
                     $object->$sqlId = null;
+                    $fieldsToUpdate[$sqlId] = true;
                 }
                 if (isset($fieldProperties['i18n']) && $fieldProperties['i18n']) {
                     $i18n = true;
                     if (isset($attributes->$fieldName, $attributes->$fieldName->language)) {
+                        $fieldsToUpdate[$fieldName] = [];
                         foreach ($attributes->$fieldName->language as $lang) {
                             /* @var SimpleXMLElement $lang */
                             $object->{$fieldName}[(int) $lang->attributes()->id] = (string) $lang;
+                            $fieldsToUpdate[$fieldName][(int) $lang->attributes()->id] = true;
                         }
                     } else {
                         $object->{$fieldName} = (string) $attributes->$fieldName;
+                        $fieldsToUpdate[$fieldName] = true;
                     }
                 }
             }
@@ -1668,6 +1675,11 @@ class WebserviceRequestCore
                     if (isset($this->resourceConfiguration['objectMethods']) && array_key_exists($objectMethod, $this->resourceConfiguration['objectMethods'])) {
                         $objectMethod = $this->resourceConfiguration['objectMethods'][$objectMethod];
                     }
+
+                    if ($this->method == 'PATCH') {
+                        $object->setFieldsToUpdate($fieldsToUpdate);
+                    }
+
                     $result = $object->{$objectMethod}();
                     if ($result) {
                         if (isset($attributes->associations)) {
