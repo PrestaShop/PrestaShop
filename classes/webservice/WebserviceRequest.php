@@ -1621,7 +1621,9 @@ class WebserviceRequestCore
                             return false;
                         } else {
                             $object->{$fieldProperties['setter']}((string) $attributes->$fieldName);
-                            $fieldsToUpdate[$fieldName] = true;
+                            if (property_exists($object, $sqlId)) {
+                                $fieldsToUpdate[$sqlId] = true;
+                            }
                         }
                     } elseif (property_exists($object, $sqlId)) {
                         $object->$sqlId = (string) $attributes->$fieldName;
@@ -1676,7 +1678,7 @@ class WebserviceRequestCore
                         $objectMethod = $this->resourceConfiguration['objectMethods'][$objectMethod];
                     }
 
-                    if ($this->method == 'PATCH') {
+                    if ($this->method === 'PATCH') {
                         $object->setFieldsToUpdate($fieldsToUpdate);
                     }
 
