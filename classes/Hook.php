@@ -1304,13 +1304,7 @@ class HookCore extends ObjectModel
             );
         }
 
-        try {
-            $hookModuleFilter = $serviceContainer->get(HookModuleFilter::class);
-        } catch (Exception $e) {
-            return null;
-        }
-
-        return $hookModuleFilter;
+        return $serviceContainer->get(HookModuleFilter::class);
     }
 
     /**
