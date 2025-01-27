@@ -1,0 +1,13 @@
+services:
+  _defaults:
+    public: true
+
+  PrestaShop\PrestaShop\Adapter\Discount\CommandHandler\AddFreeShippingDiscountHandler:
+    autowire: true
+    public: false
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Discount\QueryHandler\GetDiscountForEditingHandler:
+    autowire: true
+    public: false
+    autoconfigure: true

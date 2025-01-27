@@ -197,6 +197,7 @@ CREATE TABLE `PREFIX_cart_rule` (
   `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
+  `type` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`id_cart_rule`),
   KEY `id_customer` (
     `id_customer`, `active`, `date_to`
@@ -213,7 +214,8 @@ CREATE TABLE `PREFIX_cart_rule` (
     `date_to`
   ),
   KEY `date_from` (`date_from`),
-  KEY `date_to` (`date_to`)
+  KEY `date_to` (`date_to`),
+  KEY `type` (`type`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
 /* Localized name assocatied with a promo code */

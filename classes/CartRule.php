@@ -105,6 +105,7 @@ class CartRuleCore extends ObjectModel
     public $active = true;
     public $date_add;
     public $date_upd;
+    public ?string $type = null;
 
     protected static $cartAmountCache = [];
 
@@ -148,6 +149,7 @@ class CartRuleCore extends ObjectModel
             'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'type' => ['type' => self::TYPE_STRING, 'validate' => 'isString'],
             /* Lang fields */
             'name' => [
                 'type' => self::TYPE_HTML,
@@ -511,8 +513,8 @@ class CartRuleCore extends ObjectModel
                  * in the cart rule. So he will be able to use it.
                  */
                 $validAddressExists = Db::getInstance()->getValue('
-                    SELECT crc.id_cart_rule 
-                    FROM ' . _DB_PREFIX_ . 'cart_rule_country crc 
+                    SELECT crc.id_cart_rule
+                    FROM ' . _DB_PREFIX_ . 'cart_rule_country crc
                     INNER JOIN ' . _DB_PREFIX_ . 'address a
                     ON a.id_customer = ' . (int) $id_customer . ' AND
                     a.deleted = 0 AND
