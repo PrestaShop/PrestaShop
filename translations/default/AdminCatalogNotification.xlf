@@ -202,11 +202,6 @@
         <target>Invalid voucher.</target>
         <note>Line: 659</note>
       </trans-unit>
-      <trans-unit id="01816dd287bcb3b88ad3f63970ce045f">
-        <source>Invalid quantity</source>
-        <target>Invalid quantity</target>
-        <note>Line: 478</note>
-      </trans-unit>
       <trans-unit id="2cb44aa56605e05e0b912131875edcb7">
         <source>There are not enough products in stock.</source>
         <target>There are not enough products in stock.</target>
@@ -216,6 +211,11 @@
   </file>
   <file original="controllers/admin/AdminProductsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="01816dd287bcb3b88ad3f63970ce045f">
+        <source>Invalid quantity</source>
+        <target>Invalid quantity</target>
+        <note>Line: 1593</note>
+      </trans-unit>
       <trans-unit id="608860b0f96a18f3737756fc6b7766f9">
         <source>Cannot add image because product creation failed.</source>
         <target>Cannot add image because product creation failed.</target>
@@ -743,11 +743,6 @@
         <target><![CDATA[The display of your brands is disabled on your store. Go to %sShop Parameters > General%s to edit settings.]]></target>
         <note>Line: 826</note>
       </trans-unit>
-      <trans-unit id="60df675f17670057ec657783db03d35e">
-        <source>Unable to resize one or more of your pictures.</source>
-        <target>Unable to resize one or more of your pictures.</target>
-        <note>Line: 717</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/CombinationController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -775,6 +770,11 @@
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/SupplierController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="60df675f17670057ec657783db03d35e">
+        <source>Unable to resize one or more of your pictures.</source>
+        <target>Unable to resize one or more of your pictures.</target>
+        <note>Line: 539</note>
+      </trans-unit>
       <trans-unit id="3aff310e32cb7bb2d1affd97920c9f4b">
         <source><![CDATA[The display of your suppliers is enabled on your store. Go to %sShop Parameters > General%s to edit settings.]]></source>
         <target><![CDATA[The display of your suppliers is enabled on your store. Go to %sShop Parameters > General%s to edit settings.]]></target>
@@ -1106,13 +1106,17 @@ Comment: "It" refers to the option "Force update of friendly URL"</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Categories/Blocks/delete_categories_modal.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Categories/Blocks/delete_block.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="4f11b2e8a220dab912231e74a3dfea5d">
         <source>What do you want to do with the products associated with this category?</source>
         <target>What do you want to do with the products associated with this category?</target>
-        <note>Line: 28</note>
+        <note>Line: 31</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Categories/Blocks/delete_categories_modal.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="332a0777d848606eb5f63149d0bb1105">
         <source>Note that if they have another category, your products will logically remain associated with it.</source>
         <target>Note that if they have another category, your products will logically remain associated with it.</target>

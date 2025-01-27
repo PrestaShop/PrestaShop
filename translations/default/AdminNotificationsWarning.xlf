@@ -37,12 +37,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminStoresController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e25f0ecd41211b01c83e5fec41df4fe7">
         <source>Delete selected items?</source>
         <target>Delete selected items?</target>
-        <note>Line: 69</note>
+        <note>Line: 48</note>
       </trans-unit>
     </body>
   </file>
@@ -64,12 +64,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/Core/MerchandiseReturn/Configuration/MerchandiseReturnOptionsConfiguration.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/Adapter/Preferences/PreferencesConfiguration.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="85265e940fbb820dd2475946e7bc48d9">
         <source>Invalid configuration</source>
         <target>Invalid configuration</target>
-        <note>Line: 64</note>
+        <note>Line: 77</note>
       </trans-unit>
     </body>
   </file>

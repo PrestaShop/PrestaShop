@@ -683,6 +683,11 @@
         <target>The SameSite=None is only available in secure mode.</target>
         <note>Line: 80</note>
       </trans-unit>
+      <trans-unit id="6234474f7c68eb4436d392ed9645136b">
+        <source>The SameSite=None attribute is only available in secure mode.</source>
+        <target>The SameSite=None attribute is only available in secure mode.</target>
+        <note>Line: 79</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/Adapter/Import/Handler/ProductImportHandler.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -901,6 +906,15 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/Adapter/Smarty/SmartyCacheConfiguration.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="667685497be44ab0fc2d4334a512405b">
+        <source>Error: Could not write to file. Make sure that the correct permissions are set on the file %s</source>
+        <target>Error: Could not write to file. Make sure that the correct permissions are set on the file %s</target>
+        <note>Line: 81</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/Adapter/SqlManager/SqlQueryValidator.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="61f5912b0425ad1895fe203e725d2d7e">
@@ -925,24 +939,6 @@
         <source>The extension of your file should be .csv.</source>
         <target>The extension of your file should be .csv.</target>
         <note>Line: 134</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Core/SqlManager/Configuration/SqlRequestConfiguration.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="667685497be44ab0fc2d4334a512405b">
-        <source>Error: Could not write to file. Make sure that the correct permissions are set on the file %s</source>
-        <target>Error: Could not write to file. Make sure that the correct permissions are set on the file %s</target>
-        <note>Line: 102</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/AdministrationController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="6234474f7c68eb4436d392ed9645136b">
-        <source>The SameSite=None attribute is only available in secure mode.</source>
-        <target>The SameSite=None attribute is only available in secure mode.</target>
-        <note>Line: 252</note>
       </trans-unit>
     </body>
   </file>
@@ -1052,6 +1048,11 @@
         <target>This key already exists.</target>
         <note>Line: 397</note>
       </trans-unit>
+      <trans-unit id="3a59a0e5e521300876d4f2c596d6aeca">
+        <source>Key length must be %length% characters long.</source>
+        <target>Key length must be %length% characters long.</target>
+        <note>Line: 390</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/CachingType.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1089,11 +1090,6 @@
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Webservice/WebserviceKeyType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="3a59a0e5e521300876d4f2c596d6aeca">
-        <source>Key length must be %length% characters long.</source>
-        <target>Key length must be %length% characters long.</target>
-        <note>Line: 111</note>
-      </trans-unit>
       <trans-unit id="2cb84ea6e832a3190d3ad11a3e1f415c">
         <source>Only non-accented characters, numbers, and the following special characters are allowed: %allowed_characters%</source>
         <target>Only non-accented characters, numbers, and the following special characters are allowed: %allowed_characters%</target>

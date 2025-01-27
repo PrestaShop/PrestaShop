@@ -130,15 +130,15 @@ Comment: Confirm uninstall</note>
         <target>Text color</target>
         <note>Line: 48</note>
       </trans-unit>
-      <trans-unit id="c9cc8cce247e49bae79f15173ce97354">
-        <source>Save</source>
-        <target>Save</target>
-        <note>Line: 63</note>
-      </trans-unit>
     </body>
   </file>
   <file original="modules/blockreassurance/views/templates/admin/tabs/content/config.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="c9cc8cce247e49bae79f15173ce97354">
+        <source>Save</source>
+        <target>Save</target>
+        <note>Line: 74</note>
+      </trans-unit>
       <trans-unit id="c177d75d997a0273d1cc5be2dc4ea701">
         <source>Reassurance Block</source>
         <target>Reassurance Block</target>
@@ -304,6 +304,11 @@ Comment: Confirm uninstall</note>
         <target>Specific position for cart page</target>
         <note>Line: 22</note>
       </trans-unit>
+      <trans-unit id="3f01481a13daed04a03caaa1a28ab49f">
+        <source>Main column</source>
+        <target>Main column</target>
+        <note>Line: 30</note>
+      </trans-unit>
     </body>
   </file>
   <file original="modules/blockreassurance/views/templates/admin/tabs/display/global.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -342,11 +347,6 @@ Comment: Confirm uninstall</note>
   </file>
   <file original="modules/blockreassurance/views/templates/admin/tabs/display/product.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="3f01481a13daed04a03caaa1a28ab49f">
-        <source>Main column</source>
-        <target>Main column</target>
-        <note>Line: 30</note>
-      </trans-unit>
       <trans-unit id="56e152954e91d1d5caf567ec1ea12577">
         <source>Specific position for product page</source>
         <target>Specific position for product page</target>

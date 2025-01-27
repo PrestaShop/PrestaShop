@@ -1012,15 +1012,6 @@ Comment: voluntary do affectation here</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/Core/Grid/Definition/Factory/AttributeGroupGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e129ae480280e47ef82fc7702f8321ba">
-        <source>Refresh list</source>
-        <target>Refresh list</target>
-        <note>Line: 163</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/Core/Grid/Definition/Factory/BackupDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="9d8d2d5ab12b515182a505f54db7f538">
@@ -1047,15 +1038,15 @@ Comment: voluntary do affectation here</note>
         <target>Sent</target>
         <note>Line: 139</note>
       </trans-unit>
-      <trans-unit id="dcc459e0cef1e36a18a356fbc5789b16">
-        <source>Erase all</source>
-        <target>Erase all</target>
-        <note>Line: 231</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/Core/Grid/Definition/Factory/LogGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="dcc459e0cef1e36a18a356fbc5789b16">
+        <source>Erase all</source>
+        <target>Erase all</target>
+        <note>Line: 248</note>
+      </trans-unit>
       <trans-unit id="ecb833e2dc5d6c03d4d0cddf1b15e85a">
         <source>Severity (1-4)</source>
         <target>Severity (1-4)</target>
@@ -1078,7 +1069,7 @@ Comment: voluntary do affectation here</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/Core/Grid/Definition/Factory/Security/Session/EmployeeGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/Core/Grid/Definition/Factory/Security/Session/CustomerGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="236d0eb7130ba05580fa0cb21f6b968d">
         <source>Last update</source>
@@ -1088,23 +1079,27 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="8c01c65cd2c7619b8bb617b441cd05c4">
         <source>The user will be signed out from this session.</source>
         <target>The user will be signed out from this session.</target>
-        <note>Line: 164</note>
+        <note>Line: 165</note>
       </trans-unit>
       <trans-unit id="b49d9bafc2f2394cdd875fb0b96bb974">
         <source>Delete session?</source>
         <target>Delete session?</target>
-        <note>Line: 170</note>
+        <note>Line: 171</note>
       </trans-unit>
       <trans-unit id="12e882347d5f51cf292ca08e2e606eb2">
         <source>Users will be signed out from all selected sessions.</source>
         <target>Users will be signed out from all selected sessions.</target>
-        <note>Line: 293</note>
+        <note>Line: 295</note>
       </trans-unit>
       <trans-unit id="b0778bfd9332089cdb4468bd9f04e031">
         <source>Delete selected sessions?</source>
         <target>Delete selected sessions?</target>
-        <note>Line: 299</note>
+        <note>Line: 301</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Grid/Definition/Factory/Security/Session/EmployeeGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="4d372ba3330d919603c6279404505f7c">
         <source>Employee ID</source>
         <target>Employee ID</target>
@@ -1112,17 +1107,12 @@ Comment: voluntary do affectation here</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/Core/Grid/Definition/Factory/WebserviceKeyDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/Core/Grid/Definition/Factory/TaxRulesGroupGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="897356954c2cd3d41b221e3f24f99bba">
-        <source>Key</source>
-        <target>Key</target>
-        <note>Line: 86</note>
-      </trans-unit>
-      <trans-unit id="52699c78843b98f98620186a59b0a3fa">
-        <source>Key description</source>
-        <target>Key description</target>
-        <note>Line: 93</note>
+      <trans-unit id="e129ae480280e47ef82fc7702f8321ba">
+        <source>Refresh list</source>
+        <target>Refresh list</target>
+        <note>Line: 186</note>
       </trans-unit>
     </body>
   </file>
@@ -1142,11 +1132,6 @@ Comment: voluntary do affectation here</note>
         <target>Advanced stock management</target>
         <note>Line: 89</note>
       </trans-unit>
-      <trans-unit id="75ed578ac3cb02b0ba40002a25bc0403">
-        <source>Product reference</source>
-        <target>Product reference</target>
-        <note>Line: 58</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/Core/Import/EntityField/Provider/ProductFieldsProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1158,12 +1143,50 @@ Comment: voluntary do affectation here</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/AdministrationController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="dcfba1534995899d2ca36cda978da215">
+        <source>Lifetime of front office cookies</source>
+        <target>Lifetime of front office cookies</target>
+        <note>Line: 298</note>
+      </trans-unit>
+      <trans-unit id="e62d77475fe6318731b4411ba1181dca">
+        <source>Lifetime of back office cookies</source>
+        <target>Lifetime of back office cookies</target>
+        <note>Line: 303</note>
+      </trans-unit>
+      <trans-unit id="454036c51196464f8d9c84ded5808985">
+        <source>Maximum size for attached files</source>
+        <target>Maximum size for attached files</target>
+        <note>Line: 283</note>
+      </trans-unit>
+      <trans-unit id="4ae386b852a3ee22324e8922e50c9aec">
+        <source>Maximum size for a downloadable product</source>
+        <target>Maximum size for a downloadable product</target>
+        <note>Line: 288</note>
+      </trans-unit>
+      <trans-unit id="a1652ab7a761fa7bb3726fe28b97d1f3">
+        <source>Maximum size for a product's image</source>
+        <target>Maximum size for a product's image</target>
+        <note>Line: 293</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/FeatureFlagController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="997320bab8342395326fd0a109068200">
         <source><![CDATA[New & Experimental Features]]></source>
         <target><![CDATA[New & Experimental Features]]></target>
         <note>Line: 96</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/PerformanceController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="79c0d6cba080dc90b01c887064c9fc2f">
+        <source>Clear cache</source>
+        <target>Clear cache</target>
+        <note>Line: 59</note>
       </trans-unit>
     </body>
   </file>
@@ -1178,6 +1201,11 @@ Comment: voluntary do affectation here</note>
   </file>
   <file original="src/PrestaShopBundle/Controller/Api/StockController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="75ed578ac3cb02b0ba40002a25bc0403">
+        <source>Product reference</source>
+        <target>Product reference</target>
+        <note>Line: 185</note>
+      </trans-unit>
       <trans-unit id="ae5977a08e8a3d45283789d99c67c3c3">
         <source>Combination reference</source>
         <target>Combination reference</target>
@@ -1278,11 +1306,6 @@ Comment: voluntary do affectation here</note>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/SmartyType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="79c0d6cba080dc90b01c887064c9fc2f">
-        <source>Clear cache</source>
-        <target>Clear cache</target>
-        <note>Line: 76</note>
-      </trans-unit>
       <trans-unit id="dbe2df5641344e1d14be812243f91ec5">
         <source>Never clear cache files</source>
         <target>Never clear cache files</target>
@@ -1332,16 +1355,6 @@ Comment: voluntary do affectation here</note>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/GeneralType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="dcfba1534995899d2ca36cda978da215">
-        <source>Lifetime of front office cookies</source>
-        <target>Lifetime of front office cookies</target>
-        <note>Line: 54</note>
-      </trans-unit>
-      <trans-unit id="e62d77475fe6318731b4411ba1181dca">
-        <source>Lifetime of back office cookies</source>
-        <target>Lifetime of back office cookies</target>
-        <note>Line: 59</note>
-      </trans-unit>
       <trans-unit id="46f18d3960afc01e5a1a5a0e0e9d571b">
         <source>Automatically check for module updates</source>
         <target>Automatically check for module updates</target>
@@ -1380,21 +1393,6 @@ Comment: voluntary do affectation here</note>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/UploadQuotaType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="454036c51196464f8d9c84ded5808985">
-        <source>Maximum size for attached files</source>
-        <target>Maximum size for attached files</target>
-        <note>Line: 67</note>
-      </trans-unit>
-      <trans-unit id="4ae386b852a3ee22324e8922e50c9aec">
-        <source>Maximum size for a downloadable product</source>
-        <target>Maximum size for a downloadable product</target>
-        <note>Line: 99</note>
-      </trans-unit>
-      <trans-unit id="a1652ab7a761fa7bb3726fe28b97d1f3">
-        <source>Maximum size for a product's image</source>
-        <target>Maximum size for a product's image</target>
-        <note>Line: 131</note>
-      </trans-unit>
       <trans-unit id="2c111a587b8e6a65856ac7933d76bdce">
         <source>megabytes</source>
         <target>megabytes</target>
@@ -1474,17 +1472,17 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="6adf97f83acf6453d4a6a4b1070f3754">
         <source>None</source>
         <target>None</target>
-        <note>Line: 75</note>
+        <note>Line: 85</note>
       </trans-unit>
       <trans-unit id="099d7d04319e5191b7473e016c55e320">
         <source>TLS</source>
         <target>TLS</target>
-        <note>Line: 76</note>
+        <note>Line: 86</note>
       </trans-unit>
       <trans-unit id="ea52c36203c5f99c3ce2442d531b1a22">
         <source>SSL</source>
         <target>SSL</target>
-        <note>Line: 77</note>
+        <note>Line: 87</note>
       </trans-unit>
       <trans-unit id="3e5b7324ee6019d543023eac3bb13016">
         <source>Email domain name</source>
@@ -1494,22 +1492,22 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="bdd48fb41b9d0a4a1051fa22a87eb5a2">
         <source>SMTP server</source>
         <target>SMTP server</target>
-        <note>Line: 54</note>
+        <note>Line: 57</note>
       </trans-unit>
       <trans-unit id="a7bfd8847270913b15396380c3627d76">
         <source>SMTP username</source>
         <target>SMTP username</target>
-        <note>Line: 60</note>
+        <note>Line: 66</note>
       </trans-unit>
       <trans-unit id="3cffa2fabd5519beaf4c2fbd0610899b">
         <source>SMTP password</source>
         <target>SMTP password</target>
-        <note>Line: 66</note>
+        <note>Line: 75</note>
       </trans-unit>
       <trans-unit id="d7f2615c71a1567cc13cf3a7f7de0aea">
         <source>Encryption</source>
         <target>Encryption</target>
-        <note>Line: 80</note>
+        <note>Line: 90</note>
       </trans-unit>
     </body>
   </file>
@@ -1720,6 +1718,16 @@ Comment: voluntary do affectation here</note>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Webservice/WebserviceKeyType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="897356954c2cd3d41b221e3f24f99bba">
+        <source>Key</source>
+        <target>Key</target>
+        <note>Line: 90</note>
+      </trans-unit>
+      <trans-unit id="52699c78843b98f98620186a59b0a3fa">
+        <source>Key description</source>
+        <target>Key description</target>
+        <note>Line: 131</note>
+      </trans-unit>
       <trans-unit id="20eebdc752ee86d49f5d090759b237aa">
         <source>Webservice account key.</source>
         <target>Webservice account key.</target>

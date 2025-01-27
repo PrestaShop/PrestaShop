@@ -428,22 +428,22 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="2a3c280f73a3389c6ba4b2d87c8aa15f">
         <source>IP address or server name (e.g. smtp.mydomain.com).</source>
         <target>IP address or server name (e.g. smtp.mydomain.com).</target>
-        <note>Line: 55</note>
+        <note>Line: 58</note>
       </trans-unit>
       <trans-unit id="a5d35e0a66d41c7d12c0df6e643fa0ff">
         <source>Leave blank if not applicable.</source>
         <target>Leave blank if not applicable.</target>
-        <note>Line: 67</note>
+        <note>Line: 76</note>
       </trans-unit>
       <trans-unit id="5b8df4265c79cd43831e740281850c84">
         <source>SSL does not seem to be available on your server.</source>
         <target>SSL does not seem to be available on your server.</target>
-        <note>Line: 81</note>
+        <note>Line: 91</note>
       </trans-unit>
       <trans-unit id="762160912d2bac8eb64bc00b711d6f6c">
         <source>Port number to use.</source>
         <target>Port number to use.</target>
-        <note>Line: 86</note>
+        <note>Line: 96</note>
       </trans-unit>
     </body>
   </file>
@@ -463,11 +463,6 @@ Comment: Special case for Product : either one or the other. Not both.</note>
         <source>This page will be displayed just after login.</source>
         <target>This page will be displayed just after login.</target>
         <note>Line: 229</note>
-      </trans-unit>
-      <trans-unit id="d222c4d0463bd3f146536ac89c0d7c77">
-        <source>Password should be at least %num% characters long.</source>
-        <target>Password should be at least %num% characters long.</target>
-        <note>Line: 173</note>
       </trans-unit>
     </body>
   </file>
@@ -562,6 +557,39 @@ Comment: Special case for Product : either one or the other. Not both.</note>
         <source>Quick description of the key: who it is for, what permissions it has, etc.</source>
         <target>Quick description of the key: who it is for, what permissions it has, etc.</target>
         <note>Line: 133</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Type/ChangePasswordType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d222c4d0463bd3f146536ac89c0d7c77">
+        <source>Password should be at least %num% characters long.</source>
+        <target>Password should be at least %num% characters long.</target>
+        <note>Line: 90</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Common/Grid/Columns/Content/severity_level.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b80c52e7f679fba3c2837b42705fe779">
+        <source>Informative only</source>
+        <target>Informative only</target>
+        <note>Line: 31</note>
+      </trans-unit>
+      <trans-unit id="0eaadb4fcb48a0a0ed7bc9868be9fbaa">
+        <source>Warning</source>
+        <target>Warning</target>
+        <note>Line: 34</note>
+      </trans-unit>
+      <trans-unit id="902b0d55fddef6f8d651fe1035b7d4bd">
+        <source>Error</source>
+        <target>Error</target>
+        <note>Line: 37</note>
+      </trans-unit>
+      <trans-unit id="4a378407770df6a42474ec5db9f54740">
+        <source>Major issue (crash)!</source>
+        <target>Major issue (crash)!</target>
+        <note>Line: 40</note>
       </trans-unit>
     </body>
   </file>
@@ -707,26 +735,6 @@ Comment: Special case for Product : either one or the other. Not both.</note>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/LogsPage/Blocks/severity_levels.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="b80c52e7f679fba3c2837b42705fe779">
-        <source>Informative only</source>
-        <target>Informative only</target>
-        <note>Line: 36</note>
-      </trans-unit>
-      <trans-unit id="0eaadb4fcb48a0a0ed7bc9868be9fbaa">
-        <source>Warning</source>
-        <target>Warning</target>
-        <note>Line: 41</note>
-      </trans-unit>
-      <trans-unit id="902b0d55fddef6f8d651fe1035b7d4bd">
-        <source>Error</source>
-        <target>Error</target>
-        <note>Line: 46</note>
-      </trans-unit>
-      <trans-unit id="4a378407770df6a42474ec5db9f54740">
-        <source>Major issue (crash)!</source>
-        <target>Major issue (crash)!</target>
-        <note>Line: 51</note>
-      </trans-unit>
       <trans-unit id="3979bb684920e9e9dc86e266f93d8c87">
         <source>Severity levels</source>
         <target>Severity levels</target>

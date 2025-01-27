@@ -74,6 +74,21 @@
         <target>missing</target>
         <note>Line: 111</note>
       </trans-unit>
+      <trans-unit id="f05b91496296629228c94a6b4b0a335f">
+        <source>Expressions to translate:</source>
+        <target>Expressions to translate:</target>
+        <note>Line: 57</note>
+      </trans-unit>
+      <trans-unit id="57aca76c1e8e4e4063437a931c74a0ee">
+        <source>Total missing expressions:</source>
+        <target>Total missing expressions:</target>
+        <note>Line: 58</note>
+      </trans-unit>
+      <trans-unit id="1476dfb963d54c697399a79fafa90151">
+        <source>expressions</source>
+        <target>expressions</target>
+        <note>Line: 110</note>
+      </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -92,21 +107,6 @@
   </file>
   <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="f05b91496296629228c94a6b4b0a335f">
-        <source>Expressions to translate:</source>
-        <target>Expressions to translate:</target>
-        <note>Line: 56</note>
-      </trans-unit>
-      <trans-unit id="57aca76c1e8e4e4063437a931c74a0ee">
-        <source>Total missing expressions:</source>
-        <target>Total missing expressions:</target>
-        <note>Line: 57</note>
-      </trans-unit>
-      <trans-unit id="1476dfb963d54c697399a79fafa90151">
-        <source>expressions</source>
-        <target>expressions</target>
-        <note>Line: 116</note>
-      </trans-unit>
       <trans-unit id="2303c057afcbe798a5d9811d36e88050">
         <source>Modify translations</source>
         <target>Modify translations</target>
@@ -374,52 +374,19 @@
         <target>Other</target>
         <note>Line: 71</note>
       </trans-unit>
-      <trans-unit id="ce8ae9da5b7cd6c3df2929543a9af92d">
-        <source>Email</source>
-        <target>Email</target>
-        <note>Line: 70</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Core/Grid/Definition/Factory/CurrencyGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="02c86eb2792f3262c21d030a87e19793">
-        <source>Symbol</source>
-        <target>Symbol</target>
-        <note>Line: 203</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/Core/Grid/Definition/Factory/CustomerThreadGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="ce8ae9da5b7cd6c3df2929543a9af92d">
+        <source>Email</source>
+        <target>Email</target>
+        <note>Line: 135</note>
+      </trans-unit>
       <trans-unit id="a1fa27779242b4902f7ae3bdd5c6d508">
         <source>Type</source>
         <target>Type</target>
         <note>Line: 142</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Core/Grid/Definition/Factory/LanguageGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e59a41e120686e63cbb743f003bea4e6">
-        <source>Language code</source>
-        <target>Language code</target>
-        <note>Line: 121</note>
-      </trans-unit>
-      <trans-unit id="534fd46732986cba0efeda8701592427">
-        <source>Date format</source>
-        <target>Date format</target>
-        <note>Line: 128</note>
-      </trans-unit>
-      <trans-unit id="c11566e30920ed4786e534e5332d5b87">
-        <source>Date format (full)</source>
-        <target>Date format (full)</target>
-        <note>Line: 135</note>
-      </trans-unit>
-      <trans-unit id="c5836008c1649301e29351a55db8f65c">
-        <source>Flag</source>
-        <target>Flag</target>
-        <note>Line: 97</note>
       </trans-unit>
     </body>
   </file>
@@ -429,11 +396,6 @@
         <source>Search rate</source>
         <target>Search rate</target>
         <note>Line: 173</note>
-      </trans-unit>
-      <trans-unit id="dcb66ff6e4a2517ade22183779939c9d">
-        <source>Rate</source>
-        <target>Rate</target>
-        <note>Line: 100</note>
       </trans-unit>
     </body>
   </file>
@@ -449,6 +411,20 @@
         <target>Numeric ISO code</target>
         <note>Line: 561</note>
       </trans-unit>
+      <trans-unit id="586e27d3575f00e51ad43b66eb34e49f">
+        <source>Currency name</source>
+        <target>Currency name</target>
+        <note>Line: 575</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Improve/International/LanguageController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e59a41e120686e63cbb743f003bea4e6">
+        <source>Language code</source>
+        <target>Language code</target>
+        <note>Line: 383</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Improve/International/ZoneController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -462,10 +438,10 @@
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Currencies/CurrencyType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="586e27d3575f00e51ad43b66eb34e49f">
-        <source>Currency name</source>
-        <target>Currency name</target>
-        <note>Line: 128</note>
+      <trans-unit id="02c86eb2792f3262c21d030a87e19793">
+        <source>Symbol</source>
+        <target>Symbol</target>
+        <note>Line: 148</note>
       </trans-unit>
       <trans-unit id="7d9ccccf4e5cc7d7949f26f0a2f5f341">
         <source>Select a currency</source>
@@ -529,6 +505,21 @@
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Language/LanguageType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="534fd46732986cba0efeda8701592427">
+        <source>Date format</source>
+        <target>Date format</target>
+        <note>Line: 118</note>
+      </trans-unit>
+      <trans-unit id="c11566e30920ed4786e534e5332d5b87">
+        <source>Date format (full)</source>
+        <target>Date format (full)</target>
+        <note>Line: 134</note>
+      </trans-unit>
+      <trans-unit id="c5836008c1649301e29351a55db8f65c">
+        <source>Flag</source>
+        <target>Flag</target>
+        <note>Line: 150</note>
+      </trans-unit>
       <trans-unit id="a0978fb69022447c12c0db348ad4f00c">
         <source>"No-picture" image</source>
         <target>"No-picture" image</target>
@@ -666,6 +657,15 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Tax/TaxType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="dcb66ff6e4a2517ade22183779939c9d">
+        <source>Rate</source>
+        <target>Rate</target>
+        <note>Line: 101</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Translations/AddUpdateLanguageType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="d92acc5a17d29f3f8b7ac58f22fe7df8">
@@ -714,17 +714,13 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Translations/ExportThemeLanguageType.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Translations/ModifyTranslationsType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="84a63a234d9b35094275bfb41ad46b47">
         <source>Select your theme</source>
         <target>Select your theme</target>
-        <note>Line: 75</note>
+        <note>Line: 125</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Translations/ModifyTranslationsType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="5aca31cb4d1fbb543b716cbaaf35c65f">
         <source>Core (no theme selected)</source>
         <target>Core (no theme selected)</target>
@@ -756,12 +752,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Design/MailTheme/Blocks/generate_mails_form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Design/MailTheme/Blocks/translate_mails_body_form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="c96f531c0eda2dece593a2f8df3a58a8">
         <source>Select your language</source>
         <target>Select your language</target>
-        <note>Line: 51</note>
+        <note>Line: 39</note>
       </trans-unit>
     </body>
   </file>
@@ -1010,20 +1006,21 @@ Comment: nb_translations can be 0 or 1</note>
         <target>Search translations</target>
         <note>Line: 58</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Twig/TranslationsExtension.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="c949bd6d096b356fc06f55ec5205e3b6">
         <source>%d missing</source>
         <target>%d missing</target>
-        <note>Line: 360</note>
+        <note><![CDATA[Line: 45
+Comment: Missing is plural, always > 1]]></note>
       </trans-unit>
       <trans-unit id="3a8b99657fcabfc65f45cd1be2b34de9">
         <source>%nb_translations% expressions</source>
         <target>%nb_translations% expressions</target>
-        <note>Line: 429</note>
+        <note>Line: 47</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Twig/TranslationsExtension.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="740b879fdd48f184f798b8018134f630">
         <source>Show messages</source>
         <target>Show messages</target>

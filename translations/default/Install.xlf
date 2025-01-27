@@ -911,17 +911,17 @@ Comment: We fill the process step used for Ajax queries</note>
       <trans-unit id="8bdd8b2357d516da5b81eb16746ba9a9">
         <source>Fashion and accessories</source>
         <target>Fashion and accessories</target>
-        <note>Line: 227</note>
+        <note>Line: 228</note>
       </trans-unit>
       <trans-unit id="9503054261b8aeed48e0a3902019b579">
         <source>Sport and Entertainment</source>
         <target>Sport and Entertainment</target>
-        <note>Line: 238</note>
+        <note>Line: 239</note>
       </trans-unit>
       <trans-unit id="4d0a6a9777a818ecc3b59b9a8ecd0c43">
         <source>-- Please choose your main activity --</source>
         <target>-- Please choose your main activity --</target>
-        <note>Line: 218</note>
+        <note>Line: 219</note>
       </trans-unit>
     </body>
   </file>
@@ -1081,15 +1081,15 @@ Comment: We fill the process step used for Ajax queries</note>
         <target>"%class%" must be an instance of "InstallXmlLoader"</target>
         <note>Line: 1107</note>
       </trans-unit>
-      <trans-unit id="6c16e88afa7f92cfe15e74a1fbe9c250">
-        <source><![CDATA[SQL error on query <i>%query%</i>]]></source>
-        <target><![CDATA[SQL error on query <i>%query%</i>]]></target>
-        <note>Line: 328</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Install/XmlLoader.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="6c16e88afa7f92cfe15e74a1fbe9c250">
+        <source><![CDATA[SQL error on query <i>%query%</i>]]></source>
+        <target><![CDATA[SQL error on query <i>%query%</i>]]></target>
+        <note>Line: 1266</note>
+      </trans-unit>
       <trans-unit id="5b56439cb79f3a01ae56d92e52be2218">
         <source><![CDATA[An SQL error occurred for entity <i>%entity%</i>: <i>%message%</i>]]></source>
         <target><![CDATA[An SQL error occurred for entity <i>%entity%</i>: <i>%message%</i>]]></target>

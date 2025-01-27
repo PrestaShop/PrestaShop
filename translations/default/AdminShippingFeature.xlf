@@ -106,12 +106,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/cart_rules/actions.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/carts/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="29aa46cc3d2677c7e0f216910df600ff">
         <source>Free shipping</source>
         <target>Free shipping</target>
-        <note>Line: 26</note>
+        <note>Line: 218</note>
       </trans-unit>
     </body>
   </file>
@@ -280,15 +280,19 @@
         <target>Maximum package weight</target>
         <note>Line: 371</note>
       </trans-unit>
-      <trans-unit id="4e140ba723a03baa6948340bf90e2ef6">
-        <source>Name:</source>
-        <target>Name:</target>
-        <note>Line: 692</note>
-      </trans-unit>
       <trans-unit id="8f497c1a3d15af9e0c215019f26b887d">
         <source>Delay</source>
         <target>Delay</target>
         <note>Line: 85</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCartRulesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4e140ba723a03baa6948340bf90e2ef6">
+        <source>Name:</source>
+        <target>Name:</target>
+        <note>Line: 866</note>
       </trans-unit>
     </body>
   </file>

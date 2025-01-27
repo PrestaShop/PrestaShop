@@ -18,30 +18,26 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/new-theme/template/components/layout/error_messages.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1e460c9780e870a025de51dbac61eeae">
-        <source>There are %d errors.</source>
-        <target>There are %d errors.</target>
-        <note>Line: 32</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/new-theme/template/components/layout/warning_messages.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="23a61fdb216b255d81b0d49ca1abb8a4">
-        <source>There are %d warnings.</source>
-        <target>There are %d warnings.</target>
-        <note>Line: 30</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/new-theme/template/error.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/error.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="ecdb1f330299c20ac9897cd73f92c8cd">
         <source>%1$s on line %2$s in file %3$s</source>
         <target>%1$s on line %2$s in file %3$s</target>
         <note>Line: 31</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/layout-ajax.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1e460c9780e870a025de51dbac61eeae">
+        <source>There are %d errors.</source>
+        <target>There are %d errors.</target>
+        <note>Line: 49</note>
+      </trans-unit>
+      <trans-unit id="23a61fdb216b255d81b0d49ca1abb8a4">
+        <source>There are %d warnings.</source>
+        <target>There are %d warnings.</target>
+        <note>Line: 88</note>
       </trans-unit>
     </body>
   </file>
@@ -329,6 +325,16 @@
         <target>Filetype not allowed</target>
         <note>Line: 366</note>
       </trans-unit>
+      <trans-unit id="a5a6e6da29a779cece21518a4ba337e2">
+        <source>The uploaded file exceeds the post_max_size directive in php.ini</source>
+        <target>The uploaded file exceeds the post_max_size directive in php.ini</target>
+        <note>Line: 351</note>
+      </trans-unit>
+      <trans-unit id="0bff5a3a7cc19937dd97b8a995915222">
+        <source>File is too big. Current size is %1s, maximum size is %2s.</source>
+        <target>File is too big. Current size is %1s, maximum size is %2s.</target>
+        <note>Line: 372</note>
+      </trans-unit>
     </body>
   </file>
   <file original="classes/controller/AdminController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -442,16 +448,6 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
   </file>
   <file original="classes/helper/HelperImageUploader.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="a5a6e6da29a779cece21518a4ba337e2">
-        <source>The uploaded file exceeds the post_max_size directive in php.ini</source>
-        <target>The uploaded file exceeds the post_max_size directive in php.ini</target>
-        <note>Line: 53</note>
-      </trans-unit>
-      <trans-unit id="0bff5a3a7cc19937dd97b8a995915222">
-        <source>File is too big. Current size is %1s, maximum size is %2s.</source>
-        <target>File is too big. Current size is %1s, maximum size is %2s.</target>
-        <note>Line: 71</note>
-      </trans-unit>
       <trans-unit id="2368e33e3e01d53abb9b60061ab83903">
         <source>The uploaded file exceeds the upload_max_filesize directive in php.ini</source>
         <target>The uploaded file exceeds the upload_max_filesize directive in php.ini</target>
@@ -464,12 +460,12 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="fdc746e5693df31cf4f6ef789a8846c5">
         <source>file (%s) not writable</source>
         <target>file (%s) not writable</target>
-        <note>Line: 2874</note>
+        <note>Line: 2879</note>
       </trans-unit>
       <trans-unit id="a9de928286071f457fcbc45656353761">
         <source>directory (%s) not writable</source>
         <target>directory (%s) not writable</target>
-        <note>Line: 2974</note>
+        <note>Line: 2979</note>
       </trans-unit>
     </body>
   </file>
@@ -479,54 +475,6 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
         <source>The file you are trying to upload is %2$d KB, which is larger than the maximum size allowed of %1$d KB.</source>
         <target>The file you are trying to upload is %2$d KB, which is larger than the maximum size allowed of %1$d KB.</target>
         <note>Line: 357</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminAccessController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a7eca295291f53a23ab7ba0a9c7fd9de">
-        <source>This functionality has been disabled.</source>
-        <target>This functionality has been disabled.</target>
-        <note>Line: 166</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminAttributesGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="45ebc64529137a007889ee445d64611c">
-        <source>Failed to update the position.</source>
-        <target>Failed to update the position.</target>
-        <note>Line: 780</note>
-      </trans-unit>
-      <trans-unit id="ddd4e7f16c2032d59cb4fb4b86576bc5">
-        <source>You must select at least one element to delete.</source>
-        <target>You must select at least one element to delete.</target>
-        <note>Line: 818</note>
-      </trans-unit>
-      <trans-unit id="815e471ea2970db0b63b9b09feacc70f">
-        <source>An error occurred while updating the status for an object.</source>
-        <target>An error occurred while updating the status for an object.</target>
-        <note>Line: 719</note>
-      </trans-unit>
-      <trans-unit id="77ae44aa6c998166fcf1a87496278ad5">
-        <source>(cannot load object)</source>
-        <target>(cannot load object)</target>
-        <note>Line: 720</note>
-      </trans-unit>
-      <trans-unit id="11a257a80f8c8d76132470b171de6795">
-        <source>You do not have permission to delete this.</source>
-        <target>You do not have permission to delete this.</target>
-        <note>Line: 821</note>
-      </trans-unit>
-      <trans-unit id="1bdd228669c9dd995eb664737e60786e">
-        <source>You do not have permission to edit this.</source>
-        <target>You do not have permission to edit this.</target>
-        <note>Line: 771</note>
-      </trans-unit>
-      <trans-unit id="1d5dfad5ac415b412c20a05a89d43db6">
-        <source>An error occurred while deleting this selection.</source>
-        <target>An error occurred while deleting this selection.</target>
-        <note>Line: 816</note>
       </trans-unit>
     </body>
   </file>
@@ -725,6 +673,21 @@ Comment: Error wordings, one_error is not used anymore</note>
   </file>
   <file original="controllers/admin/AdminProductsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="45ebc64529137a007889ee445d64611c">
+        <source>Failed to update the position.</source>
+        <target>Failed to update the position.</target>
+        <note>Line: 1142</note>
+      </trans-unit>
+      <trans-unit id="ddd4e7f16c2032d59cb4fb4b86576bc5">
+        <source>You must select at least one element to delete.</source>
+        <target>You must select at least one element to delete.</target>
+        <note>Line: 730</note>
+      </trans-unit>
+      <trans-unit id="1d5dfad5ac415b412c20a05a89d43db6">
+        <source>An error occurred while deleting this selection.</source>
+        <target>An error occurred while deleting this selection.</target>
+        <note>Line: 726</note>
+      </trans-unit>
       <trans-unit id="06b778accab7c14a499bc6e7a68138ec">
         <source>An error occurred while copying the image.</source>
         <target>An error occurred while copying the image.</target>
@@ -860,6 +823,16 @@ Comment: Error wordings, one_error is not used anymore</note>
         <target>The %s field is not valid</target>
         <note>Line: 772</note>
       </trans-unit>
+      <trans-unit id="bc33aa1314e7dcd3472db72472b909b2">
+        <source>An error occurred during deletion.</source>
+        <target>An error occurred during deletion.</target>
+        <note>Line: 622</note>
+      </trans-unit>
+      <trans-unit id="7f290594963a303db17a5e21dc4cf0b7">
+        <source>An error occurred while deleting the object.</source>
+        <target>An error occurred while deleting the object.</target>
+        <note>Line: 627</note>
+      </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminRequestSqlController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -868,15 +841,6 @@ Comment: Error wordings, one_error is not used anymore</note>
         <source>"%key%" does not exist.</source>
         <target>"%key%" does not exist.</target>
         <note>Line: 549</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminSearchController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1b0cc7183377b461e298d0ebcf5f8548">
-        <source>An error occurred while updating the status.</source>
-        <target>An error occurred while updating the status.</target>
-        <note>Line: 87</note>
       </trans-unit>
     </body>
   </file>
@@ -905,6 +869,26 @@ Comment: Error wordings, one_error is not used anymore</note>
   </file>
   <file original="controllers/admin/AdminShopUrlController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="815e471ea2970db0b63b9b09feacc70f">
+        <source>An error occurred while updating the status for an object.</source>
+        <target>An error occurred while updating the status for an object.</target>
+        <note>Line: 451</note>
+      </trans-unit>
+      <trans-unit id="77ae44aa6c998166fcf1a87496278ad5">
+        <source>(cannot load object)</source>
+        <target>(cannot load object)</target>
+        <note>Line: 451</note>
+      </trans-unit>
+      <trans-unit id="1bdd228669c9dd995eb664737e60786e">
+        <source>You do not have permission to edit this.</source>
+        <target>You do not have permission to edit this.</target>
+        <note>Line: 454</note>
+      </trans-unit>
+      <trans-unit id="1b0cc7183377b461e298d0ebcf5f8548">
+        <source>An error occurred while updating the status.</source>
+        <target>An error occurred while updating the status.</target>
+        <note>Line: 432</note>
+      </trans-unit>
       <trans-unit id="fd44c173b6a7897151a978b9015fec76">
         <source>You cannot disable the Main URL.</source>
         <target>You cannot disable the Main URL.</target>
@@ -924,20 +908,6 @@ Comment: Error wordings, one_error is not used anymore</note>
         <source>A shop virtual URL cannot be "%URL%"</source>
         <target>A shop virtual URL cannot be "%URL%"</target>
         <note>Line: 478</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminStatesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="bc33aa1314e7dcd3472db72472b909b2">
-        <source>An error occurred during deletion.</source>
-        <target>An error occurred during deletion.</target>
-        <note>Line: 248</note>
-      </trans-unit>
-      <trans-unit id="7f290594963a303db17a5e21dc4cf0b7">
-        <source>An error occurred while deleting the object.</source>
-        <target>An error occurred while deleting the object.</target>
-        <note>Line: 253</note>
       </trans-unit>
     </body>
   </file>
@@ -967,6 +937,11 @@ Comment: Error wordings, one_error is not used anymore</note>
   </file>
   <file original="controllers/admin/AdminTaxRulesGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="11a257a80f8c8d76132470b171de6795">
+        <source>You do not have permission to delete this.</source>
+        <target>You do not have permission to delete this.</target>
+        <note>Line: 397</note>
+      </trans-unit>
       <trans-unit id="d8d4c3b79181fdcca8cb5159208fa56a">
         <source>You do not have permission to add this.</source>
         <target>You do not have permission to add this.</target>
@@ -976,6 +951,11 @@ Comment: Error wordings, one_error is not used anymore</note>
   </file>
   <file original="controllers/admin/AdminTranslationsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="a7eca295291f53a23ab7ba0a9c7fd9de">
+        <source>This functionality has been disabled.</source>
+        <target>This functionality has been disabled.</target>
+        <note>Line: 1503</note>
+      </trans-unit>
       <trans-unit id="e298a0bc9a35d45798e28c082dfc1dfa">
         <source>"%type%" does not exist.</source>
         <target>"%type%" does not exist.</target>
@@ -1115,12 +1095,12 @@ Comment: Error wordings, one_error is not used anymore</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_facetedsearch/src/Form/Attribute/FormModifier.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_facetedsearch/src/Form/Feature/FormModifier.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="87ecb83d305a6af0e0438a0587e31de8">
         <source>%s is invalid.</source>
         <target>%s is invalid.</target>
-        <note>Line: 82</note>
+        <note>Line: 84</note>
       </trans-unit>
     </body>
   </file>
@@ -1129,7 +1109,7 @@ Comment: Error wordings, one_error is not used anymore</note>
       <trans-unit id="7cc92687130ea12abb80556681538001">
         <source>An error occurred during the image upload process.</source>
         <target>An error occurred during the image upload process.</target>
-        <note>Line: 491</note>
+        <note>Line: 522</note>
       </trans-unit>
     </body>
   </file>
@@ -1165,6 +1145,15 @@ Comment: Error wordings, one_error is not used anymore</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/Adapter/Product/GeneralConfiguration.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="cc8f0fe2d629bd1810331b1a265914ec">
+        <source>The selected condition must be different in each field to set an order of priority.</source>
+        <target>The selected condition must be different in each field to set an order of priority.</target>
+        <note>Line: 105</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/Core/Localization/Pack/Import/LocalizationPackImporter.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="0bd212ed072143f56147f2f119892d03">
@@ -1195,6 +1184,11 @@ Comment: Error wordings, one_error is not used anymore</note>
         <target>%s is invalid. Please enter an integer lower than %s.</target>
         <note>Line: 243</note>
       </trans-unit>
+      <trans-unit id="5d4ab8176c670bbb26380353630c90e4">
+        <source>%s is invalid. Please enter an integer greater than or equal to 0.</source>
+        <target>%s is invalid. Please enter an integer greater than or equal to 0.</target>
+        <note>Line: 237</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/EmployeeController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1209,10 +1203,14 @@ Comment: Error wordings, one_error is not used anymore</note>
         <target>You need permission to add this.</target>
         <note>Line: 566</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="df3c280f0aaf0cb0d5c25ab322a8bcf9">
         <source>You do not have permission to update this.</source>
         <target>You do not have permission to update this.</target>
-        <note>Line: 334</note>
+        <note>Line: 360</note>
       </trans-unit>
     </body>
   </file>
@@ -1354,11 +1352,6 @@ Comment: Error wordings, one_error is not used anymore</note>
         <target>Unexpected error occurred.</target>
         <note>Line: 426</note>
       </trans-unit>
-      <trans-unit id="1da2e8106b3a2171fbb7193a24b91526">
-        <source>An unexpected error occurred.</source>
-        <target>An unexpected error occurred.</target>
-        <note>Line: 427</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Improve/International/LanguageController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1377,6 +1370,11 @@ Comment: Error wordings, one_error is not used anymore</note>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Improve/International/StateController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="1da2e8106b3a2171fbb7193a24b91526">
+        <source>An unexpected error occurred.</source>
+        <target>An unexpected error occurred.</target>
+        <note>Line: 393</note>
+      </trans-unit>
       <trans-unit id="d52eaeff31af37a4a7e0550008aff5df">
         <source>An error occurred while attempting to save.</source>
         <target>An error occurred while attempting to save.</target>
@@ -1423,11 +1421,6 @@ Comment: Error wordings, one_error is not used anymore</note>
         <target>Invalid data supplied.</target>
         <note>Line: 637</note>
       </trans-unit>
-      <trans-unit id="a031742eeff8c55743063075a141da16">
-        <source>Address fields contain invalid values.</source>
-        <target>Address fields contain invalid values.</target>
-        <note>Line: 651</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CartRuleController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1450,10 +1443,10 @@ Comment: Error wordings, one_error is not used anymore</note>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/ManufacturerController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="d01e90d69347d836d72fbae16abf2ad3">
-        <source>Image format not recognized, allowed formats are: .gif, .jpg, .png, .webp</source>
-        <target>Image format not recognized, allowed formats are: .gif, .jpg, .png, .webp</target>
-        <note>Line: 726</note>
+      <trans-unit id="a031742eeff8c55743063075a141da16">
+        <source>Address fields contain invalid values.</source>
+        <target>Address fields contain invalid values.</target>
+        <note>Line: 735</note>
       </trans-unit>
     </body>
   </file>
@@ -1487,11 +1480,6 @@ Comment: Error wordings, one_error is not used anymore</note>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="cc8f0fe2d629bd1810331b1a265914ec">
-        <source>The selected condition must be different in each field to set an order of priority.</source>
-        <target>The selected condition must be different in each field to set an order of priority.</target>
-        <note>Line: 1498</note>
-      </trans-unit>
       <trans-unit id="95be38fc18a46111194e2cba0649504a">
         <source>Product price is invalid</source>
         <target>Product price is invalid</target>
@@ -1521,6 +1509,11 @@ Comment: Error wordings, one_error is not used anymore</note>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/SupplierController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="d01e90d69347d836d72fbae16abf2ad3">
+        <source>Image format not recognized, allowed formats are: .gif, .jpg, .png, .webp</source>
+        <target>Image format not recognized, allowed formats are: .gif, .jpg, .png, .webp</target>
+        <note>Line: 548</note>
+      </trans-unit>
       <trans-unit id="2c576ac66b22c688a12278e88a976ab8">
         <source>The address for this supplier has been deleted.</source>
         <target>The address for this supplier has been deleted.</target>
@@ -1609,6 +1602,11 @@ Comment: Error wordings, one_error is not used anymore</note>
         <target>You cannot edit the price of a product that no longer exists in your catalog.</target>
         <note>Line: 2029</note>
       </trans-unit>
+      <trans-unit id="59af32e406ca8d94850e9a2a696c9dcd">
+        <source>Invalid value: the payment must be a positive amount.</source>
+        <target>Invalid value: the payment must be a positive amount.</target>
+        <note>Line: 1983</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Controller/Api/StockController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1636,10 +1634,10 @@ Comment: Error wordings, one_error is not used anymore</note>
         <target>This field is invalid</target>
         <note>Line: 163</note>
       </trans-unit>
-      <trans-unit id="1a668ad0d1d7a5623d2710d2517bbdd1">
-        <source>This field cannot be shorter than %limit% characters</source>
-        <target>This field cannot be shorter than %limit% characters</target>
-        <note>Line: 319</note>
+      <trans-unit id="dada2d58c67cca61c8e6daeb0e4c79bb">
+        <source>This field cannot be empty.</source>
+        <target>This field cannot be empty.</target>
+        <note>Line: 345</note>
       </trans-unit>
     </body>
   </file>
@@ -1659,11 +1657,6 @@ Comment: Error wordings, one_error is not used anymore</note>
         <target>The "%s" field is invalid. HTML tags are not allowed.</target>
         <note>Line: 137</note>
       </trans-unit>
-      <trans-unit id="ce09b68fe980afcd2181771fe3bf5b31">
-        <source>This field cannot be longer than %limit% characters</source>
-        <target>This field cannot be longer than %limit% characters</target>
-        <note>Line: 104</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/CustomerPreferences/GeneralType.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1681,15 +1674,6 @@ Comment: Error wordings, one_error is not used anymore</note>
         <source>The %s field is invalid. Please enter a positive integer.</source>
         <target>The %s field is invalid. Please enter a positive integer.</target>
         <note>Line: 90</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/SearchEngines/SearchEngineType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="dada2d58c67cca61c8e6daeb0e4c79bb">
-        <source>This field cannot be empty.</source>
-        <target>This field cannot be empty.</target>
-        <note>Line: 72</note>
       </trans-unit>
     </body>
   </file>
@@ -1751,11 +1735,6 @@ Comment: Error wordings, one_error is not used anymore</note>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="5d4ab8176c670bbb26380353630c90e4">
-        <source>%s is invalid. Please enter an integer greater than or equal to 0.</source>
-        <target>%s is invalid. Please enter an integer greater than or equal to 0.</target>
-        <note>Line: 342</note>
-      </trans-unit>
       <trans-unit id="db5870baa2d95de54c94afbc8a624e49">
         <source>%s is invalid. Please enter an integer lower than or equal to %s.</source>
         <target>%s is invalid. Please enter an integer lower than or equal to %s.</target>
@@ -1800,15 +1779,6 @@ Comment: Error wordings, one_error is not used anymore</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Sell/Order/OrderPaymentType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="59af32e406ca8d94850e9a2a696c9dcd">
-        <source>Invalid value: the payment must be a positive amount.</source>
-        <target>Invalid value: the payment must be a positive amount.</target>
-        <note>Line: 119</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Image/ImageDropzoneType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="ce049c53d46c1c5a36b1d7ed392c19f0">
@@ -1843,6 +1813,16 @@ Comment: Error wordings, one_error is not used anymore</note>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Type/ChangePasswordType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="1a668ad0d1d7a5623d2710d2517bbdd1">
+        <source>This field cannot be shorter than %limit% characters</source>
+        <target>This field cannot be shorter than %limit% characters</target>
+        <note>Line: 165</note>
+      </trans-unit>
+      <trans-unit id="ce09b68fe980afcd2181771fe3bf5b31">
+        <source>This field cannot be longer than %limit% characters</source>
+        <target>This field cannot be longer than %limit% characters</target>
+        <note>Line: 179</note>
+      </trans-unit>
       <trans-unit id="65efaaf9ead1beea82672beb5ace1fe2">
         <source>The confirmation password doesn't match.</source>
         <target>The confirmation password doesn't match.</target>

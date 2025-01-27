@@ -173,35 +173,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/front/OrderConfirmationController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="30a3534b67a9a2c4cb3f1bb8659b321f">
-        <source>Very weak</source>
-        <target>Very weak</target>
-        <note>Line: 148</note>
-      </trans-unit>
-      <trans-unit id="7324e3727807d95037eb19d304fd91ec">
-        <source>Weak</source>
-        <target>Weak</target>
-        <note>Line: 149</note>
-      </trans-unit>
-      <trans-unit id="b1897515d548a960afe49ecf66a29021">
-        <source>Average</source>
-        <target>Average</target>
-        <note>Line: 150</note>
-      </trans-unit>
-      <trans-unit id="c43e0fd449c758dab8f891d8e19eb1a9">
-        <source>Strong</source>
-        <target>Strong</target>
-        <note>Line: 151</note>
-      </trans-unit>
-      <trans-unit id="516b34a4d2351006f3a0f39ccffccefa">
-        <source>Very strong</source>
-        <target>Very strong</target>
-        <note>Line: 152</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/front/OrderReturnController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e06d7593c1cd6dabef450be6c3da7091">
@@ -211,12 +182,41 @@
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/front/ProductController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/front/PageNotFoundController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="f2fbecfb4e1f8fd471dcc0881d8518f1">
         <source>The page you are looking for was not found.</source>
         <target>The page you are looking for was not found.</target>
-        <note>Line: 1465</note>
+        <note>Line: 70</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/PasswordController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="30a3534b67a9a2c4cb3f1bb8659b321f">
+        <source>Very weak</source>
+        <target>Very weak</target>
+        <note>Line: 182</note>
+      </trans-unit>
+      <trans-unit id="7324e3727807d95037eb19d304fd91ec">
+        <source>Weak</source>
+        <target>Weak</target>
+        <note>Line: 183</note>
+      </trans-unit>
+      <trans-unit id="b1897515d548a960afe49ecf66a29021">
+        <source>Average</source>
+        <target>Average</target>
+        <note>Line: 184</note>
+      </trans-unit>
+      <trans-unit id="c43e0fd449c758dab8f891d8e19eb1a9">
+        <source>Strong</source>
+        <target>Strong</target>
+        <note>Line: 185</note>
+      </trans-unit>
+      <trans-unit id="516b34a4d2351006f3a0f39ccffccefa">
+        <source>Very strong</source>
+        <target>Very strong</target>
+        <note>Line: 186</note>
       </trans-unit>
     </body>
   </file>
@@ -350,27 +350,27 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/Adapter/Presenter/Order/OrderLazyArray.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/Adapter/Presenter/Cart/CartLazyArray.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e3ddbe6b144e01554bfa072db9bcca2f">
         <source>(tax included)</source>
         <target>(tax included)</target>
-        <note>Line: 428</note>
+        <note>Line: 331</note>
       </trans-unit>
       <trans-unit id="e9e7ca277da652bde67ef5faafb755dc">
         <source>(tax excluded)</source>
         <target>(tax excluded)</target>
-        <note>Line: 429</note>
+        <note>Line: 332</note>
       </trans-unit>
       <trans-unit id="1f87346a16cf80c372065de3c54c86d9">
         <source>(tax incl.)</source>
         <target>(tax incl.)</target>
-        <note>Line: 425</note>
+        <note>Line: 328</note>
       </trans-unit>
       <trans-unit id="21034ae6d01a83e702839a72ba8a77b0">
         <source>(tax excl.)</source>
         <target>(tax excl.)</target>
-        <note>Line: 426</note>
+        <note>Line: 329</note>
       </trans-unit>
     </body>
   </file>
@@ -453,12 +453,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription-column.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/classic/modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="3805f49499fa5010c394e219aa1fe7a0">
         <source>Get our latest news and special sales</source>
         <target>Get our latest news and special sales</target>
-        <note>Line: 29</note>
+        <note>Line: 28</note>
       </trans-unit>
     </body>
   </file>
@@ -509,21 +509,21 @@
       </trans-unit>
     </body>
   </file>
+  <file original="themes/classic/templates/_partials/footer.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7601c8e861088bd27255e18afaefab6b">
+        <source>%copyright% %year% - Ecommerce software by %prestashop%</source>
+        <target>%copyright% %year% - Ecommerce software by %prestashop%</target>
+        <note>Line: 49</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="themes/classic/templates/catalog/_partials/sort-orders.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="98438bb96e6464272cadcd6a9c5774b7">
         <source>Sort by selection</source>
         <target>Sort by selection</target>
         <note>Line: 32</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/templates/checkout/_partials/footer.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="7601c8e861088bd27255e18afaefab6b">
-        <source>%copyright% %year% - Ecommerce software by %prestashop%</source>
-        <target>%copyright% %year% - Ecommerce software by %prestashop%</target>
-        <note>Line: 41</note>
       </trans-unit>
     </body>
   </file>

@@ -119,11 +119,6 @@
         <target>Save then add another value</target>
         <note>Line: 576</note>
       </trans-unit>
-      <trans-unit id="22cbf85c41427960736dc10cfec5faf4">
-        <source>Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").</source>
-        <target>Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").</target>
-        <note>Line: 325</note>
-      </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminCustomerThreadsController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -229,6 +224,15 @@
       </trans-unit>
     </body>
   </file>
+  <file original="controllers/admin/AdminShopController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="22cbf85c41427960736dc10cfec5faf4">
+        <source>Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").</source>
+        <target>Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").</target>
+        <note>Line: 434</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminSuppliersController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="dd0479e67d24cd2c2868d4c6b2dcba9a">
@@ -299,15 +303,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Product/ProductCombination.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="16a5534d559007de7e8f5b4f17112203">
-        <source>Leave empty to disable</source>
-        <target>Leave empty to disable</target>
-        <note>Line: 200</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Product/ProductInformation.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="7bb36e0f484d91aeba5d83fe2af63d28">
@@ -352,6 +347,11 @@
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Product/ProductQuantity.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="16a5534d559007de7e8f5b4f17112203">
+        <source>Leave empty to disable</source>
+        <target>Leave empty to disable</target>
+        <note>Line: 209</note>
+      </trans-unit>
       <trans-unit id="e63e2ba42470a41ba75e0d7ea35a410f">
         <source>Combine several attributes, e.g.: "Size: all", "Color: red".</source>
         <target>Combine several attributes, e.g.: "Size: all", "Color: red".</target>
@@ -445,7 +445,7 @@
       <trans-unit id="0834dbec80c240be5b2fda7c96b79b50">
         <source>Search product</source>
         <target>Search product</target>
-        <note>Line: 155</note>
+        <note>Line: 142</note>
       </trans-unit>
     </body>
   </file>

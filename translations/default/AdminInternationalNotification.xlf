@@ -18,6 +18,15 @@
       </trans-unit>
     </body>
   </file>
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7cefb4829c6de24b63f7a05716b43bec">
+        <source>This expression uses a special syntax:</source>
+        <target>This expression uses a special syntax:</target>
+        <note>Line: 133</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="06a92b5dc72bff3b98bf4b932ce72864">
@@ -64,15 +73,6 @@
         <source>%limit% for suhosin.request.max_vars.</source>
         <target>%limit% for suhosin.request.max_vars.</target>
         <note>Line: 42</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="7cefb4829c6de24b63f7a05716b43bec">
-        <source>This expression uses a special syntax:</source>
-        <target>This expression uses a special syntax:</target>
-        <note>Line: 140</note>
       </trans-unit>
     </body>
   </file>
@@ -652,14 +652,10 @@ Comment: @todo Throw exception</note>
         <target>Country selection is invalid.</target>
         <note>Line: 115</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Geolocation/GeolocationWhitelistFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="0861a67f819158c5690a1844d95390b4">
         <source>Invalid whitelist</source>
         <target>Invalid whitelist</target>
-        <note>Line: 76</note>
+        <note>Line: 123</note>
       </trans-unit>
     </body>
   </file>

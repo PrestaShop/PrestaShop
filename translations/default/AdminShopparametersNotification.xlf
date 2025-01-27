@@ -201,12 +201,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/OrderPreferencesGeneralFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/OrderPreferencesFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="85a1ca0031f114f8409d15c6790856f5">
         <source>Assign a valid page if you want it to be read.</source>
         <target>Assign a valid page if you want it to be read.</target>
-        <note>Line: 118</note>
+        <note>Line: 142</note>
       </trans-unit>
     </body>
   </file>
