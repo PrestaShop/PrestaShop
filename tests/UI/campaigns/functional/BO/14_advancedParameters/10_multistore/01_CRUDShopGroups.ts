@@ -1,16 +1,19 @@
+// Import utils
 import testContext from '@utils/testContext';
-import {expect} from 'chai';
 
 // Import commonTests
 import setMultiStoreStatus from '@commonTests/BO/advancedParameters/multistore';
 
+// Import pages
+import addShopGroupPage from '@pages/BO/advancedParameters/multistore/add';
+import addShopPage from '@pages/BO/advancedParameters/multistore/shop/add';
+import shopPage from '@pages/BO/advancedParameters/multistore/shop';
+
+import {expect} from 'chai';
 import {
   boDashboardPage,
   boLoginPage,
   boMultistorePage,
-  boMultistoreGroupCreatePage,
-  boMultistoreShopPage,
-  boMultistoreShopCreatePage,
   type BrowserContext,
   FakerShop,
   FakerShopGroup,
@@ -83,15 +86,15 @@ describe('BO - Advanced Parameters - Multistore : Create, Read, Update and Delet
 
       await boMultistorePage.goToNewShopGroupPage(page);
 
-      const pageTitle = await boMultistoreGroupCreatePage.getPageTitle(page);
-      expect(pageTitle).to.contains(boMultistoreGroupCreatePage.pageTitleCreate);
+      const pageTitle = await addShopGroupPage.getPageTitle(page);
+      expect(pageTitle).to.contains(addShopGroupPage.pageTitleCreate);
     });
 
     it('should create shop group and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createShopGroup', baseContext);
 
-      const textResult = await boMultistoreGroupCreatePage.setShopGroup(page, createShopGroupData);
-      expect(textResult).to.contains(boMultistoreGroupCreatePage.successfulCreationMessage);
+      const textResult = await addShopGroupPage.setShopGroup(page, createShopGroupData);
+      expect(textResult).to.contains(addShopGroupPage.successfulCreationMessage);
 
       const numberOfShopGroupsAfterCreation = await boMultistorePage.getNumberOfElementInGrid(page);
       expect(numberOfShopGroupsAfterCreation).to.be.equal(numberOfShopGroups + 1);
@@ -106,15 +109,15 @@ describe('BO - Advanced Parameters - Multistore : Create, Read, Update and Delet
       await boMultistorePage.filterTable(page, 'a!name', createShopGroupData.name);
       await boMultistorePage.gotoEditShopGroupPage(page, 1);
 
-      const pageTitle = await boMultistoreGroupCreatePage.getPageTitle(page);
-      expect(pageTitle).to.contains(boMultistoreGroupCreatePage.pageTitleEdit);
+      const pageTitle = await addShopGroupPage.getPageTitle(page);
+      expect(pageTitle).to.contains(addShopGroupPage.pageTitleEdit);
     });
 
     it('should edit shop group and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateShopGroup', baseContext);
 
-      const textResult = await boMultistoreGroupCreatePage.setShopGroup(page, updateShopGroupData);
-      expect(textResult).to.contains(boMultistoreGroupCreatePage.successfulUpdateMessage);
+      const textResult = await addShopGroupPage.setShopGroup(page, updateShopGroupData);
+      expect(textResult).to.contains(addShopGroupPage.successfulUpdateMessage);
 
       const numberOfShopGroupsAfterUpdate = await boMultistorePage.resetAndGetNumberOfLines(page);
       expect(numberOfShopGroupsAfterUpdate).to.be.equal(numberOfShopGroups + 1);
@@ -128,24 +131,24 @@ describe('BO - Advanced Parameters - Multistore : Create, Read, Update and Delet
 
       await boMultistorePage.goToNewShopPage(page);
 
-      const pageTitle = await boMultistoreShopCreatePage.getPageTitle(page);
-      expect(pageTitle).to.contains(boMultistoreShopCreatePage.pageTitleCreate);
+      const pageTitle = await addShopPage.getPageTitle(page);
+      expect(pageTitle).to.contains(addShopPage.pageTitleCreate);
     });
 
     it('should create shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createShop', baseContext);
 
-      const textResult = await boMultistoreShopCreatePage.setShop(page, shopData);
+      const textResult = await addShopPage.setShop(page, shopData);
       expect(textResult).to.contains(boMultistorePage.successfulCreationMessage);
     });
 
     it('should get the id of the new shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getShopID', baseContext);
 
-      const numberOfShops = await boMultistoreShopPage.getNumberOfElementInGrid(page);
+      const numberOfShops = await shopPage.getNumberOfElementInGrid(page);
       expect(numberOfShops).to.be.above(0);
 
-      shopID = parseInt(await boMultistoreShopPage.getTextColumn(page, 1, 'id_shop'), 10);
+      shopID = parseInt(await shopPage.getTextColumn(page, 1, 'id_shop'), 10);
     });
   });
 
@@ -182,22 +185,22 @@ describe('BO - Advanced Parameters - Multistore : Create, Read, Update and Delet
 
       await boMultistorePage.goToShopPage(page, shopID);
 
-      const pageTitle = await boMultistoreShopPage.getPageTitle(page);
+      const pageTitle = await shopPage.getPageTitle(page);
       expect(pageTitle).to.contains(updateShopGroupData.name);
     });
 
     it('should delete the shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteShop', baseContext);
 
-      const numberOfShops = await boMultistoreShopPage.getNumberOfElementInGrid(page);
+      const numberOfShops = await shopPage.getNumberOfElementInGrid(page);
       expect(numberOfShops).to.be.above(1);
 
-      await boMultistoreShopPage.filterTable(page, 'a!name', shopData.name);
+      await shopPage.filterTable(page, 'a!name', shopData.name);
 
-      const textResult = await boMultistoreShopPage.deleteShop(page, 1);
-      expect(textResult).to.contains(boMultistoreShopPage.successfulDeleteMessage);
+      const textResult = await shopPage.deleteShop(page, 1);
+      expect(textResult).to.contains(shopPage.successfulDeleteMessage);
 
-      const numberOfShopsAfterDelete = await boMultistoreShopPage.resetAndGetNumberOfLines(page);
+      const numberOfShopsAfterDelete = await shopPage.resetAndGetNumberOfLines(page);
       expect(numberOfShopsAfterDelete).to.be.equal(1);
     });
 
