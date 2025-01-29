@@ -25,45 +25,40 @@
         <target>This expression uses a special syntax:</target>
         <note>Line: 133</note>
       </trans-unit>
-      <trans-unit id="06a92b5dc72bff3b98bf4b932ce72864">
-        <source>Apache mod_security is activated on your server. This could result in some Bad Request errors</source>
-        <target>Apache mod_security is activated on your server. This could result in some Bad Request errors</target>
-        <note>Line: 31</note>
-      </trans-unit>
-      <trans-unit id="1f0f8b59397f34d499b181297714713a">
-        <source>Warning! Your hosting provider is using the Suhosin patch for PHP, which limits the maximum number of fields allowed in a form:</source>
-        <target>Warning! Your hosting provider is using the Suhosin patch for PHP, which limits the maximum number of fields allowed in a form:</target>
-        <note>Line: 37</note>
-      </trans-unit>
-      <trans-unit id="308c1cf98be9973142833c9a9dbbc2ef">
-        <source>Please ask your hosting provider to increase the Suhosin limit to</source>
-        <target>Please ask your hosting provider to increase the Suhosin limit to</target>
-        <note>Line: 41</note>
-      </trans-unit>
-      <trans-unit id="5ad040870ae5ccaeb2d57e4d052163a4">
-        <source>Warning! Your PHP configuration limits the maximum number of fields allowed in a form:</source>
-        <target>Warning! Your PHP configuration limits the maximum number of fields allowed in a form:</target>
-        <note>Line: 43</note>
-      </trans-unit>
-      <trans-unit id="5607dc45ebdfc0baaab64d944aa88f47">
-        <source>for max_input_vars.</source>
-        <target>for max_input_vars.</target>
-        <note>Line: 44</note>
-      </trans-unit>
-      <trans-unit id="6e709babf4b5a0ed4194ad5240e1be2c">
-        <source>Please ask your hosting provider to increase this limit to</source>
-        <target>Please ask your hosting provider to increase this limit to</target>
-        <note>Line: 45</note>
-      </trans-unit>
-      <trans-unit id="4fb6a3beb82f8d8aa4bbdf8f5a0c35fa">
-        <source>%s at least, or you will have to edit the translation files.</source>
-        <target>%s at least, or you will have to edit the translation files.</target>
-        <note>Line: 47</note>
-      </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="06a92b5dc72bff3b98bf4b932ce72864">
+        <source>Apache mod_security is activated on your server. This could result in some Bad Request errors</source>
+        <target>Apache mod_security is activated on your server. This could result in some Bad Request errors</target>
+        <note>Line: 33</note>
+      </trans-unit>
+      <trans-unit id="1f0f8b59397f34d499b181297714713a">
+        <source>Warning! Your hosting provider is using the Suhosin patch for PHP, which limits the maximum number of fields allowed in a form:</source>
+        <target>Warning! Your hosting provider is using the Suhosin patch for PHP, which limits the maximum number of fields allowed in a form:</target>
+        <note>Line: 39</note>
+      </trans-unit>
+      <trans-unit id="308c1cf98be9973142833c9a9dbbc2ef">
+        <source>Please ask your hosting provider to increase the Suhosin limit to</source>
+        <target>Please ask your hosting provider to increase the Suhosin limit to</target>
+        <note>Line: 43</note>
+      </trans-unit>
+      <trans-unit id="5ad040870ae5ccaeb2d57e4d052163a4">
+        <source>Warning! Your PHP configuration limits the maximum number of fields allowed in a form:</source>
+        <target>Warning! Your PHP configuration limits the maximum number of fields allowed in a form:</target>
+        <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="5607dc45ebdfc0baaab64d944aa88f47">
+        <source>for max_input_vars.</source>
+        <target>for max_input_vars.</target>
+        <note>Line: 46</note>
+      </trans-unit>
+      <trans-unit id="6e709babf4b5a0ed4194ad5240e1be2c">
+        <source>Please ask your hosting provider to increase this limit to</source>
+        <target>Please ask your hosting provider to increase this limit to</target>
+        <note>Line: 47</note>
+      </trans-unit>
       <trans-unit id="bbfb7a636f839052067cc86c39fa595a">
         <source>%limit% for suhosin.post.max_vars.</source>
         <target>%limit% for suhosin.post.max_vars.</target>
@@ -73,6 +68,11 @@
         <source>%limit% for suhosin.request.max_vars.</source>
         <target>%limit% for suhosin.request.max_vars.</target>
         <note>Line: 42</note>
+      </trans-unit>
+      <trans-unit id="4fb6a3beb82f8d8aa4bbdf8f5a0c35fa">
+        <source>%s at least, or you will have to edit the translation files.</source>
+        <target>%s at least, or you will have to edit the translation files.</target>
+        <note>Line: 49</note>
       </trans-unit>
     </body>
   </file>
@@ -104,6 +104,11 @@ Comment: @todo Throw exception</note>
   </file>
   <file original="classes/LocalizationPack.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="962f6e835582ebb404a37893f46c60f3">
+        <source>An error has occurred, this module does not exist: %s</source>
+        <target>An error has occurred, this module does not exist: %s</target>
+        <note>Line: 513</note>
+      </trans-unit>
       <trans-unit id="dd7edad69f95c053248e9b53eab73826">
         <source>Cannot load country: %d</source>
         <target>Cannot load country: %d</target>
@@ -207,6 +212,26 @@ Comment: @todo Throw exception</note>
   </file>
   <file original="classes/controller/AdminController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="6cfb80c26b415f8f6467cf07b0c700dd">
+        <source>The translation was successfully copied.</source>
+        <target>The translation was successfully copied.</target>
+        <note>Line: 521</note>
+      </trans-unit>
+      <trans-unit id="f22def68c5c456936078623b6dcd27ff">
+        <source>The translations have been successfully added.</source>
+        <target>The translations have been successfully added.</target>
+        <note>Line: 522</note>
+      </trans-unit>
+      <trans-unit id="bb01c8c21884e974df8517110c92b22a">
+        <source>The translation was added successfully, but the language has not been created.</source>
+        <target>The translation was added successfully, but the language has not been created.</target>
+        <note>Line: 527</note>
+      </trans-unit>
+      <trans-unit id="c9468b4bd45a165049277af6756db10e">
+        <source>Localization pack imported successfully.</source>
+        <target>Localization pack imported successfully.</target>
+        <note>Line: 531</note>
+      </trans-unit>
       <trans-unit id="ae99f365ee39176c3ab50b76a95cf629">
         <source>Cannot add configuration %1$s for %2$s language</source>
         <target>Cannot add configuration %1$s for %2$s language</target>
@@ -517,11 +542,6 @@ Comment: @todo Throw exception</note>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Improve/International/LocalizationController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="c9468b4bd45a165049277af6756db10e">
-        <source>Localization pack imported successfully.</source>
-        <target>Localization pack imported successfully.</target>
-        <note>Line: 214</note>
-      </trans-unit>
       <trans-unit id="53802fa30d7e83f77eccfa376c33e6fa">
         <source>Importing a new language may fail without the OpenSSL module. Please enable "openssl.so" on your server configuration.</source>
         <target>Importing a new language may fail without the OpenSSL module. Please enable "openssl.so" on your server configuration.</target>
@@ -531,21 +551,6 @@ Comment: @todo Throw exception</note>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Improve/International/TranslationsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="962f6e835582ebb404a37893f46c60f3">
-        <source>An error has occurred, this module does not exist: %s</source>
-        <target>An error has occurred, this module does not exist: %s</target>
-        <note>Line: 163</note>
-      </trans-unit>
-      <trans-unit id="6cfb80c26b415f8f6467cf07b0c700dd">
-        <source>The translation was successfully copied.</source>
-        <target>The translation was successfully copied.</target>
-        <note>Line: 345</note>
-      </trans-unit>
-      <trans-unit id="f22def68c5c456936078623b6dcd27ff">
-        <source>The translations have been successfully added.</source>
-        <target>The translations have been successfully added.</target>
-        <note>Line: 199</note>
-      </trans-unit>
       <trans-unit id="2c4113bd192a65a98ee212d9e946d152">
         <source>You must select at least one translation type to export translations.</source>
         <target>You must select at least one translation type to export translations.</target>
@@ -656,15 +661,6 @@ Comment: @todo Throw exception</note>
         <source>Language files must be complete to allow copying of translations.</source>
         <target>Language files must be complete to allow copying of translations.</target>
         <note>Line: 62</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Twig/Component/Legacy/LegacySessionAlert.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="bb01c8c21884e974df8517110c92b22a">
-        <source>The translation was added successfully, but the language has not been created.</source>
-        <target>The translation was added successfully, but the language has not been created.</target>
-        <note>Line: 75</note>
       </trans-unit>
     </body>
   </file>

@@ -38,6 +38,15 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Payment/PaymentMethods/Blocks/payment_modules_list.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2693dd71600631eed47725291fe5da19">
+        <source>v%version% - by %author%</source>
+        <target>v%version% - by %author%</target>
+        <note>Line: 41</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_grid_addons.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="24a25a6b874647087c51ea00b7992def">
@@ -59,11 +68,6 @@
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_list.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="2693dd71600631eed47725291fe5da19">
-        <source>v%version% - by %author%</source>
-        <target>v%version% - by %author%</target>
-        <note>Line: 74</note>
-      </trans-unit>
       <trans-unit id="031f3657c3601889e98df488db139b75">
         <source>Service by %author%</source>
         <target>Service by %author%</target>
@@ -78,15 +82,19 @@
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/dropdown_categories.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="62f5d708d6ad1fa1ddd9429a65cccbea">
-        <source>All categories</source>
-        <target>All categories</target>
-        <note>Line: 37</note>
-      </trans-unit>
       <trans-unit id="042be00d927cff11fd00361b3dda1817">
         <source>Recently used</source>
         <target>Recently used</target>
         <note>Line: 45</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/dropdown_categories_catalog.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="62f5d708d6ad1fa1ddd9429a65cccbea">
+        <source>All categories</source>
+        <target>All categories</target>
+        <note>Line: 37</note>
       </trans-unit>
     </body>
   </file>

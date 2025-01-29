@@ -308,6 +308,21 @@
   </file>
   <file original="controllers/front/GuestTrackingController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="e9c8b958cbfb895182fe7eeeeadd1121">
+        <source>A customer account has already been created from this guest account. Please sign in.</source>
+        <target>A customer account has already been created from this guest account. Please sign in.</target>
+        <note>Line: 112</note>
+      </trans-unit>
+      <trans-unit id="b5617edd6c80a257d3cb7bbc9b3e5bdf">
+        <source>You can't transform your account into a customer account, because a registered customer with the same email already exists.</source>
+        <target>You can't transform your account into a customer account, because a registered customer with the same email already exists.</target>
+        <note>Line: 119</note>
+      </trans-unit>
+      <trans-unit id="97f79d53b078e529949d5c3c8b676d52">
+        <source>An unexpected error occurred while creating your account.</source>
+        <target>An unexpected error occurred while creating your account.</target>
+        <note>Line: 132</note>
+      </trans-unit>
       <trans-unit id="ddb329ec6521925a245fbe1334d2ce18">
         <source>Please provide the required information</source>
         <target>Please provide the required information</target>
@@ -329,25 +344,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/front/OrderConfirmationController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e9c8b958cbfb895182fe7eeeeadd1121">
-        <source>A customer account has already been created from this guest account. Please sign in.</source>
-        <target>A customer account has already been created from this guest account. Please sign in.</target>
-        <note>Line: 193</note>
-      </trans-unit>
-      <trans-unit id="b5617edd6c80a257d3cb7bbc9b3e5bdf">
-        <source>You can't transform your account into a customer account, because a registered customer with the same email already exists.</source>
-        <target>You can't transform your account into a customer account, because a registered customer with the same email already exists.</target>
-        <note>Line: 200</note>
-      </trans-unit>
-      <trans-unit id="97f79d53b078e529949d5c3c8b676d52">
-        <source>An unexpected error occurred while creating your account.</source>
-        <target>An unexpected error occurred while creating your account.</target>
-        <note>Line: 213</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/front/OrderController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="56ca67fde405db4d75fb5fc3350db81b">
@@ -364,11 +360,6 @@
   </file>
   <file original="controllers/front/OrderDetailController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="3dc245110e1f3601860c20299d97c01d">
-        <source>The message cannot be blank.</source>
-        <target>The message cannot be blank.</target>
-        <note>Line: 57</note>
-      </trans-unit>
       <trans-unit id="ffabab221ec5c24fbdb4a70ad48bc985">
         <source>The order is no longer valid.</source>
         <target>The order is no longer valid.</target>
@@ -412,11 +403,6 @@
         <source>The minimum score must be: %s</source>
         <target>The minimum score must be: %s</target>
         <note>Line: 189</note>
-      </trans-unit>
-      <trans-unit id="e267e2be02cf3e29f4ba53b5d97cf78a">
-        <source>Invalid email address.</source>
-        <target>Invalid email address.</target>
-        <note>Line: 70</note>
       </trans-unit>
       <trans-unit id="909179695703d6a048fab0bcc9af4758">
         <source>We cannot regenerate your password with the data you've submitted</source>
@@ -496,19 +482,15 @@
   </file>
   <file original="controllers/front/PdfOrderReturnController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="b430bfb9e8ec89ded934087889c2e845">
+        <source>Order return not found.</source>
+        <target>Order return not found.</target>
+        <note>Line: 68</note>
+      </trans-unit>
       <trans-unit id="b55e152dc0683c3d315b6baabb98495d">
         <source>Order return not confirmed.</source>
         <target>Order return not confirmed.</target>
         <note>Line: 70</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/front/PdfOrderSlipController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b430bfb9e8ec89ded934087889c2e845">
-        <source>Order return not found.</source>
-        <target>Order return not found.</target>
-        <note>Line: 55</note>
       </trans-unit>
     </body>
   </file>
@@ -557,10 +539,24 @@
   </file>
   <file original="modules/contactform/contactform.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="3dc245110e1f3601860c20299d97c01d">
+        <source>The message cannot be blank.</source>
+        <target>The message cannot be blank.</target>
+        <note>Line: 412</note>
+      </trans-unit>
       <trans-unit id="dd6b089a49908d671c3e9cc8dc5899ae">
         <source>Invalid message</source>
         <target>Invalid message</target>
         <note>Line: 419</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailsubscription/ps_emailsubscription.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e267e2be02cf3e29f4ba53b5d97cf78a">
+        <source>Invalid email address.</source>
+        <target>Invalid email address.</target>
+        <note>Line: 440</note>
       </trans-unit>
     </body>
   </file>
@@ -569,12 +565,12 @@
       <trans-unit id="80d889c08e270f0016d61b963e13fec1">
         <source>This product is no longer available for sale.</source>
         <target>This product is no longer available for sale.</target>
-        <note>Line: 1122</note>
+        <note>Line: 1305</note>
       </trans-unit>
       <trans-unit id="a923575984949608ce04c4984806ec2a">
         <source>There are not enough products in stock</source>
         <target>There are not enough products in stock</target>
-        <note>Line: 1186</note>
+        <note>Line: 1382</note>
       </trans-unit>
     </body>
   </file>

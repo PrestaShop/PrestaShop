@@ -128,6 +128,120 @@
       </trans-unit>
     </body>
   </file>
+  <file original="modules/blockwishlist/views/templates/components/modals/add-to-wishlist.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="31323452eb311e8fbef81c75d3062659">
+        <source>No list found.</source>
+        <target>No list found.</target>
+        <note>Line: 58</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockwishlist/views/templates/components/modals/create.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2f745c01f53c6a617fbff3bc18028e33">
+        <source>Create wishlist</source>
+        <target>Create wishlist</target>
+        <note>Line: 27</note>
+      </trans-unit>
+      <trans-unit id="31b920bfe179e602e215842387ab8feb">
+        <source>Add name</source>
+        <target>Add name</target>
+        <note>Line: 25</note>
+      </trans-unit>
+      <trans-unit id="ff54fda7befc2debddd893cb7bc65c68">
+        <source>List title is too short</source>
+        <target>List title is too short</target>
+        <note>Line: 28</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockwishlist/views/templates/components/modals/delete.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a1cfe7cbeafd513db812282da3f01704">
+        <source>Remove product from wishlist</source>
+        <target>Remove product from wishlist</target>
+        <note>Line: 28</note>
+      </trans-unit>
+      <trans-unit id="1beb403d31c2e510c90d78c71460c088">
+        <source>Delete wishlist</source>
+        <target>Delete wishlist</target>
+        <note>Line: 29</note>
+      </trans-unit>
+      <trans-unit id="7bd9ca3a2784a710caef154068db87b8">
+        <source>The product will be removed from "%nameofthewishlist%".</source>
+        <target>The product will be removed from "%nameofthewishlist%".</target>
+        <note>Line: 30</note>
+      </trans-unit>
+      <trans-unit id="1063e38cb53d94d386f21227fcd84717">
+        <source>Remove</source>
+        <target>Remove</target>
+        <note>Line: 32</note>
+      </trans-unit>
+      <trans-unit id="f2a6c498fb90ee345d997f888fce3b18">
+        <source>Delete</source>
+        <target>Delete</target>
+        <note>Line: 33</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockwishlist/views/templates/components/modals/login.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ea4788705e6873b424c65e91c2846b19">
+        <source>Cancel</source>
+        <target>Cancel</target>
+        <note>Line: 23</note>
+      </trans-unit>
+      <trans-unit id="b6d4223e60986fa4c9af77ee5f7149c5">
+        <source>Sign in</source>
+        <target>Sign in</target>
+        <note>Line: 37</note>
+      </trans-unit>
+      <trans-unit id="30ca097d6f7ac158bc3d02dfb18979a1">
+        <source>You need to be logged in to save products in your wishlist.</source>
+        <target>You need to be logged in to save products in your wishlist.</target>
+        <note>Line: 49</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockwishlist/views/templates/components/modals/rename.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="972d48662f3cf5d0514a3cbba209837a">
+        <source>Wishlist name</source>
+        <target>Wishlist name</target>
+        <note>Line: 24</note>
+      </trans-unit>
+      <trans-unit id="3f122c673ce2e03b7ed71889b17ec119">
+        <source>Rename wishlist</source>
+        <target>Rename wishlist</target>
+        <note>Line: 26</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockwishlist/views/templates/components/modals/share.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8f02ed5e74022ada127d2bd206049a36">
+        <source>Share wishlist</source>
+        <target>Share wishlist</target>
+        <note>Line: 23</note>
+      </trans-unit>
+      <trans-unit id="6d6db52799620de23c1e87d00abde8c4">
+        <source>Copied!</source>
+        <target>Copied!</target>
+        <note>Line: 24</note>
+      </trans-unit>
+      <trans-unit id="50f67a17a3a4c58de43d4b9abf7ccab7">
+        <source>Share link</source>
+        <target>Share link</target>
+        <note>Line: 25</note>
+      </trans-unit>
+      <trans-unit id="b603b043e8b03095685f200bdd8b2283">
+        <source>Copy text</source>
+        <target>Copy text</target>
+        <note>Line: 27</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/blockwishlist/views/templates/components/pagination.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="f66707580b8d486dfa68766544243619">
@@ -231,11 +345,6 @@
   </file>
   <file original="themes/hummingbird/modules/blockwishlist/views/templates/components/modals/add-to-wishlist.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="31323452eb311e8fbef81c75d3062659">
-        <source>No list found.</source>
-        <target>No list found.</target>
-        <note>Line: 38</note>
-      </trans-unit>
       <trans-unit id="2d96bb66d8541a89620d3c158ceef42b">
         <source>Add to wishlist</source>
         <target>Add to wishlist</target>
@@ -245,111 +354,6 @@
         <source>Close</source>
         <target>Close</target>
         <note>Line: 26</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/hummingbird/modules/blockwishlist/views/templates/components/modals/create.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="972d48662f3cf5d0514a3cbba209837a">
-        <source>Wishlist name</source>
-        <target>Wishlist name</target>
-        <note>Line: 10</note>
-      </trans-unit>
-      <trans-unit id="2f745c01f53c6a617fbff3bc18028e33">
-        <source>Create wishlist</source>
-        <target>Create wishlist</target>
-        <note>Line: 13</note>
-      </trans-unit>
-      <trans-unit id="31b920bfe179e602e215842387ab8feb">
-        <source>Add name</source>
-        <target>Add name</target>
-        <note>Line: 11</note>
-      </trans-unit>
-      <trans-unit id="ff54fda7befc2debddd893cb7bc65c68">
-        <source>List title is too short</source>
-        <target>List title is too short</target>
-        <note>Line: 14</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/hummingbird/modules/blockwishlist/views/templates/components/modals/delete.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ea4788705e6873b424c65e91c2846b19">
-        <source>Cancel</source>
-        <target>Cancel</target>
-        <note>Line: 17</note>
-      </trans-unit>
-      <trans-unit id="a1cfe7cbeafd513db812282da3f01704">
-        <source>Remove product from wishlist</source>
-        <target>Remove product from wishlist</target>
-        <note>Line: 14</note>
-      </trans-unit>
-      <trans-unit id="1beb403d31c2e510c90d78c71460c088">
-        <source>Delete wishlist</source>
-        <target>Delete wishlist</target>
-        <note>Line: 15</note>
-      </trans-unit>
-      <trans-unit id="7bd9ca3a2784a710caef154068db87b8">
-        <source>The product will be removed from "%nameofthewishlist%".</source>
-        <target>The product will be removed from "%nameofthewishlist%".</target>
-        <note>Line: 16</note>
-      </trans-unit>
-      <trans-unit id="1063e38cb53d94d386f21227fcd84717">
-        <source>Remove</source>
-        <target>Remove</target>
-        <note>Line: 18</note>
-      </trans-unit>
-      <trans-unit id="f2a6c498fb90ee345d997f888fce3b18">
-        <source>Delete</source>
-        <target>Delete</target>
-        <note>Line: 19</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/hummingbird/modules/blockwishlist/views/templates/components/modals/login.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b6d4223e60986fa4c9af77ee5f7149c5">
-        <source>Sign in</source>
-        <target>Sign in</target>
-        <note>Line: 21</note>
-      </trans-unit>
-      <trans-unit id="30ca097d6f7ac158bc3d02dfb18979a1">
-        <source>You need to be logged in to save products in your wishlist.</source>
-        <target>You need to be logged in to save products in your wishlist.</target>
-        <note>Line: 31</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/hummingbird/modules/blockwishlist/views/templates/components/modals/rename.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="3f122c673ce2e03b7ed71889b17ec119">
-        <source>Rename wishlist</source>
-        <target>Rename wishlist</target>
-        <note>Line: 13</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/hummingbird/modules/blockwishlist/views/templates/components/modals/share.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="8f02ed5e74022ada127d2bd206049a36">
-        <source>Share wishlist</source>
-        <target>Share wishlist</target>
-        <note>Line: 9</note>
-      </trans-unit>
-      <trans-unit id="6d6db52799620de23c1e87d00abde8c4">
-        <source>Copied!</source>
-        <target>Copied!</target>
-        <note>Line: 10</note>
-      </trans-unit>
-      <trans-unit id="50f67a17a3a4c58de43d4b9abf7ccab7">
-        <source>Share link</source>
-        <target>Share link</target>
-        <note>Line: 11</note>
-      </trans-unit>
-      <trans-unit id="b603b043e8b03095685f200bdd8b2283">
-        <source>Copy text</source>
-        <target>Copy text</target>
-        <note>Line: 13</note>
       </trans-unit>
     </body>
   </file>

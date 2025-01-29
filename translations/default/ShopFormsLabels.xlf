@@ -61,6 +61,16 @@
   </file>
   <file original="classes/form/CustomerFormatter.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="ce8ae9da5b7cd6c3df2929543a9af92d">
+        <source>Email</source>
+        <target>Email</target>
+        <note>Line: 167</note>
+      </trans-unit>
+      <trans-unit id="dc647eb65e6711e155375218212b3964">
+        <source>Password</source>
+        <target>Password</target>
+        <note>Line: 180</note>
+      </trans-unit>
       <trans-unit id="20db0bfeecd8fe60533206a2b5e9891a">
         <source>First name</source>
         <target>First name</target>
@@ -94,22 +104,13 @@ Comment: Please localize this string with the applicable registration number typ
       </trans-unit>
     </body>
   </file>
-  <file original="classes/form/CustomerLoginFormatter.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ce8ae9da5b7cd6c3df2929543a9af92d">
-        <source>Email</source>
-        <target>Email</target>
-        <note>Line: 49</note>
-      </trans-unit>
-      <trans-unit id="dc647eb65e6711e155375218212b3964">
-        <source>Password</source>
-        <target>Password</target>
-        <note>Line: 60</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="themes/classic/modules/contactform/views/templates/widget/contactform.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="b357b524e740bc85b9790a0712d84a30">
+        <source>Email address</source>
+        <target>Email address</target>
+        <note>Line: 58</note>
+      </trans-unit>
       <trans-unit id="c7892ebbb139886662c6f2fc8c450710">
         <source>Subject</source>
         <target>Subject</target>
@@ -204,15 +205,6 @@ Comment: Please localize this string with the applicable registration number typ
         <source>Email:</source>
         <target>Email:</target>
         <note>Line: 61</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/templates/customer/password-email.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b357b524e740bc85b9790a0712d84a30">
-        <source>Email address</source>
-        <target>Email address</target>
-        <note>Line: 53</note>
       </trans-unit>
     </body>
   </file>

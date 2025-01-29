@@ -345,8 +345,7 @@
       <trans-unit id="2dd1148046499f9c2422ce1045a4accf">
         <source>Image type</source>
         <target>Image type</target>
-        <note>Line: 32
-Comment: Display generated client secrets passed by session</note>
+        <note>Line: 32</note>
       </trans-unit>
     </body>
   </file>

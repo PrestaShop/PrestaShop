@@ -112,15 +112,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/groups/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="0bcef9c45bd8a48eda1b26eb0c61c869">
-        <source>%</source>
-        <target>%</target>
-        <note>Line: 107</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/default/template/controllers/groups/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="a1e7379abfdbc3b8e03506e5489c6110">
@@ -282,11 +273,6 @@
   </file>
   <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="a7bd935a88c629dc11c52e0c16c2a8a0">
-        <source>%d</source>
-        <target>%d</target>
-        <note>Line: 58</note>
-      </trans-unit>
       <trans-unit id="bbfb7a636f839052067cc86c39fa595a">
         <source>%limit% for suhosin.post.max_vars.</source>
         <target>%limit% for suhosin.post.max_vars.</target>
@@ -296,6 +282,11 @@
         <source>%limit% for suhosin.request.max_vars.</source>
         <target>%limit% for suhosin.request.max_vars.</target>
         <note>Line: 40</note>
+      </trans-unit>
+      <trans-unit id="a7bd935a88c629dc11c52e0c16c2a8a0">
+        <source>%d</source>
+        <target>%d</target>
+        <note>Line: 58</note>
       </trans-unit>
       <trans-unit id="54524210ee89080b3da6c88a11c6d438">
         <source>You must use this syntax in your translations. Here are several examples:</source>
@@ -647,6 +638,11 @@
   </file>
   <file original="admin-dev/themes/default/template/helpers/list/list_content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="0bcef9c45bd8a48eda1b26eb0c61c869">
+        <source>%</source>
+        <target>%</target>
+        <note>Line: 120</note>
+      </trans-unit>
       <trans-unit id="087fb8756d4add87f2d162304ccd486b">
         <source>No records found</source>
         <target>No records found</target>
@@ -775,6 +771,15 @@
       </trans-unit>
     </body>
   </file>
+  <file original="admin-dev/themes/default/template/helpers/shops_list/list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="93f04304c09d561ed79442ea9ee722d4">
+        <source>%s group</source>
+        <target>%s group</target>
+        <note>Line: 42</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="admin-dev/themes/default/template/helpers/tree/tree_node_folder_checkbox.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="24fc6fbf93a9d551ea7da4cd69f3da3e">
@@ -804,6 +809,16 @@
   </file>
   <file original="admin-dev/themes/default/template/helpers/uploader/ajax.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="1908624a0bca678cd26b99bfd405324e">
+        <source>File size</source>
+        <target>File size</target>
+        <note>Line: 32</note>
+      </trans-unit>
+      <trans-unit id="3fcbe6bd34e9279ec2c7b13adf7e4095">
+        <source>You have reached the limit (%s) of files to upload, please remove files to continue uploading</source>
+        <target>You have reached the limit (%s) of files to upload, please remove files to continue uploading</target>
+        <note>Line: 48</note>
+      </trans-unit>
       <trans-unit id="86d3852bba89bf82128c3e156624ad08">
         <source>Add files...</source>
         <target>Add files...</target>
@@ -842,16 +857,6 @@
         <source>Download current file</source>
         <target>Download current file</target>
         <note>Line: 72</note>
-      </trans-unit>
-      <trans-unit id="1908624a0bca678cd26b99bfd405324e">
-        <source>File size</source>
-        <target>File size</target>
-        <note>Line: 39</note>
-      </trans-unit>
-      <trans-unit id="3fcbe6bd34e9279ec2c7b13adf7e4095">
-        <source>You have reached the limit (%s) of files to upload, please remove files to continue uploading</source>
-        <target>You have reached the limit (%s) of files to upload, please remove files to continue uploading</target>
-        <note>Line: 56</note>
       </trans-unit>
       <trans-unit id="d39ec66f08507e26fe86aa5325d070df">
         <source>Add files</source>
@@ -904,15 +909,6 @@
         <source>by ip address</source>
         <target>by ip address</target>
         <note>Line: 46</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/new-theme/template/helpers/shops_list/list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="93f04304c09d561ed79442ea9ee722d4">
-        <source>%s group</source>
-        <target>%s group</target>
-        <note>Line: 38</note>
       </trans-unit>
     </body>
   </file>

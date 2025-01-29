@@ -99,6 +99,11 @@
   </file>
   <file original="classes/PrestaShopBackup.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="4e0ac45de6bd848503ffa98ff6247f2f">
+        <source>Error deleting</source>
+        <target>Error deleting</target>
+        <note>Line: 192</note>
+      </trans-unit>
       <trans-unit id="47218fe85410a7029c216ef926cef044">
         <source>"Backup" directory does not exist.</source>
         <target>"Backup" directory does not exist.</target>
@@ -128,26 +133,6 @@
   </file>
   <file original="controllers/admin/AdminImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="197f1953efd11637a634a7f9b269eac3">
-        <source>To proceed, please upload a file first.</source>
-        <target>To proceed, please upload a file first.</target>
-        <note>Line: 4099</note>
-      </trans-unit>
-      <trans-unit id="8c9067e52e4440d8a20e74fdc745b0c6">
-        <source>No file was uploaded.</source>
-        <target>No file was uploaded.</target>
-        <note>Line: 704</note>
-      </trans-unit>
-      <trans-unit id="af395851b27882221a6df82c727bca3e">
-        <source>The import directory doesn't exist. Please check your file path.</source>
-        <target>The import directory doesn't exist. Please check your file path.</target>
-        <note>Line: 585</note>
-      </trans-unit>
-      <trans-unit id="c775530fad852632f78395a11820ba23">
-        <source>The import directory must be writable (CHMOD 755 / 777).</source>
-        <target>The import directory must be writable (CHMOD 755 / 777).</target>
-        <note>Line: 589</note>
-      </trans-unit>
       <trans-unit id="50844c635a86264cc59d737d532df573">
         <source>An error occurred while uploading / copying the file.</source>
         <target>An error occurred while uploading / copying the file.</target>
@@ -168,30 +153,30 @@
         <target>The uploaded file was only partially uploaded.</target>
         <note>Line: 700</note>
       </trans-unit>
+      <trans-unit id="8c9067e52e4440d8a20e74fdc745b0c6">
+        <source>No file was uploaded.</source>
+        <target>No file was uploaded.</target>
+        <note>Line: 704</note>
+      </trans-unit>
       <trans-unit id="519a3cfe5400ef0f781671c700aaed05">
         <source>The extension of your file should be ".csv".</source>
         <target>The extension of your file should be ".csv".</target>
         <note>Line: 709</note>
       </trans-unit>
-      <trans-unit id="a080a85258618039d010a2136f85e69f">
-        <source>There is an empty row in the file that won't be imported.</source>
-        <target>There is an empty row in the file that won't be imported.</target>
-        <note>Line: 3518</note>
+      <trans-unit id="197f1953efd11637a634a7f9b269eac3">
+        <source>To proceed, please upload a file first.</source>
+        <target>To proceed, please upload a file first.</target>
+        <note>Line: 4099</note>
       </trans-unit>
-      <trans-unit id="d165f0c742c272ed88dc27acc91e2642">
-        <source>%s import</source>
-        <target>%s import</target>
-        <note>Line: 4087</note>
+      <trans-unit id="af395851b27882221a6df82c727bca3e">
+        <source>The import directory doesn't exist. Please check your file path.</source>
+        <target>The import directory doesn't exist. Please check your file path.</target>
+        <note>Line: 585</note>
       </trans-unit>
-      <trans-unit id="02b5205ddff3073efc5c8b5b9cc165ba">
-        <source>(from %s to %s)</source>
-        <target>(from %s to %s)</target>
-        <note>Line: 4089</note>
-      </trans-unit>
-      <trans-unit id="b53b06c0e98a2db123f953f0059a0948">
-        <source>with truncate</source>
-        <target>with truncate</target>
-        <note>Line: 4092</note>
+      <trans-unit id="c775530fad852632f78395a11820ba23">
+        <source>The import directory must be writable (CHMOD 755 / 777).</source>
+        <target>The import directory must be writable (CHMOD 755 / 777).</target>
+        <note>Line: 589</note>
       </trans-unit>
       <trans-unit id="43bf950e043950e2da10f917b902c131">
         <source>%1$s (ID: %2$s) cannot be saved</source>
@@ -237,6 +222,26 @@
         <source>Product #%id%: the picture (%url%) cannot be saved.</source>
         <target>Product #%id%: the picture (%url%) cannot be saved.</target>
         <note>Line: 2048</note>
+      </trans-unit>
+      <trans-unit id="a080a85258618039d010a2136f85e69f">
+        <source>There is an empty row in the file that won't be imported.</source>
+        <target>There is an empty row in the file that won't be imported.</target>
+        <note>Line: 3518</note>
+      </trans-unit>
+      <trans-unit id="d165f0c742c272ed88dc27acc91e2642">
+        <source>%s import</source>
+        <target>%s import</target>
+        <note>Line: 4087</note>
+      </trans-unit>
+      <trans-unit id="02b5205ddff3073efc5c8b5b9cc165ba">
+        <source>(from %s to %s)</source>
+        <target>(from %s to %s)</target>
+        <note>Line: 4089</note>
+      </trans-unit>
+      <trans-unit id="b53b06c0e98a2db123f953f0059a0948">
+        <source>with truncate</source>
+        <target>with truncate</target>
+        <note>Line: 4092</note>
       </trans-unit>
       <trans-unit id="53d9fc1aa79e85c0f845139c6358daee">
         <source>The category ID must be unique. It can't be the same as the one for Root or Home category.</source>
@@ -763,11 +768,6 @@
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/BackupController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="4e0ac45de6bd848503ffa98ff6247f2f">
-        <source>Error deleting</source>
-        <target>Error deleting</target>
-        <note>Line: 190</note>
-      </trans-unit>
       <trans-unit id="f36c9a20c2ce51f491c944e41fde5ace">
         <source>It appears the backup was successful, however you must download and carefully verify the backup file before proceeding.</source>
         <target>It appears the backup was successful, however you must download and carefully verify the backup file before proceeding.</target>

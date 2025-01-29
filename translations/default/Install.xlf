@@ -2,6 +2,11 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="install-dev/classes/controllerHttp.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="0e8ea4263454e813a58e0f1bbad5958f">
+        <source>Content of your store</source>
+        <target>Content of your store</target>
+        <note>Line: 124</note>
+      </trans-unit>
       <trans-unit id="fa6724c724e5524034b09c9bbac81f07">
         <source>Choose your language</source>
         <target>Choose your language</target>
@@ -327,16 +332,6 @@ Comment: We fill the process step used for Ajax queries</note>
   </file>
   <file original="install-dev/theme/views/configure.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="93cba07454f06a4a960172bbd6e2a435">
-        <source>Yes</source>
-        <target>Yes</target>
-        <note>Line: 78</note>
-      </trans-unit>
-      <trans-unit id="bafd7322c6e97d25b6299b5d6fe8920b">
-        <source>No</source>
-        <target>No</target>
-        <note>Line: 82</note>
-      </trans-unit>
       <trans-unit id="c075a7d57ac5f08683a1a0a1d3425e94">
         <source>Information about your Store</source>
         <target>Information about your Store</target>
@@ -426,10 +421,15 @@ Comment: We fill the process step used for Ajax queries</note>
   </file>
   <file original="install-dev/theme/views/content.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="0e8ea4263454e813a58e0f1bbad5958f">
-        <source>Content of your store</source>
-        <target>Content of your store</target>
-        <note>Line: 29</note>
+      <trans-unit id="93cba07454f06a4a960172bbd6e2a435">
+        <source>Yes</source>
+        <target>Yes</target>
+        <note>Line: 67</note>
+      </trans-unit>
+      <trans-unit id="bafd7322c6e97d25b6299b5d6fe8920b">
+        <source>No</source>
+        <target>No</target>
+        <note>Line: 71</note>
       </trans-unit>
       <trans-unit id="82da52196edba4e07eb729fa3560027f">
         <source>Installation of theme</source>
