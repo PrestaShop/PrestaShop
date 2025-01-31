@@ -1769,18 +1769,23 @@ class CartRuleCore extends ObjectModel
         if (!CartRule::isFeatureActive() || !Validate::isLoadedObject($context->cart)) {
             return [];
         }
+
+        $cartRules = $context->cart->getCartRules(CartRule::FILTER_ACTION_ALL, true, $useOrderPrice);
     
-        $errors = [];
-        $now = time();
-    
-        foreach ($context->cart->getCartRules(CartRule::FILTER_ACTION_ALL, true, $useOrderPrice) as $cart_rule) {
-            $voucherErrors = [];
-    
+        static $errors = [];
+        foreach ($cartRules as $cart_rule) {
             if ($error = $cart_rule['obj']->checkValidity($context, true, true, true, $useOrderPrice)) {
-                $voucherErrors[] = $error;
+                $context->cart->removeCartRule($cart_rule['obj']->id, $useOrderPrice);
+                $context->cart->update();
+                $errors[] = $error;
             }
-    
-            if (!$useOrderPrice) {
+        }
+
+        if (!$useOrderPrice) {
+            $now = time();
+            foreach ($cartRules as $cart_rule) {
+                $voucherErrors = [];
+
                 if (!$cart_rule['obj']->active) {
                     $voucherErrors[] = $cart_rule['obj']->trans('This voucher is disabled', [], 'Shop.Notifications.Error');
                 }
@@ -1793,12 +1798,12 @@ class CartRuleCore extends ObjectModel
                 if (strtotime($cart_rule['obj']->date_to) < $now) {
                     $voucherErrors[] = $cart_rule['obj']->trans('This voucher has expired', [], 'Shop.Notifications.Error');
                 }
-            }
-    
-            if (!empty($voucherErrors)) {
-                $context->cart->removeCartRule($cart_rule['obj']->id, $useOrderPrice);
-                $context->cart->update();
-                $errors = array_merge($errors, $voucherErrors);
+
+                if (!empty($voucherErrors)) {
+                    $context->cart->removeCartRule($cart_rule['obj']->id, $useOrderPrice);
+                    $context->cart->update();
+                    $errors = array_merge($errors, $voucherErrors);
+                }
             }
         }
     
