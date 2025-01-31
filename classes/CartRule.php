@@ -1762,7 +1762,7 @@ class CartRuleCore extends ObjectModel
      *
      * @return array Error messages
      */
-    public static function autoRemoveFromCart(Context $context = null, bool $useOrderPrice = false): array
+    public static function autoRemoveFromCart(Context $context = null, bool $useOrderPrice = false)
     {
         $context = $context ?: Context::getContext();
     
