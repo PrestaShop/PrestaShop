@@ -1797,6 +1797,7 @@ class CartRuleCore extends ObjectModel
             if (!empty($errors)) {
                 $context->cart->removeCartRule($cart_rule['obj']->id, $useOrderPrice);
                 $context->cart->update();
+                unset($errors);
             }
         }
 
