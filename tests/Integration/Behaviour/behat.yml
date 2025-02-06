@@ -297,6 +297,17 @@ default:
         - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
         - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
         - Tests\Integration\Behaviour\Features\Transform\CurrencyTransformContext
+        - Tests\Integration\Behaviour\Features\Context\Domain\Product\AddProductFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\LegacyProductFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\CategoryFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\CartFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\CartRuleFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\CountryFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\CarrierFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\ContextFeatureContext
+
     catalog_price_rule:
       paths:
         - "%paths.base%/Features/Scenario/CatalogPriceRule"

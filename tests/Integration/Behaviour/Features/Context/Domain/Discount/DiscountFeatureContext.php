@@ -33,6 +33,7 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Command\AddDiscountCommand;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Command\AddFreeShippingDiscountCommand;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Exception\DiscountConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Discount\Exception\DiscountException;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Query\GetDiscountForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Discount\QueryResult\DiscountForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject\DiscountId;
@@ -63,15 +64,20 @@ class DiscountFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then discount :discountReference should have the following properties:
      *
-     * @param string $cartRuleReference
+     * @param string $discountReference
      * @param TableNode $tableNode
      */
-    public function assertDiscount(string $cartRuleReference, TableNode $tableNode): void
+    public function assertDiscount(string $discountReference, TableNode $tableNode): void
     {
-        $this->assertDiscountProperties(
-            $this->getDiscountForEditing($cartRuleReference),
-            $this->localizeByRows($tableNode)
-        );
+        try {
+            // if discount already exists we assert all its expected properties
+            $this->assertDiscountProperties(
+                $this->getDiscountForEditing($discountReference),
+                $this->localizeByRows($tableNode)
+            );
+        } catch (DiscountException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
