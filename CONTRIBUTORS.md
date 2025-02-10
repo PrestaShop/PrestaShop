@@ -12,7 +12,6 @@ GitHub contributors:
 - Adam
 - Adib Aroui
 - Adonis Karavokyros
-- Adrianllopis
 - Adrien
 - Adrien Astier
 - Adrien Foulon
@@ -90,7 +89,6 @@ GitHub contributors:
 - Arnaud Dohogne
 - Arnaud Lemercier
 - Arnaud Schaeffer
-- Arnaud Scoté
 - Arnaud104
 - Arťom Evsin
 - Ashish Sharawat
@@ -128,7 +126,6 @@ GitHub contributors:
 - BigZ
 - BluTiGeS
 - BMS-fenaille
-- Boki
 - Boris Hermans
 - Boubker Bribri
 - Brais Pato
@@ -354,7 +351,6 @@ GitHub contributors:
 - Gregory Roussac
 - grezlikowski
 - gRoussac
-- Grzegorz Wójcik
 - Grzegorz Zawadzki
 - Guilhem Fanton
 - Guillaume DELOINCE
@@ -448,10 +444,8 @@ GitHub contributors:
 - Joep Hendrix
 - Johannes Schramm
 - John Aurry
-- John BOTELLA
 - John Cocula
 - John Zandbergen
-- johnk0306
 - JohnPAfr
 - Jonadabe
 - Jonas Erixon
@@ -577,7 +571,6 @@ GitHub contributors:
 - Marius Gudauskis
 - Mark Wienk
 - MarkC
-- Markus
 - Markus Staab
 - Martin Finkenflügel
 - Martin Fojtík
@@ -679,7 +672,6 @@ GitHub contributors:
 - Nicolas Lœuillet
 - Nicolas Martin
 - Nicolas Sorosac
-- Nicolas SOTRON
 - Niels Wouda
 - nigel
 - Nigel Helliwell
@@ -919,7 +911,6 @@ GitHub contributors:
 - Sylvestre Nicky
 - Symeon
 - Tadas Davidsonas
-- Tanguy
 - Tanguy JACQUET
 - Tanguy Salmon
 - Tatu Wikman
