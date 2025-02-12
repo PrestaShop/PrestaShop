@@ -391,10 +391,8 @@ class ContextCore
             return $this->translator;
         }
 
-        $sfContainer = SymfonyContainer::getInstance();
-
-        if ($isInstaller || null === $sfContainer) {
-            // symfony's container isn't available in front office, so we load and configure the translator component
+        if ($isInstaller || !defined('_PS_ADMIN_DIR_')) {
+            // we load and configure the translator component otherwise some theme translations would not work
             $this->translator = $this->getTranslatorFromLocale($this->language->locale);
         } else {
             $this->translator = $sfContainer->get(TranslatorInterface::class);
