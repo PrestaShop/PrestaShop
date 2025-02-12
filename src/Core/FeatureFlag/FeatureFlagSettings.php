@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -53,4 +54,5 @@ class FeatureFlagSettings
     public const FEATURE_FLAG_ADMIN_API_MULTISTORE = 'admin_api_multistore';
     public const FEATURE_FLAG_ADMIN_API_EXPERIMENTAL_ENDPOINTS = 'admin_api_experimental_endpoints';
     public const FEATURE_FLAG_FRONT_CONTAINER_V2 = 'front_container_v2';
+    public const FEATURE_FLAG_SHIPMENT = 'shipment';
 }
