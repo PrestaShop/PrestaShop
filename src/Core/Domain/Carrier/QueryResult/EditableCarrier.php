@@ -56,6 +56,7 @@ class EditableCarrier
         private array $zones,
         private ?string $logoPath = null,
         private int $ordersCount = 0,
+        private bool $needRange = false,
     ) {
     }
 
@@ -168,5 +169,10 @@ class EditableCarrier
     public function getOrdersCount(): int
     {
         return $this->ordersCount;
+    }
+
+    public function getNeedRange(): bool
+    {
+        return $this->needRange;
     }
 }

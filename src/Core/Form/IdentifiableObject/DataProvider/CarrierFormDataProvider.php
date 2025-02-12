@@ -77,12 +77,14 @@ class CarrierFormDataProvider implements FormDataProviderInterface
                 'zones' => $carrier->getZones(),
                 'ranges' => $this->formatRangesData($carrierRanges),
                 'ranges_costs' => $this->formatRangesCostsData($carrier, $carrierRanges),
+                'need_range' => $carrier->getNeedRange(),
             ],
             'size_weight_settings' => [
                 'max_width' => $carrier->getMaxWidth(),
                 'max_height' => $carrier->getMaxHeight(),
                 'max_depth' => $carrier->getMaxDepth(),
                 'max_weight' => $carrier->getMaxWeight(),
+                'need_range' => $carrier->getNeedRange(),
             ],
         ];
     }

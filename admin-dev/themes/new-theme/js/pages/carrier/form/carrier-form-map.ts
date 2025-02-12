@@ -55,4 +55,5 @@ export default {
     '#carrier_shipping_settings_ranges',
     '#carrier_shipping_settings_ranges_costs',
   ],
+  needRangeInput: '#carrier_shipping_settings_need_range',
 };

@@ -170,12 +170,14 @@ class CarrierFormDataProviderTest extends TestCase
                         ['range' => '20kg - 25kg', 'from' => '20', 'to' => '25', 'price' => '22'],
                     ]],
                 ],
+                'need_range' => false,
             ],
             'size_weight_settings' => [
                 'max_width' => 1234,
                 'max_height' => 1123,
                 'max_depth' => 3421,
                 'max_weight' => 1657,
+                'need_range' => false,
             ],
         ], $formData);
     }

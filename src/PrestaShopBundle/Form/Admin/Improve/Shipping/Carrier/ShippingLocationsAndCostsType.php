@@ -39,6 +39,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Translation\TranslatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -143,6 +144,8 @@ class ShippingLocationsAndCostsType extends TranslatorAwareType
                 'label' => null,
                 'allow_add' => true,
                 'allow_delete' => true,
+            ])
+            ->add('need_range', HiddenType::class, [
             ])
         ;
     }

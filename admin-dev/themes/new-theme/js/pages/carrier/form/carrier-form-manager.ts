@@ -49,6 +49,8 @@ export default class CarrierFormManager {
 
   $freeShippingInput: JQuery;
 
+  $needRangeInput: JQuery;
+
   $form: JQuery;
 
   /**
@@ -64,6 +66,7 @@ export default class CarrierFormManager {
     this.$shippingMethodInput = $(CarrierFormMap.shippingMethodInput);
     this.$freeShippingInput = $(CarrierFormMap.freeShippingInput);
     this.$form = $(CarrierFormMap.form);
+    this.$needRangeInput = $(CarrierFormMap.needRangeInput);
 
     // Initialize form
     this.initForm();
@@ -90,7 +93,9 @@ export default class CarrierFormManager {
     this.$shippingMethodInput.on('change', () => this.refreshCurrentShippingSymbol());
     $(CarrierFormMap.zonesContainer).on('click', CarrierFormMap.deleteZoneButton, (e:Event) => this.onDeleteZone(e));
     this.eventEmitter.on(CarrierFormEventMap.rangesUpdated, (ranges: Range[]) => this.onChangeRanges(ranges));
-    this.$form.on('submit', (event: JQuery.Event) => this.onSubmitForm(event));
+    if (this.$needRangeInput.val() === '') {
+      this.$form.on('submit', (event: JQuery.Event) => this.onSubmitForm(event));
+    }
   }
 
   private onSubmitForm(event: JQuery.Event) {
