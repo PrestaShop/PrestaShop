@@ -27,6 +27,7 @@ use PrestaShop\PrestaShop\Adapter\CoreException;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
+use PrestaShopBundle\Security\Admin\SessionEmployeeProvider;
 
 /**
  * Class EmployeeCore.
@@ -464,7 +465,16 @@ class EmployeeCore extends ObjectModel
         }
         $userProvider = $container->get('prestashop.user_provider');
 
-        return $userProvider->getUser() !== null;
+        if ($userProvider->getUser() !== null) {
+            return true;
+        } else {
+            $sessionEmployeeProvider = ServiceLocator::get(SessionEmployeeProvider::class);
+            $employee = $sessionEmployeeProvider->getEmployeeFromSession(
+                $container->get('request_stack')->getCurrentRequest()
+            );
+
+            return $employee !== null;
+        }
     }
 
     /**
