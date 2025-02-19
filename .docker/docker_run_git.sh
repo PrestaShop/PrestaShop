@@ -93,7 +93,7 @@ elif [ "$DB_SERVER" != "<to be defined>" -a $PS_INSTALL_AUTO = 1 ]; then
         echo "\n* DB server $DB_SERVER is available, let's continue !"
 fi
 
-# From now, stop at error
+# From now on, stop at error
 set -e
 
 if [ $PS_DEV_MODE -ne 1 ]; then
@@ -152,12 +152,12 @@ fi
 
 if [ $PS_USE_DOCKER_MAILDEV -eq 1 ]; then
     echo "\n* Configuring emails to use maildev ..."
-    if [ $PS_INSTALL_AUTO -ne 1 ]; then
-        echo 'warning: PrestaShop is not yet installed. Skipping mail configuration.'
-    else
+    if runuser -g www-data -u www-data -- php /var/www/html/bin/console prestashop:config get PS_MAIL_METHOD; then
         runuser -g www-data -u www-data -- php /var/www/html/bin/console prestashop:config set PS_MAIL_METHOD --value "2"
         runuser -g www-data -u www-data -- php /var/www/html/bin/console prestashop:config set PS_MAIL_SERVER --value "maildev"
         runuser -g www-data -u www-data -- php /var/www/html/bin/console prestashop:config set PS_MAIL_SMTP_PORT --value "1025"
+    else
+        echo 'warning: PrestaShop is not yet installed or properly initialized. Skipping maildev configuration.'
     fi
 fi
 
