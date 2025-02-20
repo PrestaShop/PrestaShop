@@ -5419,5 +5419,10 @@
       <title>Modify search term identifiable object data after creating it</title>
       <description>This hook allows to modify search term identifiable object forms data after it was created</description>
     </hook>
+    <hook id="actionPresentObject">
+      <name>actionPresentObject</name>
+      <title>Object Presenter</title>
+      <description>This hook is called before an object is presented</description>
+    </hook>
   </entities>
 </entity_hook>
