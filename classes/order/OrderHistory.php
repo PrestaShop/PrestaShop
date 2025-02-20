@@ -303,10 +303,43 @@ class OrderHistoryCore extends ObjectModel
                 $payment_method = Module::getInstanceByName($order->module);
             }
 
-            $invoices = $order->getInvoicesCollection();
-            foreach ($invoices as $invoice) {
-                /** @var OrderInvoice $invoice */
-                $rest_paid = $invoice->getRestPaid();
+            // Are invoices managed by Prestashop?
+            if (true === (bool)\Configuration::get('PS_INVOICE')) {
+                $invoices = $order->getInvoicesCollection();
+                foreach ($invoices as $invoice) {
+                    /** @var OrderInvoice $invoice */
+                    $rest_paid = $invoice->getRestPaid();
+                    if ($rest_paid > 0) {
+                        $payment = new OrderPayment();
+                        $payment->order_reference = Tools::substr($order->reference, 0, 9);
+                        $payment->id_currency = $order->id_currency;
+                        $payment->amount = $rest_paid;
+                        $payment->payment_method = isset($payment_method) && $payment_method instanceof Module ? $payment_method->displayName : null;
+                        $payment->conversion_rate = $order->conversion_rate;
+                        $payment->save();
+
+                        // Update total_paid_real value for backward compatibility reasons
+                        $order->total_paid_real += $rest_paid;
+                        $order->save();
+
+                        Db::getInstance()->insert(
+                            'order_invoice_payment',
+                            [
+                                'id_order_invoice' => (int) $invoice->id,
+                                'id_order_payment' => (int) $payment->id,
+                                'id_order' => (int) $order->id,
+                            ]
+                        );
+                    }
+                }
+            } else {
+                // Disabled invoices? Then deduce $rest_paid from order payments, if any
+                $payments = OrderPayment::getByOrderReference($order->reference);
+                $paid = 0;
+                foreach ($payments as $payment) {
+                    $paid += $payment->amount;
+                }
+                $rest_paid = $order->total_paid - $paid;
                 if ($rest_paid > 0) {
                     $payment = new OrderPayment();
                     $payment->order_reference = Tools::substr($order->reference, 0, 9);
@@ -323,7 +356,7 @@ class OrderHistoryCore extends ObjectModel
                     Db::getInstance()->insert(
                         'order_invoice_payment',
                         [
-                            'id_order_invoice' => (int) $invoice->id,
+                            'id_order_invoice' => 0,
                             'id_order_payment' => (int) $payment->id,
                             'id_order' => (int) $order->id,
                         ]
