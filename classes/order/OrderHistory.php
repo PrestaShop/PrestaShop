@@ -334,12 +334,7 @@ class OrderHistoryCore extends ObjectModel
                 }
             } else {
                 // Disabled invoices? Then deduce $rest_paid from order payments, if any
-                $payments = OrderPayment::getByOrderReference($order->reference);
-                $paid = 0;
-                foreach ($payments as $payment) {
-                    $paid += $payment->amount;
-                }
-                $rest_paid = $order->total_paid - $paid;
+                $rest_paid = $order->total_paid - $order->getTotalPaid();
                 if ($rest_paid > 0) {
                     $payment = new OrderPayment();
                     $payment->order_reference = Tools::substr($order->reference, 0, 9);
