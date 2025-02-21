@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Discount\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\CartRule\CartRuleBuilder;
-use PrestaShop\PrestaShop\Adapter\CartRule\Repository\CartRuleRepository;
+use PrestaShop\PrestaShop\Adapter\Discount\Repository\DiscountRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Command\AddFreeShippingDiscountCommand;
 use PrestaShop\PrestaShop\Core\Domain\Discount\CommandHandler\AddFreeShippingDiscountHandlerInterface;
@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject\DiscountId;
 class AddFreeShippingDiscountHandler implements AddFreeShippingDiscountHandlerInterface
 {
     public function __construct(
-        private readonly CartRuleRepository $cartRuleRepository,
+        private readonly DiscountRepository $discountRepository,
         private readonly CartRuleBuilder $cartRuleBuilder
     ) {
     }
@@ -45,7 +45,7 @@ class AddFreeShippingDiscountHandler implements AddFreeShippingDiscountHandlerIn
     public function handle(AddFreeShippingDiscountCommand $command): DiscountId
     {
         $BuiltCartRule = $this->cartRuleBuilder->build($command);
-        $discount = $this->cartRuleRepository->add($BuiltCartRule);
+        $discount = $this->discountRepository->add($BuiltCartRule);
 
         return new DiscountId((int) $discount->id);
     }

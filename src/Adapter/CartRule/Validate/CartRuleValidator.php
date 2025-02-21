@@ -33,6 +33,10 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintExcep
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
 
+/**
+ * @deprecated in favor of DiscountValidator this one is kept until we probably migrate all to the new Discount domain
+ * and clean this namespace
+ */
 class CartRuleValidator extends AbstractObjectModelValidator
 {
     public function validate(CartRule $cartRule): void

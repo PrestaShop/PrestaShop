@@ -36,7 +36,7 @@ abstract class AddDiscountCommand
 {
     private array $localizedNames = [];
     private int $priority = 1;
-    private bool $active = true;
+    private bool $active = false;
     private ?DateTimeImmutable $validFrom = null;
     private ?DateTimeImmutable $validTo = null;
     private int $totalQuantity = 1;
@@ -49,17 +49,15 @@ abstract class AddDiscountCommand
     private DiscountType $type;
 
     public function __construct(
-        array $localizedNames,
         string $type,
     ) {
         $this->type = new DiscountType($type);
-        $this->setLocalizedNames($localizedNames);
     }
 
     /**
      * @param array<int, string> $localizedNames
      */
-    private function setLocalizedNames(array $localizedNames): self
+    public function setLocalizedNames(array $localizedNames): self
     {
         foreach ($localizedNames as $languageId => $name) {
             $this->localizedNames[(new LanguageId($languageId))->getValue()] = $name;

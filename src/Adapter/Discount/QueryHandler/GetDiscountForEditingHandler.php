@@ -28,9 +28,8 @@ namespace PrestaShop\PrestaShop\Adapter\Discount\QueryHandler;
 
 use DateTimeImmutable;
 use Exception;
-use PrestaShop\PrestaShop\Adapter\CartRule\Repository\CartRuleRepository;
+use PrestaShop\PrestaShop\Adapter\Discount\Repository\DiscountRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Query\GetDiscountForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Discount\QueryHandler\GetDiscountForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Discount\QueryResult\DiscountForEditing;
@@ -39,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Discount\QueryResult\DiscountForEditing;
 class GetDiscountForEditingHandler implements GetDiscountForEditingHandlerInterface
 {
     public function __construct(
-        protected readonly CartRuleRepository $cartRuleRepository
+        protected readonly DiscountRepository $discountRepository
     ) {
     }
 
@@ -48,8 +47,7 @@ class GetDiscountForEditingHandler implements GetDiscountForEditingHandlerInterf
      */
     public function handle(GetDiscountForEditing $query): DiscountForEditing
     {
-        $cartRuleId = new CartRuleId($query->discountId->getValue());
-        $cartRule = $this->cartRuleRepository->get($cartRuleId);
+        $cartRule = $this->discountRepository->get($query->discountId);
 
         return new DiscountForEditing(
             $query->discountId->getValue(),
