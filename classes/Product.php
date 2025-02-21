@@ -8004,23 +8004,50 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * @return string TaxRulesGroup identifier most used
+     * @return int TaxRulesGroup identifier most used
      */
     public static function getIdTaxRulesGroupMostUsed()
     {
-        return Db::getInstance()->getValue(
-            'SELECT id_tax_rules_group
-            FROM (
-                SELECT COUNT(*) n, product_shop.id_tax_rules_group
-                FROM ' . _DB_PREFIX_ . 'product p
-                ' . Shop::addSqlAssociation('product', 'p') . '
-                JOIN ' . _DB_PREFIX_ . 'tax_rules_group trg ON (product_shop.id_tax_rules_group = trg.id_tax_rules_group)
-                WHERE trg.active = 1 AND trg.deleted = 0
-                GROUP BY product_shop.id_tax_rules_group
-                ORDER BY n DESC
-                LIMIT 1
-            ) most_used'
-        );
+        $taxRulesGroupId = (int) Configuration::get('PS_TAX_RULES_GROUP_MOST_USED');
+        $lastUpdate = Configuration::get('PS_TAX_RULES_GROUP_MOST_USED_LAST_UPD');
+
+        $shouldUpdate = false;
+
+        if ($lastUpdate) {
+            try {
+                $dateLastUpdate = new DateTime($lastUpdate);
+                $dateInterval = $dateLastUpdate->diff(new DateTime());
+
+                if ($dateInterval->days > 90) {
+                    $shouldUpdate = true;
+                }
+            } catch (Exception $exception) {
+                $shouldUpdate = true;
+            }
+        } else {
+            $shouldUpdate = true;
+        }
+
+        if ($taxRulesGroupId === 0 || $shouldUpdate) {
+            $taxRulesGroupId = (int) Db::getInstance()->getValue(
+                'SELECT id_tax_rules_group
+                FROM (
+                    SELECT COUNT(*) n, product_shop.id_tax_rules_group
+                    FROM ' . _DB_PREFIX_ . 'product p
+                    ' . Shop::addSqlAssociation('product', 'p') . '
+                    JOIN ' . _DB_PREFIX_ . 'tax_rules_group trg ON (product_shop.id_tax_rules_group = trg.id_tax_rules_group)
+                    WHERE trg.active = 1 AND trg.deleted = 0
+                    GROUP BY product_shop.id_tax_rules_group
+                    ORDER BY n DESC
+                    LIMIT 1
+                ) most_used'
+            );
+
+            Configuration::updateValue('PS_TAX_RULES_GROUP_MOST_USED', $taxRulesGroupId);
+            Configuration::updateValue('PS_TAX_RULES_GROUP_MOST_USED_LAST_UPD', date('Y-m-d H:i:s'));
+        }
+
+        return $taxRulesGroupId;
     }
 
     /**
