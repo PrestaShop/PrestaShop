@@ -1333,6 +1333,13 @@ class ValidateCore
         return (bool) preg_match('/^[\w-]{3,255}$/u', $theme_name);
     }
 
+    public static function isRequiredWhenActive($value, ObjectModelCore $object): bool
+    {
+        $isOnline = property_exists($object, 'active') ? $object->active : true;
+
+        return !$isOnline || !empty($value);
+    }
+
     /**
      * Check if enable_insecure_rsh exists in
      * this PHP version otherwise disable the
