@@ -304,7 +304,7 @@ class OrderHistoryCore extends ObjectModel
             }
 
             // Are invoices managed by Prestashop?
-            if (true === (bool)\Configuration::get('PS_INVOICE')) {
+            if (true === (bool) Configuration::get('PS_INVOICE')) {
                 $invoices = $order->getInvoicesCollection();
                 foreach ($invoices as $invoice) {
                     /** @var OrderInvoice $invoice */
