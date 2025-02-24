@@ -1138,9 +1138,10 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
                 throw new PrestaShopException($this->trans('Validation function not found: %s.', [$data['validate']], 'Admin.Notifications.Error'));
             }
 
-            // isRequiredWhenActive validator must be called especially when the value is empty
-            if (!empty($value) || $data['validate'] === 'isRequiredWhenActive') {
-                $res = $this->callValidateMethod($data['validate'], $value);
+            // isRequiredWhenActive and defaultLanguageRequiredWhenActive validators must be called especially when the value is empty
+            $isEmptyValidationMethod = Tools::strtolower($data['validate']) === 'isrequiredwhenactive' || Tools::strtolower($data['validate']) === 'defaultlanguagerequiredwhenactive';
+            if (!empty($value) || $isEmptyValidationMethod) {
+                $res = $this->callValidateMethod($data['validate'], $value, isset($id_lang) ? (int) $id_lang : null);
                 if (!$res) {
                     if ($human_errors) {
                         return $this->trans('The %s field is invalid.', [$this->displayFieldName($field, get_class($this))], 'Admin.Notifications.Error');
@@ -1154,7 +1155,7 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
         return true;
     }
 
-    protected function callValidateMethod(string $validateMethod, mixed $value): bool
+    protected function callValidateMethod(string $validateMethod, mixed $value, ?int $langId = null): bool
     {
         static $ps_allow_html_iframe = null;
 
@@ -1170,6 +1171,8 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
             return Validate::isCleanHtml($value, $ps_allow_html_iframe);
         } elseif (Tools::strtolower($validateMethod) === 'isrequiredwhenactive') {
             return Validate::isRequiredWhenActive($value, $this);
+        } elseif (Tools::strtolower($validateMethod) === 'defaultlanguagerequiredwhenactive') {
+            return Validate::defaultLanguageRequiredWhenActive($value, $langId, $this);
         }
 
         return call_user_func(['Validate', $validateMethod], $value);

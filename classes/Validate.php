@@ -1335,9 +1335,21 @@ class ValidateCore
 
     public static function isRequiredWhenActive($value, ObjectModelCore $object): bool
     {
-        $isOnline = property_exists($object, 'active') ? $object->active : true;
+        $isActive = property_exists($object, 'active') ? $object->active : true;
 
-        return !$isOnline || !empty($value);
+        return !$isActive || !empty($value);
+    }
+
+    public static function defaultLanguageRequiredWhenActive($value, ?int $langId, ObjectModelCore $object): bool
+    {
+        static $defaultLangId = null;
+        if (null === $defaultLangId) {
+            $defaultLangId = (int) Configuration::get('PS_LANG_DEFAULT');
+        }
+
+        $isActive = property_exists($object, 'active') ? $object->active : true;
+
+        return !$isActive || !empty($value) || $langId !== $defaultLangId;
     }
 
     /**

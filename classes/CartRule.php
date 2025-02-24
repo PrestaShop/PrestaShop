@@ -156,7 +156,7 @@ class CartRuleCore extends ObjectModel
                 'lang' => true,
                 'required' => false,
                 'size' => CartRuleSettings::NAME_MAX_LENGTH,
-                'validate' => 'isRequiredWhenActive',
+                'validate' => 'defaultLanguageRequiredWhenActive',
             ],
         ],
     ];
