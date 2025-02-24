@@ -134,7 +134,7 @@
     "eslint-plugin-import": "^2.31.0",
     "jsdoc-to-markdown": "^9.0.5",
     "mochawesome-merge": "^4.3.0",
-    "ts-mocha": "^10.0.0",
+    "ts-mocha": "^11.1.0",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.3"
   }
