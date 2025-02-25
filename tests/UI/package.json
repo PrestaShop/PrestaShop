@@ -112,7 +112,7 @@
   "dependencies": {
     "@faker-js/faker": "^9.5.0",
     "@prestashop-core/ui-testing": "https://github.com/PrestaShop/ui-testing-library#main",
-    "chai": "^4.5.0",
+    "chai": "^5.2.0",
     "chai-string": "^1.5.0",
     "dotenv": "^16.4.7",
     "mocha": "^10.8.2",
@@ -120,7 +120,7 @@
     "mysql2": "^3.12.0"
   },
   "devDependencies": {
-    "@types/chai": "^4.3.11",
+    "@types/chai": "^5.0.1",
     "@types/chai-string": "^1.4.5",
     "@types/mocha": "^10.0.10",
     "@types/mochawesome": "^6.2.4",
