@@ -18,3 +18,7 @@
     }
   }
 }
+
+.popover .popover-body a {
+  color: var(--#{$cdk}primary-400);
+}
