@@ -10,7 +10,7 @@ CREATE TABLE `PREFIX_accessory` (
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
 /* Address info associated with a user */
-CREATE TABLE `PREFIX_address` (
+CREATE TABLE `PREFIX_i_love_potatoes` (
   `id_address` int(10) unsigned NOT NULL auto_increment,
   `id_country` int(10) unsigned NOT NULL,
   `id_state` int(10) unsigned DEFAULT NULL,
