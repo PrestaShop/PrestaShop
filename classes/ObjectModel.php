@@ -540,7 +540,16 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
             $this->id_shop_default = (in_array(Configuration::get('PS_SHOP_DEFAULT'), $id_shop_list) == true) ? Configuration::get('PS_SHOP_DEFAULT') : min($id_shop_list);
         }
 
-        if (!$result = Db::getInstance()->insert($this->def['table'], $this->getFields(), $null_values)) {
+        // We get the fields before any insertion, because the validation is called inside those methods and in case of invalid value nothing
+        // should be inserted at all
+        $entityFields = $this->getFields();
+        if (!empty($this->def['multilang'])) {
+            $entityMultiLangFields = $this->getFieldsLang();
+        } else {
+            $entityMultiLangFields = [];
+        }
+
+        if (!$result = Db::getInstance()->insert($this->def['table'], $entityFields, $null_values)) {
             return false;
         }
 
@@ -565,27 +574,24 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
         }
 
         // Database insertion for multilingual fields related to the object
-        if (!empty($this->def['multilang'])) {
-            $fields = $this->getFieldsLang();
-            if ($fields && is_array($fields)) {
-                $shops = Shop::getCompleteListOfShopsID();
-                $asso = Shop::getAssoTable($this->def['table'] . '_lang');
-                foreach ($fields as $field) {
-                    foreach (array_keys($field) as $key) {
-                        if (!Validate::isTableOrIdentifier($key)) {
-                            throw new PrestaShopException('key ' . $key . ' is not table or identifier');
-                        }
+        if (!empty($entityMultiLangFields)) {
+            $shops = Shop::getCompleteListOfShopsID();
+            $asso = Shop::getAssoTable($this->def['table'] . '_lang');
+            foreach ($entityMultiLangFields as $field) {
+                foreach (array_keys($field) as $key) {
+                    if (!Validate::isTableOrIdentifier($key)) {
+                        throw new PrestaShopException('key ' . $key . ' is not table or identifier');
                     }
-                    $field[$this->def['primary']] = (int) $this->id;
+                }
+                $field[$this->def['primary']] = (int) $this->id;
 
-                    if ($asso !== false && $asso['type'] == 'fk_shop') {
-                        foreach ($shops as $id_shop) {
-                            $field['id_shop'] = (int) $id_shop;
-                            $result &= Db::getInstance()->insert($this->def['table'] . '_lang', $field);
-                        }
-                    } else {
+                if ($asso !== false && $asso['type'] == 'fk_shop') {
+                    foreach ($shops as $id_shop) {
+                        $field['id_shop'] = (int) $id_shop;
                         $result &= Db::getInstance()->insert($this->def['table'] . '_lang', $field);
                     }
+                } else {
+                    $result &= Db::getInstance()->insert($this->def['table'] . '_lang', $field);
                 }
             }
         }
@@ -721,8 +727,17 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
             /* @phpstan-ignore-next-line */
             $this->id_shop_default = (in_array(Configuration::get('PS_SHOP_DEFAULT'), $id_shop_list) == true) ? Configuration::get('PS_SHOP_DEFAULT') : min($id_shop_list);
         }
+
         // Database update
         $fieldsToUpdate = $this->getFields();
+        // Multi lang fields must be fetched before any updates is done, because if they are invalid the whole update should be blocked
+        // and validation process is performed in getFieldsLang
+        if (isset($this->def['multilang']) && $this->def['multilang']) {
+            $multiLangFieldsToUpdate = $this->getFieldsLang();
+        } else {
+            $multiLangFieldsToUpdate = [];
+        }
+
         if (!$result = Db::getInstance()->update($this->def['table'], $fieldsToUpdate, '`' . pSQL($this->def['primary']) . '` = ' . (int) $this->id, 0, $null_values)) {
             return false;
         }
@@ -760,7 +775,7 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
         }
 
         // Database update for multilingual fields related to the object
-        if (isset($this->def['multilang']) && $this->def['multilang']) {
+        if (!empty($multiLangFieldsToUpdate)) {
             $multiLangFieldsToUpdate = $this->getFieldsLang();
             if (is_array($multiLangFieldsToUpdate)) {
                 foreach ($multiLangFieldsToUpdate as $field) {
@@ -1034,14 +1049,9 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
     public function validateField($field, $value, $id_lang = null, $skip = [], $human_errors = false)
     {
         static $ps_lang_default = null;
-        static $ps_allow_html_iframe = null;
 
         if ($ps_lang_default === null) {
             $ps_lang_default = Configuration::get('PS_LANG_DEFAULT');
-        }
-
-        if ($ps_allow_html_iframe === null) {
-            $ps_allow_html_iframe = (int) Configuration::get('PS_ALLOW_HTML_IFRAME');
         }
 
         $this->cacheFieldsRequiredDatabase();
@@ -1128,17 +1138,10 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
                 throw new PrestaShopException($this->trans('Validation function not found: %s.', [$data['validate']], 'Admin.Notifications.Error'));
             }
 
-            if (!empty($value)) {
-                $res = true;
-                if (Tools::strtolower($data['validate']) === 'iscleanhtml') {
-                    if (!call_user_func(['Validate', $data['validate']], $value, $ps_allow_html_iframe)) {
-                        $res = false;
-                    }
-                } else {
-                    if (!call_user_func(['Validate', $data['validate']], $value)) {
-                        $res = false;
-                    }
-                }
+            // isRequiredWhenActive and defaultLanguageRequiredWhenActive validators must be called especially when the value is empty
+            $isEmptyValidationMethod = Tools::strtolower($data['validate']) === 'isrequiredwhenactive' || Tools::strtolower($data['validate']) === 'defaultlanguagerequiredwhenactive';
+            if (!empty($value) || $isEmptyValidationMethod) {
+                $res = $this->callValidateMethod($data['validate'], $value, isset($id_lang) ? (int) $id_lang : null);
                 if (!$res) {
                     if ($human_errors) {
                         return $this->trans('The %s field is invalid.', [$this->displayFieldName($field, get_class($this))], 'Admin.Notifications.Error');
@@ -1150,6 +1153,29 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
         }
 
         return true;
+    }
+
+    protected function callValidateMethod(string $validateMethod, mixed $value, ?int $langId = null): bool
+    {
+        static $ps_allow_html_iframe = null;
+
+        if (!method_exists('Validate', $validateMethod)) {
+            throw new PrestaShopException($this->trans('Validation function not found: %s.', [$validateMethod], 'Admin.Notifications.Error'));
+        }
+
+        if (Tools::strtolower($validateMethod) === 'iscleanhtml') {
+            if ($ps_allow_html_iframe === null) {
+                $ps_allow_html_iframe = (int) Configuration::get('PS_ALLOW_HTML_IFRAME');
+            }
+
+            return Validate::isCleanHtml($value, $ps_allow_html_iframe);
+        } elseif (Tools::strtolower($validateMethod) === 'isrequiredwhenactive') {
+            return Validate::isRequiredWhenActive($value, $this);
+        } elseif (Tools::strtolower($validateMethod) === 'defaultlanguagerequiredwhenactive') {
+            return Validate::defaultLanguageRequiredWhenActive($value, $langId, $this);
+        }
+
+        return call_user_func(['Validate', $validateMethod], $value);
     }
 
     /**
@@ -1221,7 +1247,7 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
             // Checking for fields validity
             // Hack for postcode required for country which does not have postcodes
             if (!empty($value) || $value === '0' || ($field == 'postcode' && $value == '0')) {
-                if (isset($data['validate']) && (!call_user_func('Validate::' . $data['validate'], $value) && (!empty($value) || $data['required']))) {
+                if (isset($data['validate']) && (!$this->callValidateMethod($data['validate'], $value) && (!empty($value) || $data['required']))) {
                     $errors[$field] = $this->trans(
                         '%s is invalid.',
                         [

@@ -1,11 +1,6 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-// Import FO pages
-import {createAccountPage as foCreateAccountPage} from '@pages/FO/classic/myAccount/add';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
@@ -14,6 +9,7 @@ import {
   dataCustomers,
   dataModules,
   FakerCustomer,
+  foClassicCreateAccountPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
@@ -211,14 +207,14 @@ describe('BO - Modules - GDPR: Customer activity tracking', async () => {
 
       await foClassicLoginPage.goToCreateAccountPage(page);
 
-      const pageHeaderTitle = await foCreateAccountPage.getHeaderTitle(page);
-      expect(pageHeaderTitle).to.equal(foCreateAccountPage.formTitle);
+      const pageHeaderTitle = await foClassicCreateAccountPage.getHeaderTitle(page);
+      expect(pageHeaderTitle).to.equal(foClassicCreateAccountPage.formTitle);
     });
 
     it('should create new account', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createNewAccount', baseContext);
 
-      await foCreateAccountPage.createAccount(page, customerData);
+      await foClassicCreateAccountPage.createAccount(page, customerData);
 
       const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);
       expect(isCustomerConnected).to.eq(true);

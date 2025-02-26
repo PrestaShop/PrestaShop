@@ -1,6 +1,5 @@
 import testContext from '@utils/testContext';
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
-import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 import {expect} from 'chai';
 
 import {
@@ -12,6 +11,7 @@ import {
   type BrowserContext,
   FakerProduct,
   foClassicCartPage,
+  foClassicModalBlockCartPage,
   foClassicProductPage,
   type Page,
   utilsFile,
@@ -221,7 +221,7 @@ describe('FO - Product page - Product page : Display volume discount', async () 
 
       await foClassicProductPage.clickOnAddToCartButton(page);
 
-      const result = await blockCartModal.getProductDetailsFromBlockCartModal(page);
+      const result = await foClassicModalBlockCartPage.getProductDetailsFromBlockCartModal(page);
       await Promise.all([
         expect(result.price).to.equal(18),
         expect(result.quantity).to.equal(3),
@@ -233,7 +233,7 @@ describe('FO - Product page - Product page : Display volume discount', async () 
     it('should remove the product from the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removeProduct', baseContext);
 
-      await blockCartModal.proceedToCheckout(page);
+      await foClassicModalBlockCartPage.proceedToCheckout(page);
       await foClassicCartPage.deleteProduct(page, 1);
 
       const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
@@ -326,7 +326,7 @@ describe('FO - Product page - Product page : Display volume discount', async () 
 
       await foClassicProductPage.clickOnAddToCartButton(page);
 
-      const result = await blockCartModal.getProductDetailsFromBlockCartModal(page);
+      const result = await foClassicModalBlockCartPage.getProductDetailsFromBlockCartModal(page);
       await Promise.all([
         expect(result.price).to.equal(17),
         expect(result.quantity).to.equal(1),
@@ -338,7 +338,7 @@ describe('FO - Product page - Product page : Display volume discount', async () 
     it('should remove the product from the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removeProduct2', baseContext);
 
-      await blockCartModal.proceedToCheckout(page);
+      await foClassicModalBlockCartPage.proceedToCheckout(page);
       await foClassicCartPage.deleteProduct(page, 1);
 
       const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);

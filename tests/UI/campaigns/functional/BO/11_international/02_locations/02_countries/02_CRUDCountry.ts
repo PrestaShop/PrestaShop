@@ -1,29 +1,23 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-// Import BO pages
-import zonesPage from '@pages/BO/international/locations';
-// Import FO pages
-import {addressesPage} from '@pages/FO/classic/myAccount/addresses';
-import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
+import {expect} from 'chai';
 
 import {
   boCountriesPage,
   boCountriesCreatePage,
   boDashboardPage,
   boLoginPage,
+  boZonesPages,
   type BrowserContext,
   dataCustomers,
   FakerCountry,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
+  foClassicMyAddressesPage,
+  foClassicMyAddressesCreatePage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_international_locations_countries_CRUDCountry';
 
@@ -94,16 +88,16 @@ describe('BO - International - Countries : CRUD country', async () => {
       boDashboardPage.internationalParentLink,
       boDashboardPage.locationsLink,
     );
-    await zonesPage.closeSfToolBar(page);
+    await boZonesPages.closeSfToolBar(page);
 
-    const pageTitle = await zonesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(zonesPage.pageTitle);
+    const pageTitle = await boZonesPages.getPageTitle(page);
+    expect(pageTitle).to.contains(boZonesPages.pageTitle);
   });
 
   it('should go to \'Countries\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCountriesPage', baseContext);
 
-    await zonesPage.goToSubTabCountries(page);
+    await boZonesPages.goToSubTabCountries(page);
 
     const pageTitle = await boCountriesPage.getPageTitle(page);
     expect(pageTitle).to.contains(boCountriesPage.pageTitle);
@@ -179,25 +173,25 @@ describe('BO - International - Countries : CRUD country', async () => {
       await foClassicHomePage.goToMyAccountPage(page);
       await foClassicMyAccountPage.goToAddressesPage(page);
 
-      const pageTitle = await addressesPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open addresses page').to.contains(addressesPage.pageTitle);
+      const pageTitle = await foClassicMyAddressesPage.getPageTitle(page);
+      expect(pageTitle, 'Fail to open addresses page').to.contains(foClassicMyAddressesPage.pageTitle);
     });
 
     it(`should check that the new country '${createCountryData.name}' exist`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkIsNewCountryExist', baseContext);
 
-      await addressesPage.openNewAddressForm(page);
+      await foClassicMyAddressesPage.openNewAddressForm(page);
 
-      const countryExist = await addAddressPage.countryExist(page, createCountryData.name);
+      const countryExist = await foClassicMyAddressesCreatePage.countryExist(page, createCountryData.name);
       expect(countryExist, 'Country does not exist').to.eq(true);
     });
 
     it('should sign out from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighOutFO_1', baseContext);
 
-      await addressesPage.logout(page);
+      await foClassicMyAddressesPage.logout(page);
 
-      const isCustomerConnected = await addressesPage.isCustomerConnected(page);
+      const isCustomerConnected = await foClassicMyAddressesPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
 
@@ -282,16 +276,16 @@ describe('BO - International - Countries : CRUD country', async () => {
       await foClassicHomePage.goToMyAccountPage(page);
       await foClassicMyAccountPage.goToAddressesPage(page);
 
-      const pageTitle = await addressesPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open addresses page').to.contains(addressesPage.pageTitle);
+      const pageTitle = await foClassicMyAddressesPage.getPageTitle(page);
+      expect(pageTitle, 'Fail to open addresses page').to.contains(foClassicMyAddressesPage.pageTitle);
     });
 
     it(`should check that the edited country '${editCountryData.name}' not exist`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkIsCountryNotExist', baseContext);
 
-      await addressesPage.openNewAddressForm(page);
+      await foClassicMyAddressesPage.openNewAddressForm(page);
 
-      const countryExist = await addAddressPage.countryExist(page, editCountryData.name);
+      const countryExist = await foClassicMyAddressesCreatePage.countryExist(page, editCountryData.name);
       expect(countryExist, 'Country exist').to.eq(false);
     });
 

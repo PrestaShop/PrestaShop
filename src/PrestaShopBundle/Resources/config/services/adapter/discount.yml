@@ -11,3 +11,14 @@ services:
     autowire: true
     public: false
     autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Discount\Validate\DiscountValidator:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Adapter\Discount\Repository\DiscountRepository:
+    autowire: true
+    public: false
+    arguments:
+      $connection: '@doctrine.dbal.default_connection'
+      $dbPrefix: '%database_prefix%'

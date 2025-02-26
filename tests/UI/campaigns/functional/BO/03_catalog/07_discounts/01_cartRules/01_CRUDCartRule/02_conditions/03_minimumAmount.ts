@@ -1,13 +1,7 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import commonTests
-import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
-
-// Import FO pages
-import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
-
 import {expect} from 'chai';
+
+import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 
 import {
   boCartRulesPage,
@@ -20,6 +14,7 @@ import {
   foClassicCartPage,
   foClassicHomePage,
   foClassicLoginPage,
+  foClassicModalBlockCartPage,
   foClassicModalQuickViewPage,
   type Page,
   utilsCore,
@@ -131,7 +126,7 @@ describe('BO - Catalog - Cart rules : Minimum amount', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       await foClassicModalQuickViewPage.addToCartByQuickView(page);
-      await blockCartModal.proceedToCheckout(page);
+      await foClassicModalBlockCartPage.proceedToCheckout(page);
 
       const pageTitle = await foClassicCartPage.getPageTitle(page);
       expect(pageTitle).to.eq(foClassicCartPage.pageTitle);

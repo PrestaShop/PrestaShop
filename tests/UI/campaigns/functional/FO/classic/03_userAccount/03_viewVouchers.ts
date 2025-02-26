@@ -1,13 +1,10 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
 // Import commonTests
 import {createCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {createAccountTest} from '@commonTests/FO/classic/account';
-
-// Import FO pages
-import {vouchersPage as foVouchersPage} from '@pages/FO/classic/myAccount/vouchers';
 
 import {
   type BrowserContext,
@@ -16,12 +13,11 @@ import {
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
+  foClassicMyVouchersPage,
   type Page,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_FO_classic_userAccount_viewVouchers';
 
@@ -112,8 +108,8 @@ describe('FO - Account : View vouchers', async () => {
       await foClassicHomePage.goToMyAccountPage(page);
       await foClassicMyAccountPage.goToVouchersPage(page);
 
-      const pageHeaderTitle = await foVouchersPage.getPageTitle(page);
-      expect(pageHeaderTitle).to.equal(foVouchersPage.pageTitle);
+      const pageHeaderTitle = await foClassicMyVouchersPage.getPageTitle(page);
+      expect(pageHeaderTitle).to.equal(foClassicMyVouchersPage.pageTitle);
     });
 
     [
@@ -135,7 +131,7 @@ describe('FO - Account : View vouchers', async () => {
       it(`should check the voucher ${cartRule.args.column} n°${cartRule.args.row}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkVoucher${index}`, baseContext);
 
-        const cartRuleTextColumn = await foVouchersPage.getTextColumnFromTableVouchers(
+        const cartRuleTextColumn = await foClassicMyVouchersPage.getTextColumnFromTableVouchers(
           page,
           cartRule.args.row,
           cartRule.args.column,

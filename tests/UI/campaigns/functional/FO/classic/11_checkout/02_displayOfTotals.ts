@@ -1,13 +1,9 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
 // Import common tests
 import {createCartRuleTest, deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 
-// Import FO pages
-import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
-
-import {expect} from 'chai';
 import {
   type BrowserContext,
   dataCarriers,
@@ -18,6 +14,7 @@ import {
   foClassicCheckoutPage,
   foClassicHomePage,
   foClassicLoginPage,
+  foClassicModalBlockCartPage,
   foClassicModalQuickViewPage,
   foClassicSearchResultsPage,
   type Page,
@@ -117,7 +114,7 @@ describe('FO - Checkout : Display of totals', async () => {
       await foClassicSearchResultsPage.quickViewProduct(page, 1);
 
       await foClassicModalQuickViewPage.addToCartByQuickView(page);
-      await blockCartModal.proceedToCheckout(page);
+      await foClassicModalBlockCartPage.proceedToCheckout(page);
 
       const pageTitle = await foClassicCartPage.getPageTitle(page);
       expect(pageTitle).to.equal(foClassicCartPage.pageTitle);

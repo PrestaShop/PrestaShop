@@ -1,8 +1,5 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import FO pages
-import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
+import {expect} from 'chai';
 
 import {
   boCustomerSettingsPage,
@@ -12,12 +9,11 @@ import {
   dataCustomers,
   foClassicHomePage,
   foClassicLoginPage,
+  foClassicModalBlockCartPage,
   foClassicModalQuickViewPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_shopParameters_customerSettings_customers_redisplayCartAtLogin';
 
@@ -123,7 +119,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
       await testContext.addContextItem(this, 'testIdentifier', `addProductToTheCart_${index}`, baseContext);
 
       await foClassicModalQuickViewPage.addToCartByQuickView(page);
-      await blockCartModal.proceedToCheckout(page);
+      await foClassicModalBlockCartPage.proceedToCheckout(page);
 
       // Check number of product in cart
       const notificationsNumber = await foClassicHomePage.getCartNotificationsNumber(page);

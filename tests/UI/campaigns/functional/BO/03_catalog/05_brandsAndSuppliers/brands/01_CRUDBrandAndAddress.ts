@@ -1,14 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import addBrandPage from '@pages/BO/catalog/brands/add';
-import addBrandAddressPage from '@pages/BO/catalog/brands/addAddress';
-import viewBrandPage from '@pages/BO/catalog/brands/view';
-
 import {expect} from 'chai';
+
 import {
+  boBrandAdressesCreatePage,
+  boBrandsCreatePage,
   boBrandsPage,
+  boBrandsViewPage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -98,14 +95,14 @@ describe('BO - Catalog - Brands & suppliers : CRUD Brand and Address', async () 
 
       await boBrandsPage.goToAddNewBrandPage(page);
 
-      const pageTitle = await addBrandPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addBrandPage.pageTitle);
+      const pageTitle = await boBrandsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boBrandsCreatePage.pageTitle);
     });
 
     it('should create brand', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createBrand', baseContext);
 
-      const result = await addBrandPage.createEditBrand(page, createBrandData);
+      const result = await boBrandsCreatePage.createEditBrand(page, createBrandData);
       expect(result).to.equal(boBrandsPage.successfulCreationMessage);
 
       const numberOfBrandsAfterCreation = await boBrandsPage.getNumberOfElementInGrid(page, brandsTable);
@@ -120,14 +117,14 @@ describe('BO - Catalog - Brands & suppliers : CRUD Brand and Address', async () 
 
       await boBrandsPage.goToAddNewBrandAddressPage(page);
 
-      const pageTitle = await addBrandAddressPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addBrandAddressPage.pageTitle);
+      const pageTitle = await boBrandAdressesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boBrandAdressesCreatePage.pageTitle);
     });
 
     it('should create brand address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createAddress', baseContext);
 
-      const result = await addBrandAddressPage.createEditBrandAddress(page, createBrandAddressData);
+      const result = await boBrandAdressesCreatePage.createEditBrandAddress(page, createBrandAddressData);
       expect(result).to.equal(boBrandsPage.successfulCreationMessage);
 
       const numberOfBrandsAddressesAfterCreation = await boBrandsPage.getNumberOfElementInGrid(page, addressesTable);
@@ -156,24 +153,24 @@ describe('BO - Catalog - Brands & suppliers : CRUD Brand and Address', async () 
 
       await boBrandsPage.viewBrand(page, 1);
 
-      const pageTitle = await viewBrandPage.getPageTitle(page);
+      const pageTitle = await boBrandsViewPage.getPageTitle(page);
       expect(pageTitle).to.contains(createBrandData.name);
     });
 
     it('should check existence of the associated address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAddressOnCreatedBrand', baseContext);
 
-      const numberOfAddressesInGrid = await viewBrandPage.getNumberOfAddressesInGrid(page);
+      const numberOfAddressesInGrid = await boBrandsViewPage.getNumberOfAddressesInGrid(page);
       expect(numberOfAddressesInGrid).to.equal(createBrandData.addresses);
 
-      const textColumn = await viewBrandPage.getTextColumnFromTableAddresses(page, 1, 1);
+      const textColumn = await boBrandsViewPage.getTextColumnFromTableAddresses(page, 1, 1);
       expect(textColumn).to.contains(`${createBrandAddressData.firstName} ${createBrandAddressData.lastName}`);
     });
 
     it('should return brands Page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPageAfterViewCreatedBrand', baseContext);
 
-      await viewBrandPage.goToPreviousPage(page);
+      await boBrandsViewPage.goToPreviousPage(page);
 
       const pageTitle = await boBrandsPage.getPageTitle(page);
       expect(pageTitle).to.contains(boBrandsPage.pageTitle);
@@ -206,14 +203,14 @@ describe('BO - Catalog - Brands & suppliers : CRUD Brand and Address', async () 
 
       await boBrandsPage.goToEditBrandPage(page, 1);
 
-      const pageTitle = await addBrandPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addBrandPage.pageTitleEdit);
+      const pageTitle = await boBrandsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boBrandsCreatePage.pageTitleEdit);
     });
 
     it('should edit brand', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateBrand', baseContext);
 
-      const result = await addBrandPage.createEditBrand(page, editBrandData);
+      const result = await boBrandsCreatePage.createEditBrand(page, editBrandData);
       expect(result).to.equal(boBrandsPage.successfulUpdateMessage);
 
       editBrandData.addresses += 1;
@@ -257,14 +254,14 @@ describe('BO - Catalog - Brands & suppliers : CRUD Brand and Address', async () 
 
       await boBrandsPage.goToEditBrandAddressPage(page, 1);
 
-      const pageTitle = await addBrandPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addBrandPage.pageTitleEdit);
+      const pageTitle = await boBrandsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boBrandsCreatePage.pageTitleEdit);
     });
 
     it('should edit brand address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateAddress', baseContext);
 
-      const result = await addBrandAddressPage.createEditBrandAddress(page, editBrandAddressData);
+      const result = await boBrandAdressesCreatePage.createEditBrandAddress(page, editBrandAddressData);
       expect(result).to.equal(boBrandsPage.successfulUpdateMessage);
     });
 
@@ -294,24 +291,24 @@ describe('BO - Catalog - Brands & suppliers : CRUD Brand and Address', async () 
 
       await boBrandsPage.viewBrand(page, 1);
 
-      const pageTitle = await viewBrandPage.getPageTitle(page);
+      const pageTitle = await boBrandsViewPage.getPageTitle(page);
       expect(pageTitle).to.contains(editBrandData.name);
     });
 
     it('should check existence of the associated address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAddressOnUpdatedBrand', baseContext);
 
-      const numberOfAddressesInGrid = await viewBrandPage.getNumberOfAddressesInGrid(page);
+      const numberOfAddressesInGrid = await boBrandsViewPage.getNumberOfAddressesInGrid(page);
       expect(numberOfAddressesInGrid).to.equal(editBrandData.addresses);
 
-      const textColumn = await viewBrandPage.getTextColumnFromTableAddresses(page, 1, 1);
+      const textColumn = await boBrandsViewPage.getTextColumnFromTableAddresses(page, 1, 1);
       expect(textColumn).to.contains(`${editBrandAddressData.firstName} ${editBrandAddressData.lastName}`);
     });
 
     it('should go back to brands Page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPageAfterViewEditedBrand', baseContext);
 
-      await viewBrandPage.goToPreviousPage(page);
+      await boBrandsViewPage.goToPreviousPage(page);
 
       const pageTitle = await boBrandsPage.getPageTitle(page);
       expect(pageTitle).to.contains(boBrandsPage.pageTitle);

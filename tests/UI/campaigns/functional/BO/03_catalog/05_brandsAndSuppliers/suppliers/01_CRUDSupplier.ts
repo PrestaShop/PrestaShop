@@ -1,16 +1,13 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import suppliersPage from '@pages/BO/catalog/suppliers';
-import viewSupplierPage from '@pages/BO/catalog/suppliers/view';
-
 import {expect} from 'chai';
+
 import {
   boBrandsPage,
   boDashboardPage,
   boLoginPage,
-  boSuppliersCreate,
+  boSuppliersCreatePage,
+  boSuppliersPage,
+  boSuppliersViewPage,
   type BrowserContext,
   FakerSupplier,
   type Page,
@@ -80,8 +77,8 @@ describe('BO - Catalog - Brands & Suppliers : CRUD supplier', async () => {
 
     await boBrandsPage.goToSubTabSuppliers(page);
 
-    const pageTitle = await suppliersPage.getPageTitle(page);
-    expect(pageTitle).to.contains(suppliersPage.pageTitle);
+    const pageTitle = await boSuppliersPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boSuppliersPage.pageTitle);
   });
 
   // 1: Create supplier
@@ -89,17 +86,17 @@ describe('BO - Catalog - Brands & Suppliers : CRUD supplier', async () => {
     it('should go to new supplier page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddSupplierPage', baseContext);
 
-      await suppliersPage.goToAddNewSupplierPage(page);
+      await boSuppliersPage.goToAddNewSupplierPage(page);
 
-      const pageTitle = await boSuppliersCreate.getPageTitle(page);
-      expect(pageTitle).to.contains(boSuppliersCreate.pageTitle);
+      const pageTitle = await boSuppliersCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boSuppliersCreatePage.pageTitle);
     });
 
     it('should create supplier', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createSupplier', baseContext);
 
-      const result = await boSuppliersCreate.createEditSupplier(page, createSupplierData);
-      expect(result).to.equal(suppliersPage.successfulCreationMessage);
+      const result = await boSuppliersCreatePage.createEditSupplier(page, createSupplierData);
+      expect(result).to.equal(boSuppliersPage.successfulCreationMessage);
     });
   });
 
@@ -108,9 +105,9 @@ describe('BO - Catalog - Brands & Suppliers : CRUD supplier', async () => {
     it('should filter suppliers by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToViewCreatedSupplier', baseContext);
 
-      await suppliersPage.filterTable(page, 'input', 'name', createSupplierData.name);
+      await boSuppliersPage.filterTable(page, 'input', 'name', createSupplierData.name);
 
-      const textColumn = await suppliersPage.getTextColumnFromTableSupplier(page, 1, 'name');
+      const textColumn = await boSuppliersPage.getTextColumnFromTableSupplier(page, 1, 'name');
       expect(textColumn).to.contain(createSupplierData.name);
     });
 
@@ -118,19 +115,19 @@ describe('BO - Catalog - Brands & Suppliers : CRUD supplier', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'viewCreatedSupplier', baseContext);
 
       // view supplier first row
-      await suppliersPage.viewSupplier(page, 1);
+      await boSuppliersPage.viewSupplier(page, 1);
 
-      const pageTitle = await viewSupplierPage.getPageTitle(page);
+      const pageTitle = await boSuppliersViewPage.getPageTitle(page);
       expect(pageTitle).to.contains(createSupplierData.name);
     });
 
     it('should return suppliers page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnToSuppliersPageAfterCreation', baseContext);
 
-      await viewSupplierPage.goToPreviousPage(page);
+      await boSuppliersViewPage.goToPreviousPage(page);
 
-      const pageTitle = await suppliersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(suppliersPage.pageTitle);
+      const pageTitle = await boSuppliersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boSuppliersPage.pageTitle);
     });
   });
 
@@ -139,17 +136,17 @@ describe('BO - Catalog - Brands & Suppliers : CRUD supplier', async () => {
     it('should go to edit first supplier page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditSupplierPage', baseContext);
 
-      await suppliersPage.goToEditSupplierPage(page, 1);
+      await boSuppliersPage.goToEditSupplierPage(page, 1);
 
-      const pageTitle = await boSuppliersCreate.getPageTitle(page);
-      expect(pageTitle).to.contains(boSuppliersCreate.pageTitleEdit);
+      const pageTitle = await boSuppliersCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boSuppliersCreatePage.pageTitleEdit);
     });
 
     it('should edit supplier', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateSupplier', baseContext);
 
-      const result = await boSuppliersCreate.createEditSupplier(page, editSupplierData);
-      expect(result).to.equal(suppliersPage.successfulUpdateMessage);
+      const result = await boSuppliersCreatePage.createEditSupplier(page, editSupplierData);
+      expect(result).to.equal(boSuppliersPage.successfulUpdateMessage);
     });
   });
 
@@ -158,10 +155,10 @@ describe('BO - Catalog - Brands & Suppliers : CRUD supplier', async () => {
     it('should filter suppliers by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToViewUpdatedSupplier', baseContext);
 
-      await suppliersPage.resetFilter(page);
-      await suppliersPage.filterTable(page, 'input', 'name', editSupplierData.name);
+      await boSuppliersPage.resetFilter(page);
+      await boSuppliersPage.filterTable(page, 'input', 'name', editSupplierData.name);
 
-      const textColumn = await suppliersPage.getTextColumnFromTableSupplier(page, 1, 'name');
+      const textColumn = await boSuppliersPage.getTextColumnFromTableSupplier(page, 1, 'name');
       expect(textColumn).to.contain(editSupplierData.name);
     });
 
@@ -169,19 +166,19 @@ describe('BO - Catalog - Brands & Suppliers : CRUD supplier', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'viewUpdatedSupplier', baseContext);
 
       // view supplier first row
-      await suppliersPage.viewSupplier(page, 1);
+      await boSuppliersPage.viewSupplier(page, 1);
 
-      const pageTitle = await viewSupplierPage.getPageTitle(page);
+      const pageTitle = await boSuppliersViewPage.getPageTitle(page);
       expect(pageTitle).to.contains(editSupplierData.name);
     });
 
     it('should return to suppliers page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnToSuppliersPageAfterUpdate', baseContext);
 
-      await viewSupplierPage.goToPreviousPage(page);
+      await boSuppliersViewPage.goToPreviousPage(page);
 
-      const pageTitle = await suppliersPage.getPageTitle(page);
-      expect(pageTitle).to.contains(suppliersPage.pageTitle);
+      const pageTitle = await boSuppliersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boSuppliersPage.pageTitle);
     });
   });
 
@@ -190,10 +187,10 @@ describe('BO - Catalog - Brands & Suppliers : CRUD supplier', async () => {
     it('should filter suppliers by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToViewDeleteSupplier', baseContext);
 
-      await suppliersPage.resetFilter(page);
-      await suppliersPage.filterTable(page, 'input', 'name', editSupplierData.name);
+      await boSuppliersPage.resetFilter(page);
+      await boSuppliersPage.filterTable(page, 'input', 'name', editSupplierData.name);
 
-      const textColumn = await suppliersPage.getTextColumnFromTableSupplier(page, 1, 'name');
+      const textColumn = await boSuppliersPage.getTextColumnFromTableSupplier(page, 1, 'name');
       expect(textColumn).to.contain(editSupplierData.name);
     });
 
@@ -201,8 +198,8 @@ describe('BO - Catalog - Brands & Suppliers : CRUD supplier', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteSupplier', baseContext);
 
       // delete supplier in first row
-      const result = await suppliersPage.deleteSupplier(page, 1);
-      expect(result).to.be.equal(suppliersPage.successfulDeleteMessage);
+      const result = await boSuppliersPage.deleteSupplier(page, 1);
+      expect(result).to.be.equal(boSuppliersPage.successfulDeleteMessage);
     });
   });
 });

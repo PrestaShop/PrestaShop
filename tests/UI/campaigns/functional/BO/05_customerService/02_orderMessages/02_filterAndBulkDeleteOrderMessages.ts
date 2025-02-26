@@ -1,15 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import addOrderMessagePage from '@pages/BO/customerService/orderMessages/add';
-
 import {expect} from 'chai';
 
 import {
   boDashboardPage,
   boLoginPage,
   boOrderMessagesPage,
+  boOrderMessagesCreatePage,
   type BrowserContext,
   FakerOrderMessage,
   type Page,
@@ -83,14 +79,14 @@ describe('BO - Customer Service - Order Messages : Filter and bulk delete order 
 
         await boOrderMessagesPage.goToAddNewOrderMessagePage(page);
 
-        const pageTitle = await addOrderMessagePage.getPageTitle(page);
-        expect(pageTitle).to.contains(addOrderMessagePage.pageTitle);
+        const pageTitle = await boOrderMessagesCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrderMessagesCreatePage.pageTitle);
       });
 
       it('should create order message', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createOrderMessage${index + 1}`, baseContext);
 
-        const result = await addOrderMessagePage.addEditOrderMessage(page, test.args.orderMessageToCreate);
+        const result = await boOrderMessagesCreatePage.addEditOrderMessage(page, test.args.orderMessageToCreate);
         expect(result).to.equal(boOrderMessagesPage.successfulCreationMessage);
 
         const numberOfOrderMessagesAfterCreation = await boOrderMessagesPage.getNumberOfElementInGrid(page);

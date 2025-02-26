@@ -1,14 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
 // Import commonTests
 import {createCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import createAccountTest from '@commonTests/FO/hummingbird/account';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
-// Import FO pages
-import foVouchersPage from '@pages/FO/hummingbird/myAccount/vouchers';
 
 import {
   type BrowserContext,
@@ -17,12 +14,11 @@ import {
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
+  foHummingbirdMyVouchersPage,
   type Page,
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_FO_hummingbird_userAccount_viewVouchers';
 
@@ -118,8 +114,8 @@ describe('FO - Account : View vouchers', async () => {
       await foHummingbirdHomePage.goToMyAccountPage(page);
       await foHummingbirdMyAccountPage.goToVouchersPage(page);
 
-      const pageHeaderTitle = await foVouchersPage.getPageTitle(page);
-      expect(pageHeaderTitle).to.equal(foVouchersPage.pageTitle);
+      const pageHeaderTitle = await foHummingbirdMyVouchersPage.getPageTitle(page);
+      expect(pageHeaderTitle).to.equal(foHummingbirdMyVouchersPage.pageTitle);
     });
 
     [
@@ -141,7 +137,7 @@ describe('FO - Account : View vouchers', async () => {
       it(`should check the voucher ${cartRule.args.column} n°${cartRule.args.row}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkVoucher${index}`, baseContext);
 
-        const cartRuleTextColumn = await foVouchersPage.getTextColumnFromTableVouchers(
+        const cartRuleTextColumn = await foHummingbirdMyVouchersPage.getTextColumnFromTableVouchers(
           page,
           cartRule.args.row,
           cartRule.args.column,

@@ -20,7 +20,7 @@ Feature: Full UX discount test
       | name[en-US]       | Promotion              |
       | description       | Promotion for holidays |
       | highlight         | false                  |
-      | is_active         | true                   |
+      | active            | true                   |
       | allow_partial_use | false                  |
       | priority          | 2                      |
       | valid_from        | 2025-01-01 11:05:00    |
@@ -33,7 +33,7 @@ Feature: Full UX discount test
       | name[en-US]       | Promotion              |
       | description       | Promotion for holidays |
       | highlight         | false                  |
-      | is_active         | true                   |
+      | active            | true                   |
       | allow_partial_use | false                  |
       | priority          | 2                      |
       | valid_from        | 2025-01-01 11:05:00    |

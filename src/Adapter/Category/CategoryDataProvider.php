@@ -247,11 +247,18 @@ class CategoryDataProvider
         $results = [];
         foreach ($searchCategories as $category) {
             $breadCrumb = $this->getBreadCrumb($category['id_category']);
+
+            if (file_exists(_PS_CAT_IMG_DIR_ . $category['id_category'] . '.jpg')) {
+                $image = Context::getContext()->link->getCatImageLink($category['name'], $category['id_category']);
+            } else {
+                $image = Context::getContext()->link->getMediaLink(_THEME_CAT_DIR_ . Context::getContext()->language->iso_code . '-default-category_default.jpg');
+            }
+
             $results[] = [
                 'id' => $category['id_category'],
                 'name' => ($nameAsBreadCrumb ? $breadCrumb : $category['name']),
                 'breadcrumb' => $breadCrumb,
-                'image' => Context::getContext()->link->getCatImageLink($category['name'], $category['id_category']),
+                'image' => $image,
             ];
         }
 

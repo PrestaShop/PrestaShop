@@ -25,5 +25,6 @@
     <feature_flag id="customer_group" name="customer_group" type="env,dotenv,db" label_wording="Customer group" label_domain="Admin.Advparameters.Feature" description_wording="Enable / Disable the customer group page." description_domain="Admin.Advparameters.Help" state="0" stability="beta" />
     <feature_flag id="store" name="store" type="env,dotenv,db" label_wording="Store" label_domain="Admin.Advparameters.Feature" description_wording="Enable / Disable the store page." description_domain="Admin.Advparameters.Help" state="0" stability="beta" />
     <feature_flag id="merchandise_return" name="merchandise_return" type="env,dotenv,db" label_wording="Merchandise return" label_domain="Admin.Advparameters.Feature" description_wording="Enable / Disable the merchandise return page." description_domain="Admin.Advparameters.Help" state="0" stability="beta" />
+    <feature_flag id="improved_shipment" name="improved_shipment" type="env,dotenv,db" label_wording="Improved shipment" label_domain="Admin.Advparameters.Feature" description_wording="Enable / Disable the newly improved shipment system" description_domain="Admin.Advparameters.Help" state="0" stability="beta" />
   </entities>
 </entity_feature_flag>

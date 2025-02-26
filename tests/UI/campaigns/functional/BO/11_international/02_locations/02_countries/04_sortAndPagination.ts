@@ -1,14 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import zonesPage from '@pages/BO/international/locations';
-
 import {expect} from 'chai';
+
 import {
   boCountriesPage,
   boDashboardPage,
   boLoginPage,
+  boZonesPages,
   type BrowserContext,
   type Page,
   utilsCore,
@@ -54,14 +51,14 @@ describe('BO - International - Countries : Sort and pagination', async () => {
       boDashboardPage.locationsLink,
     );
 
-    const pageTitle = await zonesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(zonesPage.pageTitle);
+    const pageTitle = await boZonesPages.getPageTitle(page);
+    expect(pageTitle).to.contains(boZonesPages.pageTitle);
   });
 
   it('should go to \'Countries\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCountriesPage', baseContext);
 
-    await zonesPage.goToSubTabCountries(page);
+    await boZonesPages.goToSubTabCountries(page);
 
     const pageTitle = await boCountriesPage.getPageTitle(page);
     expect(pageTitle).to.contains(boCountriesPage.pageTitle);

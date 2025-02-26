@@ -1,14 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import suppliersPage from '@pages/BO/catalog/suppliers';
-
 import {expect} from 'chai';
+
 import {
   boBrandsPage,
   boDashboardPage,
   boLoginPage,
+  boSuppliersPage,
   type BrowserContext,
   dataSuppliers,
   type Page,
@@ -63,14 +60,14 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit suppliers', 
 
     await boBrandsPage.goToSubTabSuppliers(page);
 
-    const pageTitle = await suppliersPage.getPageTitle(page);
-    expect(pageTitle).to.contains(suppliersPage.pageTitle);
+    const pageTitle = await boSuppliersPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boSuppliersPage.pageTitle);
   });
 
   it('should reset filter', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'firstReset', baseContext);
 
-    numberOfSuppliers = await suppliersPage.resetAndGetNumberOfLines(page);
+    numberOfSuppliers = await boSuppliersPage.resetAndGetNumberOfLines(page);
     expect(numberOfSuppliers).to.be.at.least(0);
   });
 
@@ -111,12 +108,12 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit suppliers', 
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
         if (test.args.filterBy === 'active') {
-          await suppliersPage.filterSupplierEnabled(
+          await boSuppliersPage.filterSupplierEnabled(
             page,
             test.args.filterValue === '1',
           );
         } else {
-          await suppliersPage.filterTable(
+          await boSuppliersPage.filterTable(
             page,
             test.args.filterType,
             test.args.filterBy,
@@ -125,16 +122,16 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit suppliers', 
         }
 
         // Check number of suppliers
-        const numberOfSuppliersAfterFilter = await suppliersPage.getNumberOfElementInGrid(page);
+        const numberOfSuppliersAfterFilter = await boSuppliersPage.getNumberOfElementInGrid(page);
         expect(numberOfSuppliersAfterFilter).to.be.at.most(numberOfSuppliers);
 
         // Check text column or status in all rows after filter
         for (let i = 1; i <= numberOfSuppliersAfterFilter; i++) {
           if (test.args.filterBy === 'active') {
-            const supplierStatus = await suppliersPage.getStatus(page, i);
+            const supplierStatus = await boSuppliersPage.getStatus(page, i);
             expect(supplierStatus).to.equal(test.args.filterValue === '1');
           } else {
-            const textColumn = await suppliersPage.getTextColumnFromTableSupplier(page, i, test.args.filterBy);
+            const textColumn = await boSuppliersPage.getTextColumnFromTableSupplier(page, i, test.args.filterBy);
             expect(textColumn).to.contains(test.args.filterValue);
           }
         }
@@ -143,7 +140,7 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit suppliers', 
       it('should reset filter', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfSuppliersAfterReset = await suppliersPage.resetAndGetNumberOfLines(page);
+        const numberOfSuppliersAfterReset = await boSuppliersPage.resetAndGetNumberOfLines(page);
         expect(numberOfSuppliersAfterReset).to.be.equal(numberOfSuppliers);
       });
     });
@@ -154,14 +151,14 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit suppliers', 
     it('should filter supplier by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
-      await suppliersPage.filterTable(page, 'input', 'name', dataSuppliers.fashion.name);
+      await boSuppliersPage.filterTable(page, 'input', 'name', dataSuppliers.fashion.name);
 
       // Check number od suppliers
-      const numberOfSuppliersAfterFilter = await suppliersPage.getNumberOfElementInGrid(page);
+      const numberOfSuppliersAfterFilter = await boSuppliersPage.getNumberOfElementInGrid(page);
       expect(numberOfSuppliersAfterFilter).to.be.at.most(numberOfSuppliers);
 
       // check text column of first row after filter
-      const textColumn = await suppliersPage.getTextColumnFromTableSupplier(page, 1, 'name');
+      const textColumn = await boSuppliersPage.getTextColumnFromTableSupplier(page, 1, 'name');
       expect(textColumn).to.contains(dataSuppliers.fashion.name);
     });
 
@@ -172,14 +169,14 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit suppliers', 
       it(`should ${test.args.action} first supplier`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Supplier`, baseContext);
 
-        const isActionPerformed = await suppliersPage.setStatus(page, 1, test.args.enabledValue);
+        const isActionPerformed = await boSuppliersPage.setStatus(page, 1, test.args.enabledValue);
 
         if (isActionPerformed) {
-          const resultMessage = await suppliersPage.getAlertSuccessBlockParagraphContent(page);
-          expect(resultMessage).to.contains(suppliersPage.successfulUpdateStatusMessage);
+          const resultMessage = await boSuppliersPage.getAlertSuccessBlockParagraphContent(page);
+          expect(resultMessage).to.contains(boSuppliersPage.successfulUpdateStatusMessage);
         }
 
-        const supplierStatus = await suppliersPage.getStatus(page, 1);
+        const supplierStatus = await boSuppliersPage.getStatus(page, 1);
         expect(supplierStatus).to.be.equal(test.args.enabledValue);
       });
     });
@@ -187,7 +184,7 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit suppliers', 
     it('should reset filter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterQuickEdit', baseContext);
 
-      const numberOfSuppliersAfterReset = await suppliersPage.resetAndGetNumberOfLines(page);
+      const numberOfSuppliersAfterReset = await boSuppliersPage.resetAndGetNumberOfLines(page);
       expect(numberOfSuppliersAfterReset).to.be.equal(numberOfSuppliers);
     });
   });

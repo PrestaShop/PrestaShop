@@ -3,13 +3,9 @@ import {expect} from 'chai';
 import {createEmployeeTest, deleteEmployeeTest} from '@commonTests/BO/advancedParameters/employee';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
-// Import BO pages
-import viewPage from '@pages/BO/customerService/customerService/view';
-// Import FO pages
-import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
-
 import {
   boCustomerServicePage,
+  boCustomerServiceViewPage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -23,6 +19,7 @@ import {
   foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicLoginPage,
+  foClassicModalBlockCartPage,
   foClassicModalQuickViewPage,
   foClassicMyAccountPage,
   foClassicMyOrderDetailsPage,
@@ -141,7 +138,7 @@ describe('BO - Customer Service : Forward message', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       await foClassicModalQuickViewPage.addToCartByQuickView(page);
-      await blockCartModal.proceedToCheckout(page);
+      await foClassicModalBlockCartPage.proceedToCheckout(page);
 
       const pageTitle = await foClassicCartPage.getPageTitle(page);
       expect(pageTitle).to.equal(foClassicCartPage.pageTitle);
@@ -242,25 +239,25 @@ describe('BO - Customer Service : Forward message', async () => {
 
       await boCustomerServicePage.goToViewMessagePage(page);
 
-      const pageTitle = await viewPage.getPageTitle(page);
-      expect(pageTitle).to.contains(viewPage.pageTitle);
+      const pageTitle = await boCustomerServiceViewPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerServiceViewPage.pageTitle);
     });
 
     it('should click on forward message button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnForwardButton1', baseContext);
 
-      const isModalVisible = await viewPage.clickOnForwardMessageButton(page);
+      const isModalVisible = await boCustomerServiceViewPage.clickOnForwardMessageButton(page);
       expect(isModalVisible).to.eq(true);
     });
 
     it('should forward the message and check the thread', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'forwardMessage1', baseContext);
 
-      await viewPage.forwardMessage(page, forwardMessageData);
+      await boCustomerServiceViewPage.forwardMessage(page, forwardMessageData);
 
-      const messages = await viewPage.getThreadMessages(page);
+      const messages = await boCustomerServiceViewPage.getThreadMessages(page);
       expect(messages)
-        .to.contains(`${viewPage.forwardMessageSuccessMessage} ${employeeData.firstName}`
+        .to.contains(`${boCustomerServiceViewPage.forwardMessageSuccessMessage} ${employeeData.firstName}`
         + ` ${employeeData.lastName}`)
         .and.contains(forwardMessageData.message);
     });
@@ -268,9 +265,9 @@ describe('BO - Customer Service : Forward message', async () => {
     it('should check orders and messages timeline', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrdersAndMessagesForm1', baseContext);
 
-      const text = await viewPage.getOrdersAndMessagesTimeline(page);
+      const text = await boCustomerServiceViewPage.getOrdersAndMessagesTimeline(page);
       expect(text).to.contains('Orders and messages timeline')
-        .and.contains(`${viewPage.forwardMessageSuccessMessage} ${employeeData.firstName}`
+        .and.contains(`${boCustomerServiceViewPage.forwardMessageSuccessMessage} ${employeeData.firstName}`
         + ` ${employeeData.lastName}`)
         .and.contains(`Comment: ${forwardMessageData.message}`);
     });
@@ -291,16 +288,16 @@ describe('BO - Customer Service : Forward message', async () => {
     it('should click on forward message button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnForwardButton2', baseContext);
 
-      const isModalVisible = await viewPage.clickOnForwardMessageButton(page);
+      const isModalVisible = await boCustomerServiceViewPage.clickOnForwardMessageButton(page);
       expect(isModalVisible).to.eq(true);
     });
 
     it('should forward the message and check the thread', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'forwardMessage2', baseContext);
 
-      await viewPage.forwardMessage(page, forwardMessageData);
+      await boCustomerServiceViewPage.forwardMessage(page, forwardMessageData);
 
-      const messages = await viewPage.getThreadMessages(page);
+      const messages = await boCustomerServiceViewPage.getThreadMessages(page);
       expect(messages)
         .to.contains(`Message forwarded to ${forwardMessageData.emailAddress}`)
         .and.contains(forwardMessageData.message);
@@ -309,7 +306,7 @@ describe('BO - Customer Service : Forward message', async () => {
     it('should check orders and messages timeline', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrdersAndMessagesForm2', baseContext);
 
-      const text = await viewPage.getOrdersAndMessagesTimeline(page);
+      const text = await boCustomerServiceViewPage.getOrdersAndMessagesTimeline(page);
       expect(text).to.contains('Orders and messages timeline')
         .and.contains(`Message forwarded to ${forwardMessageData.emailAddress}`)
         .and.contains(`Comment: ${forwardMessageData.message}`);

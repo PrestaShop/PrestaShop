@@ -1,11 +1,8 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
 // Import common tests
 import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
-
-// Import FO pages
-import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
   type BrowserContext,
@@ -16,6 +13,7 @@ import {
   foClassicCheckoutPage,
   foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
+  foClassicModalBlockCartPage,
   foClassicModalQuickViewPage,
   type MailDev,
   type MailDevEmail,
@@ -23,8 +21,6 @@ import {
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_FO_classic_checkout_payment_choosePaymentMethod';
 
@@ -87,7 +83,7 @@ describe('FO - Checkout - Payment : Choose a payment method', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `addProductToCart${index}`, baseContext);
 
         await foClassicModalQuickViewPage.addToCartByQuickView(page);
-        await blockCartModal.proceedToCheckout(page);
+        await foClassicModalBlockCartPage.proceedToCheckout(page);
 
         const pageTitle = await foClassicCartPage.getPageTitle(page);
         expect(pageTitle).to.eq(foClassicCartPage.pageTitle);

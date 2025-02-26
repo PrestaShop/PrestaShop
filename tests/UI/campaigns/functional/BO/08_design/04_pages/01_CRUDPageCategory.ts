@@ -4,12 +4,12 @@ import {expect} from 'chai';
 // Import pages
 // Import BO pages
 import addPagePage from '@pages/BO/design/pages/add';
-import pagesPage from '@pages/BO/design/pages';
-import addPageCategoryPage from '@pages/BO/design/pages/pageCategory/add';
 // Import FO pages
 import cmsPage from '@pages/FO/classic/cms';
 
 import {
+  boCMSPageCategoriesCreatePage,
+  boCMSPagesPage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -75,16 +75,16 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
       boDashboardPage.designParentLink,
       boDashboardPage.pagesLink,
     );
-    await pagesPage.closeSfToolBar(page);
+    await boCMSPagesPage.closeSfToolBar(page);
 
-    const pageTitle = await pagesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(pagesPage.pageTitle);
+    const pageTitle = await boCMSPagesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCMSPagesPage.pageTitle);
   });
 
   it('should reset all filters and get number of categories in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfCategories = await pagesPage.resetAndGetNumberOfLines(page, categoriesTableName);
+    numberOfCategories = await boCMSPagesPage.resetAndGetNumberOfLines(page, categoriesTableName);
     if (numberOfCategories !== 0) expect(numberOfCategories).to.be.above(0);
   });
 
@@ -93,32 +93,32 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
     it('should go to add new page category', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewPageCategoryPage', baseContext);
 
-      await pagesPage.goToAddNewPageCategory(page);
+      await boCMSPagesPage.goToAddNewPageCategory(page);
 
-      const pageTitle = await addPageCategoryPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addPageCategoryPage.pageTitleCreate);
+      const pageTitle = await boCMSPageCategoriesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCMSPageCategoriesCreatePage.pageTitleCreate);
     });
 
     it('should create category ', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'CreatePageCategory', baseContext);
 
-      const textResult = await addPageCategoryPage.createEditPageCategory(page, createCategoryData);
-      expect(textResult).to.equal(pagesPage.successfulCreationMessage);
+      const textResult = await boCMSPageCategoriesCreatePage.createEditPageCategory(page, createCategoryData);
+      expect(textResult).to.equal(boCMSPagesPage.successfulCreationMessage);
     });
 
     it('should go back to categories', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToCategoriesAfterCreation', baseContext);
 
-      await pagesPage.backToList(page);
+      await boCMSPagesPage.backToList(page);
 
-      const pageTitle = await pagesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(pagesPage.pageTitle);
+      const pageTitle = await boCMSPagesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCMSPagesPage.pageTitle);
     });
 
     it('should check the categories number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCategoriesNumberAfterCreation', baseContext);
 
-      const numberOfCategoriesAfterCreation = await pagesPage.getNumberOfElementInGrid(
+      const numberOfCategoriesAfterCreation = await boCMSPagesPage.getNumberOfElementInGrid(
         page,
         categoriesTableName,
       );
@@ -128,14 +128,14 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
     it('should search for the new category and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchCreatedCategory1', baseContext);
 
-      await pagesPage.filterTable(page, categoriesTableName, 'input', 'name', createCategoryData.name);
+      await boCMSPagesPage.filterTable(page, categoriesTableName, 'input', 'name', createCategoryData.name);
 
-      const textColumn = await pagesPage.getTextColumnFromTableCmsPageCategory(page, 1, 'name');
+      const textColumn = await boCMSPagesPage.getTextColumnFromTableCmsPageCategory(page, 1, 'name');
       expect(textColumn).to.contains(createCategoryData.name);
 
       // Get category ID
       categoryID = parseInt(
-        await pagesPage.getTextColumnFromTableCmsPageCategory(page, 1, 'id_cms_category'),
+        await boCMSPagesPage.getTextColumnFromTableCmsPageCategory(page, 1, 'id_cms_category'),
         10,
       );
     });
@@ -143,7 +143,7 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop1', baseContext);
 
-      page = await pagesPage.viewMyShop(page);
+      page = await boCMSPagesPage.viewMyShop(page);
 
       await foClassicHomePage.changeLanguage(page, 'en');
 
@@ -172,8 +172,8 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
 
       page = await foClassicSitemapPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await pagesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(pagesPage.pageTitle);
+      const pageTitle = await boCMSPagesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCMSPagesPage.pageTitle);
     });
   });
 
@@ -182,23 +182,23 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
     it('should click on view category', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewCategoryToCreateNewPage', baseContext);
 
-      await pagesPage.viewCategory(page, 1);
+      await boCMSPagesPage.viewCategory(page, 1);
 
-      const pageTitle = await pagesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(pagesPage.pageTitle);
+      const pageTitle = await boCMSPagesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCMSPagesPage.pageTitle);
     });
 
     it('should get the pages number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfPages', baseContext);
 
-      numberOfPages = await pagesPage.getNumberOfElementInGrid(page, pagesTableName);
+      numberOfPages = await boCMSPagesPage.getNumberOfElementInGrid(page, pagesTableName);
       expect(numberOfPages).to.equal(0);
     });
 
     it('should go to add new page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewPage', baseContext);
 
-      await pagesPage.goToAddNewPage(page);
+      await boCMSPagesPage.goToAddNewPage(page);
 
       const pageTitle = await addPagePage.getPageTitle(page);
       expect(pageTitle).to.contains(addPagePage.pageTitleCreate);
@@ -208,22 +208,22 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'createPage', baseContext);
 
       const textResult = await addPagePage.createEditPage(page, createPageData);
-      expect(textResult).to.equal(pagesPage.successfulCreationMessage);
+      expect(textResult).to.equal(boCMSPagesPage.successfulCreationMessage);
     });
 
     it('should search for the created page and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCreatedPage', baseContext);
 
-      await pagesPage.filterTable(page, pagesTableName, 'input', 'meta_title', createPageData.title);
+      await boCMSPagesPage.filterTable(page, pagesTableName, 'input', 'meta_title', createPageData.title);
 
-      const textColumn = await pagesPage.getTextColumnFromTableCmsPage(page, 1, 'meta_title');
+      const textColumn = await boCMSPagesPage.getTextColumnFromTableCmsPage(page, 1, 'meta_title');
       expect(textColumn).to.contains(createPageData.title);
     });
 
     it('should go to edit page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreatedPageForPreview', baseContext);
 
-      await pagesPage.goToEditPage(page, 1);
+      await boCMSPagesPage.goToEditPage(page, 1);
 
       const pageTitle = await addPagePage.getPageTitle(page);
       expect(pageTitle).to.contains(addPagePage.editPageTitle(createPageData.title));
@@ -258,8 +258,8 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
 
       await addPagePage.cancelPage(page);
 
-      const pageTitle = await pagesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(pagesPage.pageTitle);
+      const pageTitle = await boCMSPagesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCMSPagesPage.pageTitle);
     });
   });
 
@@ -268,47 +268,47 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
     it('should search for the created category and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchCreatedCategory2', baseContext);
 
-      await pagesPage.filterTable(page, categoriesTableName, 'input', 'name', createCategoryData.name);
+      await boCMSPagesPage.filterTable(page, categoriesTableName, 'input', 'name', createCategoryData.name);
 
-      const textColumn = await pagesPage.getTextColumnFromTableCmsPageCategory(page, 1, 'name');
+      const textColumn = await boCMSPagesPage.getTextColumnFromTableCmsPageCategory(page, 1, 'name');
       expect(textColumn).to.contains(createCategoryData.name);
     });
 
     it('should go to edit category page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditCategory', baseContext);
 
-      await pagesPage.goToEditCategoryPage(page, 1);
+      await boCMSPagesPage.goToEditCategoryPage(page, 1);
 
-      const pageTitle = await addPageCategoryPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addPageCategoryPage.pageTitleEdit);
+      const pageTitle = await boCMSPageCategoriesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCMSPageCategoriesCreatePage.pageTitleEdit);
     });
 
     it('should update the created page category', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'UpdateCategory', baseContext);
 
-      const textResult = await addPageCategoryPage.createEditPageCategory(page, editCategoryData);
-      expect(textResult).to.equal(addPageCategoryPage.successfulUpdateMessage);
+      const textResult = await boCMSPageCategoriesCreatePage.createEditPageCategory(page, editCategoryData);
+      expect(textResult).to.equal(boCMSPageCategoriesCreatePage.successfulUpdateMessage);
     });
 
     it('should go back to categories list', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToCategoriesAfterUpdate', baseContext);
 
-      await pagesPage.backToList(page);
+      await boCMSPagesPage.backToList(page);
 
-      const pageTitle = await pagesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(pagesPage.pageTitle);
+      const pageTitle = await boCMSPagesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCMSPagesPage.pageTitle);
     });
 
     it('should search for the updated category and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchUpdatedCategory', baseContext);
 
-      await pagesPage.filterTable(page, categoriesTableName, 'input', 'name', editCategoryData.name);
+      await boCMSPagesPage.filterTable(page, categoriesTableName, 'input', 'name', editCategoryData.name);
 
-      const textColumn = await pagesPage.getTextColumnFromTableCmsPageCategory(page, 1, 'name');
+      const textColumn = await boCMSPagesPage.getTextColumnFromTableCmsPageCategory(page, 1, 'name');
       expect(textColumn).to.contains(editCategoryData.name);
 
       categoryID = parseInt(
-        await pagesPage.getTextColumnFromTableCmsPageCategory(page, 1, 'id_cms_category'),
+        await boCMSPagesPage.getTextColumnFromTableCmsPageCategory(page, 1, 'id_cms_category'),
         10,
       );
     });
@@ -316,7 +316,7 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop2', baseContext);
 
-      page = await pagesPage.viewMyShop(page);
+      page = await boCMSPagesPage.viewMyShop(page);
       await foClassicHomePage.changeLanguage(page, 'en');
 
       const pageTitle = await foClassicHomePage.getPageTitle(page);
@@ -344,8 +344,8 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
 
       page = await foClassicSitemapPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await pagesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(pagesPage.pageTitle);
+      const pageTitle = await boCMSPagesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCMSPagesPage.pageTitle);
     });
   });
 
@@ -354,25 +354,25 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
     it('should click on view category', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewUpdatedCategory', baseContext);
 
-      await pagesPage.viewCategory(page, 1);
+      await boCMSPagesPage.viewCategory(page, 1);
 
-      const pageTitle = await pagesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(pagesPage.pageTitle);
+      const pageTitle = await boCMSPagesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCMSPagesPage.pageTitle);
     });
 
     it('should search for the created page and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchCreatedPage', baseContext);
 
-      await pagesPage.filterTable(page, pagesTableName, 'input', 'meta_title', createPageData.title);
+      await boCMSPagesPage.filterTable(page, pagesTableName, 'input', 'meta_title', createPageData.title);
 
-      const textColumn = await pagesPage.getTextColumnFromTableCmsPage(page, 1, 'meta_title');
+      const textColumn = await boCMSPagesPage.getTextColumnFromTableCmsPage(page, 1, 'meta_title');
       expect(textColumn).to.contains(createPageData.title);
     });
 
     it('should go to edit page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreatedPageForUpdate', baseContext);
 
-      await pagesPage.goToEditPage(page, 1);
+      await boCMSPagesPage.goToEditPage(page, 1);
 
       const pageTitle = await addPagePage.getPageTitle(page);
       expect(pageTitle).to.contains(addPagePage.editPageTitle(createPageData.title));
@@ -382,22 +382,22 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'updatePage', baseContext);
 
       const textResult = await addPagePage.createEditPage(page, editPageData);
-      expect(textResult).to.equal(pagesPage.successfulUpdateMessage);
+      expect(textResult).to.equal(boCMSPagesPage.successfulUpdateMessage);
     });
 
     it('should search for the updated Page and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchUpdatedPageForPreview', baseContext);
 
-      await pagesPage.filterTable(page, pagesTableName, 'input', 'meta_title', editPageData.title);
+      await boCMSPagesPage.filterTable(page, pagesTableName, 'input', 'meta_title', editPageData.title);
 
-      const textColumn = await pagesPage.getTextColumnFromTableCmsPage(page, 1, 'meta_title');
+      const textColumn = await boCMSPagesPage.getTextColumnFromTableCmsPage(page, 1, 'meta_title');
       expect(textColumn).to.contains(editPageData.title);
     });
 
     it('should go to edit page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToUpdatedPageForPreview', baseContext);
 
-      await pagesPage.goToEditPage(page, 1);
+      await boCMSPagesPage.goToEditPage(page, 1);
 
       const pageTitle = await addPagePage.getPageTitle(page);
       expect(pageTitle).to.contains(addPagePage.editPageTitle(editPageData.title));
@@ -426,8 +426,8 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
 
       await addPagePage.cancelPage(page);
 
-      const pageTitle = await pagesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(pagesPage.pageTitle);
+      const pageTitle = await boCMSPagesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCMSPagesPage.pageTitle);
     });
   });
 
@@ -436,16 +436,16 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
     it('should click on view category', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewCategoryForDelete', baseContext);
 
-      await pagesPage.viewCategory(page, 1);
+      await boCMSPagesPage.viewCategory(page, 1);
 
-      const pageTitle = await pagesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(pagesPage.pageTitle);
+      const pageTitle = await boCMSPagesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCMSPagesPage.pageTitle);
     });
 
     it('should search for the updated page to delete', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchUpdatedPageForDelete', baseContext);
 
-      await pagesPage.filterTable(
+      await boCMSPagesPage.filterTable(
         page,
         pagesTableName,
         'input',
@@ -453,44 +453,44 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
         editPageData.title,
       );
 
-      const textColumn = await pagesPage.getTextColumnFromTableCmsPage(page, 1, 'meta_title');
+      const textColumn = await boCMSPagesPage.getTextColumnFromTableCmsPage(page, 1, 'meta_title');
       expect(textColumn).to.contains(editPageData.title);
     });
 
     it('should delete page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deletePage', baseContext);
 
-      const textResult = await pagesPage.deleteRowInTable(page, pagesTableName, 1);
-      expect(textResult).to.equal(pagesPage.successfulDeleteMessage);
+      const textResult = await boCMSPagesPage.deleteRowInTable(page, pagesTableName, 1);
+      expect(textResult).to.equal(boCMSPagesPage.successfulDeleteMessage);
     });
 
     it('should reset filter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterPages', baseContext);
 
-      const numberOfPagesAfterDeletion = await pagesPage.resetAndGetNumberOfLines(page, pagesTableName);
+      const numberOfPagesAfterDeletion = await boCMSPagesPage.resetAndGetNumberOfLines(page, pagesTableName);
       expect(numberOfPagesAfterDeletion).to.be.equal(numberOfPages);
     });
 
     it('should click on back to list', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToCategoriesAfterDelete', baseContext);
 
-      await pagesPage.backToList(page);
+      await boCMSPagesPage.backToList(page);
 
-      const pageTitle = await pagesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(pagesPage.pageTitle);
+      const pageTitle = await boCMSPagesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCMSPagesPage.pageTitle);
     });
 
     it('should delete category', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteCategory', baseContext);
 
-      const textResult = await pagesPage.deleteRowInTable(page, categoriesTableName, 1);
-      expect(textResult).to.equal(pagesPage.successfulDeleteMessage);
+      const textResult = await boCMSPagesPage.deleteRowInTable(page, categoriesTableName, 1);
+      expect(textResult).to.equal(boCMSPagesPage.successfulDeleteMessage);
     });
 
     it('should reset filter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterCategories', baseContext);
 
-      const numberOfCategoriesAfterDeletion = await pagesPage.resetAndGetNumberOfLines(
+      const numberOfCategoriesAfterDeletion = await boCMSPagesPage.resetAndGetNumberOfLines(
         page,
         categoriesTableName,
       );

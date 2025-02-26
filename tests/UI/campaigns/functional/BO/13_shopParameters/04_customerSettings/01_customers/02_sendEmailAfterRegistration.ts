@@ -1,11 +1,7 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
-// Import commonTests
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
-
-// Import FO pages
-import {createAccountPage} from '@pages/FO/classic/myAccount/add';
 
 import {
   boCustomersPage,
@@ -15,6 +11,7 @@ import {
   boLoginPage,
   type BrowserContext,
   FakerCustomer,
+  foClassicCreateAccountPage,
   foClassicHomePage,
   foClassicLoginPage,
   type MailDev,
@@ -23,8 +20,6 @@ import {
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_shopParameters_customerSettings_customers_sendEmailAfterRegistration';
 
@@ -138,9 +133,9 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
         // Create account
         await foClassicHomePage.goToLoginPage(page);
         await foClassicLoginPage.goToCreateAccountPage(page);
-        await createAccountPage.createAccount(page, test.args.customer);
+        await foClassicCreateAccountPage.createAccount(page, test.args.customer);
 
-        const connected = await createAccountPage.isCustomerConnected(page);
+        const connected = await foClassicCreateAccountPage.isCustomerConnected(page);
         expect(connected, 'Customer is not created in FO').to.eq(true);
       });
 
@@ -148,7 +143,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
         await testContext.addContextItem(this, 'testIdentifier', `logoutFO_${index}`, baseContext);
 
         // Logout from FO
-        await createAccountPage.logout(page);
+        await foClassicCreateAccountPage.logout(page);
 
         const connected = await foClassicHomePage.isCustomerConnected(page);
         expect(connected, 'Customer is connected in FO').to.eq(false);
@@ -165,7 +160,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
       it('should go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goBackTOBO${index}`, baseContext);
 
-        page = await createAccountPage.closePage(browserContext, page, 0);
+        page = await foClassicCreateAccountPage.closePage(browserContext, page, 0);
 
         const pageTitle = await boCustomerSettingsPage.getPageTitle(page);
         expect(pageTitle).to.contains(boCustomerSettingsPage.pageTitle);

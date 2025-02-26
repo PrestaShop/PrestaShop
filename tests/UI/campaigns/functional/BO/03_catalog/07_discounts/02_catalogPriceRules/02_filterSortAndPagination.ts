@@ -18,13 +18,13 @@ import {
 const baseContext: string = 'functional_BO_catalog_discounts_catalogPriceRules_filterSortAndPagination';
 
 /*
-Create 21 catalog price rules
-Filter catalog price rules by id, Name, Shop, Currency, Country, Group, From quantity, Reduction type,
-Reduction, Beginning, End
-Sort catalog price rules by id, Name, Shop, Currency, Country, Group, From quantity, Reduction type,
-Reduction, Beginning, End
-Pagination next and previous
-Delete created catalog price rules by bulk actions
+ * Create 21 catalog price rules
+ * Filter catalog price rules by id, Name, Shop, Currency, Country, Group, From quantity, Reduction type,
+ * Reduction, Beginning, End
+ * Sort catalog price rules by id, Name, Shop, Currency, Country, Group, From quantity, Reduction type,
+ * Reduction, Beginning, End
+ * Pagination next and previous
+ * Delete created catalog price rules by bulk actions
  */
 describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price rules table', async () => {
   let browserContext: BrowserContext;
@@ -35,7 +35,6 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
   const dateToCheck: string = utilsDate.getDateFormat('mm/dd/yyyy');
   const priceRuleData: FakerCatalogPriceRule = new FakerCatalogPriceRule({fromDate: today, toDate: today});
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -112,116 +111,103 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
 
   // 2 - Filter catalog price rules table
   describe('Filter catalog price rules table', async () => {
-    const tests = [
+    [
       {
-        args: {
-          testIdentifier: 'filterID', filterType: 'input', filterBy: 'id_specific_price_rule', filterValue: '1',
-        },
+        testIdentifier: 'filterID', filterType: 'input', filterBy: 'id_specific_price_rule', filterValue: '1',
       },
       {
-        args: {
-          testIdentifier: 'filterName', filterType: 'input', filterBy: 'a!name', filterValue: priceRuleData.name,
-        },
+        testIdentifier: 'filterName', filterType: 'input', filterBy: 'a!name', filterValue: priceRuleData.name,
       },
       {
-        args: {
-          testIdentifier: 'filterCurrency',
-          filterType: 'input',
-          filterBy: 'cul!name',
-          filterValue: priceRuleData.currency,
-        },
+        testIdentifier: 'filterCurrency',
+        filterType: 'input',
+        filterBy: 'cul!name',
+        filterValue: priceRuleData.currency,
       },
       {
-        args: {
-          testIdentifier: 'filterCountry',
-          filterType: 'input',
-          filterBy: 'cl!name',
-          filterValue: priceRuleData.country,
-        },
+        testIdentifier: 'filterCountry',
+        filterType: 'input',
+        filterBy: 'cl!name',
+        filterValue: priceRuleData.country,
       },
       {
-        args: {
-          testIdentifier: 'filterGroup', filterType: 'input', filterBy: 'gl!name', filterValue: priceRuleData.group,
-        },
+        testIdentifier: 'filterGroup', filterType: 'input', filterBy: 'gl!name', filterValue: priceRuleData.group,
       },
       {
-        args: {
-          testIdentifier: 'filterFromQuantity',
-          filterType: 'input',
-          filterBy: 'from_quantity',
-          filterValue: priceRuleData.fromQuantity.toString(),
-        },
+        testIdentifier: 'filterFromQuantity',
+        filterType: 'input',
+        filterBy: 'from_quantity',
+        filterValue: priceRuleData.fromQuantity.toString(),
       },
       {
-        args: {
-          testIdentifier: 'filterReductionType',
-          filterType: 'select',
-          filterBy: 'a!reduction_type',
-          filterValue: priceRuleData.reductionType,
-        },
+        testIdentifier: 'filterReductionType',
+        filterType: 'select',
+        filterBy: 'a!reduction_type',
+        filterValue: priceRuleData.reductionType,
       },
       {
-        args: {
-          testIdentifier: 'filterReduction',
-          filterType: 'input',
-          filterBy: 'reduction',
-          filterValue: priceRuleData.reduction.toString(),
-        },
+        testIdentifier: 'filterReduction',
+        filterType: 'input',
+        filterBy: 'reduction',
+        filterValue: priceRuleData.reduction.toString(),
       },
-    ];
-
-    tests.forEach((test) => {
-      it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+    ].forEach((test: {
+      testIdentifier: string
+      filterType: string
+      filterBy: string
+      filterValue: string
+    }) => {
+      it(`should filter by ${test.filterBy} '${test.filterValue}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.testIdentifier, baseContext);
 
         await boCatalogPriceRulesPage.filterPriceRules(
           page,
-          test.args.filterType,
-          test.args.filterBy,
-          test.args.filterValue,
+          test.filterType,
+          test.filterBy,
+          test.filterValue,
         );
 
         const numberOfPriceRulesAfterFilter = await boCatalogPriceRulesPage.getNumberOfElementInGrid(page);
         expect(numberOfPriceRulesAfterFilter).to.be.at.most(numberOfCatalogPriceRules + 21);
 
         for (let row = 1; row <= numberOfPriceRulesAfterFilter; row++) {
-          const textColumn = await boCatalogPriceRulesPage.getTextColumn(page, row, test.args.filterBy);
-          expect(textColumn).to.contains(test.args.filterValue);
+          const textColumn = await boCatalogPriceRulesPage.getTextColumn(page, row, test.filterBy);
+          expect(textColumn).to.contains(test.filterValue);
         }
       });
 
       it('should reset all filters', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `${test.testIdentifier}Reset`, baseContext);
 
         const numberOfPriceRulesAfterReset = await boCatalogPriceRulesPage.resetAndGetNumberOfLines(page);
         expect(numberOfPriceRulesAfterReset).to.equal(numberOfCatalogPriceRules + 21);
       });
     });
 
-    const filterByDate = [
+    [
       {
-        args: {
-          testIdentifier: 'filterDateBeginning',
-          filterBy: 'from',
-          firstDate: today,
-          secondDate: today,
-        },
+        testIdentifier: 'filterDateBeginning',
+        filterBy: 'from',
+        firstDate: today,
+        secondDate: today,
       },
       {
-        args: {
-          testIdentifier: 'filterDateEnd',
-          filterBy: 'to',
-          firstDate: today,
-          secondDate: today,
-        },
+        testIdentifier: 'filterDateEnd',
+        filterBy: 'to',
+        firstDate: today,
+        secondDate: today,
       },
-    ];
-    filterByDate.forEach((test) => {
+    ].forEach((test: {
+      testIdentifier: string
+      filterBy: string
+      firstDate: string
+      secondDate: string
+    }) => {
       it('should filter by date Beginning and date End', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', test.testIdentifier, baseContext);
 
         // Filter by date
-        await boCatalogPriceRulesPage.filterByDate(page, test.args.filterBy, test.args.firstDate, test.args.secondDate);
+        await boCatalogPriceRulesPage.filterByDate(page, test.filterBy, test.firstDate, test.secondDate);
 
         // Get number of elements
         const numberOfShoppingCartsAfterFilter = await boCatalogPriceRulesPage.getNumberOfElementInGrid(page);
@@ -230,14 +216,14 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
           const textColumn = await boCatalogPriceRulesPage.getTextColumn(
             page,
             row,
-            test.args.filterBy,
+            test.filterBy,
           );
           expect(textColumn).to.contains(dateToCheck);
         }
       });
 
       it('should reset all filters', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `${test.testIdentifier}Reset`, baseContext);
 
         const numberOfPriceRulesAfterReset = await boCatalogPriceRulesPage.resetAndGetNumberOfLines(page);
         expect(numberOfPriceRulesAfterReset).to.equal(numberOfCatalogPriceRules + 21);
@@ -247,134 +233,98 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
 
   // 3 - Sort Price rules table
   describe('Sort catalog price rules table', async () => {
-    const sortTests = [
+    [
       {
-        args: {
-          testIdentifier: 'sortByIdDesc', sortBy: 'id_specific_price_rule', sortDirection: 'down', isFloat: true,
-        },
+        testIdentifier: 'sortByIdDesc', sortBy: 'id_specific_price_rule', sortDirection: 'down', isFloat: true,
       },
       {
-        args: {
-          testIdentifier: 'sortByNameAsc', sortBy: 'a!name', sortDirection: 'up',
-        },
+        testIdentifier: 'sortByNameAsc', sortBy: 'a!name', sortDirection: 'up',
       },
       {
-        args: {
-          testIdentifier: 'sortByNameDesc', sortBy: 'a!name', sortDirection: 'down',
-        },
+        testIdentifier: 'sortByNameDesc', sortBy: 'a!name', sortDirection: 'down',
       },
       {
-        args: {
-          testIdentifier: 'sortByCurrencyAsc', sortBy: 'cul!name', sortDirection: 'up',
-        },
+        testIdentifier: 'sortByCurrencyAsc', sortBy: 'cul!name', sortDirection: 'up',
       },
       {
-        args: {
-          testIdentifier: 'sortByCurrencyDesc', sortBy: 'cul!name', sortDirection: 'down',
-        },
+        testIdentifier: 'sortByCurrencyDesc', sortBy: 'cul!name', sortDirection: 'down',
       },
       {
-        args: {
-          testIdentifier: 'sortByCountryAsc', sortBy: 'cl!name', sortDirection: 'up',
-        },
+        testIdentifier: 'sortByCountryAsc', sortBy: 'cl!name', sortDirection: 'up',
       },
       {
-        args: {
-          testIdentifier: 'sortByCountryDesc', sortBy: 'cl!name', sortDirection: 'down',
-        },
+        testIdentifier: 'sortByCountryDesc', sortBy: 'cl!name', sortDirection: 'down',
       },
       {
-        args: {
-          testIdentifier: 'sortByGroupAsc', sortBy: 'gl!name', sortDirection: 'up',
-        },
+        testIdentifier: 'sortByGroupAsc', sortBy: 'gl!name', sortDirection: 'up',
       },
       {
-        args: {
-          testIdentifier: 'sortByGroupDesc', sortBy: 'gl!name', sortDirection: 'down',
-        },
+        testIdentifier: 'sortByGroupDesc', sortBy: 'gl!name', sortDirection: 'down',
       },
       {
-        args: {
-          testIdentifier: 'sortByFromQuantityAsc', sortBy: 'from_quantity', sortDirection: 'up', isFloat: true,
-        },
+        testIdentifier: 'sortByFromQuantityAsc', sortBy: 'from_quantity', sortDirection: 'up', isFloat: true,
       },
       {
-        args: {
-          testIdentifier: 'sortByFromQuantityDesc', sortBy: 'from_quantity', sortDirection: 'down', isFloat: true,
-        },
+        testIdentifier: 'sortByFromQuantityDesc', sortBy: 'from_quantity', sortDirection: 'down', isFloat: true,
       },
       {
-        args: {
-          testIdentifier: 'sortByReducingTypeAsc', sortBy: 'a!reduction_type', sortDirection: 'up',
-        },
+        testIdentifier: 'sortByReducingTypeAsc', sortBy: 'a!reduction_type', sortDirection: 'up',
       },
       {
-        args: {
-          testIdentifier: 'sortByReductionTypeDesc', sortBy: 'a!reduction_type', sortDirection: 'down',
-        },
+        testIdentifier: 'sortByReductionTypeDesc', sortBy: 'a!reduction_type', sortDirection: 'down',
       },
       {
-        args: {
-          testIdentifier: 'sortByReductionAsc', sortBy: 'reduction', sortDirection: 'up', isFloat: true,
-        },
+        testIdentifier: 'sortByReductionAsc', sortBy: 'reduction', sortDirection: 'up', isFloat: true,
       },
       {
-        args: {
-          testIdentifier: 'sortByReductionDesc', sortBy: 'reduction', sortDirection: 'down', isFloat: true,
-        },
+        testIdentifier: 'sortByReductionDesc', sortBy: 'reduction', sortDirection: 'down', isFloat: true,
       },
       {
-        args: {
-          testIdentifier: 'sortByDateFromAsc', sortBy: 'from', sortDirection: 'up', isDate: true,
-        },
+        testIdentifier: 'sortByDateFromAsc', sortBy: 'from', sortDirection: 'up', isDate: true,
       },
       {
-        args: {
-          testIdentifier: 'sortByDateFromDesc', sortBy: 'from', sortDirection: 'down', isDate: true,
-        },
+        testIdentifier: 'sortByDateFromDesc', sortBy: 'from', sortDirection: 'down', isDate: true,
       },
       {
-        args: {
-          testIdentifier: 'sortByDateToAsc', sortBy: 'to', sortDirection: 'up', isDate: true,
-        },
+        testIdentifier: 'sortByDateToAsc', sortBy: 'to', sortDirection: 'up', isDate: true,
       },
       {
-        args: {
-          testIdentifier: 'sortByDateToDesc', sortBy: 'to', sortDirection: 'down', isDate: true,
-        },
+        testIdentifier: 'sortByDateToDesc', sortBy: 'to', sortDirection: 'down', isDate: true,
       },
       {
-        args: {
-          testIdentifier: 'sortByIdAsc', sortBy: 'id_specific_price_rule', sortDirection: 'up', isFloat: true,
-        },
+        testIdentifier: 'sortByIdAsc', sortBy: 'id_specific_price_rule', sortDirection: 'up', isFloat: true,
       },
-    ];
+    ].forEach((test: {
+      testIdentifier: string
+      sortBy: string
+      sortDirection: string
+      isDate?: boolean
+      isFloat?: boolean
+    }) => {
+      it(`should sort by '${test.sortBy}' '${test.sortDirection}' and check result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.testIdentifier, baseContext);
 
-    sortTests.forEach((test) => {
-      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+        const nonSortedTable = await boCatalogPriceRulesPage.getAllRowsColumnContent(page, test.sortBy);
 
-        const nonSortedTable = await boCatalogPriceRulesPage.getAllRowsColumnContent(page, test.args.sortBy);
+        await boCatalogPriceRulesPage.sortTable(page, test.sortBy, test.sortDirection);
 
-        await boCatalogPriceRulesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+        const sortedTable = await boCatalogPriceRulesPage.getAllRowsColumnContent(page, test.sortBy);
 
-        const sortedTable = await boCatalogPriceRulesPage.getAllRowsColumnContent(page, test.args.sortBy);
-
-        if (test.args.isFloat) {
+        if (test.isFloat) {
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
           const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
           const expectedResult: number[] = await utilsCore.sortArrayNumber(nonSortedTableFloat);
 
-          if (test.args.sortDirection === 'up') {
+          if (test.sortDirection === 'up') {
             expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
             expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
-        } else if (test.args.isDate) {
+        } else if (test.isDate) {
           const expectedResult: string[] = await utilsCore.sortArrayDate(nonSortedTable);
 
-          if (test.args.sortDirection === 'up') {
+          if (test.sortDirection === 'up') {
             expect(sortedTable).to.deep.equal(expectedResult);
           } else {
             expect(sortedTable).to.deep.equal(expectedResult.reverse());
@@ -382,7 +332,7 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
         } else {
           const expectedResult: string[] = await utilsCore.sortArray(nonSortedTable);
 
-          if (test.args.sortDirection === 'up') {
+          if (test.sortDirection === 'up') {
             expect(sortedTable).to.deep.equal(expectedResult);
           } else {
             expect(sortedTable).to.deep.equal(expectedResult.reverse());
@@ -423,7 +373,31 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
     });
   });
 
-  // 5 - Delete catalog price rules with bulk actions
+  // 5 - Bulk select
+  describe('Bulk Select', async () => {
+    it('should select all', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'bulkSelectAll', baseContext);
+
+      await boCatalogPriceRulesPage.bulkSelectRows(page, true);
+
+      const numRows = await boCatalogPriceRulesPage.getNumberOfElementInGrid(page);
+      expect(numRows).to.gt(0);
+      const numSelectedRows = await boCatalogPriceRulesPage.getSelectedRowsCount(page);
+      expect(numSelectedRows).to.equals(numRows);
+    });
+    it('should unselect all', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'bulkUnselectAll', baseContext);
+
+      await boCatalogPriceRulesPage.bulkSelectRows(page, false);
+
+      const numRows = await boCatalogPriceRulesPage.getNumberOfElementInGrid(page);
+      expect(numRows).to.gt(0);
+      const numSelectedRows = await boCatalogPriceRulesPage.getSelectedRowsCount(page);
+      expect(numSelectedRows).to.equals(0);
+    });
+  });
+
+  // 6 - Delete catalog price rules with bulk actions
   describe('Bulk delete catalog price rules', async () => {
     it('should bulk delete cart rules', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeletePriceRules', baseContext);

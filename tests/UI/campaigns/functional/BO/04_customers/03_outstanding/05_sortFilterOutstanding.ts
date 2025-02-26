@@ -1,19 +1,16 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
-// Import commonTests
 import {createAddressTest} from '@commonTests/BO/customers/address';
 import {createCustomerB2BTest, bulkDeleteCustomersTest} from '@commonTests/BO/customers/customer';
 import {disableB2BTest, enableB2BTest} from '@commonTests/BO/shopParameters/b2b';
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
-// Import pages
-import outstandingPage from '@pages/BO/customers/outstanding';
-
 import {
   boDashboardPage,
   boLoginPage,
   boOrdersPage,
+  boOutstandingPage,
   type BrowserContext,
   dataOrderStatuses,
   dataPaymentMethods,
@@ -26,8 +23,6 @@ import {
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_customers_outstanding_sortFilterOutstanding';
 
@@ -158,15 +153,15 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
         boDashboardPage.outstandingLink,
       );
 
-      const pageTitle = await outstandingPage.getPageTitle(page);
-      expect(pageTitle).to.contains(outstandingPage.pageTitle);
+      const pageTitle = await boOutstandingPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOutstandingPage.pageTitle);
     });
     it('should reset filter and get the outstanding number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterOutstanding', baseContext);
 
-      await outstandingPage.resetFilter(page);
+      await boOutstandingPage.resetFilter(page);
 
-      numberOutstanding = await outstandingPage.getNumberOutstanding(page);
+      numberOutstanding = await boOutstandingPage.getNumberOutstanding(page);
       expect(numberOutstanding).to.be.above(0);
     });
   });
@@ -222,18 +217,18 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
       it(`should filter by ${test.args.filterBy}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier);
 
-        await outstandingPage.filterTable(page, test.args.filterType, test.args.filterBy, test.args.filterValue);
+        await boOutstandingPage.filterTable(page, test.args.filterType, test.args.filterBy, test.args.filterValue);
 
-        const numberOutstandingAfterFilter = await outstandingPage.getNumberOutstanding(page);
+        const numberOutstandingAfterFilter = await boOutstandingPage.getNumberOutstanding(page);
         expect(numberOutstandingAfterFilter).to.be.at.most(numberOutstanding);
       });
 
       it('should reset all filters and get the number of outstanding', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `resetFilterAndGetNumberOfOutstanding1_${index}`);
 
-        await outstandingPage.resetFilter(page);
+        await boOutstandingPage.resetFilter(page);
 
-        const numberOutstandingAfterReset = await outstandingPage.getNumberOutstanding(page);
+        const numberOutstandingAfterReset = await boOutstandingPage.getNumberOutstanding(page);
         expect(numberOutstandingAfterReset).to.be.equal(numberOutstanding);
       });
     });
@@ -242,14 +237,14 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
       await testContext.addContextItem(this, 'testIdentifier', 'filterByDate', baseContext);
 
       // Filter outstanding
-      await outstandingPage.filterOutstandingByDate(page, today, today);
+      await boOutstandingPage.filterOutstandingByDate(page, today, today);
 
       // Check number of element
-      const numberOfOutstandingAfterFilter = await outstandingPage.getNumberOutstanding(page);
+      const numberOfOutstandingAfterFilter = await boOutstandingPage.getNumberOutstanding(page);
       expect(numberOfOutstandingAfterFilter).to.be.at.most(numberOutstanding);
 
       for (let i = 1; i <= numberOfOutstandingAfterFilter; i++) {
-        const textColumn = await outstandingPage.getTextColumn(page, 'date_add', i);
+        const textColumn = await boOutstandingPage.getTextColumn(page, 'date_add', i);
         expect(textColumn).to.contains(dateToCheck);
       }
     });
@@ -257,9 +252,9 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
     it('should reset all filters and get the number of outstanding', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAndGetNumberOfOutstanding2');
 
-      await outstandingPage.resetFilter(page);
+      await boOutstandingPage.resetFilter(page);
 
-      const numberOutstandingAfterReset = await outstandingPage.getNumberOutstanding(page);
+      const numberOutstandingAfterReset = await boOutstandingPage.getNumberOutstanding(page);
       expect(numberOutstandingAfterReset).to.be.equal(numberOutstanding);
     });
   });
@@ -272,9 +267,9 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
     it('should filter outstanding table by outstanding allowance', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByOutstandingAllowance2');
 
-      await outstandingPage.filterTable(page, 'input', 'outstanding_allow_amount', '€');
+      await boOutstandingPage.filterTable(page, 'input', 'outstanding_allow_amount', '€');
 
-      const numberOutstandingAfterFilter = await outstandingPage.getNumberOutstanding(page);
+      const numberOutstandingAfterFilter = await boOutstandingPage.getNumberOutstanding(page);
       expect(numberOutstandingAfterFilter).to.be.at.most(numberOutstanding);
     });
     const sortByOutstandingAllowance = [
@@ -299,11 +294,11 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
       it(`should sort by outstanding allowance ${test.args.sortDirection}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await outstandingPage.getAllRowsColumnContent(page, 'outstanding_allow_amount');
+        const nonSortedTable = await boOutstandingPage.getAllRowsColumnContent(page, 'outstanding_allow_amount');
 
-        await outstandingPage.sortTable(page, 'outstanding_allow_amount', test.args.sortDirection);
+        await boOutstandingPage.sortTable(page, 'outstanding_allow_amount', test.args.sortDirection);
 
-        const sortedTable = await outstandingPage.getAllRowsColumnContent(page, 'outstanding_allow_amount');
+        const sortedTable = await boOutstandingPage.getAllRowsColumnContent(page, 'outstanding_allow_amount');
 
         if (test.args.isFloat) {
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
@@ -330,9 +325,9 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
     it('should reset all filters and get the number of outstanding', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAndGetNumberOfOutstanding3');
 
-      await outstandingPage.resetFilter(page);
+      await boOutstandingPage.resetFilter(page);
 
-      const numberOutstandingAfterReset = await outstandingPage.getNumberOutstanding(page);
+      const numberOutstandingAfterReset = await boOutstandingPage.getNumberOutstanding(page);
       expect(numberOutstandingAfterReset).to.be.equal(numberOutstanding);
     });
 
@@ -366,11 +361,11 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
       it(`should sort by ${test.args.sortBy} ${test.args.sortDirection}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await outstandingPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const nonSortedTable = await boOutstandingPage.getAllRowsColumnContent(page, test.args.sortBy);
 
-        await outstandingPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+        await boOutstandingPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        const sortedTable = await outstandingPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await boOutstandingPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));

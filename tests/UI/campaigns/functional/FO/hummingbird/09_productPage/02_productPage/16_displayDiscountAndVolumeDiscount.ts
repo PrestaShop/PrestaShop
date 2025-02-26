@@ -1,8 +1,8 @@
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
+
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
-import {expect} from 'chai';
 
 import {
   boDashboardPage,
@@ -13,6 +13,7 @@ import {
   type BrowserContext,
   FakerProduct,
   foHummingbirdCartPage,
+  foHummingbirdModalBlockCartPage,
   foHummingbirdProductPage,
   type Page,
   utilsFile,
@@ -224,7 +225,7 @@ describe('FO - Product page - Product page : Display discount', async () => {
 
       await foHummingbirdProductPage.clickOnAddToCartButton(page);
 
-      const result = await blockCartModal.getProductDetailsFromBlockCartModal(page);
+      const result = await foHummingbirdModalBlockCartPage.getProductDetailsFromBlockCartModal(page);
       await Promise.all([
         expect(result.price).to.equal(18),
         expect(result.quantity).to.equal(3),
@@ -236,7 +237,7 @@ describe('FO - Product page - Product page : Display discount', async () => {
     it('should remove the product from the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removeProduct', baseContext);
 
-      await blockCartModal.proceedToCheckout(page);
+      await foHummingbirdModalBlockCartPage.proceedToCheckout(page);
       await foHummingbirdCartPage.deleteProduct(page, 1);
 
       const notificationsNumber = await foHummingbirdCartPage.getCartNotificationsNumber(page);
@@ -329,7 +330,7 @@ describe('FO - Product page - Product page : Display discount', async () => {
 
       await foHummingbirdProductPage.clickOnAddToCartButton(page);
 
-      const result = await blockCartModal.getProductDetailsFromBlockCartModal(page);
+      const result = await foHummingbirdModalBlockCartPage.getProductDetailsFromBlockCartModal(page);
       await Promise.all([
         expect(result.price).to.equal(17),
         expect(result.quantity).to.equal(1),
@@ -341,7 +342,7 @@ describe('FO - Product page - Product page : Display discount', async () => {
     it('should remove the product from the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removeProduct2', baseContext);
 
-      await blockCartModal.proceedToCheckout(page);
+      await foHummingbirdModalBlockCartPage.proceedToCheckout(page);
       await foHummingbirdCartPage.deleteProduct(page, 1);
 
       const notificationsNumber = await foHummingbirdCartPage.getCartNotificationsNumber(page);

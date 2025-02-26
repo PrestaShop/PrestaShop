@@ -1,11 +1,7 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
-// Import commonTests
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
-// Import FO pages
-import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {
   boDashboardPage,
@@ -20,15 +16,13 @@ import {
   foHummingbirdCheckoutPage,
   foHummingbirdCheckoutOrderConfirmationPage,
   foHummingbirdHomePage,
+  foHummingbirdModalBlockCartPage,
   foHummingbirdModalQuickViewPage,
   foHummingbirdSearchResultsPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
-import {expect} from 'chai';
-
-// context
 const baseContext: string = 'functional_FO_hummingbird_orderConfirmation_listOfOrderedProducts';
 
 /*
@@ -86,7 +80,7 @@ describe('FO - Order confirmation : List of ordered products', async () => {
       await foHummingbirdSearchResultsPage.quickViewProduct(page, 1);
 
       await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
-      await blockCartModal.closeBlockCartModal(page);
+      await foHummingbirdModalBlockCartPage.closeBlockCartModal(page);
     });
 
     it(`should add the product ${dataProducts.demo_5.name} to cart by quick view`, async function () {
@@ -96,7 +90,7 @@ describe('FO - Order confirmation : List of ordered products', async () => {
       await foHummingbirdSearchResultsPage.quickViewProduct(page, 1);
 
       await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
-      await blockCartModal.closeBlockCartModal(page);
+      await foHummingbirdModalBlockCartPage.closeBlockCartModal(page);
     });
 
     it(`should add the product ${dataProducts.demo_12.name} to cart by quick view`, async function () {
@@ -106,7 +100,7 @@ describe('FO - Order confirmation : List of ordered products', async () => {
       await foHummingbirdSearchResultsPage.quickViewProduct(page, 1);
 
       await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
-      await blockCartModal.proceedToCheckout(page);
+      await foHummingbirdModalBlockCartPage.proceedToCheckout(page);
 
       const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
       expect(pageTitle).to.equal(foHummingbirdCartPage.pageTitle);

@@ -1,18 +1,16 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
-// Import commonTests
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
-// Import BO pages
-import {moduleConfigurationPage} from '@pages/BO/modules/moduleConfiguration';
 // Import FO pages
 import accountIdentityPage from '@pages/FO/hummingbird/myAccount/identity';
 
 import {
   boDashboardPage,
   boLoginPage,
+  boModuleConfigurationPage,
   boModuleManagerPage,
   type BrowserContext,
   dataCustomers,
@@ -24,8 +22,6 @@ import {
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 // context
 const baseContext: string = 'functional_FO_hummingbird_newsletter_subscribeNewsletter';
@@ -162,8 +158,8 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
       await boModuleManagerPage.searchModule(page, moduleInformation);
       await boModuleManagerPage.goToConfigurationPage(page, moduleInformation.tag);
 
-      const moduleConfigurationPageSubtitle = await moduleConfigurationPage.getPageSubtitle(page);
-      expect(moduleConfigurationPageSubtitle).to.contains(moduleInformation.name);
+      const boModuleConfigurationPageSubtitle = await boModuleConfigurationPage.getPageSubtitle(page);
+      expect(boModuleConfigurationPageSubtitle).to.contains(moduleInformation.name);
     });
 
     it('should check if user is unsubscribed from newsletter', async function () {
@@ -235,8 +231,8 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
       await boModuleManagerPage.searchModule(page, moduleInformation);
       await boModuleManagerPage.goToConfigurationPage(page, moduleInformation.tag);
 
-      const moduleConfigurationPageSubtitle = await moduleConfigurationPage.getPageSubtitle(page);
-      expect(moduleConfigurationPageSubtitle).to.contains(moduleInformation.name);
+      const boModuleConfigurationPageSubtitle = await boModuleConfigurationPage.getPageSubtitle(page);
+      expect(boModuleConfigurationPageSubtitle).to.contains(moduleInformation.name);
     });
 
     it('should check if previous customer subscription is visible in table', async function () {

@@ -1,13 +1,10 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import {moduleConfigurationPage} from '@pages/BO/modules/moduleConfiguration';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
+  boModuleConfigurationPage,
   boModuleManagerPage,
   type BrowserContext,
   dataModules,
@@ -67,7 +64,7 @@ describe('BO - Modules - Module Manager : Configure module', async () => {
 
     await boModuleManagerPage.goToConfigurationPage(page, dataModules.contactForm.tag);
 
-    const pageSubtitle = await moduleConfigurationPage.getPageSubtitle(page);
+    const pageSubtitle = await boModuleConfigurationPage.getPageSubtitle(page);
     expect(pageSubtitle).to.contains(dataModules.contactForm.name);
   });
 });

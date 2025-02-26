@@ -1,5 +1,4 @@
 import {expect} from 'chai';
-import addOrderMessagePage from '@pages/BO/customerService/orderMessages/add';
 import testContext from '@utils/testContext';
 
 import {
@@ -8,6 +7,7 @@ import {
   boLoginPage,
   boMerchandiseReturnsPage,
   boOrderMessagesPage,
+  boOrderMessagesCreatePage,
   type BrowserContext,
   type Page,
   utilsPlaywright,
@@ -84,8 +84,8 @@ describe('BO - Customer Service', async () => {
 
     await boOrderMessagesPage.gotoEditOrderMessage(page, 1);
 
-    const pageTitle = await addOrderMessagePage.getPageTitle(page);
-    expect(pageTitle).to.contains(addOrderMessagePage.pageTitleEdit);
+    const pageTitle = await boOrderMessagesCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boOrderMessagesCreatePage.pageTitleEdit);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -101,8 +101,8 @@ describe('BO - Customer Service', async () => {
     );
     await boOrderMessagesPage.goToAddNewOrderMessagePage(page);
 
-    const pageTitle = await addOrderMessagePage.getPageTitle(page);
-    expect(pageTitle).to.contains(addOrderMessagePage.pageTitle);
+    const pageTitle = await boOrderMessagesCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boOrderMessagesCreatePage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);

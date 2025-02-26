@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Security\PasswordGenerator;
 use PrestaShop\PrestaShop\Core\Util\String\StringModifier;
 use PrestaShopBundle\Security\Admin\UserTokenManager;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\IpUtils;
 use Symfony\Component\HttpFoundation\Request;
 
 class ToolsCore
@@ -3649,6 +3650,10 @@ exit;
                         'poster' => 'URI',
                         'preload' => 'Enum#auto,metadata,none',
                         'controls' => 'Bool',
+                        'autoplay' => 'Bool',
+                        'loop' => 'Bool',
+                        'muted' => 'Bool',
+                        'playsinline' => 'Bool',
                     ]);
                     $def->addElement('source', 'Block', 'Flow', 'Common', [
                         'src' => 'URI',
@@ -3963,6 +3968,25 @@ exit;
         $queryString = str_replace('%2F', '/', http_build_query($params, '', '&'));
 
         return $url . ($queryString ? "?$queryString" : '');
+    }
+
+    /**
+     * Checks if the current visitor is allowed to view the page even if maintenace mode is on, either via IP whitelist or being logged in in backoffice.
+     */
+    public static function isAllowedToBypassMaintenance()
+    {
+        $is_admin = (int) (new Cookie('psAdmin'))->id_employee;
+        $maintenance_allow_admins = (bool) Configuration::get('PS_MAINTENANCE_ALLOW_ADMINS');
+        if ($is_admin && $maintenance_allow_admins) {
+            return true;
+        }
+
+        $allowed_ips = array_map('trim', explode(',', Configuration::get('PS_MAINTENANCE_IP')));
+        if (IpUtils::checkIp(Tools::getRemoteAddr(), $allowed_ips)) {
+            return true;
+        }
+
+        return false;
     }
 }
 

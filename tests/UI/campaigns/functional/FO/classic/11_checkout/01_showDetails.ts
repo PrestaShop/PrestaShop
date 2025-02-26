@@ -1,10 +1,6 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import FO pages
-import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
-
 import {expect} from 'chai';
+
 import {
   type BrowserContext,
   dataProducts,
@@ -12,6 +8,7 @@ import {
   foClassicCheckoutPage,
   foClassicHomePage,
   foClassicLoginPage,
+  foClassicModalBlockCartPage,
   foClassicModalQuickViewPage,
   foClassicProductPage,
   type Page,
@@ -59,7 +56,7 @@ describe('FO - Checkout : Show details', async () => {
     await foClassicHomePage.quickViewProduct(page, 1);
     await foClassicModalQuickViewPage.addToCartByQuickView(page);
 
-    const isModalClosed = await blockCartModal.closeBlockCartModal(page);
+    const isModalClosed = await foClassicModalBlockCartPage.closeBlockCartModal(page);
     expect(isModalClosed).to.eq(true);
   });
 
@@ -69,7 +66,7 @@ describe('FO - Checkout : Show details', async () => {
     await foClassicLoginPage.goToHomePage(page);
     await foClassicHomePage.quickViewProduct(page, 3);
     await foClassicModalQuickViewPage.setQuantityAndAddToCart(page, 2);
-    await blockCartModal.proceedToCheckout(page);
+    await foClassicModalBlockCartPage.proceedToCheckout(page);
 
     const pageTitle = await foClassicCartPage.getPageTitle(page);
     expect(pageTitle).to.equal(foClassicCartPage.pageTitle);

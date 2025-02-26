@@ -1,8 +1,8 @@
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
+
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
-import {expect} from 'chai';
 
 import {
   boDashboardPage,
@@ -13,6 +13,7 @@ import {
   boStockMovementsPage,
   type BrowserContext,
   FakerProduct,
+  foHummingbirdModalBlockCartPage,
   foHummingbirdProductPage,
   type Page,
   utilsDate,
@@ -208,7 +209,7 @@ describe('FO - Product page - Product page : Out of stock behaviour', async () =
     it('should close the blockCart modal by clicking outside the modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeBlockCartModal2', baseContext);
 
-      const isQuickViewModalClosed = await blockCartModal.closeBlockCartModal(page, true);
+      const isQuickViewModalClosed = await foHummingbirdModalBlockCartPage.closeBlockCartModal(page, true);
       expect(isQuickViewModalClosed).to.equal(true);
     });
 

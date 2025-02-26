@@ -1,19 +1,15 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import FO pages
-import foCreateAccountPage from '@pages/FO/hummingbird/myAccount/add';
+import {expect} from 'chai';
 
 import {
   type BrowserContext,
   FakerCustomer,
+  foHummingbirdCreateAccountPage,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 let browserContext: BrowserContext;
 let page: Page;
@@ -52,14 +48,14 @@ function createAccountTest(customerData: FakerCustomer, baseContext: string = 'c
       await foHummingbirdHomePage.goToLoginPage(page);
       await foHummingbirdLoginPage.goToCreateAccountPage(page);
 
-      const pageHeaderTitle = await foCreateAccountPage.getHeaderTitle(page);
-      expect(pageHeaderTitle).to.equal(foCreateAccountPage.formTitle);
+      const pageHeaderTitle = await foHummingbirdCreateAccountPage.getHeaderTitle(page);
+      expect(pageHeaderTitle).to.equal(foHummingbirdCreateAccountPage.formTitle);
     });
 
     it('should create new account', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createAccount', baseContext);
 
-      await foCreateAccountPage.createAccount(page, customerData);
+      await foHummingbirdCreateAccountPage.createAccount(page, customerData);
 
       const isCustomerConnected = await foHummingbirdHomePage.isCustomerConnected(page);
       expect(isCustomerConnected).to.eq(true);
@@ -68,7 +64,7 @@ function createAccountTest(customerData: FakerCustomer, baseContext: string = 'c
     it('should sign out from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFO', baseContext);
 
-      await foCreateAccountPage.goToHomePage(page);
+      await foHummingbirdCreateAccountPage.goToHomePage(page);
       await foHummingbirdHomePage.logout(page);
 
       const isCustomerConnected = await foHummingbirdHomePage.isCustomerConnected(page);

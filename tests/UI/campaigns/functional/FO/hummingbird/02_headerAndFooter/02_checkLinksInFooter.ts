@@ -1,21 +1,16 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
-// Import commonTests
 import deleteCacheTest from '@commonTests/BO/advancedParameters/cache';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {createAccountTest} from '@commonTests/FO/classic/account';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
-// Import BO pages
 // Import FO pages
 import bestSalesPage from '@pages/FO/hummingbird/bestSales';
 import deliveryPage from '@pages/FO/hummingbird/delivery';
 import legalNoticePage from '@pages/FO/hummingbird/legalNotice';
-import createAccountPage from '@pages/FO/hummingbird/myAccount/add';
-import addAddressPage from '@pages/FO/hummingbird/myAccount/addAddress';
-import addressesPage from '@pages/FO/hummingbird/myAccount/addresses';
 import creditSlipsPage from '@pages/FO/hummingbird/myAccount/creditSlips';
 import personalInfoPage from '@pages/FO/hummingbird/myAccount/identity';
 import guestOrderTrackingPage from '@pages/FO/hummingbird/orderTracking/guestOrderTracking';
@@ -31,16 +26,17 @@ import {
   FakerCustomer,
   foHummingbirdAboutUsPage,
   foHummingbirdContactUsPage,
+  foHummingbirdCreateAccountPage,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
+  foHummingbirdMyAddressesPage,
+  foHummingbirdMyAddressesCreatePage,
   foHummingbirdMyOrderHistoryPage,
   foHummingbirdMyWishlistsPage,
   foHummingbirdSitemapPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_FO_hummingbird_headerAndFooter_checkLinksInFooter';
 
@@ -141,7 +137,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
     [
       {linkSelector: 'Order tracking', pageTitle: guestOrderTrackingPage.pageTitle},
       {linkSelector: 'Sign in', pageTitle: foHummingbirdLoginPage.pageTitle},
-      {linkSelector: 'Create account', pageTitle: createAccountPage.formTitle},
+      {linkSelector: 'Create account', pageTitle: foHummingbirdCreateAccountPage.formTitle},
     ].forEach((args, index: number) => {
       it(`should check '${args.linkSelector}' footer links`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkYourAccountFooterLinks1${index}`, baseContext);
@@ -150,7 +146,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
         await foHummingbirdHomePage.goToFooterLink(page, args.linkSelector);
 
         if (args.linkSelector === 'Create account') {
-          pageTitle = await createAccountPage.getHeaderTitle(page);
+          pageTitle = await foHummingbirdCreateAccountPage.getHeaderTitle(page);
         } else {
           pageTitle = await foHummingbirdHomePage.getPageTitle(page);
         }
@@ -172,7 +168,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
 
     [
       {linkSelector: 'Information', pageTitle: personalInfoPage.pageTitle},
-      {linkSelector: 'Addresses', pageTitle: addressesPage.pageTitle},
+      {linkSelector: 'Addresses', pageTitle: foHummingbirdMyAddressesPage.pageTitle},
       {linkSelector: 'Orders', pageTitle: foHummingbirdMyOrderHistoryPage.pageTitle},
       {linkSelector: 'Credit slips', pageTitle: creditSlipsPage.pageTitle},
       {linkSelector: 'Wishlist', pageTitle: foHummingbirdMyWishlistsPage.pageTitle},
@@ -210,7 +206,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
 
     [
       {linkSelector: 'Information', pageTitle: personalInfoPage.pageTitle},
-      {linkSelector: 'Add first address', pageTitle: addAddressPage.pageTitle},
+      {linkSelector: 'Add first address', pageTitle: foHummingbirdMyAddressesCreatePage.pageTitle},
       {linkSelector: 'Orders', pageTitle: foHummingbirdMyOrderHistoryPage.pageTitle},
       {linkSelector: 'Credit slips', pageTitle: creditSlipsPage.pageTitle},
       {linkSelector: 'Wishlist', pageTitle: foHummingbirdMyWishlistsPage.pageTitle},

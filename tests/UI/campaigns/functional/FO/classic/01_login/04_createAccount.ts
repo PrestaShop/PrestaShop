@@ -1,16 +1,13 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
-// Import commonTests
 import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-
-// Import FO pages
-import {createAccountPage} from '@pages/FO/classic/myAccount/add';
 
 import {
   type BrowserContext,
   FakerCustomer,
+  foClassicCreateAccountPage,
   foClassicHomePage,
   foClassicLoginPage,
   type MailDev,
@@ -19,8 +16,6 @@ import {
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_FO_classic_login_createAccount';
 
@@ -78,14 +73,14 @@ describe('FO - Login : Create account', async () => {
 
       await foClassicLoginPage.goToCreateAccountPage(page);
 
-      const pageHeaderTitle = await createAccountPage.getHeaderTitle(page);
-      expect(pageHeaderTitle).to.equal(createAccountPage.formTitle);
+      const pageHeaderTitle = await foClassicCreateAccountPage.getHeaderTitle(page);
+      expect(pageHeaderTitle).to.equal(foClassicCreateAccountPage.formTitle);
     });
 
     it('should create new account', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createAccount', baseContext);
 
-      await createAccountPage.createAccount(page, customerData);
+      await foClassicCreateAccountPage.createAccount(page, customerData);
 
       const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Created customer is not connected!').to.eq(true);

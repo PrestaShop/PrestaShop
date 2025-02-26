@@ -1,8 +1,5 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import FO pages
-import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
+import {expect} from 'chai';
 
 import {
   boDashboardPage,
@@ -17,13 +14,12 @@ import {
   foClassicCheckoutPage,
   foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
+  foClassicModalBlockCartPage,
   foClassicModalQuickViewPage,
   foClassicSearchResultsPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 // context
 const baseContext: string = 'functional_FO_classic_orderConfirmation_listOfOrderedProducts';
@@ -76,7 +72,7 @@ describe('FO - Order confirmation : List of ordered products', async () => {
       await foClassicSearchResultsPage.quickViewProduct(page, 1);
 
       await foClassicModalQuickViewPage.addToCartByQuickView(page);
-      await blockCartModal.closeBlockCartModal(page);
+      await foClassicModalBlockCartPage.closeBlockCartModal(page);
     });
 
     it(`should add the product ${
@@ -87,7 +83,7 @@ describe('FO - Order confirmation : List of ordered products', async () => {
       await foClassicSearchResultsPage.quickViewProduct(page, 1);
 
       await foClassicModalQuickViewPage.addToCartByQuickView(page);
-      await blockCartModal.closeBlockCartModal(page);
+      await foClassicModalBlockCartPage.closeBlockCartModal(page);
     });
 
     it(`should add the product ${dataProducts.demo_12.name} to cart by quick view`, async function () {
@@ -97,7 +93,7 @@ describe('FO - Order confirmation : List of ordered products', async () => {
       await foClassicSearchResultsPage.quickViewProduct(page, 1);
 
       await foClassicModalQuickViewPage.addToCartByQuickView(page);
-      await blockCartModal.proceedToCheckout(page);
+      await foClassicModalBlockCartPage.proceedToCheckout(page);
 
       const pageTitle = await foClassicCartPage.getPageTitle(page);
       expect(pageTitle).to.equal(foClassicCartPage.pageTitle);

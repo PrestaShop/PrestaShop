@@ -1,12 +1,7 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
-// Import commonTests
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
-// Import pages
-// Import FO pages
-import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {
   type BrowserContext,
@@ -14,12 +9,11 @@ import {
   foHummingbirdCartPage,
   foHummingbirdCheckoutPage,
   foHummingbirdHomePage,
+  foHummingbirdModalBlockCartPage,
   foHummingbirdModalQuickViewPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_FO_hummingbird_checkout_addresses_billingAdressWhenLoggedIn';
 
@@ -59,7 +53,7 @@ describe('FO - Guest checkout: Billing address when logged in', async () => {
 
       await foHummingbirdHomePage.quickViewProduct(page, 3);
       await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
-      await blockCartModal.proceedToCheckout(page);
+      await foHummingbirdModalBlockCartPage.proceedToCheckout(page);
 
       const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
       expect(pageTitle).to.eq(foHummingbirdCartPage.pageTitle);

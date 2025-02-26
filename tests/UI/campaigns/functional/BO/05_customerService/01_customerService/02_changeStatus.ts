@@ -1,9 +1,9 @@
 import testContext from '@utils/testContext';
-import viewPage from '@pages/BO/customerService/customerService/view';
 import {expect} from 'chai';
 
 import {
   boCustomerServicePage,
+  boCustomerServiceViewPage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -131,14 +131,14 @@ describe('BO - Customer Service : Change status', async () => {
 
         await boCustomerServicePage.goToViewMessagePage(page);
 
-        const pageTitle = await viewPage.getPageTitle(page);
-        expect(pageTitle).to.contains(viewPage.pageTitle);
+        const pageTitle = await boCustomerServiceViewPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCustomerServiceViewPage.pageTitle);
       });
 
       it(`should change the order status to '${test.args.status}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `setOrderStatus${test.args.status}`, baseContext);
 
-        const newStatus = await viewPage.setStatus(page, test.args.status);
+        const newStatus = await boCustomerServiceViewPage.setStatus(page, test.args.status);
         expect(newStatus).to.contains(test.args.statusToCheck);
       });
 
@@ -170,25 +170,25 @@ describe('BO - Customer Service : Change status', async () => {
 
       await boCustomerServicePage.goToViewMessagePage(page);
 
-      const pageTitle = await viewPage.getPageTitle(page);
-      expect(pageTitle).to.contains(viewPage.pageTitle);
+      const pageTitle = await boCustomerServiceViewPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerServiceViewPage.pageTitle);
     });
 
     it('should click on forward message button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnForwardButton', baseContext);
 
-      const isModalVisible = await viewPage.clickOnForwardMessageButton(page);
+      const isModalVisible = await boCustomerServiceViewPage.clickOnForwardMessageButton(page);
       expect(isModalVisible).to.eq(true);
     });
 
     it('should forward the message and check the thread', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'forwardMessage', baseContext);
 
-      await viewPage.forwardMessage(page, forwardMessageData);
+      await boCustomerServiceViewPage.forwardMessage(page, forwardMessageData);
 
-      const messages = await viewPage.getThreadMessages(page);
+      const messages = await boCustomerServiceViewPage.getThreadMessages(page);
       expect(messages)
-        .to.contains(`${viewPage.forwardMessageSuccessMessage} ${dataEmployees.defaultEmployee.firstName}`
+        .to.contains(`${boCustomerServiceViewPage.forwardMessageSuccessMessage} ${dataEmployees.defaultEmployee.firstName}`
           + ` ${dataEmployees.defaultEmployee.lastName}`)
         .and.contains(forwardMessageData.message);
     });
@@ -196,9 +196,9 @@ describe('BO - Customer Service : Change status', async () => {
     it('should check orders and messages timeline', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrdersAndMessagesForm', baseContext);
 
-      const text = await viewPage.getOrdersAndMessagesTimeline(page);
+      const text = await boCustomerServiceViewPage.getOrdersAndMessagesTimeline(page);
       expect(text).to.contains('Orders and messages timeline')
-        .and.contains(`${viewPage.forwardMessageSuccessMessage} ${dataEmployees.defaultEmployee.firstName}`
+        .and.contains(`${boCustomerServiceViewPage.forwardMessageSuccessMessage} ${dataEmployees.defaultEmployee.firstName}`
         + ` ${dataEmployees.defaultEmployee.lastName}`)
         .and.contains(`Comment: ${forwardMessageData.message}`);
     });

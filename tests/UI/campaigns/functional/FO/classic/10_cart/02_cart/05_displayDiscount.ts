@@ -1,13 +1,8 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import FO pages
-import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
+import {expect} from 'chai';
 
 // Import commonTests
 import {createCartRuleTest, deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
-
-import {expect} from 'chai';
 
 import {
   type BrowserContext,
@@ -16,6 +11,7 @@ import {
   foClassicCartPage,
   foClassicCheckoutPage,
   foClassicHomePage,
+  foClassicModalBlockCartPage,
   foClassicModalQuickViewPage,
   foClassicSearchResultsPage,
   type Page,
@@ -105,7 +101,7 @@ describe('FO - cart : Display discount', async () => {
 
       await foClassicModalQuickViewPage.addToCartByQuickView(page);
 
-      const isNotVisible = await blockCartModal.continueShopping(page);
+      const isNotVisible = await foClassicModalBlockCartPage.continueShopping(page);
       expect(isNotVisible).to.equal(true);
     });
 
@@ -131,7 +127,7 @@ describe('FO - cart : Display discount', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart2', baseContext);
 
       await foClassicModalQuickViewPage.addToCartByQuickView(page);
-      await blockCartModal.proceedToCheckout(page);
+      await foClassicModalBlockCartPage.proceedToCheckout(page);
 
       const pageTitle = await foClassicCartPage.getPageTitle(page);
       expect(pageTitle).to.equal(foClassicCartPage.pageTitle);

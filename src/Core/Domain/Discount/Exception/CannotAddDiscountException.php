@@ -24,14 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Discount\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Discount\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject\DiscountType;
-
-class AddFreeShippingDiscountCommand extends AddDiscountCommand
+class CannotAddDiscountException extends DiscountException
 {
-    public function __construct()
-    {
-        parent::__construct(DiscountType::FREE_SHIPPING);
-    }
 }

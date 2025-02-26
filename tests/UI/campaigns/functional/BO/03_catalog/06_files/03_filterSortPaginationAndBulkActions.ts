@@ -1,11 +1,9 @@
 import testContext from '@utils/testContext';
-
-import addFilePage from '@pages/BO/catalog/files/add';
-
 import {expect} from 'chai';
 
 import {
   boDashboardPage,
+  boFilesCreatePage,
   boFilesPage,
   boLoginPage,
   type BrowserContext,
@@ -78,14 +76,14 @@ describe('BO - Catalog - Files : Filter, sort, pagination and bulk actions files
 
         await boFilesPage.goToAddNewFilePage(page);
 
-        const pageTitle = await addFilePage.getPageTitle(page);
-        expect(pageTitle).to.contains(addFilePage.pageTitle);
+        const pageTitle = await boFilesCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boFilesCreatePage.pageTitle);
       });
 
       it(`should create file n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createFile${index}`, baseContext);
 
-        const result = await addFilePage.createEditFile(page, createFileData);
+        const result = await boFilesCreatePage.createEditFile(page, createFileData);
         expect(result).to.equal(boFilesPage.successfulCreationMessage);
 
         const numberOfFilesAfterCreation = await boFilesPage.resetAndGetNumberOfLines(page);

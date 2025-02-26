@@ -1,23 +1,18 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
-// Import commonTests
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
-// Import FO pages
-import createAccountPage from '@pages/FO/hummingbird/myAccount/add';
 
 import {
   type BrowserContext,
   FakerCustomer,
+  foHummingbirdCreateAccountPage,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_FO_hummingbird_login_createAccount';
 
@@ -64,14 +59,14 @@ describe('FO - Login : Create account', async () => {
 
       await foHummingbirdLoginPage.goToCreateAccountPage(page);
 
-      const pageHeaderTitle = await createAccountPage.getHeaderTitle(page);
-      expect(pageHeaderTitle).to.equal(createAccountPage.formTitle);
+      const pageHeaderTitle = await foHummingbirdCreateAccountPage.getHeaderTitle(page);
+      expect(pageHeaderTitle).to.equal(foHummingbirdCreateAccountPage.formTitle);
     });
 
     it('should create new account', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createAccount', baseContext);
 
-      await createAccountPage.createAccount(page, customerData);
+      await foHummingbirdCreateAccountPage.createAccount(page, customerData);
 
       const isCustomerConnected = await foHummingbirdHomePage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Created customer is not connected!').to.eq(true);

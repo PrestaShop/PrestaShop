@@ -1,15 +1,12 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-// Import pages
-// Import BO pages
-import suppliersPage from '@pages/BO/catalog/suppliers';
-
 import {
   boBrandsPage,
   boDashboardPage,
   boLoginPage,
   boShopParametersPage,
+  boSuppliersPage,
   type BrowserContext,
   foClassicHomePage,
   foClassicSitemapPage,
@@ -95,14 +92,14 @@ describe('BO - Shop Parameters - General : Enable/Disable display suppliers', as
 
           await boBrandsPage.goToSubTabSuppliers(page);
 
-          const pageTitle = await suppliersPage.getPageTitle(page);
-          expect(pageTitle).to.contains(suppliersPage.pageTitle);
+          const pageTitle = await boSuppliersPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boSuppliersPage.pageTitle);
         });
 
         it(`should check that the message alert contains '${test.args.action}'`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkAlertContains_${test.args.action}`, baseContext);
 
-          const text = await suppliersPage.getAlertInfoBlockParagraphContent(page);
+          const text = await boSuppliersPage.getAlertInfoBlockParagraphContent(page);
           expect(text).to.contains(test.args.action.toLowerCase());
         });
       }
@@ -111,7 +108,7 @@ describe('BO - Shop Parameters - General : Enable/Disable display suppliers', as
         await testContext.addContextItem(this, 'testIdentifier', `goToFO_${test.args.action}`, baseContext);
 
         // View shop
-        page = await suppliersPage.viewMyShop(page);
+        page = await boSuppliersPage.viewMyShop(page);
         // Change shop language
         await foClassicHomePage.changeLanguage(page, 'en');
 

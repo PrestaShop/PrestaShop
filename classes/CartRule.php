@@ -154,8 +154,9 @@ class CartRuleCore extends ObjectModel
             'name' => [
                 'type' => self::TYPE_HTML,
                 'lang' => true,
-                'required' => true,
+                'required' => false,
                 'size' => CartRuleSettings::NAME_MAX_LENGTH,
+                'validate' => 'defaultLanguageRequiredWhenActive',
             ],
         ],
     ];

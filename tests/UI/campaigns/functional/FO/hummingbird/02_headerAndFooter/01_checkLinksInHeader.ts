@@ -1,11 +1,7 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
-// Import commonTests
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
-// Import FO pages
-import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {
   type BrowserContext,
@@ -14,13 +10,12 @@ import {
   foHummingbirdContactUsPage,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
+  foHummingbirdModalBlockCartPage,
   foHummingbirdModalQuickViewPage,
   foHummingbirdMyAccountPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_FO_hummingbird_headerAndFooter_checkLinksInHeader';
 
@@ -109,7 +104,7 @@ describe('FO - Header and Footer : Check links in header page', async () => {
       await foHummingbirdModalQuickViewPage.setQuantityAndAddToCart(page, 3);
 
       // Close block cart modal
-      const isQuickViewModalClosed = await blockCartModal.closeBlockCartModal(page);
+      const isQuickViewModalClosed = await foHummingbirdModalBlockCartPage.closeBlockCartModal(page);
       expect(isQuickViewModalClosed).to.eq(true);
     });
 

@@ -1,12 +1,7 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-// Import commonTests
 import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
-
-// Import pages
-// Import FO pages
-import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
   boCartRulesPage,
@@ -20,6 +15,7 @@ import {
   foClassicCartPage,
   foClassicHomePage,
   foClassicLoginPage,
+  foClassicModalBlockCartPage,
   foClassicModalQuickViewPage,
   foClassicProductPage,
   foClassicSearchResultsPage,
@@ -169,7 +165,7 @@ describe('BO - Catalog - Cart rules : Product selection', async () => {
 
       await foClassicModalQuickViewPage.addToCartByQuickView(page);
 
-      const isNotVisible = await blockCartModal.continueShopping(page);
+      const isNotVisible = await foClassicModalBlockCartPage.continueShopping(page);
       expect(isNotVisible).to.eq(true);
     });
 
@@ -178,7 +174,7 @@ describe('BO - Catalog - Cart rules : Product selection', async () => {
 
       await foClassicHomePage.quickViewProduct(page, 2);
       await foClassicModalQuickViewPage.addToCartByQuickView(page);
-      await blockCartModal.proceedToCheckout(page);
+      await foClassicModalBlockCartPage.proceedToCheckout(page);
 
       // Check number of products in cart
       const notificationsNumber = await foClassicHomePage.getCartNotificationsNumber(page);

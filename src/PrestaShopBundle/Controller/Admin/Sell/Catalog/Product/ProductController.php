@@ -757,6 +757,7 @@ class ProductController extends PrestaShopAdminController
         #[Autowire(service: 'prestashop.core.grid.factory.product')]
         GridFactoryInterface $productGridFactory,
     ): CsvResponse {
+        $filters = new ProductFilters($filters->getShopConstraint(), ['limit' => null] + $filters->all());
         $grid = $productGridFactory->getGrid($filters);
 
         $headers = [

@@ -1,9 +1,5 @@
-// Import utils
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
-
-// Import pages
-import {vouchersPage as foVouchersPage} from '@pages/FO/classic/myAccount/vouchers';
 
 import {
   boCartRulesPage,
@@ -20,6 +16,7 @@ import {
   foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicMyAccountPage,
+  foClassicMyVouchersPage,
   foClassicProductPage,
   type Page,
   utilsDate,
@@ -204,14 +201,14 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await foClassicHomePage.goToMyAccountPage(page);
         await foClassicMyAccountPage.goToVouchersPage(page);
 
-        const pageHeaderTitle = await foVouchersPage.getPageTitle(page);
-        expect(pageHeaderTitle).to.equal(foVouchersPage.pageTitle);
+        const pageHeaderTitle = await foClassicMyVouchersPage.getPageTitle(page);
+        expect(pageHeaderTitle).to.equal(foClassicMyVouchersPage.pageTitle);
       });
 
       it('should get the number of vouchers', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfVouchers', baseContext);
 
-        const numberOfVouchers = await foVouchersPage.getNumberOfVouchers(page);
+        const numberOfVouchers = await foClassicMyVouchersPage.getNumberOfVouchers(page);
         expect(numberOfVouchers).to.equal(1);
       });
 
@@ -225,7 +222,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         it(`should check the voucher ${cartRule.args.column} n°${cartRule.args.row}`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkVoucher${index}`, baseContext);
 
-          const cartRuleTextColumn = await foVouchersPage.getTextColumnFromTableVouchers(
+          const cartRuleTextColumn = await foClassicMyVouchersPage.getTextColumnFromTableVouchers(
             page,
             cartRule.args.row,
             cartRule.args.column,
@@ -403,14 +400,14 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await foClassicHomePage.goToMyAccountPage(page);
         await foClassicMyAccountPage.goToVouchersPage(page);
 
-        const pageHeaderTitle = await foVouchersPage.getPageTitle(page);
-        expect(pageHeaderTitle).to.equal(foVouchersPage.pageTitle);
+        const pageHeaderTitle = await foClassicMyVouchersPage.getPageTitle(page);
+        expect(pageHeaderTitle).to.equal(foClassicMyVouchersPage.pageTitle);
       });
 
       it('should get the number of vouchers', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfVouchers2', baseContext);
 
-        const numberOfVouchers = await foVouchersPage.getNumberOfVouchers(page);
+        const numberOfVouchers = await foClassicMyVouchersPage.getNumberOfVouchers(page);
         expect(numberOfVouchers).to.equal(0);
       });
     });

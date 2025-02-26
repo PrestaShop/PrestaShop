@@ -1,12 +1,10 @@
 import testContext from '@utils/testContext';
-
-import addFilePage from '@pages/BO/catalog/files/add';
-
 import {expect} from 'chai';
 
 import {
   boDashboardPage,
   boFilesPage,
+  boFilesCreatePage,
   boLoginPage,
   type BrowserContext,
   FakerFile,
@@ -81,14 +79,14 @@ describe('BO - Catalog - Files : CRUD file', async () => {
 
       await boFilesPage.goToAddNewFilePage(page);
 
-      const pageTitle = await addFilePage.getPageTitle(page);
-      expect(pageTitle).to.contains(addFilePage.pageTitle);
+      const pageTitle = await boFilesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boFilesCreatePage.pageTitle);
     });
 
     it('should create file', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createFile', baseContext);
 
-      const result = await addFilePage.createEditFile(page, createFileData);
+      const result = await boFilesCreatePage.createEditFile(page, createFileData);
       expect(result).to.equal(boFilesPage.successfulCreationMessage);
     });
   });
@@ -110,14 +108,14 @@ describe('BO - Catalog - Files : CRUD file', async () => {
 
       await boFilesPage.goToEditFilePage(page, 1);
 
-      const pageTitle = await addFilePage.getPageTitle(page);
-      expect(pageTitle).to.contains(addFilePage.pageTitleEdit);
+      const pageTitle = await boFilesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boFilesCreatePage.pageTitleEdit);
     });
 
     it('should edit file', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateFile', baseContext);
 
-      const result = await addFilePage.createEditFile(page, editFileData);
+      const result = await boFilesCreatePage.createEditFile(page, editFileData);
       expect(result).to.equal(boFilesPage.successfulUpdateMessage);
     });
   });

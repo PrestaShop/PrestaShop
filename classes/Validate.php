@@ -1333,6 +1333,25 @@ class ValidateCore
         return (bool) preg_match('/^[\w-]{3,255}$/u', $theme_name);
     }
 
+    public static function isRequiredWhenActive($value, ObjectModelCore $object): bool
+    {
+        $isActive = property_exists($object, 'active') ? $object->active : true;
+
+        return !$isActive || !empty($value);
+    }
+
+    public static function defaultLanguageRequiredWhenActive($value, ?int $langId, ObjectModelCore $object): bool
+    {
+        static $defaultLangId = null;
+        if (null === $defaultLangId) {
+            $defaultLangId = (int) Configuration::get('PS_LANG_DEFAULT');
+        }
+
+        $isActive = property_exists($object, 'active') ? $object->active : true;
+
+        return !$isActive || !empty($value) || $langId !== $defaultLangId;
+    }
+
     /**
      * Check if enable_insecure_rsh exists in
      * this PHP version otherwise disable the

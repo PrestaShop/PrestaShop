@@ -7,14 +7,10 @@ import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {createAccountTest} from '@commonTests/FO/classic/account';
 
 // Import pages
-// Import BO pages
 // Import FO pages
 import {bestSalesPage} from '@pages/FO/classic/bestSales';
 import {deliveryPage} from '@pages/FO/classic/delivery';
 import {legalNoticePage} from '@pages/FO/classic/legalNotice';
-import {createAccountPage} from '@pages/FO/classic/myAccount/add';
-import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
-import {addressesPage} from '@pages/FO/classic/myAccount/addresses';
 import {creditSlipPage} from '@pages/FO/classic/myAccount/creditSlips';
 import {accountIdentityPage} from '@pages/FO/classic/myAccount/identity';
 import {guestOrderTrackingPage} from '@pages/FO/classic/orderTracking/guestOrderTracking';
@@ -30,8 +26,11 @@ import {
   FakerCustomer,
   foClassicAboutUsPage,
   foClassicContactUsPage,
+  foClassicCreateAccountPage,
   foClassicHomePage,
   foClassicLoginPage,
+  foClassicMyAddressesPage,
+  foClassicMyAddressesCreatePage,
   foClassicMyOrderHistoryPage,
   foClassicMyWishlistsPage,
   foClassicSitemapPage,
@@ -135,7 +134,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
     [
       {linkSelector: 'Order tracking', pageTitle: guestOrderTrackingPage.pageTitle},
       {linkSelector: 'Sign in', pageTitle: foClassicLoginPage.pageTitle},
-      {linkSelector: 'Create account', pageTitle: createAccountPage.formTitle},
+      {linkSelector: 'Create account', pageTitle: foClassicCreateAccountPage.formTitle},
     ].forEach((args, index: number) => {
       it(`should check '${args.linkSelector}' footer links`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkYourAccountFooterLinks1${index}`, baseContext);
@@ -144,7 +143,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
         await foClassicHomePage.goToFooterLink(page, args.linkSelector);
 
         if (args.linkSelector === 'Create account') {
-          pageTitle = await createAccountPage.getHeaderTitle(page);
+          pageTitle = await foClassicCreateAccountPage.getHeaderTitle(page);
         } else {
           pageTitle = await foClassicHomePage.getPageTitle(page);
         }
@@ -166,7 +165,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
 
     [
       {linkSelector: 'Information', pageTitle: accountIdentityPage.pageTitle},
-      {linkSelector: 'Addresses', pageTitle: addressesPage.pageTitle},
+      {linkSelector: 'Addresses', pageTitle: foClassicMyAddressesPage.pageTitle},
       {linkSelector: 'Orders', pageTitle: foClassicMyOrderHistoryPage.pageTitle},
       {linkSelector: 'Credit slips', pageTitle: creditSlipPage.pageTitle},
       {linkSelector: 'Wishlist', pageTitle: foClassicMyWishlistsPage.pageTitle},
@@ -204,7 +203,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
 
     [
       {linkSelector: 'Information', pageTitle: accountIdentityPage.pageTitle},
-      {linkSelector: 'Add first address', pageTitle: addAddressPage.pageTitle},
+      {linkSelector: 'Add first address', pageTitle: foClassicMyAddressesCreatePage.pageTitle},
       {linkSelector: 'Orders', pageTitle: foClassicMyOrderHistoryPage.pageTitle},
       {linkSelector: 'Credit slips', pageTitle: creditSlipPage.pageTitle},
       {linkSelector: 'Wishlist', pageTitle: foClassicMyWishlistsPage.pageTitle},

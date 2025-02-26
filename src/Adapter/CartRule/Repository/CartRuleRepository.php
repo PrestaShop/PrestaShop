@@ -43,6 +43,10 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
+/**
+ * @deprecated in favor of DiscountRepository this one is kept until we probably migrate all to the new Discount domain
+ *  and clean this namespace
+ */
 class CartRuleRepository extends AbstractObjectModelRepository
 {
     public function __construct(

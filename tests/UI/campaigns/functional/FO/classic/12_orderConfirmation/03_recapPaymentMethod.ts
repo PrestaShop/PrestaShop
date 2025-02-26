@@ -1,8 +1,6 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
-// Import FO pages
-import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 import {
   boDashboardPage,
   boLoginPage,
@@ -16,13 +14,12 @@ import {
   foClassicCheckoutPage,
   foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
+  foClassicModalBlockCartPage,
   foClassicModalQuickViewPage,
   foClassicSearchResultsPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 // context
 const baseContext: string = 'functional_FO_classic_orderConfirmation_recapPaymentMethod';
@@ -75,7 +72,7 @@ describe('FO - Order confirmation : Order details and totals - Recap of payment 
       await foClassicSearchResultsPage.quickViewProduct(page, 1);
 
       await foClassicModalQuickViewPage.addToCartByQuickView(page);
-      await blockCartModal.proceedToCheckout(page);
+      await foClassicModalBlockCartPage.proceedToCheckout(page);
 
       const pageTitle = await foClassicCartPage.getPageTitle(page);
       expect(pageTitle).to.equal(foClassicCartPage.pageTitle);

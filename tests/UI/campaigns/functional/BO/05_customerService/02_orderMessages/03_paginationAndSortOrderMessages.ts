@@ -1,15 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import addOrderMessagePage from '@pages/BO/customerService/orderMessages/add';
-
 import {expect} from 'chai';
 
 import {
   boDashboardPage,
   boLoginPage,
   boOrderMessagesPage,
+  boOrderMessagesCreatePage,
   type BrowserContext,
   FakerOrderMessage,
   type Page,
@@ -83,14 +79,14 @@ describe('BO - Customer Service - Order Messages : Pagination and sort order mes
 
         await boOrderMessagesPage.goToAddNewOrderMessagePage(page);
 
-        const pageTitle = await addOrderMessagePage.getPageTitle(page);
-        expect(pageTitle).to.contains(addOrderMessagePage.pageTitle);
+        const pageTitle = await boOrderMessagesCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrderMessagesCreatePage.pageTitle);
       });
 
       it(`should create order message n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createOrderMessage${index}`, baseContext);
 
-        const textResult = await addOrderMessagePage.addEditOrderMessage(page, createOrderMessageData);
+        const textResult = await boOrderMessagesCreatePage.addEditOrderMessage(page, createOrderMessageData);
         expect(textResult).to.equal(boOrderMessagesPage.successfulCreationMessage);
       });
 

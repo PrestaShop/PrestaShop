@@ -1,14 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import FO pages
-import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
-
 import {expect} from 'chai';
+
 import {
   type BrowserContext,
   foClassicCartPage,
   foClassicHomePage,
+  foClassicModalBlockCartPage,
   foClassicModalQuickViewPage,
   foClassicProductPage,
   type Page,
@@ -46,17 +43,17 @@ describe('FO - cart : Continue shopping / Proceed to checkout / Close', async ()
     await foClassicHomePage.quickViewProduct(page, 1);
     await foClassicModalQuickViewPage.setQuantityAndAddToCart(page, 2);
 
-    const isBlockCartModal = await blockCartModal.isBlockCartModalVisible(page);
+    const isBlockCartModal = await foClassicModalBlockCartPage.isBlockCartModalVisible(page);
     expect(isBlockCartModal).to.equal(true);
 
-    const successMessage = await blockCartModal.getBlockCartModalTitle(page);
+    const successMessage = await foClassicModalBlockCartPage.getBlockCartModalTitle(page);
     expect(successMessage).to.contains(foClassicHomePage.successAddToCartMessage);
   });
 
   it('should click on continue shopping button', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'continueShopping', baseContext);
 
-    const isModalNotVisible = await blockCartModal.continueShopping(page);
+    const isModalNotVisible = await foClassicModalBlockCartPage.continueShopping(page);
     expect(isModalNotVisible).to.equal(true);
   });
 
@@ -66,14 +63,14 @@ describe('FO - cart : Continue shopping / Proceed to checkout / Close', async ()
     await foClassicHomePage.goToProductPage(page, 2);
     await foClassicProductPage.clickOnAddToCartButton(page);
 
-    const successMessage = await blockCartModal.getBlockCartModalTitle(page);
+    const successMessage = await foClassicModalBlockCartPage.getBlockCartModalTitle(page);
     expect(successMessage).to.contains(foClassicHomePage.successAddToCartMessage);
   });
 
   it('should close the blockCart modal', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeBlockCartModal', baseContext);
 
-    const isQuickViewModalClosed = await blockCartModal.closeBlockCartModal(page);
+    const isQuickViewModalClosed = await foClassicModalBlockCartPage.closeBlockCartModal(page);
     expect(isQuickViewModalClosed).to.equal(true);
   });
 
@@ -82,14 +79,14 @@ describe('FO - cart : Continue shopping / Proceed to checkout / Close', async ()
 
     await foClassicProductPage.clickOnAddToCartButton(page);
 
-    const successMessage = await blockCartModal.getBlockCartModalTitle(page);
+    const successMessage = await foClassicModalBlockCartPage.getBlockCartModalTitle(page);
     expect(successMessage).to.contains(foClassicHomePage.successAddToCartMessage);
   });
 
   it('should close the blockCart modal by clicking outside the modal', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeBlockCartModal2', baseContext);
 
-    const isQuickViewModalClosed = await blockCartModal.closeBlockCartModal(page, true);
+    const isQuickViewModalClosed = await foClassicModalBlockCartPage.closeBlockCartModal(page, true);
     expect(isQuickViewModalClosed).to.equal(true);
   });
 
@@ -98,14 +95,14 @@ describe('FO - cart : Continue shopping / Proceed to checkout / Close', async ()
 
     await foClassicProductPage.clickOnAddToCartButton(page);
 
-    const successMessage = await blockCartModal.getBlockCartModalTitle(page);
+    const successMessage = await foClassicModalBlockCartPage.getBlockCartModalTitle(page);
     expect(successMessage).to.contains(foClassicHomePage.successAddToCartMessage);
   });
 
   it('should click on proceed to checkout button', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckout', baseContext);
 
-    await blockCartModal.proceedToCheckout(page);
+    await foClassicModalBlockCartPage.proceedToCheckout(page);
 
     const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
     expect(notificationsNumber).to.equal(5);

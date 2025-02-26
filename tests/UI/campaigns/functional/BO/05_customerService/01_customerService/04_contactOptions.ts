@@ -1,9 +1,9 @@
 import testContext from '@utils/testContext';
-import viewPage from '@pages/BO/customerService/customerService/view';
 import {expect} from 'chai';
 
 import {
   boCustomerServicePage,
+  boCustomerServiceViewPage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -113,14 +113,14 @@ describe('BO - Customer Service : Contact options', async () => {
       await boCustomerServicePage.reloadPage(page);
       await boCustomerServicePage.goToViewMessagePage(page);
 
-      const pageTitle = await viewPage.getPageTitle(page);
-      expect(pageTitle).to.contains(viewPage.pageTitle);
+      const pageTitle = await boCustomerServiceViewPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerServiceViewPage.pageTitle);
     });
 
     it('should check your answer form', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkYourAnswerForm', baseContext);
 
-      const formContent = await viewPage.getYourAnswerFormContent(page);
+      const formContent = await boCustomerServiceViewPage.getYourAnswerFormContent(page);
       expect(formContent).to.contains('Test default message');
     });
 

@@ -1,10 +1,10 @@
 import testContext from '@utils/testContext';
-import addFilePage from '@pages/BO/catalog/files/add';
 import {expect} from 'chai';
 
 import {
   boAdministrationPage,
   boDashboardPage,
+  boFilesCreatePage,
   boFilesPage,
   boLoginPage,
   boProductsPage,
@@ -126,23 +126,23 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
 
       await boFilesPage.goToAddNewFilePage(page);
 
-      const pageTitle = await addFilePage.getPageTitle(page);
-      expect(pageTitle).to.contains(addFilePage.pageTitle);
+      const pageTitle = await boFilesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boFilesCreatePage.pageTitle);
     });
 
     it('should try to upload a file > 2MB and check the error message alert', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createFileAndCheckError', baseContext);
 
-      await addFilePage.createEditFile(page, firstFileData, false);
+      await boFilesCreatePage.createEditFile(page, firstFileData, false);
 
-      const errorAlert = await addFilePage.getTextDanger(page);
+      const errorAlert = await boFilesCreatePage.getTextDanger(page);
       expect(errorAlert).to.equal('Upload error. Please check your server configurations for the maximum upload size allowed.');
     });
 
     it('should upload a file < 2MB and check the validation message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createFileAndCheckSuccess', baseContext);
 
-      const result = await addFilePage.createEditFile(page, secondFileData);
+      const result = await boFilesCreatePage.createEditFile(page, secondFileData);
       expect(result).to.equal(boFilesPage.successfulCreationMessage);
     });
 

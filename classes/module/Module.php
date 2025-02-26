@@ -3413,16 +3413,20 @@ abstract class ModuleCore implements ModuleInterface
         } while ($splDir->getRealPath() !== $directoryOverride);
     }
 
-    private function getWidgetHooks()
+    private function getWidgetHooks($existing_hook_ids = [])
     {
         $hooks = array_values(Hook::getHooks(false, true));
         $registeredHookList = Hook::getHookModuleList();
 
-        foreach ($hooks as &$hook) {
-            $hook['registered'] = !empty($registeredHookList[$hook['id_hook']][$this->id]);
-        }
+        return array_filter(array_map(function ($hook) use ($registeredHookList, $existing_hook_ids) {
+            if (!in_array($hook['id_hook'], $existing_hook_ids)) {
+                $hook['registered'] = !empty($registeredHookList[$hook['id_hook']][$this->id]);
 
-        return $hooks;
+                return $hook;
+            }
+
+            return null;
+        }, $hooks));
     }
 
     /**
@@ -3450,7 +3454,7 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         if ($this instanceof WidgetInterface) {
-            $possible_hooks_list = array_merge($this->getWidgetHooks(), $possible_hooks_list);
+            $possible_hooks_list = array_merge($this->getWidgetHooks(array_column($possible_hooks_list, 'id_hook')), $possible_hooks_list);
             $name_column = array_column($possible_hooks_list, 'name');
             array_multisort($name_column, SORT_ASC, $possible_hooks_list);
         }

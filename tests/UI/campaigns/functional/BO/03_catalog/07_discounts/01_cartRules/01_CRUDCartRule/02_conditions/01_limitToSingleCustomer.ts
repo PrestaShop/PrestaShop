@@ -4,10 +4,6 @@ import {expect} from 'chai';
 // Import commonTests
 import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 
-// Import FO pages
-import {vouchersPage as foVouchersPage} from '@pages/FO/classic/myAccount/vouchers';
-import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
-
 import {
   boCartRulesPage,
   boCartRulesCreatePage,
@@ -19,8 +15,10 @@ import {
   foClassicCartPage,
   foClassicHomePage,
   foClassicLoginPage,
+  foClassicModalBlockCartPage,
   foClassicModalQuickViewPage,
   foClassicMyAccountPage,
+  foClassicMyVouchersPage,
   type Page,
   utilsDate,
   utilsPlaywright,
@@ -141,8 +139,8 @@ describe('BO - Catalog - Cart rules : Limit to single customer', async () => {
       await foClassicHomePage.goToMyAccountPage(page);
       await foClassicMyAccountPage.goToVouchersPage(page);
 
-      const pageHeaderTitle = await foVouchersPage.getPageTitle(page);
-      expect(pageHeaderTitle).to.equal(foVouchersPage.pageTitle);
+      const pageHeaderTitle = await foClassicMyVouchersPage.getPageTitle(page);
+      expect(pageHeaderTitle).to.equal(foClassicMyVouchersPage.pageTitle);
     });
 
     [
@@ -157,7 +155,7 @@ describe('BO - Catalog - Cart rules : Limit to single customer', async () => {
       it(`should check the voucher ${cartRule.args.column}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkVoucher${index}`, baseContext);
 
-        const cartRuleTextColumn = await foVouchersPage.getTextColumnFromTableVouchers(page, 1, cartRule.args.column);
+        const cartRuleTextColumn = await foClassicMyVouchersPage.getTextColumnFromTableVouchers(page, 1, cartRule.args.column);
         expect(cartRuleTextColumn).to.equal(cartRule.args.value);
       });
     });
@@ -165,7 +163,7 @@ describe('BO - Catalog - Cart rules : Limit to single customer', async () => {
     it('should sign out', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signOut', baseContext);
 
-      await foVouchersPage.logout(page);
+      await foClassicMyVouchersPage.logout(page);
 
       const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected!').to.eq(false);
@@ -185,7 +183,7 @@ describe('BO - Catalog - Cart rules : Limit to single customer', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addFirstProductToCart', baseContext);
 
       await foClassicModalQuickViewPage.addToCartByQuickView(page);
-      await blockCartModal.proceedToCheckout(page);
+      await foClassicModalBlockCartPage.proceedToCheckout(page);
 
       const pageTitle = await foClassicCartPage.getPageTitle(page);
       expect(pageTitle).to.eq(foClassicCartPage.pageTitle);

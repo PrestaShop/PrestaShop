@@ -1,9 +1,9 @@
 import testContext from '@utils/testContext';
-import viewPage from '@pages/BO/customerService/customerService/view';
 import {expect} from 'chai';
 
 import {
   boCustomerServicePage,
+  boCustomerServiceViewPage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -111,17 +111,17 @@ describe('BO - Customer Service : View message', async () => {
 
       await boCustomerServicePage.goToViewMessagePage(page);
 
-      const pageTitle = await viewPage.getPageTitle(page);
-      expect(pageTitle).to.contains(viewPage.pageTitle);
+      const pageTitle = await boCustomerServiceViewPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerServiceViewPage.pageTitle);
     });
 
     it('should check the thread form', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkThreadForm', baseContext);
 
-      const badgeNumber = await viewPage.getBadgeNumber(page);
+      const badgeNumber = await boCustomerServiceViewPage.getBadgeNumber(page);
       expect(badgeNumber).to.contains(idCustomer);
 
-      const text = await viewPage.getCustomerMessage(page);
+      const text = await boCustomerServiceViewPage.getCustomerMessage(page);
       expect(text).to.contains(contactUsData.emailAddress);
       expect(text).to.contains(contactUsData.subject);
       expect(text).to.contains(`${messageDateTime.substring(0, 10)} - ${messageDateTime.substring(11, 16)}`);
@@ -133,18 +133,18 @@ describe('BO - Customer Service : View message', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkYourAnswerForm', baseContext);
 
       // Check that title has email on it
-      const titleContent = await viewPage.getYourAnswerFormTitle(page);
+      const titleContent = await boCustomerServiceViewPage.getYourAnswerFormTitle(page);
       expect(titleContent).to.contains(`Your answer to ${contactUsData.emailAddress}`);
 
       // Check form content
-      const formContent = await viewPage.getYourAnswerFormContent(page);
+      const formContent = await boCustomerServiceViewPage.getYourAnswerFormContent(page);
       expect(formContent).to.contains('Dear Customer, Regards, Customer service');
     });
 
     it('should check orders and messages timeline', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrdersAndMessagesForm', baseContext);
 
-      const text = await viewPage.getOrdersAndMessagesTimeline(page);
+      const text = await boCustomerServiceViewPage.getOrdersAndMessagesTimeline(page);
       expect(text).to.contains('Orders and messages timeline');
       expect(text).to.contains(`${messageDateTime.substring(0, 10)} - ${messageDateTime.substring(11, 16)}`);
       expect(text).to.contains(`Message to: ${contactUsData.subject}`);

@@ -1,15 +1,12 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import FO pages
-import {createAccountPage} from '@pages/FO/classic/myAccount/add';
-
 import {expect} from 'chai';
+
 import {
   boCustomerSettingsPage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
+  foClassicCreateAccountPage,
   foClassicHomePage,
   foClassicLoginPage,
   type Page,
@@ -98,7 +95,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable partner offe
       await foClassicLoginPage.goToCreateAccountPage(page);
 
       // Check partner offer
-      const isPartnerOfferVisible = await createAccountPage.isPartnerOfferVisible(page);
+      const isPartnerOfferVisible = await foClassicCreateAccountPage.isPartnerOfferVisible(page);
       expect(isPartnerOfferVisible).to.be.equal(test.args.enable);
     });
 
@@ -106,7 +103,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable partner offe
       await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index}`, baseContext);
 
       // Go back to BO
-      page = await createAccountPage.closePage(browserContext, page, 0);
+      page = await foClassicCreateAccountPage.closePage(browserContext, page, 0);
 
       const pageTitle = await boCustomerSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(boCustomerSettingsPage.pageTitle);

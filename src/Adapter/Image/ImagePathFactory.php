@@ -45,12 +45,12 @@ class ImagePathFactory
     }
 
     /**
-     * @param int $entityId
+     * @param int|string $imageName
      *
      * @return string
      */
-    public function getPath(int $entityId): string
+    public function getPath($imageName): string
     {
-        return sprintf('%s/%s.jpg', $this->pathToBaseDir, $entityId);
+        return sprintf('%s/%s.jpg', $this->pathToBaseDir, $imageName);
     }
 }

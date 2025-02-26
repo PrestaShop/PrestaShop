@@ -110,7 +110,7 @@
   },
   "homepage": "https://github.com/PrestaShop/PrestaShop/tree/develop/tests/UI#readme",
   "dependencies": {
-    "@faker-js/faker": "^9.4.0",
+    "@faker-js/faker": "^9.5.0",
     "@prestashop-core/ui-testing": "https://github.com/PrestaShop/ui-testing-library#main",
     "chai": "^4.5.0",
     "chai-string": "^1.5.0",
@@ -124,8 +124,8 @@
     "@types/chai-string": "^1.4.5",
     "@types/mocha": "^10.0.10",
     "@types/mochawesome": "^6.2.4",
-    "@typescript-eslint/eslint-plugin": "^8.23.0",
-    "@typescript-eslint/parser": "^8.23.0",
+    "@typescript-eslint/eslint-plugin": "^8.24.1",
+    "@typescript-eslint/parser": "^8.24.1",
     "babel-eslint": "^10.1.0",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
@@ -134,7 +134,7 @@
     "eslint-plugin-import": "^2.31.0",
     "jsdoc-to-markdown": "^9.0.5",
     "mochawesome-merge": "^4.3.0",
-    "ts-mocha": "^10.0.0",
+    "ts-mocha": "^11.1.0",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.3"
   }

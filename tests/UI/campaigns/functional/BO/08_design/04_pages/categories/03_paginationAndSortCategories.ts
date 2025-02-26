@@ -1,12 +1,9 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import pagesPage from '@pages/BO/design/pages';
-import addPageCategoryPage from '@pages/BO/design/pages/pageCategory/add';
-
 import {expect} from 'chai';
+
 import {
+  boCMSPageCategoriesCreatePage,
+  boCMSPagesPage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -60,16 +57,16 @@ describe('BO - Design - Pages : Pagination and sort categories table', async () 
       boDashboardPage.designParentLink,
       boDashboardPage.pagesLink,
     );
-    await pagesPage.closeSfToolBar(page);
+    await boCMSPagesPage.closeSfToolBar(page);
 
-    const pageTitle = await pagesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(pagesPage.pageTitle);
+    const pageTitle = await boCMSPagesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCMSPagesPage.pageTitle);
   });
 
   it('should reset all filters and get number of categories in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfCategories = await pagesPage.resetAndGetNumberOfLines(page, categoriesTableName);
+    numberOfCategories = await boCMSPagesPage.resetAndGetNumberOfLines(page, categoriesTableName);
     if (numberOfCategories !== 0) expect(numberOfCategories).to.be.above(0);
   });
 
@@ -82,32 +79,32 @@ describe('BO - Design - Pages : Pagination and sort categories table', async () 
       it('should go to add new page category', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewPageCategoryPage${index}`, baseContext);
 
-        await pagesPage.goToAddNewPageCategory(page);
+        await boCMSPagesPage.goToAddNewPageCategory(page);
 
-        const pageTitle = await addPageCategoryPage.getPageTitle(page);
-        expect(pageTitle).to.contains(addPageCategoryPage.pageTitleCreate);
+        const pageTitle = await boCMSPageCategoriesCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCMSPageCategoriesCreatePage.pageTitleCreate);
       });
 
       it(`should create category n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `CreatePageCategory${index}`, baseContext);
 
-        const textResult = await addPageCategoryPage.createEditPageCategory(page, createCategoryData);
-        expect(textResult).to.equal(pagesPage.successfulCreationMessage);
+        const textResult = await boCMSPageCategoriesCreatePage.createEditPageCategory(page, createCategoryData);
+        expect(textResult).to.equal(boCMSPagesPage.successfulCreationMessage);
       });
 
       it('should go back to categories list', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goBackToCategories${index}`, baseContext);
 
-        await pagesPage.backToList(page);
+        await boCMSPagesPage.backToList(page);
 
-        const pageTitle = await pagesPage.getPageTitle(page);
-        expect(pageTitle).to.contains(pagesPage.pageTitle);
+        const pageTitle = await boCMSPagesPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCMSPagesPage.pageTitle);
       });
 
       it('should check the categories number', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkCategoriesNumber${index}`, baseContext);
 
-        const numberOfCategoriesAfterCreation = await pagesPage.getNumberOfElementInGrid(
+        const numberOfCategoriesAfterCreation = await boCMSPagesPage.getNumberOfElementInGrid(
           page,
           categoriesTableName,
         );
@@ -121,28 +118,28 @@ describe('BO - Design - Pages : Pagination and sort categories table', async () 
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo10', baseContext);
 
-      const paginationNumber = await pagesPage.selectCategoryPaginationLimit(page, 10);
+      const paginationNumber = await boCMSPagesPage.selectCategoryPaginationLimit(page, 10);
       expect(paginationNumber).to.contain('(page 1 / 2)');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await pagesPage.paginationCategoryNext(page);
+      const paginationNumber = await boCMSPagesPage.paginationCategoryNext(page);
       expect(paginationNumber).to.contain('(page 2 / 2)');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await pagesPage.paginationCategoryPrevious(page);
+      const paginationNumber = await boCMSPagesPage.paginationCategoryPrevious(page);
       expect(paginationNumber).to.contain('(page 1 / 2)');
     });
 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
-      const paginationNumber = await pagesPage.selectCategoryPaginationLimit(page, 50);
+      const paginationNumber = await boCMSPagesPage.selectCategoryPaginationLimit(page, 50);
       expect(paginationNumber).to.contain('(page 1 / 1)');
     });
   });
@@ -186,13 +183,13 @@ describe('BO - Design - Pages : Pagination and sort categories table', async () 
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await pagesPage.getAllRowsColumnContentTableCmsPageCategory(
+        const nonSortedTable = await boCMSPagesPage.getAllRowsColumnContentTableCmsPageCategory(
           page,
           test.args.sortBy,
         );
-        await pagesPage.sortTableCmsPageCategory(page, test.args.sortBy, test.args.sortDirection);
+        await boCMSPagesPage.sortTableCmsPageCategory(page, test.args.sortBy, test.args.sortDirection);
 
-        const sortedTable = await pagesPage.getAllRowsColumnContentTableCmsPageCategory(
+        const sortedTable = await boCMSPagesPage.getAllRowsColumnContentTableCmsPageCategory(
           page,
           test.args.sortBy,
         );
@@ -226,23 +223,23 @@ describe('BO - Design - Pages : Pagination and sort categories table', async () 
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
-      await pagesPage.filterTable(page, categoriesTableName, 'input', 'name', 'todelete');
+      await boCMSPagesPage.filterTable(page, categoriesTableName, 'input', 'name', 'todelete');
 
-      const textResult = await pagesPage.getTextColumnFromTableCmsPageCategory(page, 1, 'name');
+      const textResult = await boCMSPagesPage.getTextColumnFromTableCmsPageCategory(page, 1, 'name');
       expect(textResult).to.contains('todelete');
     });
 
     it('should delete categories', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCategories', baseContext);
 
-      const deleteTextResult = await pagesPage.deleteWithBulkActions(page, categoriesTableName);
-      expect(deleteTextResult).to.be.equal(pagesPage.successfulMultiDeleteMessage);
+      const deleteTextResult = await boCMSPagesPage.deleteWithBulkActions(page, categoriesTableName);
+      expect(deleteTextResult).to.be.equal(boCMSPagesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
-      const numberOfCategoriesAfterFilter = await pagesPage.resetAndGetNumberOfLines(
+      const numberOfCategoriesAfterFilter = await boCMSPagesPage.resetAndGetNumberOfLines(
         page,
         categoriesTableName,
       );

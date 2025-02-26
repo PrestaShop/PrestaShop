@@ -1,14 +1,9 @@
-// Import utils
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-// BO pages
-import customerServiceMessageViewPage from '@pages/BO/customerService/customerService/view';
-// FO pages
-import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
-
 import {
   boCustomerServicePage,
+  boCustomerServiceViewPage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -22,6 +17,7 @@ import {
   foClassicContactUsPage,
   foClassicHomePage,
   foClassicLoginPage,
+  foClassicModalBlockCartPage,
   foClassicModalQuickViewPage,
   foClassicMyAccountPage,
   type Page,
@@ -113,7 +109,7 @@ describe('FO - Order confirmation : Contact us', async () => {
 
       await foClassicHomePage.quickViewProduct(page, 1);
       await foClassicModalQuickViewPage.addToCartByQuickView(page);
-      await blockCartModal.proceedToCheckout(page);
+      await foClassicModalBlockCartPage.proceedToCheckout(page);
 
       const pageTitle = await foClassicCartPage.getPageTitle(page);
       expect(pageTitle).to.equal(foClassicCartPage.pageTitle);
@@ -236,14 +232,14 @@ describe('FO - Order confirmation : Contact us', async () => {
 
       await boCustomerServicePage.goToViewMessagePage(page);
 
-      const pageTitle = await customerServiceMessageViewPage.getPageTitle(page);
-      expect(pageTitle).to.contains(customerServiceMessageViewPage.pageTitle);
+      const pageTitle = await boCustomerServiceViewPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerServiceViewPage.pageTitle);
     });
 
     it('should check the message content and uploaded file', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkMessageContentAndFile', baseContext);
 
-      const messageContent = await customerServiceMessageViewPage.getCustomerMessage(page);
+      const messageContent = await boCustomerServiceViewPage.getCustomerMessage(page);
       expect(messageContent).to.contains(contactUsData.message);
       expect(messageContent).to.contains('Attachment');
     });

@@ -5,7 +5,6 @@ import newProductsPage from '@pages/FO/hummingbird/newProducts';
 import bestSalesPage from '@pages/FO/hummingbird/bestSales';
 import deliveryPage from '@pages/FO/hummingbird/delivery';
 import legalNoticePage from '@pages/FO/hummingbird/legalNotice';
-import createAccountPage from '@pages/FO/hummingbird/myAccount/add';
 import guestOrderTrackingPage from '@pages/FO/hummingbird/orderTracking/guestOrderTracking';
 import termsAndConditionsOfUsePage from '@pages/FO/hummingbird/termsAndConditionsOfUse';
 import securePaymentPage from '@pages/FO/hummingbird/securePayment';
@@ -19,6 +18,7 @@ import {
   foHummingbirdAboutUsPage,
   foHummingbirdCategoryPage,
   foHummingbirdContactUsPage,
+  foHummingbirdCreateAccountPage,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdProductPage,
@@ -162,7 +162,7 @@ describe('Check FO public pages', async () => {
       [
         {linkSelector: 'Order tracking', pageTitle: guestOrderTrackingPage.pageTitle},
         {linkSelector: 'Sign in', pageTitle: foHummingbirdLoginPage.pageTitle},
-        {linkSelector: 'Create account', pageTitle: createAccountPage.formTitle},
+        {linkSelector: 'Create account', pageTitle: foHummingbirdCreateAccountPage.formTitle},
       ].forEach((args, index: number) => {
         it(`should check '${args.linkSelector}' footer links`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkYourAccountFooterLinks${index}`, baseContext);
@@ -172,7 +172,7 @@ describe('Check FO public pages', async () => {
           let pageTitle: string = '';
 
           if (args.linkSelector === 'Create account') {
-            pageTitle = await createAccountPage.getHeaderTitle(page);
+            pageTitle = await foHummingbirdCreateAccountPage.getHeaderTitle(page);
           } else {
             pageTitle = await foHummingbirdHomePage.getPageTitle(page);
           }

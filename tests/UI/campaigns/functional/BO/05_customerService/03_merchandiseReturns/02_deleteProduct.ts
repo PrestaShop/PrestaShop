@@ -1,10 +1,6 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-// Import pages
-// Import FO pages
-import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
-
 import {
   boDashboardPage,
   boLoginPage,
@@ -21,6 +17,7 @@ import {
   foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
   foClassicLoginPage,
+  foClassicModalBlockCartPage,
   foClassicModalQuickViewPage,
   foClassicMyAccountPage,
   foClassicMyMerchandiseReturnsPage,
@@ -97,17 +94,17 @@ describe('BO - Customer Service - Merchandise Returns : Delete product', async (
       // Add first product to cart by quick view
       await foClassicHomePage.quickViewProduct(page, 1);
       await foClassicModalQuickViewPage.setQuantityAndAddToCart(page, 2);
-      await blockCartModal.continueShopping(page);
+      await foClassicModalBlockCartPage.continueShopping(page);
 
       // Add second product to cart by quick view
       await foClassicHomePage.quickViewProduct(page, 2);
       await foClassicModalQuickViewPage.setQuantityAndAddToCart(page, 2);
-      await blockCartModal.continueShopping(page);
+      await foClassicModalBlockCartPage.continueShopping(page);
 
       // Add third product to cart by quick view
       await foClassicHomePage.quickViewProduct(page, 3);
       await foClassicModalQuickViewPage.setQuantityAndAddToCart(page, 2);
-      await blockCartModal.proceedToCheckout(page);
+      await foClassicModalBlockCartPage.proceedToCheckout(page);
 
       const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(6);

@@ -1,10 +1,9 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
 // Import commonTests
 import {installModule, uninstallModule} from '@commonTests/BO/modules/moduleManager';
 
-import {expect} from 'chai';
 import {
   boDashboardPage,
   boLoginPage,
@@ -18,12 +17,12 @@ import {
   foClassicCheckoutPage,
   foClassicHomePage,
   foClassicLoginPage,
+  foClassicModalBlockCartPage,
   foClassicModalQuickViewPage,
   type Page,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 const baseContext: string = 'modules_ps_cashondelivery_installation_upgradeModule';
 
@@ -229,7 +228,7 @@ describe('Cash on delivery (COD) module: Upgrade module', async () => {
       // Add first product to cart by quick view
       await foClassicHomePage.quickViewProduct(page, 1);
       await foClassicModalQuickViewPage.addToCartByQuickView(page);
-      await blockCartModal.proceedToCheckout(page);
+      await foClassicModalBlockCartPage.proceedToCheckout(page);
 
       const pageTitle = await foClassicCartPage.getPageTitle(page);
       expect(pageTitle).to.eq(foClassicCartPage.pageTitle);
@@ -385,7 +384,7 @@ describe('Cash on delivery (COD) module: Upgrade module', async () => {
       // Add first product to cart by quick view
       await foClassicHomePage.quickViewProduct(page, 1);
       await foClassicModalQuickViewPage.addToCartByQuickView(page);
-      await blockCartModal.proceedToCheckout(page);
+      await foClassicModalBlockCartPage.proceedToCheckout(page);
 
       const pageTitle = await foClassicCartPage.getPageTitle(page);
       expect(pageTitle).to.eq(foClassicCartPage.pageTitle);

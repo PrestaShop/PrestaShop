@@ -5,7 +5,6 @@ import {bestSalesPage} from '@pages/FO/classic/bestSales';
 import {deliveryPage} from '@pages/FO/classic/delivery';
 import {legalNoticePage} from '@pages/FO/classic/legalNotice';
 import {guestOrderTrackingPage} from '@pages/FO/classic/orderTracking/guestOrderTracking';
-import {createAccountPage} from '@pages/FO/classic/myAccount/add';
 import {termsAndConditionsOfUsePage} from '@pages/FO/classic/termsAndConditionsOfUse';
 import {securePaymentPage} from '@pages/FO/classic/securePayment';
 import {storesPage} from '@pages/FO/classic/stores';
@@ -18,6 +17,7 @@ import {
   foClassicAboutUsPage,
   foClassicCategoryPage,
   foClassicContactUsPage,
+  foClassicCreateAccountPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicProductPage,
@@ -157,7 +157,7 @@ describe('Check FO public pages', async () => {
     [
       {linkSelector: 'Order tracking', pageTitle: guestOrderTrackingPage.pageTitle},
       {linkSelector: 'Sign in', pageTitle: foClassicLoginPage.pageTitle},
-      {linkSelector: 'Create account', pageTitle: createAccountPage.formTitle},
+      {linkSelector: 'Create account', pageTitle: foClassicCreateAccountPage.formTitle},
     ].forEach((args, index: number) => {
       it(`should check '${args.linkSelector}' footer links`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkYourAccountFooterLinks${index}`, baseContext);
@@ -167,7 +167,7 @@ describe('Check FO public pages', async () => {
         let pageTitle: string = '';
 
         if (args.linkSelector === 'Create account') {
-          pageTitle = await createAccountPage.getHeaderTitle(page);
+          pageTitle = await foClassicCreateAccountPage.getHeaderTitle(page);
         } else {
           pageTitle = await foClassicHomePage.getPageTitle(page);
         }

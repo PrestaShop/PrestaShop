@@ -1,14 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
-
 import {expect} from 'chai';
+
 import {
   type BrowserContext,
   dataProducts,
   foClassicHomePage,
+  foClassicModalBlockCartPage,
   foClassicModalQuickViewPage,
   foClassicSearchResultsPage,
   type Page,
@@ -83,14 +80,14 @@ describe('FO - Navigation and display : Quick view products', async () => {
 
       await foClassicModalQuickViewPage.addToCartByQuickView(page);
 
-      const isVisible = await blockCartModal.isBlockCartModalVisible(page);
+      const isVisible = await foClassicModalBlockCartPage.isBlockCartModalVisible(page);
       expect(isVisible).to.eq(true);
     });
 
     it('should click on continue shopping button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'continueShopping', baseContext);
 
-      const isModalNotVisible = await blockCartModal.continueShopping(page);
+      const isModalNotVisible = await foClassicModalBlockCartPage.continueShopping(page);
       expect(isModalNotVisible).to.eq(true);
     });
   });

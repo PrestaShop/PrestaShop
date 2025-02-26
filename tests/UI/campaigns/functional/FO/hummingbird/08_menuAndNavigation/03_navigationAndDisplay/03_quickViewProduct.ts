@@ -1,17 +1,13 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
-// Import common tests
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
-// Import pages
-import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
-
-import {expect} from 'chai';
 import {
   type BrowserContext,
   dataProducts,
   foHummingbirdHomePage,
+  foHummingbirdModalBlockCartPage,
   foHummingbirdModalQuickViewPage,
   foHummingbirdSearchResultsPage,
   type Page,
@@ -94,14 +90,14 @@ describe('FO - Navigation and display : Quick view products', async () => {
 
       await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
 
-      const isVisible = await blockCartModal.isBlockCartModalVisible(page);
+      const isVisible = await foHummingbirdModalBlockCartPage.isBlockCartModalVisible(page);
       expect(isVisible).to.equal(true);
     });
 
     it('should click on continue shopping button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'continueShopping', baseContext);
 
-      const isModalNotVisible = await blockCartModal.continueShopping(page);
+      const isModalNotVisible = await foHummingbirdModalBlockCartPage.continueShopping(page);
       expect(isModalNotVisible).to.equal(true);
     });
   });

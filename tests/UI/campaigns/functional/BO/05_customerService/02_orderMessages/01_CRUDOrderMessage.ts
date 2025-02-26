@@ -1,13 +1,11 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-// Import pages
-import addOrderMessagePage from '@pages/BO/customerService/orderMessages/add';
-
 import {
   boDashboardPage,
   boLoginPage,
   boOrderMessagesPage,
+  boOrderMessagesCreatePage,
   type BrowserContext,
   FakerOrderMessage,
   type Page,
@@ -77,14 +75,14 @@ describe('BO - Customer Service - Order Messages : CRUD order message', async ()
 
       await boOrderMessagesPage.goToAddNewOrderMessagePage(page);
 
-      const pageTitle = await addOrderMessagePage.getPageTitle(page);
-      expect(pageTitle).to.contains(addOrderMessagePage.pageTitle);
+      const pageTitle = await boOrderMessagesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrderMessagesCreatePage.pageTitle);
     });
 
     it('should create order message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createOrderMessage', baseContext);
 
-      const result = await addOrderMessagePage.addEditOrderMessage(page, createOrderMessageData);
+      const result = await boOrderMessagesCreatePage.addEditOrderMessage(page, createOrderMessageData);
       expect(result).to.equal(boOrderMessagesPage.successfulCreationMessage);
     });
 
@@ -115,14 +113,14 @@ describe('BO - Customer Service - Order Messages : CRUD order message', async ()
 
       await boOrderMessagesPage.gotoEditOrderMessage(page, 1);
 
-      const pageTitle = await addOrderMessagePage.getPageTitle(page);
-      expect(pageTitle).to.contains(addOrderMessagePage.pageTitleEdit);
+      const pageTitle = await boOrderMessagesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrderMessagesCreatePage.pageTitleEdit);
     });
 
     it('should edit order message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderMessage', baseContext);
 
-      const result = await addOrderMessagePage.addEditOrderMessage(page, editOrderMessageData);
+      const result = await boOrderMessagesCreatePage.addEditOrderMessage(page, editOrderMessageData);
       expect(result).to.equal(boOrderMessagesPage.successfulUpdateMessage);
     });
 

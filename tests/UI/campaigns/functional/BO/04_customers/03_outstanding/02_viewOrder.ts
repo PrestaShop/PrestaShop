@@ -1,18 +1,15 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-// Import commonTests
 import {disableB2BTest, enableB2BTest} from '@commonTests/BO/shopParameters/b2b';
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
-
-// Import pages
-import outstandingPage from '@pages/BO/customers/outstanding';
 
 import {
   boDashboardPage,
   boLoginPage,
   boOrdersPage,
   boOrdersViewBasePage,
+  boOutstandingPage,
   type BrowserContext,
   dataCustomers,
   dataOrderStatuses,
@@ -137,19 +134,19 @@ describe('BO - Customers - Outstanding : View order', async () => {
         boDashboardPage.customersParentLink,
         boDashboardPage.outstandingLink,
       );
-      await outstandingPage.closeSfToolBar(page);
+      await boOutstandingPage.closeSfToolBar(page);
 
-      const pageTitle = await outstandingPage.getPageTitle(page);
-      expect(pageTitle).to.contains(outstandingPage.pageTitle);
+      const pageTitle = await boOutstandingPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOutstandingPage.pageTitle);
     });
 
     it('should reset filter and get the last outstanding ID', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterOutstanding', baseContext);
 
-      await outstandingPage.resetFilter(page);
+      await boOutstandingPage.resetFilter(page);
 
       const outstandingId = parseInt(
-        await outstandingPage.getTextColumn(page, 'id_invoice', 1),
+        await boOutstandingPage.getTextColumn(page, 'id_invoice', 1),
         10,
       );
       expect(outstandingId).to.be.at.least(1);
@@ -158,7 +155,7 @@ describe('BO - Customers - Outstanding : View order', async () => {
     it('should view the Order and check the orderID and the reference', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewOrder', baseContext);
 
-      await outstandingPage.viewOrder(page, 'actions', 1);
+      await boOutstandingPage.viewOrder(page, 'actions', 1);
 
       const outstandingOrderId = await boOrdersViewBasePage.getOrderID(page);
       const outstandingOrderReference = await boOrdersViewBasePage.getOrderReference(page);

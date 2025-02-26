@@ -1,10 +1,7 @@
-// Import utils
+import {expect} from 'chai';
 import testContext from '@utils/testContext';
-
-// Import common tests
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
-import {expect} from 'chai';
 import {
   type BrowserContext,
   dataCategories,
@@ -17,14 +14,13 @@ import {
 
 const baseContext: string = 'functional_FO_hummingbird_menuAndNavigation_navigateInCategories_sideBlockCategories';
 
-describe.skip('FO - Menu and Navigation : Side block categories', async () => {
+describe('FO - Menu and Navigation : Side block categories', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
   // Pre-condition : Install Hummingbird
   enableHummingbird(`${baseContext}_preTest`);
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -73,8 +69,8 @@ describe.skip('FO - Menu and Navigation : Side block categories', async () => {
           const hasBlockCategories = await foHummingbirdCategoryPage.hasBlockCategories(page);
           expect(hasBlockCategories).to.equal(true);
 
-          const numBlockCategories = await foHummingbirdCategoryPage.getNumBlockCategories(page);
-          expect(numBlockCategories).to.equal(arg.parent.children.length);
+          const numBlockCategories = await foHummingbirdCategoryPage.getNumBlockCategories(page, 0);
+          expect(numBlockCategories).to.be.equal(dataCategories.home.children.length);
         });
       }
 
@@ -82,10 +78,20 @@ describe.skip('FO - Menu and Navigation : Side block categories', async () => {
         it(`should click on category '${arg.child.name}' in sideBlock`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToSideBlock${index}`, baseContext);
 
-          await foHummingbirdCategoryPage.clickBlockCategory(page, arg.child!.name);
+          await foHummingbirdCategoryPage.clickBlockCategory(page, arg.child!.name, arg.parent.name);
 
           const pageTitle = await foHummingbirdHomePage.getPageTitle(page);
           expect(pageTitle).to.equal(arg.child!.name);
+        });
+
+        it(`should check category block '${arg.child.name}'`, async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `checkSubCategory${index}`, baseContext);
+
+          const hasBlockCategories = await foHummingbirdCategoryPage.hasBlockCategories(page);
+          expect(hasBlockCategories).to.be.equal(true);
+
+          const numBlockCategories = await foHummingbirdCategoryPage.getNumBlockCategories(page, 0);
+          expect(numBlockCategories).to.be.equal(dataCategories.home.children.length);
         });
       }
     });

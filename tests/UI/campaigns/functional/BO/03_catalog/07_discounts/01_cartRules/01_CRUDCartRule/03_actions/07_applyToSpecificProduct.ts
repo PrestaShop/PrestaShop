@@ -1,12 +1,7 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-// Import commonTests
 import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
-
-// Import pages
-// Import FO pages
-import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
   boCartRulesPage,
@@ -20,6 +15,7 @@ import {
   foClassicCartPage,
   foClassicHomePage,
   foClassicLoginPage,
+  foClassicModalBlockCartPage,
   foClassicModalQuickViewPage,
   foClassicProductPage,
   foClassicSearchResultsPage,
@@ -168,7 +164,7 @@ describe('BO - Catalog - Cart rules : Apply discount to specific product', async
 
       await foClassicModalQuickViewPage.addToCartByQuickView(page);
 
-      const isNotVisible = await blockCartModal.continueShopping(page);
+      const isNotVisible = await foClassicModalBlockCartPage.continueShopping(page);
       expect(isNotVisible).to.equal(true);
     });
 
@@ -185,7 +181,7 @@ describe('BO - Catalog - Cart rules : Apply discount to specific product', async
       await testContext.addContextItem(this, 'testIdentifier', 'addSecondProductToCart', baseContext);
 
       await foClassicModalQuickViewPage.addToCartByQuickView(page);
-      await blockCartModal.proceedToCheckout(page);
+      await foClassicModalBlockCartPage.proceedToCheckout(page);
 
       // Check number of products in cart
       const notificationsNumber = await foClassicHomePage.getCartNotificationsNumber(page);

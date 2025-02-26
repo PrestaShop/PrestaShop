@@ -1,19 +1,15 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import zonesPage from '@pages/BO/international/locations';
+import {expect} from 'chai';
 
 import {
   boDashboardPage,
   boLoginPage,
+  boZonesPages,
   type BrowserContext,
   dataZones,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_international_locations_zones_filterAndQuickEditZones';
 
@@ -54,16 +50,16 @@ describe('BO - International - Zones : Filter and quick edit', async () => {
       boDashboardPage.internationalParentLink,
       boDashboardPage.locationsLink,
     );
-    await zonesPage.closeSfToolBar(page);
+    await boZonesPages.closeSfToolBar(page);
 
-    const pageTitle = await zonesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(zonesPage.pageTitle);
+    const pageTitle = await boZonesPages.getPageTitle(page);
+    expect(pageTitle).to.contains(boZonesPages.pageTitle);
   });
 
   it('should reset all filters and get number of zones in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfZones = await zonesPage.resetAndGetNumberOfLines(page);
+    numberOfZones = await boZonesPages.resetAndGetNumberOfLines(page);
     expect(numberOfZones).to.be.above(0);
   });
 
@@ -97,22 +93,22 @@ describe('BO - International - Zones : Filter and quick edit', async () => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        await zonesPage.filterZones(
+        await boZonesPages.filterZones(
           page,
           test.args.filterType,
           test.args.filterBy,
           test.args.filterValue,
         );
 
-        const numberOfZonesAfterFilter = await zonesPage.getNumberOfElementInGrid(page);
+        const numberOfZonesAfterFilter = await boZonesPages.getNumberOfElementInGrid(page);
         expect(numberOfZonesAfterFilter).to.be.at.most(numberOfZones);
 
         for (let row = 1; row <= numberOfZonesAfterFilter; row++) {
           if (test.args.filterBy === 'active') {
-            const zoneStatus = await zonesPage.getZoneStatus(page, row);
+            const zoneStatus = await boZonesPages.getZoneStatus(page, row);
             expect(zoneStatus).to.equal(test.args.filterValue === '1');
           } else {
-            const textColumn = await zonesPage.getTextColumn(
+            const textColumn = await boZonesPages.getTextColumn(
               page,
               row,
               test.args.filterBy,
@@ -125,7 +121,7 @@ describe('BO - International - Zones : Filter and quick edit', async () => {
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfZonesAfterReset = await zonesPage.resetAndGetNumberOfLines(page);
+        const numberOfZonesAfterReset = await boZonesPages.resetAndGetNumberOfLines(page);
         expect(numberOfZonesAfterReset).to.equal(numberOfZones);
       });
     });
@@ -135,17 +131,17 @@ describe('BO - International - Zones : Filter and quick edit', async () => {
     it(`should filter by name '${dataZones.northAmerica.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
-      await zonesPage.filterZones(
+      await boZonesPages.filterZones(
         page,
         'input',
         'name',
         dataZones.northAmerica.name,
       );
 
-      const numberOfZonesAfterFilter = await zonesPage.getNumberOfElementInGrid(page);
+      const numberOfZonesAfterFilter = await boZonesPages.getNumberOfElementInGrid(page);
       expect(numberOfZonesAfterFilter).to.be.below(numberOfZones);
 
-      const textColumn = await zonesPage.getTextColumn(page, 1, 'name');
+      const textColumn = await boZonesPages.getTextColumn(page, 1, 'name');
       expect(textColumn).to.contains(dataZones.northAmerica.name);
     });
 
@@ -156,13 +152,13 @@ describe('BO - International - Zones : Filter and quick edit', async () => {
       it(`should ${status.args.status} the first zone`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${status.args.status}Zone`, baseContext);
 
-        await zonesPage.setZoneStatus(
+        await boZonesPages.setZoneStatus(
           page,
           1,
           status.args.enable,
         );
 
-        const currentStatus = await zonesPage.getZoneStatus(page, 1);
+        const currentStatus = await boZonesPages.getZoneStatus(page, 1);
         expect(currentStatus).to.be.equal(status.args.enable);
       });
     });
@@ -170,7 +166,7 @@ describe('BO - International - Zones : Filter and quick edit', async () => {
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterQuickEdit', baseContext);
 
-      const numberOfZonesAfterReset = await zonesPage.resetAndGetNumberOfLines(page);
+      const numberOfZonesAfterReset = await boZonesPages.resetAndGetNumberOfLines(page);
       expect(numberOfZonesAfterReset).to.equal(numberOfZones);
     });
   });

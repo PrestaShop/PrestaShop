@@ -50,15 +50,43 @@ class DiscountFeatureContext extends AbstractDomainFeatureContext
      * @param string $discountReference
      * @param TableNode $node
      */
-    public function createFreeShippingDiscountIfNotExists(string $discountReference, TableNode $node): void
+    public function createFreeShippingDiscount(string $discountReference, TableNode $node): void
     {
         $data = $this->localizeByRows($node);
         try {
-            $command = new AddFreeShippingDiscountCommand($data['name']);
+            $command = new AddFreeShippingDiscountCommand();
             $this->createDiscount($discountReference, $data, $command);
         } catch (DiscountConstraintException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @When I create a free shipping discount :discountReference
+     *
+     * @param string $discountReference
+     */
+    public function createFreeShippingDiscountIWithNoParameters(string $discountReference): void
+    {
+        try {
+            $command = new AddFreeShippingDiscountCommand();
+            $this->createDiscount($discountReference, [], $command);
+        } catch (DiscountConstraintException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then I should get error that discount field :field is invalid
+     */
+    public function assertDiscountInvalidField(string $field): void
+    {
+        $errorCode = match ($field) {
+            'name' => DiscountConstraintException::INVALID_NAME,
+            default => null,
+        };
+
+        $this->assertLastErrorIs(DiscountConstraintException::class, $errorCode);
     }
 
     /**
@@ -86,6 +114,9 @@ class DiscountFeatureContext extends AbstractDomainFeatureContext
      */
     protected function createDiscount(string $cartRuleReference, array $data, AddDiscountCommand $command): void
     {
+        if (isset($data['name'])) {
+            $command->setLocalizedNames($data['name']);
+        }
         if (isset($data['highlight'])) {
             $command->setHighlightInCart(PrimitiveUtils::castStringBooleanIntoBoolean($data['highlight']));
         }

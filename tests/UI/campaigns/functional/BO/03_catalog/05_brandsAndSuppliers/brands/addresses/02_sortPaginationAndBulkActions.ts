@@ -1,11 +1,8 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import addBrandAddressPage from '@pages/BO/catalog/brands/addAddress';
-
 import {expect} from 'chai';
+
 import {
+  boBrandAdressesCreatePage,
   boBrandsPage,
   boDashboardPage,
   boLoginPage,
@@ -83,14 +80,14 @@ describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions 
 
         await boBrandsPage.goToAddNewBrandAddressPage(page);
 
-        const pageTitle = await addBrandAddressPage.getPageTitle(page);
-        expect(pageTitle).to.contains(addBrandAddressPage.pageTitle);
+        const pageTitle = await boBrandAdressesCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boBrandAdressesCreatePage.pageTitle);
       });
 
       it(`should create address n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createAddress${index}`, baseContext);
 
-        const result = await addBrandAddressPage.createEditBrandAddress(page, createAddressData);
+        const result = await boBrandAdressesCreatePage.createEditBrandAddress(page, createAddressData);
         expect(result).to.equal(boBrandsPage.successfulCreationMessage);
 
         const numberOfAddressesAfterCreation = await boBrandsPage.getNumberOfElementInGrid(page, tableName);

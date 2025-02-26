@@ -1,12 +1,9 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-// Import pages
-// Import BO pages
-import viewPage from '@pages/BO/customerService/customerService/view';
-
 import {
   boCustomerServicePage,
+  boCustomerServiceViewPage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -166,14 +163,14 @@ describe('FO - Contact us : Add attachment', async () => {
 
     await boCustomerServicePage.goToViewMessagePage(page);
 
-    const pageTitle = await viewPage.getPageTitle(page);
-    expect(pageTitle).to.contains(viewPage.pageTitle);
+    const pageTitle = await boCustomerServiceViewPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCustomerServiceViewPage.pageTitle);
   });
 
   it('should check the thread form', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkThreadForm', baseContext);
 
-    const text = await viewPage.getCustomerMessage(page);
+    const text = await boCustomerServiceViewPage.getCustomerMessage(page);
     expect(text)
       .to.contains(contactUsData.emailAddress)
       .and.to.contains(contactUsData.subject)
@@ -185,7 +182,7 @@ describe('FO - Contact us : Add attachment', async () => {
   it('should check the file attached', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkFileAttached', baseContext);
 
-    const fileExtension = await viewPage.getAttachedFileHref(page);
+    const fileExtension = await boCustomerServiceViewPage.getAttachedFileHref(page);
     expect(fileExtension).to.contains('.png');
   });
 

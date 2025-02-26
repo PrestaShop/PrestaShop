@@ -446,6 +446,7 @@ GitHub contributors:
 - John Aurry
 - John Cocula
 - John Zandbergen
+- JohnPAfr
 - Jonadabe
 - Jonas Erixon
 - Jónatan Núñez
@@ -709,6 +710,7 @@ GitHub contributors:
 - Paul Coudeville
 - Paulo Baptista
 - Pavel Novitsky
+- Pawel Szostok
 - pbirnzain
 - Pedro Câmara
 - Pedro J. Parra
@@ -771,6 +773,7 @@ GitHub contributors:
 - Quentin Montant
 - Quentin MONTANT - KIWIK
 - Quetzacoalt91
+- r.fabiani
 - Racochejl
 - Rafael Cunha
 - Rafał Miłecki
@@ -960,6 +963,7 @@ GitHub contributors:
 - tomek
 - Tony BOTALLA
 - toslan
+- Touxten
 - Travis-CI
 - tucoinfo
 - Tung Dao

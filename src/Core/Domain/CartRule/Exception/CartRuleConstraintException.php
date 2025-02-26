@@ -26,8 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Exception;
 
+use PrestaShop\PrestaShop\Core\Domain\Discount\Exception\DiscountConstraintException;
+
 /**
  * Thrown when validating cart rule's data
+ *
+ * @deprecated is replaced by DiscountConstraintException this exception should be cleaned once the domain has been fully refactored
  */
 class CartRuleConstraintException extends CartRuleException
 {

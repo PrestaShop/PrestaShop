@@ -1,19 +1,15 @@
-// Import utils
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 import {faker} from '@faker-js/faker';
 
-// import common tests
 import {createOrderByCustomerTest, createOrderByGuestTest} from '@commonTests/FO/classic/order';
-
-// Import pages
-import viewOrderMessagePage from '@pages/BO/customerService/orderMessages/add';
 
 import {
   boCustomerServicePage,
   boCustomersViewPage,
   boDashboardPage,
   boLoginPage,
+  boOrderMessagesCreatePage,
   boOrdersPage,
   boOrdersViewBlockTabListPage,
   type BrowserContext,
@@ -231,7 +227,7 @@ describe('BO - Header : Check notifications', async () => {
     it('should click on notifications icon', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNotificationsLink3', baseContext);
 
-      await viewOrderMessagePage.goToDashboardPage(page);
+      await boOrderMessagesCreatePage.goToDashboardPage(page);
 
       const isNotificationsVisible = await boDashboardPage.clickOnNotificationsLink(page);
       expect(isNotificationsVisible).to.eq(true);
@@ -256,7 +252,7 @@ describe('BO - Header : Check notifications', async () => {
     it('should click on customers tab', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnCustomersTab', baseContext);
 
-      await viewOrderMessagePage.goToDashboardPage(page);
+      await boOrderMessagesCreatePage.goToDashboardPage(page);
       await boDashboardPage.clickOnNotificationsLink(page);
       await boDashboardPage.clickOnNotificationsTab(page, 'customers');
 

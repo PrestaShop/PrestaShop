@@ -1,18 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-// Import commonTests
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
-// Import pages
-// BO pages
-import customerServiceMessageViewPage from '@pages/BO/customerService/customerService/view';
-// FO pages
-import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {
   boCustomerServicePage,
+  boCustomerServiceViewPage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -26,6 +19,7 @@ import {
   foHummingbirdContactUsPage,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
+  foHummingbirdModalBlockCartPage,
   foHummingbirdModalQuickViewPage,
   foHummingbirdMyAccountPage,
   type Page,
@@ -120,7 +114,7 @@ describe('FO - Order confirmation : Contact us', async () => {
 
       await foHummingbirdHomePage.quickViewProduct(page, 1);
       await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
-      await blockCartModal.proceedToCheckout(page);
+      await foHummingbirdModalBlockCartPage.proceedToCheckout(page);
 
       const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
       expect(pageTitle).to.equal(foHummingbirdCartPage.pageTitle);
@@ -244,14 +238,14 @@ describe('FO - Order confirmation : Contact us', async () => {
 
       await boCustomerServicePage.goToViewMessagePage(page);
 
-      const pageTitle = await customerServiceMessageViewPage.getPageTitle(page);
-      expect(pageTitle).to.contains(customerServiceMessageViewPage.pageTitle);
+      const pageTitle = await boCustomerServiceViewPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerServiceViewPage.pageTitle);
     });
 
     it('should check the message content and uploaded file', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkMessageContentAndFile', baseContext);
 
-      const messageContent = await customerServiceMessageViewPage.getCustomerMessage(page);
+      const messageContent = await boCustomerServiceViewPage.getCustomerMessage(page);
       expect(messageContent).to.contains(contactUsData.message);
       expect(messageContent).to.contains('Attachment');
     });

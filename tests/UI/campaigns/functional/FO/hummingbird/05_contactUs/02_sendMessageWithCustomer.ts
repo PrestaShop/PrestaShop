@@ -1,13 +1,8 @@
-// Import utils
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-// Import commonTests
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
-// Import pages
-import contactFormPage from '@pages/BO/modules/contactForm';
 
 import {
   boCustomerServicePage,
@@ -24,6 +19,7 @@ import {
   foHummingbirdLoginPage,
   type MailDev,
   type MailDevEmail,
+  modContactFormBoMain,
   type Page,
   utilsFile,
   utilsMail,
@@ -131,22 +127,22 @@ describe('FO - Contact us : Send message from contact us page with customer logg
 
       await boModuleManagerPage.goToConfigurationPage(page, dataModules.contactForm.tag);
 
-      const pageTitle = await contactFormPage.getPageSubtitle(page);
-      expect(pageTitle).to.equal(contactFormPage.pageTitle);
+      const pageTitle = await modContactFormBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.equal(modContactFormBoMain.pageTitle);
     });
 
     it('should enable Send confirmation email to your customers', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableSendConfirmationEmail', baseContext);
 
-      const successMessage = await contactFormPage.setSendConfirmationEmail(page, true);
-      expect(successMessage).to.contains(contactFormPage.successfulUpdateMessage);
+      const successMessage = await modContactFormBoMain.setSendConfirmationEmail(page, true);
+      expect(successMessage).to.contains(modContactFormBoMain.successfulUpdateMessage);
     });
 
     it('should enable Receive customers\' messages by email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableReceiveMessagesByEmail', baseContext);
 
-      const successMessage = await contactFormPage.setReceiveCustomersMessageByEmail(page, true);
-      expect(successMessage).to.contains(contactFormPage.successfulUpdateMessage);
+      const successMessage = await modContactFormBoMain.setReceiveCustomersMessageByEmail(page, true);
+      expect(successMessage).to.contains(modContactFormBoMain.successfulUpdateMessage);
     });
 
     it('should logout from BO', async function () {
@@ -304,22 +300,22 @@ describe('FO - Contact us : Send message from contact us page with customer logg
 
       await boModuleManagerPage.goToConfigurationPage(page, dataModules.contactForm.tag);
 
-      const pageTitle = await contactFormPage.getPageSubtitle(page);
-      expect(pageTitle).to.equal(contactFormPage.pageTitle);
+      const pageTitle = await modContactFormBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.equal(modContactFormBoMain.pageTitle);
     });
 
     it('should disable Send confirmation email to your customers', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableSendConfirmationEmail', baseContext);
 
-      const successMessage = await contactFormPage.setSendConfirmationEmail(page, false);
-      expect(successMessage).to.contains(contactFormPage.successfulUpdateMessage);
+      const successMessage = await modContactFormBoMain.setSendConfirmationEmail(page, false);
+      expect(successMessage).to.contains(modContactFormBoMain.successfulUpdateMessage);
     });
 
     it('should disable Receive customers\' messages by email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableReceiveMessagesByEmail', baseContext);
 
-      const successMessage = await contactFormPage.setReceiveCustomersMessageByEmail(page, false);
-      expect(successMessage).to.contains(contactFormPage.successfulUpdateMessage);
+      const successMessage = await modContactFormBoMain.setReceiveCustomersMessageByEmail(page, false);
+      expect(successMessage).to.contains(modContactFormBoMain.successfulUpdateMessage);
     });
   });
 

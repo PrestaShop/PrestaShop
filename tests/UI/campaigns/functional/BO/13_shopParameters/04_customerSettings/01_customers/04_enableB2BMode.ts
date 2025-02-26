@@ -1,15 +1,12 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import FO pages
-import {createAccountPage} from '@pages/FO/classic/myAccount/add';
-
 import {expect} from 'chai';
+
 import {
   boCustomerSettingsPage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
+  foClassicCreateAccountPage,
   foClassicHomePage,
   foClassicLoginPage,
   type Page,
@@ -99,7 +96,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable B2B mode', a
       await foClassicLoginPage.goToCreateAccountPage(page);
 
       // Check B2B mode
-      const isCompanyInputVisible = await createAccountPage.isCompanyInputVisible(page);
+      const isCompanyInputVisible = await foClassicCreateAccountPage.isCompanyInputVisible(page);
       expect(isCompanyInputVisible).to.be.equal(test.args.enable);
     });
 
@@ -107,7 +104,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable B2B mode', a
       await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index}`, baseContext);
 
       // Go back to BO
-      page = await createAccountPage.closePage(browserContext, page, 0);
+      page = await foClassicCreateAccountPage.closePage(browserContext, page, 0);
 
       const pageTitle = await boCustomerSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(boCustomerSettingsPage.pageTitle);

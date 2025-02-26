@@ -1,12 +1,9 @@
-// Import utils
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-// Import commonTests
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 
 // Import FO pages
-import {createAccountPage} from '@pages/FO/classic/myAccount/add';
 import {gdprPersonalDataPage} from '@pages/FO/classic/myAccount/gdprPersonalData';
 
 import {
@@ -27,6 +24,7 @@ import {
   foClassicCheckoutPage,
   foClassicCheckoutOrderConfirmationPage,
   foClassicContactUsPage,
+  foClassicCreateAccountPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
@@ -122,14 +120,14 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         await foClassicHomePage.goToLoginPage(page);
         await foClassicLoginPage.goToCreateAccountPage(page);
 
-        const pageHeaderTitle = await createAccountPage.getHeaderTitle(page);
-        expect(pageHeaderTitle).to.equal(createAccountPage.formTitle);
+        const pageHeaderTitle = await foClassicCreateAccountPage.getHeaderTitle(page);
+        expect(pageHeaderTitle).to.equal(foClassicCreateAccountPage.formTitle);
       });
 
       it('should create new account', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'createAccount', baseContext);
 
-        await createAccountPage.createAccount(page, customerData);
+        await foClassicCreateAccountPage.createAccount(page, customerData);
 
         const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);
         expect(isCustomerConnected).to.eq(true);

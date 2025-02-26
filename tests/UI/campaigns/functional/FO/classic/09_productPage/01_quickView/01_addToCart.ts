@@ -1,8 +1,5 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
+import {expect} from 'chai';
 
 import {
   type BrowserContext,
@@ -10,14 +7,13 @@ import {
   dataProducts,
   foClassicCartPage,
   foClassicHomePage,
+  foClassicModalBlockCartPage,
   foClassicModalQuickViewPage,
   foClassicSearchResultsPage,
   type Page,
   type ProductAttribute,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_FO_classic_productPage_quickView_addToCart';
 
@@ -79,14 +75,14 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
     await foClassicHomePage.quickViewProduct(page, 1);
     await foClassicModalQuickViewPage.addToCartByQuickView(page);
 
-    const successMessage = await blockCartModal.getBlockCartModalTitle(page);
+    const successMessage = await foClassicModalBlockCartPage.getBlockCartModalTitle(page);
     expect(successMessage).to.contains(foClassicHomePage.successAddToCartMessage);
   });
 
   it('should check product details from cart modal', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkProductDetailsInCartModal', baseContext);
 
-    const result = await blockCartModal.getProductDetailsFromBlockCartModal(page);
+    const result = await foClassicModalBlockCartPage.getProductDetailsFromBlockCartModal(page);
     await Promise.all([
       expect(result.name).to.equal(checkProductDetails.name),
       expect(result.price).to.equal(checkProductDetails.price),
@@ -97,7 +93,7 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
       expect(result.totalTaxIncl).to.equal(checkProductDetails.totalTaxIncl),
     ]);
 
-    const productAttributesFromBlockCart = await blockCartModal.getProductAttributesFromBlockCartModal(page);
+    const productAttributesFromBlockCart = await foClassicModalBlockCartPage.getProductAttributesFromBlockCartModal(page);
     await Promise.all([
       expect(productAttributesFromBlockCart.length).to.equal(2),
       expect(productAttributesFromBlockCart[0].name).to.equal(checkProductDetailsProducts[0].name),
@@ -110,7 +106,7 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
   it('should proceed to checkout and check the cart page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkCartPage', baseContext);
 
-    await blockCartModal.proceedToCheckout(page);
+    await foClassicModalBlockCartPage.proceedToCheckout(page);
 
     const pageTitle = await foClassicCartPage.getPageTitle(page);
     expect(pageTitle).to.equal(foClassicCartPage.pageTitle);

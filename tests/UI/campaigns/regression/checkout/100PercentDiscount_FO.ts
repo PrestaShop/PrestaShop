@@ -2,9 +2,6 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-// Import FO pages
-import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
-
 import {
   boCartRulesPage,
   boCartRulesCreatePage,
@@ -20,6 +17,7 @@ import {
   foClassicCheckoutPage,
   foClassicCheckoutOrderConfirmationPage,
   foClassicHomePage,
+  foClassicModalBlockCartPage,
   foClassicModalQuickViewPage,
   type Page,
   utilsPlaywright,
@@ -157,7 +155,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       await foClassicModalQuickViewPage.addToCartByQuickView(page);
-      await blockCartModal.proceedToCheckout(page);
+      await foClassicModalBlockCartPage.proceedToCheckout(page);
 
       const pageTitle = await foClassicCartPage.getPageTitle(page);
       expect(pageTitle).to.equal(foClassicCartPage.pageTitle);

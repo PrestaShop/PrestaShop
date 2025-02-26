@@ -1,23 +1,19 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import FO pages
-import {createAccountPage as foCreateAccountPage} from '@pages/FO/classic/myAccount/add';
-import {addressesPage} from '@pages/FO/classic/myAccount/addresses';
-import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
+import {expect} from 'chai';
 
 import {
   type BrowserContext,
   FakerAddress,
   FakerCustomer,
+  foClassicCreateAccountPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
+  foClassicMyAddressesPage,
+  foClassicMyAddressesCreatePage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 let browserContext: BrowserContext;
 let page: Page;
@@ -57,14 +53,14 @@ function createAccountTest(customerData: FakerCustomer, baseContext: string = 'c
       await foClassicHomePage.goToLoginPage(page);
       await foClassicLoginPage.goToCreateAccountPage(page);
 
-      const pageHeaderTitle = await foCreateAccountPage.getHeaderTitle(page);
-      expect(pageHeaderTitle).to.equal(foCreateAccountPage.formTitle);
+      const pageHeaderTitle = await foClassicCreateAccountPage.getHeaderTitle(page);
+      expect(pageHeaderTitle).to.equal(foClassicCreateAccountPage.formTitle);
     });
 
     it('should create new account', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createAccount', baseContext);
 
-      await foCreateAccountPage.createAccount(page, customerData);
+      await foClassicCreateAccountPage.createAccount(page, customerData);
 
       const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);
       expect(isCustomerConnected).to.eq(true);
@@ -73,7 +69,7 @@ function createAccountTest(customerData: FakerCustomer, baseContext: string = 'c
     it('should sign out from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFO', baseContext);
 
-      await foCreateAccountPage.goToHomePage(page);
+      await foClassicCreateAccountPage.goToHomePage(page);
       await foClassicHomePage.logout(page);
 
       const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);
@@ -137,34 +133,34 @@ function createAddressTest(
     });
 
     it('should go to \'Addresses\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToaddressesPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goTofoClassicMyAddressesPage', baseContext);
 
       await foClassicMyAccountPage.goToAddressesPage(page);
 
-      const pageHeaderTitle = await addressesPage.getPageTitle(page);
-      expect(pageHeaderTitle).to.include(addressesPage.addressPageTitle);
+      const pageHeaderTitle = await foClassicMyAddressesPage.getPageTitle(page);
+      expect(pageHeaderTitle).to.include(foClassicMyAddressesPage.addressPageTitle);
     });
 
     it('should go to create address page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewAddressPage', baseContext);
 
-      await addressesPage.openNewAddressForm(page);
+      await foClassicMyAddressesPage.openNewAddressForm(page);
 
-      const pageHeaderTitle = await addAddressPage.getHeaderTitle(page);
-      expect(pageHeaderTitle).to.equal(addAddressPage.creationFormTitle);
+      const pageHeaderTitle = await foClassicMyAddressesCreatePage.getHeaderTitle(page);
+      expect(pageHeaderTitle).to.equal(foClassicMyAddressesCreatePage.creationFormTitle);
     });
 
     it('should create address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createAddress', baseContext);
 
-      const textResult = await addAddressPage.setAddress(page, addressData);
-      expect(textResult).to.equal(addressesPage.addAddressSuccessfulMessage);
+      const textResult = await foClassicMyAddressesCreatePage.setAddress(page, addressData);
+      expect(textResult).to.equal(foClassicMyAddressesPage.addAddressSuccessfulMessage);
     });
 
     it('should sign out from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFO', baseContext);
 
-      await addAddressPage.goToHomePage(page);
+      await foClassicMyAddressesCreatePage.goToHomePage(page);
       await foClassicHomePage.logout(page);
 
       const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);

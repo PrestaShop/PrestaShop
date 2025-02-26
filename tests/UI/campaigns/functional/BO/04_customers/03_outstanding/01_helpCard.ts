@@ -1,16 +1,12 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
-// Import commonTests
 import {disableB2BTest, enableB2BTest} from '@commonTests/BO/shopParameters/b2b';
 
-// Import pages
-import outstandingPage from '@pages/BO/customers/outstanding';
-
-import {expect} from 'chai';
 import {
   boDashboardPage,
   boLoginPage,
+  boOutstandingPage,
   type BrowserContext,
   type Page,
   utilsPlaywright,
@@ -64,26 +60,26 @@ describe('BO - Customers - Outstanding : Help card in outstanding page', async (
         boDashboardPage.customersParentLink,
         boDashboardPage.outstandingLink,
       );
-      await outstandingPage.closeSfToolBar(page);
+      await boOutstandingPage.closeSfToolBar(page);
 
-      const pageTitle = await outstandingPage.getPageTitle(page);
-      expect(pageTitle).to.contains(outstandingPage.pageTitle);
+      const pageTitle = await boOutstandingPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOutstandingPage.pageTitle);
     });
 
     it('should open the help side bar and check the document language', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'openHelpSidebar', baseContext);
 
-      const isHelpSidebarVisible = await outstandingPage.openHelpSideBar(page);
+      const isHelpSidebarVisible = await boOutstandingPage.openHelpSideBar(page);
       expect(isHelpSidebarVisible).to.eq(true);
 
-      const documentURL = await outstandingPage.getHelpDocumentURL(page);
+      const documentURL = await boOutstandingPage.getHelpDocumentURL(page);
       expect(documentURL).to.contains('country=en');
     });
 
     it('should close the help side bar', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeHelpSidebar', baseContext);
 
-      const isHelpSidebarNotVisible = await outstandingPage.closeHelpSideBar(page);
+      const isHelpSidebarNotVisible = await boOutstandingPage.closeHelpSideBar(page);
       expect(isHelpSidebarNotVisible).to.eq(true);
     });
   });

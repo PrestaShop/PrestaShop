@@ -63,3 +63,6 @@ jobs:
 
           gh api repos/${{ github.repository }}/issues/$PR_NUMBER/comments \
             -f body="$COMMENT"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}

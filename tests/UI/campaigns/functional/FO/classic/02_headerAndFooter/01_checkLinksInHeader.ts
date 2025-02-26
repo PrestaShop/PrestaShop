@@ -1,8 +1,5 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import FO pages
-import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
+import {expect} from 'chai';
 
 import {
   type BrowserContext,
@@ -11,13 +8,12 @@ import {
   foClassicContactUsPage,
   foClassicHomePage,
   foClassicLoginPage,
+  foClassicModalBlockCartPage,
   foClassicModalQuickViewPage,
   foClassicMyAccountPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_FO_classic_headerAndFooter_checkLinksInHeader';
 
@@ -102,7 +98,7 @@ describe('FO - Header and Footer : Check links in header page', async () => {
     await foClassicModalQuickViewPage.setQuantityAndAddToCart(page, 3);
 
     // Close block cart modal
-    const isQuickViewModalClosed = await blockCartModal.closeBlockCartModal(page);
+    const isQuickViewModalClosed = await foClassicModalBlockCartPage.closeBlockCartModal(page);
     expect(isQuickViewModalClosed).to.eq(true);
   });
 

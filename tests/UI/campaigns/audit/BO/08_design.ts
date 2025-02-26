@@ -3,12 +3,12 @@ import imageSettingsPage from '@pages/BO/design/imageSettings';
 import addImageTypePage from '@pages/BO/design/imageSettings/add';
 import linkWidgetsPage from '@pages/BO/design/linkWidgets';
 import addLinkWidgetPage from '@pages/BO/design/linkWidgets/add';
-import pagesPage from '@pages/BO/design/pages';
 import addPagePage from '@pages/BO/design/pages/add';
-import addPageCategoryPage from '@pages/BO/design/pages/pageCategory/add';
 import testContext from '@utils/testContext';
 
 import {
+  boCMSPageCategoriesCreatePage,
+  boCMSPagesPage,
   boDashboardPage,
   boDesignEmailThemesPage,
   boDesignEmailThemesPreviewPage,
@@ -164,10 +164,10 @@ describe('BO - Design', async () => {
       boDashboardPage.designParentLink,
       boDashboardPage.pagesLink,
     );
-    await pagesPage.closeSfToolBar(page);
+    await boCMSPagesPage.closeSfToolBar(page);
 
-    const pageTitle = await pagesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(pagesPage.pageTitle);
+    const pageTitle = await boCMSPagesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCMSPagesPage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -176,10 +176,10 @@ describe('BO - Design', async () => {
   it('should go to \'Design > Pages > Add new page category\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAddCategory', baseContext);
 
-    await pagesPage.goToAddNewPageCategory(page);
+    await boCMSPagesPage.goToAddNewPageCategory(page);
 
-    const pageTitle = await addPageCategoryPage.getPageTitle(page);
-    expect(pageTitle).to.contains(addPageCategoryPage.pageTitleCreate);
+    const pageTitle = await boCMSPageCategoriesCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCMSPageCategoriesCreatePage.pageTitleCreate);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -188,8 +188,8 @@ describe('BO - Design', async () => {
   it('should go to \'Design > Pages > Add new page\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAddPage', baseContext);
 
-    await addPageCategoryPage.goToPreviousPage(page);
-    await pagesPage.goToAddNewPage(page);
+    await boCMSPageCategoriesCreatePage.goToPreviousPage(page);
+    await boCMSPagesPage.goToAddNewPage(page);
 
     const pageTitle = await addPagePage.getPageTitle(page);
     expect(pageTitle).to.contains(addPagePage.pageTitleCreate);
@@ -201,8 +201,8 @@ describe('BO - Design', async () => {
   it('should go to \'Design > Pages > Edit page\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEditPage', baseContext);
 
-    await addPageCategoryPage.goToPreviousPage(page);
-    await pagesPage.goToEditPage(page, 1);
+    await boCMSPageCategoriesCreatePage.goToPreviousPage(page);
+    await boCMSPagesPage.goToEditPage(page, 1);
 
     const pageTitle = await addPagePage.getPageTitle(page);
     expect(pageTitle).to.contains(addPagePage.editPageTitle(dataCMSPages.delivery.title));

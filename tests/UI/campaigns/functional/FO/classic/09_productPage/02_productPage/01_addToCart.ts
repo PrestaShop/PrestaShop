@@ -1,16 +1,13 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
-
 import {expect} from 'chai';
+
 import {
   type BrowserContext,
   dataProducts,
   foClassicCartPage,
   foClassicCategoryPage,
   foClassicHomePage,
+  foClassicModalBlockCartPage,
   foClassicModalQuickViewPage,
   foClassicProductPage,
   foClassicSearchResultsPage,
@@ -69,7 +66,7 @@ describe('FO - Product page - Product page : Add to cart', async () => {
 
     await foClassicProductPage.addProductToTheCart(page, qtyProductPage, [], null);
 
-    const productDetails = await blockCartModal.getProductDetailsFromBlockCartModal(page);
+    const productDetails = await foClassicModalBlockCartPage.getProductDetailsFromBlockCartModal(page);
     expect(productDetails.quantity).to.equal(qtyProductPage);
     expect(productDetails.name).to.equal(dataProducts.demo_12.name);
   });
@@ -77,7 +74,7 @@ describe('FO - Product page - Product page : Add to cart', async () => {
   it('should click on continue shopping button', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'continueShopping', baseContext);
 
-    const isModalClosed = await blockCartModal.continueShopping(page);
+    const isModalClosed = await foClassicModalBlockCartPage.continueShopping(page);
     expect(isModalClosed).to.equal(true);
   });
 
@@ -114,7 +111,7 @@ describe('FO - Product page - Product page : Add to cart', async () => {
     await foClassicModalQuickViewPage.setQuantity(page, qtyQuickView);
     await foClassicModalQuickViewPage.addToCartByQuickView(page);
 
-    const productDetails = await blockCartModal.getProductDetailsFromBlockCartModal(page);
+    const productDetails = await foClassicModalBlockCartPage.getProductDetailsFromBlockCartModal(page);
     expect(productDetails.quantity).to.equal(qtyQuickView);
     expect(productDetails.name).to.equal(dataProducts.demo_1.name);
   });
@@ -122,7 +119,7 @@ describe('FO - Product page - Product page : Add to cart', async () => {
   it('should proceed to checkout', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckout', baseContext);
 
-    await blockCartModal.proceedToCheckout(page);
+    await foClassicModalBlockCartPage.proceedToCheckout(page);
 
     const pageTitle = await foClassicCartPage.getPageTitle(page);
     expect(pageTitle).to.equal(foClassicCartPage.pageTitle);

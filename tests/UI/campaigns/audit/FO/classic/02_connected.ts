@@ -1,6 +1,4 @@
 import {expect} from 'chai';
-import {addressesPage as foClassicAddressesPage} from '@pages/FO/classic/myAccount/addresses';
-import {addAddressPage as foClassicAddressesCreatePage} from '@pages/FO/classic/myAccount/addAddress';
 import {accountIdentityPage as foClassicAccountIdentityPage} from '@pages/FO/classic/myAccount/identity';
 import {creditSlipPage as foClassicCreditSlipsPage} from '@pages/FO/classic/myAccount/creditSlips';
 import {gdprPersonalDataPage as foClassicGdprPersonalDataPage} from '@pages/FO/classic/myAccount/gdprPersonalData';
@@ -12,6 +10,8 @@ import {
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
+  foClassicMyAddressesPage,
+  foClassicMyAddressesCreatePage,
   foClassicMyOrderDetailsPage,
   foClassicMyOrderHistoryPage,
   foClassicMyWishlistsPage,
@@ -107,8 +107,8 @@ describe('Check FO connected pages', async () => {
     await foClassicAccountIdentityPage.goToMyAccountPage(page);
     await foClassicMyAccountPage.goToAddressesPage(page);
 
-    const pageHeaderTitle = await foClassicAddressesPage.getPageTitle(page);
-    expect(pageHeaderTitle).to.equal(foClassicAddressesPage.pageTitle);
+    const pageHeaderTitle = await foClassicMyAddressesPage.getPageTitle(page);
+    expect(pageHeaderTitle).to.equal(foClassicMyAddressesPage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -117,10 +117,10 @@ describe('Check FO connected pages', async () => {
   it('should go to the "New address" page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToNewAddressPage', baseContext);
 
-    await foClassicAddressesPage.openNewAddressForm(page);
+    await foClassicMyAddressesPage.openNewAddressForm(page);
 
-    const pageHeaderTitle = await foClassicAddressesCreatePage.getHeaderTitle(page);
-    expect(pageHeaderTitle).to.equal(foClassicAddressesCreatePage.creationFormTitle);
+    const pageHeaderTitle = await foClassicMyAddressesCreatePage.getHeaderTitle(page);
+    expect(pageHeaderTitle).to.equal(foClassicMyAddressesCreatePage.creationFormTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);

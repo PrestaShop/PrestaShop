@@ -1,13 +1,8 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
-// Import common tests
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
-// Import FO pages
-import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
-
-import {expect} from 'chai';
 import {
   type BrowserContext,
   dataProducts,
@@ -15,6 +10,7 @@ import {
   foHummingbirdCheckoutPage,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
+  foHummingbirdModalBlockCartPage,
   foHummingbirdModalQuickViewPage,
   foHummingbirdProductPage,
   type Page,
@@ -70,7 +66,7 @@ describe('FO - Checkout : Show details', async () => {
       await foHummingbirdHomePage.quickViewProduct(page, 1);
       await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
 
-      const isModalClosed = await blockCartModal.closeBlockCartModal(page);
+      const isModalClosed = await foHummingbirdModalBlockCartPage.closeBlockCartModal(page);
       expect(isModalClosed).to.eq(true);
     });
 
@@ -80,7 +76,7 @@ describe('FO - Checkout : Show details', async () => {
       await foHummingbirdLoginPage.goToHomePage(page);
       await foHummingbirdHomePage.quickViewProduct(page, 3);
       await foHummingbirdModalQuickViewPage.setQuantityAndAddToCart(page, 2);
-      await blockCartModal.proceedToCheckout(page);
+      await foHummingbirdModalBlockCartPage.proceedToCheckout(page);
 
       const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
       expect(pageTitle).to.equal(foHummingbirdCartPage.pageTitle);

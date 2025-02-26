@@ -1,14 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import FO pages
-import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
-
 import {expect} from 'chai';
+
 import {
   type BrowserContext,
   foClassicCartPage,
   foClassicHomePage,
+  foClassicModalBlockCartPage,
   foClassicModalQuickViewPage,
   type Page,
   utilsPlaywright,
@@ -44,7 +41,7 @@ describe('FO - cart : Change quantity', async () => {
 
     await foClassicHomePage.quickViewProduct(page, 1);
     await foClassicModalQuickViewPage.addToCartByQuickView(page);
-    await blockCartModal.proceedToCheckout(page);
+    await foClassicModalBlockCartPage.proceedToCheckout(page);
 
     const pageTitle = await foClassicCartPage.getPageTitle(page);
     expect(pageTitle).to.eq(foClassicCartPage.pageTitle);

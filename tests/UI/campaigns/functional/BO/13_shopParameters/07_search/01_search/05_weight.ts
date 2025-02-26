@@ -4,7 +4,6 @@ import {bulkDeleteFeaturesTest} from '@commonTests/BO/catalog/features';
 import opsBulkDeleteAttributes from '@commonTests/BO/catalog/attributes';
 import opsBulkDeleteBrands from '@commonTests/BO/catalog/brands';
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
-import boBrandsCreatePage from '@pages/BO/catalog/brands/add';
 import testContext from '@utils/testContext';
 
 import {
@@ -12,6 +11,7 @@ import {
   boAttributesCreatePage,
   boAttributesValueCreatePage,
   boAttributesViewPage,
+  boBrandsCreatePage,
   boBrandsPage,
   boCategoriesPage,
   boCategoriesCreatePage,

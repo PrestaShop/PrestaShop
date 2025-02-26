@@ -1,10 +1,4 @@
 import {expect} from 'chai';
-import addBrandPage from '@pages/BO/catalog/brands/add';
-import addBrandAddressPage from '@pages/BO/catalog/brands/addAddress';
-import viewBrandPage from '@pages/BO/catalog/brands/view';
-import addFilePage from '@pages/BO/catalog/files/add';
-import suppliersPage from '@pages/BO/catalog/suppliers';
-import viewSupplierPage from '@pages/BO/catalog/suppliers/view';
 import testContext from '@utils/testContext';
 
 import {
@@ -12,7 +6,10 @@ import {
   boAttributesCreatePage,
   boAttributesValueCreatePage,
   boAttributesViewPage,
+  boBrandAdressesCreatePage,
+  boBrandsCreatePage,
   boBrandsPage,
+  boBrandsViewPage,
   boCartRulesPage,
   boCartRulesCreatePage,
   boCatalogPriceRulesPage,
@@ -24,6 +21,7 @@ import {
   boFeaturesCreatePage,
   boFeaturesValueCreatePage,
   boFeaturesViewPage,
+  boFilesCreatePage,
   boFilesPage,
   boLoginPage,
   boMonitoringPage,
@@ -31,7 +29,9 @@ import {
   boProductsCreatePage,
   boStockPage,
   boStockMovementsPage,
-  boSuppliersCreate,
+  boSuppliersCreatePage,
+  boSuppliersPage,
+  boSuppliersViewPage,
   type BrowserContext,
   dataAttributes,
   dataCategories,
@@ -318,7 +318,7 @@ describe('BO - Catalog', async () => {
 
     await boBrandsPage.viewBrand(page, 1);
 
-    const pageTitle = await viewBrandPage.getPageTitle(page);
+    const pageTitle = await boBrandsViewPage.getPageTitle(page);
     expect(pageTitle).to.contains('Graphic Corner');
 
     const jsErrors = utilsPlaywright.getJsErrors();
@@ -335,8 +335,8 @@ describe('BO - Catalog', async () => {
     );
     await boBrandsPage.goToEditBrandAddressPage(page, 1);
 
-    const pageTitle = await addBrandPage.getPageTitle(page);
-    expect(pageTitle).to.contains(addBrandPage.pageTitleEdit);
+    const pageTitle = await boBrandsCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boBrandsCreatePage.pageTitleEdit);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -352,8 +352,8 @@ describe('BO - Catalog', async () => {
     );
     await boBrandsPage.goToAddNewBrandPage(page);
 
-    const pageTitle = await addBrandPage.getPageTitle(page);
-    expect(pageTitle).to.contains(addBrandPage.pageTitle);
+    const pageTitle = await boBrandsCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boBrandsCreatePage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -369,8 +369,8 @@ describe('BO - Catalog', async () => {
     );
     await boBrandsPage.goToAddNewBrandAddressPage(page);
 
-    const pageTitle = await addBrandAddressPage.getPageTitle(page);
-    expect(pageTitle).to.contains(addBrandAddressPage.pageTitle);
+    const pageTitle = await boBrandAdressesCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boBrandAdressesCreatePage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -386,8 +386,8 @@ describe('BO - Catalog', async () => {
     );
     await boBrandsPage.goToSubTabSuppliers(page);
 
-    const pageTitle = await suppliersPage.getPageTitle(page);
-    expect(pageTitle).to.contains(suppliersPage.pageTitle);
+    const pageTitle = await boSuppliersPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boSuppliersPage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -396,9 +396,9 @@ describe('BO - Catalog', async () => {
   it('should go to \'Catalog > Brands & Suppliers > Suppliers > View Supplier\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToViewSupplierPage', baseContext);
 
-    await suppliersPage.viewSupplier(page, 1);
+    await boSuppliersPage.viewSupplier(page, 1);
 
-    const pageTitle = await viewSupplierPage.getPageTitle(page);
+    const pageTitle = await boSuppliersViewPage.getPageTitle(page);
     expect(pageTitle).to.contains(dataSuppliers.accessories.name);
 
     const jsErrors = utilsPlaywright.getJsErrors();
@@ -414,10 +414,10 @@ describe('BO - Catalog', async () => {
       boDashboardPage.brandsAndSuppliersLink,
     );
     await boBrandsPage.goToSubTabSuppliers(page);
-    await suppliersPage.goToEditSupplierPage(page, 1);
+    await boSuppliersPage.goToEditSupplierPage(page, 1);
 
-    const pageTitle = await boSuppliersCreate.getPageTitle(page);
-    expect(pageTitle).to.contains(boSuppliersCreate.pageTitleEdit);
+    const pageTitle = await boSuppliersCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boSuppliersCreatePage.pageTitleEdit);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -432,10 +432,10 @@ describe('BO - Catalog', async () => {
       boDashboardPage.brandsAndSuppliersLink,
     );
     await boBrandsPage.goToSubTabSuppliers(page);
-    await suppliersPage.goToAddNewSupplierPage(page);
+    await boSuppliersPage.goToAddNewSupplierPage(page);
 
-    const pageTitle = await boSuppliersCreate.getPageTitle(page);
-    expect(pageTitle).to.contains(boSuppliersCreate.pageTitle);
+    const pageTitle = await boSuppliersCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boSuppliersCreatePage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -462,8 +462,8 @@ describe('BO - Catalog', async () => {
 
     await boFilesPage.goToAddNewFilePage(page);
 
-    const pageTitle = await addFilePage.getPageTitle(page);
-    expect(pageTitle).to.contains(addFilePage.pageTitle);
+    const pageTitle = await boFilesCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boFilesCreatePage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);

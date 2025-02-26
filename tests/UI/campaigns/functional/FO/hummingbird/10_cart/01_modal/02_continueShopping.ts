@@ -1,17 +1,13 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
-// Import common tests
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
-// Import FO pages
-import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
-
-import {expect} from 'chai';
 import {
   type BrowserContext,
   foHummingbirdCartPage,
   foHummingbirdHomePage,
+  foHummingbirdModalBlockCartPage,
   foHummingbirdModalQuickViewPage,
   foHummingbirdProductPage,
   type Page,
@@ -53,17 +49,17 @@ describe('FO - cart : Continue shopping / Proceed to checkout / Close', async ()
       await foHummingbirdHomePage.quickViewProduct(page, 1);
       await foHummingbirdModalQuickViewPage.setQuantityAndAddToCart(page, 2);
 
-      const isBlockCartModal = await blockCartModal.isBlockCartModalVisible(page);
+      const isBlockCartModal = await foHummingbirdModalBlockCartPage.isBlockCartModalVisible(page);
       expect(isBlockCartModal).to.equal(true);
 
-      const successMessage = await blockCartModal.getBlockCartModalTitle(page);
+      const successMessage = await foHummingbirdModalBlockCartPage.getBlockCartModalTitle(page);
       expect(successMessage).to.contains(foHummingbirdHomePage.successAddToCartMessage);
     });
 
     it('should click on continue shopping button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'continueShopping', baseContext);
 
-      const isModalNotVisible = await blockCartModal.continueShopping(page);
+      const isModalNotVisible = await foHummingbirdModalBlockCartPage.continueShopping(page);
       expect(isModalNotVisible).to.equal(true);
     });
 
@@ -73,14 +69,14 @@ describe('FO - cart : Continue shopping / Proceed to checkout / Close', async ()
       await foHummingbirdHomePage.goToProductPage(page, 2);
       await foHummingbirdProductPage.clickOnAddToCartButton(page);
 
-      const successMessage = await blockCartModal.getBlockCartModalTitle(page);
+      const successMessage = await foHummingbirdModalBlockCartPage.getBlockCartModalTitle(page);
       expect(successMessage).to.contains(foHummingbirdHomePage.successAddToCartMessage);
     });
 
     it('should close the blockCart modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeBlockCartModal', baseContext);
 
-      const isQuickViewModalClosed = await blockCartModal.closeBlockCartModal(page);
+      const isQuickViewModalClosed = await foHummingbirdModalBlockCartPage.closeBlockCartModal(page);
       expect(isQuickViewModalClosed).to.equal(true);
     });
 
@@ -89,14 +85,14 @@ describe('FO - cart : Continue shopping / Proceed to checkout / Close', async ()
 
       await foHummingbirdProductPage.clickOnAddToCartButton(page);
 
-      const successMessage = await blockCartModal.getBlockCartModalTitle(page);
+      const successMessage = await foHummingbirdModalBlockCartPage.getBlockCartModalTitle(page);
       expect(successMessage).to.contains(foHummingbirdHomePage.successAddToCartMessage);
     });
 
     it('should close the blockCart modal by clicking outside the modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeBlockCartModal2', baseContext);
 
-      const isQuickViewModalClosed = await blockCartModal.closeBlockCartModal(page, true);
+      const isQuickViewModalClosed = await foHummingbirdModalBlockCartPage.closeBlockCartModal(page, true);
       expect(isQuickViewModalClosed).to.equal(true);
     });
 
@@ -105,14 +101,14 @@ describe('FO - cart : Continue shopping / Proceed to checkout / Close', async ()
 
       await foHummingbirdProductPage.clickOnAddToCartButton(page);
 
-      const successMessage = await blockCartModal.getBlockCartModalTitle(page);
+      const successMessage = await foHummingbirdModalBlockCartPage.getBlockCartModalTitle(page);
       expect(successMessage).to.contains(foHummingbirdHomePage.successAddToCartMessage);
     });
 
     it('should click on proceed to checkout button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckout', baseContext);
 
-      await blockCartModal.proceedToCheckout(page);
+      await foHummingbirdModalBlockCartPage.proceedToCheckout(page);
 
       const notificationsNumber = await foHummingbirdCartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.equal(5);

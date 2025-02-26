@@ -1,13 +1,10 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import {moduleConfigurationPage} from '@pages/BO/modules/moduleConfiguration';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
+  boModuleConfigurationPage,
   boModuleManagerPage,
   boModuleManagerAlertsPage,
   type BrowserContext,
@@ -70,7 +67,7 @@ describe('BO - Modules - Alerts : Configure module', async () => {
 
     await boModuleManagerAlertsPage.goToConfigurationPage(page, dataModules.psCheckPayment.tag);
 
-    const pageSubtitle = await moduleConfigurationPage.getPageSubtitle(page);
+    const pageSubtitle = await boModuleConfigurationPage.getPageSubtitle(page);
     expect(pageSubtitle).to.contains(dataModules.psCheckPayment.name);
   });
 });

@@ -1,14 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import FO pages
-import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
-
 import {expect} from 'chai';
+
 import {
   type BrowserContext,
   foClassicCartPage,
   foClassicHomePage,
+  foClassicModalBlockCartPage,
   foClassicModalQuickViewPage,
   foClassicProductPage,
   type Page,
@@ -46,13 +43,13 @@ describe('FO - cart : Display modal when adding a product to cart', async () => 
     await foClassicHomePage.quickViewProduct(page, 1);
     await foClassicModalQuickViewPage.setQuantityAndAddToCart(page, 2);
 
-    const isBlockCartModal = await blockCartModal.isBlockCartModalVisible(page);
+    const isBlockCartModal = await foClassicModalBlockCartPage.isBlockCartModalVisible(page);
     expect(isBlockCartModal).to.equal(true);
 
-    const successMessage = await blockCartModal.getBlockCartModalTitle(page);
+    const successMessage = await foClassicModalBlockCartPage.getBlockCartModalTitle(page);
     expect(successMessage).to.contains(foClassicHomePage.successAddToCartMessage);
 
-    const isModalNotVisible = await blockCartModal.continueShopping(page);
+    const isModalNotVisible = await foClassicModalBlockCartPage.continueShopping(page);
     expect(isModalNotVisible).to.eq(true);
   });
 

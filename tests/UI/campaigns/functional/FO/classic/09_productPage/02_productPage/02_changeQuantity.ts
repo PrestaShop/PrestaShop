@@ -1,15 +1,12 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
-
 import {expect} from 'chai';
+
 import {
   type BrowserContext,
   dataProducts,
   foClassicCartPage,
   foClassicHomePage,
+  foClassicModalBlockCartPage,
   foClassicProductPage,
   type Page,
   utilsPlaywright,
@@ -80,14 +77,14 @@ describe('FO - Product page : Change quantity', async () => {
     await foClassicProductPage.setQuantity(page, 12);
     await foClassicProductPage.clickOnAddToCartButton(page);
 
-    const isVisible = await blockCartModal.isBlockCartModalVisible(page);
+    const isVisible = await foClassicModalBlockCartPage.isBlockCartModalVisible(page);
     expect(isVisible).to.equal(true);
   });
 
   it('should click on continue shopping and check that the modal is not visible', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'clickOnContinueShopping', baseContext);
 
-    const isNotVisible = await blockCartModal.continueShopping(page);
+    const isNotVisible = await foClassicModalBlockCartPage.continueShopping(page);
     expect(isNotVisible).to.equal(true);
   });
 
@@ -104,14 +101,14 @@ describe('FO - Product page : Change quantity', async () => {
     await foClassicProductPage.setQuantity(page, '-24');
     await foClassicProductPage.clickOnAddToCartButton(page);
 
-    const isVisible = await blockCartModal.isBlockCartModalVisible(page);
+    const isVisible = await foClassicModalBlockCartPage.isBlockCartModalVisible(page);
     expect(isVisible).to.equal(true);
   });
 
   it('should click on continue shopping and check that the modal is not visible', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'clickOnContinueShopping2', baseContext);
 
-    const isNotVisible = await blockCartModal.continueShopping(page);
+    const isNotVisible = await foClassicModalBlockCartPage.continueShopping(page);
     expect(isNotVisible).to.equal(true);
   });
 

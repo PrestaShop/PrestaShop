@@ -1754,6 +1754,65 @@ Changelog for PrestaShop 9
     - #31386: Add test for mismatching groups, fix the check in handler (by @Hlavtox)
 
 ####################################
+#   v8.2.1 - (2025-02-10)
+####################################
+
+- Back Office:
+  - Improvement:
+    - #37828: Add URL Validation when installing theme from URL (by @M0rgan01)
+    - #37373: Add more options to pagination (by @Hlavtox)
+    - #37355: Disable autocapitalize for SMTP settings (mobile) (by @ShaiMagal)
+  - Bug fix:
+    - #37869: Fix: Admin search by product ID results in CSV download instead of product page redirect (by @Codencode)
+    - #37888: Fix: BO > Order details page - When changing pagination, Refunded column displays automatically (by @Codencode)
+    - #37803: Fix multistore disabling (by @boherm)
+    - #37771: Improve constraint on Product description (by @jolelievre)
+    - #35709: Partial fix for textarea field height issues in V1 product page (by @Roxayl)
+    - #36607: Fix: set by default enable action if module is disabled instead of configure action (by @Nakahiru)
+    - #36505: Fix: set the product redirection to another product (301 & 302) (by @RomPiot)
+    - #37030: Fix: Multistore - Can't disable a group shop (by @Codencode)
+  - Refactoring:
+    - #36715: Fix unreliable translation export (by @Hlavtox)
+- Front Office:
+  - New feature:
+    - #37125: Make getHookModuleExecList customizable from modules (by @matthieu-rolland)
+  - Improvement:
+    - #37448: Add missing hook on checkout account creation (by @Touxten)
+  - Bug fix:
+    - #37533: If price is not shown hide add to cart too. Fixes #37532 (by @tswfi)
+    - #37268: Fix Incorrect SpecificPrice Currency Conversion (Issue 36844) (by @mrkalchemy)
+    - #37267: Fix cart value amount (by @idnovate)
+    - #37191: Fix specific references (by @rsoulard-prolaser)
+  - Refactoring:
+    - #37403: Remove unnecessary cart present and improve performance (by @Hlavtox)
+- Core:
+  - Improvement:
+    - #37964: Fixed license header (by @mattgoud)
+    - #37943: Chore: [release-8.2.1] - composer : update classic-theme package to 2… (by @mattgoud)
+    - #37907: Chore: [release-8.2.1] - update version number to 8.2.1 (by @mattgoud)
+    - #37354: Slovakia VAT change from 2025/01 to 5% and 19% and 23% (by @ShaiMagal)
+    - #36612: Add a condition for handling errors from hook actionModuleInstallBefore (by @JohnPAfr)
+    - #37016: Guest.php - OS/Browser unnecessary logging to PHP error log in specific conditions (by @ShaiMagal)
+    - #35695: Allow select correct invoice -> invoice_number can be "duplicated" (every year) (by @ShaiMagal)
+    - #37159: Updated PrestaShop Packages (by @github-actions[bot])
+    - #37147: Updated PrestaShop Packages (by @github-actions[bot])
+    - #36938: Delete old thumbnail for variant images when deleting product (by @ShaiMagal)
+  - Bug fix:
+    - #37890: Fix preview mode for combination products (by @boherm)
+    - #37912: Fix performance issue linked to HookModuleFilter PR (by @matthieu-rolland)
+    - #37849: Fix issue with count on string (by @pszostok)
+    - #37876: Downgrade lockfileVersion of themes package-lock.json files (by @mattgoud)
+    - #37332: Order::getCustomerOrders - in specific case incorrect sorting by date_add DESC (by @ShaiMagal)
+    - #37486: Fix obvious notice in Warehouse class (by @kpodemski)
+- Web Services:
+  - Bug fix:
+    - #36807: Move the array_unshift in Product::setWsPositionInCategory() (by @matks)
+- Tests:
+  - Bug fix:
+    - #37887: Fix: #37886 - [docker-compose] - upgrade node 14 to 16 (by @mattgoud)
+    - #37862: Use Ubuntu 22.04 on `8.2.x` (by @Progi1984)
+
+####################################
 #   v8.2.0 - (2024-09-23)
 ####################################
 - Back Office:

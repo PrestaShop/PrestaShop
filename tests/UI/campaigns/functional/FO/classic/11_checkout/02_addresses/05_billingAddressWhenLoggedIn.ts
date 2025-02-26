@@ -1,9 +1,5 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-// Import FO pages
-import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
+import {expect} from 'chai';
 
 import {
   type BrowserContext,
@@ -11,12 +7,11 @@ import {
   foClassicCartPage,
   foClassicCheckoutPage,
   foClassicHomePage,
+  foClassicModalBlockCartPage,
   foClassicModalQuickViewPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_FO_classic_checkout_addresses_billingAddressWhenLoggedIn';
 
@@ -53,7 +48,7 @@ describe('FO - Guest checkout: Billing address when logged in', async () => {
 
       await foClassicHomePage.quickViewProduct(page, 3);
       await foClassicModalQuickViewPage.addToCartByQuickView(page);
-      await blockCartModal.proceedToCheckout(page);
+      await foClassicModalBlockCartPage.proceedToCheckout(page);
 
       const pageTitle = await foClassicCartPage.getPageTitle(page);
       expect(pageTitle).to.eq(foClassicCartPage.pageTitle);

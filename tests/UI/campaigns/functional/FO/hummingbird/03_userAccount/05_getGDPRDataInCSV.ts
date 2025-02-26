@@ -1,12 +1,10 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-// Import commonTests
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import FO pages
-import createAccountPage from '@pages/FO/hummingbird/myAccount/add';
 import gdprPersonalDataPage from '@pages/FO/hummingbird/myAccount/gdprPersonalData';
 
 import {
@@ -27,6 +25,7 @@ import {
   foHummingbirdCheckoutPage,
   foHummingbirdCheckoutOrderConfirmationPage,
   foHummingbirdContactUsPage,
+  foHummingbirdCreateAccountPage,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
@@ -127,14 +126,14 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         await foHummingbirdHomePage.goToLoginPage(page);
         await foHummingbirdLoginPage.goToCreateAccountPage(page);
 
-        const pageHeaderTitle = await createAccountPage.getHeaderTitle(page);
-        expect(pageHeaderTitle).to.equal(createAccountPage.formTitle);
+        const pageHeaderTitle = await foHummingbirdCreateAccountPage.getHeaderTitle(page);
+        expect(pageHeaderTitle).to.equal(foHummingbirdCreateAccountPage.formTitle);
       });
 
       it('should create new account', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'createAccount', baseContext);
 
-        await createAccountPage.createAccount(page, customerData);
+        await foHummingbirdCreateAccountPage.createAccount(page, customerData);
 
         const isCustomerConnected = await foHummingbirdHomePage.isCustomerConnected(page);
         expect(isCustomerConnected).to.eq(true);

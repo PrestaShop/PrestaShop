@@ -1,11 +1,7 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
-// Import common tests
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
-// Import pages
-import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {
   type BrowserContext,
@@ -13,14 +9,13 @@ import {
   dataProducts,
   foHummingbirdCartPage,
   foHummingbirdHomePage,
+  foHummingbirdModalBlockCartPage,
   foHummingbirdModalQuickViewPage,
   foHummingbirdSearchResultsPage,
   type Page,
   type ProductAttribute,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_FO_hummingbird_productPage_quickView_addToCart';
 
@@ -91,14 +86,14 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
 
       await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
 
-      const successMessage = await blockCartModal.getBlockCartModalTitle(page);
+      const successMessage = await foHummingbirdModalBlockCartPage.getBlockCartModalTitle(page);
       expect(successMessage).to.contains(foHummingbirdHomePage.successAddToCartMessage);
     });
 
     it('should check product details from cart modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductDetailsInCartModal', baseContext);
 
-      const result = await blockCartModal.getProductDetailsFromBlockCartModal(page);
+      const result = await foHummingbirdModalBlockCartPage.getProductDetailsFromBlockCartModal(page);
       await Promise.all([
         expect(result.name).to.equal(checkProductDetails.name),
         expect(result.price).to.equal(checkProductDetails.price),
@@ -109,7 +104,7 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
         expect(result.totalTaxIncl).to.equal(checkProductDetails.totalTaxIncl),
       ]);
 
-      const productAttributesFromBlockCart = await blockCartModal.getProductAttributesFromBlockCartModal(page);
+      const productAttributesFromBlockCart = await foHummingbirdModalBlockCartPage.getProductAttributesFromBlockCartModal(page);
       await Promise.all([
         expect(productAttributesFromBlockCart.length).to.equal(2),
         expect(productAttributesFromBlockCart[0].name).to.equal(checkProductDetailsProducts[0].name),
@@ -122,7 +117,7 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
     it('should proceed to checkout and check the cart page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCartPage', baseContext);
 
-      await blockCartModal.proceedToCheckout(page);
+      await foHummingbirdModalBlockCartPage.proceedToCheckout(page);
 
       const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
       expect(pageTitle).to.equal(foHummingbirdCartPage.pageTitle);

@@ -1,15 +1,10 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-// Import commonTests
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
-// Import BO pages
 import storesPage from '@pages/BO/shopParameters/stores';
-
-// Import FO pages classic theme
-import {createAccountPage as foCreateAccountPage} from '@pages/FO/classic/myAccount/add';
 
 import {
   boCartRulesPage,
@@ -23,6 +18,7 @@ import {
   dataLanguages,
   dataModules,
   FakerCustomer,
+  foClassicCreateAccountPage,
   foClassicHomePage,
   foClassicLoginPage,
   foClassicModalWishlistPage,
@@ -420,14 +416,14 @@ describe('BO - International - Translation : Modify translation', async () => {
       await foClassicHomePage.goToLoginPage(page);
       await foClassicLoginPage.goToCreateAccountPage(page);
 
-      const pageHeaderTitle = await foCreateAccountPage.getHeaderTitle(page);
-      expect(pageHeaderTitle).to.equal(foCreateAccountPage.formTitle);
+      const pageHeaderTitle = await foClassicCreateAccountPage.getHeaderTitle(page);
+      expect(pageHeaderTitle).to.equal(foClassicCreateAccountPage.formTitle);
     });
 
     it('should create new account', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createAccount', baseContext);
 
-      await foCreateAccountPage.createAccount(page, customerData);
+      await foClassicCreateAccountPage.createAccount(page, customerData);
 
       const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);
       expect(isCustomerConnected).to.eq(true);
@@ -436,7 +432,7 @@ describe('BO - International - Translation : Modify translation', async () => {
     it('should sign out from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFO', baseContext);
 
-      await foCreateAccountPage.goToHomePage(page);
+      await foClassicCreateAccountPage.goToHomePage(page);
       await foClassicHomePage.logout(page);
 
       const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);

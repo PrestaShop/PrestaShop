@@ -1,12 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
 // Import pages
 import addPagePage from '@pages/BO/design/pages/add';
-import pagesPage from '@pages/BO/design/pages';
 
-import {expect} from 'chai';
 import {
+  boCMSPagesPage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -58,16 +57,16 @@ describe('BO - Design - Pages : Enable/Disable/Delete pages with Bulk Actions', 
       boDashboardPage.designParentLink,
       boDashboardPage.pagesLink,
     );
-    await pagesPage.closeSfToolBar(page);
+    await boCMSPagesPage.closeSfToolBar(page);
 
-    const pageTitle = await pagesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(pagesPage.pageTitle);
+    const pageTitle = await boCMSPagesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCMSPagesPage.pageTitle);
   });
 
   it('should reset filter and get number of pages in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
 
-    numberOfPages = await pagesPage.resetAndGetNumberOfLines(page, pagesTable);
+    numberOfPages = await boCMSPagesPage.resetAndGetNumberOfLines(page, pagesTable);
     expect(numberOfPages).to.be.above(0);
   });
 
@@ -77,7 +76,7 @@ describe('BO - Design - Pages : Enable/Disable/Delete pages with Bulk Actions', 
       it('should go to add new page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddPage${index + 1}`, baseContext);
 
-        await pagesPage.goToAddNewPage(page);
+        await boCMSPagesPage.goToAddNewPage(page);
 
         const pageTitle = await addPagePage.getPageTitle(page);
         expect(pageTitle).to.contains(addPagePage.pageTitleCreate);
@@ -87,7 +86,7 @@ describe('BO - Design - Pages : Enable/Disable/Delete pages with Bulk Actions', 
         await testContext.addContextItem(this, 'testIdentifier', `createPage${index + 1}`, baseContext);
 
         const textResult = await addPagePage.createEditPage(page, pageToCreate);
-        expect(textResult).to.equal(pagesPage.successfulCreationMessage);
+        expect(textResult).to.equal(boCMSPagesPage.successfulCreationMessage);
       });
     });
   });
@@ -97,9 +96,9 @@ describe('BO - Design - Pages : Enable/Disable/Delete pages with Bulk Actions', 
     it('should filter list by Title', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkEditStatus', baseContext);
 
-      await pagesPage.filterTable(page, pagesTable, 'input', 'meta_title', 'todelete');
+      await boCMSPagesPage.filterTable(page, pagesTable, 'input', 'meta_title', 'todelete');
 
-      const textResult = await pagesPage.getTextColumnFromTableCmsPage(page, 1, 'meta_title');
+      const textResult = await boCMSPagesPage.getTextColumnFromTableCmsPage(page, 1, 'meta_title');
       expect(textResult).to.contains('todelete');
     });
 
@@ -110,14 +109,14 @@ describe('BO - Design - Pages : Enable/Disable/Delete pages with Bulk Actions', 
       it(`should ${pageStatus.args.status} pages with Bulk Actions and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${pageStatus.args.status}Page`, baseContext);
 
-        const textResult = await pagesPage.bulkSetStatus(page, pagesTable, pageStatus.args.enable);
-        expect(textResult).to.be.equal(pagesPage.successfulUpdateStatusMessage);
+        const textResult = await boCMSPagesPage.bulkSetStatus(page, pagesTable, pageStatus.args.enable);
+        expect(textResult).to.be.equal(boCMSPagesPage.successfulUpdateStatusMessage);
 
-        const numberOfPagesInGrid = await pagesPage.getNumberOfElementInGrid(page, pagesTable);
+        const numberOfPagesInGrid = await boCMSPagesPage.getNumberOfElementInGrid(page, pagesTable);
         expect(numberOfPagesInGrid).to.be.at.most(numberOfPages);
 
         for (let i = 1; i <= numberOfPagesInGrid; i++) {
-          const textColumn = await pagesPage.getStatus(page, pagesTable, i);
+          const textColumn = await boCMSPagesPage.getStatus(page, pagesTable, i);
           expect(textColumn).to.equal(pageStatus.args.enable);
         }
       });
@@ -129,23 +128,23 @@ describe('BO - Design - Pages : Enable/Disable/Delete pages with Bulk Actions', 
     it('should filter list by Title', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
 
-      await pagesPage.filterTable(page, pagesTable, 'input', 'meta_title', 'todelete');
+      await boCMSPagesPage.filterTable(page, pagesTable, 'input', 'meta_title', 'todelete');
 
-      const textResult = await pagesPage.getTextColumnFromTableCmsPage(page, 1, 'meta_title');
+      const textResult = await boCMSPagesPage.getTextColumnFromTableCmsPage(page, 1, 'meta_title');
       expect(textResult).to.contains('todelete');
     });
 
     it('should delete pages', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'BulkDelete', baseContext);
 
-      const deleteTextResult = await pagesPage.deleteWithBulkActions(page, pagesTable);
-      expect(deleteTextResult).to.be.equal(pagesPage.successfulMultiDeleteMessage);
+      const deleteTextResult = await boCMSPagesPage.deleteWithBulkActions(page, pagesTable);
+      expect(deleteTextResult).to.be.equal(boCMSPagesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
-      const numberOfPagesAfterFilter = await pagesPage.resetAndGetNumberOfLines(page, pagesTable);
+      const numberOfPagesAfterFilter = await boCMSPagesPage.resetAndGetNumberOfLines(page, pagesTable);
       expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages);
     });
   });

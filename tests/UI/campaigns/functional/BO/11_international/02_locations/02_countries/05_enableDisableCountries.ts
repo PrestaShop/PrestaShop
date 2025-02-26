@@ -1,13 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import zonesPage from '@pages/BO/international/locations';
+import {expect} from 'chai';
 
 import {
   boCountriesPage,
   boDashboardPage,
   boLoginPage,
+  boZonesPages,
   type BrowserContext,
   dataCountries,
   dataPaymentMethods,
@@ -21,8 +19,6 @@ import {
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_international_locations_countries_enableDisableCountries';
 
@@ -64,16 +60,16 @@ describe('BO - International - Countries : Enable / Disable Countries', async ()
       boDashboardPage.internationalParentLink,
       boDashboardPage.locationsLink,
     );
-    await zonesPage.closeSfToolBar(page);
+    await boZonesPages.closeSfToolBar(page);
 
-    const pageTitle = await zonesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(zonesPage.pageTitle);
+    const pageTitle = await boZonesPages.getPageTitle(page);
+    expect(pageTitle).to.contains(boZonesPages.pageTitle);
   });
 
   it('should go to \'Countries\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCountriesPage', baseContext);
 
-    await zonesPage.goToSubTabCountries(page);
+    await boZonesPages.goToSubTabCountries(page);
 
     const pageTitle = await boCountriesPage.getPageTitle(page);
     expect(pageTitle).to.contains(boCountriesPage.pageTitle);
