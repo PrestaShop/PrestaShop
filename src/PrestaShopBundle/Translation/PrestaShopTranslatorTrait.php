@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,7 +27,6 @@
 
 namespace PrestaShopBundle\Translation;
 
-use Exception;
 use PrestaShop\PrestaShop\Adapter\Localization\LegacyTranslator;
 use Symfony\Component\Translation\Exception\InvalidArgumentException;
 
@@ -47,8 +47,16 @@ trait PrestaShopTranslatorTrait
      *
      * @throws InvalidArgumentException If the locale contains invalid characters
      */
-    public function trans($id, array $parameters = [], $domain = null, $locale = null): string
+    public function trans($id, array $parameters = [], $domain = null, $locale = null)
     {
+        if (isset($parameters['legacy'])) {
+            @trigger_error(
+                'The legacy parameter is deprecated and will be removed in the next major version.',
+                E_USER_DEPRECATED
+            );
+            unset($parameters['legacy']);
+        }
+
         $isSprintf = !empty($parameters) && $this->isSprintfString($id);
 
         if (empty($locale)) {
@@ -116,10 +124,10 @@ trait PrestaShopTranslatorTrait
         }
 
         if (!$this->isSprintfString($id)) {
-            return parent::trans($id, array_merge($parameters, ['%count%' => $number]), $domain, $locale);
+            return parent::transChoice($id, $number, $parameters, $domain, $locale);
         }
 
-        return vsprintf(parent::trans($id, ['%count%' => $number], $domain, $locale), $parameters);
+        return vsprintf(parent::transChoice($id, $number, [], $domain, $locale), $parameters);
     }
 
     /**
@@ -143,8 +151,7 @@ trait PrestaShopTranslatorTrait
      *
      * @return mixed|string
      *
-     * @throws InvalidArgumentException If the locale contains invalid characters
-     * @throws Exception
+     * @throws \Exception
      */
     private function translateUsingLegacySystem($message, array $parameters, $domain, $locale = null)
     {
@@ -165,19 +172,19 @@ trait PrestaShopTranslatorTrait
      *
      * @param string $message Message to translate
      * @param ?string $domain Translation domain
-     * @param ?string $locale Translation locale
+     * @param ?string $locale Locale
      *
      * @return bool
      */
     private function shouldFallbackToLegacyModuleTranslation(string $message, ?string $domain, ?string $locale): bool
     {
         return
-            str_starts_with($domain ?? '', 'Modules.')
+            'Modules.' === substr($domain ?? '', 0, 8)
             && (
                 !method_exists($this, 'getCatalogue')
                 || !$this->getCatalogue($locale)->has($message, $this->normalizeDomain($domain))
             )
-        ;
+            ;
     }
 
     /**
