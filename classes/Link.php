@@ -461,7 +461,7 @@ class LinkCore
             $category = $this->getCategoryObject($category, $idLang);
             $cats = [];
             foreach (array_reverse($category->getParentsCategories($idLang)) as $cat) {
-                if($cat['id_category'] == $category->id) {
+                if ($cat['id_category'] == $category->id) {
                     continue;
                 }
                 if (!in_array($cat['id_category'], Link::$category_disable_rewrite)) {
