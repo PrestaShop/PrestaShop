@@ -70,9 +70,9 @@ class ManufacturerType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $manufacturers = $this->manufacturerChoiceProvider->getChoices();
-        $choices = array_merge([
+        $choices = [
             $this->trans('No brand', 'Admin.Catalog.Feature') => NoManufacturerId::NO_MANUFACTURER_ID,
-        ], $manufacturers);
+        ] + $manufacturers;
 
         $resolver->setDefaults([
             'label' => $this->trans('Brand', 'Admin.Catalog.Feature'),
