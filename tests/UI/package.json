@@ -136,6 +136,6 @@
     "mochawesome-merge": "^4.3.0",
     "ts-mocha": "^11.1.0",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.2"
   }
 }
