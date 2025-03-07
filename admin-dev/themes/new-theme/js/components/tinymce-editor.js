@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import ComponentsMap from '@components/components-map';
+/* // TODO <cnc-modifica> - TinyMCEEditor -  */
+import Router from '@components/router';
 import {EventEmitter} from './event-emitter';
 
 const {$} = window;
@@ -37,6 +39,8 @@ class TinyMCEEditor {
   constructor(options) {
     const opts = options || {};
     this.tinyMCELoaded = false;
+    /* // TODO <cnc-modifica> - TinyMCEEditor::constructor() -  */
+    this.router = new Router();
     if (typeof opts.baseAdminUrl === 'undefined') {
       if (typeof window.baseAdminDir !== 'undefined') {
         opts.baseAdminUrl = window.baseAdminDir;
@@ -117,10 +121,21 @@ class TinyMCEEditor {
         this.changeToMaterial();
       },
       setup: (editor) => {
+        /* // TODO <cnc-modifica> - TinyMCEEditor::initTinyMCE() - */
+        editor.advantageLink = cfg.advantageLink;
+        /* ****************************************************** */
         this.setupEditor(editor);
       },
       ...config,
     };
+    /* // TODO <cnc-modifica> - TinyMCEEditor::initTinyMCE() - */
+    config.advantageLink = true;
+
+    if (config.advantageLink) {
+      cfg.advantageLink = true;
+      cfg.toolbar1 += ',advantageLink';
+    }
+    /* ****************************************************** */
 
     if (typeof window.defaultTinyMceConfig !== 'undefined') {
       Object.assign(cfg, window.defaultTinyMceConfig);
@@ -145,6 +160,58 @@ class TinyMCEEditor {
    * @param editor
    */
   setupEditor(editor) {
+    /* // TODO <cnc-modifica> - TinyMCEEditor::setupEditor() - Creazione pulsante */
+    if (editor.advantageLink) {
+      const allCmsRoute = this.router.generate('admin_cms_pages_all_cms');
+      editor.addButton('advantageLink', {
+        type: 'button',
+        text: '',
+        icon: 'link',
+        title: 'Internal link',
+        onclick() {
+          $.ajax({
+            type: 'POST',
+            url: allCmsRoute,
+            success(data) {
+              const pages = [];
+              $.each(data, (index, cms) => {
+                pages.push({text: cms.meta_title, value: cms.id_cms});
+              });
+
+              editor.windowManager.open({
+                title: 'Aggiungi link interno',
+                body: [
+                  {
+                    type: 'textbox',
+                    name: 'text',
+                    label: 'Text to display',
+                    value: '',
+                  },
+                  {
+                    type: 'listbox',
+                    name: 'pageId',
+                    label: 'Page',
+                    values: pages,
+                  },
+                ],
+                onsubmit(e) {
+                  let {text} = e.data;
+                  const {pageId} = e.data;
+
+                  if (!text) {
+                    text = `NAME_CMS_ID=${pageId}`;
+                  }
+
+                  editor.insertContent(`<a href="URL_CMS_ID=${pageId}">${text}</a>`);
+                },
+              });
+            },
+            dataType: 'json',
+          });
+        },
+      });
+    }
+    /* ****************************************************** */
     editor.on('loadContent', (event) => {
       this.handleCounterTiny(event.target.id);
     });

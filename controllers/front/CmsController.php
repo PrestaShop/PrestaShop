@@ -109,6 +109,9 @@ class CmsControllerCore extends FrontController
     {
         if ($this->assignCase == self::CMS_CASE_PAGE) {
             $cmsVar = $this->objectPresenter->present($this->cms);
+            // TODO <cnc-modifica> - CmsControllerCore::initContent() -
+            $cmsVar['content'] = $this->replaceCmsTags($cmsVar['content']);
+            // ********************************************************
 
             // Chained hook call - if multiple modules are hooked here, they will receive the result of the previous one as a parameter
             $filteredCmsContent = Hook::exec(
@@ -276,5 +279,31 @@ class CmsControllerCore extends FrontController
         }
 
         return '';
+    }
+
+    // TODO <cnc-modifica> - CmsControllerCore::replacePageTags() -
+    protected function replaceCmsTags($content): string
+    {
+        $pattern = '/(URL_CMS_ID|NAME_CMS_ID)=(\d+)/';
+
+        preg_match_all($pattern, $content, $cmsIds);
+
+        $content = preg_replace_callback($pattern, function ($matches) {
+            /**
+             * // TODO <cnc-modifica> - CmsControllerCore::replacePageTags() - DA MIGLIORARE:
+             * qui bisognerebbe non caricare ogni volta il CMS
+             */
+            $cms = new CMS((int) $matches[2], $this->context->language->id);
+
+            if ($matches[1] == 'NAME_CMS_ID') {
+                $value = $cms->meta_title;
+            } else {
+                $value = $this->context->link->getCMSLink($cms);
+            }
+
+            return $value;
+        }, $content);
+
+        return $content;
     }
 }

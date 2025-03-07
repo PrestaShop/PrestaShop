@@ -27,6 +27,8 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\CMS\CMSDataProvider;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Shop\Url\CmsProvider;
 use PrestaShop\PrestaShop\Core\CMS\CmsPageViewDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkDeleteCmsPageCommand;
@@ -72,6 +74,7 @@ use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -1103,5 +1106,22 @@ class CmsPageController extends PrestaShopAdminController
         ];
 
         return $toolbarButtons;
+    }
+
+    /**
+     * @param LegacyContext $context
+     *
+     * @return JsonResponse
+     */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function allCmsAction(
+        #[Autowire(service: 'prestashop.adapter.legacy.context')]
+        LegacyContext $context,
+        #[Autowire(service: 'prestashop.adapter.data_provider.cms')]
+        CMSDataProvider $cmsDataProvider,
+    ): JsonResponse {// TODO <cnc-modifica> - CmsPageController::findCmsAction() -
+        $cms = $cmsDataProvider->getCMSPages($context->getContext()->language->id);
+
+        return $this->json($cms);
     }
 }
