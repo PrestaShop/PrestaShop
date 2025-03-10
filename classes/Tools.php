@@ -3708,7 +3708,14 @@ exit;
         }
 
         $sort_function = function ($a, $b) use ($column) {
-            return $b[$column] > $a[$column] ? 1 : -1;
+            if (
+                is_array($a)
+                && isset($a[$column])
+            ) {
+                return $b[$column] > $a[$column] ? 1 : -1;
+            } else {
+                return $b > $a ? 1 : -1;
+            }
         };
 
         uasort($rows, $sort_function);
@@ -3729,7 +3736,14 @@ exit;
                 $adjustment_factor += $sign * 1 / $unit;
             }
 
-            $row[$column] += $adjustment_factor;
+            if (
+                is_array($row)
+                && isset($row[$column])
+            ) {
+                $row[$column] += $adjustment_factor;
+            } else {
+                $row += $adjustment_factor;
+            }
 
             ++$position;
         }
