@@ -1,20 +1,16 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-// Import pages
-// Import BO pages
-import addPagePage from '@pages/BO/design/pages/add';
-// Import FO pages
-import cmsPage from '@pages/FO/classic/cms';
-
 import {
   boCMSPageCategoriesCreatePage,
   boCMSPagesPage,
+  boCMSPagesCreatePage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
   FakerCMSCategory,
   FakerCMSPage,
+  foClassicCmsPage,
   foClassicHomePage,
   foClassicSitemapPage,
   type Page,
@@ -200,14 +196,14 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
 
       await boCMSPagesPage.goToAddNewPage(page);
 
-      const pageTitle = await addPagePage.getPageTitle(page);
-      expect(pageTitle).to.contains(addPagePage.pageTitleCreate);
+      const pageTitle = await boCMSPagesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCMSPagesCreatePage.pageTitleCreate);
     });
 
     it('should create page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createPage', baseContext);
 
-      const textResult = await addPagePage.createEditPage(page, createPageData);
+      const textResult = await boCMSPagesCreatePage.createEditPage(page, createPageData);
       expect(textResult).to.equal(boCMSPagesPage.successfulCreationMessage);
     });
 
@@ -225,38 +221,38 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
 
       await boCMSPagesPage.goToEditPage(page, 1);
 
-      const pageTitle = await addPagePage.getPageTitle(page);
-      expect(pageTitle).to.contains(addPagePage.editPageTitle(createPageData.title));
+      const pageTitle = await boCMSPagesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCMSPagesCreatePage.editPageTitle(createPageData.title));
     });
 
     it('should preview the page in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'previewPage', baseContext);
 
-      page = await addPagePage.previewPage(page);
+      page = await boCMSPagesCreatePage.previewPage(page);
 
-      const pageTitle = await cmsPage.getTextContent(page, cmsPage.pageTitle);
+      const pageTitle = await foClassicCmsPage.getTextContent(page, foClassicCmsPage.pageTitle);
       expect(pageTitle).to.contains(createPageData.title);
 
-      const metaTitle = await cmsPage.getPageTitle(page);
+      const metaTitle = await foClassicCmsPage.getPageTitle(page);
       expect(metaTitle).to.equal(createPageData.metaTitle);
 
-      const pageContent = await cmsPage.getTextContent(page, cmsPage.pageContent);
+      const pageContent = await foClassicCmsPage.getTextContent(page, foClassicCmsPage.pageContent);
       expect(pageContent).to.include(createPageData.content);
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
 
-      page = await cmsPage.closePage(browserContext, page, 0);
+      page = await foClassicCmsPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await addPagePage.getPageTitle(page);
-      expect(pageTitle).to.contains(addPagePage.editPageTitle(createPageData.title));
+      const pageTitle = await boCMSPagesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCMSPagesCreatePage.editPageTitle(createPageData.title));
     });
 
     it('should click on cancel button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'cancelCreatedPageEdition', baseContext);
 
-      await addPagePage.cancelPage(page);
+      await boCMSPagesCreatePage.cancelPage(page);
 
       const pageTitle = await boCMSPagesPage.getPageTitle(page);
       expect(pageTitle).to.contains(boCMSPagesPage.pageTitle);
@@ -374,14 +370,14 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
 
       await boCMSPagesPage.goToEditPage(page, 1);
 
-      const pageTitle = await addPagePage.getPageTitle(page);
-      expect(pageTitle).to.contains(addPagePage.editPageTitle(createPageData.title));
+      const pageTitle = await boCMSPagesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCMSPagesCreatePage.editPageTitle(createPageData.title));
     });
 
     it('should update the created page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updatePage', baseContext);
 
-      const textResult = await addPagePage.createEditPage(page, editPageData);
+      const textResult = await boCMSPagesCreatePage.createEditPage(page, editPageData);
       expect(textResult).to.equal(boCMSPagesPage.successfulUpdateMessage);
     });
 
@@ -399,32 +395,32 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
 
       await boCMSPagesPage.goToEditPage(page, 1);
 
-      const pageTitle = await addPagePage.getPageTitle(page);
-      expect(pageTitle).to.contains(addPagePage.editPageTitle(editPageData.title));
+      const pageTitle = await boCMSPagesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCMSPagesCreatePage.editPageTitle(editPageData.title));
     });
 
     it('should click on preview button and check that the page does not exist in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'previewUpdatedPage', baseContext);
 
-      page = await addPagePage.previewPage(page);
+      page = await boCMSPagesCreatePage.previewPage(page);
 
-      const pageTitle = await cmsPage.getTextContent(page, cmsPage.pageTitle);
-      expect(pageTitle).to.include(cmsPage.pageNotFound);
+      const pageTitle = await foClassicCmsPage.getTextContent(page, foClassicCmsPage.pageTitle);
+      expect(pageTitle).to.include(foClassicCmsPage.pageNotFound);
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO4', baseContext);
 
-      page = await cmsPage.closePage(browserContext, page, 0);
+      page = await foClassicCmsPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await addPagePage.getPageTitle(page);
-      expect(pageTitle).to.contains(addPagePage.editPageTitle(editPageData.title));
+      const pageTitle = await boCMSPagesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCMSPagesCreatePage.editPageTitle(editPageData.title));
     });
 
     it('should click on cancel button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'cancelUpdatedPageEdition', baseContext);
 
-      await addPagePage.cancelPage(page);
+      await boCMSPagesCreatePage.cancelPage(page);
 
       const pageTitle = await boCMSPagesPage.getPageTitle(page);
       expect(pageTitle).to.contains(boCMSPagesPage.pageTitle);

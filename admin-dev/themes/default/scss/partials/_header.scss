@@ -14,6 +14,7 @@
 
 #header_infos {
   position: fixed;
+  top: 0;
   z-index: 503;
   display: flex;
   gap: var(--#{$cdk}size-4);

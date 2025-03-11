@@ -8,7 +8,6 @@ import legalNoticePage from '@pages/FO/hummingbird/legalNotice';
 import guestOrderTrackingPage from '@pages/FO/hummingbird/orderTracking/guestOrderTracking';
 import termsAndConditionsOfUsePage from '@pages/FO/hummingbird/termsAndConditionsOfUse';
 import securePaymentPage from '@pages/FO/hummingbird/securePayment';
-import storesPage from '@pages/FO/hummingbird/stores';
 import testContext from '@utils/testContext';
 
 import {
@@ -24,6 +23,7 @@ import {
   foHummingbirdProductPage,
   foHummingbirdSearchResultsPage,
   foHummingbirdSitemapPage,
+  foHummingbirdStoresPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -142,7 +142,7 @@ describe('Check FO public pages', async () => {
         {linkSelector: 'Secure payment', pageTitle: securePaymentPage.pageTitle},
         {linkSelector: 'Contact us', pageTitle: foHummingbirdContactUsPage.pageTitle},
         {linkSelector: 'Sitemap', pageTitle: foHummingbirdSitemapPage.pageTitle},
-        {linkSelector: 'Stores', pageTitle: storesPage.pageTitle},
+        {linkSelector: 'Stores', pageTitle: foHummingbirdStoresPage.pageTitle},
       ].forEach((args, index: number) => {
         it(`should check '${args.linkSelector}' footer links`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkOurCompanyFooterLinks${index}`, baseContext);

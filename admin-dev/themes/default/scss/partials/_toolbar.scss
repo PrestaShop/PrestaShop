@@ -217,6 +217,7 @@
         font-size: var(--#{$cdk}size-14);
         line-height: 1;
         color: var(--#{$cdk}primary-700);
+        text-decoration: none !important;
         vertical-align: middle;
 
         &:hover {

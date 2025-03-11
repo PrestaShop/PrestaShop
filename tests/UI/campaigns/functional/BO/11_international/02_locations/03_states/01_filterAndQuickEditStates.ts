@@ -1,12 +1,11 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-import statesPage from '@pages/BO/international/locations/states';
-
 import {
   boDashboardPage,
   boLoginPage,
-  boZonesPages,
+  boStatesPage,
+  boZonesPage,
   type BrowserContext,
   dataStates,
   type Page,
@@ -52,25 +51,25 @@ describe('BO - International - States : Filter and quick edit', async () => {
       boDashboardPage.internationalParentLink,
       boDashboardPage.locationsLink,
     );
-    await boZonesPages.closeSfToolBar(page);
+    await boZonesPage.closeSfToolBar(page);
 
-    const pageTitle = await boZonesPages.getPageTitle(page);
-    expect(pageTitle).to.contains(boZonesPages.pageTitle);
+    const pageTitle = await boZonesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boZonesPage.pageTitle);
   });
 
   it('should go to \'States\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToStatesPage', baseContext);
 
-    await boZonesPages.goToSubTabStates(page);
+    await boZonesPage.goToSubTabStates(page);
 
-    const pageTitle = await statesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(statesPage.pageTitle);
+    const pageTitle = await boStatesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boStatesPage.pageTitle);
   });
 
   it('should reset all filters and get number of states in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfStates = await statesPage.resetAndGetNumberOfLines(page);
+    numberOfStates = await boStatesPage.resetAndGetNumberOfLines(page);
     expect(numberOfStates).to.be.above(0);
   });
 
@@ -130,21 +129,21 @@ describe('BO - International - States : Filter and quick edit', async () => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        await statesPage.filterStates(
+        await boStatesPage.filterStates(
           page,
           test.args.filterType,
           test.args.filterBy,
           test.args.filterValue,
         );
 
-        const numberOfStatesAfterFilter = await statesPage.getNumberOfElementInGrid(page);
+        const numberOfStatesAfterFilter = await boStatesPage.getNumberOfElementInGrid(page);
         expect(numberOfStatesAfterFilter).to.be.at.most(numberOfStates);
 
         if (test.args.filterBy === 'active') {
-          const countryStatus = await statesPage.getStateStatus(page, 1);
+          const countryStatus = await boStatesPage.getStateStatus(page, 1);
           expect(countryStatus).to.equal(test.args.filterValue === '1');
         } else {
-          const textColumn = await statesPage.getTextColumn(
+          const textColumn = await boStatesPage.getTextColumn(
             page,
             1,
             test.args.filterBy,
@@ -156,7 +155,7 @@ describe('BO - International - States : Filter and quick edit', async () => {
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfStatesAfterReset = await statesPage.resetAndGetNumberOfLines(page);
+        const numberOfStatesAfterReset = await boStatesPage.resetAndGetNumberOfLines(page);
         expect(numberOfStatesAfterReset).to.equal(numberOfStates);
       });
     });
@@ -166,17 +165,17 @@ describe('BO - International - States : Filter and quick edit', async () => {
     it('should filter by name \'California\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
-      await statesPage.filterStates(
+      await boStatesPage.filterStates(
         page,
         'input',
         'name',
         dataStates.california.name,
       );
 
-      const numberOfStatesAfterFilter = await statesPage.getNumberOfElementInGrid(page);
+      const numberOfStatesAfterFilter = await boStatesPage.getNumberOfElementInGrid(page);
       expect(numberOfStatesAfterFilter).to.be.below(numberOfStates);
 
-      const textColumn = await statesPage.getTextColumn(page, 1, 'name');
+      const textColumn = await boStatesPage.getTextColumn(page, 1, 'name');
       expect(textColumn).to.contains(dataStates.california.name);
     });
 
@@ -187,13 +186,13 @@ describe('BO - International - States : Filter and quick edit', async () => {
       it(`should ${status.args.status} the first state`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${status.args.status}State`, baseContext);
 
-        await statesPage.setStateStatus(
+        await boStatesPage.setStateStatus(
           page,
           1,
           status.args.enable,
         );
 
-        const currentStatus = await statesPage.getStateStatus(page, 1);
+        const currentStatus = await boStatesPage.getStateStatus(page, 1);
         expect(currentStatus).to.be.equal(status.args.enable);
       });
     });
@@ -201,7 +200,7 @@ describe('BO - International - States : Filter and quick edit', async () => {
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterQuickEdit', baseContext);
 
-      const numberOfStatesAfterReset = await statesPage.resetAndGetNumberOfLines(page);
+      const numberOfStatesAfterReset = await boStatesPage.resetAndGetNumberOfLines(page);
       expect(numberOfStatesAfterReset).to.equal(numberOfStates);
     });
   });

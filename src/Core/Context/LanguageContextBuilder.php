@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Context;
 
+use Language as LegacyLanguage;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Language\Repository\LanguageRepository as ObjectModelLanguageRepository;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
@@ -35,11 +36,16 @@ use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale\RepositoryInterface;
+use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 
 class LanguageContextBuilder implements LegacyContextBuilderInterface
 {
+    use LegacyObjectCheckerTrait;
+
     private ?int $languageId = null;
     private ?int $defaultLanguageId = null;
+
+    private ?LegacyLanguage $legacyLanguage = null;
 
     public function __construct(
         private readonly LanguageRepositoryInterface $languageRepository,
@@ -99,7 +105,7 @@ class LanguageContextBuilder implements LegacyContextBuilderInterface
         }
     }
 
-    private function getLocaleByLanguage(LanguageInterface $language)
+    private function getLocaleByLanguage(LanguageInterface $language): LocaleInterface
     {
         return $this->localeRepository->getLocale($language->getLocale());
     }
@@ -124,8 +130,29 @@ class LanguageContextBuilder implements LegacyContextBuilderInterface
     public function buildLegacyContext(): void
     {
         $this->assertArguments();
-        $language = $this->objectModelLanguageRepository->get(new LanguageId($this->languageId));
-        $this->contextStateManager->setLanguage($language);
-        $this->contextStateManager->setCurrentLocale($this->getLocaleByLanguage($language));
+
+        $legacyLanguage = $this->getLegacyLanguage();
+        $legacyLocale = $this->getLocaleByLanguage($legacyLanguage);
+
+        // Only update the legacy context when the language is not the expected one, if not leave the context unchanged
+        if ($this->legacyObjectNeedsUpdate($this->contextStateManager->getContext()->language, (int) $legacyLanguage->id)) {
+            $this->contextStateManager->setLanguage($this->getLegacyLanguage());
+        }
+
+        /** @var LocaleInterface|null $contextLocale */
+        $contextLocale = $this->contextStateManager->getContext()->currentLocale;
+        // Only update the legacy context when the locale is not the expected one, if not leave the context unchanged
+        if (empty($contextLocale) || $contextLocale->getCode() !== $legacyLocale->getCode()) {
+            $this->contextStateManager->setCurrentLocale($legacyLocale);
+        }
+    }
+
+    private function getLegacyLanguage(): ?LegacyLanguage
+    {
+        if ($this->legacyObjectNeedsUpdate($this->legacyLanguage, $this->languageId)) {
+            $this->legacyLanguage = $this->objectModelLanguageRepository->get(new LanguageId($this->languageId));
+        }
+
+        return $this->legacyLanguage;
     }
 }

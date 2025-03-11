@@ -1,12 +1,12 @@
 import {expect} from 'chai';
 import testContext from '@utils/testContext';
-import preferencesPage from '@pages/BO/shipping/preferences';
 
 import {
   boDashboardPage,
   boLoginPage,
   boCarriersPage,
   boCarriersCreatePage,
+  boShippingPreferencesPage,
   type BrowserContext,
   type Page,
   utilsPlaywright,
@@ -97,8 +97,8 @@ describe('BO - Shipping', async () => {
       boDashboardPage.shippingPreferencesLink,
     );
 
-    const pageTitle = await preferencesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(preferencesPage.pageTitle);
+    const pageTitle = await boShippingPreferencesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boShippingPreferencesPage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);

@@ -1,15 +1,12 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import contactPage from '@pages/BO/shopParameters/contact';
-import storesPage from '@pages/BO/shopParameters/stores';
-import addStorePage from '@pages/BO/shopParameters/stores/add';
-
 import {expect} from 'chai';
+
 import {
+  boContactsPage,
   boDashboardPage,
   boLoginPage,
+  boStoresPage,
+  boStoresCreatePage,
   type BrowserContext,
   FakerStore,
   type Page,
@@ -59,25 +56,25 @@ describe('BO - Shop Parameters - Contact : Sort and pagination stores', async ()
       boDashboardPage.shopParametersParentLink,
       boDashboardPage.contactLink,
     );
-    await contactPage.closeSfToolBar(page);
+    await boContactsPage.closeSfToolBar(page);
 
-    const pageTitle = await contactPage.getPageTitle(page);
-    expect(pageTitle).to.contains(contactPage.pageTitle);
+    const pageTitle = await boContactsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boContactsPage.pageTitle);
   });
 
   it('should go to stores page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToStoresPage', baseContext);
 
-    await contactPage.goToStoresPage(page);
+    await boContactsPage.goToStoresPage(page);
 
-    const pageTitle = await storesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(storesPage.pageTitle);
+    const pageTitle = await boStoresPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boStoresPage.pageTitle);
   });
 
   it('should reset all filters and get number of stores in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfStores = await storesPage.resetAndGetNumberOfLines(page);
+    numberOfStores = await boStoresPage.resetAndGetNumberOfLines(page);
     expect(numberOfStores).to.be.above(0);
   });
 
@@ -159,11 +156,11 @@ describe('BO - Shop Parameters - Contact : Sort and pagination stores', async ()
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await storesPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const nonSortedTable = await boStoresPage.getAllRowsColumnContent(page, test.args.sortBy);
 
-        await storesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+        await boStoresPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        const sortedTable = await storesPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await boStoresPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
@@ -200,19 +197,19 @@ describe('BO - Shop Parameters - Contact : Sort and pagination stores', async ()
           it('should go to add new store page', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `goToAddStorePage${index}`, baseContext);
 
-            await storesPage.goToNewStorePage(page);
+            await boStoresPage.goToNewStorePage(page);
 
-            const pageTitle = await addStorePage.getPageTitle(page);
-            expect(pageTitle).to.contains(addStorePage.pageTitleCreate);
+            const pageTitle = await boStoresCreatePage.getPageTitle(page);
+            expect(pageTitle).to.contains(boStoresCreatePage.pageTitleCreate);
           });
 
           it('should create store and check result', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `createStore${index}`, baseContext);
 
-            const textResult = await addStorePage.createEditStore(page, createStoreData);
-            expect(textResult).to.contains(storesPage.successfulCreationMessage);
+            const textResult = await boStoresCreatePage.createEditStore(page, createStoreData);
+            expect(textResult).to.contains(boStoresPage.successfulCreationMessage);
 
-            const numberOfStoresAfterCreation = await storesPage.getNumberOfElementInGrid(page);
+            const numberOfStoresAfterCreation = await boStoresPage.getNumberOfElementInGrid(page);
             expect(numberOfStoresAfterCreation).to.be.equal(numberOfStores + 1 + index);
           });
         });
@@ -223,28 +220,28 @@ describe('BO - Shop Parameters - Contact : Sort and pagination stores', async ()
       it('should change the items number to 20 per page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
-        const paginationNumber = await storesPage.selectPaginationLimit(page, 20);
+        const paginationNumber = await boStoresPage.selectPaginationLimit(page, 20);
         expect(paginationNumber).to.equal('1');
       });
 
       it('should click on next', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-        const paginationNumber = await storesPage.paginationNext(page);
+        const paginationNumber = await boStoresPage.paginationNext(page);
         expect(paginationNumber).to.equal('2');
       });
 
       it('should click on previous', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-        const paginationNumber = await storesPage.paginationPrevious(page);
+        const paginationNumber = await boStoresPage.paginationPrevious(page);
         expect(paginationNumber).to.equal('1');
       });
 
       it('should change the items number to 50 per page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
-        const paginationNumber = await storesPage.selectPaginationLimit(page, 50);
+        const paginationNumber = await boStoresPage.selectPaginationLimit(page, 50);
         expect(paginationNumber).to.equal('1');
       });
     });
@@ -253,13 +250,13 @@ describe('BO - Shop Parameters - Contact : Sort and pagination stores', async ()
       it('should filter list by name', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
-        await storesPage.filterTable(page, 'input', 'sl!name', 'todelete');
+        await boStoresPage.filterTable(page, 'input', 'sl!name', 'todelete');
 
-        const numberOfStoresAfterFilter = await storesPage.getNumberOfElementInGrid(page);
+        const numberOfStoresAfterFilter = await boStoresPage.getNumberOfElementInGrid(page);
         expect(numberOfStoresAfterFilter).to.be.at.least(16);
 
         for (let i = 1; i <= numberOfStoresAfterFilter; i++) {
-          const textColumn = await storesPage.getTextColumn(page, i, 'sl!name');
+          const textColumn = await boStoresPage.getTextColumn(page, i, 'sl!name');
           expect(textColumn).to.contains('todelete');
         }
       });
@@ -267,14 +264,14 @@ describe('BO - Shop Parameters - Contact : Sort and pagination stores', async ()
       it('should delete stores with Bulk Actions and check result', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteStores', baseContext);
 
-        const deleteTextResult = await storesPage.bulkDeleteStores(page);
-        expect(deleteTextResult).to.be.contains(storesPage.successfulMultiDeleteMessage);
+        const deleteTextResult = await boStoresPage.bulkDeleteStores(page);
+        expect(deleteTextResult).to.be.contains(boStoresPage.successfulMultiDeleteMessage);
       });
 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
-        const numberOfStoresAfterReset = await storesPage.resetAndGetNumberOfLines(page);
+        const numberOfStoresAfterReset = await boStoresPage.resetAndGetNumberOfLines(page);
         expect(numberOfStoresAfterReset).to.be.equal(numberOfStores);
       });
     });

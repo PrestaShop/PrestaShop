@@ -29,7 +29,9 @@ declare(strict_types=1);
 namespace PrestaShopBundle\EventListener\Admin\Context;
 
 use PrestaShop\PrestaShop\Core\Context\LegacyContextBuilderInterface;
-use Symfony\Component\HttpKernel\Event\ControllerEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\KernelEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * This listener is responsible for calling every LegacyContextBuilderInterface services and
@@ -45,7 +47,7 @@ use Symfony\Component\HttpKernel\Event\ControllerEvent;
  *
  * It is only used for the Back-Office/Admin application.
  */
-class LegacyContextListener
+class LegacyContextSubscriber implements EventSubscriberInterface
 {
     /**
      * @param iterable|LegacyContextBuilderInterface[] $legacyBuilders
@@ -55,7 +57,19 @@ class LegacyContextListener
     ) {
     }
 
-    public function onKernelController(ControllerEvent $event): void
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            // Build legacy context early in the process, so it is available for AdminController::init that is executed
+            // early in the process during the route matching in LegacyRouterChecker
+            KernelEvents::REQUEST => 'buildLegacyContext',
+            // Rebuild the legacy context after all request listeners executed and LegacyRouterChecker executed AdminController::init
+            // in case the legacy controller changed come context value
+            KernelEvents::CONTROLLER => 'buildLegacyContext',
+        ];
+    }
+
+    public function buildLegacyContext(KernelEvent $event): void
     {
         if (!$event->isMainRequest()) {
             return;

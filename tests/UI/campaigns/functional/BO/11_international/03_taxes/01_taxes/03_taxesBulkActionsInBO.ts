@@ -1,20 +1,16 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import addTaxPage from '@pages/BO/international/taxes/add';
+import {expect} from 'chai';
 
 import {
   boDashboardPage,
   boLoginPage,
   boTaxesPage,
+  boTaxesCreatePage,
   type BrowserContext,
   FakerTax,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_international_taxes_taxes_taxesBulkActionsInBO';
 
@@ -80,14 +76,14 @@ describe('BO - International - Taxes : Bulk actions', async () => {
 
         await boTaxesPage.goToAddNewTaxPage(page);
 
-        const pageTitle = await addTaxPage.getPageTitle(page);
-        expect(pageTitle).to.contains(addTaxPage.pageTitleCreate);
+        const pageTitle = await boTaxesCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boTaxesCreatePage.pageTitleCreate);
       });
 
       it('should create tax and check result', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `CreateTax${index + 1}`, baseContext);
 
-        const textResult = await addTaxPage.createEditTax(page, test.args.taxToCreate);
+        const textResult = await boTaxesCreatePage.createEditTax(page, test.args.taxToCreate);
         expect(textResult).to.equal(boTaxesPage.successfulCreationMessage);
 
         const numberOfTaxesAfterCreation = await boTaxesPage.getNumberOfElementInGrid(page);

@@ -36,7 +36,7 @@
     <tax id="27" name="TVA RO 19%" rate="19" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="28" name="Moms SE 25%" rate="25" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="29" name="DDV SI 22%" rate="22" auto-generated="1" from-eu-tax-group="virtual"/>
-    <tax id="30" name="DPH SK 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
+    <tax id="30" name="DPH SK 23%" rate="23" auto-generated="1" from-eu-tax-group="virtual"/>
     <taxRulesGroup name="NL Standard Rate (21%)">
       <taxRule iso_code_country="be" id_tax="1"/>
       <taxRule iso_code_country="bg" id_tax="1"/>

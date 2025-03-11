@@ -316,6 +316,20 @@ class MediaCore
         Configuration::updateValue('PS_CCCJS_VERSION', ++$version);
         $version = (int) Configuration::get('PS_CCCCSS_VERSION');
         Configuration::updateValue('PS_CCCCSS_VERSION', ++$version);
+
+        if (Shop::getContext() != Shop::CONTEXT_SHOP) {
+            foreach (Shop::getShops() as $shop) {
+                if (Configuration::hasKey('PS_CCCJS_VERSION', null, null, (int) $shop['id_shop'])) {
+                    $version = (int) Configuration::get('PS_CCCJS_VERSION', null, null, (int) $shop['id_shop']);
+                    Configuration::updateValue('PS_CCCJS_VERSION', ++$version, false, null, (int) $shop['id_shop']);
+                }
+
+                if (Configuration::hasKey('PS_CCCCSS_VERSION', null, null, (int) $shop['id_shop'])) {
+                    $version = (int) Configuration::get('PS_CCCCSS_VERSION', null, null, (int) $shop['id_shop']);
+                    Configuration::updateValue('PS_CCCCSS_VERSION', ++$version, false, null, (int) $shop['id_shop']);
+                }
+            }
+        }
     }
 
     /**

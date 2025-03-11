@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShopBundle\Twig\Layout\MenuBuilder;
 use PrestaShopBundle\Twig\Layout\TemplateVariables;
 use Shop;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Tools;
@@ -62,6 +63,7 @@ class HeadTag
         protected readonly LanguageContext $defaultLanguageContext,
         protected readonly CurrencyContext $currencyContext,
         protected readonly LegacyControllerContext $legacyControllerContext,
+        protected readonly RouterInterface $router,
     ) {
     }
 
@@ -108,6 +110,8 @@ class HeadTag
                 'show_new_orders' => $this->configuration->get('PS_SHOW_NEW_ORDERS'),
                 'show_new_customers' => $this->configuration->get('PS_SHOW_NEW_CUSTOMERS'),
                 'show_new_messages' => $this->configuration->get('PS_SHOW_NEW_MESSAGES'),
+                // Variable used in admin.js legacy javascript file
+                'changeFormLanguageUrl' => $this->router->generate('admin_employees_change_form_language'),
             ],
             Media::getJsDef(),
         );

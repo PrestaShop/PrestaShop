@@ -14,7 +14,7 @@ import {
   boCountriesCreatePage,
   boDashboardPage,
   boLoginPage,
-  boZonesPages,
+  boZonesPage,
   type BrowserContext,
   type Page,
   utilsPlaywright,
@@ -419,16 +419,16 @@ describe('WS - Countries : CRUD', async () => {
             boDashboardPage.internationalParentLink,
             boDashboardPage.locationsLink,
           );
-          await boZonesPages.closeSfToolBar(page);
+          await boZonesPage.closeSfToolBar(page);
 
-          const pageTitle = await boZonesPages.getPageTitle(page);
-          expect(pageTitle).to.contains(boZonesPages.pageTitle);
+          const pageTitle = await boZonesPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boZonesPage.pageTitle);
         });
 
         it('should go to \'Countries\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToCountriesPagePost', baseContext);
 
-          await boZonesPages.goToSubTabCountries(page);
+          await boZonesPage.goToSubTabCountries(page);
 
           const pageTitle = await boCountriesPage.getPageTitle(page);
           expect(pageTitle).to.contains(boCountriesPage.pageTitle);
@@ -551,7 +551,7 @@ describe('WS - Countries : CRUD', async () => {
         it('should go to \'Countries\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToCountriesPagePostReset', baseContext);
 
-          await boZonesPages.goToSubTabCountries(page);
+          await boZonesPage.goToSubTabCountries(page);
 
           const pageTitle = await boCountriesPage.getPageTitle(page);
           expect(pageTitle).to.contains(boCountriesPage.pageTitle);
@@ -813,7 +813,7 @@ describe('WS - Countries : CRUD', async () => {
         it('should go to \'Countries\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToCountriesPagePutReset', baseContext);
 
-          await boZonesPages.goToSubTabCountries(page);
+          await boZonesPage.goToSubTabCountries(page);
 
           const pageTitle = await boCountriesPage.getPageTitle(page);
           expect(pageTitle).to.contains(boCountriesPage.pageTitle);

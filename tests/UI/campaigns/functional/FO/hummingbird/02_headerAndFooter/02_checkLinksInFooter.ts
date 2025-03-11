@@ -17,7 +17,6 @@ import guestOrderTrackingPage from '@pages/FO/hummingbird/orderTracking/guestOrd
 import newProductsPage from '@pages/FO/hummingbird/newProducts';
 import pricesDropPage from '@pages/FO/hummingbird/pricesDrop';
 import securePaymentPage from '@pages/FO/hummingbird/securePayment';
-import storesPage from '@pages/FO/hummingbird/stores';
 import termsAndConditionsOfUsePage from '@pages/FO/hummingbird/termsAndConditionsOfUse';
 
 import {
@@ -34,6 +33,7 @@ import {
   foHummingbirdMyOrderHistoryPage,
   foHummingbirdMyWishlistsPage,
   foHummingbirdSitemapPage,
+  foHummingbirdStoresPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -119,7 +119,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
       {linkSelector: 'Secure payment', pageTitle: securePaymentPage.pageTitle},
       {linkSelector: 'Contact us', pageTitle: foHummingbirdContactUsPage.pageTitle},
       {linkSelector: 'Sitemap', pageTitle: foHummingbirdSitemapPage.pageTitle},
-      {linkSelector: 'Stores', pageTitle: storesPage.pageTitle},
+      {linkSelector: 'Stores', pageTitle: foHummingbirdStoresPage.pageTitle},
     ].forEach((args, index: number) => {
       it(`should check '${args.linkSelector}' footer links`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkOurCompanyFooterLinks${index}`, baseContext);

@@ -206,6 +206,11 @@ parameters:
 			path: src/Core/Context/CountryContextBuilder.php
 
 		-
+			message: "#^Class ObjectModel is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Context/CountryContextBuilder.php
+
+		-
 			message: "#^Namespace Country is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
 			count: 1
 			path: src/Core/Context/CountryContextBuilder.php
@@ -213,6 +218,11 @@ parameters:
 		-
 			message: "#^Class Currency is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
 			count: 2
+			path: src/Core/Context/CurrencyContextBuilder.php
+
+		-
+			message: "#^Class ObjectModel is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
 			path: src/Core/Context/CurrencyContextBuilder.php
 
 		-
@@ -226,9 +236,29 @@ parameters:
 			path: src/Core/Context/EmployeeContextBuilder.php
 
 		-
+			message: "#^Class ObjectModel is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Context/EmployeeContextBuilder.php
+
+		-
 			message: "#^Namespace Employee is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
 			count: 1
 			path: src/Core/Context/EmployeeContextBuilder.php
+
+		-
+			message: "#^Class Language is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Context/LanguageContextBuilder.php
+
+		-
+			message: "#^Class ObjectModel is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Context/LanguageContextBuilder.php
+
+		-
+			message: "#^Namespace Language is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Context/LanguageContextBuilder.php
 
 		-
 			message: "#^Namespace Language is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
@@ -244,6 +274,16 @@ parameters:
 			message: "#^Namespace Tools is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
 			count: 3
 			path: src/Core/Context/LegacyControllerContextBuilder.php
+
+		-
+			message: "#^Namespace ObjectModel is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Context/LegacyObjectCheckerTrait.php
+
+		-
+			message: "#^Class ObjectModel is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Context/ShopContextBuilder.php
 
 		-
 			message: "#^Class Shop is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"

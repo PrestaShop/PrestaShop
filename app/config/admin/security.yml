@@ -35,7 +35,7 @@ security:
         success_handler: PrestaShopBundle\Security\Admin\AdminAuthenticationSuccessHandler
       remember_me:
         secret: "%kernel.secret%"
-        lifetime: 3600
+        lifetime: "%prestashop.admin_cookie_lifetime%"
         remember_me_parameter: stay_logged_in
         signature_properties: [ 'password' ]
       logout:

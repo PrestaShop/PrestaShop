@@ -77,6 +77,7 @@ class LanguageContextBuilderTest extends TestCase
     public function testBuildLegacyContext(): void
     {
         $objectModelLanguage = $this->mockObjectModelLanguage();
+        $objectModelLanguage->id = 42;
         $objectModelLanguage->method('getId')->willReturn(42);
         $contextManagerMock = $this->createMock(ContextStateManager::class);
         $objectModelLanguageMock = $this->mockObjectModelLanguageRepository($objectModelLanguage);

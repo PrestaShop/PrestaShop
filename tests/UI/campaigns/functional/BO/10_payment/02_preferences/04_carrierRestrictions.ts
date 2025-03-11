@@ -1,13 +1,10 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-// Import BO pages
-import preferencesPage from '@pages/BO/payment/preferences';
+import {expect} from 'chai';
 
 import {
   boDashboardPage,
   boLoginPage,
+  boPaymentPreferencesPage,
   type BrowserContext,
   dataCustomers,
   foClassicCartPage,
@@ -18,8 +15,6 @@ import {
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_payment_preferences_carrierRestrictions';
 
@@ -86,10 +81,10 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
         boDashboardPage.paymentParentLink,
         boDashboardPage.preferencesLink,
       );
-      await preferencesPage.closeSfToolBar(page);
+      await boPaymentPreferencesPage.closeSfToolBar(page);
 
-      const pageTitle = await preferencesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(preferencesPage.pageTitle);
+      const pageTitle = await boPaymentPreferencesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boPaymentPreferencesPage.pageTitle);
     });
 
     [
@@ -106,20 +101,20 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
           baseContext,
         );
 
-        const result = await preferencesPage.setCarrierRestriction(
+        const result = await boPaymentPreferencesPage.setCarrierRestriction(
           page,
           0,
           test.args.paymentModule,
           test.args.exist,
         );
-        expect(result).to.contains(preferencesPage.successfulUpdateMessage);
+        expect(result).to.contains(boPaymentPreferencesPage.successfulUpdateMessage);
       });
 
       it('should view my shop', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
         // Click on view my shop
-        page = await preferencesPage.viewMyShop(page);
+        page = await boPaymentPreferencesPage.viewMyShop(page);
         // Change language in FO
         await foClassicHomePage.changeLanguage(page, 'en');
 
@@ -167,8 +162,8 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
         // Close current tab
         page = await foClassicHomePage.closePage(browserContext, page, 0);
 
-        const pageTitle = await preferencesPage.getPageTitle(page);
-        expect(pageTitle).to.contains(preferencesPage.pageTitle);
+        const pageTitle = await boPaymentPreferencesPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boPaymentPreferencesPage.pageTitle);
       });
     });
   });

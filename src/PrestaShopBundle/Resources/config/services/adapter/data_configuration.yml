@@ -85,6 +85,7 @@ services:
 
   prestashop.adapter.general.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\GeneralConfiguration'
+    autowire: true
     arguments:
       - '@prestashop.adapter.legacy.configuration'
       - '@=service("prestashop.adapter.legacy.context").getContext().cookie'

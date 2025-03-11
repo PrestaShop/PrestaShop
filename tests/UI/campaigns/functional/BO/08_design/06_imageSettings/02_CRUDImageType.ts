@@ -1,13 +1,10 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import imageSettingsPage from '@pages/BO/design/imageSettings';
-import addImageTypePage from '@pages/BO/design/imageSettings/add';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
+  boImageSettingsPage,
+  boImageSettingsCreatePage,
   boLoginPage,
   type BrowserContext,
   FakerImageType,
@@ -58,16 +55,16 @@ describe('BO - Design - Image Settings : CRUD image type in BO', async () => {
       boDashboardPage.designParentLink,
       boDashboardPage.imageSettingsLink,
     );
-    await imageSettingsPage.closeSfToolBar(page);
+    await boImageSettingsPage.closeSfToolBar(page);
 
-    const pageTitle = await imageSettingsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(imageSettingsPage.pageTitle);
+    const pageTitle = await boImageSettingsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boImageSettingsPage.pageTitle);
   });
 
   it('should reset all filters and get number of image types in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfImageTypes = await imageSettingsPage.resetAndGetNumberOfLines(page);
+    numberOfImageTypes = await boImageSettingsPage.resetAndGetNumberOfLines(page);
     expect(numberOfImageTypes).to.be.above(0);
   });
 
@@ -76,19 +73,19 @@ describe('BO - Design - Image Settings : CRUD image type in BO', async () => {
     it('should go to add new image type page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddImageTypePage', baseContext);
 
-      await imageSettingsPage.goToNewImageTypePage(page);
+      await boImageSettingsPage.goToNewImageTypePage(page);
 
-      const pageTitle = await addImageTypePage.getPageTitle(page);
-      expect(pageTitle).to.equal(addImageTypePage.pageTitleCreate);
+      const pageTitle = await boImageSettingsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.equal(boImageSettingsCreatePage.pageTitleCreate);
     });
 
     it('should create image type and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createImageType', baseContext);
 
-      const textResult = await addImageTypePage.createEditImageType(page, createImageTypeData);
-      expect(textResult).to.contains(imageSettingsPage.successfulCreationMessage);
+      const textResult = await boImageSettingsCreatePage.createEditImageType(page, createImageTypeData);
+      expect(textResult).to.contains(boImageSettingsPage.successfulCreationMessage);
 
-      const numberOfImageTypesAfterCreation = await imageSettingsPage.getNumberOfElementInGrid(page);
+      const numberOfImageTypesAfterCreation = await boImageSettingsPage.getNumberOfElementInGrid(page);
       expect(numberOfImageTypesAfterCreation).to.be.equal(numberOfImageTypes + 1);
     });
   });
@@ -98,34 +95,34 @@ describe('BO - Design - Image Settings : CRUD image type in BO', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdate', baseContext);
 
-      await imageSettingsPage.resetFilter(page);
-      await imageSettingsPage.filterTable(
+      await boImageSettingsPage.resetFilter(page);
+      await boImageSettingsPage.filterTable(
         page,
         'input',
         'name',
         createImageTypeData.name,
       );
 
-      const textEmail = await imageSettingsPage.getTextColumn(page, 1, 'name');
+      const textEmail = await boImageSettingsPage.getTextColumn(page, 1, 'name');
       expect(textEmail).to.contains(createImageTypeData.name);
     });
 
     it('should go to edit image type page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditImageTypePage', baseContext);
 
-      await imageSettingsPage.gotoEditImageTypePage(page, 1);
+      await boImageSettingsPage.gotoEditImageTypePage(page, 1);
 
-      const pageTitle = await addImageTypePage.getPageTitle(page);
-      expect(pageTitle).to.equal(addImageTypePage.pageTitleEdit(createImageTypeData.name));
+      const pageTitle = await boImageSettingsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.equal(boImageSettingsCreatePage.pageTitleEdit(createImageTypeData.name));
     });
 
     it('should update image type', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateImageType', baseContext);
 
-      const textResult = await addImageTypePage.createEditImageType(page, editImageTypeData);
-      expect(textResult).to.contains(imageSettingsPage.successfulUpdateMessage);
+      const textResult = await boImageSettingsCreatePage.createEditImageType(page, editImageTypeData);
+      expect(textResult).to.contains(boImageSettingsPage.successfulUpdateMessage);
 
-      const numberOfImageTypesAfterUpdate = await imageSettingsPage.resetAndGetNumberOfLines(page);
+      const numberOfImageTypesAfterUpdate = await boImageSettingsPage.resetAndGetNumberOfLines(page);
       expect(numberOfImageTypesAfterUpdate).to.be.equal(numberOfImageTypes + 1);
     });
   });
@@ -135,25 +132,25 @@ describe('BO - Design - Image Settings : CRUD image type in BO', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForDelete', baseContext);
 
-      await imageSettingsPage.resetFilter(page);
-      await imageSettingsPage.filterTable(
+      await boImageSettingsPage.resetFilter(page);
+      await boImageSettingsPage.filterTable(
         page,
         'input',
         'name',
         editImageTypeData.name,
       );
 
-      const textEmail = await imageSettingsPage.getTextColumn(page, 1, 'name');
+      const textEmail = await boImageSettingsPage.getTextColumn(page, 1, 'name');
       expect(textEmail).to.contains(editImageTypeData.name);
     });
 
     it('should delete image type', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteImageType', baseContext);
 
-      const textResult = await imageSettingsPage.deleteImageType(page, 1);
-      expect(textResult).to.contains(imageSettingsPage.successfulDeleteMessage);
+      const textResult = await boImageSettingsPage.deleteImageType(page, 1);
+      expect(textResult).to.contains(boImageSettingsPage.successfulDeleteMessage);
 
-      const numberOfImageTypesAfterDelete = await imageSettingsPage.resetAndGetNumberOfLines(page);
+      const numberOfImageTypesAfterDelete = await boImageSettingsPage.resetAndGetNumberOfLines(page);
       expect(numberOfImageTypesAfterDelete).to.be.equal(numberOfImageTypes);
     });
   });

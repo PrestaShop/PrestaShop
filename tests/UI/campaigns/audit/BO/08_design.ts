@@ -1,9 +1,4 @@
 import {expect} from 'chai';
-import imageSettingsPage from '@pages/BO/design/imageSettings';
-import addImageTypePage from '@pages/BO/design/imageSettings/add';
-import linkWidgetsPage from '@pages/BO/design/linkWidgets';
-import addLinkWidgetPage from '@pages/BO/design/linkWidgets/add';
-import addPagePage from '@pages/BO/design/pages/add';
 import testContext from '@utils/testContext';
 
 import {
@@ -12,8 +7,13 @@ import {
   boDashboardPage,
   boDesignEmailThemesPage,
   boDesignEmailThemesPreviewPage,
+  boDesignLinkListPage,
+  boDesignLinkListCreatePage,
+  boCMSPagesCreatePage,
   boDesignPositionsHookModulePage,
   boDesignPositionsPage,
+  boImageSettingsPage,
+  boImageSettingsCreatePage,
   boLoginPage,
   boThemeAdvancedConfigurationPage,
   boThemeAndLogoChooseLayoutsPage,
@@ -191,8 +191,8 @@ describe('BO - Design', async () => {
     await boCMSPageCategoriesCreatePage.goToPreviousPage(page);
     await boCMSPagesPage.goToAddNewPage(page);
 
-    const pageTitle = await addPagePage.getPageTitle(page);
-    expect(pageTitle).to.contains(addPagePage.pageTitleCreate);
+    const pageTitle = await boCMSPagesCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCMSPagesCreatePage.pageTitleCreate);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -204,8 +204,8 @@ describe('BO - Design', async () => {
     await boCMSPageCategoriesCreatePage.goToPreviousPage(page);
     await boCMSPagesPage.goToEditPage(page, 1);
 
-    const pageTitle = await addPagePage.getPageTitle(page);
-    expect(pageTitle).to.contains(addPagePage.editPageTitle(dataCMSPages.delivery.title));
+    const pageTitle = await boCMSPagesCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCMSPagesCreatePage.editPageTitle(dataCMSPages.delivery.title));
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -248,10 +248,10 @@ describe('BO - Design', async () => {
       boDashboardPage.designParentLink,
       boDashboardPage.imageSettingsLink,
     );
-    await imageSettingsPage.closeSfToolBar(page);
+    await boImageSettingsPage.closeSfToolBar(page);
 
-    const pageTitle = await imageSettingsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(imageSettingsPage.pageTitle);
+    const pageTitle = await boImageSettingsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boImageSettingsPage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -260,10 +260,10 @@ describe('BO - Design', async () => {
   it('should go to \'Design > Image Settings > Add new image type\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAddImageTypePage', baseContext);
 
-    await imageSettingsPage.goToNewImageTypePage(page);
+    await boImageSettingsPage.goToNewImageTypePage(page);
 
-    const pageTitle = await addImageTypePage.getPageTitle(page);
-    expect(pageTitle).to.equal(addImageTypePage.pageTitleCreate);
+    const pageTitle = await boImageSettingsCreatePage.getPageTitle(page);
+    expect(pageTitle).to.equal(boImageSettingsCreatePage.pageTitleCreate);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -272,11 +272,11 @@ describe('BO - Design', async () => {
   it('should go to \'Design > Image Settings > Edit image type\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEditImageTypePage', baseContext);
 
-    await addImageTypePage.goToPreviousPage(page);
-    await imageSettingsPage.gotoEditImageTypePage(page, 1);
+    await boImageSettingsCreatePage.goToPreviousPage(page);
+    await boImageSettingsPage.gotoEditImageTypePage(page, 1);
 
-    const pageTitle = await addImageTypePage.getPageTitle(page);
-    expect(pageTitle).to.equal(addImageTypePage.pageTitleEdit('cart_default'));
+    const pageTitle = await boImageSettingsCreatePage.getPageTitle(page);
+    expect(pageTitle).to.equal(boImageSettingsCreatePage.pageTitleEdit('cart_default'));
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -290,10 +290,10 @@ describe('BO - Design', async () => {
       boDashboardPage.designParentLink,
       boDashboardPage.linkWidgetLink,
     );
-    await linkWidgetsPage.closeSfToolBar(page);
+    await boDesignLinkListPage.closeSfToolBar(page);
 
-    const pageTitle = await linkWidgetsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(linkWidgetsPage.pageTitle);
+    const pageTitle = await boDesignLinkListPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDesignLinkListPage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -302,10 +302,10 @@ describe('BO - Design', async () => {
   it('should go to \'Design > Link List > New block\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToNewLinkWidgetPage', baseContext);
 
-    await linkWidgetsPage.goToNewLinkWidgetPage(page);
+    await boDesignLinkListPage.goToNewLinkWidgetPage(page);
 
-    const pageTitle = await addLinkWidgetPage.getPageTitle(page);
-    expect(pageTitle).to.contains(addLinkWidgetPage.pageTitle);
+    const pageTitle = await boDesignLinkListCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDesignLinkListCreatePage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -314,11 +314,11 @@ describe('BO - Design', async () => {
   it('should go to \'Design > Link List > Edit block\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEditLinkWidgetPage', baseContext);
 
-    await addLinkWidgetPage.goToPreviousPage(page);
-    await linkWidgetsPage.goToEditLinkWidgetPage(page, dataHooks.displayFooter.name, 1);
+    await boDesignLinkListCreatePage.goToPreviousPage(page);
+    await boDesignLinkListPage.goToEditBlock(page, dataHooks.displayFooter.name, 1);
 
-    const pageTitle = await addLinkWidgetPage.getPageTitle(page);
-    expect(pageTitle).to.contains(addLinkWidgetPage.pageTitle);
+    const pageTitle = await boDesignLinkListCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDesignLinkListCreatePage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);

@@ -1,12 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
 // Import pages
-import contactsPage from '@pages/BO/shopParameters/contact';
 import addContactPage from '@pages/BO/shopParameters/contact/add';
 
-import {expect} from 'chai';
 import {
+  boContactsPage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -54,16 +53,16 @@ describe('BO - Shop Parameters - Contact : Bulk delete contacts', async () => {
       boDashboardPage.shopParametersParentLink,
       boDashboardPage.contactLink,
     );
-    await contactsPage.closeSfToolBar(page);
+    await boContactsPage.closeSfToolBar(page);
 
-    const pageTitle = await contactsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(contactsPage.pageTitle);
+    const pageTitle = await boContactsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boContactsPage.pageTitle);
   });
 
   it('should reset all filters and get number of contacts in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfContacts = await contactsPage.resetAndGetNumberOfLines(page);
+    numberOfContacts = await boContactsPage.resetAndGetNumberOfLines(page);
     expect(numberOfContacts).to.be.above(0);
   });
 
@@ -78,7 +77,7 @@ describe('BO - Shop Parameters - Contact : Bulk delete contacts', async () => {
       it('should go to add new contact page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewContactPage${index + 1}`, baseContext);
 
-        await contactsPage.goToAddNewContactPage(page);
+        await boContactsPage.goToAddNewContactPage(page);
 
         const pageTitle = await addContactPage.getPageTitle(page);
         expect(pageTitle).to.contains(addContactPage.pageTitleCreate);
@@ -88,9 +87,9 @@ describe('BO - Shop Parameters - Contact : Bulk delete contacts', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `CreateContact${index + 1}`, baseContext);
 
         const textResult = await addContactPage.createEditContact(page, test.args.contactToCreate);
-        expect(textResult).to.equal(contactsPage.successfulCreationMessage);
+        expect(textResult).to.equal(boContactsPage.successfulCreationMessage);
 
-        const numberOfContactsAfterCreation = await contactsPage.getNumberOfElementInGrid(page);
+        const numberOfContactsAfterCreation = await boContactsPage.getNumberOfElementInGrid(page);
         expect(numberOfContactsAfterCreation).to.be.equal(numberOfContacts + index + 1);
       });
     });
@@ -101,13 +100,13 @@ describe('BO - Shop Parameters - Contact : Bulk delete contacts', async () => {
     it('should filter list by title', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
 
-      await contactsPage.filterContacts(page, 'name', 'todelete');
+      await boContactsPage.filterContacts(page, 'name', 'todelete');
 
-      const numberOfContactsAfterFilter = await contactsPage.getNumberOfElementInGrid(page);
+      const numberOfContactsAfterFilter = await boContactsPage.getNumberOfElementInGrid(page);
       expect(numberOfContactsAfterFilter).to.be.at.most(numberOfContacts);
 
       for (let i = 1; i <= numberOfContactsAfterFilter; i++) {
-        const textColumn = await contactsPage.getTextColumnFromTableContacts(page, i, 'name');
+        const textColumn = await boContactsPage.getTextColumnFromTableContacts(page, i, 'name');
         expect(textColumn).to.contains('todelete');
       }
     });
@@ -115,14 +114,14 @@ describe('BO - Shop Parameters - Contact : Bulk delete contacts', async () => {
     it('should delete contacts with Bulk Actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteContacts', baseContext);
 
-      const deleteTextResult = await contactsPage.deleteContactsBulkActions(page);
-      expect(deleteTextResult).to.be.equal(contactsPage.successfulMultiDeleteMessage);
+      const deleteTextResult = await boContactsPage.deleteContactsBulkActions(page);
+      expect(deleteTextResult).to.be.equal(boContactsPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
-      const numberOfContactsAfterReset = await contactsPage.resetAndGetNumberOfLines(page);
+      const numberOfContactsAfterReset = await boContactsPage.resetAndGetNumberOfLines(page);
       expect(numberOfContactsAfterReset).to.be.equal(numberOfContacts);
     });
   });

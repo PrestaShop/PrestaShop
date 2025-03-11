@@ -3,6 +3,7 @@ import testContext from '@utils/testContext';
 
 import {expect} from 'chai';
 import {
+  APIRequestContext,
   boApiClientsPage,
   boApiClientsCreatePage,
   boDashboardPage,
@@ -10,21 +11,31 @@ import {
   boModuleManagerPage,
   type BrowserContext,
   dataModules,
+  FakerAPIClient,
   type Page,
   utilsCore,
   utilsPlaywright,
+  utilsAPI,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'modules_ps_apiresources_installation_disableEnableModule';
 
 describe('PrestaShop API Resources module - Disable/Enable module', async () => {
+  let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
+  let clientSecret: string;
 
-  // before and after functions
+  const clientData: FakerAPIClient = new FakerAPIClient({
+    enabled: true,
+    scopes: ['api_client_read'],
+  });
+
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
+
+    apiContext = await utilsPlaywright.createAPIContext(global.API.URL);
   });
 
   after(async () => {
@@ -129,20 +140,86 @@ describe('PrestaShop API Resources module - Disable/Enable module', async () => 
         }
       });
 
-      // @todo : https://github.com/PrestaShop/PrestaShop/issues/34496
-      it(`should check that scopes from Module are present and ${test.action}d`, async function () {
+      it('should check that scopes from Module are present and enabled', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkScopesModule${index}`, baseContext);
 
-        this.skip();
-        /*
         const scopes = await boApiClientsCreatePage.getApiScopes(page, dataModules.psApiResources.tag);
 
         // eslint-disable-next-line no-restricted-syntax
         for (const scope of scopes) {
           const isScopeDisabled = await boApiClientsCreatePage.isAPIScopeDisabled(page, scope);
-          expect(isScopeDisabled).to.be.equal(!test.state);
+          expect(isScopeDisabled).to.be.equal(false);
         }
-        */
+      });
+
+      it('should create API Client', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `createAPIClient${index}`, baseContext);
+
+        const textResult = await boApiClientsCreatePage.addAPIClient(page, clientData);
+        expect(textResult).to.contains(boApiClientsCreatePage.successfulCreationMessage);
+
+        const textMessage = await boApiClientsCreatePage.getAlertInfoBlockParagraphContent(page);
+        expect(textMessage).to.contains(boApiClientsCreatePage.apiClientGeneratedMessage);
+      });
+
+      it('should copy client secret', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `copyClientSecret${index}`, baseContext);
+
+        await boApiClientsCreatePage.copyClientSecret(page);
+
+        clientSecret = await boApiClientsCreatePage.getClipboardText(page);
+        expect(clientSecret.length).to.be.gt(0);
+      });
+
+      it('should request the endpoint /access_token', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `requestOauth2Token${index}`, baseContext);
+
+        const apiResponse = await apiContext.post('access_token', {
+          form: {
+            client_id: clientData.clientId,
+            client_secret: clientSecret,
+            grant_type: 'client_credentials',
+            scope: clientData.scopes[0],
+          },
+        });
+
+        expect(apiResponse.status()).to.eq(test.state ? 200 : 400);
+        expect(utilsAPI.hasResponseHeader(apiResponse, 'Content-Type')).to.eq(true);
+        expect(utilsAPI.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
+
+        const jsonResponse = await apiResponse.json();
+
+        if (test.state) {
+          expect(jsonResponse).to.have.property('access_token');
+          expect(jsonResponse.access_token).to.be.a('string');
+        } else {
+          expect(jsonResponse).to.have.property('error');
+          expect(jsonResponse.error).to.be.a('string');
+          expect(jsonResponse.error).to.equals('invalid_scope');
+        }
+      });
+
+      it('should go to \'Advanced Parameters > API Client\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `returnToAdminAPIPage${index}`, baseContext);
+
+        await boDashboardPage.goToSubMenu(
+          page,
+          boDashboardPage.advancedParametersLink,
+          boDashboardPage.adminAPILink,
+        );
+
+        const pageTitle = await boApiClientsPage.getPageTitle(page);
+        expect(pageTitle).to.eq(boApiClientsPage.pageTitle);
+      });
+
+      it('should delete API Client', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `deleteAPIClient${index}`, baseContext);
+
+        const textResult = await boApiClientsPage.deleteAPIClient(page, 1);
+        expect(textResult).to.equal(boApiClientsCreatePage.successfulDeleteMessage);
+
+        const numElements = await boApiClientsPage.getNumberOfElementInGrid(page);
+        expect(numElements).to.equal(0);
       });
     });
   });

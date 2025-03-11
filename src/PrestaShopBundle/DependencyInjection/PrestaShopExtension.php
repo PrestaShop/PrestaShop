@@ -76,37 +76,54 @@ class PrestaShopExtension extends Extension implements PrependExtensionInterface
 
     public function prepend(ContainerBuilder $container)
     {
+        $container->setParameter('prestashop.admin_cookie_lifetime', $this->getAdminCookieLifetime());
         $this->preprendApiConfig($container);
         $this->preprendSessionConfig($container);
     }
 
     protected function preprendSessionConfig(ContainerBuilder $container)
     {
+        $container->prependExtensionConfig('framework', [
+            'session' => [
+                'cookie_lifetime' => $this->getAdminCookieLifetime(),
+                'cookie_samesite' => $this->getCookieSameSite(),
+            ],
+        ]);
+    }
+
+    protected function getCookieSameSite(): string
+    {
         try {
             /** @var ConfigurationInterface $configuration */
             $configuration = new Configuration();
-            $cookieLifetimeBo = (int) $configuration->get('PS_COOKIE_LIFETIME_BO');
             $cookieSamesite = $configuration->get('PS_COOKIE_SAMESITE');
-            if (empty($cookieLifetimeBo) || $cookieLifetimeBo <= 0) {
-                $cookieLifetimeBo = CookieOptions::MAX_COOKIE_VALUE;
-            }
-
             $cookieSamesite = match ($cookieSamesite) {
                 CookieOptions::SAMESITE_NONE => Cookie::SAMESITE_NONE,
                 CookieOptions::SAMESITE_STRICT => Cookie::SAMESITE_STRICT,
                 default => Cookie::SAMESITE_LAX,
             };
         } catch (Throwable) {
-            $cookieLifetimeBo = CookieOptions::MAX_COOKIE_VALUE;
             $cookieSamesite = 'lax';
         }
 
-        $container->prependExtensionConfig('framework', [
-            'session' => [
-                'cookie_lifetime' => $cookieLifetimeBo * 3600,
-                'cookie_samesite' => $cookieSamesite,
-            ],
-        ]);
+        return $cookieSamesite;
+    }
+
+    protected function getAdminCookieLifetime(): int
+    {
+        try {
+            /** @var ConfigurationInterface $configuration */
+            $configuration = new Configuration();
+            $cookieLifetimeBo = (int) $configuration->get('PS_COOKIE_LIFETIME_BO');
+            if (empty($cookieLifetimeBo) || $cookieLifetimeBo <= 0) {
+                $cookieLifetimeBo = CookieOptions::MAX_COOKIE_VALUE;
+            }
+        } catch (Throwable) {
+            $cookieLifetimeBo = CookieOptions::MAX_COOKIE_VALUE;
+        }
+
+        // Configuration value (and default value) are expressed in HOURS, so we convert it into seconds
+        return $cookieLifetimeBo * 3600;
     }
 
     protected function preprendApiConfig(ContainerBuilder $container)

@@ -71,11 +71,11 @@ services:
   PrestaShopBundle\EventListener\Admin\Context\CountryContextListener: ~
   PrestaShopBundle\EventListener\Admin\Context\LegacyControllerContextListener: ~
 
-  PrestaShopBundle\EventListener\Admin\Context\LegacyContextListener:
+  PrestaShopBundle\EventListener\Admin\Context\LegacyContextSubscriber:
+    autowire: true
+    autoconfigure: true
     arguments:
       $legacyBuilders: !tagged_iterator core.legacy_context_builder
-    tags:
-      - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
 
   # SSL middleware
   PrestaShopBundle\EventListener\Admin\SSLMiddlewareListener:

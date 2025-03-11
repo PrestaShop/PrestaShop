@@ -1,13 +1,10 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-// Import BO pages
-import preferencesPage from '@pages/BO/shipping/preferences';
+import {expect} from 'chai';
 
 import {
   boDashboardPage,
   boLoginPage,
+  boShippingPreferencesPage,
   type BrowserContext,
   dataCarriers,
   dataCustomers,
@@ -19,8 +16,6 @@ import {
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_shipping_preferences_carrierOptions_defaultCarrier';
 
@@ -63,10 +58,10 @@ describe('BO - Shipping - Preferences : Update default carrier and check it in F
       boDashboardPage.shippingLink,
       boDashboardPage.shippingPreferencesLink,
     );
-    await preferencesPage.closeSfToolBar(page);
+    await boShippingPreferencesPage.closeSfToolBar(page);
 
-    const pageTitle = await preferencesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(preferencesPage.pageTitle);
+    const pageTitle = await boShippingPreferencesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boShippingPreferencesPage.pageTitle);
   });
 
   const carriers: FakerCarrier[] = [
@@ -79,15 +74,15 @@ describe('BO - Shipping - Preferences : Update default carrier and check it in F
       it(`should set default carrier to ${carrier.name} in BO`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `setDefaultCarrier${index}`, baseContext);
 
-        const textResult = await preferencesPage.setDefaultCarrier(page, carrier);
-        expect(textResult).to.contain(preferencesPage.successfulUpdateMessage);
+        const textResult = await boShippingPreferencesPage.setDefaultCarrier(page, carrier);
+        expect(textResult).to.contain(boShippingPreferencesPage.successfulUpdateMessage);
       });
 
       it('should view my shop', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
         // Click on view my shop
-        page = await preferencesPage.viewMyShop(page);
+        page = await boShippingPreferencesPage.viewMyShop(page);
         // Change FO language
         await foClassicHomePage.changeLanguage(page, 'en');
 
@@ -129,8 +124,8 @@ describe('BO - Shipping - Preferences : Update default carrier and check it in F
 
         page = await foClassicCheckoutPage.closePage(browserContext, page, 0);
 
-        const pageTitle = await preferencesPage.getPageTitle(page);
-        expect(pageTitle).to.contains(preferencesPage.pageTitle);
+        const pageTitle = await boShippingPreferencesPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boShippingPreferencesPage.pageTitle);
       });
     });
   });

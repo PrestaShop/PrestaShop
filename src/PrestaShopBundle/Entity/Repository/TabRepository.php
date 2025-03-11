@@ -137,7 +137,8 @@ class TabRepository extends EntityRepository
         if (!isset($this->cachedTabIds[$className])) {
             $result = $this->createQueryBuilder('t')
                 ->select('t.id, t.className')
-                ->where('t.className = :className')
+                // Use binary to force a case-sensitive comparison (HOME and Home are different)
+                ->where('t.className = BINARY(:className)')
                 ->andWhere('t.id != 0')
                 ->setParameter('className', $className)
                 ->getQuery()

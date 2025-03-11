@@ -4,14 +4,13 @@ import {expect} from 'chai';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
-import storesPage from '@pages/BO/shopParameters/stores';
-
 import {
   boCartRulesPage,
   boCartRulesCreatePage,
   boDashboardPage,
   boLoginPage,
   boModuleManagerPage,
+  boStoresPage,
   boTranslationsPage,
   type BrowserContext,
   dataCustomers,
@@ -394,7 +393,7 @@ describe('BO - International - Translation : Modify translation', async () => {
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'openFO', baseContext);
 
-      page = await storesPage.viewMyShop(page);
+      page = await boStoresPage.viewMyShop(page);
       await foClassicHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foClassicHomePage.isHomePage(page);

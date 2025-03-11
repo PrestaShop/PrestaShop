@@ -1548,7 +1548,7 @@ class CategoryCore extends ObjectModel
         if (!$context->shop->id) {
             $context->shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
         }
-        if (count(Category::getCategoriesWithoutParent()) > 1) {
+        if (Shop::getContext() !== Shop::CONTEXT_SHOP && count(Category::getCategoriesWithoutParent()) > 1) {
             $context->shop->id_category = (int) Configuration::get('PS_ROOT_CATEGORY');
         }
         $idShop = $context->shop->id;

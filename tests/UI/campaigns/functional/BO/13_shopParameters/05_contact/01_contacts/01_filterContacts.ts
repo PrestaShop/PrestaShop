@@ -1,12 +1,8 @@
-// Import utils
 import testContext from '@utils/testContext';
-
 import {expect} from 'chai';
 
-// Import pages
-import contactsPage from '@pages/BO/shopParameters/contact';
-
 import {
+  boContactsPage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -51,16 +47,16 @@ describe('BO - Shop Parameters - Contact : Filter Contacts table', async () => {
       boDashboardPage.shopParametersParentLink,
       boDashboardPage.contactLink,
     );
-    await contactsPage.closeSfToolBar(page);
+    await boContactsPage.closeSfToolBar(page);
 
-    const pageTitle = await contactsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(contactsPage.pageTitle);
+    const pageTitle = await boContactsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boContactsPage.pageTitle);
   });
 
   it('should reset all filters and get number of contacts in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfContacts = await contactsPage.resetAndGetNumberOfLines(page);
+    numberOfContacts = await boContactsPage.resetAndGetNumberOfLines(page);
     expect(numberOfContacts).to.be.above(0);
   });
 
@@ -84,13 +80,13 @@ describe('BO - Shop Parameters - Contact : Filter Contacts table', async () => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}`, baseContext);
 
-        await contactsPage.filterContacts(page, test.args.filterBy, test.args.filterValue);
+        await boContactsPage.filterContacts(page, test.args.filterBy, test.args.filterValue);
 
-        const numberOfContactsAfterFilter = await contactsPage.getNumberOfElementInGrid(page);
+        const numberOfContactsAfterFilter = await boContactsPage.getNumberOfElementInGrid(page);
         expect(numberOfContactsAfterFilter).to.be.at.most(numberOfContacts);
 
         for (let i = 1; i <= numberOfContactsAfterFilter; i++) {
-          const textColumn = await contactsPage.getTextColumnFromTableContacts(page, i, test.args.filterBy);
+          const textColumn = await boContactsPage.getTextColumnFromTableContacts(page, i, test.args.filterBy);
           expect(textColumn).to.contains(test.args.filterValue);
         }
       });
@@ -98,7 +94,7 @@ describe('BO - Shop Parameters - Contact : Filter Contacts table', async () => {
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfContactsAfterReset = await contactsPage.resetAndGetNumberOfLines(page);
+        const numberOfContactsAfterReset = await boContactsPage.resetAndGetNumberOfLines(page);
         expect(numberOfContactsAfterReset).to.equal(numberOfContacts);
       });
     });

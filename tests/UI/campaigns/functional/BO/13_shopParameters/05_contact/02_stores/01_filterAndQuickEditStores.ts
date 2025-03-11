@@ -1,14 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import contactPage from '@pages/BO/shopParameters/contact';
-import storesPage from '@pages/BO/shopParameters/stores';
-
 import {expect} from 'chai';
+
 import {
+  boContactsPage,
   boDashboardPage,
   boLoginPage,
+  boStoresPage,
   type BrowserContext,
   dataStores,
   type Page,
@@ -50,25 +47,25 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
       boDashboardPage.shopParametersParentLink,
       boDashboardPage.contactLink,
     );
-    await contactPage.closeSfToolBar(page);
+    await boContactsPage.closeSfToolBar(page);
 
-    const pageTitle = await contactPage.getPageTitle(page);
-    expect(pageTitle).to.contains(contactPage.pageTitle);
+    const pageTitle = await boContactsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boContactsPage.pageTitle);
   });
 
   it('should go to \'Stores\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToStoresPage', baseContext);
 
-    await contactPage.goToStoresPage(page);
+    await boContactsPage.goToStoresPage(page);
 
-    const pageTitle = await storesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(storesPage.pageTitle);
+    const pageTitle = await boStoresPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boStoresPage.pageTitle);
   });
 
   it('should reset all filters and get number of stores in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfStores = await storesPage.resetAndGetNumberOfLines(page);
+    numberOfStores = await boStoresPage.resetAndGetNumberOfLines(page);
     expect(numberOfStores).to.be.above(0);
   });
 
@@ -170,22 +167,22 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
       it(`should filter by ${test.args.column} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filter${test.args.column}`, baseContext);
 
-        await storesPage.filterTable(
+        await boStoresPage.filterTable(
           page,
           test.args.filterType,
           test.args.filterBy,
           test.args.filterValue,
         );
 
-        const numberOfStoresAfterFilter = await storesPage.getNumberOfElementInGrid(page);
+        const numberOfStoresAfterFilter = await boStoresPage.getNumberOfElementInGrid(page);
         expect(numberOfStoresAfterFilter).to.be.at.most(numberOfStores);
 
         for (let row = 1; row <= numberOfStoresAfterFilter; row++) {
           if (test.args.column === 'Status') {
-            const storeStatus = await storesPage.getStoreStatus(page, row);
+            const storeStatus = await boStoresPage.getStoreStatus(page, row);
             expect(storeStatus).to.equal(test.args.filterValue === '1');
           } else {
-            const textColumn = await storesPage.getTextColumn(page, row, test.args.filterBy);
+            const textColumn = await boStoresPage.getTextColumn(page, row, test.args.filterBy);
             expect(textColumn).to.contains(test.args.filterValue);
           }
         }
@@ -194,7 +191,7 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `resetFilter${test.args.column}`, baseContext);
 
-        const numberOfStoresAfterReset = await storesPage.resetAndGetNumberOfLines(page);
+        const numberOfStoresAfterReset = await boStoresPage.resetAndGetNumberOfLines(page);
         expect(numberOfStoresAfterReset).to.equal(numberOfStores);
       });
     });
@@ -204,12 +201,12 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
     it(`should filter by name '${dataStores.store_2.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
-      await storesPage.filterTable(page, 'input', 'sl!name', dataStores.store_2.name);
+      await boStoresPage.filterTable(page, 'input', 'sl!name', dataStores.store_2.name);
 
-      const numberOfStoresAfterFilter = await storesPage.getNumberOfElementInGrid(page);
+      const numberOfStoresAfterFilter = await boStoresPage.getNumberOfElementInGrid(page);
       expect(numberOfStoresAfterFilter).to.be.at.most(numberOfStores);
 
-      const textColumn = await storesPage.getTextColumn(page, 1, 'sl!name');
+      const textColumn = await boStoresPage.getTextColumn(page, 1, 'sl!name');
       expect(textColumn).to.contains(dataStores.store_2.name);
     });
 
@@ -222,9 +219,9 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
       it(`should ${test.args.action} first element in grid`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Store`, baseContext);
 
-        await storesPage.setStoreStatus(page, 1, test.args.statusWanted);
+        await boStoresPage.setStoreStatus(page, 1, test.args.statusWanted);
 
-        const storeStatus = await storesPage.getStoreStatus(page, 1);
+        const storeStatus = await boStoresPage.getStoreStatus(page, 1);
         expect(storeStatus).to.equal(test.args.statusWanted);
       });
     });
@@ -232,7 +229,7 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterQuickEdit', baseContext);
 
-      const numberOfStoresAfterReset = await storesPage.resetAndGetNumberOfLines(page);
+      const numberOfStoresAfterReset = await boStoresPage.resetAndGetNumberOfLines(page);
       expect(numberOfStoresAfterReset).to.equal(numberOfStores);
     });
   });

@@ -2,6 +2,30 @@
   padding: var(--#{$cdk}size-16) var(--#{$cdk}size-16) var(--#{$cdk}size-16) calc(var(--#{$cdk}sidebar-width) + var(--#{$cdk}size-16));
   transition: padding var(--#{$cdk}default-transition-duration);
 
+  // Links
+  a {
+    &[href] {
+      // Exclude classes that don't need underline
+      &:not(
+      .breadcrumb a,
+      .dropdown-menu a,
+      table a,
+      [class*="btn"],
+      [class*="dropdown"],
+      [class*="list-group-item"],
+      [class*="kpi-container"],
+      [class*="nav-link"]) {
+        text-decoration: underline;
+        text-underline-offset: var(--#{$cdk}size-2);
+        transition: var(--#{$cdk}default-transition);
+
+        &:hover {
+          text-underline-offset: var(--#{$cdk}size-4);
+        }
+      }
+    }
+  }
+
   @include media-breakpoint-down(md) {
     padding-inline: var(--#{$cdk}size-16);
 

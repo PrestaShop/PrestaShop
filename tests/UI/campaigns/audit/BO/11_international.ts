@@ -1,27 +1,26 @@
 import {expect} from 'chai';
 import testContext from '@utils/testContext';
 
-import geolocationPage from '@pages/BO/international/localization/geolocation';
-import addZonePage from '@pages/BO/international/locations/add';
-import statesPage from '@pages/BO/international/locations/states';
-import addStatePage from '@pages/BO/international/locations/states/add';
-import addTaxPage from '@pages/BO/international/taxes/add';
-
 import {
   boCountriesPage,
   boCountriesCreatePage,
   boCurrenciesPage,
   boCurrenciesCreatePage,
   boDashboardPage,
+  boGeolocationPage,
   boLoginPage,
   boLocalizationPage,
   boLanguagesPage,
   boLanguagesCreatePage,
+  boStatesPage,
+  boStatesCreatePage,
   boTaxesPage,
+  boTaxesCreatePage,
   boTaxRulesPage,
   boTaxRulesCreatePage,
   boTranslationsPage,
-  boZonesPages,
+  boZonesPage,
+  boZonesCreatePage,
   type BrowserContext,
   type Page,
   utilsPlaywright,
@@ -157,8 +156,8 @@ describe('BO - International', async () => {
 
     await boLocalizationPage.goToSubTabGeolocation(page);
 
-    const pageTitle = await geolocationPage.getPageTitle(page);
-    expect(pageTitle).to.equal(geolocationPage.pageTitle);
+    const pageTitle = await boGeolocationPage.getPageTitle(page);
+    expect(pageTitle).to.equal(boGeolocationPage.pageTitle);
   });
 
   it('should go to \'Locations > Zones\' page', async function () {
@@ -171,8 +170,8 @@ describe('BO - International', async () => {
     );
     await boLocalizationPage.closeSfToolBar(page);
 
-    const pageTitle = await boZonesPages.getPageTitle(page);
-    expect(pageTitle).to.contains(boZonesPages.pageTitle);
+    const pageTitle = await boZonesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boZonesPage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -181,10 +180,10 @@ describe('BO - International', async () => {
   it('should go to \'Locations > Zones > New Zone\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewZonePage', baseContext);
 
-    await boZonesPages.goToAddNewZonePage(page);
+    await boZonesPage.goToAddNewZonePage(page);
 
-    const pageTitle = await addZonePage.getPageTitle(page);
-    expect(pageTitle).to.contains(addZonePage.pageTitleCreate);
+    const pageTitle = await boZonesCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boZonesCreatePage.pageTitleCreate);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -193,16 +192,16 @@ describe('BO - International', async () => {
   it('should go to \'Locations > Zones > Edit Zone\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goEditToZonesPage', baseContext);
 
-    await addZonePage.goToSubMenu(
+    await boZonesCreatePage.goToSubMenu(
       page,
       boDashboardPage.internationalParentLink,
       boDashboardPage.locationsLink,
     );
 
-    await boZonesPages.goToEditZonePage(page, 1);
+    await boZonesPage.goToEditZonePage(page, 1);
 
-    const pageTitle = await addZonePage.getPageTitle(page);
-    expect(pageTitle).to.contains(addZonePage.pageTitleEdit);
+    const pageTitle = await boZonesCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boZonesCreatePage.pageTitleEdit);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -211,7 +210,7 @@ describe('BO - International', async () => {
   it('should go to \'Locations > Countries\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCountriesPage', baseContext);
 
-    await boZonesPages.goToSubTabCountries(page);
+    await boZonesPage.goToSubTabCountries(page);
 
     const pageTitle = await boCountriesPage.getPageTitle(page);
     expect(pageTitle).to.contains(boCountriesPage.pageTitle);
@@ -235,7 +234,7 @@ describe('BO - International', async () => {
   it('should go to \'Locations > Countries > Edit Country\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEditCountriesPage', baseContext);
 
-    await boZonesPages.goToSubTabCountries(page);
+    await boZonesPage.goToSubTabCountries(page);
     await boCountriesPage.goToEditCountryPage(page, 1);
 
     const pageTitle = await boCountriesCreatePage.getPageTitle(page);
@@ -248,10 +247,10 @@ describe('BO - International', async () => {
   it('should go to \'Locations > States\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToStatesPage', baseContext);
 
-    await boZonesPages.goToSubTabStates(page);
+    await boZonesPage.goToSubTabStates(page);
 
-    const pageTitle = await statesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(statesPage.pageTitle);
+    const pageTitle = await boStatesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boStatesPage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -260,10 +259,10 @@ describe('BO - International', async () => {
   it('should go to \'Locations > States > New State\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewStatePage', baseContext);
 
-    await statesPage.goToAddNewStatePage(page);
+    await boStatesPage.goToAddNewStatePage(page);
 
-    const pageTitle = await addStatePage.getPageTitle(page);
-    expect(pageTitle).to.contains(addStatePage.pageTitleCreate);
+    const pageTitle = await boStatesCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boStatesCreatePage.pageTitleCreate);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -272,11 +271,11 @@ describe('BO - International', async () => {
   it('should go to \'Locations > States > Edit State\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEditStatesPage', baseContext);
 
-    await boZonesPages.goToSubTabStates(page);
-    await statesPage.goToEditStatePage(page, 1);
+    await boZonesPage.goToSubTabStates(page);
+    await boStatesPage.goToEditStatePage(page, 1);
 
-    const pageTitle = await addStatePage.getPageTitle(page);
-    expect(pageTitle).to.contains(addStatePage.pageTitleEdit);
+    const pageTitle = await boStatesCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boStatesCreatePage.pageTitleEdit);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -303,8 +302,8 @@ describe('BO - International', async () => {
 
     await boTaxesPage.goToAddNewTaxPage(page);
 
-    const pageTitle = await addTaxPage.getPageTitle(page);
-    expect(pageTitle).to.contains(addTaxPage.pageTitleCreate);
+    const pageTitle = await boTaxesCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boTaxesCreatePage.pageTitleCreate);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -313,15 +312,15 @@ describe('BO - International', async () => {
   it('should go to \'International > Taxes > Edit Tax\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEditTaxesPage', baseContext);
 
-    await addTaxPage.goToSubMenu(
+    await boTaxesCreatePage.goToSubMenu(
       page,
       boDashboardPage.internationalParentLink,
       boDashboardPage.taxesLink,
     );
     await boTaxesPage.goToEditTaxPage(page, 1);
 
-    const pageTitle = await addTaxPage.getPageTitle(page);
-    expect(pageTitle).to.contains(addTaxPage.pageTitleEdit);
+    const pageTitle = await boTaxesCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boTaxesCreatePage.pageTitleEdit);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);

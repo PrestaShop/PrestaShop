@@ -1,11 +1,9 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-// Import pages
-import addPagePage from '@pages/BO/design/pages/add';
-
 import {
   boCMSPagesPage,
+  boCMSPagesCreatePage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -79,14 +77,14 @@ describe('BO - design - Pages : Pagination of Pages table', async () => {
 
         await boCMSPagesPage.goToAddNewPage(page);
 
-        const pageTitle = await addPagePage.getPageTitle(page);
-        expect(pageTitle).to.contains(addPagePage.pageTitleCreate);
+        const pageTitle = await boCMSPagesCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCMSPagesCreatePage.pageTitleCreate);
       });
 
       it(`should create page n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createPage${index}`, baseContext);
 
-        const textResult = await addPagePage.createEditPage(page, createPageData);
+        const textResult = await boCMSPagesCreatePage.createEditPage(page, createPageData);
         expect(textResult).to.equal(boCMSPagesPage.successfulCreationMessage);
       });
     });

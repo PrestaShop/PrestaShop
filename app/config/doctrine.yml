@@ -28,3 +28,4 @@ doctrine:
     dql:
       string_functions:
         regexp: DoctrineExtensions\Query\Mysql\Regexp
+        binary: DoctrineExtensions\Query\Mysql\Binary

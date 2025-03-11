@@ -1,5 +1,5 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
 // Import webservices
 import StoreWS from '@webservices/store/storeWS';
@@ -10,19 +10,18 @@ import {addWebserviceKey, removeWebserviceKey, setWebserviceStatus} from '@commo
 
 // Import BO pages
 import webservicePage from '@pages/BO/advancedParameters/webservice';
-import contactPage from '@pages/BO/shopParameters/contact';
-import storesPage from '@pages/BO/shopParameters/stores';
-import addStorePage from '@pages/BO/shopParameters/stores/add';
 
 // Import data
 import {getStoreXml, getUpdateStoreXml} from '@data/xml/store';
 
-import {expect} from 'chai';
 import {
   type APIRequestContext,
   type APIResponse,
+  boContactsPage,
   boDashboardPage,
   boLoginPage,
+  boStoresPage,
+  boStoresCreatePage,
   type BrowserContext,
   type Page,
   utilsPlaywright,
@@ -436,50 +435,50 @@ describe('WS - Stores : CRUD', async () => {
             boDashboardPage.shopParametersParentLink,
             boDashboardPage.contactLink,
           );
-          await contactPage.closeSfToolBar(page);
+          await boContactsPage.closeSfToolBar(page);
 
-          const pageTitle = await contactPage.getPageTitle(page);
-          expect(pageTitle).to.contains(contactPage.pageTitle);
+          const pageTitle = await boContactsPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boContactsPage.pageTitle);
         });
 
         it('should go to \'Stores\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToStoresPagePost', baseContext);
 
-          await contactPage.goToStoresPage(page);
+          await boContactsPage.goToStoresPage(page);
 
-          const pageTitle = await storesPage.getPageTitle(page);
-          expect(pageTitle).to.contains(storesPage.pageTitle);
+          const pageTitle = await boStoresPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boStoresPage.pageTitle);
         });
 
         it('should filter store by ID', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdateAfterPost', baseContext);
 
           // Filter
-          await storesPage.resetFilter(page);
-          await storesPage.filterTable(page, 'input', 'id_store', storeNodeID as string);
+          await boStoresPage.resetFilter(page);
+          await boStoresPage.filterTable(page, 'input', 'id_store', storeNodeID as string);
 
           // Check number of stores
-          const numberOfStoresAfterFilter = await storesPage.getNumberOfElementInGrid(page);
+          const numberOfStoresAfterFilter = await boStoresPage.getNumberOfElementInGrid(page);
           expect(numberOfStoresAfterFilter).to.be.eq(1);
 
-          const textColumn = await storesPage.getTextColumn(page, 1, 'id_store');
+          const textColumn = await boStoresPage.getTextColumn(page, 1, 'id_store');
           expect(textColumn).to.contains(storeNodeID as string);
         });
 
         it('should go to edit store page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToEditStorePageAfterPost', baseContext);
 
-          await storesPage.gotoEditStorePage(page, 1);
+          await boStoresPage.gotoEditStorePage(page, 1);
 
-          const pageTitle = await addStorePage.getPageTitle(page);
-          expect(pageTitle).to.contains(addStorePage.pageTitleEdit);
+          const pageTitle = await boStoresCreatePage.getPageTitle(page);
+          expect(pageTitle).to.contains(boStoresCreatePage.pageTitleEdit);
         });
 
         it('should check store\'s name language 1', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreNameLang1', baseContext);
 
           const xmlValueName1 = storeXml.getLangEltTextContent(xmlCreate, 'name', '1');
-          const valueName1 = await addStorePage.getInputValue(page, 'name', '1');
+          const valueName1 = await boStoresCreatePage.getInputValue(page, 'name', '1');
           expect(valueName1).to.be.eq(xmlValueName1);
         });
 
@@ -487,7 +486,7 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreNameLang2', baseContext);
 
           const xmlValueName2 = storeXml.getLangEltTextContent(xmlCreate, 'name', '2');
-          const valueName2 = await addStorePage.getInputValue(page, 'name', '2');
+          const valueName2 = await boStoresCreatePage.getInputValue(page, 'name', '2');
           expect(valueName2).to.be.eq(xmlValueName2);
         });
 
@@ -495,7 +494,7 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreAddress1Lang1', baseContext);
 
           const xmlValueAddress = storeXml.getLangEltTextContent(xmlCreate, 'address1', '1');
-          const valueAddress = await addStorePage.getInputValue(page, 'address1', '1');
+          const valueAddress = await boStoresCreatePage.getInputValue(page, 'address1', '1');
           expect(valueAddress).to.be.eq(xmlValueAddress);
         });
 
@@ -503,7 +502,7 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreAddress1Lang2', baseContext);
 
           const xmlValueAddress = storeXml.getLangEltTextContent(xmlCreate, 'address1', '2');
-          const valueAddress = await addStorePage.getInputValue(page, 'address1', '2');
+          const valueAddress = await boStoresCreatePage.getInputValue(page, 'address1', '2');
           expect(valueAddress).to.be.eq(xmlValueAddress);
         });
 
@@ -511,7 +510,7 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreAddress2Lang1', baseContext);
 
           const xmlValueAddress = storeXml.getLangEltTextContent(xmlCreate, 'address2', '1');
-          const valueAddress = await addStorePage.getInputValue(page, 'address2', '1');
+          const valueAddress = await boStoresCreatePage.getInputValue(page, 'address2', '1');
           expect(valueAddress).to.be.eq(xmlValueAddress);
         });
 
@@ -519,7 +518,7 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreAddress2Lang2', baseContext);
 
           const xmlValueAddress = storeXml.getLangEltTextContent(xmlCreate, 'address2', '2');
-          const valueAddress = await addStorePage.getInputValue(page, 'address2', '2');
+          const valueAddress = await boStoresCreatePage.getInputValue(page, 'address2', '2');
           expect(valueAddress).to.be.eq(xmlValueAddress);
         });
 
@@ -527,7 +526,7 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStorePostcode', baseContext);
 
           const xmlValuePostcode = storeXml.getEltTextContent(xmlCreate, 'postcode');
-          const valuePostcode = await addStorePage.getInputValue(page, 'postcode');
+          const valuePostcode = await boStoresCreatePage.getInputValue(page, 'postcode');
           expect(valuePostcode).to.be.eq(xmlValuePostcode);
         });
 
@@ -535,7 +534,7 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreCity', baseContext);
 
           const xmlValueCity = storeXml.getEltTextContent(xmlCreate, 'city');
-          const valueCity = await addStorePage.getInputValue(page, 'city');
+          const valueCity = await boStoresCreatePage.getInputValue(page, 'city');
 
           expect(valueCity).to.be.eq(xmlValueCity);
         });
@@ -544,7 +543,7 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreCountry', baseContext);
 
           const xmlValueIDCountry = storeXml.getEltTextContent(xmlCreate, 'id_country');
-          const valueIDCountry = await addStorePage.getSelectValue(page, 'id_country');
+          const valueIDCountry = await boStoresCreatePage.getSelectValue(page, 'id_country');
 
           expect(valueIDCountry).to.be.eq(xmlValueIDCountry);
         });
@@ -553,7 +552,7 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreState', baseContext);
 
           const xmlValueIDState = storeXml.getEltTextContent(xmlCreate, 'id_state');
-          const valueIDState = await addStorePage.getSelectValue(page, 'id_state');
+          const valueIDState = await boStoresCreatePage.getSelectValue(page, 'id_state');
           expect(valueIDState).to.be.eq(xmlValueIDState);
         });
 
@@ -561,7 +560,7 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreLatitude', baseContext);
 
           const xmlValueLatitude = storeXml.getEltTextContent(xmlCreate, 'latitude');
-          const valueLatitude = await addStorePage.getInputValue(page, 'latitude');
+          const valueLatitude = await boStoresCreatePage.getInputValue(page, 'latitude');
           expect(valueLatitude).to.be.eq(xmlValueLatitude);
         });
 
@@ -569,7 +568,7 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreLongitude', baseContext);
 
           const xmlValueLongitude = storeXml.getEltTextContent(xmlCreate, 'longitude');
-          const valueLongitude = await addStorePage.getInputValue(page, 'longitude');
+          const valueLongitude = await boStoresCreatePage.getInputValue(page, 'longitude');
           expect(valueLongitude).to.be.eq(xmlValueLongitude);
         });
 
@@ -577,7 +576,7 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStorePhone', baseContext);
 
           const xmlValuePhone = storeXml.getEltTextContent(xmlCreate, 'phone');
-          const valuePhone = await addStorePage.getInputValue(page, 'phone');
+          const valuePhone = await boStoresCreatePage.getInputValue(page, 'phone');
           expect(valuePhone).to.be.eq(xmlValuePhone);
         });
 
@@ -585,7 +584,7 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreFax', baseContext);
 
           const xmlValueFax = storeXml.getEltTextContent(xmlCreate, 'fax');
-          const valueFax = await addStorePage.getInputValue(page, 'fax');
+          const valueFax = await boStoresCreatePage.getInputValue(page, 'fax');
           expect(valueFax).to.be.eq(xmlValueFax);
         });
 
@@ -593,7 +592,7 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreEmail', baseContext);
 
           const xmlValueFax = storeXml.getEltTextContent(xmlCreate, 'email');
-          const valueFax = await addStorePage.getInputValue(page, 'email');
+          const valueFax = await boStoresCreatePage.getInputValue(page, 'email');
           expect(valueFax).to.be.eq(xmlValueFax);
         });
 
@@ -601,7 +600,7 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreActive', baseContext);
 
           const xmlValueActive = storeXml.getEltTextContent(xmlCreate, 'active');
-          const active = await addStorePage.isActive(page, 'on');
+          const active = await boStoresCreatePage.isActive(page, 'on');
           expect(active).to.be.eq(xmlValueActive !== '0');
         });
 
@@ -620,7 +619,7 @@ describe('WS - Stores : CRUD', async () => {
               expectedDayHours = dayHours.substring(2, dayHours.length - 2);
             }
 
-            const dayValue = await addStorePage.getInputValue(page, `${day}`, '1');
+            const dayValue = await boStoresCreatePage.getInputValue(page, `${day}`, '1');
             expect(dayValue).to.be.eq(expectedDayHours);
           });
 
@@ -637,7 +636,7 @@ describe('WS - Stores : CRUD', async () => {
             } else {
               expectedDayHours = dayHours.substring(2, dayHours.length - 2);
             }
-            const dayValue = await addStorePage.getInputValue(page, `${day}`, '2');
+            const dayValue = await boStoresCreatePage.getInputValue(page, `${day}`, '2');
             expect(dayValue).to.be.eq(expectedDayHours);
           });
         });
@@ -645,16 +644,16 @@ describe('WS - Stores : CRUD', async () => {
         it('should go to \'Stores\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToStoresPagePostReset', baseContext);
 
-          await contactPage.goToStoresPage(page);
+          await boContactsPage.goToStoresPage(page);
 
-          const pageTitle = await storesPage.getPageTitle(page);
-          expect(pageTitle).to.contains(storesPage.pageTitle);
+          const pageTitle = await boStoresPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boStoresPage.pageTitle);
         });
 
         it('should reset all filters', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirstAfterPost', baseContext);
 
-          const numberOfStores = await storesPage.resetAndGetNumberOfLines(page);
+          const numberOfStores = await boStoresPage.resetAndGetNumberOfLines(page);
           expect(numberOfStores).to.be.above(0);
         });
       });
@@ -795,31 +794,31 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdateAfterPost2', baseContext);
 
           // Filter
-          await storesPage.resetFilter(page);
-          await storesPage.filterTable(page, 'input', 'id_store', storeNodeID as string);
+          await boStoresPage.resetFilter(page);
+          await boStoresPage.filterTable(page, 'input', 'id_store', storeNodeID as string);
 
           // Check number of stores
-          const numberOfStoresAfterFilter = await storesPage.getNumberOfElementInGrid(page);
+          const numberOfStoresAfterFilter = await boStoresPage.getNumberOfElementInGrid(page);
           expect(numberOfStoresAfterFilter).to.be.eq(1);
 
-          const textColumn = await storesPage.getTextColumn(page, 1, 'id_store');
+          const textColumn = await boStoresPage.getTextColumn(page, 1, 'id_store');
           expect(textColumn).to.contains(storeNodeID as string);
         });
 
         it('should go to edit store page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToEditStorePageAfterPost2', baseContext);
 
-          await storesPage.gotoEditStorePage(page, 1);
+          await boStoresPage.gotoEditStorePage(page, 1);
 
-          const pageTitle = await addStorePage.getPageTitle(page);
-          expect(pageTitle).to.contains(addStorePage.pageTitleEdit);
+          const pageTitle = await boStoresCreatePage.getPageTitle(page);
+          expect(pageTitle).to.contains(boStoresCreatePage.pageTitleEdit);
         });
 
         it('should check store\'s name language 1', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreNameLang12', baseContext);
 
           const xmlValueName1 = storeXml.getLangEltTextContent(xmlUpdate, 'name', '1');
-          const valueName1 = await addStorePage.getInputValue(page, 'name', '1');
+          const valueName1 = await boStoresCreatePage.getInputValue(page, 'name', '1');
           expect(valueName1).to.be.eq(xmlValueName1);
         });
 
@@ -827,7 +826,7 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreNameLang22', baseContext);
 
           const xmlValueName2 = storeXml.getLangEltTextContent(xmlUpdate, 'name', '2');
-          const valueName2 = await addStorePage.getInputValue(page, 'name', '2');
+          const valueName2 = await boStoresCreatePage.getInputValue(page, 'name', '2');
           expect(valueName2).to.be.eq(xmlValueName2);
         });
 
@@ -835,7 +834,7 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreAddress1Lang12', baseContext);
 
           const xmlValueAddress = storeXml.getLangEltTextContent(xmlUpdate, 'address1', '1');
-          const valueAddress = await addStorePage.getInputValue(page, 'address1', '1');
+          const valueAddress = await boStoresCreatePage.getInputValue(page, 'address1', '1');
           expect(valueAddress).to.be.eq(xmlValueAddress);
         });
 
@@ -843,7 +842,7 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreAddress1Lang22', baseContext);
 
           const xmlValueAddress = storeXml.getLangEltTextContent(xmlUpdate, 'address1', '2');
-          const valueAddress = await addStorePage.getInputValue(page, 'address1', '2');
+          const valueAddress = await boStoresCreatePage.getInputValue(page, 'address1', '2');
           expect(valueAddress).to.be.eq(xmlValueAddress);
         });
 
@@ -851,7 +850,7 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreAddress1Lang13', baseContext);
 
           const xmlValueAddress = storeXml.getLangEltTextContent(xmlUpdate, 'address2', '1');
-          const valueAddress = await addStorePage.getInputValue(page, 'address2', '1');
+          const valueAddress = await boStoresCreatePage.getInputValue(page, 'address2', '1');
           expect(valueAddress).to.be.eq(xmlValueAddress);
         });
 
@@ -859,7 +858,7 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreAddress2Lang22', baseContext);
 
           const xmlValueAddress = storeXml.getLangEltTextContent(xmlUpdate, 'address2', '2');
-          const valueAddress = await addStorePage.getInputValue(page, 'address2', '2');
+          const valueAddress = await boStoresCreatePage.getInputValue(page, 'address2', '2');
           expect(valueAddress).to.be.eq(xmlValueAddress);
         });
 
@@ -867,7 +866,7 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStorePostcode2', baseContext);
 
           const xmlValuePostcode = storeXml.getEltTextContent(xmlUpdate, 'postcode');
-          const valuePostcode = await addStorePage.getInputValue(page, 'postcode');
+          const valuePostcode = await boStoresCreatePage.getInputValue(page, 'postcode');
           expect(valuePostcode).to.be.eq(xmlValuePostcode);
         });
 
@@ -875,7 +874,7 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreCity2', baseContext);
 
           const xmlValueCity = storeXml.getEltTextContent(xmlUpdate, 'city');
-          const valueCity = await addStorePage.getInputValue(page, 'city');
+          const valueCity = await boStoresCreatePage.getInputValue(page, 'city');
           expect(valueCity).to.be.eq(xmlValueCity);
         });
 
@@ -883,7 +882,7 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreCountry2', baseContext);
 
           const xmlValueIDCountry = storeXml.getEltTextContent(xmlUpdate, 'id_country');
-          const valueIDCountry = await addStorePage.getSelectValue(page, 'id_country');
+          const valueIDCountry = await boStoresCreatePage.getSelectValue(page, 'id_country');
           expect(valueIDCountry).to.be.eq(xmlValueIDCountry);
         });
 
@@ -891,7 +890,7 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreState2', baseContext);
 
           const xmlValueIDState = storeXml.getEltTextContent(xmlUpdate, 'id_state');
-          const valueIDState = await addStorePage.getSelectValue(page, 'id_state');
+          const valueIDState = await boStoresCreatePage.getSelectValue(page, 'id_state');
           expect(valueIDState).to.be.eq(xmlValueIDState);
         });
 
@@ -899,7 +898,7 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreLatitude2', baseContext);
 
           const xmlValueLatitude = storeXml.getEltTextContent(xmlUpdate, 'latitude');
-          const valueLatitude = await addStorePage.getInputValue(page, 'latitude');
+          const valueLatitude = await boStoresCreatePage.getInputValue(page, 'latitude');
           expect(valueLatitude).to.be.eq(xmlValueLatitude);
         });
 
@@ -907,7 +906,7 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreLongitude2', baseContext);
 
           const xmlValueLongitude = storeXml.getEltTextContent(xmlUpdate, 'longitude');
-          const valueLongitude = await addStorePage.getInputValue(page, 'longitude');
+          const valueLongitude = await boStoresCreatePage.getInputValue(page, 'longitude');
           expect(valueLongitude).to.be.eq(xmlValueLongitude);
         });
 
@@ -915,7 +914,7 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStorePhone2', baseContext);
 
           const xmlValuePhone = storeXml.getEltTextContent(xmlUpdate, 'phone');
-          const valuePhone = await addStorePage.getInputValue(page, 'phone');
+          const valuePhone = await boStoresCreatePage.getInputValue(page, 'phone');
           expect(valuePhone).to.be.eq(xmlValuePhone);
         });
 
@@ -923,7 +922,7 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreFax2', baseContext);
 
           const xmlValueFax = storeXml.getEltTextContent(xmlUpdate, 'fax');
-          const valueFax = await addStorePage.getInputValue(page, 'fax');
+          const valueFax = await boStoresCreatePage.getInputValue(page, 'fax');
           expect(valueFax).to.be.eq(xmlValueFax);
         });
 
@@ -931,7 +930,7 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreEmail2', baseContext);
 
           const xmlValueFax = storeXml.getEltTextContent(xmlUpdate, 'email');
-          const valueFax = await addStorePage.getInputValue(page, 'email');
+          const valueFax = await boStoresCreatePage.getInputValue(page, 'email');
           expect(valueFax).to.be.eq(xmlValueFax);
         });
 
@@ -939,7 +938,7 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreActive2', baseContext);
 
           const xmlValueActive = storeXml.getEltTextContent(xmlUpdate, 'active');
-          const active = await addStorePage.isActive(page, 'on');
+          const active = await boStoresCreatePage.isActive(page, 'on');
           expect(active).to.be.eq((xmlValueActive !== '0'));
         });
 
@@ -962,7 +961,7 @@ describe('WS - Stores : CRUD', async () => {
               expectedDayHours = dayHours.substring(2, dayHours.length - 2);
             }
 
-            const dayValue = await addStorePage.getInputValue(page, `${day}`, '1');
+            const dayValue = await boStoresCreatePage.getInputValue(page, `${day}`, '1');
             expect(dayValue).to.be.eq(expectedDayHours);
           });
 
@@ -984,7 +983,7 @@ describe('WS - Stores : CRUD', async () => {
               expectedDayHours = dayHours.substring(2, dayHours.length - 2);
             }
 
-            const dayValue = await addStorePage.getInputValue(page, `${day}`, '2');
+            const dayValue = await boStoresCreatePage.getInputValue(page, `${day}`, '2');
             expect(dayValue).to.be.eq(expectedDayHours);
           });
         });
@@ -992,16 +991,16 @@ describe('WS - Stores : CRUD', async () => {
         it('should go to \'Stores\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToStoresPagePostReset2', baseContext);
 
-          await contactPage.goToStoresPage(page);
+          await boContactsPage.goToStoresPage(page);
 
-          const pageTitle = await storesPage.getPageTitle(page);
-          expect(pageTitle).to.contains(storesPage.pageTitle);
+          const pageTitle = await boStoresPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boStoresPage.pageTitle);
         });
 
         it('should reset all filters', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirstAfterPost2', baseContext);
 
-          const numberOfStores = await storesPage.resetAndGetNumberOfLines(page);
+          const numberOfStores = await boStoresPage.resetAndGetNumberOfLines(page);
           expect(numberOfStores).to.be.above(0);
         });
       });
@@ -1036,18 +1035,18 @@ describe('WS - Stores : CRUD', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdateAfterDelete', baseContext);
 
         // Filter
-        await storesPage.resetFilter(page);
-        await storesPage.filterTable(page, 'input', 'id_store', storeNodeID as string);
+        await boStoresPage.resetFilter(page);
+        await boStoresPage.filterTable(page, 'input', 'id_store', storeNodeID as string);
 
         // Check number of stores
-        const numberOfStoresAfterFilter = await storesPage.getNumberOfElementInGrid(page);
+        const numberOfStoresAfterFilter = await boStoresPage.getNumberOfElementInGrid(page);
         expect(numberOfStoresAfterFilter).to.be.eq(0);
       });
 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-        const numberOfStores = await storesPage.resetAndGetNumberOfLines(page);
+        const numberOfStores = await boStoresPage.resetAndGetNumberOfLines(page);
         expect(numberOfStores).to.be.above(0);
       });
     });

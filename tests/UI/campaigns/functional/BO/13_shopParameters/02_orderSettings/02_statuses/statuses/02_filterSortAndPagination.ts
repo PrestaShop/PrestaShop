@@ -1,21 +1,17 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import statusesPage from '@pages/BO/shopParameters/orderSettings/statuses';
+import {expect} from 'chai';
 
 import {
   boDashboardPage,
   boLoginPage,
   boOrderSettingsPage,
+  boOrderStatusesPage,
   type BrowserContext,
   dataOrderStatuses,
   type Page,
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_shopParameters_orderSettings_statuses_statuses_filterSortAndPagination';
 
@@ -69,14 +65,14 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
 
     await boOrderSettingsPage.goToStatusesPage(page);
 
-    const pageTitle = await statusesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(statusesPage.pageTitle);
+    const pageTitle = await boOrderStatusesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boOrderStatusesPage.pageTitle);
   });
 
   it('should reset all filters and get number of order statuses', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfOrderStatuses = await statusesPage.resetAndGetNumberOfLines(page, tableName);
+    numberOfOrderStatuses = await boOrderStatusesPage.resetAndGetNumberOfLines(page, tableName);
     expect(numberOfOrderStatuses).to.be.above(0);
   });
 
@@ -149,7 +145,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        await statusesPage.filterTable(
+        await boOrderStatusesPage.filterTable(
           page,
           tableName,
           test.args.filterType,
@@ -157,15 +153,15 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
           test.args.filterValue,
         );
 
-        const numberOfLinesAfterFilter = await statusesPage.getNumberOfElementInGrid(page, tableName);
+        const numberOfLinesAfterFilter = await boOrderStatusesPage.getNumberOfElementInGrid(page, tableName);
         expect(numberOfLinesAfterFilter).to.be.at.most(numberOfOrderStatuses);
 
         for (let row = 1; row <= numberOfLinesAfterFilter; row++) {
           if (test.args.filterTypeOf === 'boolean') {
-            const columnStatus = await statusesPage.getStatus(page, tableName, row, test.args.filterBy);
+            const columnStatus = await boOrderStatusesPage.getStatus(page, tableName, row, test.args.filterBy);
             expect(columnStatus).to.equal(test.args.filterValue === '1');
           } else {
-            const textColumn = await statusesPage.getTextColumn(
+            const textColumn = await boOrderStatusesPage.getTextColumn(
               page,
               tableName,
               row,
@@ -179,7 +175,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfLinesAfterReset = await statusesPage.resetAndGetNumberOfLines(page, tableName);
+        const numberOfLinesAfterReset = await boOrderStatusesPage.resetAndGetNumberOfLines(page, tableName);
         expect(numberOfLinesAfterReset).to.equal(numberOfOrderStatuses);
       });
     });
@@ -190,7 +186,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
     it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo2001', baseContext);
 
-      const paginationNumber = await statusesPage.selectPaginationLimit(page, tableName, 20);
+      const paginationNumber = await boOrderStatusesPage.selectPaginationLimit(page, tableName, 20);
       expect(paginationNumber).to.contains('(page 1 / 1)');
     });
 
@@ -231,15 +227,15 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await statusesPage.getAllRowsColumnContent(
+        const nonSortedTable = await boOrderStatusesPage.getAllRowsColumnContent(
           page,
           tableName,
           test.args.sortBy,
         );
 
-        await statusesPage.sortTable(page, tableName, test.args.sortBy, test.args.columnID, test.args.sortDirection);
+        await boOrderStatusesPage.sortTable(page, tableName, test.args.sortBy, test.args.columnID, test.args.sortDirection);
 
-        const sortedTable = await statusesPage.getAllRowsColumnContent(
+        const sortedTable = await boOrderStatusesPage.getAllRowsColumnContent(
           page,
           tableName,
           test.args.sortBy,
@@ -274,28 +270,28 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
-      const paginationNumber = await statusesPage.selectPaginationLimit(page, tableName, 10);
+      const paginationNumber = await boOrderStatusesPage.selectPaginationLimit(page, tableName, 10);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await statusesPage.paginationNext(page, tableName);
+      const paginationNumber = await boOrderStatusesPage.paginationNext(page, tableName);
       expect(paginationNumber).to.contains('(page 2 / 2)');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await statusesPage.paginationPrevious(page, tableName);
+      const paginationNumber = await boOrderStatusesPage.paginationPrevious(page, tableName);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
-      const paginationNumber = await statusesPage.selectPaginationLimit(page, tableName, 20);
+      const paginationNumber = await boOrderStatusesPage.selectPaginationLimit(page, tableName, 20);
       expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });

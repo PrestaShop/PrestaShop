@@ -1,12 +1,9 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import BO pages
-import linkWidgetsPage from '@pages/BO/design/linkWidgets';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
+  boDesignLinkListPage,
   boLoginPage,
   type BrowserContext,
   dataHooks,
@@ -49,10 +46,10 @@ describe('BO - Design - Link Widget : Sort link list', async () => {
       boDashboardPage.designParentLink,
       boDashboardPage.linkWidgetLink,
     );
-    await linkWidgetsPage.closeSfToolBar(page);
+    await boDesignLinkListPage.closeSfToolBar(page);
 
-    const pageTitle = await linkWidgetsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(linkWidgetsPage.pageTitle);
+    const pageTitle = await boDesignLinkListPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDesignLinkListPage.pageTitle);
   });
 
   describe('Sort link list table', async () => {
@@ -92,15 +89,15 @@ describe('BO - Design - Link Widget : Sort link list', async () => {
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await linkWidgetsPage.getAllRowsColumnContent(page,
+        const nonSortedTable = await boDesignLinkListPage.getAllRowsColumnContent(page,
           test.args.sortBy,
           test.args.sortBy,
           dataHooks.displayFooter.name,
         );
 
-        await linkWidgetsPage.sortLinkWidget(page, test.args.sortBy, test.args.sortDirection, dataHooks.displayFooter.name);
+        await boDesignLinkListPage.sortLinkWidget(page, test.args.sortBy, test.args.sortDirection, dataHooks.displayFooter.name);
 
-        const sortedTable = await linkWidgetsPage.getAllRowsColumnContent(page,
+        const sortedTable = await boDesignLinkListPage.getAllRowsColumnContent(page,
           test.args.sortBy,
           test.args.sortBy,
           dataHooks.displayFooter.name,

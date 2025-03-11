@@ -36,6 +36,8 @@ use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
 class CurrencyContextBuilder implements LegacyContextBuilderInterface
 {
+    use LegacyObjectCheckerTrait;
+
     private ?int $currencyId = null;
 
     private ?LegacyCurrency $legacyCurrency = null;
@@ -75,7 +77,10 @@ class CurrencyContextBuilder implements LegacyContextBuilderInterface
     public function buildLegacyContext(): void
     {
         $this->assertArguments();
-        $this->contextStateManager->setCurrency($this->getLegacyCurrency());
+        // Only update the legacy context when the currency is not the expected one, if not leave the context unchanged
+        if ($this->legacyObjectNeedsUpdate($this->contextStateManager->getContext()->currency, (int) $this->getLegacyCurrency()->id)) {
+            $this->contextStateManager->setCurrency($this->getLegacyCurrency());
+        }
     }
 
     public function setCurrencyId(int $currencyId)
@@ -97,7 +102,7 @@ class CurrencyContextBuilder implements LegacyContextBuilderInterface
 
     private function getLegacyCurrency(): LegacyCurrency
     {
-        if (!$this->legacyCurrency) {
+        if ($this->legacyObjectNeedsUpdate($this->legacyCurrency, $this->currencyId)) {
             $this->legacyCurrency = $this->currencyRepository->get(new CurrencyId($this->currencyId));
         }
 

@@ -17,7 +17,6 @@ import {guestOrderTrackingPage} from '@pages/FO/classic/orderTracking/guestOrder
 import {newProductsPage} from '@pages/FO/classic/newProducts';
 import {pricesDropPage} from '@pages/FO/classic/pricesDrop';
 import {securePaymentPage} from '@pages/FO/classic/securePayment';
-import {storesPage} from '@pages/FO/classic/stores';
 import {termsAndConditionsOfUsePage} from '@pages/FO/classic/termsAndConditionsOfUse';
 
 import {
@@ -34,6 +33,7 @@ import {
   foClassicMyOrderHistoryPage,
   foClassicMyWishlistsPage,
   foClassicSitemapPage,
+  foClassicStoresPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -116,7 +116,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
       {linkSelector: 'Secure payment', pageTitle: securePaymentPage.pageTitle},
       {linkSelector: 'Contact us', pageTitle: foClassicContactUsPage.pageTitle},
       {linkSelector: 'Sitemap', pageTitle: foClassicSitemapPage.pageTitle},
-      {linkSelector: 'Stores', pageTitle: storesPage.pageTitle},
+      {linkSelector: 'Stores', pageTitle: foClassicStoresPage.pageTitle},
     ].forEach((args, index: number) => {
       it(`should check '${args.linkSelector}' footer links`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkOurCompanyFooterLinks${index}`, baseContext);

@@ -1,15 +1,12 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import statusesPage from '@pages/BO/shopParameters/orderSettings/statuses';
-import addOrderReturnStatusPage from '@pages/BO/shopParameters/orderSettings/statuses/returnStatus/add';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
   boOrderSettingsPage,
+  boOrderStatusesPage,
+  boReturnStatusesCreatePage,
   type BrowserContext,
   dataOrderReturnStatuses,
   FakerOrderReturnStatus,
@@ -72,14 +69,14 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
 
     await boOrderSettingsPage.goToStatusesPage(page);
 
-    const pageTitle = await statusesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(statusesPage.pageTitle);
+    const pageTitle = await boOrderStatusesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boOrderStatusesPage.pageTitle);
   });
 
   it('should reset all filters and get number of order return statuses', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfOrderReturnStatuses = await statusesPage.resetAndGetNumberOfLines(page, tableName);
+    numberOfOrderReturnStatuses = await boOrderStatusesPage.resetAndGetNumberOfLines(page, tableName);
     expect(numberOfOrderReturnStatuses).to.be.above(0);
   });
 
@@ -112,7 +109,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
       it(`should filter by ${test.filterBy} '${test.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.testIdentifier, baseContext);
 
-        await statusesPage.filterTable(
+        await boOrderStatusesPage.filterTable(
           page,
           tableName,
           test.filterType,
@@ -120,11 +117,11 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
           test.filterValue,
         );
 
-        const numberOfLinesAfterFilter = await statusesPage.getNumberOfElementInGrid(page, tableName);
+        const numberOfLinesAfterFilter = await boOrderStatusesPage.getNumberOfElementInGrid(page, tableName);
         expect(numberOfLinesAfterFilter).to.be.at.most(numberOfOrderReturnStatuses);
 
         for (let row = 1; row <= numberOfLinesAfterFilter; row++) {
-          const textColumn = await statusesPage.getTextColumn(
+          const textColumn = await boOrderStatusesPage.getTextColumn(
             page,
             tableName,
             row,
@@ -137,7 +134,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.testIdentifier}Reset`, baseContext);
 
-        const numberOfLinesAfterReset = await statusesPage.resetAndGetNumberOfLines(page, tableName);
+        const numberOfLinesAfterReset = await boOrderStatusesPage.resetAndGetNumberOfLines(page, tableName);
         expect(numberOfLinesAfterReset).to.equal(numberOfOrderReturnStatuses);
       });
     });
@@ -182,15 +179,15 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
       it(`should sort by '${test.sortBy}' '${test.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.testIdentifier, baseContext);
 
-        const nonSortedTable = await statusesPage.getAllRowsColumnContent(
+        const nonSortedTable = await boOrderStatusesPage.getAllRowsColumnContent(
           page,
           tableName,
           test.sortBy,
         );
 
-        await statusesPage.sortTable(page, tableName, test.sortBy, test.columnID, test.sortDirection);
+        await boOrderStatusesPage.sortTable(page, tableName, test.sortBy, test.columnID, test.sortDirection);
 
-        const sortedTable = await statusesPage.getAllRowsColumnContent(
+        const sortedTable = await boOrderStatusesPage.getAllRowsColumnContent(
           page,
           tableName,
           test.sortBy,
@@ -230,19 +227,19 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
       it('should go to add new order status group page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddOrderReturnStatusPage${index}`, baseContext);
 
-        await statusesPage.goToNewOrderReturnStatusPage(page);
+        await boOrderStatusesPage.goToNewOrderReturnStatusPage(page);
 
-        const pageTitle = await addOrderReturnStatusPage.getPageTitle(page);
-        expect(pageTitle).to.contains(addOrderReturnStatusPage.pageTitleCreate);
+        const pageTitle = await boReturnStatusesCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boReturnStatusesCreatePage.pageTitleCreate);
       });
 
       it('should create order status and check result', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createOrderReturnStatus${index}`, baseContext);
 
-        const textResult = await addOrderReturnStatusPage.setOrderReturnStatus(page, orderReturnStatusData);
-        expect(textResult).to.contains(statusesPage.successfulCreationMessage);
+        const textResult = await boReturnStatusesCreatePage.setOrderReturnStatus(page, orderReturnStatusData);
+        expect(textResult).to.contains(boOrderStatusesPage.successfulCreationMessage);
 
-        const numberOfLinesAfterCreation = await statusesPage.getNumberOfElementInGrid(page, tableName);
+        const numberOfLinesAfterCreation = await boOrderStatusesPage.getNumberOfElementInGrid(page, tableName);
         expect(numberOfLinesAfterCreation).to.be.equal(numberOfOrderReturnStatuses + index + 1);
       });
     });
@@ -253,28 +250,28 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
-      const paginationNumber = await statusesPage.selectPaginationLimit(page, tableName, 10);
+      const paginationNumber = await boOrderStatusesPage.selectPaginationLimit(page, tableName, 10);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await statusesPage.paginationNext(page, tableName);
+      const paginationNumber = await boOrderStatusesPage.paginationNext(page, tableName);
       expect(paginationNumber).to.contains('(page 2 / 2)');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await statusesPage.paginationPrevious(page, tableName);
+      const paginationNumber = await boOrderStatusesPage.paginationPrevious(page, tableName);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
-      const paginationNumber = await statusesPage.selectPaginationLimit(page, tableName, 20);
+      const paginationNumber = await boOrderStatusesPage.selectPaginationLimit(page, tableName, 20);
       expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
@@ -284,11 +281,11 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
 
-      await statusesPage.filterTable(page, tableName, 'input', 'name', 'todelete');
-      const numberOfLinesAfterFilter = await statusesPage.getNumberOfElementInGrid(page, tableName);
+      await boOrderStatusesPage.filterTable(page, tableName, 'input', 'name', 'todelete');
+      const numberOfLinesAfterFilter = await boOrderStatusesPage.getNumberOfElementInGrid(page, tableName);
 
       for (let i = 1; i <= numberOfLinesAfterFilter; i++) {
-        const textColumn = await statusesPage.getTextColumn(page, tableName, i, 'name');
+        const textColumn = await boOrderStatusesPage.getTextColumn(page, tableName, i, 'name');
         expect(textColumn).to.contains('todelete');
       }
     });
@@ -296,13 +293,13 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
     it('should delete order return statuses with Bulk Actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteStatus', baseContext);
 
-      const deleteTextResult = await statusesPage.bulkDeleteOrderStatuses(page, tableName);
-      expect(deleteTextResult).to.be.contains(statusesPage.successfulDeleteMessage);
+      const deleteTextResult = await boOrderStatusesPage.bulkDeleteOrderStatuses(page, tableName);
+      expect(deleteTextResult).to.be.contains(boOrderStatusesPage.successfulDeleteMessage);
     });
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
-      const numberOfLinesAfterReset = await statusesPage.resetAndGetNumberOfLines(page, tableName);
+      const numberOfLinesAfterReset = await boOrderStatusesPage.resetAndGetNumberOfLines(page, tableName);
       expect(numberOfLinesAfterReset).to.be.equal(numberOfOrderReturnStatuses);
     });
   });

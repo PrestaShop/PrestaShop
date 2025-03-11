@@ -1,12 +1,11 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-import addZonePage from '@pages/BO/international/locations/add';
-
 import {
   boDashboardPage,
   boLoginPage,
-  boZonesPages,
+  boZonesPage,
+  boZonesCreatePage,
   type BrowserContext,
   FakerZone,
   type Page,
@@ -53,16 +52,16 @@ describe('BO - International - Zones : Bulk enable, disable and delete', async (
       boDashboardPage.internationalParentLink,
       boDashboardPage.locationsLink,
     );
-    await boZonesPages.closeSfToolBar(page);
+    await boZonesPage.closeSfToolBar(page);
 
-    const pageTitle = await boZonesPages.getPageTitle(page);
-    expect(pageTitle).to.contains(boZonesPages.pageTitle);
+    const pageTitle = await boZonesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boZonesPage.pageTitle);
   });
 
   it('should reset all filters and get number of zones in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfZones = await boZonesPages.resetAndGetNumberOfLines(page);
+    numberOfZones = await boZonesPage.resetAndGetNumberOfLines(page);
     expect(numberOfZones).to.be.above(0);
   });
 
@@ -71,19 +70,19 @@ describe('BO - International - Zones : Bulk enable, disable and delete', async (
       it('should go to add new title page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewZonePage${index + 1}`, baseContext);
 
-        await boZonesPages.goToAddNewZonePage(page);
+        await boZonesPage.goToAddNewZonePage(page);
 
-        const pageTitle = await addZonePage.getPageTitle(page);
-        expect(pageTitle).to.contains(addZonePage.pageTitleCreate);
+        const pageTitle = await boZonesCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boZonesCreatePage.pageTitleCreate);
       });
 
       it('should create zone and check result', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createZone${index + 1}`, baseContext);
 
-        const textResult = await addZonePage.createEditZone(page, zoneToCreate);
-        expect(textResult).to.contains(boZonesPages.successfulCreationMessage);
+        const textResult = await boZonesCreatePage.createEditZone(page, zoneToCreate);
+        expect(textResult).to.contains(boZonesPage.successfulCreationMessage);
 
-        const numberOfZonesAfterCreation = await boZonesPages.getNumberOfElementInGrid(page);
+        const numberOfZonesAfterCreation = await boZonesPage.getNumberOfElementInGrid(page);
         expect(numberOfZonesAfterCreation).to.be.equal(numberOfZones + index + 1);
       });
     });
@@ -93,18 +92,18 @@ describe('BO - International - Zones : Bulk enable, disable and delete', async (
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
 
-      await boZonesPages.filterZones(
+      await boZonesPage.filterZones(
         page,
         'input',
         'name',
         'todelete',
       );
 
-      const numberOfZonesAfterFilter = await boZonesPages.getNumberOfElementInGrid(page);
+      const numberOfZonesAfterFilter = await boZonesPage.getNumberOfElementInGrid(page);
       expect(numberOfZonesAfterFilter).to.be.at.most(numberOfZones);
 
       for (let i = 1; i <= numberOfZonesAfterFilter; i++) {
-        const textColumn = await boZonesPages.getTextColumn(
+        const textColumn = await boZonesPage.getTextColumn(
           page,
           i,
           'name',
@@ -120,12 +119,12 @@ describe('BO - International - Zones : Bulk enable, disable and delete', async (
       it(`should ${test.action} zones with bulk actions`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.action}Zones`, baseContext);
 
-        await boZonesPages.bulkSetStatus(page, test.wantedStatus);
+        await boZonesPage.bulkSetStatus(page, test.wantedStatus);
 
-        const numberOfZonesBulkActions = await boZonesPages.getNumberOfElementInGrid(page);
+        const numberOfZonesBulkActions = await boZonesPage.getNumberOfElementInGrid(page);
 
         for (let row = 1; row <= numberOfZonesBulkActions; row++) {
-          const rowStatus = await boZonesPages.getZoneStatus(page, row);
+          const rowStatus = await boZonesPage.getZoneStatus(page, row);
           expect(rowStatus).to.equal(test.wantedStatus);
         }
       });
@@ -134,14 +133,14 @@ describe('BO - International - Zones : Bulk enable, disable and delete', async (
     it('should bulk delete zones', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteZones', baseContext);
 
-      const deleteTextResult = await boZonesPages.bulkDeleteZones(page);
-      expect(deleteTextResult).to.be.contains(boZonesPages.successfulMultiDeleteMessage);
+      const deleteTextResult = await boZonesPage.bulkDeleteZones(page);
+      expect(deleteTextResult).to.be.contains(boZonesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
-      const numberOfZonesAfterReset = await boZonesPages.resetAndGetNumberOfLines(page);
+      const numberOfZonesAfterReset = await boZonesPage.resetAndGetNumberOfLines(page);
       expect(numberOfZonesAfterReset).to.be.equal(numberOfZones);
     });
   });

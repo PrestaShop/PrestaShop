@@ -1,13 +1,10 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-// Import BO pages
-import geolocationPage from '@pages/BO/international/localization/geolocation';
-
 import {expect} from 'chai';
+import setGeolocationCheckCommented from '@commonTests/BO/international/geolocation';
+
 import {
   boDashboardPage,
+  boGeolocationPage,
   boLocalizationPage,
   boLoginPage,
   type BrowserContext,
@@ -16,7 +13,6 @@ import {
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-import setGeolocationCheckCommented from '@commonTests/BO/international/geolocation';
 
 const baseContext: string = 'functional_BO_international_localization_geolocation_updateIpAddressWhitelist';
 
@@ -66,23 +62,23 @@ describe('BO - International - Localization - Geolocation: Update IP address whi
 
     await boLocalizationPage.goToSubTabGeolocation(page);
 
-    const pageTitle = await geolocationPage.getPageTitle(page);
-    expect(pageTitle).to.equal(geolocationPage.pageTitle);
+    const pageTitle = await boGeolocationPage.getPageTitle(page);
+    expect(pageTitle).to.equal(boGeolocationPage.pageTitle);
 
-    //const hasAlertBlock  = await geolocationPage.hasAlertBlock(page);
+    //const hasAlertBlock  = await boGeolocationPage.hasAlertBlock(page);
     //expect(hasAlertBlock).to.equal(true);
 
-    const messageWarning = await geolocationPage.getWarningMessage(page);
-    expect(messageWarning).to.equal(geolocationPage.messageWarningNeedDB);
+    const messageWarning = await boGeolocationPage.getWarningMessage(page);
+    expect(messageWarning).to.equal(boGeolocationPage.messageWarningNeedDB);
   });
 
   it('should try to enable the geolocation and get an error', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'tryEnableGeolocationAndGetError', baseContext);
 
-    await geolocationPage.setGeolocationByIPAddressStatus(page, true);
+    await boGeolocationPage.setGeolocationByIPAddressStatus(page, true);
 
-    const result = await geolocationPage.saveFormGeolocationByIPAddress(page);
-    expect(result).to.equal(geolocationPage.messageGeolocationDBUnavailable);
+    const result = await boGeolocationPage.saveFormGeolocationByIPAddress(page);
+    expect(result).to.equal(boGeolocationPage.messageGeolocationDBUnavailable);
   });
 
   it('should download the database', async function () {
@@ -100,19 +96,19 @@ describe('BO - International - Localization - Geolocation: Update IP address whi
     const hasFound = await utilsFile.doesFileExist(`${utilsFile.getRootPath()}/app/Resources/geoip/GeoLite2-City.mmdb`);
     expect(hasFound).to.equal(true);
 
-    await geolocationPage.reloadPage(page);
+    await boGeolocationPage.reloadPage(page);
 
-    const hasAlertBlock = await geolocationPage.hasAlertBlock(page);
+    const hasAlertBlock = await boGeolocationPage.hasAlertBlock(page);
     expect(hasAlertBlock).to.equal(false);
   });
 
   it('should enable the geolocation', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enableGeolocation', baseContext);
 
-    await geolocationPage.setGeolocationByIPAddressStatus(page, true);
+    await boGeolocationPage.setGeolocationByIPAddressStatus(page, true);
 
-    const resultForm1 = await geolocationPage.saveFormGeolocationByIPAddress(page);
-    expect(resultForm1).to.equal(geolocationPage.successfulUpdateMessage);
+    const resultForm1 = await boGeolocationPage.saveFormGeolocationByIPAddress(page);
+    expect(resultForm1).to.equal(boGeolocationPage.successfulUpdateMessage);
   });
 
   it('should disable the check on front office and go to the FO', async function () {
@@ -122,15 +118,15 @@ describe('BO - International - Localization - Geolocation: Update IP address whi
     setGeolocationCheckCommented(true);
 
     // In docker
-    ipAddressWhiteList = await geolocationPage.getWhiteListedIPAddresses(page);
+    ipAddressWhiteList = await boGeolocationPage.getWhiteListedIPAddresses(page);
     expect(ipAddressWhiteList.length).to.be.gt(0);
 
-    await geolocationPage.setWhiteListedIPAddresses(page, ipAddressWhiteList.replace('127.0.0.1', ipDocker).trim());
+    await boGeolocationPage.setWhiteListedIPAddresses(page, ipAddressWhiteList.replace('127.0.0.1', ipDocker).trim());
 
-    const resultForm2 = await geolocationPage.saveFormIPAddressesWhitelist(page);
-    expect(resultForm2).to.equal(geolocationPage.successfulUpdateMessage);
+    const resultForm2 = await boGeolocationPage.saveFormIPAddressesWhitelist(page);
+    expect(resultForm2).to.equal(boGeolocationPage.successfulUpdateMessage);
 
-    page = await geolocationPage.viewMyShop(page);
+    page = await boGeolocationPage.viewMyShop(page);
     await foClassicHomePage.changeLanguage(page, 'en');
 
     const isHomePage = await foClassicHomePage.isHomePage(page);
@@ -142,16 +138,16 @@ describe('BO - International - Localization - Geolocation: Update IP address whi
 
     page = await foClassicHomePage.changePage(browserContext, 0);
 
-    await geolocationPage.setWhiteListedIPAddresses(page, ipAddressWhiteList.replace(ipDocker, '').trim());
+    await boGeolocationPage.setWhiteListedIPAddresses(page, ipAddressWhiteList.replace(ipDocker, '').trim());
 
-    const result = await geolocationPage.saveFormIPAddressesWhitelist(page);
-    expect(result).to.equal(geolocationPage.successfulUpdateMessage);
+    const result = await boGeolocationPage.saveFormIPAddressesWhitelist(page);
+    expect(result).to.equal(boGeolocationPage.successfulUpdateMessage);
   });
 
   it('should check the front office ', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkFO301', baseContext);
 
-    page = await geolocationPage.changePage(browserContext, 1);
+    page = await boGeolocationPage.changePage(browserContext, 1);
     await foClassicHomePage.reloadPage(page);
 
     const isRestrictedPage = await foClassicHomePage.isRestrictedPage(page);
@@ -166,16 +162,16 @@ describe('BO - International - Localization - Geolocation: Update IP address whi
 
     page = await foClassicHomePage.changePage(browserContext, 0);
 
-    await geolocationPage.setGeolocationByIPAddressStatus(page, false);
+    await boGeolocationPage.setGeolocationByIPAddressStatus(page, false);
 
-    const result = await geolocationPage.saveFormGeolocationByIPAddress(page);
-    expect(result).to.equal(geolocationPage.successfulUpdateMessage);
+    const result = await boGeolocationPage.saveFormGeolocationByIPAddress(page);
+    expect(result).to.equal(boGeolocationPage.successfulUpdateMessage);
   });
 
   it('should check the front office ', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkFO200', baseContext);
 
-    page = await geolocationPage.changePage(browserContext, 1);
+    page = await boGeolocationPage.changePage(browserContext, 1);
 
     await foClassicHomePage.reloadPage(page);
 
@@ -188,10 +184,10 @@ describe('BO - International - Localization - Geolocation: Update IP address whi
 
     page = await foClassicHomePage.changePage(browserContext, 0);
 
-    await geolocationPage.setWhiteListedIPAddresses(page, ipAddressWhiteList);
+    await boGeolocationPage.setWhiteListedIPAddresses(page, ipAddressWhiteList);
 
-    const result = await geolocationPage.saveFormIPAddressesWhitelist(page);
-    expect(result).to.equal(geolocationPage.successfulUpdateMessage);
+    const result = await boGeolocationPage.saveFormIPAddressesWhitelist(page);
+    expect(result).to.equal(boGeolocationPage.successfulUpdateMessage);
   });
 
   it('should remove the comment in code', async function () {

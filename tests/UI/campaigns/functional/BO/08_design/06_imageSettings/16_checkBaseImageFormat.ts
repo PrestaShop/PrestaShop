@@ -1,10 +1,11 @@
 import testContext from '@utils/testContext';
-import {deleteProductTest} from '@commonTests/BO/catalog/product';
-import imageSettingsPage from '@pages/BO/design/imageSettings';
 import {expect} from 'chai';
+
+import {deleteProductTest} from '@commonTests/BO/catalog/product';
 
 import {
   boDashboardPage,
+  boImageSettingsPage,
   boLoginPage,
   boProductsPage,
   boProductsCreatePage,
@@ -89,25 +90,25 @@ describe('BO - Design - Image Settings - Check base image format', async () => {
         boDashboardPage.designParentLink,
         boDashboardPage.imageSettingsLink,
       );
-      await imageSettingsPage.closeSfToolBar(page);
+      await boImageSettingsPage.closeSfToolBar(page);
 
-      const pageTitle = await imageSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(imageSettingsPage.pageTitle);
+      const pageTitle = await boImageSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boImageSettingsPage.pageTitle);
     });
 
     it('should check Image Generation Options', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkImageGenerationOptions', baseContext);
 
       // Image Format : JPEG/PNG should be checked
-      const jpegChecked = await imageSettingsPage.isImageFormatToGenerateChecked(page, 'jpg');
+      const jpegChecked = await boImageSettingsPage.isImageFormatToGenerateChecked(page, 'jpg');
       expect(jpegChecked).to.eq(true);
 
       // Image Format : JPEG/PNG should be disabled
-      const jpegDisabled = await imageSettingsPage.isImageFormatToGenerateDisabled(page, 'jpg');
+      const jpegDisabled = await boImageSettingsPage.isImageFormatToGenerateDisabled(page, 'jpg');
       expect(jpegDisabled).to.eq(true);
 
       // Base Format : PNG should be checked
-      const pngChecked = await imageSettingsPage.isBaseFormatToGenerateChecked(page, 'png');
+      const pngChecked = await boImageSettingsPage.isBaseFormatToGenerateChecked(page, 'png');
       expect(pngChecked).to.eq(true);
     });
 
@@ -141,20 +142,20 @@ describe('BO - Design - Image Settings - Check base image format', async () => {
               boDashboardPage.designParentLink,
               boDashboardPage.imageSettingsLink,
             );
-            await imageSettingsPage.closeSfToolBar(page);
+            await boImageSettingsPage.closeSfToolBar(page);
 
-            const pageTitle = await imageSettingsPage.getPageTitle(page);
-            expect(pageTitle).to.contains(imageSettingsPage.pageTitle);
+            const pageTitle = await boImageSettingsPage.getPageTitle(page);
+            expect(pageTitle).to.contains(boImageSettingsPage.pageTitle);
           });
         }
 
         it(`should enable ${arg.baseFormat.toUpperCase()} as Base Format in Image Generation Options`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `setBaseFormatImageGenerationOptions${index}`, baseContext);
 
-          const textResult = await imageSettingsPage.setBaseFormatChecked(page, arg.baseFormat, true);
-          expect(textResult).to.be.eq(imageSettingsPage.messageSettingsUpdated);
+          const textResult = await boImageSettingsPage.setBaseFormatChecked(page, arg.baseFormat, true);
+          expect(textResult).to.be.eq(boImageSettingsPage.messageSettingsUpdated);
 
-          const baseFormatChecked = await imageSettingsPage.isBaseFormatToGenerateChecked(page, arg.baseFormat);
+          const baseFormatChecked = await boImageSettingsPage.isBaseFormatToGenerateChecked(page, arg.baseFormat);
           expect(baseFormatChecked).to.eq(true);
         });
 

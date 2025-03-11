@@ -41,6 +41,8 @@ use Shop as LegacyShop;
  */
 class ShopContextBuilder implements LegacyContextBuilderInterface
 {
+    use LegacyObjectCheckerTrait;
+
     private ?ShopConstraint $shopConstraint = null;
     private ?int $shopId = null;
     private ?LegacyShop $legacyShop = null;
@@ -83,7 +85,10 @@ class ShopContextBuilder implements LegacyContextBuilderInterface
         $this->assertArguments();
         // It is very important to start by setting the shop, because the ContextStateManager forcefully sets the Context shop to single shop when setShop
         // is called. If we set it first we can then correctly set the appropriate shop context based on the shop constraint
-        $this->contextStateManager->setShop($this->getLegacyShop());
+        // But only update the legacy context when the shop is not the expected one, if not leave the context entity unchanged
+        if ($this->legacyObjectNeedsUpdate($this->contextStateManager->getContext()->shop, (int) $this->getLegacyShop()->id)) {
+            $this->contextStateManager->setShop($this->getLegacyShop());
+        }
 
         // Now we properly set the context
         if ($this->shopConstraint->forAllShops()) {
@@ -133,7 +138,7 @@ class ShopContextBuilder implements LegacyContextBuilderInterface
 
     private function getLegacyShop(): LegacyShop
     {
-        if (!$this->legacyShop) {
+        if ($this->legacyObjectNeedsUpdate($this->legacyShop, $this->shopId)) {
             $this->legacyShop = $this->shopRepository->get(new ShopId($this->shopId));
         }
 

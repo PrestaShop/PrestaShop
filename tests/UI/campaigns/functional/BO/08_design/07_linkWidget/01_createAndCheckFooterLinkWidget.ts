@@ -1,15 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-// Import BO pages
-import linkWidgetsPage from '@pages/BO/design/linkWidgets';
-import addLinkWidgetPage from '@pages/BO/design/linkWidgets/add';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
+  boDesignLinkListPage,
+  boDesignLinkListCreatePage,
   type BrowserContext,
   dataHooks,
   dataLinkWidgets,
@@ -59,16 +55,16 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
       boDashboardPage.designParentLink,
       boDashboardPage.linkWidgetLink,
     );
-    await linkWidgetsPage.closeSfToolBar(page);
+    await boDesignLinkListPage.closeSfToolBar(page);
 
-    const pageTitle = await linkWidgetsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(linkWidgetsPage.pageTitle);
+    const pageTitle = await boDesignLinkListPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDesignLinkListPage.pageTitle);
   });
 
   it('should get link widget number', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'getLinkWidgetNumber', baseContext);
 
-    numberOfLinkWidgetInFooter = await linkWidgetsPage.getNumberOfElementInGrid(page, dataHooks.displayFooter.name);
+    numberOfLinkWidgetInFooter = await boDesignLinkListPage.getNumberOfElementInGrid(page, dataHooks.displayFooter.name);
     expect(numberOfLinkWidgetInFooter).to.be.above(0);
   });
 
@@ -76,19 +72,19 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
     it('should go to add new link widget page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewLinkWidgetPage', baseContext);
 
-      await linkWidgetsPage.goToNewLinkWidgetPage(page);
+      await boDesignLinkListPage.goToNewLinkWidgetPage(page);
 
-      const pageTitle = await addLinkWidgetPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addLinkWidgetPage.pageTitle);
+      const pageTitle = await boDesignLinkListCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDesignLinkListCreatePage.pageTitle);
     });
 
     it('should create link widget', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createFooterLInkWidget', baseContext);
 
-      const textResult = await addLinkWidgetPage.addLinkWidget(page, dataLinkWidgets.demo_1);
-      expect(textResult).to.equal(linkWidgetsPage.successfulCreationMessage);
+      const textResult = await boDesignLinkListCreatePage.addLinkWidget(page, dataLinkWidgets.demo_1);
+      expect(textResult).to.equal(boDesignLinkListPage.successfulCreationMessage);
 
-      const numberOfLinkWidget = await linkWidgetsPage.getNumberOfElementInGrid(page, dataHooks.displayFooter.name);
+      const numberOfLinkWidget = await boDesignLinkListPage.getNumberOfElementInGrid(page, dataHooks.displayFooter.name);
       expect(numberOfLinkWidget).to.equal(numberOfLinkWidgetInFooter + 1);
     });
   });
@@ -98,7 +94,7 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
       // View shop
-      page = await linkWidgetsPage.viewMyShop(page);
+      page = await boDesignLinkListPage.viewMyShop(page);
       // Change FO language
       await foClassicHomePage.changeLanguage(page, 'en');
 
@@ -127,8 +123,8 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
       // Go back to BO
       page = await foClassicHomePage.closePage(browserContext, page, 0);
 
-      const pageTitle = await linkWidgetsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(linkWidgetsPage.pageTitle);
+      const pageTitle = await boDesignLinkListPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDesignLinkListPage.pageTitle);
     });
   });
 
@@ -136,14 +132,14 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
     it('should delete link widget', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteLinkWidget', baseContext);
 
-      const textResult = await linkWidgetsPage.deleteLinkWidget(
+      const textResult = await boDesignLinkListPage.deleteLinkWidget(
         page,
         dataHooks.displayFooter.name,
         numberOfLinkWidgetInFooter + 1,
       );
-      expect(textResult).to.equal(linkWidgetsPage.successfulDeleteMessage);
+      expect(textResult).to.equal(boDesignLinkListPage.successfulDeleteMessage);
 
-      const numberOfLinkWidgetAfterDelete = await linkWidgetsPage.getNumberOfElementInGrid(
+      const numberOfLinkWidgetAfterDelete = await boDesignLinkListPage.getNumberOfElementInGrid(
         page,
         dataHooks.displayFooter.name,
       );

@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Cookie;
+use PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Http\CookieOptions;
 
@@ -35,24 +36,11 @@ use PrestaShop\PrestaShop\Core\Http\CookieOptions;
  */
 class GeneralConfiguration implements DataConfigurationInterface
 {
-    /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    /**
-     * @var Cookie
-     */
-    private $cookie;
-
-    /**
-     * @param Configuration $configuration
-     * @param Cookie $cookie
-     */
-    public function __construct(Configuration $configuration, Cookie $cookie)
-    {
-        $this->configuration = $configuration;
-        $this->cookie = $cookie;
+    public function __construct(
+        private readonly Configuration $configuration,
+        private readonly Cookie $cookie,
+        private readonly SymfonyCacheClearer $symfonyCacheClearer,
+    ) {
     }
 
     /**
@@ -90,6 +78,9 @@ class GeneralConfiguration implements DataConfigurationInterface
                 // Clear checksum to force the refresh
                 $this->cookie->checksum = '';
                 $this->cookie->write();
+
+                // Since the DB value PS_COOKIE_LIFETIME_BO impacts the Symfony security configuration we need to clear the cache
+                $this->symfonyCacheClearer->clear();
             }
         }
 

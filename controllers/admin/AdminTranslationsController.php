@@ -3055,7 +3055,7 @@ class AdminTranslationsControllerCore extends AdminController
             $email_file = _PS_ROOT_DIR_ . $email;
         }
 
-        if (strpos(realpath($email_file), _PS_ROOT_DIR_) === 0 && file_exists($email_file)) {
+        if (strpos(realpath($email_file), _PS_MAIL_DIR_) === 0 && file_exists($email_file)) {
             $email_html = file_get_contents($email_file);
         } else {
             $email_html = '';

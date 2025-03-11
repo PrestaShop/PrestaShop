@@ -4,7 +4,7 @@ import {expect} from 'chai';
 import {
   boDashboardPage,
   boLoginPage,
-  boZonesPages,
+  boZonesPage,
   type BrowserContext,
   dataZones,
   type Page,
@@ -50,16 +50,16 @@ describe('BO - International - Zones : Filter and quick edit', async () => {
       boDashboardPage.internationalParentLink,
       boDashboardPage.locationsLink,
     );
-    await boZonesPages.closeSfToolBar(page);
+    await boZonesPage.closeSfToolBar(page);
 
-    const pageTitle = await boZonesPages.getPageTitle(page);
-    expect(pageTitle).to.contains(boZonesPages.pageTitle);
+    const pageTitle = await boZonesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boZonesPage.pageTitle);
   });
 
   it('should reset all filters and get number of zones in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfZones = await boZonesPages.resetAndGetNumberOfLines(page);
+    numberOfZones = await boZonesPage.resetAndGetNumberOfLines(page);
     expect(numberOfZones).to.be.above(0);
   });
 
@@ -93,22 +93,22 @@ describe('BO - International - Zones : Filter and quick edit', async () => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        await boZonesPages.filterZones(
+        await boZonesPage.filterZones(
           page,
           test.args.filterType,
           test.args.filterBy,
           test.args.filterValue,
         );
 
-        const numberOfZonesAfterFilter = await boZonesPages.getNumberOfElementInGrid(page);
+        const numberOfZonesAfterFilter = await boZonesPage.getNumberOfElementInGrid(page);
         expect(numberOfZonesAfterFilter).to.be.at.most(numberOfZones);
 
         for (let row = 1; row <= numberOfZonesAfterFilter; row++) {
           if (test.args.filterBy === 'active') {
-            const zoneStatus = await boZonesPages.getZoneStatus(page, row);
+            const zoneStatus = await boZonesPage.getZoneStatus(page, row);
             expect(zoneStatus).to.equal(test.args.filterValue === '1');
           } else {
-            const textColumn = await boZonesPages.getTextColumn(
+            const textColumn = await boZonesPage.getTextColumn(
               page,
               row,
               test.args.filterBy,
@@ -121,7 +121,7 @@ describe('BO - International - Zones : Filter and quick edit', async () => {
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfZonesAfterReset = await boZonesPages.resetAndGetNumberOfLines(page);
+        const numberOfZonesAfterReset = await boZonesPage.resetAndGetNumberOfLines(page);
         expect(numberOfZonesAfterReset).to.equal(numberOfZones);
       });
     });
@@ -131,17 +131,17 @@ describe('BO - International - Zones : Filter and quick edit', async () => {
     it(`should filter by name '${dataZones.northAmerica.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
-      await boZonesPages.filterZones(
+      await boZonesPage.filterZones(
         page,
         'input',
         'name',
         dataZones.northAmerica.name,
       );
 
-      const numberOfZonesAfterFilter = await boZonesPages.getNumberOfElementInGrid(page);
+      const numberOfZonesAfterFilter = await boZonesPage.getNumberOfElementInGrid(page);
       expect(numberOfZonesAfterFilter).to.be.below(numberOfZones);
 
-      const textColumn = await boZonesPages.getTextColumn(page, 1, 'name');
+      const textColumn = await boZonesPage.getTextColumn(page, 1, 'name');
       expect(textColumn).to.contains(dataZones.northAmerica.name);
     });
 
@@ -152,13 +152,13 @@ describe('BO - International - Zones : Filter and quick edit', async () => {
       it(`should ${status.args.status} the first zone`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${status.args.status}Zone`, baseContext);
 
-        await boZonesPages.setZoneStatus(
+        await boZonesPage.setZoneStatus(
           page,
           1,
           status.args.enable,
         );
 
-        const currentStatus = await boZonesPages.getZoneStatus(page, 1);
+        const currentStatus = await boZonesPage.getZoneStatus(page, 1);
         expect(currentStatus).to.be.equal(status.args.enable);
       });
     });
@@ -166,7 +166,7 @@ describe('BO - International - Zones : Filter and quick edit', async () => {
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterQuickEdit', baseContext);
 
-      const numberOfZonesAfterReset = await boZonesPages.resetAndGetNumberOfLines(page);
+      const numberOfZonesAfterReset = await boZonesPage.resetAndGetNumberOfLines(page);
       expect(numberOfZonesAfterReset).to.equal(numberOfZones);
     });
   });

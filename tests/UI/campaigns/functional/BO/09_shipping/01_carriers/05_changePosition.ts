@@ -1,16 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import BO pages
-import preferencesPage from '@pages/BO/shipping/preferences';
-
 import {expect} from 'chai';
 
-// Import data
 import {
   boCarriersPage,
   boDashboardPage,
   boLoginPage,
+  boShippingPreferencesPage,
   type BrowserContext,
   dataCarriers,
   dataCustomers,
@@ -109,17 +104,17 @@ describe('BO - Shipping - Carriers : Change carrier position', async () => {
         boDashboardPage.shippingLink,
         boDashboardPage.shippingPreferencesLink,
       );
-      await preferencesPage.closeSfToolBar(page);
+      await boShippingPreferencesPage.closeSfToolBar(page);
 
-      const pageTitle = await preferencesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(preferencesPage.pageTitle);
+      const pageTitle = await boShippingPreferencesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boShippingPreferencesPage.pageTitle);
     });
 
     it('should set sort by \'Position\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setSortByPosition', baseContext);
 
-      const textResult = await preferencesPage.setCarrierSortOrderBy(page, 'Position', 'Ascending');
-      expect(textResult).to.contain(preferencesPage.successfulUpdateMessage);
+      const textResult = await boShippingPreferencesPage.setCarrierSortOrderBy(page, 'Position', 'Ascending');
+      expect(textResult).to.contain(boShippingPreferencesPage.successfulUpdateMessage);
     });
 
     it('should go to \'Shipping > Carriers\' page', async function () {
@@ -211,17 +206,17 @@ describe('BO - Shipping - Carriers : Change carrier position', async () => {
         boDashboardPage.shippingLink,
         boDashboardPage.shippingPreferencesLink,
       );
-      await preferencesPage.closeSfToolBar(page);
+      await boShippingPreferencesPage.closeSfToolBar(page);
 
-      const pageTitle = await preferencesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(preferencesPage.pageTitle);
+      const pageTitle = await boShippingPreferencesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boShippingPreferencesPage.pageTitle);
     });
 
     it('should set sort by \'Price\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setSortByPrice', baseContext);
 
-      const textResult = await preferencesPage.setCarrierSortOrderBy(page, 'Price', 'Ascending');
-      expect(textResult).to.contain(preferencesPage.successfulUpdateMessage);
+      const textResult = await boShippingPreferencesPage.setCarrierSortOrderBy(page, 'Price', 'Ascending');
+      expect(textResult).to.contain(boShippingPreferencesPage.successfulUpdateMessage);
     });
   });
 });

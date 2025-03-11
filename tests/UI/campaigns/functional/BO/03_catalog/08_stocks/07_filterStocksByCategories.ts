@@ -15,14 +15,13 @@ import {
 const baseContext: string = 'functional_BO_catalog_stocks_filterStocksByCategories';
 
 /*
-Filter stocks page by categories and check products list
+ * Filter stocks page by categories and check products list
  */
 describe('BO - Catalog - Stocks : Filter stocks by categories', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfProducts: number = 0;
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);

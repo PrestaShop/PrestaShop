@@ -1,20 +1,16 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import statusesPage from '@pages/BO/shopParameters/orderSettings/statuses';
+import {expect} from 'chai';
 
 import {
   boDashboardPage,
   boLoginPage,
   boOrderSettingsPage,
+  boOrderStatusesPage,
   type BrowserContext,
   dataOrderStatuses,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_shopParameters_orderSettings_statuses_statuses_quickEdit';
 
@@ -68,23 +64,23 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Quick edit order st
 
     await boOrderSettingsPage.goToStatusesPage(page);
 
-    const pageTitle = await statusesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(statusesPage.pageTitle);
+    const pageTitle = await boOrderStatusesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boOrderStatusesPage.pageTitle);
   });
 
   it('should filter by status name', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterByName', baseContext);
 
-    numberOfOrderStatuses = await statusesPage.resetAndGetNumberOfLines(page, tableName);
+    numberOfOrderStatuses = await boOrderStatusesPage.resetAndGetNumberOfLines(page, tableName);
     expect(numberOfOrderStatuses).to.be.above(0);
 
-    await statusesPage.filterTable(page, tableName, 'input', 'name', dataOrderStatuses.shipped.name);
+    await boOrderStatusesPage.filterTable(page, tableName, 'input', 'name', dataOrderStatuses.shipped.name);
 
-    const numberOfLinesAfterFilter = await statusesPage.getNumberOfElementInGrid(page, tableName);
+    const numberOfLinesAfterFilter = await boOrderStatusesPage.getNumberOfElementInGrid(page, tableName);
     expect(numberOfLinesAfterFilter).to.be.above(0);
 
     for (let row = 1; row <= numberOfLinesAfterFilter; row++) {
-      const textColumn = await statusesPage.getTextColumn(page, tableName, row, 'name');
+      const textColumn = await boOrderStatusesPage.getTextColumn(page, tableName, row, 'name');
       expect(textColumn).to.contains(dataOrderStatuses.shipped.name);
     }
   });
@@ -126,7 +122,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Quick edit order st
     it(`should ${orderStatus.args.status} ${orderStatus.args.columnName} by quick edit`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${orderStatus.args.status}${index}`, baseContext);
 
-      const isActionPerformed = await statusesPage.setStatus(
+      const isActionPerformed = await boOrderStatusesPage.setStatus(
         page,
         tableName,
         1,
@@ -135,11 +131,11 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Quick edit order st
       );
 
       if (isActionPerformed) {
-        const resultMessage = await statusesPage.getAlertSuccessBlockParagraphContent(page);
-        expect(resultMessage).to.contains(statusesPage.successfulUpdateStatusMessage);
+        const resultMessage = await boOrderStatusesPage.getAlertSuccessBlockParagraphContent(page);
+        expect(resultMessage).to.contains(boOrderStatusesPage.successfulUpdateStatusMessage);
       }
 
-      const currentStatus = await statusesPage.getStatus(page, tableName, 1, orderStatus.args.columnName);
+      const currentStatus = await boOrderStatusesPage.getStatus(page, tableName, 1, orderStatus.args.columnName);
       expect(currentStatus).to.be.equal(orderStatus.args.enable);
     });
   });
@@ -147,7 +143,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Quick edit order st
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
-    const numberOfLinesAfterReset = await statusesPage.resetAndGetNumberOfLines(page, tableName);
+    const numberOfLinesAfterReset = await boOrderStatusesPage.resetAndGetNumberOfLines(page, tableName);
     expect(numberOfLinesAfterReset).to.equal(numberOfOrderStatuses);
   });
 });

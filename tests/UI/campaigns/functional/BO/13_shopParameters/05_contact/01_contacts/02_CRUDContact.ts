@@ -1,12 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
 // Import pages
-import contactsPage from '@pages/BO/shopParameters/contact';
 import addContactPage from '@pages/BO/shopParameters/contact/add';
 
-import {expect} from 'chai';
 import {
+  boContactsPage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -54,16 +53,16 @@ describe('BO - Shop Parameters - Contact : Create, Update and Delete contact in 
       boDashboardPage.shopParametersParentLink,
       boDashboardPage.contactLink,
     );
-    await contactsPage.closeSfToolBar(page);
+    await boContactsPage.closeSfToolBar(page);
 
-    const pageTitle = await contactsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(contactsPage.pageTitle);
+    const pageTitle = await boContactsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boContactsPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfContacts = await contactsPage.resetAndGetNumberOfLines(page);
+    numberOfContacts = await boContactsPage.resetAndGetNumberOfLines(page);
     expect(numberOfContacts).to.be.above(0);
   });
 
@@ -72,7 +71,7 @@ describe('BO - Shop Parameters - Contact : Create, Update and Delete contact in 
     it('should go to add new contact page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewContact', baseContext);
 
-      await contactsPage.goToAddNewContactPage(page);
+      await boContactsPage.goToAddNewContactPage(page);
 
       const pageTitle = await addContactPage.getPageTitle(page);
       expect(pageTitle).to.contains(addContactPage.pageTitleCreate);
@@ -82,9 +81,9 @@ describe('BO - Shop Parameters - Contact : Create, Update and Delete contact in 
       await testContext.addContextItem(this, 'testIdentifier', 'createContact', baseContext);
 
       const textResult = await addContactPage.createEditContact(page, createContactData);
-      expect(textResult).to.equal(contactsPage.successfulCreationMessage);
+      expect(textResult).to.equal(boContactsPage.successfulCreationMessage);
 
-      const numberOfContactsAfterCreation = await contactsPage.getNumberOfElementInGrid(page);
+      const numberOfContactsAfterCreation = await boContactsPage.getNumberOfElementInGrid(page);
       expect(numberOfContactsAfterCreation).to.be.equal(numberOfContacts + 1);
     });
   });
@@ -94,17 +93,17 @@ describe('BO - Shop Parameters - Contact : Create, Update and Delete contact in 
     it('should filter list by email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdate', baseContext);
 
-      await contactsPage.resetFilter(page);
-      await contactsPage.filterContacts(page, 'email', createContactData.email);
+      await boContactsPage.resetFilter(page);
+      await boContactsPage.filterContacts(page, 'email', createContactData.email);
 
-      const textEmail = await contactsPage.getTextColumnFromTableContacts(page, 1, 'email');
+      const textEmail = await boContactsPage.getTextColumnFromTableContacts(page, 1, 'email');
       expect(textEmail).to.contains(createContactData.email);
     });
 
     it('should go to edit contact page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditContactPage', baseContext);
 
-      await contactsPage.goToEditContactPage(page, 1);
+      await boContactsPage.goToEditContactPage(page, 1);
 
       const pageTitle = await addContactPage.getPageTitle(page);
       expect(pageTitle).to.contains(addContactPage.pageTitleEdit);
@@ -114,9 +113,9 @@ describe('BO - Shop Parameters - Contact : Create, Update and Delete contact in 
       await testContext.addContextItem(this, 'testIdentifier', 'updateContact', baseContext);
 
       const textResult = await addContactPage.createEditContact(page, editContactData);
-      expect(textResult).to.equal(contactsPage.successfulUpdateMessage);
+      expect(textResult).to.equal(boContactsPage.successfulUpdateMessage);
 
-      const numberOfContactsAfterUpdate = await contactsPage.resetAndGetNumberOfLines(page);
+      const numberOfContactsAfterUpdate = await boContactsPage.resetAndGetNumberOfLines(page);
       expect(numberOfContactsAfterUpdate).to.be.equal(numberOfContacts + 1);
     });
   });
@@ -126,20 +125,20 @@ describe('BO - Shop Parameters - Contact : Create, Update and Delete contact in 
     it('should filter list by email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForDelete', baseContext);
 
-      await contactsPage.resetFilter(page);
-      await contactsPage.filterContacts(page, 'email', editContactData.email);
+      await boContactsPage.resetFilter(page);
+      await boContactsPage.filterContacts(page, 'email', editContactData.email);
 
-      const textEmail = await contactsPage.getTextColumnFromTableContacts(page, 1, 'email');
+      const textEmail = await boContactsPage.getTextColumnFromTableContacts(page, 1, 'email');
       expect(textEmail).to.contains(editContactData.email);
     });
 
     it('should delete contact', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteContact', baseContext);
 
-      const textResult = await contactsPage.deleteContact(page, 1);
-      expect(textResult).to.equal(contactsPage.successfulDeleteMessage);
+      const textResult = await boContactsPage.deleteContact(page, 1);
+      expect(textResult).to.equal(boContactsPage.successfulDeleteMessage);
 
-      const numberOfContactsAfterDelete = await contactsPage.resetAndGetNumberOfLines(page);
+      const numberOfContactsAfterDelete = await boContactsPage.resetAndGetNumberOfLines(page);
       expect(numberOfContactsAfterDelete).to.be.equal(numberOfContacts);
     });
   });

@@ -1,5 +1,6 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
+import {faker} from '@faker-js/faker';
 
 import {
   boDashboardPage,
@@ -17,13 +18,13 @@ import {
 const baseContext: string = 'functional_BO_shopParameters_search_search_filterSortPaginationAndBulkActions';
 
 /*
-Create 19 aliases
-Pagination
-Filter table
-Sort table
-Enable status by bulk actions
-Disable status by bulk actions
-Delete the created aliases by bulk actions
+ * Create 19 aliases
+ * Pagination
+ * Filter table
+ * Sort table
+ * Enable status by bulk actions
+ * Disable status by bulk actions
+ * Delete the created aliases by bulk actions
  */
 describe('BO - Shop Parameters - Search : Filter, sort, pagination and bulk actions', async () => {
   const numAliases: number = 20;
@@ -83,8 +84,14 @@ describe('BO - Shop Parameters - Search : Filter, sort, pagination and bulk acti
   // 1 - Create 20 aliases
   const creationTests: number[] = new Array(numAliases).fill(0, 0, numAliases);
   describe(`Create ${numAliases} aliases in BO`, async () => {
+    const fakerWords = faker.lorem.words(numAliases)
+      .split(/(\s+)/)
+      .filter((value) => value.trim().length > 0);
     creationTests.forEach((test: number, index: number) => {
-      const aliasData: FakerSearchAlias = new FakerSearchAlias({search: `todelete${index}`});
+      const aliasData: FakerSearchAlias = new FakerSearchAlias({
+        search: `todelete${index}`,
+        alias: `alias_${fakerWords[index]}`,
+      });
 
       it('should go to add new search page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddAliasPage${index}`, baseContext);

@@ -1,13 +1,11 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-// Import pages
-import imageSettingsPage from '@pages/BO/design/imageSettings';
-
 import {
   boCategoriesPage,
   boCategoriesCreatePage,
   boDashboardPage,
+  boImageSettingsPage,
   boLoginPage,
   boProductsPage,
   boProductsCreatePage,
@@ -95,42 +93,42 @@ describe('BO - Design - Image Settings - Image Generation on creation', async ()
         boDashboardPage.designParentLink,
         boDashboardPage.imageSettingsLink,
       );
-      await imageSettingsPage.closeSfToolBar(page);
+      await boImageSettingsPage.closeSfToolBar(page);
 
-      const pageTitle = await imageSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(imageSettingsPage.pageTitle);
+      const pageTitle = await boImageSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boImageSettingsPage.pageTitle);
     });
 
     it('should enable WebP image format', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableWebP', baseContext);
 
-      const result = await imageSettingsPage.setImageFormatToGenerateChecked(page, 'webp', true);
-      expect(result).to.be.eq(imageSettingsPage.messageSettingsUpdated);
+      const result = await boImageSettingsPage.setImageFormatToGenerateChecked(page, 'webp', true);
+      expect(result).to.be.eq(boImageSettingsPage.messageSettingsUpdated);
     });
 
     it('should check image generation options', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkImageGenerationOptions', baseContext);
 
       // JPEG/PNG should be checked
-      const jpegChecked = await imageSettingsPage.isImageFormatToGenerateChecked(page, 'jpg');
+      const jpegChecked = await boImageSettingsPage.isImageFormatToGenerateChecked(page, 'jpg');
       expect(jpegChecked).to.eq(true);
 
       // JPEG/PNG should be checked
-      const jpegDisabled = await imageSettingsPage.isImageFormatToGenerateDisabled(page, 'jpg');
+      const jpegDisabled = await boImageSettingsPage.isImageFormatToGenerateDisabled(page, 'jpg');
       expect(jpegDisabled).to.eq(true);
 
       // WebP should be checked
-      const webpChecked = await imageSettingsPage.isImageFormatToGenerateChecked(page, 'webp');
+      const webpChecked = await boImageSettingsPage.isImageFormatToGenerateChecked(page, 'webp');
       expect(webpChecked).to.eq(true);
     });
 
     it('should fetch image name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'fetchImageName', baseContext);
 
-      imageTypeProducts = await imageSettingsPage.getRegenerateThumbnailsFormats(page, 'products');
+      imageTypeProducts = await boImageSettingsPage.getRegenerateThumbnailsFormats(page, 'products');
       expect(imageTypeProducts.length).to.gt(0);
 
-      imageTypeCategories = await imageSettingsPage.getRegenerateThumbnailsFormats(page, 'categories');
+      imageTypeCategories = await boImageSettingsPage.getRegenerateThumbnailsFormats(page, 'categories');
       expect(imageTypeCategories.length).to.gt(0);
     });
   });

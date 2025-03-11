@@ -1,12 +1,10 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-// Import pages
-import addPagePage from '@pages/BO/design/pages/add';
-
 import {
   boCMSPagesPage,
   boDashboardPage,
+  boCMSPagesCreatePage,
   boLoginPage,
   type BrowserContext,
   FakerCMSPage,
@@ -78,14 +76,14 @@ describe('BO - Design - Pages : Enable/Disable/Delete pages with Bulk Actions', 
 
         await boCMSPagesPage.goToAddNewPage(page);
 
-        const pageTitle = await addPagePage.getPageTitle(page);
-        expect(pageTitle).to.contains(addPagePage.pageTitleCreate);
+        const pageTitle = await boCMSPagesCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCMSPagesCreatePage.pageTitleCreate);
       });
 
       it(`should create page n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createPage${index + 1}`, baseContext);
 
-        const textResult = await addPagePage.createEditPage(page, pageToCreate);
+        const textResult = await boCMSPagesCreatePage.createEditPage(page, pageToCreate);
         expect(textResult).to.equal(boCMSPagesPage.successfulCreationMessage);
       });
     });

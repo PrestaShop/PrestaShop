@@ -42,6 +42,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
@@ -82,6 +83,7 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
             LoginSuccessEvent::class => 'onLoginSuccess',
             // Must be executed after the firewall listener
             KernelEvents::REQUEST => [['onKernelRequest', 7]],
+            KernelEvents::RESPONSE => 'onKernelResponse',
             LogoutEvent::class => 'onLogout',
             TokenDeauthenticatedEvent::class => 'cleanEmployeeSessions',
         ];
@@ -159,6 +161,15 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
         // Update the legacy cookie on each request in case it has been modified, this way we make sure the legacy modules and
         // legacy controllers that rely on it always have up-to-date info
         $this->updateLegacyCookie($event->getRequest());
+    }
+
+    public function onKernelResponse(ResponseEvent $event): void
+    {
+        if (!$event->isMainRequest()) {
+            return;
+        }
+
+        $this->legacyContext->getContext()->cookie->write();
     }
 
     public function cleanEmployeeSessions(TokenDeauthenticatedEvent $event): void

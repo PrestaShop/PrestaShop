@@ -12,6 +12,7 @@ $header-text-color: var(--#{$cdk}white) !default;
 
 .main-header {
   position: fixed;
+  top: 0;
   z-index: 1040;
   display: flex;
   gap: var(--#{$cdk}size-4);

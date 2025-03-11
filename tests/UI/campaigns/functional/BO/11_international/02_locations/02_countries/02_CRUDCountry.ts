@@ -6,7 +6,7 @@ import {
   boCountriesCreatePage,
   boDashboardPage,
   boLoginPage,
-  boZonesPages,
+  boZonesPage,
   type BrowserContext,
   dataCustomers,
   FakerCountry,
@@ -88,16 +88,16 @@ describe('BO - International - Countries : CRUD country', async () => {
       boDashboardPage.internationalParentLink,
       boDashboardPage.locationsLink,
     );
-    await boZonesPages.closeSfToolBar(page);
+    await boZonesPage.closeSfToolBar(page);
 
-    const pageTitle = await boZonesPages.getPageTitle(page);
-    expect(pageTitle).to.contains(boZonesPages.pageTitle);
+    const pageTitle = await boZonesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boZonesPage.pageTitle);
   });
 
   it('should go to \'Countries\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCountriesPage', baseContext);
 
-    await boZonesPages.goToSubTabCountries(page);
+    await boZonesPage.goToSubTabCountries(page);
 
     const pageTitle = await boCountriesPage.getPageTitle(page);
     expect(pageTitle).to.contains(boCountriesPage.pageTitle);

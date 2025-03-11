@@ -1,14 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-// Import BO pages
-import preferencesPage from '@pages/BO/shipping/preferences';
+import {expect} from 'chai';
 
 import {
   boCarriersPage,
   boDashboardPage,
   boLoginPage,
+  boShippingPreferencesPage,
   type BrowserContext,
   dataCarriers,
   dataCustomers,
@@ -20,8 +17,6 @@ import {
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_shipping_preferences_carrierOptions_updateCarriersSortOption';
 
@@ -129,10 +124,10 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
         boDashboardPage.shippingLink,
         boDashboardPage.shippingPreferencesLink,
       );
-      await preferencesPage.closeSfToolBar(page);
+      await boShippingPreferencesPage.closeSfToolBar(page);
 
-      const pageTitle = await preferencesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(preferencesPage.pageTitle);
+      const pageTitle = await boShippingPreferencesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boShippingPreferencesPage.pageTitle);
     });
 
     const sortByPosition: string[] = [
@@ -150,15 +145,15 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
       it(`should set sort by '${test.args.sortBy}' and order by '${test.args.orderBy}' in BO`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `setDefaultCarrier${index}`, baseContext);
 
-        const textResult = await preferencesPage.setCarrierSortOrderBy(page, test.args.sortBy, test.args.orderBy);
-        expect(textResult).to.contain(preferencesPage.successfulUpdateMessage);
+        const textResult = await boShippingPreferencesPage.setCarrierSortOrderBy(page, test.args.sortBy, test.args.orderBy);
+        expect(textResult).to.contain(boShippingPreferencesPage.successfulUpdateMessage);
       });
 
       it('should view my shop', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
         // Click on view my shop
-        page = await preferencesPage.viewMyShop(page);
+        page = await boShippingPreferencesPage.viewMyShop(page);
         // Change FO language
         await foClassicHomePage.changeLanguage(page, 'en');
 
@@ -215,8 +210,8 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
 
         page = await foClassicCheckoutPage.closePage(browserContext, page, 0);
 
-        const pageTitle = await preferencesPage.getPageTitle(page);
-        expect(pageTitle).to.contains(preferencesPage.pageTitle);
+        const pageTitle = await boShippingPreferencesPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boShippingPreferencesPage.pageTitle);
       });
     });
   });

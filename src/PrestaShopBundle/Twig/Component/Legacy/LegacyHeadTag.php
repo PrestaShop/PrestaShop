@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Twig\Component\HeadTag;
 use PrestaShopBundle\Twig\Layout\MenuBuilder;
 use PrestaShopBundle\Twig\Layout\TemplateVariables;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
@@ -60,6 +61,7 @@ class LegacyHeadTag extends HeadTag
         CurrencyContext $currencyContext,
         LegacyControllerContext $legacyControllerContext,
         protected readonly LegacyContext $context,
+        RouterInterface $router,
     ) {
         parent::__construct(
             $configuration,
@@ -72,7 +74,8 @@ class LegacyHeadTag extends HeadTag
             $languageContext,
             $defaultLanguageContext,
             $currencyContext,
-            $legacyControllerContext
+            $legacyControllerContext,
+            $router
         );
     }
 

@@ -73,7 +73,11 @@ class LegacyRouterChecker
             $moduleName = $tab->getModule();
             $controllers = Dispatcher::getControllers(_PS_MODULE_DIR_ . $moduleName . '/controllers/admin/');
             if (!isset($controllers[strtolower($queryController)])) {
-                throw new NotFoundHttpException(sprintf('Unknown controller %s', $queryController));
+                throw new NotFoundHttpException(sprintf(
+                    'Controller %s was not found. It belonged to module %s, make sure it is still installed.',
+                    $queryController,
+                    $moduleName
+                ));
             } else {
                 $controllerName = $controllers[strtolower($queryController)];
                 // Controllers in modules can be named AdminXXX.php or AdminXXXController.php

@@ -1,21 +1,17 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import imageSettingsPage from '@pages/BO/design/imageSettings';
-import contactPage from '@pages/BO/shopParameters/contact';
-import storesPage from '@pages/BO/shopParameters/stores';
-import createStoresPage from '@pages/BO/shopParameters/stores/add';
-// Import FO pages
-import {storesPage as storePage} from '@pages/FO/classic/stores';
-
 import {expect} from 'chai';
+
 import {
+  boContactsPage,
   boDashboardPage,
+  boImageSettingsPage,
   boLoginPage,
+  boStoresPage,
+  boStoresCreatePage,
   type BrowserContext,
   FakerStore,
   foClassicHomePage,
+  foClassicStoresPage,
   type Page,
   utilsFile,
   utilsPlaywright,
@@ -82,32 +78,32 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
         boDashboardPage.designParentLink,
         boDashboardPage.imageSettingsLink,
       );
-      await imageSettingsPage.closeSfToolBar(page);
+      await boImageSettingsPage.closeSfToolBar(page);
 
-      const pageTitle = await imageSettingsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(imageSettingsPage.pageTitle);
+      const pageTitle = await boImageSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boImageSettingsPage.pageTitle);
     });
 
     it('should enable WebP image format', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableWebP', baseContext);
 
-      const result = await imageSettingsPage.setImageFormatToGenerateChecked(page, 'webp', true);
-      expect(result).to.be.eq(imageSettingsPage.messageSettingsUpdated);
+      const result = await boImageSettingsPage.setImageFormatToGenerateChecked(page, 'webp', true);
+      expect(result).to.be.eq(boImageSettingsPage.messageSettingsUpdated);
     });
 
     it('should check image generation options', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkImageGenerationOptions', baseContext);
 
       // JPEG/PNG should be checked
-      const jpegChecked = await imageSettingsPage.isImageFormatToGenerateChecked(page, 'jpg');
+      const jpegChecked = await boImageSettingsPage.isImageFormatToGenerateChecked(page, 'jpg');
       expect(jpegChecked).to.eq(true);
 
       // JPEG/PNG should be checked
-      const jpegDisabled = await imageSettingsPage.isImageFormatToGenerateDisabled(page, 'jpg');
+      const jpegDisabled = await boImageSettingsPage.isImageFormatToGenerateDisabled(page, 'jpg');
       expect(jpegDisabled).to.eq(true);
 
       // WebP should be checked
-      const webpChecked = await imageSettingsPage.isImageFormatToGenerateChecked(page, 'webp');
+      const webpChecked = await boImageSettingsPage.isImageFormatToGenerateChecked(page, 'webp');
       expect(webpChecked).to.eq(true);
     });
   });
@@ -131,7 +127,7 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
         it('should go to BO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToBoStores${arg.extOriginal}`, baseContext);
 
-          await storePage.goToBO(page);
+          await foClassicStoresPage.goToBO(page);
 
           const pageTitle = await boDashboardPage.getPageTitle(page);
           expect(pageTitle).to.contains(boDashboardPage.pageTitle);
@@ -146,52 +142,52 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
           boDashboardPage.shopParametersParentLink,
           boDashboardPage.contactLink,
         );
-        await contactPage.closeSfToolBar(page);
+        await boContactsPage.closeSfToolBar(page);
 
-        const pageTitle = await contactPage.getPageTitle(page);
-        expect(pageTitle).to.contains(contactPage.pageTitle);
+        const pageTitle = await boContactsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boContactsPage.pageTitle);
       });
 
       it('should go to \'Stores\' tab', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToStoresTab${arg.extOriginal}`, baseContext);
 
-        await contactPage.goToStoresPage(page);
+        await boContactsPage.goToStoresPage(page);
 
-        const pageTitle = await storesPage.getPageTitle(page);
-        expect(pageTitle).to.contains(storesPage.pageTitle);
+        const pageTitle = await boStoresPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boStoresPage.pageTitle);
       });
 
       it('should click on \'Add new store\' button', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `clickOnNewStoreButton${arg.extOriginal}`, baseContext);
 
-        await storesPage.goToNewStorePage(page);
+        await boStoresPage.goToNewStorePage(page);
 
-        const pageTitle = await createStoresPage.getPageTitle(page);
-        expect(pageTitle).to.contains(createStoresPage.pageTitleCreate);
+        const pageTitle = await boStoresCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boStoresCreatePage.pageTitleCreate);
       });
 
       it('should create a store', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createStore${arg.extOriginal}`, baseContext);
 
-        const createMessage = await createStoresPage.createEditStore(page, arg.store);
-        expect(createMessage).to.contains(storesPage.successfulCreationMessage);
+        const createMessage = await boStoresCreatePage.createEditStore(page, arg.store);
+        expect(createMessage).to.contains(boStoresPage.successfulCreationMessage);
       });
 
       it('should search for the new store and fetch the ID', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `searchCreatedCategory${arg.extOriginal}`, baseContext);
 
-        await storesPage.resetFilter(page);
-        await storesPage.filterTable(
+        await boStoresPage.resetFilter(page);
+        await boStoresPage.filterTable(
           page,
           'input',
           'sl!name',
           arg.store.name,
         );
 
-        const textColumn = await storesPage.getTextColumn(page, 1, 'sl!name');
+        const textColumn = await boStoresPage.getTextColumn(page, 1, 'sl!name');
         expect(textColumn).to.contains(arg.store.name);
 
-        idStore = parseInt(await storesPage.getTextColumn(page, 1, 'id_store'), 10);
+        idStore = parseInt(await boStoresPage.getTextColumn(page, 1, 'id_store'), 10);
       });
 
       it('should check that images are generated', async function () {
@@ -228,7 +224,7 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
       it('should go to FO page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToFo${arg.extOriginal}`, baseContext);
 
-        page = await storesPage.viewMyShop(page);
+        page = await boStoresPage.viewMyShop(page);
         await foClassicHomePage.changeLanguage(page, 'en');
 
         const isHomePage = await foClassicHomePage.isHomePage(page);
@@ -240,15 +236,15 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
 
         await foClassicHomePage.goToFooterLink(page, 'Stores');
 
-        const pageTitle = await storePage.getPageTitle(page);
-        expect(pageTitle).to.be.eq(storePage.pageTitle);
+        const pageTitle = await foClassicStoresPage.getPageTitle(page);
+        expect(pageTitle).to.be.eq(foClassicStoresPage.pageTitle);
       });
 
       it('should check that the main image of the store is a WebP', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkStoreImageMain${arg.extOriginal}`, baseContext);
 
         // Check the WebP file from the Stores page
-        const quickViewImageMain = await storePage.getStoreImageMain(page, idStore);
+        const quickViewImageMain = await foClassicStoresPage.getStoreImageMain(page, idStore);
         expect(quickViewImageMain).to.not.eq(null);
 
         await utilsFile.downloadFile(quickViewImageMain as string, 'image.img');
@@ -286,7 +282,7 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
         it('should go to BO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToBoStores${arg.extension}`, baseContext);
 
-          await storePage.goToBO(page);
+          await foClassicStoresPage.goToBO(page);
 
           const pageTitle = await boDashboardPage.getPageTitle(page);
           expect(pageTitle).to.contains(boDashboardPage.pageTitle);
@@ -300,37 +296,37 @@ describe('BO - Design - Image Settings - Check store image format', async () => 
             boDashboardPage.shopParametersParentLink,
             boDashboardPage.contactLink,
           );
-          await contactPage.closeSfToolBar(page);
+          await boContactsPage.closeSfToolBar(page);
 
-          const pageTitle = await contactPage.getPageTitle(page);
-          expect(pageTitle).to.contains(contactPage.pageTitle);
+          const pageTitle = await boContactsPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boContactsPage.pageTitle);
         });
 
         it('should go to \'Stores\' tab', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToStoresTab${arg.extension}ForRemoval`, baseContext);
 
-          await contactPage.goToStoresPage(page);
+          await boContactsPage.goToStoresPage(page);
 
-          const pageTitle = await storesPage.getPageTitle(page);
-          expect(pageTitle).to.contains(storesPage.pageTitle);
+          const pageTitle = await boStoresPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boStoresPage.pageTitle);
         });
       }
 
       it('should filter list by name', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterForDelete${arg.extension}`, baseContext);
 
-        await storesPage.resetFilter(page);
-        await storesPage.filterTable(page, 'input', 'sl!name', arg.store.name);
+        await boStoresPage.resetFilter(page);
+        await boStoresPage.filterTable(page, 'input', 'sl!name', arg.store.name);
 
-        const storeName = await storesPage.getTextColumn(page, 1, 'sl!name');
+        const storeName = await boStoresPage.getTextColumn(page, 1, 'sl!name');
         expect(storeName).to.contains(arg.store.name);
       });
 
       it('should delete store', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deleteStore${arg.extension}`, baseContext);
 
-        const textResult = await storesPage.deleteStore(page, 1);
-        expect(textResult).to.contains(storesPage.successfulDeleteMessage);
+        const textResult = await boStoresPage.deleteStore(page, 1);
+        expect(textResult).to.contains(boStoresPage.successfulDeleteMessage);
       });
     });
   });

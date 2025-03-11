@@ -1,20 +1,16 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import addTaxPage from '@pages/BO/international/taxes/add';
+import {expect} from 'chai';
 
 import {
   boDashboardPage,
   boLoginPage,
   boTaxesPage,
+  boTaxesCreatePage,
   type BrowserContext,
   FakerTax,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_international_taxes_taxes_CRUDTaxesInBO';
 
@@ -74,15 +70,15 @@ describe('BO - International - Taxes : Create, Update and Delete Tax', async () 
 
       await boTaxesPage.goToAddNewTaxPage(page);
 
-      const pageTitle = await addTaxPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addTaxPage.pageTitleCreate);
+      const pageTitle = await boTaxesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boTaxesCreatePage.pageTitleCreate);
     });
 
     it('should create Tax and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createTax', baseContext);
 
-      const textResult = await addTaxPage.createEditTax(page, createTaxData);
-      expect(textResult).to.equal(addTaxPage.successfulCreationMessage);
+      const textResult = await boTaxesCreatePage.createEditTax(page, createTaxData);
+      expect(textResult).to.equal(boTaxesCreatePage.successfulCreationMessage);
 
       const numberOfTaxesAfterCreation = await boTaxesPage.getNumberOfElementInGrid(page);
       expect(numberOfTaxesAfterCreation).to.be.equal(numberOfTaxes + 1);
@@ -124,14 +120,14 @@ describe('BO - International - Taxes : Create, Update and Delete Tax', async () 
 
       await boTaxesPage.goToEditTaxPage(page, 1);
 
-      const pageTitle = await addTaxPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addTaxPage.pageTitleEdit);
+      const pageTitle = await boTaxesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boTaxesCreatePage.pageTitleEdit);
     });
 
     it('should update tax', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateTax', baseContext);
 
-      const textResult = await addTaxPage.createEditTax(page, editTaxData);
+      const textResult = await boTaxesCreatePage.createEditTax(page, editTaxData);
       expect(textResult).to.equal(boTaxesPage.successfulUpdateMessage);
     });
 

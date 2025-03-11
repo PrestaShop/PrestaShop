@@ -37,6 +37,8 @@ use PrestaShop\PrestaShop\Adapter\Employee\EmployeeRepository;
  */
 class EmployeeContextBuilder implements LegacyContextBuilderInterface
 {
+    use LegacyObjectCheckerTrait;
+
     private ?int $employeeId = null;
     private ?LegacyEmployee $legacyEmployee = null;
 
@@ -74,8 +76,8 @@ class EmployeeContextBuilder implements LegacyContextBuilderInterface
     {
         $legacyEmployee = $this->getLegacyEmployee();
         if (!empty($legacyEmployee)) {
-            $contextEmployee = $this->contextStateManager->getContext()->employee;
-            if (null === $contextEmployee || empty($contextEmployee->id)) {
+            // Only update the legacy context when the employee is not the expected one, if not leave the context unchanged
+            if ($this->legacyObjectNeedsUpdate($this->contextStateManager->getContext()->employee, (int) $legacyEmployee->id)) {
                 $this->contextStateManager->setEmployee($legacyEmployee);
             }
         }
@@ -90,7 +92,7 @@ class EmployeeContextBuilder implements LegacyContextBuilderInterface
 
     private function getLegacyEmployee(): ?LegacyEmployee
     {
-        if (!$this->legacyEmployee && !empty($this->employeeId)) {
+        if ($this->legacyObjectNeedsUpdate($this->legacyEmployee, $this->employeeId)) {
             $this->legacyEmployee = $this->employeeRepository->get($this->employeeId);
         }
 

@@ -52,6 +52,30 @@ body {
   .nav.nav-tabs li.active a {
     z-index: 99;
   }
+
+  // Links
+  a {
+    &[href] {
+      // Exclude classes that don't need underline
+      &:not(
+      .breadcrumb a,
+      .dropdown-menu a,
+      table a,
+      [class*="btn"],
+      [class*="dropdown"],
+      [class*="list-group-item"],
+      [class*="kpi-container"],
+      [class*="nav-link"]) {
+        text-decoration: underline;
+        text-underline-offset: var(--#{$cdk}size-2);
+        transition: var(--#{$cdk}default-transition);
+
+        &:hover {
+          text-underline-offset: var(--#{$cdk}size-4);
+        }
+      }
+    }
+  }
 }
 
 body.adminmodules {
