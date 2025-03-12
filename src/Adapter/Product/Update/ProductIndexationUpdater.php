@@ -67,7 +67,6 @@ class ProductIndexationUpdater
      * then a new indexation is needed.
      *
      * @param array $updatedFields
-     *
      * @return bool
      */
     public function isIndexationNeeded(array $updatedFields): bool
