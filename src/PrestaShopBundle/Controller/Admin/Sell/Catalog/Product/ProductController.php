@@ -1165,6 +1165,7 @@ class ProductController extends FrameworkBundleAdminController
             'taxEnabled' => (bool) $configuration->get('PS_TAX'),
             'stockEnabled' => (bool) $configuration->get('PS_STOCK_MANAGEMENT'),
             'isMultistoreActive' => $this->get('prestashop.adapter.multistore_feature')->isActive(),
+            'layoutTitle' => $this->trans('Product', 'Admin.Global'),
         ]);
     }
 
