@@ -1477,6 +1477,15 @@ class CarrierCore extends ObjectModel
     {
         static $ps_country_default = null;
 
+        Hook::exec('actionUpdateProductSize', [
+            'product' => &$product,
+            'id_warehouse' => $id_warehouse,
+            'id_address_delivery' => $id_address_delivery,
+            'id_shop' => $id_shop,
+            'cart' => $cart,
+            'error' => &$error,
+        ]);
+
         if ($ps_country_default === null) {
             $ps_country_default = Configuration::get('PS_COUNTRY_DEFAULT');
         }

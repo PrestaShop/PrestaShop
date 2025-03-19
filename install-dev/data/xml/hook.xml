@@ -376,6 +376,11 @@
       <title>Extra carrier (module mode)</title>
       <description/>
     </hook>
+    <hook id="actionUpdateProductSize">
+      <name>actionUpdateProductSize</name>
+      <title>This hook is a way of assigning a custom product size before carrier filtering</title>
+      <description/>
+    </hook>
     <hook id="displayShoppingCart">
       <name>displayShoppingCart</name>
       <title>Shopping cart - Additional button</title>
