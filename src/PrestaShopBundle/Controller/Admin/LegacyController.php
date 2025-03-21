@@ -116,7 +116,10 @@ class LegacyController extends PrestaShopAdminController
         header('Cache-Control: no-store, no-cache');
 
         $smarty = $this->legacyContext->getSmarty();
-        $smarty->setTemplateDir(_PS_BO_ALL_THEMES_DIR_ . 'default/template/');
+        $smarty->setTemplateDir([
+            _PS_BO_ALL_THEMES_DIR_ . 'default/template/',
+            _PS_OVERRIDE_DIR_ . 'controllers/admin/templates',
+        ]);;
 
         $isAjaxRequest = (bool) $request->get('ajax');
         if ($isAjaxRequest) {
