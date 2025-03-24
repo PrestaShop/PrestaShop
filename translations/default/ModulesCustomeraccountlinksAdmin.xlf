@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_customeraccountlinks/ps_customeraccountlinks.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="Modules.Customeraccountlinks.Admin.xlf" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="ecf3e4f8f34a293099620cc25d5b4d93">
-        <source>My Account block</source>
-        <target>My Account block</target>
-        <note>Line: 46</note>
-      </trans-unit>
-      <trans-unit id="d03c37dd831b71ea0325997c25f89bc1">
-        <source>Welcome your customers with their personal information displayed right on your footer.</source>
-        <target>Welcome your customers with their personal information displayed right on your footer.</target>
-        <note>Line: 47</note>
-      </trans-unit>
       <trans-unit id="d1a365ea7809ae5831c6d9f86886630c">
         <source>Credit slips</source>
         <target>Credit slips</target>
-        <note>Line: 110</note>
-      </trans-unit>
-      <trans-unit id="0fd8dc8abb2404ad11af4182f10643c1">
-        <source>Personal info</source>
-        <target>Personal info</target>
-        <note>Line: 118</note>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_customeraccountlinks/ps_customeraccountlinks.php [Line: 110]</note>
       </trans-unit>
       <trans-unit id="e06d7593c1cd6dabef450be6c3da7091">
         <source>Merchandise returns</source>
         <target>Merchandise returns</target>
-        <note>Line: 125</note>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_customeraccountlinks/ps_customeraccountlinks.php [Line: 125]</note>
+      </trans-unit>
+      <trans-unit id="ecf3e4f8f34a293099620cc25d5b4d93">
+        <source>My Account block</source>
+        <target>My Account block</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_customeraccountlinks/ps_customeraccountlinks.php [Line: 46]</note>
+      </trans-unit>
+      <trans-unit id="0fd8dc8abb2404ad11af4182f10643c1">
+        <source>Personal info</source>
+        <target>Personal info</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_customeraccountlinks/ps_customeraccountlinks.php [Line: 118]</note>
+      </trans-unit>
+      <trans-unit id="d03c37dd831b71ea0325997c25f89bc1">
+        <source>Welcome your customers with their personal information displayed right on your footer.</source>
+        <target>Welcome your customers with their personal information displayed right on your footer.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_customeraccountlinks/ps_customeraccountlinks.php [Line: 47]</note>
       </trans-unit>
     </body>
   </file>

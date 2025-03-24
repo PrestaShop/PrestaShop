@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_currencyselector/ps_currencyselector.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="Modules.Currencyselector.Admin.xlf" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="f7a31ae8f776597d4282bd3b1013f08b">
         <source>Currency block</source>
         <target>Currency block</target>
-        <note>Line: 48</note>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_currencyselector/ps_currencyselector.php [Line: 48]</note>
       </trans-unit>
       <trans-unit id="f2fe6429e9a86a46f26a66cc63a836cc">
         <source>Offer your customers the possibility to buy matching items when on a product page.</source>
         <target>Offer your customers the possibility to buy matching items when on a product page.</target>
-        <note>Line: 49</note>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_currencyselector/ps_currencyselector.php [Line: 49]</note>
       </trans-unit>
     </body>
   </file>

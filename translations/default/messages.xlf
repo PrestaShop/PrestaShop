@@ -1,1503 +1,386 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="admin-dev/themes/default/template/controllers/carrier_wizard/summary.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="62acf0bc057112bf91cd1ff9f1426c6c">
-        <source>[undefined]</source>
-        <target>[undefined]</target>
-        <note>Line: 53</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/cart_rules/actions.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="bcca39c6f36c3085c46429511614b227">
-        <source>If enabled, the voucher will not apply to products already on sale.</source>
-        <target>If enabled, the voucher will not apply to products already on sale.</target>
-        <note>Line: 145</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/cart_rules/product_rule_group.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="d6d9190e86f812c0490da9360e12cee1">
-        <source>Add a rule concerning</source>
-        <target>Add a rule concerning</target>
-        <note>Line: 45</note>
-      </trans-unit>
-      <trans-unit id="c5536e008327e8873c8daf321a088873">
-        <source>The product(s) are matching one of these:</source>
-        <target>The product(s) are matching one of these:</target>
-        <note>Line: 65</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/customer_threads/helpers/options/options.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1e65b02f3464a517e0946a46d496327c">
-        <source>Sync success</source>
-        <target>Sync success</target>
-        <note>Line: 75</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/customer_threads/helpers/view/modal.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="d3d2e617335f08df83599665eef8a418">
-        <source>Close</source>
-        <target>Close</target>
-        <note>Line: 62</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/customer_threads/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="3bf63a999cda6c9d95c3827e7942f41d">
-        <source>Customer since: %s</source>
-        <target>Customer since: %s</target>
-        <note>Line: 79</note>
-      </trans-unit>
-      <trans-unit id="8df41ed5ebc778c45f74a201e822613a">
-        <source>Choose a template</source>
-        <target>Choose a template</target>
-        <note>Line: 112</note>
-      </trans-unit>
-      <trans-unit id="94966d90747b97d1f0f206c98a8b1ac3">
-        <source>Send</source>
-        <target>Send</target>
-        <note>Line: 115</note>
-      </trans-unit>
-      <trans-unit id="2605a817441c19cc88eb9e5d17845dc0">
-        <source>You can add a comment here.</source>
-        <target>You can add a comment here.</target>
-        <note>Line: 151</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/customer_threads/message.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="d13d8380c3f4de07fef91a42fe6c60d7">
-        <source>Customer ID:</source>
-        <target>Customer ID:</target>
-        <note>Line: 127</note>
-      </trans-unit>
-      <trans-unit id="d1228f5476d15142b1358ae4b5fa2454">
-        <source>Order #</source>
-        <target>Order #</target>
-        <note>Line: 134</note>
-      </trans-unit>
-      <trans-unit id="c851a34d4806acb02a55df148f9d7f25">
-        <source>Product #</source>
-        <target>Product #</target>
-        <note>Line: 141</note>
-      </trans-unit>
-      <trans-unit id="47a0be8d1015d526a1fbaa56c3102135">
-        <source>Subject:</source>
-        <target>Subject:</target>
-        <note>Line: 147</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/dashboard/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="908f8d9f34f375a55dd5b6a86489d364">
-        <source>No result</source>
-        <target>No result</target>
-        <note>Line: 28</note>
-      </trans-unit>
-      <trans-unit id="43340e6cc4e88197d57f8d6d5ea50a46">
-        <source>Read more</source>
-        <target>Read more</target>
-        <note>Line: 29</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/groups/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a1e7379abfdbc3b8e03506e5489c6110">
-        <source>Discount:</source>
-        <target>Discount:</target>
-        <note>Line: 36</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/import/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="5f613cee6c941423b73e1f87ea3b99bc">
-        <source>Please name your data matching configuration in order to save it.</source>
-        <target>Please name your data matching configuration in order to save it.</target>
-        <note>Line: 28</note>
-      </trans-unit>
-      <trans-unit id="43a37c093f7655efe882a7ffd7ce2e8d">
-        <source>Match your data</source>
-        <target>Match your data</target>
-        <note>Line: 61</note>
-      </trans-unit>
-      <trans-unit id="e275f3b49dc3286ef66d7c2774a1f79b">
-        <source>Please match each column of your source file to one of the destination columns.</source>
-        <target>Please match each column of your source file to one of the destination columns.</target>
-        <note>Line: 63</note>
-      </trans-unit>
-      <trans-unit id="4d83ebfaf28dd4436e1165a1764750db">
-        <source>Load a data matching configuration</source>
-        <target>Load a data matching configuration</target>
-        <note>Line: 67</note>
-      </trans-unit>
-      <trans-unit id="f19dbf2edb3a0bd74b0524d960ff21eb">
-        <source>Load</source>
-        <target>Load</target>
-        <note>Line: 76</note>
-      </trans-unit>
-      <trans-unit id="e195639ebd7491676218b40af7aeafe3">
-        <source>Save your data matching configuration</source>
-        <target>Save your data matching configuration</target>
-        <note>Line: 81</note>
-      </trans-unit>
-      <trans-unit id="371ed088d2c0e456f5cae0bb97fe7c4b">
-        <source>Two columns cannot have the same type of values</source>
-        <target>Two columns cannot have the same type of values</target>
-        <note>Line: 91</note>
-      </trans-unit>
-      <trans-unit id="6a00e03023004b3330275e8d9842b54c">
-        <source>This column must be set:</source>
-        <target>This column must be set:</target>
-        <note>Line: 94</note>
-      </trans-unit>
-      <trans-unit id="3b057f0f92ac8d274701c269ac00c5fa">
-        <source>Rows to skip</source>
-        <target>Rows to skip</target>
-        <note>Line: 114</note>
-      </trans-unit>
-      <trans-unit id="225ba2bdb1c56af16651110411fc21b1">
-        <source>Indicate how many of the first rows of your file should be skipped when importing the data. For instance set it to 1 if the first row of your file contains headers.</source>
-        <target>Indicate how many of the first rows of your file should be skipped when importing the data. For instance set it to 1 if the first row of your file contains headers.</target>
-        <note>Line: 117</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/not_found/content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="efc54df619cd3792c98805fba1ee5ff7">
-        <source>The controller %s is missing or invalid.</source>
-        <target>The controller %s is missing or invalid.</target>
-        <note>Line: 27</note>
-      </trans-unit>
-      <trans-unit id="9178de10abf6a1368e7a73ec0adb0e8e">
-        <source>Back to the previous page</source>
-        <target>Back to the previous page</target>
-        <note>Line: 31</note>
-      </trans-unit>
-      <trans-unit id="585c732d00a27a32cd9585fe481964cf">
-        <source>Go to the dashboard</source>
-        <target>Go to the dashboard</target>
-        <note>Line: 35</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/return/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e9cb217697088a98b1937d111d936281">
-        <source>Attachment</source>
-        <target>Attachment</target>
-        <note>Line: 83</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/specific_price_rule/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="3adbdb3ac060038aa0e6e6c138ef9873">
-        <source>Category</source>
-        <target>Category</target>
-        <note>Line: 240</note>
-      </trans-unit>
-      <trans-unit id="1be6f9eb563f3bf85c78b4219bf09de9">
-        <source>Brand</source>
-        <target>Brand</target>
-        <note>Line: 251</note>
-      </trans-unit>
-      <trans-unit id="ec136b444eede3bc85639fac0dd06229">
-        <source>Supplier</source>
-        <target>Supplier</target>
-        <note>Line: 262</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/suppliers/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="38f06ccd27281c8fc66e11581798ec06">
-        <source>Number of products:</source>
-        <target>Number of products:</target>
-        <note>Line: 30</note>
-      </trans-unit>
-      <trans-unit id="df644ae155e79abf54175bd15d75f363">
-        <source>Product name</source>
-        <target>Product name</target>
-        <note>Line: 34</note>
-      </trans-unit>
-      <trans-unit id="1caa6ff629641a4eb20f190f7a0539ca">
-        <source>Attribute name</source>
-        <target>Attribute name</target>
-        <note>Line: 35</note>
-      </trans-unit>
-      <trans-unit id="bc67a1507258a758c3a31e66d7ceff8f">
-        <source>Supplier Reference</source>
-        <target>Supplier Reference</target>
-        <note>Line: 36</note>
-      </trans-unit>
-      <trans-unit id="c804723ccdde3d7a46933b208c6f928d">
-        <source>Wholesale price</source>
-        <target>Wholesale price</target>
-        <note>Line: 37</note>
-      </trans-unit>
-      <trans-unit id="a7b4930bf2fc5d57eec6b03097200152">
-        <source>EAN-13</source>
-        <target>EAN-13</target>
-        <note>Line: 39</note>
-      </trans-unit>
-      <trans-unit id="fbd99ad01b92dbafc686772a39e3d065">
-        <source>UPC</source>
-        <target>UPC</target>
-        <note>Line: 40</note>
-      </trans-unit>
-      <trans-unit id="c8c5918f1175c1296d19755b2f49d1c9">
-        <source>Available Quantity</source>
-        <target>Available Quantity</target>
-        <note>Line: 42</note>
-      </trans-unit>
-      <trans-unit id="382b0f5185773fa0f67a8ed8056c7759">
-        <source>N/A</source>
-        <target>N/A</target>
-        <note>Line: 69</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="bbfb7a636f839052067cc86c39fa595a">
-        <source>%limit% for suhosin.post.max_vars.</source>
-        <target>%limit% for suhosin.post.max_vars.</target>
-        <note>Line: 39</note>
-      </trans-unit>
-      <trans-unit id="e97da54b23c78752578cd7fa01e8866d">
-        <source>%limit% for suhosin.request.max_vars.</source>
-        <target>%limit% for suhosin.request.max_vars.</target>
-        <note>Line: 40</note>
-      </trans-unit>
-      <trans-unit id="a7bd935a88c629dc11c52e0c16c2a8a0">
-        <source>%d</source>
-        <target>%d</target>
-        <note>Line: 58</note>
-      </trans-unit>
-      <trans-unit id="54524210ee89080b3da6c88a11c6d438">
-        <source>You must use this syntax in your translations. Here are several examples:</source>
-        <target>You must use this syntax in your translations. Here are several examples:</target>
-        <note>Line: 86</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/helpers/calendar/calendar.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="5da618e8e4b89c66fe86e32cdafde142">
-        <source>From</source>
-        <target>From</target>
-        <note>Line: 87</note>
-      </trans-unit>
-      <trans-unit id="08ee10c9fa141c53ae44667dcc1adf1e">
-        <source>Date range</source>
-        <target>Date range</target>
-        <note>Line: 48</note>
-      </trans-unit>
-      <trans-unit id="90589c47f06eb971d548591f23c285af">
-        <source>Custom</source>
-        <target>Custom</target>
-        <note>Line: 83</note>
-      </trans-unit>
-      <trans-unit id="01b6e20344b68835c5ed1ddedf20d531">
-        <source>to</source>
-        <target>to</target>
-        <note>Line: 89</note>
-      </trans-unit>
-      <trans-unit id="0c031866121d4fc6d21d0f524d0091e4">
-        <source>Compare to</source>
-        <target>Compare to</target>
-        <note>Line: 77</note>
-      </trans-unit>
-      <trans-unit id="97bf2dbc7a13706eeb1eac149bd2d130">
-        <source>Previous period</source>
-        <target>Previous period</target>
-        <note>Line: 81</note>
-      </trans-unit>
-      <trans-unit id="635f2145a06da2d4ce2c355bf94da6ed">
-        <source>Previous Year</source>
-        <target>Previous Year</target>
-        <note>Line: 82</note>
-      </trans-unit>
-      <trans-unit id="3ca6ac2463aa0dc57452cf676723b79f">
-        <source>Previous year</source>
-        <target>Previous year</target>
-        <note>Line: 82</note>
-      </trans-unit>
-      <trans-unit id="9d1a0949c39e66a0cd65240bc0ac9177">
-        <source>Sunday</source>
-        <target>Sunday</target>
-        <note>Line: 111</note>
-      </trans-unit>
-      <trans-unit id="6f8522e0610541f1ef215a22ffa66ff6">
-        <source>Monday</source>
-        <target>Monday</target>
-        <note>Line: 111</note>
-      </trans-unit>
-      <trans-unit id="5792315f09a5d54fb7e3d066672b507f">
-        <source>Tuesday</source>
-        <target>Tuesday</target>
-        <note>Line: 111</note>
-      </trans-unit>
-      <trans-unit id="796c163589f295373e171842f37265d5">
-        <source>Wednesday</source>
-        <target>Wednesday</target>
-        <note>Line: 111</note>
-      </trans-unit>
-      <trans-unit id="78ae6f0cd191d25147e252dc54768238">
-        <source>Thursday</source>
-        <target>Thursday</target>
-        <note>Line: 111</note>
-      </trans-unit>
-      <trans-unit id="c33b138a163847cdb6caeeb7c9a126b4">
-        <source>Friday</source>
-        <target>Friday</target>
-        <note>Line: 111</note>
-      </trans-unit>
-      <trans-unit id="8b7051187b9191cdcdae6ed5a10e5adc">
-        <source>Saturday</source>
-        <target>Saturday</target>
-        <note>Line: 111</note>
-      </trans-unit>
-      <trans-unit id="ef6572e4cd58bb39a3f4e82fc64fe9f0">
-        <source>Sun</source>
-        <target>Sun</target>
-        <note>Line: 112</note>
-      </trans-unit>
-      <trans-unit id="fd29458ae58ac32a2d8734ed90ad51ec">
-        <source>Mon</source>
-        <target>Mon</target>
-        <note>Line: 112</note>
-      </trans-unit>
-      <trans-unit id="2ddecde85408faf230652444db78cb72">
-        <source>Tue</source>
-        <target>Tue</target>
-        <note>Line: 112</note>
-      </trans-unit>
-      <trans-unit id="510c292b1686eb070d9e90a575f74106">
-        <source>Wed</source>
-        <target>Wed</target>
-        <note>Line: 112</note>
-      </trans-unit>
-      <trans-unit id="ed5e8353dfc585f4c6b3a55d1a9fc01d">
-        <source>Thu</source>
-        <target>Thu</target>
-        <note>Line: 112</note>
-      </trans-unit>
-      <trans-unit id="ac616f844b9a5ea5a827bf7fb99b1ad5">
-        <source>Fri</source>
-        <target>Fri</target>
-        <note>Line: 112</note>
-      </trans-unit>
-      <trans-unit id="13c7d2d737f81f7bf89aed9fbcd0ad55">
-        <source>Sat</source>
-        <target>Sat</target>
-        <note>Line: 112</note>
-      </trans-unit>
-      <trans-unit id="f72c915d8f575a5c0999b5f37b6d99b7">
-        <source>Su</source>
-        <target>Su</target>
-        <note>Line: 113</note>
-      </trans-unit>
-      <trans-unit id="c08df9bb5fb44242a6291b1eee5d09ad">
-        <source>Mo</source>
-        <target>Mo</target>
-        <note>Line: 113</note>
-      </trans-unit>
-      <trans-unit id="080502c4fa636ac639bf42b6d2ba01d7">
-        <source>Tu</source>
-        <target>Tu</target>
-        <note>Line: 113</note>
-      </trans-unit>
-      <trans-unit id="485c47a81eb6e3998ec05aca48eda184">
-        <source>We</source>
-        <target>We</target>
-        <note>Line: 113</note>
-      </trans-unit>
-      <trans-unit id="eeeb9a8eb45dd351d9ec0eb4acce66ce">
-        <source>Th</source>
-        <target>Th</target>
-        <note>Line: 113</note>
-      </trans-unit>
-      <trans-unit id="fa717ba17306cd76900510df8ac8013e">
-        <source>Fr</source>
-        <target>Fr</target>
-        <note>Line: 113</note>
-      </trans-unit>
-      <trans-unit id="e55bb1ae59b6a64858a85a2f48c53036">
-        <source>Sa</source>
-        <target>Sa</target>
-        <note>Line: 113</note>
-      </trans-unit>
-      <trans-unit id="86f5978d9b80124f509bdb71786e929e">
-        <source>January</source>
-        <target>January</target>
-        <note>Line: 114</note>
-      </trans-unit>
-      <trans-unit id="659e59f062c75f81259d22786d6c44aa">
-        <source>February</source>
-        <target>February</target>
-        <note>Line: 114</note>
-      </trans-unit>
-      <trans-unit id="fa3e5edac607a88d8fd7ecb9d6d67424">
-        <source>March</source>
-        <target>March</target>
-        <note>Line: 114</note>
-      </trans-unit>
-      <trans-unit id="3fcf026bbfffb63fb24b8de9d0446949">
-        <source>April</source>
-        <target>April</target>
-        <note>Line: 114</note>
-      </trans-unit>
-      <trans-unit id="195fbb57ffe7449796d23466085ce6d8">
-        <source>May</source>
-        <target>May</target>
-        <note>Line: 114</note>
-      </trans-unit>
-      <trans-unit id="688937ccaf2a2b0c45a1c9bbba09698d">
-        <source>June</source>
-        <target>June</target>
-        <note>Line: 114</note>
-      </trans-unit>
-      <trans-unit id="1b539f6f34e8503c97f6d3421346b63c">
-        <source>July</source>
-        <target>July</target>
-        <note>Line: 114</note>
-      </trans-unit>
-      <trans-unit id="41ba70891fb6f39327d8ccb9b1dafb84">
-        <source>August</source>
-        <target>August</target>
-        <note>Line: 114</note>
-      </trans-unit>
-      <trans-unit id="cc5d90569e1c8313c2b1c2aab1401174">
-        <source>September</source>
-        <target>September</target>
-        <note>Line: 114</note>
-      </trans-unit>
-      <trans-unit id="eca60ae8611369fe28a02e2ab8c5d12e">
-        <source>October</source>
-        <target>October</target>
-        <note>Line: 114</note>
-      </trans-unit>
-      <trans-unit id="7e823b37564da492ca1629b4732289a8">
-        <source>November</source>
-        <target>November</target>
-        <note>Line: 114</note>
-      </trans-unit>
-      <trans-unit id="82331503174acbae012b2004f6431fa5">
-        <source>December</source>
-        <target>December</target>
-        <note>Line: 114</note>
-      </trans-unit>
-      <trans-unit id="e68564f23e0e939acea76dc3d2bc01bf">
-        <source>Jan</source>
-        <target>Jan</target>
-        <note>Line: 115</note>
-      </trans-unit>
-      <trans-unit id="ea171d540ccd5f0669171ef06d3cd848">
-        <source>Feb</source>
-        <target>Feb</target>
-        <note>Line: 115</note>
-      </trans-unit>
-      <trans-unit id="7ce6b2286a5396e614b8484105d277e0">
-        <source>Mar</source>
-        <target>Mar</target>
-        <note>Line: 115</note>
-      </trans-unit>
-      <trans-unit id="6d7215c4b3bc4716d026ac46c6d9ae64">
-        <source>Apr</source>
-        <target>Apr</target>
-        <note>Line: 115</note>
-      </trans-unit>
-      <trans-unit id="e7f8f5c51fe3a6d48a79c6ede9112b7a">
-        <source>May </source>
-        <target>May </target>
-        <note>Line: 115</note>
-      </trans-unit>
-      <trans-unit id="eb4b40c1221dad5b23fe7ef84d292be1">
-        <source>Jun</source>
-        <target>Jun</target>
-        <note>Line: 115</note>
-      </trans-unit>
-      <trans-unit id="a2866cd6efaa65c92278d4771a9eaec7">
-        <source>Jul</source>
-        <target>Jul</target>
-        <note>Line: 115</note>
-      </trans-unit>
-      <trans-unit id="22f1a4667604b8557c9b209c201b4bc6">
-        <source>Aug</source>
-        <target>Aug</target>
-        <note>Line: 115</note>
-      </trans-unit>
-      <trans-unit id="f04aa7019c490474fa3ce16e93501b57">
-        <source>Sep</source>
-        <target>Sep</target>
-        <note>Line: 115</note>
-      </trans-unit>
-      <trans-unit id="594be08882c8e9d5efb9eeb62f303744">
-        <source>Oct</source>
-        <target>Oct</target>
-        <note>Line: 115</note>
-      </trans-unit>
-      <trans-unit id="343e6957be77c6247aa2b8d0deb68bd6">
-        <source>Nov</source>
-        <target>Nov</target>
-        <note>Line: 115</note>
-      </trans-unit>
-      <trans-unit id="d207b4e0bce42a8f1555ce3a05e287f6">
-        <source>Dec</source>
-        <target>Dec</target>
-        <note>Line: 115</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/helpers/form/assoshop.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="741aae2e1e9e98305742675d1cfc3fb0">
-        <source>All stores</source>
-        <target>All stores</target>
-        <note>Line: 84</note>
-      </trans-unit>
-      <trans-unit id="1aa4c641d6920ddb97a2562f8ec53853">
-        <source>Group:</source>
-        <target>Group:</target>
-        <note>Line: 99</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="2efd89b3ccc76b0b03a34196fc6d1c8b">
-        <source>Add tag</source>
-        <target>Add tag</target>
-        <note>Line: 198</note>
-      </trans-unit>
-      <trans-unit id="1063e38cb53d94d386f21227fcd84717">
-        <source>Remove</source>
-        <target>Remove</target>
-        <note>Line: 333</note>
-      </trans-unit>
-      <trans-unit id="1e1cc9bdeb2f29f5480106aec7e9bc48">
-        <source>Now</source>
-        <target>Now</target>
-        <note>Line: 808</note>
-      </trans-unit>
-      <trans-unit id="f92965e2c8a7afb3c1b9a5c09a263636">
-        <source>Done</source>
-        <target>Done</target>
-        <note>Line: 809</note>
-      </trans-unit>
-      <trans-unit id="3964fd83339fec5014c831822005653a">
-        <source>Choose Time</source>
-        <target>Choose Time</target>
-        <note>Line: 815</note>
-      </trans-unit>
-      <trans-unit id="a76d4ef5f3f6a672bbfab2865563e530">
-        <source>Time</source>
-        <target>Time</target>
-        <note>Line: 816</note>
-      </trans-unit>
-      <trans-unit id="b55e509c697e4cca0e1d160a7806698f">
-        <source>Hour</source>
-        <target>Hour</target>
-        <note>Line: 817</note>
-      </trans-unit>
-      <trans-unit id="62902641c38f3a4a8eb3212454360e24">
-        <source>Minute</source>
-        <target>Minute</target>
-        <note>Line: 818</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/helpers/form/form_group.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="c6155aaecccf794cd2a00fcc35898022">
-        <source>Group name</source>
-        <target>Group name</target>
-        <note>Line: 40</note>
-      </trans-unit>
-      <trans-unit id="69e62346c35bc63795db142cfbb0af66">
-        <source>No group created</source>
-        <target>No group created</target>
-        <note>Line: 64</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/helpers/list/list_content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="messages.xlf" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="0bcef9c45bd8a48eda1b26eb0c61c869">
         <source>%</source>
         <target>%</target>
-        <note>Line: 120</note>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/list/list_content.tpl [Line: 120]</note>
       </trans-unit>
-      <trans-unit id="087fb8756d4add87f2d162304ccd486b">
-        <source>No records found</source>
-        <target>No records found</target>
-        <note>Line: 210</note>
+      <trans-unit id="a7bd935a88c629dc11c52e0c16c2a8a0">
+        <source>%d</source>
+        <target>%d</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl [Line: 57]</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/helpers/list/list_footer.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="4c41e0bd957698b58100a5c687d757d9">
-        <source>Select all</source>
-        <target>Select all</target>
-        <note>Line: 37</note>
+      <trans-unit id="bbfb7a636f839052067cc86c39fa595a">
+        <source>%limit% for suhosin.post.max_vars.</source>
+        <target>%limit% for suhosin.post.max_vars.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/translations/helpers/view/translation_form.tpl [Line: 39]</note>
       </trans-unit>
-      <trans-unit id="237c7b6874386141a095e321c9fdfd38">
-        <source>Unselect all</source>
-        <target>Unselect all</target>
-        <note>Line: 42</note>
-      </trans-unit>
-      <trans-unit id="b9987a246a537f4fe86f1f2e3d10dbdb">
-        <source>Display</source>
-        <target>Display</target>
-        <note>Line: 63</note>
-      </trans-unit>
-      <trans-unit id="dd8921b41e0279a02c6a26a509241700">
-        <source>result(s)</source>
-        <target>result(s)</target>
-        <note>Line: 75</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/helpers/list/list_header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="6ccfec41b65de46efeb7ca242341e8ea">
-        <source>Please fill at least one field to perform a search in this list.</source>
-        <target>Please fill at least one field to perform a search in this list.</target>
-        <note>Line: 116</note>
-      </trans-unit>
-      <trans-unit id="e129ae480280e47ef82fc7702f8321ba">
-        <source>Refresh list</source>
-        <target>Refresh list</target>
-        <note>Line: 160</note>
-      </trans-unit>
-      <trans-unit id="dbcd43f8ba2bafd1bccc57fe9c8b5d7b">
-        <source>Show SQL query</source>
-        <target>Show SQL query</target>
-        <note>Line: 169</note>
-      </trans-unit>
-      <trans-unit id="351b6d570b6ba15fe66e85c1eaf9ec64">
-        <source>Export to SQL Manager</source>
-        <target>Export to SQL Manager</target>
-        <note>Line: 174</note>
-      </trans-unit>
-      <trans-unit id="e9c7e4df74077626f7e42797c65273c4">
-        <source>and stay</source>
-        <target>and stay</target>
-        <note>Line: 206</note>
-      </trans-unit>
-      <trans-unit id="4493e821e06072415518bd7ae4077996">
-        <source>Shop group</source>
-        <target>Shop group</target>
-        <note>Line: 325</note>
-      </trans-unit>
-      <trans-unit id="e12167aa0a7698e6ebc92b4ce3909b53">
-        <source>To</source>
-        <target>To</target>
-        <note>Line: 365</note>
-      </trans-unit>
-      <trans-unit id="526d688f37a86d3c3f27d0c5016eb71d">
-        <source>Reset</source>
-        <target>Reset</target>
-        <note>Line: 417</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/helpers/options/options.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="c103bafd6451f1f08200bebff539606f">
-        <source>Multistore</source>
-        <target>Multistore</target>
-        <note>Line: 61</note>
-      </trans-unit>
-      <trans-unit id="50de2399e96ac57bed17e95376046c3b">
-        <source>Check / Uncheck all</source>
-        <target>Check / Uncheck all</target>
-        <note>Line: 80</note>
-      </trans-unit>
-      <trans-unit id="d97ccb3e617d930d52ffd95e5db2c101">
-        <source>If you check a field, change its value, and save, the multistore behavior will not apply to this shop (or group), for this particular parameter.</source>
-        <target>If you check a field, change its value, and save, the multistore behavior will not apply to this shop (or group), for this particular parameter.</target>
-        <note>Line: 82</note>
-      </trans-unit>
-      <trans-unit id="21034ae6d01a83e702839a72ba8a77b0">
-        <source>(tax excl.)</source>
-        <target>(tax excl.)</target>
-        <note>Line: 224</note>
-      </trans-unit>
-      <trans-unit id="fe73eda0f6569ec502fe52716a648370">
-        <source>You can't change the value of this configuration field in this store's context.</source>
-        <target>You can't change the value of this configuration field in this store's context.</target>
-        <note>Line: 335</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/helpers/required_fields.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="0470d45929f27e1161330164c423b415">
-        <source>Set required fields for this section</source>
-        <target>Set required fields for this section</target>
-        <note>Line: 26</note>
-      </trans-unit>
-      <trans-unit id="e54b38290c8bdd95e8bc10412c9cc096">
-        <source>Required Fields</source>
-        <target>Required Fields</target>
-        <note>Line: 30</note>
-      </trans-unit>
-      <trans-unit id="81f32b96f6626b8968e6a0f4a9bce62e">
-        <source>Select the fields you would like to be required for this section.</source>
-        <target>Select the fields you would like to be required for this section.</target>
-        <note>Line: 33</note>
-      </trans-unit>
-      <trans-unit id="ee9b2f3cf31c23c944b15fb0b33d6a77">
-        <source>Field Name</source>
-        <target>Field Name</target>
-        <note>Line: 42</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/helpers/shops_list/list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="93f04304c09d561ed79442ea9ee722d4">
-        <source>%s group</source>
-        <target>%s group</target>
-        <note>Line: 42</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/helpers/tree/tree_node_folder_checkbox.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="24fc6fbf93a9d551ea7da4cd69f3da3e">
-        <source>(%s selected)</source>
-        <target>(%s selected)</target>
-        <note>Line: 31</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/helpers/tree/tree_node_folder_checkbox_shops.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="bebe39eef720d7cbb479d8b3428e4c04">
-        <source>Group: %s</source>
-        <target>Group: %s</target>
-        <note>Line: 29</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/helpers/tree/tree_toolbar_search.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="d77a48a51f8c62087570ab8f9d6ca55a">
-        <source>search...</source>
-        <target>search...</target>
-        <note>Line: 32</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/helpers/uploader/ajax.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1908624a0bca678cd26b99bfd405324e">
-        <source>File size</source>
-        <target>File size</target>
-        <note>Line: 32</note>
-      </trans-unit>
-      <trans-unit id="3fcbe6bd34e9279ec2c7b13adf7e4095">
-        <source>You have reached the limit (%s) of files to upload, please remove files to continue uploading</source>
-        <target>You have reached the limit (%s) of files to upload, please remove files to continue uploading</target>
-        <note>Line: 48</note>
-      </trans-unit>
-      <trans-unit id="86d3852bba89bf82128c3e156624ad08">
-        <source>Add files...</source>
-        <target>Add files...</target>
-        <note>Line: 62</note>
-      </trans-unit>
-      <trans-unit id="9e74a55bb862a98723f9cf3f868d837e">
-        <source>Add file...</source>
-        <target>Add file...</target>
-        <note>Line: 62</note>
-      </trans-unit>
-      <trans-unit id="c7de86f69db264c3950d8ae46ed2e33f">
-        <source>Upload files</source>
-        <target>Upload files</target>
-        <note>Line: 70</note>
-      </trans-unit>
-      <trans-unit id="ffeed24e8e4fd763c1d0d02c6e5d6e15">
-        <source>Upload file</source>
-        <target>Upload file</target>
-        <note>Line: 70</note>
-      </trans-unit>
-      <trans-unit id="6dc85b454944660cf96e7d0c2d171ee3">
-        <source>You cannot have more than %s images in total. Please remove some of the current images before adding new ones.</source>
-        <target>You cannot have more than %s images in total. Please remove some of the current images before adding new ones.</target>
-        <note>Line: 170</note>
-      </trans-unit>
-      <trans-unit id="b21f085d08623fc7a5a9da204cc66c8c">
-        <source>Remove file</source>
-        <target>Remove file</target>
-        <note>Line: 178</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/helpers/uploader/simple.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="c2299e6abb73991105dfacfb6fdd6dd4">
-        <source>Download current file</source>
-        <target>Download current file</target>
-        <note>Line: 72</note>
-      </trans-unit>
-      <trans-unit id="d39ec66f08507e26fe86aa5325d070df">
-        <source>Add files</source>
-        <target>Add files</target>
-        <note>Line: 67</note>
-      </trans-unit>
-      <trans-unit id="58be4de806253a6ee411b6c0c99296c7">
-        <source>Add file</source>
-        <target>Add file</target>
-        <note>Line: 67</note>
-      </trans-unit>
-      <trans-unit id="09942cec33b5becdf3e2275913b818e2">
-        <source>Download current file (%skb)</source>
-        <target>Download current file (%skb)</target>
-        <note>Line: 72</note>
-      </trans-unit>
-      <trans-unit id="009044df8c709bfdefa065ae7fa733e1">
-        <source>You can upload a maximum of %s files</source>
-        <target>You can upload a maximum of %s files</target>
-        <note>Line: 134</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/layout.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e112201196d8a38cfe15031655647cb6">
-        <source>There are %d warnings:</source>
-        <target>There are %d warnings:</target>
-        <note>Line: 87</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/search_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="03de6422045e4ed3ac822c673ace32d1">
-        <source>123.45.67.89</source>
-        <target>123.45.67.89</target>
-        <note>Line: 50</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/new-theme/template/components/layout/search_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="855d2bf59043b81e76bc931e685a4f58">
-        <source>by name</source>
-        <target>by name</target>
-        <note>Line: 45</note>
-      </trans-unit>
-      <trans-unit id="399574be0ed95657dfac0e8d38374c62">
-        <source>by ip address</source>
-        <target>by ip address</target>
-        <note>Line: 46</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/controller/AdminController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="4ee29ca12c7d126654bd0e5275de6135">
-        <source>List</source>
-        <target>List</target>
-        <note>Line: 650</note>
-      </trans-unit>
-      <trans-unit id="6e9783376d951cfd780e9fdb67a0f02c">
-        <source>View details</source>
-        <target>View details</target>
-        <note>Line: 656</note>
-      </trans-unit>
-      <trans-unit id="dae8ace18bdcbcc6ae5aece263e14fe8">
-        <source>Options</source>
-        <target>Options</target>
-        <note>Line: 661</note>
-      </trans-unit>
-      <trans-unit id="92a8f0b9d28a89b480bd1d29f46f0484">
-        <source>Generator</source>
-        <target>Generator</target>
-        <note>Line: 666</note>
-      </trans-unit>
-      <trans-unit id="7d341c08fd102f0b86285b5ff2e26ea7">
-        <source>%s: %s</source>
-        <target>%s: %s</target>
-        <note>Line: 764</note>
-      </trans-unit>
-      <trans-unit id="921d54865f8169b84c90d4335c256494">
-        <source>filter by %s</source>
-        <target>filter by %s</target>
-        <note>Line: 771</note>
-      </trans-unit>
-      <trans-unit id="a333339eb21abf3d5a04f5ede8f73ae9">
-        <source>%s deletion</source>
-        <target>%s deletion</target>
-        <note>Line: 3967</note>
+      <trans-unit id="e97da54b23c78752578cd7fa01e8866d">
+        <source>%limit% for suhosin.request.max_vars.</source>
+        <target>%limit% for suhosin.request.max_vars.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/translations/helpers/view/translation_form.tpl [Line: 40]</note>
       </trans-unit>
       <trans-unit id="6ca3b11e4d89a7649d10c2d70d98612f">
         <source>%s addition</source>
         <target>%s addition</target>
-        <note>Line: 1223</note>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/classes/controller/AdminController.php [Line: 1223]</note>
+      </trans-unit>
+      <trans-unit id="a333339eb21abf3d5a04f5ede8f73ae9">
+        <source>%s deletion</source>
+        <target>%s deletion</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/classes/controller/AdminController.php [Line: 3967]</note>
+      </trans-unit>
+      <trans-unit id="93f04304c09d561ed79442ea9ee722d4">
+        <source>%s group</source>
+        <target>%s group</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/new-theme/template/helpers/shops_list/list.tpl [Line: 38]</note>
       </trans-unit>
       <trans-unit id="0919680b340ae0ac8d1a804c4c69b0ba">
         <source>%s modification</source>
         <target>%s modification</target>
-        <note>Line: 1332</note>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/classes/controller/AdminController.php [Line: 1332]</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCustomerThreadsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="240f3031f25601fa128bd4e15f0a37de">
-        <source>Comment:</source>
-        <target>Comment:</target>
-        <note>Line: 423</note>
+      <trans-unit id="7d341c08fd102f0b86285b5ff2e26ea7">
+        <source>%s: %s</source>
+        <target>%s: %s</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/classes/controller/AdminController.php [Line: 764]</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="install-dev/controllers/http/configure.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="43775ce1723057d9e3d21e5969324fd1">
-        <source>Straight rows of keys are easy to guess</source>
-        <target>Straight rows of keys are easy to guess</target>
-        <note>Line: 239</note>
+      <trans-unit id="24fc6fbf93a9d551ea7da4cd69f3da3e">
+        <source>(%s selected)</source>
+        <target>(%s selected)</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/tree/tree_node_folder_checkbox.tpl [Line: 31]</note>
       </trans-unit>
-      <trans-unit id="bed5e315d09dedac517831b95571a7f4">
-        <source>Short keyboard patterns are easy to guess</source>
-        <target>Short keyboard patterns are easy to guess</target>
-        <note>Line: 240</note>
+      <trans-unit id="21034ae6d01a83e702839a72ba8a77b0">
+        <source>(tax excl.)</source>
+        <target>(tax excl.)</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/options/options.tpl [Line: 224]</note>
       </trans-unit>
-      <trans-unit id="37ffb1976d12530b5c07821baaf5be39">
-        <source>Use a longer keyboard pattern with more turns</source>
-        <target>Use a longer keyboard pattern with more turns</target>
-        <note>Line: 241</note>
-      </trans-unit>
-      <trans-unit id="773ac0d662987369abf46eebc9000a09">
-        <source>Repeats like "aaa" are easy to guess</source>
-        <target>Repeats like "aaa" are easy to guess</target>
-        <note>Line: 242</note>
-      </trans-unit>
-      <trans-unit id="97681c90722711e8081dcbd10620502e">
-        <source>Repeats like "abcabcabc" are only slightly harder to guess than "abc"</source>
-        <target>Repeats like "abcabcabc" are only slightly harder to guess than "abc"</target>
-        <note>Line: 243</note>
-      </trans-unit>
-      <trans-unit id="de3492070cd44f280a6f398dca2f1efb">
-        <source>Sequences like "abc" or "6543" are easy to guess</source>
-        <target>Sequences like "abc" or "6543" are easy to guess</target>
-        <note>Line: 244</note>
-      </trans-unit>
-      <trans-unit id="25096ab4fbb9994547ace751ca107515">
-        <source>Recent years are easy to guess</source>
-        <target>Recent years are easy to guess</target>
-        <note>Line: 245</note>
-      </trans-unit>
-      <trans-unit id="b3c7b778a3c8c869426ae81486275b12">
-        <source>Dates are often easy to guess</source>
-        <target>Dates are often easy to guess</target>
-        <note>Line: 246</note>
-      </trans-unit>
-      <trans-unit id="954a21d373e3f1bd2446606700a37217">
-        <source>This is a top-10 common password</source>
-        <target>This is a top-10 common password</target>
-        <note>Line: 247</note>
-      </trans-unit>
-      <trans-unit id="f6e52aa06b58dd0d8855340b165c0b49">
-        <source>This is a top-100 common password</source>
-        <target>This is a top-100 common password</target>
-        <note>Line: 248</note>
-      </trans-unit>
-      <trans-unit id="0f4a64d2fecd6b4ab2c10d21313e02a6">
-        <source>This is a very common password</source>
-        <target>This is a very common password</target>
-        <note>Line: 249</note>
-      </trans-unit>
-      <trans-unit id="c92578d4545d5aceb430aed0c7285398">
-        <source>This is similar to a commonly used password</source>
-        <target>This is similar to a commonly used password</target>
-        <note>Line: 250</note>
+      <trans-unit id="03de6422045e4ed3ac822c673ace32d1">
+        <source>123.45.67.89</source>
+        <target>123.45.67.89</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/search_form.tpl [Line: 50]</note>
       </trans-unit>
       <trans-unit id="9769bc6be635c708fee72d29f5a08f30">
         <source>A word by itself is easy to guess</source>
         <target>A word by itself is easy to guess</target>
-        <note>Line: 251</note>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/install-dev/controllers/http/configure.php [Line: 251]</note>
       </trans-unit>
-      <trans-unit id="83812066e07a07e691d165c97ba89735">
-        <source>Names and surnames by themselves are easy to guess</source>
-        <target>Names and surnames by themselves are easy to guess</target>
-        <note>Line: 252</note>
-      </trans-unit>
-      <trans-unit id="c8a17899dc267baa655e66e93dfa97a2">
-        <source>Common names and surnames are easy to guess</source>
-        <target>Common names and surnames are easy to guess</target>
-        <note>Line: 253</note>
-      </trans-unit>
-      <trans-unit id="30a3534b67a9a2c4cb3f1bb8659b321f">
-        <source>Very weak</source>
-        <target>Very weak</target>
-        <note>Line: 254</note>
-      </trans-unit>
-      <trans-unit id="7324e3727807d95037eb19d304fd91ec">
-        <source>Weak</source>
-        <target>Weak</target>
-        <note>Line: 255</note>
-      </trans-unit>
-      <trans-unit id="b1897515d548a960afe49ecf66a29021">
-        <source>Average</source>
-        <target>Average</target>
-        <note>Line: 256</note>
-      </trans-unit>
-      <trans-unit id="c43e0fd449c758dab8f891d8e19eb1a9">
-        <source>Strong</source>
-        <target>Strong</target>
-        <note>Line: 257</note>
-      </trans-unit>
-      <trans-unit id="516b34a4d2351006f3a0f39ccffccefa">
-        <source>Very strong</source>
-        <target>Very strong</target>
-        <note>Line: 258</note>
-      </trans-unit>
-      <trans-unit id="dd96380694cf9e241cba2b2ac4cf8c03">
-        <source>Use a few words, avoid common phrases</source>
-        <target>Use a few words, avoid common phrases</target>
-        <note>Line: 259</note>
-      </trans-unit>
-      <trans-unit id="db3fe1774e30b4103c663805d999043b">
-        <source>No need for symbols, digits, or uppercase letters</source>
-        <target>No need for symbols, digits, or uppercase letters</target>
-        <note>Line: 260</note>
-      </trans-unit>
-      <trans-unit id="6af81f974e7c0a35a3a80db30e8e9fa1">
-        <source>Avoid repeated words and characters</source>
-        <target>Avoid repeated words and characters</target>
-        <note>Line: 261</note>
-      </trans-unit>
-      <trans-unit id="cf80cfbbf9eb1b8fc60a7c2c4a1d02d2">
-        <source>Avoid sequences</source>
-        <target>Avoid sequences</target>
-        <note>Line: 262</note>
-      </trans-unit>
-      <trans-unit id="b4535b0e01e0d48c4e38758a933870ad">
-        <source>Avoid recent years</source>
-        <target>Avoid recent years</target>
-        <note>Line: 263</note>
-      </trans-unit>
-      <trans-unit id="18d5eb58e70730c3d43d6a8775201057">
-        <source>Avoid years that are associated with you</source>
-        <target>Avoid years that are associated with you</target>
-        <note>Line: 264</note>
-      </trans-unit>
-      <trans-unit id="54e26a80f66b734f94bc2bd91f3a39ca">
-        <source>Avoid dates and years that are associated with you</source>
-        <target>Avoid dates and years that are associated with you</target>
-        <note>Line: 265</note>
-      </trans-unit>
-      <trans-unit id="fb6fb2ced4938c895874cd10f135a624">
-        <source>Capitalization doesn't help very much</source>
-        <target>Capitalization doesn't help very much</target>
-        <note>Line: 266</note>
-      </trans-unit>
-      <trans-unit id="82958461f3498cc00c0e95ffc05c482d">
-        <source>All-uppercase is almost as easy to guess as all-lowercase</source>
-        <target>All-uppercase is almost as easy to guess as all-lowercase</target>
-        <note>Line: 267</note>
-      </trans-unit>
-      <trans-unit id="fc51ea2f3761abe2201b06a33f75748e">
-        <source>Reversed words aren't much harder to guess</source>
-        <target>Reversed words aren't much harder to guess</target>
-        <note>Line: 268</note>
-      </trans-unit>
-      <trans-unit id="8aedfe9265263408f5a72fff0a21c118">
-        <source>Predictable substitutions like "@" instead of "a" don't help very much</source>
-        <target>Predictable substitutions like "@" instead of "a" don't help very much</target>
-        <note>Line: 269</note>
+      <trans-unit id="d6d9190e86f812c0490da9360e12cee1">
+        <source>Add a rule concerning</source>
+        <target>Add a rule concerning</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/cart_rules/product_rule_group.tpl [Line: 45]</note>
       </trans-unit>
       <trans-unit id="a2bfda43aef35df5f7edb8f8de1f5f30">
         <source>Add another word or two. Uncommon words are better.</source>
         <target>Add another word or two. Uncommon words are better.</target>
-        <note>Line: 270</note>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/install-dev/controllers/http/configure.php [Line: 270]</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="modules/psgdpr/classes/GDPRLog.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ba2c992afac038de48cb8866fb819fd6">
-        <source>Guest client : ID</source>
-        <target>Guest client : ID</target>
-        <note>Line: 102</note>
+      <trans-unit id="58be4de806253a6ee411b6c0c99296c7">
+        <source>Add file</source>
+        <target>Add file</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/uploader/simple.tpl [Line: 67]</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="modules/psgdpr/controllers/front/ExportDataToCsv.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="3bcfe5c02494f4ff326c5dbd1dcffa91">
-        <source>General info</source>
-        <target>General info</target>
-        <note>Line: 67
-Comment: GENERAL INFO</note>
+      <trans-unit id="9e74a55bb862a98723f9cf3f868d837e">
+        <source>Add file...</source>
+        <target>Add file...</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/uploader/ajax.tpl [Line: 62]</note>
       </trans-unit>
-      <trans-unit id="019ec3132cdf8ee0f2e2a75cf5d3e459">
-        <source>Gender</source>
-        <target>Gender</target>
-        <note>Line: 71</note>
+      <trans-unit id="d39ec66f08507e26fe86aa5325d070df">
+        <source>Add files</source>
+        <target>Add files</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/uploader/simple.tpl [Line: 67]</note>
       </trans-unit>
-      <trans-unit id="49ee3087348e8d44e1feda1917443987">
-        <source>Name</source>
-        <target>Name</target>
-        <note>Line: 261</note>
+      <trans-unit id="86d3852bba89bf82128c3e156624ad08">
+        <source>Add files...</source>
+        <target>Add files...</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/uploader/ajax.tpl [Line: 62]</note>
       </trans-unit>
-      <trans-unit id="9c37b7b6ff829e977df287900543ea54">
-        <source>Birth date</source>
-        <target>Birth date</target>
-        <note>Line: 73</note>
-      </trans-unit>
-      <trans-unit id="9d8d2d5ab12b515182a505f54db7f538">
-        <source>Age</source>
-        <target>Age</target>
-        <note>Line: 74</note>
-      </trans-unit>
-      <trans-unit id="ce8ae9da5b7cd6c3df2929543a9af92d">
-        <source>Email</source>
-        <target>Email</target>
-        <note>Line: 75</note>
-      </trans-unit>
-      <trans-unit id="4994a8ffeba4ac3140beb89e8d41f174">
-        <source>Language</source>
-        <target>Language</target>
-        <note>Line: 76</note>
-      </trans-unit>
-      <trans-unit id="7d9f5730d745285016630376deebcbd8">
-        <source>Creation account data</source>
-        <target>Creation account data</target>
-        <note>Line: 77</note>
-      </trans-unit>
-      <trans-unit id="5e5914912e8d2f2765525840acf98bea">
-        <source>Last visit</source>
-        <target>Last visit</target>
-        <note>Line: 78</note>
-      </trans-unit>
-      <trans-unit id="60adc330494a66981dec101c81e27f03">
-        <source>Siret</source>
-        <target>Siret</target>
-        <note>Line: 79</note>
-      </trans-unit>
-      <trans-unit id="6c5a79a30b5c5c4fb6ec45735d32edc2">
-        <source>Ape</source>
-        <target>Ape</target>
-        <note>Line: 80</note>
-      </trans-unit>
-      <trans-unit id="1c76cbfe21c6f44c1d1e59d54f3e4420">
-        <source>Company</source>
-        <target>Company</target>
-        <note>Line: 115</note>
-      </trans-unit>
-      <trans-unit id="15bbb9d0bbf25e8d2978de1168c749dc">
-        <source>Website</source>
-        <target>Website</target>
-        <note>Line: 82</note>
-      </trans-unit>
-      <trans-unit id="284b47b0bb63ae2df3b29f0e691d6fcf">
-        <source>Addresses</source>
-        <target>Addresses</target>
-        <note>Line: 110
-Comment: ADDRESSES</note>
-      </trans-unit>
-      <trans-unit id="effdb9ce6c5d44df31b89d7069c8e0fb">
-        <source>Alias</source>
-        <target>Alias</target>
-        <note>Line: 114</note>
+      <trans-unit id="2efd89b3ccc76b0b03a34196fc6d1c8b">
+        <source>Add tag</source>
+        <target>Add tag</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/form/form.tpl [Line: 198]</note>
       </trans-unit>
       <trans-unit id="dd7bf230fde8d4836917806aff6a6b27">
         <source>Address</source>
         <target>Address</target>
-        <note>Line: 117</note>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 117]</note>
       </trans-unit>
-      <trans-unit id="fac322c3b42d04806299ae195f8a9238">
-        <source>Phone(s)</source>
-        <target>Phone(s)</target>
-        <note>Line: 118</note>
-      </trans-unit>
-      <trans-unit id="59716c97497eb9694541f7c3d37b1a4d">
-        <source>Country</source>
-        <target>Country</target>
-        <note>Line: 341</note>
-      </trans-unit>
-      <trans-unit id="44749712dbec183e983dcd78a7736c41">
-        <source>Date</source>
-        <target>Date</target>
-        <note>Line: 342</note>
-      </trans-unit>
-      <trans-unit id="587bb937485e3dbe02ea0d281600bb52">
-        <source>No addresses</source>
-        <target>No addresses</target>
-        <note>Line: 140</note>
-      </trans-unit>
-      <trans-unit id="7442e29d7d53e549b78d93c46b8cdcfc">
-        <source>Orders</source>
-        <target>Orders</target>
-        <note>Line: 151
-Comment: ORDERS</note>
-      </trans-unit>
-      <trans-unit id="63d5049791d9d79d86e9a108b0a999ca">
-        <source>Reference</source>
-        <target>Reference</target>
-        <note>Line: 155</note>
-      </trans-unit>
-      <trans-unit id="c453a4b8e8d98e82f35b67f433e3b4da">
-        <source>Payment</source>
-        <target>Payment</target>
-        <note>Line: 156</note>
-      </trans-unit>
-      <trans-unit id="d02bbc3cb147c272b0445ac5ca7d1a36">
-        <source>Order state</source>
-        <target>Order state</target>
-        <note>Line: 157</note>
-      </trans-unit>
-      <trans-unit id="ea067eb37801c5aab1a1c685eb97d601">
-        <source>Total paid</source>
-        <target>Total paid</target>
-        <note>Line: 158</note>
-      </trans-unit>
-      <trans-unit id="08cfa7751d1812e961560f623e082aba">
-        <source>No orders</source>
-        <target>No orders</target>
-        <note>Line: 177</note>
-      </trans-unit>
-      <trans-unit id="c8be451a5698956a0e78b5c2caab4821">
-        <source>Products bought</source>
-        <target>Products bought</target>
-        <note>Line: 189</note>
-      </trans-unit>
-      <trans-unit id="79af0c77f8ce8cbb17006e22e8e9494b">
-        <source>Order ref</source>
-        <target>Order ref</target>
-        <note>Line: 193</note>
-      </trans-unit>
-      <trans-unit id="2cc349f141e8c9932281bf573f2c40ef">
-        <source>Product ref</source>
-        <target>Product ref</target>
-        <note>Line: 194</note>
-      </trans-unit>
-      <trans-unit id="694e8d1f2ee056f98ee488bdc4982d73">
-        <source>Quantity</source>
-        <target>Quantity</target>
-        <note>Line: 262</note>
-      </trans-unit>
-      <trans-unit id="fc26e55e0993a75e892175deb02aae15">
-        <source>Carts</source>
-        <target>Carts</target>
-        <note>Line: 222
-Comment: CARTS</note>
-      </trans-unit>
-      <trans-unit id="490aa6e856ccf208a054389e47ce0d06">
-        <source>Id</source>
-        <target>Id</target>
-        <note>Line: 226</note>
-      </trans-unit>
-      <trans-unit id="db205f01b4fd580fb5daa9072d96849d">
-        <source>Total products</source>
-        <target>Total products</target>
-        <note>Line: 227</note>
-      </trans-unit>
-      <trans-unit id="bbd47e26c95290218b2fc449e54e8cdc">
-        <source>No carts</source>
-        <target>No carts</target>
-        <note>Line: 288</note>
-      </trans-unit>
-      <trans-unit id="89ac4bd26e975229032206877db1f027">
-        <source>Product(s) still in cart</source>
-        <target>Product(s) still in cart</target>
-        <note>Line: 255
-Comment: PRODUCTS IN CART</note>
-      </trans-unit>
-      <trans-unit id="fc6dfe4f8b07fc04c99e27425f780754">
-        <source>Cart ID</source>
-        <target>Cart ID</target>
-        <note>Line: 259</note>
-      </trans-unit>
-      <trans-unit id="75ed578ac3cb02b0ba40002a25bc0403">
-        <source>Product reference</source>
-        <target>Product reference</target>
-        <note>Line: 260</note>
-      </trans-unit>
-      <trans-unit id="09dc02ecbb078868a3a86dded030076d">
-        <source>No products</source>
-        <target>No products</target>
-        <note>Line: 282</note>
-      </trans-unit>
-      <trans-unit id="41de6d6cfb8953c021bbe4ba0701c8a1">
-        <source>Messages</source>
-        <target>Messages</target>
-        <note>Line: 299
-Comment: MESSSAGES</note>
-      </trans-unit>
-      <trans-unit id="a12a3079e14ced46e69ba52b8a90b21a">
-        <source>IP</source>
-        <target>IP</target>
-        <note>Line: 303</note>
-      </trans-unit>
-      <trans-unit id="4c2a8fe7eaf24721cc7a9f0175115bd4">
-        <source>Message</source>
-        <target>Message</target>
-        <note>Line: 304</note>
-      </trans-unit>
-      <trans-unit id="58a747ef5d07d22101bdcd058e772ff9">
-        <source>No messages</source>
-        <target>No messages</target>
-        <note>Line: 321</note>
-      </trans-unit>
-      <trans-unit id="93bd48ecb9c4d5c4eec7fefffbb2070f">
-        <source>Last connections</source>
-        <target>Last connections</target>
-        <note>Line: 332
-Comment: CONNECTIONS</note>
-      </trans-unit>
-      <trans-unit id="33e29c1d042c0923008f78b46af94984">
-        <source>Origin request</source>
-        <target>Origin request</target>
-        <note>Line: 336</note>
-      </trans-unit>
-      <trans-unit id="57f32d7d0e6672cc2b60bc7a49f91453">
-        <source>Page viewed</source>
-        <target>Page viewed</target>
-        <note>Line: 337</note>
-      </trans-unit>
-      <trans-unit id="fae6aba9bc4e69842be0ac98e15c4c99">
-        <source>Time on the page</source>
-        <target>Time on the page</target>
-        <note>Line: 338</note>
-      </trans-unit>
-      <trans-unit id="75ba8d70e3692ba200f0e0df37b4d2ae">
-        <source>IP address</source>
-        <target>IP address</target>
-        <note>Line: 339</note>
-      </trans-unit>
-      <trans-unit id="c51e6bdf66e5d601e85d055301014410">
-        <source>No connections</source>
-        <target>No connections</target>
-        <note>Line: 360</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/psgdpr/psgdpr.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="5966265f35dd87febf4d59029bc9ef66">
-        <source>Official GDPR compliance</source>
-        <target>Official GDPR compliance</target>
-        <note>Line: 138</note>
-      </trans-unit>
-      <trans-unit id="74f261754dce7bb6c07ea3f586c3e2f1">
-        <source>Make your store comply with the General Data Protection Regulation (GDPR).</source>
-        <target>Make your store comply with the General Data Protection Regulation (GDPR).</target>
-        <note>Line: 139</note>
-      </trans-unit>
-      <trans-unit id="bb8956c67b82c7444a80c6b2433dd8b4">
-        <source>Are you sure you want to uninstall this module?</source>
-        <target>Are you sure you want to uninstall this module?</target>
-        <note>Line: 151
-Comment: Confirm uninstall</note>
-      </trans-unit>
-      <trans-unit id="e9415612c1d72517733c98e6877a6b46">
-        <source>There was an error during the uninstallation. Please contact us through Addons website.</source>
-        <target>There was an error during the uninstallation. Please contact us through Addons website.</target>
-        <note>Line: 205
-Comment: if something wrong return false</note>
-      </trans-unit>
-      <trans-unit id="f82c07eeaadf212c53a454cca4073e82">
-        <source>There was an error on module uninstall. Please contact us through Addons website</source>
-        <target>There was an error on module uninstall. Please contact us through Addons website</target>
-        <note>Line: 228</note>
-      </trans-unit>
-      <trans-unit id="f3aa5220c9615fe82e680b31ec805772">
-        <source>Data accessibility</source>
-        <target>Data accessibility</target>
-        <note>Line: 326</note>
-      </trans-unit>
-      <trans-unit id="2f4239765c85ef14bc7d270b88169431">
-        <source>How can a customer retrieve all of his personal data?</source>
-        <target>How can a customer retrieve all of his personal data?</target>
-        <note>Line: 329</note>
-      </trans-unit>
-      <trans-unit id="f23b2c81c46ee0bef9e68cf8a4e8094d">
-        <source>From his customer account, a new tab called My Personal Data is available and your customer can retrieve all of his personal data collected by your shop and installed modules, in PDF or CSV format.</source>
-        <target>From his customer account, a new tab called My Personal Data is available and your customer can retrieve all of his personal data collected by your shop and installed modules, in PDF or CSV format.</target>
-        <note>Line: 330</note>
-      </trans-unit>
-      <trans-unit id="b05c17c9e1019a5b801746c5b8c5d965">
-        <source>Customer consent</source>
-        <target>Customer consent</target>
-        <note>Line: 335</note>
-      </trans-unit>
-      <trans-unit id="de571168b7c4d4ab2c7826d2df1ec04b">
-        <source>There is no consent confirmation checkbox in the contact form. Isn't this a requirement?</source>
-        <target>There is no consent confirmation checkbox in the contact form. Isn't this a requirement?</target>
-        <note>Line: 338</note>
-      </trans-unit>
-      <trans-unit id="5132f2c7071d21437185cc8906ff30d6">
-        <source>No, it is not a requirement as the customer gives consent by clicking on the Submit message button. Only a message is required to give your customers more information about the use of personal data on your website. We are currently working on a new version of the contact form, it will be available really soon for your online store.</source>
-        <target>No, it is not a requirement as the customer gives consent by clicking on the Submit message button. Only a message is required to give your customers more information about the use of personal data on your website. We are currently working on a new version of the contact form, it will be available really soon for your online store.</target>
-        <note>Line: 339</note>
-      </trans-unit>
-      <trans-unit id="ea4ec6483496abdc141f5ded3db3ede1">
-        <source>Data erasure</source>
-        <target>Data erasure</target>
-        <note>Line: 344</note>
-      </trans-unit>
-      <trans-unit id="9176e38989ed06bc8bc2d2eb64ff651a">
-        <source>How will a customer ask for all of his personal data to be deleted ?</source>
-        <target>How will a customer ask for all of his personal data to be deleted ?</target>
-        <note>Line: 347</note>
-      </trans-unit>
-      <trans-unit id="9bfcf0be1757b83609e3cd7fc59fc7ea">
-        <source>The customer will send a message from the contact form for any rectification and erasure requests, justifying his request.</source>
-        <target>The customer will send a message from the contact form for any rectification and erasure requests, justifying his request.</target>
-        <note>Line: 348</note>
-      </trans-unit>
-      <trans-unit id="c11321f9fb4112e493e86a1410745b32">
-        <source>There is no Remove Data button in the customer account. Isn't this a requirement?</source>
-        <target>There is no Remove Data button in the customer account. Isn't this a requirement?</target>
-        <note>Line: 351</note>
-      </trans-unit>
-      <trans-unit id="0124f1dc4ed1770b17898a61a00ba224">
-        <source>No, the Remove Data button in the customer account is not an obligation. For the data erasure requests, your customers can request data removal only under certain circumstances, that is the reason why we decided not to include an automatic Remove Data button in their customer account.
-
-They can, however, contact you anytime via your contact form, in this case, you can review their request and once you accept it, you will be able to remove their personal data directly in the configuration page of our Official GDPR Compliance module.</source>
-        <target>No, the Remove Data button in the customer account is not an obligation. For the data erasure requests, your customers can request data removal only under certain circumstances, that is the reason why we decided not to include an automatic Remove Data button in their customer account.
-
-They can, however, contact you anytime via your contact form, in this case, you can review their request and once you accept it, you will be able to remove their personal data directly in the configuration page of our Official GDPR Compliance module.</target>
-        <note>Line: 352</note>
-      </trans-unit>
-      <trans-unit id="72cd5bd2552bb7c07721af5830c6cb57">
-        <source>How to remove the personal data of a customer?</source>
-        <target>How to remove the personal data of a customer?</target>
-        <note>Line: 355</note>
-      </trans-unit>
-      <trans-unit id="cb91cb05467ec71c32d5c23913b71bd0">
-        <source>If the request is valid, from the Personal Data Management tab of this module, any customer can be found by typing the first few letters of his name or email address in the search bar.
-Before deleting any data, we recommend you to download all the invoices of the involved customer. After deleting the data with the “Remove data” button, the customer’s orders can’t be legally deleted, they just won’t be linked to any account. This allows you to keep precise statistics of your shop.</source>
-        <target>If the request is valid, from the Personal Data Management tab of this module, any customer can be found by typing the first few letters of his name or email address in the search bar.
-Before deleting any data, we recommend you to download all the invoices of the involved customer. After deleting the data with the “Remove data” button, the customer’s orders can’t be legally deleted, they just won’t be linked to any account. This allows you to keep precise statistics of your shop.</target>
-        <note>Line: 356</note>
+      <trans-unit id="284b47b0bb63ae2df3b29f0e691d6fcf">
+        <source>Addresses</source>
+        <target>Addresses</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 110]</note>
       </trans-unit>
       <trans-unit id="87ad69c27077c1bb5c57d004e7eac4aa">
         <source>After removing all personal data of a customer from my database, what will happen to his orders?</source>
         <target>After removing all personal data of a customer from my database, what will happen to his orders?</target>
-        <note>Line: 359</note>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/psgdpr.php [Line: 359]</note>
+      </trans-unit>
+      <trans-unit id="9d8d2d5ab12b515182a505f54db7f538">
+        <source>Age</source>
+        <target>Age</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 74]</note>
+      </trans-unit>
+      <trans-unit id="effdb9ce6c5d44df31b89d7069c8e0fb">
+        <source>Alias</source>
+        <target>Alias</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 114]</note>
+      </trans-unit>
+      <trans-unit id="741aae2e1e9e98305742675d1cfc3fb0">
+        <source>All stores</source>
+        <target>All stores</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/shops_list/list.tpl [Line: 32]</note>
+      </trans-unit>
+      <trans-unit id="82958461f3498cc00c0e95ffc05c482d">
+        <source>All-uppercase is almost as easy to guess as all-lowercase</source>
+        <target>All-uppercase is almost as easy to guess as all-lowercase</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/install-dev/controllers/http/configure.php [Line: 267]</note>
+      </trans-unit>
+      <trans-unit id="6c5a79a30b5c5c4fb6ec45735d32edc2">
+        <source>Ape</source>
+        <target>Ape</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 80]</note>
+      </trans-unit>
+      <trans-unit id="6d7215c4b3bc4716d026ac46c6d9ae64">
+        <source>Apr</source>
+        <target>Apr</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 115]</note>
+      </trans-unit>
+      <trans-unit id="3fcf026bbfffb63fb24b8de9d0446949">
+        <source>April</source>
+        <target>April</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 114]</note>
+      </trans-unit>
+      <trans-unit id="bb8956c67b82c7444a80c6b2433dd8b4">
+        <source>Are you sure you want to uninstall this module?</source>
+        <target>Are you sure you want to uninstall this module?</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/psgdpr.php [Line: 151]</note>
+      </trans-unit>
+      <trans-unit id="e9cb217697088a98b1937d111d936281">
+        <source>Attachment</source>
+        <target>Attachment</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/return/helpers/form/form.tpl [Line: 83]</note>
+      </trans-unit>
+      <trans-unit id="1caa6ff629641a4eb20f190f7a0539ca">
+        <source>Attribute name</source>
+        <target>Attribute name</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/suppliers/helpers/view/view.tpl [Line: 35]</note>
+      </trans-unit>
+      <trans-unit id="22f1a4667604b8557c9b209c201b4bc6">
+        <source>Aug</source>
+        <target>Aug</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 115]</note>
+      </trans-unit>
+      <trans-unit id="41ba70891fb6f39327d8ccb9b1dafb84">
+        <source>August</source>
+        <target>August</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 114]</note>
+      </trans-unit>
+      <trans-unit id="c8c5918f1175c1296d19755b2f49d1c9">
+        <source>Available Quantity</source>
+        <target>Available Quantity</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/suppliers/helpers/view/view.tpl [Line: 42]</note>
+      </trans-unit>
+      <trans-unit id="b1897515d548a960afe49ecf66a29021">
+        <source>Average</source>
+        <target>Average</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/install-dev/controllers/http/configure.php [Line: 256]</note>
+      </trans-unit>
+      <trans-unit id="54e26a80f66b734f94bc2bd91f3a39ca">
+        <source>Avoid dates and years that are associated with you</source>
+        <target>Avoid dates and years that are associated with you</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/install-dev/controllers/http/configure.php [Line: 265]</note>
+      </trans-unit>
+      <trans-unit id="b4535b0e01e0d48c4e38758a933870ad">
+        <source>Avoid recent years</source>
+        <target>Avoid recent years</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/install-dev/controllers/http/configure.php [Line: 263]</note>
+      </trans-unit>
+      <trans-unit id="6af81f974e7c0a35a3a80db30e8e9fa1">
+        <source>Avoid repeated words and characters</source>
+        <target>Avoid repeated words and characters</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/install-dev/controllers/http/configure.php [Line: 261]</note>
+      </trans-unit>
+      <trans-unit id="cf80cfbbf9eb1b8fc60a7c2c4a1d02d2">
+        <source>Avoid sequences</source>
+        <target>Avoid sequences</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/install-dev/controllers/http/configure.php [Line: 262]</note>
+      </trans-unit>
+      <trans-unit id="18d5eb58e70730c3d43d6a8775201057">
+        <source>Avoid years that are associated with you</source>
+        <target>Avoid years that are associated with you</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/install-dev/controllers/http/configure.php [Line: 264]</note>
+      </trans-unit>
+      <trans-unit id="9178de10abf6a1368e7a73ec0adb0e8e">
+        <source>Back to the previous page</source>
+        <target>Back to the previous page</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/not_found/content.tpl [Line: 31]</note>
+      </trans-unit>
+      <trans-unit id="9c37b7b6ff829e977df287900543ea54">
+        <source>Birth date</source>
+        <target>Birth date</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 73]</note>
+      </trans-unit>
+      <trans-unit id="1be6f9eb563f3bf85c78b4219bf09de9">
+        <source>Brand</source>
+        <target>Brand</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/specific_price_rule/helpers/form/form.tpl [Line: 251]</note>
+      </trans-unit>
+      <trans-unit id="fb6fb2ced4938c895874cd10f135a624">
+        <source>Capitalization doesn't help very much</source>
+        <target>Capitalization doesn't help very much</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/install-dev/controllers/http/configure.php [Line: 266]</note>
+      </trans-unit>
+      <trans-unit id="fc6dfe4f8b07fc04c99e27425f780754">
+        <source>Cart ID</source>
+        <target>Cart ID</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 259]</note>
+      </trans-unit>
+      <trans-unit id="fc26e55e0993a75e892175deb02aae15">
+        <source>Carts</source>
+        <target>Carts</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 222]</note>
+      </trans-unit>
+      <trans-unit id="3adbdb3ac060038aa0e6e6c138ef9873">
+        <source>Category</source>
+        <target>Category</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/specific_price_rule/helpers/form/form.tpl [Line: 240]</note>
+      </trans-unit>
+      <trans-unit id="50de2399e96ac57bed17e95376046c3b">
+        <source>Check / Uncheck all</source>
+        <target>Check / Uncheck all</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/options/options.tpl [Line: 80]</note>
+      </trans-unit>
+      <trans-unit id="3964fd83339fec5014c831822005653a">
+        <source>Choose Time</source>
+        <target>Choose Time</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/form/form.tpl [Line: 815]</note>
+      </trans-unit>
+      <trans-unit id="8df41ed5ebc778c45f74a201e822613a">
+        <source>Choose a template</source>
+        <target>Choose a template</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/customer_threads/helpers/view/view.tpl [Line: 112]</note>
+      </trans-unit>
+      <trans-unit id="d3d2e617335f08df83599665eef8a418">
+        <source>Close</source>
+        <target>Close</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/customer_threads/helpers/view/modal.tpl [Line: 62]</note>
+      </trans-unit>
+      <trans-unit id="240f3031f25601fa128bd4e15f0a37de">
+        <source>Comment:</source>
+        <target>Comment:</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/controllers/admin/AdminCustomerThreadsController.php [Line: 423]</note>
+      </trans-unit>
+      <trans-unit id="c8a17899dc267baa655e66e93dfa97a2">
+        <source>Common names and surnames are easy to guess</source>
+        <target>Common names and surnames are easy to guess</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/install-dev/controllers/http/configure.php [Line: 253]</note>
+      </trans-unit>
+      <trans-unit id="1c76cbfe21c6f44c1d1e59d54f3e4420">
+        <source>Company</source>
+        <target>Company</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 115]</note>
+      </trans-unit>
+      <trans-unit id="0c031866121d4fc6d21d0f524d0091e4">
+        <source>Compare to</source>
+        <target>Compare to</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 77]</note>
+      </trans-unit>
+      <trans-unit id="59716c97497eb9694541f7c3d37b1a4d">
+        <source>Country</source>
+        <target>Country</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 341]</note>
+      </trans-unit>
+      <trans-unit id="7d9f5730d745285016630376deebcbd8">
+        <source>Creation account data</source>
+        <target>Creation account data</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 77]</note>
+      </trans-unit>
+      <trans-unit id="90589c47f06eb971d548591f23c285af">
+        <source>Custom</source>
+        <target>Custom</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 83]</note>
+      </trans-unit>
+      <trans-unit id="d13d8380c3f4de07fef91a42fe6c60d7">
+        <source>Customer ID:</source>
+        <target>Customer ID:</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/customer_threads/message.tpl [Line: 127]</note>
+      </trans-unit>
+      <trans-unit id="b05c17c9e1019a5b801746c5b8c5d965">
+        <source>Customer consent</source>
+        <target>Customer consent</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/psgdpr.php [Line: 335]</note>
+      </trans-unit>
+      <trans-unit id="a59aa7fb037f2498e36a6d687869e83e">
+        <source>Customer data deleted by official GDPR module.</source>
+        <target>Customer data deleted by official GDPR module.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/psgdpr.php [Line: 549]</note>
+      </trans-unit>
+      <trans-unit id="3bf63a999cda6c9d95c3827e7942f41d">
+        <source>Customer since: %s</source>
+        <target>Customer since: %s</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/customer_threads/helpers/view/view.tpl [Line: 79]</note>
+      </trans-unit>
+      <trans-unit id="f3aa5220c9615fe82e680b31ec805772">
+        <source>Data accessibility</source>
+        <target>Data accessibility</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/psgdpr.php [Line: 326]</note>
+      </trans-unit>
+      <trans-unit id="ea4ec6483496abdc141f5ded3db3ede1">
+        <source>Data erasure</source>
+        <target>Data erasure</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/psgdpr.php [Line: 344]</note>
+      </trans-unit>
+      <trans-unit id="44749712dbec183e983dcd78a7736c41">
+        <source>Date</source>
+        <target>Date</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 342]</note>
+      </trans-unit>
+      <trans-unit id="08ee10c9fa141c53ae44667dcc1adf1e">
+        <source>Date range</source>
+        <target>Date range</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 48]</note>
+      </trans-unit>
+      <trans-unit id="b3c7b778a3c8c869426ae81486275b12">
+        <source>Dates are often easy to guess</source>
+        <target>Dates are often easy to guess</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/install-dev/controllers/http/configure.php [Line: 246]</note>
+      </trans-unit>
+      <trans-unit id="d207b4e0bce42a8f1555ce3a05e287f6">
+        <source>Dec</source>
+        <target>Dec</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 115]</note>
+      </trans-unit>
+      <trans-unit id="82331503174acbae012b2004f6431fa5">
+        <source>December</source>
+        <target>December</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 114]</note>
+      </trans-unit>
+      <trans-unit id="a1e7379abfdbc3b8e03506e5489c6110">
+        <source>Discount:</source>
+        <target>Discount:</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/groups/helpers/view/view.tpl [Line: 36]</note>
+      </trans-unit>
+      <trans-unit id="b9987a246a537f4fe86f1f2e3d10dbdb">
+        <source>Display</source>
+        <target>Display</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/list/list_footer.tpl [Line: 63]</note>
+      </trans-unit>
+      <trans-unit id="f92965e2c8a7afb3c1b9a5c09a263636">
+        <source>Done</source>
+        <target>Done</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/form/form.tpl [Line: 809]</note>
+      </trans-unit>
+      <trans-unit id="c2299e6abb73991105dfacfb6fdd6dd4">
+        <source>Download current file</source>
+        <target>Download current file</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/uploader/simple.tpl [Line: 72]</note>
+      </trans-unit>
+      <trans-unit id="09942cec33b5becdf3e2275913b818e2">
+        <source>Download current file (%skb)</source>
+        <target>Download current file (%skb)</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/uploader/simple.tpl [Line: 72]</note>
       </trans-unit>
       <trans-unit id="10201d0ca5552dfa9bd599483105ffd0">
         <source>Due to other legal obligations, his orders will still be stocked but they are no longer associated with the customer.
@@ -1506,26 +389,978 @@ According to the Rec.30;Art.7(1)(c)</source>
         <target>Due to other legal obligations, his orders will still be stocked but they are no longer associated with the customer.
 Only the name, shipping, and billing information must be kept in the order details page for legal reasons, invoicing, and accounting.
 According to the Rec.30;Art.7(1)(c)</target>
-        <note>Line: 360</note>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/psgdpr.php [Line: 360]</note>
+      </trans-unit>
+      <trans-unit id="a7b4930bf2fc5d57eec6b03097200152">
+        <source>EAN-13</source>
+        <target>EAN-13</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/suppliers/helpers/view/view.tpl [Line: 39]</note>
+      </trans-unit>
+      <trans-unit id="ce8ae9da5b7cd6c3df2929543a9af92d">
+        <source>Email</source>
+        <target>Email</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 75]</note>
+      </trans-unit>
+      <trans-unit id="351b6d570b6ba15fe66e85c1eaf9ec64">
+        <source>Export to SQL Manager</source>
+        <target>Export to SQL Manager</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/list/list_header.tpl [Line: 174]</note>
+      </trans-unit>
+      <trans-unit id="ea171d540ccd5f0669171ef06d3cd848">
+        <source>Feb</source>
+        <target>Feb</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 115]</note>
+      </trans-unit>
+      <trans-unit id="659e59f062c75f81259d22786d6c44aa">
+        <source>February</source>
+        <target>February</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 114]</note>
+      </trans-unit>
+      <trans-unit id="ee9b2f3cf31c23c944b15fb0b33d6a77">
+        <source>Field Name</source>
+        <target>Field Name</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/required_fields.tpl [Line: 42]</note>
+      </trans-unit>
+      <trans-unit id="1908624a0bca678cd26b99bfd405324e">
+        <source>File size</source>
+        <target>File size</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/uploader/simple.tpl [Line: 39]</note>
+      </trans-unit>
+      <trans-unit id="fa717ba17306cd76900510df8ac8013e">
+        <source>Fr</source>
+        <target>Fr</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 113]</note>
+      </trans-unit>
+      <trans-unit id="ac616f844b9a5ea5a827bf7fb99b1ad5">
+        <source>Fri</source>
+        <target>Fri</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 112]</note>
+      </trans-unit>
+      <trans-unit id="c33b138a163847cdb6caeeb7c9a126b4">
+        <source>Friday</source>
+        <target>Friday</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 111]</note>
+      </trans-unit>
+      <trans-unit id="5da618e8e4b89c66fe86e32cdafde142">
+        <source>From</source>
+        <target>From</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/list/list_header.tpl [Line: 358]</note>
+      </trans-unit>
+      <trans-unit id="f23b2c81c46ee0bef9e68cf8a4e8094d">
+        <source>From his customer account, a new tab called My Personal Data is available and your customer can retrieve all of his personal data collected by your shop and installed modules, in PDF or CSV format.</source>
+        <target>From his customer account, a new tab called My Personal Data is available and your customer can retrieve all of his personal data collected by your shop and installed modules, in PDF or CSV format.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/psgdpr.php [Line: 330]</note>
+      </trans-unit>
+      <trans-unit id="019ec3132cdf8ee0f2e2a75cf5d3e459">
+        <source>Gender</source>
+        <target>Gender</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 71]</note>
+      </trans-unit>
+      <trans-unit id="3bcfe5c02494f4ff326c5dbd1dcffa91">
+        <source>General info</source>
+        <target>General info</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 67]</note>
+      </trans-unit>
+      <trans-unit id="2871afea416378d2772937c4d67d6c2c">
+        <source>Generate password</source>
+        <target>Generate password</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Form/Admin/Type/ChangePasswordType.php [Line: 124]</note>
+      </trans-unit>
+      <trans-unit id="92a8f0b9d28a89b480bd1d29f46f0484">
+        <source>Generator</source>
+        <target>Generator</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/classes/controller/AdminController.php [Line: 666]</note>
+      </trans-unit>
+      <trans-unit id="585c732d00a27a32cd9585fe481964cf">
+        <source>Go to the dashboard</source>
+        <target>Go to the dashboard</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/not_found/content.tpl [Line: 35]</note>
+      </trans-unit>
+      <trans-unit id="c6155aaecccf794cd2a00fcc35898022">
+        <source>Group name</source>
+        <target>Group name</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/form/form_group.tpl [Line: 40]</note>
+      </trans-unit>
+      <trans-unit id="1aa4c641d6920ddb97a2562f8ec53853">
+        <source>Group:</source>
+        <target>Group:</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/form/assoshop.tpl [Line: 99]</note>
+      </trans-unit>
+      <trans-unit id="bebe39eef720d7cbb479d8b3428e4c04">
+        <source>Group: %s</source>
+        <target>Group: %s</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/tree/tree_node_folder_checkbox_shops.tpl [Line: 29]</note>
+      </trans-unit>
+      <trans-unit id="ba2c992afac038de48cb8866fb819fd6">
+        <source>Guest client : ID</source>
+        <target>Guest client : ID</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/classes/GDPRLog.php [Line: 102]</note>
+      </trans-unit>
+      <trans-unit id="b55e509c697e4cca0e1d160a7806698f">
+        <source>Hour</source>
+        <target>Hour</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/form/form.tpl [Line: 817]</note>
+      </trans-unit>
+      <trans-unit id="2f4239765c85ef14bc7d270b88169431">
+        <source>How can a customer retrieve all of his personal data?</source>
+        <target>How can a customer retrieve all of his personal data?</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/psgdpr.php [Line: 329]</note>
+      </trans-unit>
+      <trans-unit id="72cd5bd2552bb7c07721af5830c6cb57">
+        <source>How to remove the personal data of a customer?</source>
+        <target>How to remove the personal data of a customer?</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/psgdpr.php [Line: 355]</note>
+      </trans-unit>
+      <trans-unit id="9176e38989ed06bc8bc2d2eb64ff651a">
+        <source>How will a customer ask for all of his personal data to be deleted ?</source>
+        <target>How will a customer ask for all of his personal data to be deleted ?</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/psgdpr.php [Line: 347]</note>
+      </trans-unit>
+      <trans-unit id="a12a3079e14ced46e69ba52b8a90b21a">
+        <source>IP</source>
+        <target>IP</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 303]</note>
+      </trans-unit>
+      <trans-unit id="75ba8d70e3692ba200f0e0df37b4d2ae">
+        <source>IP address</source>
+        <target>IP address</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 339]</note>
+      </trans-unit>
+      <trans-unit id="490aa6e856ccf208a054389e47ce0d06">
+        <source>Id</source>
+        <target>Id</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 226]</note>
+      </trans-unit>
+      <trans-unit id="bcca39c6f36c3085c46429511614b227">
+        <source>If enabled, the voucher will not apply to products already on sale.</source>
+        <target>If enabled, the voucher will not apply to products already on sale.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/cart_rules/actions.tpl [Line: 145]</note>
+      </trans-unit>
+      <trans-unit id="cb91cb05467ec71c32d5c23913b71bd0">
+        <source>If the request is valid, from the Personal Data Management tab of this module, any customer can be found by typing the first few letters of his name or email address in the search bar.
+Before deleting any data, we recommend you to download all the invoices of the involved customer. After deleting the data with the “Remove data” button, the customer’s orders can’t be legally deleted, they just won’t be linked to any account. This allows you to keep precise statistics of your shop.</source>
+        <target>If the request is valid, from the Personal Data Management tab of this module, any customer can be found by typing the first few letters of his name or email address in the search bar.
+Before deleting any data, we recommend you to download all the invoices of the involved customer. After deleting the data with the “Remove data” button, the customer’s orders can’t be legally deleted, they just won’t be linked to any account. This allows you to keep precise statistics of your shop.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/psgdpr.php [Line: 356]</note>
+      </trans-unit>
+      <trans-unit id="d97ccb3e617d930d52ffd95e5db2c101">
+        <source>If you check a field, change its value, and save, the multistore behavior will not apply to this shop (or group), for this particular parameter.</source>
+        <target>If you check a field, change its value, and save, the multistore behavior will not apply to this shop (or group), for this particular parameter.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/options/options.tpl [Line: 82]</note>
+      </trans-unit>
+      <trans-unit id="225ba2bdb1c56af16651110411fc21b1">
+        <source>Indicate how many of the first rows of your file should be skipped when importing the data. For instance set it to 1 if the first row of your file contains headers.</source>
+        <target>Indicate how many of the first rows of your file should be skipped when importing the data. For instance set it to 1 if the first row of your file contains headers.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/import/helpers/view/view.tpl [Line: 117]</note>
+      </trans-unit>
+      <trans-unit id="e68564f23e0e939acea76dc3d2bc01bf">
+        <source>Jan</source>
+        <target>Jan</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 115]</note>
+      </trans-unit>
+      <trans-unit id="86f5978d9b80124f509bdb71786e929e">
+        <source>January</source>
+        <target>January</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 114]</note>
+      </trans-unit>
+      <trans-unit id="a2866cd6efaa65c92278d4771a9eaec7">
+        <source>Jul</source>
+        <target>Jul</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 115]</note>
+      </trans-unit>
+      <trans-unit id="1b539f6f34e8503c97f6d3421346b63c">
+        <source>July</source>
+        <target>July</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 114]</note>
+      </trans-unit>
+      <trans-unit id="eb4b40c1221dad5b23fe7ef84d292be1">
+        <source>Jun</source>
+        <target>Jun</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 115]</note>
+      </trans-unit>
+      <trans-unit id="688937ccaf2a2b0c45a1c9bbba09698d">
+        <source>June</source>
+        <target>June</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 114]</note>
+      </trans-unit>
+      <trans-unit id="4994a8ffeba4ac3140beb89e8d41f174">
+        <source>Language</source>
+        <target>Language</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 76]</note>
+      </trans-unit>
+      <trans-unit id="93bd48ecb9c4d5c4eec7fefffbb2070f">
+        <source>Last connections</source>
+        <target>Last connections</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 332]</note>
+      </trans-unit>
+      <trans-unit id="5e5914912e8d2f2765525840acf98bea">
+        <source>Last visit</source>
+        <target>Last visit</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 78]</note>
+      </trans-unit>
+      <trans-unit id="4ee29ca12c7d126654bd0e5275de6135">
+        <source>List</source>
+        <target>List</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/classes/controller/AdminController.php [Line: 650]</note>
+      </trans-unit>
+      <trans-unit id="f19dbf2edb3a0bd74b0524d960ff21eb">
+        <source>Load</source>
+        <target>Load</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/import/helpers/view/view.tpl [Line: 76]</note>
+      </trans-unit>
+      <trans-unit id="4d83ebfaf28dd4436e1165a1764750db">
+        <source>Load a data matching configuration</source>
+        <target>Load a data matching configuration</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/import/helpers/view/view.tpl [Line: 67]</note>
+      </trans-unit>
+      <trans-unit id="74f261754dce7bb6c07ea3f586c3e2f1">
+        <source>Make your store comply with the General Data Protection Regulation (GDPR).</source>
+        <target>Make your store comply with the General Data Protection Regulation (GDPR).</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/psgdpr.php [Line: 139]</note>
+      </trans-unit>
+      <trans-unit id="7ce6b2286a5396e614b8484105d277e0">
+        <source>Mar</source>
+        <target>Mar</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 115]</note>
+      </trans-unit>
+      <trans-unit id="fa3e5edac607a88d8fd7ecb9d6d67424">
+        <source>March</source>
+        <target>March</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 114]</note>
+      </trans-unit>
+      <trans-unit id="43a37c093f7655efe882a7ffd7ce2e8d">
+        <source>Match your data</source>
+        <target>Match your data</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/import/helpers/view/view.tpl [Line: 61]</note>
+      </trans-unit>
+      <trans-unit id="195fbb57ffe7449796d23466085ce6d8">
+        <source>May</source>
+        <target>May</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 114]</note>
+      </trans-unit>
+      <trans-unit id="e7f8f5c51fe3a6d48a79c6ede9112b7a">
+        <source>May </source>
+        <target>May </target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 115]</note>
+      </trans-unit>
+      <trans-unit id="4c2a8fe7eaf24721cc7a9f0175115bd4">
+        <source>Message</source>
+        <target>Message</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 304]</note>
+      </trans-unit>
+      <trans-unit id="41de6d6cfb8953c021bbe4ba0701c8a1">
+        <source>Messages</source>
+        <target>Messages</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 299]</note>
+      </trans-unit>
+      <trans-unit id="62902641c38f3a4a8eb3212454360e24">
+        <source>Minute</source>
+        <target>Minute</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/form/form.tpl [Line: 818]</note>
+      </trans-unit>
+      <trans-unit id="c08df9bb5fb44242a6291b1eee5d09ad">
+        <source>Mo</source>
+        <target>Mo</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 113]</note>
+      </trans-unit>
+      <trans-unit id="fd29458ae58ac32a2d8734ed90ad51ec">
+        <source>Mon</source>
+        <target>Mon</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 112]</note>
+      </trans-unit>
+      <trans-unit id="6f8522e0610541f1ef215a22ffa66ff6">
+        <source>Monday</source>
+        <target>Monday</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 111]</note>
+      </trans-unit>
+      <trans-unit id="c103bafd6451f1f08200bebff539606f">
+        <source>Multistore</source>
+        <target>Multistore</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/options/options.tpl [Line: 61]</note>
+      </trans-unit>
+      <trans-unit id="382b0f5185773fa0f67a8ed8056c7759">
+        <source>N/A</source>
+        <target>N/A</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/suppliers/helpers/view/view.tpl [Line: 69]</note>
+      </trans-unit>
+      <trans-unit id="49ee3087348e8d44e1feda1917443987">
+        <source>Name</source>
+        <target>Name</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 261]</note>
+      </trans-unit>
+      <trans-unit id="83812066e07a07e691d165c97ba89735">
+        <source>Names and surnames by themselves are easy to guess</source>
+        <target>Names and surnames by themselves are easy to guess</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/install-dev/controllers/http/configure.php [Line: 252]</note>
+      </trans-unit>
+      <trans-unit id="587bb937485e3dbe02ea0d281600bb52">
+        <source>No addresses</source>
+        <target>No addresses</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 140]</note>
+      </trans-unit>
+      <trans-unit id="bbd47e26c95290218b2fc449e54e8cdc">
+        <source>No carts</source>
+        <target>No carts</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 288]</note>
+      </trans-unit>
+      <trans-unit id="c51e6bdf66e5d601e85d055301014410">
+        <source>No connections</source>
+        <target>No connections</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 360]</note>
+      </trans-unit>
+      <trans-unit id="69e62346c35bc63795db142cfbb0af66">
+        <source>No group created</source>
+        <target>No group created</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/form/form_group.tpl [Line: 64]</note>
+      </trans-unit>
+      <trans-unit id="58a747ef5d07d22101bdcd058e772ff9">
+        <source>No messages</source>
+        <target>No messages</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 321]</note>
+      </trans-unit>
+      <trans-unit id="db3fe1774e30b4103c663805d999043b">
+        <source>No need for symbols, digits, or uppercase letters</source>
+        <target>No need for symbols, digits, or uppercase letters</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/install-dev/controllers/http/configure.php [Line: 260]</note>
+      </trans-unit>
+      <trans-unit id="08cfa7751d1812e961560f623e082aba">
+        <source>No orders</source>
+        <target>No orders</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 177]</note>
+      </trans-unit>
+      <trans-unit id="09dc02ecbb078868a3a86dded030076d">
+        <source>No products</source>
+        <target>No products</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 282]</note>
+      </trans-unit>
+      <trans-unit id="087fb8756d4add87f2d162304ccd486b">
+        <source>No records found</source>
+        <target>No records found</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/list/list_content.tpl [Line: 210]</note>
+      </trans-unit>
+      <trans-unit id="908f8d9f34f375a55dd5b6a86489d364">
+        <source>No result</source>
+        <target>No result</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/dashboard/helpers/view/view.tpl [Line: 28]</note>
+      </trans-unit>
+      <trans-unit id="5132f2c7071d21437185cc8906ff30d6">
+        <source>No, it is not a requirement as the customer gives consent by clicking on the Submit message button. Only a message is required to give your customers more information about the use of personal data on your website. We are currently working on a new version of the contact form, it will be available really soon for your online store.</source>
+        <target>No, it is not a requirement as the customer gives consent by clicking on the Submit message button. Only a message is required to give your customers more information about the use of personal data on your website. We are currently working on a new version of the contact form, it will be available really soon for your online store.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/psgdpr.php [Line: 339]</note>
+      </trans-unit>
+      <trans-unit id="0124f1dc4ed1770b17898a61a00ba224">
+        <source>No, the Remove Data button in the customer account is not an obligation. For the data erasure requests, your customers can request data removal only under certain circumstances, that is the reason why we decided not to include an automatic Remove Data button in their customer account.
+
+They can, however, contact you anytime via your contact form, in this case, you can review their request and once you accept it, you will be able to remove their personal data directly in the configuration page of our Official GDPR Compliance module.</source>
+        <target>No, the Remove Data button in the customer account is not an obligation. For the data erasure requests, your customers can request data removal only under certain circumstances, that is the reason why we decided not to include an automatic Remove Data button in their customer account.
+
+They can, however, contact you anytime via your contact form, in this case, you can review their request and once you accept it, you will be able to remove their personal data directly in the configuration page of our Official GDPR Compliance module.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/psgdpr.php [Line: 352]</note>
+      </trans-unit>
+      <trans-unit id="343e6957be77c6247aa2b8d0deb68bd6">
+        <source>Nov</source>
+        <target>Nov</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 115]</note>
+      </trans-unit>
+      <trans-unit id="7e823b37564da492ca1629b4732289a8">
+        <source>November</source>
+        <target>November</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 114]</note>
+      </trans-unit>
+      <trans-unit id="1e1cc9bdeb2f29f5480106aec7e9bc48">
+        <source>Now</source>
+        <target>Now</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/form/form.tpl [Line: 808]</note>
+      </trans-unit>
+      <trans-unit id="38f06ccd27281c8fc66e11581798ec06">
+        <source>Number of products:</source>
+        <target>Number of products:</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/suppliers/helpers/view/view.tpl [Line: 30]</note>
+      </trans-unit>
+      <trans-unit id="594be08882c8e9d5efb9eeb62f303744">
+        <source>Oct</source>
+        <target>Oct</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 115]</note>
+      </trans-unit>
+      <trans-unit id="eca60ae8611369fe28a02e2ab8c5d12e">
+        <source>October</source>
+        <target>October</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 114]</note>
+      </trans-unit>
+      <trans-unit id="5966265f35dd87febf4d59029bc9ef66">
+        <source>Official GDPR compliance</source>
+        <target>Official GDPR compliance</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/psgdpr.php [Line: 138]</note>
+      </trans-unit>
+      <trans-unit id="dae8ace18bdcbcc6ae5aece263e14fe8">
+        <source>Options</source>
+        <target>Options</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/classes/controller/AdminController.php [Line: 661]</note>
+      </trans-unit>
+      <trans-unit id="d1228f5476d15142b1358ae4b5fa2454">
+        <source>Order #</source>
+        <target>Order #</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/customer_threads/message.tpl [Line: 134]</note>
+      </trans-unit>
+      <trans-unit id="79af0c77f8ce8cbb17006e22e8e9494b">
+        <source>Order ref</source>
+        <target>Order ref</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 193]</note>
+      </trans-unit>
+      <trans-unit id="d02bbc3cb147c272b0445ac5ca7d1a36">
+        <source>Order state</source>
+        <target>Order state</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 157]</note>
+      </trans-unit>
+      <trans-unit id="7442e29d7d53e549b78d93c46b8cdcfc">
+        <source>Orders</source>
+        <target>Orders</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 151]</note>
+      </trans-unit>
+      <trans-unit id="33e29c1d042c0923008f78b46af94984">
+        <source>Origin request</source>
+        <target>Origin request</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 336]</note>
+      </trans-unit>
+      <trans-unit id="57f32d7d0e6672cc2b60bc7a49f91453">
+        <source>Page viewed</source>
+        <target>Page viewed</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 337]</note>
+      </trans-unit>
+      <trans-unit id="c453a4b8e8d98e82f35b67f433e3b4da">
+        <source>Payment</source>
+        <target>Payment</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 156]</note>
+      </trans-unit>
+      <trans-unit id="fac322c3b42d04806299ae195f8a9238">
+        <source>Phone(s)</source>
+        <target>Phone(s)</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 118]</note>
+      </trans-unit>
+      <trans-unit id="6ccfec41b65de46efeb7ca242341e8ea">
+        <source>Please fill at least one field to perform a search in this list.</source>
+        <target>Please fill at least one field to perform a search in this list.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/list/list_header.tpl [Line: 116]</note>
+      </trans-unit>
+      <trans-unit id="e275f3b49dc3286ef66d7c2774a1f79b">
+        <source>Please match each column of your source file to one of the destination columns.</source>
+        <target>Please match each column of your source file to one of the destination columns.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/import/helpers/view/view.tpl [Line: 63]</note>
+      </trans-unit>
+      <trans-unit id="5f613cee6c941423b73e1f87ea3b99bc">
+        <source>Please name your data matching configuration in order to save it.</source>
+        <target>Please name your data matching configuration in order to save it.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/import/helpers/view/view.tpl [Line: 28]</note>
+      </trans-unit>
+      <trans-unit id="8aedfe9265263408f5a72fff0a21c118">
+        <source>Predictable substitutions like "@" instead of "a" don't help very much</source>
+        <target>Predictable substitutions like "@" instead of "a" don't help very much</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/install-dev/controllers/http/configure.php [Line: 269]</note>
+      </trans-unit>
+      <trans-unit id="635f2145a06da2d4ce2c355bf94da6ed">
+        <source>Previous Year</source>
+        <target>Previous Year</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 82]</note>
+      </trans-unit>
+      <trans-unit id="97bf2dbc7a13706eeb1eac149bd2d130">
+        <source>Previous period</source>
+        <target>Previous period</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 81]</note>
+      </trans-unit>
+      <trans-unit id="3ca6ac2463aa0dc57452cf676723b79f">
+        <source>Previous year</source>
+        <target>Previous year</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 82]</note>
+      </trans-unit>
+      <trans-unit id="c851a34d4806acb02a55df148f9d7f25">
+        <source>Product #</source>
+        <target>Product #</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/customer_threads/message.tpl [Line: 141]</note>
+      </trans-unit>
+      <trans-unit id="df644ae155e79abf54175bd15d75f363">
+        <source>Product name</source>
+        <target>Product name</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/suppliers/helpers/view/view.tpl [Line: 34]</note>
+      </trans-unit>
+      <trans-unit id="2cc349f141e8c9932281bf573f2c40ef">
+        <source>Product ref</source>
+        <target>Product ref</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 194]</note>
+      </trans-unit>
+      <trans-unit id="75ed578ac3cb02b0ba40002a25bc0403">
+        <source>Product reference</source>
+        <target>Product reference</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 260]</note>
+      </trans-unit>
+      <trans-unit id="89ac4bd26e975229032206877db1f027">
+        <source>Product(s) still in cart</source>
+        <target>Product(s) still in cart</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 255]</note>
+      </trans-unit>
+      <trans-unit id="c8be451a5698956a0e78b5c2caab4821">
+        <source>Products bought</source>
+        <target>Products bought</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 189]</note>
+      </trans-unit>
+      <trans-unit id="694e8d1f2ee056f98ee488bdc4982d73">
+        <source>Quantity</source>
+        <target>Quantity</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 262]</note>
+      </trans-unit>
+      <trans-unit id="43340e6cc4e88197d57f8d6d5ea50a46">
+        <source>Read more</source>
+        <target>Read more</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/dashboard/helpers/view/view.tpl [Line: 29]</note>
+      </trans-unit>
+      <trans-unit id="25096ab4fbb9994547ace751ca107515">
+        <source>Recent years are easy to guess</source>
+        <target>Recent years are easy to guess</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/install-dev/controllers/http/configure.php [Line: 245]</note>
+      </trans-unit>
+      <trans-unit id="63d5049791d9d79d86e9a108b0a999ca">
+        <source>Reference</source>
+        <target>Reference</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 155]</note>
+      </trans-unit>
+      <trans-unit id="e129ae480280e47ef82fc7702f8321ba">
+        <source>Refresh list</source>
+        <target>Refresh list</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/list/list_header.tpl [Line: 160]</note>
+      </trans-unit>
+      <trans-unit id="1063e38cb53d94d386f21227fcd84717">
+        <source>Remove</source>
+        <target>Remove</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/form/form.tpl [Line: 333]</note>
+      </trans-unit>
+      <trans-unit id="b21f085d08623fc7a5a9da204cc66c8c">
+        <source>Remove file</source>
+        <target>Remove file</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/uploader/ajax.tpl [Line: 178]</note>
+      </trans-unit>
+      <trans-unit id="773ac0d662987369abf46eebc9000a09">
+        <source>Repeats like "aaa" are easy to guess</source>
+        <target>Repeats like "aaa" are easy to guess</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/install-dev/controllers/http/configure.php [Line: 242]</note>
+      </trans-unit>
+      <trans-unit id="97681c90722711e8081dcbd10620502e">
+        <source>Repeats like "abcabcabc" are only slightly harder to guess than "abc"</source>
+        <target>Repeats like "abcabcabc" are only slightly harder to guess than "abc"</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/install-dev/controllers/http/configure.php [Line: 243]</note>
+      </trans-unit>
+      <trans-unit id="e54b38290c8bdd95e8bc10412c9cc096">
+        <source>Required Fields</source>
+        <target>Required Fields</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/required_fields.tpl [Line: 30]</note>
+      </trans-unit>
+      <trans-unit id="526d688f37a86d3c3f27d0c5016eb71d">
+        <source>Reset</source>
+        <target>Reset</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/list/list_header.tpl [Line: 417]</note>
+      </trans-unit>
+      <trans-unit id="fc51ea2f3761abe2201b06a33f75748e">
+        <source>Reversed words aren't much harder to guess</source>
+        <target>Reversed words aren't much harder to guess</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/install-dev/controllers/http/configure.php [Line: 268]</note>
+      </trans-unit>
+      <trans-unit id="3b057f0f92ac8d274701c269ac00c5fa">
+        <source>Rows to skip</source>
+        <target>Rows to skip</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/import/helpers/view/view.tpl [Line: 114]</note>
+      </trans-unit>
+      <trans-unit id="e55bb1ae59b6a64858a85a2f48c53036">
+        <source>Sa</source>
+        <target>Sa</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 113]</note>
+      </trans-unit>
+      <trans-unit id="13c7d2d737f81f7bf89aed9fbcd0ad55">
+        <source>Sat</source>
+        <target>Sat</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 112]</note>
+      </trans-unit>
+      <trans-unit id="8b7051187b9191cdcdae6ed5a10e5adc">
+        <source>Saturday</source>
+        <target>Saturday</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 111]</note>
+      </trans-unit>
+      <trans-unit id="e195639ebd7491676218b40af7aeafe3">
+        <source>Save your data matching configuration</source>
+        <target>Save your data matching configuration</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/import/helpers/view/view.tpl [Line: 81]</note>
       </trans-unit>
       <trans-unit id="e7502bc086a11cfa8789053af27eab2d">
         <source>Saved with success !</source>
         <target>Saved with success !</target>
-        <note>Line: 524</note>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/psgdpr.php [Line: 524]</note>
       </trans-unit>
-      <trans-unit id="a59aa7fb037f2498e36a6d687869e83e">
-        <source>Customer data deleted by official GDPR module.</source>
-        <target>Customer data deleted by official GDPR module.</target>
-        <note>Line: 549</note>
+      <trans-unit id="4c41e0bd957698b58100a5c687d757d9">
+        <source>Select all</source>
+        <target>Select all</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/list/list_footer.tpl [Line: 37]</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Type/ChangePasswordType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="2871afea416378d2772937c4d67d6c2c">
-        <source>Generate password</source>
-        <target>Generate password</target>
-        <note>Line: 124</note>
+      <trans-unit id="81f32b96f6626b8968e6a0f4a9bce62e">
+        <source>Select the fields you would like to be required for this section.</source>
+        <target>Select the fields you would like to be required for this section.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/required_fields.tpl [Line: 33]</note>
+      </trans-unit>
+      <trans-unit id="94966d90747b97d1f0f206c98a8b1ac3">
+        <source>Send</source>
+        <target>Send</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/customer_threads/helpers/view/view.tpl [Line: 115]</note>
+      </trans-unit>
+      <trans-unit id="f04aa7019c490474fa3ce16e93501b57">
+        <source>Sep</source>
+        <target>Sep</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 115]</note>
+      </trans-unit>
+      <trans-unit id="cc5d90569e1c8313c2b1c2aab1401174">
+        <source>September</source>
+        <target>September</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 114]</note>
+      </trans-unit>
+      <trans-unit id="de3492070cd44f280a6f398dca2f1efb">
+        <source>Sequences like "abc" or "6543" are easy to guess</source>
+        <target>Sequences like "abc" or "6543" are easy to guess</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/install-dev/controllers/http/configure.php [Line: 244]</note>
+      </trans-unit>
+      <trans-unit id="0470d45929f27e1161330164c423b415">
+        <source>Set required fields for this section</source>
+        <target>Set required fields for this section</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/required_fields.tpl [Line: 26]</note>
+      </trans-unit>
+      <trans-unit id="4493e821e06072415518bd7ae4077996">
+        <source>Shop group</source>
+        <target>Shop group</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/list/list_header.tpl [Line: 325]</note>
+      </trans-unit>
+      <trans-unit id="bed5e315d09dedac517831b95571a7f4">
+        <source>Short keyboard patterns are easy to guess</source>
+        <target>Short keyboard patterns are easy to guess</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/install-dev/controllers/http/configure.php [Line: 240]</note>
+      </trans-unit>
+      <trans-unit id="dbcd43f8ba2bafd1bccc57fe9c8b5d7b">
+        <source>Show SQL query</source>
+        <target>Show SQL query</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/list/list_header.tpl [Line: 169]</note>
+      </trans-unit>
+      <trans-unit id="60adc330494a66981dec101c81e27f03">
+        <source>Siret</source>
+        <target>Siret</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 79]</note>
+      </trans-unit>
+      <trans-unit id="43775ce1723057d9e3d21e5969324fd1">
+        <source>Straight rows of keys are easy to guess</source>
+        <target>Straight rows of keys are easy to guess</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/install-dev/controllers/http/configure.php [Line: 239]</note>
+      </trans-unit>
+      <trans-unit id="c43e0fd449c758dab8f891d8e19eb1a9">
+        <source>Strong</source>
+        <target>Strong</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/install-dev/controllers/http/configure.php [Line: 257]</note>
+      </trans-unit>
+      <trans-unit id="f72c915d8f575a5c0999b5f37b6d99b7">
+        <source>Su</source>
+        <target>Su</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 113]</note>
+      </trans-unit>
+      <trans-unit id="47a0be8d1015d526a1fbaa56c3102135">
+        <source>Subject:</source>
+        <target>Subject:</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/customer_threads/message.tpl [Line: 147]</note>
+      </trans-unit>
+      <trans-unit id="ef6572e4cd58bb39a3f4e82fc64fe9f0">
+        <source>Sun</source>
+        <target>Sun</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 112]</note>
+      </trans-unit>
+      <trans-unit id="9d1a0949c39e66a0cd65240bc0ac9177">
+        <source>Sunday</source>
+        <target>Sunday</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 111]</note>
+      </trans-unit>
+      <trans-unit id="ec136b444eede3bc85639fac0dd06229">
+        <source>Supplier</source>
+        <target>Supplier</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/specific_price_rule/helpers/form/form.tpl [Line: 262]</note>
+      </trans-unit>
+      <trans-unit id="bc67a1507258a758c3a31e66d7ceff8f">
+        <source>Supplier Reference</source>
+        <target>Supplier Reference</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/suppliers/helpers/view/view.tpl [Line: 36]</note>
+      </trans-unit>
+      <trans-unit id="1e65b02f3464a517e0946a46d496327c">
+        <source>Sync success</source>
+        <target>Sync success</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/customer_threads/helpers/options/options.tpl [Line: 75]</note>
+      </trans-unit>
+      <trans-unit id="eeeb9a8eb45dd351d9ec0eb4acce66ce">
+        <source>Th</source>
+        <target>Th</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 113]</note>
+      </trans-unit>
+      <trans-unit id="efc54df619cd3792c98805fba1ee5ff7">
+        <source>The controller %s is missing or invalid.</source>
+        <target>The controller %s is missing or invalid.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/not_found/content.tpl [Line: 27]</note>
+      </trans-unit>
+      <trans-unit id="9bfcf0be1757b83609e3cd7fc59fc7ea">
+        <source>The customer will send a message from the contact form for any rectification and erasure requests, justifying his request.</source>
+        <target>The customer will send a message from the contact form for any rectification and erasure requests, justifying his request.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/psgdpr.php [Line: 348]</note>
+      </trans-unit>
+      <trans-unit id="c5536e008327e8873c8daf321a088873">
+        <source>The product(s) are matching one of these:</source>
+        <target>The product(s) are matching one of these:</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/cart_rules/product_rule_group.tpl [Line: 65]</note>
+      </trans-unit>
+      <trans-unit id="e112201196d8a38cfe15031655647cb6">
+        <source>There are %d warnings:</source>
+        <target>There are %d warnings:</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/layout.tpl [Line: 87]</note>
+      </trans-unit>
+      <trans-unit id="c11321f9fb4112e493e86a1410745b32">
+        <source>There is no Remove Data button in the customer account. Isn't this a requirement?</source>
+        <target>There is no Remove Data button in the customer account. Isn't this a requirement?</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/psgdpr.php [Line: 351]</note>
+      </trans-unit>
+      <trans-unit id="de571168b7c4d4ab2c7826d2df1ec04b">
+        <source>There is no consent confirmation checkbox in the contact form. Isn't this a requirement?</source>
+        <target>There is no consent confirmation checkbox in the contact form. Isn't this a requirement?</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/psgdpr.php [Line: 338]</note>
+      </trans-unit>
+      <trans-unit id="e9415612c1d72517733c98e6877a6b46">
+        <source>There was an error during the uninstallation. Please contact us through Addons website.</source>
+        <target>There was an error during the uninstallation. Please contact us through Addons website.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/psgdpr.php [Line: 205]</note>
+      </trans-unit>
+      <trans-unit id="f82c07eeaadf212c53a454cca4073e82">
+        <source>There was an error on module uninstall. Please contact us through Addons website</source>
+        <target>There was an error on module uninstall. Please contact us through Addons website</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/psgdpr.php [Line: 228]</note>
+      </trans-unit>
+      <trans-unit id="6a00e03023004b3330275e8d9842b54c">
+        <source>This column must be set:</source>
+        <target>This column must be set:</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/import/helpers/view/view.tpl [Line: 94]</note>
+      </trans-unit>
+      <trans-unit id="954a21d373e3f1bd2446606700a37217">
+        <source>This is a top-10 common password</source>
+        <target>This is a top-10 common password</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/install-dev/controllers/http/configure.php [Line: 247]</note>
+      </trans-unit>
+      <trans-unit id="f6e52aa06b58dd0d8855340b165c0b49">
+        <source>This is a top-100 common password</source>
+        <target>This is a top-100 common password</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/install-dev/controllers/http/configure.php [Line: 248]</note>
+      </trans-unit>
+      <trans-unit id="0f4a64d2fecd6b4ab2c10d21313e02a6">
+        <source>This is a very common password</source>
+        <target>This is a very common password</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/install-dev/controllers/http/configure.php [Line: 249]</note>
+      </trans-unit>
+      <trans-unit id="c92578d4545d5aceb430aed0c7285398">
+        <source>This is similar to a commonly used password</source>
+        <target>This is similar to a commonly used password</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/install-dev/controllers/http/configure.php [Line: 250]</note>
+      </trans-unit>
+      <trans-unit id="ed5e8353dfc585f4c6b3a55d1a9fc01d">
+        <source>Thu</source>
+        <target>Thu</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 112]</note>
+      </trans-unit>
+      <trans-unit id="78ae6f0cd191d25147e252dc54768238">
+        <source>Thursday</source>
+        <target>Thursday</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 111]</note>
+      </trans-unit>
+      <trans-unit id="a76d4ef5f3f6a672bbfab2865563e530">
+        <source>Time</source>
+        <target>Time</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/form/form.tpl [Line: 816]</note>
+      </trans-unit>
+      <trans-unit id="fae6aba9bc4e69842be0ac98e15c4c99">
+        <source>Time on the page</source>
+        <target>Time on the page</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 338]</note>
+      </trans-unit>
+      <trans-unit id="e12167aa0a7698e6ebc92b4ce3909b53">
+        <source>To</source>
+        <target>To</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/list/list_header.tpl [Line: 365]</note>
+      </trans-unit>
+      <trans-unit id="ea067eb37801c5aab1a1c685eb97d601">
+        <source>Total paid</source>
+        <target>Total paid</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 158]</note>
+      </trans-unit>
+      <trans-unit id="db205f01b4fd580fb5daa9072d96849d">
+        <source>Total products</source>
+        <target>Total products</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 227]</note>
+      </trans-unit>
+      <trans-unit id="080502c4fa636ac639bf42b6d2ba01d7">
+        <source>Tu</source>
+        <target>Tu</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 113]</note>
+      </trans-unit>
+      <trans-unit id="2ddecde85408faf230652444db78cb72">
+        <source>Tue</source>
+        <target>Tue</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 112]</note>
+      </trans-unit>
+      <trans-unit id="5792315f09a5d54fb7e3d066672b507f">
+        <source>Tuesday</source>
+        <target>Tuesday</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 111]</note>
+      </trans-unit>
+      <trans-unit id="371ed088d2c0e456f5cae0bb97fe7c4b">
+        <source>Two columns cannot have the same type of values</source>
+        <target>Two columns cannot have the same type of values</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/import/helpers/view/view.tpl [Line: 91]</note>
+      </trans-unit>
+      <trans-unit id="fbd99ad01b92dbafc686772a39e3d065">
+        <source>UPC</source>
+        <target>UPC</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/suppliers/helpers/view/view.tpl [Line: 40]</note>
+      </trans-unit>
+      <trans-unit id="237c7b6874386141a095e321c9fdfd38">
+        <source>Unselect all</source>
+        <target>Unselect all</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/list/list_footer.tpl [Line: 42]</note>
+      </trans-unit>
+      <trans-unit id="ffeed24e8e4fd763c1d0d02c6e5d6e15">
+        <source>Upload file</source>
+        <target>Upload file</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/uploader/ajax.tpl [Line: 70]</note>
+      </trans-unit>
+      <trans-unit id="c7de86f69db264c3950d8ae46ed2e33f">
+        <source>Upload files</source>
+        <target>Upload files</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/uploader/ajax.tpl [Line: 70]</note>
+      </trans-unit>
+      <trans-unit id="dd96380694cf9e241cba2b2ac4cf8c03">
+        <source>Use a few words, avoid common phrases</source>
+        <target>Use a few words, avoid common phrases</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/install-dev/controllers/http/configure.php [Line: 259]</note>
+      </trans-unit>
+      <trans-unit id="37ffb1976d12530b5c07821baaf5be39">
+        <source>Use a longer keyboard pattern with more turns</source>
+        <target>Use a longer keyboard pattern with more turns</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/install-dev/controllers/http/configure.php [Line: 241]</note>
+      </trans-unit>
+      <trans-unit id="516b34a4d2351006f3a0f39ccffccefa">
+        <source>Very strong</source>
+        <target>Very strong</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/install-dev/controllers/http/configure.php [Line: 258]</note>
+      </trans-unit>
+      <trans-unit id="30a3534b67a9a2c4cb3f1bb8659b321f">
+        <source>Very weak</source>
+        <target>Very weak</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/install-dev/controllers/http/configure.php [Line: 254]</note>
+      </trans-unit>
+      <trans-unit id="6e9783376d951cfd780e9fdb67a0f02c">
+        <source>View details</source>
+        <target>View details</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/classes/controller/AdminController.php [Line: 656]</note>
+      </trans-unit>
+      <trans-unit id="485c47a81eb6e3998ec05aca48eda184">
+        <source>We</source>
+        <target>We</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 113]</note>
+      </trans-unit>
+      <trans-unit id="7324e3727807d95037eb19d304fd91ec">
+        <source>Weak</source>
+        <target>Weak</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/install-dev/controllers/http/configure.php [Line: 255]</note>
+      </trans-unit>
+      <trans-unit id="15bbb9d0bbf25e8d2978de1168c749dc">
+        <source>Website</source>
+        <target>Website</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 82]</note>
+      </trans-unit>
+      <trans-unit id="510c292b1686eb070d9e90a575f74106">
+        <source>Wed</source>
+        <target>Wed</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 112]</note>
+      </trans-unit>
+      <trans-unit id="796c163589f295373e171842f37265d5">
+        <source>Wednesday</source>
+        <target>Wednesday</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 111]</note>
+      </trans-unit>
+      <trans-unit id="c804723ccdde3d7a46933b208c6f928d">
+        <source>Wholesale price</source>
+        <target>Wholesale price</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/suppliers/helpers/view/view.tpl [Line: 37]</note>
+      </trans-unit>
+      <trans-unit id="2605a817441c19cc88eb9e5d17845dc0">
+        <source>You can add a comment here.</source>
+        <target>You can add a comment here.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/customer_threads/helpers/view/view.tpl [Line: 151]</note>
+      </trans-unit>
+      <trans-unit id="009044df8c709bfdefa065ae7fa733e1">
+        <source>You can upload a maximum of %s files</source>
+        <target>You can upload a maximum of %s files</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/uploader/simple.tpl [Line: 134]</note>
+      </trans-unit>
+      <trans-unit id="fe73eda0f6569ec502fe52716a648370">
+        <source>You can't change the value of this configuration field in this store's context.</source>
+        <target>You can't change the value of this configuration field in this store's context.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/options/options.tpl [Line: 335]</note>
+      </trans-unit>
+      <trans-unit id="6dc85b454944660cf96e7d0c2d171ee3">
+        <source>You cannot have more than %s images in total. Please remove some of the current images before adding new ones.</source>
+        <target>You cannot have more than %s images in total. Please remove some of the current images before adding new ones.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/uploader/ajax.tpl [Line: 170]</note>
+      </trans-unit>
+      <trans-unit id="3fcbe6bd34e9279ec2c7b13adf7e4095">
+        <source>You have reached the limit (%s) of files to upload, please remove files to continue uploading</source>
+        <target>You have reached the limit (%s) of files to upload, please remove files to continue uploading</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/uploader/simple.tpl [Line: 56]</note>
+      </trans-unit>
+      <trans-unit id="54524210ee89080b3da6c88a11c6d438">
+        <source>You must use this syntax in your translations. Here are several examples:</source>
+        <target>You must use this syntax in your translations. Here are several examples:</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/translations/helpers/view/translation_form.tpl [Line: 86]</note>
+      </trans-unit>
+      <trans-unit id="62acf0bc057112bf91cd1ff9f1426c6c">
+        <source>[undefined]</source>
+        <target>[undefined]</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/carrier_wizard/summary.tpl [Line: 53]</note>
+      </trans-unit>
+      <trans-unit id="e9c7e4df74077626f7e42797c65273c4">
+        <source>and stay</source>
+        <target>and stay</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/list/list_header.tpl [Line: 206]</note>
+      </trans-unit>
+      <trans-unit id="399574be0ed95657dfac0e8d38374c62">
+        <source>by ip address</source>
+        <target>by ip address</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/new-theme/template/components/layout/search_form.tpl [Line: 46]</note>
+      </trans-unit>
+      <trans-unit id="855d2bf59043b81e76bc931e685a4f58">
+        <source>by name</source>
+        <target>by name</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/new-theme/template/components/layout/search_form.tpl [Line: 45]</note>
+      </trans-unit>
+      <trans-unit id="921d54865f8169b84c90d4335c256494">
+        <source>filter by %s</source>
+        <target>filter by %s</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/classes/controller/AdminController.php [Line: 771]</note>
+      </trans-unit>
+      <trans-unit id="dd8921b41e0279a02c6a26a509241700">
+        <source>result(s)</source>
+        <target>result(s)</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/list/list_footer.tpl [Line: 75]</note>
+      </trans-unit>
+      <trans-unit id="d77a48a51f8c62087570ab8f9d6ca55a">
+        <source>search...</source>
+        <target>search...</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/tree/tree_toolbar_search.tpl [Line: 32]</note>
+      </trans-unit>
+      <trans-unit id="01b6e20344b68835c5ed1ddedf20d531">
+        <source>to</source>
+        <target>to</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 89]</note>
       </trans-unit>
     </body>
   </file>

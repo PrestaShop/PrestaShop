@@ -1,198 +1,191 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_emailalerts/ps_emailalerts.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="Modules.Emailalerts.Admin.xlf" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="fd30254803e8db32521d3390131a44da">
-        <source>Mail alerts</source>
-        <target>Mail alerts</target>
-        <note>Line: 73</note>
-      </trans-unit>
-      <trans-unit id="3cfaf283873b2bb08dbbbc9ca3efa79d">
-        <source>Make your everyday life easier, handle mail alerts about stock and orders, addressed to you as well as your customers.</source>
-        <target>Make your everyday life easier, handle mail alerts about stock and orders, addressed to you as well as your customers.</target>
-        <note>Line: 74</note>
-      </trans-unit>
-      <trans-unit id="c1ee76f076a5b97e3b4b0c0e5703246e">
-        <source>Cannot update settings</source>
-        <target>Cannot update settings</target>
-        <note>Line: 319</note>
-      </trans-unit>
-      <trans-unit id="d5f5c6acde4150404b8a54bcde944d9d">
-        <source>Please enter one (or more) email address for the new order notification.</source>
-        <target>Please enter one (or more) email address for the new order notification.</target>
-        <note>Line: 238</note>
-      </trans-unit>
-      <trans-unit id="fe053a0324335f0087da6683d77cba48">
-        <source>Invalid email:</source>
-        <target>Invalid email:</target>
-        <note>Line: 293
-Comment: Add error message and remove it</note>
-      </trans-unit>
-      <trans-unit id="91854d7024aaeef9985ab4cb34eb754e">
-        <source>Cannot update new order emails.</source>
-        <target>Cannot update new order emails.</target>
-        <note>Line: 256</note>
-      </trans-unit>
-      <trans-unit id="09065e4b575415cbc308a7eab961a2be">
-        <source>Please enter one (or more) email address for "out of stock" notifications.</source>
-        <target>Please enter one (or more) email address for "out of stock" notifications.</target>
-        <note>Line: 262</note>
-      </trans-unit>
-      <trans-unit id="efeba9a86bc37b02f1893c508acef541">
-        <source>Cannot update email for "out of stock" notifications.</source>
-        <target>Cannot update email for "out of stock" notifications.</target>
-        <note>Line: 280</note>
-      </trans-unit>
-      <trans-unit id="23ca7e7b11802ed822636dd14064bc0b">
-        <source>Please enter one (or more) email address for "return slip" notifications.</source>
-        <target>Please enter one (or more) email address for "return slip" notifications.</target>
-        <note>Line: 286</note>
+      <trans-unit id="35fe6b0f0a1debcdf760477a2194bc6b">
+        <source>Add email</source>
+        <target>Add email</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 1238]</note>
       </trans-unit>
       <trans-unit id="06c805399c80b36dcf1754acdba3609b">
         <source>Cannot update "return slip" emails.</source>
         <target>Cannot update "return slip" emails.</target>
-        <note>Line: 304</note>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 304]</note>
       </trans-unit>
-      <trans-unit id="462390017ab0938911d2d4e964c0cab7">
-        <source>Settings updated successfully</source>
-        <target>Settings updated successfully</target>
-        <note>Line: 326</note>
+      <trans-unit id="efeba9a86bc37b02f1893c508acef541">
+        <source>Cannot update email for "out of stock" notifications.</source>
+        <target>Cannot update email for "out of stock" notifications.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 280]</note>
       </trans-unit>
-      <trans-unit id="7cb9a154f101c674c945f88dad5c5e28">
-        <source>No message</source>
-        <target>No message</target>
-        <note>Line: 415</note>
+      <trans-unit id="91854d7024aaeef9985ab4cb34eb754e">
+        <source>Cannot update new order emails.</source>
+        <target>Cannot update new order emails.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 256]</note>
       </trans-unit>
-      <trans-unit id="1d744a9ad1dac20645cfc4a36b77323b">
-        <source>image(s)</source>
-        <target>image(s)</target>
-        <note>Line: 437</note>
-      </trans-unit>
-      <trans-unit id="9137796c15dd92e5553c3f29574d0968">
-        <source>Voucher code:</source>
-        <target>Voucher code:</target>
-        <note>Line: 468</note>
-      </trans-unit>
-      <trans-unit id="58a20987a1f4e45d508b4491614a2c57">
-        <source>Customer notifications</source>
-        <target>Customer notifications</target>
-        <note>Line: 1073</note>
-      </trans-unit>
-      <trans-unit id="808aaaa33716529eb7c9f658ff4a15b5">
-        <source>Product availability</source>
-        <target>Product availability</target>
-        <note>Line: 1080
-Comment: retro compat 1.5</note>
-      </trans-unit>
-      <trans-unit id="9ca0da55063428cbc4c424440e443128">
-        <source>Give the customer the option of receiving a notification when an out of stock product is available again.</source>
-        <target>Give the customer the option of receiving a notification when an out of stock product is available again.</target>
-        <note>Line: 1082</note>
-      </trans-unit>
-      <trans-unit id="a5b84d670ff303fdc89d20cf979a1003">
-        <source>Order edit</source>
-        <target>Order edit</target>
-        <note>Line: 1099
-Comment: retro compat 1.5</note>
-      </trans-unit>
-      <trans-unit id="0c00f6da997acaa413d658206e25235a">
-        <source>Send a notification to the customer when an order is edited.</source>
-        <target>Send a notification to the customer when an order is edited.</target>
-        <note>Line: 1101</note>
-      </trans-unit>
-      <trans-unit id="4c9120f1a5947445c0e9620254ceb30b">
-        <source>New order</source>
-        <target>New order</target>
-        <note>Line: 1128
-Comment: retro compat 1.5</note>
-      </trans-unit>
-      <trans-unit id="382ba298d6c80b03037629d326811919">
-        <source>Receive a notification when an order is placed.</source>
-        <target>Receive a notification when an order is placed.</target>
-        <note>Line: 1130</note>
-      </trans-unit>
-      <trans-unit id="172123b1c4411da3c41a1eb36e4662d4">
-        <source>Send to:</source>
-        <target>Send to:</target>
-        <note>Line: 1236</note>
-      </trans-unit>
-      <trans-unit id="35fe6b0f0a1debcdf760477a2194bc6b">
-        <source>Add email</source>
-        <target>Add email</target>
-        <note>Line: 1238</note>
-      </trans-unit>
-      <trans-unit id="fb690a859d745afa33dc801efb5b8cb3">
-        <source>Enter one or more email address. Use 'Return' or a comma to separate each address.</source>
-        <target>Enter one or more email address. Use 'Return' or a comma to separate each address.</target>
-        <note>Line: 1239</note>
-      </trans-unit>
-      <trans-unit id="b55197a49e8c4cd8c314bc2aa39d6feb">
-        <source>Out of stock</source>
-        <target>Out of stock</target>
-        <note>Line: 1154
-Comment: retro compat 1.5</note>
-      </trans-unit>
-      <trans-unit id="c0146c441cd6d5dc9d6e0ea1464b345f">
-        <source>Receive a notification if the available quantity of a product is below the following threshold.</source>
-        <target>Receive a notification if the available quantity of a product is below the following threshold.</target>
-        <note>Line: 1156</note>
-      </trans-unit>
-      <trans-unit id="2a63f555989152ba866b43a1faacd680">
-        <source>Threshold</source>
-        <target>Threshold</target>
-        <note>Line: 1179</note>
-      </trans-unit>
-      <trans-unit id="5b38721cd2e6ea2e12a664fb6dca1990">
-        <source>Quantity for which a product is considered out of stock.</source>
-        <target>Quantity for which a product is considered out of stock.</target>
-        <note>Line: 1182</note>
-      </trans-unit>
-      <trans-unit id="135d106e835a4fa3b6fb5c4638a5d76b">
-        <source>Coverage warning</source>
-        <target>Coverage warning</target>
-        <note>Line: 1190
-Comment: retro compat 1.5</note>
-      </trans-unit>
-      <trans-unit id="218786c9273b95bc637e7adb710b4195">
-        <source>Receive a notification when a product has insufficient coverage.</source>
-        <target>Receive a notification when a product has insufficient coverage.</target>
-        <note>Line: 1192</note>
+      <trans-unit id="c1ee76f076a5b97e3b4b0c0e5703246e">
+        <source>Cannot update settings</source>
+        <target>Cannot update settings</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 319]</note>
       </trans-unit>
       <trans-unit id="9841bdc50c4226cb6ec5db76494249e6">
         <source>Coverage</source>
         <target>Coverage</target>
-        <note>Line: 1208</note>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 1208]</note>
       </trans-unit>
-      <trans-unit id="2a4ae220a78d0c4a4d4c2b7285753321">
-        <source>Stock coverage, in days. Also, the stock coverage of a given product will be calculated based on this number.</source>
-        <target>Stock coverage, in days. Also, the stock coverage of a given product will be calculated based on this number.</target>
-        <note>Line: 1211</note>
+      <trans-unit id="135d106e835a4fa3b6fb5c4638a5d76b">
+        <source>Coverage warning</source>
+        <target>Coverage warning</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 1190]</note>
       </trans-unit>
-      <trans-unit id="4762fdc5fdf2ab3118f73fe252a6668b">
-        <source>Returns</source>
-        <target>Returns</target>
-        <note>Line: 1218
-Comment: retro compat 1.5</note>
+      <trans-unit id="58a20987a1f4e45d508b4491614a2c57">
+        <source>Customer notifications</source>
+        <target>Customer notifications</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 1073]</note>
       </trans-unit>
-      <trans-unit id="6408356e699097abbb968b575499f76e">
-        <source>Receive a notification when a customer requests a merchandise return.</source>
-        <target>Receive a notification when a customer requests a merchandise return.</target>
-        <note>Line: 1220</note>
+      <trans-unit id="fb690a859d745afa33dc801efb5b8cb3">
+        <source>Enter one or more email address. Use 'Return' or a comma to separate each address.</source>
+        <target>Enter one or more email address. Use 'Return' or a comma to separate each address.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 1239]</note>
       </trans-unit>
-      <trans-unit id="6f974bbda9064a9c0836370dbf5a6076">
-        <source>Merchant notifications</source>
-        <target>Merchant notifications</target>
-        <note>Line: 1245</note>
+      <trans-unit id="9ca0da55063428cbc4c424440e443128">
+        <source>Give the customer the option of receiving a notification when an out of stock product is available again.</source>
+        <target>Give the customer the option of receiving a notification when an out of stock product is available again.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 1082]</note>
+      </trans-unit>
+      <trans-unit id="fe053a0324335f0087da6683d77cba48">
+        <source>Invalid email:</source>
+        <target>Invalid email:</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 293]</note>
       </trans-unit>
       <trans-unit id="fb95520fa4829e9de86209dcf5ddd754">
         <source>Mail alert: Unable to delete customer using email.</source>
         <target>Mail alert: Unable to delete customer using email.</target>
-        <note>Line: 1288</note>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 1288]</note>
       </trans-unit>
       <trans-unit id="cbaab5c1b41cd9f8199743faa5ba58d2">
         <source>Mail alert: Unable to export customer using email.</source>
         <target>Mail alert: Unable to export customer using email.</target>
-        <note>Line: 1300</note>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 1300]</note>
+      </trans-unit>
+      <trans-unit id="fd30254803e8db32521d3390131a44da">
+        <source>Mail alerts</source>
+        <target>Mail alerts</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 73]</note>
+      </trans-unit>
+      <trans-unit id="3cfaf283873b2bb08dbbbc9ca3efa79d">
+        <source>Make your everyday life easier, handle mail alerts about stock and orders, addressed to you as well as your customers.</source>
+        <target>Make your everyday life easier, handle mail alerts about stock and orders, addressed to you as well as your customers.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 74]</note>
+      </trans-unit>
+      <trans-unit id="6f974bbda9064a9c0836370dbf5a6076">
+        <source>Merchant notifications</source>
+        <target>Merchant notifications</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 1245]</note>
+      </trans-unit>
+      <trans-unit id="4c9120f1a5947445c0e9620254ceb30b">
+        <source>New order</source>
+        <target>New order</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 1128]</note>
+      </trans-unit>
+      <trans-unit id="7cb9a154f101c674c945f88dad5c5e28">
+        <source>No message</source>
+        <target>No message</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 415]</note>
+      </trans-unit>
+      <trans-unit id="a5b84d670ff303fdc89d20cf979a1003">
+        <source>Order edit</source>
+        <target>Order edit</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 1099]</note>
+      </trans-unit>
+      <trans-unit id="b55197a49e8c4cd8c314bc2aa39d6feb">
+        <source>Out of stock</source>
+        <target>Out of stock</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 1154]</note>
+      </trans-unit>
+      <trans-unit id="09065e4b575415cbc308a7eab961a2be">
+        <source>Please enter one (or more) email address for "out of stock" notifications.</source>
+        <target>Please enter one (or more) email address for "out of stock" notifications.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 262]</note>
+      </trans-unit>
+      <trans-unit id="23ca7e7b11802ed822636dd14064bc0b">
+        <source>Please enter one (or more) email address for "return slip" notifications.</source>
+        <target>Please enter one (or more) email address for "return slip" notifications.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 286]</note>
+      </trans-unit>
+      <trans-unit id="d5f5c6acde4150404b8a54bcde944d9d">
+        <source>Please enter one (or more) email address for the new order notification.</source>
+        <target>Please enter one (or more) email address for the new order notification.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 238]</note>
+      </trans-unit>
+      <trans-unit id="808aaaa33716529eb7c9f658ff4a15b5">
+        <source>Product availability</source>
+        <target>Product availability</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 1080]</note>
+      </trans-unit>
+      <trans-unit id="5b38721cd2e6ea2e12a664fb6dca1990">
+        <source>Quantity for which a product is considered out of stock.</source>
+        <target>Quantity for which a product is considered out of stock.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 1182]</note>
+      </trans-unit>
+      <trans-unit id="c0146c441cd6d5dc9d6e0ea1464b345f">
+        <source>Receive a notification if the available quantity of a product is below the following threshold.</source>
+        <target>Receive a notification if the available quantity of a product is below the following threshold.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 1156]</note>
+      </trans-unit>
+      <trans-unit id="6408356e699097abbb968b575499f76e">
+        <source>Receive a notification when a customer requests a merchandise return.</source>
+        <target>Receive a notification when a customer requests a merchandise return.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 1220]</note>
+      </trans-unit>
+      <trans-unit id="218786c9273b95bc637e7adb710b4195">
+        <source>Receive a notification when a product has insufficient coverage.</source>
+        <target>Receive a notification when a product has insufficient coverage.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 1192]</note>
+      </trans-unit>
+      <trans-unit id="382ba298d6c80b03037629d326811919">
+        <source>Receive a notification when an order is placed.</source>
+        <target>Receive a notification when an order is placed.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 1130]</note>
+      </trans-unit>
+      <trans-unit id="4762fdc5fdf2ab3118f73fe252a6668b">
+        <source>Returns</source>
+        <target>Returns</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 1218]</note>
+      </trans-unit>
+      <trans-unit id="0c00f6da997acaa413d658206e25235a">
+        <source>Send a notification to the customer when an order is edited.</source>
+        <target>Send a notification to the customer when an order is edited.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 1101]</note>
+      </trans-unit>
+      <trans-unit id="172123b1c4411da3c41a1eb36e4662d4">
+        <source>Send to:</source>
+        <target>Send to:</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 1236]</note>
+      </trans-unit>
+      <trans-unit id="462390017ab0938911d2d4e964c0cab7">
+        <source>Settings updated successfully</source>
+        <target>Settings updated successfully</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 326]</note>
+      </trans-unit>
+      <trans-unit id="2a4ae220a78d0c4a4d4c2b7285753321">
+        <source>Stock coverage, in days. Also, the stock coverage of a given product will be calculated based on this number.</source>
+        <target>Stock coverage, in days. Also, the stock coverage of a given product will be calculated based on this number.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 1211]</note>
+      </trans-unit>
+      <trans-unit id="2a63f555989152ba866b43a1faacd680">
+        <source>Threshold</source>
+        <target>Threshold</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 1179]</note>
+      </trans-unit>
+      <trans-unit id="9137796c15dd92e5553c3f29574d0968">
+        <source>Voucher code:</source>
+        <target>Voucher code:</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 468]</note>
+      </trans-unit>
+      <trans-unit id="1d744a9ad1dac20645cfc4a36b77323b">
+        <source>image(s)</source>
+        <target>image(s)</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_emailalerts/ps_emailalerts.php [Line: 437]</note>
       </trans-unit>
     </body>
   </file>

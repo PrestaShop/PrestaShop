@@ -1,81 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="admin-dev/themes/default/template/header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="Admin.Login.Notification.xlf" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="61c79423624504f70ce7b16f76587aac">
+        <source>An error occurred while attempting to reset your password.</source>
+        <target>An error occurred while attempting to reset your password.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/LoginController.php [Line: 201]</note>
+      </trans-unit>
+      <trans-unit id="d84626aafd2ead966ff2f5c2e0bca73f">
+        <source>For security reasons, you cannot connect to the back office until you have:</source>
+        <target>For security reasons, you cannot connect to the back office until you have:</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Resources/views/Admin/Login/required_actions.html.twig [Line: 29]</note>
+      </trans-unit>
       <trans-unit id="9ff082251dea737459c9f32e73ca7a62">
         <source>For security reasons, you must also delete the /install folder.</source>
         <target>For security reasons, you must also delete the /install folder.</target>
-        <note>Line: 423</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/LoginController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1414e6b52fb36401e73871528bfb074d">
-        <source>The employee does not exist, or the password provided is incorrect.</source>
-        <target>The employee does not exist, or the password provided is incorrect.</target>
-        <note>Line: 92</note>
-      </trans-unit>
-      <trans-unit id="d2bd0a6c92a4501d3459335139825d21">
-        <source>Please, check your mailbox.</source>
-        <target>Please, check your mailbox.</target>
-        <note>Line: 155
-Comment: to find out the employee's emails via brute force.</note>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/new-theme/template/light_display_layout.tpl [Line: 41]</note>
       </trans-unit>
       <trans-unit id="bc7c377379671f975af83f1166822d4b">
         <source>If this email address has been registered in our store, you will receive a link to reset your password.</source>
         <target>If this email address has been registered in our store, you will receive a link to reset your password.</target>
-        <note>Line: 156</note>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/LoginController.php [Line: 156]</note>
       </trans-unit>
-      <trans-unit id="b2e73e907ab40d78981c8bbfd0e0881f">
-        <source>You can reset your password every %interval% minute(s) only. Please try again later.</source>
-        <target>You can reset your password every %interval% minute(s) only. Please try again later.</target>
-        <note>Line: 160</note>
-      </trans-unit>
-      <trans-unit id="61c79423624504f70ce7b16f76587aac">
-        <source>An error occurred while attempting to reset your password.</source>
-        <target>An error occurred while attempting to reset your password.</target>
-        <note>Line: 201</note>
-      </trans-unit>
-      <trans-unit id="30d1a8e4c44146dcccec7b7a11db6d6e">
-        <source>The password has been changed successfully.</source>
-        <target>The password has been changed successfully.</target>
-        <note>Line: 194</note>
-      </trans-unit>
-      <trans-unit id="56f5aa17fc3a9c5d9827bb148f072cd2">
-        <source>Your password reset request expired. Please start again.</source>
-        <target>Your password reset request expired. Please start again.</target>
-        <note>Line: 197
-Comment: Display generic error message with no details why it failed</note>
-      </trans-unit>
-      <trans-unit id="362b56674d07160fab60725a927bbf13">
-        <source>deleted the /install folder</source>
-        <target>deleted the /install folder</target>
-        <note>Line: 232</note>
-      </trans-unit>
-      <trans-unit id="83c8a48abe6dd9b6fcc44986069b36dd">
-        <source>renamed the /admin folder (e.g. %s)</source>
-        <target>renamed the /admin folder (e.g. %s)</target>
-        <note>Line: 242</note>
-      </trans-unit>
-      <trans-unit id="0c38dbc5d2689404ee34e0fc2da845cf">
-        <source>SSL is activated. Please connect using the following link to [1]log in to secure mode (https://)[/1]</source>
-        <target>SSL is activated. Please connect using the following link to [1]log in to secure mode (https://)[/1]</target>
-        <note>Line: 266</note>
+      <trans-unit id="d2bd0a6c92a4501d3459335139825d21">
+        <source>Please, check your mailbox.</source>
+        <target>Please, check your mailbox.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/LoginController.php [Line: 155]</note>
       </trans-unit>
       <trans-unit id="64bebbfcf422901ff5898cd0d0f92ba4">
         <source>SSL is activated. However, your IP is allowed to enter unsecure mode for maintenance or local IP issues.</source>
         <target>SSL is activated. However, your IP is allowed to enter unsecure mode for maintenance or local IP issues.</target>
-        <note>Line: 271</note>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/LoginController.php [Line: 271]</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Login/required_actions.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="d84626aafd2ead966ff2f5c2e0bca73f">
-        <source>For security reasons, you cannot connect to the back office until you have:</source>
-        <target>For security reasons, you cannot connect to the back office until you have:</target>
-        <note>Line: 29</note>
+      <trans-unit id="0c38dbc5d2689404ee34e0fc2da845cf">
+        <source>SSL is activated. Please connect using the following link to [1]log in to secure mode (https://)[/1]</source>
+        <target>SSL is activated. Please connect using the following link to [1]log in to secure mode (https://)[/1]</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/LoginController.php [Line: 266]</note>
+      </trans-unit>
+      <trans-unit id="1414e6b52fb36401e73871528bfb074d">
+        <source>The employee does not exist, or the password provided is incorrect.</source>
+        <target>The employee does not exist, or the password provided is incorrect.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/LoginController.php [Line: 92]</note>
+      </trans-unit>
+      <trans-unit id="30d1a8e4c44146dcccec7b7a11db6d6e">
+        <source>The password has been changed successfully.</source>
+        <target>The password has been changed successfully.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/LoginController.php [Line: 194]</note>
+      </trans-unit>
+      <trans-unit id="b2e73e907ab40d78981c8bbfd0e0881f">
+        <source>You can reset your password every %interval% minute(s) only. Please try again later.</source>
+        <target>You can reset your password every %interval% minute(s) only. Please try again later.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/LoginController.php [Line: 160]</note>
+      </trans-unit>
+      <trans-unit id="56f5aa17fc3a9c5d9827bb148f072cd2">
+        <source>Your password reset request expired. Please start again.</source>
+        <target>Your password reset request expired. Please start again.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/LoginController.php [Line: 197]</note>
+      </trans-unit>
+      <trans-unit id="362b56674d07160fab60725a927bbf13">
+        <source>deleted the /install folder</source>
+        <target>deleted the /install folder</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/LoginController.php [Line: 232]</note>
+      </trans-unit>
+      <trans-unit id="83c8a48abe6dd9b6fcc44986069b36dd">
+        <source>renamed the /admin folder (e.g. %s)</source>
+        <target>renamed the /admin folder (e.g. %s)</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/LoginController.php [Line: 242]</note>
       </trans-unit>
     </body>
   </file>

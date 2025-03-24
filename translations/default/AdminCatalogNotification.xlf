@@ -1,598 +1,446 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="admin-dev/themes/default/template/controllers/cart_rules/actions.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="Admin.Catalog.Notification.xlf" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="e602c06958cd934ccc238913f51282aa">
-        <source>You must select some products before</source>
-        <target>You must select some products before</target>
-        <note>Line: 125</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/Product.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="30a367ba686890c829937e768d588b8f">
-        <source>You cannot set 0 or a negative position, the minimum is 1.</source>
-        <target>You cannot set 0 or a negative position, the minimum is 1.</target>
-        <note>Line: 6848</note>
-      </trans-unit>
-      <trans-unit id="cf99dad7d7306d9ac01ba5a2e2d2c715">
-        <source>You cannot set a position greater than the total number of products in the category, starting at 1.</source>
-        <target>You cannot set a position greater than the total number of products in the category, starting at 1.</target>
-        <note>Line: 6869</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/controller/AdminController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="fc2c8663d58c42bc29edd45a79b4358c">
-        <source>The discount was successfully generated.</source>
-        <target>The discount was successfully generated.</target>
-        <note>Line: 538</note>
-      </trans-unit>
-      <trans-unit id="801982917ddd7afd63f9e103ba4699bd">
-        <source>The root category of the shop %shop% is not associated with the current shop. You can't access this page. Please change the root category of the shop.</source>
-        <target>The root category of the shop %shop% is not associated with the current shop. You can't access this page. Please change the root category of the shop.</target>
-        <note>Line: 544</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/helper/HelperList.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="76a0433a69a82abfba836ca72dbef13f">
-        <source>This will copy the images too. If you wish to proceed, click "%yes_label%". If not, click "%no_label%".</source>
-        <target>This will copy the images too. If you wish to proceed, click "%yes_label%". If not, click "%no_label%".</target>
-        <note>Line: 475</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/stock/StockManagerModule.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="bc6f653d2d54db1348de50fe0b0192e9">
-        <source>Incorrect Stock Manager class [%s]</source>
-        <target>Incorrect Stock Manager class [%s]</target>
-        <note>Line: 45</note>
-      </trans-unit>
-      <trans-unit id="65d09c7dfa652d616875eddb50c18d2b">
-        <source>Stock Manager class not found [%s]</source>
-        <target>Stock Manager class not found [%s]</target>
-        <note>Line: 51</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/webservice/WebserviceSpecificManagementAttachments.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="8a23b9ee3a4502a0de3fc32c5ba7aa65">
-        <source>Failed to copy the file.</source>
-        <target>Failed to copy the file.</target>
-        <note>Line: 363</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCartRulesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="95ac8bc6255b6740202d83865577f942">
-        <source>The "%s" restriction is checked, but no item is selected.</source>
-        <target>The "%s" restriction is checked, but no item is selected.</target>
-        <note>Line: 228</note>
-      </trans-unit>
-      <trans-unit id="e9e6c1ea4c16a7bd1b64b53209a8659f">
-        <source>Product with required customization fields cannot be used as a gift.</source>
-        <target>Product with required customization fields cannot be used as a gift.</target>
-        <note>Line: 244</note>
-      </trans-unit>
-      <trans-unit id="fdf5ec6ad9d20c9985038e5d6521159f">
-        <source>The voucher cannot end before it begins.</source>
-        <target>The voucher cannot end before it begins.</target>
-        <note>Line: 249</note>
-      </trans-unit>
-      <trans-unit id="5c7f52b03569889081067d1413b5edbd">
-        <source>The minimum amount cannot be lower than zero.</source>
-        <target>The minimum amount cannot be lower than zero.</target>
-        <note>Line: 252</note>
-      </trans-unit>
-      <trans-unit id="93c331edf337bac96fcbac751a492fe1">
-        <source>Reduction percentage must be between 0% and 100%</source>
-        <target>Reduction percentage must be between 0% and 100%</target>
-        <note>Line: 255</note>
-      </trans-unit>
-      <trans-unit id="a3ad09e600d30676504b705e29be782d">
-        <source>Reduction amount cannot be lower than zero.</source>
-        <target>Reduction amount cannot be lower than zero.</target>
-        <note>Line: 258</note>
-      </trans-unit>
-      <trans-unit id="7f5ef3543345170784cc954cffa697d6">
-        <source>This cart rule code is already used (conflict with cart rule %rulename%)</source>
-        <target>This cart rule code is already used (conflict with cart rule %rulename%)</target>
-        <note>Line: 261</note>
-      </trans-unit>
-      <trans-unit id="bbc6a34f03def2d56def8e7685a3fcae">
-        <source>An action is required for this cart rule.</source>
-        <target>An action is required for this cart rule.</target>
-        <note>Line: 264</note>
-      </trans-unit>
-      <trans-unit id="b4be93136a337fcef40c9eb87004c9d0">
-        <source>No product has been found.</source>
-        <target>No product has been found.</target>
-        <note>Line: 677</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_linklist/src/Controller/Admin/Improve/Design/LinkBlockController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="15d30198621ad33274fc94b08cff5009">
-        <source>Could not delete #%i</source>
-        <target>Could not delete #%i</target>
-        <note>Line: 136</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_linklist/src/Form/LinkBlockFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="3535b3934d0e2d6e7759649d78c7da58">
-        <source>Missing id_hook</source>
-        <target>Missing id_hook</target>
-        <note>Line: 240</note>
-      </trans-unit>
-      <trans-unit id="36ccadce9e530e36cf265145bdba5c1c">
-        <source>Missing block_name</source>
-        <target>Missing block_name</target>
-        <note>Line: 248</note>
-      </trans-unit>
-      <trans-unit id="12f4f6b7d1d17838950e3c6107144f2a">
-        <source>Missing block_name value for language %s</source>
-        <target>Missing block_name value for language %s</target>
-        <note>Line: 256</note>
-      </trans-unit>
-      <trans-unit id="504ca7ea96dde692360e88a97e98fc91">
-        <source>Missing %s value in custom[%s] for language %s</source>
-        <target>Missing %s value in custom[%s] for language %s</target>
-        <note>Line: 278</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Adapter/Order/Delivery/SlipPdfConfiguration.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="afe2d0e6d792e09a2d3e6fb85a37af94">
-        <source>Invalid 'to' date</source>
-        <target>Invalid 'to' date</target>
-        <note>Line: 56</note>
-      </trans-unit>
-      <trans-unit id="32d3b531ad19ea651820651ca9d40d05">
-        <source>Invalid 'from' date</source>
-        <target>Invalid 'from' date</target>
-        <note>Line: 64</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Core/Form/ChoiceProvider/CategoryDeleteModeChoiceProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="4d5ec94fee2d67b1f49517f355425fb0">
-        <source>If they have no other category, I want to associate them with the parent category.</source>
-        <target>If they have no other category, I want to associate them with the parent category.</target>
-        <note>Line: 57</note>
-      </trans-unit>
-      <trans-unit id="8743e83ee9ec372f40d4a58160bfc1d2">
-        <source>If they have no other category, I want to associate them with the parent category and turn them offline.</source>
-        <target>If they have no other category, I want to associate them with the parent category and turn them offline.</target>
-        <note>Line: 65</note>
-      </trans-unit>
       <trans-unit id="fe8da1bad19e3e82de7c76c99c53cb27">
         <source>(Recommended)</source>
         <target>(Recommended)</target>
-        <note>Line: 69</note>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/Core/Form/ChoiceProvider/CategoryDeleteModeChoiceProvider.php [Line: 69]</note>
       </trans-unit>
-      <trans-unit id="63cfe520c7e96406010bc883272667f5">
-        <source>If they have no other category, I want to delete them as well.</source>
-        <target>If they have no other category, I want to delete them as well.</target>
-        <note>Line: 73</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Core/Grid/Data/Factory/AttachmentGridDataFactoryDecorator.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="14c18063d1497fb156ab73c0d59d354b">
-        <source>This file is associated with the following products. Are you sure you want to delete it?</source>
-        <target>This file is associated with the following products. Are you sure you want to delete it?</target>
-        <note>Line: 120</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="3af7787bf8822cfd0cbeab09c9176a54">
-        <source>Remember to properly edit all information after duplicating - including SEO information and friendly URL.</source>
-        <target>Remember to properly edit all information after duplicating - including SEO information and friendly URL.</target>
-        <note>Line: 480</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/AttachmentController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="d647666a6c4cef994b4fa1a540ba4481">
-        <source>Upload error. Please check your server configurations for the maximum upload size allowed.</source>
-        <target>Upload error. Please check your server configurations for the maximum upload size allowed.</target>
-        <note>Line: 330</note>
-      </trans-unit>
-      <trans-unit id="f19434225ce7712f091bcfc109413732">
-        <source>An attachment name is required.</source>
-        <target>An attachment name is required.</target>
-        <note>Line: 335</note>
-      </trans-unit>
-      <trans-unit id="da792c9eb1652c5939671ae14592b264">
-        <source>Invalid description for %s language.</source>
-        <target>Invalid description for %s language.</target>
-        <note>Line: 350</note>
-      </trans-unit>
-      <trans-unit id="34a22d134d958abd17afd6e6cd8b79e2">
-        <source>This attachment was unable to be loaded into the database.</source>
-        <target>This attachment was unable to be loaded into the database.</target>
-        <note>Line: 373</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/AttributeGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="6d5d591e1fb4538c4d64e05b8a58942e">
-        <source>An error occurred while creating the attribute.</source>
-        <target>An error occurred while creating the attribute.</target>
-        <note>Line: 336</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b50f440e3c9f14988bd0086683e77095">
-        <source>You cannot remove this category because one of your shops uses it as a root category.</source>
-        <target>You cannot remove this category because one of your shops uses it as a root category.</target>
-        <note>Line: 841</note>
-      </trans-unit>
-      <trans-unit id="3d85438a25723cc56bd4aefb9b368bc0">
-        <source>An error occurred while creating the category.</source>
-        <target>An error occurred while creating the category.</target>
-        <note>Line: 846</note>
-      </trans-unit>
-      <trans-unit id="17668cbc24213c8d43211a67139c3939">
-        <source>The root category of a shop cannot be edited.</source>
-        <target>The root category of a shop cannot be edited.</target>
-        <note>Line: 851</note>
-      </trans-unit>
-      <trans-unit id="175ad2b319a95a0b7c580dbc4205fdac">
-        <source>An error occurred while editing the category.</source>
-        <target>An error occurred while editing the category.</target>
-        <note>Line: 856</note>
-      </trans-unit>
-      <trans-unit id="a874ef298164bbd4d00d55901225cd87">
-        <source>An error occurred while uploading the image:</source>
-        <target>An error occurred while uploading the image:</target>
-        <note>Line: 867</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/FeatureController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f568d0f89a82fd70eaec65a461fbcc88">
-        <source><![CDATA[The features are disabled on your store. Go to %sAdvanced Parameters > Performance%s to edit settings.]]></source>
-        <target><![CDATA[The features are disabled on your store. Go to %sAdvanced Parameters > Performance%s to edit settings.]]></target>
-        <note>Line: 352</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/ManufacturerController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1205b99b993cef78d80b0bcbc312f2c3">
-        <source><![CDATA[The display of your brands is disabled on your store. Go to %sShop Parameters > General%s to edit settings.]]></source>
-        <target><![CDATA[The display of your brands is disabled on your store. Go to %sShop Parameters > General%s to edit settings.]]></target>
-        <note>Line: 798</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/CombinationController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="9edb260e4183e5f1fa35c1702f0cffa1">
-        <source>Error for combination %combination_id%: %error_message%</source>
-        <target>Error for combination %combination_id%: %error_message%</target>
-        <note>Line: 509</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b49b6a333fc4422d8fbfad546c47b97c">
-        <source>Error for product %product_id%: %error_message%</source>
-        <target>Error for product %product_id%: %error_message%</target>
-        <note>Line: 1361</note>
-      </trans-unit>
-      <trans-unit id="ee5c982526f2e7b8e72b282dc590aafd">
-        <source>When redirecting towards a product you must select a target product.</source>
-        <target>When redirecting towards a product you must select a target product.</target>
-        <note>Line: 1404</note>
-      </trans-unit>
-      <trans-unit id="323970e84c7dc4bc7432a513f09959b6">
-        <source>To put this product online, please enter a name.</source>
-        <target>To put this product online, please enter a name.</target>
-        <note>Line: 1409</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/SpecificPriceController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="c24ed8eb6e592f766cd1d31ae49ed5b1">
         <source>A specific price already exists for these parameters.</source>
         <target>A specific price already exists for these parameters.</target>
-        <note>Line: 179</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/SupplierController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="60df675f17670057ec657783db03d35e">
-        <source>Unable to resize one or more of your pictures.</source>
-        <target>Unable to resize one or more of your pictures.</target>
-        <note>Line: 521</note>
-      </trans-unit>
-      <trans-unit id="925c714b657d85c49a9718ef792fcb95">
-        <source>It is not possible to delete a supplier if there are pending supplier orders.</source>
-        <target>It is not possible to delete a supplier if there are pending supplier orders.</target>
-        <note>Line: 495</note>
-      </trans-unit>
-      <trans-unit id="555740fcf7bb2fb267bc711c4919edcb">
-        <source><![CDATA[The display of your suppliers is disabled on your store. Go to %sShop Parameters > General%s to edit settings.]]></source>
-        <target><![CDATA[The display of your suppliers is disabled on your store. Go to %sShop Parameters > General%s to edit settings.]]></target>
-        <note>Line: 553</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Order/CartController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="891d308560a0cca2452fd2f482dded8c">
-        <source><![CDATA[Product customization could not be found. Go to Catalog > Products to customize the product.]]></source>
-        <target><![CDATA[Product customization could not be found. Go to Catalog > Products to customize the product.]]></target>
-        <note>Line: 759</note>
-      </trans-unit>
-      <trans-unit id="b164de93448b61c61dd1c0f68c2c5884">
-        <source>An order has already been placed with this cart.</source>
-        <target>An order has already been placed with this cart.</target>
-        <note>Line: 805</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="2cb44aa56605e05e0b912131875edcb7">
-        <source>There are not enough products in stock.</source>
-        <target>There are not enough products in stock.</target>
-        <note>Line: 1919</note>
-      </trans-unit>
-      <trans-unit id="4fce600d4fc0429af2f5bc5861eefb3e">
-        <source>Selected products were successfully canceled.</source>
-        <target>Selected products were successfully canceled.</target>
-        <note>Line: 1620</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/FooterType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="82e2cb8b020d1a97624214f6b5135ee1">
-        <source>Permanently delete this product?</source>
-        <target>Permanently delete this product?</target>
-        <note>Line: 156</note>
-      </trans-unit>
-      <trans-unit id="99d897ff771961295cfaaccb411f00a6">
-        <source>Duplicate product?</source>
-        <target>Duplicate product?</target>
-        <note>Line: 171</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/HeaderType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f2f4d2bf15f28a6f3543068bdf957864">
-        <source>Change the product type</source>
-        <target>Change the product type</target>
-        <note>Line: 122</note>
-      </trans-unit>
-      <trans-unit id="2b260d6a8a4b747672d790f18c2ab780">
-        <source>Are you sure you want to change the product type?</source>
-        <target>Are you sure you want to change the product type?</target>
-        <note>Line: 123</note>
-      </trans-unit>
-      <trans-unit id="da531a2761eef5012cadd0a2e31acab6">
-        <source>Change product type</source>
-        <target>Change product type</target>
-        <note>Line: 124</note>
-      </trans-unit>
-      <trans-unit id="178b6141eb15b94fb25e5940625ecd01">
-        <source>Changing the product type will immediately save the product and refresh the page.</source>
-        <target>Changing the product type will immediately save the product and refresh the page.</target>
-        <note>Line: 126</note>
-      </trans-unit>
-      <trans-unit id="d125a0ad5887eb2575a57c2149a12c1d">
-        <source>This will delete all combinations.</source>
-        <target>This will delete all combinations.</target>
-        <note>Line: 127</note>
-      </trans-unit>
-      <trans-unit id="6b7844c384e54ed301c7f3f6b4aac389">
-        <source>This will delete the list of products in this pack.</source>
-        <target>This will delete the list of products in this pack.</target>
-        <note>Line: 128</note>
-      </trans-unit>
-      <trans-unit id="4882c6b9d11d6aacd193fa21547fd727">
-        <source>This will delete the associated virtual file.</source>
-        <target>This will delete the associated virtual file.</target>
-        <note>Line: 129</note>
-      </trans-unit>
-      <trans-unit id="86cd56eb2d6168a7f7786095aa23987b">
-        <source>This will reset the ecotax value and may impact your retail price (tax incl.).</source>
-        <target>This will reset the ecotax value and may impact your retail price (tax incl.).</target>
-        <note>Line: 130</note>
-      </trans-unit>
-      <trans-unit id="6b66b205d18d82d5837d66eeb5dc4bf8">
-        <source>This will reset the stock of this product.</source>
-        <target>This will reset the stock of this product.</target>
-        <note>Line: 131</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Image/ImageDropzoneType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="9a906b85c45f31efeb25eef56aad240b">
-        <source>Image replaced</source>
-        <target>Image replaced</target>
-        <note>Line: 106</note>
-      </trans-unit>
-      <trans-unit id="11e1b8fba896a3b5618a554605412938">
-        <source>Are you sure you want to delete the selected image?|Are you sure you want to delete the {filesNb} selected images?</source>
-        <target>Are you sure you want to delete the selected image?|Are you sure you want to delete the {filesNb} selected images?</target>
-        <note>Line: 131</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Options/ProductAttachmentsType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="4ee37b458043e7739815acb9571d5e73">
-        <source>The file was successfully added.</source>
-        <target>The file was successfully added.</target>
-        <note>Line: 82</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="c292d80ff15bf0d38f63af320f9f7839">
-        <source>Friendly URLs are currently disabled.</source>
-        <target>Friendly URLs are currently disabled.</target>
-        <note>Line: 233</note>
-      </trans-unit>
-      <trans-unit id="517937df76770fb3c4f9e6100ed69ce9">
-        <source>To enable it, go to [1]SEO and URLs[/1]</source>
-        <target>To enable it, go to [1]SEO and URLs[/1]</target>
-        <note>Line: 234</note>
-      </trans-unit>
-      <trans-unit id="d7e9bf98e857f83943b3b75fce04cea9">
-        <source>The "Force update of friendly URL" option is currently enabled.</source>
-        <target>The "Force update of friendly URL" option is currently enabled.</target>
-        <note>Line: 243</note>
-      </trans-unit>
-      <trans-unit id="87ffb4b96479e24281064ad98ddfd16f">
-        <source>To disable it, go to [1]Product Settings[/1]</source>
-        <target>To disable it, go to [1]Product Settings[/1]</target>
-        <note>Line: 244</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Validator/Constraints/TinyMceMaxLengthValidator.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="cf456ee90912d9e25795925d067f8952">
-        <source>This value is too long. It should have %limit% characters or less.</source>
-        <target>This value is too long. It should have %limit% characters or less.</target>
-        <note>Line: 92</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Categories/Blocks/delete_block.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="4f11b2e8a220dab912231e74a3dfea5d">
-        <source>What do you want to do with the products associated with this category?</source>
-        <target>What do you want to do with the products associated with this category?</target>
-        <note>Line: 31</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Categories/Blocks/delete_categories_modal.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="332a0777d848606eb5f63149d0bb1105">
-        <source>Note that if they have another category, your products will logically remain associated with it.</source>
-        <target>Note that if they have another category, your products will logically remain associated with it.</target>
-        <note>Line: 45</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Features/Blocks/disabled_feature_warning.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="8be9030c26dd464a739bd131dff74336">
-        <source>This feature has been disabled. You can activate it here: %url%.</source>
-        <target>This feature has been disabled. You can activate it here: %url%.</target>
-        <note>Line: 31</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Manufacturer/Blocks/View/addresses.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="4c473ee3c2de78ecaf8a5f6ce24d9b24">
-        <source>No address has been found for this brand.</source>
-        <target>No address has been found for this brand.</target>
-        <note>Line: 77</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Manufacturer/Blocks/View/products.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="11ca7e16510805ca6ea97678351aa5ab">
-        <source>No products has been found for this brand.</source>
-        <target>No products has been found for this brand.</target>
-        <note>Line: 121</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Combination/not_found.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a8b62b581b171eef3a4d73f53a1a1804">
-        <source>This combination doesn't exist anymore</source>
-        <target>This combination doesn't exist anymore</target>
-        <note>Line: 36</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Combination/paginated_list_header.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="99bf2d0d54c3c3d988036435b5c85a51">
-        <source>Are you sure you want to delete selected combinations from store "%store_name%"?</source>
-        <target>Are you sure you want to delete selected combinations from store "%store_name%"?</target>
-        <note>Line: 50</note>
-      </trans-unit>
-      <trans-unit id="0a93bc6a803478fc23cdef1d0947bf76">
-        <source>Are you sure you want to delete selected combinations?</source>
-        <target>Are you sure you want to delete selected combinations?</target>
-        <note>Line: 53</note>
-      </trans-unit>
-      <trans-unit id="b7c81f9722737da40c428373101fe01c">
-        <source>Are you sure you want to delete selected combinations from all stores?</source>
-        <target>Are you sure you want to delete selected combinations from all stores?</target>
-        <note>Line: 81</note>
-      </trans-unit>
-      <trans-unit id="d077aab0da809b9037b3e3974da6bad3">
-        <source>Discard changes?</source>
-        <target>Discard changes?</target>
-        <note>Line: 121</note>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/SpecificPriceController.php [Line: 179]</note>
       </trans-unit>
       <trans-unit id="757830b27c4880fd8a0e6f35891eefe5">
         <source>All unsaved modifications made on the combination [1]{combinationName}[/1] will be lost.</source>
         <target>All unsaved modifications made on the combination [1]{combinationName}[/1] will be lost.</target>
-        <note>Line: 122</note>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Combination/paginated_list_header.html.twig [Line: 122]</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b385b71f1d14c0afa6d7ca6cb18927b3">
-        <source>There is no attachment yet.</source>
-        <target>There is no attachment yet.</target>
-        <note>Line: 612</note>
+      <trans-unit id="bbc6a34f03def2d56def8e7685a3fcae">
+        <source>An action is required for this cart rule.</source>
+        <target>An action is required for this cart rule.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/controllers/admin/AdminCartRulesController.php [Line: 264]</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Translation/Api/StockApi.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
+      <trans-unit id="f19434225ce7712f091bcfc109413732">
+        <source>An attachment name is required.</source>
+        <target>An attachment name is required.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/Sell/Catalog/AttachmentController.php [Line: 335]</note>
+      </trans-unit>
+      <trans-unit id="6d5d591e1fb4538c4d64e05b8a58942e">
+        <source>An error occurred while creating the attribute.</source>
+        <target>An error occurred while creating the attribute.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/Sell/Catalog/AttributeGroupController.php [Line: 336]</note>
+      </trans-unit>
+      <trans-unit id="3d85438a25723cc56bd4aefb9b368bc0">
+        <source>An error occurred while creating the category.</source>
+        <target>An error occurred while creating the category.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php [Line: 846]</note>
+      </trans-unit>
+      <trans-unit id="175ad2b319a95a0b7c580dbc4205fdac">
+        <source>An error occurred while editing the category.</source>
+        <target>An error occurred while editing the category.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php [Line: 856]</note>
+      </trans-unit>
+      <trans-unit id="a874ef298164bbd4d00d55901225cd87">
+        <source>An error occurred while uploading the image:</source>
+        <target>An error occurred while uploading the image:</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php [Line: 867]</note>
+      </trans-unit>
+      <trans-unit id="b164de93448b61c61dd1c0f68c2c5884">
+        <source>An order has already been placed with this cart.</source>
+        <target>An order has already been placed with this cart.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/Sell/Order/CartController.php [Line: 805]</note>
+      </trans-unit>
+      <trans-unit id="2b260d6a8a4b747672d790f18c2ab780">
+        <source>Are you sure you want to change the product type?</source>
+        <target>Are you sure you want to change the product type?</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Form/Admin/Sell/Product/HeaderType.php [Line: 123]</note>
+      </trans-unit>
+      <trans-unit id="b7c81f9722737da40c428373101fe01c">
+        <source>Are you sure you want to delete selected combinations from all stores?</source>
+        <target>Are you sure you want to delete selected combinations from all stores?</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Combination/paginated_list_header.html.twig [Line: 81]</note>
+      </trans-unit>
+      <trans-unit id="99bf2d0d54c3c3d988036435b5c85a51">
+        <source>Are you sure you want to delete selected combinations from store "%store_name%"?</source>
+        <target>Are you sure you want to delete selected combinations from store "%store_name%"?</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Combination/paginated_list_header.html.twig [Line: 50]</note>
+      </trans-unit>
+      <trans-unit id="0a93bc6a803478fc23cdef1d0947bf76">
+        <source>Are you sure you want to delete selected combinations?</source>
+        <target>Are you sure you want to delete selected combinations?</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Combination/paginated_list_header.html.twig [Line: 53]</note>
+      </trans-unit>
+      <trans-unit id="11e1b8fba896a3b5618a554605412938">
+        <source>Are you sure you want to delete the selected image?|Are you sure you want to delete the {filesNb} selected images?</source>
+        <target>Are you sure you want to delete the selected image?|Are you sure you want to delete the {filesNb} selected images?</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Form/Admin/Sell/Product/Image/ImageDropzoneType.php [Line: 131]</note>
+      </trans-unit>
+      <trans-unit id="da531a2761eef5012cadd0a2e31acab6">
+        <source>Change product type</source>
+        <target>Change product type</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Form/Admin/Sell/Product/HeaderType.php [Line: 124]</note>
+      </trans-unit>
+      <trans-unit id="f2f4d2bf15f28a6f3543068bdf957864">
+        <source>Change the product type</source>
+        <target>Change the product type</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Form/Admin/Sell/Product/HeaderType.php [Line: 122]</note>
+      </trans-unit>
+      <trans-unit id="178b6141eb15b94fb25e5940625ecd01">
+        <source>Changing the product type will immediately save the product and refresh the page.</source>
+        <target>Changing the product type will immediately save the product and refresh the page.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Form/Admin/Sell/Product/HeaderType.php [Line: 126]</note>
+      </trans-unit>
+      <trans-unit id="15d30198621ad33274fc94b08cff5009">
+        <source>Could not delete #%i</source>
+        <target>Could not delete #%i</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_linklist/src/Controller/Admin/Improve/Design/LinkBlockController.php [Line: 136]</note>
+      </trans-unit>
+      <trans-unit id="d077aab0da809b9037b3e3974da6bad3">
+        <source>Discard changes?</source>
+        <target>Discard changes?</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Combination/paginated_list_header.html.twig [Line: 121]</note>
+      </trans-unit>
+      <trans-unit id="99d897ff771961295cfaaccb411f00a6">
+        <source>Duplicate product?</source>
+        <target>Duplicate product?</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Form/Admin/Sell/Product/FooterType.php [Line: 171]</note>
+      </trans-unit>
+      <trans-unit id="9edb260e4183e5f1fa35c1702f0cffa1">
+        <source>Error for combination %combination_id%: %error_message%</source>
+        <target>Error for combination %combination_id%: %error_message%</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/CombinationController.php [Line: 509]</note>
+      </trans-unit>
+      <trans-unit id="b49b6a333fc4422d8fbfad546c47b97c">
+        <source>Error for product %product_id%: %error_message%</source>
+        <target>Error for product %product_id%: %error_message%</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1362]</note>
+      </trans-unit>
+      <trans-unit id="8a23b9ee3a4502a0de3fc32c5ba7aa65">
+        <source>Failed to copy the file.</source>
+        <target>Failed to copy the file.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/Sell/Catalog/AttachmentController.php [Line: 363]</note>
+      </trans-unit>
+      <trans-unit id="c292d80ff15bf0d38f63af320f9f7839">
+        <source>Friendly URLs are currently disabled.</source>
+        <target>Friendly URLs are currently disabled.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 233]</note>
+      </trans-unit>
+      <trans-unit id="8743e83ee9ec372f40d4a58160bfc1d2">
+        <source>If they have no other category, I want to associate them with the parent category and turn them offline.</source>
+        <target>If they have no other category, I want to associate them with the parent category and turn them offline.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/Core/Form/ChoiceProvider/CategoryDeleteModeChoiceProvider.php [Line: 65]</note>
+      </trans-unit>
+      <trans-unit id="4d5ec94fee2d67b1f49517f355425fb0">
+        <source>If they have no other category, I want to associate them with the parent category.</source>
+        <target>If they have no other category, I want to associate them with the parent category.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/Core/Form/ChoiceProvider/CategoryDeleteModeChoiceProvider.php [Line: 57]</note>
+      </trans-unit>
+      <trans-unit id="63cfe520c7e96406010bc883272667f5">
+        <source>If they have no other category, I want to delete them as well.</source>
+        <target>If they have no other category, I want to delete them as well.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/Core/Form/ChoiceProvider/CategoryDeleteModeChoiceProvider.php [Line: 73]</note>
+      </trans-unit>
+      <trans-unit id="9a906b85c45f31efeb25eef56aad240b">
+        <source>Image replaced</source>
+        <target>Image replaced</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Form/Admin/Sell/Product/Image/ImageDropzoneType.php [Line: 106]</note>
+      </trans-unit>
+      <trans-unit id="bc6f653d2d54db1348de50fe0b0192e9">
+        <source>Incorrect Stock Manager class [%s]</source>
+        <target>Incorrect Stock Manager class [%s]</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/classes/stock/StockManagerModule.php [Line: 45]</note>
+      </trans-unit>
+      <trans-unit id="32d3b531ad19ea651820651ca9d40d05">
+        <source>Invalid 'from' date</source>
+        <target>Invalid 'from' date</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/Adapter/Order/Delivery/SlipPdfConfiguration.php [Line: 64]</note>
+      </trans-unit>
+      <trans-unit id="afe2d0e6d792e09a2d3e6fb85a37af94">
+        <source>Invalid 'to' date</source>
+        <target>Invalid 'to' date</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/Adapter/Order/Delivery/SlipPdfConfiguration.php [Line: 56]</note>
+      </trans-unit>
+      <trans-unit id="da792c9eb1652c5939671ae14592b264">
+        <source>Invalid description for %s language.</source>
+        <target>Invalid description for %s language.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/Sell/Catalog/AttachmentController.php [Line: 350]</note>
+      </trans-unit>
+      <trans-unit id="925c714b657d85c49a9718ef792fcb95">
+        <source>It is not possible to delete a supplier if there are pending supplier orders.</source>
+        <target>It is not possible to delete a supplier if there are pending supplier orders.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/Sell/Catalog/SupplierController.php [Line: 495]</note>
+      </trans-unit>
+      <trans-unit id="504ca7ea96dde692360e88a97e98fc91">
+        <source>Missing %s value in custom[%s] for language %s</source>
+        <target>Missing %s value in custom[%s] for language %s</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_linklist/src/Form/LinkBlockFormDataProvider.php [Line: 278]</note>
+      </trans-unit>
+      <trans-unit id="36ccadce9e530e36cf265145bdba5c1c">
+        <source>Missing block_name</source>
+        <target>Missing block_name</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_linklist/src/Form/LinkBlockFormDataProvider.php [Line: 248]</note>
+      </trans-unit>
+      <trans-unit id="12f4f6b7d1d17838950e3c6107144f2a">
+        <source>Missing block_name value for language %s</source>
+        <target>Missing block_name value for language %s</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_linklist/src/Form/LinkBlockFormDataProvider.php [Line: 256]</note>
+      </trans-unit>
+      <trans-unit id="3535b3934d0e2d6e7759649d78c7da58">
+        <source>Missing id_hook</source>
+        <target>Missing id_hook</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/ps_linklist/src/Form/LinkBlockFormDataProvider.php [Line: 240]</note>
+      </trans-unit>
+      <trans-unit id="4c473ee3c2de78ecaf8a5f6ce24d9b24">
+        <source>No address has been found for this brand.</source>
+        <target>No address has been found for this brand.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Manufacturer/Blocks/View/addresses.html.twig [Line: 77]</note>
+      </trans-unit>
+      <trans-unit id="b4be93136a337fcef40c9eb87004c9d0">
+        <source>No product has been found.</source>
+        <target>No product has been found.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/controllers/admin/AdminCartRulesController.php [Line: 677]</note>
+      </trans-unit>
       <trans-unit id="5566045e38ed5e7bb072b8d55f3ceb2f">
         <source>No product matches your search. Try changing search terms.</source>
         <target>No product matches your search. Try changing search terms.</target>
-        <note>Line: 64</note>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Translation/Api/StockApi.php [Line: 64]</note>
+      </trans-unit>
+      <trans-unit id="11ca7e16510805ca6ea97678351aa5ab">
+        <source>No products has been found for this brand.</source>
+        <target>No products has been found for this brand.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Manufacturer/Blocks/View/products.html.twig [Line: 121]</note>
+      </trans-unit>
+      <trans-unit id="332a0777d848606eb5f63149d0bb1105">
+        <source>Note that if they have another category, your products will logically remain associated with it.</source>
+        <target>Note that if they have another category, your products will logically remain associated with it.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Categories/Blocks/delete_categories_modal.html.twig [Line: 45]</note>
+      </trans-unit>
+      <trans-unit id="82e2cb8b020d1a97624214f6b5135ee1">
+        <source>Permanently delete this product?</source>
+        <target>Permanently delete this product?</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Form/Admin/Sell/Product/FooterType.php [Line: 156]</note>
+      </trans-unit>
+      <trans-unit id="891d308560a0cca2452fd2f482dded8c">
+        <source><![CDATA[Product customization could not be found. Go to Catalog > Products to customize the product.]]></source>
+        <target><![CDATA[Product customization could not be found. Go to Catalog > Products to customize the product.]]></target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/Sell/Order/CartController.php [Line: 759]</note>
+      </trans-unit>
+      <trans-unit id="e9e6c1ea4c16a7bd1b64b53209a8659f">
+        <source>Product with required customization fields cannot be used as a gift.</source>
+        <target>Product with required customization fields cannot be used as a gift.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/controllers/admin/AdminCartRulesController.php [Line: 244]</note>
+      </trans-unit>
+      <trans-unit id="a3ad09e600d30676504b705e29be782d">
+        <source>Reduction amount cannot be lower than zero.</source>
+        <target>Reduction amount cannot be lower than zero.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/controllers/admin/AdminCartRulesController.php [Line: 258]</note>
+      </trans-unit>
+      <trans-unit id="93c331edf337bac96fcbac751a492fe1">
+        <source>Reduction percentage must be between 0% and 100%</source>
+        <target>Reduction percentage must be between 0% and 100%</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/controllers/admin/AdminCartRulesController.php [Line: 255]</note>
+      </trans-unit>
+      <trans-unit id="3af7787bf8822cfd0cbeab09c9176a54">
+        <source>Remember to properly edit all information after duplicating - including SEO information and friendly URL.</source>
+        <target>Remember to properly edit all information after duplicating - including SEO information and friendly URL.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 480]</note>
+      </trans-unit>
+      <trans-unit id="4fce600d4fc0429af2f5bc5861eefb3e">
+        <source>Selected products were successfully canceled.</source>
+        <target>Selected products were successfully canceled.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 1620]</note>
+      </trans-unit>
+      <trans-unit id="65d09c7dfa652d616875eddb50c18d2b">
+        <source>Stock Manager class not found [%s]</source>
+        <target>Stock Manager class not found [%s]</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/classes/stock/StockManagerModule.php [Line: 51]</note>
       </trans-unit>
       <trans-unit id="96d17a8fdea016168a9d506b0da23c07">
         <source>Stock successfully updated</source>
         <target>Stock successfully updated</target>
-        <note>Line: 66</note>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Translation/Api/StockApi.php [Line: 66]</note>
+      </trans-unit>
+      <trans-unit id="95ac8bc6255b6740202d83865577f942">
+        <source>The "%s" restriction is checked, but no item is selected.</source>
+        <target>The "%s" restriction is checked, but no item is selected.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/controllers/admin/AdminCartRulesController.php [Line: 228]</note>
+      </trans-unit>
+      <trans-unit id="d7e9bf98e857f83943b3b75fce04cea9">
+        <source>The "Force update of friendly URL" option is currently enabled.</source>
+        <target>The "Force update of friendly URL" option is currently enabled.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 243]</note>
+      </trans-unit>
+      <trans-unit id="fc2c8663d58c42bc29edd45a79b4358c">
+        <source>The discount was successfully generated.</source>
+        <target>The discount was successfully generated.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Twig/Component/Legacy/LegacySessionAlert.php [Line: 86]</note>
+      </trans-unit>
+      <trans-unit id="1205b99b993cef78d80b0bcbc312f2c3">
+        <source><![CDATA[The display of your brands is disabled on your store. Go to %sShop Parameters > General%s to edit settings.]]></source>
+        <target><![CDATA[The display of your brands is disabled on your store. Go to %sShop Parameters > General%s to edit settings.]]></target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/Sell/Catalog/ManufacturerController.php [Line: 798]</note>
+      </trans-unit>
+      <trans-unit id="555740fcf7bb2fb267bc711c4919edcb">
+        <source><![CDATA[The display of your suppliers is disabled on your store. Go to %sShop Parameters > General%s to edit settings.]]></source>
+        <target><![CDATA[The display of your suppliers is disabled on your store. Go to %sShop Parameters > General%s to edit settings.]]></target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/Sell/Catalog/SupplierController.php [Line: 553]</note>
+      </trans-unit>
+      <trans-unit id="f568d0f89a82fd70eaec65a461fbcc88">
+        <source><![CDATA[The features are disabled on your store. Go to %sAdvanced Parameters > Performance%s to edit settings.]]></source>
+        <target><![CDATA[The features are disabled on your store. Go to %sAdvanced Parameters > Performance%s to edit settings.]]></target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/Sell/Catalog/FeatureController.php [Line: 352]</note>
+      </trans-unit>
+      <trans-unit id="4ee37b458043e7739815acb9571d5e73">
+        <source>The file was successfully added.</source>
+        <target>The file was successfully added.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Form/Admin/Sell/Product/Options/ProductAttachmentsType.php [Line: 82]</note>
+      </trans-unit>
+      <trans-unit id="5c7f52b03569889081067d1413b5edbd">
+        <source>The minimum amount cannot be lower than zero.</source>
+        <target>The minimum amount cannot be lower than zero.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/controllers/admin/AdminCartRulesController.php [Line: 252]</note>
+      </trans-unit>
+      <trans-unit id="17668cbc24213c8d43211a67139c3939">
+        <source>The root category of a shop cannot be edited.</source>
+        <target>The root category of a shop cannot be edited.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php [Line: 851]</note>
+      </trans-unit>
+      <trans-unit id="801982917ddd7afd63f9e103ba4699bd">
+        <source>The root category of the shop %shop% is not associated with the current shop. You can't access this page. Please change the root category of the shop.</source>
+        <target>The root category of the shop %shop% is not associated with the current shop. You can't access this page. Please change the root category of the shop.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Twig/Component/Legacy/LegacySessionAlert.php [Line: 101]</note>
+      </trans-unit>
+      <trans-unit id="fdf5ec6ad9d20c9985038e5d6521159f">
+        <source>The voucher cannot end before it begins.</source>
+        <target>The voucher cannot end before it begins.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/controllers/admin/AdminCartRulesController.php [Line: 249]</note>
+      </trans-unit>
+      <trans-unit id="2cb44aa56605e05e0b912131875edcb7">
+        <source>There are not enough products in stock.</source>
+        <target>There are not enough products in stock.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 1919]</note>
+      </trans-unit>
+      <trans-unit id="b385b71f1d14c0afa6d7ca6cb18927b3">
+        <source>There is no attachment yet.</source>
+        <target>There is no attachment yet.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig [Line: 612]</note>
+      </trans-unit>
+      <trans-unit id="34a22d134d958abd17afd6e6cd8b79e2">
+        <source>This attachment was unable to be loaded into the database.</source>
+        <target>This attachment was unable to be loaded into the database.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/Sell/Catalog/AttachmentController.php [Line: 373]</note>
+      </trans-unit>
+      <trans-unit id="7f5ef3543345170784cc954cffa697d6">
+        <source>This cart rule code is already used (conflict with cart rule %rulename%)</source>
+        <target>This cart rule code is already used (conflict with cart rule %rulename%)</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/controllers/admin/AdminCartRulesController.php [Line: 261]</note>
+      </trans-unit>
+      <trans-unit id="a8b62b581b171eef3a4d73f53a1a1804">
+        <source>This combination doesn't exist anymore</source>
+        <target>This combination doesn't exist anymore</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Combination/not_found.html.twig [Line: 36]</note>
+      </trans-unit>
+      <trans-unit id="8be9030c26dd464a739bd131dff74336">
+        <source>This feature has been disabled. You can activate it here: %url%.</source>
+        <target>This feature has been disabled. You can activate it here: %url%.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Features/Blocks/disabled_feature_warning.html.twig [Line: 31]</note>
+      </trans-unit>
+      <trans-unit id="14c18063d1497fb156ab73c0d59d354b">
+        <source>This file is associated with the following products. Are you sure you want to delete it?</source>
+        <target>This file is associated with the following products. Are you sure you want to delete it?</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/Core/Grid/Data/Factory/AttachmentGridDataFactoryDecorator.php [Line: 120]</note>
+      </trans-unit>
+      <trans-unit id="cf456ee90912d9e25795925d067f8952">
+        <source>This value is too long. It should have %limit% characters or less.</source>
+        <target>This value is too long. It should have %limit% characters or less.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Form/Validator/Constraints/TinyMceMaxLengthValidator.php [Line: 92]</note>
+      </trans-unit>
+      <trans-unit id="76a0433a69a82abfba836ca72dbef13f">
+        <source>This will copy the images too. If you wish to proceed, click "%yes_label%". If not, click "%no_label%".</source>
+        <target>This will copy the images too. If you wish to proceed, click "%yes_label%". If not, click "%no_label%".</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/classes/helper/HelperList.php [Line: 475]</note>
+      </trans-unit>
+      <trans-unit id="d125a0ad5887eb2575a57c2149a12c1d">
+        <source>This will delete all combinations.</source>
+        <target>This will delete all combinations.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Form/Admin/Sell/Product/HeaderType.php [Line: 127]</note>
+      </trans-unit>
+      <trans-unit id="4882c6b9d11d6aacd193fa21547fd727">
+        <source>This will delete the associated virtual file.</source>
+        <target>This will delete the associated virtual file.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Form/Admin/Sell/Product/HeaderType.php [Line: 129]</note>
+      </trans-unit>
+      <trans-unit id="6b7844c384e54ed301c7f3f6b4aac389">
+        <source>This will delete the list of products in this pack.</source>
+        <target>This will delete the list of products in this pack.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Form/Admin/Sell/Product/HeaderType.php [Line: 128]</note>
+      </trans-unit>
+      <trans-unit id="86cd56eb2d6168a7f7786095aa23987b">
+        <source>This will reset the ecotax value and may impact your retail price (tax incl.).</source>
+        <target>This will reset the ecotax value and may impact your retail price (tax incl.).</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Form/Admin/Sell/Product/HeaderType.php [Line: 130]</note>
+      </trans-unit>
+      <trans-unit id="6b66b205d18d82d5837d66eeb5dc4bf8">
+        <source>This will reset the stock of this product.</source>
+        <target>This will reset the stock of this product.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Form/Admin/Sell/Product/HeaderType.php [Line: 131]</note>
+      </trans-unit>
+      <trans-unit id="87ffb4b96479e24281064ad98ddfd16f">
+        <source>To disable it, go to [1]Product Settings[/1]</source>
+        <target>To disable it, go to [1]Product Settings[/1]</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 244]</note>
+      </trans-unit>
+      <trans-unit id="517937df76770fb3c4f9e6100ed69ce9">
+        <source>To enable it, go to [1]SEO and URLs[/1]</source>
+        <target>To enable it, go to [1]SEO and URLs[/1]</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 234]</note>
+      </trans-unit>
+      <trans-unit id="323970e84c7dc4bc7432a513f09959b6">
+        <source>To put this product online, please enter a name.</source>
+        <target>To put this product online, please enter a name.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1410]</note>
+      </trans-unit>
+      <trans-unit id="60df675f17670057ec657783db03d35e">
+        <source>Unable to resize one or more of your pictures.</source>
+        <target>Unable to resize one or more of your pictures.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/Sell/Catalog/SupplierController.php [Line: 521]</note>
+      </trans-unit>
+      <trans-unit id="d647666a6c4cef994b4fa1a540ba4481">
+        <source>Upload error. Please check your server configurations for the maximum upload size allowed.</source>
+        <target>Upload error. Please check your server configurations for the maximum upload size allowed.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/Sell/Catalog/AttachmentController.php [Line: 330]</note>
+      </trans-unit>
+      <trans-unit id="4f11b2e8a220dab912231e74a3dfea5d">
+        <source>What do you want to do with the products associated with this category?</source>
+        <target>What do you want to do with the products associated with this category?</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Categories/Blocks/delete_categories_modal.html.twig [Line: 28]</note>
+      </trans-unit>
+      <trans-unit id="ee5c982526f2e7b8e72b282dc590aafd">
+        <source>When redirecting towards a product you must select a target product.</source>
+        <target>When redirecting towards a product you must select a target product.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1405]</note>
+      </trans-unit>
+      <trans-unit id="b50f440e3c9f14988bd0086683e77095">
+        <source>You cannot remove this category because one of your shops uses it as a root category.</source>
+        <target>You cannot remove this category because one of your shops uses it as a root category.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php [Line: 841]</note>
+      </trans-unit>
+      <trans-unit id="30a367ba686890c829937e768d588b8f">
+        <source>You cannot set 0 or a negative position, the minimum is 1.</source>
+        <target>You cannot set 0 or a negative position, the minimum is 1.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/classes/Product.php [Line: 6849]</note>
+      </trans-unit>
+      <trans-unit id="cf99dad7d7306d9ac01ba5a2e2d2c715">
+        <source>You cannot set a position greater than the total number of products in the category, starting at 1.</source>
+        <target>You cannot set a position greater than the total number of products in the category, starting at 1.</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/classes/Product.php [Line: 6870]</note>
+      </trans-unit>
+      <trans-unit id="e602c06958cd934ccc238913f51282aa">
+        <source>You must select some products before</source>
+        <target>You must select some products before</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/admin-dev/themes/default/template/controllers/cart_rules/actions.tpl [Line: 125]</note>
       </trans-unit>
     </body>
   </file>

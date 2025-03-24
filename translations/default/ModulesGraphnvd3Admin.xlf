@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/graphnvd3/graphnvd3.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="Modules.Graphnvd3.Admin.xlf" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="a9f70dff230e6fc8e878043486e6cddf">
-        <source>NVD3 Charts</source>
-        <target>NVD3 Charts</target>
-        <note>Line: 54</note>
-      </trans-unit>
       <trans-unit id="37398dbb8ad78a10d010a81bd15c73d8">
         <source>Enable the NVD3 charting code for your own uses, providing you with ever so useful graphs.</source>
         <target>Enable the NVD3 charting code for your own uses, providing you with ever so useful graphs.</target>
-        <note>Line: 55</note>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/graphnvd3/graphnvd3.php [Line: 55]</note>
+      </trans-unit>
+      <trans-unit id="a9f70dff230e6fc8e878043486e6cddf">
+        <source>NVD3 Charts</source>
+        <target>NVD3 Charts</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/graphnvd3/graphnvd3.php [Line: 54]</note>
       </trans-unit>
     </body>
   </file>

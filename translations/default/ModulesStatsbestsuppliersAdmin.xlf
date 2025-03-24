@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/statsbestsuppliers/statsbestsuppliers.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="Modules.Statsbestsuppliers.Admin.xlf" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="ea067eb37801c5aab1a1c685eb97d601">
-        <source>Total paid</source>
-        <target>Total paid</target>
-        <note>Line: 70</note>
-      </trans-unit>
       <trans-unit id="cc3eb9ba7d0e236f33023a4744d0693a">
         <source>Best suppliers</source>
         <target>Best suppliers</target>
-        <note>Line: 76</note>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/statsbestsuppliers/statsbestsuppliers.php [Line: 76]</note>
       </trans-unit>
       <trans-unit id="2928964d6d9c07c7cd0e1bf70fe63349">
         <source>Enrich your stats: add a list of the best suppliers to your dashboard.</source>
         <target>Enrich your stats: add a list of the best suppliers to your dashboard.</target>
-        <note>Line: 77</note>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/statsbestsuppliers/statsbestsuppliers.php [Line: 77]</note>
+      </trans-unit>
+      <trans-unit id="ea067eb37801c5aab1a1c685eb97d601">
+        <source>Total paid</source>
+        <target>Total paid</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/modules/statsbestsuppliers/statsbestsuppliers.php [Line: 70]</note>
       </trans-unit>
     </body>
   </file>

@@ -1,58 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="src/PrestaShopBundle/EventListener/Admin/EmployeeSessionSubscriber.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="Admin.Login.Feature.xlf" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="bfb30c807cd2ae0ece3a44d2e8cbf74d">
-        <source>You have been logged out for security reasons</source>
-        <target>You have been logged out for security reasons</target>
-        <note>Line: 210</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Login/LoginType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="bffe9a3c9a7e00ba00a11749e022d911">
-        <source>Log in</source>
-        <target>Log in</target>
-        <note>Line: 64</note>
-      </trans-unit>
-      <trans-unit id="77dcc4123443269bb7d3e1e5912439df">
-        <source>Stay logged in</source>
-        <target>Stay logged in</target>
-        <note>Line: 67</note>
+      <trans-unit id="01a569ddc6cf67ddec2a683f0a5f5956">
+        <source>Forgot your password?</source>
+        <target>Forgot your password?</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Form/Admin/Login/RequestPasswordResetType.php [Line: 80]</note>
       </trans-unit>
       <trans-unit id="b05d72142020283dc6812fd3a9bc691c">
         <source>I forgot my password</source>
         <target>I forgot my password</target>
-        <note>Line: 71</note>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Form/Admin/Login/LoginType.php [Line: 71]</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Login/RequestPasswordResetType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="733ae3eecadd5777cea5ce9a32379d7a">
-        <source>Send reset link</source>
-        <target>Send reset link</target>
-        <note>Line: 67</note>
+      <trans-unit id="bffe9a3c9a7e00ba00a11749e022d911">
+        <source>Log in</source>
+        <target>Log in</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Form/Admin/Login/LoginType.php [Line: 64]</note>
       </trans-unit>
-      <trans-unit id="01a569ddc6cf67ddec2a683f0a5f5956">
-        <source>Forgot your password?</source>
-        <target>Forgot your password?</target>
-        <note>Line: 80</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Login/ResetPasswordType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="3b5b0f1e26d98a827ef82af202c2e85b">
         <source>Reset password</source>
         <target>Reset password</target>
-        <note>Line: 94</note>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Form/Admin/Login/ResetPasswordType.php [Line: 94]</note>
       </trans-unit>
       <trans-unit id="32fe59513f5bbdd353b4527cc6af55ce">
         <source>Reset your password</source>
         <target>Reset your password</target>
-        <note>Line: 103</note>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Form/Admin/Login/ResetPasswordType.php [Line: 103]</note>
+      </trans-unit>
+      <trans-unit id="733ae3eecadd5777cea5ce9a32379d7a">
+        <source>Send reset link</source>
+        <target>Send reset link</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Form/Admin/Login/RequestPasswordResetType.php [Line: 67]</note>
+      </trans-unit>
+      <trans-unit id="77dcc4123443269bb7d3e1e5912439df">
+        <source>Stay logged in</source>
+        <target>Stay logged in</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/Form/Admin/Login/LoginType.php [Line: 67]</note>
+      </trans-unit>
+      <trans-unit id="bfb30c807cd2ae0ece3a44d2e8cbf74d">
+        <source>You have been logged out for security reasons</source>
+        <target>You have been logged out for security reasons</target>
+        <note>File: /home/runner/work/TranslationTool/TranslationTool/prestashop/src/PrestaShopBundle/EventListener/Admin/EmployeeSessionSubscriber.php [Line: 221]</note>
       </trans-unit>
     </body>
   </file>
