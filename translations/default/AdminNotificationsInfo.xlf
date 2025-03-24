@@ -19,35 +19,39 @@
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminAttributesGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminCarriersController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="d3b206d196cd6be3a2764c1fb90b200f">
         <source>Delete selected</source>
         <target>Delete selected</target>
-        <note>Line: 80</note>
-      </trans-unit>
-      <trans-unit id="e25f0ecd41211b01c83e5fec41df4fe7">
-        <source>Delete selected items?</source>
-        <target>Delete selected items?</target>
-        <note>Line: 82</note>
+        <note>Line: 56</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminCarriersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminCartRulesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="1412292b09d3cd39f32549afb1f5f102">
         <source>Delete selected item?</source>
         <target>Delete selected item?</target>
-        <note>Line: 688</note>
+        <note>Line: 863</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminQuickAccessesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="3e053943605d9e4bf7dd7588ea19e9d2">
         <source>Forbidden characters:</source>
         <target>Forbidden characters:</target>
-        <note>Line: 364</note>
+        <note>Line: 90</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminSearchConfController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e25f0ecd41211b01c83e5fec41df4fe7">
+        <source>Delete selected items?</source>
+        <target>Delete selected items?</target>
+        <note>Line: 55</note>
       </trans-unit>
     </body>
   </file>
@@ -78,21 +82,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/OrderStateController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Controller/Admin/Improve/International/LanguageController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="233a1ce8ca8efc5c0f45bf2df346812a">
         <source>Note that this page is available in all shops context only, this is why your context has just switched.</source>
         <target>Note that this page is available in all shops context only, this is why your context has just switched.</target>
         <note>Line: 80</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/SearchEnginesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="bcc5aa7d20ec5e8bfa75d7754753e35b">
-        <source>Note that this feature is only available in the "all stores" context. It will be added to all your stores.</source>
-        <target>Note that this feature is only available in the "all stores" context. It will be added to all your stores.</target>
-        <note>Line: 107</note>
       </trans-unit>
     </body>
   </file>
@@ -110,7 +105,7 @@
       <trans-unit id="d522a12a111ad26cc15c16da99cebef6">
         <source>This product is not associated with the store selected in the multistore header, please select another one.</source>
         <target>This product is not associated with the store selected in the multistore header, please select another one.</target>
-        <note>Line: 1525</note>
+        <note>Line: 1526</note>
       </trans-unit>
       <trans-unit id="2c7dae12339ce3e31db32f7b78288369">
         <source>This page is only compatible in a single store context. To access the page, please select a store or [1]disable the multistore feature[/1].</source>
@@ -120,7 +115,16 @@
       <trans-unit id="0269f018a765e0d969747a1871c109a1">
         <source>This page is only compatible in a single-store context. Please select a store in the multistore header.</source>
         <target>This page is only compatible in a single-store context. Please select a store in the multistore header.</target>
-        <note>Line: 1541</note>
+        <note>Line: 1542</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/CustomerService/OrderMessageController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="bcc5aa7d20ec5e8bfa75d7754753e35b">
+        <source>Note that this feature is only available in the "all stores" context. It will be added to all your stores.</source>
+        <target>Note that this feature is only available in the "all stores" context. It will be added to all your stores.</target>
+        <note>Line: 118</note>
       </trans-unit>
     </body>
   </file>
@@ -156,21 +160,21 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Payment/PaymentMethods/payment_methods.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="178a5f69a18bd94dc2bbafbd074be1f2">
-        <source>Note that this page is available in a single shop context only. Switch context to work on it.</source>
-        <target>Note that this page is available in a single shop context only. Switch context to work on it.</target>
-        <note>Line: 49</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Categories/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Features/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="6252c0f2c2ed83b7b06dfca86d4650bb">
         <source>Invalid characters:</source>
         <target>Invalid characters:</target>
-        <note>Line: 170</note>
+        <note>Line: 40</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Stock/overview.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="178a5f69a18bd94dc2bbafbd074be1f2">
+        <source>Note that this page is available in a single shop context only. Switch context to work on it.</source>
+        <target>Note that this page is available in a single shop context only. Switch context to work on it.</target>
+        <note>Line: 37</note>
       </trans-unit>
     </body>
   </file>

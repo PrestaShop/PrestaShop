@@ -119,11 +119,6 @@
         <target>Save then add another value</target>
         <note>Line: 576</note>
       </trans-unit>
-      <trans-unit id="22cbf85c41427960736dc10cfec5faf4">
-        <source>Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").</source>
-        <target>Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").</target>
-        <note>Line: 325</note>
-      </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminCustomerThreadsController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -222,10 +217,14 @@
         <target>Add new feature values</target>
         <note>Line: 272</note>
       </trans-unit>
-      <trans-unit id="7aad0283b11e41230d9d1fc7372c3862">
-        <source>Add new feature value</source>
-        <target>Add new feature value</target>
-        <note>Line: 224</note>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminShopGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="22cbf85c41427960736dc10cfec5faf4">
+        <source>Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").</source>
+        <target>Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").</target>
+        <note>Line: 202</note>
       </trans-unit>
     </body>
   </file>
@@ -246,16 +245,6 @@
         <target>Mobile phone number for this supplier.</target>
         <note>Line: 183</note>
       </trans-unit>
-      <trans-unit id="afd7431f75b5801226c9ee37acc1a504">
-        <source>Will appear in the list of suppliers.</source>
-        <target>Will appear in the list of suppliers.</target>
-        <note>Line: 163</note>
-      </trans-unit>
-      <trans-unit id="e865605842d16d0d11c266c731e00507">
-        <source>Upload a supplier logo from your computer.</source>
-        <target>Upload a supplier logo from your computer.</target>
-        <note>Line: 256</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -273,6 +262,15 @@
         <source>Create a new product: CTRL+P</source>
         <target>Create a new product: CTRL+P</target>
         <note>Line: 388</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/FeatureController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7aad0283b11e41230d9d1fc7372c3862">
+        <source>Add new feature value</source>
+        <target>Add new feature value</target>
+        <note>Line: 210</note>
       </trans-unit>
     </body>
   </file>
@@ -296,15 +294,6 @@
         <source><![CDATA[Unless the 'Accented URL' option is enabled (in Shop parameters > Traffic & SEO), only letters, numbers, underscores (_), and hyphens (-) are allowed.]]></source>
         <target><![CDATA[Unless the 'Accented URL' option is enabled (in Shop parameters > Traffic & SEO), only letters, numbers, underscores (_), and hyphens (-) are allowed.]]></target>
         <note>Line: 193</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Product/ProductCombination.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="16a5534d559007de7e8f5b4f17112203">
-        <source>Leave empty to disable</source>
-        <target>Leave empty to disable</target>
-        <note>Line: 200</note>
       </trans-unit>
     </body>
   </file>
@@ -341,17 +330,13 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Product/ProductPrice.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="420f46a170eef476454fa134085a85a2">
-        <source>Per kilo, per litre</source>
-        <target>Per kilo, per litre</target>
-        <note>Line: 237</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Product/ProductQuantity.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="16a5534d559007de7e8f5b4f17112203">
+        <source>Leave empty to disable</source>
+        <target>Leave empty to disable</target>
+        <note>Line: 209</note>
+      </trans-unit>
       <trans-unit id="e63e2ba42470a41ba75e0d7ea35a410f">
         <source>Combine several attributes, e.g.: "Size: all", "Color: red".</source>
         <target>Combine several attributes, e.g.: "Size: all", "Color: red".</target>
@@ -386,21 +371,6 @@
         <target>To have a different description than your product summary in search results pages, write it here.</target>
         <note>Line: 126</note>
       </trans-unit>
-      <trans-unit id="96bacc9c71fc8b7763f985fed3dfc545">
-        <source>To which product should the page redirect?</source>
-        <target>To which product should the page redirect?</target>
-        <note>Line: 186</note>
-      </trans-unit>
-      <trans-unit id="6dd1254fcdbcc7b3fd459617adad9289">
-        <source>To which category should the page redirect?</source>
-        <target>To which category should the page redirect?</target>
-        <note>Line: 188</note>
-      </trans-unit>
-      <trans-unit id="1b9648d6a32243bb7003ae8046dc7c1a">
-        <source>By default, the main category will be used if no category is selected.</source>
-        <target>By default, the main category will be used if no category is selected.</target>
-        <note>Line: 189</note>
-      </trans-unit>
       <trans-unit id="8533d8d42f2c7ef3078797984ea14675">
         <source>This description will appear in search engines. You need a single sentence, shorter than 160 characters (including spaces)</source>
         <target>This description will appear in search engines. You need a single sentence, shorter than 160 characters (including spaces)</target>
@@ -422,15 +392,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Combination/BulkCombinationPriceType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="c4b69e0455faf0784b6a8b2fd9634d16">
-        <source>If the price of this combination is different from the initial retail price, enter the value of the impact (negative or positive).</source>
-        <target>If the price of this combination is different from the initial retail price, enter the value of the impact (negative or positive).</target>
-        <note>Line: 109</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Combination/CombinationFormType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="762d425093de542e7ab628b44ff68515">
@@ -440,12 +401,21 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Combination/CombinationPriceImpactType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c4b69e0455faf0784b6a8b2fd9634d16">
+        <source>If the price of this combination is different from the initial retail price, enter the value of the impact (negative or positive).</source>
+        <target>If the price of this combination is different from the initial retail price, enter the value of the impact (negative or positive).</target>
+        <note>Line: 123</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Description/DescriptionType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="0834dbec80c240be5b2fda7c96b79b50">
         <source>Search product</source>
         <target>Search product</target>
-        <note>Line: 155</note>
+        <note>Line: 142</note>
       </trans-unit>
     </body>
   </file>
@@ -502,6 +472,11 @@
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Pricing/UnitPriceType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="420f46a170eef476454fa134085a85a2">
+        <source>Per kilo, per litre</source>
+        <target>Per kilo, per litre</target>
+        <note>Line: 101</note>
+      </trans-unit>
       <trans-unit id="dfeaf70424e17fcd26f016ace18f2139">
         <source>Indicate the price for a single unit of the product. For instance, if you're selling fabrics, it would be the price per meter.</source>
         <target>Indicate the price for a single unit of the product. For instance, if you're selling fabrics, it would be the price per meter.</target>
@@ -511,6 +486,21 @@
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/RedirectOptionType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="96bacc9c71fc8b7763f985fed3dfc545">
+        <source>To which product should the page redirect?</source>
+        <target>To which product should the page redirect?</target>
+        <note>Line: 104</note>
+      </trans-unit>
+      <trans-unit id="6dd1254fcdbcc7b3fd459617adad9289">
+        <source>To which category should the page redirect?</source>
+        <target>To which category should the page redirect?</target>
+        <note>Line: 114</note>
+      </trans-unit>
+      <trans-unit id="1b9648d6a32243bb7003ae8046dc7c1a">
+        <source>By default, the main category will be used if no category is selected.</source>
+        <target>By default, the main category will be used if no category is selected.</target>
+        <note>Line: 115</note>
+      </trans-unit>
       <trans-unit id="e35bdf9023b638203d854dd2d9382878">
         <source>[1]No redirection (200), display product[/1] [2] Do not redirect anywhere, display product as discontinued and return normal 200 response.</source>
         <target>[1]No redirection (200), display product[/1] [2] Do not redirect anywhere, display product as discontinued and return normal 200 response.</target>
@@ -595,6 +585,20 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Supplier/SupplierType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="afd7431f75b5801226c9ee37acc1a504">
+        <source>Will appear in the list of suppliers.</source>
+        <target>Will appear in the list of suppliers.</target>
+        <note>Line: 150</note>
+      </trans-unit>
+      <trans-unit id="e865605842d16d0d11c266c731e00507">
+        <source>Upload a supplier logo from your computer.</source>
+        <target>Upload a supplier logo from your computer.</target>
+        <note>Line: 278</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Product/CatalogPage/Lists/products_table.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="542f59279cd5d73dfbdb069ce0833b0a">
@@ -674,11 +678,6 @@
         <target>If you want to quickly create a new category, you can do it here. Don’t forget to then go to the Categories page to fill in the needed details (description, image, etc.).  A new category will not automatically appear in your shop's menu, please read the Help about it.</target>
         <note>Line: 56</note>
       </trans-unit>
-      <trans-unit id="c5abe76b24973299661ce389d1a092e1">
-        <source>Search categories</source>
-        <target>Search categories</target>
-        <note>Line: 35</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Forms/form_combination.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -687,21 +686,6 @@
         <source>Does this combination have a different price? Is it cheaper or more expensive than the default retail price?</source>
         <target>Does this combination have a different price? Is it cheaper or more expensive than the default retail price?</target>
         <note>Line: 169</note>
-      </trans-unit>
-      <trans-unit id="ea8d1b4f32f86030683d8f9252c0a3e1">
-        <source>The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity.</source>
-        <target>The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity.</target>
-        <note>Line: 104</note>
-      </trans-unit>
-      <trans-unit id="1914ce33841a6e52c0577751d9004159">
-        <source><![CDATA[The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]]]></source>
-        <target><![CDATA[The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]]]></target>
-        <note>Line: 146</note>
-      </trans-unit>
-      <trans-unit id="0041a5c39ca241f883f4e0516a32d290">
-        <source>This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.</source>
-        <target>This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.</target>
-        <note>Line: 234</note>
       </trans-unit>
     </body>
   </file>
@@ -846,6 +830,16 @@
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Panels/combinations.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="ea8d1b4f32f86030683d8f9252c0a3e1">
+        <source>The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity.</source>
+        <target>The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity.</target>
+        <note>Line: 43</note>
+      </trans-unit>
+      <trans-unit id="1914ce33841a6e52c0577751d9004159">
+        <source><![CDATA[The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]]]></source>
+        <target><![CDATA[The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]]]></target>
+        <note>Line: 74</note>
+      </trans-unit>
       <trans-unit id="5f4efe2735311bfd3e5784705fb0110f">
         <source>Number of days this file can be accessed by customers. Set to zero for unlimited access.</source>
         <target>Number of days this file can be accessed by customers. Set to zero for unlimited access.</target>
@@ -917,6 +911,11 @@ Comment: First tag [1][/1] is for a HTML link. Second tag [2] is an icon (no clo
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Panels/options.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="0041a5c39ca241f883f4e0516a32d290">
+        <source>This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.</source>
+        <target>This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.</target>
+        <note>Line: 119</note>
+      </trans-unit>
       <trans-unit id="c268a2747d5680c617c361cd505c4576">
         <source>MPN is used internationally to identify the Manufacturer Part Number.</source>
         <target>MPN is used internationally to identify the Manufacturer Part Number.</target>
@@ -1071,6 +1070,15 @@ Comment: First tag [1][/1] is for a HTML link. Second tag [2] is an icon (no clo
         <source>To add combinations, you first need to create proper attributes and values in [1]%attributes_and_features_label%[/1].</source>
         <target>To add combinations, you first need to create proper attributes and values in [1]%attributes_and_features_label%[/1].</target>
         <note>Line: 34</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/FormTheme/categories.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c5abe76b24973299661ce389d1a092e1">
+        <source>Search categories</source>
+        <target>Search categories</target>
+        <note>Line: 55</note>
       </trans-unit>
     </body>
   </file>

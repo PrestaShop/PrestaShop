@@ -188,11 +188,6 @@
         <target>Delete</target>
         <note>Line: 33</note>
       </trans-unit>
-      <trans-unit id="ea4788705e6873b424c65e91c2846b19">
-        <source>Cancel</source>
-        <target>Cancel</target>
-        <note>Line: 31</note>
-      </trans-unit>
     </body>
   </file>
   <file original="modules/blockwishlist/views/templates/components/modals/login.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -225,6 +220,11 @@
   </file>
   <file original="modules/blockwishlist/views/templates/components/modals/share.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="ea4788705e6873b424c65e91c2846b19">
+        <source>Cancel</source>
+        <target>Cancel</target>
+        <note>Line: 26</note>
+      </trans-unit>
       <trans-unit id="8f02ed5e74022ada127d2bd206049a36">
         <source>Share wishlist</source>
         <target>Share wishlist</target>
