@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7b8097e6a8fa01503221ab8861d195c0",
+    "content-hash": "732b7c3feb795c138f37edea39079ce1",
     "packages": [
         {
             "name": "api-platform/core",
@@ -7445,16 +7445,16 @@
         },
         {
             "name": "prestashop/translationtools-bundle",
-            "version": "v6.0.1",
+            "version": "dev-single-file-xliff-export",
             "source": {
                 "type": "git",
-                "url": "https://github.com/PrestaShop/TranslationToolsBundle.git",
-                "reference": "b4e6c4140fab6c05349eb6c4356a4338d65206b8"
+                "url": "https://github.com/jolelievre/TranslationToolsBundle.git",
+                "reference": "f68f07d41afc0e45a8b2b0c97b28a99e0f7909af"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/TranslationToolsBundle/zipball/b4e6c4140fab6c05349eb6c4356a4338d65206b8",
-                "reference": "b4e6c4140fab6c05349eb6c4356a4338d65206b8",
+                "url": "https://api.github.com/repos/jolelievre/TranslationToolsBundle/zipball/f68f07d41afc0e45a8b2b0c97b28a99e0f7909af",
+                "reference": "f68f07d41afc0e45a8b2b0c97b28a99e0f7909af",
                 "shasum": ""
             },
             "require": {
@@ -7478,7 +7478,6 @@
                     "PrestaShop\\TranslationToolsBundle\\": ""
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -7499,10 +7498,9 @@
                 "translation"
             ],
             "support": {
-                "issues": "https://github.com/PrestaShop/TranslationToolsBundle/issues",
-                "source": "https://github.com/PrestaShop/TranslationToolsBundle/tree/v6.0.1"
+                "source": "https://github.com/jolelievre/TranslationToolsBundle/tree/single-file-xliff-export"
             },
-            "time": "2024-01-05T15:58:25+00:00"
+            "time": "2025-03-24T14:37:47+00:00"
         },
         {
             "name": "psr/cache",
@@ -18222,7 +18220,8 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "prestashop/classic": 20,
-        "prestashop/ps_apiresources": 20
+        "prestashop/ps_apiresources": 20,
+        "prestashop/translationtools-bundle": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

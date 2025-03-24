@@ -127,7 +127,7 @@
         "prestashop/statssales": "^2",
         "prestashop/statssearch": "^2",
         "prestashop/statsstock": "^2",
-        "prestashop/translationtools-bundle": "^6.0.1",
+        "prestashop/translationtools-bundle": "dev-single-file-xliff-export",
         "smarty/smarty": "^4.3.1",
         "soundasleep/html2text": "^2.1.0",
         "symfony/asset": "~6.4.0",
@@ -217,6 +217,10 @@
         "ps_apiresources": {
             "type": "vcs",
             "url": "https://github.com/PrestaShop/ps_apiresources.git"
+        },
+        "translations-tools-bundle": {
+            "type": "vcs",
+            "url": "https://github.com/jolelievre/TranslationToolsBundle.git"
         }
     },
     "minimum-stability": "dev",
