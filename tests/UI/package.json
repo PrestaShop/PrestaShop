@@ -110,22 +110,22 @@
   },
   "homepage": "https://github.com/PrestaShop/PrestaShop/tree/develop/tests/UI#readme",
   "dependencies": {
-    "@faker-js/faker": "^9.0.3",
+    "@faker-js/faker": "^9.6.0",
     "@prestashop-core/ui-testing": "https://github.com/PrestaShop/ui-testing-library#main",
     "chai": "^4.5.0",
-    "chai-string": "^1.5.0",
-    "dotenv": "^16.4.5",
+    "chai-string": "^1.6.0",
+    "dotenv": "^16.4.7",
     "mocha": "^10.7.3",
     "mochawesome": "^7.1.3",
-    "mysql2": "^3.11.3"
+    "mysql2": "^3.13.0"
   },
   "devDependencies": {
     "@types/chai": "^4.3.11",
     "@types/chai-string": "^1.4.5",
     "@types/mocha": "^10.0.9",
     "@types/mochawesome": "^6.2.4",
-    "@typescript-eslint/eslint-plugin": "^8.8.1",
-    "@typescript-eslint/parser": "^8.8.1",
+    "@typescript-eslint/eslint-plugin": "^8.27.0",
+    "@typescript-eslint/parser": "^8.26.1",
     "babel-eslint": "^10.1.0",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
@@ -133,7 +133,7 @@
     "eslint-plugin-html": "^8.1.2",
     "eslint-plugin-import": "^2.31.0",
     "mochawesome-merge": "^4.3.0",
-    "ts-mocha": "^10.0.0",
+    "ts-mocha": "^11.1.0",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.6.3"
   }
