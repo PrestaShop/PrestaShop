@@ -6384,23 +6384,23 @@
         },
         {
             "name": "prestashop/ps_searchbar",
-            "version": "v2.1.3",
+            "version": "v2.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_searchbar.git",
-                "reference": "e02b6b2b5e6084227f3a2b7cc9272867a23843f1"
+                "reference": "5bbf4e3158ec01cd7a965ecb7571e3ed5f4e1524"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_searchbar/zipball/e02b6b2b5e6084227f3a2b7cc9272867a23843f1",
-                "reference": "e02b6b2b5e6084227f3a2b7cc9272867a23843f1",
+                "url": "https://api.github.com/repos/PrestaShop/ps_searchbar/zipball/5bbf4e3158ec01cd7a965ecb7571e3ed5f4e1524",
+                "reference": "5bbf4e3158ec01cd7a965ecb7571e3ed5f4e1524",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4"
+                "php": ">=5.6"
             },
             "require-dev": {
-                "prestashop/php-dev-tools": "^3.4"
+                "prestashop/php-dev-tools": "^4.3"
             },
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
@@ -6416,29 +6416,29 @@
             "description": "PrestaShop module ps_searchbar",
             "homepage": "https://github.com/PrestaShop/ps_searchbar",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_searchbar/tree/v2.1.3"
+                "source": "https://github.com/PrestaShop/ps_searchbar/tree/v2.1.4"
             },
-            "time": "2022-04-13T10:56:58+00:00"
+            "time": "2025-03-04T09:51:58+00:00"
         },
         {
             "name": "prestashop/ps_sharebuttons",
-            "version": "v2.1.2",
+            "version": "v2.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_sharebuttons.git",
-                "reference": "781b63a4cb0ea71989c7396d0b928c7294664852"
+                "reference": "711fd74b2b11c7cab74a66e0563534daeb74d3f9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_sharebuttons/zipball/781b63a4cb0ea71989c7396d0b928c7294664852",
-                "reference": "781b63a4cb0ea71989c7396d0b928c7294664852",
+                "url": "https://api.github.com/repos/PrestaShop/ps_sharebuttons/zipball/711fd74b2b11c7cab74a66e0563534daeb74d3f9",
+                "reference": "711fd74b2b11c7cab74a66e0563534daeb74d3f9",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4"
+                "php": ">=5.6"
             },
             "require-dev": {
-                "prestashop/php-dev-tools": "^3.4"
+                "prestashop/php-dev-tools": "^4.3"
             },
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
@@ -6454,9 +6454,9 @@
             "description": "PrestaShop module ps_sharebuttons",
             "homepage": "https://github.com/PrestaShop/ps_sharebuttons",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_sharebuttons/tree/v2.1.2"
+                "source": "https://github.com/PrestaShop/ps_sharebuttons/tree/v2.1.3"
             },
-            "time": "2022-12-13T10:10:47+00:00"
+            "time": "2025-03-21T08:27:29+00:00"
         },
         {
             "name": "prestashop/ps_shoppingcart",
