@@ -159,23 +159,41 @@ class StockManager
             ';
         }
 
-        $updateReservedQuantityQuery .= '
-            SET sa.reserved_quantity = (
-                SELECT SUM(od.product_quantity - od.product_quantity_refunded)
-                FROM {table_prefix}orders o
-                INNER JOIN {table_prefix}order_detail od ON od.id_order = o.id_order
-                INNER JOIN {table_prefix}order_state os ON os.id_order_state = o.current_state
-                WHERE o.id_shop = :shop_id AND
-                os.shipped != 1 AND (
-                    o.valid = 1 OR (
-                        os.id_order_state != :error_state AND
-                        os.id_order_state != :cancellation_state
+        $updateReservedQuantityQuery = '
+        UPDATE {table_prefix}stock_available sa
+        LEFT JOIN (
+            SELECT 
+                od.product_id,
+                od.product_attribute_id,
+                SUM(
+                    GREATEST(0, 
+                        CAST(od.product_quantity AS SIGNED) - CAST(od.product_quantity_refunded AS SIGNED)
                     )
-                ) AND sa.id_product = od.product_id AND
-                sa.id_product_attribute = od.product_attribute_id
-                GROUP BY od.product_id, od.product_attribute_id
-            )
-            WHERE sa.id_shop = :shop_id
+                ) AS new_reserved_quantity
+            FROM 
+                {table_prefix}order_detail od
+            INNER JOIN 
+                {table_prefix}orders o ON od.id_order = o.id_order
+            INNER JOIN 
+                {table_prefix}order_state os ON os.id_order_state = o.current_state
+            WHERE 
+                o.id_shop = :shop_id
+                AND os.shipped != 1 
+                AND (
+                    o.valid = 1 
+                    OR (
+                        os.id_order_state != :error_state 
+                        AND os.id_order_state != :cancellation_state
+                    )
+                )
+            GROUP BY 
+                od.product_id, od.product_attribute_id
+        ) calculated_quantity ON sa.id_product = calculated_quantity.product_id 
+            AND sa.id_product_attribute = calculated_quantity.product_attribute_id
+        SET 
+            sa.reserved_quantity = IFNULL(calculated_quantity.new_reserved_quantity, 0)
+        WHERE 
+            sa.id_shop = :shop_id
         ';
 
         $strParams = [
