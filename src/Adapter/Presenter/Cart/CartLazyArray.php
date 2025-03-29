@@ -129,6 +129,15 @@ class CartLazyArray extends AbstractLazyArray
         // And add customizations made
         $this->products = $this->cartPresenter->addCustomizedData($presentedProducts, $this->cart);
 
+        // Execute hook to allow modules to add additional content to each product line
+        foreach ($this->products as &$product) {
+            \Hook::exec('actionCartProductLineAdditionalContent', [
+                'product' => &$product,
+                'cart' => $this->cart,
+            ], null, true);
+        }
+        unset($product); // Unset reference to avoid potential issues
+
         return $this->products;
     }
 
