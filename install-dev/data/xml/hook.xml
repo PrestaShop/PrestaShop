@@ -5403,10 +5403,10 @@
       <title>Modify search term identifiable object data after creating it</title>
       <description>This hook allows to modify search term identifiable object forms data after it was created</description>
     </hook>
-    <hook id="displayCartProductLineAdditionalContent">
-      <name>displayCartProductLineAdditionalContent</name>
-      <title>Display cart product line additional content</title>
-      <description>This hook is called when the cart product line additional content is displayed</description>
+    <hook id="actionCartProductLineAdditionalContent">
+      <name>actionCartProductLineAdditionalContent</name>
+      <title>Enrich products with additional data via hook</title>
+      <description>This hook allows to add additional content and data to products in the shopping cart</description>
     </hook>
   </entities>
 </entity_hook>
