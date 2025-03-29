@@ -845,16 +845,6 @@ class CartCore extends ObjectModel
                 }
 
                 $this->_products[] = $product;
-
-                // Add hook for additional content on each cart product line
-                $additionalContent = Hook::exec('displayCartProductLineAdditionalContent', [
-                    'product' => $product,
-                    'cart' => $this
-                ], null, true);
-
-                if (!empty($additionalContent)) {
-                    $product['additional_content'] = $additionalContent;
-                }
             }
         } else {
             $this->_products = $products;
