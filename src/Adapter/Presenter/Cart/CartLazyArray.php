@@ -131,7 +131,7 @@ class CartLazyArray extends AbstractLazyArray
 
         // Execute hook to allow modules to add additional content to each product line
         foreach ($this->products as &$product) {
-            \Hook::exec('actionCartProductLineAdditionalContent', [
+            Hook::exec('actionCartProductLineAdditionalContent', [
                 'product' => &$product,
                 'cart' => $this->cart,
             ], null, true);
