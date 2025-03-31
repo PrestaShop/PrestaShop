@@ -119,7 +119,7 @@ class LegacyController extends PrestaShopAdminController
         $smarty->setTemplateDir([
             _PS_BO_ALL_THEMES_DIR_ . 'default/template/',
             _PS_OVERRIDE_DIR_ . 'controllers/admin/templates',
-        ]);;
+        ]);
 
         $isAjaxRequest = (bool) $request->get('ajax');
         if ($isAjaxRequest) {
