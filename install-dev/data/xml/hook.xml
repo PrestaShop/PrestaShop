@@ -121,6 +121,11 @@
       <title>Cart creation and update</title>
       <description>This hook is displayed when a product is added to the cart or if the cart's content is modified</description>
     </hook>
+    <hook id="actionDuplicateCartData">
+      <name>actionDuplicateCartData</name>
+      <title>Cart duplication</title>
+      <description>This hook is triggered after all the cart related data has been duplicated</description>
+    </hook>
     <hook id="actionAuthentication">
       <name>actionAuthentication</name>
       <title>Successful customer authentication</title>
