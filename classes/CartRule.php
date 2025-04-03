@@ -705,6 +705,30 @@ class CartRuleCore extends ObjectModel
         if (!CartRule::isFeatureActive()) {
             return false;
         }
+
+        // Return a false value or error message (string) if the cart rule is not valid, true otherwise
+        $hookBeforeResult = Hook::exec(
+            hook_name: 'actionCartRuleCheckValidityBefore',
+            hook_args: [
+                'cart_rule' => $this,
+                'context' => $context,
+                'already_in_cart' => $alreadyInCart,
+                'display_error' => $display_error,
+                'check_carrier' => $check_carrier,
+                'use_order_prices' => $useOrderPrices,
+            ],
+            array_return: true
+        );
+
+        // There may be multiple modules that need to validate the cart rule, so we need iterate over the results
+        if (is_array($hookBeforeResult)) {
+            foreach ($hookBeforeResult as $moduleResult) {
+                if ($moduleResult === false || is_string($moduleResult)) {
+                    return $moduleResult;
+                }
+            }
+        }
+
         $cart = $context->cart;
 
         // All these checks are necessary when you add the cart rule the first time, so when it's not in cart yet

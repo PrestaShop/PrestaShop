@@ -4539,5 +4539,10 @@
       <title>Triggers when returning AJAX response</title>
       <description>Allows to modify AJAX response of controllers using ajaxRender method.</description>
     </hook>
+    <hook id="actionCartRuleCheckValidityBefore">
+      <name>actionCartRuleCheckValidityBefore</name>
+      <title>Triggers before validating cart rule</title>
+      <description>Allows to add custom validation logic before validating cart rule.</description>
+    </hook>
   </entities>
 </entity_hook>
