@@ -4595,7 +4595,14 @@ class ProductCore extends ObjectModel
         $sql .= 'GROUP BY id_attribute_group, id_product_attribute
                 ORDER BY ag.`position` ASC, a.`position` ASC, agl.`name` ASC';
 
-        return Db::getInstance()->executeS($sql);
+        $result = Db::getInstance()->executeS($sql);
+
+        Hook::exec('actionProductGetAttributesGroupsAfter', [
+            'product' => $this,
+            'attributes_groups' => &$result,
+        ]);
+
+        return $result;
     }
 
     /**

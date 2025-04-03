@@ -51,11 +51,6 @@
       <title>Payment confirmation</title>
       <description>This hook displays new elements after the payment is validated</description>
     </hook>
-    <hook id="actionPaymentModuleProductVarTplAfter">
-      <name>actionPaymentModuleProductVarTplAfter</name>
-      <title>Triggers after product data is prepared for e-mail template</title>
-      <description>Allows to modify product data in e-mail template.</description>
-    </hook>
     <hook id="displayPaymentReturn">
       <name>displayPaymentReturn</name>
       <title>Payment return</title>
@@ -126,11 +121,6 @@
       <title>Cart creation and update</title>
       <description>This hook is displayed when a product is added to the cart or if the cart's content is modified</description>
     </hook>
-    <hook id="actionDuplicateCartData">
-      <name>actionDuplicateCartData</name>
-      <title>Cart duplication</title>
-      <description>This hook is triggered after all the cart related data has been duplicated</description>
-    </hook>
     <hook id="actionAuthentication">
       <name>actionAuthentication</name>
       <title>Successful customer authentication</title>
@@ -185,11 +175,6 @@
       <name>actionProductDelete</name>
       <title>Product deletion</title>
       <description>This hook is called when a product is deleted</description>
-    </hook>
-    <hook id="actionObjectDuplicateAfter">
-      <name>actionObjectDuplicateAfter</name>
-      <title>After duplicating an object</title>
-      <description>This hook is called after duplicating an object by the core.</description>
     </hook>
     <hook id="actionObjectProductInCartDeleteBefore">
       <name>actionObjectProductInCartDeleteBefore</name>
@@ -300,11 +285,6 @@
       <name>displayCustomerAccount</name>
       <title>Customer account displayed in Front Office</title>
       <description>This hook displays new elements on the customer account page</description>
-    </hook>
-    <hook id="displayCustomerAccountTop">
-      <name>displayCustomerAccountTop</name>
-      <title>Customer account displayed in Front Office (Top part)</title>
-      <description>This hook displays new elements on the customer account page on Top</description>
     </hook>
     <hook id="actionOrderSlipAdd">
       <name>actionOrderSlipAdd</name>
@@ -660,11 +640,6 @@
       <name>sendMailAlterTemplateVars</name>
       <title>Alter template vars on the fly</title>
       <description>This hook is called when Mail::send() is called</description>
-    </hook>
-    <hook id="displayCartExtraProductInfo">
-      <name>displayCartExtraProductInfo</name>
-      <title>Extra information in shopping cart product line</title>
-      <description>This hook adds extra information to the product lines, in the shopping cart</description>
     </hook>
     <hook id="displayCartExtraProductActions">
       <name>displayCartExtraProductActions</name>
@@ -2872,11 +2847,6 @@
       <name>actionCheckoutRender</name>
       <title>Modify checkout process</title>
       <description>This hook is called when constructing the checkout process</description>
-    </hook>
-    <hook id="actionCheckoutStepRenderTemplate">
-      <name>actionCheckoutStepRenderTemplate</name>
-      <title>Modify the parameters of the checkout step template rendering</title>
-      <description>This hook is called when rendering every checkout step template</description>
     </hook>
     <hook id="actionPresentProductListing">
       <name>actionPresentProductListing</name>
@@ -5433,55 +5403,10 @@
       <title>Modify search term identifiable object data after creating it</title>
       <description>This hook allows to modify search term identifiable object forms data after it was created</description>
     </hook>
-    <hook id="actionProductGetAttributesGroupsBefore">
-      <name>actionProductGetAttributesGroupsBefore</name>
-      <title>Triggers before getting product attributes groups</title>
-      <description>Allows to modify product attributes groups SQL query before they are retrieved from the database.</description>
-    </hook>
     <hook id="actionProductGetAttributesGroupsAfter">
       <name>actionProductGetAttributesGroupsAfter</name>
       <title>Triggers after getting product attributes groups</title>
       <description>Allows to modify product attributes groups after they are retrieved from the database.</description>
-    </hook>
-    <hook id="actionGetPdfRenderer">
-      <name>actionGetPdfRenderer</name>
-      <title>Provide a PDF renderer</title>
-      <description>This hook allows to provide a custom PDF renderer to generate PDF files</description>
-    </hook>
-    <hook id="actionGetPdfTemplateObject">
-      <name>actionGetPdfTemplateObject</name>
-      <title>Get PDF template object</title>
-      <description>This hook allows to recieve a PDF template object from modules</description>
-    </hook>
-    <hook id="displayAdminStoreInformation">
-      <name>displayAdminStoreInformation</name>
-      <title>Display extra store information</title>
-      <description>This hook displays content in the Information page to add store information</description>
-    </hook>
-    <hook id="overrideImageLink">
-      <name>overrideImageLink</name>
-      <title>Override product image link</title>
-      <description>Allows to fully override the image URL returned by the getImageLink() method.</description>
-    </hook>
-    <hook id="adaptImageLink">
-      <name>adaptImageLink</name>
-      <title>Adapt product image link</title>
-      <description>Allows to dynamically modify the final image URL generated by getImageLink(), using a reference to the final value.</description>
-    </hook>
-    <hook id="actionOrderHasBeenShipped">
-        <name>actionOrderHasBeenShipped</name>
-        <title>Called when checking if an order has been shipped</title>
-        <description>Allows modules to override or react to the hasBeenShipped() method of the Order class.</description>
-    </hook>
-    <hook id="actionOrderHasBeenDelivered">
-        <name>actionOrderHasBeenDelivered</name>
-        <title>Called when checking if an order has been delivered</title>
-        <description>Allows modules to override or react to the hasBeenDelivered() method of the Order class.</description>
-    </hook>
-    <hook id="actionModifyHtmlPurifierConfig">
-        <name>actionModifyHtmlPurifierConfig</name>
-        <title>Called when configuring HTMLPurifier</title>
-        <description>Allows modules to modify the HTMLPurifier definition by adding custom allowed HTML elements or attributes during Tools::purifyHTML().</description>
     </hook>
   </entities>
 </entity_hook>
