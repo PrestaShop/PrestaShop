@@ -120,6 +120,9 @@ class CarrierCore extends ObjectModel
     /** @var int grade of the shipping delay (0 for longest, 9 for shortest) */
     public $grade;
 
+    /** @var array Eco data */
+    public $eco_shipping_data = [];
+
     /**
      * @see ObjectModel::$definition
      */
@@ -308,13 +311,20 @@ class CarrierCore extends ObjectModel
 
         $price_by_weight = Hook::exec('actionDeliveryPriceByWeight', ['id_carrier' => $id_carrier, 'total_weight' => $total_weight, 'id_zone' => $id_zone]);
 
-        Hook::exec('actionBeforeEcoShippingCalculation', [
+        $eco_params = [
             'carrier' => $this,
             'total_weight' => $total_weight,
             'id_zone' => $id_zone,
             'shipping_method' => self::SHIPPING_METHOD_WEIGHT,
-            'eco_data' => [], // Modules can fill this with their own eco data
-        ]);
+            'eco_data' => [],
+        ];
+
+        Hook::exec('actionBeforeEcoShippingCalculation', $eco_params);
+
+        // Store eco data in carrier for later use
+        if (!empty($eco_params['eco_data'])) {
+            $this->eco_shipping_data = $eco_params['eco_data'];
+        }
 
         if (is_numeric($price_by_weight)) {
             self::$price_by_weight[$cache_key] = $price_by_weight;
@@ -422,15 +432,21 @@ class CarrierCore extends ObjectModel
 
         $price_by_price = Hook::exec('actionDeliveryPriceByPrice', ['id_carrier' => $id_carrier, 'order_total' => $order_total, 'id_zone' => $id_zone]);
 
-        // Hook avant le calcul
-        Hook::exec('actionBeforeEcoShippingCalculation', [
+        $eco_params = [
             'carrier' => $this,
             'order_total' => $order_total,
             'id_zone' => $id_zone,
             'id_currency' => $id_currency,
             'shipping_method' => self::SHIPPING_METHOD_PRICE,
-            'eco_data' => [], // Modules can fill this with their own eco data
-        ]);
+            'eco_data' => [],
+        ];
+
+        Hook::exec('actionBeforeEcoShippingCalculation', $eco_params);
+
+        // Store eco data in carrier for later use
+        if (!empty($eco_params['eco_data'])) {
+            $this->eco_shipping_data = $eco_params['eco_data'];
+        }
 
         if (is_numeric($price_by_price)) {
             self::$price_by_price[$cache_key] = $price_by_price;
