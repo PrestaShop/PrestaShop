@@ -156,20 +156,31 @@
         return this.list;
       },
       onCheck(obj: any): void {
-        const itemLabel = obj.item[this.label];
+        const itemId = obj.item[this.itemId];
         const filterType = this.hasChildren ? 'category' : 'supplier';
-
+      
+        const updateSelection = (items: Array<any>) => {
+          items.forEach(item => {
+            if (item[this.itemId] === itemId) {
+              item.selected = obj.checked;
+            }
+            if (item.children) {
+              updateSelection(item.children);
+            }
+          });
+        };
+        
+        updateSelection(this.list);
+      
         if (obj.checked) {
-          this.tags.push(itemLabel);
+          this.tags.push(obj.item[this.label]);
         } else {
-          const index = this.tags.indexOf(itemLabel);
+          const index = this.tags.indexOf(obj.item[this.label]);
           this.tags.splice(index, 1);
         }
-        if (this.tags.length) {
-          this.$emit('active', this.filterList(this.tags), filterType);
-        } else {
-          this.$emit('active', [], filterType);
-        }
+      
+        const filteredList = this.filterList(this.tags);
+        this.$emit('active', filteredList, filterType);
       },
       onTyping(val: string): void {
         this.currentVal = val.toLowerCase();
@@ -189,17 +200,18 @@
       },
       filterList(tags: Array<any>): Array<number> {
         const idList: Array<number> = [];
-        const {categoryList} = this.$store.state;
-        const list = this.hasChildren ? categoryList : this.list;
+        const list = this.list;
 
-        list.map((data: Record<string, any>) => {
-          const isInIdList = idList.indexOf(Number(data[this.itemId])) === -1;
-
-          if (tags.indexOf(data[this.label]) !== -1 && isInIdList) {
-            idList.push(Number(data[this.itemId]));
+        const checkCategory = (category: Record<string, any>) => {
+          if (category.selected === true) {
+            idList.push(Number(category[this.itemId]));
           }
-          return idList;
-        });
+          if (category.children) {
+            category.children.forEach(checkCategory);
+          }
+        };
+
+        list.forEach(checkCategory);
         return idList;
       },
     },
