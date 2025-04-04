@@ -285,6 +285,14 @@ class CarrierCore extends ObjectModel
      */
     public function getDeliveryPriceByWeight($total_weight, $id_zone)
     {
+        // Hook avant le calcul
+        Hook::exec('actionBeforeEcoShippingCalculation', [
+            'carrier' => $this,
+            'total_weight' => $total_weight,
+            'id_zone' => $id_zone,
+            'shipping_method' => self::SHIPPING_METHOD_WEIGHT
+        ]);
+        
         $id_carrier = (int) $this->id;
         $cache_key = $id_carrier . '_' . $total_weight . '_' . $id_zone;
         if (!isset(self::$price_by_weight[$cache_key])) {
@@ -386,6 +394,15 @@ class CarrierCore extends ObjectModel
      */
     public function getDeliveryPriceByPrice($order_total, $id_zone, $id_currency = null)
     {
+        // Hook avant le calcul
+        Hook::exec('actionBeforeEcoShippingCalculation', [
+            'carrier' => $this,
+            'order_total' => $order_total,
+            'id_zone' => $id_zone,
+            'id_currency' => $id_currency,
+            'shipping_method' => self::SHIPPING_METHOD_PRICE
+        ]);
+        
         $id_carrier = (int) $this->id;
         $cache_key = $this->id . '_' . $order_total . '_' . $id_zone . '_' . $id_currency;
         if (!isset(self::$price_by_price[$cache_key])) {
@@ -1266,7 +1283,7 @@ class CarrierCore extends ObjectModel
         }
         Cache::clean('carrier_id_tax_rules_group_' . (int) $this->id . '_' . (int) Context::getContext()->shop->id);
 
-        return Db::getInstance()->insert('carrier_tax_rules_group_shop', $values);
+        return Db::getInstance()->insert('carrier_tax_rules_group_shop', $values, false, false, Db::INSERT);
     }
 
     /**

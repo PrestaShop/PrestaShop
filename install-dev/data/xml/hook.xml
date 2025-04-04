@@ -5403,5 +5403,10 @@
       <title>Modify search term identifiable object data after creating it</title>
       <description>This hook allows to modify search term identifiable object forms data after it was created</description>
     </hook>
+    <hook id="actionBeforeEcoShippingCalculation">
+      <name>actionBeforeEcoShippingCalculation</name>
+      <title>Before eco-friendly shipping calculation</title>
+      <description>This hook is called before calculating shipping costs, allowing to modify shipping parameters based on eco-friendly criteria</description>
+    </hook>
   </entities>
 </entity_hook>
