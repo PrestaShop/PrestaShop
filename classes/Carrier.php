@@ -1283,7 +1283,7 @@ class CarrierCore extends ObjectModel
         }
         Cache::clean('carrier_id_tax_rules_group_' . (int) $this->id . '_' . (int) Context::getContext()->shop->id);
 
-        return Db::getInstance()->insert('carrier_tax_rules_group_shop', $values, false, false, Db::INSERT);
+        return Db::getInstance()->insert('carrier_tax_rules_group_shop', $values);
     }
 
     /**
