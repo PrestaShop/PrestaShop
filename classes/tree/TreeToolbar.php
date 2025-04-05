@@ -208,6 +208,10 @@ class TreeToolbarCore implements ITreeToolbarCore
 
     private function _normalizeDirectory($directory)
     {
+        if (empty($directory)) {
+            return DIRECTORY_SEPARATOR;
+        }
+        
         $last = $directory[strlen($directory) - 1];
 
         if (in_array($last, ['/', '\\'])) {

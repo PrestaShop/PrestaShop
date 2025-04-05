@@ -516,12 +516,16 @@ class TreeCore
     }
 
     /**
-     * @param string|array $directory
+     * @param string|array|null $directory
      *
      * @return string|array
      */
     private function _normalizeDirectory($directory)
     {
+        if (empty($directory)) {
+            return DIRECTORY_SEPARATOR;
+        }
+        
         $last = $directory[strlen($directory) - 1];
 
         if (in_array($last, ['/', '\\'])) {
