@@ -158,9 +158,8 @@
       onCheck(obj: any): void {
         const itemId = obj.item[this.itemId];
         const filterType = this.hasChildren ? 'category' : 'supplier';
-      
         const updateSelection = (items: Array<any>) => {
-          items.forEach(item => {
+          items.forEach((item) => {
             if (item[this.itemId] === itemId) {
               item.selected = obj.checked;
             }
@@ -169,16 +168,13 @@
             }
           });
         };
-        
-        updateSelection(this.list);
-      
+        updateSelection(this.list); 
         if (obj.checked) {
           this.tags.push(obj.item[this.label]);
         } else {
           const index = this.tags.indexOf(obj.item[this.label]);
           this.tags.splice(index, 1);
         }
-      
         const filteredList = this.filterList(this.tags);
         this.$emit('active', filteredList, filterType);
       },
@@ -200,7 +196,7 @@
       },
       filterList(tags: Array<any>): Array<number> {
         const idList: Array<number> = [];
-        const list = this.list;
+        const {list} = this;
 
         const checkCategory = (category: Record<string, any>) => {
           if (category.selected === true) {
