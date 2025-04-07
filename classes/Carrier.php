@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -312,7 +311,8 @@ class CarrierCore extends ObjectModel
         $price_by_weight = Hook::exec('actionDeliveryPriceByWeight', ['id_carrier' => $id_carrier, 'total_weight' => $total_weight, 'id_zone' => $id_zone]);
 
         $eco_params = [
-            'carrier' => $this,
+            'id_carrier' => $this->id,
+            'name' => $this->name,
             'total_weight' => $total_weight,
             'id_zone' => $id_zone,
             'shipping_method' => self::SHIPPING_METHOD_WEIGHT,
@@ -433,7 +433,8 @@ class CarrierCore extends ObjectModel
         $price_by_price = Hook::exec('actionDeliveryPriceByPrice', ['id_carrier' => $id_carrier, 'order_total' => $order_total, 'id_zone' => $id_zone]);
 
         $eco_params = [
-            'carrier' => $this,
+            'id_carrier' => $this->id,
+            'name' => $this->name,
             'order_total' => $order_total,
             'id_zone' => $id_zone,
             'id_currency' => $id_currency,
