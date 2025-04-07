@@ -117,15 +117,15 @@
     "dotenv": "^16.4.7",
     "mocha": "^10.7.3",
     "mochawesome": "^7.1.3",
-    "mysql2": "^3.13.0"
+    "mysql2": "^3.14.0"
   },
   "devDependencies": {
     "@types/chai": "^4.3.11",
     "@types/chai-string": "^1.4.5",
     "@types/mocha": "^10.0.9",
     "@types/mochawesome": "^6.2.4",
-    "@typescript-eslint/eslint-plugin": "^8.27.0",
-    "@typescript-eslint/parser": "^8.26.1",
+    "@typescript-eslint/eslint-plugin": "^8.28.0",
+    "@typescript-eslint/parser": "^8.29.0",
     "babel-eslint": "^10.1.0",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
