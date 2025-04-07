@@ -322,7 +322,7 @@ class CarrierCore extends ObjectModel
         Hook::exec('actionBeforeEcoShippingCalculation', $eco_params);
 
         // Store eco data in carrier for later use
-        if (!empty($eco_params['eco_data'])) {
+        if (count($eco_params['eco_data']) > 0) {
             $this->eco_shipping_data = $eco_params['eco_data'];
         }
 
@@ -444,8 +444,8 @@ class CarrierCore extends ObjectModel
 
         Hook::exec('actionBeforeEcoShippingCalculation', $eco_params);
 
-        // Store eco data in carrier for later use
-        if (!empty($eco_params['eco_data'])) {
+        // Store eco data in carrier for later use if modules have added data
+        if (count($eco_params['eco_data']) > 0) {
             $this->eco_shipping_data = $eco_params['eco_data'];
         }
 
