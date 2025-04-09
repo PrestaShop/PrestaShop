@@ -46,17 +46,18 @@ class AdminCartsControllerCore extends AdminController
         $this->allow_export = true;
         $this->_orderWay = 'DESC';
 
+        $limitDate30minutes = strtotime('-30 minutes', strtotime('now'));
+        $limit24h = strtotime('-24 hours', strtotime('now'));
         $this->_select = '
             CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) `customer`,
             a.id_cart total,
             ca.name carrier,
             o.id_order,
             IF (
-		        IFNULL(o.id_order, \'' . $this->trans('Non ordered', [], 'Admin.Orderscustomers.Feature') . '\') = \'' . $this->trans('Non ordered', [], 'Admin.Orderscustomers.Feature') . '\',
-		        IF(TIME_TO_SEC(TIMEDIFF(\'' . pSQL(date('Y-m-d H:i:00', time())) . '\', a.`date_add`)) > 86400, \'' . $this->trans('Abandoned cart', [], 'Admin.Orderscustomers.Feature') . '\',
-		        \'' . $this->trans('Non ordered', [], 'Admin.Orderscustomers.Feature') . '\'),
-		        o.id_order
-            ) AS status,
+    o.id_order IS NULL,
+    IF(a.date_add <  \'' . pSQL(date('Y-m-d H:i:00', $limit24h)) . '\', \'' . $this->trans('Abandoned cart', [], 'Admin.Orderscustomers.Feature') . '\', \'' . $this->trans('Non ordered', [], 'Admin.Orderscustomers.Feature') . '\'),
+    o.id_order
+) AS status,
 		    IF(o.id_order, 1, 0) badge_success,
 		    IF(o.id_order, 0, 1) badge_danger,
 		    IF(co.id_guest, 1, 0) id_guest';
@@ -68,7 +69,7 @@ class AdminCartsControllerCore extends AdminController
             SELECT DISTINCT `id_guest`
             FROM `' . _DB_PREFIX_ . 'connections`
             WHERE
-                TIME_TO_SEC(TIMEDIFF(\'' . pSQL(date('Y-m-d H:i:00', time())) . '\', `date_add`)) < 1800
+                `date_add` > \'' . pSQL(date('Y-m-d H:i:00', $limitDate30minutes)) . '\'
        ) AS co ON co.`id_guest` = a.`id_guest`';
 
         if (Tools::getValue('action') && Tools::getValue('action') == 'filterOnlyAbandonedCarts') {
