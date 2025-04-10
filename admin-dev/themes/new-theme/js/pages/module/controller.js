@@ -100,6 +100,7 @@ class AdminModuleController {
 
     // Selectors for Module Import
     this.importModalBtnSelector = '#page-header-desc-configuration-add_module';
+    this.importModalBtnSelectorMobile = '#page-header-desc-floating-configuration-add_module';
     this.dropZoneModalSelector = '#module-modal-import';
     this.dropZoneModalFooterSelector = '#module-modal-import .modal-footer';
     this.dropZoneImportZoneSelector = '#importDropzone';
@@ -531,9 +532,12 @@ class AdminModuleController {
 
   initAddModuleAction() {
     const self = this;
-    const addModuleButton = $(self.importModalBtnSelector);
-    addModuleButton.attr('data-toggle', 'modal');
-    addModuleButton.attr('data-target', self.dropZoneModalSelector);
+    const addModuleButton = $(`${self.importModalBtnSelector}, ${self.importModalBtnSelectorMobile}`);
+    if (addModuleButton.length) {
+      console.log('#module-modal-import is now visible');
+      addModuleButton.attr('data-toggle', 'modal');
+      addModuleButton.attr('data-target', self.dropZoneModalSelector);
+    }
   }
 
   initDropzone() {
