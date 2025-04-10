@@ -88,4 +88,11 @@ interface EntitySchemaManagerInterface
      * @return bool true on success, false if any operation failed
      */
     public function dropMultiple(array $entitiesClassesName): bool;
+
+    /**
+     * Adds a new path for entities to the entity manager (Ex.: %kernel.project_dir%/modules/MyModule/src/Entity)
+     *
+     * @param string $entityPath The path where Doctrine should look for entities
+     */
+    public function addEntityPath(string $entityPath): void;
 }

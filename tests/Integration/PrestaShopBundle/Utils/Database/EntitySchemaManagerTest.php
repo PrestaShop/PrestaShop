@@ -95,6 +95,11 @@ class EntitySchemaManagerTest extends KernelTestCase
     private function getEntitySchemaManager(): ?EntitySchemaManagerInterface
     {
         $service = self::$kernel->getContainer()->get(self::SERVICE_NAME);
+
+        if (!$service instanceof EntitySchemaManagerInterface) {
+            return null;
+        }
+
         $service->addEntityPath('%kernel.project_dir%/tests/Resources/Entity');
 
         return $service;
