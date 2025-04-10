@@ -27,7 +27,9 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Utils\Database;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\ToolsException;
 use PrestaShop\PrestaShop\Core\Exception\DatabaseException;
@@ -169,5 +171,18 @@ class EntitySchemaManager implements EntitySchemaManagerInterface
         }
 
         return $status;
+    }
+
+    /**
+     * Adds a new path for entities to the entity manager (Ex.: %kernel.project_dir%/modules/MyModule/src/Entity)
+     *
+     * @param string $entityPath The path where Doctrine should look for entities
+     */
+    public function addEntityPath(string $entityPath): void
+    {
+        $configuration = $this->entityManager->getConfiguration();
+        $annotationReader = new AnnotationReader();
+        $driver = new AnnotationDriver($annotationReader, [$entityPath]);
+        $configuration->setMetadataDriverImpl($driver);
     }
 }

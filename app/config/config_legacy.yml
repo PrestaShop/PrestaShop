@@ -12,8 +12,3 @@ doctrine:
         dir: "%kernel.project_dir%/src/PrestaShopBundle/Entity"
         is_bundle: false
         prefix: PrestaShop
-      Tests\Resources:
-        is_bundle: false
-        type: annotation
-        dir: '%kernel.project_dir%/tests/Resources/Entity'
-        prefix: 'Tests\Resources\Entity'

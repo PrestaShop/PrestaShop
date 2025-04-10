@@ -30,6 +30,7 @@ declare(strict_types=1);
 namespace Tests\Resources\Entity;
 
 use DateTimeImmutable;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Represents a Test entity.

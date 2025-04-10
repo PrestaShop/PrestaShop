@@ -92,9 +92,12 @@ class EntitySchemaManagerTest extends KernelTestCase
         $this->assertFalse($this->checkIfTableExists('my_table_test_entity_two_for_pr_35527'));
     }
 
-    private function getEntitySchemaManager(): EntitySchemaManagerInterface
+    private function getEntitySchemaManager(): ?EntitySchemaManagerInterface
     {
-        return self::$kernel->getContainer()->get(self::SERVICE_NAME);
+        $service = self::$kernel->getContainer()->get(self::SERVICE_NAME);
+        $service->addEntityPath('%kernel.project_dir%/tests/Resources/Entity');
+
+        return $service;
     }
 
     private function checkIfTableExists(string $tableName): bool
