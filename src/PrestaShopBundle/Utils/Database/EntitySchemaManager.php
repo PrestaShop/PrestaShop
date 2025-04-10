@@ -31,11 +31,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\ToolsException;
 use PrestaShop\PrestaShop\Core\Exception\DatabaseException;
+use PrestaShop\PrestaShop\Core\Util\Database\EntitySchemaManagerInterface;
 
 /**
  * Class EntitySchemaManager help to manage an entity schema: update, create, drop.
  */
-class EntitySchemaManager
+class EntitySchemaManager implements EntitySchemaManagerInterface
 {
     /**
      * @var SchemaTool

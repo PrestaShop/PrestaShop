@@ -26,17 +26,23 @@
 
 namespace Tests\Integration\PrestaShopBundle\Utils\Database;
 
+use Doctrine\DBAL\Connection;
+use Exception;
+use PrestaShop\PrestaShop\Core\Util\Database\EntitySchemaManagerInterface;
 use PrestaShopBundle\Utils\Database\EntitySchemaManager;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Tests\Resources\Entity\TestEntity;
 
 class EntitySchemaManagerTest extends KernelTestCase
 {
     private const SERVICE_NAME = 'prestashop.util.database.entity_schema_manager';
+    private ?Connection $connection;
 
     public function setUp(): void
     {
         parent::setUp();
         self::bootKernel();
+        $this->connection = self::$kernel->getContainer()->get('doctrine.dbal.default_connection');
     }
 
     public function testService(): void
@@ -44,6 +50,39 @@ class EntitySchemaManagerTest extends KernelTestCase
         /** @var EntitySchemaManager $entitySchemaManager */
         $entitySchemaManager = self::$kernel->getContainer()->get(self::SERVICE_NAME);
         $this->assertNotNull($entitySchemaManager);
-        $this->assertInstanceOf(EntitySchemaManager::class, $entitySchemaManager);
+        $this->assertInstanceOf(EntitySchemaManagerInterface::class, $entitySchemaManager);
+    }
+
+    /**
+     * @depends testService
+     */
+    public function testTableCreate(): void
+    {
+        /** @var EntitySchemaManager $entitySchemaManager */
+        $entitySchemaManager = self::$kernel->getContainer()->get(self::SERVICE_NAME);
+        $entitySchemaManager->create(TestEntity::class);
+        $this->assertTrue($this->checkIfTableExists('my_test_entity_for_pr_35527'));
+    }
+
+    /**
+     * @depends testTableCreate
+     */
+    public function testTableDrop(): void
+    {
+        /** @var EntitySchemaManager $entitySchemaManager */
+        $entitySchemaManager = self::$kernel->getContainer()->get(self::SERVICE_NAME);
+        $entitySchemaManager->drop(TestEntity::class);
+        $this->assertFalse($this->checkIfTableExists('my_test_entity_for_pr_35527'));
+    }
+
+    private function checkIfTableExists(string $tableName): bool
+    {
+        try {
+            $result = $this->connection->executeQuery('SHOW TABLES LIKE ?', [$tableName]);
+
+            return $result->rowCount() > 0;
+        } catch (Exception $e) {
+            return false;
+        }
     }
 }
