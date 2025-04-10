@@ -29,9 +29,9 @@ namespace Tests\Integration\PrestaShopBundle\Utils\Database;
 use Doctrine\DBAL\Connection;
 use Exception;
 use PrestaShop\PrestaShop\Core\Util\Database\EntitySchemaManagerInterface;
-use PrestaShopBundle\Utils\Database\EntitySchemaManager;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Tests\Resources\Entity\TestEntity;
+use Tests\Resources\Entity\TestEntityOne;
+use Tests\Resources\Entity\TestEntityTwo;
 
 class EntitySchemaManagerTest extends KernelTestCase
 {
@@ -47,8 +47,7 @@ class EntitySchemaManagerTest extends KernelTestCase
 
     public function testService(): void
     {
-        /** @var EntitySchemaManager $entitySchemaManager */
-        $entitySchemaManager = self::$kernel->getContainer()->get(self::SERVICE_NAME);
+        $entitySchemaManager = $this->getEntitySchemaManager();
         $this->assertNotNull($entitySchemaManager);
         $this->assertInstanceOf(EntitySchemaManagerInterface::class, $entitySchemaManager);
     }
@@ -58,10 +57,8 @@ class EntitySchemaManagerTest extends KernelTestCase
      */
     public function testTableCreate(): void
     {
-        /** @var EntitySchemaManager $entitySchemaManager */
-        $entitySchemaManager = self::$kernel->getContainer()->get(self::SERVICE_NAME);
-        $entitySchemaManager->create(TestEntity::class);
-        $this->assertTrue($this->checkIfTableExists('my_test_entity_for_pr_35527'));
+        $this->getEntitySchemaManager()->create(TestEntityOne::class);
+        $this->assertTrue($this->checkIfTableExists('my_table_test_entity_one_for_pr_35527'));
     }
 
     /**
@@ -69,10 +66,35 @@ class EntitySchemaManagerTest extends KernelTestCase
      */
     public function testTableDrop(): void
     {
-        /** @var EntitySchemaManager $entitySchemaManager */
-        $entitySchemaManager = self::$kernel->getContainer()->get(self::SERVICE_NAME);
-        $entitySchemaManager->drop(TestEntity::class);
-        $this->assertFalse($this->checkIfTableExists('my_test_entity_for_pr_35527'));
+        $this->getEntitySchemaManager()->drop(TestEntityOne::class);
+        $this->assertFalse($this->checkIfTableExists('my_table_test_entity_one_for_pr_35527'));
+    }
+
+    /**
+     * @depends testTableDrop
+     */
+    public function testTableCreateMultiple(): void
+    {
+        $this->getEntitySchemaManager()->createMultiple([TestEntityOne::class, TestEntityTwo::class]);
+
+        $this->assertTrue($this->checkIfTableExists('my_table_test_entity_one_for_pr_35527'));
+        $this->assertTrue($this->checkIfTableExists('my_table_test_entity_two_for_pr_35527'));
+    }
+
+    /**
+     * @depends testTableCreateMultiple
+     */
+    public function testTableDropMultiple(): void
+    {
+        $this->getEntitySchemaManager()->dropMultiple([TestEntityOne::class, TestEntityTwo::class]);
+
+        $this->assertFalse($this->checkIfTableExists('my_table_test_entity_one_for_pr_35527'));
+        $this->assertFalse($this->checkIfTableExists('my_table_test_entity_two_for_pr_35527'));
+    }
+
+    private function getEntitySchemaManager(): EntitySchemaManagerInterface
+    {
+        return self::$kernel->getContainer()->get(self::SERVICE_NAME);
     }
 
     private function checkIfTableExists(string $tableName): bool

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -34,9 +35,10 @@ use DateTimeImmutable;
  * Represents a Test entity.
  *
  * @ORM\Entity()
- * @ORM\Table(name="my_test_entity_for_pr_35527")
+ *
+ * @ORM\Table(name="my_table_test_entity_two_for_pr_35527")
  */
-class TestEntity
+class TestEntityTwo
 {
     /**
      * The unique identifier of the user.
@@ -44,7 +46,9 @@ class TestEntity
      * @var int|null
      *
      * @ORM\Id
+     *
      * @ORM\GeneratedValue
+     *
      * @ORM\Column(type="integer")
      */
     private ?int $id = null;
@@ -100,11 +104,13 @@ class TestEntity
      * Sets the user's full name.
      *
      * @param string $name
+     *
      * @return self
      */
     public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -122,11 +128,13 @@ class TestEntity
      * Sets the user's email address.
      *
      * @param string $email
+     *
      * @return self
      */
     public function setEmail(string $email): self
     {
         $this->email = $email;
+
         return $this;
     }
 
@@ -144,11 +152,13 @@ class TestEntity
      * Sets the creation date and time.
      *
      * @param DateTimeImmutable $createdAt
+     *
      * @return self
      */
     public function setCreatedAt(DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 }
