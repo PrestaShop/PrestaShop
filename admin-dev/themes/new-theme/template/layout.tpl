@@ -141,8 +141,6 @@
 </div>
 
 {if (!isset($lite_display) || (isset($lite_display) && !$lite_display))}
-  <div class="mobile-layer"></div>
-
   {if $display_footer}
       {include file='footer.tpl'}
   {/if}
