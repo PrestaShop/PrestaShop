@@ -193,14 +193,11 @@ function toggleApplyDiscountTo() {
 }
 
 function toggleGiftProduct() {
-  const isChecked = $('#free_gift_on').is(':checked');
-
-  $('#free_gift_div').toggle(isChecked, 400);
-  $('#gift_products_found').toggle(isChecked, 400);
-
-  if (!isChecked) {
+  if ($('#free_gift_on').prop('checked')) $('#free_gift_div').show(400);
+  else {
     $('#gift_product').val('0');
     $('#giftProductFilter').val('');
+    $('#free_gift_div').hide(200);
   }
 }
 
