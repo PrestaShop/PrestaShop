@@ -35,13 +35,8 @@ use PrestaShop\PrestaShop\Core\Exception\DatabaseException;
 /**
  * Class EntitySchemaManager help to manage an entity schema: update, create, drop.
  */
-final class EntitySchemaManager
+class EntitySchemaManager
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected EntityManagerInterface $entityManager;
-
     /**
      * @var SchemaTool
      */
@@ -50,9 +45,8 @@ final class EntitySchemaManager
     /**
      * @param EntityManagerInterface $entityManager
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(protected EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
         $this->schemaTool = new SchemaTool($this->entityManager);
     }
 
