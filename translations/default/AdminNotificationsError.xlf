@@ -1,1704 +1,1266 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="admin-dev/themes/default/template/controllers/access/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="5d1994bf28899a87795983875a98c2e1">
-        <source>Unable to update settings.</source>
-        <target>Unable to update settings.</target>
-        <note>Line: 230</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/error.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ecdb1f330299c20ac9897cd73f92c8cd">
-        <source>%1$s on line %2$s in file %3$s</source>
-        <target>%1$s on line %2$s in file %3$s</target>
-        <note>Line: 31</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/layout-ajax.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1e460c9780e870a025de51dbac61eeae">
-        <source>There are %d errors.</source>
-        <target>There are %d errors.</target>
-        <note>Line: 49</note>
-      </trans-unit>
-      <trans-unit id="23a61fdb216b255d81b0d49ca1abb8a4">
-        <source>There are %d warnings.</source>
-        <target>There are %d warnings.</target>
-        <note>Line: 88</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/Address.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="02af8c16ef4efa9fa9e2142372b0b90d">
-        <source>The %s field is required.</source>
-        <target>The %s field is required.</target>
-        <note>Line: 380</note>
-      </trans-unit>
-      <trans-unit id="fed3c8d832129d27b64c34fe410e7346">
-        <source>Property %s is empty.</source>
-        <target>Property %s is empty.</target>
-        <note>Line: 387</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/AddressFormat.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="47be00818e1acd46db0092d6586204cf">
-        <source>This class name does not exist.</source>
-        <target>This class name does not exist.</target>
-        <note>Line: 134</note>
-      </trans-unit>
-      <trans-unit id="388ed04607290133b78adf251a3e17ed">
-        <source>This property does not exist in the class or is forbidden.</source>
-        <target>This property does not exist in the class or is forbidden.</target>
-        <note>Line: 151</note>
-      </trans-unit>
-      <trans-unit id="48524477f4f52618e4ab9f1f6fb1d1a8">
-        <source>This association has too many elements.</source>
-        <target>This association has too many elements.</target>
-        <note>Line: 178</note>
-      </trans-unit>
-      <trans-unit id="46e6c4977ebd38ff176e68481ab04275">
-        <source>This name is not allowed.</source>
-        <target>This name is not allowed.</target>
-        <note>Line: 194</note>
-      </trans-unit>
-      <trans-unit id="6b6a27e705469286cb83d20ec8e1b885">
-        <source>Syntax error with this pattern.</source>
-        <target>Syntax error with this pattern.</target>
-        <note>Line: 188</note>
-      </trans-unit>
-      <trans-unit id="a3084b5f93d22e573824af3ca8f58b73">
-        <source>This key has already been used.</source>
-        <target>This key has already been used.</target>
-        <note>Line: 227</note>
-      </trans-unit>
-      <trans-unit id="988bebfbe120b5c4506333172898053a">
-        <source>The %s field (in tab %s) is required.</source>
-        <target>The %s field (in tab %s) is required.</target>
-        <note>Line: 250</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/Configuration.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="05c210d25ce1e9ad49a27d570f82b090">
-        <source>[%s] is not a valid configuration key</source>
-        <target>[%s] is not a valid configuration key</target>
-        <note>Line: 442</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/Currency.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e07269088946aa33a280b8c05529b46c">
-        <source>Cannot parse feed.</source>
-        <target>Cannot parse feed.</target>
-        <note>Line: 1058</note>
-      </trans-unit>
-      <trans-unit id="6f775dff2aa88bce2301e5d5309c5f7e">
-        <source>No default currency</source>
-        <target>No default currency</target>
-        <note>Line: 1065</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/Customer.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="2086311c1fd24419e3286804f69db13e">
-        <source>The email is already used, please choose another one</source>
-        <target>The email is already used, please choose another one</target>
-        <note>Line: 358</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/Customization.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="95013b94140e1438329efc8a39352f4b">
-        <source>Could not load cart id=%s</source>
-        <target>Could not load cart id=%s</target>
-        <note>Line: 394</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/ImageManager.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="c8c0514e93ea92be8895754e128348a0">
-        <source>Image format not recognized, allowed formats are: %s</source>
-        <target>Image format not recognized, allowed formats are: %s</target>
-        <note>Line: 518</note>
-      </trans-unit>
-      <trans-unit id="30fb35f3cf2b6e6e599b30dacc6c19c8">
-        <source>Image is too large (%1$d kB). Maximum allowed: %2$d kB</source>
-        <target>Image is too large (%1$d kB). Maximum allowed: %2$d kB</target>
-        <note>Line: 543</note>
-      </trans-unit>
-      <trans-unit id="2ab146a83f61d2896a472f52f353b321">
-        <source>Image format not recognized, allowed formats are: .ico</source>
-        <target>Image format not recognized, allowed formats are: .ico</target>
-        <note>Line: 546</note>
-      </trans-unit>
-      <trans-unit id="da819cb8d5fcace59e5ec77b43b12b0a">
-        <source>Error while uploading image; please change your server's settings.</source>
-        <target>Error while uploading image; please change your server's settings.</target>
-        <note>Line: 549</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/Language.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="c1c3fb9e8ca710c7a958c50d03829415">
-        <source>Cannot generate emails because the Symfony container is unavailable.</source>
-        <target>Cannot generate emails because the Symfony container is unavailable.</target>
-        <note>Line: 1336</note>
-      </trans-unit>
-      <trans-unit id="eb98c1e496a76fc9a930ed4731977498">
-        <source>Cannot generate email templates: %s.</source>
-        <target>Cannot generate email templates: %s.</target>
-        <note>Line: 1357</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/Meta.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="36757394a699878de6f0e51f203d1ee7">
-        <source>Cannot scan root directory</source>
-        <target>Cannot scan root directory</target>
-        <note>Line: 71</note>
-      </trans-unit>
-      <trans-unit id="c0c29d8902aa2cb256ea9eaefe307bf5">
-        <source>Cannot scan "override" directory</source>
-        <target>Cannot scan "override" directory</target>
-        <note>Line: 78</note>
-      </trans-unit>
-      <trans-unit id="b1ea648f9b7634752699f28ec9897b1a">
-        <source>File %2$s (in directory %1$s)</source>
-        <target>File %2$s (in directory %1$s)</target>
-        <note>Line: 106</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/ObjectModel.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="0e2338b37ab3dfeed544e8233b53d4e0">
-        <source>The %1$s field is too long (%2$d chars max).</source>
-        <target>The %1$s field is too long (%2$d chars max).</target>
-        <note>Line: 1091</note>
-      </trans-unit>
-      <trans-unit id="872d428c40b36bba9fc5fafaa76c6f22">
-        <source>Property %1$s has a bad value (allowed values are: %2$s).</source>
-        <target>Property %1$s has a bad value (allowed values are: %2$s).</target>
-        <note>Line: 1072</note>
-      </trans-unit>
-      <trans-unit id="9599d22695068a773c0f10ea1fd26a74">
-        <source>Your entry in field %1$s (language %2$s) exceeds max length %3$d chars (incl. html tags).</source>
-        <target>Your entry in field %1$s (language %2$s) exceeds max length %3$d chars (incl. html tags).</target>
-        <note>Line: 1089</note>
-      </trans-unit>
-      <trans-unit id="2674ff1d6f5ff826dae13cd4db1ca9b0">
-        <source>The length of property %1$s is currently %2$d chars. It must be between %3$d and %4$d chars.</source>
-        <target>The length of property %1$s is currently %2$d chars. It must be between %3$d and %4$d chars.</target>
-        <note>Line: 1095</note>
-      </trans-unit>
-      <trans-unit id="36fa50f9470229a5409dead853a3ad60">
-        <source>The range of property %1$s is currently %2$d. It must be between %3$d and %4$d.</source>
-        <target>The range of property %1$s is currently %2$d. It must be between %3$d and %4$d.</target>
-        <note>Line: 1113</note>
-      </trans-unit>
-      <trans-unit id="1448270fc6dbabe70584c87fa27cc96f">
-        <source>Validation function not found: %s.</source>
-        <target>Validation function not found: %s.</target>
-        <note>Line: 1128</note>
-      </trans-unit>
-      <trans-unit id="6938fc7c0e5b0b07a6ba370bcb84bbd3">
-        <source>Property %s is not valid</source>
-        <target>Property %s is not valid</target>
-        <note>Line: 1146</note>
-      </trans-unit>
-      <trans-unit id="ee66f9c9930cb33d2a5dde9b240d3f7e">
-        <source>is required.</source>
-        <target>is required.</target>
-        <note>Line: 1208</note>
-      </trans-unit>
-      <trans-unit id="0fec856489067e4d21aa315324c441dc">
-        <source>%1$s is too long. Maximum length: %2$d</source>
-        <target>%1$s is too long. Maximum length: %2$d</target>
-        <note>Line: 1215</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/Tools.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="355f26b47eff3302c93a1c49676f078e">
-        <source>Fatal error</source>
-        <target>Fatal error</target>
-        <note>Line: 1018</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/Uploader.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a5a6e6da29a779cece21518a4ba337e2">
-        <source>The uploaded file exceeds the post_max_size directive in php.ini</source>
-        <target>The uploaded file exceeds the post_max_size directive in php.ini</target>
-        <note>Line: 351</note>
-      </trans-unit>
-      <trans-unit id="0bff5a3a7cc19937dd97b8a995915222">
-        <source>File is too big. Current size is %1s, maximum size is %2s.</source>
-        <target>File is too big. Current size is %1s, maximum size is %2s.</target>
-        <note>Line: 372</note>
-      </trans-unit>
-      <trans-unit id="fb0e0badcf5ac5c98f791447646f5ac8">
-        <source>Server file size is different from local file size</source>
-        <target>Server file size is different from local file size</target>
-        <note>Line: 288</note>
-      </trans-unit>
-      <trans-unit id="ae8e757923a42d666e5c0fdf59fda545">
-        <source>The uploaded file exceeds %s</source>
-        <target>The uploaded file exceeds %s</target>
-        <note>Line: 309</note>
-      </trans-unit>
-      <trans-unit id="f8fe8cba1625eaf8e5c253b041d57dbd">
-        <source>The uploaded file was only partially uploaded</source>
-        <target>The uploaded file was only partially uploaded</target>
-        <note>Line: 313</note>
-      </trans-unit>
-      <trans-unit id="298883b17e36ee3a18d73e835c0b44fc">
-        <source>No file was uploaded</source>
-        <target>No file was uploaded</target>
-        <note>Line: 317</note>
-      </trans-unit>
-      <trans-unit id="c6de8e792d7423f52f3108b197f87738">
-        <source>Missing temporary folder</source>
-        <target>Missing temporary folder</target>
-        <note>Line: 321</note>
-      </trans-unit>
-      <trans-unit id="f5985b2c059d5cc36968baab7585baba">
-        <source>Failed to write file to disk</source>
-        <target>Failed to write file to disk</target>
-        <note>Line: 325</note>
-      </trans-unit>
-      <trans-unit id="b2b0bd0f32c2dcb52c3e2feb24f33a31">
-        <source>A PHP extension stopped the file upload</source>
-        <target>A PHP extension stopped the file upload</target>
-        <note>Line: 329</note>
-      </trans-unit>
-      <trans-unit id="be694d5db9d32c43014995441a5939c4">
-        <source>Invalid file name</source>
-        <target>Invalid file name</target>
-        <note>Line: 357</note>
-      </trans-unit>
-      <trans-unit id="85fb1cf47b9543043438ba7ed901b626">
-        <source>Filetype not allowed</source>
-        <target>Filetype not allowed</target>
-        <note>Line: 366</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/controller/AdminController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="7f290594963a303db17a5e21dc4cf0b7">
-        <source>An error occurred while deleting the object.</source>
-        <target>An error occurred while deleting the object.</target>
-        <note>Line: 1175</note>
-      </trans-unit>
-      <trans-unit id="1d5dfad5ac415b412c20a05a89d43db6">
-        <source>An error occurred while deleting this selection.</source>
-        <target>An error occurred while deleting this selection.</target>
-        <note>Line: 3982</note>
-      </trans-unit>
-      <trans-unit id="c2c0814b9cbcdf57b426000de541d20f">
-        <source>The object cannot be loaded (or found).</source>
-        <target>The object cannot be loaded (or found).</target>
-        <note>Line: 1775
-Comment: throw exception</note>
-      </trans-unit>
-      <trans-unit id="efb49241363bce74c7d7899333cdebb5">
-        <source>An error occurred when attempting to update the required fields.</source>
-        <target>An error occurred when attempting to update the required fields.</target>
-        <note>Line: 1374</note>
-      </trans-unit>
-      <trans-unit id="a62d7ffa591311c930a2017b07e55394">
-        <source>The object cannot be loaded (the identifier is missing or invalid)</source>
-        <target>The object cannot be loaded (the identifier is missing or invalid)</target>
-        <note>Line: 1785</note>
-      </trans-unit>
-      <trans-unit id="66042fc205784775b028ba4ac7acebf3">
-        <source>Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server's configuration settings.</source>
-        <target>Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server's configuration settings.</target>
-        <note>Line: 3906</note>
-      </trans-unit>
-      <trans-unit id="ddd4e7f16c2032d59cb4fb4b86576bc5">
-        <source>You must select at least one element to delete.</source>
-        <target>You must select at least one element to delete.</target>
-        <note>Line: 3985</note>
-      </trans-unit>
-      <trans-unit id="10f97f4fea6d1ff9ffd1ed3260d6220d">
-        <source>Unable to delete associated images.</source>
-        <target>Unable to delete associated images.</target>
-        <note>Line: 1151</note>
-      </trans-unit>
-      <trans-unit id="6d28945e1e7f349cda5503c96aa3ae76">
-        <source>You must select at least one item to perform a bulk action.</source>
-        <target>You must select at least one item to perform a bulk action.</target>
-        <note>Line: 4075</note>
-      </trans-unit>
-      <trans-unit id="7c422404cb037e6781b5a553060670a6">
-        <source>Can't delete #%id%</source>
-        <target>Can't delete #%id%</target>
-        <note>Line: 3976</note>
-      </trans-unit>
-      <trans-unit id="ee77ea46b0c548ed60eadf31bdd68613">
-        <source>Bad SQL query</source>
-        <target>Bad SQL query</target>
-        <note>Line: 2392</note>
-      </trans-unit>
-      <trans-unit id="df2751083713a6a971814c07d88c3eb5">
-        <source>The 'From' date format is invalid (YYYY-MM-DD)</source>
-        <target>The 'From' date format is invalid (YYYY-MM-DD)</target>
-        <note>Line: 945</note>
-      </trans-unit>
-      <trans-unit id="f500b8d6f94abcca48cda7c033c64996">
-        <source>The 'To' date format is invalid (YYYY-MM-DD)</source>
-        <target>The 'To' date format is invalid (YYYY-MM-DD)</target>
-        <note>Line: 953</note>
-      </trans-unit>
-      <trans-unit id="83379252d4737a0b2a63a9388bb36890">
-        <source>An error occurred while attempting to delete the image. (cannot load object).</source>
-        <target>An error occurred while attempting to delete the image. (cannot load object).</target>
-        <note>Line: 1059</note>
-      </trans-unit>
-      <trans-unit id="b1367942aa02ea8c9d4aa07cdf5e473c">
-        <source>You need at least one object.</source>
-        <target>You need at least one object.</target>
-        <note>Line: 3944</note>
-      </trans-unit>
-      <trans-unit id="ec5f6f7f65190788d12ef16ab6135009">
-        <source>You cannot delete all of the items.</source>
-        <target>You cannot delete all of the items.</target>
-        <note>Line: 3946</note>
-      </trans-unit>
-      <trans-unit id="2a0c56d5a5183a9b65b8e2817f75ded2">
-        <source>You cannot delete this item.</source>
-        <target>You cannot delete this item.</target>
-        <note>Line: 1143
-Comment: check if some ids are in list_skip_actions and forbid deletion</note>
-      </trans-unit>
-      <trans-unit id="bc33aa1314e7dcd3472db72472b909b2">
-        <source>An error occurred during deletion.</source>
-        <target>An error occurred during deletion.</target>
-        <note>Line: 1161</note>
-      </trans-unit>
-      <trans-unit id="204c3558e41366f3d558ce8e01426a22">
-        <source>field %s is required.</source>
-        <target>field %s is required.</target>
-        <note>Line: 1529</note>
-      </trans-unit>
-      <trans-unit id="6d4b3edf61cd910289b082cd39a682c0">
-        <source>The option selected in the %s field is invalid.</source>
-        <target>The option selected in the %s field is invalid.</target>
-        <note>Line: 1535</note>
-      </trans-unit>
-      <trans-unit id="c2c0e06097c62422199e29a5574e9fc4">
-        <source>Cannot add configuration %s</source>
-        <target>Cannot add configuration %s</target>
-        <note>Line: 1598</note>
-      </trans-unit>
-      <trans-unit id="2782e6f430c2658c79aecfcecdc0d0e8">
-        <source>The field %field_name% is required at least in %lang%.</source>
-        <target>The field %field_name% is required at least in %lang%.</target>
-        <note>Line: 3611</note>
-      </trans-unit>
-      <trans-unit id="b4186b9ed7c957a1cd9f4e7ce916e603">
-        <source>%s: Incorrect value</source>
-        <target>%s: Incorrect value</target>
-        <note>Line: 3830</note>
-      </trans-unit>
-      <trans-unit id="9c79588566c8069eb2bd441da9a27be1">
-        <source>Can't update #%id% status</source>
-        <target>Can't update #%id% status</target>
-        <note>Line: 4065</note>
-      </trans-unit>
-      <trans-unit id="c87956ad745e55231c633c03fe0f0d5b">
-        <source>An error occurred while assigning a zone to the selection.</source>
-        <target>An error occurred while assigning a zone to the selection.</target>
-        <note>Line: 4095</note>
-      </trans-unit>
-      <trans-unit id="93463ceee9a3d376b18ee618bc2fffe4">
-        <source>You must select at least one element to assign a new zone.</source>
-        <target>You must select at least one element to assign a new zone.</target>
-        <note>Line: 4097</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/controller/Controller.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="652122103181aa2752efaecab300edf0">
-        <source>Access denied.</source>
-        <target>Access denied.</target>
-        <note>Line: 332</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/helper/HelperImageUploader.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="2368e33e3e01d53abb9b60061ab83903">
-        <source>The uploaded file exceeds the upload_max_filesize directive in php.ini</source>
-        <target>The uploaded file exceeds the upload_max_filesize directive in php.ini</target>
-        <note>Line: 59</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/module/Module.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="fdc746e5693df31cf4f6ef789a8846c5">
-        <source>file (%s) not writable</source>
-        <target>file (%s) not writable</target>
-        <note>Line: 2973</note>
-      </trans-unit>
-      <trans-unit id="a9de928286071f457fcbc45656353761">
-        <source>directory (%s) not writable</source>
-        <target>directory (%s) not writable</target>
-        <note>Line: 3073</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/webservice/WebserviceSpecificManagementAttachments.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="4c5a77e114a577bca066d292aeef02bc">
-        <source>The file you are trying to upload is %2$d KB, which is larger than the maximum size allowed of %1$d KB.</source>
-        <target>The file you are trying to upload is %2$d KB, which is larger than the maximum size allowed of %1$d KB.</target>
-        <note>Line: 357</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/webservice/WebserviceSpecificManagementImages.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b05c3c0bfce943b86e286e8e8103b6e5">
-        <source>An error occurred while uploading the image.</source>
-        <target>An error occurred while uploading the image.</target>
-        <note>Line: 993</note>
-      </trans-unit>
-      <trans-unit id="6c3609de8769a4456305ec22e764573d">
-        <source>An error occurred while copying this image: %s</source>
-        <target>An error occurred while copying this image: %s</target>
-        <note>Line: 1166</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCarrierWizardController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="574af21ff5cd555457e49205287f7e9b">
-        <source>The object cannot be loaded.</source>
-        <target>The object cannot be loaded.</target>
-        <note>Line: 907</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCarriersController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="954b49d26a3a0986aca720a7095f2aa9">
-        <source>An error occurred while updating an object.</source>
-        <target>An error occurred while updating an object.</target>
-        <note>Line: 459</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCountriesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="01e93e9457d86c646965decd586dc5ea">
-        <source>Address format invalid</source>
-        <target>Address format invalid</target>
-        <note>Line: 439</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCustomerThreadsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="84e4970c5c35731ac7084f09ca0a77cd">
-        <source>The email address is invalid.</source>
-        <target>The email address is invalid.</target>
-        <note>Line: 427</note>
-      </trans-unit>
-      <trans-unit id="62867691cceb8f8a7e7683b924cc20c5">
-        <source>An error occurred during the file upload process.</source>
-        <target>An error occurred during the file upload process.</target>
-        <note>Line: 443</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminDashboardController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="8f29c70fd66f50ce28b727cd40c6a3a3">
-        <source>The selected date range is not valid.</source>
-        <target>The selected date range is not valid.</target>
-        <note>Line: 325</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f86f7b91afe27e79305a6b07bdb0d3c0">
-        <source>Failed to update the status</source>
-        <target>Failed to update the status</target>
-        <note>Line: 225</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e96814b3d9ff9ae65c8f2be2ee3e0555">
-        <source>Invalid tag(s) (%s)</source>
-        <target>Invalid tag(s) (%s)</target>
-        <note>Line: 1996</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminModulesPositionsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="aeca1e74dd7d86d85886996651937da9">
-        <source>No valid value for field exceptions has been defined.</source>
-        <target>No valid value for field exceptions has been defined.</target>
-        <note>Line: 174</note>
-      </trans-unit>
-      <trans-unit id="0ce2f4a4f40a2d23525b5b02bcfe611f">
-        <source>An error occurred while transplanting the module to its hook.</source>
-        <target>An error occurred while transplanting the module to its hook.</target>
-        <note>Line: 107</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminPdfController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b42cd3af71fc00ef268910709255320a">
-        <source>You do not have permission to view this.</source>
-        <target>You do not have permission to view this.</target>
-        <note>Line: 71</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminShopController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="d9b5b2302d57f3d13d5387ba9c99daae">
-        <source>An error occurred while creating an object.</source>
-        <target>An error occurred while creating an object.</target>
-        <note>Line: 713</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminShopGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f1534de7e6636fdfedf7aea238841b24">
-        <source>You cannot delete or disable the last shop group.</source>
-        <target>You cannot delete or disable the last shop group.</target>
-        <note>Line: 344</note>
-      </trans-unit>
-      <trans-unit id="e91077be3c46fd0d3fd8e972e8ca1e48">
-        <source>You cannot delete or disable a shop group in use.</source>
-        <target>You cannot delete or disable a shop group in use.</target>
-        <note>Line: 346</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminShopUrlController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1b0cc7183377b461e298d0ebcf5f8548">
-        <source>An error occurred while updating the status.</source>
-        <target>An error occurred while updating the status.</target>
-        <note>Line: 437</note>
-      </trans-unit>
-      <trans-unit id="815e471ea2970db0b63b9b09feacc70f">
-        <source>An error occurred while updating the status for an object.</source>
-        <target>An error occurred while updating the status for an object.</target>
-        <note>Line: 456</note>
-      </trans-unit>
-      <trans-unit id="1bdd228669c9dd995eb664737e60786e">
-        <source>You do not have permission to edit this.</source>
-        <target>You do not have permission to edit this.</target>
-        <note>Line: 459</note>
-      </trans-unit>
-      <trans-unit id="77ae44aa6c998166fcf1a87496278ad5">
-        <source>(cannot load object)</source>
-        <target>(cannot load object)</target>
-        <note>Line: 456</note>
-      </trans-unit>
-      <trans-unit id="fd44c173b6a7897151a978b9015fec76">
-        <source>You cannot disable the Main URL.</source>
-        <target>You cannot disable the Main URL.</target>
-        <note>Line: 533</note>
-      </trans-unit>
-      <trans-unit id="d2de9e264ff4f0e711d809f00da76e45">
-        <source>You cannot change a main URL to a non-main URL. You have to set another URL as your Main URL for the selected shop.</source>
-        <target>You cannot change a main URL to a non-main URL. You have to set another URL as your Main URL for the selected shop.</target>
-        <note>Line: 529</note>
-      </trans-unit>
-      <trans-unit id="aee1f34d776c8cc3401cac254299e6f9">
-        <source>A shop URL that uses this domain already exists.</source>
-        <target>A shop URL that uses this domain already exists.</target>
-        <note>Line: 507</note>
-      </trans-unit>
-      <trans-unit id="deb836e0c149bb47a1d86eabe4b2f7db">
-        <source>A shop virtual URL cannot be "%URL%"</source>
-        <target>A shop virtual URL cannot be "%URL%"</target>
-        <note>Line: 483</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminStoresController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f759990f130f580695eae63e25558461">
-        <source>Your Zip/Postal code is incorrect.</source>
-        <target>Your Zip/Postal code is incorrect.</target>
-        <note>Line: 384</note>
-      </trans-unit>
-      <trans-unit id="6660b316abc0970476a09df63028d553">
-        <source>It must be entered as follows:</source>
-        <target>It must be entered as follows:</target>
-        <note>Line: 384</note>
-      </trans-unit>
-      <trans-unit id="50b668816d2acbdb62484bb5ea5d25ab">
-        <source>A Zip/Postal code is required.</source>
-        <target>A Zip/Postal code is required.</target>
-        <note>Line: 386</note>
-      </trans-unit>
-      <trans-unit id="e6c1e151f2554afad6c0d551046650e8">
-        <source>The Zip/Postal code is invalid.</source>
-        <target>The Zip/Postal code is invalid.</target>
-        <note>Line: 388</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminTabsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="45ebc64529137a007889ee445d64611c">
-        <source>Failed to update the position.</source>
-        <target>Failed to update the position.</target>
-        <note>Line: 303</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminTaxRulesGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="d8d4c3b79181fdcca8cb5159208fa56a">
-        <source>You do not have permission to add this.</source>
-        <target>You do not have permission to add this.</target>
-        <note>Line: 403</note>
-      </trans-unit>
-      <trans-unit id="11a257a80f8c8d76132470b171de6795">
-        <source>You do not have permission to delete this.</source>
-        <target>You do not have permission to delete this.</target>
-        <note>Line: 397</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminTranslationsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a7eca295291f53a23ab7ba0a9c7fd9de">
-        <source>This functionality has been disabled.</source>
-        <target>This functionality has been disabled.</target>
-        <note>Line: 1327</note>
-      </trans-unit>
-      <trans-unit id="e298a0bc9a35d45798e28c082dfc1dfa">
-        <source>"%type%" does not exist.</source>
-        <target>"%type%" does not exist.</target>
-        <note>Line: 114</note>
-      </trans-unit>
-      <trans-unit id="40f5c232e433d178a4f912b3092d7df1">
-        <source>Directory "%folder%" cannot be created</source>
-        <target>Directory "%folder%" cannot be created</target>
-        <note>Line: 336</note>
-      </trans-unit>
-      <trans-unit id="80034ab2323115584ed4c5b05e222f60">
-        <source>File "%file%" cannot be created</source>
-        <target>File "%file%" cannot be created</target>
-        <note>Line: 338</note>
-      </trans-unit>
-      <trans-unit id="6b12f160f2bb3c7dea01bd96a223d80e">
-        <source>Cannot write this file: "%folder%"</source>
-        <target>Cannot write this file: "%folder%"</target>
-        <note>Line: 388</note>
-      </trans-unit>
-      <trans-unit id="f0566c73cce29920f99fda8819745804">
-        <source>This file must be writable: %file%</source>
-        <target>This file must be writable: %file%</target>
-        <note>Line: 531</note>
-      </trans-unit>
-      <trans-unit id="e0a602c130d12d57cd4ca2a8b9240917">
-        <source>This file must be writable:</source>
-        <target>This file must be writable:</target>
-        <note>Line: 1568</note>
-      </trans-unit>
-      <trans-unit id="bcfa9fd034fffbe5aa1a9c9e306386f1">
-        <source>Fatal error: The module directory does not exist.</source>
-        <target>Fatal error: The module directory does not exist.</target>
-        <note>Line: 1995</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/blockreassurance/blockreassurance.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="7c67bd3f540cf0ec5e7346bcea963013">
-        <source>The field %field_name% is required at least in your default language.</source>
-        <target>The field %field_name% is required at least in your default language.</target>
-        <note>Line: 523</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/blockreassurance/controllers/admin/AdminBlockListingController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="c4ae3afc5d4c01919142f8b39cc5c1c5">
-        <source>Image format not recognized, allowed formats are: .gif, .jpg, .png</source>
-        <target>Image format not recognized, allowed formats are: .gif, .jpg, .png</target>
-        <note>Line: 196</note>
-      </trans-unit>
-      <trans-unit id="198dabd328b3e93b2eec2f6d76ab3eb1">
-        <source>Error while uploading image; please change your server's settings. (Error code: %s)</source>
-        <target>Error while uploading image; please change your server's settings. (Error code: %s)</target>
-        <note>Line: 199</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/dashproducts/dashproducts.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="5cd8dc8a58702a63e79af3ad9de16d7a">
-        <source>The %s field is invalid.</source>
-        <target>The %s field is invalid.</target>
-        <note>Line: 589</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/productcomments/productcomments.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="8f2569cb25ecb7b7540661a20ac65e68">
-        <source>%s is invalid. Please enter an integer greater than %s.</source>
-        <target>%s is invalid. Please enter an integer greater than %s.</target>
-        <note>Line: 190</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_banner/ps_banner.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="df7859ac16e724c9b1fba0a364503d72">
-        <source>An error occurred while attempting to upload the file.</source>
-        <target>An error occurred while attempting to upload the file.</target>
-        <note>Line: 146</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_categorytree/ps_categorytree.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="23e0d4ecc25de9b2777fdaca3e2f3193">
-        <source>Maximum depth: Invalid number.</source>
-        <target>Maximum depth: Invalid number.</target>
-        <note>Line: 91</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_customtext/ps_customtext.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="abb1f006957d2d4002cc1d49c63a0fad">
-        <source>Please fill out all fields.</source>
-        <target>Please fill out all fields.</target>
-        <note>Line: 176</note>
-      </trans-unit>
-      <trans-unit id="3fa720301fb9c9badc23c00c1e88b4f7">
-        <source>An error occurred on saving.</source>
-        <target>An error occurred on saving.</target>
-        <note>Line: 182</note>
-      </trans-unit>
-      <trans-unit id="57746b104110541e8bd663f550206ed5">
-        <source><![CDATA[To use <iframe>, enable the feature in Shop Parameters > General]]></source>
-        <target><![CDATA[To use <iframe>, enable the feature in Shop Parameters > General]]></target>
-        <note>Line: 210</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_emailsubscription/ps_emailsubscription.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="417d63b1effb110e438d4b4b9f0fbd95">
-        <source>The voucher code is invalid.</source>
-        <target>The voucher code is invalid.</target>
-        <note>Line: 224</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_facetedsearch/src/Form/Feature/FormModifier.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="87ecb83d305a6af0e0438a0587e31de8">
-        <source>%s is invalid.</source>
-        <target>%s is invalid.</target>
-        <note>Line: 84</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_imageslider/ps_imageslider.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="7cc92687130ea12abb80556681538001">
-        <source>An error occurred during the image upload process.</source>
-        <target>An error occurred during the image upload process.</target>
-        <note>Line: 522</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_linklist/src/Form/Type/LinkBlockType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="48d87ac90e3cfaac58c02f30259fbfec">
-        <source>You have to select at least one shop to associate this item with</source>
-        <target>You have to select at least one shop to associate this item with</target>
-        <note>Line: 188</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_socialfollow/ps_socialfollow.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f9c7939a8397ee022fefee2bdb3407af">
-        <source>Invalid URL</source>
-        <target>Invalid URL</target>
-        <note>Line: 397</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Adapter/Configuration/LogsConfiguration.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="3ba5cf4a182aa6398ff81f3255c359df">
-        <source>Invalid emails: %invalid_emails%.</source>
-        <target>Invalid emails: %invalid_emails%.</target>
-        <note>Line: 94</note>
-      </trans-unit>
-      <trans-unit id="d9b20c3ccfd685197de07684f7775258">
-        <source>Invalid email: %invalid_email%.</source>
-        <target>Invalid email: %invalid_email%.</target>
-        <note>Line: 100</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Adapter/Product/GeneralConfiguration.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="cc8f0fe2d629bd1810331b1a265914ec">
-        <source>The selected condition must be different in each field to set an order of priority.</source>
-        <target>The selected condition must be different in each field to set an order of priority.</target>
-        <note>Line: 107</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Adapter/SqlManager/SqlQueryValidator.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="Admin.Notifications.Error.xlf" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="0b5512610b0c8548345f37a58bf51360">
         <source>"%key%" does not exist.</source>
         <target>"%key%" does not exist.</target>
-        <note>Line: 388</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/AdminAPIController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="0b23d15a0490ea1b57d347923236bde8">
-        <source>This value for "%field%" is already used and must be unique.</source>
-        <target>This value for "%field%" is already used and must be unique.</target>
-        <note>Line: 300</note>
-      </trans-unit>
-      <trans-unit id="bc59794bf2e27147861f4014fb25ffe7">
-        <source>The field "%field%" cannot be longer than %limit% characters.</source>
-        <target>The field "%field%" cannot be longer than %limit% characters.</target>
-        <note>Line: 336</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/AdministrationController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="5d4ab8176c670bbb26380353630c90e4">
-        <source>%s is invalid. Please enter an integer greater than or equal to 0.</source>
-        <target>%s is invalid. Please enter an integer greater than or equal to 0.</target>
-        <note>Line: 193</note>
-      </trans-unit>
-      <trans-unit id="2a8676c5942efe4449225f3fbeccb816">
-        <source>%s is invalid. Please enter an integer lower than %s.</source>
-        <target>%s is invalid. Please enter an integer lower than %s.</target>
-        <note>Line: 199</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/EmployeeController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="4094e2b5b97c257c5805be4554a7e589">
-        <source>The password doesn't meet the password policy requirements.</source>
-        <target>The password doesn't meet the password policy requirements.</target>
-        <note>Line: 487</note>
-      </trans-unit>
-      <trans-unit id="b9858844487d4453664143257f104266">
-        <source>The selected default page is not accessible by the selected profile.</source>
-        <target>The selected default page is not accessible by the selected profile.</target>
-        <note>Line: 492</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="df3c280f0aaf0cb0d5c25ab322a8bcf9">
-        <source>You do not have permission to update this.</source>
-        <target>You do not have permission to update this.</target>
-        <note>Line: 361</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/MemcacheServerController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b07242082d4a24b63951185a1bae15bb">
-        <source>You do not have permission to create this.</source>
-        <target>You do not have permission to create this.</target>
-        <note>Line: 95</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ProfileController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="3f19c85aaf117e786e30ce2d7f2c018f">
-        <source>This field cannot be longer than %limit% characters (incl. HTML tags)</source>
-        <target>This field cannot be longer than %limit% characters (incl. HTML tags)</target>
-        <note>Line: 292</note>
-      </trans-unit>
-      <trans-unit id="876bf016176064bc6ef0cdfca73bdafb">
-        <source>Role(s) assigned to employee cannot be deleted</source>
-        <target>Role(s) assigned to employee cannot be deleted</target>
-        <note>Line: 314</note>
-      </trans-unit>
-      <trans-unit id="171460399d524a507ddf20a4c37275fa">
-        <source>You cannot delete your own role</source>
-        <target>You cannot delete your own role</target>
-        <note>Line: 319</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/SecurityController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="90a9ebb26592cd5b32b42788d6d7d122">
-        <source>An error occurred while clearing objects.</source>
-        <target>An error occurred while clearing objects.</target>
-        <note>Line: 414</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/SqlManagerController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="bf413509dac07690b304373338fc1149">
-        <source>Cannot open export file for writing</source>
-        <target>Cannot open export file for writing</target>
-        <note>Line: 484</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/ContactsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="505bbc38260c669d0793757e414caecc">
-        <source>The %s field is not valid</source>
-        <target>The %s field is not valid</target>
-        <note>Line: 245</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/MetaController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e31f2dac034e1437efa1dbf499509963">
-        <source>Cannot write into file: %filename%. Please check write permissions.</source>
-        <target>Cannot write into file: %filename%. Please check write permissions.</target>
-        <note>Line: 347</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/OrderStateController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="4def5438dd1db0e90c6cbe2028772138">
-        <source>This order status does not exist.</source>
-        <target>This order status does not exist.</target>
-        <note>Line: 476</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/FrameworkBundleAdminController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="5ab1978ae9ce868183a34316327be062">
-        <source>An unexpected error occurred. [%type% code %code%]: %message%</source>
-        <target>An unexpected error occurred. [%type% code %code%]: %message%</target>
-        <note>Line: 503</note>
-      </trans-unit>
-      <trans-unit id="e8ae00af8575f645bf6e4358f120cba3">
-        <source>An unexpected error occurred. [%type% code %code%]</source>
-        <target>An unexpected error occurred. [%type% code %code%]</target>
-        <note>Line: 514</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Improve/Design/MailThemeController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="0f411b3d0a4cca67f710f4b5d181154a">
-        <source>Cannot send test email for theme %theme% because it is not your current theme</source>
-        <target>Cannot send test email for theme %theme% because it is not your current theme</target>
-        <note>Line: 289</note>
-      </trans-unit>
-      <trans-unit id="042b67d6d246fe6ddf24d6d5b3c7e511">
-        <source>Cannot send test email for layout %layout%</source>
-        <target>Cannot send test email for layout %layout%</target>
-        <note>Line: 346</note>
-      </trans-unit>
-      <trans-unit id="26c322633921fe508bb9a03de1124986">
-        <source>Cannot translate emails body content</source>
-        <target>Cannot translate emails body content</target>
-        <note>Line: 376</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="3463605a91f50da30633ac9a1d922d3a">
-        <source>Themes can only be changed in single store context.</source>
-        <target>Themes can only be changed in single store context.</target>
-        <note>Line: 443</note>
-      </trans-unit>
-      <trans-unit id="22c02340d6f7c86c03120d5dfe60eac3">
-        <source>Missing configuration file</source>
-        <target>Missing configuration file</target>
-        <note>Line: 446</note>
-      </trans-unit>
-      <trans-unit id="85265e940fbb820dd2475946e7bc48d9">
-        <source>Invalid configuration</source>
-        <target>Invalid configuration</target>
-        <note>Line: 449</note>
-      </trans-unit>
-      <trans-unit id="5992528f236587164ee4f212b9460410">
-        <source>Invalid data</source>
-        <target>Invalid data</target>
-        <note>Line: 452</note>
-      </trans-unit>
-      <trans-unit id="4dedf35a15365e00b8a151fc1daed3af">
-        <source>Image format not recognized, allowed format(s) is(are): .%s</source>
-        <target>Image format not recognized, allowed format(s) is(are): .%s</target>
-        <note>Line: 539</note>
-      </trans-unit>
-      <trans-unit id="5dcea1234ac01d22f40ffc81d0bc4c2f">
-        <source>File too large (limit of %s bytes).</source>
-        <target>File too large (limit of %s bytes).</target>
-        <note>Line: 550</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Improve/International/CurrencyController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b3f69fdbd12765a4667492d013ea3d81">
-        <source>You need permission to edit this.</source>
-        <target>You need permission to edit this.</target>
-        <note>Line: 398</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Improve/International/LanguageController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="25e49a9ca73fb59fa5fdb618f136ed48">
-        <source>Max file size allowed is "%s" bytes.</source>
-        <target>Max file size allowed is "%s" bytes.</target>
-        <note>Line: 331</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Improve/International/StateController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="d52eaeff31af37a4a7e0550008aff5df">
-        <source>An error occurred while attempting to save.</source>
-        <target>An error occurred while attempting to save.</target>
-        <note>Line: 412</note>
-      </trans-unit>
-      <trans-unit id="1da2e8106b3a2171fbb7193a24b91526">
-        <source>An unexpected error occurred.</source>
-        <target>An unexpected error occurred.</target>
-        <note>Line: 390</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Improve/International/ZoneController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="d0d474f143062278a7fda7bfb9d2712a">
-        <source>This zone does not exist.</source>
-        <target>This zone does not exist.</target>
-        <note>Line: 329</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Improve/ModuleController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="dbf373dd3565accf2d2fd19700f6a5ae">
-        <source>Invalid action</source>
-        <target>Invalid action</target>
-        <note>Line: 234</note>
-      </trans-unit>
-      <trans-unit id="2b73839c76b07fdd994e444e0c7e75ad">
-        <source>Your uploaded file might exceed the [1]upload_max_filesize[/1] and the [1]post_max_size[/1] directives in [1]php.ini[/1], please check your server configuration.</source>
-        <target>Your uploaded file might exceed the [1]upload_max_filesize[/1] and the [1]post_max_size[/1] directives in [1]php.ini[/1], please check your server configuration.</target>
-        <note>Line: 355</note>
-      </trans-unit>
-      <trans-unit id="370835a4106d1c7860f2fbb5daabd050">
-        <source>The file is missing.</source>
-        <target>The file is missing.</target>
-        <note>Line: 369</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Address/AddressController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="acdcc688155bd653f51eaf710cac8af5">
-        <source>Internal error #%s</source>
-        <target>Internal error #%s</target>
-        <note>Line: 605</note>
-      </trans-unit>
-      <trans-unit id="ddb7f719baea8c9f335937b683e8f155">
-        <source>Invalid data supplied.</source>
-        <target>Invalid data supplied.</target>
-        <note>Line: 612</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/AttachmentController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="5569135c321c16866b524ec82dcd2b2a">
-        <source>No file has been selected</source>
-        <target>No file has been selected</target>
-        <note>Line: 386</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/AttributeController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b6064b175aca1507103559599479a144">
-        <source>Attribute name is invalid</source>
-        <target>Attribute name is invalid</target>
-        <note>Line: 358</note>
-      </trans-unit>
-      <trans-unit id="fa7f44fdd62689c43d0f8f372ce5d1e5">
-        <source>Attribute color is invalid </source>
-        <target>Attribute color is invalid</target>
-        <note>Line: 363</note>
-      </trans-unit>
-      <trans-unit id="4496b5be6539dd817e80c50f5a52c949">
-        <source>Attribute group is invalid</source>
-        <target>Attribute group is invalid</target>
-        <note>Line: 368</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CartRuleController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="9764b5693aa5cfa087814309050c34ad">
-        <source>An error occurred while toggling this selection.</source>
-        <target>An error occurred while toggling this selection.</target>
-        <note>Line: 345</note>
-      </trans-unit>
-      <trans-unit id="fdd0f930eba8bb3e975eaeb7e8036ec2">
-        <source>This cart rule code is already used</source>
-        <target>This cart rule code is already used</target>
-        <note>Line: 353</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/ManufacturerController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a031742eeff8c55743063075a141da16">
-        <source>Address fields contain invalid values.</source>
-        <target>Address fields contain invalid values.</target>
-        <note>Line: 750</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/CombinationController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="5665aa13a0a85870c2b9289be605a9e6">
-        <source>Form contains invalid values</source>
-        <target>Form contains invalid values</target>
-        <note>Line: 308</note>
-      </trans-unit>
-      <trans-unit id="fdc24eb8de33764908945df96c66812b">
-        <source>To create combinations for all your stores, the selected attributes must be available on each of them.</source>
-        <target>To create combinations for all your stores, the selected attributes must be available on each of them.</target>
-        <note>Line: 730</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ImageController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="cd8dda5d025206b512480dfb825ad6f2">
-        <source>Invalid ID.</source>
-        <target>Invalid ID.</target>
-        <note>Line: 301</note>
-      </trans-unit>
-      <trans-unit id="8c9067e52e4440d8a20e74fdc745b0c6">
-        <source>No file was uploaded.</source>
-        <target>No file was uploaded.</target>
-        <note>Line: 330</note>
-      </trans-unit>
-      <trans-unit id="fb86a99edb05e880b59843698a2fafbd">
-        <source>Cannot delete file</source>
-        <target>Cannot delete file</target>
-        <note>Line: 336</note>
-      </trans-unit>
-      <trans-unit id="846f7e7b28be2689ff7d896c532201d6">
-        <source>Cannot remove cover image.</source>
-        <target>Cannot remove cover image.</target>
-        <note>Line: 341</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="95be38fc18a46111194e2cba0649504a">
-        <source>Product price is invalid</source>
-        <target>Product price is invalid</target>
-        <note>Line: 1394</note>
-      </trans-unit>
-      <trans-unit id="b64b49fceb6719b964e08084a3997eba">
-        <source>Product price per unit is invalid</source>
-        <target>Product price per unit is invalid</target>
-        <note>Line: 1399</note>
-      </trans-unit>
-      <trans-unit id="cc360e6a888c0d7ff56efeff9e7dab9f">
-        <source>You cannot associate the same feature value more than once.</source>
-        <target>You cannot associate the same feature value more than once.</target>
-        <note>Line: 1415</note>
-      </trans-unit>
-      <trans-unit id="1348633590e241b276cdbb7ceaeb8295">
-        <source>The selected value belongs to another feature.</source>
-        <target>The selected value belongs to another feature.</target>
-        <note>Line: 1420</note>
-      </trans-unit>
-      <trans-unit id="9ddbf7ca8d42128f5a6875b6b90252f7">
-        <source>This product cannot be changed into a pack because it is already associated to another pack.</source>
-        <target>This product cannot be changed into a pack because it is already associated to another pack.</target>
-        <note>Line: 1433</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/SupplierController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="d01e90d69347d836d72fbae16abf2ad3">
-        <source>Image format not recognized, allowed formats are: .gif, .jpg, .png, .webp</source>
-        <target>Image format not recognized, allowed formats are: .gif, .jpg, .png, .webp</target>
-        <note>Line: 532</note>
-      </trans-unit>
-      <trans-unit id="2c576ac66b22c688a12278e88a976ab8">
-        <source>The address for this supplier has been deleted.</source>
-        <target>The address for this supplier has been deleted.</target>
-        <note>Line: 472</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Order/CartController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="0bd212ed072143f56147f2f119892d03">
-        <source>Invalid selection</source>
-        <target>Invalid selection</target>
-        <note>Line: 800</note>
-      </trans-unit>
-      <trans-unit id="e1f19b2938605ab0bdc64ba270815786">
-        <source>Same product quantity is already in cart</source>
-        <target>Same product quantity is already in cart</target>
-        <note>Line: 722</note>
-      </trans-unit>
-      <trans-unit id="c5064b408c1894a4dbd6db58f119c4a6">
-        <source>Selected language cannot be used because it is disabled</source>
-        <target>Selected language cannot be used because it is disabled</target>
-        <note>Line: 729</note>
-      </trans-unit>
-      <trans-unit id="ea5d4a7a4ca312b276b1d4ea1f74d724">
-        <source>Selected currency cannot be used because it is deleted.</source>
-        <target>Selected currency cannot be used because it is deleted.</target>
-        <note>Line: 736</note>
-      </trans-unit>
-      <trans-unit id="021361da28a3e064871e2cbbacd46757">
-        <source>Selected currency cannot be used because it is disabled.</source>
-        <target>Selected currency cannot be used because it is disabled.</target>
-        <note>Line: 741</note>
-      </trans-unit>
-      <trans-unit id="959c96ec640d353311dd9763d57daad6">
-        <source>Please fill in all the required fields.</source>
-        <target>Please fill in all the required fields.</target>
-        <note>Line: 748</note>
-      </trans-unit>
-      <trans-unit id="bc5d37ff246288c98fa45f3903172747">
-        <source>Custom field text cannot be longer than %limit% characters.</source>
-        <target>Custom field text cannot be longer than %limit% characters.</target>
-        <note>Line: 753</note>
-      </trans-unit>
-      <trans-unit id="aa83c911e54936648591034d74055aa2">
-        <source>Gift message not valid</source>
-        <target>Gift message not valid</target>
-        <note>Line: 788</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="59af32e406ca8d94850e9a2a696c9dcd">
-        <source>Invalid value: the payment must be a positive amount.</source>
-        <target>Invalid value: the payment must be a positive amount.</target>
-        <note>Line: 1924</note>
-      </trans-unit>
-      <trans-unit id="059cfac7937209448c9fb1cf8f07e321">
-        <source>Positive product quantity is required.</source>
-        <target>Positive product quantity is required.</target>
-        <note>Line: 1964</note>
-      </trans-unit>
-      <trans-unit id="b19e2fa860ab1d9fdd60f5b7772b6a3e">
-        <source>The product customization picture could not be found.</source>
-        <target>The product customization picture could not be found.</target>
-        <note>Line: 1679</note>
-      </trans-unit>
-      <trans-unit id="3e19a894b9552d54a62e99b3f7e7cf94">
-        <source>Invalid action: this order has already been paid.</source>
-        <target>Invalid action: this order has already been paid.</target>
-        <note>Line: 1930</note>
-      </trans-unit>
-      <trans-unit id="546710db975c663e306008fda9fc5865">
-        <source>Invalid action: this order has not been delivered.</source>
-        <target>Invalid action: this order has not been delivered.</target>
-        <note>Line: 1935</note>
-      </trans-unit>
-      <trans-unit id="b5ab864b320f4fcbcd061ee3119cf21c">
-        <source>Invalid action: this order has already been delivered.</source>
-        <target>Invalid action: this order has already been delivered.</target>
-        <note>Line: 1940</note>
-      </trans-unit>
-      <trans-unit id="7621aa68f3fb11dce889ba85f3a74758">
-        <source>Invalid action: this order has not been paid.</source>
-        <target>Invalid action: this order has not been paid.</target>
-        <note>Line: 1945</note>
-      </trans-unit>
-      <trans-unit id="074ed474a7e0b671a07422f3014dadfb">
-        <source>This product is already in your order, please edit the quantity instead.</source>
-        <target>This product is already in your order, please edit the quantity instead.</target>
-        <note>Line: 1969</note>
-      </trans-unit>
-      <trans-unit id="5b5d79a83148583db9a987bc0dbb6265">
-        <source>This product is already in the invoice [1], please edit the quantity instead.</source>
-        <target>This product is already in the invoice [1], please edit the quantity instead.</target>
-        <note>Line: 1974</note>
-      </trans-unit>
-      <trans-unit id="963830daedc95e3bd008090ae4c7d1d9">
-        <source>You cannot edit the price of a product that no longer exists in your catalog.</source>
-        <target>You cannot edit the price of a product that no longer exists in your catalog.</target>
-        <note>Line: 1979</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Api/StockController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="7b59b1211b3e9edf7619901949bce29b">
-        <source>Value cannot be 0.</source>
-        <target>Value cannot be 0.</target>
-        <note>Line: 258</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/UploadQuotaType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b11625064a307c86174fae97efb79d8c">
-        <source>The field is invalid. Please enter an integer greater than or equal to 0.</source>
-        <target>The field is invalid. Please enter an integer greater than or equal to 0.</target>
-        <note>Line: 151</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Employee/EmployeeType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="dada2d58c67cca61c8e6daeb0e4c79bb">
-        <source>This field cannot be empty.</source>
-        <target>This field cannot be empty.</target>
-        <note>Line: 346</note>
-      </trans-unit>
-      <trans-unit id="24e70577722f76a8245415c0a344b96c">
-        <source>This field is invalid</source>
-        <target>This field is invalid</target>
-        <note>Line: 166</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Webservice/WebserviceKeyType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="9303c9bd4f8178680dc382adbfcd62af">
-        <source>This field is required.</source>
-        <target>This field is required.</target>
-        <note>Line: 105</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/Contact/ContactType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="beb1bd310e20cc44e7aab1e31b90f619">
-        <source>The "%s" field is invalid. HTML tags are not allowed.</source>
-        <target>The "%s" field is invalid. HTML tags are not allowed.</target>
-        <note>Line: 137</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/CustomerPreferences/GeneralType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="708e8bb5546888ed29df354fa76fb962">
-        <source>The field is invalid. Please enter a positive integer.</source>
-        <target>The field is invalid. Please enter a positive integer.</target>
-        <note>Line: 85</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="9e435c0fbf3faa97d2d117ee748ba925">
-        <source>The %s field is invalid. Please enter a positive integer.</source>
-        <target>The %s field is invalid. Please enter a positive integer.</target>
-        <note>Line: 90</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/MetaSettingsShopUrlsFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="8fb7465fec179740502812519d1a8182">
-        <source>This domain is not valid.</source>
-        <target>This domain is not valid.</target>
-        <note>Line: 110</note>
-      </trans-unit>
-      <trans-unit id="d2d0c6d9bcc804f2c59b8fc228dc671e">
-        <source>The SSL domain is not valid.</source>
-        <target>The SSL domain is not valid.</target>
-        <note>Line: 118</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Improve/Design/ImageSettings/ImageTypeType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="257ec95a959075f6af07ab976e07e87c">
-        <source>This field must be between %min% and %max%</source>
-        <target>This field must be between %min% and %max%</target>
-        <note>Line: 96</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Improve/Design/Theme/ImportThemeType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="6e9550e40cc317663fbe81e759d098e8">
-        <source>The uploaded file is too large.</source>
-        <target>The uploaded file is too large.</target>
-        <note>Line: 109</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Currencies/CurrencyType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="6d570c631367510b7bda39252afda6b7">
-        <source>This value should be less than or equal to %value%.</source>
-        <target>This value should be less than or equal to %value%.</target>
-        <note>Line: 253</note>
-      </trans-unit>
-      <trans-unit id="a5d028cb6593937f07a5b50b210fc78d">
-        <source>This value should be greater than %value%</source>
-        <target>This value should be greater than %value%</target>
-        <note>Line: 212</note>
-      </trans-unit>
-      <trans-unit id="844ca4e119500cc9f8683704324a7e8e">
-        <source>This value should be greater than or equal to %value%</source>
-        <target>This value should be greater than or equal to %value%</target>
-        <note>Line: 238</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Tax/TaxType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1cf26a08db6ef9cd67be91523c68ab6a">
-        <source>This field is invalid, it must contain numeric values</source>
-        <target>This field is invalid, it must contain numeric values</target>
-        <note>Line: 117</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="bc4b8805c947b08122f7cf67c8b7e7a3">
-        <source>Please enter a valid URL.</source>
-        <target>Please enter a valid URL.</target>
-        <note>Line: 117</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Sell/CatalogPriceRule/CatalogPriceRuleType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="2fe13fdedc51b372d555f49493993a7e">
-        <source>Reduction value "%value%" is invalid. Allowed values from 0 to %max%</source>
-        <target>Reduction value "%value%" is invalid. Allowed values from 0 to %max%</target>
-        <note>Line: 160</note>
-      </trans-unit>
-      <trans-unit id="a5e2f007d6044085203c9a13c981ed8a">
-        <source>Reduction value "%value%" is invalid. Value cannot be negative</source>
-        <target>Reduction value "%value%" is invalid. Value cannot be negative</target>
-        <note>Line: 165</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="20aedd1e6de4dcf8d115b5a7424c58d7">
-        <source>Password is required.</source>
-        <target>Password is required.</target>
-        <note>Line: 156</note>
+        <note>File: src/Adapter/SqlManager/SqlQueryValidator.php [Line: 388]</note>
+      </trans-unit>
+      <trans-unit id="e298a0bc9a35d45798e28c082dfc1dfa">
+        <source>"%type%" does not exist.</source>
+        <target>"%type%" does not exist.</target>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 114]</note>
+      </trans-unit>
+      <trans-unit id="0fec856489067e4d21aa315324c441dc">
+        <source>%1$s is too long. Maximum length: %2$d</source>
+        <target>%1$s is too long. Maximum length: %2$d</target>
+        <note>File: classes/ObjectModel.php [Line: 1215]</note>
+      </trans-unit>
+      <trans-unit id="ecdb1f330299c20ac9897cd73f92c8cd">
+        <source>%1$s on line %2$s in file %3$s</source>
+        <target>%1$s on line %2$s in file %3$s</target>
+        <note>File: admin-dev/themes/new-theme/template/error.tpl [Line: 31]</note>
+      </trans-unit>
+      <trans-unit id="c4cb30b5b82b83b374d454c004b3194a">
+        <source>%error_message% - Language: %language_name%</source>
+        <target>%error_message% - Language: %language_name%</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/macros.html.twig [Line: 216]</note>
+      </trans-unit>
+      <trans-unit id="87ecb83d305a6af0e0438a0587e31de8">
+        <source>%s is invalid.</source>
+        <target>%s is invalid.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Supplier/SupplierType.php [Line: 158]</note>
       </trans-unit>
       <trans-unit id="1c4c6cc0c43756c723e1c9ebfc6748ab">
         <source>%s is invalid. Please enter an integer between 0 and %s.</source>
         <target>%s is invalid. Please enter an integer between 0 and %s.</target>
-        <note>Line: 368</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 368]</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Sell/CustomerService/ReplyToCustomerThreadType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a0ac57c5bea0b6a1bdf66d112c8047cd">
-        <source>Reply message is required</source>
-        <target>Reply message is required</target>
-        <note>Line: 62</note>
+      <trans-unit id="8f2569cb25ecb7b7540661a20ac65e68">
+        <source>%s is invalid. Please enter an integer greater than %s.</source>
+        <target>%s is invalid. Please enter an integer greater than %s.</target>
+        <note>File: modules/productcomments/productcomments.php [Line: 190]</note>
       </trans-unit>
-      <trans-unit id="dec3aab094a04dda9fd7b25b9f1db0dd">
-        <source>Reply message is invalid</source>
-        <target>Reply message is invalid</target>
-        <note>Line: 69</note>
+      <trans-unit id="5d4ab8176c670bbb26380353630c90e4">
+        <source>%s is invalid. Please enter an integer greater than or equal to 0.</source>
+        <target>%s is invalid. Please enter an integer greater than or equal to 0.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/AdministrationController.php [Line: 193]</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Sell/Order/AddOrderCartRuleType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
+      <trans-unit id="2a8676c5942efe4449225f3fbeccb816">
+        <source>%s is invalid. Please enter an integer lower than %s.</source>
+        <target>%s is invalid. Please enter an integer lower than %s.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/AdministrationController.php [Line: 199]</note>
+      </trans-unit>
+      <trans-unit id="b4186b9ed7c957a1cd9f4e7ce916e603">
+        <source>%s: Incorrect value</source>
+        <target>%s: Incorrect value</target>
+        <note>File: classes/controller/AdminController.php [Line: 3829]</note>
+      </trans-unit>
+      <trans-unit id="77ae44aa6c998166fcf1a87496278ad5">
+        <source>(cannot load object)</source>
+        <target>(cannot load object)</target>
+        <note>File: src/Adapter/Webservice/WebserviceKeyStatusModifier.php [Line: 77]</note>
+      </trans-unit>
+      <trans-unit id="b2b0bd0f32c2dcb52c3e2feb24f33a31">
+        <source>A PHP extension stopped the file upload</source>
+        <target>A PHP extension stopped the file upload</target>
+        <note>File: classes/Uploader.php [Line: 329]</note>
+      </trans-unit>
+      <trans-unit id="50b668816d2acbdb62484bb5ea5d25ab">
+        <source>A Zip/Postal code is required.</source>
+        <target>A Zip/Postal code is required.</target>
+        <note>File: controllers/admin/AdminStoresController.php [Line: 386]</note>
+      </trans-unit>
+      <trans-unit id="aee1f34d776c8cc3401cac254299e6f9">
+        <source>A shop URL that uses this domain already exists.</source>
+        <target>A shop URL that uses this domain already exists.</target>
+        <note>File: controllers/admin/AdminShopUrlController.php [Line: 507]</note>
+      </trans-unit>
+      <trans-unit id="deb836e0c149bb47a1d86eabe4b2f7db">
+        <source>A shop virtual URL cannot be "%URL%"</source>
+        <target>A shop virtual URL cannot be "%URL%"</target>
+        <note>File: controllers/admin/AdminShopUrlController.php [Line: 483]</note>
+      </trans-unit>
+      <trans-unit id="652122103181aa2752efaecab300edf0">
+        <source>Access denied.</source>
+        <target>Access denied.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/EmailController.php [Line: 206]</note>
+      </trans-unit>
+      <trans-unit id="a031742eeff8c55743063075a141da16">
+        <source>Address fields contain invalid values.</source>
+        <target>Address fields contain invalid values.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/ManufacturerController.php [Line: 750]</note>
+      </trans-unit>
+      <trans-unit id="01e93e9457d86c646965decd586dc5ea">
+        <source>Address format invalid</source>
+        <target>Address format invalid</target>
+        <note>File: controllers/admin/AdminCountriesController.php [Line: 439]</note>
+      </trans-unit>
+      <trans-unit id="bc33aa1314e7dcd3472db72472b909b2">
+        <source>An error occurred during deletion.</source>
+        <target>An error occurred during deletion.</target>
+        <note>File: classes/controller/AdminController.php [Line: 1161]</note>
+      </trans-unit>
+      <trans-unit id="62867691cceb8f8a7e7683b924cc20c5">
+        <source>An error occurred during the file upload process.</source>
+        <target>An error occurred during the file upload process.</target>
+        <note>File: controllers/admin/AdminCustomerThreadsController.php [Line: 443]</note>
+      </trans-unit>
+      <trans-unit id="7cc92687130ea12abb80556681538001">
+        <source>An error occurred during the image upload process.</source>
+        <target>An error occurred during the image upload process.</target>
+        <note>File: modules/ps_imageslider/ps_imageslider.php [Line: 522]</note>
+      </trans-unit>
+      <trans-unit id="3fa720301fb9c9badc23c00c1e88b4f7">
+        <source>An error occurred on saving.</source>
+        <target>An error occurred on saving.</target>
+        <note>File: modules/ps_customtext/ps_customtext.php [Line: 182]</note>
+      </trans-unit>
+      <trans-unit id="efb49241363bce74c7d7899333cdebb5">
+        <source>An error occurred when attempting to update the required fields.</source>
+        <target>An error occurred when attempting to update the required fields.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/AttachmentController.php [Line: 345]</note>
+      </trans-unit>
+      <trans-unit id="c87956ad745e55231c633c03fe0f0d5b">
+        <source>An error occurred while assigning a zone to the selection.</source>
+        <target>An error occurred while assigning a zone to the selection.</target>
+        <note>File: classes/controller/AdminController.php [Line: 4094]</note>
+      </trans-unit>
+      <trans-unit id="83379252d4737a0b2a63a9388bb36890">
+        <source>An error occurred while attempting to delete the image. (cannot load object).</source>
+        <target>An error occurred while attempting to delete the image. (cannot load object).</target>
+        <note>File: classes/controller/AdminController.php [Line: 1059]</note>
+      </trans-unit>
+      <trans-unit id="d52eaeff31af37a4a7e0550008aff5df">
+        <source>An error occurred while attempting to save.</source>
+        <target>An error occurred while attempting to save.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ImageController.php [Line: 324]</note>
+      </trans-unit>
+      <trans-unit id="df7859ac16e724c9b1fba0a364503d72">
+        <source>An error occurred while attempting to upload the file.</source>
+        <target>An error occurred while attempting to upload the file.</target>
+        <note>File: modules/ps_banner/ps_banner.php [Line: 146]</note>
+      </trans-unit>
+      <trans-unit id="90a9ebb26592cd5b32b42788d6d7d122">
+        <source>An error occurred while clearing objects.</source>
+        <target>An error occurred while clearing objects.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/SecurityController.php [Line: 414]</note>
+      </trans-unit>
+      <trans-unit id="6c3609de8769a4456305ec22e764573d">
+        <source>An error occurred while copying this image: %s</source>
+        <target>An error occurred while copying this image: %s</target>
+        <note>File: classes/webservice/WebserviceSpecificManagementImages.php [Line: 1166]</note>
+      </trans-unit>
+      <trans-unit id="d9b5b2302d57f3d13d5387ba9c99daae">
+        <source>An error occurred while creating an object.</source>
+        <target>An error occurred while creating an object.</target>
+        <note>File: controllers/admin/AdminShopController.php [Line: 713]</note>
+      </trans-unit>
+      <trans-unit id="7f290594963a303db17a5e21dc4cf0b7">
+        <source>An error occurred while deleting the object.</source>
+        <target>An error occurred while deleting the object.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/CustomerService/OrderMessageController.php [Line: 244]</note>
+      </trans-unit>
+      <trans-unit id="1d5dfad5ac415b412c20a05a89d43db6">
+        <source>An error occurred while deleting this selection.</source>
+        <target>An error occurred while deleting this selection.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/CustomerService/OrderMessageController.php [Line: 249]</note>
+      </trans-unit>
+      <trans-unit id="9764b5693aa5cfa087814309050c34ad">
+        <source>An error occurred while toggling this selection.</source>
+        <target>An error occurred while toggling this selection.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CartRuleController.php [Line: 345]</note>
+      </trans-unit>
+      <trans-unit id="0ce2f4a4f40a2d23525b5b02bcfe611f">
+        <source>An error occurred while transplanting the module to its hook.</source>
+        <target>An error occurred while transplanting the module to its hook.</target>
+        <note>File: controllers/admin/AdminModulesPositionsController.php [Line: 107]</note>
+      </trans-unit>
+      <trans-unit id="954b49d26a3a0986aca720a7095f2aa9">
+        <source>An error occurred while updating an object.</source>
+        <target>An error occurred while updating an object.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CatalogPriceRuleController.php [Line: 300]</note>
+      </trans-unit>
+      <trans-unit id="815e471ea2970db0b63b9b09feacc70f">
+        <source>An error occurred while updating the status for an object.</source>
+        <target>An error occurred while updating the status for an object.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/SupplierController.php [Line: 482]</note>
+      </trans-unit>
+      <trans-unit id="1b0cc7183377b461e298d0ebcf5f8548">
+        <source>An error occurred while updating the status.</source>
+        <target>An error occurred while updating the status.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/SupplierController.php [Line: 477]</note>
+      </trans-unit>
+      <trans-unit id="b05c3c0bfce943b86e286e8e8103b6e5">
+        <source>An error occurred while uploading the image.</source>
+        <target>An error occurred while uploading the image.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/SupplierController.php [Line: 516]</note>
+      </trans-unit>
+      <trans-unit id="1da2e8106b3a2171fbb7193a24b91526">
+        <source>An unexpected error occurred.</source>
+        <target>An unexpected error occurred.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/International/StateController.php [Line: 435]</note>
+      </trans-unit>
+      <trans-unit id="e8ae00af8575f645bf6e4358f120cba3">
+        <source>An unexpected error occurred. [%type% code %code%]</source>
+        <target>An unexpected error occurred. [%type% code %code%]</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/PrestaShopAdminController.php [Line: 240]</note>
+      </trans-unit>
+      <trans-unit id="5ab1978ae9ce868183a34316327be062">
+        <source>An unexpected error occurred. [%type% code %code%]: %message%</source>
+        <target>An unexpected error occurred. [%type% code %code%]: %message%</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/PrestaShopAdminController.php [Line: 229]</note>
+      </trans-unit>
+      <trans-unit id="fa7f44fdd62689c43d0f8f372ce5d1e5">
+        <source>Attribute color is invalid </source>
+        <target>Attribute color is invalid</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/AttributeController.php [Line: 363]</note>
+      </trans-unit>
+      <trans-unit id="4496b5be6539dd817e80c50f5a52c949">
+        <source>Attribute group is invalid</source>
+        <target>Attribute group is invalid</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/AttributeController.php [Line: 368]</note>
+      </trans-unit>
+      <trans-unit id="b6064b175aca1507103559599479a144">
+        <source>Attribute name is invalid</source>
+        <target>Attribute name is invalid</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/AttributeController.php [Line: 358]</note>
+      </trans-unit>
+      <trans-unit id="ee77ea46b0c548ed60eadf31bdd68613">
+        <source>Bad SQL query</source>
+        <target>Bad SQL query</target>
+        <note>File: src/Adapter/SqlManager/SqlQueryValidator.php [Line: 60]</note>
+      </trans-unit>
+      <trans-unit id="7c422404cb037e6781b5a553060670a6">
+        <source>Can't delete #%id%</source>
+        <target>Can't delete #%id%</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/EmployeeController.php [Line: 440]</note>
+      </trans-unit>
+      <trans-unit id="9c79588566c8069eb2bd441da9a27be1">
+        <source>Can't update #%id% status</source>
+        <target>Can't update #%id% status</target>
+        <note>File: classes/controller/AdminController.php [Line: 4064]</note>
+      </trans-unit>
+      <trans-unit id="c2c0e06097c62422199e29a5574e9fc4">
+        <source>Cannot add configuration %s</source>
+        <target>Cannot add configuration %s</target>
+        <note>File: classes/controller/AdminController.php [Line: 1598]</note>
+      </trans-unit>
+      <trans-unit id="fb86a99edb05e880b59843698a2fafbd">
+        <source>Cannot delete file</source>
+        <target>Cannot delete file</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ImageController.php [Line: 336]</note>
+      </trans-unit>
+      <trans-unit id="eb98c1e496a76fc9a930ed4731977498">
+        <source>Cannot generate email templates: %s.</source>
+        <target>Cannot generate email templates: %s.</target>
+        <note>File: classes/Language.php [Line: 1365]</note>
+      </trans-unit>
+      <trans-unit id="c1c3fb9e8ca710c7a958c50d03829415">
+        <source>Cannot generate emails because the Symfony container is unavailable.</source>
+        <target>Cannot generate emails because the Symfony container is unavailable.</target>
+        <note>File: classes/Language.php [Line: 1344]</note>
+      </trans-unit>
+      <trans-unit id="bf413509dac07690b304373338fc1149">
+        <source>Cannot open export file for writing</source>
+        <target>Cannot open export file for writing</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/SqlManagerController.php [Line: 484]</note>
+      </trans-unit>
+      <trans-unit id="e07269088946aa33a280b8c05529b46c">
+        <source>Cannot parse feed.</source>
+        <target>Cannot parse feed.</target>
+        <note>File: classes/Currency.php [Line: 1058]</note>
+      </trans-unit>
+      <trans-unit id="846f7e7b28be2689ff7d896c532201d6">
+        <source>Cannot remove cover image.</source>
+        <target>Cannot remove cover image.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ImageController.php [Line: 341]</note>
+      </trans-unit>
+      <trans-unit id="c0c29d8902aa2cb256ea9eaefe307bf5">
+        <source>Cannot scan "override" directory</source>
+        <target>Cannot scan "override" directory</target>
+        <note>File: classes/Meta.php [Line: 77]</note>
+      </trans-unit>
+      <trans-unit id="36757394a699878de6f0e51f203d1ee7">
+        <source>Cannot scan root directory</source>
+        <target>Cannot scan root directory</target>
+        <note>File: classes/Meta.php [Line: 70]</note>
+      </trans-unit>
+      <trans-unit id="042b67d6d246fe6ddf24d6d5b3c7e511">
+        <source>Cannot send test email for layout %layout%</source>
+        <target>Cannot send test email for layout %layout%</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/MailThemeController.php [Line: 346]</note>
+      </trans-unit>
+      <trans-unit id="0f411b3d0a4cca67f710f4b5d181154a">
+        <source>Cannot send test email for theme %theme% because it is not your current theme</source>
+        <target>Cannot send test email for theme %theme% because it is not your current theme</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/MailThemeController.php [Line: 289]</note>
+      </trans-unit>
+      <trans-unit id="26c322633921fe508bb9a03de1124986">
+        <source>Cannot translate emails body content</source>
+        <target>Cannot translate emails body content</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/MailThemeController.php [Line: 376]</note>
+      </trans-unit>
+      <trans-unit id="e31f2dac034e1437efa1dbf499509963">
+        <source>Cannot write into file: %filename%. Please check write permissions.</source>
+        <target>Cannot write into file: %filename%. Please check write permissions.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/MetaController.php [Line: 347]</note>
+      </trans-unit>
+      <trans-unit id="6b12f160f2bb3c7dea01bd96a223d80e">
+        <source>Cannot write this file: "%folder%"</source>
+        <target>Cannot write this file: "%folder%"</target>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 388]</note>
+      </trans-unit>
       <trans-unit id="b5f4891560c670dfd0ee974717d6bd7c">
         <source>Cart rule name must contain clean HTML</source>
         <target>Cart rule name must contain clean HTML</target>
-        <note>Line: 95</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Order/AddOrderCartRuleType.php [Line: 95]</note>
+      </trans-unit>
+      <trans-unit id="95013b94140e1438329efc8a39352f4b">
+        <source>Could not load cart id=%s</source>
+        <target>Could not load cart id=%s</target>
+        <note>File: classes/Customization.php [Line: 394]</note>
+      </trans-unit>
+      <trans-unit id="bc5d37ff246288c98fa45f3903172747">
+        <source>Custom field text cannot be longer than %limit% characters.</source>
+        <target>Custom field text cannot be longer than %limit% characters.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/CartController.php [Line: 753]</note>
+      </trans-unit>
+      <trans-unit id="40f5c232e433d178a4f912b3092d7df1">
+        <source>Directory "%folder%" cannot be created</source>
+        <target>Directory "%folder%" cannot be created</target>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 336]</note>
       </trans-unit>
       <trans-unit id="88f07c5ea15091bd64ef2c3fa1a7dae3">
         <source>Discount value must be a number</source>
         <target>Discount value must be a number</target>
-        <note>Line: 108</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Order/AddOrderCartRuleType.php [Line: 108]</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Sell/Order/CreditSlip/GeneratePdfByDateType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="0511ee0d41117aa7b4abaaf102aa513d">
-        <source>This field is required</source>
-        <target>This field is required</target>
-        <note>Line: 52</note>
+      <trans-unit id="66042fc205784775b028ba4ac7acebf3">
+        <source>Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server's configuration settings.</source>
+        <target>Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server's configuration settings.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/SupplierController.php [Line: 511]</note>
+      </trans-unit>
+      <trans-unit id="da819cb8d5fcace59e5ec77b43b12b0a">
+        <source>Error while uploading image; please change your server's settings.</source>
+        <target>Error while uploading image; please change your server's settings.</target>
+        <note>File: classes/ImageManager.php [Line: 549]</note>
+      </trans-unit>
+      <trans-unit id="198dabd328b3e93b2eec2f6d76ab3eb1">
+        <source>Error while uploading image; please change your server's settings. (Error code: %s)</source>
+        <target>Error while uploading image; please change your server's settings. (Error code: %s)</target>
+        <note>File: modules/blockreassurance/controllers/admin/AdminBlockListingController.php [Line: 199]</note>
+      </trans-unit>
+      <trans-unit id="45ebc64529137a007889ee445d64611c">
+        <source>Failed to update the position.</source>
+        <target>Failed to update the position.</target>
+        <note>File: controllers/admin/AdminTabsController.php [Line: 303]</note>
+      </trans-unit>
+      <trans-unit id="f86f7b91afe27e79305a6b07bdb0d3c0">
+        <source>Failed to update the status</source>
+        <target>Failed to update the status</target>
+        <note>File: controllers/admin/AdminGroupsController.php [Line: 225]</note>
+      </trans-unit>
+      <trans-unit id="f5985b2c059d5cc36968baab7585baba">
+        <source>Failed to write file to disk</source>
+        <target>Failed to write file to disk</target>
+        <note>File: classes/Uploader.php [Line: 325]</note>
+      </trans-unit>
+      <trans-unit id="355f26b47eff3302c93a1c49676f078e">
+        <source>Fatal error</source>
+        <target>Fatal error</target>
+        <note>File: classes/Tools.php [Line: 1019]</note>
+      </trans-unit>
+      <trans-unit id="bcfa9fd034fffbe5aa1a9c9e306386f1">
+        <source>Fatal error: The module directory does not exist.</source>
+        <target>Fatal error: The module directory does not exist.</target>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 1995]</note>
+      </trans-unit>
+      <trans-unit id="80034ab2323115584ed4c5b05e222f60">
+        <source>File "%file%" cannot be created</source>
+        <target>File "%file%" cannot be created</target>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 338]</note>
+      </trans-unit>
+      <trans-unit id="b1ea648f9b7634752699f28ec9897b1a">
+        <source>File %2$s (in directory %1$s)</source>
+        <target>File %2$s (in directory %1$s)</target>
+        <note>File: classes/Meta.php [Line: 105]</note>
+      </trans-unit>
+      <trans-unit id="0bff5a3a7cc19937dd97b8a995915222">
+        <source>File is too big. Current size is %1s, maximum size is %2s.</source>
+        <target>File is too big. Current size is %1s, maximum size is %2s.</target>
+        <note>File: classes/helper/HelperImageUploader.php [Line: 71]</note>
+      </trans-unit>
+      <trans-unit id="5dcea1234ac01d22f40ffc81d0bc4c2f">
+        <source>File too large (limit of %s bytes).</source>
+        <target>File too large (limit of %s bytes).</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 550]</note>
+      </trans-unit>
+      <trans-unit id="85fb1cf47b9543043438ba7ed901b626">
+        <source>Filetype not allowed</source>
+        <target>Filetype not allowed</target>
+        <note>File: classes/Uploader.php [Line: 366]</note>
+      </trans-unit>
+      <trans-unit id="5665aa13a0a85870c2b9289be605a9e6">
+        <source>Form contains invalid values</source>
+        <target>Form contains invalid values</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/CombinationController.php [Line: 308]</note>
+      </trans-unit>
+      <trans-unit id="aa83c911e54936648591034d74055aa2">
+        <source>Gift message not valid</source>
+        <target>Gift message not valid</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/CartController.php [Line: 788]</note>
+      </trans-unit>
+      <trans-unit id="4dedf35a15365e00b8a151fc1daed3af">
+        <source>Image format not recognized, allowed format(s) is(are): .%s</source>
+        <target>Image format not recognized, allowed format(s) is(are): .%s</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 539]</note>
+      </trans-unit>
+      <trans-unit id="c8c0514e93ea92be8895754e128348a0">
+        <source>Image format not recognized, allowed formats are: %s</source>
+        <target>Image format not recognized, allowed formats are: %s</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php [Line: 869]</note>
+      </trans-unit>
+      <trans-unit id="c4ae3afc5d4c01919142f8b39cc5c1c5">
+        <source>Image format not recognized, allowed formats are: .gif, .jpg, .png</source>
+        <target>Image format not recognized, allowed formats are: .gif, .jpg, .png</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/CartController.php [Line: 782]</note>
+      </trans-unit>
+      <trans-unit id="d01e90d69347d836d72fbae16abf2ad3">
+        <source>Image format not recognized, allowed formats are: .gif, .jpg, .png, .webp</source>
+        <target>Image format not recognized, allowed formats are: .gif, .jpg, .png, .webp</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/SupplierController.php [Line: 532]</note>
+      </trans-unit>
+      <trans-unit id="2ab146a83f61d2896a472f52f353b321">
+        <source>Image format not recognized, allowed formats are: .ico</source>
+        <target>Image format not recognized, allowed formats are: .ico</target>
+        <note>File: classes/ImageManager.php [Line: 546]</note>
+      </trans-unit>
+      <trans-unit id="30fb35f3cf2b6e6e599b30dacc6c19c8">
+        <source>Image is too large (%1$d kB). Maximum allowed: %2$d kB</source>
+        <target>Image is too large (%1$d kB). Maximum allowed: %2$d kB</target>
+        <note>File: classes/ImageManager.php [Line: 543]</note>
+      </trans-unit>
+      <trans-unit id="acdcc688155bd653f51eaf710cac8af5">
+        <source>Internal error #%s</source>
+        <target>Internal error #%s</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Address/AddressController.php [Line: 605]</note>
+      </trans-unit>
+      <trans-unit id="cd8dda5d025206b512480dfb825ad6f2">
+        <source>Invalid ID.</source>
+        <target>Invalid ID.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ImageController.php [Line: 301]</note>
+      </trans-unit>
+      <trans-unit id="f9c7939a8397ee022fefee2bdb3407af">
+        <source>Invalid URL</source>
+        <target>Invalid URL</target>
+        <note>File: modules/ps_socialfollow/ps_socialfollow.php [Line: 397]</note>
+      </trans-unit>
+      <trans-unit id="dbf373dd3565accf2d2fd19700f6a5ae">
+        <source>Invalid action</source>
+        <target>Invalid action</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/ModuleController.php [Line: 234]</note>
+      </trans-unit>
+      <trans-unit id="b5ab864b320f4fcbcd061ee3119cf21c">
+        <source>Invalid action: this order has already been delivered.</source>
+        <target>Invalid action: this order has already been delivered.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 1940]</note>
+      </trans-unit>
+      <trans-unit id="3e19a894b9552d54a62e99b3f7e7cf94">
+        <source>Invalid action: this order has already been paid.</source>
+        <target>Invalid action: this order has already been paid.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 1930]</note>
+      </trans-unit>
+      <trans-unit id="546710db975c663e306008fda9fc5865">
+        <source>Invalid action: this order has not been delivered.</source>
+        <target>Invalid action: this order has not been delivered.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 1935]</note>
+      </trans-unit>
+      <trans-unit id="7621aa68f3fb11dce889ba85f3a74758">
+        <source>Invalid action: this order has not been paid.</source>
+        <target>Invalid action: this order has not been paid.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 1945]</note>
+      </trans-unit>
+      <trans-unit id="85265e940fbb820dd2475946e7bc48d9">
+        <source>Invalid configuration</source>
+        <target>Invalid configuration</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 449]</note>
+      </trans-unit>
+      <trans-unit id="5992528f236587164ee4f212b9460410">
+        <source>Invalid data</source>
+        <target>Invalid data</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 452]</note>
+      </trans-unit>
+      <trans-unit id="ddb7f719baea8c9f335937b683e8f155">
+        <source>Invalid data supplied.</source>
+        <target>Invalid data supplied.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Address/AddressController.php [Line: 612]</note>
       </trans-unit>
       <trans-unit id="e267d34972b3ab66b987fbad59fba513">
         <source>Invalid date format.</source>
         <target>Invalid date format.</target>
-        <note>Line: 53</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Order/CreditSlip/GeneratePdfByDateType.php [Line: 53]</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Image/ImageDropzoneType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ce049c53d46c1c5a36b1d7ed392c19f0">
-        <source>The file is too large. The maximum size allowed is [1] MB. The file you are trying to upload is [2] MB.</source>
-        <target>The file is too large. The maximum size allowed is [1] MB. The file you are trying to upload is [2] MB.</target>
-        <note>Line: 134</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Type/ApeType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="5d332d96e4a2c480629c66ec0e0b9715">
-        <source>This field is invalid.</source>
-        <target>This field is invalid.</target>
-        <note>Line: 55</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Type/ChangePasswordType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ce09b68fe980afcd2181771fe3bf5b31">
-        <source>This field cannot be longer than %limit% characters</source>
-        <target>This field cannot be longer than %limit% characters</target>
-        <note>Line: 181</note>
-      </trans-unit>
-      <trans-unit id="1a668ad0d1d7a5623d2710d2517bbdd1">
-        <source>This field cannot be shorter than %limit% characters</source>
-        <target>This field cannot be shorter than %limit% characters</target>
-        <note>Line: 167</note>
-      </trans-unit>
-      <trans-unit id="65efaaf9ead1beea82672beb5ace1fe2">
-        <source>The confirmation password doesn't match.</source>
-        <target>The confirmation password doesn't match.</target>
-        <note>Line: 109</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Type/EmailType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="e267e2be02cf3e29f4ba53b5d97cf78a">
         <source>Invalid email address.</source>
         <target>Invalid email address.</target>
-        <note>Line: 55</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Type/EmailType.php [Line: 55]</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Type/FormattedTextareaType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="cb1ff1b51f6e9525ed8cfa59d4019c83">
-        <source>This field cannot be longer than %limit% characters.</source>
-        <target>This field cannot be longer than %limit% characters.</target>
-        <note>Line: 87</note>
+      <trans-unit id="d9b20c3ccfd685197de07684f7775258">
+        <source>Invalid email: %invalid_email%.</source>
+        <target>Invalid email: %invalid_email%.</target>
+        <note>File: src/Adapter/Configuration/LogsConfiguration.php [Line: 100]</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Type/PriceReductionType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
+      <trans-unit id="3ba5cf4a182aa6398ff81f3255c359df">
+        <source>Invalid emails: %invalid_emails%.</source>
+        <target>Invalid emails: %invalid_emails%.</target>
+        <note>File: src/Adapter/Configuration/LogsConfiguration.php [Line: 94]</note>
+      </trans-unit>
+      <trans-unit id="be694d5db9d32c43014995441a5939c4">
+        <source>Invalid file name</source>
+        <target>Invalid file name</target>
+        <note>File: classes/Uploader.php [Line: 357]</note>
+      </trans-unit>
+      <trans-unit id="0bd212ed072143f56147f2f119892d03">
+        <source>Invalid selection</source>
+        <target>Invalid selection</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/CartController.php [Line: 800]</note>
+      </trans-unit>
+      <trans-unit id="e96814b3d9ff9ae65c8f2be2ee3e0555">
+        <source>Invalid tag(s) (%s)</source>
+        <target>Invalid tag(s) (%s)</target>
+        <note>File: src/Adapter/Import/Handler/ProductImportHandler.php [Line: 1038]</note>
+      </trans-unit>
+      <trans-unit id="59af32e406ca8d94850e9a2a696c9dcd">
+        <source>Invalid value: the payment must be a positive amount.</source>
+        <target>Invalid value: the payment must be a positive amount.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Order/OrderPaymentType.php [Line: 119]</note>
+      </trans-unit>
+      <trans-unit id="6660b316abc0970476a09df63028d553">
+        <source>It must be entered as follows:</source>
+        <target>It must be entered as follows:</target>
+        <note>File: src/Core/ConstraintValidator/AddressZipCodeValidator.php [Line: 97]</note>
+      </trans-unit>
+      <trans-unit id="25e49a9ca73fb59fa5fdb618f136ed48">
+        <source>Max file size allowed is "%s" bytes.</source>
+        <target>Max file size allowed is "%s" bytes.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/CartController.php [Line: 775]</note>
+      </trans-unit>
+      <trans-unit id="23e0d4ecc25de9b2777fdaca3e2f3193">
+        <source>Maximum depth: Invalid number.</source>
+        <target>Maximum depth: Invalid number.</target>
+        <note>File: modules/ps_categorytree/ps_categorytree.php [Line: 91]</note>
+      </trans-unit>
+      <trans-unit id="22c02340d6f7c86c03120d5dfe60eac3">
+        <source>Missing configuration file</source>
+        <target>Missing configuration file</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 446]</note>
+      </trans-unit>
+      <trans-unit id="c6de8e792d7423f52f3108b197f87738">
+        <source>Missing temporary folder</source>
+        <target>Missing temporary folder</target>
+        <note>File: classes/Uploader.php [Line: 321]</note>
+      </trans-unit>
+      <trans-unit id="6f775dff2aa88bce2301e5d5309c5f7e">
+        <source>No default currency</source>
+        <target>No default currency</target>
+        <note>File: classes/Currency.php [Line: 1065]</note>
+      </trans-unit>
+      <trans-unit id="5569135c321c16866b524ec82dcd2b2a">
+        <source>No file has been selected</source>
+        <target>No file has been selected</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/AttachmentController.php [Line: 386]</note>
+      </trans-unit>
+      <trans-unit id="298883b17e36ee3a18d73e835c0b44fc">
+        <source>No file was uploaded</source>
+        <target>No file was uploaded</target>
+        <note>File: classes/Uploader.php [Line: 317]</note>
+      </trans-unit>
+      <trans-unit id="8c9067e52e4440d8a20e74fdc745b0c6">
+        <source>No file was uploaded.</source>
+        <target>No file was uploaded.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ImageController.php [Line: 330]</note>
+      </trans-unit>
+      <trans-unit id="aeca1e74dd7d86d85886996651937da9">
+        <source>No valid value for field exceptions has been defined.</source>
+        <target>No valid value for field exceptions has been defined.</target>
+        <note>File: controllers/admin/AdminModulesPositionsController.php [Line: 174]</note>
+      </trans-unit>
+      <trans-unit id="88e6e5a9b5ba8629661e4dcdb78e26a5">
+        <source>Oops... looks like an unexpected error occurred</source>
+        <target>Oops... looks like an unexpected error occurred</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Error/error.html.twig [Line: 49]</note>
+      </trans-unit>
+      <trans-unit id="d0fbda9855d118740f1105334305c126">
+        <source>Page not found</source>
+        <target>Page not found</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Error/error404.html.twig [Line: 46]</note>
+      </trans-unit>
+      <trans-unit id="20aedd1e6de4dcf8d115b5a7424c58d7">
+        <source>Password is required.</source>
+        <target>Password is required.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 156]</note>
+      </trans-unit>
+      <trans-unit id="bc4b8805c947b08122f7cf67c8b7e7a3">
+        <source>Please enter a valid URL.</source>
+        <target>Please enter a valid URL.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 117]</note>
+      </trans-unit>
+      <trans-unit id="959c96ec640d353311dd9763d57daad6">
+        <source>Please fill in all the required fields.</source>
+        <target>Please fill in all the required fields.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/CartController.php [Line: 748]</note>
+      </trans-unit>
+      <trans-unit id="abb1f006957d2d4002cc1d49c63a0fad">
+        <source>Please fill out all fields.</source>
+        <target>Please fill out all fields.</target>
+        <note>File: modules/ps_customtext/ps_customtext.php [Line: 176]</note>
+      </trans-unit>
+      <trans-unit id="059cfac7937209448c9fb1cf8f07e321">
+        <source>Positive product quantity is required.</source>
+        <target>Positive product quantity is required.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 1964]</note>
+      </trans-unit>
+      <trans-unit id="95be38fc18a46111194e2cba0649504a">
+        <source>Product price is invalid</source>
+        <target>Product price is invalid</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1395]</note>
+      </trans-unit>
+      <trans-unit id="b64b49fceb6719b964e08084a3997eba">
+        <source>Product price per unit is invalid</source>
+        <target>Product price per unit is invalid</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1400]</note>
+      </trans-unit>
+      <trans-unit id="872d428c40b36bba9fc5fafaa76c6f22">
+        <source>Property %1$s has a bad value (allowed values are: %2$s).</source>
+        <target>Property %1$s has a bad value (allowed values are: %2$s).</target>
+        <note>File: classes/ObjectModel.php [Line: 1072]</note>
+      </trans-unit>
+      <trans-unit id="fed3c8d832129d27b64c34fe410e7346">
+        <source>Property %s is empty.</source>
+        <target>Property %s is empty.</target>
+        <note>File: classes/ObjectModel.php [Line: 1058]</note>
+      </trans-unit>
+      <trans-unit id="6938fc7c0e5b0b07a6ba370bcb84bbd3">
+        <source>Property %s is not valid</source>
+        <target>Property %s is not valid</target>
+        <note>File: classes/ObjectModel.php [Line: 1146]</note>
+      </trans-unit>
+      <trans-unit id="2fe13fdedc51b372d555f49493993a7e">
+        <source>Reduction value "%value%" is invalid. Allowed values from 0 to %max%</source>
+        <target>Reduction value "%value%" is invalid. Allowed values from 0 to %max%</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/CatalogPriceRule/CatalogPriceRuleType.php [Line: 160]</note>
+      </trans-unit>
       <trans-unit id="e6510b8946a51a3d98ddcd431ca4fef9">
         <source>Reduction value "%value%" is invalid. It must be greater than 0 and maximum %max%.</source>
         <target>Reduction value "%value%" is invalid. It must be greater than 0 and maximum %max%.</target>
-        <note>Line: 115</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Type/PriceReductionType.php [Line: 115]</note>
       </trans-unit>
       <trans-unit id="e7126a8aabc4f2862a1dfa85fc14d0fe">
         <source>Reduction value "%value%" is invalid. It must be greater than 0.</source>
         <target>Reduction value "%value%" is invalid. It must be greater than 0.</target>
-        <note>Line: 120</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Type/PriceReductionType.php [Line: 120]</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Error/error.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="88e6e5a9b5ba8629661e4dcdb78e26a5">
-        <source>Oops... looks like an unexpected error occurred</source>
-        <target>Oops... looks like an unexpected error occurred</target>
-        <note>Line: 49</note>
+      <trans-unit id="a5e2f007d6044085203c9a13c981ed8a">
+        <source>Reduction value "%value%" is invalid. Value cannot be negative</source>
+        <target>Reduction value "%value%" is invalid. Value cannot be negative</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/CatalogPriceRule/CatalogPriceRuleType.php [Line: 165]</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Error/error403.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
+      <trans-unit id="dec3aab094a04dda9fd7b25b9f1db0dd">
+        <source>Reply message is invalid</source>
+        <target>Reply message is invalid</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/CustomerService/ReplyToCustomerThreadType.php [Line: 69]</note>
+      </trans-unit>
+      <trans-unit id="a0ac57c5bea0b6a1bdf66d112c8047cd">
+        <source>Reply message is required</source>
+        <target>Reply message is required</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/CustomerService/ReplyToCustomerThreadType.php [Line: 62]</note>
+      </trans-unit>
+      <trans-unit id="876bf016176064bc6ef0cdfca73bdafb">
+        <source>Role(s) assigned to employee cannot be deleted</source>
+        <target>Role(s) assigned to employee cannot be deleted</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ProfileController.php [Line: 314]</note>
+      </trans-unit>
+      <trans-unit id="e1f19b2938605ab0bdc64ba270815786">
+        <source>Same product quantity is already in cart</source>
+        <target>Same product quantity is already in cart</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/CartController.php [Line: 722]</note>
+      </trans-unit>
+      <trans-unit id="ea5d4a7a4ca312b276b1d4ea1f74d724">
+        <source>Selected currency cannot be used because it is deleted.</source>
+        <target>Selected currency cannot be used because it is deleted.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/CartController.php [Line: 736]</note>
+      </trans-unit>
+      <trans-unit id="021361da28a3e064871e2cbbacd46757">
+        <source>Selected currency cannot be used because it is disabled.</source>
+        <target>Selected currency cannot be used because it is disabled.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/CartController.php [Line: 741]</note>
+      </trans-unit>
+      <trans-unit id="c5064b408c1894a4dbd6db58f119c4a6">
+        <source>Selected language cannot be used because it is disabled</source>
+        <target>Selected language cannot be used because it is disabled</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/CartController.php [Line: 729]</note>
+      </trans-unit>
+      <trans-unit id="fb0e0badcf5ac5c98f791447646f5ac8">
+        <source>Server file size is different from local file size</source>
+        <target>Server file size is different from local file size</target>
+        <note>File: classes/Uploader.php [Line: 288]</note>
+      </trans-unit>
+      <trans-unit id="6b6a27e705469286cb83d20ec8e1b885">
+        <source>Syntax error with this pattern.</source>
+        <target>Syntax error with this pattern.</target>
+        <note>File: classes/AddressFormat.php [Line: 188]</note>
+      </trans-unit>
+      <trans-unit id="beb1bd310e20cc44e7aab1e31b90f619">
+        <source>The "%s" field is invalid. HTML tags are not allowed.</source>
+        <target>The "%s" field is invalid. HTML tags are not allowed.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/Contact/ContactType.php [Line: 137]</note>
+      </trans-unit>
+      <trans-unit id="0e2338b37ab3dfeed544e8233b53d4e0">
+        <source>The %1$s field is too long (%2$d chars max).</source>
+        <target>The %1$s field is too long (%2$d chars max).</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Combination/CombinationItemType.php [Line: 179]</note>
+      </trans-unit>
+      <trans-unit id="988bebfbe120b5c4506333172898053a">
+        <source>The %s field (in tab %s) is required.</source>
+        <target>The %s field (in tab %s) is required.</target>
+        <note>File: classes/AddressFormat.php [Line: 250]</note>
+      </trans-unit>
+      <trans-unit id="5cd8dc8a58702a63e79af3ad9de16d7a">
+        <source>The %s field is invalid.</source>
+        <target>The %s field is invalid.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 225]</note>
+      </trans-unit>
+      <trans-unit id="9e435c0fbf3faa97d2d117ee748ba925">
+        <source>The %s field is invalid. Please enter a positive integer.</source>
+        <target>The %s field is invalid. Please enter a positive integer.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationFormDataProvider.php [Line: 90]</note>
+      </trans-unit>
+      <trans-unit id="505bbc38260c669d0793757e414caecc">
+        <source>The %s field is not valid</source>
+        <target>The %s field is not valid</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Order/OrderMessageType.php [Line: 95]</note>
+      </trans-unit>
+      <trans-unit id="02af8c16ef4efa9fa9e2142372b0b90d">
+        <source>The %s field is required.</source>
+        <target>The %s field is required.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Tax/TaxType.php [Line: 97]</note>
+      </trans-unit>
+      <trans-unit id="df2751083713a6a971814c07d88c3eb5">
+        <source>The 'From' date format is invalid (YYYY-MM-DD)</source>
+        <target>The 'From' date format is invalid (YYYY-MM-DD)</target>
+        <note>File: classes/controller/AdminController.php [Line: 945]</note>
+      </trans-unit>
+      <trans-unit id="f500b8d6f94abcca48cda7c033c64996">
+        <source>The 'To' date format is invalid (YYYY-MM-DD)</source>
+        <target>The 'To' date format is invalid (YYYY-MM-DD)</target>
+        <note>File: classes/controller/AdminController.php [Line: 953]</note>
+      </trans-unit>
+      <trans-unit id="d2d0c6d9bcc804f2c59b8fc228dc671e">
+        <source>The SSL domain is not valid.</source>
+        <target>The SSL domain is not valid.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/MetaSettingsShopUrlsFormDataProvider.php [Line: 118]</note>
+      </trans-unit>
+      <trans-unit id="e6c1e151f2554afad6c0d551046650e8">
+        <source>The Zip/Postal code is invalid.</source>
+        <target>The Zip/Postal code is invalid.</target>
+        <note>File: controllers/admin/AdminStoresController.php [Line: 388]</note>
+      </trans-unit>
+      <trans-unit id="2c576ac66b22c688a12278e88a976ab8">
+        <source>The address for this supplier has been deleted.</source>
+        <target>The address for this supplier has been deleted.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/SupplierController.php [Line: 472]</note>
+      </trans-unit>
+      <trans-unit id="65efaaf9ead1beea82672beb5ace1fe2">
+        <source>The confirmation password doesn't match.</source>
+        <target>The confirmation password doesn't match.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Type/ChangePasswordType.php [Line: 109]</note>
+      </trans-unit>
+      <trans-unit id="84e4970c5c35731ac7084f09ca0a77cd">
+        <source>The email address is invalid.</source>
+        <target>The email address is invalid.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/CustomerService/CustomerThread/ForwardCustomerThreadType.php [Line: 81]</note>
+      </trans-unit>
+      <trans-unit id="2086311c1fd24419e3286804f69db13e">
+        <source>The email is already used, please choose another one</source>
+        <target>The email is already used, please choose another one</target>
+        <note>File: classes/Customer.php [Line: 358]</note>
+      </trans-unit>
+      <trans-unit id="bc59794bf2e27147861f4014fb25ffe7">
+        <source>The field "%field%" cannot be longer than %limit% characters.</source>
+        <target>The field "%field%" cannot be longer than %limit% characters.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/AdminAPIController.php [Line: 336]</note>
+      </trans-unit>
+      <trans-unit id="2782e6f430c2658c79aecfcecdc0d0e8">
+        <source>The field %field_name% is required at least in %lang%.</source>
+        <target>The field %field_name% is required at least in %lang%.</target>
+        <note>File: classes/controller/AdminController.php [Line: 3611]</note>
+      </trans-unit>
+      <trans-unit id="7c67bd3f540cf0ec5e7346bcea963013">
+        <source>The field %field_name% is required at least in your default language.</source>
+        <target>The field %field_name% is required at least in your default language.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Details/FeatureValueType.php [Line: 82]</note>
+      </trans-unit>
+      <trans-unit id="708e8bb5546888ed29df354fa76fb962">
+        <source>The field is invalid. Please enter a positive integer.</source>
+        <target>The field is invalid. Please enter a positive integer.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/CustomerPreferences/GeneralType.php [Line: 85]</note>
+      </trans-unit>
+      <trans-unit id="b11625064a307c86174fae97efb79d8c">
+        <source>The field is invalid. Please enter an integer greater than or equal to 0.</source>
+        <target>The field is invalid. Please enter an integer greater than or equal to 0.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/UploadQuotaType.php [Line: 151]</note>
+      </trans-unit>
+      <trans-unit id="370835a4106d1c7860f2fbb5daabd050">
+        <source>The file is missing.</source>
+        <target>The file is missing.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/ModuleController.php [Line: 369]</note>
+      </trans-unit>
+      <trans-unit id="ce049c53d46c1c5a36b1d7ed392c19f0">
+        <source>The file is too large. The maximum size allowed is [1] MB. The file you are trying to upload is [2] MB.</source>
+        <target>The file is too large. The maximum size allowed is [1] MB. The file you are trying to upload is [2] MB.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Image/ImageDropzoneType.php [Line: 134]</note>
+      </trans-unit>
+      <trans-unit id="4c5a77e114a577bca066d292aeef02bc">
+        <source>The file you are trying to upload is %2$d KB, which is larger than the maximum size allowed of %1$d KB.</source>
+        <target>The file you are trying to upload is %2$d KB, which is larger than the maximum size allowed of %1$d KB.</target>
+        <note>File: classes/webservice/WebserviceSpecificManagementAttachments.php [Line: 357]</note>
+      </trans-unit>
+      <trans-unit id="2674ff1d6f5ff826dae13cd4db1ca9b0">
+        <source>The length of property %1$s is currently %2$d chars. It must be between %3$d and %4$d chars.</source>
+        <target>The length of property %1$s is currently %2$d chars. It must be between %3$d and %4$d chars.</target>
+        <note>File: classes/ObjectModel.php [Line: 1095]</note>
+      </trans-unit>
+      <trans-unit id="c2c0814b9cbcdf57b426000de541d20f">
+        <source>The object cannot be loaded (or found).</source>
+        <target>The object cannot be loaded (or found).</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/CreditSlipController.php [Line: 170]</note>
+      </trans-unit>
+      <trans-unit id="a62d7ffa591311c930a2017b07e55394">
+        <source>The object cannot be loaded (the identifier is missing or invalid)</source>
+        <target>The object cannot be loaded (the identifier is missing or invalid)</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/CustomerService/MerchandiseReturnController.php [Line: 155]</note>
+      </trans-unit>
+      <trans-unit id="574af21ff5cd555457e49205287f7e9b">
+        <source>The object cannot be loaded.</source>
+        <target>The object cannot be loaded.</target>
+        <note>File: controllers/admin/AdminCarriersController.php [Line: 599]</note>
+      </trans-unit>
+      <trans-unit id="6d4b3edf61cd910289b082cd39a682c0">
+        <source>The option selected in the %s field is invalid.</source>
+        <target>The option selected in the %s field is invalid.</target>
+        <note>File: classes/controller/AdminController.php [Line: 1535]</note>
+      </trans-unit>
+      <trans-unit id="4094e2b5b97c257c5805be4554a7e589">
+        <source>The password doesn't meet the password policy requirements.</source>
+        <target>The password doesn't meet the password policy requirements.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/EmployeeController.php [Line: 487]</note>
+      </trans-unit>
+      <trans-unit id="b19e2fa860ab1d9fdd60f5b7772b6a3e">
+        <source>The product customization picture could not be found.</source>
+        <target>The product customization picture could not be found.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 1679]</note>
+      </trans-unit>
+      <trans-unit id="36fa50f9470229a5409dead853a3ad60">
+        <source>The range of property %1$s is currently %2$d. It must be between %3$d and %4$d.</source>
+        <target>The range of property %1$s is currently %2$d. It must be between %3$d and %4$d.</target>
+        <note>File: classes/ObjectModel.php [Line: 1113]</note>
+      </trans-unit>
+      <trans-unit id="cc8f0fe2d629bd1810331b1a265914ec">
+        <source>The selected condition must be different in each field to set an order of priority.</source>
+        <target>The selected condition must be different in each field to set an order of priority.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1427]</note>
+      </trans-unit>
+      <trans-unit id="8f29c70fd66f50ce28b727cd40c6a3a3">
+        <source>The selected date range is not valid.</source>
+        <target>The selected date range is not valid.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Pricing/SpecificPriceType.php [Line: 160]</note>
+      </trans-unit>
+      <trans-unit id="b9858844487d4453664143257f104266">
+        <source>The selected default page is not accessible by the selected profile.</source>
+        <target>The selected default page is not accessible by the selected profile.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/EmployeeController.php [Line: 492]</note>
+      </trans-unit>
+      <trans-unit id="1348633590e241b276cdbb7ceaeb8295">
+        <source>The selected value belongs to another feature.</source>
+        <target>The selected value belongs to another feature.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1421]</note>
+      </trans-unit>
+      <trans-unit id="ae8e757923a42d666e5c0fdf59fda545">
+        <source>The uploaded file exceeds %s</source>
+        <target>The uploaded file exceeds %s</target>
+        <note>File: classes/Uploader.php [Line: 309]</note>
+      </trans-unit>
+      <trans-unit id="a5a6e6da29a779cece21518a4ba337e2">
+        <source>The uploaded file exceeds the post_max_size directive in php.ini</source>
+        <target>The uploaded file exceeds the post_max_size directive in php.ini</target>
+        <note>File: classes/helper/HelperImageUploader.php [Line: 53]</note>
+      </trans-unit>
+      <trans-unit id="2368e33e3e01d53abb9b60061ab83903">
+        <source>The uploaded file exceeds the upload_max_filesize directive in php.ini</source>
+        <target>The uploaded file exceeds the upload_max_filesize directive in php.ini</target>
+        <note>File: classes/helper/HelperImageUploader.php [Line: 59]</note>
+      </trans-unit>
+      <trans-unit id="6e9550e40cc317663fbe81e759d098e8">
+        <source>The uploaded file is too large.</source>
+        <target>The uploaded file is too large.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Design/Theme/ImportThemeType.php [Line: 109]</note>
+      </trans-unit>
+      <trans-unit id="f8fe8cba1625eaf8e5c253b041d57dbd">
+        <source>The uploaded file was only partially uploaded</source>
+        <target>The uploaded file was only partially uploaded</target>
+        <note>File: classes/Uploader.php [Line: 313]</note>
+      </trans-unit>
+      <trans-unit id="417d63b1effb110e438d4b4b9f0fbd95">
+        <source>The voucher code is invalid.</source>
+        <target>The voucher code is invalid.</target>
+        <note>File: modules/ps_emailsubscription/ps_emailsubscription.php [Line: 224]</note>
+      </trans-unit>
+      <trans-unit id="3463605a91f50da30633ac9a1d922d3a">
+        <source>Themes can only be changed in single store context.</source>
+        <target>Themes can only be changed in single store context.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 443]</note>
+      </trans-unit>
+      <trans-unit id="1e460c9780e870a025de51dbac61eeae">
+        <source>There are %d errors.</source>
+        <target>There are %d errors.</target>
+        <note>File: admin-dev/themes/new-theme/template/components/layout/error_messages.tpl [Line: 32]</note>
+      </trans-unit>
+      <trans-unit id="23a61fdb216b255d81b0d49ca1abb8a4">
+        <source>There are %d warnings.</source>
+        <target>There are %d warnings.</target>
+        <note>File: admin-dev/themes/new-theme/template/components/layout/warning_messages.tpl [Line: 30]</note>
+      </trans-unit>
+      <trans-unit id="48524477f4f52618e4ab9f1f6fb1d1a8">
+        <source>This association has too many elements.</source>
+        <target>This association has too many elements.</target>
+        <note>File: classes/AddressFormat.php [Line: 178]</note>
+      </trans-unit>
+      <trans-unit id="fdd0f930eba8bb3e975eaeb7e8036ec2">
+        <source>This cart rule code is already used</source>
+        <target>This cart rule code is already used</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CartRuleController.php [Line: 353]</note>
+      </trans-unit>
+      <trans-unit id="47be00818e1acd46db0092d6586204cf">
+        <source>This class name does not exist.</source>
+        <target>This class name does not exist.</target>
+        <note>File: classes/AddressFormat.php [Line: 134]</note>
+      </trans-unit>
+      <trans-unit id="8fb7465fec179740502812519d1a8182">
+        <source>This domain is not valid.</source>
+        <target>This domain is not valid.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/MetaSettingsShopUrlsFormDataProvider.php [Line: 110]</note>
+      </trans-unit>
+      <trans-unit id="dada2d58c67cca61c8e6daeb0e4c79bb">
+        <source>This field cannot be empty.</source>
+        <target>This field cannot be empty.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Supplier/SupplierType.php [Line: 332]</note>
+      </trans-unit>
+      <trans-unit id="ce09b68fe980afcd2181771fe3bf5b31">
+        <source>This field cannot be longer than %limit% characters</source>
+        <target>This field cannot be longer than %limit% characters</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Type/ChangePasswordType.php [Line: 181]</note>
+      </trans-unit>
+      <trans-unit id="3f19c85aaf117e786e30ce2d7f2c018f">
+        <source>This field cannot be longer than %limit% characters (incl. HTML tags)</source>
+        <target>This field cannot be longer than %limit% characters (incl. HTML tags)</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ProfileController.php [Line: 292]</note>
+      </trans-unit>
+      <trans-unit id="cb1ff1b51f6e9525ed8cfa59d4019c83">
+        <source>This field cannot be longer than %limit% characters.</source>
+        <target>This field cannot be longer than %limit% characters.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Type/FormattedTextareaType.php [Line: 87]</note>
+      </trans-unit>
+      <trans-unit id="1a668ad0d1d7a5623d2710d2517bbdd1">
+        <source>This field cannot be shorter than %limit% characters</source>
+        <target>This field cannot be shorter than %limit% characters</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Type/ChangePasswordType.php [Line: 167]</note>
+      </trans-unit>
+      <trans-unit id="24e70577722f76a8245415c0a344b96c">
+        <source>This field is invalid</source>
+        <target>This field is invalid</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Address/CustomerAddressType.php [Line: 124]</note>
+      </trans-unit>
+      <trans-unit id="1cf26a08db6ef9cd67be91523c68ab6a">
+        <source>This field is invalid, it must contain numeric values</source>
+        <target>This field is invalid, it must contain numeric values</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Order/CancelProductType.php [Line: 74]</note>
+      </trans-unit>
+      <trans-unit id="5d332d96e4a2c480629c66ec0e0b9715">
+        <source>This field is invalid.</source>
+        <target>This field is invalid.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Type/ApeType.php [Line: 55]</note>
+      </trans-unit>
+      <trans-unit id="0511ee0d41117aa7b4abaaf102aa513d">
+        <source>This field is required</source>
+        <target>This field is required</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Order/CreditSlip/GeneratePdfByDateType.php [Line: 52]</note>
+      </trans-unit>
+      <trans-unit id="9303c9bd4f8178680dc382adbfcd62af">
+        <source>This field is required.</source>
+        <target>This field is required.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Webservice/WebserviceKeyType.php [Line: 105]</note>
+      </trans-unit>
+      <trans-unit id="257ec95a959075f6af07ab976e07e87c">
+        <source>This field must be between %min% and %max%</source>
+        <target>This field must be between %min% and %max%</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Design/ImageSettings/ImageTypeType.php [Line: 96]</note>
+      </trans-unit>
+      <trans-unit id="e0a602c130d12d57cd4ca2a8b9240917">
+        <source>This file must be writable:</source>
+        <target>This file must be writable:</target>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 1568]</note>
+      </trans-unit>
+      <trans-unit id="f0566c73cce29920f99fda8819745804">
+        <source>This file must be writable: %file%</source>
+        <target>This file must be writable: %file%</target>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 531]</note>
+      </trans-unit>
+      <trans-unit id="a7eca295291f53a23ab7ba0a9c7fd9de">
+        <source>This functionality has been disabled.</source>
+        <target>This functionality has been disabled.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/PrestaShopAdminController.php [Line: 400]</note>
+      </trans-unit>
+      <trans-unit id="a3084b5f93d22e573824af3ca8f58b73">
+        <source>This key has already been used.</source>
+        <target>This key has already been used.</target>
+        <note>File: classes/AddressFormat.php [Line: 227]</note>
+      </trans-unit>
+      <trans-unit id="46e6c4977ebd38ff176e68481ab04275">
+        <source>This name is not allowed.</source>
+        <target>This name is not allowed.</target>
+        <note>File: classes/AddressFormat.php [Line: 194]</note>
+      </trans-unit>
+      <trans-unit id="4def5438dd1db0e90c6cbe2028772138">
+        <source>This order status does not exist.</source>
+        <target>This order status does not exist.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/OrderStateController.php [Line: 476]</note>
+      </trans-unit>
+      <trans-unit id="9ddbf7ca8d42128f5a6875b6b90252f7">
+        <source>This product cannot be changed into a pack because it is already associated to another pack.</source>
+        <target>This product cannot be changed into a pack because it is already associated to another pack.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1434]</note>
+      </trans-unit>
+      <trans-unit id="5b5d79a83148583db9a987bc0dbb6265">
+        <source>This product is already in the invoice [1], please edit the quantity instead.</source>
+        <target>This product is already in the invoice [1], please edit the quantity instead.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 1974]</note>
+      </trans-unit>
+      <trans-unit id="074ed474a7e0b671a07422f3014dadfb">
+        <source>This product is already in your order, please edit the quantity instead.</source>
+        <target>This product is already in your order, please edit the quantity instead.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 1969]</note>
+      </trans-unit>
+      <trans-unit id="388ed04607290133b78adf251a3e17ed">
+        <source>This property does not exist in the class or is forbidden.</source>
+        <target>This property does not exist in the class or is forbidden.</target>
+        <note>File: classes/AddressFormat.php [Line: 151]</note>
+      </trans-unit>
+      <trans-unit id="0b23d15a0490ea1b57d347923236bde8">
+        <source>This value for "%field%" is already used and must be unique.</source>
+        <target>This value for "%field%" is already used and must be unique.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/AdminAPIController.php [Line: 300]</note>
+      </trans-unit>
+      <trans-unit id="a5d028cb6593937f07a5b50b210fc78d">
+        <source>This value should be greater than %value%</source>
+        <target>This value should be greater than %value%</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Currencies/CurrencyType.php [Line: 212]</note>
+      </trans-unit>
+      <trans-unit id="844ca4e119500cc9f8683704324a7e8e">
+        <source>This value should be greater than or equal to %value%</source>
+        <target>This value should be greater than or equal to %value%</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Currencies/CurrencyType.php [Line: 238]</note>
+      </trans-unit>
+      <trans-unit id="6d570c631367510b7bda39252afda6b7">
+        <source>This value should be less than or equal to %value%.</source>
+        <target>This value should be less than or equal to %value%.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Stock/VirtualProductFileType.php [Line: 168]</note>
+      </trans-unit>
+      <trans-unit id="d0d474f143062278a7fda7bfb9d2712a">
+        <source>This zone does not exist.</source>
+        <target>This zone does not exist.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/International/ZoneController.php [Line: 329]</note>
+      </trans-unit>
+      <trans-unit id="fdc24eb8de33764908945df96c66812b">
+        <source>To create combinations for all your stores, the selected attributes must be available on each of them.</source>
+        <target>To create combinations for all your stores, the selected attributes must be available on each of them.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/CombinationController.php [Line: 730]</note>
+      </trans-unit>
+      <trans-unit id="57746b104110541e8bd663f550206ed5">
+        <source><![CDATA[To use <iframe>, enable the feature in Shop Parameters > General]]></source>
+        <target><![CDATA[To use <iframe>, enable the feature in Shop Parameters > General]]></target>
+        <note>File: modules/ps_customtext/ps_customtext.php [Line: 210]</note>
+      </trans-unit>
+      <trans-unit id="10f97f4fea6d1ff9ffd1ed3260d6220d">
+        <source>Unable to delete associated images.</source>
+        <target>Unable to delete associated images.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php [Line: 835]</note>
+      </trans-unit>
+      <trans-unit id="5d1994bf28899a87795983875a98c2e1">
+        <source>Unable to update settings.</source>
+        <target>Unable to update settings.</target>
+        <note>File: admin-dev/themes/default/template/controllers/access/helpers/form/form.tpl [Line: 230]</note>
+      </trans-unit>
+      <trans-unit id="1448270fc6dbabe70584c87fa27cc96f">
+        <source>Validation function not found: %s.</source>
+        <target>Validation function not found: %s.</target>
+        <note>File: classes/ObjectModel.php [Line: 1128]</note>
+      </trans-unit>
+      <trans-unit id="7b59b1211b3e9edf7619901949bce29b">
+        <source>Value cannot be 0.</source>
+        <target>Value cannot be 0.</target>
+        <note>File: src/PrestaShopBundle/Controller/Api/StockController.php [Line: 258]</note>
+      </trans-unit>
+      <trans-unit id="cc360e6a888c0d7ff56efeff9e7dab9f">
+        <source>You cannot associate the same feature value more than once.</source>
+        <target>You cannot associate the same feature value more than once.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1416]</note>
+      </trans-unit>
+      <trans-unit id="d2de9e264ff4f0e711d809f00da76e45">
+        <source>You cannot change a main URL to a non-main URL. You have to set another URL as your Main URL for the selected shop.</source>
+        <target>You cannot change a main URL to a non-main URL. You have to set another URL as your Main URL for the selected shop.</target>
+        <note>File: controllers/admin/AdminShopUrlController.php [Line: 529]</note>
+      </trans-unit>
+      <trans-unit id="ec5f6f7f65190788d12ef16ab6135009">
+        <source>You cannot delete all of the items.</source>
+        <target>You cannot delete all of the items.</target>
+        <note>File: classes/controller/AdminController.php [Line: 3945]</note>
+      </trans-unit>
+      <trans-unit id="e91077be3c46fd0d3fd8e972e8ca1e48">
+        <source>You cannot delete or disable a shop group in use.</source>
+        <target>You cannot delete or disable a shop group in use.</target>
+        <note>File: controllers/admin/AdminShopGroupController.php [Line: 346]</note>
+      </trans-unit>
+      <trans-unit id="f1534de7e6636fdfedf7aea238841b24">
+        <source>You cannot delete or disable the last shop group.</source>
+        <target>You cannot delete or disable the last shop group.</target>
+        <note>File: controllers/admin/AdminShopGroupController.php [Line: 344]</note>
+      </trans-unit>
+      <trans-unit id="2a0c56d5a5183a9b65b8e2817f75ded2">
+        <source>You cannot delete this item.</source>
+        <target>You cannot delete this item.</target>
+        <note>File: classes/controller/AdminController.php [Line: 1143]</note>
+      </trans-unit>
+      <trans-unit id="171460399d524a507ddf20a4c37275fa">
+        <source>You cannot delete your own role</source>
+        <target>You cannot delete your own role</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ProfileController.php [Line: 319]</note>
+      </trans-unit>
+      <trans-unit id="fd44c173b6a7897151a978b9015fec76">
+        <source>You cannot disable the Main URL.</source>
+        <target>You cannot disable the Main URL.</target>
+        <note>File: controllers/admin/AdminShopUrlController.php [Line: 533]</note>
+      </trans-unit>
+      <trans-unit id="963830daedc95e3bd008090ae4c7d1d9">
+        <source>You cannot edit the price of a product that no longer exists in your catalog.</source>
+        <target>You cannot edit the price of a product that no longer exists in your catalog.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 1979]</note>
+      </trans-unit>
+      <trans-unit id="d8d4c3b79181fdcca8cb5159208fa56a">
+        <source>You do not have permission to add this.</source>
+        <target>You do not have permission to add this.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Modules/ModuleAbstractController.php [Line: 65]</note>
+      </trans-unit>
+      <trans-unit id="b07242082d4a24b63951185a1bae15bb">
+        <source>You do not have permission to create this.</source>
+        <target>You do not have permission to create this.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/MemcacheServerController.php [Line: 95]</note>
+      </trans-unit>
+      <trans-unit id="11a257a80f8c8d76132470b171de6795">
+        <source>You do not have permission to delete this.</source>
+        <target>You do not have permission to delete this.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/FrameworkBundleAdminController.php [Line: 475]</note>
+      </trans-unit>
       <trans-unit id="d3898eaa73cd333af874808eb0dbf13c">
         <source>You do not have permission to do this</source>
         <target>You do not have permission to do this</target>
-        <note>Line: 45</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Error/error403.html.twig [Line: 45]</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Error/error404.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="d0fbda9855d118740f1105334305c126">
-        <source>Page not found</source>
-        <target>Page not found</target>
-        <note>Line: 46</note>
+      <trans-unit id="1bdd228669c9dd995eb664737e60786e">
+        <source>You do not have permission to edit this.</source>
+        <target>You do not have permission to edit this.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 376]</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/macros.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="c4cb30b5b82b83b374d454c004b3194a">
-        <source>%error_message% - Language: %language_name%</source>
-        <target>%error_message% - Language: %language_name%</target>
-        <note>Line: 216</note>
+      <trans-unit id="df3c280f0aaf0cb0d5c25ab322a8bcf9">
+        <source>You do not have permission to update this.</source>
+        <target>You do not have permission to update this.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ImportController.php [Line: 361]</note>
+      </trans-unit>
+      <trans-unit id="b42cd3af71fc00ef268910709255320a">
+        <source>You do not have permission to view this.</source>
+        <target>You do not have permission to view this.</target>
+        <note>File: controllers/admin/AdminPdfController.php [Line: 71]</note>
+      </trans-unit>
+      <trans-unit id="48d87ac90e3cfaac58c02f30259fbfec">
+        <source>You have to select at least one shop to associate this item with</source>
+        <target>You have to select at least one shop to associate this item with</target>
+        <note>File: modules/ps_linklist/src/Form/Type/LinkBlockType.php [Line: 188]</note>
+      </trans-unit>
+      <trans-unit id="93463ceee9a3d376b18ee618bc2fffe4">
+        <source>You must select at least one element to assign a new zone.</source>
+        <target>You must select at least one element to assign a new zone.</target>
+        <note>File: classes/controller/AdminController.php [Line: 4096]</note>
+      </trans-unit>
+      <trans-unit id="ddd4e7f16c2032d59cb4fb4b86576bc5">
+        <source>You must select at least one element to delete.</source>
+        <target>You must select at least one element to delete.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/SupplierController.php [Line: 488]</note>
+      </trans-unit>
+      <trans-unit id="6d28945e1e7f349cda5503c96aa3ae76">
+        <source>You must select at least one item to perform a bulk action.</source>
+        <target>You must select at least one item to perform a bulk action.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/International/CurrencyController.php [Line: 548]</note>
+      </trans-unit>
+      <trans-unit id="b1367942aa02ea8c9d4aa07cdf5e473c">
+        <source>You need at least one object.</source>
+        <target>You need at least one object.</target>
+        <note>File: classes/controller/AdminController.php [Line: 3943]</note>
+      </trans-unit>
+      <trans-unit id="b3f69fdbd12765a4667492d013ea3d81">
+        <source>You need permission to edit this.</source>
+        <target>You need permission to edit this.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/International/CurrencyController.php [Line: 398]</note>
+      </trans-unit>
+      <trans-unit id="f759990f130f580695eae63e25558461">
+        <source>Your Zip/Postal code is incorrect.</source>
+        <target>Your Zip/Postal code is incorrect.</target>
+        <note>File: src/Core/ConstraintValidator/AddressZipCodeValidator.php [Line: 95]</note>
+      </trans-unit>
+      <trans-unit id="9599d22695068a773c0f10ea1fd26a74">
+        <source>Your entry in field %1$s (language %2$s) exceeds max length %3$d chars (incl. html tags).</source>
+        <target>Your entry in field %1$s (language %2$s) exceeds max length %3$d chars (incl. html tags).</target>
+        <note>File: classes/ObjectModel.php [Line: 1089]</note>
+      </trans-unit>
+      <trans-unit id="2b73839c76b07fdd994e444e0c7e75ad">
+        <source>Your uploaded file might exceed the [1]upload_max_filesize[/1] and the [1]post_max_size[/1] directives in [1]php.ini[/1], please check your server configuration.</source>
+        <target>Your uploaded file might exceed the [1]upload_max_filesize[/1] and the [1]post_max_size[/1] directives in [1]php.ini[/1], please check your server configuration.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/ModuleController.php [Line: 355]</note>
+      </trans-unit>
+      <trans-unit id="05c210d25ce1e9ad49a27d570f82b090">
+        <source>[%s] is not a valid configuration key</source>
+        <target>[%s] is not a valid configuration key</target>
+        <note>File: classes/Configuration.php [Line: 442]</note>
+      </trans-unit>
+      <trans-unit id="a9de928286071f457fcbc45656353761">
+        <source>directory (%s) not writable</source>
+        <target>directory (%s) not writable</target>
+        <note>File: classes/module/Module.php [Line: 3073]</note>
+      </trans-unit>
+      <trans-unit id="204c3558e41366f3d558ce8e01426a22">
+        <source>field %s is required.</source>
+        <target>field %s is required.</target>
+        <note>File: classes/controller/AdminController.php [Line: 1529]</note>
+      </trans-unit>
+      <trans-unit id="fdc746e5693df31cf4f6ef789a8846c5">
+        <source>file (%s) not writable</source>
+        <target>file (%s) not writable</target>
+        <note>File: classes/module/Module.php [Line: 2973]</note>
+      </trans-unit>
+      <trans-unit id="ee66f9c9930cb33d2a5dde9b240d3f7e">
+        <source>is required.</source>
+        <target>is required.</target>
+        <note>File: classes/ObjectModel.php [Line: 1208]</note>
       </trans-unit>
     </body>
   </file>
