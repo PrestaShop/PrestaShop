@@ -227,16 +227,6 @@
         <target>Upload an icon from your computer (File type: .gif, suggested size: 16x16).</target>
         <note>Line: 305</note>
       </trans-unit>
-      <trans-unit id="f0fe1aebeace842330fb048126151e06">
-        <source>Only letters, numbers and underscores ("_") are allowed.</source>
-        <target>Only letters, numbers and underscores ("_") are allowed.</target>
-        <note>Line: 424</note>
-      </trans-unit>
-      <trans-unit id="3d034f43e44ee495a11005507185a0a0">
-        <source>Email template for both .html and .txt.</source>
-        <target>Email template for both .html and .txt.</target>
-        <note>Line: 425</note>
-      </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminStoresController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -395,7 +385,7 @@
       <trans-unit id="3d1ffb24b2e1b1381ca7da9a9b5dd97a">
         <source>The multistore feature allows you to manage several front offices from a single back office. If this feature is enabled, a Multistore page is available in the Advanced Parameters menu.</source>
         <target>The multistore feature allows you to manage several front offices from a single back office. If this feature is enabled, a Multistore page is available in the Advanced Parameters menu.</target>
-        <note>Line: 212</note>
+        <note>Line: 213</note>
       </trans-unit>
     </body>
   </file>
@@ -479,6 +469,20 @@
         <source><![CDATA[Remember to regenerate email templates in [1]Design > Email theme[/1] after enabling or disabling this feature.]]></source>
         <target><![CDATA[Remember to regenerate email templates in [1]Design > Email theme[/1] after enabling or disabling this feature.]]></target>
         <note>Line: 102</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f0fe1aebeace842330fb048126151e06">
+        <source>Only letters, numbers and underscores ("_") are allowed.</source>
+        <target>Only letters, numbers and underscores ("_") are allowed.</target>
+        <note>Line: 201</note>
+      </trans-unit>
+      <trans-unit id="3d034f43e44ee495a11005507185a0a0">
+        <source>Email template for both .html and .txt.</source>
+        <target>Email template for both .html and .txt.</target>
+        <note>Line: 202</note>
       </trans-unit>
     </body>
   </file>
@@ -702,6 +706,10 @@
         <target>Order's return status name.</target>
         <note>Line: 41</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/OrderStates/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="a4bb440d400f4dc30f148b44d08680b4">
         <source>Invalid characters: numbers and</source>
         <target>Invalid characters: numbers and</target>
@@ -710,12 +718,8 @@
       <trans-unit id="00b963b1cb1aad2142ae67ce65329944">
         <source>Status will be highlighted in this color. HTML colors only.</source>
         <target>Status will be highlighted in this color. HTML colors only.</target>
-        <note>Line: 49</note>
+        <note>Line: 83</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/OrderStates/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="83b262520a65657b95fd686817c56a09">
         <source>Order status (e.g. 'Pending').</source>
         <target>Order status (e.g. 'Pending').</target>
@@ -760,11 +764,6 @@
         <target>Only letters and hyphens are allowed.</target>
         <note>Line: 81</note>
       </trans-unit>
-      <trans-unit id="0210e7a00cf2cd3cca0e4d7ed3bdf86f">
-        <source>To add tags, click in the field, write something, and then press the "Enter" key.</source>
-        <target>To add tags, click in the field, write something, and then press the "Enter" key.</target>
-        <note>Line: 70</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/preferences.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -773,6 +772,15 @@
         <source>If you want to enable SSL on all the pages of your shop, activate the "Enable on all the pages" option below.</source>
         <target>If you want to enable SSL on all the pages of your shop, activate the "Enable on all the pages" option below.</target>
         <note>Line: 53</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Categories/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0210e7a00cf2cd3cca0e4d7ed3bdf86f">
+        <source>To add tags, click in the field, write something, and then press the "Enter" key.</source>
+        <target>To add tags, click in the field, write something, and then press the "Enter" key.</target>
+        <note>Line: 169</note>
       </trans-unit>
     </body>
   </file>

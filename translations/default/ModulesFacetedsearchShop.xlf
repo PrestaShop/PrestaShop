@@ -1,86 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_facetedsearch/src/Filters/Block.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_facetedsearch/src/Filters/Converter.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="3601146c4e948c32b6424d2c0a7f0118">
         <source>Price</source>
         <target>Price</target>
-        <note>Line: 236</note>
+        <note>Line: 502</note>
       </trans-unit>
       <trans-unit id="8c489d0946f66d17d73f26366a4bf620">
         <source>Weight</source>
         <target>Weight</target>
-        <note>Line: 324</note>
+        <note>Line: 504</note>
       </trans-unit>
       <trans-unit id="03c2e7e41ffc181a4e84080b4710e81e">
         <source>New</source>
         <target>New</target>
-        <note>Line: 370</note>
+        <note>Line: 333</note>
       </trans-unit>
       <trans-unit id="019d1ca7d50cc54b995f60d456435e87">
         <source>Used</source>
         <target>Used</target>
-        <note>Line: 378</note>
+        <note>Line: 338</note>
       </trans-unit>
       <trans-unit id="6da03a74721a0554b7143254225cc08a">
         <source>Refurbished</source>
         <target>Refurbished</target>
-        <note>Line: 386</note>
+        <note>Line: 343</note>
       </trans-unit>
       <trans-unit id="9e2941b3c81256fac10392aaca4ccfde">
         <source>Condition</source>
         <target>Condition</target>
-        <note>Line: 411</note>
+        <note>Line: 506</note>
       </trans-unit>
       <trans-unit id="2d25c72c1b18e562f6654fff8e11711e">
         <source>Not available</source>
         <target>Not available</target>
-        <note>Line: 460</note>
+        <note>Line: 302</note>
       </trans-unit>
       <trans-unit id="78945de8de090e90045d299651a68a9b">
         <source>Available</source>
         <target>Available</target>
-        <note>Line: 452</note>
+        <note>Line: 307</note>
       </trans-unit>
       <trans-unit id="fcebe56087b9373f15514831184fa572">
         <source>In stock</source>
         <target>In stock</target>
-        <note>Line: 444</note>
+        <note>Line: 312</note>
       </trans-unit>
       <trans-unit id="faeaec9eda6bc4c8cb6e1a9156a858be">
         <source>Availability</source>
         <target>Availability</target>
-        <note>Line: 529</note>
+        <note>Line: 510</note>
       </trans-unit>
       <trans-unit id="1be6f9eb563f3bf85c78b4219bf09de9">
         <source>Brand</source>
         <target>Brand</target>
-        <note>Line: 689</note>
+        <note>Line: 512</note>
       </trans-unit>
       <trans-unit id="af1b98adf7f686b84cd0b443e022b7a0">
         <source>Categories</source>
         <target>Categories</target>
-        <note>Line: 1017</note>
+        <note>Line: 514</note>
       </trans-unit>
       <trans-unit id="656c3be690ee43df4b845bd2a2ebe587">
         <source>New product</source>
         <target>New product</target>
-        <note>Line: 571</note>
+        <note>Line: 364</note>
       </trans-unit>
       <trans-unit id="588907ab2d492aca0b07b5bf9c931eea">
         <source>On sale</source>
         <target>On sale</target>
-        <note>Line: 554</note>
+        <note>Line: 369</note>
       </trans-unit>
       <trans-unit id="f1d1a0610ca57f7ed6344bd00eac3855">
         <source>Discounted</source>
         <target>Discounted</target>
-        <note>Line: 594</note>
+        <note>Line: 374</note>
       </trans-unit>
       <trans-unit id="08b2b36f3738ad802ba6e7b7932c31a1">
         <source>Selections</source>
         <target>Selections</target>
-        <note>Line: 622</note>
+        <note>Line: 508</note>
       </trans-unit>
     </body>
   </file>
