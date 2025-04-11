@@ -534,7 +534,6 @@ class AdminModuleController {
     const self = this;
     const addModuleButton = $(`${self.importModalBtnSelector}, ${self.importModalBtnSelectorMobile}`);
     if (addModuleButton.length) {
-      console.log('#module-modal-import is now visible');
       addModuleButton.attr('data-toggle', 'modal');
       addModuleButton.attr('data-target', self.dropZoneModalSelector);
     }
