@@ -35,7 +35,7 @@ class PDFCore
     public $filename;
 
     /**
-     * @var TCPDF
+     * @var PDFGenerator
      */
     public $pdf_renderer;
 
@@ -250,7 +250,7 @@ class PDFCore
      * @param string $template
      * @param string $orientation
      *
-     * @return TCPDF|null
+     * @return PDFGenerator|null
      */
     private function getPdfRendererFromModules($template, $orientation)
     {
@@ -269,7 +269,7 @@ class PDFCore
         }
 
         foreach ($renderers as $renderer) {
-            if ($renderer instanceof TCPDF) {
+            if ($renderer instanceof PDFGenerator) {
                 return $renderer;
             }
         }
