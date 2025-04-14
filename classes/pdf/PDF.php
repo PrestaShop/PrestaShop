@@ -258,7 +258,7 @@ class PDFCore
             'actionGetPdfRenderer',
             [
                 'template' => $template,
-                'orientation' => $orientation
+                'orientation' => $orientation,
             ],
             null,
             true
