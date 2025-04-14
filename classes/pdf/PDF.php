@@ -75,7 +75,13 @@ class PDFCore
      */
     public function __construct($objects, $template, $smarty, $orientation = 'P')
     {
-        $this->pdf_renderer = new PDFGenerator((bool) Configuration::get('PS_PDF_USE_CACHE'), $orientation);
+        $this->pdf_renderer = $this->getPdfRendererFromModules($template, $orientation);
+
+        // if no module wants to provide a pdf renderer, then the core feature is used
+        if (null === $this->pdf_renderer) {
+            $this->pdf_renderer = new PDFGenerator((bool) Configuration::get('PS_PDF_USE_CACHE'), $orientation);
+        }
+
         $this->template = $template;
 
         /*
@@ -234,5 +240,38 @@ class PDFCore
         }
 
         return !empty($this->filename);
+    }
+
+    /**
+     * Get the PDF renderer from modules.
+     *
+     * @param string $template
+     * @param string $orientation
+     *
+     * @return TCPDF|null
+     */
+    private function getPdfRendererFromModules($template, $orientation)
+    {
+        $renderers = Hook::exec(
+            'actionGetPdfRenderer',
+            [
+                'template' => $template,
+                'orientation' => $orientation
+            ],
+            null,
+            true
+        );
+
+        if (!is_array($renderers)) {
+            $renderers = [];
+        }
+
+        foreach ($renderers as $renderer) {
+            if ($renderer instanceof TCPDF) {
+                return $renderer;
+            }
+        }
+
+        return null;
     }
 }
