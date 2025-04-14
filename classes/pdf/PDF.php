@@ -35,7 +35,7 @@ class PDFCore
     public $filename;
 
     /**
-     * @var PDFGenerator
+     * @var TCPDF
      */
     public $pdf_renderer;
 
@@ -75,11 +75,13 @@ class PDFCore
      */
     public function __construct($objects, $template, $smarty, $orientation = 'P')
     {
-        $this->pdf_renderer = $this->getPdfRendererFromModules($template, $orientation);
+        $pdfRendererFromModules = $this->getPdfRendererFromModules($template, $orientation);
 
         // if no module wants to provide a pdf renderer, then the core feature is used
-        if (null === $this->pdf_renderer) {
+        if (null === $pdfRendererFromModules) {
             $this->pdf_renderer = new PDFGenerator((bool) Configuration::get('PS_PDF_USE_CACHE'), $orientation);
+        } else {
+            $this->pdf_renderer = $pdfRendererFromModules;
         }
 
         $this->template = $template;
