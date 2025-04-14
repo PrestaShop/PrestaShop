@@ -5403,5 +5403,10 @@
       <title>Modify search term identifiable object data after creating it</title>
       <description>This hook allows to modify search term identifiable object forms data after it was created</description>
     </hook>
+    <hook id="actionGetTemplateObject">
+      <name>actionGetTemplateObject</name>
+      <title>Get PDF template object</title>
+      <description>This hook allows to recieve a PDF template object from modules</description>
+    </hook>
   </entities>
 </entity_hook>

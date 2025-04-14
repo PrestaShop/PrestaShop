@@ -180,14 +180,16 @@ class PDFCore
         $class = false;
         $class_name = 'HTMLTemplate' . $this->template;
 
-        if (class_exists($class_name)) {
+        $class = $this->getTemplateObjectFromModules($object, $this->smarty, $this->send_bulk_flag, $this->template);
+
+        if (false === $class && class_exists($class_name)) {
             // Some HTMLTemplateXYZ implementations won't use the third param but this is not a problem (no warning in PHP),
             // the third param is then ignored if not added to the method signature.
             $class = new $class_name($object, $this->smarty, $this->send_bulk_flag);
+        }
 
-            if (!($class instanceof HTMLTemplate)) {
-                throw new PrestaShopException('Invalid class. It should be an instance of HTMLTemplate');
-            }
+        if (!($class instanceof HTMLTemplate)) {
+            throw new PrestaShopException('Invalid class. It should be an instance of HTMLTemplate');
         }
 
         return $class;
@@ -234,5 +236,42 @@ class PDFCore
         }
 
         return !empty($this->filename);
+    }
+
+    /**
+     * Get the template object from modules.
+     *
+     * @param mixed $object
+     * @param Smarty $smarty
+     * @param bool $send_bulk_flag
+     * @param string $template
+     *
+     * @return HTMLTemplate|false
+     */
+    private function getTemplateObjectFromModules($object, $smarty, $send_bulk_flag, $template)
+    {
+        $templateObjects = Hook::exec(
+            'actionGetTemplateObject',
+            [
+                'object' => $object,
+                'smarty' => $smarty,
+                'send_bulk_flag' => $send_bulk_flag,
+                'template' => $template,
+            ],
+            null,
+            true
+        );
+
+        if (!is_array($templateObjects)) {
+            $templateObjects = [];
+        }
+
+        foreach ($templateObjects as $templateObject) {
+            if ($templateObject instanceof HTMLTemplate) {
+                return $templateObject;
+            }
+        }
+
+        return false;
     }
 }
