@@ -251,7 +251,7 @@ class PDFCore
     private function getTemplateObjectFromModules($object, $smarty, $send_bulk_flag, $template)
     {
         $templateObjects = Hook::exec(
-            'actionGetTemplateObject',
+            'actionGetPdfTemplateObject',
             [
                 'object' => $object,
                 'smarty' => $smarty,
