@@ -109,6 +109,7 @@ class OrderSlipCreator
                 'order' => $order,
                 'productList' => $orderRefundSummary->getProductRefunds(),
                 'qtyList' => $fullQuantityList,
+                'orderSlipCreated' => $orderSlipCreated,
             ], null, false, true, false, $order->id_shop);
 
             $customer = new Customer((int) $order->id_customer);
