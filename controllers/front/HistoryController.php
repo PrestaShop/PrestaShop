@@ -87,7 +87,11 @@ class HistoryControllerCore extends FrontController
      */
     public static function getUrlToInvoice(Order $order, Context $context)
     {
-        $url_to_invoice = '';
+        $url_to_invoice = Hook::exec('actionGetUrlInvoice', ['order' => $order]);
+
+        if (Validate::isUrl($url_to_invoice)) {
+            return $url_to_invoice;
+        }
 
         if ((bool) Configuration::get('PS_INVOICE') && OrderState::invoiceAvailable($order->current_state) && count($order->getInvoicesCollection())) {
             $params = [

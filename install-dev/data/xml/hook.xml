@@ -4928,6 +4928,11 @@
       <title>PDF Invoice - Render</title>
       <description>This hook is called when a PDF invoice is rendered from the Front Office and the Back Office</description>
     </hook>
+    <hook id="actionGetUrlInvoice">
+      <name>actionGetUrlInvoice</name>
+      <title>Url Invoice</title>
+      <description>This hook can be used to define a link from a third-party solution to the order invoice in the order history page.</description>
+    </hook>
     <hook id="actionPresentObject">
       <name>actionPresentObject</name>
       <title>Object Presenter</title>
