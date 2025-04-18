@@ -79,7 +79,7 @@ class CountryFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @param string $countryIsoCode
      *
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     public function checkCountryWithIsoCodeExists(string $countryIsoCode)
     {

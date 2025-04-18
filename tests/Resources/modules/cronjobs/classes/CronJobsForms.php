@@ -61,7 +61,7 @@ class CronJobsForms
         $currencies_cron_url = Tools::getShopDomain(true, true) . __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_);
         $currencies_cron_url .= '/cron_currency_rates.php?secure_key=' . md5(_COOKIE_KEY_ . Configuration::get('PS_SHOP_NAME'));
 
-        if (($update == true) && (Tools::isSubmit('id_cronjob'))) {
+        if (($update == true) && Tools::isSubmit('id_cronjob')) {
             $id_cronjob = (int) Tools::getValue('id_cronjob');
             $id_module = (int) Db::getInstance()->getValue('SELECT `id_module` FROM `' . _DB_PREFIX_ . bqSQL(self::$module->name) . '`
                 WHERE `id_cronjob` = \'' . (int) $id_cronjob . '\'

@@ -30,14 +30,15 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Alias\Command\AddAliasCommand;
-use PrestaShop\PrestaShop\Core\Domain\Alias\Command\BulkDeleteAliasCommand;
-use PrestaShop\PrestaShop\Core\Domain\Alias\Command\BulkUpdateAliasStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Alias\Command\DeleteAliasCommand;
-use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasCommand;
-use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Command\AddSearchTermAliasesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Command\BulkDeleteSearchTermsAliasesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Command\DeleteSearchTermAliasesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateSearchTermAliasesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasException;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Query\GetAliasesBySearchTermForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Query\SearchForSearchTerm;
+use PrestaShop\PrestaShop\Core\Domain\Alias\QueryResult\AliasForEditing;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Grid\Query\AliasQueryBuilder;
 use PrestaShop\PrestaShop\Core\Search\Filters;
@@ -47,22 +48,52 @@ use Tests\Resources\DatabaseDump;
 class AliasFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @When I add alias with following information:
+     * @BeforeFeature @restore-aliases-before-feature
+     */
+    public static function restoreAliasTables(): void
+    {
+        DatabaseDump::restoreTables(['alias']);
+    }
+
+    /**
+     * @When I add a search term :searchTerm with following aliases:
      *
      * @param TableNode $table
      */
-    public function addAlias(TableNode $table): void
+    public function addAlias(string $searchTerm, TableNode $table): void
     {
-        $data = $table->getRowsHash();
+        // We retrieve the data from the table and cast the active column to a boolean
+        $aliases = $table->getColumnsHash();
+        array_walk($aliases, function (&$alias) {
+            $alias['active'] = filter_var($alias['active'], FILTER_VALIDATE_BOOL);
+        });
 
+        // Then, we create the AddSearchTermAliasesCommand and dispatch it
         try {
-            $this->getCommandBus()->handle(new AddAliasCommand(
-                PrimitiveUtils::castStringArrayIntoArray($data['alias']),
-                $data['search']
-            ));
-        } catch (InvalidArgumentException $exception) {
+            $this->getCommandBus()->handle(new AddSearchTermAliasesCommand($aliases, $searchTerm));
+        } catch (InvalidArgumentException|AliasConstraintException $exception) {
             $this->setLastException($exception);
         }
+    }
+
+    /**
+     * @When I update search term :searchTerm with following aliases:
+     *
+     * @param TableNode $table
+     */
+    public function updateSearchTermAliases(string $searchTerm, TableNode $table): void
+    {
+        $this->editSearchTermCommand($searchTerm, $table);
+    }
+
+    /**
+     * @When I update search term :oldSearchTerm by :newSearchTerm with following aliases:
+     *
+     * @param TableNode $table
+     */
+    public function updateWithNewSearchTermAliases(string $oldSearchTerm, string $newSearchTerm, TableNode $table): void
+    {
+        $this->editSearchTermCommand($oldSearchTerm, $table, $newSearchTerm);
     }
 
     /**
@@ -80,106 +111,83 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
             ->getSearchQueryBuilder(new Filters([
                 'limit' => null,
                 'offset' => 0,
-                'orderBy' => 'id_alias',
+                'orderBy' => 'a.id_alias',
                 'sortOrder' => 'asc',
                 'filters' => [],
             ]))
-            ->execute()
+            ->select('a.search, a.alias, a.active')
+            ->executeQuery()
             ->fetchAllAssociative();
 
-        Assert::assertCount(count($expectedAliases), $aliases, 'Unexpected aliases count');
-
-        $idsByIdReferences = $this->assertAliasProperties($expectedAliases, $aliases);
-
-        foreach ($idsByIdReferences as $reference => $id) {
-            $this->getSharedStorage()->set($reference, (int) $id);
-        }
+        $this->assertExistAliasProperties($expectedAliases, $aliases);
     }
 
     /**
-     * @When /^I (enable|disable) alias with reference "(.+)"$/
+     * @Then following aliases shouldn't exist:
      *
-     * @param bool $enable
-     * @param string $aliasReference
-     *
-     * @see StringToBoolTransformContext::transformTruthyStringToBoolean for $enable string to bool transformation
+     * @param TableNode $table
      */
-    public function updateAliasStatus(bool $enable, string $aliasReference): void
+    public function assertAliasesNotInList(TableNode $table): void
     {
-        $this->getCommandBus()->handle(new UpdateAliasStatusCommand(
-            $this->getSharedStorage()->get($aliasReference),
-            $enable
-        ));
+        $expectedAliases = $table->getColumnsHash();
+
+        /** @var AliasQueryBuilder $aliasQueryBuilder */
+        $aliasQueryBuilder = $this->getContainer()->get(AliasQueryBuilder::class);
+        $aliases = $aliasQueryBuilder
+            ->getSearchQueryBuilder(new Filters([
+                'limit' => null,
+                'offset' => 0,
+                'orderBy' => 'a.id_alias',
+                'sortOrder' => 'asc',
+                'filters' => [],
+            ]))
+            ->select('a.search, a.alias, a.active')
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        $this->assertNotExistAliasProperties($expectedAliases, $aliases);
     }
 
     /**
-     * @When /^I bulk (enable|disable) the following aliases "([^"]*)"$/
+     * @Then I should have the following aliases for search term :searchTerm:
      *
-     * @param bool $status
-     * @param string $aliasReferences
+     * @param string $searchTerm
+     * @param TableNode $table
      */
-    public function bulkUpdateStatusForDefaultShop(bool $status, string $aliasReferences): void
+    public function assertOneSearchTermWithAliases(string $searchTerm, TableNode $table): void
     {
-        try {
-            $this->getCommandBus()->handle(new BulkUpdateAliasStatusCommand($this->referencesToIds($aliasReferences), $status));
-        } catch (AliasException $e) {
-            $this->setLastException($e);
-        }
-    }
+        $expectedAliases = $table->getColumnsHash();
 
-    /**
-     * @Then I should get error that alias cannot be empty
-     * @Then I should get error that search term cannot be empty
-     *
-     * @return void
-     */
-    public function assertLastErrorIsInvalidAliasConstraint(): void
-    {
-        $this->assertLastErrorIs(InvalidArgumentException::class);
-    }
+        $command = new GetAliasesBySearchTermForEditing($searchTerm);
+        /** @var AliasForEditing $aliasForEditing */
+        $aliasForEditing = $this->getQueryBus()->handle($command);
 
-    /**
-     * @When I update alias ":aliasReference" with following values:
-     *
-     * @return void
-     */
-    public function assertUpdateAlias(string $aliasReference, TableNode $table): void
-    {
-        $updateAliasCommand = $this->buildUpdateAliasCommand($aliasReference, $table);
+        $foundedAliases = $aliasForEditing->getAliases();
 
-        try {
-            $this->getCommandBus()->handle($updateAliasCommand);
-        } catch (AliasException $e) {
-            $this->setLastException($e);
-        }
-    }
+        /** @var array $expectedAlias */
+        foreach ($expectedAliases as $index => $expectedAlias) {
+            /** @var array $foundedAlias */
+            $foundedAlias = $foundedAliases[$index];
 
-    /**
-     * @When I delete alias :reference
-     *
-     * @param string $reference
-     */
-    public function deleteAlias(string $reference): void
-    {
-        /** @var int $aliasId */
-        $aliasId = $this->getSharedStorage()->get($reference);
+            Assert::assertEquals(
+                $expectedAlias['alias'],
+                $foundedAlias['alias'],
+                sprintf(
+                    'Invalid Alias, expected %s but got %s instead.',
+                    $expectedAlias['alias'],
+                    $foundedAlias['alias'],
+                )
+            );
 
-        try {
-            $this->getCommandBus()->handle(new DeleteAliasCommand(($aliasId)));
-        } catch (AliasException $e) {
-            $this->setLastException($e);
-        }
-    }
-
-    /**
-     * @When I bulk delete aliases :aliasReferences
-     */
-    public function bulkDeleteAlias(string $aliasReferences): void
-    {
-        try {
-            $this->getCommandBus()->handle(new BulkDeleteAliasCommand($this->referencesToIds($aliasReferences)));
-        } catch (AliasException $e) {
-            $this->setLastException($e);
+            Assert::assertEquals(
+                filter_var($expectedAlias['active'], FILTER_VALIDATE_BOOL),
+                filter_var($foundedAlias['active'], FILTER_VALIDATE_BOOL),
+                sprintf(
+                    'Invalid Alias Active, expected %s but got %s instead.',
+                    $expectedAlias['active'],
+                    $foundedAlias['active']
+                )
+            );
         }
     }
 
@@ -216,67 +224,133 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @BeforeFeature @restore-aliases-before-feature
+     * @Then I should get error that alias cannot be empty
+     *
+     * @return void
      */
-    public static function restoreAliasTables(): void
+    public function assertLastErrorIsInvalidAliasConstraint(): void
     {
-        DatabaseDump::restoreTables(['alias']);
+        $this->assertLastErrorIs(AliasConstraintException::class, AliasConstraintException::INVALID_ALIAS);
+    }
+
+    /**
+     * @Then I should get error that search term cannot be empty
+     *
+     * @return void
+     */
+    public function assertLastErrorIsInvalidSearchTermConstraint(): void
+    {
+        $this->assertLastErrorIs(AliasConstraintException::class, AliasConstraintException::INVALID_SEARCH);
+    }
+
+    /**
+     * @Then I should get error that alias is already used by another search term
+     *
+     * @return void
+     */
+    public function assertLastErrorIsAliasAlreadyInUse(): void
+    {
+        $this->assertLastErrorIs(
+            AliasConstraintException::class,
+            AliasConstraintException::ALIAS_ALREADY_USED
+        );
+    }
+
+    /**
+     * Fonction to update search term aliases
+     */
+    private function editSearchTermCommand(string $oldSearchTerm, TableNode $table, ?string $newSearchTerm = null): void
+    {
+        // If no new searchTerm is provided, we use the old one
+        $newSearchTerm = $newSearchTerm ?? $oldSearchTerm;
+
+        // We retrieve the data from the table and cast the active column to a boolean
+        $aliases = $table->getColumnsHash();
+        array_walk($aliases, function (&$alias) {
+            $alias['active'] = filter_var($alias['active'], FILTER_VALIDATE_BOOL);
+        });
+
+        // Then, we create the UpdateAliasesBySearchTermCommand and dispatch it
+        try {
+            $this->getCommandBus()->handle(new UpdateSearchTermAliasesCommand($oldSearchTerm, $aliases, $newSearchTerm));
+        } catch (InvalidArgumentException|AliasConstraintException $exception) {
+            $this->setLastException($exception);
+        }
     }
 
     /**
      * @param object[] $expectedData
      * @param array[] $aliases
-     *
-     * @return string[]
      */
-    private function assertAliasProperties(array $expectedData, array $aliases): array
+    private function assertExistAliasProperties(array $expectedData, array $aliases): void
     {
-        $idsByIdReferences = [];
-        foreach ($aliases as $key => $alias) {
-            $expectedAlias = $expectedData[$key];
-
-            Assert::assertSame(
-                $alias['alias'],
-                $expectedAlias['alias'],
-                'Unexpected alias reference'
-            );
-
-            Assert::assertSame(
-                $alias['search'],
-                $expectedAlias['search'],
-                'Unexpected alias reference'
-            );
-
-            if (isset($expectedAlias['active'])) {
-                Assert::assertSame(
-                    (int) $alias['active'],
-                    (int) $expectedAlias['active'],
-                    'Unexpected alias active field'
-                );
-            }
-
-            if (isset($expectedAlias['id reference'])) {
-                $idsByIdReferences[$expectedAlias['id reference']] = $alias['id_alias'];
-            }
-        }
-
-        return $idsByIdReferences;
+        $this->assertAliasProperties($expectedData, $aliases, true);
     }
 
-    private function buildUpdateAliasCommand(string $aliasReference, TableNode $table): UpdateAliasCommand
+    /**
+     * @param object[] $expectedData
+     * @param array[] $aliases
+     */
+    private function assertNotExistAliasProperties(array $expectedData, array $aliases): void
     {
-        $data = $table->getRowsHash();
-        $aliasId = $this->getSharedStorage()->get($aliasReference);
-        $aliases = [];
-        $searchTerm = '';
+        $this->assertAliasProperties($expectedData, $aliases, false);
+    }
 
-        if (isset($data['aliases'])) {
-            $aliases = PrimitiveUtils::castStringArrayIntoArray($data['aliases']);
-        }
-        if (isset($data['search'])) {
-            $searchTerm = $data['search'];
-        }
+    /**
+     * @param object[] $expectedData
+     * @param array[] $aliases
+     * @param bool $exist
+     */
+    private function assertAliasProperties(array $expectedData, array $aliases, bool $exist = false)
+    {
+        foreach ($expectedData as $key => $expectedAlias) {
+            $filter = array_filter($aliases, function ($alias) use ($expectedAlias) {
+                return
+                    $alias['alias'] === $expectedAlias['alias']
+                    && $alias['search'] === $expectedAlias['search']
+                    && filter_var($alias['active'], FILTER_VALIDATE_BOOL) === filter_var($expectedAlias['active'], FILTER_VALIDATE_BOOL)
+                ;
+            });
 
-        return new UpdateAliasCommand($aliasId, $aliases, $searchTerm);
+            Assert::assertCount(
+                $exist ? 1 : 0,
+                $filter,
+                sprintf(
+                    "Alias '%s' for search term '%s' and active '%s' not found.",
+                    $expectedAlias['alias'],
+                    $expectedAlias['search'],
+                    $expectedAlias['active']
+                )
+            );
+        }
+    }
+
+    /**
+     * @When I delete search term :searchTerm
+     *
+     * @param string $searchTerm
+     */
+    public function deleteSearchTerm(string $searchTerm): void
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteSearchTermAliasesCommand($searchTerm));
+        } catch (AliasException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I bulk delete search terms :searchTerms
+     *
+     * @param string $searchTerms
+     */
+    public function bulkDeleteSearchTerm(string $searchTerms): void
+    {
+        try {
+            $searchTerms = explode(',', $searchTerms);
+            $this->getCommandBus()->handle(new BulkDeleteSearchTermsAliasesCommand($searchTerms));
+        } catch (AliasException $e) {
+            $this->setLastException($e);
+        }
     }
 }

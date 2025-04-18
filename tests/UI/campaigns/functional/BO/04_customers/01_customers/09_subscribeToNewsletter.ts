@@ -1,22 +1,20 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import BO pages
-import customersPage from '@pages/BO/customers';
-import dashboardPage from '@pages/BO/dashboard';
-import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
-import psEmailSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
-
-// Import data
-import Customers from '@data/demo/customers';
-import Modules from '@data/demo/modules';
+import {
+  boCustomersPage,
+  boDashboardPage,
+  boLoginPage,
+  boModuleManagerPage,
+  type BrowserContext,
+  dataCustomers,
+  dataModules,
+  modPsEmailSubscriptionBoMain,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_customers_customers_subscribeToNewsletter';
 
@@ -27,46 +25,52 @@ describe('BO - Customers - Customers : Check customer subscription to newsletter
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'Customers > Customers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.customersParentLink,
-      dashboardPage.customersLink,
+      boDashboardPage.customersParentLink,
+      boDashboardPage.customersLink,
     );
-    await customersPage.closeSfToolBar(page);
+    await boCustomersPage.closeSfToolBar(page);
 
-    const pageTitle = await customersPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(customersPage.pageTitle);
+    const pageTitle = await boCustomersPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCustomersPage.pageTitle);
   });
 
   it('should reset all filters and get number of customers in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetAllFilters', baseContext);
 
-    numberOfCustomers = await customersPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfCustomers).to.be.above(0);
+    numberOfCustomers = await boCustomersPage.resetAndGetNumberOfLines(page);
+    expect(numberOfCustomers).to.be.above(0);
   });
 
-  it(`should filter by email '${Customers.johnDoe.email}'`, async function () {
+  it(`should filter by email '${dataCustomers.johnDoe.email}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterByEmail', baseContext);
 
-    await customersPage.filterCustomers(page, 'input', 'email', Customers.johnDoe.email);
+    await boCustomersPage.filterCustomers(page, 'input', 'email', dataCustomers.johnDoe.email);
 
-    const numberOfCustomersAfterFilter = await customersPage.getNumberOfElementInGrid(page);
-    await expect(numberOfCustomersAfterFilter).to.equal(1);
+    const numberOfCustomersAfterFilter = await boCustomersPage.getNumberOfElementInGrid(page);
+    expect(numberOfCustomersAfterFilter).to.equal(1);
   });
 
   [
@@ -76,67 +80,67 @@ describe('BO - Customers - Customers : Check customer subscription to newsletter
     it(`should ${test.args.action} newsletters`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}NewsLetters`, baseContext);
 
-      await customersPage.setNewsletterStatus(page, 1, test.args.value);
+      await boCustomersPage.setNewsletterStatus(page, 1, test.args.value);
 
-      const newsletterStatus = await customersPage.getNewsletterStatus(page, 1);
-      await expect(newsletterStatus).to.be.equal(test.args.value);
+      const newsletterStatus = await boCustomersPage.getNewsletterStatus(page, 1);
+      expect(newsletterStatus).to.be.equal(test.args.value);
     });
 
     it('should go to \'Modules > Module Manager\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToModuleManageTo${index}`, baseContext);
 
-      await customersPage.goToSubMenu(
+      await boCustomersPage.goToSubMenu(
         page,
-        customersPage.modulesParentLink,
-        customersPage.moduleManagerLink,
+        boCustomersPage.modulesParentLink,
+        boCustomersPage.moduleManagerLink,
       );
 
-      const pageTitle = await moduleManagerPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
+      const pageTitle = await boModuleManagerPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
     });
 
-    it(`should go to '${Modules.psEmailSubscription.name}' module`, async function () {
+    it(`should go to '${dataModules.psEmailSubscription.name}' module`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToEmailSubscriptionModule${index}`, baseContext);
 
       // Search and go to configure module page
-      await moduleManagerPage.searchModule(page, Modules.psEmailSubscription);
-      await moduleManagerPage.goToConfigurationPage(page, Modules.psEmailSubscription.tag);
+      await boModuleManagerPage.searchModule(page, dataModules.psEmailSubscription);
+      await boModuleManagerPage.goToConfigurationPage(page, dataModules.psEmailSubscription.tag);
 
-      const pageTitle = await psEmailSubscriptionPage.getPageSubtitle(page);
-      await expect(pageTitle).to.contains(Modules.psEmailSubscription.name);
+      const pageTitle = await modPsEmailSubscriptionBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.contains(dataModules.psEmailSubscription.name);
     });
 
     it('should check customer registration to newsletter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkCustomerRegistration${index}`, baseContext);
 
       // Get list of emails registered to newsletter
-      const listOfEmails = await psEmailSubscriptionPage.getListOfNewsletterRegistrationEmails(page);
+      const listOfEmails = await modPsEmailSubscriptionBoMain.getListOfNewsletterRegistrationEmails(page);
 
       if (test.args.value) {
-        await expect(listOfEmails).to.include(Customers.johnDoe.email);
+        expect(listOfEmails).to.include(dataCustomers.johnDoe.email);
       } else {
-        await expect(listOfEmails).to.not.include(Customers.johnDoe.email);
+        expect(listOfEmails).to.not.include(dataCustomers.johnDoe.email);
       }
     });
 
     it('should go to \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `gotoCustomersPage${index}`, baseContext);
 
-      await psEmailSubscriptionPage.goToSubMenu(
+      await modPsEmailSubscriptionBoMain.goToSubMenu(
         page,
-        psEmailSubscriptionPage.customersParentLink,
-        psEmailSubscriptionPage.customersLink,
+        modPsEmailSubscriptionBoMain.customersParentLink,
+        modPsEmailSubscriptionBoMain.customersLink,
       );
 
-      const pageTitle = await customersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customersPage.pageTitle);
+      const pageTitle = await boCustomersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomersPage.pageTitle);
     });
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetAfterAll', baseContext);
 
-    const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
+    const numberOfCustomersAfterReset = await boCustomersPage.resetAndGetNumberOfLines(page);
+    expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
   });
 });

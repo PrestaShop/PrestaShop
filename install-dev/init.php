@@ -23,7 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DBALException;
 
 ob_start();
 
@@ -83,7 +83,7 @@ if (!defined('_PS_CORE_DIR_')) {
 /* in dev mode - check if composer was executed */
 if ((!is_dir(_PS_CORE_DIR_ . DIRECTORY_SEPARATOR . 'vendor') ||
     !file_exists(_PS_CORE_DIR_ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php'))) {
-    die('Error : please install <a href="https://getcomposer.org/">composer</a>. Then run "php composer.phar install"');
+    die('Init Install Error : please install <a href="https://getcomposer.org/">composer</a>. Then run "php composer.phar install"');
 }
 
 require_once _PS_CORE_DIR_ . '/config/defines.inc.php';
@@ -91,10 +91,11 @@ require_once _PS_CORE_DIR_ . '/config/autoload.php';
 
 if (file_exists(_PS_CORE_DIR_ . '/app/config/parameters.php')) {
     require_once _PS_CORE_DIR_ . '/config/bootstrap.php';
+    require_once _PS_CORE_DIR_ . '/app/AdminKernel.php';
 
     global $kernel;
     try {
-        $kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
+        $kernel = new AdminKernel(_PS_ENV_, _PS_MODE_DEV_);
         $kernel->boot();
     } catch (DBALException $e) {
         /*

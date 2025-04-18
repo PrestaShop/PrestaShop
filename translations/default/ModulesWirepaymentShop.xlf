@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_wirepayment/controllers/front/payment.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="763538d192c0e4a3a341c1c7d0db9240">
+        <source>%1$s (tax incl.)</source>
+        <target>%1$s (tax incl.)</target>
+        <note>Line: 43</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/ps_wirepayment/controllers/front/validation.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e2b7dec8fa4b498156dfee6e4c84b156">
         <source>This payment method is not available.</source>
         <target>This payment method is not available.</target>
         <note>Line: 47</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_wirepayment/ps_wirepayment.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="763538d192c0e4a3a341c1c7d0db9240">
-        <source>%1$s (tax incl.)</source>
-        <target>%1$s (tax incl.)</target>
-        <note>Line: 392</note>
       </trans-unit>
     </body>
   </file>
@@ -58,16 +58,6 @@
   </file>
   <file original="modules/ps_wirepayment/views/templates/hook/payment_return.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="88526efe38fd18179a127024aba8c1d7">
-        <source>Your order on %s is complete.</source>
-        <target>Your order on %s is complete.</target>
-        <note>Line: 21</note>
-      </trans-unit>
-      <trans-unit id="1552c5916ccfe019f35d91fd8955755e">
-        <source>Please send us a bank wire with:</source>
-        <target>Please send us a bank wire with:</target>
-        <note>Line: 22</note>
-      </trans-unit>
       <trans-unit id="e82b76a36b23218201ac431c5c2da4c6">
         <source>Please specify your order reference %s in the bankwire description.</source>
         <target>Please specify your order reference %s in the bankwire description.</target>
@@ -88,6 +78,16 @@
         <target>If you have questions, comments or concerns, please contact our [1]expert customer support team[/1].</target>
         <note>Line: 32</note>
       </trans-unit>
+      <trans-unit id="88526efe38fd18179a127024aba8c1d7">
+        <source>Your order on %s is complete.</source>
+        <target>Your order on %s is complete.</target>
+        <note>Line: 21</note>
+      </trans-unit>
+      <trans-unit id="1552c5916ccfe019f35d91fd8955755e">
+        <source>Please send us a bank wire with:</source>
+        <target>Please send us a bank wire with:</target>
+        <note>Line: 22</note>
+      </trans-unit>
     </body>
   </file>
   <file original="modules/ps_wirepayment/views/templates/hook/ps_wirepayment_intro.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -100,22 +100,51 @@
       <trans-unit id="1a81e90b854883236a07009057635bcd">
         <source>Goods will be reserved %s days for you and we'll process the order immediately after receiving the payment.</source>
         <target>Goods will be reserved %s days for you and we'll process the order immediately after receiving the payment.</target>
-        <note>Line: 24</note>
+        <note>Line: 25</note>
+      </trans-unit>
+      <trans-unit id="a1f33d213fa754bce2846ca0fcb846ed">
+        <source>Goods will be reserved %s day for you and we'll process the order immediately after receiving the payment.</source>
+        <target>Goods will be reserved %s day for you and we'll process the order immediately after receiving the payment.</target>
+        <note>Line: 27</note>
       </trans-unit>
       <trans-unit id="ab066b3292d8ab61ef3b5c77169cdd19">
         <source>More information</source>
         <target>More information</target>
-        <note>Line: 27</note>
+        <note>Line: 31</note>
       </trans-unit>
       <trans-unit id="35b4b09d5d0686ec5c2e2cc9f3d9039c">
         <source>Bankwire</source>
         <target>Bankwire</target>
-        <note>Line: 38</note>
+        <note>Line: 42</note>
       </trans-unit>
       <trans-unit id="ebcdf354e92daa6f6dee8a83a14e5c7a">
         <source>Payment is made by transfer of the invoice amount to the following account:</source>
         <target>Payment is made by transfer of the invoice amount to the following account:</target>
-        <note>Line: 41</note>
+        <note>Line: 45</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/hummingbird/modules/ps_wirepayment/views/templates/hook/payment_return.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4ffaad55a1d22c453e7c9bad67b0598f">
+        <source>Pay by Bank Wire</source>
+        <target>Pay by Bank Wire</target>
+        <note>Line: 9</note>
+      </trans-unit>
+      <trans-unit id="bed00e78df913b269d3307a44215aa8e">
+        <source>You have chosen payment by bank transfer.</source>
+        <target>You have chosen payment by bank transfer.</target>
+        <note>Line: 12</note>
+      </trans-unit>
+      <trans-unit id="c6dd03b181b72e670f55b77d9b0e85cd">
+        <source>Please send us a bank transfer with following details:</source>
+        <target>Please send us a bank transfer with following details:</target>
+        <note>Line: 13</note>
+      </trans-unit>
+      <trans-unit id="c00373052588907ffdd28d1866a75aee">
+        <source>We noticed a problem with your order. If you think this is an error, feel free to contact our [1]expert customer support team[/1].</source>
+        <target>We noticed a problem with your order. If you think this is an error, feel free to contact our [1]expert customer support team[/1].</target>
+        <note>Line: 61</note>
       </trans-unit>
     </body>
   </file>

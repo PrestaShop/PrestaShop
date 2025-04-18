@@ -70,7 +70,14 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
 
         if (isset($requestParameters['submitCreate'])) {
             $this->registerForm->fillWith($requestParameters);
-            if ($this->registerForm->submit()) {
+            $hookResult = array_reduce(
+                Hook::exec('actionSubmitAccountBefore', [], null, true),
+                function ($carry, $item) {
+                    return $carry && $item;
+                },
+                true
+            );
+            if ($hookResult && $this->registerForm->submit()) {
                 $this->setNextStepAsCurrent();
                 $this->setComplete(true);
             } else {

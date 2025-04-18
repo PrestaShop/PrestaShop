@@ -32,7 +32,7 @@
     display: block;
     width: 36px;
     height: 22px;
-    background: #b3c7cd;
+    background: var(--#{$cdk}primary-800);
     border: 0;
     @include transition(0.25s ease-out);
     @include border-radius(1000px);
@@ -44,7 +44,7 @@
       width: 18px;
       height: 18px;
       content: "";
-      background: #fff;
+      background: var(--#{$cdk}white);
       @include border-radius(50%);
       @include transition(0.25s ease-out);
     }
@@ -89,7 +89,7 @@
       }
 
       ~ .slide-button {
-        background: #b3c7cd;
+        background: var(--#{$cdk}primary-800);
       }
     }
 

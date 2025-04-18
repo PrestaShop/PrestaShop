@@ -53,7 +53,7 @@ final class BulkToggleTaxStatusHandler extends AbstractTaxHandler implements Bul
                 if (!$tax->save()) {
                     throw new UpdateTaxException(sprintf('Unable to toggle Tax with id "%s"', $taxId->getValue()), UpdateTaxException::FAILED_BULK_UPDATE_STATUS);
                 }
-            } catch (PrestaShopException $e) {
+            } catch (PrestaShopException) {
                 throw new TaxException(sprintf('An error occurred when updating Tax status with id "%s"', $taxId->getValue()));
             }
         }

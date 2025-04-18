@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,15 +21,15 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
 {% form_theme currencyForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {% block form %}
   {{ form_start(currencyForm, {
-    'attr': {
-      'id': 'currency_form',
-      'data-reference-url': path('admin_currencies_get_reference_data', {'currencyIsoCode': 'CURRENCY_ISO_CODE'})|replace({'/CURRENCY_ISO_CODE': '{/id}'}),
+    attr: {
+      id: 'currency_form',
+      'data-reference-url': path('admin_currencies_get_reference_data', {currencyIsoCode: 'CURRENCY_ISO_CODE'})|replace({'/CURRENCY_ISO_CODE': '{/id}'}),
       'data-languages': languages|json_encode,
       'data-translations': {
         'step.symbol': '1. Enter symbol'|trans({}, 'Admin.International.Feature'),
@@ -74,7 +74,7 @@
           {{ form_row(currencyForm.names) }}
 
           {% set symbolsClass = currencyForm.symbols.vars.errors|length ? '' : 'd-none' %}
-          {{ form_row(currencyForm.symbols, {'row_attr': {'class': symbolsClass}}) }}
+          {{ form_row(currencyForm.symbols, {row_attr: {class: symbolsClass}}) }}
           {{ form_widget(currencyForm) }}
         </div>
       </div>
@@ -86,7 +86,7 @@
           </a>
 
           {% if currencyForm.vars.data.id is defined and not currencyForm.vars.data.unofficial %}
-            <button type="button" id="currency_reset_default_settings" class="btn btn-outline-primary card-currency-reset">
+            <button type="button" id="currency_reset_default_settings" class="btn btn-outline-secondary card-currency-reset">
               <i class="material-icons">refresh</i>
               {{ 'Restore default settings'|trans({}, 'Admin.International.Feature') }}
             </button>

@@ -1,16 +1,15 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import login steps
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-import dashboardPage from '@pages/BO/dashboard';
-import generalPage from '@pages/BO/shopParameters/general';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  boDashboardPage,
+  boLoginPage,
+  boShopParametersPage,
+  type BrowserContext,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_general_general_enableDisableMultistore';
 
@@ -24,54 +23,62 @@ describe('BO - Shop Parameters - General : Enable/Disable multi store', async ()
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'Shop parameters > General\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToGeneralPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.shopParametersParentLink,
-      dashboardPage.shopParametersGeneralLink,
+      boDashboardPage.shopParametersParentLink,
+      boDashboardPage.shopParametersGeneralLink,
     );
-    await generalPage.closeSfToolBar(page);
+    await boShopParametersPage.closeSfToolBar(page);
 
-    const pageTitle = await generalPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(generalPage.pageTitle);
+    const pageTitle = await boShopParametersPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boShopParametersPage.pageTitle);
   });
 
   const tests = [
-    {args: {action: 'enable', exist: true}},
-    {args: {action: 'disable', exist: false}},
+    {args: {action: 'Enable', exist: true}},
+    {args: {action: 'Disable', exist: false}},
   ];
 
   tests.forEach((test, index: number) => {
-    it(`should ${test.args.action} multi store`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}MultiStore`, baseContext);
+    describe(`${test.args.action} Display Multistore`, async () => {
+      it(`should ${test.args.action} multi store`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}MultiStore`, baseContext);
 
-      const result = await generalPage.setMultiStoreStatus(page, test.args.exist);
-      await expect(result).to.contains(generalPage.successfulUpdateMessage);
-    });
+        const result = await boShopParametersPage.setMultiStoreStatus(page, test.args.exist);
+        expect(result).to.contains(boShopParametersPage.successfulUpdateMessage);
+      });
 
-    it('should check the existence of \'Advanced Parameters > Multistore\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `goToMultiStorePage_${index}`, baseContext);
+      it('should check the existence of \'Advanced Parameters > Multistore\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToMultiStorePage_${index}`, baseContext);
 
-      const result = await generalPage.isSubmenuVisible(
-        page,
-        generalPage.advancedParametersLink,
-        generalPage.multistoreLink,
-      );
-      await expect(result).to.be.equal(test.args.exist);
+        const result = await boShopParametersPage.isSubmenuVisible(
+          page,
+          boShopParametersPage.advancedParametersLink,
+          boShopParametersPage.multistoreLink,
+        );
+        expect(result).to.be.equal(test.args.exist);
+      });
     });
   });
 });

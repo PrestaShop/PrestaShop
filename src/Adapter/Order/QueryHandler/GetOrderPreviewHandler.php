@@ -82,7 +82,7 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
     public function __construct(
         LocaleRepository $localeRepository,
         string $locale,
-        AddressFormatterInterface $addressFormatter = null
+        ?AddressFormatterInterface $addressFormatter = null
     ) {
         $this->localeRepository = $localeRepository;
         $this->locale = $locale;

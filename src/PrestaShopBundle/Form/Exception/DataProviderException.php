@@ -38,7 +38,7 @@ class DataProviderException extends DomainException
      */
     private $InvalidConfigurationDataErrors;
 
-    public function __construct($message = '', $code = 0, Throwable $previous = null, ?InvalidConfigurationDataErrorCollection $InvalidConfigurationDataErrors = null)
+    public function __construct($message = '', $code = 0, ?Throwable $previous = null, ?InvalidConfigurationDataErrorCollection $InvalidConfigurationDataErrors = null)
     {
         parent::__construct($message, $code, $previous);
         $this->InvalidConfigurationDataErrors = $InvalidConfigurationDataErrors ?: new InvalidConfigurationDataErrorCollection();

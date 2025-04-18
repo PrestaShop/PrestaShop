@@ -60,7 +60,7 @@ class CarrierCore extends ObjectModel
     /** @var string URL with a '@' for */
     public $url;
 
-    /** @var string Delay needed to deliver customer */
+    /** @var string[]|string Delay needed to deliver customer */
     public $delay;
 
     /** @var bool Carrier statuts */
@@ -113,7 +113,7 @@ class CarrierCore extends ObjectModel
     /** @var int maximum package deep managed by the transporter */
     public $max_depth;
 
-    /** @var int maximum package weight managed by the transporter */
+    /** @var float maximum package weight managed by the transporter */
     public $max_weight;
 
     /** @var int grade of the shipping delay (0 for longest, 9 for shortest) */
@@ -133,7 +133,7 @@ class CarrierCore extends ObjectModel
             'name' => ['type' => self::TYPE_STRING, 'validate' => 'isCarrierName', 'required' => true, 'size' => 64],
             'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true],
             'is_free' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
-            'url' => ['type' => self::TYPE_STRING, 'validate' => 'isAbsoluteUrl'],
+            'url' => ['type' => self::TYPE_STRING, 'validate' => 'isAbsoluteUrl', 'size' => 255],
             'shipping_handling' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'shipping_external' => ['type' => self::TYPE_BOOL],
             'range_behavior' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
@@ -255,14 +255,19 @@ class CarrierCore extends ObjectModel
      */
     public function delete()
     {
-        if (!parent::delete()) {
-            return false;
-        }
-        Carrier::cleanPositions();
+        if ($this->isUsed()) {
+            return parent::softDelete() && Carrier::cleanPositions();
+        } else {
+            if (!parent::delete()) {
+                return false;
+            }
 
-        return Db::getInstance()->delete('cart_rule_carrier', 'id_carrier = ' . (int) $this->id) &&
-                Db::getInstance()->delete('module_carrier', 'id_reference = ' . (int) $this->id_reference) &&
-                $this->deleteTaxRulesGroup(Shop::getShops(true, null, true));
+            Carrier::cleanPositions();
+
+            return Db::getInstance()->delete('cart_rule_carrier', 'id_carrier = ' . (int) $this->id)
+                    && Db::getInstance()->delete('module_carrier', 'id_reference = ' . (int) $this->id_reference)
+                    && $this->deleteTaxRulesGroup(Shop::getShops(true, null, true));
+        }
     }
 
     /**
@@ -610,12 +615,8 @@ class CarrierCore extends ObjectModel
      *
      * @return array Countries to which can be delivered
      */
-    public static function getDeliveredCountries($id_lang, $active_countries = false, $active_carriers = false, $contain_states = null)
+    public static function getDeliveredCountries(int $id_lang, bool $active_countries = false, bool $active_carriers = false, $contain_states = null)
     {
-        if (!Validate::isBool($active_countries) || !Validate::isBool($active_carriers)) {
-            die(Tools::displayError());
-        }
-
         $states = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
             SELECT s.*
             FROM `' . _DB_PREFIX_ . 'state` s
@@ -712,13 +713,13 @@ class CarrierCore extends ObjectModel
             $shipping_method = $carrier->getShippingMethod();
             if ($shipping_method != Carrier::SHIPPING_METHOD_FREE) {
                 // Get only carriers that are compliant with shipping method
-                if (($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && $carrier->getMaxDeliveryPriceByWeight($id_zone) === false)) {
+                if ($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && $carrier->getMaxDeliveryPriceByWeight($id_zone) === false) {
                     $error[$carrier->id] = Carrier::SHIPPING_WEIGHT_EXCEPTION;
                     unset($result[$k]);
 
                     continue;
                 }
-                if (($shipping_method == Carrier::SHIPPING_METHOD_PRICE && $carrier->getMaxDeliveryPriceByPrice($id_zone) === false)) {
+                if ($shipping_method == Carrier::SHIPPING_METHOD_PRICE && $carrier->getMaxDeliveryPriceByPrice($id_zone) === false) {
                     $error[$carrier->id] = Carrier::SHIPPING_PRICE_EXCEPTION;
                     unset($result[$k]);
 
@@ -899,6 +900,11 @@ class CarrierCore extends ObjectModel
             WHERE id_carrier=' . (int) $this->id);
     }
 
+    public function getAssociatedGroupIds(): array
+    {
+        return array_map(fn ($group) => (int) $group['id_group'], $this->getGroups());
+    }
+
     /**
      * Clean delivery prices (weight/price).
      *
@@ -1050,7 +1056,7 @@ class CarrierCore extends ObjectModel
             ');
         }
 
-        //Copy default carrier
+        // Copy default carrier
         if (Configuration::get('PS_CARRIER_DEFAULT') == $old_id) {
             Configuration::updateValue('PS_CARRIER_DEFAULT', (int) $this->id);
         }
@@ -1197,7 +1203,7 @@ class CarrierCore extends ObjectModel
      *
      * @return int TaxrulesGroup ID
      */
-    public function getIdTaxRulesGroup(Context $context = null)
+    public function getIdTaxRulesGroup(?Context $context = null)
     {
         return Carrier::getIdTaxRulesGroupByIdCarrier((int) $this->id, $context);
     }
@@ -1211,7 +1217,7 @@ class CarrierCore extends ObjectModel
      * @return int TaxRulesGroup ID
      *             false if not found
      */
-    public static function getIdTaxRulesGroupByIdCarrier($id_carrier, Context $context = null)
+    public static function getIdTaxRulesGroupByIdCarrier($id_carrier, ?Context $context = null)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -1244,7 +1250,7 @@ class CarrierCore extends ObjectModel
     public function setTaxRulesGroup($id_tax_rules_group, $all_shops = false)
     {
         if (!Validate::isUnsignedId($id_tax_rules_group)) {
-            die(Tools::displayError());
+            throw new PrestaShopException('Parameter "id_tax_rules_group" is invalid.');
         }
 
         if (!$all_shops) {
@@ -1275,7 +1281,7 @@ class CarrierCore extends ObjectModel
      *
      * @return bool Whether the TaxRulesGroup has been successfully removed from this Carrier
      */
-    public function deleteTaxRulesGroup(array $shops = null)
+    public function deleteTaxRulesGroup(?array $shops = null)
     {
         if (!$shops) {
             $shops = Shop::getContextListShopID();
@@ -1298,7 +1304,7 @@ class CarrierCore extends ObjectModel
      *
      * @return float Total Tax rate for this Carrier
      */
-    public function getTaxesRate(Address $address = null)
+    public function getTaxesRate(?Address $address = null)
     {
         if (!$address || !$address->id_country) {
             $address = Address::initialize();
@@ -1464,7 +1470,7 @@ class CarrierCore extends ObjectModel
      * @param Product $product The id of the product, or an array with at least the package size and weight
      * @param int|null $id_warehouse Warehouse ID - not used anymore
      * @param int|null $id_address_delivery Delivery Address ID
-     * @param int|null$id_shop Shop ID
+     * @param int|null $id_shop Shop ID
      * @param CartCore|null $cart Cart object
      * @param array|null $error contain an error message if an error occurs
      *
@@ -1529,15 +1535,15 @@ class CarrierCore extends ObjectModel
 
         $carrier_list = [];
         if (!empty($carriers_for_product)) {
-            //the product is linked with carriers
-            foreach ($carriers_for_product as $carrier) { //check if the linked carriers are available in current zone
+            // the product is linked with carriers
+            foreach ($carriers_for_product as $carrier) { // check if the linked carriers are available in current zone
                 if (Carrier::checkCarrierZone($carrier['id_carrier'], $id_zone)) {
                     $carrier_list[$carrier['id_carrier']] = $carrier['id_carrier'];
                 }
             }
             if (empty($carrier_list)) {
                 return [];
-            }//no linked carrier are available for this zone
+            }// no linked carrier are available for this zone
         }
 
         $available_carrier_list = [];

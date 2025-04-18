@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
-use PHPUnit\Framework\Assert as Assert;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Command\AddOrderReturnStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Command\BulkDeleteOrderReturnStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Command\DeleteOrderReturnStateCommand;
@@ -41,22 +41,10 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Exception\OrderReturnStat
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Query\GetOrderReturnStateForEditing;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\QueryResult\EditableOrderReturnState;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\ValueObject\OrderReturnStateId;
-use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class OrderReturnStateFeatureContext extends AbstractDomainFeatureContext
 {
-    /**
-     * @var int default language id from configs
-     */
-    private $defaultLangId;
-
-    public function __construct()
-    {
-        $configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
-        $this->defaultLangId = $configuration->get('PS_LANG_DEFAULT');
-    }
-
     /**
      * @Given I add a new order return state :orderReturnStateReference with the following details:
      *
@@ -71,7 +59,7 @@ class OrderReturnStateFeatureContext extends AbstractDomainFeatureContext
             /** @var OrderReturnStateId $orderReturnStateId */
             $orderReturnStateId = $this->getCommandBus()->handle(new AddOrderReturnStateCommand(
                 [
-                    $this->defaultLangId => $data['name'],
+                    $this->getDefaultLangId() => $data['name'],
                 ],
                 $data['color']
             ));
@@ -97,7 +85,7 @@ class OrderReturnStateFeatureContext extends AbstractDomainFeatureContext
         $data = $table->getRowsHash();
         if (isset($data['name'])) {
             $editableOrderReturnState->setName([
-                $this->defaultLangId => $data['name'],
+                $this->getDefaultLangId() => $data['name'],
             ]);
         }
         if (isset($data['color'])) {
@@ -163,8 +151,8 @@ class OrderReturnStateFeatureContext extends AbstractDomainFeatureContext
 
         $localizedNames = $editableOrderReturnState->getLocalizedNames();
         Assert::assertIsArray($localizedNames);
-        Assert::assertArrayHasKey($this->defaultLangId, $localizedNames);
-        Assert::assertEquals($data['name'], $localizedNames[$this->defaultLangId]);
+        Assert::assertArrayHasKey($this->getDefaultLangId(), $localizedNames);
+        Assert::assertEquals($data['name'], $localizedNames[$this->getDefaultLangId()]);
         Assert::assertEquals($data['color'], $editableOrderReturnState->getColor());
     }
 

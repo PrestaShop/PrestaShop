@@ -24,7 +24,7 @@
  *}
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale={(isset($viewport_scale)) ? $viewport_scale : '1'}">
-<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="robots" content="NOFOLLOW, NOINDEX">
 
 <link rel="icon" type="image/x-icon" href="{$img_dir}favicon.ico" />

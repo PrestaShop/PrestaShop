@@ -29,15 +29,19 @@
   <h2><?php echo $this->translator->trans('Information about your Store', [], 'Install'); ?></h2>
 
   <div class="field clearfix">
-	<label for="infosShop" class="aligned"><?php echo $this->translator->trans('Store name', [], 'Install'); ?> </label>
+	<label for="infosShop" class="aligned">
+		<?php echo $this->translator->trans('Store name', [], 'Install'); ?><sup class="required">*</sup>
+	</label>
 	<div class="contentinput">
-	  <input class="text required" type="text" id="infosShop" name="shop_name" value="<?php echo htmlspecialchars($this->session->shop_name ?? ''); ?>" /> <sup class="required">*</sup>
+	  <input class="text required" type="text" id="infosShop" name="shop_name" value="<?php echo htmlspecialchars($this->session->shop_name ?? ''); ?>" />
 	</div>
 	<?php echo $this->displayError('shop_name'); ?>
   </div>
 
   <div class="field clearfix">
-	<label for="infosCountry" class="aligned"><?php echo $this->translator->trans('Country', [], 'Install'); ?></label>
+	<label for="infosCountry" class="aligned">
+		<?php echo $this->translator->trans('Country', [], 'Install'); ?><sup class="required">*</sup>
+	</label>
 	<div class="contentinput">
 	  <select name="shop_country" id="infosCountry" class="chosen">
 		<option value="0" style="font-weight: bold"><?php echo $this->translator->trans('Select your country', [], 'Install'); ?></option>
@@ -45,7 +49,6 @@
 		  <option value="<?php echo (isset($country['iso'])) ? $country['iso'] : ''; ?>" <?php if ($this->session->shop_country && isset($country['iso']) && $this->session->shop_country === $country['iso']) { ?>selected="selected"<?php } ?>><?php echo $country['name']; ?></option>
 		<?php } ?>
 	  </select>
-	  <sup class="required">*</sup>
 	</div>
 	<?php echo $this->displayError('shop_country'); ?>
   </div>
@@ -53,7 +56,9 @@
   <div id="timezone_div" class="field clearfix" <?php if (!in_array($this->session->shop_timezone, ['us', 'ca', 'au', 'ru', 'me', 'id'])) {
     echo 'style="display:none"';
 } ?>>
-	<label for="infosTimezone" class="aligned"><?php echo $this->translator->trans('Shop timezone', [], 'Install'); ?></label>
+	<label for="infosTimezone" class="aligned">
+		<?php echo $this->translator->trans('Shop timezone', [], 'Install'); ?><sup class="required">*</sup>
+	</label>
 	<div class="contentinput">
 	  <select name="shop_timezone" id="infosTimezone" class="chosen no-chosen">
 		<option value="0" style="font-weight: bold"><?php echo $this->translator->trans('Select your timezone', [], 'Install'); ?></option>
@@ -61,14 +66,13 @@
 		  <option value="<?php echo $timezone; ?>" <?php if ($this->session->shop_timezone == $timezone) { ?>selected="selected"<?php } ?>><?php echo $timezone; ?></option>
 		<?php } ?>
 	  </select>
-	  <sup class="required">*</sup>
 	</div>
 	<?php echo $this->displayError('shop_timezone'); ?>
   </div>
 
   <div class="field clearfix">
     <label class="aligned"><?php echo $this->translator->trans('Enable SSL', [], 'Install'); ?></label>
-    <div class="contentinput">
+    <div class="contentinput radio-inline">
       <label>
         <input value="1" type="radio" name="enable_ssl" style="vertical-align: middle;" <?php if ($this->session->enable_ssl) { ?>checked="checked"<?php } ?> autocomplete="off" />
         <?php echo $this->translator->trans('Yes', [], 'Install'); ?>
@@ -84,35 +88,40 @@
 
   <!-- Admin firstname -->
   <div class="field clearfix">
-	<label for="infosFirstname" class="aligned"><?php echo $this->translator->trans('First name', [], 'Install'); ?> </label>
+	<label for="infosFirstname" class="aligned">
+		<?php echo $this->translator->trans('First name', [], 'Install'); ?><sup class="required">*</sup>
+	</label>
 	<div class="contentinput">
 	  <input class="text required" type="text" id="infosFirstname" name="admin_firstname" value="<?php echo htmlspecialchars($this->session->admin_firstname ?? ''); ?>" />
-	  <sup class="required">*</sup>
 	</div>
 	<?php echo $this->displayError('admin_firstname'); ?>
   </div>
 
   <div class="field clearfix">
-	<label for="infosName" class="aligned"><?php echo $this->translator->trans('Last name', [], 'Install'); ?> </label>
+	<label for="infosName" class="aligned">
+		<?php echo $this->translator->trans('Last name', [], 'Install'); ?><sup class="required">*</sup>
+	</label>
 	<div class="contentinput">
 	  <input class="text required" type="text" id="infosName" name="admin_lastname" value="<?php echo htmlspecialchars($this->session->admin_lastname ?? ''); ?>" />
-	  <sup class="required">*</sup>
 	</div>
 	<?php echo $this->displayError('admin_lastname'); ?>
   </div>
 
   <div class="field clearfix">
-	<label for="infosEmail" class="aligned"><?php echo $this->translator->trans('E-mail address', [], 'Install'); ?> </label>
+	<label for="infosEmail" class="aligned">
+		<?php echo $this->translator->trans('E-mail address', [], 'Install'); ?><sup class="required">*</sup>
+	</label>
 	<div class="contentinput">
 	  <input type="text" class="text required" id="infosEmail" name="admin_email" value="<?php echo htmlspecialchars($this->session->admin_email ?? ''); ?>" />
-	  <sup class="required">*</sup>
 	</div>
 	<p class="userInfos aligned"><?php echo $this->translator->trans('This email address will be your username to access your store\'s back office.', [], 'Install'); ?></p>
 	<?php echo $this->displayError('admin_email'); ?>
   </div>
 
   <div class="field field-password clearfix">
-	<label for="infosPassword" class="aligned"><?php echo $this->translator->trans('Shop password', [], 'Install'); ?> </label>
+	<label for="infosPassword" class="aligned">
+		<?php echo $this->translator->trans('Shop password', [], 'Install'); ?><sup class="required">*</sup>
+	</label>
 	<div class="contentinput">
       <div class="popover fade bs-popover-top d-none" role="tooltip" x-placement="top">
         <div class="arrow"></div>
@@ -121,7 +130,6 @@
       </div>
 
 	  <input autocomplete="off" type="password" data-minlength="8" data-maxlength="72" data-minscore="3" class="text required" id="infosPassword" name="admin_password" value="<?php echo htmlspecialchars($this->session->admin_password ?? ''); ?>" />
-	  <sup class="required">*</sup>
 	</div>
 
 	<?php if ($this->displayError('admin_password')) { ?>
@@ -132,10 +140,11 @@
   </div>
 
   <div class="field clearfix">
-	<label class="aligned" for="infosPasswordRepeat"><?php echo $this->translator->trans('Re-type to confirm', [], 'Install'); ?> </label>
+	<label class="aligned" for="infosPasswordRepeat">
+		<?php echo $this->translator->trans('Re-type to confirm', [], 'Install'); ?><sup class="required">*</sup>
+	</label>
 	<div class="contentinput">
 	  <input type="password" autocomplete="off" class="text required" id="infosPasswordRepeat" name="admin_password_confirm" value="<?php echo htmlspecialchars($this->session->admin_password_confirm ?? ''); ?>" />
-	  <sup class="required">*</sup>
 	</div>
 	<?php echo $this->displayError('admin_password_confirm'); ?>
   </div>

@@ -90,6 +90,7 @@ class EditProductFormType extends TranslatorAwareType
         $builder
             ->add('header', HeaderType::class, [
                 'active' => $options['active'],
+                'force_default_active' => $options['force_default_active'],
                 'product_id' => $productId,
             ])
             ->add('description', DescriptionType::class, [
@@ -111,6 +112,7 @@ class EditProductFormType extends TranslatorAwareType
             ])
             ->add('seo', SEOType::class, [
                 'product_id' => $productId,
+                'active' => $options['active'],
             ])
             ->add('options', OptionsType::class)
             ->add('extra_modules', ExtraModulesType::class, [
@@ -138,6 +140,7 @@ class EditProductFormType extends TranslatorAwareType
             'product_type' => $options['product_type'],
             'product_id' => $options['product_id'],
             'shop_id' => $options['shop_id'],
+            'force_default_active' => $options['force_default_active'] ? 1 : 0,
         ];
 
         $view->vars = array_replace($view->vars, $formVars);
@@ -155,6 +158,7 @@ class EditProductFormType extends TranslatorAwareType
             ->setDefaults([
                 'virtual_product_file_id' => null,
                 'active' => false,
+                'force_default_active' => false,
                 'allow_extra_fields' => true,
                 'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/product.html.twig',
                 'use_default_themes' => false,

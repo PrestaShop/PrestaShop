@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler;
 
-use PDO;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
@@ -126,8 +125,8 @@ final class GetEditableCombinationsListHandler implements GetEditableCombination
             ]
         );
 
-        $combinations = $this->combinationQueryBuilder->getSearchQueryBuilder($searchCriteria)->execute()->fetchAll();
-        $total = (int) $this->combinationQueryBuilder->getCountQueryBuilder($searchCriteria)->execute()->fetch(PDO::FETCH_COLUMN);
+        $combinations = $this->combinationQueryBuilder->getSearchQueryBuilder($searchCriteria)->executeQuery()->fetchAllAssociative();
+        $total = (int) $this->combinationQueryBuilder->getCountQueryBuilder($searchCriteria)->executeQuery()->fetchOne();
 
         $combinationIds = array_map(function (array $combination): CombinationId {
             return new CombinationId((int) $combination['id_product_attribute']);

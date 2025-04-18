@@ -1,16 +1,15 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
-import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  boDashboardPage,
+  boLoginPage,
+  boShoppingCartsPage,
+  type BrowserContext,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Function to delete non-ordered shopping carts
@@ -25,51 +24,57 @@ function deleteNonOrderedShoppingCarts(baseContext: string = 'commonTests-delete
   describe('PRE-TEST: Delete the non-ordered shopping carts', async () => {
     // before and after functions
     before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
     });
 
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
+      await utilsPlaywright.closeBrowserContext(browserContext);
     });
 
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Orders > Shopping carts\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage1', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.shoppingCartsLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.shoppingCartsLink,
       );
 
-      const pageTitle = await shoppingCartsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(shoppingCartsPage.pageTitle);
+      const pageTitle = await boShoppingCartsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boShoppingCartsPage.pageTitle);
     });
 
     it('should reset all filters and get number of shopping carts', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst1', baseContext);
 
-      numberOfShoppingCarts = await shoppingCartsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfShoppingCarts).to.be.above(0);
+      numberOfShoppingCarts = await boShoppingCartsPage.resetAndGetNumberOfLines(page);
+      expect(numberOfShoppingCarts).to.be.above(0);
     });
 
     it('should search for the non ordered shopping carts', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchNonOrderedShoppingCarts1', baseContext);
 
-      await shoppingCartsPage.filterTable(page, 'input', 'status', 'Non ordered');
+      await boShoppingCartsPage.filterTable(page, 'select', 'status', 'Non ordered');
 
-      numberOfNonOrderedShoppingCarts = await shoppingCartsPage.getNumberOfElementInGrid(page);
-      await expect(numberOfNonOrderedShoppingCarts).to.be.at.most(numberOfShoppingCarts);
+      numberOfNonOrderedShoppingCarts = await boShoppingCartsPage.getNumberOfElementInGrid(page);
+      expect(numberOfNonOrderedShoppingCarts).to.be.at.most(numberOfShoppingCarts);
 
       numberOfShoppingCarts -= numberOfNonOrderedShoppingCarts;
 
       for (let row = 1; row <= numberOfNonOrderedShoppingCarts; row++) {
-        const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'status');
-        await expect(textColumn).to.contains('Non ordered');
+        const textColumn = await boShoppingCartsPage.getTextColumn(page, row, 'status');
+        expect(textColumn).to.contains('Non ordered');
       }
     });
 
@@ -77,16 +82,16 @@ function deleteNonOrderedShoppingCarts(baseContext: string = 'commonTests-delete
       await testContext.addContextItem(this, 'testIdentifier', 'deleteNonOrderedShoppingCartsIfExists1', baseContext);
 
       if (numberOfNonOrderedShoppingCarts > 0) {
-        const deleteTextResult = await shoppingCartsPage.bulkDeleteShoppingCarts(page);
-        await expect(deleteTextResult).to.be.contains(shoppingCartsPage.successfulMultiDeleteMessage);
+        const deleteTextResult = await boShoppingCartsPage.bulkDeleteShoppingCarts(page);
+        expect(deleteTextResult).to.be.contains(boShoppingCartsPage.successfulDeleteMessage);
       }
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDeleteNonOrderedCarts1', baseContext);
 
-      const numberOfShoppingCartsAfterReset = await shoppingCartsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfShoppingCartsAfterReset).to.be.equal(numberOfShoppingCarts);
+      const numberOfShoppingCartsAfterReset = await boShoppingCartsPage.resetAndGetNumberOfLines(page);
+      expect(numberOfShoppingCartsAfterReset).to.be.equal(numberOfShoppingCarts);
     });
   });
 }

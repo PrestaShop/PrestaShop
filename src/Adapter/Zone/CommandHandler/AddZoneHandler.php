@@ -66,7 +66,7 @@ final class AddZoneHandler extends AbstractObjectModelHandler implements AddZone
             }
 
             $this->associateWithShops($zone, $command->getShopAssociation());
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new ZoneException(sprintf('Failed to add new zone "%s"', $command->getName()));
         }
 

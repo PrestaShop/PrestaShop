@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
 {% if not orderForViewing.virtual %}
   {% if orderForViewing.returns.orderReturns is not empty %}
@@ -41,7 +41,7 @@
           <td data-role="merchandise-return-type">{{ return.type }}</td>
           <td data-role="merchandise-return-state">{{ return.stateName }}</td>
           <td data-role="merchandise-return-id">
-            <a class="d-print-none" href="{{ getAdminLink('AdminReturn', true, {'id_order_return': return.idOrderReturn, updateorder_return : '', 'back': app.request.uri}) }}">
+            <a class="d-print-none" href="{{ getAdminLink('AdminReturn', true, {id_order_return: return.idOrderReturn, updateorder_return: '', back: app.request.uri}) }}">
                 {{ return.orderReturnNumber }}
             </a>
           </td>

@@ -74,7 +74,7 @@ final class EditSqlRequestHandler extends AbstractSqlRequestHandler implements E
             if (false === $entity->update()) {
                 throw new CannotEditSqlRequestException(sprintf('Error occurred when updating SqlRequest with id "%s"', $command->getSqlRequestId()->getValue()));
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new SqlRequestException(sprintf('Error occurred when updating SqlRequest with id "%s"', $command->getSqlRequestId()->getValue()));
         }
     }

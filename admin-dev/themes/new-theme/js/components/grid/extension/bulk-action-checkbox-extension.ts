@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import {Grid} from '@js/types/grid';
+import {Grid} from '@PSTypes/grid';
 import GridMap from '@components/grid/grid-map';
 
 const {$} = window;
@@ -38,8 +38,24 @@ export default class BulkActionCheckboxExtension {
    * @param {Grid} grid
    */
   extend(grid: Grid): void {
+    this.handleBulkActionCheckboxStatus(grid);
     this.handleBulkActionCheckboxSelect(grid);
     this.handleBulkActionSelectAllCheckbox(grid);
+  }
+
+  /**
+   * Disable/Enable "Select all" button in the grid
+   *
+   * @param {Grid} grid
+   *
+   * @private
+   */
+  private handleBulkActionCheckboxStatus(grid: Grid) {
+    const gridBulkActionSelectAll = grid.getContainer().find(GridMap.bulks.actionSelectAll);
+    gridBulkActionSelectAll.prop(
+      'disabled',
+      grid.getContainer().find(GridMap.bulks.bulkActionCheckbox).length === 0,
+    );
   }
 
   /**

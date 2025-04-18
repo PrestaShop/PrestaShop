@@ -361,7 +361,7 @@ class UploaderCore
 
         $types = $this->getAcceptTypes();
 
-        //TODO check mime type.
+        // TODO check mime type.
         if (!empty($types) && !in_array(Tools::strtolower(pathinfo($file['name'], PATHINFO_EXTENSION)), $types)) {
             $file['error'] = Context::getContext()->getTranslator()->trans('Filetype not allowed', [], 'Admin.Notifications.Error');
 

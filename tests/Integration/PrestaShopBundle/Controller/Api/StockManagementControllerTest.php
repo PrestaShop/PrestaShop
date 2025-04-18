@@ -73,13 +73,15 @@ class StockManagementControllerTest extends ApiTestCase
             ->getMock();
 
         $stockMovementRepository->method('saveStockMvt')->willReturn(true);
-        self::$container->set('prestashop.core.api.stock_movement.repository', $stockMovementRepository);
+        self::getContainer()->set('prestashop.core.api.stock_movement.repository', $stockMovementRepository);
 
         $this->restoreQuantityEditionFixtures();
     }
 
     public function testItShouldReturnBadRequestResponseOnInvalidPaginationParams(): void
     {
+        self::$client->disableReboot();
+
         $routes = [
             $this->router->generate('api_stock_list_products', []),
             $this->router->generate('api_stock_list_movements', []),
@@ -176,7 +178,7 @@ class StockManagementControllerTest extends ApiTestCase
     private function assertOkResponseOnList(
         string $routeName,
         array $parameters = [],
-        int $expectedTotalPages = null
+        ?int $expectedTotalPages = null
     ): void {
         $route = $this->router->generate($routeName, $parameters);
         self::$client->request('GET', $route);

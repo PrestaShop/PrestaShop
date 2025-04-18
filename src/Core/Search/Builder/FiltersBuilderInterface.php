@@ -67,5 +67,5 @@ interface FiltersBuilderInterface
      *
      * @return Filters
      */
-    public function buildFilters(Filters $filters = null);
+    public function buildFilters(?Filters $filters = null);
 }

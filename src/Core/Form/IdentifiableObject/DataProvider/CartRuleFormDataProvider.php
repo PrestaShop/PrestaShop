@@ -63,7 +63,7 @@ class CartRuleFormDataProvider implements FormDataProviderInterface
         /** @var CartRuleForEditing $editableCartRule */
         $editableCartRule = $this->queryBus->handle(new GetCartRuleForEditing($id));
 
-        //@todo: finish up in a dedicated PR when EditCartRuleCommand is introduced
+        // @todo: finish up in a dedicated PR when EditCartRuleCommand is introduced
         return [
             'information' => [
                 'name' => $editableCartRule->getInformation()->getLocalizedNames(),

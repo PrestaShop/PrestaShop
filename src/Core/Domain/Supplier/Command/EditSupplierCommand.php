@@ -100,11 +100,6 @@ class EditSupplierCommand
     private $localizedMetaDescriptions;
 
     /**
-     * @var string[]|null
-     */
-    private $localizedMetaKeywords;
-
-    /**
      * @var bool|null
      */
     private $enabled;
@@ -373,26 +368,6 @@ class EditSupplierCommand
     public function setLocalizedMetaDescriptions(array $localizedMetaDescriptions): self
     {
         $this->localizedMetaDescriptions = $localizedMetaDescriptions;
-
-        return $this;
-    }
-
-    /**
-     * @return string[]|null
-     */
-    public function getLocalizedMetaKeywords(): ?array
-    {
-        return $this->localizedMetaKeywords;
-    }
-
-    /**
-     * @param string[] $localizedMetaKeywords
-     *
-     * @return EditSupplierCommand
-     */
-    public function setLocalizedMetaKeywords(array $localizedMetaKeywords): self
-    {
-        $this->localizedMetaKeywords = $localizedMetaKeywords;
 
         return $this;
     }

@@ -112,7 +112,7 @@ class ConfigurableFiltersBuilder extends AbstractFiltersBuilder
     /**
      * {@inheritdoc}
      */
-    public function buildFilters(Filters $filters = null)
+    public function buildFilters(?Filters $filters = null)
     {
         if (empty($this->parameters)) {
             return $filters;

@@ -17,17 +17,17 @@ PrestaShop is an Open Source e-commerce web application, committed to providing 
   <img src="https://user-images.githubusercontent.com/2137763/201319765-9157f702-4970-4258-8390-1187de2ad587.png" alt="PrestaShop 8.0 back office"/>
 </p>
 
-This repository contains the source code of PrestaShop, which is intended for development and preview only. To download the latest stable public version of PrestaShop (currently, version 8.0), please go to [the releases page][download].
+This repository contains the source code of PrestaShop, which is intended for development and preview only. To download the latest stable public version of PrestaShop (currently, version 8.1), please go to [the releases page][download].
 
+The first stable version of PrestaShop 8.0 was released on October 26th, 2022.  
+The first stable version of PrestaShop 8.1 was released on June 26th, 2023. Further updates have been released since then. Learn more about it on [the Build devblog](https://build.prestashop-project.org/tag/8.1/).
 
-About the 'develop' branch
+About the `develop` branch
 --------
 
-The 'develop' branch of this repository contains the work in progress source code for the next version of PrestaShop.
+The `develop` branch of this repository contains the work in progress source code for the next version of PrestaShop. Currently, it is exclusively for version 9.1.
 
 For more information on our branch system, read our guide on [installing PrestaShop for development][install-guide-dev].
-
-The first stable version of PrestaShop 8.0, was released on October 26th, 2022. Further updates have been released since then. Learn more about it on [the Build devblog](https://build.prestashop-project.org/tag/8.0/).
 
 Server configuration
 --------
@@ -52,7 +52,7 @@ PrestaShop can also be deployed with Docker and its tool [Docker compose][docker
 To run the software, use:
 
 ```
-docker-compose up
+docker compose up
 ```
 
 Then reach your shop on this URL: http://localhost:8001
@@ -60,7 +60,7 @@ Then reach your shop on this URL: http://localhost:8001
 Docker will bind your port 8001 to the web server. If you want to use other port, open and modify the file `docker-compose.yml`.
 MySQL credentials can also be found and modified in this file if needed.
 
-**Note:**  Before auto-installing PrestaShop, this container checks the file *config/settings.inc.php* does not exist on startup.
+**Note:**  Before auto-installing PrestaShop, this container checks the file *app/config/parameters.php* does not exist on startup.
 If you expect the container to (re)install your shop, remove this file if it exists. And make sure the container user `www-data`
 has write access to the whole workspace.
 
@@ -73,19 +73,36 @@ git reset --hard origin/develop
 git clean -dfx
 
 # inform build scripts to reinstall shop
-rm config/settings.inc.php
+rm app/config/parameters.php
 
 # clear all docker caches and rebuild everything
 docker compose down -v
 docker compose build --no-cache
-docker-compose up --build --force-recreate
+docker compose up --build --force-recreate
 ```
-**Note:** To add a PHPMyAdmin service to your Docker Compose setup, you can copy the existing `docker-compose.override.yml.dist` to `docker-compose.override.yml` and then start your Docker Compose setup (override file will be included as it is a convention)
+
+### PHPMyAdmin
+To add a PHPMyAdmin service to your Docker Compose setup, you can copy the existing `docker-compose.override.yml.dist` to `docker-compose.override.yml` and then start your Docker Compose setup (override file will be included as it is a convention)
 
 ```
 cp docker-compose.override.yml.dist docker-compose.override.yml
-docker-compose up
+docker compose up
 ```
+
+### BLACKFIRE
+By default, blackfire will not be installed. During the install process, the installation of blackfire is based on 3 environment variables:
+
+```
+BLACKFIRE_ENABLE: 1
+BLACKFIRE_SERVER_ID: "your_server_id"
+BLACKFIRE_SERVER_TOKEN: "your_blackfire_server_token"
+```
+
+Those env variables are self-explanatory, you can either set them yourself or override the docker-compose default values:
+
+Open the file `docker-compose.override.yml` (copy it from `docker-compose.override.yml.dist`
+if it's not already done, see command just above in the PHPMyadmin section).
+Then uncomment the 3 docker lines and fill the BLACKFIRE_SERVER_ID and BLACKFIRE_SERVER_TOKEN with your account's server id and token.
 
 Documentation
 --------
@@ -148,7 +165,7 @@ You can discuss about e-commerce, help other merchants and get help, and contrib
 
 Thank you for downloading and using the PrestaShop Open Source e-commerce solution!
 
-[available-features]: https://www.prestashop.com/en/online-store-builder
+[available-features]: https://prestashop.com/create-online-store/
 [download]: https://github.com/PrestaShop/PrestaShop/releases
 [forums]: https://www.prestashop.com/forums/
 [ghdiscussions]: https://github.com/PrestaShop/PrestaShop/discussions
@@ -156,23 +173,23 @@ Thank you for downloading and using the PrestaShop Open Source e-commerce soluti
 [chat]: https://www.prestashop-project.org/slack/
 [user-doc]: https://docs.prestashop-project.org
 [contributing-md]: CONTRIBUTING.md
-[contributing-tutorial]: https://devdocs.prestashop-project.org/8/contribute/
+[contributing-tutorial]: https://devdocs.prestashop-project.org/9/contribute/
 [crowdin]: https://crowdin.net/project/prestashop-official
 [getting-started]: https://docs.prestashop-project.org/v.8-documentation/v/english/getting-started
 [user-guide]: https://docs.prestashop-project.org/v.8-documentation/v/english/user-guide
 [updating-guide]: https://docs.prestashop-project.org/1-6-documentation/english-documentation/updating-prestashop
 [merchant-guide]: https://docs.prestashop-project.org/1-6-documentation/english-documentation/merchants-guide
-[faq-17]: https://devdocs.prestashop-project.org/8/faq/
+[faq-17]: https://devdocs.prestashop-project.org/9/faq/
 [sysadmin-guide]: https://docs.prestashop-project.org/1-6-documentation/english-documentation/system-administrator-guide
 [contributors-md]: CONTRIBUTORS.md
-[example-nginx]: https://devdocs.prestashop-project.org/8/basics/installation/nginx/
+[example-nginx]: https://devdocs.prestashop-project.org/9/basics/installation/nginx/
 [docker-compose]: https://docs.docker.com/compose/
-[install-guide-dev]: https://devdocs.prestashop-project.org/8/basics/installation/
-[system-requirements]: https://devdocs.prestashop-project.org/8/basics/installation/system-requirements/
+[install-guide-dev]: https://devdocs.prestashop-project.org/9/basics/installation/
+[system-requirements]: https://devdocs.prestashop-project.org/9/basics/installation/system-requirements/
 [install-guide]: https://docs.prestashop-project.org/v.8-documentation/v/english/getting-started/installing-prestashop
 [devdocs]: https://devdocs.prestashop-project.org/
 [create-issue]: https://github.com/PrestaShop/PrestaShop/issues/new/choose
-[reporting-issues]: https://devdocs.prestashop-project.org/8/contribute/contribute-reporting-issues/
-[modules-devdocs]: https://devdocs.prestashop-project.org/8/modules/
-[themes-devdocs]: https://devdocs.prestashop-project.org/8/themes/
+[reporting-issues]: https://devdocs.prestashop-project.org/9/contribute/contribute-reporting-issues/
+[modules-devdocs]: https://devdocs.prestashop-project.org/9/modules/
+[themes-devdocs]: https://devdocs.prestashop-project.org/9/themes/
 [bug-bounty]: https://www.prestashop-project.org/security/bug-bounty/

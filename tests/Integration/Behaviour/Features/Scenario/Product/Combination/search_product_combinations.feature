@@ -62,6 +62,14 @@ Feature: Search attribute combinations for product in Back Office (BO) of multip
       | product1Blue  | Color - Blue     |           | [Color:Blue]  | 0               | 0        | false      |
 
   Scenario: Search combinations by attributes
+    When I list product "product1" combinations in language "en" for shop "shop1" limited to "10" results I should see following results:
+      | id reference   | combination name        |
+      | product1SWhite | Size - S, Color - White |
+      | product1SBlack | Size - S, Color - Black |
+      | product1SBlue  | Size - S, Color - Blue  |
+      | product1MWhite | Size - M, Color - White |
+      | product1MBlack | Size - M, Color - Black |
+      | product1MBlue  | Size - M, Color - Blue  |
     When I search product "product1" combinations by phrase "b" in language "en" for shop "shop2" limited to "20" results I should see following results:
       | id reference  | combination name |
       | product1Black | Color - Black    |

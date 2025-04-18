@@ -31,6 +31,7 @@ use Context;
 use LogicException;
 use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use Product;
 use Shop;
 
 /**
@@ -65,9 +66,9 @@ class CategoryDataProvider
      * @param int|null $idLang
      * @param int|null $idShop
      *
-     * @throws LogicException If the category id is not set
-     *
      * @return Category
+     *
+     * @throws LogicException If the category id is not set
      */
     public function getCategory($idCategory = null, $idLang = null, $idShop = null)
     {
@@ -133,7 +134,7 @@ class CategoryDataProvider
     /**
      * Return a simple array id/name of categories for a specified product.
      *
-     * @param \Product $product
+     * @param Product $product
      *
      * @return array Categories
      */
@@ -246,11 +247,18 @@ class CategoryDataProvider
         $results = [];
         foreach ($searchCategories as $category) {
             $breadCrumb = $this->getBreadCrumb($category['id_category']);
+
+            if (file_exists(_PS_CAT_IMG_DIR_ . $category['id_category'] . '.jpg')) {
+                $image = Context::getContext()->link->getCatImageLink($category['name'], $category['id_category']);
+            } else {
+                $image = Context::getContext()->link->getMediaLink(_THEME_CAT_DIR_ . Context::getContext()->language->iso_code . '-default-category_default.jpg');
+            }
+
             $results[] = [
                 'id' => $category['id_category'],
                 'name' => ($nameAsBreadCrumb ? $breadCrumb : $category['name']),
                 'breadcrumb' => $breadCrumb,
-                'image' => Context::getContext()->link->getCatImageLink($category['name'], $category['id_category']),
+                'image' => $image,
             ];
         }
 
@@ -263,7 +271,7 @@ class CategoryDataProvider
      *
      * @return Category
      */
-    public function getRootCategory($idLang = null, Shop $shop = null)
+    public function getRootCategory($idLang = null, ?Shop $shop = null)
     {
         return Category::getRootCategory($idLang, $shop);
     }

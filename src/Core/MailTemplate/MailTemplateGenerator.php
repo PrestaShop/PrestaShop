@@ -56,7 +56,7 @@ class MailTemplateGenerator
      */
     public function __construct(
         MailTemplateRendererInterface $renderer,
-        LoggerInterface $logger = null
+        ?LoggerInterface $logger = null
     ) {
         $this->renderer = $renderer;
         $this->logger = null !== $logger ? $logger : new NullLogger();
@@ -101,7 +101,7 @@ class MailTemplateGenerator
                 $outputFolder = implode(DIRECTORY_SEPARATOR, [$coreOutputFolder, $language->getIsoCode()]);
             }
 
-            //Generate HTML template
+            // Generate HTML template
             $htmlTemplatePath = $this->generateTemplatePath($layout, MailTemplateInterface::HTML_TYPE, $outputFolder);
             if (!$this->fileSystem->exists($htmlTemplatePath) || $overwriteTemplates) {
                 $generatedTemplate = $this->renderer->renderHtml($layout, $language);
@@ -109,7 +109,7 @@ class MailTemplateGenerator
                 $this->logger->info(sprintf('Generate html template %s at %s', $layout->getName(), $htmlTemplatePath));
             }
 
-            //Generate TXT template
+            // Generate TXT template
             $txtTemplatePath = $this->generateTemplatePath($layout, MailTemplateInterface::TXT_TYPE, $outputFolder);
             if (!$this->fileSystem->exists($txtTemplatePath) || $overwriteTemplates) {
                 $generatedTemplate = $this->renderer->renderTxt($layout, $language);

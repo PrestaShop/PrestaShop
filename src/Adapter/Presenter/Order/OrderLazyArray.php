@@ -39,6 +39,7 @@ use Order;
 use OrderReturn;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
+use PrestaShop\PrestaShop\Adapter\Presenter\LazyArrayAttribute;
 use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
@@ -91,10 +92,9 @@ class OrderLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return mixed
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getTotals()
     {
         $amounts = $this->getAmounts();
@@ -103,52 +103,47 @@ class OrderLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return int
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getIdAddressInvoice()
     {
         return $this->order->id_address_invoice;
     }
 
     /**
-     * @arrayAccess
-     *
      * @return int
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getIdAddressDelivery()
     {
         return $this->order->id_address_delivery;
     }
 
     /**
-     * @arrayAccess
-     *
      * @return mixed
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getSubtotals()
     {
         return $this->subTotals;
     }
 
     /**
-     * @arrayAccess
-     *
      * @return int
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getProductsCount()
     {
         return count($this->getProducts());
     }
 
     /**
-     * @arrayAccess
-     *
      * @return mixed
      *
      * @throws PrestaShopException
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getShipping()
     {
         $details = $this->getDetails();
@@ -157,10 +152,9 @@ class OrderLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return array
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getProducts()
     {
         $order = $this->order;
@@ -226,10 +220,9 @@ class OrderLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return array
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getAmounts()
     {
         $order = $this->order;
@@ -279,20 +272,18 @@ class OrderLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return OrderDetailLazyArray
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getDetails()
     {
         return new OrderDetailLazyArray($this->order);
     }
 
     /**
-     * @arrayAccess
-     *
      * @return array
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getHistory()
     {
         $order = $this->order;
@@ -320,10 +311,9 @@ class OrderLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return array
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getMessages()
     {
         $order = $this->order;
@@ -347,10 +337,9 @@ class OrderLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return array
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getCarrier()
     {
         $order = $this->order;
@@ -364,10 +353,9 @@ class OrderLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return array
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getAddresses()
     {
         $order = $this->order;
@@ -393,10 +381,9 @@ class OrderLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return string
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getFollowUp()
     {
         $order = $this->order;
@@ -410,10 +397,9 @@ class OrderLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return array
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getLabels()
     {
         return [

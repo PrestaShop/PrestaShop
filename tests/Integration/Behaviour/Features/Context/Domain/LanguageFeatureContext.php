@@ -30,7 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use Cache;
-use PHPUnit\Framework\Assert as Assert;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\AddLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\BulkDeleteLanguagesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\BulkToggleLanguagesStatusCommand;
@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Language\Command\DeleteLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\EditLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\ToggleLanguageStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\DefaultLanguageException;
+use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Query\GetLanguageForEditing;
@@ -49,11 +50,12 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 class LanguageFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @Given I add a new language with the following details:
+     * @Given I add a new language :languageReference with the following details:
      *
+     * @param string $languageReference
      * @param TableNode $table
      */
-    public function addNewLanguage(TableNode $table): void
+    public function addNewLanguage(string $languageReference, TableNode $table): void
     {
         $data = $table->getRowsHash();
 
@@ -83,25 +85,21 @@ class LanguageFeatureContext extends AbstractDomainFeatureContext
                 ]
             ));
 
-            SharedStorage::getStorage()->set($data['isoCode'], $languageId->getValue());
+            SharedStorage::getStorage()->set($languageReference, $languageId->getValue());
         } catch (LanguageException $e) {
             $this->setLastException($e);
         }
     }
 
     /**
-     * @Given I update the language with ISOCode :isoCode with the following details:
+     * @Given I update the language :languageReference with the following details:
      *
-     * @param string $isoCode
+     * @param string $languageReference
      * @param TableNode $table
      */
-    public function updateLanguage(string $isoCode, TableNode $table): void
+    public function updateLanguage(string $languageReference, TableNode $table): void
     {
-        $languageId = SharedStorage::getStorage()->get($isoCode);
-
-        $editableLanguage = new EditLanguageCommand((int) $languageId);
-        $editableLanguage->setIsoCode($isoCode);
-
+        $editableLanguage = new EditLanguageCommand($this->referenceToId($languageReference));
         $data = $table->getRowsHash();
         if (isset($data['name'])) {
             $editableLanguage->setName($data['name']);
@@ -133,15 +131,14 @@ class LanguageFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I delete the language with ISOCode :isoCode
+     * @When I delete the language :languageReference
      *
-     * @param string $isoCode
+     * @param string $languageReference
      */
-    public function deleteLanguage(string $isoCode): void
+    public function deleteLanguage(string $languageReference): void
     {
-        $languageId = SharedStorage::getStorage()->get($isoCode);
-
         try {
+            $languageId = $this->referenceToId($languageReference);
             $this->getCommandBus()->handle(new DeleteLanguageCommand($languageId));
             SharedStorage::getStorage()->clear($languageId);
 
@@ -153,19 +150,14 @@ class LanguageFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I bulk delete languages with ISOCode :isoCode
+     * @When I bulk delete languages :languageReferences
      *
-     * @param string $isoCodes
+     * @param string $languageReferences
      */
-    public function bulkDeleteLanguage(string $isoCodes): void
+    public function bulkDeleteLanguage(string $languageReferences): void
     {
-        $isoCodes = explode(',', $isoCodes);
-        $languageIds = [];
-        foreach ($isoCodes as $isoCode) {
-            $languageIds[] = SharedStorage::getStorage()->get($isoCode);
-        }
-
         try {
+            $languageIds = $this->referencesToIds($languageReferences);
             $this->getCommandBus()->handle(new BulkDeleteLanguagesCommand($languageIds));
 
             // Important to clean this cache or Language::getIdByIso still returns stored value for next adding
@@ -180,18 +172,22 @@ class LanguageFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When /^I (enable|disable) the language with ISOCode "([a-z]{2})"$/
+     * @When I toggle the language :languageReference status to :status
      *
-     * @param string $statusVerb
-     * @param string $isoCode
+     * @param string $status
+     * @param string $languageReference
      */
-    public function setStatusLanguage(string $statusVerb, string $isoCode): void
+    public function setStatusLanguage(string $status, string $languageReference): void
     {
+        if (!in_array($status, ['enabled', 'disabled'])) {
+            throw new RuntimeException(sprintf('A status should be "enabled" or "disabled", not "%s"', $status));
+        }
+
         try {
             $this->getCommandBus()->handle(
                 new ToggleLanguageStatusCommand(
-                    SharedStorage::getStorage()->get($isoCode),
-                    $statusVerb === 'enable'
+                    $this->referenceToId($languageReference),
+                    $status === 'enabled'
                 )
             );
         } catch (LanguageException $e) {
@@ -200,22 +196,20 @@ class LanguageFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When /^I bulk (enable|disable) languages with ISOCode "([a-z,]+)"$/
+     * @When I bulk toggle languages :languageReferences status to :status
      *
-     * @param string $statusVerb
-     * @param string $isoCodes
+     * @param string $status
+     * @param string $languageReferences
      */
-    public function bulkSetStatusLanguage(string $statusVerb, string $isoCodes): void
+    public function bulkSetStatusLanguage(string $status, string $languageReferences): void
     {
-        $isoCodes = explode(',', $isoCodes);
-        $languageIds = [];
-        foreach ($isoCodes as $isoCode) {
-            $languageIds[] = SharedStorage::getStorage()->get($isoCode);
+        if (!in_array($status, ['enabled', 'disabled'])) {
+            throw new RuntimeException(sprintf('A status should be "enabled" or "disabled", not "%s"', $status));
         }
 
         try {
             $this->getCommandBus()->handle(
-                new BulkToggleLanguagesStatusCommand($languageIds, $statusVerb === 'enable')
+                new BulkToggleLanguagesStatusCommand($this->referencesToIds($languageReferences), $status === 'enabled')
             );
         } catch (LanguageException $e) {
             $this->setLastException($e);
@@ -223,21 +217,22 @@ class LanguageFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then the language with ISOCode :isoCode should have the following details:
+     * @Then the language :languageReference should have the following details:
      *
-     * @param string $isoCode
+     * @param string $languageReference
      * @param TableNode $table
      */
-    public function checkLanguageDetails(string $isoCode, TableNode $table): void
+    public function checkLanguageDetails(string $languageReference, TableNode $table): void
     {
-        $editableLanguage = $this->getLanguage($isoCode);
+        $editableLanguage = $this->getLanguage($languageReference);
 
         $this->assertLastErrorIsNull();
 
         $data = $table->getRowsHash();
         Assert::assertEquals($data['name'], $editableLanguage->getName());
-        Assert::assertEquals($data['isoCode'], $editableLanguage->getIsoCode()->getValue());
-        Assert::assertEquals($data['tagIETF'], $editableLanguage->getTagIETF()->getValue());
+        Assert::assertEquals($data['isoCode'], $editableLanguage->getIsoCode());
+        Assert::assertEquals($data['tagIETF'], $editableLanguage->getTagIETF());
+        Assert::assertEquals($data['locale'], $editableLanguage->getLocale());
         Assert::assertEquals($data['shortDateFormat'], $editableLanguage->getShortDateFormat());
         Assert::assertEquals($data['fullDateFormat'], $editableLanguage->getFullDateFormat());
         Assert::assertEquals((bool) $data['isRtl'], $editableLanguage->isRtl());
@@ -248,41 +243,41 @@ class LanguageFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then the language with ISOCode :isoCode should exist
+     * @Then the language :languageReference should exist
      *
-     * @param string $isoCode
+     * @param string $languageReference
      */
-    public function checkLanguageExists(string $isoCode): void
+    public function checkLanguageExists(string $languageReference): void
     {
-        $this->getLanguage($isoCode);
+        $this->getLanguage($languageReference);
 
         $this->assertLastErrorIsNull();
     }
 
     /**
-     * @Then the language with ISOCode :isoCode shouldn't exist
+     * @Then the language :languageReference shouldn't exist
      *
-     * @param string $isoCode
+     * @param string $languageReference
      */
-    public function checkLanguageNotExists(string $isoCode): void
+    public function checkLanguageNotExists(string $languageReference): void
     {
-        $this->getLanguage($isoCode);
+        $this->getLanguage($languageReference);
 
         $this->assertLastErrorIs(LanguageNotFoundException::class);
     }
 
     /**
-     * @Then the language with ISOCode :isoCode should be :status
+     * @Then the language :languageReference should be :status
      *
-     * @param string $isoCode
+     * @param string $languageReference
      */
-    public function checkLanguageStatus(string $isoCode, string $status): void
+    public function checkLanguageStatus(string $languageReference, string $status): void
     {
         if (!in_array($status, ['enabled', 'disabled'])) {
             throw new RuntimeException(sprintf('A status should be "enabled" or "disabled", not "%s"', $status));
         }
 
-        $editableLanguage = $this->getLanguage($isoCode);
+        $editableLanguage = $this->getLanguage($languageReference);
 
         $this->assertLastErrorIsNull();
         Assert::assertEquals($status === 'enabled', $editableLanguage->isActive());
@@ -311,15 +306,26 @@ class LanguageFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @param string $isoCode
+     * @Then I should get an error that a language with this ISO code already exists
+     */
+    public function checkDuplicateIsoCode(): void
+    {
+        $this->assertLastErrorIs(
+            LanguageConstraintException::class,
+            LanguageConstraintException::DUPLICATE_ISO_CODE
+        );
+    }
+
+    /**
+     * @param string $languageReference
      *
      * @return EditableLanguage|null
      */
-    private function getLanguage(string $isoCode): ?EditableLanguage
+    private function getLanguage(string $languageReference): ?EditableLanguage
     {
         try {
             return $this->getQueryBus()->handle(
-                new GetLanguageForEditing(SharedStorage::getStorage()->get($isoCode))
+                new GetLanguageForEditing($this->referenceToId($languageReference))
             );
         } catch (LanguageException $e) {
             $this->setLastException($e);

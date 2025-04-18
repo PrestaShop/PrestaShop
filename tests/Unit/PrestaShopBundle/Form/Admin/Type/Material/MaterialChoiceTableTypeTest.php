@@ -38,7 +38,7 @@ class MaterialChoiceTableTypeTest extends TestCase
     /**
      * @dataProvider providerBuildView
      */
-    public function testBuildView(array $viewData, array $choices, bool $expectedReturn): void
+    public function testBuildView(array $viewData, array $choices, bool $displayTotalItems, array $expectedReturn): void
     {
         $mockForm = $this
             ->getMockBuilder(FormInterface::class)
@@ -58,10 +58,11 @@ class MaterialChoiceTableTypeTest extends TestCase
             $mockForm,
             [
                 'choices' => $choices,
+                'display_total_items' => $displayTotalItems,
             ]
         );
 
-        $this->assertEquals($expectedReturn, $formView->vars['isCheckSelectAll']);
+        $this->assertEquals($expectedReturn, [$formView->vars['isCheckSelectAll'], $formView->vars['displayTotalItems']]);
     }
 
     public function providerBuildView(): array
@@ -70,12 +71,14 @@ class MaterialChoiceTableTypeTest extends TestCase
             [
                 [1, 2, 3],
                 [1, 2, 3],
-                true,
+                false,
+                [true, false],
             ],
             [
                 [1, 2],
                 [1, 2, 3],
-                false,
+                true,
+                [false, true],
             ],
         ];
     }

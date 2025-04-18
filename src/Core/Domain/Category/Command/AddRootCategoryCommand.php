@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\RedirectOption;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -70,11 +71,6 @@ class AddRootCategoryCommand
     private $localizedMetaDescriptions;
 
     /**
-     * @var string[]
-     */
-    private $localizedMetaKeywords;
-
-    /**
      * @var int[]
      */
     private $associatedGroupIds;
@@ -94,10 +90,7 @@ class AddRootCategoryCommand
      */
     private $thumbnailImage;
 
-    /**
-     * @var array
-     */
-    private $menuThumbnailImages;
+    private ?RedirectOption $redirectOption = null;
 
     /**
      * @param string[] $name
@@ -112,7 +105,6 @@ class AddRootCategoryCommand
             ->setLocalizedNames($name)
             ->setLocalizedLinkRewrites($linkRewrite)
             ->setIsActive($isActive);
-        $this->menuThumbnailImages = [];
     }
 
     /**
@@ -274,26 +266,6 @@ class AddRootCategoryCommand
     }
 
     /**
-     * @return string[]
-     */
-    public function getLocalizedMetaKeywords()
-    {
-        return $this->localizedMetaKeywords;
-    }
-
-    /**
-     * @param string[] $localizedMetaKeywords
-     *
-     * @return $this
-     */
-    public function setLocalizedMetaKeywords(array $localizedMetaKeywords)
-    {
-        $this->localizedMetaKeywords = $localizedMetaKeywords;
-
-        return $this;
-    }
-
-    /**
      * @return int[]
      */
     public function getAssociatedGroupIds()
@@ -365,19 +337,13 @@ class AddRootCategoryCommand
         $this->thumbnailImage = $thumbnailImage;
     }
 
-    /**
-     * @return array
-     */
-    public function getMenuThumbnailImages(): array
+    public function getRedirectOption(): ?RedirectOption
     {
-        return $this->menuThumbnailImages;
+        return $this->redirectOption;
     }
 
-    /**
-     * @param array $menuThumbnailImages
-     */
-    public function setMenuThumbnailImages(array $menuThumbnailImages): void
+    public function setRedirectOption(?RedirectOption $redirectOption): void
     {
-        $this->menuThumbnailImages = $menuThumbnailImages;
+        $this->redirectOption = $redirectOption;
     }
 }

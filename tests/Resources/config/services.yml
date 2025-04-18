@@ -2,11 +2,18 @@ services:
     _defaults:
         public: true
 
+    Tests\Resources\Controller\:
+      resource: "%kernel.project_dir%/tests/Resources/Controller/*"
+      autoconfigure: true
+      autowire: true
+
     prestashop.bundle.routing.converter.cache:
         class: Symfony\Component\Cache\Adapter\ArrayAdapter
 
     prestashop.adapter.image.uploader.category_cover_image_uploader:
         class: 'PrestaShop\PrestaShop\Adapter\Image\Uploader\CategoryCoverImageUploader'
+        arguments:
+          - '@PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration'
 
     prestashop.adapter.shop.url.product_image_folder_provider:
         class: 'Tests\Integration\Adapter\Shop\Url\TestProductImageFolderProvider'
@@ -44,3 +51,54 @@ services:
           - 'AdminLogin'
           - 'AdminQuickAccesses'
           - 'AdminTabs'
+
+    security.csrf.token_storage:
+      class: Tests\Integration\Utility\CsrfTokenStorage
+
+    Symfony\Component\Serializer\SerializerInterface:
+      alias: serializer
+
+    Tests\Resources\MailDevClient:
+      autowire: true
+      arguments:
+        $mailDevHost: 'localhost'
+        $mailDevPort: 1080
+
+    test_password_hasher_factory:
+      alias: Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface
+
+    # Decorate contexts to make them mutable for test purpose only
+    # It is very important to have these decorators lazy, or it would force the early creation of the decorated service that would be
+    # built before the listeners get the chance to setup the builders
+    Tests\Resources\Context\ApiClientContextDecorator:
+      lazy: true
+      decorates: PrestaShop\PrestaShop\Core\Context\ApiClientContext
+      arguments: ['@.inner']
+
+    Tests\Resources\Context\EmployeeContextDecorator:
+      lazy: true
+      decorates: PrestaShop\PrestaShop\Core\Context\EmployeeContext
+      arguments: ['@.inner']
+
+    # The builders are made public to dynamically change their settings for test purposes
+    test_shop_context_builder:
+      alias: PrestaShop\PrestaShop\Core\Context\ShopContextBuilder
+    test_language_context_builder:
+      alias: PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder
+    test_currency_context_builder:
+      alias: PrestaShop\PrestaShop\Core\Context\CurrencyContextBuilder
+
+    # The contexts services are not shared, meaning a new instance is created everytime they are accessed
+    # This allow changing them dynamically during the test process
+    PrestaShop\PrestaShop\Core\Context\ShopContext:
+      shared: false
+      lazy: true
+      factory: [ '@PrestaShop\PrestaShop\Core\Context\ShopContextBuilder', 'build' ]
+    PrestaShop\PrestaShop\Core\Context\LanguageContext:
+      shared: false
+      lazy: true
+      factory: [ '@PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder', 'build' ]
+    PrestaShop\PrestaShop\Core\Context\CurrencyContext:
+      shared: false
+      lazy: true
+      factory: [ '@PrestaShop\PrestaShop\Core\Context\CurrencyContextBuilder', 'build' ]

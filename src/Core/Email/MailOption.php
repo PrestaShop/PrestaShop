@@ -37,7 +37,7 @@ final class MailOption
     public const METHOD_NATIVE = 1;
 
     /**
-     *  @var int Option defines that emails should be sent using configured SMTP settings
+     * @var int Option defines that emails should be sent using configured SMTP settings
      */
     public const METHOD_SMTP = 2;
 

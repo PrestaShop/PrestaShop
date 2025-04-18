@@ -44,47 +44,47 @@ class PSRLoggerAdapter implements LoggerInterface
         $this->logger = $logger;
     }
 
-    public function emergency($message, array $context = [])
+    public function emergency($message, array $context = []): void
     {
         $this->logger->logError($message);
     }
 
-    public function alert($message, array $context = [])
+    public function alert($message, array $context = []): void
     {
         $this->logger->logError($message);
     }
 
-    public function critical($message, array $context = [])
+    public function critical($message, array $context = []): void
     {
         $this->logger->logError($message);
     }
 
-    public function error($message, array $context = [])
+    public function error($message, array $context = []): void
     {
         $this->logger->logError($message);
     }
 
-    public function warning($message, array $context = [])
+    public function warning($message, array $context = []): void
     {
         $this->logger->logWarning($message);
     }
 
-    public function notice($message, array $context = [])
+    public function notice($message, array $context = []): void
     {
         $this->logger->logInfo($message);
     }
 
-    public function info($message, array $context = [])
+    public function info($message, array $context = []): void
     {
         $this->logger->logInfo($message);
     }
 
-    public function debug($message, array $context = [])
+    public function debug($message, array $context = []): void
     {
         $this->logger->logDebug($message);
     }
 
-    public function log($level, $message, array $context = [])
+    public function log($level, $message, array $context = []): void
     {
         switch ($level) {
             case LogLevel::EMERGENCY:

@@ -41,7 +41,7 @@ class GuestTrackingControllerCore extends FrontController
      *
      * @see FrontController::init()
      */
-    public function init()
+    public function init(): void
     {
         if ($this->context->customer->isLogged()) {
             Tools::redirect('history.php');
@@ -55,7 +55,7 @@ class GuestTrackingControllerCore extends FrontController
      *
      * @see FrontController::postProcess()
      */
-    public function postProcess()
+    public function postProcess(): void
     {
         $order_reference = current(explode('#', Tools::getValue('order_reference')));
         $email = Tools::getValue('email');
@@ -75,10 +75,10 @@ class GuestTrackingControllerCore extends FrontController
         $this->order = Order::getByReferenceAndEmail($order_reference, $email);
         if (!Validate::isLoadedObject($this->order)) {
             $this->errors[] = $this->getTranslator()->trans(
-                    'We couldn\'t find your order with the information provided, please try again',
-                    [],
-                    'Shop.Notifications.Error'
-                );
+                'We couldn\'t find your order with the information provided, please try again',
+                [],
+                'Shop.Notifications.Error'
+            );
         }
 
         if (Tools::isSubmit('submitTransformGuestToCustomer') && Tools::getValue('password')) {
@@ -113,6 +113,13 @@ class GuestTrackingControllerCore extends FrontController
                     [],
                     'Shop.Notifications.Error'
                 );
+            // Check if a different customer with the same email was not already created in a different window or through backoffice
+            } elseif (Customer::customerExists($customer->email)) {
+                $this->errors[] = $this->trans(
+                    'You can\'t transform your account into a customer account, because a registered customer with the same email already exists.',
+                    [],
+                    'Shop.Notifications.Error'
+                );
             // Attempt to convert the customer
             } elseif ($customer->transformToCustomer($this->context->language->id, $password)) {
                 $this->success[] = $this->trans(
@@ -135,12 +142,14 @@ class GuestTrackingControllerCore extends FrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         parent::initContent();
 
         if (!Validate::isLoadedObject($this->order)) {
-            return $this->setTemplate('customer/guest-login');
+            $this->setTemplate('customer/guest-login');
+
+            return;
         }
 
         if ((int) $this->order->isReturnable()) {
@@ -162,10 +171,10 @@ class GuestTrackingControllerCore extends FrontController
             'HOOK_DISPLAYORDERDETAIL' => Hook::exec('displayOrderDetail', ['order' => $this->order]),
         ]);
 
-        return $this->setTemplate('customer/guest-tracking');
+        $this->setTemplate('customer/guest-tracking');
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumbLinks = parent::getBreadcrumbLinks();
 
@@ -182,5 +191,13 @@ class GuestTrackingControllerCore extends FrontController
         }
 
         return $breadcrumbLinks;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCanonicalURL(): string
+    {
+        return $this->context->link->getPageLink('guest-tracking');
     }
 }

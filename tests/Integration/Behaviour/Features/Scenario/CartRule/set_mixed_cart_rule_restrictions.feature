@@ -26,8 +26,10 @@ Feature: Set cart rule restrictions in BO
     And manufacturer graphicCorner named "Graphic Corner" exists
     And supplier fashionSupplier named "Fashion supplier" exists
     And supplier accessoriesSupplier named "Accessories supplier" exists
-    And there is a carrier named "carrier1"
-    And there is a carrier named "carrier2"
+    And I create carrier "carrier1" with specified properties:
+      | name             | carrier 1                          |
+    And I create carrier "carrier2" with specified properties:
+      | name             | carrier 2                          |
     And I add new country "France" with following properties:
       | name[en-US]                | France          |
       | iso_code                   | FR              |

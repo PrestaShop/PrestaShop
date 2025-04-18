@@ -1,23 +1,22 @@
-// Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
 // Import commonTests
 import {createCustomerTest, deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import loginCommon from '@commonTests/BO/loginBO';
 
-// Import BO pages
-import viewCustomerPage from '@pages/BO/customers/view';
-import dashboardPage from '@pages/BO/dashboard';
-import ordersPage from '@pages/BO/orders';
-import addOrderPage from '@pages/BO/orders/add';
-
-// Import data
-import Customers from '@data/demo/customers';
-import CustomerData from '@data/faker/customer';
-
-import {expect} from 'chai';
-import type {BrowserContext, Frame, Page} from 'playwright';
+import {
+  boCustomersViewPage,
+  boDashboardPage,
+  boLoginPage,
+  boOrdersPage,
+  boOrdersCreatePage,
+  type BrowserContext,
+  dataCustomers,
+  FakerCustomer,
+  type Frame,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_orders_orders_createOrders_searchViewCustomer';
 
@@ -39,9 +38,9 @@ describe('BO - Orders - Create order : Search and view customer details from new
   let page: Page;
   let customerIframe: Frame|null;
 
-  const nonExistentCustomer: CustomerData = new CustomerData();
-  const disabledCustomer: CustomerData = new CustomerData({enabled: false});
-  const newCustomer: CustomerData = new CustomerData({
+  const nonExistentCustomer: FakerCustomer = new FakerCustomer();
+  const disabledCustomer: FakerCustomer = new FakerCustomer({enabled: false});
+  const newCustomer: FakerCustomer = new FakerCustomer({
     firstName: 'Jane',
     lastName: 'DOE',
     defaultCustomerGroup: 'Customer',
@@ -55,40 +54,46 @@ describe('BO - Orders - Create order : Search and view customer details from new
   createCustomerTest(newCustomer, `${baseContext}_preTest_2`);
 
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   // 1 - Search for customers
   describe('Search for customers', () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should go to create order page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreateOrderPage', baseContext);
 
-      await ordersPage.goToCreateOrderPage(page);
+      await boOrdersPage.goToCreateOrderPage(page);
 
-      const pageTitle = await addOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addOrderPage.pageTitle);
+      const pageTitle = await boOrdersCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersCreatePage.pageTitle);
     });
 
     [
@@ -106,59 +111,59 @@ describe('BO - Orders - Create order : Search and view customer details from new
       it(`should search for ${step.customerType} customer and check error message`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', step.testIdentifier, baseContext);
 
-        await addOrderPage.searchCustomer(page, step.customer.email);
+        await boOrdersCreatePage.searchCustomer(page, step.customer.email);
 
-        const errorDisplayed = await addOrderPage.getNoCustomerFoundError(page);
-        await expect(errorDisplayed, 'Error is not correct').to.equal(addOrderPage.noCustomerFoundText);
+        const errorDisplayed = await boOrdersCreatePage.getNoCustomerFoundError(page);
+        expect(errorDisplayed, 'Error is not correct').to.equal(boOrdersCreatePage.noCustomerFoundText);
       });
     });
 
     it('should search for the customer with lastName \'Doe\' and check result number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkExistentCustomerCard', baseContext);
 
-      await addOrderPage.searchCustomer(page, Customers.johnDoe.lastName);
+      await boOrdersCreatePage.searchCustomer(page, dataCustomers.johnDoe.lastName);
 
-      const searchResultNumber = await addOrderPage.getCustomersSearchNumber(page);
-      await expect(searchResultNumber).to.be.equal(2);
+      const searchResultNumber = await boOrdersCreatePage.getCustomersSearchNumber(page);
+      expect(searchResultNumber).to.be.equal(2);
     });
 
     it('should check that first customer card contain \'Name, Email, birthdate and groups\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkFirstSearchResult', baseContext);
 
-      const defaultCustomerName = await addOrderPage.getCustomerNameFromResult(page, 1);
-      await expect(defaultCustomerName).to.contains(
-        `${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}`,
+      const defaultCustomerName = await boOrdersCreatePage.getCustomerNameFromResult(page, 1);
+      expect(defaultCustomerName).to.contains(
+        `${dataCustomers.johnDoe.firstName} ${dataCustomers.johnDoe.lastName}`,
       );
 
-      const customerCardContent = await addOrderPage.getCustomerCardBody(page, 1);
-      await expect(customerCardContent)
-        .to.contains(Customers.johnDoe.email)
-        .and.to.contains(Customers.johnDoe.birthDate.toJSON().slice(0, 10))
-        .and.to.contains(Customers.johnDoe.defaultCustomerGroup);
+      const customerCardContent = await boOrdersCreatePage.getCustomerCardBody(page, 1);
+      expect(customerCardContent)
+        .to.contains(dataCustomers.johnDoe.email)
+        .and.to.contains(dataCustomers.johnDoe.birthDate.toJSON().slice(0, 10))
+        .and.to.contains(dataCustomers.johnDoe.defaultCustomerGroup);
     });
 
     it('should check that second customer card contain \'Name, Email, birthdate and groups\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSecondSearchResult', baseContext);
 
-      const newCustomerName = await addOrderPage.getCustomerNameFromResult(page, 2);
-      await expect(newCustomerName).to.contains(`${newCustomer.firstName} ${newCustomer.lastName}`);
+      const newCustomerName = await boOrdersCreatePage.getCustomerNameFromResult(page, 2);
+      expect(newCustomerName).to.contains(`${newCustomer.firstName} ${newCustomer.lastName}`);
 
-      const customerCardContent = await addOrderPage.getCustomerCardBody(page, 2);
-      await expect(customerCardContent)
+      const customerCardContent = await boOrdersCreatePage.getCustomerCardBody(page, 2);
+      expect(customerCardContent)
         .to.contains(newCustomer.email)
         .and.to.contains(`${newCustomer.yearOfBirth}-${newCustomer.monthOfBirth}-${newCustomer.dayOfBirth}`)
         .and.to.contains(newCustomer.defaultCustomerGroup);
     });
 
     it(
-      `should choose customer ${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}`,
+      `should choose customer ${dataCustomers.johnDoe.firstName} ${dataCustomers.johnDoe.lastName}`,
       async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'chooseDefaultCustomer', baseContext);
 
-        await addOrderPage.searchCustomer(page, Customers.johnDoe.email);
+        await boOrdersCreatePage.searchCustomer(page, dataCustomers.johnDoe.email);
 
-        const isCartsTableVisible = await addOrderPage.chooseCustomer(page);
-        await expect(isCartsTableVisible).to.be.true;
+        const isCartsTableVisible = await boOrdersCreatePage.chooseCustomer(page);
+        expect(isCartsTableVisible).to.eq(true);
       },
     );
   });
@@ -168,20 +173,20 @@ describe('BO - Orders - Create order : Search and view customer details from new
     it('should click on \'Details\' button from customer card', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnDetailButton', baseContext);
 
-      const isIframeVisible = await addOrderPage.clickOnDetailsButton(page);
-      await expect(isIframeVisible).to.be.true;
+      const isIframeVisible = await boOrdersCreatePage.clickOnDetailsButton(page);
+      expect(isIframeVisible).to.eq(true);
     });
 
     it('should check the existence of personal information block in the iframe', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPersonalInformation', baseContext);
 
-      customerIframe = await addOrderPage.getCustomerIframe(page, Customers.johnDoe.id);
-      await expect(customerIframe).to.be.not.null;
+      customerIframe = boOrdersCreatePage.getCustomerIframe(page, dataCustomers.johnDoe.id);
+      expect(customerIframe).to.not.eq(null);
 
-      const cardHeaderText = await viewCustomerPage.getPersonalInformationTitle(customerIframe!);
-      await expect(cardHeaderText).to.contains(Customers.johnDoe.firstName);
-      await expect(cardHeaderText).to.contains(Customers.johnDoe.lastName);
-      await expect(cardHeaderText).to.contains(Customers.johnDoe.email);
+      const cardHeaderText = await boCustomersViewPage.getPersonalInformationTitle(customerIframe!);
+      expect(cardHeaderText).to.contains(dataCustomers.johnDoe.firstName);
+      expect(cardHeaderText).to.contains(dataCustomers.johnDoe.lastName);
+      expect(cardHeaderText).to.contains(dataCustomers.johnDoe.email);
     });
 
     [
@@ -198,16 +203,16 @@ describe('BO - Orders - Create order : Search and view customer details from new
       it(`should check the ${test.args.blockName} number`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `check${test.args.blockName}Number`, baseContext);
 
-        const cardHeaderText = await viewCustomerPage.getNumberOfElementFromTitle(customerIframe!, test.args.blockName);
-        await expect(parseInt(cardHeaderText, 10)).to.be.at.least(test.args.number);
+        const cardHeaderText = await boCustomersViewPage.getNumberOfElementFromTitle(customerIframe!, test.args.blockName);
+        expect(parseInt(cardHeaderText, 10)).to.be.at.least(test.args.number);
       });
     });
 
     it('should check the existence of add private note block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAddPrivateNote', baseContext);
 
-      const isVisible = await viewCustomerPage.isPrivateNoteBlockVisible(customerIframe!);
-      await expect(isVisible).to.be.true;
+      const isVisible = await boCustomersViewPage.isPrivateNoteBlockVisible(customerIframe!);
+      expect(isVisible).to.eq(true);
     });
   });
 

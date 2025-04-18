@@ -27,28 +27,32 @@
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Context;
-use Db;
-use PrestaShop\PrestaShop\Adapter\Configuration;
+use Doctrine\Common\Cache\Psr6\DoctrineProvider;
+use Language;
+use PrestaShop\Decimal\Operation\Rounding;
 use PrestaShop\PrestaShop\Adapter\HookManager;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
-use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Adapter\Tools;
-use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
+use PrestaShop\PrestaShop\Core\Context\ApiClientContext;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\Number\Formatter as NumberFormatter;
+use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
+use PrestaShop\PrestaShop\Core\Localization\Specification\NumberCollection;
+use PrestaShop\PrestaShop\Core\Localization\Specification\NumberSymbolList;
+use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory;
-use PrestaShop\PrestaShop\Core\Util\File\YamlParser;
 use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
-use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\Cache\DoctrineProvider;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\Router;
+use Symfony\Component\Translation\Loader\XliffFileLoader;
 
 class ModuleManagerBuilder
 {
@@ -57,22 +61,27 @@ class ModuleManagerBuilder
      *
      * @var ModuleRepository
      */
-    public static $modulesRepository = null;
+    protected static $modulesRepository = null;
     /**
      * Singleton of ModuleManager.
      *
      * @var ModuleManager
      */
-    public static $moduleManager = null;
-    public static $adminModuleDataProvider = null;
-    public static $lecacyContext;
-    public static $legacyLogger = null;
-    public static $moduleDataProvider = null;
-    public static $moduleDataUpdater = null;
-    public static $translator = null;
-    public static $categoriesProvider = null;
-    public static $instance = null;
-    public static $cacheProvider = null;
+    protected static $moduleManager = null;
+    protected static $adminModuleDataProvider = null;
+    protected static $legacyLogger = null;
+    protected static $moduleDataProvider = null;
+    protected static $translator = null;
+    protected static $instance = null;
+    protected static $cacheProvider = null;
+    /**
+     * @var ApiClientContext
+     */
+    protected static $apiClientContext;
+    /**
+     * @var LanguageContext|null
+     */
+    protected static $languageContext = null;
 
     /**
      * @var bool
@@ -110,7 +119,10 @@ class ModuleManagerBuilder
                     new SourceHandlerFactory(),
                     self::$translator,
                     new NullDispatcher(),
-                    new HookManager()
+                    new HookManager(),
+                    _PS_MODULE_DIR_,
+                    new XliffFileLoader(),
+                    null
                 );
             }
         }
@@ -136,7 +148,7 @@ class ModuleManagerBuilder
                     self::$cacheProvider,
                     new HookManager(),
                     _PS_MODULE_DIR_,
-                    Context::getContext()->language->id
+                    $this->getLanguageContext(),
                 );
             }
         }
@@ -159,10 +171,6 @@ class ModuleManagerBuilder
             return;
         }
 
-        $yamlParser = new YamlParser((new Configuration())->get('_PS_CACHE_DIR_'));
-
-        $prestashopAddonsConfig = $yamlParser->parse($this->getConfigDir() . '/addons/categories.yml');
-
         $tools = new Tools();
         $tools->refreshCaCertFile();
 
@@ -170,7 +178,7 @@ class ModuleManagerBuilder
 
         $kernelDir = realpath($this->getConfigDir() . '/../../var');
         $cacheDir = $kernelDir . ($this->isDebug ? '/cache/dev' : '/cache/prod');
-        self::$cacheProvider = new DoctrineProvider(
+        self::$cacheProvider = DoctrineProvider::wrap(
             new FilesystemAdapter(
                 '',
                 0,
@@ -178,37 +186,25 @@ class ModuleManagerBuilder
             )
         );
 
-        $themeManagerBuilder = new ThemeManagerBuilder(Context::getContext(), Db::getInstance());
-        $themeName = Context::getContext()->shop->theme_name;
-        $themeModules = $themeName ?
-                        $themeManagerBuilder->buildRepository()->getInstanceByName($themeName)->getModulesToEnable() :
-                        [];
-
         self::$legacyLogger = new LegacyLogger();
-        self::$categoriesProvider = new CategoriesProvider(
-            $prestashopAddonsConfig['prestashop']['addons']['categories'],
-            $themeModules
-        );
-        self::$lecacyContext = new LegacyContext();
 
         if (null === self::$adminModuleDataProvider) {
             self::$moduleDataProvider = new ModuleDataProvider(self::$legacyLogger, self::$translator);
+            self::$apiClientContext = new ApiClientContext(null);
             self::$adminModuleDataProvider = new AdminModuleDataProvider(
-                self::$categoriesProvider,
                 self::$moduleDataProvider,
-                Context::getContext()->employee
+                self::$translator,
+                Context::getContext()->employee,
+                self::$apiClientContext,
             );
             self::$adminModuleDataProvider->setRouter($this->getSymfonyRouter());
-
-            self::$translator = Context::getContext()->getTranslator();
-            self::$moduleDataUpdater = new ModuleDataUpdater();
         }
     }
 
     /**
      * Returns an instance of \Symfony\Component\Routing\Router from Symfony scope into Legacy.
      *
-     * @return \Symfony\Component\Routing\Router
+     * @return Router
      */
     private function getSymfonyRouter()
     {
@@ -219,6 +215,71 @@ class ModuleManagerBuilder
         $loader = new YamlFileLoader($locator);
 
         return new Router($loader, $routeFileName);
+    }
+
+    private function getLanguageContext(): LanguageContext
+    {
+        if (self::$languageContext) {
+            return self::$languageContext;
+        }
+
+        /** @var Language $language */
+        $language = Context::getContext()->language;
+
+        // If locale is present in context we can use, if not we create a mock one
+        // the locale is not used by the ModuleRepository anyway only the language ID is relevant for its internal cache key generation
+        if (Context::getContext()->currentLocale) {
+            $locale = Context::getContext()->currentLocale;
+        } else {
+            $numberSymbolList = new NumberSymbolList(',', ' ', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN');
+            $priceSpecsCollection = new NumberCollection();
+            $priceSpecsCollection->add(
+                'EUR',
+                new PriceSpecification(
+                    '#,##0.## ¤',
+                    '-#,##0.## ¤',
+                    ['latn' => $numberSymbolList],
+                    2,
+                    2,
+                    true,
+                    3,
+                    3,
+                    'symbol',
+                    '€',
+                    'EUR'
+                )
+            );
+            $numberSpecification = new NumberSpecification(
+                '#,##0.###',
+                '-#,##0.###',
+                [$numberSymbolList],
+                3,
+                2,
+                true,
+                2,
+                3
+            );
+            $locale = new Locale(
+                $language->locale,
+                $numberSpecification,
+                $priceSpecsCollection,
+                new NumberFormatter(Rounding::ROUND_HALF_UP, 'latn')
+            );
+        }
+
+        self::$languageContext = new LanguageContext(
+            $language->id,
+            $language->name,
+            $language->iso_code,
+            $language->locale,
+            $language->language_code,
+            $language->is_rtl,
+            $language->date_format_lite,
+            $language->date_format_full,
+            $locale
+        );
+
+        return self::$languageContext;
     }
 
     protected function getConfigDir()

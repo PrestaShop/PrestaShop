@@ -39,7 +39,7 @@ class InvalidPaginationParamsException extends OutOfBoundsException
     public function __construct(
         $message = '',
         $code = 0,
-        Exception $previous = null
+        ?Exception $previous = null
     ) {
         if ($message == '') {
             $message = 'A page index should be an integer greater than 1.';

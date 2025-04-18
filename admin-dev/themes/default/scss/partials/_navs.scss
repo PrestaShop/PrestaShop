@@ -1,0 +1,42 @@
+.nav-tabs {
+  border-bottom: none;
+
+  > li {
+    > a {
+      color: var(--#{$cdk}primary-600);
+      border: none;
+      border-bottom: 3px solid transparent;
+
+      &:hover {
+        color: var(--#{$cdk}primary-800);
+        background-color: transparent;
+        border: none;
+        border-color: transparent;
+        border-bottom: 3px solid transparent;
+      }
+    }
+
+    // Active state, and its :hover to override normal :hover
+    &.active > a {
+      &,
+      &:focus {
+        border: none;
+        border-bottom: 3px solid var(--#{$cdk}primary-800);
+      }
+
+      &:hover {
+        border: none;
+        border-bottom: 3px solid var(--#{$cdk}primary-800);
+      }
+    }
+  }
+
+  // Custom
+  &#custom-address-fields {
+    > li {
+      > a {
+        padding-inline: var(--#{$cdk}size-12);
+      }
+    }
+  }
+}

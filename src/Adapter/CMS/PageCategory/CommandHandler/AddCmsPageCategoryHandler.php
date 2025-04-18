@@ -68,7 +68,6 @@ final class AddCmsPageCategoryHandler extends AbstractCmsPageCategoryHandler imp
             $cmsPageCategory->description = $command->getLocalisedDescription();
             $cmsPageCategory->meta_title = $command->getLocalisedMetaTitle();
             $cmsPageCategory->meta_description = $command->getLocalisedMetaDescription();
-            $cmsPageCategory->meta_keywords = $command->getLocalisedMetaKeywords();
 
             $cmsPageCategory->link_rewrite = $command->getLocalisedFriendlyUrl();
 

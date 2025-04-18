@@ -46,6 +46,8 @@ Feature: OrderState
     And the order state "order_state_3rd" should have the following details:
       | name            | The 3rd Order State |
       | color           | #CDEF12             |
+      | hasSendMail     | 0                   |
+      | template        |                     |
     ## Reset
     When I delete the order state "order_state_3rd"
     And the order state "order_state_3rd" should be deleted
@@ -56,6 +58,30 @@ Feature: OrderState
     And the order state "order_state_1st" should have the following details:
       | name            | The 1st Order State |
       | color           | #345678             |
+      | hasSendMail     | 0                   |
+      | template        |                     |
+
+  Scenario: Edit order state (with Send Email disabled)
+    When I update the order state "order_state_1st" with the following details:
+      | color           | #345678             |
+      | hasSendMail     | 0                   |
+      | template        | account             |
+    And the order state "order_state_1st" should have the following details:
+      | name            | The 1st Order State |
+      | color           | #345678             |
+      | hasSendMail     | 0                   |
+      | template        |                     |
+
+  Scenario: Edit order state (with Send Email enabled)
+    When I update the order state "order_state_1st" with the following details:
+      | color           | #345678             |
+      | hasSendMail     | 1                   |
+      | template        | account             |
+    And the order state "order_state_1st" should have the following details:
+      | name            | The 1st Order State |
+      | color           | #345678             |
+      | hasSendMail     | 1                   |
+      | template        | account             |
 
   Scenario: Delete order state
     When I delete the order state "order_state_1st"

@@ -197,13 +197,13 @@ class ShopUrlCore extends ObjectModel
     {
         ShopUrl::cacheMainDomainForShop($id_shop);
 
-        return self::$main_domain[(int) $id_shop];
+        return self::$main_domain[(int) $id_shop] ?? null;
     }
 
     public static function getMainShopDomainSSL($id_shop = null)
     {
         ShopUrl::cacheMainDomainForShop($id_shop);
 
-        return self::$main_domain_ssl[(int) $id_shop];
+        return self::$main_domain_ssl[(int) $id_shop] ?? null;
     }
 }

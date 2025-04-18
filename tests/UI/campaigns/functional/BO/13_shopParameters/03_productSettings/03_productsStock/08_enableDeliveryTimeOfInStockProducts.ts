@@ -1,20 +1,17 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-// Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
-import productSettingsPage from '@pages/BO/shopParameters/productSettings';
-// Import FO pages
-import {homePage as foHomePage} from '@pages/FO/home';
-import foProductPage from '@pages/FO/product';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  boDashboardPage,
+  boLoginPage,
+  boProductSettingsPage,
+  type BrowserContext,
+  foClassicHomePage,
+  foClassicProductPage,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_productSettings_productsStock_enableDeliveryTimeOfInStockProducts';
 
@@ -24,29 +21,35 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time in stoc
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'Shop parameters > Product Settings\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.shopParametersParentLink,
-      dashboardPage.productSettingsLink,
+      boDashboardPage.shopParametersParentLink,
+      boDashboardPage.productSettingsLink,
     );
 
-    const pageTitle = await productSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+    const pageTitle = await boProductSettingsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
   });
 
   const tests = [
@@ -58,45 +61,45 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time in stoc
     it(`should ${test.args.action} delivery time of in-stock products`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}StockManagement`, baseContext);
 
-      const result = await productSettingsPage.setDeliveryTimeInStock(page, test.args.deliveryTimeText);
-      await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      const result = await boProductSettingsPage.setDeliveryTimeInStock(page, test.args.deliveryTimeText);
+      expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
     });
 
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
-      page = await productSettingsPage.viewMyShop(page);
-      await foHomePage.changeLanguage(page, 'en');
+      page = await boProductSettingsPage.viewMyShop(page);
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foHomePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      const isHomePage = await foClassicHomePage.isHomePage(page);
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should check delivery time block visibility', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `deliveryTimeBlockVisible${index}`, baseContext);
 
-      await foHomePage.goToProductPage(page, 4);
+      await foClassicHomePage.goToProductPage(page, 4);
 
-      const isDeliveryTimeBlockVisible = await foProductPage.isDeliveryInformationVisible(page);
-      await expect(isDeliveryTimeBlockVisible).to.equal(test.args.enable);
+      const isDeliveryTimeBlockVisible = await foClassicProductPage.isDeliveryInformationVisible(page);
+      expect(isDeliveryTimeBlockVisible).to.equal(test.args.enable);
     });
 
     if (test.args.enable) {
       it('should check delivery time text', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deliveryTimeBlockText${index}`, baseContext);
 
-        const deliveryTimeText = await foProductPage.getDeliveryInformationText(page);
-        await expect(deliveryTimeText).to.equal(test.args.deliveryTimeText);
+        const deliveryTimeText = await foClassicProductPage.getDeliveryInformationText(page);
+        expect(deliveryTimeText).to.equal(test.args.deliveryTimeText);
       });
     }
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
-      page = await foProductPage.closePage(browserContext, page, 0);
+      page = await foClassicProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await productSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      const pageTitle = await boProductSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
     });
   });
 });

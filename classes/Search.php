@@ -27,65 +27,65 @@
 /* Copied from Drupal search module, except for \x{0}-\x{2f} that has been replaced by \x{0}-\x{2c}\x{2e}-\x{2f} in order to keep the char '-' */
 define(
     'PREG_CLASS_SEARCH_EXCLUDE',
-'\x{0}-\x{2c}\x{2e}-\x{2f}\x{3a}-\x{40}\x{5b}-\x{60}\x{7b}-\x{bf}\x{d7}\x{f7}\x{2b0}-' .
-'\x{385}\x{387}\x{3f6}\x{482}-\x{489}\x{559}-\x{55f}\x{589}-\x{5c7}\x{5f3}-' .
-'\x{61f}\x{640}\x{64b}-\x{65e}\x{66a}-\x{66d}\x{670}\x{6d4}\x{6d6}-\x{6ed}' .
-'\x{6fd}\x{6fe}\x{700}-\x{70f}\x{711}\x{730}-\x{74a}\x{7a6}-\x{7b0}\x{901}-' .
-'\x{903}\x{93c}\x{93e}-\x{94d}\x{951}-\x{954}\x{962}-\x{965}\x{970}\x{981}-' .
-'\x{983}\x{9bc}\x{9be}-\x{9cd}\x{9d7}\x{9e2}\x{9e3}\x{9f2}-\x{a03}\x{a3c}-' .
-'\x{a4d}\x{a70}\x{a71}\x{a81}-\x{a83}\x{abc}\x{abe}-\x{acd}\x{ae2}\x{ae3}' .
-'\x{af1}-\x{b03}\x{b3c}\x{b3e}-\x{b57}\x{b70}\x{b82}\x{bbe}-\x{bd7}\x{bf0}-' .
-'\x{c03}\x{c3e}-\x{c56}\x{c82}\x{c83}\x{cbc}\x{cbe}-\x{cd6}\x{d02}\x{d03}' .
-'\x{d3e}-\x{d57}\x{d82}\x{d83}\x{dca}-\x{df4}\x{e31}\x{e34}-\x{e3f}\x{e46}-' .
-'\x{e4f}\x{e5a}\x{e5b}\x{eb1}\x{eb4}-\x{ebc}\x{ec6}-\x{ecd}\x{f01}-\x{f1f}' .
-'\x{f2a}-\x{f3f}\x{f71}-\x{f87}\x{f90}-\x{fd1}\x{102c}-\x{1039}\x{104a}-' .
-'\x{104f}\x{1056}-\x{1059}\x{10fb}\x{10fc}\x{135f}-\x{137c}\x{1390}-\x{1399}' .
-'\x{166d}\x{166e}\x{1680}\x{169b}\x{169c}\x{16eb}-\x{16f0}\x{1712}-\x{1714}' .
-'\x{1732}-\x{1736}\x{1752}\x{1753}\x{1772}\x{1773}\x{17b4}-\x{17db}\x{17dd}' .
-'\x{17f0}-\x{180e}\x{1843}\x{18a9}\x{1920}-\x{1945}\x{19b0}-\x{19c0}\x{19c8}' .
-'\x{19c9}\x{19de}-\x{19ff}\x{1a17}-\x{1a1f}\x{1d2c}-\x{1d61}\x{1d78}\x{1d9b}-' .
-'\x{1dc3}\x{1fbd}\x{1fbf}-\x{1fc1}\x{1fcd}-\x{1fcf}\x{1fdd}-\x{1fdf}\x{1fed}-' .
-'\x{1fef}\x{1ffd}-\x{2070}\x{2074}-\x{207e}\x{2080}-\x{2101}\x{2103}-\x{2106}' .
-'\x{2108}\x{2109}\x{2114}\x{2116}-\x{2118}\x{211e}-\x{2123}\x{2125}\x{2127}' .
-'\x{2129}\x{212e}\x{2132}\x{213a}\x{213b}\x{2140}-\x{2144}\x{214a}-\x{2b13}' .
-'\x{2ce5}-\x{2cff}\x{2d6f}\x{2e00}-\x{3005}\x{3007}-\x{303b}\x{303d}-\x{303f}' .
-'\x{3099}-\x{309e}\x{30a0}\x{30fb}\x{30fd}\x{30fe}\x{3190}-\x{319f}\x{31c0}-' .
-'\x{31cf}\x{3200}-\x{33ff}\x{4dc0}-\x{4dff}\x{a015}\x{a490}-\x{a716}\x{a802}' .
-'\x{e000}-\x{f8ff}\x{fb29}\x{fd3e}-\x{fd3f}\x{fdfc}-\x{fdfd}' .
-'\x{fd3f}\x{fdfc}-\x{fe6b}\x{feff}-\x{ff0f}\x{ff1a}-\x{ff20}\x{ff3b}-\x{ff40}' .
-'\x{ff5b}-\x{ff65}\x{ff70}\x{ff9e}\x{ff9f}\x{ffe0}-\x{fffd}'
+    '\x{0}-\x{2c}\x{2e}-\x{2f}\x{3a}-\x{40}\x{5b}-\x{60}\x{7b}-\x{bf}\x{d7}\x{f7}\x{2b0}-' .
+    '\x{385}\x{387}\x{3f6}\x{482}-\x{489}\x{559}-\x{55f}\x{589}-\x{5c7}\x{5f3}-' .
+    '\x{61f}\x{640}\x{64b}-\x{65e}\x{66a}-\x{66d}\x{670}\x{6d4}\x{6d6}-\x{6ed}' .
+    '\x{6fd}\x{6fe}\x{700}-\x{70f}\x{711}\x{730}-\x{74a}\x{7a6}-\x{7b0}\x{901}-' .
+    '\x{903}\x{93c}\x{93e}-\x{94d}\x{951}-\x{954}\x{962}-\x{965}\x{970}\x{981}-' .
+    '\x{983}\x{9bc}\x{9be}-\x{9cd}\x{9d7}\x{9e2}\x{9e3}\x{9f2}-\x{a03}\x{a3c}-' .
+    '\x{a4d}\x{a70}\x{a71}\x{a81}-\x{a83}\x{abc}\x{abe}-\x{acd}\x{ae2}\x{ae3}' .
+    '\x{af1}-\x{b03}\x{b3c}\x{b3e}-\x{b57}\x{b70}\x{b82}\x{bbe}-\x{bd7}\x{bf0}-' .
+    '\x{c03}\x{c3e}-\x{c56}\x{c82}\x{c83}\x{cbc}\x{cbe}-\x{cd6}\x{d02}\x{d03}' .
+    '\x{d3e}-\x{d57}\x{d82}\x{d83}\x{dca}-\x{df4}\x{e31}\x{e34}-\x{e3f}\x{e46}-' .
+    '\x{e4f}\x{e5a}\x{e5b}\x{eb1}\x{eb4}-\x{ebc}\x{ec6}-\x{ecd}\x{f01}-\x{f1f}' .
+    '\x{f2a}-\x{f3f}\x{f71}-\x{f87}\x{f90}-\x{fd1}\x{102c}-\x{1039}\x{104a}-' .
+    '\x{104f}\x{1056}-\x{1059}\x{10fb}\x{10fc}\x{135f}-\x{137c}\x{1390}-\x{1399}' .
+    '\x{166d}\x{166e}\x{1680}\x{169b}\x{169c}\x{16eb}-\x{16f0}\x{1712}-\x{1714}' .
+    '\x{1732}-\x{1736}\x{1752}\x{1753}\x{1772}\x{1773}\x{17b4}-\x{17db}\x{17dd}' .
+    '\x{17f0}-\x{180e}\x{1843}\x{18a9}\x{1920}-\x{1945}\x{19b0}-\x{19c0}\x{19c8}' .
+    '\x{19c9}\x{19de}-\x{19ff}\x{1a17}-\x{1a1f}\x{1d2c}-\x{1d61}\x{1d78}\x{1d9b}-' .
+    '\x{1dc3}\x{1fbd}\x{1fbf}-\x{1fc1}\x{1fcd}-\x{1fcf}\x{1fdd}-\x{1fdf}\x{1fed}-' .
+    '\x{1fef}\x{1ffd}-\x{2070}\x{2074}-\x{207e}\x{2080}-\x{2101}\x{2103}-\x{2106}' .
+    '\x{2108}\x{2109}\x{2114}\x{2116}-\x{2118}\x{211e}-\x{2123}\x{2125}\x{2127}' .
+    '\x{2129}\x{212e}\x{2132}\x{213a}\x{213b}\x{2140}-\x{2144}\x{214a}-\x{2b13}' .
+    '\x{2ce5}-\x{2cff}\x{2d6f}\x{2e00}-\x{3005}\x{3007}-\x{303b}\x{303d}-\x{303f}' .
+    '\x{3099}-\x{309e}\x{30a0}\x{30fb}\x{30fd}\x{30fe}\x{3190}-\x{319f}\x{31c0}-' .
+    '\x{31cf}\x{3200}-\x{33ff}\x{4dc0}-\x{4dff}\x{a015}\x{a490}-\x{a716}\x{a802}' .
+    '\x{e000}-\x{f8ff}\x{fb29}\x{fd3e}-\x{fd3f}\x{fdfc}-\x{fdfd}' .
+    '\x{fd3f}\x{fdfc}-\x{fe6b}\x{feff}-\x{ff0f}\x{ff1a}-\x{ff20}\x{ff3b}-\x{ff40}' .
+    '\x{ff5b}-\x{ff65}\x{ff70}\x{ff9e}\x{ff9f}\x{ffe0}-\x{fffd}'
 );
 
 define(
     'PREG_CLASS_NUMBERS',
-'\x{30}-\x{39}\x{b2}\x{b3}\x{b9}\x{bc}-\x{be}\x{660}-\x{669}\x{6f0}-\x{6f9}' .
-'\x{966}-\x{96f}\x{9e6}-\x{9ef}\x{9f4}-\x{9f9}\x{a66}-\x{a6f}\x{ae6}-\x{aef}' .
-'\x{b66}-\x{b6f}\x{be7}-\x{bf2}\x{c66}-\x{c6f}\x{ce6}-\x{cef}\x{d66}-\x{d6f}' .
-'\x{e50}-\x{e59}\x{ed0}-\x{ed9}\x{f20}-\x{f33}\x{1040}-\x{1049}\x{1369}-' .
-'\x{137c}\x{16ee}-\x{16f0}\x{17e0}-\x{17e9}\x{17f0}-\x{17f9}\x{1810}-\x{1819}' .
-'\x{1946}-\x{194f}\x{2070}\x{2074}-\x{2079}\x{2080}-\x{2089}\x{2153}-\x{2183}' .
-'\x{2460}-\x{249b}\x{24ea}-\x{24ff}\x{2776}-\x{2793}\x{3007}\x{3021}-\x{3029}' .
-'\x{3038}-\x{303a}\x{3192}-\x{3195}\x{3220}-\x{3229}\x{3251}-\x{325f}\x{3280}-' .
-'\x{3289}\x{32b1}-\x{32bf}\x{ff10}-\x{ff19}'
+    '\x{30}-\x{39}\x{b2}\x{b3}\x{b9}\x{bc}-\x{be}\x{660}-\x{669}\x{6f0}-\x{6f9}' .
+    '\x{966}-\x{96f}\x{9e6}-\x{9ef}\x{9f4}-\x{9f9}\x{a66}-\x{a6f}\x{ae6}-\x{aef}' .
+    '\x{b66}-\x{b6f}\x{be7}-\x{bf2}\x{c66}-\x{c6f}\x{ce6}-\x{cef}\x{d66}-\x{d6f}' .
+    '\x{e50}-\x{e59}\x{ed0}-\x{ed9}\x{f20}-\x{f33}\x{1040}-\x{1049}\x{1369}-' .
+    '\x{137c}\x{16ee}-\x{16f0}\x{17e0}-\x{17e9}\x{17f0}-\x{17f9}\x{1810}-\x{1819}' .
+    '\x{1946}-\x{194f}\x{2070}\x{2074}-\x{2079}\x{2080}-\x{2089}\x{2153}-\x{2183}' .
+    '\x{2460}-\x{249b}\x{24ea}-\x{24ff}\x{2776}-\x{2793}\x{3007}\x{3021}-\x{3029}' .
+    '\x{3038}-\x{303a}\x{3192}-\x{3195}\x{3220}-\x{3229}\x{3251}-\x{325f}\x{3280}-' .
+    '\x{3289}\x{32b1}-\x{32bf}\x{ff10}-\x{ff19}'
 );
 
 define(
     'PREG_CLASS_PUNCTUATION',
-'\x{21}-\x{23}\x{25}-\x{2a}\x{2c}-\x{2f}\x{3a}\x{3b}\x{3f}\x{40}\x{5b}-\x{5d}' .
-'\x{5f}\x{7b}\x{7d}\x{a1}\x{ab}\x{b7}\x{bb}\x{bf}\x{37e}\x{387}\x{55a}-\x{55f}' .
-'\x{589}\x{58a}\x{5be}\x{5c0}\x{5c3}\x{5f3}\x{5f4}\x{60c}\x{60d}\x{61b}\x{61f}' .
-'\x{66a}-\x{66d}\x{6d4}\x{700}-\x{70d}\x{964}\x{965}\x{970}\x{df4}\x{e4f}' .
-'\x{e5a}\x{e5b}\x{f04}-\x{f12}\x{f3a}-\x{f3d}\x{f85}\x{104a}-\x{104f}\x{10fb}' .
-'\x{1361}-\x{1368}\x{166d}\x{166e}\x{169b}\x{169c}\x{16eb}-\x{16ed}\x{1735}' .
-'\x{1736}\x{17d4}-\x{17d6}\x{17d8}-\x{17da}\x{1800}-\x{180a}\x{1944}\x{1945}' .
-'\x{2010}-\x{2027}\x{2030}-\x{2043}\x{2045}-\x{2051}\x{2053}\x{2054}\x{2057}' .
-'\x{207d}\x{207e}\x{208d}\x{208e}\x{2329}\x{232a}\x{23b4}-\x{23b6}\x{2768}-' .
-'\x{2775}\x{27e6}-\x{27eb}\x{2983}-\x{2998}\x{29d8}-\x{29db}\x{29fc}\x{29fd}' .
-'\x{3001}-\x{3003}\x{3008}-\x{3011}\x{3014}-\x{301f}\x{3030}\x{303d}\x{30a0}' .
-'\x{30fb}\x{fd3e}\x{fd3f}\x{fe30}-\x{fe52}\x{fe54}-\x{fe61}\x{fe63}\x{fe68}' .
-'\x{fe6a}\x{fe6b}\x{ff01}-\x{ff03}\x{ff05}-\x{ff0a}\x{ff0c}-\x{ff0f}\x{ff1a}' .
-'\x{ff1b}\x{ff1f}\x{ff20}\x{ff3b}-\x{ff3d}\x{ff3f}\x{ff5b}\x{ff5d}\x{ff5f}-' .
-'\x{ff65}'
+    '\x{21}-\x{23}\x{25}-\x{2a}\x{2c}-\x{2f}\x{3a}\x{3b}\x{3f}\x{40}\x{5b}-\x{5d}' .
+    '\x{5f}\x{7b}\x{7d}\x{a1}\x{ab}\x{b7}\x{bb}\x{bf}\x{37e}\x{387}\x{55a}-\x{55f}' .
+    '\x{589}\x{58a}\x{5be}\x{5c0}\x{5c3}\x{5f3}\x{5f4}\x{60c}\x{60d}\x{61b}\x{61f}' .
+    '\x{66a}-\x{66d}\x{6d4}\x{700}-\x{70d}\x{964}\x{965}\x{970}\x{df4}\x{e4f}' .
+    '\x{e5a}\x{e5b}\x{f04}-\x{f12}\x{f3a}-\x{f3d}\x{f85}\x{104a}-\x{104f}\x{10fb}' .
+    '\x{1361}-\x{1368}\x{166d}\x{166e}\x{169b}\x{169c}\x{16eb}-\x{16ed}\x{1735}' .
+    '\x{1736}\x{17d4}-\x{17d6}\x{17d8}-\x{17da}\x{1800}-\x{180a}\x{1944}\x{1945}' .
+    '\x{2010}-\x{2027}\x{2030}-\x{2043}\x{2045}-\x{2051}\x{2053}\x{2054}\x{2057}' .
+    '\x{207d}\x{207e}\x{208d}\x{208e}\x{2329}\x{232a}\x{23b4}-\x{23b6}\x{2768}-' .
+    '\x{2775}\x{27e6}-\x{27eb}\x{2983}-\x{2998}\x{29d8}-\x{29db}\x{29fc}\x{29fd}' .
+    '\x{3001}-\x{3003}\x{3008}-\x{3011}\x{3014}-\x{301f}\x{3030}\x{303d}\x{30a0}' .
+    '\x{30fb}\x{fd3e}\x{fd3f}\x{fe30}-\x{fe52}\x{fe54}-\x{fe61}\x{fe63}\x{fe68}' .
+    '\x{fe6a}\x{fe6b}\x{ff01}-\x{ff03}\x{ff05}-\x{ff0a}\x{ff0c}-\x{ff0f}\x{ff1a}' .
+    '\x{ff1b}\x{ff1f}\x{ff20}\x{ff3b}-\x{ff3d}\x{ff3f}\x{ff5b}\x{ff5d}\x{ff5f}-' .
+    '\x{ff65}'
 );
 
 /*
@@ -128,31 +128,57 @@ class SearchCore
     public const PS_SEARCH_ORDINATE_MAX = -1;
     public const PS_SEARCH_ABSCISSA_MIN = 0.5;
     public const PS_SEARCH_ABSCISSA_MAX = 2;
-    public const PS_DISTANCE_MAX = 8;
+    public const PS_DISTANCE_MAX = 5;
 
+    /**
+     * Method that takes a raw string (sentence) and extract all keywords it can find.
+     *
+     * @param string $string Search expression
+     * @param int $id_lang Language ID
+     * @param bool $indexation Are we in indexation mode or not
+     * @param bool|string $iso_code Iso code to use in sanitization function, to perform some tasks
+     */
     public static function extractKeyWords($string, $id_lang, $indexation = false, $iso_code = false)
     {
-        if (null === $string) {
+        // If nothing was passed, nothing to do here
+        if (empty($string)) {
             return [];
         }
 
+        // First, we take the string and clean it as a whole.
+        // This removes special characters, tags, blacklisted words, hyphens etc.
+        // So, "Prestashop Tést A-1000" becomes "prestashop test a 1000";
         $sanitizedString = Search::sanitize($string, $id_lang, $indexation, $iso_code, false);
+
+        // And we separate it by words to get array
+        // So we get an array ["prestashop", "test", "a", "1000"]
         $words = explode(' ', $sanitizedString);
+
+        /*
+         * Now, because we want to maximize the number of keywords we can get from the expression,
+         * we will also try to handle words with hyphens in them. People can search A 1000, A-1000, A1000, we don't know.
+         *
+         * For this reason, if the original expression contained a dash, we will do the process once again,
+         * but keeping the dashes.
+         */
         if (strpos($string, '-') !== false) {
-            $sanitizedString = Search::sanitize($string, $id_lang, $indexation, $iso_code, true);
-            $words2 = explode(' ', $sanitizedString);
-            // foreach word containing hyphen, we want to index additional word removing the hyphen
-            // eg: t-shirt => tshirt
-            foreach ($words2 as $word) {
-                if (strpos($word, '-') !== false) {
-                    $word = str_replace('-', '', $word);
-                    if (!empty($word)) {
-                        $words[] = $word;
-                    }
+            // So, one more sanitization with different parameter, one more separation to get array.
+            // We get an array ["prestashop", "test", "a-1000"]
+            $sanitizedStringWithHyphens = Search::sanitize($string, $id_lang, $indexation, $iso_code, true);
+            $wordsWithHyphens = explode(' ', $sanitizedStringWithHyphens);
+
+            // And we add all words to our final list, in both dashed and non dashed version.
+            foreach ($wordsWithHyphens as $word) {
+                if (strpos($word, '-') === false) {
+                    continue;
+                }
+
+                $words[] = $word;
+                $word = str_replace('-', '', $word);
+                if (!empty($word)) {
+                    $words[] = $word;
                 }
             }
-
-            $words = array_merge($words, $words2);
         }
 
         return array_unique($words);
@@ -160,15 +186,18 @@ class SearchCore
 
     public static function sanitize($string, $id_lang, $indexation = false, $iso_code = false, $keepHyphens = false)
     {
+        // If we get some nonsense or space, just return empty string
         if (null === $string || empty($string = trim($string))) {
             return '';
         }
 
+        // The string gets into this method in a raw form of, like "Prestashop Tést A-1000".
+        // This get rid of all tags, special characters and convert everything to lowercase.
         $string = Tools::strtolower(strip_tags($string));
         $string = html_entity_decode($string, ENT_NOQUOTES, 'utf-8');
-
         $string = preg_replace('/([' . PREG_CLASS_NUMBERS . ']+)[' . PREG_CLASS_PUNCTUATION . ']+(?=[' . PREG_CLASS_NUMBERS . '])/u', '\1', $string);
         $string = preg_replace('/[' . PREG_CLASS_SEARCH_EXCLUDE . ']+/u', ' ', $string);
+        // Now, our string looks something like "prestashop test a-1000".
 
         if ($indexation) {
             if (!$keepHyphens) {
@@ -177,16 +206,18 @@ class SearchCore
                 $string = str_replace(['.', '_'], ' ', $string);
             }
         } else {
-            $words = explode(' ', $string);
-            $processed_words = [];
-            // search for aliases for each word of the query
+            /*
+             * Now, we will search for all aliases, that are contained in our query.
+             * Our string looks something like "prestashop test a-1000".
+             * Aliases must be searched for in a raw form, with no special characters.
+             */
             $query = '
 				SELECT a.alias, a.search
 				FROM `' . _DB_PREFIX_ . 'alias` a
 				WHERE \'' . pSQL($string) . '\' %s AND `active` = 1
             ';
 
-            // check if we can we use '\b' (faster)
+            // Check if we can we use '\b' (faster)
             $useICU = (bool) Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->getValue(
                 'SELECT 1 FROM DUAL WHERE \'icu regex\' REGEXP \'\\\\bregex\''
             );
@@ -199,7 +230,9 @@ class SearchCore
                 )
             );
 
-            foreach ($aliases  as $alias) {
+            $words = explode(' ', $string);
+            $processed_words = [];
+            foreach ($aliases as $alias) {
                 $processed_words = array_merge($processed_words, explode(' ', $alias['search']));
                 // delete words that are being replaced with aliases
                 $words = array_diff($words, explode(' ', $alias['alias']));
@@ -211,6 +244,7 @@ class SearchCore
             }
         }
 
+        // Remove all blacklisted words from the search string
         $blacklist = Tools::strtolower(Configuration::get('PS_SEARCH_BLACKLIST', $id_lang));
         if (!empty($blacklist)) {
             $string = preg_replace('/(?<=\s)(' . $blacklist . ')(?=\s)/Su', '', $string);
@@ -219,7 +253,8 @@ class SearchCore
             $string = preg_replace('/^(' . $blacklist . ')$/Su', '', $string);
         }
 
-        // If the language is constituted with symbol and there is no "words", then split every chars
+        // If the language is constituted with symbol and there is no "words", then split every chars.
+        // This concerns asian languages.
         if (in_array($iso_code, ['zh', 'tw', 'ja'])) {
             // Cut symbols from letters
             $symbols = '';
@@ -248,11 +283,27 @@ class SearchCore
             }
         }
 
+        // Do some more cleaning to the string and return it
         $string = Tools::replaceAccentedChars(trim(preg_replace('/\s+/', ' ', $string)));
 
         return $string;
     }
 
+    /**
+     * The holy method to search for products.
+     *
+     * @param int $id_lang Language identifier
+     * @param string $expr Search expression
+     * @param int $page_number Start from page
+     * @param int $page_size Number of products to return
+     * @param $order_by
+     * @param $order_way
+     * @param bool $ajax Specifies the return structure of data
+     * @param bool $use_cookie unused
+     * @param Context $context Context to use when searching data. Current context will be used if missing.
+     *
+     * @return array|bool search results returned in certain structure, depending on $ajax parameter
+     */
     public static function find(
         $id_lang,
         $expr,
@@ -262,44 +313,68 @@ class SearchCore
         $order_way = 'desc',
         $ajax = false,
         $use_cookie = true,
-        Context $context = null
+        ?Context $context = null
     ) {
         if (!$context) {
             $context = Context::getContext();
         }
 
+        // Get database instance to use
         $db = Db::getInstance(_PS_USE_SQL_SLAVE_);
 
-        // TODO : smart page management
-        if ($page_number < 1) {
+        // Initialize pagination if nonsense was passed
+        if (empty($page_number)) {
             $page_number = 1;
         }
-        if ($page_size < 1) {
+        if (empty($page_size)) {
             $page_size = 1;
         }
 
+        // Initialize and validate sorting
         if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way)) {
             return false;
         }
 
-        $scoreArray = [];
+        /*
+         * Variables related to fuzzy search.
+         *
+         * $psFuzzySearch to see if fuzzy search is enabled.
+         * $fuzzyMaxLoop configuration to limit how many times we try to fuzzy search for each word.
+         * $fuzzyLoop to track how many times we tried to fuzzy search, so we can break the loop.
+         */
         $fuzzyLoop = 0;
-        $wordCnt = 0;
-        $eligibleProducts2Full = [];
-        $expressions = explode(';', $expr);
         $fuzzyMaxLoop = (int) Configuration::get('PS_SEARCH_FUZZY_MAX_LOOP');
         $psFuzzySearch = (int) Configuration::get('PS_SEARCH_FUZZY');
+
+        // Score array to keep track of words we will get weights for (for relevance)
+        $scoreArray = [];
+
+        // Word count to track how many words we got for given expression
+        $wordCnt = 0;
+
+        // Final resulting array with product IDs found
+        $foundProductIds = [];
+
+        // Expressions to search for. If user passes search expressions separated with semicolon, they will be treated separately
+        $expressions = explode(';', $expr);
+
+        // Minimal word length configuration, so we don't search for extremely short words
         $psSearchMinWordLength = (int) Configuration::get('PS_SEARCH_MINWORDLEN');
+
+        // Ok, now let's go through each expression. It's usually only one.
         foreach ($expressions as $expression) {
-            $eligibleProducts2 = null;
+            $productIdsFoundForCurrentExpression = null;
+
+            // Get all words from current expression
             $words = Search::extractKeyWords($expression, $id_lang, false, $context->language->iso_code);
             foreach ($words as $key => $word) {
+                // Skip all empty words or shorter than our limit
                 if (empty($word) || strlen($word) < $psSearchMinWordLength) {
                     unset($words[$key]);
                     continue;
                 }
 
-                $sql_param_search = self::getSearchParamFromWord($word);
+                // We prepare a basic part of SQL query that we will be searching
                 $sql = 'SELECT DISTINCT si.id_product ' .
                     'FROM ' . _DB_PREFIX_ . 'search_word sw ' .
                     'LEFT JOIN ' . _DB_PREFIX_ . 'search_index si ON sw.id_word = si.id_word ' .
@@ -311,6 +386,17 @@ class SearchCore
                     'AND product_shop.indexed = 1 ' .
                     'AND sw.word LIKE ';
 
+                /*
+                 * Now, find all products from the index, that have this keyword.
+                 * We start with the word itself wrapped in %%, coming from getSearchParamFromWord.
+                 *
+                 * If we don't find anything, we will leverage levenshtein algorithm to find a closest keyword
+                 * via findClosestWeightestWord method.
+                 *
+                 * We will keep searching with different expressions, until we find something
+                 * or we exceed our fuzzy search limit.
+                 */
+                $sql_param_search = self::getSearchParamFromWord($word);
                 while (!($result = $db->executeS($sql . "'" . $sql_param_search . "';", true, false))) {
                     if (!$psFuzzySearch
                         || $fuzzyLoop++ > $fuzzyMaxLoop
@@ -320,32 +406,52 @@ class SearchCore
                     }
                 }
 
+                // If nothing was found after X retries, skip this keyword
                 if (!$result) {
                     unset($words[$key]);
                     continue;
                 }
 
-                $productIds = array_column($result, 'id_product');
-                if ($eligibleProducts2 === null) {
-                    $eligibleProducts2 = $productIds;
+                /*
+                 * Extremely important step that someone broke in the past.
+                 * Now if we found something, we need to intersect it with the the previously found products.
+                 * If we search for "Red car", we want to get products that contain "red" AND contain "car".
+                 * Somebody broke it before and it found all things "car" and all things "red".
+                 */
+                $productIdsFoundForCurrentWord = array_column($result, 'id_product');
+                if ($productIdsFoundForCurrentExpression === null) {
+                    $productIdsFoundForCurrentExpression = $productIdsFoundForCurrentWord;
                 } else {
-                    $eligibleProducts2 = array_intersect($eligibleProducts2, $productIds);
+                    $productIdsFoundForCurrentExpression = array_intersect($productIdsFoundForCurrentExpression, $productIdsFoundForCurrentWord);
                 }
 
+                // Add the expresion to our score array, so we can later calculate the relevance
                 $scoreArray[] = 'sw.word LIKE \'' . $sql_param_search . '\'';
             }
             $wordCnt += count($words);
-            if ($eligibleProducts2) {
-                $eligibleProducts2Full = array_merge($eligibleProducts2Full, $eligibleProducts2);
+            if ($productIdsFoundForCurrentExpression) {
+                $foundProductIds = array_merge($foundProductIds, $productIdsFoundForCurrentExpression);
             }
         }
 
-        $eligibleProducts2Full = array_unique($eligibleProducts2Full);
+        // Remove all duplicates from product IDs
+        $foundProductIds = array_unique($foundProductIds);
 
-        if (!$wordCnt || !count($eligibleProducts2Full)) {
+        // If we didn't end up anything now, we can immediately return empty response.
+        // No sense in calculating weights of nothing.
+        if (!$wordCnt || !count($foundProductIds)) {
             return $ajax ? [] : ['total' => 0, 'result' => []];
         }
 
+        /*
+         * Now, we have a list of randomly ordered product IDs for our search,
+         * but we don't know if they are active, should be displayed, nothing.
+         */
+
+        /*
+         * This is a subquery that selects weight for each keyword.
+         * This is used as "relevance" sort order.
+         */
         $sqlScore = '';
         if (!empty($scoreArray) && is_array($scoreArray)) {
             $sqlScore = ',( ' .
@@ -365,6 +471,7 @@ class SearchCore
             $sqlGroups = 'AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Group::getCurrent()->id);
         }
 
+        // Select products from the list of IDs that should be displayed and can be returned.
         $results = $db->executeS(
             'SELECT DISTINCT cp.`id_product` ' .
             'FROM `' . _DB_PREFIX_ . 'category_product` cp ' .
@@ -376,20 +483,27 @@ class SearchCore
             'AND product_shop.`active` = 1 ' .
             'AND product_shop.`visibility` IN ("both", "search") ' .
             'AND product_shop.indexed = 1 ' .
-            'AND cp.id_product IN (' . implode(',', $eligibleProducts2Full) . ')' . $sqlGroups,
+            'AND cp.id_product IN (' . implode(',', $foundProductIds) . ')' . $sqlGroups,
             true,
             false
         );
 
+        // And again, extract their IDs
         $eligibleProducts = [];
         foreach ($results as $row) {
             $eligibleProducts[] = $row['id_product'];
         }
 
+        // If we didn't end up anything now, we can immediately return empty response.
+        // No sense in getting more data for nothing.
         if (!count($eligibleProducts)) {
             return $ajax ? [] : ['total' => 0, 'result' => []];
         }
 
+        /*
+         * Now, we have a list of (also) randomly ordered product IDs for our search,
+         * but we know that they are real, active products that should be returned.
+         */
         $product_pool = ' IN (' . implode(',', $eligibleProducts) . ') ';
 
         if ($ajax) {
@@ -471,13 +585,7 @@ class SearchCore
 				WHERE p.`id_product` ' . $product_pool;
         $total = $db->getValue($sql, false);
 
-        if (!$result) {
-            $result_properties = false;
-        } else {
-            $result_properties = Product::getProductsProperties((int) $id_lang, $result);
-        }
-
-        return ['total' => $total, 'result' => $result_properties];
+        return ['total' => $total, 'result' => $result];
     }
 
     /**
@@ -931,13 +1039,13 @@ class SearchCore
     public static function searchTag(
         $id_lang,
         $tag,
-        $count = false,
+        bool $count = false,
         $pageNumber = 0,
         $pageSize = 10,
         $orderBy = false,
         $orderWay = false,
         $useCookie = true,
-        Context $context = null
+        ?Context $context = null
     ) {
         if (!$context) {
             $context = Context::getContext();
@@ -950,7 +1058,7 @@ class SearchCore
             $id_customer = 0;
         }
 
-        if (!is_numeric($pageNumber) || !is_numeric($pageSize) || !Validate::isBool($count) || !Validate::isValidSearch($tag)
+        if (!is_numeric($pageNumber) || !is_numeric($pageSize) || !Validate::isValidSearch($tag)
             || $orderBy && !$orderWay || ($orderBy && !Validate::isOrderBy($orderBy)) || ($orderWay && !Validate::isOrderBy($orderWay))
         ) {
             return false;
@@ -1031,7 +1139,7 @@ class SearchCore
             return false;
         }
 
-        return Product::getProductsProperties((int) $id_lang, $result);
+        return $result;
     }
 
     /**
@@ -1067,6 +1175,7 @@ class SearchCore
         $distance = []; // cache levenshtein distance
         $searchMinWordLength = (int) Configuration::get('PS_SEARCH_MINWORDLEN');
         $psSearchMaxWordLength = (int) Configuration::get('PS_SEARCH_MAX_WORD_LENGTH');
+        $levenshteinMaxWordDifference = (int) Configuration::get('PS_SEARCH_FUZZY_MAX_DIFFERENCE');
 
         if (!self::$totalWordInSearchWordTable) {
             $sql = 'SELECT count(*) FROM `' . _DB_PREFIX_ . 'search_word`;';
@@ -1079,7 +1188,7 @@ class SearchCore
          * we will get $coefMax < 1 following by $coefMax < $coefMin, this is a non-sense.
          * So, we test it before and assign a right value for both target lengths */
         if (self::$totalWordInSearchWordTable > static::PS_SEARCH_MAX_WORDS_IN_TABLE) {
-            self::$targetLengthMin = self::$targetLengthMax = (int) (strlen($queryString));
+            self::$targetLengthMin = self::$targetLengthMax = (int) strlen($queryString);
         } else {
             /* This part of code can be considered like an auto-scale mechanism.
             *  The table ps_search_word can grow huge, and exceed server resources.
@@ -1099,16 +1208,16 @@ class SearchCore
             *  80,000 words id DB give $coefMin : 0.9, $coefMax : 1.2
             *  100,000 words id DB give $coefMin : 1, $coefMax : 1*/
             if (!self::$coefMin) {
-                //self::$coefMin && self::$coefMax depend on the number of total words in ps_search_word table, need to calculate only for every search
+                // self::$coefMin && self::$coefMax depend on the number of total words in ps_search_word table, need to calculate only for every search
                 self::$coefMin = (
                     (static::PS_SEARCH_ORDINATE_MIN / static::PS_SEARCH_MAX_WORDS_IN_TABLE)
                     * self::$totalWordInSearchWordTable
-                ) + static::PS_SEARCH_ABSCISSA_MIN; //y = ax + b
+                ) + static::PS_SEARCH_ABSCISSA_MIN; // y = ax + b
 
                 self::$coefMax = (
                     (static::PS_SEARCH_ORDINATE_MAX / static::PS_SEARCH_MAX_WORDS_IN_TABLE)
                     * self::$totalWordInSearchWordTable
-                ) + static::PS_SEARCH_ABSCISSA_MAX; //y = ax + b
+                ) + static::PS_SEARCH_ABSCISSA_MAX; // y = ax + b
             }
             // self::$targetLengthMin depends of the length of the $queryString, need to calculate for every word
             self::$targetLengthMin = (int) (strlen($queryString) * self::$coefMin);
@@ -1155,7 +1264,7 @@ class SearchCore
             ['word' => 'initial', 'weight' => 0, 'levenshtein' => 100]
         );
 
-        return $closestWord['levenshtein'] < static::PS_DISTANCE_MAX ? $closestWord['word'] : '';
+        return $closestWord['levenshtein'] <= $levenshteinMaxWordDifference ? $closestWord['word'] : '';
     }
 
     /**

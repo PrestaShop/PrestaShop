@@ -15,16 +15,19 @@ $component-name: component-search;
         margin-left: 0;
 
         .#{$component-name}-body {
-          padding: 0.25rem 0;
-          background: $white;
-          @include border-bottom-left-radius(7px);
-          @include border-bottom-right-radius(7px);
+          padding: var(--#{$cdk}size-4) var(--#{$cdk}size-8);
+          background: var(--#{$cdk}white);
         }
 
         .#{$component-name}-top {
           display: flex;
           align-items: center;
-          padding-left: 1rem;
+
+          #bo_query {
+            &::placeholder {
+              font-size: var(--#{$cdk}size-14);
+            }
+          }
         }
 
         form {
@@ -32,53 +35,45 @@ $component-name: component-search;
           max-width: 100%;
         }
 
-        input:focus {
-          border: 1px solid $primary;
-        }
-
         .dropdown-item {
-          padding: 0.5rem 1rem;
+          padding: var(--#{$cdk}size-8) var(--#{$cdk}size-16);
+          font-size: var(--#{$cdk}size-14);
         }
       }
+    }
+
+    &-quickaccess {
+      @extend .dropdown-menu;
+      display: block;
+      width: 100%;
+      margin: 0;
     }
 
     &-background {
       position: absolute;
       top: 0;
+      right: 0;
       left: 0;
       z-index: -1;
-      width: 150vw;
-      height: 150vh;
-      background: rgba($black, 0.8);
+      height: 100vh;
+      background: rgba(map-get($map: $cdk-primary, $key: "primary-800"), 0.8);
     }
 
     &-cancel {
-      padding: 0.75rem 1rem;
-      font-size: 1rem;
+      padding: var(--#{$cdk}size-8) var(--#{$cdk}size-16);
+      font-size: var(--#{$cdk}size-16);
       font-weight: 500;
-      color: $gray-450;
+      color: var(--#{$cdk}primary-500);
       background: inherit;
       border: 0;
     }
 
-    .dropdown-item {
-      color: $gray-700;
-
-      i {
-        margin-right: 0.75rem;
-        color: $gray-500;
-      }
-    }
-
-    .dropdown-divider {
-      margin: 0 1rem;
-    }
-
     &-title {
-      padding: 0.5rem 1rem;
-      margin-bottom: 0;
-      font-size: 0.75rem;
-      color: $gray-500;
+      padding: var(--#{$cdk}size-8) var(--#{$cdk}size-16);
+      margin: 0;
+      font-size: var(--#{$cdk}size-14);
+      font-weight: 500;
+      color: var(--#{$cdk}primary-500);
       text-transform: uppercase;
     }
   }

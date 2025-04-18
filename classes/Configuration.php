@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
+
 /**
  * Class ConfigurationCore.
  */
@@ -57,7 +59,7 @@ class ConfigurationCore extends ObjectModel
             'name' => ['type' => self::TYPE_STRING, 'validate' => 'isConfigName', 'required' => true, 'size' => 254],
             'id_shop_group' => ['type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'],
             'id_shop' => ['type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'],
-            'value' => ['type' => self::TYPE_STRING],
+            'value' => ['type' => self::TYPE_STRING, 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
         ],
@@ -174,8 +176,8 @@ class ConfigurationCore extends ObjectModel
         $sql = 'SELECT c.`name`, cl.`id_lang`, IF(cl.`id_lang` IS NULL, c.`value`, cl.`value`) AS value, c.id_shop_group, c.id_shop
                FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '` c
                LEFT JOIN `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '_lang` cl ON (c.`' . bqSQL(
-               self::$definition['primary']
-            ) . '` = cl.`' . bqSQL(self::$definition['primary']) . '`)';
+            self::$definition['primary']
+        ) . '` = cl.`' . bqSQL(self::$definition['primary']) . '`)';
         $db = Db::getInstance();
         $results = $db->executeS($sql);
         if ($results) {
@@ -215,15 +217,14 @@ class ConfigurationCore extends ObjectModel
      *
      * @param string $key Key wanted
      * @param int $idLang Language ID
+     * @param int $idShopGroup Shop Group ID
+     * @param int $idShop Shop ID
+     * @param mixed $default Default value
      *
      * @return string|false Value
      */
     public static function get($key, $idLang = null, $idShopGroup = null, $idShop = null, $default = false)
     {
-        if (_PS_DO_NOT_LOAD_CONFIGURATION_) {
-            return false;
-        }
-
         // Init the cache on demand
         if (!self::$_initialized) {
             Configuration::loadConfiguration();
@@ -308,14 +309,14 @@ class ConfigurationCore extends ObjectModel
     /**
      * Get several configuration values (in one language only).
      *
-     * @throws PrestaShopException
-     *
      * @param array $keys Keys wanted
      * @param int $idLang Language ID
      * @param int $idShopGroup
      * @param int $idShop
      *
      * @return array Values
+     *
+     * @throws PrestaShopException
      */
     public static function getMultiple($keys, $idLang = null, $idShopGroup = null, $idShop = null)
     {
@@ -377,7 +378,7 @@ class ConfigurationCore extends ObjectModel
     public static function set($key, $values, $idShopGroup = null, $idShop = null)
     {
         if (!Validate::isConfigName($key)) {
-            die(Tools::displayError(Context::getContext()->getTranslator()->trans('[%s] is not a valid configuration key', [Tools::htmlentitiesUTF8($key)], 'Admin.Notifications.Error')));
+            throw new PrestaShopException(Context::getContext()->getTranslator()->trans('[%s] is not a valid configuration key', [Tools::htmlentitiesUTF8($key)], 'Admin.Notifications.Error'));
         }
 
         if ($idShop === null) {
@@ -438,7 +439,7 @@ class ConfigurationCore extends ObjectModel
     public static function updateValue($key, $values, $html = false, $idShopGroup = null, $idShop = null)
     {
         if (!Validate::isConfigName($key)) {
-            die(Tools::displayError(Context::getContext()->getTranslator()->trans('[%s] is not a valid configuration key', [Tools::htmlentitiesUTF8($key)], 'Admin.Notifications.Error')));
+            throw new PrestaShopException(Context::getContext()->getTranslator()->trans('[%s] is not a valid configuration key', [Tools::htmlentitiesUTF8($key)], 'Admin.Notifications.Error'));
         }
 
         if ($idShop === null || !Shop::isFeatureActive()) {
@@ -463,8 +464,8 @@ class ConfigurationCore extends ObjectModel
             $storedValue = Configuration::get($key, $lang, $idShopGroup, $idShop);
             // if there isn't a $stored_value, we must insert $value
             if (
-              ((!is_numeric($value) && $value === $storedValue) || (is_numeric($value) && $value == $storedValue))
-               && Configuration::hasKey($key, $lang, $idShopGroup, $idShop)
+                ((!is_numeric($value) && $value === $storedValue) || (is_numeric($value) && $value == $storedValue))
+                 && Configuration::hasKey($key, $lang, $idShopGroup, $idShop)
             ) {
                 continue;
             }
@@ -598,7 +599,7 @@ class ConfigurationCore extends ObjectModel
      * @param int $idShopGroup
      * @param int $idShop
      */
-    public static function deleteFromContext($key, int $idShopGroup = null, int $idShop = null)
+    public static function deleteFromContext($key, ?int $idShopGroup = null, ?int $idShop = null)
     {
         if (Shop::getContext() == Shop::CONTEXT_ALL) {
             return;
@@ -696,11 +697,11 @@ class ConfigurationCore extends ObjectModel
      */
     public static function isCatalogMode()
     {
-        return Configuration::get('PS_CATALOG_MODE') ||
-            !Configuration::showPrices() ||
-            (
-                is_a(Context::getContext()->controller, 'FrontController') &&
-                Context::getContext()->controller->getRestrictedCountry() == Country::GEOLOC_CATALOG_MODE
+        return Configuration::get('PS_CATALOG_MODE')
+            || !Configuration::showPrices()
+            || (
+                is_a(Context::getContext()->controller, 'FrontController')
+                && Context::getContext()->controller->getRestrictedCountry() == Country::GEOLOC_CATALOG_MODE
             );
     }
 

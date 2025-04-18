@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProduct
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCategoriesCommandsBuilder;
 
-class ProductCategoriesCommandsBuilderTest extends AbstractProductCommandBuilderTest
+class ProductCategoriesCommandsBuilderTest extends AbstractProductCommandBuilderTestCase
 {
     /**
      * @dataProvider getExpectedCommands

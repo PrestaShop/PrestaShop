@@ -4,19 +4,18 @@ parameters:
   translations_theme_dir: "%resources_dir%/themes"
   translations_modules_dir: "%resources_dir%/modules"
   prestashop.security.voter.product.class: Tests\Integration\Utility\PageVoter
-  AdapterSecurityAdminClass: Tests\Integration\Utility\AdapterSecurityAdmin
 
 imports:
   - { resource: config.yml }
-  - { resource: security_test.yml }
   - { resource: "../../tests/Resources/config/services.yml" }
 
 framework:
   test: ~
   session:
-    storage_id: session.storage.mock_file
+    storage_factory_id: session.storage.factory.mock_file
   profiler:
     collect: false
+  trusted_proxies: 'REMOTE_ADDR'
 
 web_profiler:
   toolbar: '%use_debug_toolbar%'
@@ -52,3 +51,9 @@ monolog:
         VERBOSITY_VERY_VERBOSE: NOTICE
         VERBOSITY_DEBUG: DEBUG
       channels: [ "doctrine" ]
+
+api_platform:
+  mapping:
+    paths:
+      - '%kernel.project_dir%/src/PrestaShopBundle/ApiPlatform/Resources'
+      - '%kernel.project_dir%/tests/Resources/ApiPlatform/Resources'

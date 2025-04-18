@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,8 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-
+ * #}
 
 <div class="card customer-personal-informations-card">
   <h3 class="card-header">
@@ -35,7 +34,7 @@
       {{ customerInformation.personalInformation.email }}
     </a>
 
-    <a href="{{ getAdminLink('AdminCustomers', true, {'id_customer': customerInformation.customerId.value, 'updatecustomer': 1, 'back': app.request.uri}) }}"
+    <a href="{{ getAdminLink('AdminCustomers', true, {id_customer: customerInformation.customerId.value, updatecustomer: 1, back: app.request.uri}) }}"
        class="tooltip-link float-right edit-link"
        data-toggle="pstooltip"
        title=""
@@ -174,7 +173,7 @@
               <p class="text-muted">{{ 'You can transform this guest to a registered customer. The customer will receive an email with a link to set a password.'|trans({}, 'Admin.Orderscustomers.Notification') }}</p>
 
               {% form_theme transferGuestAccountForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
-              {{ form_start(transferGuestAccountForm, {'action': path('admin_customers_transform_guest_to_customer', {'customerId': customerInformation.customerId.value})}) }}
+              {{ form_start(transferGuestAccountForm, {action: path('admin_customers_transform_guest_to_customer', {customerId: customerInformation.customerId.value})}) }}
                 {{ form_widget(transferGuestAccountForm.transfer_guest_account) }}
               {{ form_end(transferGuestAccountForm) }}
             {% endif %}

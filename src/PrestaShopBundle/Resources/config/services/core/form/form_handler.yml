@@ -118,11 +118,23 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FeatureFormDataHandler'
 
+  prestashop.core.form.identifiable_object.attribute_form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    factory: [ '@prestashop.core.form.identifiable_object.handler.form_handler_factory', 'create' ]
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\AttributeFormDataHandler'
+
   prestashop.core.form.identifiable_object.handler.feature_value_form_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
     factory: [ '@prestashop.core.form.identifiable_object.handler.form_handler_factory', 'create' ]
     arguments:
       - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FeatureValueFormDataHandler'
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\AttributeGroupFormHandler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    factory: [ '@prestashop.core.form.identifiable_object.handler.form_handler_factory', 'create' ]
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\AttributeGroupFormDataHandler'
 
   prestashop.core.form.identifiable_object.handler.order_message_form_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
@@ -274,12 +286,6 @@ services:
     arguments:
       - '@prestashop.core.form.identifiable_object.data_handler.state_form_data_handler'
 
-  prestashop.core.form.identifiable_object.handler.application_form_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
-    factory: [ '@prestashop.core.form.identifiable_object.handler.form_handler_factory', 'create' ]
-    arguments:
-      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ApplicationFormDataHandler'
-
   prestashop.core.form.identifiable_object.handler.tax_rules_group_form_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
     factory: [ '@prestashop.core.form.identifiable_object.handler.form_handler_factory', 'create' ]
@@ -292,8 +298,38 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CartRuleFormDataHandler'
 
+  prestashop.core.form.identifiable_object.handler.discount_form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    factory: [ '@prestashop.core.form.identifiable_object.handler.form_handler_factory', 'create' ]
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\DiscountFormDataHandler'
+
   prestashop.core.form.identifiable_object.handler.title_form_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
     factory: [ '@prestashop.core.form.identifiable_object.handler.form_handler_factory', 'create' ]
     arguments:
       - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\TitleFormDataHandler'
+
+  prestashop.core.form.identifiable_object.api_client_form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    factory: [ '@prestashop.core.form.identifiable_object.handler.form_handler_factory', 'create' ]
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ApiClientFormDataHandler'
+
+  prestashop.core.form.identifiable_object.handler.image_type_form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    factory: [ '@prestashop.core.form.identifiable_object.handler.form_handler_factory', 'create' ]
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ImageTypeFormDataHandler'
+
+  prestashop.core.form.identifiable_object.handler.carrier_form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    factory: [ '@prestashop.core.form.identifiable_object.handler.form_handler_factory', 'create' ]
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CarrierFormDataHandler'
+
+  prestashop.core.form.identifiable_object.builder.alias_search_term_form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    factory: [ '@prestashop.core.form.identifiable_object.handler.form_handler_factory', 'create' ]
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\AliasFormDataHandler'

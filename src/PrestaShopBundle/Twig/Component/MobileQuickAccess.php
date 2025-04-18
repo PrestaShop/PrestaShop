@@ -28,14 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Twig\Component;
 
-use Link;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/mobile_quick_access.html.twig')]
-class MobileQuickAccess
+class MobileQuickAccess extends QuickAccess
 {
-    public array $quickAccess;
-    public Link $link;
-    public string $quickAccessCurrentLinkIcon;
-    public string $quickAccessCurrentLinkName;
 }

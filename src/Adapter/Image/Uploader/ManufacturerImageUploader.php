@@ -28,7 +28,9 @@ namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 
 use ImageManager;
 use ImageType;
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
+use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
@@ -79,28 +81,20 @@ final class ManufacturerImageUploader extends AbstractImageUploader implements I
 
         try {
             /* Generate images with different size */
-            if (count($_FILES) &&
-                file_exists(_PS_MANU_IMG_DIR_ . $manufacturerId . '.jpg')
+            if (count($_FILES)
+                && file_exists(_PS_MANU_IMG_DIR_ . $manufacturerId . '.jpg')
             ) {
                 $imageTypes = ImageType::getImagesTypes('manufacturers');
-
-                /** @var \PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration $imageFormatConfiguration */
-                $imageFormatConfiguration = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration');
-                $configuredImageFormats = $imageFormatConfiguration->getGenerationFormats();
+                $configuredImageFormats = ServiceLocator::get(ImageFormatConfiguration::class)->getGenerationFormats();
 
                 foreach ($imageTypes as $imageType) {
                     foreach ($configuredImageFormats as $imageFormat) {
-                        // For JPG images, we let Imagemanager decide what to do and choose between JPG/PNG.
-                        // For webp and avif extensions, we want it to follow our command and ignore the original format.
-                        $forceFormat = ($imageFormat !== 'jpg');
-
                         $resized &= ImageManager::resize(
                             _PS_MANU_IMG_DIR_ . $manufacturerId . '.jpg',
                             _PS_MANU_IMG_DIR_ . $manufacturerId . '-' . stripslashes($imageType['name']) . '.' . $imageFormat,
                             (int) $imageType['width'],
                             (int) $imageType['height'],
-                            $imageFormat,
-                            $forceFormat
+                            $imageFormat
                         );
                     }
                 }
@@ -111,7 +105,7 @@ final class ManufacturerImageUploader extends AbstractImageUploader implements I
                     unlink($currentLogo);
                 }
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new ImageOptimizationException('Unable to resize one or more of your pictures.');
         }
 

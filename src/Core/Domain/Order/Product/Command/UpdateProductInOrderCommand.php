@@ -88,7 +88,7 @@ class UpdateProductInOrderCommand
         try {
             $this->priceTaxIncluded = new DecimalNumber($priceTaxIncluded);
             $this->priceTaxExcluded = new DecimalNumber($priceTaxExcluded);
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException) {
             throw new InvalidAmountException();
         }
         $this->setQuantity($quantity);

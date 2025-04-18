@@ -1,23 +1,20 @@
-// Import utils
-import basicHelper from '@utils/basicHelper';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-import dashboardPage from '@pages/BO/dashboard';
-import searchPage from '@pages/BO/shopParameters/search';
-import tagsPage from '@pages/BO/shopParameters/search/tags';
-import addTagPage from '@pages/BO/shopParameters/search/tags/add';
-
-// Import data
-import Languages from '@data/demo/languages';
-import TagData from '@data/faker/tag';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+
+import {
+  boDashboardPage,
+  boLoginPage,
+  boSearchPage,
+  boTagsPage,
+  boTagsCreatePage,
+  type BrowserContext,
+  dataLanguages,
+  dataProducts,
+  FakerSearchTag,
+  type Page,
+  utilsCore,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_search_tags_filterSortAndPagination';
 
@@ -35,39 +32,45 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'ShopParameters > Search\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSearchPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.shopParametersParentLink,
-      dashboardPage.searchLink,
+      boDashboardPage.shopParametersParentLink,
+      boDashboardPage.searchLink,
     );
 
-    const pageTitle = await searchPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(searchPage.pageTitle);
+    const pageTitle = await boSearchPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boSearchPage.pageTitle);
   });
 
   it('should go to \'Tags\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTagsPage', baseContext);
 
-    await searchPage.goToTagsPage(page);
-    numberOfTags = await tagsPage.getNumberOfElementInGrid(page);
+    await boSearchPage.goToTagsPage(page);
+    numberOfTags = await boTagsPage.getNumberOfElementInGrid(page);
 
-    const pageTitle = await tagsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(tagsPage.pageTitle);
+    const pageTitle = await boTagsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boTagsPage.pageTitle);
   });
 
   // 1 - Create tag
@@ -75,25 +78,29 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
     const creationTests: number[] = new Array(21).fill(0, 0, 21);
 
     creationTests.forEach((test: number, index: number) => {
-      const tagData: TagData = new TagData({name: `todelete${index}`, language: Languages.english.name});
+      const tagData: FakerSearchTag = new FakerSearchTag({
+        name: `todelete${index}`,
+        language: dataLanguages.english.name,
+        products: dataProducts.demo_19.name,
+      });
 
       it('should go to add new tag page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddTagPage${index}`, baseContext);
 
-        await tagsPage.goToAddNewTagPage(page);
+        await boTagsPage.goToAddNewTagPage(page);
 
-        const pageTitle = await addTagPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addTagPage.pageTitleCreate);
+        const pageTitle = await boTagsCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boTagsCreatePage.pageTitleCreate);
       });
 
       it(`should create tag n° ${index + 1} and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createTag${index}`, baseContext);
 
-        const textResult = await addTagPage.setTag(page, tagData);
-        await expect(textResult).to.contains(tagsPage.successfulCreationMessage);
+        const textResult = await boTagsCreatePage.setTag(page, tagData);
+        expect(textResult).to.contains(boTagsPage.successfulCreationMessage);
 
-        const numberOfElementAfterCreation = await tagsPage.getNumberOfElementInGrid(page);
-        await expect(numberOfElementAfterCreation).to.be.equal(numberOfTags + 1 + index);
+        const numberOfElementAfterCreation = await boTagsPage.getNumberOfElementInGrid(page);
+        expect(numberOfElementAfterCreation).to.be.equal(numberOfTags + 1 + index);
       });
     });
   });
@@ -102,7 +109,7 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
   describe('Filter tags table', async () => {
     const tests = [
       {args: {testIdentifier: 'filterById', filterBy: 'id_tag', filterValue: '5'}},
-      {args: {testIdentifier: 'filterByLanguage', filterBy: 'l!name', filterValue: Languages.english.name}},
+      {args: {testIdentifier: 'filterByLanguage', filterBy: 'l!name', filterValue: dataLanguages.english.name}},
       {args: {testIdentifier: 'filterByName', filterBy: 'a!name', filterValue: 'todelete10'}},
       {args: {testIdentifier: 'filterByProducts', filterBy: 'products', filterValue: '0'}},
     ];
@@ -111,22 +118,22 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        await tagsPage.filterTable(page, test.args.filterBy, test.args.filterValue);
+        await boTagsPage.filterTable(page, test.args.filterBy, test.args.filterValue);
 
-        const numberOfLinesAfterFilter = await tagsPage.getNumberOfElementInGrid(page);
-        await expect(numberOfLinesAfterFilter).to.be.at.most(numberOfTags + 21);
+        const numberOfLinesAfterFilter = await boTagsPage.getNumberOfElementInGrid(page);
+        expect(numberOfLinesAfterFilter).to.be.at.most(numberOfTags + 21);
 
         for (let row = 1; row <= numberOfLinesAfterFilter; row++) {
-          const textColumn = await tagsPage.getTextColumn(page, row, test.args.filterBy);
-          await expect(textColumn).to.contains(test.args.filterValue);
+          const textColumn = await boTagsPage.getTextColumn(page, row, test.args.filterBy);
+          expect(textColumn).to.contains(test.args.filterValue);
         }
       });
 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfLinesAfterReset = await tagsPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfLinesAfterReset).to.equal(numberOfTags + 21);
+        const numberOfLinesAfterReset = await boTagsPage.resetAndGetNumberOfLines(page);
+        expect(numberOfLinesAfterReset).to.equal(numberOfTags + 21);
       });
     });
   });
@@ -180,30 +187,30 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await tagsPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const nonSortedTable = await boTagsPage.getAllRowsColumnContent(page, test.args.sortBy);
 
-        await tagsPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+        await boTagsPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        const sortedTable = await tagsPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await boTagsPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
           const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-          const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+          const expectedResult: number[] = await utilsCore.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'up') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
-          const expectedResult = await basicHelper.sortArray(nonSortedTable);
+          const expectedResult = await utilsCore.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'up') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });
@@ -215,28 +222,28 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
     it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
-      const paginationNumber = await tagsPage.selectPaginationLimit(page, 20);
+      const paginationNumber = await boTagsPage.selectPaginationLimit(page, 20);
       expect(paginationNumber).to.equal('1');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await tagsPage.paginationNext(page);
+      const paginationNumber = await boTagsPage.paginationNext(page);
       expect(paginationNumber).to.equal('2');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await tagsPage.paginationPrevious(page);
+      const paginationNumber = await boTagsPage.paginationPrevious(page);
       expect(paginationNumber).to.equal('1');
     });
 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
-      const paginationNumber = await tagsPage.selectPaginationLimit(page, 50);
+      const paginationNumber = await boTagsPage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.equal('1');
     });
   });
@@ -246,21 +253,21 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
 
-      await tagsPage.filterTable(page, 'a!name', 'todelete');
+      await boTagsPage.filterTable(page, 'a!name', 'todelete');
 
-      const numberOfLinesAfterFilter = await tagsPage.getNumberOfElementInGrid(page);
+      const numberOfLinesAfterFilter = await boTagsPage.getNumberOfElementInGrid(page);
 
       for (let i = 1; i <= numberOfLinesAfterFilter; i++) {
-        const textColumn = await tagsPage.getTextColumn(page, i, 'a!name');
-        await expect(textColumn).to.contains('todelete');
+        const textColumn = await boTagsPage.getTextColumn(page, i, 'a!name');
+        expect(textColumn).to.contains('todelete');
       }
     });
 
     it('should delete tags with Bulk Actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteTags', baseContext);
 
-      const deleteTextResult = await tagsPage.bulkDelete(page);
-      await expect(deleteTextResult).to.be.contains(tagsPage.successfulMultiDeleteMessage);
+      const deleteTextResult = await boTagsPage.bulkDelete(page);
+      expect(deleteTextResult).to.be.contains(boTagsPage.successfulMultiDeleteMessage);
     });
   });
 });

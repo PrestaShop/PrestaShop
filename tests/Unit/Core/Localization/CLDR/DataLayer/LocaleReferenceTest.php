@@ -51,7 +51,7 @@ class LocaleReferenceTest extends TestCase
         $this->stubLocaleData->foo = ['bar', 'baz'];
 
         $fakeReader = $this->getMockBuilder(ReaderInterface::class)
-            ->setMethods(['readLocaleData'])
+            ->onlyMethods(['readLocaleData'])
             ->getMock();
         $fakeReader->method('readLocaleData')
             ->willReturnMap([

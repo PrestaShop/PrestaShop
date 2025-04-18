@@ -43,7 +43,7 @@ class SpecificPricesType extends TranslatorAwareType
             ->add('add_specific_price_btn', IconButtonType::class, [
                 'label' => $this->trans('Add a specific price', 'Admin.Catalog.Feature'),
                 'attr' => [
-                    'class' => 'js-add-specific-price-btn btn btn-outline-primary',
+                    'class' => 'js-add-specific-price-btn btn btn-primary',
                     'data-modal-title' => $this->trans('Add new specific price', 'Admin.Catalog.Help'),
                     'data-confirm-button-label' => $this->trans('Save and publish', 'Admin.Actions'),
                     'data-cancel-button-label' => $this->trans('Cancel', 'Admin.Actions'),

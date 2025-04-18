@@ -1,32 +1,26 @@
-// Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import FO pages
-import {cartPage} from '@pages/FO/cart';
-import checkoutPage from '@pages/FO/checkout';
-import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
-import {homePage} from '@pages/FO/home';
-import {loginPage as foLoginPage} from '@pages/FO/login';
-import productPage from '@pages/FO/product';
-
-// Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
-import deliverySlipsPage from '@pages/BO/orders/deliverySlips';
-import ordersPage from '@pages/BO/orders';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
-
-// Import data
-import Customers from '@data/demo/customers';
-import PaymentMethods from '@data/demo/paymentMethods';
-import OrderStatuses from '@data/demo/orderStatuses';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+
+import {
+  boDashboardPage,
+  boDeliverySlipsPage,
+  boLoginPage,
+  boOrdersPage,
+  boOrdersViewBlockTabListPage,
+  type BrowserContext,
+  dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
+  foClassicCartPage,
+  foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
+  foClassicHomePage,
+  foClassicLoginPage,
+  foClassicProductPage,
+  type Page,
+  utilsFile,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_orders_deliverySlips_deliverySlipOptions_enableDisableProductImage';
 
@@ -47,16 +41,22 @@ describe('BO - Orders - Delivery slips : Enable/Disable product image', async ()
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   const tests = [
@@ -83,24 +83,24 @@ describe('BO - Orders - Delivery slips : Enable/Disable product image', async ()
       it('should go to \'Orders > Delivery slips\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToDeliverySlipsPage${index}`, baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.ordersParentLink,
-          dashboardPage.deliverySlipslink,
+          boDashboardPage.ordersParentLink,
+          boDashboardPage.deliverySlipslink,
         );
-        await deliverySlipsPage.closeSfToolBar(page);
+        await boDeliverySlipsPage.closeSfToolBar(page);
 
-        const pageTitle = await deliverySlipsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(deliverySlipsPage.pageTitle);
+        const pageTitle = await boDeliverySlipsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boDeliverySlipsPage.pageTitle);
       });
 
       it(`should ${test.args.action} product image`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}ProductImage`, baseContext);
 
-        await deliverySlipsPage.setEnableProductImage(page, test.args.enable);
+        await boDeliverySlipsPage.setEnableProductImage(page, test.args.enable);
 
-        const textMessage = await deliverySlipsPage.saveDeliverySlipOptions(page);
-        await expect(textMessage).to.contains(deliverySlipsPage.successfulUpdateMessage);
+        const textMessage = await boDeliverySlipsPage.saveDeliverySlipOptions(page);
+        expect(textMessage).to.contains(boDeliverySlipsPage.successfulUpdateMessage);
       });
 
       describe('Create new order in FO', async () => {
@@ -108,93 +108,93 @@ describe('BO - Orders - Delivery slips : Enable/Disable product image', async ()
           await testContext.addContextItem(this, 'testIdentifier', `goToFO${index}`, baseContext);
 
           // Click on view my shop
-          page = await deliverySlipsPage.viewMyShop(page);
+          page = await boDeliverySlipsPage.viewMyShop(page);
           // Change FO language
-          await homePage.changeLanguage(page, 'en');
+          await foClassicHomePage.changeLanguage(page, 'en');
 
-          const isHomePage = await homePage.isHomePage(page);
-          await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+          const isHomePage = await foClassicHomePage.isHomePage(page);
+          expect(isHomePage, 'Fail to open FO home page').to.eq(true);
         });
 
         it('should go to login page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToLoginPageFO${index}`, baseContext);
 
-          await homePage.goToLoginPage(page);
+          await foClassicHomePage.goToLoginPage(page);
 
-          const pageTitle = await foLoginPage.getPageTitle(page);
-          await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+          const pageTitle = await foClassicLoginPage.getPageTitle(page);
+          expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
         });
 
         it('should sign in with default customer', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `signInFO${index}`, baseContext);
 
-          await foLoginPage.customerLogin(page, Customers.johnDoe);
+          await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-          const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-          await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+          const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
+          expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
         });
 
         it('should add product to cart', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `addProductToCart${index}`, baseContext);
 
           // Go to home page
-          await foLoginPage.goToHomePage(page);
+          await foClassicLoginPage.goToHomePage(page);
           // Go to the first product page
-          await homePage.goToProductPage(page, 1);
+          await foClassicHomePage.goToProductPage(page, 1);
           // Add the product to the cart
-          await productPage.addProductToTheCart(page);
+          await foClassicProductPage.addProductToTheCart(page);
 
-          const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-          await expect(notificationsNumber).to.be.equal(1);
+          const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
+          expect(notificationsNumber).to.be.equal(1);
         });
 
         it('should go to delivery step', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToDeliveryStep${index}`, baseContext);
 
           // Proceed to checkout the shopping cart
-          await cartPage.clickOnProceedToCheckout(page);
+          await foClassicCartPage.clickOnProceedToCheckout(page);
 
           // Address step - Go to delivery step
-          const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-          await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+          const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
+          expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
         });
 
         it('should go to payment step', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToPaymentStep${index}`, baseContext);
 
           // Delivery step - Go to payment step
-          const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-          await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+          const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
+          expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
         });
 
         it('should choose payment method and confirm the order', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `confirmOrder${index}`, baseContext);
 
           // Payment step - Choose payment step
-          await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+          await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
           // Check the confirmation message
-          const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-          await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+          const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+          expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
         });
 
         it('should sign out from FO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `signOutFO${index}`, baseContext);
 
-          await orderConfirmationPage.logout(page);
+          await foClassicCheckoutOrderConfirmationPage.logout(page);
 
-          const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
-          await expect(isCustomerConnected, 'Customer is connected').to.be.false;
+          const isCustomerConnected = await foClassicCheckoutOrderConfirmationPage.isCustomerConnected(page);
+          expect(isCustomerConnected, 'Customer is connected').to.eq(false);
         });
 
         it('should go back to BO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
           // Close tab and init other page objects with new current tab
-          page = await orderConfirmationPage.closePage(browserContext, page, 0);
+          page = await foClassicCheckoutOrderConfirmationPage.closePage(browserContext, page, 0);
 
-          const pageTitle = await deliverySlipsPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(deliverySlipsPage.pageTitle);
+          const pageTitle = await boDeliverySlipsPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boDeliverySlipsPage.pageTitle);
         });
       });
 
@@ -202,46 +202,46 @@ describe('BO - Orders - Delivery slips : Enable/Disable product image', async ()
         it('should go to \'Orders > Orders\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToOrderPage${index}`, baseContext);
 
-          await deliverySlipsPage.goToSubMenu(
+          await boDeliverySlipsPage.goToSubMenu(
             page,
-            deliverySlipsPage.ordersParentLink,
-            deliverySlipsPage.ordersLink,
+            boDashboardPage.ordersParentLink,
+            boDashboardPage.ordersLink,
           );
 
-          const pageTitle = await ordersPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(ordersPage.pageTitle);
+          const pageTitle = await boOrdersPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boOrdersPage.pageTitle);
         });
 
         it('should go to the created order page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToCreatedOrderPage${index}`, baseContext);
 
-          await ordersPage.goToOrder(page, 1);
+          await boOrdersPage.goToOrder(page, 1);
 
-          const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-          await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+          const pageTitle = await boOrdersViewBlockTabListPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);
         });
 
-        it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
+        it(`should change the order status to '${dataOrderStatuses.shipped.name}' and check it`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus${index}`, baseContext);
 
-          const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
-          await expect(result).to.equal(OrderStatuses.shipped.name);
+          const result = await boOrdersViewBlockTabListPage.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
+          expect(result).to.equal(dataOrderStatuses.shipped.name);
         });
 
         it('should download the delivery slip', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `downloadDeliverySlips${index}`, baseContext);
 
-          filePath = await orderPageTabListBlock.downloadDeliverySlip(page);
+          filePath = await boOrdersViewBlockTabListPage.downloadDeliverySlip(page);
 
-          const exist = await files.doesFileExist(filePath);
-          await expect(exist).to.be.true;
+          const exist = await utilsFile.doesFileExist(filePath);
+          expect(exist).to.eq(true);
         });
 
         it(`should check that there is ${test.args.isProductImageDisplayed} in the PDF File`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkProductImage${index}`, baseContext);
 
-          const imageNumber = await files.getImageNumberInPDF(filePath);
-          await expect(imageNumber).to.be.equal(test.args.imageNumber);
+          const imageNumber = await utilsFile.getImageNumberInPDF(filePath);
+          expect(imageNumber).to.be.equal(test.args.imageNumber);
         });
       });
     });

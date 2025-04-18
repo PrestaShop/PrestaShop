@@ -11,11 +11,13 @@
     font-weight: 600;
     font-stretch: normal;
     line-height: normal;
-    color: $white;
+    color: var(--#{$cdk}white);
     text-align: center;
-    letter-spacing: -0.2px;
-    background-color: $gray-500;
-    @include border-radius(2px);
+    background-color: var(--#{$cdk}primary-800);
+
+    &:hover {
+      background-color: var(--#{$cdk}primary-700);
+    }
   }
 
   .btn-tertiary-outline {
@@ -23,22 +25,20 @@
     font-weight: 600;
     font-stretch: normal;
     line-height: normal;
-    color: $gray-700;
+    color: var(--#{$cdk}primary-800);
     text-align: center;
-    letter-spacing: -0.2px;
-    background-color: transparent;
-    border: 1px solid $gray-500;
-  }
+    background-color: var(--#{$cdk}white);
+    border: 1px solid var(--#{$cdk}primary-400);
 
-  .btn-tertiary:hover {
-    background-color: $gray-700;
+    &:hover {
+      background-color: var(--#{$cdk}primary-400);
+    }
   }
 
   .layout-configuration {
     .inner-content {
-      padding: 0.9375rem;
-      background-color: #f8f8f8;
-      @include border-radius(0.25rem);
+      padding: var(--#{$cdk}size-16);
+      background-color: var(--#{$cdk}primary-200);
 
       .title {
         font-size: 14px;
@@ -62,8 +62,9 @@
     }
 
     .layout-logo {
-      padding-right: 1rem;
+      padding-right: var(--#{$cdk}size-16);
       vertical-align: text-bottom;
+      filter: grayscale(100%);
     }
 
     .choose-layouts-button {

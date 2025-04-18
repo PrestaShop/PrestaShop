@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
@@ -86,12 +86,12 @@
                                 <span class="sr-only">{{ 'Toggle dropdown'|trans({}, 'Admin.Modules.Feature') }}</span>
                             </button>
                             <div class="dropdown-menu menu-sm">
-                                <a href="{{ path('admin_import_file_download', {'filename': fileName}) }}" class="dropdown-item" target="_blank">
+                                <a href="{{ path('admin_import_file_download', {filename: fileName}) }}" class="dropdown-item" target="_blank">
                                     <i class="material-icons">file_download</i>
                                     {{ 'Download'|trans }}
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <a href="{{ path('admin_import_file_delete', {'filename': fileName}) }}" class="dropdown-item">
+                                <a href="{{ path('admin_import_file_delete', {filename: fileName}) }}" class="dropdown-item">
                                     <i class="material-icons">delete</i>
                                     {{ 'Delete'|trans({}, 'Admin.Actions') }}
                                 </a>

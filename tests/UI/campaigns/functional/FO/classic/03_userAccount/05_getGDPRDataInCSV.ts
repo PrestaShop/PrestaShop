@@ -1,40 +1,39 @@
-// Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
-import basicHelper from '@utils/basicHelper';
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
-// Import commonTests
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import loginCommon from '@commonTests/BO/loginBO';
 
 // Import FO pages
-import {cartPage} from '@pages/FO/cart';
-import checkoutPage from '@pages/FO/checkout';
-import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
-import {contactUsPage} from '@pages/FO/contactUs';
-import customersPage from '@pages/BO/customers';
-import viewCustomerPage from '@pages/BO/customers/view';
-import customerServicePage from '@pages/BO/customerService/customerService';
-import dashboardPage from '@pages/BO/dashboard';
-import {homePage} from '@pages/FO/home';
-import {loginPage} from '@pages/FO/login';
-import {myAccountPage} from '@pages/FO/myAccount';
-import {createAccountPage} from '@pages/FO/myAccount/add';
-import gdprPersonalDataPage from '@pages/FO/myAccount/gdprPersonalData';
-import ordersPage from '@pages/BO/orders';
-import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
-import productPage from '@pages/FO/product';
+import {gdprPersonalDataPage} from '@pages/FO/classic/myAccount/gdprPersonalData';
 
-// Import data
-import PaymentMethods from '@data/demo/paymentMethods';
-import Products from '@data/demo/products';
-import AddressData from '@data/faker/address';
-import MessageData from '@data/faker/message';
-import CustomerData from '@data/faker/customer';
-
-import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  boCustomersPage,
+  boCustomersViewPage,
+  boCustomerServicePage,
+  boDashboardPage,
+  boLoginPage,
+  boOrdersPage,
+  boShoppingCartsPage,
+  type BrowserContext,
+  dataPaymentMethods,
+  dataProducts,
+  FakerAddress,
+  FakerContactMessage,
+  FakerCustomer,
+  foClassicCartPage,
+  foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
+  foClassicContactUsPage,
+  foClassicCreateAccountPage,
+  foClassicHomePage,
+  foClassicLoginPage,
+  foClassicMyAccountPage,
+  foClassicProductPage,
+  type Page,
+  utilsCore,
+  utilsFile,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_userAccount_getGDPRDataInCSV';
 
@@ -65,13 +64,13 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
   let ipAddress: string;
   let connectionOrigin: string;
 
-  const customerData: CustomerData = new CustomerData({
+  const customerData: FakerCustomer = new FakerCustomer({
     firstName: 'Marc',
     lastName: 'Beier',
     email: 'presta@prestashop.com',
   });
   const date: Date = new Date();
-  const addressData: AddressData = new AddressData({
+  const addressData: FakerAddress = new FakerAddress({
     firstName: 'Marc',
     lastName: 'Beier',
     country: 'France',
@@ -79,7 +78,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
     city: 'Paris',
     company: 'PrestaShop',
   });
-  const contactUsData: MessageData = new MessageData({
+  const contactUsData: FakerContactMessage = new FakerContactMessage({
     firstName: customerData.firstName,
     lastName: customerData.lastName,
     subject: 'Customer service',
@@ -92,16 +91,16 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
     // Create file for contact us form
-    await files.createFile('.', `${contactUsData.fileName}.txt`, 'new filename');
+    await utilsFile.createFile('.', `${contactUsData.fileName}.txt`, 'new filename');
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
     // Delete the created file
-    await files.deleteFile(`${contactUsData.fileName}.txt`);
+    await utilsFile.deleteFile(`${contactUsData.fileName}.txt`);
   });
 
   describe('Check GDPR CSV file after create customer and first login', async () => {
@@ -109,47 +108,47 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should go to FO home page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount1', baseContext);
 
-        await homePage.goToFo(page);
+        await foClassicHomePage.goToFo(page);
 
-        const isHomePage = await homePage.isHomePage(page);
-        await expect(isHomePage).to.be.true;
+        const isHomePage = await foClassicHomePage.isHomePage(page);
+        expect(isHomePage).to.eq(true);
       });
 
       it('should go to create account page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToCreateAccountPage', baseContext);
 
-        await homePage.goToLoginPage(page);
-        await loginPage.goToCreateAccountPage(page);
+        await foClassicHomePage.goToLoginPage(page);
+        await foClassicLoginPage.goToCreateAccountPage(page);
 
-        const pageHeaderTitle = await createAccountPage.getHeaderTitle(page);
-        await expect(pageHeaderTitle).to.equal(createAccountPage.formTitle);
+        const pageHeaderTitle = await foClassicCreateAccountPage.getHeaderTitle(page);
+        expect(pageHeaderTitle).to.equal(foClassicCreateAccountPage.formTitle);
       });
 
       it('should create new account', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'createAccount', baseContext);
 
-        await createAccountPage.createAccount(page, customerData);
+        await foClassicCreateAccountPage.createAccount(page, customerData);
 
-        const isCustomerConnected = await homePage.isCustomerConnected(page);
-        await expect(isCustomerConnected).to.be.true;
+        const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);
+        expect(isCustomerConnected).to.eq(true);
       });
 
       it('should go to my account page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccountPage1', baseContext);
 
-        await homePage.goToMyAccountPage(page);
+        await foClassicHomePage.goToMyAccountPage(page);
 
-        const pageTitle = await myAccountPage.getPageTitle(page);
-        await expect(pageTitle).to.equal(myAccountPage.pageTitle);
+        const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);
       });
 
       it('should go to \'GDPR - Personal data\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToGDPRPage1', baseContext);
 
-        await myAccountPage.goToMyGDPRPersonalDataPage(page);
+        await foClassicMyAccountPage.goToMyGDPRPersonalDataPage(page);
 
         const pageTitle = await gdprPersonalDataPage.getPageTitle(page);
-        await expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
+        expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
       });
 
       it('should click on \'Get my data to CSV\'', async function () {
@@ -157,72 +156,78 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         filePath = await gdprPersonalDataPage.exportDataToCSV(page);
 
-        const found = await files.doesFileExist(filePath);
-        await expect(found, 'CSV file was not downloaded').to.be.true;
+        const found = await utilsFile.doesFileExist(filePath);
+        expect(found, 'CSV file was not downloaded').to.eq(true);
       });
     });
 
     describe('Get personal information from BO', async () => {
       it('should login in BO', async function () {
-        await loginCommon.loginBO(this, page);
+        await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+        await boLoginPage.goTo(page, global.BO.URL);
+        await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boDashboardPage.pageTitle);
       });
 
       it('should go to \'Customers > Customers\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage1', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.customersParentLink,
-          dashboardPage.customersLink,
+          boDashboardPage.customersParentLink,
+          boDashboardPage.customersLink,
         );
-        await customersPage.closeSfToolBar(page);
+        await boCustomersPage.closeSfToolBar(page);
 
-        const pageTitle = await customersPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(customersPage.pageTitle);
+        const pageTitle = await boCustomersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCustomersPage.pageTitle);
       });
 
       it(`should filter by customer first name '${customerData.firstName}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomerFirstName1', baseContext);
 
-        await customersPage.filterCustomers(page, 'input', 'firstname', customerData.firstName);
+        await boCustomersPage.filterCustomers(page, 'input', 'firstname', customerData.firstName);
 
-        const numberOfCustomersAfterFilter = await customersPage.getNumberOfElementInGrid(page);
-        await expect(numberOfCustomersAfterFilter).to.equal(1);
+        const numberOfCustomersAfterFilter = await boCustomersPage.getNumberOfElementInGrid(page);
+        expect(numberOfCustomersAfterFilter).to.equal(1);
       });
 
       it('should get creation account date', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getRegistrationDate', baseContext);
 
-        const registration = await customersPage.getTextColumnFromTableCustomers(page, 1, 'date_add');
+        const registration = await boCustomersPage.getTextColumnFromTableCustomers(page, 1, 'date_add');
 
         registrationDate = `${registration.substring(6, 10)}-${registration.substring(0, 2)}-`
           + `${registration.substring(3, 5)}${registration.substring(11, 19)}`;
-        await expect(registrationDate).to.contains(date.getFullYear());
+        expect(registrationDate).to.contains(date.getFullYear());
       });
 
       it('should get last visit date', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getLastVisitDate1', baseContext);
 
-        const lastVisit = await customersPage.getTextColumnFromTableCustomers(page, 1, 'connect');
+        const lastVisit = await boCustomersPage.getTextColumnFromTableCustomers(page, 1, 'connect');
         lastVisitDate = `${lastVisit.substring(6, 10)}-${lastVisit.substring(0, 2)}-`
           + `${lastVisit.substring(3, 5)}${lastVisit.substring(11, 19)}`;
-        await expect(lastVisitDate).to.contains(date.getFullYear());
+        expect(lastVisitDate).to.contains(date.getFullYear());
       });
 
       it('should click on view customer', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToViewCustomerPage', baseContext);
 
-        await customersPage.goToViewCustomerPage(page, 1);
+        await boCustomersPage.goToViewCustomerPage(page, 1);
 
-        const pageTitle = await viewCustomerPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(viewCustomerPage.pageTitle(createCustomerName));
+        const pageTitle = await boCustomersViewPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCustomersViewPage.pageTitle(createCustomerName));
       });
 
       it('should get last connections ip address', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkLAstConnections', baseContext);
 
-        ipAddress = await viewCustomerPage.getTextColumnFromTableLastConnections(page, 'ip-address');
-        await expect(ipAddress).to.not.be.null;
+        ipAddress = await boCustomersViewPage.getTextColumnFromTableLastConnections(page, 'ip-address');
+        expect(ipAddress).to.not.eq(null);
       });
     });
 
@@ -230,9 +235,9 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check general info', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkGeneralInfo', baseContext);
 
-        const age = await basicHelper.age(customerData.birthDate);
+        const age = await utilsCore.age(customerData.birthDate);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           '"GENERALINFO"GenderName"Birthdate"AgeEmailLanguage"Creationaccountdata""Lastvisit"'
           + `SiretApeCompanyWebsite${customerData.socialTitle}"${customerData.firstName}${customerData.lastName}"`
@@ -242,65 +247,65 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
           true,
           'utf16le',
         );
-        await expect(isVisible, 'General info is not correct!').to.be.true;
+        expect(isVisible, 'General info is not correct!').to.eq(true);
       });
 
       it('should check that Addresses table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkThatAddressesTableIsEmpty', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           'ADDRESSESAliasCompanyNameAddressPhone(s)CountryDate"Noaddresses"',
           true,
           true,
           'utf16le',
         );
-        await expect(isVisible, 'Addresses table is not empty!').to.be.true;
+        expect(isVisible, 'Addresses table is not empty!').to.eq(true);
       });
 
       it('should check that Orders table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkThatOrdersTableIsEmpty', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           'RDERSReferencePayment"Orderstate""Totalpaid"Date"Noorders"',
           true,
           true,
           'utf16le',
         );
-        await expect(isVisible, 'Orders table is not empty!').to.be.true;
+        expect(isVisible, 'Orders table is not empty!').to.eq(true);
       });
 
       it('should check that Carts table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkThatCartsTableIsEmpty1', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           'CARTSId"Totalproducts"Date"Nocarts""PRODUCT(S)STILLINCART""CartID""Productreference"NameQuantity"Nocarts"',
           true,
           true,
           'utf16le',
         );
-        await expect(isVisible, 'Carts table is not empty!').to.be.true;
+        expect(isVisible, 'Carts table is not empty!').to.eq(true);
       });
 
       it('should check that Messages table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkThatMessagesTableIsEmpty', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           'MESSAGESIPMessageDate"Nomessages""',
           true,
           true,
           'utf16le',
         );
-        await expect(isVisible, 'Messages table is not empty!').to.be.true;
+        expect(isVisible, 'Messages table is not empty!').to.eq(true);
       });
 
       it('should check Last connections table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkLastConnectionsTable1', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           `LASTCONNECTIONS""Originrequest""Pageviewed""Timeonthepage""IPaddress"DateCountryDate0${ipAddress}`
           + `"${lastVisitDate}"`,
@@ -308,46 +313,46 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
           true,
           'utf16le',
         );
-        await expect(isVisible, 'The data in Last connections table is not correct!').to.be.true;
+        expect(isVisible, 'The data in Last connections table is not correct!').to.eq(true);
       });
 
       it('should check that Newsletter subscription table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkNewsletterSubscriptionTable', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           '"MODULE:NEWSLETTERSUBSCRIPTION""Newslettersubscription:noemailtoexport,thiscustomerhasnotregistered.""',
           true,
           true,
           'utf16le',
         );
-        await expect(isVisible, 'Newsletter subscription table is not empty!').to.be.true;
+        expect(isVisible, 'Newsletter subscription table is not empty!').to.eq(true);
       });
 
       it('should check that Module product comments is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkModuleProductComments', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           '""MODULE:PRODUCTCOMMENTS""MODULE:MAILALERTS"',
           true,
           true,
           'utf16le',
         );
-        await expect(isVisible, 'Products comments is not empty!').to.be.true;
+        expect(isVisible, 'Products comments is not empty!').to.eq(true);
       });
 
       it('should check that mail alerts table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkModuleMailAlerts', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           'MODULE:MAILALERTS""Mailalert:Unabletoexportcustomerusingemail."',
           true,
           true,
           'utf16le',
         );
-        await expect(isVisible, 'Mail alert table is not empty!').to.be.true;
+        expect(isVisible, 'Mail alert table is not empty!').to.eq(true);
       });
     });
   });
@@ -357,40 +362,40 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should go to FO home page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount2', baseContext);
 
-        await homePage.goToFo(page);
+        await foClassicHomePage.goToFo(page);
 
-        const isHomePage = await homePage.isHomePage(page);
-        await expect(isHomePage).to.be.true;
+        const isHomePage = await foClassicHomePage.isHomePage(page);
+        expect(isHomePage).to.eq(true);
       });
 
       it('should add product to cart', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart1', baseContext);
 
         // Go to the first product page
-        await homePage.goToProductPage(page, 1);
+        await foClassicHomePage.goToProductPage(page, 1);
         // Add the product to the cart
-        await productPage.addProductToTheCart(page, 2);
+        await foClassicProductPage.addProductToTheCart(page, 2);
 
-        const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-        await expect(notificationsNumber).to.be.equal(2);
+        const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
+        expect(notificationsNumber).to.be.equal(2);
       });
 
       it('should go to my account page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccountPage2', baseContext);
 
-        await homePage.goToMyAccountPage(page);
+        await foClassicHomePage.goToMyAccountPage(page);
 
-        const pageTitle = await myAccountPage.getPageTitle(page);
-        await expect(pageTitle).to.equal(myAccountPage.pageTitle);
+        const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);
       });
 
       it('should go to \'GDPR - Personal data\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToGDPRPage2', baseContext);
 
-        await myAccountPage.goToMyGDPRPersonalDataPage(page);
+        await foClassicMyAccountPage.goToMyGDPRPersonalDataPage(page);
 
         const pageTitle = await gdprPersonalDataPage.getPageTitle(page);
-        await expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
+        expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
       });
 
       it('should click on \'Get my data to CSV file\'', async function () {
@@ -398,8 +403,8 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         filePath = await gdprPersonalDataPage.exportDataToCSV(page);
 
-        const found = await files.doesFileExist(filePath);
-        await expect(found, 'CSV file was not downloaded').to.be.true;
+        const found = await utilsFile.doesFileExist(filePath);
+        expect(found, 'CSV file was not downloaded').to.eq(true);
       });
     });
 
@@ -407,53 +412,53 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should open the BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'openBoPage1', baseContext);
 
-        await loginPage.goTo(page, global.BO.URL);
+        await foClassicLoginPage.goTo(page, global.BO.URL);
 
-        const pageTitle = await dashboardPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(dashboardPage.pageTitle);
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boDashboardPage.pageTitle);
       });
 
       it('should go to \'Orders > Shopping carts\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.ordersParentLink,
-          dashboardPage.shoppingCartsLink,
+          boDashboardPage.ordersParentLink,
+          boDashboardPage.shoppingCartsLink,
         );
 
-        const pageTitle = await shoppingCartsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(shoppingCartsPage.pageTitle);
+        const pageTitle = await boShoppingCartsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boShoppingCartsPage.pageTitle);
       });
 
       it('should reset all filters and get number of shopping carts', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
 
-        numberOfShoppingCarts = await shoppingCartsPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfShoppingCarts).to.be.above(0);
+        numberOfShoppingCarts = await boShoppingCartsPage.resetAndGetNumberOfLines(page);
+        expect(numberOfShoppingCarts).to.be.above(0);
       });
 
       it('should filter list by customer', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer', baseContext);
 
-        await shoppingCartsPage.filterTable(page, 'input', 'c!lastname', customerData.lastName);
+        await boShoppingCartsPage.filterTable(page, 'input', 'customer_name', customerData.lastName);
 
-        const numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
-        await expect(numberOfShoppingCartsAfterFilter).to.equal(1);
+        const numberOfShoppingCartsAfterFilter = await boShoppingCartsPage.getNumberOfElementInGrid(page);
+        expect(numberOfShoppingCartsAfterFilter).to.equal(1);
 
-        const textColumn = await shoppingCartsPage.getTextColumn(page, 1, 'c!lastname');
-        await expect(textColumn).to.contains(customerData.lastName);
+        const textColumn = await boShoppingCartsPage.getTextColumn(page, 1, 'customer_name');
+        expect(textColumn).to.contains(customerData.lastName);
       });
 
       it('should get shopping cart ID and Date', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getShoppingCartIDAndDate', baseContext);
 
-        shoppingCartDate = await shoppingCartsPage.getTextColumn(page, 1, 'date');
+        shoppingCartDate = await boShoppingCartsPage.getTextColumn(page, 1, 'date_add');
         shoppingCartDate = `${shoppingCartDate.substring(6, 10)}-${shoppingCartDate.substring(0, 2)}-`
           + `${shoppingCartDate.substring(3, 5)}${shoppingCartDate.substring(11, 19)}`;
 
-        shoppingCartID = await shoppingCartsPage.getTextColumn(page, 1, 'id_cart');
-        await expect(parseInt(shoppingCartID, 10)).to.be.greaterThan(5);
+        shoppingCartID = await boShoppingCartsPage.getTextColumn(page, 1, 'id_cart');
+        expect(parseInt(shoppingCartID, 10)).to.be.greaterThan(5);
       });
     });
 
@@ -461,16 +466,16 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check Carts table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkThatCartsTableIsEmpty2', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           `CARTSId"Totalproducts"Date#${shoppingCartID}1`
           + `"${shoppingCartDate}""PRODUCT(S)STILLINCART""CartID""Productreference"NameQuantity`
-          + `#${shoppingCartID}${Products.demo_1.reference}"${Products.demo_1.name.replace(/\s/g, '')}"2`,
+          + `#${shoppingCartID}${dataProducts.demo_1.reference}"${dataProducts.demo_1.name.replace(/\s/g, '')}"2`,
           true,
           true,
           'utf16le',
         );
-        await expect(isVisible, 'Data in Carts table is not correct!').to.be.true;
+        expect(isVisible, 'Data in Carts table is not correct!').to.eq(true);
       });
     });
   });
@@ -480,66 +485,66 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should go to FO home page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount3', baseContext);
 
-        await homePage.goToFo(page);
+        await foClassicHomePage.goToFo(page);
 
-        const isHomePage = await homePage.isHomePage(page);
-        await expect(isHomePage).to.be.true;
+        const isHomePage = await foClassicHomePage.isHomePage(page);
+        expect(isHomePage).to.eq(true);
       });
 
       it('should go to carts page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart2', baseContext);
 
-        await homePage.goToCartPage(page);
+        await foClassicHomePage.goToCartPage(page);
 
-        const pageTitle = await cartPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(cartPage.pageTitle);
+        const pageTitle = await foClassicCartPage.getPageTitle(page);
+        expect(pageTitle).to.contains(foClassicCartPage.pageTitle);
       });
 
       it('should fill address form and go to delivery step', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'setAddressStep', baseContext);
 
         // Proceed to checkout the shopping cart
-        await cartPage.clickOnProceedToCheckout(page);
+        await foClassicCartPage.clickOnProceedToCheckout(page);
 
-        const isStepAddressComplete = await checkoutPage.setAddress(page, addressData);
-        await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+        const isStepAddressComplete = await foClassicCheckoutPage.setAddress(page, addressData);
+        expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
       });
 
       it('should go to payment step', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
 
         // Delivery step - Go to payment step
-        const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-        await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+        const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
+        expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
       });
 
       it('should choose payment method and confirm the order', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
         // Payment step - Choose payment step
-        await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+        await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
         // Check the confirmation message
-        const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-        await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+        const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+        expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
       });
 
       it('should go to my account page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccountPage3', baseContext);
 
-        await homePage.goToMyAccountPage(page);
+        await foClassicHomePage.goToMyAccountPage(page);
 
-        const pageTitle = await myAccountPage.getPageTitle(page);
-        await expect(pageTitle).to.equal(myAccountPage.pageTitle);
+        const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);
       });
 
       it('should go to \'GDPR - Personal data\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToGDPRPage3', baseContext);
 
-        await myAccountPage.goToMyGDPRPersonalDataPage(page);
+        await foClassicMyAccountPage.goToMyGDPRPersonalDataPage(page);
 
         const pageTitle = await gdprPersonalDataPage.getPageTitle(page);
-        await expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
+        expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
       });
 
       it('should click on \'Get my data to CSV file\'', async function () {
@@ -547,8 +552,8 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         filePath = await gdprPersonalDataPage.exportDataToCSV(page);
 
-        const found = await files.doesFileExist(filePath);
-        await expect(found, 'CSV file was not downloaded').to.be.true;
+        const found = await utilsFile.doesFileExist(filePath);
+        expect(found, 'CSV file was not downloaded').to.eq(true);
       });
     });
 
@@ -556,45 +561,45 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should open the BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'openBoPage2', baseContext);
 
-        await loginPage.goTo(page, global.BO.URL);
+        await foClassicLoginPage.goTo(page, global.BO.URL);
 
-        const pageTitle = await dashboardPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(dashboardPage.pageTitle);
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boDashboardPage.pageTitle);
       });
 
       it('should go to \'Orders > Orders\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.ordersParentLink,
-          dashboardPage.ordersLink,
+          boDashboardPage.ordersParentLink,
+          boDashboardPage.ordersLink,
         );
 
-        const pageTitle = await ordersPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(ordersPage.pageTitle);
+        const pageTitle = await boOrdersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersPage.pageTitle);
       });
 
       it('should filter the Orders table by customer', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterOrdersTable', baseContext);
 
-        await ordersPage.filterOrders(page, 'input', 'customer', customerData.lastName);
+        await boOrdersPage.filterOrders(page, 'input', 'customer', customerData.lastName);
 
-        const numberOfOrdersAfterFilter = await ordersPage.getNumberOfElementInGrid(page);
-        await expect(numberOfOrdersAfterFilter).to.equal(1);
+        const numberOfOrdersAfterFilter = await boOrdersPage.getNumberOfElementInGrid(page);
+        expect(numberOfOrdersAfterFilter).to.equal(1);
 
-        const textColumn = await ordersPage.getTextColumn(page, 'customer');
-        await expect(textColumn).to.contains(customerData.lastName);
+        const textColumn = await boOrdersPage.getTextColumn(page, 'customer');
+        expect(textColumn).to.contains(customerData.lastName);
       });
 
       it('should get order data', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getOrderData', baseContext);
 
-        orderReference = await ordersPage.getTextColumn(page, 'reference');
-        await expect(orderReference).to.not.be.null;
+        orderReference = await boOrdersPage.getTextColumn(page, 'reference');
+        expect(orderReference).to.not.eq(null);
 
-        totalPaid = await ordersPage.getOrderATIPrice(page);
-        orderDate = await ordersPage.getTextColumn(page, 'date_add');
+        totalPaid = await boOrdersPage.getOrderATIPrice(page);
+        orderDate = await boOrdersPage.getTextColumn(page, 'date_add');
         orderDate = `${orderDate.substring(6, 10)}-${orderDate.substring(0, 2)}-${orderDate.substring(3, 5)}`
           + `${orderDate.substring(11, 19)}`;
       });
@@ -602,8 +607,8 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'resetOrdersTable', baseContext);
 
-        const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfOrders).to.be.above(0);
+        const numberOfOrders = await boOrdersPage.resetAndGetNumberOfLines(page);
+        expect(numberOfOrders).to.be.above(0);
       });
     });
 
@@ -611,7 +616,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check Addresses table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkAddressesTable1', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           `ADDRESSESAliasCompanyNameAddressPhone(s)CountryDate"${addressData.alias}"${addressData.company}`
           + `"${addressData.firstName}${addressData.lastName}""${addressData.address.replace(/\s/g, '')}"`
@@ -619,34 +624,34 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
           true,
           true,
           'utf16le');
-        await expect(isVisible, 'Data in Addresses table is not correct!').to.be.true;
+        expect(isVisible, 'Data in Addresses table is not correct!').to.eq(true);
       });
 
       it('should check Orders table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkOrdersTable1', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           `ORDERSReferencePayment"Orderstate""Totalpaid"Date${orderReference}"Banktransfer"`
           + `"Awaitingbankwirepayment""${totalPaid}EUR""${orderDate}""PRODUCTSBOUGHT""Orderref""Productref"`
-          + `NameQuantity${orderReference}${Products.demo_1.reference}"${Products.demo_1.name.replace(/\s/g, '')}`
+          + `NameQuantity${orderReference}${dataProducts.demo_1.reference}"${dataProducts.demo_1.name.replace(/\s/g, '')}`
           + '(Size:S-Color:White)"2',
           true,
           true,
           'utf16le');
-        await expect(isVisible, 'Data in Orders table is not correct!').to.be.true;
+        expect(isVisible, 'Data in Orders table is not correct!').to.eq(true);
       });
 
       it('should check that Carts table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkCartsTable1', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           'CARTSId"Totalproducts"Date"Nocarts""PRODUCT(S)STILLINCART""CartID""Productreference"NameQuantity"Nocarts"',
           true,
           true,
           'utf16le');
-        await expect(isVisible, 'Carts table is not empty!').to.be.true;
+        expect(isVisible, 'Carts table is not empty!').to.eq(true);
       });
     });
   });
@@ -656,47 +661,47 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should go to FO home page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount4', baseContext);
 
-        await homePage.goToFo(page);
+        await foClassicHomePage.goToFo(page);
 
-        const isHomePage = await homePage.isHomePage(page);
-        await expect(isHomePage).to.be.true;
+        const isHomePage = await foClassicHomePage.isHomePage(page);
+        expect(isHomePage).to.eq(true);
       });
 
       it('should go on contact us page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goOnContactPage', baseContext);
 
         // Go to contact us page
-        await loginPage.goToFooterLink(page, 'Contact us');
+        await foClassicLoginPage.goToFooterLink(page, 'Contact us');
 
-        const pageTitle = await contactUsPage.getPageTitle(page);
-        await expect(pageTitle).to.equal(contactUsPage.pageTitle);
+        const pageTitle = await foClassicContactUsPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foClassicContactUsPage.pageTitle);
       });
 
       it('should send message to customer service', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
 
-        await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.txt`);
+        await foClassicContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.txt`);
 
-        const validationMessage = await contactUsPage.getAlertSuccess(page);
-        await expect(validationMessage).to.equal(contactUsPage.validationMessage);
+        const validationMessage = await foClassicContactUsPage.getAlertSuccess(page);
+        expect(validationMessage).to.equal(foClassicContactUsPage.validationMessage);
       });
 
       it('should go to my account page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccountPage4', baseContext);
 
-        await homePage.goToMyAccountPage(page);
+        await foClassicHomePage.goToMyAccountPage(page);
 
-        const pageTitle = await myAccountPage.getPageTitle(page);
-        await expect(pageTitle).to.equal(myAccountPage.pageTitle);
+        const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);
       });
 
       it('should go to \'GDPR - Personal data\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToGDPRPage4', baseContext);
 
-        await myAccountPage.goToMyGDPRPersonalDataPage(page);
+        await foClassicMyAccountPage.goToMyGDPRPersonalDataPage(page);
 
         const pageTitle = await gdprPersonalDataPage.getPageTitle(page);
-        await expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
+        expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
       });
 
       it('should click on \'Get my data to CSV file\'', async function () {
@@ -704,8 +709,8 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         filePath = await gdprPersonalDataPage.exportDataToCSV(page);
 
-        const found = await files.doesFileExist(filePath);
-        await expect(found, 'CSV file was not downloaded').to.be.true;
+        const found = await utilsFile.doesFileExist(filePath);
+        expect(found, 'CSV file was not downloaded').to.eq(true);
       });
     });
 
@@ -713,39 +718,39 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should open the BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'openBoPage3', baseContext);
 
-        await loginPage.goTo(page, global.BO.URL);
+        await foClassicLoginPage.goTo(page, global.BO.URL);
 
-        const pageTitle = await dashboardPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(dashboardPage.pageTitle);
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boDashboardPage.pageTitle);
       });
 
       it('should go to customer service page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrderMessagesPage', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.customerServiceParentLink,
-          dashboardPage.customerServiceLink,
+          boDashboardPage.customerServiceParentLink,
+          boDashboardPage.customerServiceLink,
         );
 
-        const pageTitle = await customerServicePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(customerServicePage.pageTitle);
+        const pageTitle = await boCustomerServicePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCustomerServicePage.pageTitle);
       });
 
       it('should check customer name', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerName', baseContext);
 
-        const email = await customerServicePage.getTextColumn(page, 1, 'customer');
-        await expect(email).to.contain(`${contactUsData.firstName} ${contactUsData.lastName}`);
+        const email = await boCustomerServicePage.getTextColumn(page, 1, 'customer');
+        expect(email).to.contain(`${contactUsData.firstName} ${contactUsData.lastName}`);
       });
 
       it('should get last message date', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerEmail', baseContext);
 
-        messageDate = await customerServicePage.getTextColumn(page, 1, 'date');
+        messageDate = await boCustomerServicePage.getTextColumn(page, 1, 'date');
         messageDate = `${messageDate.substring(6, 10)}-${messageDate.substring(0, 2)}-`
           + `${messageDate.substring(3, 5)}${messageDate.substring(11, 19)}`;
-        await expect(messageDate).to.not.be.null;
+        expect(messageDate).to.not.eq(null);
       });
     });
 
@@ -753,7 +758,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check Addresses table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkAddressesTable2', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           `ADDRESSESAliasCompanyNameAddressPhone(s)CountryDate"${addressData.alias}"${addressData.company}`
           + `"${addressData.firstName}${addressData.lastName}""${addressData.address.replace(/\s/g, '')}"`
@@ -761,46 +766,46 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
           true,
           true,
           'utf16le');
-        await expect(isVisible, 'Data in Addresses table is not correct!').to.be.true;
+        expect(isVisible, 'Data in Addresses table is not correct!').to.eq(true);
       });
 
       it('should check Orders table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkOrdersTable2', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           `ORDERSReferencePayment"Orderstate""Totalpaid"Date${orderReference}"Banktransfer"`
           + `"Awaitingbankwirepayment""${totalPaid}EUR""${orderDate}""PRODUCTSBOUGHT""Orderref""Productref"`
-          + `NameQuantity${orderReference}${Products.demo_1.reference}"${Products.demo_1.name.replace(/\s/g, '')}`
+          + `NameQuantity${orderReference}${dataProducts.demo_1.reference}"${dataProducts.demo_1.name.replace(/\s/g, '')}`
           + '(Size:S-Color:White)"2',
           true,
           true,
           'utf16le');
-        await expect(isVisible, 'Data in Orders table is not correct!').to.be.true;
+        expect(isVisible, 'Data in Orders table is not correct!').to.eq(true);
       });
 
       it('should check that Carts table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkCartsTable2', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           'CARTSId"Totalproducts"Date"Nocarts""PRODUCT(S)STILLINCART""CartID""Productreference"NameQuantity"Nocarts"',
           true,
           true,
           'utf16le');
-        await expect(isVisible, 'Carts table is not empty!').to.be.true;
+        expect(isVisible, 'Carts table is not empty!').to.eq(true);
       });
 
       it('should check Messages table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkMessagesTable1', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           `MESSAGESIPMessageDate${ipAddress}"${contactUsData.message.replace(/\s/g, '')}""${messageDate}`,
           true,
           true,
           'utf16le');
-        await expect(isVisible, 'Data in Messages table is not correct!').to.be.true;
+        expect(isVisible, 'Data in Messages table is not correct!').to.eq(true);
       });
     });
   });
@@ -810,47 +815,47 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should go to FO home page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount5', baseContext);
 
-        await homePage.goToFo(page);
+        await foClassicHomePage.goToFo(page);
 
-        const isHomePage = await homePage.isHomePage(page);
-        await expect(isHomePage).to.be.true;
+        const isHomePage = await foClassicHomePage.isHomePage(page);
+        expect(isHomePage).to.eq(true);
       });
 
       it('should logout by the link in the header', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'signOutFOByHeaderLink', baseContext);
 
-        await homePage.logout(page);
+        await foClassicHomePage.logout(page);
 
-        const isCustomerConnected = await homePage.isCustomerConnected(page);
-        await expect(isCustomerConnected, 'Customer is connected!').to.be.false;
+        const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);
+        expect(isCustomerConnected, 'Customer is connected!').to.eq(false);
       });
 
       it('should sign in', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'signInFO2', baseContext);
 
-        await homePage.goToLoginPage(page);
-        await loginPage.customerLogin(page, customerData);
+        await foClassicHomePage.goToLoginPage(page);
+        await foClassicLoginPage.customerLogin(page, customerData);
 
-        const isCustomerConnected = await loginPage.isCustomerConnected(page);
-        await expect(isCustomerConnected, 'Customer is not connected!').to.be.true;
+        const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
+        expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
       });
 
       it('should go to my account page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccountPage5', baseContext);
 
-        await homePage.goToMyAccountPage(page);
+        await foClassicHomePage.goToMyAccountPage(page);
 
-        const pageTitle = await myAccountPage.getPageTitle(page);
-        await expect(pageTitle).to.equal(myAccountPage.pageTitle);
+        const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);
       });
 
       it('should go to \'GDPR - Personal data\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToGDPRPage5', baseContext);
 
-        await myAccountPage.goToMyGDPRPersonalDataPage(page);
+        await foClassicMyAccountPage.goToMyGDPRPersonalDataPage(page);
 
         const pageTitle = await gdprPersonalDataPage.getPageTitle(page);
-        await expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
+        expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
       });
 
       it('should click on \'Get my data to CSV file\'', async function () {
@@ -858,8 +863,8 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         filePath = await gdprPersonalDataPage.exportDataToCSV(page);
 
-        const found = await files.doesFileExist(filePath);
-        await expect(found, 'CSV file was not downloaded').to.be.true;
+        const found = await utilsFile.doesFileExist(filePath);
+        expect(found, 'CSV file was not downloaded').to.eq(true);
       });
     });
 
@@ -867,68 +872,64 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should open the BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'openBoPage4', baseContext);
 
-        await loginPage.goTo(page, global.BO.URL);
+        await foClassicLoginPage.goTo(page, global.BO.URL);
 
-        const pageTitle = await dashboardPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(dashboardPage.pageTitle);
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boDashboardPage.pageTitle);
       });
 
       it('should go to \'Customers > Customers\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage2', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.customersParentLink,
-          dashboardPage.customersLink,
+          boDashboardPage.customersParentLink,
+          boDashboardPage.customersLink,
         );
 
-        await customersPage.closeSfToolBar(page);
+        await boCustomersPage.closeSfToolBar(page);
 
-        const pageTitle = await customersPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(customersPage.pageTitle);
+        const pageTitle = await boCustomersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCustomersPage.pageTitle);
       });
 
       it(`should filter by customer first name '${customerData.firstName}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomerFirstName2', baseContext);
 
-        await customersPage.filterCustomers(page, 'input', 'firstname', customerData.firstName);
+        await boCustomersPage.filterCustomers(page, 'input', 'firstname', customerData.firstName);
 
-        const numberOfCustomersAfterFilter = await customersPage.getNumberOfElementInGrid(page);
-        await expect(numberOfCustomersAfterFilter).to.equal(1);
+        const numberOfCustomersAfterFilter = await boCustomersPage.getNumberOfElementInGrid(page);
+        expect(numberOfCustomersAfterFilter).to.equal(1);
       });
 
       it('should get last visit date', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getLastVisitDate2', baseContext);
 
-        const lastVisit = await customersPage.getTextColumnFromTableCustomers(page, 1, 'connect');
+        const lastVisit = await boCustomersPage.getTextColumnFromTableCustomers(page, 1, 'connect');
         secondLastVisitDate = `${lastVisit.substring(6, 10)}-${lastVisit.substring(0, 2)}-`
           + `${lastVisit.substring(3, 5)}${lastVisit.substring(11, 19)}`;
-        await expect(lastVisitDate).to.contains(date.getFullYear());
+        expect(lastVisitDate).to.contains(date.getFullYear());
       });
 
       it('should click on view customer', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToViewCustomerPage2', baseContext);
 
-        await customersPage.goToViewCustomerPage(page, 1);
+        await boCustomersPage.goToViewCustomerPage(page, 1);
 
-        const pageTitle = await viewCustomerPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(viewCustomerPage.pageTitle(createCustomerName));
+        const pageTitle = await boCustomersViewPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCustomersViewPage.pageTitle(createCustomerName));
       });
 
       it('should get last connections origin', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getLastConnectionsOrigin', baseContext);
 
-        connectionOrigin = await viewCustomerPage.getTextColumnFromTableLastConnections(page, 'origin', 1);
+        connectionOrigin = await boCustomersViewPage.getTextColumnFromTableLastConnections(page, 'origin', 1);
         if (connectionOrigin === 'Direct link') {
           connectionOrigin = '';
         } else if (connectionOrigin === 'localhost') {
-          if (global.INSTALL.ENABLE_SSL) {
-            connectionOrigin = 'https://localhost:8002/en/';
-          } else {
-            connectionOrigin = 'http://localhost:8001/en/';
-          }
+          connectionOrigin = global.INSTALL.ENABLE_SSL ? 'https://localhost:8002/' : 'http://localhost:8001/';
         }
-        await expect(connectionOrigin).to.not.be.null;
+        expect(connectionOrigin).to.not.eq(null);
       });
     });
 
@@ -936,7 +937,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check Addresses table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkAddressesTable3', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           `ADDRESSESAliasCompanyNameAddressPhone(s)CountryDate"${addressData.alias}"${addressData.company}`
           + `"${addressData.firstName}${addressData.lastName}""${addressData.address.replace(/\s/g, '')}"`
@@ -944,59 +945,59 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
           true,
           true,
           'utf16le');
-        await expect(isVisible, 'Data in Addresses table is not correct!').to.be.true;
+        expect(isVisible, 'Data in Addresses table is not correct!').to.eq(true);
       });
 
       it('should check Orders table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkOrdersTable3', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           `ORDERSReferencePayment"Orderstate""Totalpaid"Date${orderReference}"Banktransfer"`
           + `"Awaitingbankwirepayment""${totalPaid}EUR""${orderDate}""PRODUCTSBOUGHT""Orderref""Productref"`
-          + `NameQuantity${orderReference}${Products.demo_1.reference}"${Products.demo_1.name.replace(/\s/g, '')}`
+          + `NameQuantity${orderReference}${dataProducts.demo_1.reference}"${dataProducts.demo_1.name.replace(/\s/g, '')}`
           + '(Size:S-Color:White)"2',
           true,
           true,
           'utf16le');
-        await expect(isVisible, 'Data in Orders table is not correct!').to.be.true;
+        expect(isVisible, 'Data in Orders table is not correct!').to.eq(true);
       });
 
       it('should check that Carts table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkCartsTable3', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           'CARTSId"Totalproducts"Date"Nocarts""PRODUCT(S)STILLINCART""CartID""Productreference"NameQuantity"Nocarts"',
           true,
           true,
           'utf16le');
-        await expect(isVisible, 'Carts table is not empty!').to.be.true;
+        expect(isVisible, 'Carts table is not empty!').to.eq(true);
       });
 
       it('should check Messages table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkMessagesTable2', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           `MESSAGESIPMessageDate${ipAddress}"${contactUsData.message.replace(/\s/g, '')}""${messageDate}`,
           true,
           true,
           'utf16le');
-        await expect(isVisible, 'Data in Messages table is not correct!').to.be.true;
+        expect(isVisible, 'Data in Messages table is not correct!').to.eq(true);
       });
 
       it('should check Last connections table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkLastConnectionsTable2', baseContext);
 
-        const isVisible = await files.isTextInFile(
+        const isVisible = await utilsFile.isTextInFile(
           filePath,
           'LASTCONNECTIONS""Originrequest""Pageviewed""Timeonthepage""IPaddress"DateCountryDate'
           + `${connectionOrigin}0${ipAddress}"${secondLastVisitDate}"0${ipAddress}"${lastVisitDate}"`,
           true,
           true,
           'utf16le');
-        await expect(isVisible, 'The data in Last connections table is not correct!').to.be.true;
+        expect(isVisible, 'The data in Last connections table is not correct!').to.eq(true);
       });
     });
   });

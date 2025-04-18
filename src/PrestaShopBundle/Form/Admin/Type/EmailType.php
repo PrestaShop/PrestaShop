@@ -30,21 +30,30 @@ namespace PrestaShopBundle\Form\Admin\Type;
 use PrestaShopBundle\Form\DataTransformer\IDNConverterDataTransformer;
 use Symfony\Component\Form\Extension\Core\Type\EmailType as BaseEmailType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class EmailType extends BaseEmailType
 {
-    /**
-     * @var IDNConverterDataTransformer
-     */
-    private $IDNConverterDataTransformer;
-
-    public function __construct(IDNConverterDataTransformer $IDNConverterDataTransformer)
-    {
-        $this->IDNConverterDataTransformer = $IDNConverterDataTransformer;
+    public function __construct(
+        protected readonly IDNConverterDataTransformer $IDNConverterDataTransformer,
+        protected readonly TranslatorInterface $translator,
+    ) {
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->addViewTransformer($this->IDNConverterDataTransformer);
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+        $resolver->setDefaults([
+            'attr' => [
+                'class' => 'email-input',
+                'data-invalid-message' => $this->translator->trans('Invalid email address.', [], 'Admin.Notifications.Error'),
+            ],
+        ]);
     }
 }

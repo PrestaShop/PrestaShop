@@ -121,7 +121,7 @@ class CookieCore
         $this->_salt = $this->_standalone ? str_pad('', 32, md5('ps' . __FILE__)) : _COOKIE_IV_;
 
         if ($this->_standalone) {
-            $asciiSafeString = \Defuse\Crypto\Encoding::saveBytesToChecksummedAsciiSafeString(Key::KEY_CURRENT_VERSION, str_pad($name, Key::KEY_BYTE_SIZE, md5(__FILE__)));
+            $asciiSafeString = Defuse\Crypto\Encoding::saveBytesToChecksummedAsciiSafeString(Key::KEY_CURRENT_VERSION, str_pad($name, Key::KEY_BYTE_SIZE, md5(__FILE__)));
             $this->cipherTool = new PhpEncryption($asciiSafeString);
         } else {
             $this->cipherTool = new PhpEncryption(_NEW_COOKIE_KEY_);
@@ -190,7 +190,7 @@ class CookieCore
      */
     public function setExpire($expire)
     {
-        $this->_expire = (int) ($expire);
+        $this->_expire = (int) $expire;
     }
 
     /**
@@ -228,10 +228,10 @@ class CookieCore
     public function __set($key, $value)
     {
         if (is_array($value)) {
-            die(Tools::displayError());
+            throw new PrestaShopException('Cookie value can\'t be an array.');
         }
         if (preg_match('/¤|\|/', $key . $value)) {
-            throw new Exception('Forbidden chars in cookie');
+            throw new PrestaShopException('Forbidden chars in cookie');
         }
         if (!$this->_modified && (!array_key_exists($key, $this->_content) || $this->_content[$key] != $value)) {
             $this->_modified = true;
@@ -308,7 +308,7 @@ class CookieCore
         if (isset($_COOKIE[$this->_name])) {
             /* Decrypt cookie content */
             $content = $this->cipherTool->decrypt($_COOKIE[$this->_name]);
-            //printf("\$content = %s<br />", $content);
+            // printf("\$content = %s<br />", $content);
 
             /* Get cookie checksum */
             $tmpTab = explode('¤', $content);
@@ -316,7 +316,7 @@ class CookieCore
             array_pop($tmpTab);
             $content_for_checksum = implode('¤', $tmpTab) . '¤';
             $checksum = hash('sha256', $this->_salt . $content_for_checksum);
-            //printf("\$checksum = %s<br />", $checksum);
+            // printf("\$checksum = %s<br />", $checksum);
 
             /* Unserialize cookie content */
             $tmpTab = explode('¤', $content);
@@ -338,7 +338,7 @@ class CookieCore
             $this->_content['date_add'] = date('Y-m-d H:i:s');
         }
 
-        //checks if the language exists, if not choose the default language
+        // checks if the language exists, if not choose the default language
         if (!$this->_standalone && !Language::getLanguage((int) $this->id_lang)) {
             $this->id_lang = (int) Configuration::get('PS_LANG_DEFAULT');
             // set detect_language to force going through Tools::setCookieLanguage to figure out browser lang
@@ -357,16 +357,6 @@ class CookieCore
      */
     protected function encryptAndSetCookie($cookie = null)
     {
-        // Check if the content fits in the Cookie
-        $length = null === $cookie
-            ? 0
-            : ((ini_get('mbstring.func_overload') & 2)
-                ? mb_strlen($cookie, ini_get('default_charset'))
-                : strlen($cookie));
-
-        if ($length >= 1048576) {
-            return false;
-        }
         if ($cookie) {
             $content = $this->cipherTool->encrypt($cookie);
             $time = $this->_expire;
@@ -376,19 +366,18 @@ class CookieCore
         }
 
         /*
-         * The alternative signature supporting an options array is only available since
-         * PHP 7.3.0, before there is no support for SameSite attribute.
+         * We need to check if the new cookie will be compliant with RFC 2965, maximum of 4096 bytes
+         * per cookie. Major browsers follow this very closely and will refuse to save this cookie.
+         *
+         * If we exceed this value, some module is saving something to cookie that it shouldn't save,
+         * and overflowing the cookie. It's absolutely critical that this does not happen because
+         * it breaks for example all cart functionality.
+         *
+         * We are using strlen because it calculates the byte count, we don't care about character
+         * count in case of multi-byte characters.
          */
-        if (PHP_VERSION_ID < 70300) {
-            return setcookie(
-                $this->_name,
-                $content,
-                $time,
-                $this->_path,
-                $this->_domain . '; SameSite=' . $this->_sameSite,
-                $this->_secure,
-                true
-            );
+        if (strlen($this->_name . $content) > 4096) {
+            throw new PrestaShopException('Error during setting a cookie. Combined size of name and value cannot exceed 4096 characters. Larger cookie is not compliant with RFC 2965 and will not be accepted by the browser.');
         }
 
         return setcookie(
@@ -438,6 +427,7 @@ class CookieCore
         }
         $cookie .= 'checksum|' . $newChecksum;
         $this->_modified = false;
+
         /* Cookies are encrypted for evident security reasons */
         return $this->encryptAndSetCookie($cookie);
     }

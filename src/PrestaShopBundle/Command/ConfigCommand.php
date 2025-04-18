@@ -114,7 +114,7 @@ class ConfigCommand extends Command
             ->addOption('lang', 'l', InputArgument::OPTIONAL, 'in this language. this can be either language id or ISO 3166-2 alpha-2 (en, fr, fi...)', null)
             ->addOption('shopGroupId', 'g', InputArgument::OPTIONAL, 'in this shop group (if no shop group or shop options are given defaults to allShops)', null)
             ->addOption('shopId', 's', InputArgument::OPTIONAL, 'in this shop (if no shop group or shop options are given defaults to allShops)', null)
-            ;
+        ;
     }
 
     protected function init(): void

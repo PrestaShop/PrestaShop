@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShopBundle\Entity\FeatureFlag;
 
 class FeatureFlagRepository extends EntityRepository
@@ -43,13 +42,6 @@ class FeatureFlagRepository extends EntityRepository
      */
     public function getByName(string $featureFlagName): ?FeatureFlag
     {
-        // Temporary automatic conversion of the feature flag since now only one value is used
-        // will be removed when the FEATURE_FLAG_PRODUCT_PAGE_V2_MULTI_SHOP is removed and/or the
-        // feature is officially released
-        if ($featureFlagName === FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2_MULTI_SHOP) {
-            $featureFlagName = FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2;
-        }
-
         return $this->findOneBy(['name' => $featureFlagName]);
     }
 

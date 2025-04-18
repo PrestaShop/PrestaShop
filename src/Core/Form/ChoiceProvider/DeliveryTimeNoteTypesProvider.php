@@ -101,7 +101,7 @@ final class DeliveryTimeNoteTypesProvider implements FormChoiceProviderInterface
                 '[2]' => $linkOpeningTag,
                 '[/2]' => $linkClosingTag,
             ], 'Admin.Catalog.Feature') => DeliveryTimeNoteType::TYPE_DEFAULT,
-            $this->translator->trans('Specific delivery time to this product', [], 'Admin.Catalog.Feature') => DeliveryTimeNoteType::TYPE_SPECIFIC,
+            $this->translator->trans('Specific delivery time for this product', [], 'Admin.Catalog.Feature') => DeliveryTimeNoteType::TYPE_SPECIFIC,
         ];
     }
 

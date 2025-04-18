@@ -1,296 +1,413 @@
-# deprecated old notation since 9.0
 services:
   prestashop.core.form.choice_provider.currency_by_id:
     alias: PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.tax_inclusion:
     alias: PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TaxInclusionChoiceProvider
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.language_by_id:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageByIdChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.all_languages:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.country_by_id:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIdChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.timezone_by_name:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TimezoneByNameChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.localization_pack_by_iso_code:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LocalizationPackByIsoCodeChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.non_installed_localization:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\NonInstalledLocalizationChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.country_by_iso_code:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIsoCodeChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.group_by_id:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\GroupByIdChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.carrier_by_reference_id:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CarrierByReferenceChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.order_state_by_id:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.invoice_model_by_name:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\InvoiceModelByNameChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.mail_method:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\MailMethodChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.contact_by_id:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ContactByIdChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.translation_type:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TranslationTypeChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.email_content_type:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\EmailContentTypeChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.theme_by_name:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemeByNameChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.theme_by_name_with_emails:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemeByNameWithEmailsChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.module_by_name:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ModuleByNameChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.status:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\StatusChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.canonical_redirect_type:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CanonicalRedirectTypeChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.category_delete_mode:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CategoryDeleteModeChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.customer_required_fields:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerRequiredFieldsChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.import_match_configuration:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImportMatchConfigurationChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.import_entity_field:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImportEntityFieldChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.customer_delete_method:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerDeleteMethodChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.theme_page_layouts:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemePageLayoutsChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.theme_zip:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemeZipChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.theme:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemeChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.currency_name_by_iso_code:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyNameByIsoCodeChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.permissions_choice_provider:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\PermissionsChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.default_meta_page_name:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\DefaultMetaPageNameChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.module_meta_page_name:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ModuleMetaPageNameChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.tax_address_type_choice_provider:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TaxAddressTypeChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.tax_rule_group_choice_provider:
     alias: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\TaxRuleGroupChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.cms_categories:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CmsCategoriesChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.accessible_tab:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TabChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.profile:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProfileChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.mail_themes:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\MailThemeChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice.provider.order_discount_type:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderDiscountTypeChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.address_required_fields:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\AddressRequiredFieldsChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.customer_addresses_by_id:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerAddressesChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.customer_service_order_messages_name:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerServiceOrderMessagesNameChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.customer_service_order_messages:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerServiceOrderMessagesChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.delivery_time_note_types_provider:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\DeliveryTimeNoteTypesProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.product_visibility_choice_provider:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProductVisibilityChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.product_condition_choice_provider:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProductConditionChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.out_of_stock_type_choice_provider:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OutOfStockTypeChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.pack_stock_type_choice_provider:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\PackStockTypeChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.customization_field_type_choice_provider:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomizationFieldTypeChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.product_images_choice_provider:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProductImagesChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.product_type_choice_provider:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProductTypeChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.zone_by_id:
     alias: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ZoneByIdChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.configurable_country_by_id:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIdConfigurableChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.specific_price_priority_choice_provider:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\SpecificPricePriorityChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.gender_choice_provider:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\GenderChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.contact_type_choice_provider:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ContactTypeChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.form.choice_provider.customer_thread_statuses_choice_provider:
     alias: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerThreadStatusesChoiceProvider'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0

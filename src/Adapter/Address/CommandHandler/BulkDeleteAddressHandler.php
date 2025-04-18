@@ -55,7 +55,7 @@ final class BulkDeleteAddressHandler extends AbstractAddressHandler implements B
                 if (!$this->deleteAddress($address)) {
                     $errors[] = $address->id;
                 }
-            } catch (AddressException $e) {
+            } catch (AddressException) {
                 $errors[] = $addressId->getValue();
             }
         }

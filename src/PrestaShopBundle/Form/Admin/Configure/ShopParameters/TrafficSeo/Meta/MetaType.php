@@ -168,26 +168,6 @@ class MetaType extends AbstractType
                     'required' => false,
                 ],
             ])
-            ->add('meta_keywords', TranslatableType::class, [
-                'required' => false,
-                'options' => [
-                    'constraints' => [
-                        new Regex([
-                            'pattern' => '/^[^<>={}]*$/u',
-                            'message' => $this->trans(
-                                '%s is invalid.',
-                                [],
-                                'Admin.Notifications.Error'
-                            ),
-                        ]),
-                    ],
-                    'attr' => [
-                        'class' => 'js-taggable-field',
-                        'placeholder' => $this->trans('Add tag', [], 'Admin.Actions'),
-                    ],
-                    'required' => false,
-                ],
-            ])
             ->add('url_rewrite', TranslatableType::class, [
                 'options' => [
                     'constraints' => [

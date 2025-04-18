@@ -87,60 +87,60 @@ final class CustomerOrderGridDefinitionFactory extends AbstractGridDefinitionFac
     {
         return (new ColumnCollection())
             ->add((new DataColumn('id_order'))
-            ->setName($this->trans('ID', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'id_order',
-            ])
+                ->setName($this->trans('ID', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'id_order',
+                ])
             )
             ->add((new DateTimeColumn('date_add'))
-            ->setName($this->trans('Date', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'date_add',
-                'format' => $this->contextDateFormat,
-                'clickable' => true,
-            ])
+                ->setName($this->trans('Date', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'date_add',
+                    'format' => $this->contextDateFormat,
+                    'clickable' => true,
+                ])
             )
             ->add((new DataColumn('payment'))
-            ->setName($this->trans('Payment', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'payment',
-            ])
+                ->setName($this->trans('Payment', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'payment',
+                ])
             )
             ->add((new HtmlColumn('status'))
-            ->setName($this->trans('Status', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'status',
-            ])
+                ->setName($this->trans('Status', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'status',
+                ])
             )
             ->add((new DataColumn('nb_products'))
-            ->setName($this->trans('Products', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'nb_products',
-            ])
+                ->setName($this->trans('Products', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'nb_products',
+                ])
             )
             ->add((new DataColumn('total_paid_tax_incl'))
-            ->setName($this->trans('Total (Tax incl.)', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'total_paid_tax_incl',
-            ])
+                ->setName($this->trans('Total (Tax incl.)', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'total_paid_tax_incl',
+                ])
             )
             ->add((new ActionColumn('actions'))
-            ->setName($this->trans('Actions', [], 'Admin.Global'))
-            ->setOptions([
-                'actions' => (new RowActionCollection())
-                    ->add(
-                    (new LinkRowAction('view'))
-                        ->setName($this->trans('View', [], 'Admin.Actions'))
-                        ->setIcon('zoom_in')
-                        ->setOptions([
-                            'route' => 'admin_orders_view',
-                            'route_param_name' => 'orderId',
-                            'route_param_field' => 'id_order',
-                            'use_inline_display' => true,
-                            'clickable_row' => true,
-                        ])
-                    ),
-            ])
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
+                ->setOptions([
+                    'actions' => (new RowActionCollection())
+                        ->add(
+                            (new LinkRowAction('view'))
+                                ->setName($this->trans('View', [], 'Admin.Actions'))
+                                ->setIcon('zoom_in')
+                                ->setOptions([
+                                    'route' => 'admin_orders_view',
+                                    'route_param_name' => 'orderId',
+                                    'route_param_field' => 'id_order',
+                                    'use_inline_display' => true,
+                                    'clickable_row' => true,
+                                ])
+                        ),
+                ])
             );
     }
 

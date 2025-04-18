@@ -43,10 +43,6 @@ class CommandAndQueryCollectorPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container): void
     {
-        if (!in_array($container->getParameter('kernel.environment'), ['dev', 'test'])) {
-            return;
-        }
-
         $commandsAndQueries = $this->findCommandsAndQueries($container);
         $container->setParameter('prestashop.commands_and_queries', $commandsAndQueries);
     }

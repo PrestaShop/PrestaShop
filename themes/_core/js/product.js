@@ -118,7 +118,7 @@ function showErrorNextToAddtoCartButton(errorMessage) {
  * @param {string} updateUrl
  */
 function updateProduct(event, eventType, updateUrl) {
-  const $productActions = $(prestashop.selectors.product.actions);
+  const $productActions = $(prestashop.selectors.product.actions).last();
   const $quantityWantedInput = $productActions.find(
     prestashop.selectors.quantityWanted,
   );
@@ -135,7 +135,9 @@ function updateProduct(event, eventType, updateUrl) {
   }
 
   if (preview !== null) {
-    preview = `&preview=${preview}`;
+    const adtoken = psGetRequestParameter('adtoken');
+    const idEmployee = psGetRequestParameter('id_employee');
+    preview = `&preview=${preview}&adtoken=${adtoken}&id_employee=${idEmployee}`;
   } else {
     preview = '';
   }
@@ -182,7 +184,7 @@ function updateProduct(event, eventType, updateUrl) {
         + preview,
       method: 'POST',
       data: {
-        quickview: $('.modal.quickview.in').length,
+        quickview: $('.modal.quickview.in, .modal.quickview.show').length,
         ajax: 1,
         action: 'refresh',
         quantity_wanted:

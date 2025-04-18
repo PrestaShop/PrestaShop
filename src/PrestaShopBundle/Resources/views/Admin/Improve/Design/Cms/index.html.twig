@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,29 +21,29 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
 
-  {% include '@PrestaShop/Admin/Improve/Design/Cms/Blocks/showcase_card.html.twig' %}
+  {{ include('@PrestaShop/Admin/Improve/Design/Cms/Blocks/showcase_card.html.twig') }}
 
   {% block cms_page_category_breadcrumb %}
-    {% include '@PrestaShop/Admin/Improve/Design/Cms/Blocks/breadcrumb.html.twig' %}
+    {{ include('@PrestaShop/Admin/Improve/Design/Cms/Blocks/breadcrumb.html.twig') }}
   {% endblock %}
 
   {% block cms_category_grid %}
-    {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': cmsCategoryGrid} %}
+    {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {grid: cmsCategoryGrid} %}
       {% block grid_panel_footer %}
         {% if app.request.query.get('id_cms_category') and app.request.query.get('id_cms_category') != cmsPageView.root_category_id %}
-          {% include '@PrestaShop/Admin/Improve/Design/Cms/Blocks/listing_panel_footer.html.twig' %}
+          {{ include('@PrestaShop/Admin/Improve/Design/Cms/Blocks/listing_panel_footer.html.twig') }}
         {% endif %}
       {% endblock %}
     {% endembed %}
   {% endblock %}
 
   {% block cms_grid %}
-    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': cmsGrid} %}
+    {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: cmsGrid}) }}
   {% endblock %}
 {% endblock %}
 

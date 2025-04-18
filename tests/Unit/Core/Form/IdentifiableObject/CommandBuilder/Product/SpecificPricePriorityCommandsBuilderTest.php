@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\RemoveSpecif
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\SetSpecificPricePriorityForProductCommand;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\SpecificPricePriorityCommandsBuilder;
 
-class SpecificPricePriorityCommandsBuilderTest extends AbstractProductCommandBuilderTest
+class SpecificPricePriorityCommandsBuilderTest extends AbstractProductCommandBuilderTestCase
 {
     /**
      * @dataProvider getExpectedCommands

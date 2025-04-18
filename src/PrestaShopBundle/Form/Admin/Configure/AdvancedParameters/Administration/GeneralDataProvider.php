@@ -61,19 +61,12 @@ final class GeneralDataProvider implements FormDataProviderInterface
      */
     private $sslEnabled;
 
-    /**
-     * @var bool
-     */
-    private $sslEnabledEverywhere;
-
     public function __construct(
         DataConfigurationInterface $dataConfiguration,
-        bool $sslEnabled,
-        bool $sslEnabledEverywhere
+        bool $sslEnabled
     ) {
         $this->dataConfiguration = $dataConfiguration;
         $this->sslEnabled = $sslEnabled;
-        $this->sslEnabledEverywhere = $sslEnabledEverywhere;
     }
 
     /**
@@ -146,7 +139,7 @@ final class GeneralDataProvider implements FormDataProviderInterface
     protected function validateSameSite(string $sameSite): bool
     {
         if ($sameSite === CookieOptions::SAMESITE_NONE) {
-            return $this->sslEnabled && $this->sslEnabledEverywhere;
+            return $this->sslEnabled;
         }
 
         return true;

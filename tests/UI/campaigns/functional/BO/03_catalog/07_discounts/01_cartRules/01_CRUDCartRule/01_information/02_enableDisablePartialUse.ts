@@ -1,31 +1,27 @@
-// Import utils
-import date from '@utils/date';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-import cartRulesPage from '@pages/BO/catalog/discounts';
-import addCartRulePage from '@pages/BO/catalog/discounts/add';
-import dashboardPage from '@pages/BO/dashboard';
-import {cartPage} from '@pages/FO/cart';
-import {homePage} from '@pages/FO/home';
-import foProductPage from '@pages/FO/product';
-import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
-import {myAccountPage} from '@pages/FO/myAccount';
-import foVouchersPage from '@pages/FO/myAccount/vouchers';
-import checkoutPage from '@pages/FO/checkout';
-
-// Import data
-import Products from '@data/demo/products';
-import CartRuleData from '@data/faker/cartRule';
-import Customers from '@data/demo/customers';
-import PaymentMethods from '@data/demo/paymentMethods';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+
+import {
+  boCartRulesPage,
+  boCartRulesCreatePage,
+  boDashboardPage,
+  boLoginPage,
+  type BrowserContext,
+  dataCustomers,
+  dataPaymentMethods,
+  dataProducts,
+  FakerCartRule,
+  foClassicCartPage,
+  foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
+  foClassicHomePage,
+  foClassicMyAccountPage,
+  foClassicMyVouchersPage,
+  foClassicProductPage,
+  type Page,
+  utilsDate,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_information_enableDisablePartialUse';
 
@@ -33,8 +29,8 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
   let browserContext: BrowserContext;
   let page: Page;
 
-  const pastDate: string = date.getDateFormat('yyyy-mm-dd', 'past');
-  const cartRuleEnabledPartialUse: CartRuleData = new CartRuleData({
+  const pastDate: string = utilsDate.getDateFormat('yyyy-mm-dd', 'past');
+  const cartRuleEnabledPartialUse: FakerCartRule = new FakerCartRule({
     name: 'partialUseEnabled',
     partialUse: true,
     dateFrom: pastDate,
@@ -45,7 +41,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
       tax: 'Tax included',
     },
   });
-  const cartRuleDisabledPartialUse: CartRuleData = new CartRuleData({
+  const cartRuleDisabledPartialUse: FakerCartRule = new FakerCartRule({
     name: 'partialUseEnabled',
     partialUse: false,
     dateFrom: pastDate,
@@ -57,51 +53,57 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
     },
   });
 
-  const amountValue: number = cartRuleEnabledPartialUse.discountAmount!.value - Products.demo_1.finalPrice;
+  const amountValue: number = cartRuleEnabledPartialUse.discountAmount!.value - dataProducts.demo_1.finalPrice;
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('case 1 : Create cart rule with enabled partial use then check it on FO', async () => {
     describe('Create cart rule in BO', async () => {
       it('should login in BO', async function () {
-        await loginCommon.loginBO(this, page);
+        await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+        await boLoginPage.goTo(page, global.BO.URL);
+        await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boDashboardPage.pageTitle);
       });
 
       it('should go to \'Catalog > Discounts\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.catalogParentLink,
-          dashboardPage.discountsLink,
+          boDashboardPage.catalogParentLink,
+          boDashboardPage.discountsLink,
         );
 
-        const pageTitle = await cartRulesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+        const pageTitle = await boCartRulesPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCartRulesPage.pageTitle);
       });
 
       it('should go to new cart rule page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToNewCartRulePage1', baseContext);
 
-        await cartRulesPage.goToAddNewCartRulesPage(page);
+        await boCartRulesPage.goToAddNewCartRulesPage(page);
 
-        const pageTitle = await addCartRulePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addCartRulePage.pageTitle);
+        const pageTitle = await boCartRulesCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCartRulesCreatePage.pageTitle);
       });
 
       it('should create cart rule', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'createCartRule2', baseContext);
 
-        const validationMessage = await addCartRulePage.createEditCartRules(page, cartRuleEnabledPartialUse);
-        await expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
+        const validationMessage = await boCartRulesCreatePage.createEditCartRules(page, cartRuleEnabledPartialUse);
+        expect(validationMessage).to.contains(boCartRulesCreatePage.successfulCreationMessage);
       });
     });
 
@@ -110,104 +112,104 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop1', baseContext);
 
         // View my shop and init pages
-        page = await addCartRulePage.viewMyShop(page);
-        await homePage.changeLanguage(page, 'en');
+        page = await boCartRulesCreatePage.viewMyShop(page);
+        await foClassicHomePage.changeLanguage(page, 'en');
 
-        const isHomePage = await homePage.isHomePage(page);
-        await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+        const isHomePage = await foClassicHomePage.isHomePage(page);
+        expect(isHomePage, 'Fail to open FO home page').to.eq(true);
       });
 
       it('should go to the first product page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFirstProductPage1', baseContext);
 
-        await homePage.goToProductPage(page, 1);
+        await foClassicHomePage.goToProductPage(page, 1);
 
-        const pageTitle = await foProductPage.getPageTitle(page);
-        await expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
+        const pageTitle = await foClassicProductPage.getPageTitle(page);
+        expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
       });
 
       it('should add product to cart and proceed to checkout', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart1', baseContext);
 
-        await foProductPage.addProductToTheCart(page);
+        await foClassicProductPage.addProductToTheCart(page);
 
-        const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-        await expect(notificationsNumber).to.be.equal(1);
+        const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
+        expect(notificationsNumber).to.be.equal(1);
       });
 
       it('should verify the total after discount', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'verifyTotalAfterDiscount1', baseContext);
 
-        const priceATI = await cartPage.getATIPrice(page);
-        await expect(priceATI).to.equal(0);
+        const priceATI = await foClassicCartPage.getATIPrice(page);
+        expect(priceATI).to.equal(0);
 
-        const cartRuleName = await cartPage.getCartRuleName(page);
-        await expect(cartRuleName).to.equal(cartRuleEnabledPartialUse.name);
+        const cartRuleName = await foClassicCartPage.getCartRuleName(page);
+        expect(cartRuleName).to.equal(cartRuleEnabledPartialUse.name);
 
-        const discountValue = await cartPage.getDiscountValue(page);
-        await expect(discountValue.toString()).to.equal(`-${Products.demo_1.finalPrice}`);
+        const discountValue = await foClassicCartPage.getDiscountValue(page);
+        expect(discountValue.toString()).to.equal(`-${dataProducts.demo_1.finalPrice}`);
       });
 
       it('should validate shopping cart and go to checkout page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToCheckoutPage', baseContext);
 
-        await cartPage.clickOnProceedToCheckout(page);
+        await foClassicCartPage.clickOnProceedToCheckout(page);
 
-        const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
-        await expect(isCheckoutPage).to.be.true;
+        const isCheckoutPage = await foClassicCheckoutPage.isCheckoutPage(page);
+        expect(isCheckoutPage).to.eq(true);
       });
 
       it('should sign in by created customer', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
-        await checkoutPage.clickOnSignIn(page);
+        await foClassicCheckoutPage.clickOnSignIn(page);
 
-        const isCustomerConnected = await checkoutPage.customerLogin(page, Customers.johnDoe);
-        await expect(isCustomerConnected, 'Customer is not connected!').to.be.true;
+        const isCustomerConnected = await foClassicCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
+        expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
       });
 
       it('should go to delivery step', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
 
         // Address step - Go to delivery step
-        const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-        await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+        const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
+        expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
       });
 
       it('should go to payment step', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
 
         // Delivery step - Go to payment step
-        const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-        await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+        const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
+        expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
       });
 
       it('should confirm the order', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
         // Payment step - Choose payment step
-        await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+        await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
         // Check the confirmation message
-        const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-        await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+        const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+        expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
       });
 
       it('should go to vouchers page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFOVouchersPage', baseContext);
 
-        await homePage.goToMyAccountPage(page);
-        await myAccountPage.goToVouchersPage(page);
+        await foClassicHomePage.goToMyAccountPage(page);
+        await foClassicMyAccountPage.goToVouchersPage(page);
 
-        const pageHeaderTitle = await foVouchersPage.getPageTitle(page);
-        await expect(pageHeaderTitle).to.equal(foVouchersPage.pageTitle);
+        const pageHeaderTitle = await foClassicMyVouchersPage.getPageTitle(page);
+        expect(pageHeaderTitle).to.equal(foClassicMyVouchersPage.pageTitle);
       });
 
       it('should get the number of vouchers', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfVouchers', baseContext);
 
-        const numberOfVouchers = await foVouchersPage.getNumberOfVouchers(page);
-        await expect(numberOfVouchers).to.equal(1);
+        const numberOfVouchers = await foClassicMyVouchersPage.getNumberOfVouchers(page);
+        expect(numberOfVouchers).to.equal(1);
       });
 
       [
@@ -220,12 +222,12 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         it(`should check the voucher ${cartRule.args.column} n°${cartRule.args.row}`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkVoucher${index}`, baseContext);
 
-          const cartRuleTextColumn = await foVouchersPage.getTextColumnFromTableVouchers(
+          const cartRuleTextColumn = await foClassicMyVouchersPage.getTextColumnFromTableVouchers(
             page,
             cartRule.args.row,
             cartRule.args.column,
           );
-          await expect(cartRuleTextColumn).to.equal(cartRule.args.value);
+          expect(cartRuleTextColumn).to.equal(cartRule.args.value);
         });
       });
     });
@@ -235,43 +237,43 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo1', baseContext);
 
         // Close tab and init other page objects with new current tab
-        page = await homePage.closePage(browserContext, page, 0);
+        page = await foClassicHomePage.closePage(browserContext, page, 0);
 
-        await cartRulesPage.reloadPage(page);
+        await boCartRulesPage.reloadPage(page);
 
-        const pageTitle = await cartRulesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+        const pageTitle = await boCartRulesPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCartRulesPage.pageTitle);
       });
 
       it('should check the number of cart rules', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfCartRules', baseContext);
 
-        const numberOfCartRules = await cartRulesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfCartRules).to.equal(2);
+        const numberOfCartRules = await boCartRulesPage.getNumberOfElementInGrid(page);
+        expect(numberOfCartRules).to.equal(2);
       });
 
       it('should go to edit the first cart rule', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToEditCartRulePage', baseContext);
 
-        await cartRulesPage.goToEditCartRulePage(page, 1);
+        await boCartRulesPage.goToEditCartRulePage(page, 1);
 
-        const pageTitle = await addCartRulePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addCartRulePage.editPageTitle);
+        const pageTitle = await boCartRulesCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCartRulesCreatePage.editPageTitle);
       });
 
       it('should check the cart rule limit customer', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkCartRuleCustomer', baseContext);
 
-        const customer = await addCartRulePage.getLimitSingleCustomer(page);
-        await expect(customer).to.equal(
-          `${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName} (${Customers.johnDoe.email})`);
+        const customer = await boCartRulesCreatePage.getLimitSingleCustomer(page);
+        expect(customer).to.equal(
+          `${dataCustomers.johnDoe.firstName} ${dataCustomers.johnDoe.lastName} (${dataCustomers.johnDoe.email})`);
       });
 
       it('should check the cart rule amount value', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkCartRuleAmountValue', baseContext);
 
-        const amount = await addCartRulePage.getAmountValue(page);
-        await expect(amount).to.equal(amountValue.toString());
+        const amount = await boCartRulesCreatePage.getAmountValue(page);
+        expect(amount).to.equal(amountValue.toString());
       });
     });
 
@@ -279,17 +281,17 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
       it('should click on cancel button', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnCancelButton', baseContext);
 
-        await addCartRulePage.clickOnCancelButton(page);
+        await boCartRulesCreatePage.clickOnCancelButton(page);
 
-        const pageTitle = await cartRulesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+        const pageTitle = await boCartRulesPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCartRulesPage.pageTitle);
       });
 
       it('should bulk delete cart rules', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCartRules', baseContext);
 
-        const deleteTextResult = await cartRulesPage.bulkDeleteCartRules(page);
-        await expect(deleteTextResult).to.be.contains(cartRulesPage.successfulMultiDeleteMessage);
+        const deleteTextResult = await boCartRulesPage.bulkDeleteCartRules(page);
+        expect(deleteTextResult).to.be.contains(boCartRulesPage.successfulMultiDeleteMessage);
       });
     });
   });
@@ -299,17 +301,17 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
       it('should go to new cart rule page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToNewCartRulePage2', baseContext);
 
-        await cartRulesPage.goToAddNewCartRulesPage(page);
+        await boCartRulesPage.goToAddNewCartRulesPage(page);
 
-        const pageTitle = await addCartRulePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addCartRulePage.pageTitle);
+        const pageTitle = await boCartRulesCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCartRulesCreatePage.pageTitle);
       });
 
       it('should create cart rule', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'createCartRule1', baseContext);
 
-        const validationMessage = await addCartRulePage.createEditCartRules(page, cartRuleDisabledPartialUse);
-        await expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
+        const validationMessage = await boCartRulesCreatePage.createEditCartRules(page, cartRuleDisabledPartialUse);
+        expect(validationMessage).to.contains(boCartRulesCreatePage.successfulCreationMessage);
       });
     });
 
@@ -318,95 +320,95 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop2', baseContext);
 
         // View my shop and init pages
-        page = await addCartRulePage.viewMyShop(page);
-        await homePage.changeLanguage(page, 'en');
+        page = await boCartRulesCreatePage.viewMyShop(page);
+        await foClassicHomePage.changeLanguage(page, 'en');
 
-        const isHomePage = await homePage.isHomePage(page);
-        await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+        const isHomePage = await foClassicHomePage.isHomePage(page);
+        expect(isHomePage, 'Fail to open FO home page').to.eq(true);
       });
 
       it('should go to the first product page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFirstProductPage2', baseContext);
 
-        await homePage.goToProductPage(page, 1);
+        await foClassicHomePage.goToProductPage(page, 1);
 
-        const pageTitle = await foProductPage.getPageTitle(page);
-        await expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
+        const pageTitle = await foClassicProductPage.getPageTitle(page);
+        expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
       });
 
       it('should add product to cart and proceed to checkout', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart2', baseContext);
 
-        await foProductPage.addProductToTheCart(page);
+        await foClassicProductPage.addProductToTheCart(page);
 
-        const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-        await expect(notificationsNumber).to.be.equal(1);
+        const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
+        expect(notificationsNumber).to.be.equal(1);
       });
 
       it('should verify the total after discount', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'verifyTotalAfterDiscount2', baseContext);
 
-        const priceATI = await cartPage.getATIPrice(page);
-        await expect(priceATI).to.equal(0);
+        const priceATI = await foClassicCartPage.getATIPrice(page);
+        expect(priceATI).to.equal(0);
 
-        const cartRuleName = await cartPage.getCartRuleName(page);
-        await expect(cartRuleName).to.equal(cartRuleEnabledPartialUse.name);
+        const cartRuleName = await foClassicCartPage.getCartRuleName(page);
+        expect(cartRuleName).to.equal(cartRuleEnabledPartialUse.name);
 
-        const discountValue = await cartPage.getDiscountValue(page);
-        await expect(discountValue.toString()).to.equal(`-${Products.demo_1.finalPrice}`);
+        const discountValue = await foClassicCartPage.getDiscountValue(page);
+        expect(discountValue.toString()).to.equal(`-${dataProducts.demo_1.finalPrice}`);
       });
 
       it('should validate shopping cart and go to checkout page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToCheckoutPage2', baseContext);
 
-        await cartPage.clickOnProceedToCheckout(page);
+        await foClassicCartPage.clickOnProceedToCheckout(page);
 
-        const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
-        await expect(isCheckoutPage).to.be.true;
+        const isCheckoutPage = await foClassicCheckoutPage.isCheckoutPage(page);
+        expect(isCheckoutPage).to.eq(true);
       });
 
       it('should go to delivery step', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep2', baseContext);
 
         // Address step - Go to delivery step
-        const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-        await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+        const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
+        expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
       });
 
       it('should go to payment step', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep2', baseContext);
 
         // Delivery step - Go to payment step
-        const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-        await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+        const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
+        expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
       });
 
       it('should confirm the order', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder2', baseContext);
 
         // Payment step - Choose payment step
-        await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+        await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
         // Check the confirmation message
-        const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-        await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+        const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+        expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
       });
 
       it('should go to vouchers page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFOVouchersPage2', baseContext);
 
-        await homePage.goToMyAccountPage(page);
-        await myAccountPage.goToVouchersPage(page);
+        await foClassicHomePage.goToMyAccountPage(page);
+        await foClassicMyAccountPage.goToVouchersPage(page);
 
-        const pageHeaderTitle = await foVouchersPage.getPageTitle(page);
-        await expect(pageHeaderTitle).to.equal(foVouchersPage.pageTitle);
+        const pageHeaderTitle = await foClassicMyVouchersPage.getPageTitle(page);
+        expect(pageHeaderTitle).to.equal(foClassicMyVouchersPage.pageTitle);
       });
 
       it('should get the number of vouchers', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfVouchers2', baseContext);
 
-        const numberOfVouchers = await foVouchersPage.getNumberOfVouchers(page);
-        await expect(numberOfVouchers).to.equal(0);
+        const numberOfVouchers = await foClassicMyVouchersPage.getNumberOfVouchers(page);
+        expect(numberOfVouchers).to.equal(0);
       });
     });
 
@@ -415,19 +417,19 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo2', baseContext);
 
         // Close tab and init other page objects with new current tab
-        page = await homePage.closePage(browserContext, page, 0);
+        page = await foClassicHomePage.closePage(browserContext, page, 0);
 
-        await cartRulesPage.reloadPage(page);
+        await boCartRulesPage.reloadPage(page);
 
-        const pageTitle = await cartRulesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+        const pageTitle = await boCartRulesPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCartRulesPage.pageTitle);
       });
 
       it('should check the number of cart rules', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfCartRules2', baseContext);
 
-        const numberOfCartRules = await cartRulesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfCartRules).to.equal(1);
+        const numberOfCartRules = await boCartRulesPage.getNumberOfElementInGrid(page);
+        expect(numberOfCartRules).to.equal(1);
       });
     });
 
@@ -435,8 +437,8 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
       it('should delete cart rule', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'deleteCartRule', baseContext);
 
-        const deleteTextResult = await cartRulesPage.deleteCartRule(page);
-        await expect(deleteTextResult).to.be.contains(cartRulesPage.successfulDeleteMessage);
+        const deleteTextResult = await boCartRulesPage.deleteCartRule(page);
+        expect(deleteTextResult).to.be.contains(boCartRulesPage.successfulDeleteMessage);
       });
     });
   });

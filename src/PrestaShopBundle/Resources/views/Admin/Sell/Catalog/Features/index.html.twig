@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,19 +21,21 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {% block content %}
-  {{ ps.infotip(settingsTipMessage, true) }}
+  {% if settingsTipMessage is not empty %}
+    {{ ps.infotip(settingsTipMessage, true) }}
+  {% endif %}
   {% block feature_group_showcase_card %}
-      {% include '@PrestaShop/Admin/Sell/Catalog/Features/Blocks/showcase_card.html.twig' %}
+      {{ include('@PrestaShop/Admin/Sell/Catalog/Features/Blocks/showcase_card.html.twig') }}
   {% endblock %}
   {% block features_listing %}
-    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': featureGrid} %}
+    {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: featureGrid}) }}
   {% endblock %}
 {% endblock %}
 

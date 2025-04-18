@@ -56,6 +56,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\AddProductToOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 use Product;
 use ProductAttribute;
 use Shop;
@@ -209,7 +211,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 $command->getProductId()->getValue(),
                 null !== $command->getCombinationId() ? $command->getCombinationId()->getValue() : 0,
                 $command->getProductPriceTaxExcluded(),
-                $command->getProductPriceTaxIncluded()
+                $command->getProductPriceTaxIncluded(),
+                0
             );
 
             $this->updateAffectedOrderDetails(
@@ -243,8 +246,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      * @param Cart $cart
      * @param array $cartProducts
      *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     private function createOrderDetails(Order $order, ?OrderInvoice $invoice, Cart $cart, array $cartProducts): void
     {
@@ -267,8 +270,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      * @param CartProductUpdate[] $updatedProducts
      *
      * @throws OrderException
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     private function updateAffectedOrderDetails(
         Order $order,
@@ -562,7 +565,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      */
     private function checkProductInStock(Product $product, AddProductToOrderCommand $command, int $shopId): void
     {
-        //check if product is available in stock
+        // check if product is available in stock
         if (!Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($command->getProductId()->getValue()))) {
             $combinationId = null !== $command->getCombinationId() ? $command->getCombinationId()->getValue() : 0;
             $availableQuantity = StockAvailable::getQuantityAvailableByProduct(

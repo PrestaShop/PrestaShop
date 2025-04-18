@@ -54,7 +54,7 @@ class PackItemsManager
     }
 
     /**
-     * Get all Packs that contains the given item in the corresponding declination.
+     * Get all Packs that contains the given item in the corresponding combination.
      *
      * @param Product $item
      * @param int $item_attribute_id

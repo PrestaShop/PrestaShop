@@ -59,14 +59,14 @@ abstract class AbstractFiltersBuilder implements FiltersBuilderInterface
     /**
      * {@inheritdoc}
      */
-    abstract public function buildFilters(Filters $filters = null);
+    abstract public function buildFilters(?Filters $filters = null);
 
     /**
      * @param Filters|null $filters
      *
      * @return string
      */
-    protected function getFilterId(Filters $filters = null)
+    protected function getFilterId(?Filters $filters = null)
     {
         if (null === $filters) {
             return $this->filterId;

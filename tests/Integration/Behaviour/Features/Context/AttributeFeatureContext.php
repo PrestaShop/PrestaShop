@@ -92,6 +92,28 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Given /^I switch positions of attributes "(.+)" and "(.+)"$/
+     *
+     * @param string $attributeReference
+     * @param string $secondAttributeReference
+     *
+     * @return void
+     */
+    public function switchAttributePosition(string $attributeReference, string $secondAttributeReference): void
+    {
+        $attributeId = $this->getSharedStorage()->get($attributeReference);
+        $secondAttributeId = $this->getSharedStorage()->get($secondAttributeReference);
+        $attribute = new ProductAttribute($attributeId);
+        $secondAttribute = new ProductAttribute($secondAttributeId);
+
+        $position = (int) $attribute->position;
+        $attribute->position = $secondAttribute->position;
+        $secondAttribute->position = $position;
+        $attribute->save();
+        $secondAttribute->save();
+    }
+
+    /**
      * @Given attribute ":attributeReference" is not associated to shops ":shopReferences"
      *
      * @param string $attributeReference

@@ -35,6 +35,8 @@ use PrestaShop\PrestaShop\Adapter\HookManager;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
+use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotFoundException;
 use Symfony\Component\Finder\Finder;
 use Throwable;
 
@@ -74,25 +76,19 @@ class ModuleRepository implements ModuleRepositoryInterface
     /** @var Module[] */
     private $modulesFromHook;
 
-    /**
-     * @var int
-     */
-    private $contextLangId;
-
     public function __construct(
         ModuleDataProvider $moduleDataProvider,
         AdminModuleDataProvider $adminModuleDataProvider,
         CacheProvider $cacheProvider,
         HookManager $hookManager,
         string $modulePath,
-        int $contextLangId
+        private LanguageContext $languageContext,
     ) {
         $this->moduleDataProvider = $moduleDataProvider;
         $this->adminModuleDataProvider = $adminModuleDataProvider;
         $this->cacheProvider = $cacheProvider;
         $this->hookManager = $hookManager;
         $this->modulePath = $modulePath;
-        $this->contextLangId = $contextLangId;
     }
 
     public function getList(): ModuleCollection
@@ -128,6 +124,19 @@ class ModuleRepository implements ModuleRepositoryInterface
         return $this->getList()->filter(static function (Module $module) {
             return $module->isConfigurable() && $module->isActive() && $module->hasValidInstance() && !empty($module->getInstance()->warning);
         });
+    }
+
+    /**
+     * Returns an instance of a present module, if the module is not in the modules folder an exception is thrown.
+     */
+    public function getPresentModule(string $technicalName): Module
+    {
+        $module = $this->getModule($technicalName);
+        if (!$module->disk->get('is_present')) {
+            throw new ModuleNotFoundException();
+        }
+
+        return $module;
     }
 
     public function getUpgradableModules(): ModuleCollection
@@ -211,13 +220,11 @@ class ModuleRepository implements ModuleRepositoryInterface
                         }
                     }
                 }
+            }
 
-                return true;
-            } else {
-                $cacheKey = $this->getCacheKey($moduleName);
-                if ($this->cacheProvider->contains($cacheKey)) {
-                    return $this->cacheProvider->delete($cacheKey);
-                }
+            $cacheKey = $this->getCacheKey($moduleName);
+            if ($this->cacheProvider->contains($cacheKey)) {
+                return $this->cacheProvider->delete($cacheKey);
             }
         }
 
@@ -234,7 +241,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     {
         $shop = $shopId ? [$shopId] : Shop::getContextListShopID();
 
-        return $moduleName . implode('-', $shop) . $this->contextLangId;
+        return $moduleName . implode('-', $shop) . $this->languageContext->getId();
     }
 
     private function getModuleAttributes(string $moduleName, bool $isValid): array
@@ -243,7 +250,7 @@ class ModuleRepository implements ModuleRepositoryInterface
         if ($isValid) {
             try {
                 $tmpModule = ModuleLegacy::getInstanceByName($moduleName);
-            } catch (Throwable $e) {
+            } catch (Throwable) {
                 return $attributes;
             }
             foreach (self::MODULE_ATTRIBUTES as $attribute) {
@@ -262,12 +269,18 @@ class ModuleRepository implements ModuleRepositoryInterface
     private function getModuleDiskAttributes(string $moduleName, bool $isValid, int $filemtime): array
     {
         $path = $this->modulePath . $moduleName;
+        if ($isValid) {
+            $moduleConfig = ModuleLegacy::loadModuleXMLConfig($moduleName);
+            $version = $moduleConfig['version'] ?? null;
+        } else {
+            $version = null;
+        }
 
         return [
             'filemtime' => $filemtime,
             'is_present' => $filemtime > 0,
             'is_valid' => $isValid,
-            'version' => $isValid ? ModuleLegacy::getInstanceByName($moduleName)->version : null,
+            'version' => $version,
             'path' => $path,
         ];
     }
@@ -287,6 +300,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     private function getModulesFromHook()
     {
         if ($this->modulesFromHook === null) {
+            // An array [module_name => module_output] will be returned
             $modulesFromHook = $this->hookManager->exec('actionListModules', [], null, true);
             $modulesFromHook = array_values($modulesFromHook ?? []);
 
@@ -307,7 +321,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     {
         try {
             $externalModules = $this->getModulesFromHook();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $modules->addError($e);
 
             return $modules;
@@ -338,7 +352,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     {
         try {
             $modulesFromHook = $this->getModulesFromHook();
-        } catch (\Throwable $e) {
+        } catch (Throwable) {
             return $module;
         }
 

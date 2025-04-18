@@ -23,6 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 use PrestaShop\PrestaShop\Adapter\EntityTranslation\DataLangFactory;
 use PrestaShop\PrestaShop\Adapter\EntityTranslation\EntityTranslatorFactory;
 use PrestaShop\PrestaShop\Adapter\EntityTranslation\Exception\DataLangClassNameNotFoundException;
@@ -36,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\RTL\Processor as RtlStylesheetProcessor;
+use PrestaShopBundle\Translation\TranslatorInterface;
 use Symfony\Component\Intl\Countries;
 
 class LanguageCore extends ObjectModel implements LanguageInterface
@@ -354,7 +356,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             $mPath_to = _PS_MAIL_DIR_ . (string) $iso_to . '/';
         }
 
-        $lFiles = ['admin.php', 'errors.php', 'fields.php', 'pdf.php', 'tabs.php'];
+        $lFiles = ['admin.php', 'errors.php', 'pdf.php', 'tabs.php'];
 
         // Added natives mails files
         $mFiles = [
@@ -495,7 +497,6 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     {
         $tables = Db::getInstance()->executeS('SHOW TABLES LIKE \'' . str_replace('_', '\\_', _DB_PREFIX_) . '%\_lang\' ');
         $langTables = [];
-
         foreach ($tables as $table) {
             foreach ($table as $t) {
                 $langTables[] = $t;
@@ -520,8 +521,8 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     }
 
     /**
-     * duplicate translated rows from xxx_lang tables
-     * from the shop default language.
+     * Creates new entries in _lang tables using the data from default language.
+     * If data already exist in that language, they won't be overwritten.
      *
      * @param string $tableName
      * @param int $shopDefaultLangId
@@ -529,56 +530,70 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      *
      * @return bool
      *
-     * @throws \PrestaShopDatabaseException
+     * @throws PrestaShopDatabaseException
      */
     private function duplicateRowsFromDefaultShopLang($tableName, $shopDefaultLangId, $shopId)
     {
-        preg_match('#^' . preg_quote(_DB_PREFIX_) . '(.+)_lang$#i', $tableName, $m);
-        $identifier = 'id_' . $m[1];
-
-        $fields = [];
-        // We will check if the table contains a column "id_shop"
-        // If yes, we will add "id_shop" as a WHERE condition in queries copying data from default language
-        $shop_field_exists = $primary_key_exists = false;
+        // We load all columns from the table
         $columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `' . $tableName . '`');
+
+        // We check if the table contains a column "id_shop".
+        // If yes, we will add "id_shop" as a WHERE condition in queries copying data from default language.
+        $idShopColumnExists = false;
+        $idLangColumnExists = false;
+
+        // We extract the column names from the table
+        $columnNames = [];
         foreach ($columns as $column) {
-            $fields[] = '`' . $column['Field'] . '`';
+            // Build field to our list
+            $columnNames[] = $column['Field'];
+
+            // Save info that we will need to use id_shop
             if ($column['Field'] == 'id_shop') {
-                $shop_field_exists = true;
+                $idShopColumnExists = true;
             }
-            if ($column['Field'] == $identifier) {
-                $primary_key_exists = true;
+
+            // Check if the table actually has id_lang column, so we don't crash for some custom tables
+            if ($column['Field'] == 'id_lang') {
+                $idLangColumnExists = true;
             }
         }
-        $fields = implode(',', $fields);
 
-        if (!$primary_key_exists) {
+        // If the table does not contain id_lang, nothing to do here
+        if ($idLangColumnExists === false) {
             return true;
         }
 
-        $sql = 'INSERT IGNORE INTO `' . $tableName . '` (' . $fields . ') (SELECT ';
+        // Format insert fields, they are just normal column names without any prefix.
+        $insertFields = [];
+        foreach ($columnNames as $columnName) {
+            $insertFields[] = '`' . $columnName . '`';
+        }
 
-        // For each column, copy data from default language
-        reset($columns);
-        $selectQueries = [];
-        foreach ($columns as $column) {
-            if ($identifier != $column['Field'] && $column['Field'] != 'id_lang') {
-                $selectQueries[] = '(
-							SELECT `' . bqSQL($column['Field']) . '`
-							FROM `' . bqSQL($tableName) . '` tl
-							WHERE tl.`id_lang` = ' . (int) $shopDefaultLangId . '
-							' . ($shop_field_exists ? ' AND tl.`id_shop` = ' . (int) $shopId : '') . '
-							AND tl.`' . bqSQL($identifier) . '` = `' . bqSQL(str_replace('_lang', '', $tableName)) . '`.`' . bqSQL($identifier) . '`
-						)';
+        /*
+         * Now let's format select fields. We will prefix every column with our table prefix, with one exception.
+         *
+         * For language field, we will use the unique language ID from lang table we cross join. Otherwise we would
+         * be inserting the ID of default language for every row.
+         */
+        $selectFields = [];
+        foreach ($columnNames as $columnName) {
+            if ($columnName == 'id_lang') {
+                $selectFields[] = 'l.`id_lang`';
             } else {
-                $selectQueries[] = '`' . bqSQL($column['Field']) . '`';
+                $selectFields[] = 'tl.`' . $columnName . '`';
             }
         }
-        $sql .= implode(',', $selectQueries);
-        $sql .= ' FROM `' . _DB_PREFIX_ . 'lang` CROSS JOIN `' . bqSQL(str_replace('_lang', '', $tableName)) . '` ';
 
-        // prevent insert with where initial data exists
-        $sql .= ' WHERE `' . bqSQL($identifier) . '` IN (SELECT `' . bqSQL($identifier) . '` FROM `' . bqSQL($tableName) . '`) )';
+        // Format the SQL query and run it
+        // Entries which already exist are ignored, only new ones are added.
+        $sql = '
+        INSERT IGNORE INTO `' . $tableName . '` (' . implode(', ', $insertFields) . ')
+        SELECT ' . implode(', ', $selectFields) . '
+        FROM `' . $tableName . '` tl
+        CROSS JOIN `' . _DB_PREFIX_ . 'lang` l
+        WHERE tl.id_lang = ' . (int) $shopDefaultLangId .
+        ($idShopColumnExists ? ' AND tl.`id_shop` = ' . (int) $shopId : '');
 
         return Db::getInstance()->execute($sql);
     }
@@ -593,16 +608,34 @@ class LanguageCore extends ObjectModel implements LanguageInterface
                 $this->iso_code = Language::getIsoById($this->id);
             }
 
-            // Database translations deletion
+            // Now let's delete all entries in _lang tables for given languages
             $result = Db::getInstance()->executeS('SHOW TABLES FROM `' . _DB_NAME_ . '`');
+
+            // A key we will be searching for, database returns it in this weird format
             $tableNameKey = 'Tables_in_' . _DB_NAME_;
 
             foreach ($result as $row) {
-                if (isset($row[$tableNameKey]) && !empty($row[$tableNameKey]) && preg_match('/_lang$/', $row[$tableNameKey])) {
-                    if (!Db::getInstance()->execute('DELETE FROM `' . $row[$tableNameKey] . '` WHERE `id_lang` = ' . (int) $this->id)) {
-                        return false;
+                // If we received empty table name for some reason or the language name does not end with _lang
+                if (empty($row[$tableNameKey]) || !preg_match('/_lang$/', $row[$tableNameKey])) {
+                    continue;
+                }
+
+                // We check if this table contains id_lang column
+                $columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `' . $row[$tableNameKey] . '`');
+                $idLangColumnExists = false;
+                foreach ($columns as $column) {
+                    if ($column['Field'] == 'id_lang') {
+                        $idLangColumnExists = true;
                     }
                 }
+
+                // If it doesn't, nothing to delete
+                if ($idLangColumnExists === false) {
+                    continue;
+                }
+
+                // Delete all entries for this language ID
+                Db::getInstance()->execute('DELETE FROM `' . $row[$tableNameKey] . '` WHERE `id_lang` = ' . (int) $this->id);
             }
 
             // Delete tags
@@ -658,12 +691,8 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     /**
      * {@inheritdoc}
      */
-    public function deleteSelection($selection)
+    public function deleteSelection(array $selection)
     {
-        if (!is_array($selection)) {
-            die(Tools::displayError());
-        }
-
         $result = true;
         foreach ($selection as $id) {
             $language = new Language($id);
@@ -731,7 +760,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             return false;
         }
 
-        return static::$_LANGUAGES[(int) ($id_lang)];
+        return static::$_LANGUAGES[(int) $id_lang];
     }
 
     /**
@@ -1289,6 +1318,13 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         $zipArchive->extractTo(self::SF_TRANSLATIONS_DIR);
         $zipArchive->close();
 
+        // As soon as new XLF catalogue is installed the translator catalogues are not up to date
+        // anymore, so we force them to reload
+        self::loadAdminTranslatorLocale($locale, true);
+
+        // Symfony cache must be cleared after new language is installed
+        Tools::clearSf2Cache();
+
         return true;
     }
 
@@ -1444,7 +1480,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     {
         $lang_pack = static::getLangDetails($iso);
         if (!empty($lang_pack['locale'])) {
-            //Update locale field if empty (manually created, or imported without it)
+            // Update locale field if empty (manually created, or imported without it)
             $language = new Language(Language::getIdByIso($iso));
             if ($language->id && empty($language->locale)) {
                 $language->locale = $lang_pack['locale'];
@@ -1525,7 +1561,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     public static function updateMultilangTables(Language $language, array $tablesToUpdate)
     {
-        $translator = SymfonyContainer::getInstance()->get('translator');
+        $translator = SymfonyContainer::getInstance()->get(TranslatorInterface::class);
 
         foreach ($tablesToUpdate as $tableName) {
             $className = (new DataLangFactory(_DB_PREFIX_, $translator))
@@ -1585,7 +1621,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     public static function updateMultilangFromClass($table, $className, $lang)
     {
-        $translator = SymfonyContainer::getInstance()->get('translator');
+        $translator = SymfonyContainer::getInstance()->get(TranslatorInterface::class);
 
         try {
             $classObject = (new DataLangFactory(_DB_PREFIX_, $translator))
@@ -1613,7 +1649,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * @param LanguageCore $lang
      * @param Shop $shop
      *
-     * @throws \PrestaShopDatabaseException
+     * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
     private static function updateMultilangFromClassForShop(DataLangCore $classObject, self $lang, Shop $shop)
@@ -1621,17 +1657,25 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         $shopDefaultLangId = (int) Configuration::get('PS_LANG_DEFAULT', null, $shop->id_shop_group, $shop->id);
         $shopDefaultLanguage = new Language($shopDefaultLangId);
 
-        $sfContainer = SymfonyContainer::getInstance();
-        $translator = $sfContainer->get('translator');
-        if (!$translator->isLanguageLoaded($shopDefaultLanguage->locale)) {
-            $sfContainer->get('prestashop.translation.translator_language_loader')
-                ->setIsAdminContext(true)
-                ->loadLanguage($translator, $shopDefaultLanguage->locale);
-        }
+        self::loadAdminTranslatorLocale($shopDefaultLanguage->locale, false);
+        self::loadAdminTranslatorLocale($lang->locale, false);
 
+        $sfContainer = SymfonyContainer::getInstance();
+        $translator = $sfContainer->get(TranslatorInterface::class);
         (new EntityTranslatorFactory($translator))
             ->build($classObject)
             ->translate($lang->id, $shop->id);
+    }
+
+    private static function loadAdminTranslatorLocale(string $locale, bool $clearCatalogue): void
+    {
+        $sfContainer = SymfonyContainer::getInstance();
+        $translator = $sfContainer->get(TranslatorInterface::class);
+        if (!$translator->isLanguageLoaded($locale) || $clearCatalogue) {
+            $languageLoader = $sfContainer->get('prestashop.translation.translator_language_loader');
+            $languageLoader->setIsAdminContext(true);
+            $languageLoader->loadLanguage($translator, $locale, true, null, $clearCatalogue);
+        }
     }
 
     /**
@@ -1686,7 +1730,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     /**
      * @return string return the language locale, or its code by default
      */
-    public function getLocale()
+    public function getLocale(): string
     {
         return !empty($this->locale) ?
             $this->locale :
@@ -1696,7 +1740,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     /**
      * {@inheritdoc}
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -1704,7 +1748,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -1712,7 +1756,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     /**
      * {@inheritdoc}
      */
-    public function getIsoCode()
+    public function getIsoCode(): string
     {
         return $this->iso_code;
     }
@@ -1720,7 +1764,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     /**
      * {@inheritdoc}
      */
-    public function getLanguageCode()
+    public function getLanguageCode(): string
     {
         return $this->language_code;
     }
@@ -1728,9 +1772,25 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     /**
      * {@inheritdoc}
      */
-    public function isRTL()
+    public function isRTL(): bool
     {
         return $this->is_rtl;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDateFormat(): string
+    {
+        return $this->date_format_lite;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDateTimeFormat(): string
+    {
+        return $this->date_format_full;
     }
 
     /**

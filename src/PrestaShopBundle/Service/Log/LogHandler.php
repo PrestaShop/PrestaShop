@@ -35,6 +35,7 @@ use Symfony\Component\DependencyInjection\Container;
  * @phpstan-import-type LevelName from Logger
  * @phpstan-import-type Level from Logger
  * @phpstan-import-type Record from Logger
+ *
  * @phpstan-type FormattedRecord array{message: string, context: mixed[], level: Level, level_name: LevelName, channel: string, datetime: \DateTimeImmutable, extra: mixed[], formatted: mixed}
  */
 class LogHandler extends AbstractProcessingHandler

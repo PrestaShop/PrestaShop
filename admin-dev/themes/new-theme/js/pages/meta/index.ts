@@ -23,57 +23,42 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Grid from '@components/grid/grid';
-import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
-import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
-import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
-import SortingExtension from '@components/grid/extension/sorting-extension';
-import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
-import SubmitGridExtension from '@components/grid/extension/submit-grid-action-extension';
-import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
-import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
-import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import ShowcaseCard from '@components/showcase-card/showcase-card';
 import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
-import TaggableField from '@components/taggable-field';
-import TranslatableInput from '@components/translatable-input';
-import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
 import MetaPageNameOptionHandler from '@pages/meta/meta-page-name-option-handler';
-import TextWithRecommendedLengthCounter from '@components/form/text-with-recommended-length-counter';
 
 const {$} = window;
 
 $(() => {
-  const meta = new Grid('meta');
-  meta.addExtension(new ReloadListActionExtension());
-  meta.addExtension(new ExportToSqlManagerExtension());
-  meta.addExtension(new FiltersResetExtension());
-  meta.addExtension(new SortingExtension());
-  meta.addExtension(new LinkRowActionExtension());
-  meta.addExtension(new SubmitGridExtension());
-  meta.addExtension(new SubmitBulkExtension());
-  meta.addExtension(new SubmitRowActionExtension());
-  meta.addExtension(new BulkActionCheckboxExtension());
-  meta.addExtension(new FiltersSubmitButtonEnablerExtension());
+  const meta = new window.prestashop.component.Grid('meta');
+  meta.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
+  meta.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
+  meta.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+  meta.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  meta.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
+  meta.addExtension(new window.prestashop.component.GridExtensions.SubmitGridActionExtension());
+  meta.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
+  meta.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
+  meta.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
+  meta.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
 
   const helperBlock = new ShowcaseCard('seo-urls-showcase-card');
   helperBlock.addExtension(new ShowcaseCardCloseExtension());
 
-  new TaggableField({
+  new window.prestashop.component.TaggableField({
     tokenFieldSelector: 'input.js-taggable-field',
     options: {
       createTokensOnBlur: true,
     },
   });
 
-  new TranslatableInput();
   new MetaPageNameOptionHandler();
 
   window.prestashop.component.initComponents(
     [
       'MultistoreConfigField',
+      'TranslatableInput',
+      'TextWithRecommendedLengthCounter',
     ],
   );
-
-  new TextWithRecommendedLengthCounter();
 });

@@ -9,15 +9,20 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Tools: ~
 
-  # Deprecated in 8.1
   prestashop.adapter.tools:
     alias: PrestaShop\PrestaShop\Adapter\Tools
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 8.1
 
   PrestaShop\PrestaShop\Adapter\LegacyContext:
     arguments:
       - "%mail_themes_uri%"
       - '@PrestaShop\PrestaShop\Adapter\Tools'
+
+  PrestaShop\PrestaShop\Adapter\Shipment\OrderShipmentCreator:
+    arguments:
+      - '@PrestaShopBundle\Entity\Repository\ShipmentRepository'
 
   prestashop.adapter.legacy.context:
     alias: PrestaShop\PrestaShop\Adapter\LegacyContext
@@ -25,7 +30,9 @@ services:
   prestashop.adapter.environment:
     class: PrestaShop\PrestaShop\Adapter\Environment
     arguments:
-      - !php/const _PS_MODE_DEV_
+      $isDebug: '%kernel.debug%'
+      $name: '%kernel.environment%'
+      $appId: '%kernel.app_id%'
 
   prestashop.adapter.validate:
     class: PrestaShop\PrestaShop\Adapter\Validate
@@ -36,3 +43,5 @@ services:
 
   prestashop.adapter.context_state_manager:
     alias: PrestaShop\PrestaShop\Adapter\ContextStateManager
+
+  PrestaShop\PrestaShop\Adapter\Employee\EmployeeRepository: ~

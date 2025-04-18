@@ -47,7 +47,7 @@ abstract class AbstractInstall
     protected $errors = [];
 
     /**
-     * @var PrestaShopLoggerInterface
+     * @var PrestaShopLoggerInterface|null
      */
     protected $logger;
 
@@ -68,6 +68,11 @@ abstract class AbstractInstall
     public function getErrors()
     {
         return $this->errors;
+    }
+
+    public function resetErrors(): void
+    {
+        $this->errors = [];
     }
 
     public function setTranslator($translator)

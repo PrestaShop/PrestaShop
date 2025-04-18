@@ -47,7 +47,7 @@ class RemoveXmlCompiledContainerPass implements CompilerPassInterface
 
             try {
                 $filesystem->remove($filename);
-            } catch (IOException $e) {
+            } catch (IOException) {
                 // discard chmod failure (some filesystem may not support it)
             }
         }

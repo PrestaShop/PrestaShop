@@ -1,0 +1,5 @@
+_api_common:
+  resource: routing.yml
+
+test:
+  resource: "../../../tests/Resources/config/routes.yml"

@@ -130,7 +130,7 @@ final class ImportDataFormatter
             return [];
         }
 
-        $content = fgetcsv($fd, 0, $separator);
+        $content = fgetcsv($fd, 0, $separator, '"', '');
         fclose($fd);
 
         if ($uniqidPath !== false && file_exists($uniqidPath)) {

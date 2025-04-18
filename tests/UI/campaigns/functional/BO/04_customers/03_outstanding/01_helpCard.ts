@@ -1,17 +1,16 @@
-// Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
 import {disableB2BTest, enableB2BTest} from '@commonTests/BO/shopParameters/b2b';
 
-// Import pages
-import dashboardPage from '@pages/BO/dashboard';
-import outstandingPage from '@pages/BO/customers/outstanding';
-
-import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  boDashboardPage,
+  boLoginPage,
+  boOutstandingPage,
+  type BrowserContext,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_customers_outstanding_helpCard';
 
@@ -33,49 +32,55 @@ describe('BO - Customers - Outstanding : Help card in outstanding page', async (
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   // 1 - Click on the help card
   describe('Help card in outstanding page', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Customers > Outstanding\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOutstandingPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.customersParentLink,
-        dashboardPage.outstandingLink,
+        boDashboardPage.customersParentLink,
+        boDashboardPage.outstandingLink,
       );
-      await outstandingPage.closeSfToolBar(page);
+      await boOutstandingPage.closeSfToolBar(page);
 
-      const pageTitle = await outstandingPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(outstandingPage.pageTitle);
+      const pageTitle = await boOutstandingPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOutstandingPage.pageTitle);
     });
 
     it('should open the help side bar and check the document language', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'openHelpSidebar', baseContext);
 
-      const isHelpSidebarVisible = await outstandingPage.openHelpSideBar(page);
-      await expect(isHelpSidebarVisible).to.be.true;
+      const isHelpSidebarVisible = await boOutstandingPage.openHelpSideBar(page);
+      expect(isHelpSidebarVisible).to.eq(true);
 
-      const documentURL = await outstandingPage.getHelpDocumentURL(page);
-      await expect(documentURL).to.contains('country=en');
+      const documentURL = await boOutstandingPage.getHelpDocumentURL(page);
+      expect(documentURL).to.contains('country=en');
     });
 
     it('should close the help side bar', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeHelpSidebar', baseContext);
 
-      const isHelpSidebarNotVisible = await outstandingPage.closeHelpSideBar(page);
-      await expect(isHelpSidebarNotVisible).to.be.true;
+      const isHelpSidebarNotVisible = await boOutstandingPage.closeHelpSideBar(page);
+      expect(isHelpSidebarNotVisible).to.eq(true);
     });
   });
 

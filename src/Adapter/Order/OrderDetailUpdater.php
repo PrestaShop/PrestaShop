@@ -134,7 +134,8 @@ class OrderDetailUpdater
         int $productId,
         int $combinationId,
         DecimalNumber $priceTaxExcluded,
-        DecimalNumber $priceTaxIncluded
+        DecimalNumber $priceTaxIncluded,
+        int $customizationId = 0
     ): void {
         [$roundType, $computingPrecision, $taxAddress] = $this->prepareOrderContext($order);
 
@@ -147,7 +148,8 @@ class OrderDetailUpdater
                 $priceTaxIncluded,
                 $roundType,
                 $computingPrecision,
-                $taxAddress
+                $taxAddress,
+                $customizationId
             );
         } finally {
             $this->contextStateManager->restorePreviousContext();
@@ -164,17 +166,18 @@ class OrderDetailUpdater
         try {
             $orderDetailsData = $order->getProducts();
             foreach ($orderDetailsData as $orderDetailData) {
-                $orderDetail = new OrderDetail($orderDetailData['id_order_detail']);
+                $orderDetail = new OrderDetail((int) $orderDetailData['id_order_detail']);
 
                 // Clean existing order_detail_tax
                 Db::getInstance()->delete('order_detail_tax', 'id_order_detail = ' . (int) $orderDetail->id);
 
                 $taxCalculator = $this->getTaxCalculatorByAddress($taxAddress, $orderDetail);
                 $taxesAmount = $taxCalculator->getTaxesAmount($orderDetail->unit_price_tax_excl);
-                $unitAmount = $totalAmount = 0;
+                $sumUnitAmount = $sumTotalAmount = 0;
                 if (!empty($taxesAmount)) {
                     $orderDetailTaxes = [];
                     foreach ($taxesAmount as $taxId => $amount) {
+                        $unitAmount = $totalAmount = 0;
                         switch ($roundType) {
                             case Order::ROUND_ITEM:
                                 $unitAmount = (float) Tools::ps_round($amount, $computingPrecision);
@@ -198,16 +201,16 @@ class OrderDetailUpdater
                             'unit_amount' => (float) $unitAmount,
                             'total_amount' => (float) $totalAmount,
                         ];
-                        $orderDetail->unit_price_tax_incl = (float) $orderDetail->unit_price_tax_excl + $unitAmount;
-                        $orderDetail->total_price_tax_incl = (float) $orderDetail->total_price_tax_incl + $totalAmount;
+                        $sumUnitAmount += $unitAmount;
+                        $sumTotalAmount += $totalAmount;
                     }
 
                     Db::getInstance()->insert('order_detail_tax', $orderDetailTaxes, false);
                 }
 
                 // Update OrderDetail values
-                $orderDetail->unit_price_tax_incl = (float) $orderDetail->unit_price_tax_excl + $unitAmount;
-                $orderDetail->total_price_tax_incl = (float) $orderDetail->total_price_tax_incl + $totalAmount;
+                $orderDetail->unit_price_tax_incl = (float) $orderDetail->unit_price_tax_excl + $sumUnitAmount;
+                $orderDetail->total_price_tax_incl = (float) $orderDetail->total_price_tax_excl + $sumTotalAmount;
                 if (!$orderDetail->update()) {
                     throw new OrderException('An error occurred while editing the product line.');
                 }
@@ -314,9 +317,10 @@ class OrderDetailUpdater
         DecimalNumber $priceTaxIncluded,
         int $roundType,
         int $computingPrecision,
-        Address $taxAddress
+        Address $taxAddress,
+        int $customizationId = 0
     ): void {
-        $identicalOrderDetails = $this->getOrderDetailsForProduct($order, $productId, $combinationId);
+        $identicalOrderDetails = $this->getOrderDetailsForProduct($order, $productId, $combinationId, $customizationId);
         if (empty($identicalOrderDetails)) {
             return;
         }
@@ -361,13 +365,15 @@ class OrderDetailUpdater
     private function getOrderDetailsForProduct(
         Order $order,
         int $productId,
-        int $combinationId
+        int $combinationId,
+        int $customizationId = 0
     ): array {
         $identicalOrderDetails = [];
         $orderDetails = $order->getOrderDetailList();
         foreach ($orderDetails as $orderDetail) {
             if ((int) $orderDetail['product_id'] === $productId
-                && (int) $orderDetail['product_attribute_id'] === $combinationId) {
+                && (int) $orderDetail['product_attribute_id'] === $combinationId
+                && (int) $orderDetail['id_customization'] === $customizationId) {
                 $identicalOrderDetails[] = new OrderDetail($orderDetail['id_order_detail']);
             }
         }

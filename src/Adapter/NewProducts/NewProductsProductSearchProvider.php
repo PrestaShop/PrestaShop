@@ -104,15 +104,15 @@ class NewProductsProductSearchProvider implements ProductSearchProviderInterface
             // We use default set of sort orders + option to sort by date
             $result->setAvailableSortOrders(
                 array_merge(
-                [
-                    (new SortOrder('product', 'date_add', 'desc'))->setLabel(
-                        $this->translator->trans('Date added, newest to oldest', [], 'Shop.Theme.Catalog')
-                    ),
-                    (new SortOrder('product', 'date_add', 'asc'))->setLabel(
-                        $this->translator->trans('Date added, oldest to newest', [], 'Shop.Theme.Catalog')
-                    ),
-                ],
-                $this->sortOrdersCollection->getDefaults())
+                    [
+                        (new SortOrder('product', 'date_add', 'desc'))->setLabel(
+                            $this->translator->trans('Date added, newest to oldest', [], 'Shop.Theme.Catalog')
+                        ),
+                        (new SortOrder('product', 'date_add', 'asc'))->setLabel(
+                            $this->translator->trans('Date added, oldest to newest', [], 'Shop.Theme.Catalog')
+                        ),
+                    ],
+                    $this->sortOrdersCollection->getDefaults())
             );
         }
 

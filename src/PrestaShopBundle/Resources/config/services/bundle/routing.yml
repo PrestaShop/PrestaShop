@@ -2,7 +2,7 @@ services:
   prestashop.bundle.routing.module_route_loader:
     class: 'PrestaShopBundle\Routing\YamlModuleLoader'
     arguments:
-      - '@=service("prestashop.adapter.module.repository.module_repository").getActiveModulesPaths()'
+      - '@=service("prestashop.adapter.module.repository.module_repository").getInstalledModulesPaths()'
     tags: [ routing.loader ]
 
   prestashop.bundle.routing.converter.legacy_url_converter:
@@ -18,7 +18,9 @@ services:
   prestashop.bundle.routing.converter.legacy_parameters_converter:
     alias: 'PrestaShopBundle\Routing\Converter\LegacyParametersConverter'
     public: true
-    deprecated: '%alias_id% service alias is deprecated and will be removed in 10.0.'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   PrestaShopBundle\Routing\Converter\RouterProvider:
     autowire: true
@@ -30,7 +32,7 @@ services:
 
   # We set this alias so that we can override it in test environment (to avoid memory limit crashes)
   prestashop.bundle.routing.converter.cache:
-    alias: Symfony\Component\Cache\Adapter\AdapterInterface
+    alias: cache.system
 
   prestashop.bundle.routing.converter.cache_provider:
     class: 'PrestaShopBundle\Routing\Converter\CacheProvider'
@@ -47,7 +49,7 @@ services:
       - '%kernel.environment%'
 
   prestashop.bundle.routing.linter.security_annotation_linter:
-    class: 'PrestaShopBundle\Routing\Linter\SecurityAnnotationLinter'
+    class: 'PrestaShopBundle\Routing\Linter\SecurityAttributeLinter'
     arguments:
       - '@annotation_reader'
     public: true
@@ -62,3 +64,8 @@ services:
     class: 'PrestaShopBundle\Routing\Linter\AdminRouteProvider'
     arguments:
       - '@router'
+
+  PrestaShopBundle\Routing\LegacyRouterChecker:
+    autoconfigure: true
+    autowire: true
+    public: false

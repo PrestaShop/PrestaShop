@@ -99,7 +99,7 @@ abstract class AbstractDeleteCategoryHandler
                 $this->categoryRepository->assertCategoryExists(new CategoryId($parentId));
 
                 return $parentId;
-            } catch (CategoryNotFoundException $e) {
+            } catch (CategoryNotFoundException) {
                 // if category doesn't exist, we could continue trying to find another parent
                 // but most of the time this command will be run from BO, which is constructed in a way that
                 // all the deleted category ids will have the same parent,

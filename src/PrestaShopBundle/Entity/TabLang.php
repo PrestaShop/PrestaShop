@@ -32,85 +32,66 @@ use Doctrine\ORM\Mapping as ORM;
  * TabLang.
  *
  * @ORM\Table()
+ *
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\TabLangRepository")
  */
 class TabLang
 {
     /**
      * @ORM\Id
+     *
      * @ORM\ManyToOne(targetEntity="PrestaShopBundle\Entity\Tab", inversedBy="tabLangs")
+     *
      * @ORM\JoinColumn(name="id_tab", referencedColumnName="id_tab", nullable=false)
      */
-    private $id;
+    private Tab $tab;
 
     /**
      * @ORM\Id
+     *
      * @ORM\ManyToOne(targetEntity="PrestaShopBundle\Entity\Lang")
+     *
      * @ORM\JoinColumn(name="id_lang", referencedColumnName="id_lang", nullable=false, onDelete="CASCADE")
      */
-    private $lang;
+    private Lang $lang;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="name", type="string", length=128)
      */
-    private $name;
+    private string $name;
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getTab(): Tab
     {
-        return $this->id;
+        return $this->tab;
     }
 
-    /**
-     * Set name.
-     *
-     * @param string $name
-     *
-     * @return TabLang
-     */
-    public function setName($name)
+    public function setTab(Tab $tab): static
+    {
+        $this->tab = $tab;
+
+        return $this;
+    }
+
+    public function setName(string $name): static
     {
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * Set lang.
-     *
-     * @param \PrestaShopBundle\Entity\Lang $lang
-     *
-     * @return TabLang
-     */
-    public function setLang(Lang $lang)
+    public function setLang(Lang $lang): static
     {
         $this->lang = $lang;
 
         return $this;
     }
 
-    /**
-     * Get lang.
-     *
-     * @return \PrestaShopBundle\Entity\Lang
-     */
-    public function getLang()
+    public function getLang(): Lang
     {
         return $this->lang;
     }

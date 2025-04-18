@@ -32,7 +32,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class AuthorizationChecker implements AuthorizationCheckerInterface
 {
-    public function isGranted($attributes, $subject = null)
+    public function isGranted($attributes, $subject = null): bool
     {
         return true;
     }

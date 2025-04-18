@@ -231,13 +231,13 @@ final class ProductImportHandler extends AbstractImportHandler
         $this->loadSupplier($product, false);
         $this->loadPrice($product);
         $this->loadCategory($product, false);
-        $this->loadMetaData($product, $importConfig);
+        $this->loadMetaData($product);
         $this->fixFloatValues($product);
 
         $productExistsById = $this->entityExists($product, 'product');
-        $productExistsByReference = $importConfig->matchReferences() &&
-            $product->reference &&
-            $product->existsRefInDatabase($product->reference)
+        $productExistsByReference = $importConfig->matchReferences()
+            && $product->reference
+            && $product->existsRefInDatabase($product->reference)
         ;
 
         if ($productExistsByReference || $productExistsById) {
@@ -290,8 +290,7 @@ final class ProductImportHandler extends AbstractImportHandler
                 $this->updateAdditionalData($product, $runtimeConfig->shouldValidateData());
                 $this->saveStock(
                     $product,
-                    $runtimeConfig->shouldValidateData(),
-                    $productExistsById || $productExistsByReference
+                    $runtimeConfig->shouldValidateData()
                 );
 
                 $this->linkAccessories($product, $runtimeConfig);
@@ -732,9 +731,8 @@ final class ProductImportHandler extends AbstractImportHandler
      * Load meta data into the product object.
      *
      * @param Product $product
-     * @param ImportConfigInterface $importConfig
      */
-    private function loadMetaData(Product $product, ImportConfigInterface $importConfig)
+    private function loadMetaData(Product $product)
     {
         $linkRewrite = '';
 
@@ -770,19 +768,6 @@ final class ProductImportHandler extends AbstractImportHandler
             $product->link_rewrite = $this->dataFormatter->createMultiLangField($linkRewrite);
         } else {
             $product->link_rewrite[(int) $this->languageId] = $linkRewrite;
-        }
-
-        $multipleValueSeparator = $importConfig->getMultipleValueSeparator();
-
-        // replace the value of separator by coma
-        if ($multipleValueSeparator != ',') {
-            if (is_array($product->meta_keywords)) {
-                foreach ($product->meta_keywords as &$metaKeyword) {
-                    if (!empty($metaKeyword)) {
-                        $metaKeyword = str_replace($multipleValueSeparator, ',', $metaKeyword);
-                    }
-                }
-            }
         }
     }
 
@@ -1073,7 +1058,7 @@ final class ProductImportHandler extends AbstractImportHandler
      */
     private function saveProductImages(Product $product, ImportConfigInterface $importConfig)
     {
-        //delete existing images if "delete_existing_images" is set to 1
+        // delete existing images if "delete_existing_images" is set to 1
         if (isset($product->delete_existing_images)) {
             if ((bool) $product->delete_existing_images) {
                 $product->deleteImages();
@@ -1219,9 +1204,8 @@ final class ProductImportHandler extends AbstractImportHandler
      *
      * @param Product $product
      * @param bool $validateOnly
-     * @param bool $productExists
      */
-    private function saveStock(Product $product, $validateOnly, $productExists)
+    private function saveStock(Product $product, $validateOnly)
     {
         if ($this->isMultistoreEnabled) {
             $shopIds = $product->id_shop_list;
@@ -1252,9 +1236,9 @@ final class ProductImportHandler extends AbstractImportHandler
         }
 
         $hasAccessories =
-            isset($product->accessories) &&
-            is_array($product->accessories) &&
-            count($product->accessories)
+            isset($product->accessories)
+            && is_array($product->accessories)
+            && count($product->accessories)
         ;
 
         if ($hasAccessories) {

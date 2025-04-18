@@ -208,23 +208,26 @@ class FormBuilderTest extends TestCase
         }
 
         $hookDispatcherMock = $this->createMock(HookDispatcherInterface::class);
-        $hookDispatcherMock->expects($this->exactly(2))
+
+        $invokedCount = $this->exactly(2);
+        $hookDispatcherMock->expects($invokedCount)
             ->method('dispatchWithParameters')
-            ->withConsecutive(
-                [
-                    $this->equalTo('action' . $formName . $hookNameEnd),
-                    $this->equalTo($hookOptions),
-                ],
-                [
-                    $this->equalTo('action' . $formName . 'FormBuilderModifier'),
-                    $this->equalTo([
+            ->willReturnCallback(function ($hookName, array $hookParameters) use ($invokedCount, $formName, $hookNameEnd, $hookOptions, $formBuilder, $expectedOptions, $expectedId) {
+                if ($invokedCount->numberOfInvocations() === 1) {
+                    $this->assertEquals('action' . $formName . $hookNameEnd, $hookName);
+                    $this->assertEquals($hookOptions, $hookParameters);
+                }
+
+                if ($invokedCount->numberOfInvocations() === 2) {
+                    $this->assertEquals('action' . $formName . 'FormBuilderModifier', $hookName);
+                    $this->assertEquals([
                         'form_builder' => $formBuilder,
                         'data' => [],
                         'options' => $expectedOptions,
                         'id' => $expectedId,
-                    ]),
-                ]
-            );
+                    ], $hookParameters);
+                }
+            });
 
         return $hookDispatcherMock;
     }
@@ -301,7 +304,7 @@ class FormBuilderTest extends TestCase
         $optionProviderMock
             ->expects($this->never())
             ->method('getDefaultOptions')
-            ;
+        ;
 
         return $optionProviderMock;
     }

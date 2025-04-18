@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,12 +21,12 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
   {{ form_start(updateOrderStatusActionBarForm, {
-    'action': path('admin_orders_update_status', {'orderId': orderForViewing.id}),
-    'attr': {
-      'id': 'update_order_status_action_form'
+    action: path('admin_orders_update_status', {orderId: orderForViewing.id}),
+    attr: {
+      id: 'update_order_status_action_form'
     }
   }) }}
 
@@ -41,10 +41,10 @@
     {% endfor %}
     <div class="select-status{% if isBright %} is-bright{% endif %}" id="update_order_status_action_input_wrapper" style="background-color:{{ backgroundColor }};">
         {{ form_widget(updateOrderStatusActionBarForm.new_order_status_id, {
-          'attr': {
-            'class': 'select-status-colored',
+          attr: {
+            class: 'select-status-colored',
           },
-          'id': 'update_order_status_action_input',
+          id: 'update_order_status_action_input',
         }) }}
     </div>
 
@@ -65,7 +65,7 @@
   {% if orderForViewing.documents.canGenerateInvoice %}
     <form class="order-actions-invoice">
       <div class="input-group">
-        <a href="{{ path('admin_orders_generate_invoice_pdf', {'orderId': orderForViewing.id}) }}"
+        <a href="{{ path('admin_orders_generate_invoice_pdf', {orderId: orderForViewing.id}) }}"
            class="btn btn-action" data-role="view-invoice">
           <i class="material-icons">receipt</i>
           {{ 'View invoice'|trans({}, 'Admin.Orderscustomers.Feature') }}
@@ -86,7 +86,7 @@
   {% if orderForViewing.documents.canGenerateDeliverySlip %}
     <form class="order-actions-delivery">
       <div class="input-group">
-        <a href="{{ path('admin_orders_generate_delivery_slip_pdf', {'orderId': orderForViewing.id}) }}"
+        <a href="{{ path('admin_orders_generate_delivery_slip_pdf', {orderId: orderForViewing.id}) }}"
            class="btn btn-action" data-role="view-delivery-slip">
           <i class="material-icons">local_shipping</i>
           {{ 'View delivery slip'|trans({}, 'Admin.Orderscustomers.Feature') }}
@@ -95,7 +95,7 @@
     </form>
   {% endif %}
 
-  {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/extra_order_button_actions.html.twig' %}
+  {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/extra_order_button_actions.html.twig') }}
 
   {% if merchandiseReturnEnabled %}
     {% if orderForViewing.isDelivered() %}
@@ -122,4 +122,4 @@
       </button>
   {% endif %}
 
-  {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/order_navigation.html.twig' %}
+  {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/order_navigation.html.twig') }}

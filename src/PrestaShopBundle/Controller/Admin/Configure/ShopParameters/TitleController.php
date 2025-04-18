@@ -35,10 +35,12 @@ use PrestaShop\PrestaShop\Core\Domain\Title\Exception\TitleException;
 use PrestaShop\PrestaShop\Core\Domain\Title\Exception\TitleNotFoundException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\TitleFilters;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,53 +48,40 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Controller responsible for "Configure > Shop Parameters > Customer Settings > Titles" page.
  */
-class TitleController extends FrameworkBundleAdminController
+class TitleController extends PrestaShopAdminController
 {
-    /**
-     * Show customer titles page.
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
-     *
-     * @param Request $request
-     * @param TitleFilters $filters
-     *
-     * @return Response
-     */
-    public function indexAction(Request $request, TitleFilters $filters): Response
-    {
-        $titleGridFactory = $this->get('prestashop.core.grid.factory.title');
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'Access denied.')]
+    public function indexAction(
+        Request $request,
+        TitleFilters $filters,
+        #[Autowire(service: 'prestashop.core.grid.factory.title')]
+        GridFactoryInterface $titleGridFactory,
+    ): Response {
         $titleGrid = $titleGridFactory->getGrid($filters);
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/CustomerSettings/Title/index.html.twig', [
             'titleGrid' => $this->presentGrid($titleGrid),
-            'layoutTitle' => $this->trans('Titles', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Titles', [], 'Admin.Navigation.Menu'),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
         ]);
     }
 
-    /**
-     * Displays and handles title form.
-     *
-     * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_title_index",
-     *     message="You need permission to create this."
-     * )
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function createAction(Request $request): Response
-    {
-        $titleForm = $this->getFormBuilder()->getForm();
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message: 'You need permission to create this.', redirectRoute: 'admin_title_index')]
+    public function createAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.title_form_builder')]
+        FormBuilderInterface $titleFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.title_form_handler')]
+        FormHandlerInterface $titleFormHandler,
+    ): Response {
+        $titleForm = $titleFormBuilder->getForm();
         $titleForm->handleRequest($request);
 
         try {
-            $handlerResult = $this->getFormHandler()->handle($titleForm);
+            $handlerResult = $titleFormHandler->handle($titleForm);
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
-                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_title_index');
             }
@@ -110,27 +99,26 @@ class TitleController extends FrameworkBundleAdminController
     /**
      * Displays title form.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_title_index",
-     *     message="You need permission to edit this."
-     * )
-     *
      * @param int $titleId
      * @param Request $request
      *
      * @return Response
      */
-    public function editAction(int $titleId, Request $request): Response
-    {
-        $titleForm = null;
-
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You need permission to edit this.', redirectRoute: 'admin_title_index')]
+    public function editAction(
+        int $titleId,
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.title_form_builder')]
+        FormBuilderInterface $titleFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.title_form_handler')]
+        FormHandlerInterface $titleFormHandler,
+    ): Response {
         try {
-            $titleForm = $this->getFormBuilder()->getFormFor((int) $titleId);
+            $titleForm = $titleFormBuilder->getFormFor((int) $titleId);
             $titleForm->handleRequest($request);
-            $result = $this->getFormHandler()->handleFor((int) $titleId, $titleForm);
+            $result = $titleFormHandler->handleFor((int) $titleId, $titleForm);
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Update successful', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_title_index');
             }
@@ -146,37 +134,25 @@ class TitleController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'layoutTitle' => $this->trans(
                 'Edit: %value%',
-                'Admin.Actions',
                 [
-                    '%value%' => $titleForm->getData()['name'][$this->getContextLangId()],
-                ]
+                    '%value%' => $titleForm->getData()['name'][$this->getLanguageContext()->getId()],
+                ],
+                'Admin.Actions',
             ),
             'titleForm' => $titleForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
     }
 
-    /**
-     * Deletes title.
-     *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_title_index",
-     *     message="You need permission to delete this."
-     * )
-     *
-     * @param int $titleId
-     *
-     * @return RedirectResponse
-     */
     #[DemoRestricted(redirectRoute: 'admin_title_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You need permission to delete this.', redirectRoute: 'admin_title_index')]
     public function deleteAction(int $titleId): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(new DeleteTitleCommand($titleId));
+            $this->dispatchCommand(new DeleteTitleCommand($titleId));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
             );
         } catch (TitleException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -185,25 +161,17 @@ class TitleController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_title_index');
     }
 
-    /**
-     * Deletes titles in bulk action
-     *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_title_index")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
     #[DemoRestricted(redirectRoute: 'admin_title_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_title_index')]
     public function bulkDeleteAction(Request $request): RedirectResponse
     {
         $titleIds = $this->getBulkTitlesFromRequest($request);
 
         try {
-            $this->getCommandBus()->handle(new BulkDeleteTitleCommand($titleIds));
+            $this->dispatchCommand(new BulkDeleteTitleCommand($titleIds));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
             );
         } catch (TitleException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -212,11 +180,6 @@ class TitleController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_title_index');
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return array<int, int>
-     */
     private function getBulkTitlesFromRequest(Request $request): array
     {
         $titleIds = $request->request->all('title_title_bulk');
@@ -228,32 +191,14 @@ class TitleController extends FrameworkBundleAdminController
         return $titleIds;
     }
 
-    /**
-     * @return array<string, string>
-     */
     private function getErrorMessages(): array
     {
         return [
             TitleNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found).',
+                [],
                 'Admin.Notifications.Error'
             ),
         ];
-    }
-
-    /**
-     * @return FormHandlerInterface
-     */
-    protected function getFormHandler(): FormHandlerInterface
-    {
-        return $this->get('prestashop.core.form.identifiable_object.handler.title_form_handler');
-    }
-
-    /**
-     * @return FormBuilderInterface
-     */
-    protected function getFormBuilder(): FormBuilderInterface
-    {
-        return $this->get('prestashop.core.form.identifiable_object.builder.title_form_builder');
     }
 }

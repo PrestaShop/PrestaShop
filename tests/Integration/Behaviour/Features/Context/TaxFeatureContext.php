@@ -194,17 +194,6 @@ class TaxFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^carrier "(.+)" belongs to tax group "(.+)"$/
-     */
-    public function setCarrierTaxRuleGroup($carrierName, $taxName)
-    {
-        $this->carrierFeatureContext->checkCarrierWithNameExists($carrierName);
-        $this->checkTaxRuleWithNameExists($taxName);
-        $carrier = $this->carrierFeatureContext->getCarrierWithName($carrierName);
-        $carrier->setTaxRulesGroup($this->taxRuleGroups[$taxName]->id);
-    }
-
-    /**
      * @Given /^Ecotax belongs to tax group "(.+)"$/
      */
     public function setEcotaxTaxRuleGroup($taxName)

@@ -1,5 +1,6 @@
 ul.category-tree {
   padding: 0;
+  margin: 0;
 
   .less,
   .more {
@@ -12,11 +13,11 @@ ul.category-tree {
 
       &::before {
         position: absolute;
-        top: -0.25rem;
-        left: -0.1rem;
-        font-family: "Material Icons", Arial, Helvetica, sans-serif;
-        font-size: 1.25rem;
-        color: $gray-medium;
+        top: calc(-1 * var(--#{$cdk}size-4));
+        left: calc(-1 * var(--#{$cdk}size-2));
+        font-family: var(--#{$cdk}font-family-material-icons);
+        font-size: var(--#{$cdk}size-20);
+        color: var(--#{$cdk}primary-500);
         cursor: pointer;
       }
     }
@@ -43,14 +44,14 @@ ul.category-tree {
   .category-label {
     position: relative;
     display: block;
-    padding-right: 1.563rem;
+    padding-right: var(--#{$cdk}size-24);
 
     .form-check-label {
       position: absolute;
       top: 0;
       right: 0.4em;
-      width: 20px;
-      height: 20px;
+      width: var(--#{$cdk}size-20);
+      height: var(--#{$cdk}size-20);
       cursor: pointer;
     }
 
@@ -63,19 +64,19 @@ ul.category-tree {
   }
 
   ul {
-    padding-left: 1.563rem;
+    padding-left: var(--#{$cdk}size-24);
   }
 
   li {
     list-style: none;
     background-repeat: no-repeat;
-    background-position: 0 3px;
-    background-size: 12px 12px;
+    background-position: 0 var(--#{$cdk}size-4);
+    background-size: var(--#{$cdk}size-12) var(--#{$cdk}size-12);
 
     .checkbox,
     .radio {
       padding-top: 0;
-      padding-left: 20px;
+      padding-left: var(--#{$cdk}size-20);
     }
   }
 }
@@ -83,21 +84,21 @@ ul.category-tree {
 // category tree on the catalog page
 #tree-categories,
 .category-filter-menu {
-  padding: 0.625rem;
+  padding: var(--#{$cdk}size-8);
 
   .categories-tree-actions {
-    margin-bottom: 0.625rem;
-    white-space: nowrap; // prevent buttons from collapsing
-    border-bottom: 0.063rem solid $gray-light;
+    margin-bottom: var(--#{$cdk}size-16);
+    //white-space: nowrap; // prevent buttons from collapsing
+    border-bottom: 1px solid var(--#{$cdk}primary-400);
 
     > a {
       display: inline-block;
 
-      margin-bottom: 0.625rem;
-      color: $gray-medium;
+      margin-bottom: var(--#{$cdk}size-8);
+      color: var(--#{$cdk}primary-600);
 
       + a {
-        margin-left: 0.9375rem;
+        margin-left: var(--#{$cdk}size-16);
       }
 
       &:hover {
@@ -105,24 +106,28 @@ ul.category-tree {
       }
 
       i.material-icons {
-        font-size: 1.25rem;
+        font-size: var(--#{$cdk}size-20);
         vertical-align: bottom;
       }
     }
 
     > button {
       display: inline-block;
-      padding: 0;
-      margin-bottom: 0.625rem;
-      color: $gray-medium;
+      padding: var(--#{$cdk}size-4);
+      margin-bottom: var(--#{$cdk}size-8);
+      color: var(--#{$cdk}primary-600);
+
+      &:hover {
+        color: var(--#{$cdk}primary-800);
+      }
     }
   }
 
   label.form-control-label {
     width: 100%;
-    padding-right: 15px;
-    padding-left: 15px;
-    color: $gray-medium;
+    padding-right: var(--#{$cdk}size-16);
+    padding-left: var(--#{$cdk}size-16);
+    color: var(--#{$cdk}primary-400);
   }
 
   #choice_tree {
@@ -133,5 +138,5 @@ ul.category-tree {
 }
 
 .category-filter-menu {
-  min-width: 320px;
+  min-width: 360px;
 }

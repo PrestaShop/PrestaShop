@@ -1,21 +1,17 @@
-// Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
-import featuresPage from '@pages/BO/catalog/features';
-import addFeaturePage from '@pages/BO/catalog/features/addFeature';
-import attributesPage from '@pages/BO/catalog/attributes';
-
-// Import data
-import FeatureData from '@data/faker/feature';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+
+import {
+  boAttributesPage,
+  boDashboardPage,
+  boFeaturesPage,
+  boFeaturesCreatePage,
+  boLoginPage,
+  type BrowserContext,
+  type FakerFeature,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 let browserContext: BrowserContext;
 let page: Page;
@@ -24,65 +20,71 @@ let numberOfFeaturesToDelete: number;
 
 /**
  * Function to create feature
- * @param createFeatureData {FeatureData} Data to set to create feature
+ * @param createFeatureData {FakerFeature} Data to set to create feature
  * @param baseContext {string} String to identify the test
  */
-function createFeatureTest(createFeatureData: FeatureData, baseContext: string = 'commonTests-createFeatureTest'): void {
+function createFeatureTest(createFeatureData: FakerFeature, baseContext: string = 'commonTests-createFeatureTest'): void {
   describe(`PRE-TEST: Create feature '${createFeatureData.name}'`, async () => {
     // before and after functions
     before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
     });
 
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
+      await utilsPlaywright.closeBrowserContext(browserContext);
     });
 
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Catalog > Attributes & Features\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAttributesPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.attributesAndFeaturesLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.attributesAndFeaturesLink,
       );
-      await attributesPage.closeSfToolBar(page);
+      await boAttributesPage.closeSfToolBar(page);
 
-      const pageTitle = await attributesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(attributesPage.pageTitle);
+      const pageTitle = await boAttributesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boAttributesPage.pageTitle);
     });
 
     it('should go to Features page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFeaturesPage', baseContext);
 
-      await attributesPage.goToFeaturesPage(page);
+      await boAttributesPage.goToFeaturesPage(page);
 
-      const pageTitle = await featuresPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(featuresPage.pageTitle);
+      const pageTitle = await boFeaturesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boFeaturesPage.pageTitle);
 
-      numberOfFeatures = await featuresPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfFeatures).to.be.above(0);
+      numberOfFeatures = await boFeaturesPage.resetAndGetNumberOfLines(page);
+      expect(numberOfFeatures).to.be.above(0);
     });
 
     it('should go to add new feature page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewFeaturePage', baseContext);
 
-      await featuresPage.goToAddFeaturePage(page);
+      await boFeaturesPage.goToAddFeaturePage(page);
 
-      const pageTitle = await addFeaturePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addFeaturePage.createPageTitle);
+      const pageTitle = await boFeaturesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boFeaturesCreatePage.createPageTitle);
     });
 
     it('should create feature', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createNewFeature', baseContext);
 
-      const textResult = await addFeaturePage.setFeature(page, createFeatureData);
-      await expect(textResult).to.contains(featuresPage.successfulCreationMessage);
+      const textResult = await boFeaturesCreatePage.setFeature(page, createFeatureData);
+      expect(textResult).to.contains(boFeaturesPage.successfulCreationMessage);
     });
   });
 }
@@ -96,72 +98,71 @@ function bulkDeleteFeaturesTest(featureName: string, baseContext: string = 'comm
   describe('POST-TEST: Bulk delete features', async () => {
     // before and after functions
     before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
     });
 
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
+      await utilsPlaywright.closeBrowserContext(browserContext);
     });
 
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Catalog > Attributes & Features\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAttributesPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.attributesAndFeaturesLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.attributesAndFeaturesLink,
       );
-      await attributesPage.closeSfToolBar(page);
+      await boAttributesPage.closeSfToolBar(page);
 
-      const pageTitle = await attributesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(attributesPage.pageTitle);
+      const pageTitle = await boAttributesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boAttributesPage.pageTitle);
     });
 
     it('should go to Features page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFeaturesPage', baseContext);
 
-      await attributesPage.goToFeaturesPage(page);
+      await boAttributesPage.goToFeaturesPage(page);
 
-      const pageTitle = await featuresPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(featuresPage.pageTitle);
+      const pageTitle = await boFeaturesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boFeaturesPage.pageTitle);
 
-      numberOfFeatures = await featuresPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfFeatures).to.be.above(0);
+      numberOfFeatures = await boFeaturesPage.resetAndGetNumberOfLines(page);
+      expect(numberOfFeatures).to.be.above(0);
     });
 
     it(`should filter by feature name '${featureName}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDelete', baseContext);
 
-      await featuresPage.filterTable(page, 'b!name', featureName);
+      await boFeaturesPage.filterTable(page, 'name', featureName);
 
-      const numberOfFeaturesAfterFilter = await featuresPage.getNumberOfElementInGrid(page);
-      await expect(numberOfFeaturesAfterFilter).to.be.equal(19);
-    });
-
-    it('should get the number of features to delete', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'getNumberToDelete', baseContext);
-
-      numberOfFeaturesToDelete = await featuresPage.getNumberOfElementInGrid(page);
-      await expect(numberOfFeaturesToDelete).to.be.above(0);
+      numberOfFeaturesToDelete = await boFeaturesPage.getNumberOfElementInGrid(page);
+      expect(numberOfFeaturesToDelete).to.be.above(0);
     });
 
     it('should delete features by Bulk Actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteFeatures', baseContext);
 
-      const deleteTextResult = await featuresPage.bulkDeleteFeatures(page);
-      await expect(deleteTextResult).to.be.contains(featuresPage.successfulMultiDeleteMessage);
+      const deleteTextResult = await boFeaturesPage.bulkDeleteFeatures(page);
+      expect(deleteTextResult).to.be.contains(boFeaturesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
-      const numberOfFeaturesAfterDelete = await featuresPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfFeaturesAfterDelete).to.equal(numberOfFeatures - numberOfFeaturesToDelete);
+      const numberOfFeaturesAfterDelete = await boFeaturesPage.resetAndGetNumberOfLines(page);
+      expect(numberOfFeaturesAfterDelete).to.equal(numberOfFeatures - numberOfFeaturesToDelete);
     });
   });
 }

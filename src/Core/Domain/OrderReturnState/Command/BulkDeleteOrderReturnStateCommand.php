@@ -38,7 +38,7 @@ class BulkDeleteOrderReturnStateCommand
     /**
      * @var OrderReturnStateId[]
      */
-    private $orderReturnStateIds;
+    private $orderReturnStateIds = [];
 
     /**
      * @param int[] $orderReturnStateIds

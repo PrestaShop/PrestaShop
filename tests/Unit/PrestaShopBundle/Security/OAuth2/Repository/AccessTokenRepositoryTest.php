@@ -48,6 +48,5 @@ class AccessTokenRepositoryTest extends TestCase
         $token = $this->accessTokenRepository->getNewToken($this->createMock(ClientEntityInterface::class), [], 'userIdentifier');
         $this->assertSame('userIdentifier', $token->getUserIdentifier());
         $this->assertTrue($token->getClient() instanceof ClientEntityInterface);
-        $this->assertSame(null, $token->getIdentifier());
     }
 }

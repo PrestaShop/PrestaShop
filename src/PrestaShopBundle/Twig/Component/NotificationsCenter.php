@@ -32,25 +32,28 @@ use Configuration;
 use Context;
 use Link;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Domain\Cart\CartStatus;
 use Profile;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/notifications_center.html.twig')]
 class NotificationsCenter
 {
-    private ?bool $showNewOrders = null;
-    private ?bool $showNewCustomers = null;
-    private ?bool $showNewMessages = null;
-    private ?string $noOrderTip = null;
-    private ?string $noCustomerTip = null;
-    private ?string $noCustomerMessageTip = null;
-    private readonly Link $link;
-    private array|false|null $accesses = null;
+    protected ?bool $showNewOrders = null;
+    protected ?bool $showNewCustomers = null;
+    protected ?bool $showNewMessages = null;
+    protected ?string $noOrderTip = null;
+    protected ?string $noCustomerTip = null;
+    protected ?string $noCustomerMessageTip = null;
+    protected readonly Link $link;
+    protected array|false|null $accesses = null;
 
     public function __construct(
-        private readonly TranslatorInterface $translator,
-        LegacyContext $legacyContext
+        protected readonly TranslatorInterface $translator,
+        protected readonly LegacyContext $legacyContext,
+        protected readonly RouterInterface $router,
     ) {
         $this->link = $legacyContext->getContext()->link;
     }
@@ -127,7 +130,7 @@ class NotificationsCenter
         return $this->noCustomerMessageTip;
     }
 
-    private function getNotificationTip(string $type): string
+    protected function getNotificationTip(string $type): string
     {
         $tips = [
             'order' => [
@@ -136,7 +139,7 @@ class NotificationsCenter
                     [
                         '[1]' => '<strong>',
                         '[/1]' => '</strong>',
-                        '[2]' => '<a href="' . $this->link->getAdminLink('AdminCarts', true, [], ['action' => 'filterOnlyAbandonedCarts']) . '">',
+                        '[2]' => '<a href="' . $this->router->generate('admin_carts_index', ['cart[filters][status]' => CartStatus::ABANDONED_CART]) . '">',
                         '[/2]' => '</a>',
                         '[3]' => '<br>',
                     ],
@@ -158,7 +161,7 @@ class NotificationsCenter
         return $tips[$type][array_rand($tips[$type])];
     }
 
-    private function getAccesses(): array|false
+    protected function getAccesses(): array|false
     {
         if ($this->accesses === null) {
             $this->accesses = Profile::getProfileAccesses(Context::getContext()->employee->id_profile, 'class_name');

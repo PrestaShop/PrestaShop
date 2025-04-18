@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
+
 /**
  * Class RequestSqlCore.
  */
@@ -40,7 +42,7 @@ class RequestSqlCore extends ObjectModel
         'primary' => 'id_request_sql',
         'fields' => [
             'name' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true, 'size' => 200],
-            'sql' => ['type' => self::TYPE_SQL, 'validate' => 'isString', 'required' => true],
+            'sql' => ['type' => self::TYPE_SQL, 'validate' => 'isString', 'required' => true, 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4],
         ],
     ];
 
@@ -322,7 +324,7 @@ class RequestSqlCore extends ObjectModel
                 $tab = [];
                 foreach ($tables as $table) {
                     if ($this->attributExistInTable($attr, $table['table'])) {
-                        $tab = $table['table'];
+                        $tab[] = $table['table'];
                     }
                 }
                 if (count($tab) == 1) {

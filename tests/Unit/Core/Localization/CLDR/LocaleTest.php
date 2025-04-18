@@ -177,7 +177,7 @@ class LocaleTest extends TestCase
      * When asking for the number symbols of this system
      * Then the expected symbols should be retrieved
      *
-     * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
+     * @throws LocalizationException
      */
     public function testGetNumberSymbolsByNumberingSystem()
     {
@@ -208,7 +208,7 @@ class LocaleTest extends TestCase
      * When asking for the decimal pattern of this numbering system
      * Then the expected pattern should be retrieved
      *
-     * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
+     * @throws LocalizationException
      */
     public function testGetDecimalPattern()
     {
@@ -239,7 +239,7 @@ class LocaleTest extends TestCase
      * When asking for the percentage pattern of this numbering system
      * Then the expected pattern should be retrieved
      *
-     * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
+     * @throws LocalizationException
      */
     public function testGetPercentPattern()
     {
@@ -270,7 +270,7 @@ class LocaleTest extends TestCase
      * When asking for the currency (price formatting) pattern of this numbering system
      * Then the expected pattern should be retrieved
      *
-     * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
+     * @throws LocalizationException
      */
     public function testGetCurrencyPattern()
     {

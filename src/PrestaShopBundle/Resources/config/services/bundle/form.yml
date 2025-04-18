@@ -11,11 +11,9 @@ services:
       $defaultCurrencyId: '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
       $defaultLanguageId: '@=service("prestashop.adapter.legacy.configuration").get("PS_LANG_DEFAULT")'
       $formRenderer: '@twig.form.renderer'
-      $flashBag: '@session.flash_bag'
+      $requestStack: '@request_stack'
       $locale: '@prestashop.core.localization.locale.context_locale'
-      $multistoreController: '@prestashop.core.admin.multistore'
       $validate: "@prestashop.adapter.validate"
-      $multiStoreContext: '@prestashop.adapter.shop.context'
       $themeRepository: '@prestashop.core.addon.theme.repository'
       $shopThemeName: '@=service("prestashop.adapter.legacy.context").getContext().shop.theme.getName()'
 
@@ -24,6 +22,7 @@ services:
 
   PrestaShopBundle\Form\FormCloner:
   PrestaShopBundle\Form\FormBuilderModifier:
+  PrestaShopBundle\Service\Form\MultistoreConfigurationDropdownRenderer:
   PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler:
   PrestaShopBundle\Form\Admin\Improve\Design\Theme\PageLayoutCustomizationFormFactory:
 
@@ -41,8 +40,6 @@ services:
 
   PrestaShopBundle\Form\Admin\Type\CustomMoneyType:
     alias: 'PrestaShopBundle\Form\Extension\CustomMoneyTypeExtension'
-    deprecated: ~
-
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\EventListener\FeatureFlagTypeListener:
-    tags:
-      - { name: core.legacy.hook.subscriber }
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0

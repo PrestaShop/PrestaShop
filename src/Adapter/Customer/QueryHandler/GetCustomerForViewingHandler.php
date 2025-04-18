@@ -116,7 +116,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
             $this->getPersonalInformation($customer),
             $this->getCustomerOrders($customer),
             [],
-            $this->getCustomerProducts($customer),
+            $this->getCustomerProducts(),
             $this->getCustomerMessages($customer),
             [],
             $this->getLastEmailsSentToCustomer($customer),
@@ -255,11 +255,9 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
     }
 
     /**
-     * @param Customer $customer
-     *
      * @return ProductsInformation
      */
-    private function getCustomerProducts(Customer $customer)
+    private function getCustomerProducts()
     {
         return new ProductsInformation([], []);
     }

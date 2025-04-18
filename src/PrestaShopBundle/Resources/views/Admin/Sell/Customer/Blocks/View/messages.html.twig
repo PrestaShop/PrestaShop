@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
 <div class="card customer-messages-card">
   <h3 class="card-header">
@@ -44,7 +44,7 @@
         <tr class="customer-message">
           <td class="customer-message-status">{{ message.status }}</td>
           <td class="customer-message-message">
-            <a href="{{ getAdminLink('AdminCustomerThreads', true, {'id_customer_thread': message.customerThreadId, 'viewcustomer_thread': 1}) }}">
+            <a href="{{ getAdminLink('AdminCustomerThreads', true, {id_customer_thread: message.customerThreadId, viewcustomer_thread: 1}) }}">
               {{ message.message }}...
             </a>
           </td>

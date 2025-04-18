@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import;
 
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
 use PrestaShop\PrestaShop\Core\Import\File\FileFinder;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class ImportFormDataProvider is responsible for providing Import's 1st step form data.
@@ -36,25 +36,13 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 final class ImportFormDataProvider implements ImportFormDataProviderInterface
 {
     /**
-     * @var FileFinder
-     */
-    private $importFileFinder;
-
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-
-    /**
      * @param FileFinder $importFileFinder
-     * @param SessionInterface $session
+     * @param RequestStack $requestStack
      */
     public function __construct(
-        FileFinder $importFileFinder,
-        SessionInterface $session
+        private readonly FileFinder $importFileFinder,
+        private readonly RequestStack $requestStack
     ) {
-        $this->importFileFinder = $importFileFinder;
-        $this->session = $session;
     }
 
     /**
@@ -90,16 +78,16 @@ final class ImportFormDataProvider implements ImportFormDataProviderInterface
                 'parameters' => [],
             ];
         } else {
-            $this->session->set('csv', $data['csv']);
-            $this->session->set('entity', $data['entity']);
-            $this->session->set('iso_lang', $data['iso_lang']);
-            $this->session->set('separator', $data['separator']);
-            $this->session->set('multiple_value_separator', $data['multiple_value_separator']);
-            $this->session->set('truncate', $data['truncate']);
-            $this->session->set('match_ref', $data['match_ref']);
-            $this->session->set('regenerate', $data['regenerate']);
-            $this->session->set('forceIDs', $data['forceIDs']);
-            $this->session->set('sendemail', $data['sendemail']);
+            $this->requestStack->getSession()->set('csv', $data['csv']);
+            $this->requestStack->getSession()->set('entity', $data['entity']);
+            $this->requestStack->getSession()->set('iso_lang', $data['iso_lang']);
+            $this->requestStack->getSession()->set('separator', $data['separator']);
+            $this->requestStack->getSession()->set('multiple_value_separator', $data['multiple_value_separator']);
+            $this->requestStack->getSession()->set('truncate', $data['truncate']);
+            $this->requestStack->getSession()->set('match_ref', $data['match_ref']);
+            $this->requestStack->getSession()->set('regenerate', $data['regenerate']);
+            $this->requestStack->getSession()->set('forceIDs', $data['forceIDs']);
+            $this->requestStack->getSession()->set('sendemail', $data['sendemail']);
         }
 
         return $errors;

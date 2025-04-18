@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 {# Widgets #}
 
 {%- block form_widget -%}
@@ -35,7 +35,7 @@
 {%- block form_widget_simple -%}
   {%- set type = type|default('text') -%}
   <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
-  {% include "@Twig/form_max_length.html.twig" with {"attr": attr} %}
+  {{ include('@Twig/form_max_length.html.twig', {attr: attr}) }}
 {%- endblock form_widget_simple -%}
 
 {%- block form_widget_compound -%}
@@ -50,14 +50,14 @@
 
 {%- block collection_widget -%}
   {% if prototype is defined %}
-    {%- set attr = attr|merge({'data-prototype': form_row(prototype) }) -%}
+    {%- set attr = attr|merge({'data-prototype': form_row(prototype)}) -%}
   {% endif %}
   {{- block('form_widget') -}}
 {%- endblock collection_widget -%}
 
 {%- block textarea_widget -%}
   <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
-  {% include "@Twig/form_max_length.html.twig" with {"attr": attr} %}
+  {{ include('@Twig/form_max_length.html.twig', {attr: attr}) }}
 {%- endblock textarea_widget -%}
 
 {%- block choice_widget -%}
@@ -142,9 +142,9 @@
   {%- else -%}
     <div {{ block('widget_container_attributes') }}>
       {{- date_pattern|replace({
-        '{{ year }}':  form_widget(form.year),
+        '{{ year }}': form_widget(form.year),
         '{{ month }}': form_widget(form.month),
-        '{{ day }}':   form_widget(form.day),
+        '{{ day }}': form_widget(form.day),
       })|raw -}}
     </div>
   {%- endif -%}
@@ -154,7 +154,7 @@
   {%- if widget == 'single_text' -%}
     {{ block('form_widget_simple') }}
   {%- else -%}
-    {%- set vars = widget == 'text' ? { 'attr': { 'size': 1 }} : {} -%}
+    {%- set vars = widget == 'text' ? {attr: {size: 1}} : {} -%}
     <div {{ block('widget_container_attributes') }}>
       {{ form_widget(form.hour, vars) }}{% if with_minutes %}:{{ form_widget(form.minute, vars) }}{% endif %}{% if with_seconds %}:{{ form_widget(form.second, vars) }}{% endif %}
     </div>
@@ -173,7 +173,7 @@
 {%- endblock integer_widget -%}
 
 {%- block money_widget -%}
-  {{ money_pattern|replace({ '{{ widget }}': block('form_widget_simple') })|raw }}
+  {{ money_pattern|replace({'{{ widget }}': block('form_widget_simple')})|raw }}
 {%- endblock money_widget -%}
 
 {%- block url_widget -%}
@@ -235,10 +235,10 @@
 {%- block form_label -%}
   {% if label is not same as(false) -%}
     {% if not compound -%}
-      {% set label_attr = label_attr|merge({'for': id}) %}
+      {% set label_attr = label_attr|merge({for: id}) %}
     {%- endif %}
     {% if required -%}
-      {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+      {% set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' required')|trim}) %}
     {%- endif %}
     {% if label is empty -%}
       {%- if label_format is not empty -%}
@@ -259,7 +259,7 @@
 
       {% if label_attr['popover'] is defined %}
         {% set placement = label_attr['popover_placement'] is defined ? label_attr['popover_placement'] : 'top' %}
-        {% include '@Common/HelpBox/helpbox.html.twig' with { "placement" : placement, "content": label_attr['popover'] } %}
+        {{ include('@Common/HelpBox/helpbox.html.twig', {placement: placement, content: label_attr['popover']}) }}
       {% endif %}
     </label>
 
@@ -306,13 +306,13 @@
 
 {%- block form_start -%}
   {% set method = method|upper %}
-  {%- if method in ["GET", "POST"] -%}
+  {%- if method in ['GET', 'POST'] -%}
     {% set form_method = method %}
   {%- else -%}
-    {% set form_method = "POST" %}
+    {% set form_method = 'POST' %}
   {%- endif -%}
   <form name="{{ name }}"
-        method="{{ form_method|lower }}" 
+        method="{{ form_method|lower }}"
         action="{{ action }}"
         {% for attrname, attrvalue in attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}
         {% if multipart %} enctype="multipart/form-data"{% endif %}>
@@ -347,8 +347,8 @@
 
   {% for child in form -%}
     {% if not child.rendered %}
-      {{- ps.form_group_row(child, { attr: child.vars.attr }, {
-        'label': child.vars.label
+      {{- ps.form_group_row(child, {attr: child.vars.attr}, {
+        label: child.vars.label
       }) -}}
     {% endif %}
   {%- endfor %}
@@ -368,7 +368,7 @@
   {%- if disabled %} disabled="disabled"{% endif -%}
   {%- if required %} required="required"{% endif -%}
   {%- for attrname, attrvalue in attr -%}
-    {{- " " -}}
+    {{- ' ' -}}
     {%- if attrname in ['placeholder', 'title'] -%}
       {{- attrname }}="{{ attrvalue }}"
     {%- elseif attrvalue is same as(true) -%}
@@ -382,7 +382,7 @@
 {%- block widget_container_attributes -%}
   {%- if id is not empty %}id="{{ id }}"{% endif -%}
   {%- for attrname, attrvalue in attr -%}
-    {{- " " -}}
+    {{- ' ' -}}
     {%- if attrname in ['placeholder', 'title'] -%}
       {{- attrname }}="{{ attrvalue }}"
     {%- elseif attrvalue is same as(true) -%}
@@ -396,7 +396,7 @@
 {%- block button_attributes -%}
   id="{{ id }}" name="{{ full_name }}"{% if disabled %} disabled="disabled"{% endif -%}
   {%- for attrname, attrvalue in attr -%}
-    {{- " " -}}
+    {{- ' ' -}}
     {%- if attrname in ['placeholder', 'title'] -%}
       {{- attrname }}="{{ attrvalue }}"
     {%- elseif attrvalue is same as(true) -%}
@@ -409,7 +409,7 @@
 
 {% block attributes -%}
   {%- for attrname, attrvalue in attr -%}
-    {{- " " -}}
+    {{- ' ' -}}
     {%- if attrname in ['placeholder', 'title'] -%}
       {{- attrname }}="{{ attrvalue }}"
     {%- elseif attrvalue is same as(true) -%}

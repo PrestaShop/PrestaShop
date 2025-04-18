@@ -7,9 +7,9 @@
         <target>Top-sellers block</target>
         <note>Line: 60</note>
       </trans-unit>
-      <trans-unit id="94f6b12d006c2b82c1306e53910109f8">
-        <source>Adds a block displaying your store's top-selling products.</source>
-        <target>Adds a block displaying your store's top-selling products.</target>
+      <trans-unit id="d097706618745d1d4e3d1fa48837d9ec">
+        <source>Show your visitors what are your top-selling products directly on your homepage.</source>
+        <target>Show your visitors what are your top-selling products directly on your homepage.</target>
         <note>Line: 61</note>
       </trans-unit>
       <trans-unit id="26986c3388870d4148b1b5375368a83d">
@@ -21,11 +21,6 @@
         <source>Determine the number of product to display in this block</source>
         <target>Determine the number of product to display in this block</target>
         <note>Line: 143</note>
-      </trans-unit>
-      <trans-unit id="d097706618745d1d4e3d1fa48837d9ec">
-        <source>Show your visitors what are your top-selling products directly on your homepage.</source>
-        <target>Show your visitors what are your top-selling products directly on your homepage.</target>
-        <note>Line: 61</note>
       </trans-unit>
     </body>
   </file>

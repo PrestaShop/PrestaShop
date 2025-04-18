@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
+use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
@@ -81,6 +82,16 @@ class ProductFormDataProvider implements FormDataProviderInterface
     private $configuration;
 
     /**
+     * @var FeaturesChoiceProvider
+     */
+    private $featuresChoiceProvider;
+
+    /**
+     * @var array|null
+     */
+    private $featureNames = null;
+
+    /**
      * @param CommandBusInterface $queryBus
      * @param ConfigurationInterface $configuration
      * @param int $contextLangId
@@ -92,13 +103,15 @@ class ProductFormDataProvider implements FormDataProviderInterface
         ConfigurationInterface $configuration,
         int $contextLangId,
         int $defaultShopId,
-        ?int $contextShopId
+        ?int $contextShopId,
+        FeaturesChoiceProvider $featuresChoiceProvider
     ) {
         $this->queryBus = $queryBus;
         $this->configuration = $configuration;
         $this->contextLangId = $contextLangId;
         $this->defaultShopId = $defaultShopId;
         $this->contextShopId = $contextShopId;
+        $this->featuresChoiceProvider = $featuresChoiceProvider;
     }
 
     /**
@@ -316,7 +329,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
             'references' => [
                 'mpn' => $details->getMpn(),
                 'upc' => $details->getUpc(),
-                'ean_13' => $details->getEan13(),
+                'ean_13' => $details->getGtin(),
                 'isbn' => $details->getIsbn(),
                 'reference' => $details->getReference(),
             ],
@@ -341,22 +354,32 @@ class ProductFormDataProvider implements FormDataProviderInterface
             return [];
         }
 
-        $productFeatureValues = [];
+        $featureNames = $this->getFeatureNames();
+        $productFeatureCollection = [];
         foreach ($featureValues as $featureValue) {
+            if (!isset($productFeatureCollection[$featureValue->getFeatureId()])) {
+                $productFeatureCollection[$featureValue->getFeatureId()] = [
+                    'feature_id' => $featureValue->getFeatureId(),
+                    'feature_name' => $featureNames[$featureValue->getFeatureId()],
+                    'feature_values' => [],
+                ];
+            }
+
             $productFeatureValue = [
-                'feature_id' => $featureValue->getFeatureId(),
                 'feature_value_id' => $featureValue->getFeatureValueId(),
+                'feature_value_name' => $featureValue->getLocalizedValues()[$this->contextLangId],
+                'is_custom' => $featureValue->isCustom(),
             ];
             if ($featureValue->isCustom()) {
                 $productFeatureValue['custom_value'] = $featureValue->getLocalizedValues();
-                $productFeatureValue['custom_value_id'] = $featureValue->getFeatureValueId();
             }
 
-            $productFeatureValues[] = $productFeatureValue;
+            $productFeatureCollection[$featureValue->getFeatureId()]['feature_values'][] = $productFeatureValue;
         }
 
         return [
-            'feature_values' => $productFeatureValues,
+            // Return 0-indexed array, not mapped by feature ID
+            'feature_collection' => array_values($productFeatureCollection),
         ];
     }
 
@@ -500,7 +523,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
     /**
      * @param ProductForEditing $productForEditing
      *
-     * @return array{type: string, target: null|array}
+     * @return array{type: string, target: array|null}
      */
     private function extractRedirectOptionData(ProductForEditing $productForEditing): array
     {
@@ -616,6 +639,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
                 'name' => $customizationField->getLocalizedNames(),
                 'type' => $customizationField->getType(),
                 'required' => $customizationField->isRequired(),
+                'addedByModule' => $customizationField->isAddedByModule(),
             ];
         }
 
@@ -692,5 +716,26 @@ class ProductFormDataProvider implements FormDataProviderInterface
         }
 
         return array_values(PriorityList::AVAILABLE_PRIORITIES);
+    }
+
+    /**
+     * Revert the array from form choices provider because it uses the name as they key and the ID as the value.
+     * We need the opposite so we reformat this array. Also, we use the choice provider instead of the repository
+     * for performance reason because it already handles an internal cache, so we don't need to perform the same
+     * SQL query several times.
+     *
+     * @return array
+     */
+    private function getFeatureNames(): array
+    {
+        if (null === $this->featureNames) {
+            $this->featureNames = [];
+            $featureChoices = $this->featuresChoiceProvider->getChoices();
+            foreach ($featureChoices as $featureName => $featureId) {
+                $this->featureNames[$featureId] = $featureName;
+            }
+        }
+
+        return $this->featureNames;
     }
 }

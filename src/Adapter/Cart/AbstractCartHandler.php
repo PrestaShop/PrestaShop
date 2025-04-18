@@ -55,7 +55,7 @@ abstract class AbstractCartHandler
     {
         try {
             $cart = new Cart($cartId->getValue());
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new CartException(sprintf('An error occurred when trying to load cart with id "%s', $cartId->getValue()));
         }
 

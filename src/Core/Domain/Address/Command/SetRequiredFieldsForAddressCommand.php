@@ -64,10 +64,6 @@ class SetRequiredFieldsForAddressCommand
      */
     private function assertContainsOnlyAllowedFields(array $requiredFields)
     {
-        if (empty($requiredFields)) {
-            return;
-        }
-
         foreach ($requiredFields as $requiredField) {
             if (!in_array($requiredField, RequiredFields::ALLOWED_REQUIRED_FIELDS)) {
                 throw new AddressConstraintException(sprintf('Required field %s is invalid. Allowed fields are: %s', $requiredField, implode(',', RequiredFields::ALLOWED_REQUIRED_FIELDS)), AddressConstraintException::INVALID_REQUIRED_FIELDS);

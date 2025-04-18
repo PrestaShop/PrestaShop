@@ -30,14 +30,13 @@ use Behat\Gherkin\Node\TableNode;
 use Category;
 use Configuration;
 use Language;
-use PHPUnit\Framework\Assert as Assert;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkUpdateCategoriesStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCoverImageCommand;
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryMenuThumbnailImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\SetCategoryIsEnabledCommand;
@@ -50,6 +49,8 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryIsEnabled;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\CategoryForTree;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\RedirectOption;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectTarget;
 use RuntimeException;
 use Shop;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -60,32 +61,16 @@ use Tests\Resources\DummyFileUploader;
 class CategoryFeatureContext extends AbstractDomainFeatureContext
 {
     public const JPG_IMAGE_TYPE = '.jpg';
-    private const MENU_THUMB_SUFFIX = '0_thumb';
 
     private const CATEGORY_POSITION_WAYS_MAP = [
         'up' => 0,
         'down' => 1,
     ];
 
-    /** @var int */
-    private $defaultLanguageId;
-
-    /** @var string */
-    private $psCatImgDir;
-
     private const PROPERTY_TYPE_BASIC = 0;
     private const PROPERTY_TYPE_REFERENCE = 1;
     private const PROPERTY_TYPE_REFERENCE_ARRAY = 2;
     private const PROPERTY_TYPE_BOOL = 3;
-
-    /**
-     * CategoryFeatureContext constructor.
-     */
-    public function __construct()
-    {
-        $this->defaultLanguageId = (int) Configuration::get('PS_LANG_DEFAULT');
-        $this->psCatImgDir = _PS_CAT_IMG_DIR_;
-    }
 
     /**
      * @Then I should see following root categories in ":langIso" language:
@@ -180,7 +165,18 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         $this->assertProperty($data, 'additional description', $editableCategory->getAdditionalDescription());
         $this->assertProperty($data, 'group access', $editableCategory->getGroupAssociationIds(), self::PROPERTY_TYPE_REFERENCE_ARRAY);
         $this->assertProperty($data, 'associated shops', $editableCategory->getShopAssociationIds(), self::PROPERTY_TYPE_REFERENCE_ARRAY);
-        $this->assertProperty($data, 'meta keywords', $editableCategory->getMetaKeywords());
+        $this->assertProperty($data, 'redirect type', $editableCategory->getRedirectType());
+
+        $expectedRedirectTarget = isset($data['redirect target']) ?
+            $this->getSharedStorage()->get($data['redirect target']) :
+            RedirectTarget::NO_TARGET
+        ;
+
+        Assert::assertEquals(
+            $expectedRedirectTarget,
+            $editableCategory->getRedirectTarget() ? $editableCategory->getRedirectTarget()->getId() : RedirectTarget::NO_TARGET,
+            'Unexpected redirect target'
+        );
     }
 
     /**
@@ -266,7 +262,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         $generatedPositions = [];
         foreach ($idsByPositions as $position => $id) {
             // mimic generating of positions like in list
-            //@todo: the whole UpdateCategoryPositionCommand needs to be refactored, it shouldn't depend on UI
+            // @todo: the whole UpdateCategoryPositionCommand needs to be refactored, it shouldn't depend on UI
             $generatedPositions[$position] = 'tr_' . $parentCategoryId . '_' . $id;
         }
 
@@ -355,8 +351,14 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['associated shops'])) {
             $command->setAssociatedShopIds($this->referencesToIds($data['associated shops']));
         }
-        if (isset($data['meta keywords'])) {
-            $command->setLocalizedMetaKeywords($data['meta keywords']);
+        if (isset($data['redirect type'])) {
+            $target = isset($data['redirect target']) ? $this->getSharedStorage()->get($data['redirect target']) : 0;
+
+            $redirectionOption = new RedirectOption(
+                $data['redirect type'],
+                $target,
+            );
+            $command->setRedirectOption($redirectionOption);
         }
 
         /** @var CategoryId $categoryId */
@@ -414,11 +416,17 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['associated shops'])) {
             $command->setAssociatedShopIds($this->referencesToIds($data['associated shops']));
         }
-        if (isset($data['meta keywords'])) {
-            $command->setLocalizedMetaKeywords($data['meta keywords']);
-        }
         if ($command instanceof EditCategoryCommand && isset($data['parent category'])) {
             $command->setParentCategoryId($this->getSharedStorage()->get($data['parent category']));
+        }
+        if (isset($data['redirect type'])) {
+            $target = isset($data['redirect target']) ? $this->getSharedStorage()->get($data['redirect target']) : 0;
+
+            $redirectionOption = new RedirectOption(
+                $data['redirect type'],
+                $target,
+            );
+            $command->setRedirectOption($redirectionOption);
         }
     }
 
@@ -489,46 +497,6 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given category :categoryReference has menu thumbnail image
-     *
-     * @param string $categoryReference
-     */
-    public function categoryHasMenuThumbnailImage(string $categoryReference)
-    {
-        $editableCategory = $this->getEditableCategory($categoryReference);
-        $menuThumbnailImages = $editableCategory->getMenuThumbnailImages();
-        Assert::assertCount(1, $menuThumbnailImages);
-    }
-
-    /**
-     * @When I delete category :categoryReference menu thumbnail image
-     *
-     * @param string $categoryReference
-     */
-    public function deleteCategoryMenuThumbnailImage(string $categoryReference)
-    {
-        $categoryId = SharedStorage::getStorage()->get($categoryReference);
-        $editableCategory = $this->getEditableCategory($categoryReference);
-
-        $menuThumbnailImages = $editableCategory->getMenuThumbnailImages();
-        $menuThumbnailImageId = $menuThumbnailImages[0]['id'];
-
-        $this->getCommandBus()->handle(new DeleteCategoryMenuThumbnailImageCommand($categoryId, $menuThumbnailImageId));
-    }
-
-    /**
-     * @Then category :categoryReference does not have menu thumbnail image
-     *
-     * @param string $categoryReference
-     */
-    public function categoryDoesNotHaveMenuThumbnailImage(string $categoryReference)
-    {
-        $editableCategory = $this->getEditableCategory($categoryReference);
-        $menuThumbnailImages = $editableCategory->getMenuThumbnailImages();
-        Assert::assertCount(0, $menuThumbnailImages);
-    }
-
-    /**
      * @Given /^category "(.*)" is (enabled|disabled)$/
      *
      * Status type "enabled|disabled" should be converted by transform context. @see StringToBoolTransformContext
@@ -552,8 +520,8 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     {
         $editableCategory = $this->getEditableCategory($categoryReference);
         $this->getCommandBus()->handle(new SetCategoryIsEnabledCommand(
-                $editableCategory->getId()->getValue(),
-                true)
+            $editableCategory->getId()->getValue(),
+            true)
         );
     }
 
@@ -566,8 +534,8 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     {
         $editableCategory = $this->getEditableCategory($categoryReference);
         $this->getCommandBus()->handle(new SetCategoryIsEnabledCommand(
-                $editableCategory->getId()->getValue(),
-                false)
+            $editableCategory->getId()->getValue(),
+            false)
         );
     }
 
@@ -592,7 +560,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertCategoryExistsByName(string $categoryReference, string $categoryName)
     {
-        $foundCategory = Category::searchByName($this->defaultLanguageId, $categoryName, true);
+        $foundCategory = Category::searchByName($this->getDefaultLangId(), $categoryName, true);
 
         if (!isset($foundCategory['name']) || $foundCategory['name'] !== $categoryName) {
             throw new RuntimeException(sprintf(
@@ -628,7 +596,9 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @param string $reference
+     *
      * @todo: should start naming "home" everywhere instead of "default".
+     *
      * @Given category ":reference" is the default one
      */
     public function assertIsDefaultCategory(string $reference): void
@@ -779,7 +749,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         return $this->uploadImage(
             $imageReference,
             $fileName,
-            $this->psCatImgDir . $categoryId . self::JPG_IMAGE_TYPE
+            _PS_CAT_IMG_DIR_ . $categoryId . self::JPG_IMAGE_TYPE
         );
     }
 
@@ -795,23 +765,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         return $this->uploadImage(
             $imageReference,
             $fileName,
-            $this->psCatImgDir . $categoryId . '-small_default' . self::JPG_IMAGE_TYPE
-        );
-    }
-
-    /**
-     * @When I upload menu thumbnail image ":imageReference" named ":fileName" to category ":categoryReference"
-     *
-     * @return string
-     */
-    public function uploadMenuThumbnailImage(string $imageReference, string $fileName, string $categoryReference): string
-    {
-        $categoryId = $this->getSharedStorage()->get($categoryReference);
-
-        return $this->uploadImage(
-            $imageReference,
-            $fileName,
-            $this->psCatImgDir . $categoryId . '-' . self::MENU_THUMB_SUFFIX . self::JPG_IMAGE_TYPE
+            _PS_CAT_IMG_DIR_ . $categoryId . '_thumb' . self::JPG_IMAGE_TYPE
         );
     }
 

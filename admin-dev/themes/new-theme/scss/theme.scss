@@ -2,11 +2,13 @@
 @import "config/settings";
 @import "config/keyframes";
 
-// Tools
+// Load PrestaShop UI Kit
 @import "~prestakit/scss/application";
+
+// Tools
 @import "~dropzone/dist/min/dropzone.min.css";
 @import "~magnific-popup/dist/magnific-popup.css";
-@import "bourbon";
+@import "~bourbon";
 @import "~perfect-scrollbar/css/perfect-scrollbar.css";
 @import "~eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css";
 @import "~bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css";
@@ -67,8 +69,10 @@
 @import "components/submittable_input";
 @import "components/timeline";
 @import "components/toggable_field";
+@import "components/tooltip";
 @import "components/translatable_input";
 @import "components/unavailable-feature";
+@import "components/typeahead_product_collection_type";
 
 // Pages specifics SCSS files
 @import "pages/invoices";
@@ -76,7 +80,6 @@
 @import "pages/import_data";
 @import "pages/currency";
 @import "pages/themes_logo";
-@import "pages/cms_page";
 @import "pages/employee";
 @import "pages/error";
 @import "pages/order_states";
@@ -88,7 +91,8 @@
 @import "pages/payment";
 @import "pages/translation_page";
 @import "pages/product_preferences";
-@import "pages/authorization_server";
+@import "pages/admin_api";
+@import "pages/discount";
 
 // Main Layout
 @import "pages/modules";
@@ -102,7 +106,7 @@
 // Main Layout
 body {
   direction: ltr;
-  background: $background-grey;
+  background: var(--#{$cdk}primary-200);
 }
 
 // To put into the PrestaKit
@@ -150,8 +154,9 @@ span.twitter-typeahead {
 // setting dropdown button
 .dropdown-toggle.tool-button {
   &::after {
-    font-size: 1.375rem;
-    color: $medium-gray;
+    margin: 0;
+    font-size: var(--#{$cdk}size-24);
+    color: var(--#{$cdk}primary-800);
     content: "settings";
   }
 }

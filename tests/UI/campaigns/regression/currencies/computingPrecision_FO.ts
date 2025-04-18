@@ -1,42 +1,36 @@
-// Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Common tests login BO
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-// Import BO pages
-import sqlManagerPage from '@pages/BO/advancedParameters/database/sqlManager';
-import addSqlQueryPage from '@pages/BO/advancedParameters/database/sqlManager/add';
-import viewSqlQueryPage from '@pages/BO/advancedParameters/database/sqlManager/view';
-import cartRulesPage from '@pages/BO/catalog/discounts';
-import addCartRulePage from '@pages/BO/catalog/discounts/add';
-import dashboardPage from '@pages/BO/dashboard';
-import currenciesPage from '@pages/BO/international/currencies';
-import addCurrencyPage from '@pages/BO/international/currencies/add';
-import localizationPage from '@pages/BO/international/localization';
-import ordersPage from '@pages/BO/orders';
-// Import FO pages
-import {cartPage} from '@pages/FO/cart';
-import checkoutPage from '@pages/FO/checkout';
-import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
-import {homePage} from '@pages/FO/home';
-import {loginPage as foLoginPage} from '@pages/FO/login';
-import productPage from '@pages/FO/product';
-import searchResultsPage from '@pages/FO/searchResults';
-
-// Import data
-import Currencies from '@data/demo/currencies';
-import Customers from '@data/demo/customers';
-import PaymentMethods from '@data/demo/paymentMethods';
-import Products from '@data/demo/products';
-import CartRuleData from '@data/faker/cartRule';
-import OrderData from '@data/faker/order';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
-import SqlQueryData from '@data/faker/sqlQuery';
+
+import {
+  boCartRulesPage,
+  boCartRulesCreatePage,
+  boCurrenciesPage,
+  boCurrenciesCreatePage,
+  boDashboardPage,
+  boLocalizationPage,
+  boLoginPage,
+  boOrdersPage,
+  boSqlManagerPage,
+  boSqlManagerCreatePage,
+  boSqlManagerViewPage,
+  type BrowserContext,
+  dataCurrencies,
+  dataCustomers,
+  dataPaymentMethods,
+  dataProducts,
+  FakerCartRule,
+  FakerOrder,
+  FakerSqlQuery,
+  foClassicCartPage,
+  foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
+  foClassicHomePage,
+  foClassicLoginPage,
+  foClassicProductPage,
+  foClassicSearchResultsPage,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'regression_currencies_computingPrecision_FO';
 
@@ -61,31 +55,31 @@ describe(
     let browserContext: BrowserContext;
     let page: Page;
 
-    const percentCartRule: CartRuleData = new CartRuleData({
+    const percentCartRule: FakerCartRule = new FakerCartRule({
       name: 'discount15',
       code: 'discount15',
       discountType: 'Percent',
       discountPercent: 15,
     });
-    const giftCartRule: CartRuleData = new CartRuleData({
+    const giftCartRule: FakerCartRule = new FakerCartRule({
       name: 'freeGiftMug',
       code: 'freeMug',
       discountType: 'None',
       freeGift: true,
-      freeGiftProduct: Products.demo_13,
+      freeGiftProduct: dataProducts.demo_13,
     });
     // Create sql query data to get last order discount and total price
-    const sqlQueryData = new SqlQueryData({
+    const sqlQueryData: FakerSqlQuery = new FakerSqlQuery({
       name: 'Discount and ATI from last order',
       sqlQuery: '',
     });
     const sqlQueryTemplate = (orderRef: string) => 'SELECT total_discounts, total_paid_tax_incl '
       + `FROM  ${global.INSTALL.DB_PREFIX}orders WHERE reference = '${orderRef}'`;
     // Init data for the order
-    const orderToMake: OrderData = new OrderData({
+    const orderToMake: FakerOrder = new FakerOrder({
       products: [
         {
-          product: Products.demo_3,
+          product: dataProducts.demo_3,
           quantity: 4,
         },
       ],
@@ -96,47 +90,53 @@ describe(
 
     // before and after functions
     before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
     });
 
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
+      await utilsPlaywright.closeBrowserContext(browserContext);
     });
 
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     describe('Create cart rules', async () => {
       it('should go to cart rule page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToCartRulesPageToCreate', baseContext);
 
-        await addCurrencyPage.goToSubMenu(
+        await boCurrenciesCreatePage.goToSubMenu(
           page,
-          addCurrencyPage.catalogParentLink,
-          addCurrencyPage.discountsLink,
+          boCurrenciesCreatePage.catalogParentLink,
+          boCurrenciesCreatePage.discountsLink,
         );
 
-        const pageTitle = await cartRulesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+        const pageTitle = await boCartRulesPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCartRulesPage.pageTitle);
       });
 
       describe('Create a percentage cart rule', async () => {
         it('should go to new cart rule page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToNewCartRulePage1', baseContext);
 
-          await cartRulesPage.goToAddNewCartRulesPage(page);
+          await boCartRulesPage.goToAddNewCartRulesPage(page);
 
-          const pageTitle = await addCartRulePage.getPageTitle(page);
-          await expect(pageTitle).to.contains(addCartRulePage.pageTitle);
+          const pageTitle = await boCartRulesCreatePage.getPageTitle(page);
+          expect(pageTitle).to.contains(boCartRulesCreatePage.pageTitle);
         });
 
         it('should create new cart rule', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'createPercentCartRule', baseContext);
 
-          const validationMessage = await addCartRulePage.createEditCartRules(page, percentCartRule);
-          await expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
+          const validationMessage = await boCartRulesCreatePage.createEditCartRules(page, percentCartRule);
+          expect(validationMessage).to.contains(boCartRulesCreatePage.successfulCreationMessage);
         });
       });
 
@@ -144,17 +144,17 @@ describe(
         it('should go to new cart rule page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToNewCartRulePage2', baseContext);
 
-          await cartRulesPage.goToAddNewCartRulesPage(page);
+          await boCartRulesPage.goToAddNewCartRulesPage(page);
 
-          const pageTitle = await addCartRulePage.getPageTitle(page);
-          await expect(pageTitle).to.contains(addCartRulePage.pageTitle);
+          const pageTitle = await boCartRulesCreatePage.getPageTitle(page);
+          expect(pageTitle).to.contains(boCartRulesCreatePage.pageTitle);
         });
 
         it('should create new cart rule', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'createGiftCartRule', baseContext);
 
-          const validationMessage = await addCartRulePage.createEditCartRules(page, giftCartRule);
-          await expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
+          const validationMessage = await boCartRulesCreatePage.createEditCartRules(page, giftCartRule);
+          expect(validationMessage).to.contains(boCartRulesCreatePage.successfulCreationMessage);
         });
       });
     });
@@ -163,52 +163,52 @@ describe(
       it('should go to localization page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPageToChangePrecision', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.internationalParentLink,
-          dashboardPage.localizationLink,
+          boDashboardPage.internationalParentLink,
+          boDashboardPage.localizationLink,
         );
-        await localizationPage.closeSfToolBar(page);
+        await boLocalizationPage.closeSfToolBar(page);
 
-        const pageTitle = await localizationPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(localizationPage.pageTitle);
+        const pageTitle = await boLocalizationPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boLocalizationPage.pageTitle);
       });
 
       it('should go to currencies page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesPageToChangePrecision', baseContext);
 
-        await localizationPage.goToSubTabCurrencies(page);
+        await boLocalizationPage.goToSubTabCurrencies(page);
 
-        const pageTitle = await currenciesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(currenciesPage.pageTitle);
+        const pageTitle = await boCurrenciesPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCurrenciesPage.pageTitle);
       });
 
-      it(`should filter by iso code '${Currencies.euro.isoCode}'`, async function () {
+      it(`should filter by iso code '${dataCurrencies.euro.isoCode}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterCurrenciesToChangePrecision', baseContext);
 
         // Filter
-        await currenciesPage.filterTable(page, 'input', 'iso_code', Currencies.euro.isoCode);
+        await boCurrenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.euro.isoCode);
 
         // Check number of currencies
-        const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfCurrenciesAfterFilter).to.be.at.least(1);
+        const numberOfCurrenciesAfterFilter = await boCurrenciesPage.getNumberOfElementInGrid(page);
+        expect(numberOfCurrenciesAfterFilter).to.be.at.least(1);
       });
 
       it('should go to edit currency page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToEditCurrencyToChangePrecision', baseContext);
 
-        await currenciesPage.goToEditCurrencyPage(page, 1);
+        await boCurrenciesPage.goToEditCurrencyPage(page, 1);
 
-        const pageTitle = await addCurrencyPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addCurrencyPage.editCurrencyPage);
+        const pageTitle = await boCurrenciesCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCurrenciesCreatePage.editCurrencyPage);
       });
 
       it('should set precision to 3', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'changePrecision', baseContext);
 
         // Set currency precision to 3 and check successful update message
-        const textResult = await addCurrencyPage.setCurrencyPrecision(page, 3);
-        await expect(textResult).to.contains(currenciesPage.successfulUpdateMessage);
+        const textResult = await boCurrenciesCreatePage.setCurrencyPrecision(page, 3);
+        expect(textResult).to.contains(boCurrenciesPage.successfulUpdateMessage);
       });
     });
 
@@ -216,72 +216,72 @@ describe(
       it('should go to FO page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
-        page = await cartRulesPage.viewMyShop(page);
-        await homePage.changeLanguage(page, 'en');
+        page = await boCartRulesPage.viewMyShop(page);
+        await foClassicHomePage.changeLanguage(page, 'en');
 
-        const isHomePage = await homePage.isHomePage(page);
-        await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+        const isHomePage = await foClassicHomePage.isHomePage(page);
+        expect(isHomePage, 'Fail to open FO home page').to.eq(true);
       });
 
       it('should go to login page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFOLoginPage', baseContext);
 
-        await homePage.goToLoginPage(page);
+        await foClassicHomePage.goToLoginPage(page);
 
-        const pageTitle = await foLoginPage.getPageTitle(page);
-        await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+        const pageTitle = await foClassicLoginPage.getPageTitle(page);
+        expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
       });
 
       it('should sign in with default customer', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'loginInFO', baseContext);
 
-        await foLoginPage.customerLogin(page, Customers.johnDoe);
+        await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-        const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-        await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+        const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
+        expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
       });
 
       it('should add product to cart', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
         // Go to home page
-        await foLoginPage.goToHomePage(page);
+        await foClassicLoginPage.goToHomePage(page);
         // Go to product page after searching its name
-        await homePage.searchProduct(page, orderToMake.products[0].product.name);
-        await searchResultsPage.goToProductPage(page, 1);
+        await foClassicHomePage.searchProduct(page, orderToMake.products[0].product.name);
+        await foClassicSearchResultsPage.goToProductPage(page, 1);
         // Add the created product to the cart
-        await productPage.addProductToTheCart(page, orderToMake.products[0].quantity);
+        await foClassicProductPage.addProductToTheCart(page, orderToMake.products[0].quantity);
 
         // Check cart page
-        const pageTitle = await cartPage.getPageTitle(page);
-        await expect(pageTitle, 'Fail to go to cart page').to.contains(cartPage.pageTitle);
+        const pageTitle = await foClassicCartPage.getPageTitle(page);
+        expect(pageTitle, 'Fail to go to cart page').to.contains(foClassicCartPage.pageTitle);
       });
 
       it('should add percent discount and check that the discount was added', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addPercentDiscount', baseContext);
 
-        await cartPage.addPromoCode(page, percentCartRule.code);
-        const firstSubtotalDiscountValue = await cartPage.getSubtotalDiscountValue(page);
+        await foClassicCartPage.addPromoCode(page, percentCartRule.code);
+        const firstSubtotalDiscountValue = await foClassicCartPage.getSubtotalDiscountValue(page);
 
-        await expect(firstSubtotalDiscountValue, 'First discount was not applied')
+        expect(firstSubtotalDiscountValue, 'First discount was not applied')
           .to.equal(-(orderToMake.discountPercentValue));
       });
 
       it('should add free gift discount and check that the discount was added', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addGiftDiscount', baseContext);
 
-        await cartPage.addPromoCode(page, giftCartRule.code);
-        const finalSubtotalDiscountValue = await cartPage.getSubtotalDiscountValue(page);
+        await foClassicCartPage.addPromoCode(page, giftCartRule.code);
+        const finalSubtotalDiscountValue = await foClassicCartPage.getSubtotalDiscountValue(page);
 
-        await expect(finalSubtotalDiscountValue, 'Second discount was not applied')
+        expect(finalSubtotalDiscountValue, 'Second discount was not applied')
           .to.equal(-(orderToMake.discountPercentValue + orderToMake.discountGiftValue));
       });
 
       it('should check order total price', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkToTalPriceInFO', baseContext);
 
-        const totalPrice = await cartPage.getATIPrice(page);
-        await expect(totalPrice, 'Order total price is incorrect')
+        const totalPrice = await foClassicCartPage.getATIPrice(page);
+        expect(totalPrice, 'Order total price is incorrect')
           .to.equal(orderToMake.totalPrice);
       });
 
@@ -289,22 +289,22 @@ describe(
         await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
         // Proceed to checkout the shopping cart
-        await cartPage.clickOnProceedToCheckout(page);
+        await foClassicCartPage.clickOnProceedToCheckout(page);
 
         // Address step - Go to delivery step
-        const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-        await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+        const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
+        expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
 
         // Delivery step - Go to payment step
-        const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-        await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+        const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
+        expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
 
         // Payment step - Choose payment step
-        await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
-        const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
+        await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
+        const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
 
         // Check the confirmation message
-        await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+        expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
       });
     });
 
@@ -313,34 +313,34 @@ describe(
         await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
         // Close tab and init other page objects with new current tab
-        page = await orderConfirmationPage.closePage(browserContext, page, 0);
+        page = await foClassicCheckoutOrderConfirmationPage.closePage(browserContext, page, 0);
 
-        const pageTitle = await currenciesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(currenciesPage.pageTitle);
+        const pageTitle = await boCurrenciesPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCurrenciesPage.pageTitle);
       });
 
       it('should go to orders page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-        await cartRulesPage.goToSubMenu(
+        await boCartRulesPage.goToSubMenu(
           page,
-          cartRulesPage.ordersParentLink,
-          cartRulesPage.ordersLink,
+          boCartRulesPage.ordersParentLink,
+          boCartRulesPage.ordersLink,
         );
 
-        const pageTitle = await ordersPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(ordersPage.pageTitle);
+        const pageTitle = await boOrdersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersPage.pageTitle);
       });
 
       it('should check order total price', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkToTalPriceInBO', baseContext);
 
         // Get order reference to use in sql query
-        orderToMake.reference = await ordersPage.getTextColumn(page, 'reference', 1);
+        orderToMake.setReference(await boOrdersPage.getTextColumn(page, 'reference', 1));
 
         // Check total price
-        const totalPriceInOrdersPage = await ordersPage.getOrderATIPrice(page, 1);
-        await expect(totalPriceInOrdersPage, 'Order total price is incorrect').to.equal(orderToMake.totalPrice);
+        const totalPriceInOrdersPage = await boOrdersPage.getOrderATIPrice(page, 1);
+        expect(totalPriceInOrdersPage, 'Order total price is incorrect').to.equal(orderToMake.totalPrice);
       });
     });
 
@@ -348,33 +348,33 @@ describe(
       it('should go to sql manager page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToSqlManagerPage', baseContext);
 
-        await ordersPage.goToSubMenu(
+        await boOrdersPage.goToSubMenu(
           page,
-          ordersPage.advancedParametersLink,
-          ordersPage.databaseLink,
+          boOrdersPage.advancedParametersLink,
+          boOrdersPage.databaseLink,
         );
 
-        const pageTitle = await sqlManagerPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(sqlManagerPage.pageTitle);
+        const pageTitle = await boSqlManagerPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boSqlManagerPage.pageTitle);
       });
 
       describe('Create new SQL query to get last order total price', async () => {
         it('should go to \'New SQL query\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToCreateSqlQueryPage', baseContext);
 
-          await sqlManagerPage.goToNewSQLQueryPage(page);
+          await boSqlManagerPage.goToNewSQLQueryPage(page);
           // Adding order reference to sql query
           sqlQueryData.sqlQuery = sqlQueryTemplate(orderToMake.reference);
 
-          const pageTitle = await addSqlQueryPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(addSqlQueryPage.pageTitle);
+          const pageTitle = await boSqlManagerCreatePage.getPageTitle(page);
+          expect(pageTitle).to.contains(boSqlManagerCreatePage.pageTitle);
         });
 
         it('should create new SQL query', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'createSqlQuery', baseContext);
 
-          const textResult = await addSqlQueryPage.createEditSQLQuery(page, sqlQueryData);
-          await expect(textResult).to.equal(addSqlQueryPage.successfulCreationMessage);
+          const textResult = await boSqlManagerCreatePage.createEditSQLQuery(page, sqlQueryData);
+          expect(textResult).to.equal(boSqlManagerCreatePage.successfulCreationMessage);
         });
       });
 
@@ -382,36 +382,36 @@ describe(
         it('should filter list by name', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'filterSqlQueriesToView', baseContext);
 
-          await sqlManagerPage.resetFilter(page);
-          await sqlManagerPage.filterSQLQuery(page, 'name', sqlQueryData.name);
+          await boSqlManagerPage.resetFilter(page);
+          await boSqlManagerPage.filterSQLQuery(page, 'name', sqlQueryData.name);
 
-          const sqlQueryName = await sqlManagerPage.getTextColumnFromTable(page, 1, 'name');
-          await expect(sqlQueryName).to.contains(sqlQueryData.name);
+          const sqlQueryName = await boSqlManagerPage.getTextColumnFromTable(page, 1, 'name');
+          expect(sqlQueryName).to.contains(sqlQueryData.name);
         });
 
         it('should click on view button', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'viewSqlQuery', baseContext);
 
-          await sqlManagerPage.goToViewSQLQueryPage(page, 1);
+          await boSqlManagerPage.goToViewSQLQueryPage(page, 1);
 
-          const pageTitle = await viewSqlQueryPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(viewSqlQueryPage.pageTitle);
+          const pageTitle = await boSqlManagerViewPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boSqlManagerViewPage.pageTitle);
         });
 
         it('should check order discount in database', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkLastOrderDiscountInDatabase', baseContext);
 
           // Get total discount from first column of the first row
-          const discountInDatabase = await viewSqlQueryPage.getTextColumn(page, 1, 'total_discounts');
-          await expect(parseFloat(discountInDatabase), 'Discount price is incorrect in database')
+          const discountInDatabase = await boSqlManagerViewPage.getTextColumn(page, 1, 'total_discounts');
+          expect(parseFloat(discountInDatabase), 'Discount price is incorrect in database')
             .to.equal(orderToMake.discountPercentValue + orderToMake.discountGiftValue);
         });
         it('should check last order total price', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkToTalPriceInDatabase', baseContext);
 
           // Get total discount from second column of the first row
-          const totalPriceInDatabase = await viewSqlQueryPage.getTextColumn(page, 1, 'total_paid_tax_incl');
-          await expect(parseFloat(totalPriceInDatabase), 'Total price is incorrect in database')
+          const totalPriceInDatabase = await boSqlManagerViewPage.getTextColumn(page, 1, 'total_paid_tax_incl');
+          expect(parseFloat(totalPriceInDatabase), 'Total price is incorrect in database')
             .to.equal(orderToMake.totalPrice);
         });
       });
@@ -427,51 +427,51 @@ describe(
         it('should go to localization page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPageToReset', baseContext);
 
-          await sqlManagerPage.goToSubMenu(
+          await boSqlManagerPage.goToSubMenu(
             page,
-            sqlManagerPage.internationalParentLink,
-            sqlManagerPage.localizationLink,
+            boSqlManagerPage.internationalParentLink,
+            boSqlManagerPage.localizationLink,
           );
 
-          const pageTitle = await localizationPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(localizationPage.pageTitle);
+          const pageTitle = await boLocalizationPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boLocalizationPage.pageTitle);
         });
 
         it('should go to currencies page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesPageToReset', baseContext);
 
-          await localizationPage.goToSubTabCurrencies(page);
+          await boLocalizationPage.goToSubTabCurrencies(page);
 
-          const pageTitle = await currenciesPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(currenciesPage.pageTitle);
+          const pageTitle = await boCurrenciesPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boCurrenciesPage.pageTitle);
         });
 
-        it(`should filter by iso code '${Currencies.euro.isoCode}'`, async function () {
+        it(`should filter by iso code '${dataCurrencies.euro.isoCode}'`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'filterCurrenciesToReset', baseContext);
 
           // Filter
-          await currenciesPage.filterTable(page, 'input', 'iso_code', Currencies.euro.isoCode);
+          await boCurrenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.euro.isoCode);
 
           // Check number of currencies
-          const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
-          await expect(numberOfCurrenciesAfterFilter).to.be.at.least(1);
+          const numberOfCurrenciesAfterFilter = await boCurrenciesPage.getNumberOfElementInGrid(page);
+          expect(numberOfCurrenciesAfterFilter).to.be.at.least(1);
         });
 
         it('should go to edit currency page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToEditCurrencyPageToReset', baseContext);
 
-          await currenciesPage.goToEditCurrencyPage(page, 1);
+          await boCurrenciesPage.goToEditCurrencyPage(page, 1);
 
-          const pageTitle = await addCurrencyPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(addCurrencyPage.editCurrencyPage);
+          const pageTitle = await boCurrenciesCreatePage.getPageTitle(page);
+          expect(pageTitle).to.contains(boCurrenciesCreatePage.editCurrencyPage);
         });
 
         it('should reset currency precision', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'resetCurrencyPrecision', baseContext);
 
           // Set currency precision to 2 and check successful update message
-          const textResult = await addCurrencyPage.setCurrencyPrecision(page, 2);
-          await expect(textResult).to.contains(currenciesPage.successfulUpdateMessage);
+          const textResult = await boCurrenciesCreatePage.setCurrencyPrecision(page, 2);
+          expect(textResult).to.contains(boCurrenciesPage.successfulUpdateMessage);
         });
       });
 
@@ -479,21 +479,21 @@ describe(
         it('should go to cart rules page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToCartRulesPageToDelete', baseContext);
 
-          await currenciesPage.goToSubMenu(
+          await boCurrenciesPage.goToSubMenu(
             page,
-            currenciesPage.catalogParentLink,
-            currenciesPage.discountsLink,
+            boCurrenciesPage.catalogParentLink,
+            boCurrenciesPage.discountsLink,
           );
 
-          const pageTitle = await cartRulesPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+          const pageTitle = await boCartRulesPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boCartRulesPage.pageTitle);
         });
 
         it('should bulk delete cart rules', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'deleteCartRules', baseContext);
 
-          const deleteTextResult = await cartRulesPage.bulkDeleteCartRules(page);
-          await expect(deleteTextResult).to.be.contains(cartRulesPage.successfulMultiDeleteMessage);
+          const deleteTextResult = await boCartRulesPage.bulkDeleteCartRules(page);
+          expect(deleteTextResult).to.be.contains(boCartRulesPage.successfulMultiDeleteMessage);
         });
       });
 
@@ -501,31 +501,31 @@ describe(
         it('should go to \'SQL Manager\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToSqlManagerPageToDelete', baseContext);
 
-          await cartRulesPage.goToSubMenu(
+          await boCartRulesPage.goToSubMenu(
             page,
-            cartRulesPage.advancedParametersLink,
-            cartRulesPage.databaseLink,
+            boCartRulesPage.advancedParametersLink,
+            boCartRulesPage.databaseLink,
           );
 
-          const pageTitle = await sqlManagerPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(sqlManagerPage.pageTitle);
+          const pageTitle = await boSqlManagerPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boSqlManagerPage.pageTitle);
         });
 
         it('should filter list by name', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'filterSQLQueriesToDelete', baseContext);
 
-          await sqlManagerPage.resetFilter(page);
-          await sqlManagerPage.filterSQLQuery(page, 'name', sqlQueryData.name);
+          await boSqlManagerPage.resetFilter(page);
+          await boSqlManagerPage.filterSQLQuery(page, 'name', sqlQueryData.name);
 
-          const sqlQueryName = await sqlManagerPage.getTextColumnFromTable(page, 1, 'name');
-          await expect(sqlQueryName).to.contains(sqlQueryData.name);
+          const sqlQueryName = await boSqlManagerPage.getTextColumnFromTable(page, 1, 'name');
+          expect(sqlQueryName).to.contains(sqlQueryData.name);
         });
 
         it('should delete SQL query', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'deleteSQLQuery', baseContext);
 
-          const textResult = await sqlManagerPage.deleteSQLQuery(page, 1);
-          await expect(textResult).to.equal(sqlManagerPage.successfulDeleteMessage);
+          const textResult = await boSqlManagerPage.deleteSQLQuery(page, 1);
+          expect(textResult).to.equal(boSqlManagerPage.successfulDeleteMessage);
         });
       });
     });

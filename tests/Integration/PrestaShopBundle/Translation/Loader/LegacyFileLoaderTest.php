@@ -50,9 +50,9 @@ class LegacyFileLoaderTest extends KernelTestCase
     /**
      * {@inheritdoc}
      */
-    public function __construct($name = null, array $data = [], $dataName = '')
+    public function __construct($name = null)
     {
-        parent::__construct($name, $data, $dataName);
+        parent::__construct($name);
 
         $this->catalogueVerifier = new CatalogueVerifier($this);
     }

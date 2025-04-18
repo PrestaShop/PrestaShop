@@ -194,8 +194,8 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
             if (!$this->getCheckoutProcess()->hasErrors()) {
                 $this->setNextStepAsCurrent();
                 $this->setComplete(
-                    $this->getCheckoutSession()->getIdAddressInvoice() &&
-                    $this->getCheckoutSession()->getIdAddressDelivery()
+                    $this->getCheckoutSession()->getIdAddressInvoice()
+                    && $this->getCheckoutSession()->getIdAddressDelivery()
                 );
 
                 // if we just pushed the invoice address form, we are using another address for invoice
@@ -240,19 +240,19 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
             'use_same_address' => $this->use_same_address,
             'use_different_address_url' => $this->context->link->getPageLink(
                 'order',
-                true,
+                null,
                 null,
                 ['use_same_address' => 0]
             ),
             'new_address_delivery_url' => $this->context->link->getPageLink(
                 'order',
-                true,
+                null,
                 null,
                 ['newAddress' => 'delivery']
             ),
             'new_address_invoice_url' => $this->context->link->getPageLink(
                 'order',
-                true,
+                null,
                 null,
                 ['newAddress' => 'invoice']
             ),

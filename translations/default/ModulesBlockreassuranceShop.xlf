@@ -5,22 +5,22 @@
       <trans-unit id="f154808e37d634b883331dc0c0fd8120">
         <source>Security policy</source>
         <target>Security policy</target>
-        <note>Line: 164</note>
+        <note>Line: 169</note>
       </trans-unit>
       <trans-unit id="6a91548cc5152c4e715d0ad0dac8f86a">
         <source>(edit with the Customer Reassurance module)</source>
         <target>(edit with the Customer Reassurance module)</target>
-        <note>Line: 166</note>
+        <note>Line: 171</note>
       </trans-unit>
       <trans-unit id="e80df274da3233f266b147540dd66fab">
         <source>Delivery policy</source>
         <target>Delivery policy</target>
-        <note>Line: 165</note>
+        <note>Line: 170</note>
       </trans-unit>
       <trans-unit id="13cc1f7b2daf32313448c607192405a1">
         <source>Return policy</source>
         <target>Return policy</target>
-        <note>Line: 166</note>
+        <note>Line: 171</note>
       </trans-unit>
     </body>
   </file>

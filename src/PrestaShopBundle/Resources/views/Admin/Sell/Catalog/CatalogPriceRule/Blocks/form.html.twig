@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 {# Apply ui kit theme only on reduction type for now, but it should be used for the whole form #}
@@ -36,47 +36,47 @@
   <div class="card-body">
     <div class="form-wrapper">
       {{ ps.form_group_row(catalogPriceRuleForm.name, {}, {
-        'label': 'Name'|trans({}, 'Admin.Global'),
+        label: 'Name'|trans({}, 'Admin.Global'),
       }) }}
 
       {% if catalogPriceRuleForm.id_shop is defined %}
         {{ ps.form_group_row(catalogPriceRuleForm.id_shop, {}, {
-          'label': 'Store'|trans({}, 'Admin.Global')
+          label: 'Store'|trans({}, 'Admin.Global')
         }) }}
       {% endif %}
 
       {{ ps.form_group_row(catalogPriceRuleForm.id_currency, {}, {
-        'label': 'Currency'|trans({}, 'Admin.Global'),
+        label: 'Currency'|trans({}, 'Admin.Global'),
       }) }}
 
       {{ ps.form_group_row(catalogPriceRuleForm.id_country, {}, {
-        'label': 'Country'|trans({}, 'Admin.Global'),
+        label: 'Country'|trans({}, 'Admin.Global'),
       }) }}
 
       {{ ps.form_group_row(catalogPriceRuleForm.id_group, {}, {
-        'label': 'Group'|trans({}, 'Admin.Global'),
+        label: 'Group'|trans({}, 'Admin.Global'),
       }) }}
 
       {{ ps.form_group_row(catalogPriceRuleForm.from_quantity, {}, {
-        'label': 'From quantity'|trans({}, 'Admin.Catalog.Feature'),
+        label: 'From quantity'|trans({}, 'Admin.Catalog.Feature'),
       }) }}
 
       {{ ps.form_group_row(catalogPriceRuleForm.price, {}, {
-        'label': 'Price (tax excl.)'|trans({}, 'Admin.Catalog.Feature'),
+        label: 'Price (tax excl.)'|trans({}, 'Admin.Catalog.Feature'),
       }) }}
 
-      {{ ps.form_group_row(catalogPriceRuleForm.leave_initial_price, {}, {'label': ''}) }}
+      {{ ps.form_group_row(catalogPriceRuleForm.leave_initial_price, {}, {label: ''}) }}
 
       {{ ps.form_group_row(catalogPriceRuleForm.date_range.from, {}, {
-        'label': 'From'|trans({}, 'Admin.Global'),
+        label: 'From'|trans({}, 'Admin.Global'),
       }) }}
 
       {{ ps.form_group_row(catalogPriceRuleForm.date_range.to, {}, {
-        'label': 'To'|trans({}, 'Admin.Global'),
+        label: 'To'|trans({}, 'Admin.Global'),
       }) }}
 
-      {{ ps.form_group_row(catalogPriceRuleForm.reduction, {'attr': {'class': 'js-reduction-type-source'}}, {
-        'label': 'Reduction'|trans({}, 'Admin.Catalog.Feature'),
+      {{ ps.form_group_row(catalogPriceRuleForm.reduction, {attr: {class: 'js-reduction-type-source'}}, {
+        label: 'Reduction'|trans({}, 'Admin.Catalog.Feature'),
       }) }}
 
       {% block catalog_price_rule_form_rest %}

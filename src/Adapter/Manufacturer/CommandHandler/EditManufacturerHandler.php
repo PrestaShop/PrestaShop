@@ -63,7 +63,7 @@ final class EditManufacturerHandler extends AbstractManufacturerHandler implemen
             if (null !== $command->getAssociatedShops()) {
                 $this->associateWithShops($manufacturer, $command->getAssociatedShops());
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new ManufacturerException(sprintf('Cannot update manufacturer with id "%s"', $manufacturer->id));
         }
     }
@@ -87,9 +87,6 @@ final class EditManufacturerHandler extends AbstractManufacturerHandler implemen
         }
         if (null !== $command->getLocalizedMetaDescriptions()) {
             $manufacturer->meta_description = $command->getLocalizedMetaDescriptions();
-        }
-        if (null !== $command->getLocalizedMetaKeywords()) {
-            $manufacturer->meta_keywords = $command->getLocalizedMetaKeywords();
         }
         if (null !== $command->getLocalizedMetaTitles()) {
             $manufacturer->meta_title = $command->getLocalizedMetaTitles();

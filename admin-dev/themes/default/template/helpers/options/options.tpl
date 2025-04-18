@@ -348,7 +348,7 @@
 				{if isset($categoryData['submit']) || isset($categoryData['buttons'])}
 					<div class="panel-footer">
 						{if isset($categoryData['submit']) && !empty($categoryData['submit'])}
-						<button type="{if isset($categoryData['submit']['type'])}{$categoryData['submit']['type']}{else}submit{/if}" {if isset($categoryData['submit']['id'])}id="{$categoryData['submit']['id']}"{/if} class="btn btn-default pull-right" name="{if isset($categoryData['submit']['name'])}{$categoryData['submit']['name']}{else}submitOptions{$table}{/if}"><i class="process-icon-{if isset($categoryData['submit']['imgclass'])}{$categoryData['submit']['imgclass']}{else}save{/if}"></i> {$categoryData['submit']['title']}</button>
+						<button type="{if isset($categoryData['submit']['type'])}{$categoryData['submit']['type']}{else}submit{/if}" {if isset($categoryData['submit']['id'])}id="{$categoryData['submit']['id']}"{/if} class="btn btn-primary pull-right" name="{if isset($categoryData['submit']['name'])}{$categoryData['submit']['name']}{else}submitOptions{$table}{/if}"><i class="process-icon-{if isset($categoryData['submit']['imgclass'])}{$categoryData['submit']['imgclass']}{else}save{/if}"></i> {$categoryData['submit']['title']}</button>
 						{/if}
 						{if isset($categoryData['buttons'])}
 						{foreach from=$categoryData['buttons'] item=btn key=k}

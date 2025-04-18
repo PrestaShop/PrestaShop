@@ -114,6 +114,20 @@ Feature: Update product basic information from Back Office (BO)
       | locale | value        |
       | en-US  | english name |
       | fr-FR  | english name |
+    # Partial update only secondary language only
+    When I update product "empty_product" with following values:
+      | name[fr-FR] | nom français |
+    Then product "empty_product" localized "name" should be:
+      | locale | value        |
+      | en-US  | english name |
+      | fr-FR  | nom français |
+    # Partial update only default language, when other language is filled no need to force the value
+    When I update product "empty_product" with following values:
+      | name[en-US] | new english name |
+    Then product "empty_product" localized "name" should be:
+      | locale | value            |
+      | en-US  | new english name |
+      | fr-FR  | nom français     |
 
   Scenario: When product name is updated, empty friendly-urls are auto-filled
     Given language "fr" with locale "fr-FR" exists

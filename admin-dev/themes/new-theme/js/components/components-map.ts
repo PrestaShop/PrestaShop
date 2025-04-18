@@ -103,6 +103,8 @@ export default {
   recommendedLengthInput: '.js-recommended-length-input',
   multistoreCheckbox: '.multistore-checkbox',
   formGroup: '.form-group',
+  formControlInvalidClass: 'is-invalid',
+  formControlInvalidFeedbackClass: 'invalid-feedback',
   inputNotCheckbox: ':input:not(.multistore-checkbox)',
   inputContainer: '.input-container',
   formControlLabel: '.form-control-label',
@@ -140,5 +142,8 @@ export default {
       progressModalError: 'progress-modal-error',
       progressStatusIcon: (status: string): string => `progress-${status}-icon`,
     },
+  },
+  emailInput: {
+    inputSelector: '.email-input',
   },
 };

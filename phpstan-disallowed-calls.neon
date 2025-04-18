@@ -267,6 +267,7 @@ parameters:
             allowIn:
                 - src/Adapter/*
                 - src/PrestaShopBundle/Install/*
+                - src/PrestaShopBundle/Controller/Admin/Improve/Design/PositionsController.php
         -
             class: 'Symfony\Component\Translation\TranslatorInterface'
             message: 'use Symfony\Contracts\Translation\TranslatorInterface instead'
@@ -284,8 +285,20 @@ parameters:
             disallowIn:
                 - src/PrestaShopBundle/Controller/*
             allowIn:
+                - src/PrestaShopBundle/Controller/Admin/CommonController.php
                 - src/PrestaShopBundle/Controller/Admin/FrameworkBundleAdminController.php
                 - src/PrestaShopBundle/Controller/Admin/PrestaShopAdminController.php
+                - src/PrestaShopBundle/Controller/Admin/Improve/Modules/ModuleAbstractController.php
+                - src/PrestaShopBundle/Controller/Admin/Sell/Catalog/MonitoringController.php
+                - src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ImageController.php
+                - src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/CombinationController.php
+                - src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php
+                - src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/MetaController.php
+                - src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/OrderStateController.php
+                - src/PrestaShopBundle/Controller/Admin/Improve/Design/CmsPageController.php
+                - src/PrestaShopBundle/Controller/Admin/Improve/Design/MailThemeController.php
+                - src/PrestaShopBundle/Controller/Admin/Improve/International/LanguageController.php
+                - src/PrestaShopBundle/Controller/Admin/Improve/International/CurrencyController.php
   disallowedConstants:
         -
             constant:
@@ -416,3 +429,8 @@ parameters:
                 - src/*
                 - classes/*
                 - controllers/*
+  ignoreErrors:
+        -
+            message: "#^Namespace Module is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+            count: 1
+            path: src/PrestaShopBundle/Controller/Admin/Improve/Design/PositionsController.php

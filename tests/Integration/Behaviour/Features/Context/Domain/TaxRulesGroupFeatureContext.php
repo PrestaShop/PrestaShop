@@ -201,6 +201,7 @@ class TaxRulesGroupFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Then /^tax rules group "(.*)" should be (enabled|disabled)$/
+     *
      * @Given /^tax rules group "(.*)" is (enabled|disabled)$/
      */
     public function assertTaxRulesGroupStatus(string $taxRulesGroupReference, bool $isEnabled): void

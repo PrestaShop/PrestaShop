@@ -141,7 +141,7 @@ class ChangePasswordType extends AbstractType
      *
      * @return Length
      */
-    private function getLengthConstraint(int $maxLength, int $minLength = null): Length
+    private function getLengthConstraint(int $maxLength, ?int $minLength = null): Length
     {
         $options = [
             'max' => $maxLength,

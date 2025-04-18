@@ -82,7 +82,7 @@ class CategoriesType extends TranslatorAwareType
             ->add('add_categories_btn', ButtonType::class, [
                 'label' => $this->trans('Add categories', 'Admin.Catalog.Feature'),
                 'attr' => [
-                    'class' => 'add-categories-btn btn-outline-primary',
+                    'class' => 'add-categories-btn btn-outline-secondary',
                 ],
             ])
         ;

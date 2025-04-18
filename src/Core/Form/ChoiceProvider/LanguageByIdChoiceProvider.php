@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
 use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceFormatter;
 
 /**
  * Class LanguageByIdChoiceProvider provides active language choices with ID values.
@@ -56,12 +57,12 @@ final class LanguageByIdChoiceProvider implements ConfigurableFormChoiceProvider
      */
     public function getChoices(array $options = [])
     {
-        $choices = [];
         $shopId = isset($options['shop_id']) && (int) $options['shop_id'] > 0 ? $options['shop_id'] : false;
-        foreach ($this->languageDataProvider->getLanguages(true, $shopId) as $language) {
-            $choices[$language['name']] = $language['id_lang'];
-        }
 
-        return $choices;
+        return FormChoiceFormatter::formatFormChoices(
+            $this->languageDataProvider->getLanguages(true, $shopId),
+            'id_lang',
+            'name'
+        );
     }
 }

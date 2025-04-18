@@ -54,7 +54,7 @@ final class GetAttachmentForEditingHandler implements GetAttachmentForEditingHan
 
         try {
             $attachment = new Attachment($attachmentIdValue);
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new AttachmentNotFoundException(sprintf('Attachment with id "%s" was not found.', $attachmentIdValue));
         }
 

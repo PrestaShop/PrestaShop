@@ -73,13 +73,12 @@ class DateRangeType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $now = new DateTime();
         $builder
             ->add('from', DatePickerType::class, [
                 'required' => false,
                 'label' => $options['label_from'],
                 'attr' => [
-                    'placeholder' => $this->translator->trans('YY-MM-DD', [], 'Admin.Global'),
+                    'placeholder' => $options['placeholder'],
                     'class' => 'from date-range-start-date',
                 ],
                 'date_format' => $options['date_format'],
@@ -87,9 +86,9 @@ class DateRangeType extends AbstractType
             ->add('to', DatePickerType::class, [
                 'required' => false,
                 'attr' => [
-                    'placeholder' => $this->translator->trans('YY-MM-DD', [], 'Admin.Global'),
+                    'placeholder' => $options['placeholder'],
                     'class' => 'to date-range-end-date',
-                    'data-default-value' => $now->format('Y-m-d'),
+                    'data-default-value' => $options['default_end_value'],
                 ],
                 'label' => $options['label_to'],
                 'date_format' => $options['date_format'],
@@ -137,12 +136,15 @@ class DateRangeType extends AbstractType
     {
         $resolver->setDefaults([
             'date_format' => self::DEFAULT_DATE_FORMAT,
+            'placeholder' => self::DEFAULT_DATE_FORMAT,
             'has_unlimited_checkbox' => false,
+            'default_end_value' => (new DateTime())->format('Y-m-d'),
             'label_from' => $this->translator->trans('Start date', [], 'Admin.Global'),
             'label_to' => $this->translator->trans('End date', [], 'Admin.Global'),
         ]);
         $resolver
             ->setAllowedTypes('date_format', 'string')
+            ->setAllowedTypes('placeholder', 'string')
             ->setAllowedTypes('label_from', 'string')
             ->setAllowedTypes('label_to', 'string')
         ;

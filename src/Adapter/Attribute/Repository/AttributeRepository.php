@@ -28,8 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Attribute\Repository;
 
+use Attribute;
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\AttributeNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\CannotAddAttributeException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\CannotUpdateAttributeException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject\AttributeId;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
@@ -38,35 +41,74 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
-use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
 use ProductAttribute;
 use RuntimeException;
 
 /**
  * Provides access to attribute data source
  */
-class AttributeRepository extends AbstractObjectModelRepository
+class AttributeRepository extends AbstractMultiShopObjectModelRepository
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
 
-    /**
-     * @var string
-     */
-    private $dbPrefix;
+    private string $dbPrefix;
 
-    /**
-     * @param Connection $connection
-     * @param string $dbPrefix
-     */
     public function __construct(
         Connection $connection,
         string $dbPrefix
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
+    }
+
+    /**
+     * @param AttributeId $attributeId
+     *
+     * @return ProductAttribute
+     *
+     * @throws AttributeNotFoundException
+     * @throws CoreException
+     */
+    public function get(AttributeId $attributeId): ProductAttribute
+    {
+        /** @var ProductAttribute $attribute */
+        $attribute = $this->getObjectModel(
+            $attributeId->getValue(),
+            ProductAttribute::class,
+            AttributeNotFoundException::class
+        );
+
+        return $attribute;
+    }
+
+    /**
+     * @param ProductAttribute $attribute
+     *
+     * @return AttributeId
+     *
+     * @throws CoreException
+     */
+    public function add(ProductAttribute $attribute): AttributeId
+    {
+        $attributeId = $this->addObjectModelToShops(
+            $attribute,
+            array_map(fn (int $shopId) => new ShopId((int) $shopId), $attribute->id_shop_list),
+            CannotAddAttributeException::class
+        );
+
+        return new AttributeId($attributeId);
+    }
+
+    public function partialUpdate(ProductAttribute $attribute, array $propertiesToUpdate, int $errorCode = 0): void
+    {
+        $this->partiallyUpdateObjectModel($attribute, $propertiesToUpdate, CannotUpdateAttributeException::class, $errorCode);
+        $this->updateObjectModelShopAssociations(
+            (int) $attribute->id,
+            ProductAttribute::class,
+            $attribute->id_shop_list
+        );
     }
 
     /**
@@ -85,7 +127,7 @@ class AttributeRepository extends AbstractObjectModelRepository
             ->setParameter('idsList', $attributeIds, Connection::PARAM_INT_ARRAY)
         ;
 
-        $result = (int) $qb->execute()->fetch()['total'];
+        $result = (int) $qb->executeQuery()->fetchAssociative()['total'];
 
         if (count($attributeIds) !== $result) {
             throw new AttributeNotFoundException('Some of provided attributes does not exist');
@@ -121,6 +163,7 @@ class AttributeRepository extends AbstractObjectModelRepository
             )
             ->andWhere($qb->expr()->in('a.id_attribute_group', ':attributeGroupIds'))
             ->setParameter('attributeGroupIds', $attributeGroupIdValues, Connection::PARAM_INT_ARRAY)
+            ->addOrderBy('a.position', 'ASC')
         ;
 
         if (!empty($attributeIds)) {
@@ -148,7 +191,7 @@ class AttributeRepository extends AbstractObjectModelRepository
             ;
         }
 
-        $results = $qb->execute()->fetchAllAssociative();
+        $results = $qb->executeQuery()->fetchAllAssociative();
 
         if (!$results) {
             return [];
@@ -231,7 +274,7 @@ class AttributeRepository extends AbstractObjectModelRepository
             ->where($qb->expr()->in('a.id_attribute', ':attributeIds'))
             ->setParameter('shopIds', $shopIdValues, Connection::PARAM_INT_ARRAY)
             ->setParameter('attributeIds', $attributeIdValues, Connection::PARAM_INT_ARRAY)
-            ->execute()
+            ->executeQuery()
             ->fetchAllAssociative()
         ;
 
@@ -270,7 +313,7 @@ class AttributeRepository extends AbstractObjectModelRepository
             ->setParameter('combinationIds', $combinationIds, Connection::PARAM_INT_ARRAY)
         ;
 
-        return $qb->execute()->fetchAll();
+        return $qb->executeQuery()->fetchAllAssociative();
     }
 
     /**
@@ -310,7 +353,7 @@ class AttributeRepository extends AbstractObjectModelRepository
             ->setParameter('langId', $langId)
         ;
 
-        $attributesInfo = $qb->execute()->fetchAll();
+        $attributesInfo = $qb->executeQuery()->fetchAllAssociative();
 
         $attributesInfoByAttributeId = [];
         foreach ($attributesInfo as $attributeInfo) {

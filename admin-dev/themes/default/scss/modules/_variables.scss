@@ -1,19 +1,13 @@
 // PrestaShop Admin Theme Colors
-$main-color: #363a41 !default;
-$primary-color: #25b9d7 !default;
-$primary-light-color: #7cd5e7 !default;
-$secondary-color: $greenPrestashop !default;
-$bg-content-color: #eff1f2 !default;
+$main-color: map-get($map: $cdk-primary, $key: "primary-800") !default;
+$primary-color: map-get($map: $cdk-primary, $key: "primary-800") !default;
+$primary-light-color: map-get($map: $cdk-primary, $key: "primary-800") !default;
+$secondary-color: map-get($map: $cdk-primary, $key: "primary-800") !default;
+$bg-content-color: map-get($map: $cdk-primary, $key: "primary-200") !default;
 
-$contrasted-dark-default: #333;
-$contrasted-light-default: #fff;
+$contrasted-dark-default: map-get($map: $cdk-primary, $key: "primary-800");
+$contrasted-light-default: map-get($map: $cdk-common, $key: "white");
 $contrasted-lightness-threshold: 10%;
-
-$bg-page-head-color: $secondary-color;
-$bg-panel-heading-color: hsl(hue($secondary-color), 10, 90);
-
-$badge-notif-color: $greenPrestashop;
-$brand-addons: $pinkPrestashop;
 
 $font-family-mono: "Open Sans", helvetica, arial, sans-serif;
 
@@ -24,8 +18,28 @@ $icon-size-base: 14px;
 
 // Tooltips
 $tooltip-opacity: 1;
-$tooltip-bg: #555;
+$tooltip-bg: map-get($map: $cdk-primary, $key: "primary-800");
 $tooltip-max-width: 250px;
+
+$tooltip-arrow-width: map-get($map: $cdk-size, $key: "size-8");
+$tooltip-arrow-color: $tooltip-bg;
+
+// Popovers
+$popover-bg: rgba(map-get($map: $cdk-primary, $key: "primary-800"), 0.9);
+$popover-max-width: 250px;
+
+$popover-border-color: rgba(map-get($map: $cdk-primary, $key: "primary-800"), 0.9);
+$popover-fallback-border-color: rgba(map-get($map: $cdk-primary, $key: "primary-800"), 0.9);
+
+$popover-title-bg: transparent;
+
+$popover-arrow-width: map-get($map: $cdk-size, $key: "size-10");
+$popover-arrow-color: $popover-bg;
+
+$popover-arrow-outer-width: map-get($map: $cdk-size, $key: "size-12");
+$popover-arrow-outer-color: transparent;
+$popover-arrow-outer-fallback-color: transparent;
+
 
 // Bootstrap variables
 $gray-darker: lighten(#000, 13.5%);
@@ -40,28 +54,58 @@ $card-border-color: #dbe6e9;
 $card-icon-color: #6c868e;
 
 // Brand colors
-$brand-primary: $primary-color !default;
+$brand-primary: $primary-color;
 
-$brand-success: #72c279 !default;
-$brand-warning: #fbbb22 !default;
-$brand-danger: #e08f95 !default;
-$brand-info: #25b9d7 !default;
+$brand-success: map-get($map: $cdk-green, $key: "green-500");
+$brand-warning: map-get($map: $cdk-yellow, $key: "yellow-500");
+$brand-danger: map-get($map: $cdk-red, $key: "red-500");
+$brand-info: map-get($map: $cdk-blue, $key: "blue-500");
 
-$alert-success-bg: #cbf2d4 !default;
-$alert-success-text: #363a41 !default;
-$alert-success-border: #53d572 !default;
+// Alerts
+$alert-border-radius: map-get($map: $cdk-size, $key: "size-0");
 
-$alert-info-bg: #beeaf3 !default;
-$alert-info-text: #363a41 !default;
-$alert-info-border: #25b9d7 !default;
+$alert-success-bg: map-get($map: $cdk-green, $key: "green-50");
+$alert-success-text: map-get($map: $cdk-primary, $key: "primary-800");
+$alert-success-border: map-get($map: $cdk-green, $key: "green-500");
 
-$alert-warning-bg: #fffbd3 !default;
-$alert-warning-text: #363a41 !default;
-$alert-warning-border: #fab000 !default;
+$alert-info-bg: map-get($map: $cdk-blue, $key: "blue-50");
+$alert-info-text: map-get($map: $cdk-primary, $key: "primary-800");
+$alert-info-border: map-get($map: $cdk-blue, $key: "blue-500");
 
-$alert-danger-bg: #fbc6c3 !default;
-$alert-danger-text: #363a41 !default;
-$alert-danger-border: #f44336 !default;
+$alert-warning-bg: map-get($map: $cdk-yellow, $key: "yellow-50");
+$alert-warning-text: map-get($map: $cdk-primary, $key: "primary-800");
+$alert-warning-border: map-get($map: $cdk-yellow, $key: "yellow-500");
+
+$alert-danger-bg: map-get($map: $cdk-red, $key: "red-50");
+$alert-danger-text: map-get($map: $cdk-primary, $key: "primary-800");
+$alert-danger-border: map-get($map: $cdk-red, $key: "red-500");
+
+// Progress bars
+$progress-bg: map-get($map: $cdk-primary, $key: "primary-400");
+
+// Breadcrumbs
+$breadcrumb-padding-vertical: map-get($map: $cdk-size, $key: "size-5");
+$breadcrumb-padding-horizontal: map-get($map: $cdk-size, $key: "size-5");
+
+$breadcrumb-bg: transparent;
+$breadcrumb-color: map-get($map: $cdk-primary, $key: "primary-700");
+$breadcrumb-active-color: map-get($map: $cdk-primary, $key: "primary-800");
+$breadcrumb-separator: ">";
+
+// Thumbnails
+$thumbnail-border: map-get($map: $cdk-primary, $key: "primary-400");
+$thumbnail-bg: map-get($map: $cdk-common, $key: "white");
+$thumbnail-caption-color: map-get($map: $cdk-primary, $key: "primary-800");
+$thumbnail-caption-padding: map-get($map: $cdk-size, $key: "size-8");
+
+// Badges
+$badge-color: map-get($map: $cdk-common, $key: "white");
+$badge-link-hover-color: map-get($map: $cdk-common, $key: "white");
+$badge-bg: map-get($map: $cdk-primary, $key: "primary-800");
+$badge-active-color: map-get($map: $cdk-primary, $key: "primary-600");
+$badge-active-bg: map-get($map: $cdk-common, $key: "white");
+$badge-font-weight: 400;
+$badge-border-radius: map-get($map: $cdk-size, $key: "size-10");
 
 // Sidebar
 $sidebar-menu-color: #bebebe !default;
@@ -70,65 +114,191 @@ $sidebar-menu-hover-color: #fff !default;
 $sidebar-menu-bg-hover-color: #282b30;
 
 // Toolbar
-$toolbar-buttons-color: #2eacce;
-$toolbar-buttons-hover-color: #40c9ed;
+$toolbar-buttons-color: map-get($map: $cdk-blue, $key: "blue-500");
+$toolbar-buttons-hover-color: map-get($map: $cdk-blue, $key: "blue-700");
 
 // Scaffolding
 $body-bg: $bg-content-color;
-$text-color: $gray;
+$text-color: map-get($map: $cdk-primary, $key: "primary-800");
 
 // Typography
 $FontPathOpenSans: "../node_modules/open-sans-fonts/open-sans";
-$url-font-content-name: "Open Sans" !default;
-$url-font-headings-name: "Open Sans" !default;
-$font-family-sans-serif: $url-font-content-name, helvetica, arial, sans-serif;
-$headings-font-family: $url-font-headings-name, helvetica, arial, sans-serif;
-$font-size-base: 12px;
+$url-font-content-name: var(--#{$cdk}font-family-primary);
+$url-font-headings-name: var(--#{$cdk}font-family-primary);
+$font-family-sans-serif: var(--#{$cdk}font-family-primary);
+$headings-font-family: var(--#{$cdk}font-family-primary);
+$font-size-base: 14px;
 $line-height-base: 1.428571429;
 $line-height-computed: floor($font-size-base * $line-height-base);
 $headings-font-weight: 400;
 
+$font-size-h1:            map-get($map: $cdk-size, $key: "size-24");
+$font-size-h2:            map-get($map: $cdk-size, $key: "size-20");
+$font-size-h3:            map-get($map: $cdk-size, $key: "size-16");
+$font-size-h4:            map-get($map: $cdk-size, $key: "size-14");
+$font-size-h5:            map-get($map: $cdk-size, $key: "size-14");
+$font-size-h6:            map-get($map: $cdk-size, $key: "size-14");
+
+$headings-font-weight:    700;
+$headings-line-height:    1.2;
+$headings-color:          map-get($map: $cdk-primary, $key: "primary-800");
+
 // Components
 $padding-base-vertical: 8px;
 $padding-base-horizontal: 16px;
-$border-radius-base: 4px;
+$border-radius-base: map-get($map: $cdk-size, $key: "size-0");
+$border-radius-large: map-get($map: $cdk-size, $key: "size-0");
+$border-radius-small: map-get($map: $cdk-size, $key: "size-0");
 
 // Tables
+$table-bg-accent:               map-get($map: $cdk-primary, $key: "primary-300");
+$table-bg-hover:                map-get($map: $cdk-primary, $key: "primary-400");
 
-// $table-bg: transparent  overall background-color
-$table-bg-accent: #f9f9f9;
-$table-bg-hover: #edf7fb;
+$table-border-color:            map-get($map: $cdk-primary, $key: "primary-300");
 
 // Buttons
-$btn-default-color: $main-color;
-$btn-default-bg: #fff;
-$btn-default-border: #bbcdd2;
-$btn-primary-color: #fff;
-$btn-primary-bg: $primary-color;
-$btn-primary-border: $primary-color;
-$btn-primary-active-bg: #21a6c1;
+$btn-font-weight:                600;
 
-$btn-secondary-hover: #889da2;
-$btn-secondary-active-color: #889da2;
-$btn-secondary-color: #fff;
+$btn-default-color:              map-get($map: $cdk-primary, $key: "primary-800");
+$btn-default-bg:                 map-get($map: $cdk-common, $key: "white");
+$btn-default-border:             map-get($map: $cdk-primary, $key: "primary-800");
+
+$btn-primary-color:              map-get($map: $cdk-common, $key: "white");
+$btn-primary-bg:                 map-get($map: $cdk-primary, $key: "primary-800");
+$btn-primary-border:             map-get($map: $cdk-primary, $key: "primary-800");
+$btn-primary-active-bg:          map-get($map: $cdk-primary, $key: "primary-700");
+
+$btn-secondary-color:            map-get($map: $cdk-primary, $key: "primary-800");
+$btn-secondary-bg:               map-get($map: $cdk-primary, $key: "primary-500");
+$btn-secondary-border:           map-get($map: $cdk-primary, $key: "primary-500");
+
+$btn-success-color:              map-get($map: $cdk-common, $key: "white");
+$btn-success-bg:                 $brand-success;
+$btn-success-border:             $brand-success;
+
+$btn-info-color:                 map-get($map: $cdk-common, $key: "white");
+$btn-info-bg:                    $brand-info;
+$btn-info-border:                $brand-info;
+
+$btn-warning-color:              map-get($map: $cdk-common, $key: "white");
+$btn-warning-bg:                 $brand-warning;
+$btn-warning-border:             $brand-warning;
+
+$btn-danger-color:               map-get($map: $cdk-common, $key: "white");
+$btn-danger-bg:                  $brand-danger;
+$btn-danger-border:              $brand-danger;
+
+$btn-link-disabled-color:        map-get($map: $cdk-primary, $key: "primary-500");
 
 // Forms
-$input-bg: #fff;
-$input-height-base: ($line-height-computed + ($padding-base-vertical * 2) + 6);
-$input-group-addon-bg: #f5f8f9;
-$input-border: #bbcdd2;
-$input-focus-background: #f4fcfd;
-$input-focus-border: $primary-color;
+$input-bg: map-get($map: $cdk-common, $key: "white");
+$input-bg-disabled: map-get($map: $cdk-primary, $key: "primary-300");
+
+$input-color: map-get($map: $cdk-primary, $key: "primary-800");
+$input-border: map-get($map: $cdk-primary, $key: "primary-400");
+$input-border-focus: map-get($map: $cdk-primary, $key: "primary-800");
+$input-color-placeholder: map-get($map: $cdk-primary, $key: "primary-500");
+
+$input-height-base: ($line-height-computed + ($padding-base-vertical * 2) + 2);
+$input-group-addon-bg: map-get($map: $cdk-primary, $key: "primary-200");
+$input-focus-background: map-get($map: $cdk-common, $key: "white");
+
+$legend-color: map-get($map: $cdk-primary, $key: "primary-800");
+$legend-border-color: map-get($map: $cdk-primary, $key: "primary-400");
+
+// Form states and alerts
+$state-success-text: map-get($map: $cdk-green, $key: "green-500");
+$state-success-bg: map-get($map: $cdk-green, $key: "green-50");
+$state-success-border: map-get($map: $cdk-green, $key: "green-500");
+
+$state-info-text: map-get($map: $cdk-blue, $key: "blue-500");
+$state-info-bg: map-get($map: $cdk-blue, $key: "blue-50");
+$state-info-border: map-get($map: $cdk-blue, $key: "blue-500");
+
+$state-warning-text: map-get($map: $cdk-yellow, $key: "yellow-500");
+$state-warning-bg: map-get($map: $cdk-yellow, $key: "yellow-50");
+$state-warning-border: map-get($map: $cdk-yellow, $key: "yellow-500");
+
+$state-danger-text: map-get($map: $cdk-red, $key: "red-500");
+$state-danger-bg: map-get($map: $cdk-red, $key: "red-50");
+$state-danger-border: map-get($map: $cdk-red, $key: "red-500");
+
 // Dropdowns
-$dropdown-link-hover-color: #fff;
-$dropdown-link-hover-bg: $brand-primary;
+$dropdown-border: map-get($map: $cdk-common, $key: "white");
+$dropdown-fallback-border: map-get($map: $cdk-common, $key: "white");
+$dropdown-divider-bg: map-get($map: $cdk-primary, $key: "primary-400");
+
+$dropdown-link-hover-color: map-get($map: $cdk-primary, $key: "primary-800");
+$dropdown-link-hover-bg: map-get($map: $cdk-primary, $key: "primary-200");
+$dropdown-link-disabled-color: map-get($map: $cdk-primary, $key: "primary-300");
+
+// Navs
+$nav-link-padding: map-get($map: $cdk-size, $key: "size-16") map-get($map: $cdk-size, $key: "size-20");
+$nav-link-hover-bg: map-get($map: $cdk-common, $key: "white");
+
+$nav-disabled-link-color: map-get($map: $cdk-primary, $key: "primary-400");
+$nav-disabled-link-hover-color: map-get($map: $cdk-primary, $key: "primary-400");
+
+// Tabs
+$nav-tabs-border-color: map-get($map: $cdk-primary, $key: "primary-300");
+
+$nav-tabs-link-hover-border-color: map-get($map: $cdk-primary, $key: "primary-300");
+
+$nav-tabs-active-link-hover-bg: map-get($map: $cdk-primary, $key: "primary-200");
+$nav-tabs-active-link-hover-color: map-get($map: $cdk-primary, $key: "primary-800");
+$nav-tabs-active-link-hover-border-color: map-get($map: $cdk-primary, $key: "primary-200");
+
+$nav-tabs-justified-link-border-color: map-get($map: $cdk-primary, $key: "primary-200");
+$nav-tabs-justified-active-link-border-color: map-get($map: $cdk-primary, $key: "primary-400");
+
+// Pills
+$nav-pills-active-link-hover-bg: map-get($map: $cdk-primary, $key: "primary-800");
+$nav-pills-active-link-hover-color: map-get($map: $cdk-common, $key: "white");
+
+// List group
+$list-group-bg: map-get($map: $cdk-common, $key: "white");
+$list-group-border: map-get($map: $cdk-primary, $key: "primary-400");
+
+$list-group-hover-bg: map-get($map: $cdk-primary, $key: "primary-200");
+$list-group-active-color: map-get($map: $cdk-common, $key: "white");
+$list-group-active-bg: map-get($map: $cdk-primary, $key: "primary-800");
+$list-group-active-border: map-get($map: $cdk-primary, $key: "primary-200");
+$list-group-active-text-color: map-get($map: $cdk-common, $key: "white");
+
+$list-group-disabled-color: map-get($map: $cdk-primary, $key: "primary-500");
+$list-group-disabled-bg: map-get($map: $cdk-primary, $key: "primary-200");
+$list-group-disabled-text-color: map-get($map: $cdk-primary, $key: "primary-500");
+
+$list-group-link-color: map-get($map: $cdk-primary, $key: "primary-800");
+$list-group-link-hover-color: map-get($map: $cdk-primary, $key: "primary-700");
+$list-group-link-heading-color: map-get($map: $cdk-primary, $key: "primary-800");
+
+// Panels
+$panel-bg: map-get($map: $cdk-common, $key: "white");
+$panel-body-padding: map-get($map: $cdk-size, $key: "size-24");
+$panel-heading-padding: map-get($map: $cdk-size, $key: "size-24");
+$panel-footer-padding: map-get($map: $cdk-size, $key: "size-24");
+
+$panel-default-text: map-get($map: $cdk-primary, $key: "primary-800");
+$panel-default-border: map-get($map: $cdk-primary, $key: "primary-400");
+$panel-default-heading-bg: map-get($map: $cdk-common, $key: "white");
+
+$panel-inner-border: map-get($map: $cdk-primary, $key: "primary-400");
+$panel-footer-bg: map-get($map: $cdk-common, $key: "white");
+
+$panel-primary-text: map-get($map: $cdk-common, $key: "white");
+$panel-primary-border: map-get($map: $cdk-primary, $key: "primary-800");
+$panel-primary-heading-bg: map-get($map: $cdk-primary, $key: "primary-800");
+
+// Wells
+$well-bg: map-get($map: $cdk-primary, $key: "primary-200");
+$well-border: map-get($map: $cdk-primary, $key: "primary-400");
 
 // Grid system
 $grid-gutter-width: 10px;
 
 // Basics of a navbar
-$navbar-height: 40px;
-$well-bg: #fcfdfe;
+$navbar-height: 52px;
 
 // Media queries breakpoints
 // Tiny screen / phone
@@ -162,25 +332,24 @@ $container-desktop: 940px;
 $container-large-desktop: 1170px;
 
 // Menu
-$gray-dark-menu: #363a41;
+$gray-dark-menu: map-get($map: $cdk-common, $key: "white");
+$sidebar-menu-bg: map-get($map: $cdk-common, $key: "white");
 $widthSidebarNav: 210px;
 $paddingLeftPageClosed: 4.0625rem;
 $paddingLeftMobile: 0.625rem;
 $widthSidebarSubmenu: 200px;
 $menu-item-size: 34px;
 $min-height: 950px;
-$gray-dark-link: #fff;
-$gray-dark-link-hover: #fff;
-$size-navbar-width: 13.13rem;
-$size-navbar-width-mini: 3.125rem;
-$size-header-height: 2.5rem;
-$header-mobile-padding-y: 0.625rem;
-$medium-gray: #6c868e;
-$gray-medium: $medium-gray;
-$gray-dark-active-menu: #22252a;
-$gray-dark-title: #98aab0;
-$gray-dark-secondary-link: #b6c3c7;
-$gray-dark-logout: #ff7a7a;
+$gray-dark-link: map-get($map: $cdk-primary, $key: "primary-800");
+$gray-dark-link-hover: map-get($map: $cdk-primary, $key: "primary-700");
+$size-navbar-width: map-get($map: $cdk-size, $key: "size-208");
+$size-navbar-width-mini: map-get($map: $cdk-size, $key: "size-52");
+$size-header-height: map-get($map: $cdk-size, $key: "size-52");
+$header-mobile-padding-y: map-get($map: $cdk-size, $key: "size-10");
+$medium-gray: map-get($map: $cdk-primary, $key: "primary-400");
+$gray-medium: map-get($map: $cdk-primary, $key: "primary-400");
+$gray-dark-active-menu:  map-get($map: $cdk-primary, $key: "primary-200");
+$gray-dark-title: map-get($map: $cdk-blue, $key: "blue-500");
 
 // use rems to ensure homogeneity on all zoom scales
 $grid-breakpoints: (xs: 0, sm: 34em, md: 48em, lg: 64em, xl: 81.25em);

@@ -74,7 +74,7 @@ class CombinationImagesChoiceType extends TranslatorAwareType
                 'multiple' => true,
                 'expanded' => true,
             ]
-        );
+            );
 
         $choiceProvider = $this->imagesChoiceProvider;
         $resolver->setNormalizer('choices', function (OptionsResolver $resolver) use ($choiceProvider) {

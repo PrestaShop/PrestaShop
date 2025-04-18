@@ -463,7 +463,7 @@ class AdminCarrierWizardControllerCore extends AdminController
         $groups = Group::getGroups($this->context->language->id);
 
         foreach ($groups as $group) {
-            $fields_value['groupBox_' . $group['id_group']] = Tools::getValue('groupBox_' . $group['id_group'], (in_array($group['id_group'], $carrier_groups_ids) || empty($carrier_groups_ids) && !$carrier->id));
+            $fields_value['groupBox_' . $group['id_group']] = Tools::getValue('groupBox_' . $group['id_group'], in_array($group['id_group'], $carrier_groups_ids) || empty($carrier_groups_ids) && !$carrier->id);
         }
 
         return $this->renderGenericForm(['form' => $this->fields_form], $fields_value);
@@ -511,7 +511,7 @@ class AdminCarrierWizardControllerCore extends AdminController
      * @param array $tpl_vars
      * @param array $fields_value
      */
-    protected function getTplRangesVarsAndValues($carrier, &$tpl_vars, &$fields_value)
+    protected function getTplRangesVarsAndValues(Carrier $carrier, array &$tpl_vars, array &$fields_value)
     {
         $tpl_vars['zones'] = Zone::getZones(false, true);
         $carrier_zones = $carrier->getZones();
@@ -531,7 +531,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 
         $zones = Zone::getZones(false);
         foreach ($zones as $zone) {
-            $fields_value['zones'][$zone['id_zone']] = Tools::getValue('zone_' . $zone['id_zone'], (in_array($zone['id_zone'], $carrier_zones_ids)));
+            $fields_value['zones'][$zone['id_zone']] = Tools::getValue('zone_' . $zone['id_zone'], in_array($zone['id_zone'], $carrier_zones_ids));
         }
 
         if ($shipping_method == Carrier::SHIPPING_METHOD_FREE) {
@@ -664,7 +664,7 @@ class AdminCarrierWizardControllerCore extends AdminController
         die($template->fetch());
     }
 
-    protected function validateForm($die = true)
+    protected function validateForm(bool $die = true)
     {
         $step_number = (int) Tools::getValue('step_number');
         $return = ['has_error' => false];
@@ -812,7 +812,7 @@ class AdminCarrierWizardControllerCore extends AdminController
                     $this->duplicateLogo((int) $new_carrier->id, (int) $current_carrier->id);
                     $this->changeGroups((int) $new_carrier->id);
 
-                    //Copy default carrier
+                    // Copy default carrier
                     if (Configuration::get('PS_CARRIER_DEFAULT') == $current_carrier->id) {
                         Configuration::updateValue('PS_CARRIER_DEFAULT', (int) $new_carrier->id);
                     }
@@ -838,7 +838,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 
             if (isset($carrier)) {
                 if ($carrier->is_free) {
-                    //if carrier is free delete shipping cost
+                    // if carrier is free delete shipping cost
                     $carrier->deleteDeliveryPrice('range_weight');
                     $carrier->deleteDeliveryPrice('range_price');
                 }
@@ -889,7 +889,7 @@ class AdminCarrierWizardControllerCore extends AdminController
         die(json_encode($return));
     }
 
-    protected function changeGroups($id_carrier, $delete = true)
+    protected function changeGroups(int $id_carrier, bool $delete = true)
     {
         $carrier = new Carrier((int) $id_carrier);
         if (!Validate::isLoadedObject($carrier)) {
@@ -952,11 +952,6 @@ class AdminCarrierWizardControllerCore extends AdminController
         }
 
         return $definition;
-    }
-
-    public static function displayFieldName($field)
-    {
-        return $field;
     }
 
     public function duplicateLogo($new_id, $old_id)

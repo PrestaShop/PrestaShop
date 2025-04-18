@@ -28,6 +28,7 @@ namespace PrestaShopBundle\EventListener;
 
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
@@ -84,7 +85,7 @@ class ActionDispatcherLegacyHooksSubscriber implements EventSubscriberInterface
             : $event->getController()
         ;
 
-        if ($controller instanceof FrameworkBundleAdminController) {
+        if ($controller instanceof FrameworkBundleAdminController || $controller instanceof PrestaShopAdminController) {
             $controllerType = self::BACK_OFFICE_CONTROLLER;
         }
 

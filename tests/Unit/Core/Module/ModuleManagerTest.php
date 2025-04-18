@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ModuleManagerTest extends TestCase
@@ -53,6 +54,9 @@ class ModuleManagerTest extends TestCase
 
     /** @var Module&MockObject */
     private $module;
+
+    /** @var LegacyModule&MockObject */
+    private $legacyModule;
 
     public function setUp(): void
     {
@@ -76,6 +80,9 @@ class ModuleManagerTest extends TestCase
                 $translatorMock,
                 $this->createMock(EventDispatcherInterface::class),
                 $this->createMock(HookManager::class),
+                _PS_MODULE_DIR_,
+                new XliffFileLoader(),
+                null,
             ])
             ->onlyMethods(['upgradeMigration'])
             ->getMock()
@@ -159,18 +166,16 @@ class ModuleManagerTest extends TestCase
 
     public function testGetError(): void
     {
-        $moduleInstance = $this->createMock(LegacyModule::class);
-        $moduleInstance->method('getErrors')->willReturnOnConsecutiveCalls([], ['my error']);
-        $this->module->method('getInstance')->willReturn($moduleInstance);
+        $this->legacyModule->method('getErrors')->willReturnOnConsecutiveCalls([], ['my error']);
         $this->module->method('hasValidInstance')->willReturnOnConsecutiveCalls(false, true, true);
 
         $this->assertEquals(
-            'The module is invalid and cannot be loaded.',
+            'The module %module% is invalid and cannot be loaded.',
             $this->moduleManager->getError(self::INSTALLED_MODULE_NAME)
         );
 
         $this->assertEquals(
-            'Unfortunately, the module did not return additional details.',
+            'Unfortunately, the module %module% did not return additional details.',
             $this->moduleManager->getError(self::INSTALLED_MODULE_NAME)
         );
 
@@ -189,10 +194,17 @@ class ModuleManagerTest extends TestCase
         $module = $this->getMockBuilder(Module::class)
             ->disableOriginalConstructor()
             ->enableOriginalClone()
-            ->setMethodsExcept([])
-            ->addMethods(['reset', 'postInstall'])
             ->getMock()
         ;
+
+        $this->legacyModule = $this->getMockBuilder(LegacyModule::class)
+            ->disableOriginalConstructor()
+            ->enableOriginalClone()
+            ->addMethods(['reset'])
+            ->onlyMethods(['getErrors'])
+            ->getMock()
+        ;
+        $this->legacyModule->method('reset')->willReturn(true);
 
         $module->method('get')->with('version')->willReturn('1.0.0');
         $module->method('onInstall')->willReturn(true);
@@ -202,8 +214,7 @@ class ModuleManagerTest extends TestCase
         $module->method('onUpgrade')->willReturn(true);
         $module->method('onReset')->willReturn(true);
         $module->method('onPostInstall')->willReturn(true);
-        $module->method('reset')->willReturn(true);
-        $module->method('postInstall')->willReturn(true);
+        $module->method('getInstance')->willReturn($this->legacyModule);
 
         return $module;
     }

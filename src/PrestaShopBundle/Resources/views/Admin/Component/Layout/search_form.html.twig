@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,11 +21,11 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 <form id="header_search"
       class="bo_search_form dropdown-form js-dropdown-form collapsed"
       method="post"
-      action="{{ path('AdminSearch') }}"
+      action="{{ legacy_path('AdminSearch') }}"
       role="search">
   <input type="hidden" name="bo_search_type" id="bo_search_type" class="js-search-type" />
   {% if showClearBtn is defined and showClearBtn %}
@@ -48,7 +48,7 @@
         <a class="dropdown-item" data-item="{{ 'Carts'|trans({}, 'Admin.Global') }}" href="#" data-value="5" data-placeholder="{{ 'Cart ID'|trans({}, 'Admin.Navigation.Header') }}" data-icon="icon-shopping-cart"><i class="material-icons">shopping_cart</i> {{ 'Carts'|trans({}, 'Admin.Global') }}</a>
         <a class="dropdown-item" data-item="{{ 'Modules'|trans({}, 'Admin.Global') }}" href="#" data-value="7" data-placeholder="{{ 'Module name'|trans({}, 'Admin.Navigation.Header') }}" data-icon="icon-puzzle-piece"><i class="material-icons">extension</i> {{ 'Modules'|trans({}, 'Admin.Global') }}</a>
       </div>
-      <button class="btn btn-primary" type="submit"><span class="d-none">{{ 'SEARCH'|trans({}, 'Admin.Navigation.Header') }}</span><i class="material-icons">search</i></button>
+      <button class="btn btn-secondary" type="submit"><span class="d-none">{{ 'SEARCH'|trans({}, 'Admin.Navigation.Header') }}</span><i class="material-icons">search</i></button>
     </div>
   </div>
 </form>
@@ -63,4 +63,3 @@
       });
     });
 </script>
-

@@ -62,7 +62,7 @@ class ModuleTabRegister
     protected $tabRepository;
 
     /**
-     * @var \Psr\Log\LoggerInterface
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -230,7 +230,7 @@ class ModuleTabRegister
         if ($data->has('ParentClassName') && !$data->has('parent_class_name')) {
             $this->logger->warning('Tab attribute "ParentClassName" is deprecated. You must use "parent_class_name" instead.');
         }
-        //Check if the tab was already added manually
+        // Check if the tab was already added manually
         if (!empty($this->tabRepository->findOneIdByClassName($className))) {
             throw new Exception(sprintf('Cannot register tab "%s" because it already exists', $className));
         }

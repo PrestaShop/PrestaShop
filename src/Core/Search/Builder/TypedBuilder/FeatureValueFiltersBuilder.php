@@ -56,7 +56,7 @@ class FeatureValueFiltersBuilder extends AbstractFiltersBuilder implements Typed
     /**
      * {@inheritdoc}
      */
-    public function buildFilters(Filters $filters = null)
+    public function buildFilters(?Filters $filters = null)
     {
         $filterParameters = FeatureValueFilters::getDefaults();
         if (null !== $filters) {

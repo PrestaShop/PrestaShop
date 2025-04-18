@@ -51,7 +51,7 @@ class OrderMessageProvider
      *
      * @return array
      */
-    public function getMessages(int $langId = null): array
+    public function getMessages(?int $langId = null): array
     {
         $result = OrderMessage::getOrderMessages($langId ?? $this->contextLanguageId);
 

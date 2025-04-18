@@ -25,6 +25,7 @@
  */
 
 use PrestaShopBundle\Install\LanguageList;
+use Symfony\Component\Finder\Finder;
 
 class InstallControllerHttp
 {
@@ -147,25 +148,17 @@ class InstallControllerHttp
         $detect_language = $this->language->detectLanguage();
 
         if (empty($this->session->lang)) {
-            $this->session->lang = $detect_language['primarytag'];
+            // Set the en as default fallback in case we can't detect a better one
+            $this->session->lang = 'en';
+            if (isset($detect_language['primarytag'])
+                && in_array($detect_language['primarytag'], $this->language->getIsoList())) {
+                $this->session->lang = $detect_language['primarytag'];
+            }
         }
 
-        Context::getContext()->language = $this->language->getLanguage(
-            $this->session->lang ?: false
-        );
-
+        Context::getContext()->language = $this->language->getLanguage($this->session->lang);
         $this->translator = Context::getContext()->getTranslator(true);
-
-        if (isset($this->session->lang)) {
-            $lang = $this->session->lang;
-        } else {
-            $lang = (isset($detect_language['primarytag'])) ? $detect_language['primarytag'] : false;
-        }
-
-        if (!in_array($lang, $this->language->getIsoList())) {
-            $lang = 'en';
-        }
-        $this->language->setLanguage($lang);
+        $this->language->setLanguage($this->session->lang);
 
         if (empty(self::getSteps())) {
             $this->initSteps();
@@ -185,11 +178,6 @@ class InstallControllerHttp
     final public static function execute()
     {
         $self = new static();
-
-        if (Tools::getValue('compile_templates')) {
-            require_once _PS_INSTALL_CONTROLLERS_PATH_ . 'http/smarty_compile.php';
-            exit;
-        }
 
         $session = InstallSession::getInstance();
         if (!$session->last_step || $session->last_step === 'welcome') {
@@ -414,6 +402,16 @@ class InstallControllerHttp
 
         if (file_exists($customPath . $template . '.php')) {
             return $this->renderTemplate($customPath, $template);
+        }
+
+        // Loop through the modules in modules folder and search for a potential template override
+        $finder = new Finder();
+        $finder->in(_PS_CORE_DIR_ . '/modules')->directories()->depth(0);
+        foreach ($finder as $dir) {
+            $moduleInstallTheme = $dir->getRealPath() . '/install-theme/';
+            if (file_exists($moduleInstallTheme . $template . '.php')) {
+                return $this->renderTemplate($moduleInstallTheme, $template);
+            }
         }
 
         if (file_exists($path . $template . '.php')) {

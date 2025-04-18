@@ -14,10 +14,17 @@ services:
       - '@prestashop.core.image.parser.image_tag_source_parser'
       - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
 
-  prestashop.adapter.language.rtl.installed_language_checker:
-    class: 'PrestaShop\PrestaShop\Adapter\Language\RTL\InstalledLanguageChecker'
+  PrestaShop\PrestaShop\Adapter\Language\RTL\InstalledLanguageChecker:
+    public: false
     arguments:
       - '@prestashop.adapter.data_provider.language'
+
+  prestashop.adapter.language.rtl.installed_language_checker:
+    alias: 'PrestaShop\PrestaShop\Adapter\Language\RTL\InstalledLanguageChecker'
+    public: true
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.adapter.language.command_handler.add_language_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Language\CommandHandler\AddLanguageHandler'
@@ -65,3 +72,6 @@ services:
     public: false
     arguments:
       $context: '@prestashop.adapter.legacy.context'
+
+  PrestaShop\PrestaShop\Adapter\Language\Repository\LanguageRepository:
+    autowire: true

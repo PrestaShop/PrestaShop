@@ -74,7 +74,7 @@ class WebserviceEndpointFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @When /^I use Webservice with key "(.*)" to add "(.+)" for reference "(.+)"$/
      */
-    public function whenRequestPost(string $webserviceKey, string $endpoint, string $reference, TableNode $rows = null): void
+    public function whenRequestPost(string $webserviceKey, string $endpoint, string $reference, ?TableNode $rows = null): void
     {
         $output = $this->whenRequest($webserviceKey, 'POST', $endpoint, $rows ? $rows->getHash() : null);
 
@@ -88,7 +88,7 @@ class WebserviceEndpointFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @When /^I use Webservice with key "(.*)" to update "(.+)" for reference "(.+)"$/
      */
-    public function whenRequestPut(string $webserviceKey, string $endpoint, string $reference, TableNode $rows = null): void
+    public function whenRequestPut(string $webserviceKey, string $endpoint, string $reference, ?TableNode $rows = null): void
     {
         if (!empty($rows)) {
             $rows = $rows->getHash();
@@ -168,7 +168,7 @@ class WebserviceEndpointFeatureContext extends AbstractPrestaShopFeatureContext
         throw new RuntimeException(sprintf('Error with code %d was not found', $errorCode));
     }
 
-    private function whenRequest(string $webserviceKey, string $method, string $endpoint, array $rows = null): Crawler
+    private function whenRequest(string $webserviceKey, string $method, string $endpoint, ?array $rows = null): Crawler
     {
         $postFields = '';
         if (!empty($rows)) {

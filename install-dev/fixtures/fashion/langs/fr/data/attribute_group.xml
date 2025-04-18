@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <entity_attribute_group>
   <attribute_group id="Size">
-    <name>Size</name>
-    <public_name>Size</public_name>
+    <name>Taille</name>
+    <public_name>Taille</public_name>
   </attribute_group>
   <attribute_group id="Color">
-    <name>Color</name>
-    <public_name>Color</public_name>
+    <name>Couleur</name>
+    <public_name>Couleur</public_name>
   </attribute_group>
   <attribute_group id="Dimension">
     <name>Dimension</name>

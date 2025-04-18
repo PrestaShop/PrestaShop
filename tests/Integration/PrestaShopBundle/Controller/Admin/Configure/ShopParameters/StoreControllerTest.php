@@ -35,7 +35,7 @@ use Tests\Integration\PrestaShopBundle\Controller\GridControllerTestCase;
 use Tests\Integration\PrestaShopBundle\Controller\TestEntityDTO;
 use Tests\Resources\Resetter\StoreResetter;
 
-//@todo: when form actions are ready, this class should extend FormGridControllerTestCase and add additional tests for forms
+// @todo: when form actions are ready, this class should extend FormGridControllerTestCase and add additional tests for forms
 class StoreControllerTest extends GridControllerTestCase
 {
     /**
@@ -51,7 +51,6 @@ class StoreControllerTest extends GridControllerTestCase
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        static::mockContext();
         StoreResetter::resetStores();
     }
 
@@ -175,7 +174,7 @@ class StoreControllerTest extends GridControllerTestCase
             $allStoreIds[] = $store->getId();
         }
 
-        //first disable all of them
+        // first disable all of them
         $this->client->request(
             'POST',
             $this->router->generate('admin_stores_bulk_disable'),
@@ -216,6 +215,8 @@ class StoreControllerTest extends GridControllerTestCase
      */
     public function testDelete(): int
     {
+        $this->client->disableReboot();
+
         $initialEntityCount = $this->getEntitiesFromGrid()->count();
         $this->deleteEntityFromPage('admin_stores_delete', ['storeId' => 5]);
 
@@ -230,6 +231,8 @@ class StoreControllerTest extends GridControllerTestCase
      */
     public function testBulkDelete(): void
     {
+        $this->client->disableReboot();
+
         $initialEntityCount = $this->getEntitiesFromGrid()->count();
         $this->bulkDeleteEntitiesFromPage('admin_stores_bulk_delete', ['store_bulk' => [2, 3]]);
         $this->assertCount($initialEntityCount - 2, $this->getEntitiesFromGrid());

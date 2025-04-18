@@ -1,0 +1,54 @@
+#createDiscountModal {
+  .modal-dialog {
+    max-width: 400px;
+
+    .modal-title {
+      font-size: var(--#{$cdk}size-24);
+    }
+
+    .required {
+      .text-danger {
+        display: none;
+      }
+    }
+
+    .discount-type {
+      .form-check-radio {
+        margin-bottom: 0;
+        border: solid 1px var(--#{$cdk}primary-400);
+        border-bottom: solid 1px transparent;
+
+        &:last-child {
+          border-bottom: solid 1px var(--#{$cdk}primary-400);
+        }
+
+        .form-check-label {
+          padding: 1rem;
+          cursor: pointer;
+
+          .discount-label {
+            font-weight: 500;
+          }
+
+          .discount-type-icon {
+            padding: 0.5rem;
+            margin-left: auto;
+            background-color: var(--#{$cdk}primary-200);
+            border: solid 1px var(--#{$cdk}primary-400);
+          }
+        }
+
+        &:has(:checked) {
+          background-color: var(--#{$cdk}primary-200);
+          border-color: var(--#{$cdk}primary-900);
+          border-bottom: solid 1px var(--#{$cdk}primary-900);
+        }
+
+        &:hover {
+          border-color: var(--#{$cdk}primary-900);
+          border-bottom: solid 1px var(--#{$cdk}primary-900);
+        }
+      }
+    }
+  }
+}

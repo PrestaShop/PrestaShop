@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Routing\Linter\Exception;
 
+use RuntimeException;
+
 /**
  * Thrown when naming convention is not followed
  */
@@ -36,7 +38,7 @@ class NamingConventionException extends LinterException
      */
     protected $expectedRouteName;
 
-    public function __construct($message = '', $code = 0, \RuntimeException $previous = null, $expectedRouteName = null)
+    public function __construct($message = '', $code = 0, ?RuntimeException $previous = null, $expectedRouteName = null)
     {
         $this->expectedRouteName = $expectedRouteName;
         parent::__construct($message, $code, $previous);

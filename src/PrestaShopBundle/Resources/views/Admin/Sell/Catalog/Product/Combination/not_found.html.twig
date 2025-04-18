@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 {% extends '@PrestaShop/base.html.twig' %}
 {% block stylesheets %}
   <link rel="stylesheet" href="{{ asset('themes/new-theme/public/theme' ~ rtl_suffix ~ '.css') }}"/>
@@ -30,7 +30,7 @@
 {% block body %}
   <div class="card-block">
     <div class="justify-content-center d-flex">
-      <img src="{{ asset('themes/new-theme/img/empty_state/missing_combination.png') }}">
+      <img src="{{ asset('themes/new-theme/img/empty_state/missing_combination.svg') }}" width="200" height="auto">
     </div>
     <div class="justify-content-center d-flex combination-not-found-description">
       <h2>{{ 'This combination doesn\'t exist anymore'|trans({}, 'Admin.Catalog.Notification') }}</h2>

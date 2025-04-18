@@ -23,6 +23,33 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShop\PrestaShop\Core\Domain\OrderState\OrderStateSettings;
+
+/**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ */
 class OrderStateCore extends ObjectModel
 {
     /** @var string|array<int, string> Name */
@@ -77,9 +104,9 @@ class OrderStateCore extends ObjectModel
         'multilang' => true,
         'fields' => [
             'send_email' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
-            'module_name' => ['type' => self::TYPE_STRING, 'validate' => 'isModuleName'],
+            'module_name' => ['type' => self::TYPE_STRING, 'validate' => 'isModuleName', 'size' => 255],
             'invoice' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
-            'color' => ['type' => self::TYPE_STRING, 'validate' => 'isColor'],
+            'color' => ['type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 32],
             'logable' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'shipped' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'unremovable' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
@@ -91,7 +118,7 @@ class OrderStateCore extends ObjectModel
             'deleted' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
 
             /* Lang fields */
-            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64],
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => OrderStateSettings::NAME_MAX_LENGTH],
             'template' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isTplName', 'size' => 64],
         ],
     ];
@@ -160,7 +187,7 @@ class OrderStateCore extends ObjectModel
 
     public function isRemovable()
     {
-        return !($this->unremovable);
+        return !$this->unremovable;
     }
 
     /**

@@ -27,6 +27,7 @@
 namespace Tests\Integration\Behaviour\Features\Context\Configuration;
 
 use Configuration;
+use Exception;
 use Pack;
 
 class PackConfigurationFeatureContext extends AbstractConfigurationFeatureContext
@@ -47,7 +48,7 @@ class PackConfigurationFeatureContext extends AbstractConfigurationFeatureContex
                 $this->setConfiguration('PS_PACK_STOCK_TYPE', Pack::STOCK_TYPE_PACK_BOTH);
                 break;
             default:
-                throw new \Exception('Unknown config value for specific shop configuration for "pack stock type": ' . $value);
+                throw new Exception('Unknown config value for specific shop configuration for "pack stock type": ' . $value);
         }
     }
 }

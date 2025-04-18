@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShopBundle\Entity\MutatorType;
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 
 class OrderCore extends ObjectModel
 {
@@ -201,12 +203,12 @@ class OrderCore extends ObjectModel
             'id_customer' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'id_carrier' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'current_state' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
-            'secure_key' => ['type' => self::TYPE_STRING, 'validate' => 'isMd5'],
-            'payment' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true],
-            'module' => ['type' => self::TYPE_STRING, 'validate' => 'isModuleName', 'required' => true],
+            'secure_key' => ['type' => self::TYPE_STRING, 'validate' => 'isMd5', 'size' => 32],
+            'payment' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 255],
+            'module' => ['type' => self::TYPE_STRING, 'validate' => 'isModuleName', 'required' => true, 'size' => 255],
             'recyclable' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'gift' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
-            'gift_message' => ['type' => self::TYPE_STRING, 'validate' => 'isMessage'],
+            'gift_message' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4],
             'mobile_theme' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'total_discounts' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
             'total_discounts_tax_incl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
@@ -232,10 +234,10 @@ class OrderCore extends ObjectModel
             'invoice_date' => ['type' => self::TYPE_DATE],
             'delivery_date' => ['type' => self::TYPE_DATE],
             'valid' => ['type' => self::TYPE_BOOL],
-            'reference' => ['type' => self::TYPE_STRING],
+            'reference' => ['type' => self::TYPE_STRING, 'size' => 255],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
-            'note' => ['type' => self::TYPE_HTML],
+            'note' => ['type' => self::TYPE_HTML, 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4],
         ],
     ];
 
@@ -539,12 +541,14 @@ class OrderCore extends ObjectModel
         if (!isset(self::$_historyCache[$this->id . '_' . $id_order_state . '_' . $filters]) || $no_hidden) {
             $id_lang = $id_lang ? (int) $id_lang : 'o.`id_lang`';
             $result = Db::getInstance()->executeS('
-            SELECT os.*, oh.*, e.`firstname` as employee_firstname, e.`lastname` as employee_lastname, osl.`name` as ostate_name
+            SELECT os.*, oh.*, e.`firstname` as employee_firstname, e.`lastname` as employee_lastname, osl.`name` as ostate_name, a.`client_id` as api_client_id
             FROM `' . _DB_PREFIX_ . 'orders` o
             LEFT JOIN `' . _DB_PREFIX_ . 'order_history` oh ON o.`id_order` = oh.`id_order`
             LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON os.`id_order_state` = oh.`id_order_state`
-            LEFT JOIN `' . _DB_PREFIX_ . 'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = ' . (int) ($id_lang) . ')
+            LEFT JOIN `' . _DB_PREFIX_ . 'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = ' . (int) $id_lang . ')
             LEFT JOIN `' . _DB_PREFIX_ . 'employee` e ON e.`id_employee` = oh.`id_employee`
+            LEFT JOIN `' . _DB_PREFIX_ . 'mutation` m ON m.`mutation_table` = "order_history" AND m.`mutation_row_id` = oh.`id_order_history` AND m.`mutator_type` = "' . MutatorType::API_CLIENT->value . '"
+            LEFT JOIN `' . _DB_PREFIX_ . 'api_client` a ON m.`mutator_identifier` = a.`id_api_client`
             WHERE oh.id_order = ' . (int) $this->id . '
             ' . ($no_hidden ? ' AND os.hidden = 0' : '') . '
             ' . ($logable ? ' AND os.logable = 1' : '') . '
@@ -744,7 +748,8 @@ class OrderCore extends ObjectModel
     protected function setProductCurrentStock(&$product)
     {
         $product['current_stock'] = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id'], (int) $this->id_shop);
-        $product['location'] = StockAvailable::getLocation($product['product_id'], $product['product_attribute_id'], (int) $this->id_shop);
+
+        $product['location'] = (string) StockAvailable::getLocation($product['product_id'], $product['product_attribute_id'], (int) $this->id_shop);
     }
 
     /**
@@ -951,7 +956,7 @@ class OrderCore extends ObjectModel
      *
      * @return array Customer orders
      */
-    public static function getCustomerOrders($id_customer, $show_hidden_status = false, Context $context = null)
+    public static function getCustomerOrders($id_customer, $show_hidden_status = false, ?Context $context = null)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -975,7 +980,7 @@ class OrderCore extends ObjectModel
         WHERE o.`id_customer` = ' . (int) $id_customer .
             Shop::addSqlRestriction(Shop::SHARE_ORDER) . '
         GROUP BY o.`id_order`
-        ORDER BY o.`date_add` DESC');
+        ORDER BY o.`date_add` DESC, o.`id_order` ASC');
 
         if (!$res) {
             return [];
@@ -1010,7 +1015,7 @@ class OrderCore extends ObjectModel
         return $orders;
     }
 
-    public static function getOrdersWithInformations($limit = null, Context $context = null)
+    public static function getOrdersWithInformations($limit = null, ?Context $context = null)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -1803,7 +1808,7 @@ class OrderCore extends ObjectModel
         $currency = null,
         $date = null,
         $order_invoice = null,
-        int $id_employee = null
+        ?int $id_employee = null
     ) {
         $order_payment = new OrderPayment();
         $order_payment->order_reference = $this->reference;
@@ -2658,7 +2663,7 @@ class OrderCore extends ObjectModel
         // assign id_carrier
         $new_cart->id_carrier = (int) $this->id_carrier;
 
-        //remove all products : cart (maybe change in the meantime)
+        // remove all products : cart (maybe change in the meantime)
         foreach ($new_cart->getProducts() as $product) {
             $new_cart->deleteProduct((int) $product['id_product'], (int) $product['id_product_attribute']);
         }

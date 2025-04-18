@@ -145,14 +145,14 @@ class CombinationAssertionFeatureContext extends AbstractCombinationFeatureConte
         return new CombinationPrices(
             new DecimalNumber($dataRows['impact on price']),
             new DecimalNumber($dataRows['impact on price with taxes']),
-            new DecimalNUmber($dataRows['impact on unit price']),
-            new DecimalNUmber($dataRows['impact on unit price with taxes']),
+            new DecimalNumber($dataRows['impact on unit price']),
+            new DecimalNumber($dataRows['impact on unit price with taxes']),
             new DecimalNumber($dataRows['eco tax']),
             new DecimalNumber($dataRows['eco tax with taxes']),
-            new DecimalNUmber($dataRows['wholesale price']),
-            new DecimalNUmber($dataRows['product tax rate']),
-            new DecimalNUmber($dataRows['product price']),
-            new DecimalNUmber($dataRows['product ecotax'])
+            new DecimalNumber($dataRows['wholesale price']),
+            new DecimalNumber($dataRows['product tax rate']),
+            new DecimalNumber($dataRows['product price']),
+            new DecimalNumber($dataRows['product ecotax'])
         );
     }
 

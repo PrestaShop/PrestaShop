@@ -13,14 +13,17 @@ services:
     public: true
 
   # Interfaced services to decorate
-  prestashop.core.admin.data_provider.product_interface:
-    class: PrestaShopBundle\Service\DataProvider\Admin\ProductInterface
-  prestashop.core.admin.data_updater.product_interface:
-    class: PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface
   prestashop.core.admin.page_preference_interface:
     class: PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface
+  PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface:
+    public: false
+
   prestashop.core.admin.data_provider.module_interface:
-    class: PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface
+    alias: PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface
+    public: true
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   # URL generation
   prestashop.core.admin.url_generator_factory:
@@ -40,13 +43,9 @@ services:
 
   prestashop.database.naming_strategy:
     class: PrestaShopBundle\Service\Database\DoctrineNamingStrategy
-    arguments: [ "%database_prefix%" ]
-
-  prestashop.service.product:
-    class: PrestaShopBundle\Service\ProductService
+    autowire: true
     arguments:
-      - "@prestashop.adapter.data_provider.product"
-    deprecated: ~
+      $prefix: "%database_prefix%"
 
   prestashop.service.translation:
     class: PrestaShopBundle\Service\TranslationService
@@ -79,24 +78,25 @@ services:
   PrestaShopBundle\Service\DataProvider\UserProvider:
     autowire: true
     public: false
-    arguments:
-      $userProvider: '@prestashop.security.admin.provider'
 
+  # Only used in legacy code, otherwise prefer using the Security service
   prestashop.user_provider:
     alias: PrestaShopBundle\Service\DataProvider\UserProvider
-    deprecated: 'The "%alias_id%" service alias is deprecated since v9.0.'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
     public: true
 
   prestashop.router:
     class: PrestaShopBundle\Service\Routing\Router
     parent: 'router.default'
     public: true
+    arguments:
+      $container: '@service_container'
     calls:
-      - [ 'setTokenManager', [ '@security.csrf.token_manager' ] ]
-      - [ 'setUserProvider', [ '@PrestaShopBundle\Service\DataProvider\UserProvider' ] ]
+      - [ 'setUserTokenManager', [ '@PrestaShopBundle\Security\Admin\UserTokenManager' ] ]
 
-  prestashop.multistore.customized_configuration_checker:
-    class: PrestaShopBundle\Service\Multistore\CustomizedConfigurationChecker
+  PrestaShopBundle\Service\Multistore\CustomizedConfigurationChecker:
     arguments:
       - "@prestashop.adapter.legacy.configuration"
 
@@ -104,24 +104,12 @@ services:
     public: false
     tags: [ 'container.env_var_processor' ]
 
-  PrestaShopBundle\ApiPlatform\Provider\QueryProvider:
-    tags: [ 'api_platform.state_provider' ]
-    public: false
-    autowire: true
-    arguments:
-      - '@prestashop.core.query_bus'
-      - !tagged prestashop.api.converters
-
-  PrestaShopBundle\ApiPlatform\Processor\CommandProcessor:
-    tags: [ 'api_platform.state_processor' ]
-    public: false
-    autowire: true
-    arguments:
-      - '@prestashop.core.command_bus'
-
   PrestaShopBundle\Security\Admin\SessionRenewer:
     arguments:
       $storage: "@security.csrf.token_storage"
+    autowire: true
+
+  PrestaShopBundle\Security\Admin\UserTokenManager:
     autowire: true
 
   PrestaShopBundle\Service\Database\TransactionManager:
@@ -131,12 +119,3 @@ services:
       - '@doctrine.orm.entity_manager'
 
   PrestaShop\PrestaShop\Core\Repository\TransactionManagerInterface: '@PrestaShopBundle\Service\Database\TransactionManager'
-
-  Symfony\Component\Serializer\Serializer $apiPlatformSerializer:
-    class: Symfony\Component\Serializer\Serializer
-    arguments:
-      $normalizers:
-        - '@prestashop.api_platform.property_normalizer'
-
-  prestashop.api_platform.property_normalizer:
-    class: Symfony\Component\Serializer\Normalizer\ObjectNormalizer

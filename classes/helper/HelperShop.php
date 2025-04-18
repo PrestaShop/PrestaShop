@@ -98,7 +98,7 @@ class HelperShopCore extends Helper
         $shop_context = Shop::getContext();
         $context = Context::getContext();
 
-        return $shop_context == Shop::CONTEXT_ALL ||
-        ($context->controller->multishop_context_group == false && $shop_context == Shop::CONTEXT_GROUP);
+        return $shop_context == Shop::CONTEXT_ALL
+        || ($context->controller->multishop_context_group == false && $shop_context == Shop::CONTEXT_GROUP);
     }
 }

@@ -77,7 +77,7 @@ abstract class AbstractCartRuleHandler
     {
         try {
             return $cartRule->delete();
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new CartRuleException(sprintf('An error occurred when deleting CartRule object with id "%s".', $cartRule->id));
         }
     }
@@ -98,7 +98,7 @@ abstract class AbstractCartRuleHandler
 
         try {
             return $cartRule->save();
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new CartRuleException(sprintf('An error occurred when updating cart rule status with id "%s"', $cartRule->id));
         }
     }

@@ -33,6 +33,7 @@ use Language;
 use Link;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
+use PrestaShop\PrestaShop\Adapter\Presenter\LazyArrayAttribute;
 
 class CategoryLazyArray extends AbstractLazyArray
 {
@@ -72,10 +73,9 @@ class CategoryLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
      * @return string
      */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getUrl()
     {
         return $this->link->getCategoryLink(
@@ -85,51 +85,63 @@ class CategoryLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @arrayAccess
-     *
-     * This method returns standardized category image array created from CATEGORYID.jpg, with one exception.
-     * One thumbnail size - CATEGORYID-small_default.jpg is generated from CATEGORYID_thumb.jpg instead.
-     * This must be resolved in the future.
+     * @return array|null
+     */
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getImage()
+    {
+        return $this->getCover();
+    }
+
+    /**
+     * This returns category cover image (miniatures of CATEGORYID.jpg).
+     * Used as a big image under category description.
      *
      * @return array|null
      */
-    public function getImage()
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getCover()
     {
-        /*
-         * Category is a bit different that other objects. It's image ID is defined by a special id_image property.
-         * When constructing Category object model, this value is a numeric ID if image exists or false if it doesn't.
-         * In case of getSubCategories method, this value is a numeric ID if image exists OR a default "not found" image if it doesn't.
-         */
-        if (empty($this->category['id_image'])) {
+        // Get image identifier for the thumbnail and check if it exists
+        $imageIdentifier = $this->category['id'];
+        if (!$this->doesCategoryImageExist($imageIdentifier)) {
             return null;
         }
 
         return $this->imageRetriever->getImage(
             new Category($this->category['id'], $this->language->getId()),
-            $this->category['id_image']
+            $imageIdentifier
         );
     }
 
     /**
-     * @arrayAccess
+     * This returns category thumbnail image (miniatures of CATEGORYID_thumb.jpg).
+     * Used for thumbnails in subcategories.
      *
      * @return array|null
      */
-    public function getCover()
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getThumbnail()
     {
-        return $this->getImage();
+        // Get image identifier for the thumbnail and check if it exists
+        $imageIdentifier = $this->category['id'] . '_thumb';
+        if (!$this->doesCategoryImageExist($imageIdentifier)) {
+            return null;
+        }
+
+        return $this->imageRetriever->getImage(
+            new Category($this->category['id'], $this->language->getId()),
+            $imageIdentifier
+        );
     }
 
     /**
-     * @todo This should return category thumbnail image (miniatures of CATEGORYID_thumb.jpg) instead,
-     * after support in ImageRetriever is implemented.
+     * Checks if given category image exists for our category.
      *
-     * @arrayAccess
-     *
-     * @return array|null
+     * @return bool
      */
-    public function getThumbnail()
+    private function doesCategoryImageExist($idImage)
     {
-        return $this->getImage();
+        return file_exists(_PS_CAT_IMG_DIR_ . $idImage . '.jpg');
     }
 }

@@ -14,8 +14,10 @@ Feature: Duplicate product from Back Office (BO).
     And language "language1" with locale "en-US" exists
     And language with iso code "en" is the default one
     And language "language2" with locale "fr-FR" exists
-    And carrier carrier1 named "ecoCarrier" exists
-    And carrier carrier2 named "Fast carry" exists
+    And I create carrier "carrier1" with specified properties:
+      | name | ecoCarrier |
+    And I create carrier "carrier2" with specified properties:
+      | name | Fast carry |
     And attribute group "Color" named "Color" in en language exists
     And attribute "Red" named "Red" in en language exists
     And attribute "Blue" named "Blue" in en language exists
@@ -123,9 +125,9 @@ Feature: Duplicate product from Back Office (BO).
       | en-US  | Its so smart |
       | fr-FR  | lel joke     |
     And product "productWithFieldsCopy" localized "link_rewrite" should be:
-      | locale | value              |
-      | en-US  | smart-sunglasses   |
-      | fr-FR  | lunettes-de-soleil |
+      | locale | value                       |
+      | en-US  | copy-of-smart-sunglasses    |
+      | fr-FR  | copie-de-lunettes-de-soleil |
     And product productWithFieldsCopy should have following seo options:
       | redirect_type   | 301-product           |
       | redirect_target | productForRedirection |
@@ -418,7 +420,6 @@ Feature: Duplicate product from Back Office (BO).
       | description[en-US]      | just a supplier    |
       | meta title[en-US]       | my supplier nr one |
       | meta description[en-US] |                    |
-      | meta keywords[en-US]    | sup,1              |
       | shops                   | [shop1]            |
     When I associate suppliers to product "productWithSuppliers"
       | supplier  | product_supplier  |

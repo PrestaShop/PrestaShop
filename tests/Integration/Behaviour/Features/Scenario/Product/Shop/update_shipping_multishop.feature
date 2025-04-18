@@ -35,8 +35,10 @@ Feature: Update product shipping information from Back Office (BO) for multiple 
       | delivery time out of stock notes[en-US] |         |
       | delivery time out of stock notes[fr-FR] |         |
       | carriers                                | []      |
-    Given carrier carrier1 named "ecoCarrier" exists
-    And carrier carrier2 named "Fast carry" exists
+    And I create carrier "carrier1" with specified properties:
+      | name        | ecoCarrier |
+    And I create carrier "carrier2" with specified properties:
+      | name        | Fast carry |
     When I update product "product1" with following values:
       | width                                   | 10.5                        |
       | height                                  | 6                           |

@@ -31,7 +31,7 @@
       top: 0;
       font-size: 26px;
       line-height: 26px;
-      color: #fff;
+      color: var(--#{$cdk}white);
       text-align: center;
       @include left(0);
       @include border-radius(3px);
@@ -39,12 +39,12 @@
 
     .title {
       display: block;
-      color: #666;
+      color: var(--#{$cdk}primary-800);
     }
 
     .subtitle {
       display: block;
-      color: #aaa;
+      color: var(--#{$cdk}primary-500);
       text-transform: uppercase;
     }
 
@@ -66,60 +66,60 @@
 .color1 {
   i,
   .boxchart-overlay {
-    color: #2ba8e3 !important;
+    color: var(--#{$cdk}blue-500) !important;
   }
 
   .value {
-    color: #2ba8e3;
+    color: var(--#{$cdk}blue-500);
   }
 }
 
 .color2 {
   i,
   .boxchart-overlay {
-    color: #ff5450 !important;
+    color: var(--#{$cdk}red-500) !important;
   }
 
   .value {
-    color: #ff5450;
+    color: var(--#{$cdk}red-500);
   }
 }
 
 .color3 {
   i,
   .boxchart-overlay {
-    color: #9e5ba1 !important;
+    color: var(--#{$cdk}purple-700) !important;
   }
 
   .value {
-    color: #9e5ba1;
+    color: var(--#{$cdk}purple-700);
   }
 }
 
 .color4 {
   i,
   .boxchart-overlay {
-    color: #95cc6b !important;
+    color: var(--#{$cdk}green-500) !important;
   }
 
   .value {
-    color: #95cc6b;
+    color: var(--#{$cdk}green-500);
   }
 }
 
 .data_chart {
   rect {
-    fill: #fff;
+    fill: var(--#{$cdk}white);
   }
 
   path {
     fill: none;
-    stroke: #fff;
+    stroke: var(--#{$cdk}white);
     stroke-width: 2;
   }
 
   line {
-    stroke: #000;
+    stroke: var(--#{$cdk}primary-800);
   }
 
   .area {

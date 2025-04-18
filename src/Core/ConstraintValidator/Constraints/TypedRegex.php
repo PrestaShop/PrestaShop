@@ -51,7 +51,11 @@ class TypedRegex extends Constraint
     public const TYPE_FILE_NAME = 'file_name';
     public const TYPE_DNI_LITE = 'dni_lite';
     public const TYPE_UPC = 'upc';
+    /**
+     * @deprecated since 9.0 will be removed in 10.0
+     */
     public const TYPE_EAN_13 = 'ean_13';
+    public const TYPE_GTIN = 'gtin';
     public const TYPE_ISBN = 'isbn';
     public const TYPE_REFERENCE = 'reference';
     public const TYPE_URL = 'url';
@@ -60,6 +64,7 @@ class TypedRegex extends Constraint
     public const TYPE_WEBSERVICE_KEY = 'webservice_key';
     public const TYPE_LINK_REWRITE = 'link_rewrite';
     public const TYPE_ZIP_CODE_FORMAT = 'zip_code_format';
+    public const TYPE_IMAGE_TYPE_NAME = 'image_type_name';
     public const CLEAN_HTML_NO_IFRAME = 'clean_html_no_iframe';
     public const CLEAN_HTML_ALLOW_IFRAME = 'clean_html_allow_iframe';
 

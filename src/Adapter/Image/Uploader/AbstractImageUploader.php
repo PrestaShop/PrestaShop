@@ -76,9 +76,9 @@ abstract class AbstractImageUploader
      *
      * @param UploadedFile $image
      *
-     * @throws ImageUploadException
-     *
      * @return string
+     *
+     * @throws ImageUploadException
      */
     protected function createTemporaryImage(UploadedFile $image)
     {
@@ -134,7 +134,7 @@ abstract class AbstractImageUploader
             foreach ($imageTypes as $imageType) {
                 $resized &= $this->resize($id, $imageDir, $imageType);
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new ImageOptimizationException('Unable to resize one or more of your pictures.');
         }
         if (!$resized) {

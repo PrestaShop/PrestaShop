@@ -33,9 +33,9 @@ class ContainerBuilder
     /**
      * Construct PrestaShop Core Service container.
      *
-     * @return \PrestaShop\PrestaShop\Core\Foundation\IoC\Container
+     * @return Container
      *
-     * @throws \PrestaShop\PrestaShop\Core\Foundation\IoC\Exception
+     * @throws Foundation\IoC\Exception
      */
     public function build()
     {
@@ -45,6 +45,7 @@ class ContainerBuilder
         $container->bind('PrestaShop\\PrestaShop\\Core\\ConfigurationInterface', '\\PrestaShop\\PrestaShop\\Adapter\\Configuration', true);
         $container->bind('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\DatabaseInterface', '\\PrestaShop\\PrestaShop\\Adapter\\Database', true);
         $container->bind('PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\DatabaseInterface', '\\PrestaShop\\PrestaShop\\Adapter\\Database', true);
+        $container->bind('PrestaShop\\PrestaShop\\Core\\Image\\ImageFormatConfiguration', 'PrestaShop\\PrestaShop\\Core\\Image\\ImageFormatConfiguration', true);
 
         return $container;
     }

@@ -31,6 +31,7 @@ use DateInterval;
 use DateTimeImmutable;
 use DateTimeInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
+use ReturnTypeWillChange;
 use RuntimeException;
 
 /**
@@ -49,8 +50,8 @@ class NullDateTime extends DateTimeImmutable
     public static function getSupportedFormats(): array
     {
         return [
-            DateTime::DEFAULT_DATE_FORMAT => DateTime::NULL_DATE,
-            DateTime::DEFAULT_DATETIME_FORMAT => DateTime::NULL_DATETIME,
+            DateTimeUtil::DEFAULT_DATE_FORMAT => DateTimeUtil::NULL_DATE,
+            DateTimeUtil::DEFAULT_DATETIME_FORMAT => DateTimeUtil::NULL_DATETIME,
         ];
     }
 
@@ -86,7 +87,7 @@ class NullDateTime extends DateTimeImmutable
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public static function createFromFormat($format, $datetime, $timezone = null)
     {
         throw self::buildUnusableMethodException('createFromFormat');
@@ -95,7 +96,7 @@ class NullDateTime extends DateTimeImmutable
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public static function createFromMutable($object): DateTimeImmutable
     {
         throw self::buildUnusableMethodException('createFromMutable');
@@ -104,7 +105,7 @@ class NullDateTime extends DateTimeImmutable
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public static function getLastErrors()
     {
         throw self::buildUnusableMethodException('getLastErrors');
@@ -113,7 +114,7 @@ class NullDateTime extends DateTimeImmutable
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function modify($modifier)
     {
         throw $this::buildUnusableMethodException('modify');
@@ -198,7 +199,7 @@ class NullDateTime extends DateTimeImmutable
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function getTimezone()
     {
         throw $this::buildUnusableMethodException('getTimezone');

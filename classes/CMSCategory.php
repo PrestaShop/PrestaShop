@@ -23,6 +23,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
+
 class CMSCategoryCore extends ObjectModel
 {
     public $id;
@@ -54,9 +57,6 @@ class CMSCategoryCore extends ObjectModel
     /** @var string|array<int, string> Meta title */
     public $meta_title;
 
-    /** @var string|array<int, string> Meta keywords */
-    public $meta_keywords;
-
     /** @var string|array<int, string> Meta description */
     public $meta_description;
 
@@ -85,12 +85,11 @@ class CMSCategoryCore extends ObjectModel
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
 
             /* Lang fields */
-            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCatalogName', 'required' => true, 'size' => 64],
-            'link_rewrite' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 64],
-            'description' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml'],
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCatalogName', 'required' => true, 'size' => 128],
+            'link_rewrite' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 128],
+            'description' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4],
             'meta_title' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
             'meta_description' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 512],
-            'meta_keywords' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
         ],
     ];
 
@@ -132,7 +131,7 @@ class CMSCategoryCore extends ObjectModel
      *
      * @return array Subcategories lite tree
      */
-    public function recurseLiteCategTree($max_depth = 3, $currentDepth = 0, $id_lang = null, $excluded_ids_array = null, Link $link = null)
+    public function recurseLiteCategTree($max_depth = 3, $currentDepth = 0, $id_lang = null, $excluded_ids_array = null, ?Link $link = null)
     {
         if (!$link) {
             $link = Context::getContext()->link;
@@ -166,7 +165,7 @@ class CMSCategoryCore extends ObjectModel
         ];
     }
 
-    public static function getRecurseCategory($id_lang = null, $current = 1, $active = 1, $links = 0, Link $link = null)
+    public static function getRecurseCategory($id_lang = null, $current = 1, $active = 1, $links = 0, ?Link $link = null)
     {
         if (!$link) {
             $link = Context::getContext()->link;
@@ -239,10 +238,10 @@ class CMSCategoryCore extends ObjectModel
      * @param array $to_delete Array reference where categories ID will be saved
      * @param array|int $id_cms_category Parent CMSCategory ID
      */
-    protected function recursiveDelete(&$to_delete, $id_cms_category)
+    protected function recursiveDelete(array &$to_delete, $id_cms_category)
     {
-        if (!is_array($to_delete) || !$id_cms_category) {
-            die(Tools::displayError());
+        if (!$id_cms_category) {
+            throw new PrestaShopException('Parameter "id_cms_category" is invalid.');
         }
 
         $result = Db::getInstance()->executeS('
@@ -307,7 +306,7 @@ class CMSCategoryCore extends ObjectModel
      *
      * return boolean Deletion result
      */
-    public function deleteSelection($categories)
+    public function deleteSelection(array $categories)
     {
         $return = true;
         foreach ($categories as $id_category_cms) {
@@ -338,12 +337,8 @@ class CMSCategoryCore extends ObjectModel
      *
      * @return array Categories
      */
-    public static function getCategories($id_lang, $active = true, $order = true)
+    public static function getCategories($id_lang, bool $active = true, $order = true)
     {
-        if (!Validate::isBool($active)) {
-            die(Tools::displayError());
-        }
-
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
 		FROM `' . _DB_PREFIX_ . 'cms_category` c
@@ -382,14 +377,10 @@ class CMSCategoryCore extends ObjectModel
      *
      * @return array Categories
      */
-    public function getSubCategories($id_lang, $active = true)
+    public function getSubCategories(int $id_lang, bool $active = true)
     {
-        if (!Validate::isBool($active)) {
-            die(Tools::displayError());
-        }
-
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT c.*, cl.id_lang, cl.name, cl.description, cl.link_rewrite, cl.meta_title, cl.meta_keywords, cl.meta_description
+		SELECT c.*, cl.id_lang, cl.name, cl.description, cl.link_rewrite, cl.meta_title, cl.meta_description
 		FROM `' . _DB_PREFIX_ . 'cms_category` c
 		LEFT JOIN `' . _DB_PREFIX_ . 'cms_category_lang` cl ON (c.`id_cms_category` = cl.`id_cms_category` AND `id_lang` = ' . (int) $id_lang . ')
 		WHERE `id_parent` = ' . (int) $this->id . '
@@ -430,12 +421,8 @@ class CMSCategoryCore extends ObjectModel
         return CMSCategory::getChildren(1, $id_lang, $active);
     }
 
-    public static function getChildren($id_parent, $id_lang, $active = true)
+    public static function getChildren($id_parent, $id_lang, bool $active = true)
     {
-        if (!Validate::isBool($active)) {
-            die(Tools::displayError());
-        }
-
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT c.`id_cms_category`, cl.`name`, cl.`link_rewrite`
 		FROM `' . _DB_PREFIX_ . 'cms_category` c
@@ -532,7 +519,7 @@ class CMSCategoryCore extends ObjectModel
         return $result['link_rewrite'];
     }
 
-    public function getLink(Link $link = null)
+    public function getLink(?Link $link = null)
     {
         if (!$link) {
             $link = Context::getContext()->link;
@@ -633,6 +620,7 @@ class CMSCategoryCore extends ObjectModel
         if (!isset($moved_category) || !isset($position)) {
             return false;
         }
+
         // < and > statements rather than BETWEEN operator
         // since BETWEEN is treated differently according to databases
         return Db::getInstance()->execute('

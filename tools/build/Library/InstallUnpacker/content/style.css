@@ -22,52 +22,127 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 @font-face {
-    font-family: OpenSans;
-    src: url('index.php?element=font');
+  font-family: "IBM Plex Sans";
+  font-weight: normal;
+  src: url('index.php?element=font');
+  font-display: swap;
+}
+
+/* ****************************************************************************
+      CSS Properties
+**************************************************************************** */
+:root {
+  --cdk-black: #000;
+  --cdk-white: #fff;
+  --cdk-primary-100: #fafafa;
+  --cdk-primary-200: #f7f7f7;
+  --cdk-primary-300: #eee;
+  --cdk-primary-400: #ddd;
+  --cdk-primary-500: #bbb;
+  --cdk-primary-600: #5e5e5e;
+  --cdk-primary-700: #3f3f3d;
+  --cdk-primary-800: #1b1c1d;
+  --cdk-primary-900: #101010;
+  --cdk-red-50: #ffe4e6;
+  --cdk-red-100: #fdbfbf;
+  --cdk-red-300: #d63f3c;
+  --cdk-red-500: #ba151a;
+  --cdk-red-700: #a41913;
+  --cdk-purple-50: #f8f0f7;
+  --cdk-purple-500: #decde7;
+  --cdk-purple-700: #7b4fac;
+  --cdk-blue-50: #e8edfd;
+  --cdk-blue-100: #d1dcfc;
+  --cdk-blue-300: #a2b8f9;
+  --cdk-blue-500: #174eef;
+  --cdk-blue-700: #2942cc;
+  --cdk-ocean-blue-50: #e4f4f8;
+  --cdk-ocean-blue-500: #a4dbe8;
+  --cdk-ocean-blue-700: #5c92aa;
+  --cdk-yellow-50: #fff5e5;
+  --cdk-yellow-100: #ffeccc;
+  --cdk-yellow-300: #ffd999;
+  --cdk-yellow-500: #ffa000;
+  --cdk-amber-100: #fdf6dd;
+  --cdk-amber-500: #f8e08e;
+  --cdk-green-50: #eaf8ef;
+  --cdk-green-100: #bde9c9;
+  --cdk-green-300: #59af70;
+  --cdk-green-500: #207f4b;
+  --cdk-size-0: 0;
+  --cdk-size-1: 1px;
+  --cdk-size-2: 0.125rem;
+  --cdk-size-3: 0.1875rem;
+  --cdk-size-4: 0.25rem;
+  --cdk-size-5: 0.3125rem;
+  --cdk-size-6: 0.375rem;
+  --cdk-size-8: 0.5rem;
+  --cdk-size-10: 0.625rem;
+  --cdk-size-12: 0.75rem;
+  --cdk-size-14: 0.875rem;
+  --cdk-size-16: 1rem;
+  --cdk-size-18: 1.125rem;
+  --cdk-size-20: 1.25rem;
+  --cdk-size-24: 1.5rem;
+  --cdk-size-28: 1.75rem;
+  --cdk-size-30: 1.875rem;
+  --cdk-size-32: 2rem;
+  --cdk-size-36: 2.25rem;
+  --cdk-size-40: 2.5rem;
+  --cdk-size-44: 2.75rem;
+  --cdk-size-48: 3rem;
+  --cdk-size-52: 3.25rem;
+  --cdk-size-56: 3.5rem;
+  --cdk-size-60: 3.75rem;
+  --cdk-size-64: 4rem;
+  --cdk-size-72: 4.5rem;
+  --cdk-size-80: 5rem;
+  --cdk-size-96: 6rem;
+  --cdk-size-112: 7rem;
+  --cdk-size-128: 8rem;
+  --cdk-size-144: 9rem;
+  --cdk-size-160: 10rem;
+  --cdk-size-176: 11rem;
+  --cdk-size-192: 12rem;
+  --cdk-size-208: 13rem;
+  --cdk-size-224: 14rem;
+  --cdk-size-240: 15rem;
+  --cdk-size-256: 16rem;
+  --cdk-size-288: 18rem;
+  --cdk-size-320: 20rem;
+  --cdk-font-family-primary: "IBM Plex Sans", "Arial", "sans-serif";
+  --cdk-box-shadow-default: 0 1px 3px 0 rgb(29 29 27 / 0.2);
+  --cdk-default-transition: all 0.15s;
+}
+
+/* reset */
+*, *:before, *:after {
+  box-sizing: border-box;
 }
 
 #content-install-in-progress {
-  font-family: 'OpenSans', sans-serif;
-  font-size: 16px;
+  font-family: var(--cdk-font-family-primary);
+  font-size: var(--cdk-size-16);
   text-align: center;
-  margin-top: 50px;
+  margin-top: var(--cdk-size-60);
   width: 100%;
+  padding-inline: var(--cdk-size-16);
 }
 
 #content-install-form {
-  font-family: 'OpenSans', sans-serif;
-  font-size: 16px;
+  font-family: var(--cdk-font-family-primary);
+  font-size: var(--cdk-size-16);
   text-align: center;
-  margin-top: 15%;
+  margin-top: var(--cdk-size-64);
   width: 100%;
+  padding-inline: var(--cdk-size-16);
 }
 
-.spinner {
-  display: inline-block;
-  width: 128px;
-  text-align: center;
-  vertical-align: top;
-  margin-top: 32px;
-}
-
-.spinner > svg {
-  width: 32px;
-  height: 32px;
-
-  display: inline-block;
-  -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
-  animation: sk-bouncedelay 1.4s infinite ease-in-out both;
-}
-
-.spinner .bounce1 {
-  -webkit-animation-delay: -0.32s;
-  animation-delay: -0.32s;
-}
-
-.spinner .bounce2 {
-  -webkit-animation-delay: -0.16s;
-  animation-delay: -0.16s;
+#spinner {
+  max-width: 100%;
+  border-radius: var(--cdk-size-32);
 }
 
 @-webkit-keyframes sk-bouncedelay {
@@ -87,127 +162,156 @@
 
 #progressContainer {
   width: 450px;
-  margin: 30px auto;
+  max-width: 100%;
+  padding-inline: var(--cdk-size-16);
+  margin: var(--cdk-size-30) auto;
 }
 
 #progressContainer > .progress {
-  background: #363A41;
-  border-radius: 16px;
+  background: var(--cdk-primary-400);
+  border-radius: var(--cdk-size-8);
   box-sizing: border-box;
-  height: 16px;
+  height: var(--cdk-size-8);
 }
 
 #progressContainer > .progress > .current {
   position: relative;
   height: 100%;
-  background: #25B9D7;
-  border-radius: 16px;
-  -webkit-transition: all 400ms linear;
-     -moz-transition: all 400ms linear;
-      -ms-transition: all 400ms linear;
-       -o-transition: all 400ms linear;
-          transition: all 400ms linear;
+  background: var(--cdk-primary-800);
+  border-radius: var(--cdk-size-4);
+  transition: var(--cdk-default-transition);
   width: 0;
 }
 
 #progressContainer > .progressNumber {
-  border-radius: 2px;
-  background: #363A41;
-  font-size: 14px;
-  width: 60px;
-  padding: 5px;
-  color: white;
+  background: var(--cdk-primary-800);
+  font-size: var(--cdk-size-14);
+  width: var(--cdk-size-48);
+  padding: var(--cdk-size-5);
+  color: var(--cdk-white);
   position: relative;
   right: 0;
-  top: -5px;
-  margin-left: -35px;
-  -webkit-transition: all 400ms linear;
-     -moz-transition: all 400ms linear;
-      -ms-transition: all 400ms linear;
-       -o-transition: all 400ms linear;
-          transition: all 400ms linear;
+  top: calc(-1 * var(--cdk-size-5));
+  margin-left: calc(-1 * var(--cdk-size-24));
+  transition: var(--cdk-default-transition);
 }
 
 #progressContainer > .progressNumber:after {
   top: 100%;
   left: 50%;
-  border: solid transparent;
-  content: " ";
+  content: "";
   height: 0;
   width: 0;
   position: absolute;
   pointer-events: none;
-  border-color: rgba(136, 183, 213, 0);
-  border-top-color: #363A41;
-  border-width: 5px;
-  margin-left: -5px;
+  border: solid transparent;
+  border-top-color: var(--cdk-primary-800);
+  border-width: var(--cdk-size-5);
+  margin-left: calc(-1 * var(--cdk-size-5));
 }
 
-#versionPanel {
-  color: #6c868e;
+#versionPanel,
+#initializationMessage {
+  color: var(--cdk-primary-800);
+  margin-top: var(--cdk-size-16);
 }
 
 #header {
-  margin-top: 29px;
+  margin-top: var(--cdk-size-30);
   margin-left: auto;
   margin-right: auto;
-  font-size: 20px;
+  font-size: var(--cdk-size-20);
   text-align: center;
-  color: #6c868e;
-  max-width: 403px;
+  color: var(--cdk-primary-800);
+  width: 380px;
+  max-width: 100%;
+  padding-inline: var(--cdk-size-16);
 }
 
 #question {
-  margin-top: 20px;
-  font-size: 16px;
-  color: #363a41;
+  margin-top: var(--cdk-size-16);
+  font-size: var(--cdk-size-16);
+  color: var(--cdk-primary-700);
 }
 
 #form-panel {
-  margin-top: 35px;
-}
-
-.button-no {
-  max-width: 140px;
-  max-height: 40px;
-  border-radius: 1px;
-  border: solid 1px #899ea5;
-  color: #576c72;
-}
-
-.button-yes {
-  max-width: 142px;
-  max-height: 40px;
-  border-radius: 1px;
-  background-color: #24b9d7;
-  color: #ffffff;
+  margin-top: var(--cdk-size-32);
 }
 
 .button {
-  padding: 10px 30px 10px 30px;
+  padding: var(--cdk-size-8) var(--cdk-size-16);
+  border-radius: 0;
+  transition: var(--cdk-default-transition);
+  height: auto;
+  background: var(--cdk-primary-800);
+  border: none;
+  color: var(--cdk-white);
+  border-color: var(--cdk-primary-800);
+  font-style: normal;
+  font-size: var(--cdk-size-14);
+  line-height: var(--cdk-size-18);
+  cursor: pointer;
   text-decoration: none;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.25;
-  letter-spacing: normal;
-  margin-left: 10px;
-  margin-right: 10px;
+}
+
+.button-no {
+  display: inline-flex;
+  padding: var(--cdk-size-8) var(--cdk-size-16);
+  background-color: var(--cdk-white);
+  border: 1px solid var(--cdk-primary-800);
+  color: var(--cdk-primary-800);
+}
+
+.button-no:hover {
+  background-color: var(--cdk-primary-300);
+  border: 1px solid var(--cdk-primary-800);
+}
+
+.button-no:active,
+.button-no:focus {
+  background-color: var(--cdk-primary-400);
+}
+
+.button-yes {
+  display: inline-flex;
+  padding: var(--cdk-size-8) var(--cdk-size-16);
+  background-color: var(--cdk-primary-800);
+  border: 1px solid var(--cdk-primary-800);
+  color: var(--cdk-white);
+}
+
+.button-yes:hover {
+  background-color: var(--cdk-primary-700);
+  border: 1px solid var(--cdk-primary-700);
+  text-decoration: none;
+}
+
+.button-yes:active,
+.button-yes:focus {
+  background-color: var(--cdk-primary-600);
+  border: 1px solid var(--cdk-primary-600);
+}
+
+.buttons {
+  display: flex;
+  gap: var(--cdk-size-16);
+  justify-content: center;
 }
 
 .error-container {
-  margin-top: 30px;
-  color: #6c868e;
+  margin-top: var(--cdk-size-32);
+  color: var(--cdk-primary-800);
 }
 
 .inactive-link {
   pointer-events: none;
   cursor: default;
-  background-color: lightgrey;
-  color: #576c72;
-  opacity: 0.5;
+  background-color: var(--cdk-primary-500);
+  border: 1px solid var(--cdk-primary-500);
+  color: var(--cdk-white);
 }
 
 #error ul {
-  list-style-type: square;
+  list-style-type: circle;
   list-style-position: inside;
 }

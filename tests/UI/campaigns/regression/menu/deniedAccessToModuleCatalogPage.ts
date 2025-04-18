@@ -1,16 +1,18 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
+import errorPage from '@pages/BO/error';
 import moduleCatalogPage from '@pages/BO/modules/moduleCatalog';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  boDashboardPage,
+  boLoginPage,
+  type BrowserContext,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'regression_menu_deniedAccessToModuleCatalogPage';
 
@@ -23,44 +25,50 @@ describe('Regression : Access to Module catalog is denied with neither left menu
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go check that `Module Catalog` on left menu is not visible', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'menuTabNotVisible', baseContext);
 
-    const isMenuTabVisible = await dashboardPage.isSubmenuVisible(
+    const isMenuTabVisible = await boDashboardPage.isSubmenuVisible(
       page,
-      dashboardPage.modulesParentLink,
-      dashboardPage.moduleCatalogueLink,
+      boDashboardPage.modulesParentLink,
+      boDashboardPage.moduleCatalogueLink,
     );
-    await expect(isMenuTabVisible, 'The Menu tab is still visible').to.be.false;
+    expect(isMenuTabVisible, 'The Menu tab is still visible').to.eq(false);
   });
 
   it('should trigger a not found alert when accessing by legacy url', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkUrlAccessibility', baseContext);
 
-    await dashboardPage.navigateToPageWithInvalidToken(page, pageLegacyUrl);
+    await boDashboardPage.navigateToPageWithInvalidToken(page, pageLegacyUrl);
 
     const alertText = await moduleCatalogPage.getAlertDangerBlockParagraphContent(page);
-    await expect(alertText).to.contain(moduleCatalogPage.pageNotFoundMessage);
+    expect(alertText).to.contain(moduleCatalogPage.pageNotFoundMessage);
   });
 
   it('should redirect to dashboard when accessing by symfony url', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkUrlAccessibility2', baseContext);
 
-    await dashboardPage.navigateToPageWithInvalidToken(page, pageSymfonyUrl);
+    await boDashboardPage.navigateToPageWithInvalidToken(page, pageSymfonyUrl);
 
-    const pageTitle = await dashboardPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(dashboardPage.pageTitle);
+    const pageTitle = await errorPage.getPageTitle(page);
+    expect(pageTitle).to.contains(errorPage.notFoundTitle);
   });
 });

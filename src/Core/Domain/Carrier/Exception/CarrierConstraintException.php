@@ -42,4 +42,109 @@ class CarrierConstraintException extends CarrierException
      * Thrown when carrier reference id is not valid
      */
     public const INVALID_REFERENCE_ID = 20;
+
+    /**
+     * Thrown when carrier name is not valid
+     */
+    public const INVALID_NAME = 30;
+
+    /**
+     * Thrown when carrier grade is not valid
+     */
+    public const INVALID_GRADE = 40;
+
+    /**
+     * Thrown when carrier tracking url is not valid
+     */
+    public const INVALID_TRACKING_URL = 50;
+
+    /**
+     * Thrown when carrier position is not valid
+     */
+    public const INVALID_POSITION = 60;
+
+    /**
+     * Thrown when carrier delay is not valid
+     */
+    public const INVALID_DELAY = 70;
+
+    /**
+     * Thrown when carrier max_width is not valid
+     */
+    public const INVALID_MAX_WIDTH = 80;
+
+    /**
+     * Thrown when carrier max_height is not valid
+     */
+    public const INVALID_MAX_HEIGHT = 80;
+
+    /**
+     * Thrown when carrier max_depth is not valid
+     */
+    public const INVALID_MAX_DEPTH = 90;
+
+    /**
+     * Thrown when carrier max_weight is not valid
+     */
+    public const INVALID_MAX_WEIGHT = 100;
+
+    /**
+     * Thrown when carrier group_access is not valid
+     */
+    public const INVALID_GROUP_ACCESS = 110;
+
+    /**
+     * Thrown when carrier shipping handling is not valid
+     */
+    public const INVALID_SHIPPING_HANDLING = 120;
+
+    /**
+     * Thrown when carrier is free option is not valid
+     */
+    public const INVALID_IS_FREE = 130;
+
+    /**
+     * Thrown when carrier shipping method is not valid
+     */
+    public const INVALID_SHIPPING_METHOD = 140;
+
+    /**
+     * Thrown when carrier tax rule group is not valid
+     */
+    public const INVALID_TAX_RULE_GROUP = 150;
+
+    /**
+     * Thrown when carrier range behavior is not valid
+     */
+    public const INVALID_RANGE_BEHAVIOR = 160;
+
+    /**
+     * Thrown when carrier shipping handling is set with free shipping
+     */
+    public const INVALID_HAS_ADDITIONAL_HANDLING_FEE_WITH_FREE_SHIPPING = 170;
+
+    /**
+     * Thrown when carrier ranges are overlapping
+     */
+    public const INVALID_RANGES_OVERLAPPING = 180;
+
+    /**
+     * Thrown when zone id in Carrier range are not valid
+     */
+    public const INVALID_ZONE_ID = 190;
+
+    /**
+     * Thrown when shop constraint isn't valid
+     */
+    public const INVALID_SHOP_CONSTRAINT = 200;
+
+    /**
+     * Thrown when carrier is save without at least one zone
+     */
+    public const INVALID_ZONE_MISSING = 210;
+
+    /**
+     * Thrown when carrier range is a negative value
+     */
+    public const INVALID_RANGE_NEGATIVE = 220;
 }

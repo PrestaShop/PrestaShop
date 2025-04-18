@@ -196,9 +196,20 @@
 
     .accordion-form-button {
       display: flex;
+      flex-direction: row;
+      align-content: flex-end;
+      width: 100%;
 
-      i.material-icons {
-        margin-left: auto;
+      span.accordion-form-button-label {
+        margin-right: auto;
+        font-size: 1rem;
+        font-weight: 700;
+      }
+
+      span.accordion-form-button-sub-label {
+        margin-right: 1rem;
+        font-size: 0.875rem;
+        font-weight: 400;
       }
 
       i.material-icons::after {
@@ -235,5 +246,28 @@
 .link_preview-widget {
   .input-container {
     padding-top: calc(0.375rem + 1px);
+  }
+}
+
+.color-widget {
+  input[type="color"] {
+    height: 1.375rem;
+  }
+}
+
+.select2-container {
+  &:not(.select2-container--bootstrap4) {
+    .select2-selection {
+      padding: var(--#{$cdk}size-8) var(--#{$cdk}size-32) var(--#{$cdk}size-8) var(--#{$cdk}size-16);
+    }
+  }
+}
+
+.small.form-external-link,
+.form-external-link {
+  font-weight: 400;
+
+  .btn {
+    font-weight: 400;
   }
 }

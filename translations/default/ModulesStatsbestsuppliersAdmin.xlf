@@ -12,11 +12,6 @@
         <target>Best suppliers</target>
         <note>Line: 76</note>
       </trans-unit>
-      <trans-unit id="37607fc64452028f4d484aa014071934">
-        <source>Adds a list of the best suppliers to the Stats dashboard.</source>
-        <target>Adds a list of the best suppliers to the Stats dashboard.</target>
-        <note>Line: 78</note>
-      </trans-unit>
       <trans-unit id="2928964d6d9c07c7cd0e1bf70fe63349">
         <source>Enrich your stats: add a list of the best suppliers to your dashboard.</source>
         <target>Enrich your stats: add a list of the best suppliers to your dashboard.</target>

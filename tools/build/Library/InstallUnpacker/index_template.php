@@ -27,8 +27,8 @@ set_time_limit(0);
 
 define('_PS_INSTALL_MINIMUM_PHP_VERSION_ID_', 80100);
 define('_PS_INSTALL_MINIMUM_PHP_VERSION_', '8.1');
-define('_PS_INSTALL_MAXIMUM_PHP_VERSION_ID_', 80199);
-define('_PS_INSTALL_MAXIMUM_PHP_VERSION_', '8.1');
+define('_PS_INSTALL_MAXIMUM_PHP_VERSION_ID_', 80499);
+define('_PS_INSTALL_MAXIMUM_PHP_VERSION_', '8.4');
 define('_PS_VERSION_', '%ps-version-placeholder%');
 
 define('ZIP_NAME', 'prestashop.zip');
@@ -209,7 +209,7 @@ if (isset($_GET['element'])) {
     switch ($_GET['element']) {
         case 'font':
             header('Content-Type: application/font-sfnt');
-            echo getFileContent('OpenSans-Regular.ttf', true);
+            echo getFileContent('IBMPlexSans-Regular.ttf', true);
 
             break;
         case 'css':
@@ -280,7 +280,7 @@ if (isset($_GET['element'])) {
           Do you want to install the latest version instead? (recommended)
         </div>
         <div id="form-panel">
-          <div id="form">
+          <div id="form" class="buttons">
             <a id="skip-button" class="button button-no" href="#">No thanks</a>
             <a id="latest-button" class="button button-yes" href="#">Yes please!</a>
           </div>

@@ -50,6 +50,13 @@ services:
         - '@prestashop.core.search.builder.event'
         - '@prestashop.core.search.builder.persist'
 
+  prestashop.core.api.search.builder:
+    class: 'PrestaShop\PrestaShop\Core\Search\Builder\ChainedFiltersBuilder'
+    arguments:
+      - - '@prestashop.core.search.builder.typed'
+        - '@prestashop.core.search.builder.request'
+        - '@prestashop.core.search.builder.event'
+
   # Typed builders (they will be automatically added to TypeFiltersBuilder thanks to their tag)
   prestashop.core.search.builder.typed_builder.product_combination_filters_builder:
     class: 'PrestaShop\PrestaShop\Core\Search\Builder\TypedBuilder\ProductCombinationFiltersBuilder'

@@ -54,7 +54,7 @@ final class SetRequiredFieldsForAddressHandler implements SetRequiredFieldsForAd
             if ($address->addFieldsRequiredDatabase($command->getRequiredFields())) {
                 return;
             }
-        } catch (PrestaShopDatabaseException $e) {
+        } catch (PrestaShopDatabaseException) {
         }
 
         throw new CannotSetRequiredFieldsForAddressException(sprintf('Cannot set "%s" required fields for customer', implode(',', $command->getRequiredFields())));

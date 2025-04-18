@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 {% set isModuleActive = module.database.active|default('0') %}
 
 <div
@@ -68,10 +68,10 @@
         <div class="col-md-2">
           <div class="text-ellipsis small-text">
             {% block addon_version %}
-              {% if module.attributes.productType == "service" %}
-                {{ 'Service by %author%'|trans({'%author%' : '<b>' ~ module.attributes.author ~ '</b>'}, 'Admin.Modules.Feature')|raw }}
+              {% if module.attributes.productType == 'service' %}
+                {{ 'Service by %author%'|trans({'%author%': '<b>' ~ module.attributes.author ~ '</b>'}, 'Admin.Modules.Feature')|raw }}
               {% else %}
-                {{ 'v%version% - by %author%'|trans({ '%version%' : module.attributes.version, '%author%' : '<b>' ~ module.attributes.author ~ '</b>' }, 'Admin.Modules.Feature')|raw }}
+                {{ 'v%version% - by %author%'|trans({'%version%': module.attributes.version, '%author%': '<b>' ~ module.attributes.author ~ '</b>'}, 'Admin.Modules.Feature')|raw }}
               {% endif %}
             {% endblock %}
           </div>
@@ -99,15 +99,15 @@
             {% if requireBulkActions is defined and requireBulkActions == true %}
               <div class="module-checkbox-bulk-list md-checkbox">
                 <label>
-                  <input type="checkbox" data-name="{{ module.attributes.displayName }}" data-tech-name="{{module.attributes.name}}" />
+                  <input type="checkbox" data-name="{{ module.attributes.displayName }}" data-tech-name="{{ module.attributes.name }}" />
                   <i class="md-checkbox-control"></i>
                 </label>
               </div>
             {% endif %}
-            {% include '@PrestaShop/Admin/Module/Includes/action_menu.html.twig' with { 'module': module } %}
+            {{ include('@PrestaShop/Admin/Module/Includes/action_menu.html.twig', {module: module}) }}
           {% endblock %}
         </div>
-        {% include '@PrestaShop/Admin/Module/Includes/modal_confirm.html.twig' with { 'module': module } %}
+        {{ include('@PrestaShop/Admin/Module/Includes/modal_confirm.html.twig', {module: module}) }}
       </div>
     </div>
   </div>

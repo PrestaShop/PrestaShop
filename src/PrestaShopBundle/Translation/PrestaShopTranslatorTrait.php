@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Translation;
 
+use Exception;
 use PrestaShop\PrestaShop\Adapter\Localization\LegacyTranslator;
 use Symfony\Component\Translation\Exception\InvalidArgumentException;
 
@@ -46,7 +47,7 @@ trait PrestaShopTranslatorTrait
      *
      * @throws InvalidArgumentException If the locale contains invalid characters
      */
-    public function trans($id, array $parameters = [], $domain = null, $locale = null)
+    public function trans($id, array $parameters = [], $domain = null, $locale = null): string
     {
         $isSprintf = !empty($parameters) && $this->isSprintfString($id);
 
@@ -143,7 +144,7 @@ trait PrestaShopTranslatorTrait
      * @return mixed|string
      *
      * @throws InvalidArgumentException If the locale contains invalid characters
-     * @throws \Exception
+     * @throws Exception
      */
     private function translateUsingLegacySystem($message, array $parameters, $domain, $locale = null)
     {
@@ -176,7 +177,7 @@ trait PrestaShopTranslatorTrait
                 !method_exists($this, 'getCatalogue')
                 || !$this->getCatalogue($locale)->has($message, $this->normalizeDomain($domain))
             )
-            ;
+        ;
     }
 
     /**

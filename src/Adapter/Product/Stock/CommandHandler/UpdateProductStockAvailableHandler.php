@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockAvailableCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\CommandHandler\UpdateProductStockHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
@@ -103,10 +104,14 @@ class UpdateProductStockAvailableHandler implements UpdateProductStockHandlerInt
         );
 
         if (null !== $outOfStockType) {
-            if ($shopConstraint->forAllShops()) {
-                $associatedShopIds = $this->productRepository->getAssociatedShopIds($productId);
+            if ($shopConstraint->forAllShops() || ($shopConstraint instanceof ShopCollection && $shopConstraint->hasShopIds())) {
+                if ($shopConstraint instanceof ShopCollection && $shopConstraint->hasShopIds()) {
+                    $updatedShopIds = $shopConstraint->getShopIds();
+                } else {
+                    $updatedShopIds = $this->productRepository->getAssociatedShopIds($productId);
+                }
 
-                foreach ($associatedShopIds as $shopId) {
+                foreach ($updatedShopIds as $shopId) {
                     $this->combinationRepository->updateCombinationOutOfStockType(
                         $productId,
                         $outOfStockType,

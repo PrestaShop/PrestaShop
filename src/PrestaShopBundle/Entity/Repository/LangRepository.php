@@ -96,6 +96,28 @@ class LangRepository extends EntityRepository implements LanguageRepositoryInter
     }
 
     /**
+     * Returns all the mapping for all installed languages, the returned array is indexed by Language ID,
+     * it contains an array with Language info, only locale is relevant for now but it may evolve in the future.
+     *
+     * @return array<int, array{'locale': string}>
+     */
+    public function getMapping(): array
+    {
+        $qb = $this->createQueryBuilder('l');
+        $qb->select('l.id, l.locale');
+        $result = $qb->getQuery()->getArrayResult();
+
+        $mapping = [];
+        foreach ($result as $row) {
+            $mapping[$row['id']] = [
+                'locale' => $row['locale'],
+            ];
+        }
+
+        return $mapping;
+    }
+
+    /**
      * @param string $key
      * @param string $value
      *

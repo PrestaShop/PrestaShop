@@ -1,16 +1,15 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
-import importPage from '@pages/BO/advancedParameters/import';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  boDashboardPage,
+  boImportPage,
+  boLoginPage,
+  type BrowserContext,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 let browserContext: BrowserContext;
 let page: Page;
@@ -29,62 +28,68 @@ function importFileTest(
   describe(`PRE-TEST: Import file '${fileName}'`, async () => {
     // before and after functions
     before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
     });
 
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
+      await utilsPlaywright.closeBrowserContext(browserContext);
     });
 
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Advanced Parameters > Import\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToImportPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.importLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.importLink,
       );
-      await importPage.closeSfToolBar(page);
+      await boImportPage.closeSfToolBar(page);
 
-      const pageTitle = await importPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(importPage.pageTitle);
+      const pageTitle = await boImportPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boImportPage.pageTitle);
     });
 
     it(`should import '${fileName}' file`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'importFile', baseContext);
 
-      const uploadSuccessText = await importPage.uploadImportFile(page, entityToImport, fileName);
-      await expect(uploadSuccessText).contain(fileName);
+      const uploadSuccessText = await boImportPage.uploadImportFile(page, entityToImport, fileName);
+      expect(uploadSuccessText).contain(fileName);
 
-      if (await importPage.isForceAllIDNumbersVisible(page)) {
-        await importPage.setForceAllIDNumbers(page);
+      if (await boImportPage.isForceAllIDNumbersVisible(page)) {
+        await boImportPage.setForceAllIDNumbers(page);
       }
     });
 
     it('should go to next import file step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'nextStep', baseContext);
 
-      const panelTitle = await importPage.goToImportNextStep(page);
-      await expect(panelTitle).contain(importPage.importPanelTitle);
+      const panelTitle = await boImportPage.goToImportNextStep(page);
+      expect(panelTitle).contain(boImportPage.importPanelTitle);
     });
 
     it('should start import file', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'confirmImport', baseContext);
 
-      const modalTitle = await importPage.startFileImport(page);
-      await expect(modalTitle).contain(importPage.importModalTitle);
+      const modalTitle = await boImportPage.startFileImport(page);
+      expect(modalTitle).contain(boImportPage.importModalTitle);
     });
 
     it('should check that the import is completed', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'waitForImport', baseContext);
 
-      const isCompleted = await importPage.getImportValidationMessage(page);
-      await expect(isCompleted, 'The import is not completed!')
+      const isCompleted = await boImportPage.getImportValidationMessage(page);
+      expect(isCompleted, 'The import is not completed!')
         .contain('Data imported')
         .and.contain('Look at your listings to make sure it\'s all there as you wished.');
     });
@@ -92,8 +97,8 @@ function importFileTest(
     it('should close import progress modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeImportModal', baseContext);
 
-      const isModalClosed = await importPage.closeImportModal(page);
-      await expect(isModalClosed).to.be.true;
+      const isModalClosed = await boImportPage.closeImportModal(page);
+      expect(isModalClosed).to.eq(true);
     });
   });
 }

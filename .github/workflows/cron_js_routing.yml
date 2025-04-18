@@ -18,14 +18,16 @@ jobs:
       matrix:
         BRANCH:
           - develop
+          - 9.0.x
+          - 8.2.x
           - 8.1.x
           - 8.0.x
         include:
           - BRANCH: develop
-            node: 16
-          - BRANCH: 8.1.x
-            node: 16
-          - BRANCH: 8.0.x
+            node: 20
+          - BRANCH: 9.0.x
+            node: 20
+          - BRANCH: 8.2.x
             node: 16
 
     env:
@@ -50,12 +52,12 @@ jobs:
           mysql root password: 'password'
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: ${{ env.GH_BRANCH }}
@@ -68,7 +70,7 @@ jobs:
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache Node Directory
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -76,7 +78,7 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Cache Composer Directory
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -84,7 +86,7 @@ jobs:
             ${{ runner.os }}-composer-
 
       - name: Install Composer dependencies
-        run: composer install --prefer-dist
+        run: COMPOSER_PROCESS_TIMEOUT=600 composer install --ansi --prefer-dist --no-interaction --no-progress
 
       - name: Build assets
         run: make assets

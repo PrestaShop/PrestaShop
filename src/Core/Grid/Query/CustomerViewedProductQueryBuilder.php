@@ -108,7 +108,7 @@ final class CustomerViewedProductQueryBuilder extends AbstractDoctrineQueryBuild
             ->from($this->dbPrefix . 'cart_product', 'cp')
             ->where('c.`id_customer` != 0')
             ->where('cp.`id_cart` NOT IN (SELECT `id_cart` FROM ' . $this->dbPrefix . 'orders)')
-            ;
+        ;
 
         $qb->innerJoin(
             'cp',

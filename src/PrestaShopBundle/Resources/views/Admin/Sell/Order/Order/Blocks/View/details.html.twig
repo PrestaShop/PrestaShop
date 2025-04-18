@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
 {% set statusTitle %}
   {{ 'Status'|trans({}, 'Admin.Global') }} ({{ orderForViewing.history.statuses|length }})
@@ -76,7 +76,7 @@
           {{ statusTitle }}
         {% endblock %}
         {% block body %}
-          {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/history.html.twig' %}
+          {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/history.html.twig') }}
         {% endblock %}
       {% endembed %}
     </div>
@@ -86,7 +86,7 @@
           {{ documentsTitle }}
         {% endblock %}
         {% block body %}
-          {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/documents.html.twig' %}
+          {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/documents.html.twig') }}
         {% endblock %}
       {% endembed %}
     </div>
@@ -96,7 +96,7 @@
           {{ carriersTitle }}
         {% endblock %}
         {% block body %}
-          {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/shipping.html.twig' %}
+          {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/shipping.html.twig') }}
         {% endblock %}
       {% endembed %}
     </div>
@@ -107,18 +107,18 @@
             {{ merchantReturnsTitle }}
           {% endblock %}
           {% block body %}
-            {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/merchandise_returns.html.twig' %}
+            {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/merchandise_returns.html.twig') }}
           {% endblock %}
         {% endembed %}
       </div>
     {% endif %}
 
     {% if orderForViewing.shipping.recycledPackaging %}
-      <span class="badge badge-success">{{ 'Recycled packaging'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
+      <span class="badge badge-success" data-badge="recyclable">{{ 'Recycled packaging'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
     {% endif %}
 
     {% if orderForViewing.shipping.giftWrapping %}
-      <span class="badge badge-success">{{ 'Gift wrapping'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
+      <span class="badge badge-success" data-badge="gift">{{ 'Gift wrapping'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
     {% endif %}
 
     {% if orderForViewing.shipping.giftMessage %}
@@ -134,9 +134,9 @@
   </div>
 </div>
 
-{% set displayAdminOrderTabLink = renderhook('displayAdminOrderTabLink', {'id_order': orderForViewing.id}) %}
-{% set displayAdminOrderTabContent = renderhook('displayAdminOrderTabContent', {'id_order': orderForViewing.id}) %}
-{% if displayAdminOrderTabLink is not empty or displayAdminOrderTabContent is not empty%}
+{% set displayAdminOrderTabLink = renderhook('displayAdminOrderTabLink', {id_order: orderForViewing.id}) %}
+{% set displayAdminOrderTabContent = renderhook('displayAdminOrderTabContent', {id_order: orderForViewing.id}) %}
+{% if displayAdminOrderTabLink is not empty or displayAdminOrderTabContent is not empty %}
   <div class="mt-2" id="order_hook_tabs">
     <ul class="nav nav nav-tabs" role="tablist">
       {# Rendering of hook displayAdminOrderTabLink, we expect tab links #}

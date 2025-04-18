@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Finder;
 
+use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Loader\DatabaseTranslationLoader;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -64,7 +65,7 @@ class UserTranslatedCatalogueFinder extends AbstractCatalogueFinder
         ?string $themeName = null
     ) {
         if (!$this->assertIsArrayOfString($translationDomains)) {
-            throw new \InvalidArgumentException('Given translation domains are invalid. An array of strings was expected.');
+            throw new InvalidArgumentException('Given translation domains are invalid. An array of strings was expected.');
         }
 
         $this->databaseTranslationReader = $databaseTranslationReader;

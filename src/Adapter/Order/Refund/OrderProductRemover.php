@@ -38,6 +38,8 @@ use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductsComparator;
 use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductUpdate;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DeleteCustomizedProductFromOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DeleteProductFromOrderException;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 use SpecificPrice;
 
 class OrderProductRemover
@@ -126,8 +128,8 @@ class OrderProductRemover
      * @param OrderDetail $orderDetail
      *
      * @throws DeleteProductFromOrderException
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     private function deleteOrderDetail(
         Order $order,

@@ -70,6 +70,7 @@ class PaginationType extends TranslatorAwareType
                     'Brand' => 5,
                     'Product quantity' => 6,
                     'Product reference' => 7,
+                    'Product sales' => 8,
                 ],
                 'required' => false,
                 'placeholder' => false,

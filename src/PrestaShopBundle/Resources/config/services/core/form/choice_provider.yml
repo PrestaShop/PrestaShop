@@ -135,3 +135,6 @@ services:
       - '@prestashop.core.command_bus'
       - '@=service("prestashop.adapter.legacy.configuration").getInt("PS_SHOP_DEFAULT")'
       - "@=service('prestashop.adapter.shop.context').getContextShopID()"
+
+  PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImageTypeChoiceProvider:
+    autowire: true

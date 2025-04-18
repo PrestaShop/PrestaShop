@@ -23,25 +23,16 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Grid from '../../components/grid/grid';
-import SortingExtension from '../../components/grid/extension/sorting-extension';
-import FiltersResetExtension from '../../components/grid/extension/filters-reset-extension';
-import FiltersSubmitButtonEnablerExtension from '../../components/grid/extension/filters-submit-button-enabler-extension';
-import TranslatableInput from '../../components/translatable-input';
-
-const {$} = window;
-
 $(() => {
   window.prestashop.component.initComponents(
     [
       'MultistoreConfigField',
+      'TranslatableInput',
     ],
   );
 
-  const grid = new Grid('merchandise_return');
-  grid.addExtension(new SortingExtension());
-  grid.addExtension(new FiltersResetExtension());
-  grid.addExtension(new FiltersSubmitButtonEnablerExtension());
-
-  new TranslatableInput();
+  const grid = new window.prestashop.component.Grid('merchandise_return');
+  grid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
 });

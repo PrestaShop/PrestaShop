@@ -25,7 +25,9 @@
  */
 use PrestaShop\PrestaShop\Adapter\Category\CategoryProductSearchProvider;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
+use PrestaShop\PrestaShop\Adapter\Presenter\Category\CategoryLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\Category\CategoryPresenter;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 
@@ -48,7 +50,7 @@ class CategoryControllerCore extends ProductListingFrontController
     /** @var CategoryPresenter */
     protected $categoryPresenter;
 
-    public function canonicalRedirection(string $canonicalURL = '')
+    public function canonicalRedirection(string $canonicalURL = ''): void
     {
         if (Validate::isLoadedObject($this->category)) {
             parent::canonicalRedirection($this->context->link->getCategoryLink($this->category));
@@ -70,30 +72,78 @@ class CategoryControllerCore extends ProductListingFrontController
     }
 
     /**
-     * Initializes controller.
+     * Initializes category controller.
      *
      * @see FrontController::init()
      *
      * @throws PrestaShopException
      */
-    public function init()
+    public function init(): void
     {
-        $id_category = (int) Tools::getValue('id_category');
-        $this->category = new Category(
-            $id_category,
-            $this->context->language->id
-        );
-
         parent::init();
 
-        if (!Validate::isLoadedObject($this->category) || !$this->category->active) {
+        // Get proper IDs
+        $id_category = (int) Tools::getValue('id_category');
+
+        // Try to load category object
+        $this->category = new Category($id_category, $this->context->language->id);
+
+        // Otherwise immediately show 404
+        if (!Validate::isLoadedObject($this->category)) {
             header('HTTP/1.1 404 Not Found');
             header('Status: 404 Not Found');
+            $this->errors[] = $this->trans('This category is no longer available.', [], 'Shop.Notifications.Error');
             $this->setTemplate('errors/404');
             $this->notFound = true;
 
             return;
-        } elseif (!$this->category->checkAccess($this->context->customer->id)) {
+        }
+
+        // If this category is not active or not related to current shop in multistore context,
+        // we treat it as not available. We will either redirect away or show error, depending
+        // on settings of the category.
+        if (!$this->category->active || !$this->category->existsInShop($this->context->shop->id)) {
+            // If category should redirect and we don't know where, we take the closest parent
+            if (!$this->category->id_type_redirected && in_array($this->category->redirect_type, [RedirectType::TYPE_PERMANENT, RedirectType::TYPE_TEMPORARY])) {
+                $this->category->id_type_redirected = $this->getCategoryToRedirectTo();
+            }
+
+            // Now, we do as configured in "Redirection when not displayed" field on the category
+            switch ($this->category->redirect_type) {
+                case RedirectType::TYPE_PERMANENT:
+                    header('HTTP/1.1 301 Moved Permanently');
+                    header('Location: ' . $this->context->link->getCategoryLink($this->category->id_type_redirected));
+                    exit;
+                case RedirectType::TYPE_TEMPORARY:
+                    header('HTTP/1.1 302 Moved Temporarily');
+                    header('Cache-Control: no-cache');
+                    header('Location: ' . $this->context->link->getCategoryLink($this->category->id_type_redirected));
+                    exit;
+                case RedirectType::TYPE_GONE:
+                    header('HTTP/1.1 410 Gone');
+                    header('Status: 410 Gone');
+                    $this->errors[] = $this->trans('This category is no longer available.', [], 'Shop.Notifications.Error');
+                    $this->setTemplate('errors/410');
+                    $this->notFound = true;
+
+                    break;
+                case RedirectType::TYPE_NOT_FOUND:
+                default:
+                    header('HTTP/1.1 404 Not Found');
+                    header('Status: 404 Not Found');
+                    $this->errors[] = $this->trans('This category is no longer available.', [], 'Shop.Notifications.Error');
+                    $this->setTemplate('errors/404');
+                    $this->notFound = true;
+
+                    break;
+            }
+
+            return;
+        }
+
+        // And one last check, we need to validate if current customer is a member
+        // of at least one group allowed to view this category.
+        if (!$this->category->checkAccess($this->context->customer->id)) {
             header('HTTP/1.1 403 Forbidden');
             header('Status: 403 Forbidden');
             $this->errors[] = $this->trans('You do not have access to this category.', [], 'Shop.Notifications.Error');
@@ -116,7 +166,7 @@ class CategoryControllerCore extends ProductListingFrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         parent::initContent();
 
@@ -124,6 +174,7 @@ class CategoryControllerCore extends ProductListingFrontController
             Validate::isLoadedObject($this->category)
             && $this->category->active
             && $this->category->checkAccess($this->context->customer->id)
+            && $this->category->existsInShop($this->context->shop->id)
         ) {
             $this->doProductSearch(
                 'catalog/listing/category',
@@ -140,7 +191,7 @@ class CategoryControllerCore extends ProductListingFrontController
      *
      * @return bool|string
      */
-    public function getLayout()
+    public function getLayout(): bool|string
     {
         if (!$this->category->checkAccess($this->context->customer->id) || $this->notFound) {
             return $this->context->shop->theme->getLayoutRelativePathForPage('error');
@@ -149,11 +200,16 @@ class CategoryControllerCore extends ProductListingFrontController
         return parent::getLayout();
     }
 
-    protected function getAjaxProductSearchVariables()
+    protected function getAjaxProductSearchVariables(): array
     {
+        // Basic data with rendered products, facets, active filters etc.
         $data = parent::getAjaxProductSearchVariables();
-        $rendered_products_header = $this->render('catalog/_partials/category-header', ['listing' => $data]);
-        $data['rendered_products_header'] = $rendered_products_header;
+
+        // Extra data for category pages, so we can dynamically update also these parts
+        $rendered_category_header = $this->render('catalog/_partials/category-header', ['listing' => $data]);
+        $data['rendered_products_header'] = $rendered_category_header;
+        $rendered_category_footer = $this->render('catalog/_partials/category-footer', ['listing' => $data]);
+        $data['rendered_products_footer'] = $rendered_category_footer;
 
         return $data;
     }
@@ -164,9 +220,9 @@ class CategoryControllerCore extends ProductListingFrontController
      *
      * @return ProductSearchQuery
      *
-     * @throws \PrestaShop\PrestaShop\Core\Product\Search\Exception\InvalidSortOrderDirectionException
+     * @throws PrestaShop\PrestaShop\Core\Product\Search\Exception\InvalidSortOrderDirectionException
      */
-    protected function getProductSearchQuery()
+    protected function getProductSearchQuery(): ProductSearchQuery
     {
         $query = new ProductSearchQuery();
         $query
@@ -182,7 +238,7 @@ class CategoryControllerCore extends ProductListingFrontController
      *
      * @return CategoryProductSearchProvider
      */
-    protected function getDefaultProductSearchProvider()
+    protected function getDefaultProductSearchProvider(): CategoryProductSearchProvider
     {
         return new CategoryProductSearchProvider(
             $this->getTranslator(),
@@ -190,7 +246,7 @@ class CategoryControllerCore extends ProductListingFrontController
         );
     }
 
-    protected function getTemplateVarCategory()
+    protected function getTemplateVarCategory(): CategoryLazyArray
     {
         $categoryVar = $this->categoryPresenter->present(
             $this->category,
@@ -214,7 +270,7 @@ class CategoryControllerCore extends ProductListingFrontController
         return $categoryVar;
     }
 
-    protected function getTemplateVarSubCategories()
+    protected function getTemplateVarSubCategories(): array
     {
         $subcategories = $this->category->getSubCategories($this->context->language->id);
 
@@ -240,7 +296,7 @@ class CategoryControllerCore extends ProductListingFrontController
         return $retriever->getImage($object, $id_image);
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 
@@ -267,7 +323,7 @@ class CategoryControllerCore extends ProductListingFrontController
     /**
      * @return Category
      */
-    public function getCategory()
+    public function getCategory(): Category
     {
         return $this->category;
     }
@@ -278,7 +334,7 @@ class CategoryControllerCore extends ProductListingFrontController
      *
      * @return array
      */
-    public function getTemplateVarPage()
+    public function getTemplateVarPage(): array
     {
         $page = parent::getTemplateVarPage();
 
@@ -296,7 +352,7 @@ class CategoryControllerCore extends ProductListingFrontController
         return $page;
     }
 
-    public function getListingLabel()
+    public function getListingLabel(): string
     {
         if (!Validate::isLoadedObject($this->category)) {
             $this->category = new Category(
@@ -310,5 +366,32 @@ class CategoryControllerCore extends ProductListingFrontController
             ['%category_name%' => $this->category->name],
             'Shop.Theme.Catalog'
         );
+    }
+
+    /**
+     * Returns a category that we will redirect into, in case we need 301/302 redirect.
+     * We will try to get the closest active parent of the current category.
+     *
+     * @return int category ID
+     */
+    private function getCategoryToRedirectTo(): int
+    {
+        $categoryToRedirectTo = null;
+        foreach ($this->category->getParentsCategories() as $category) {
+            /*
+             * Or new favourite category is a one:
+             * that is not the current one
+             * that is active
+             * and that is deeper than the last one
+             */
+            if ($category['id_category'] != $this->category->id
+                && $category['active'] == 1
+                && $category['level_depth'] > $categoryToRedirectTo['level_depth']
+            ) {
+                $categoryToRedirectTo = $category;
+            }
+        }
+
+        return $categoryToRedirectTo['id_category'];
     }
 }

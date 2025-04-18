@@ -32,39 +32,30 @@ wait_for()
     start_ts=$(date +%s)
     while :
     do
-        if [[ $ISBUSY -eq 1 ]]; then
+        # Special check for mysql
+        if [[ "$PORT" = "3306" ]]; then
+            echoerr "$CMD_NAME: Fetching status from docker mysql"
+            mysql -h$HOST -uroot -pprestashop -e "status"
+            result=$?
+        elif [[ $ISBUSY -eq 1 ]]; then
             nc -z $HOST $PORT
             result=$?
         else
             (echo > /dev/tcp/$HOST/$PORT) >/dev/null 2>&1
             result=$?
         fi
+        end_ts=$(date +%s)
+        ELAPSED_TIME=$((end_ts - start_ts))
         if [[ $result -eq 0 ]]; then
-            end_ts=$(date +%s)
-            echoerr "$CMD_NAME: $HOST:$PORT is available after $((end_ts - start_ts)) seconds"
+            echoerr "$CMD_NAME: $HOST:$PORT is available after $ELAPSED_TIME seconds"
+            break
+        elif [[ $TIMEOUT -gt 0 && $ELAPSED_TIME -gt $TIMEOUT ]]; then
+            echoerr "$CMD_NAME: $HOST:$PORT is still not available after $ELAPSED_TIME seconds"
             break
         fi
         sleep 1
     done
     return $result
-}
-
-wait_for_wrapper()
-{
-    # In order to support SIGINT during timeout: http://unix.stackexchange.com/a/57692
-    if [[ $QUIET -eq 1 ]]; then
-        timeout $BUSYTIMEFLAG $TIMEOUT $0 --quiet --child --host=$HOST --port=$PORT --timeout=$TIMEOUT &
-    else
-        timeout $BUSYTIMEFLAG $TIMEOUT $0 --child --host=$HOST --port=$PORT --timeout=$TIMEOUT &
-    fi
-    PID=$!
-    trap "kill -INT -$PID" INT
-    wait $PID
-    RESULT=$?
-    if [[ $RESULT -ne 0 ]]; then
-        echoerr "$CMD_NAME: timeout occurred after waiting $TIMEOUT seconds for $HOST:$PORT"
-    fi
-    return $RESULT
 }
 
 # process arguments
@@ -157,13 +148,8 @@ if [[ $CHILD -gt 0 ]]; then
     RESULT=$?
     exit $RESULT
 else
-    if [[ $TIMEOUT -gt 0 ]]; then
-        wait_for_wrapper
-        RESULT=$?
-    else
-        wait_for
-        RESULT=$?
-    fi
+    wait_for
+    RESULT=$?
 fi
 
 if [[ $CLI != "" ]]; then

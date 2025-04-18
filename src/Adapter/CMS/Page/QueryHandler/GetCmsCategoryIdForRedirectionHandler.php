@@ -48,7 +48,7 @@ final class GetCmsCategoryIdForRedirectionHandler extends AbstractCmsPageHandler
         try {
             $cms = $this->getCmsPageIfExistsById($query->getCmsPageId()->getValue());
             $categoryId = (int) $cms->id_cms_category;
-        } catch (CmsPageException $exception) {
+        } catch (CmsPageException) {
             $categoryId = CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID;
         }
 

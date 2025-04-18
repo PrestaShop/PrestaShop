@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotUpdateProduc
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionDataException;
@@ -119,6 +120,8 @@ class ProductImageUpdater
             throw new InvalidShopConstraintException('Image has no features related with shop group use single shop and all shops constraints');
         } elseif ($shopConstraint->forAllShops()) {
             $shopIds = $this->productImageRepository->getAssociatedShopIds(new ImageId((int) $newCover->id));
+        } elseif ($shopConstraint instanceof ShopCollection && $shopConstraint->hasShopIds()) {
+            $shopIds = $shopConstraint->getShopIds();
         } else {
             $shopIds = [$shopConstraint->getShopId()];
         }

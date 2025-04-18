@@ -23,30 +23,21 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Grid from '@components/grid/grid';
-import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
-import SortingExtension from '@components/grid/extension/sorting-extension';
-import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
-import ReloadListExtension from '@components/grid/extension/reload-list-extension';
-import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
-import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
-import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
-import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
-import TranslatableInput from '@components/translatable-input';
-
-const {$} = window;
-
 $(() => {
-  const attachmentGrid = new Grid('attachment');
+  const attachmentGrid = new window.prestashop.component.Grid('attachment');
 
-  attachmentGrid.addExtension(new FiltersResetExtension());
-  attachmentGrid.addExtension(new SortingExtension());
-  attachmentGrid.addExtension(new ExportToSqlManagerExtension());
-  attachmentGrid.addExtension(new ReloadListExtension());
-  attachmentGrid.addExtension(new BulkActionCheckboxExtension());
-  attachmentGrid.addExtension(new SubmitBulkExtension());
-  attachmentGrid.addExtension(new SubmitRowActionExtension());
-  attachmentGrid.addExtension(new LinkRowActionExtension());
+  attachmentGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+  attachmentGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  attachmentGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
+  attachmentGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
+  attachmentGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
+  attachmentGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
+  attachmentGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
+  attachmentGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
 
-  new TranslatableInput();
+  window.prestashop.component.initComponents(
+    [
+      'TranslatableInput',
+    ],
+  );
 });

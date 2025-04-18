@@ -2,15 +2,11 @@ services:
   _defaults:
     public: true
 
-  PrestaShopBundle\Entity\Repository\TabRepository:
-    factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
-    public: false
-    arguments:
-      - PrestaShopBundle\Entity\Tab
-
   prestashop.core.admin.tab.repository:
     alias: PrestaShopBundle\Entity\Repository\TabRepository
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.admin.shop.repository:
     class: 'PrestaShopBundle\Entity\Repository\ShopRepository'
@@ -30,17 +26,31 @@ services:
     arguments:
       - PrestaShopBundle\Entity\Translation
 
-  prestashop.core.admin.lang.repository:
-    class: PrestaShopBundle\Entity\Repository\LangRepository
+  PrestaShopBundle\Entity\Repository\LangRepository:
     factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
     arguments:
       - PrestaShopBundle\Entity\Lang
+    lazy: true
 
-  prestashop.core.admin.log.repository:
-    class: PrestaShopBundle\Entity\Repository\LogRepository
+  prestashop.core.admin.lang.repository:
+    alias: PrestaShopBundle\Entity\Repository\LangRepository
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+
+  PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface: '@prestashop.core.admin.lang.repository'
+
+  PrestaShopBundle\Entity\Repository\LogRepository:
+    public: false
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
+
+  prestashop.core.admin.log.repository:
+    alias: PrestaShopBundle\Entity\Repository\LogRepository
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.api.stock.repository:
     class: PrestaShopBundle\Entity\Repository\StockRepository
@@ -98,11 +108,17 @@ services:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
 
-  prestashop.core.admin.import_match.repository:
-    class: PrestaShopBundle\Entity\Repository\ImportMatchRepository
+  PrestaShopBundle\Entity\Repository\ImportMatchRepository:
+    public: false
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
+
+  prestashop.core.admin.import_match.repository:
+    alias: PrestaShopBundle\Entity\Repository\ImportMatchRepository
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.bundle.repository.module:
     class: PrestaShopBundle\Entity\Repository\ModuleRepository
@@ -116,11 +132,16 @@ services:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
 
-  prestashop.core.admin.admin_filter.repository:
-    class: PrestaShopBundle\Entity\Repository\AdminFilterRepository
+  PrestaShopBundle\Entity\Repository\AdminFilterRepository:
     factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
     arguments:
       - PrestaShopBundle\Entity\AdminFilter
+
+  prestashop.core.admin.admin_filter.repository:
+    alias: PrestaShopBundle\Entity\Repository\AdminFilterRepository
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.api.order_invoice.repository:
     class: PrestaShopBundle\Entity\Repository\OrderInvoiceRepository
@@ -128,18 +149,29 @@ services:
       - "@doctrine.dbal.default_connection"
       - "%database_prefix%"
 
-  PrestaShopBundle\Entity\Repository\FeatureFlagRepository:
+  PrestaShopBundle\Entity\Repository\ApiClientRepository:
     factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
     arguments:
-      - PrestaShopBundle\Entity\FeatureFlag
+      - PrestaShopBundle\Entity\ApiClient
 
-  PrestaShopBundle\Entity\Repository\AuthorizedApplicationRepository:
+  PrestaShopBundle\Entity\Repository\ShipmentRepository:
     factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
     arguments:
-      - PrestaShopBundle\Entity\AuthorizedApplication
-    public: true
+      - PrestaShopBundle\Entity\Shipment
 
-  PrestaShopBundle\Entity\Repository\ApiAccessRepository:
+  PrestaShopBundle\Entity\Repository\MutationRepository:
     factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
     arguments:
-      - PrestaShopBundle\Entity\ApiAccess
+      - PrestaShopBundle\Entity\Mutation
+
+  PrestaShopBundle\Entity\Repository\ImageTypeRepository:
+    factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+    arguments:
+      - PrestaShopBundle\Entity\ImageType
+
+  PrestaShopBundle\Entity\Repository\EmployeeRepository:
+    factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+    arguments:
+      - PrestaShopBundle\Entity\Employee\Employee
+    calls:
+      - setIdnConverter: [ '@PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter' ]

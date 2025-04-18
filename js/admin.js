@@ -319,22 +319,6 @@ function gencode(size)
   for (var i = 1; i <= size; ++i) {
     getE('code').value += chars.charAt(Math.floor(randomNumbers[i]/2**32 * chars.length));
   }
-
-  getE('cart-rules-highlight').style.display = '';
-}
-
-var tpl_viewing_window = null;
-function viewTemplates(id_select, lang, ext)
-{
-  var loc = $(id_select).val();
-  if (loc != 0)
-  {
-    if (tpl_viewing_window != null && !tpl_viewing_window.closed)
-      tpl_viewing_window.close();
-    var url_preview = $("option[value="+loc+"]", id_select).data('preview');
-    tpl_viewing_window = window.open(url_preview + lang + loc + ext, 'tpl_viewing', 'toolbar=0,location=0,directories=0,statfr=no,menubar=0,scrollbars=yes,resizable=yes,width=520,height=400,top=50,left=300');
-    tpl_viewing_window.focus();
-  }
 }
 
 function orderDeleteProduct(txtConfirm, txtExplain)
@@ -731,6 +715,11 @@ $(function()
       clearTimeout(ajax_running_timeout);
     });
 
+  // Ensure the spinner is hidden if no AJAX requests are running when the page loads
+  if ($.active === 0) {
+    $('#ajax_running').hide();
+  }
+
   //Check filters value on submit filter
   $("[name='submitFilter']").on('click', function(event) {
     var list_id = $(this).data('list-id');
@@ -1105,11 +1094,16 @@ function ajaxStates(id_state_selected)
 }
 
 function dniRequired() {
+  var countryId = $('#id_country').val();
+  if (!countryId) {
+    return;
+  }
+
   $.ajax({
     url: 'index.php',
     dataType: 'json',
     cache: false,
-    data: 'token=' + address_token + '&ajax=1&dni_required=1&tab=AdminAddresses&id_country=' + $('#id_country').val(),
+    data: 'token=' + address_token + '&ajax=1&dni_required=1&controller=AdminAddresses&id_country=' + countryId,
     success: function(resp) {
       if (resp && resp.dni_required) {
         $("#dni_required").fadeIn();
@@ -1209,7 +1203,7 @@ function verifyMail(testMsg, testSubject)
         "testSubject" : textSubject,
         "token"     : token_mail,
         "ajax"      : 1,
-        "tab"       : 'AdminEmails',
+        "controller"       : 'AdminEmails',
         "action"      : 'sendMailTest'
       },
        success: function(ret)
@@ -1272,17 +1266,23 @@ function isCleanHtml(content)
   var events = 'onmousedown|onmousemove|onmmouseup|onmouseover|onmouseout|onload|onunload|onfocus|onblur|onchange';
   events += '|onsubmit|ondblclick|onclick|onkeydown|onkeyup|onkeypress|onmouseenter|onmouseleave|onerror|onselect|onreset|onabort|ondragdrop|onresize|onactivate|onafterprint|onmoveend';
   events += '|onafterupdate|onbeforeactivate|onbeforecopy|onbeforecut|onbeforedeactivate|onbeforeeditfocus|onbeforepaste|onbeforeprint|onbeforeunload|onbeforeupdate|onmove';
-  events += '|onbounce|oncellchange|oncontextmenu|oncontrolselect|oncopy|oncut|ondataavailable|ondatasetchanged|ondatasetcomplete|ondeactivate|ondrag|ondragend|ondragenter|onmousewheel';
+  events += '|onbounce|oncellchange|oncontextmenu|oncontrolselect|oncopy|oncut|ondataavailable|ondatasetchanged|ondatasetcomplete|ondeactivate|ondrag|ondragend|ondragenter|ondragexit|onmousewheel';
   events += '|ondragleave|ondragover|ondragstart|ondrop|onerrorupdate|onfilterchange|onfinish|onfocusin|onfocusout|onhashchange|onhelp|oninput|onlosecapture|onmessage|onmouseup|onmovestart';
   events += '|onoffline|ononline|onpaste|onpropertychange|onreadystatechange|onresizeend|onresizestart|onrowenter|onrowexit|onrowsdelete|onrowsinserted|onscroll|onsearch|onselectionchange';
-  events += '|onselectstart|onstart|onstop';
+  events += '|onselectstart|onstart|onstop|onanimationcancel|onanimationend|onanimationiteration|onanimationstart';
+  events += '|onpointerover|onpointerenter|onpointerdown|onpointermove|onpointerup|onpointerout|onpointerleave|onpointercancel|ongotpointercapture|onlostpointercapture';
+  events += '|onpagehide|onpageshow|onautocomplete|onautocompleteerror|oncanplay|oncanplaythrough|onclose|oncuechange|ondurationchange|onemptied|onended|oninvalid|onloadeddata';
+  events += '|onloadedmetadata|onloadstart|onpause|onplay|onplaying|onpopstate|onprogress|onratechange|onreset|onseeked|onseeking|onshow|onsort|onstalled|onstorage|onsuspend|ontimeupdate';
+  events += '|ontoggle|onvolumechange|onwaiting';
 
   var script1 = /<[\s]*script/im;
   var script2 = new RegExp('('+events+')[\s]*=', 'im');
   var script3 = /.*script\:/im;
   var script4 = /<[\s]*(i?frame|embed|object)/im;
+  var script5 = /<\s*\w+[^>]*\s(on\w+)=["'][^"']*["']/ims;
+  var rloCharacter = "\xE2\x80\xAE";
 
-  if (script1.test(content) || script2.test(content) || script3.test(content) || script4.test(content))
+  if (script1.test(content) || script2.test(content) || script3.test(content) || script4.test(content) || script5.test(content) || content.indexOf(rloCharacter) !== -1)
     return false;
 
   return true;

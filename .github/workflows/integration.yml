@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [ '8.1', '8.2' ]
+        php: [ '8.1', '8.2', '8.3', '8.4' ]
       fail-fast: false
     steps:
       - name: Setup PHP
@@ -33,11 +33,11 @@ jobs:
           mysql database: 'prestashop'
           mysql root password: 'password'
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version: '20'
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: PrestaShop Configuration
         run: |
@@ -49,28 +49,30 @@ jobs:
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache Node Directory
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: ${{ runner.os }}-node-
 
       - name: Cache Composer Directory
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
       - name: Composer Install
-        run: composer install --ansi --prefer-dist --no-interaction --no-progress
+        run: COMPOSER_PROCESS_TIMEOUT=600 composer install --ansi --prefer-dist --no-interaction --no-progress
 
       - name: Update phpunit version
         if: ${{ startsWith(matrix.php, '8.') }}
-        run: composer update -w --ignore-platform-reqs --no-interaction phpunit/phpunit
+        run: COMPOSER_PROCESS_TIMEOUT=600 composer update -w --ignore-platform-reqs --no-interaction phpunit/phpunit
 
-      - name: Build theme assets
-        run: make front-classic
+      # Front assets are needed for the theme to be installed and image types to be inserted in DB, admin assets required especially
+      # because some built files (like preload.html.twig) are included and cause errors when absent
+      - name: Build all assets
+        run: make assets
 
       - name: Change MySQL authentication method
         run: mysql -h127.0.0.1 -uroot -ppassword -e "ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'password'; FLUSH PRIVILEGES;"

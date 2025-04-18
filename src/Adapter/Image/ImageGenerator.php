@@ -30,8 +30,6 @@ namespace PrestaShop\PrestaShop\Adapter\Image;
 
 use ImageManager;
 use ImageType;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
@@ -43,7 +41,6 @@ use PrestaShopException;
 class ImageGenerator
 {
     public function __construct(
-        private readonly FeatureFlagManager $featureFlagManager,
         private readonly ImageFormatConfiguration $imageFormatConfiguration
     ) {
     }
@@ -66,7 +63,7 @@ class ImageGenerator
             foreach ($imageTypes as $imageType) {
                 $resized &= $this->resize($imagePath, $imageType, $imageId);
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new ImageOptimizationException('Unable to resize one or more of your pictures.');
         }
 
@@ -94,29 +91,20 @@ class ImageGenerator
 
         /*
          * Let's resolve which formats we will use for image generation.
-         * In new image system, it's multiple formats. In case of legacy, it's only .jpg.
          *
          * In case of .jpg images, the actual format inside is decided by ImageManager.
          */
-        if ($this->featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT)) {
-            $configuredImageFormats = $this->imageFormatConfiguration->getGenerationFormats();
-        } else {
-            $configuredImageFormats = ['jpg'];
-        }
+        $configuredImageFormats = $this->imageFormatConfiguration->getGenerationFormats();
 
         $result = true;
 
         foreach ($configuredImageFormats as $imageFormat) {
-            // For JPG images, we let Imagemanager decide what to do and choose between JPG/PNG.
-            // For webp and avif extensions, we want it to follow our command and ignore the original format.
-            $forceFormat = ($imageFormat !== 'jpg');
             if (!ImageManager::resize(
                 $filePath,
                 sprintf('%s-%s.%s', dirname($filePath) . DIRECTORY_SEPARATOR . $imageId, stripslashes($imageType->name), $imageFormat),
                 $imageType->width,
                 $imageType->height,
-                $imageFormat,
-                $forceFormat
+                $imageFormat
             )) {
                 $result = false;
             }

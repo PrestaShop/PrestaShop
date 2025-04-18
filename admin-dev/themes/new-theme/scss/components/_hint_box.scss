@@ -1,8 +1,5 @@
 .hint-box {
   .alert {
-    padding-right: 1rem;
-    background-color: $background-info;
-    border: none;
-    border-left: 0.125rem solid #4ac7e0;
+    @extend .alert-info;
   }
 }

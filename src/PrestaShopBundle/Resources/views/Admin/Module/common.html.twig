@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,27 +21,27 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block javascripts %}
   {{ parent() }}
   <script>
     var moduleURLs = {
-      'configurationPage': '{{ path('admin_module_configure_action', {'module_name': ':number:'})|e('js') }}',
+      'configurationPage': '{{ path('admin_module_configure_action', {module_name: ':number:'})|e('js') }}',
       'moduleImport': '{{ path('admin_module_import')|e('js') }}',
       'notificationsCount': '{{ path('admin_module_notification_count')|e('js') }}',
       'maintenancePage': '{{ path('admin_maintenance')|e('js') }}',
     };
 
     var moduleTranslations = {
-      'singleModuleModalUpdateTitle': '{{ "Are you sure you want to update this module?"|trans({}, 'Admin.Modules.Notification') }}',
-      'multipleModuleModalUpdateTitle': '{{ "Are you sure you want to update these modules?"|trans({}, 'Admin.Modules.Notification') }}',
-      'moduleModalUpdateCancel': '{{ "Cancel"|trans({}, 'Admin.Actions') }}',
-      'moduleModalUpdateMaintenance': '{{ "Go to maintenance page"|trans({}, 'Admin.Actions') }}',
-      'moduleModalUpdateUpgrade': '{{ "Upgrade"|trans({}, 'Admin.Actions') }}',
-      'upgradeAnywayButtonText': '{{ "Update anyway"|trans({}, 'Admin.Actions') }}',
-      'moduleModalUpdateConfirmMessage': '{{ "We strongly advise you to update the modules on maintenance mode to avoid any cache issues."|trans({}, 'Admin.Modules.Notification') }}',
+      'singleModuleModalUpdateTitle': '{{ 'Are you sure you want to update this module?'|trans({}, 'Admin.Modules.Notification') }}',
+      'multipleModuleModalUpdateTitle': '{{ 'Are you sure you want to update these modules?'|trans({}, 'Admin.Modules.Notification') }}',
+      'moduleModalUpdateCancel': '{{ 'Cancel'|trans({}, 'Admin.Actions') }}',
+      'moduleModalUpdateMaintenance': '{{ 'Go to maintenance page'|trans({}, 'Admin.Actions') }}',
+      'moduleModalUpdateUpgrade': '{{ 'Upgrade'|trans({}, 'Admin.Actions') }}',
+      'upgradeAnywayButtonText': '{{ 'Update anyway'|trans({}, 'Admin.Actions') }}',
+      'moduleModalUpdateConfirmMessage': '{{ 'We strongly advise you to update the modules on maintenance mode to avoid any cache issues.'|trans({}, 'Admin.Modules.Notification') }}',
     };
 
     // Need to come from the backend
@@ -52,9 +52,9 @@
 {% endblock %}
 
 {% set js_translatable = {
-  "Bulk Action - One module minimum": "You need to select at least one module to use the bulk action."|trans({}, 'Admin.Modules.Notification'),
-  "Bulk Action - Request not found": 'The action "[1]" is not available, impossible to perform your request.'|trans({}, 'Admin.Modules.Notification'),
-  "Bulk Action - Request not available for module": "The action [1] is not available for module [2]. Skipped."|trans({}, 'Admin.Modules.Notification'),
-  "An action is already in progress. Please wait for it to finish.": 'An action is already in progress. Please wait for it to finish.'|trans({}, 'Admin.Modules.Notification'),
+  'Bulk Action - One module minimum': 'You need to select at least one module to use the bulk action.'|trans({}, 'Admin.Modules.Notification'),
+  'Bulk Action - Request not found': 'The action "[1]" is not available, impossible to perform your request.'|trans({}, 'Admin.Modules.Notification'),
+  'Bulk Action - Request not available for module': 'The action [1] is not available for module [2]. Skipped.'|trans({}, 'Admin.Modules.Notification'),
+  'An action is already in progress. Please wait for it to finish.': 'An action is already in progress. Please wait for it to finish.'|trans({}, 'Admin.Modules.Notification'),
 }|merge(js_translatable)
 %}

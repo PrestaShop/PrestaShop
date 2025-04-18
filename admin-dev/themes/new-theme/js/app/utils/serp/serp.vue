@@ -84,11 +84,20 @@
         return this.title;
       },
       displayedDescription() {
-        if (this.description.length > 150) {
-          return `${this.description.substring(0, 150)}...`;
+        const plainTextDescription = this.stripHtml(this.description);
+
+        if (plainTextDescription.length > 150) {
+          return `${plainTextDescription.substring(0, 150)}...`;
         }
 
-        return this.description;
+        return plainTextDescription;
+      },
+    },
+    methods: {
+      stripHtml(html) {
+        const div = document.createElement('div');
+        div.innerHTML = html;
+        return div.textContent || '';
       },
     },
   });
@@ -100,24 +109,25 @@
 
   .serp-preview {
     max-width: 43.75rem;
-    padding: 1.5rem 1.875rem;
-    margin: 0.938rem 0;
-    background-color: $white;
-    border: solid 1px $widget-border-color;
-    @include border-radius(0.25rem);
-    @include box-shadow(0 0 0.375rem 0 rgba($black, 0.1));
+    padding: var(--#{$cdk}size-24) var(--#{$cdk}size-30);
+    margin: var(--#{$cdk}size-16) 0;
+    background-color: var(--#{$cdk}white);
+    border: 1px solid var(--#{$cdk}primary-400);
+    box-shadow: var(--#{$cdk}box-shadow-default);
 
     .serp-url {
       font-family: arial, sans-serif;
-      font-size: 0.875rem;
+      font-size: var(--#{$cdk}size-12);
       font-style: normal;
       font-weight: 400;
-      line-height: 1.5rem;
+      line-height: var(--#{$cdk}size-18);
       color: $serp-url-light-color;
       text-align: left;
       direction: ltr;
       cursor: pointer;
       visibility: visible;
+      display: flex;
+      align-items: center;
     }
 
     .serp-base-url {
@@ -125,8 +135,8 @@
     }
 
     .serp-url-more {
-      margin: -0.25rem 0 0 0.875rem;
-      font-size: 1.125rem;
+      margin-left: var(--#{$cdk}size-12);
+      font-size: var(--#{$cdk}size-18);
       color: $serp-url-light-color;
       cursor: pointer;
     }

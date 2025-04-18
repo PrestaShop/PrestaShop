@@ -171,10 +171,10 @@ class ImageManagerCore
      *
      * @param string $sourceFile Image object from $_FILE
      * @param string $destinationFile Destination filename
-     * @param int $destinationWidth Desired width (optional)
-     * @param int $destinationHeight Desired height (optional)
-     * @param string $destinationFileType Desired file_type (may be override by PS_IMAGE_QUALITY)
-     * @param bool $forceType Don't override $file_type by PS_IMAGE_QUALITY, used when generating webp and avif files
+     * @param int $destinationWidth Desired width (optional), pass null to use original dimensions
+     * @param int $destinationHeight Desired height (optional), pass null to use original dimensions
+     * @param string $destinationFileType Desired file type inside the image. If jpg and $forceType is false, format inside will be decided by PS_IMAGE_QUALITY
+     * @param bool $forceType If false and $destinationFileType is jpg, format inside will be decided by PS_IMAGE_QUALITY
      * @param int $error Out error code
      * @param int $targetWidth Needed by AdminImportController to speed up the import process
      * @param int $targetHeight Needed by AdminImportController to speed up the import process
@@ -182,7 +182,7 @@ class ImageManagerCore
      * @param int $sourceWidth Needed by AdminImportController to speed up the import process
      * @param int $sourceHeight Needed by AdminImportController to speed up the import process
      *
-     *@return bool Operation result
+     * @return bool Operation result
      */
     public static function resize(
         $sourceFile,
@@ -248,17 +248,19 @@ class ImageManagerCore
             $sourceHeight = $tmpHeight;
         }
 
-        // If the filetype is not forced and we are requesting a JPG file, we must
-        // adjust the format inside according to PS_IMAGE_QUALITY in some cases.
+        /*
+         * If the filetype is not forced and we are requesting a JPG file, we will adjust the format inside
+         * the image according to PS_IMAGE_QUALITY in some cases.
+         */
         if (!$forceType && $destinationFileType === 'jpg') {
-            if (Configuration::get('PS_IMAGE_QUALITY') == 'png_all'
-                || (Configuration::get('PS_IMAGE_QUALITY') == 'png' && $sourceFileType == IMAGETYPE_PNG)) {
+            // If PS_IMAGE_QUALITY is set to png_all, we will use PNG file no matter the source.
+            if (Configuration::get('PS_IMAGE_QUALITY') == 'png_all') {
                 $destinationFileType = 'png';
             }
 
-            if (Configuration::get('PS_IMAGE_QUALITY') == 'webp_all'
-                || (Configuration::get('PS_IMAGE_QUALITY') == 'webp' && $sourceFileType == IMAGETYPE_WEBP)) {
-                $destinationFileType = 'webp';
+            // If PS_IMAGE_QUALITY is set to png (optional), we will use PNG if the original format could support transparency.
+            if (Configuration::get('PS_IMAGE_QUALITY') == 'png' && $sourceFileType != IMAGETYPE_JPEG) {
+                $destinationFileType = 'png';
             }
         }
 
@@ -305,8 +307,13 @@ class ImageManagerCore
         $destImage = imagecreatetruecolor($destinationWidth, $destinationHeight);
 
         // If the output is PNG, fill with transparency. Else fill with white background.
-        if ($destinationFileType == 'png' || $destinationFileType == 'webp' || $destinationFileType == 'avif') {
-            imagealphablending($destImage, false);
+        if (in_array($destinationFileType, ['png', 'webp', 'avif'])) {
+            // if png color type is 3, the file is paletted (256 colors or less). Change palette to reduce file size
+            if ($destinationFileType == 'png' && $sourceFileType == IMAGETYPE_PNG && self::getPNGColorType($sourceFile) == 3) {
+                imagetruecolortopalette($destImage, false, 255);
+            } else {
+                imagealphablending($destImage, false);
+            }
             imagesavealpha($destImage, true);
             $transparent = imagecolorallocatealpha($destImage, 255, 255, 255, 127);
             imagefilledrectangle($destImage, 0, 0, $destinationWidth, $destinationHeight, $transparent);
@@ -329,11 +336,6 @@ class ImageManagerCore
         $writeFile = ImageManager::write($destinationFileType, $destImage, $destinationFile);
         Hook::exec('actionOnImageResizeAfter', ['dst_file' => $destinationFile, 'file_type' => $destinationFileType]);
         @imagedestroy($srcImage);
-
-        file_put_contents(
-            dirname($destinationFile) . DIRECTORY_SEPARATOR . 'fileType',
-            $destinationFileType
-        );
 
         return $writeFile;
     }
@@ -600,7 +602,7 @@ class ImageManagerCore
     /**
      * Create an image with GD extension from a given type.
      *
-     * @param string $type
+     * @param int $type
      * @param string $filename
      *
      * @return false|resource
@@ -706,7 +708,7 @@ class ImageManagerCore
             default:
                 $quality = ($psJpegQuality === false ? 90 : $psJpegQuality);
                 // @phpstan-ignore-next-line
-                imageinterlace($resource, true); /// make it PROGRESSIVE
+                imageinterlace($resource, true); // / make it PROGRESSIVE
                 // @phpstan-ignore-next-line
                 $success = imagejpeg($resource, $filename, (int) $quality);
 
@@ -898,5 +900,21 @@ class ImageManagerCore
         }
 
         return $path;
+    }
+
+    /**
+     * The function `getPNGColorType` returns the color type byte from a PNG file
+     *
+     * @param string $fileName
+     *
+     * @return int|bool
+     */
+    public static function getPNGColorType($fileName)
+    {
+        if (!is_readable($fileName)) {
+            return false;
+        }
+
+        return ord(@file_get_contents($fileName, false, null, 25, 1));
     }
 }

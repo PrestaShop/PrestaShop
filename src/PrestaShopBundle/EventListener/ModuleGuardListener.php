@@ -94,7 +94,7 @@ class ModuleGuardListener implements EventSubscriberInterface
             $this->vendorFolderGuard->protectFolder($moduleVendorPath);
         } catch (IOException $e) {
             $this->logger->error(sprintf('%s: %s', $e->getMessage(), $e->getPath()));
-        } catch (FileNotFoundException $e) {
+        } catch (FileNotFoundException) {
             $this->logger->info(sprintf('Module %s has no vendor folder', $moduleName));
         }
     }

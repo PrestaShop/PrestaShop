@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,9 +21,9 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
-{% trans_default_domain "Admin.Advparameters.Feature" %}
+{% trans_default_domain 'Admin.Advparameters.Feature' %}
 {% form_theme smartyForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 {% form_theme debugModeForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 {% form_theme optionalFeaturesForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
@@ -32,7 +32,7 @@
 {% form_theme cachingForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {% block content %}
-  {{ form_start(smartyForm, {attr : {class: 'form'}, action: path('admin_performance_smarty_save') }) }}
+  {{ form_start(smartyForm, {attr: {class: 'form'}, action: path('admin_performance_smarty_save')}) }}
   {% block perfs_form_smarty_cache %}
     <div class="card">
       <h3 class="card-header">
@@ -55,7 +55,7 @@
   {% endblock %}
   {{ form_end(smartyForm) }}
 
-  {{ form_start(debugModeForm, {attr : {class: 'form'}, action: path('admin_performance_debug_mode_save') }) }}
+  {{ form_start(debugModeForm, {attr: {class: 'form'}, action: path('admin_performance_debug_mode_save')}) }}
   {% block perfs_form_debug_mode %}
     <div class="card">
       <h3 class="card-header">
@@ -122,7 +122,7 @@
     </div>
   {% endblock %}
 
-  {{ form_start(optionalFeaturesForm, {attr : {class: 'form'}, action: path('admin_performance_optional_features_save') }) }}
+  {{ form_start(optionalFeaturesForm, {attr: {class: 'form'}, action: path('admin_performance_optional_features_save')}) }}
   {% block perfs_form_optional_features %}
     <div class="card" id="optional_features">
       <h3 class="card-header">
@@ -154,7 +154,7 @@
   {% endblock %}
   {{ form_end(optionalFeaturesForm) }}
 
-  {{ form_start(combineCompressCacheForm, {attr : {class: 'form'}, action: path('admin_performance_combine_compress_cache_save') }) }}
+  {{ form_start(combineCompressCacheForm, {attr: {class: 'form'}, action: path('admin_performance_combine_compress_cache_save')}) }}
   {% block perfs_form_ccc %}
     <div class="card">
       <h3 class="card-header">
@@ -186,7 +186,7 @@
   {% endblock %}
   {{ form_end(combineCompressCacheForm) }}
 
-  {{ form_start(mediaServersForm, {attr : {class: 'form'}, action: path('admin_performance_media_servers_save') }) }}
+  {{ form_start(mediaServersForm, {attr: {class: 'form'}, action: path('admin_performance_media_servers_save')}) }}
   {% block perfs_form_media_servers %}
     <div class="card">
       <h3 class="card-header">
@@ -218,7 +218,7 @@
   {% endblock %}
   {{ form_end(mediaServersForm) }}
 
-  {{ form_start(cachingForm, {attr : {class: 'form'}, action: path('admin_performance_caching_save') }) }}
+  {{ form_start(cachingForm, {attr: {class: 'form'}, action: path('admin_performance_caching_save')}) }}
   {% block perfs_form_caching %}
     <div class="card">
       <h3 class="card-header">
@@ -231,7 +231,7 @@
             {{ form_widget(cachingForm) }}
           {% endblock %}
 
-          {{ include('@AdvancedParameters/memcache_servers.html.twig', {'form': memcacheForm}) }}
+          {{ include('@AdvancedParameters/memcache_servers.html.twig', {form: memcacheForm}) }}
         </div>
       </div>
       <div class="card-footer">

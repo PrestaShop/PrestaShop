@@ -1,28 +1,22 @@
-// Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-// Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
-import customerServicePage from '@pages/BO/customerService/customerService';
-import viewPage from '@pages/BO/customerService/customerService/view';
-// Import FO pages
-import {contactUsPage} from '@pages/FO/contactUs';
-import {homePage as foHomePage} from '@pages/FO/home';
-import {loginPage as foLoginPage} from '@pages/FO/login';
-
-// Import data
-import Customers from '@data/demo/customers';
-import Orders from '@data/demo/orders';
-import MessageData from '@data/faker/message';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+
+import {
+  boCustomerServicePage,
+  boCustomerServiceViewPage,
+  boDashboardPage,
+  boLoginPage,
+  type BrowserContext,
+  dataCustomers,
+  dataOrders,
+  FakerContactMessage,
+  foClassicContactUsPage,
+  foClassicHomePage,
+  foClassicLoginPage,
+  type Page,
+  utilsFile,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_contactUs_addAttachment';
 
@@ -39,138 +33,144 @@ describe('FO - Contact us : Add attachment', async () => {
   let idCustomer: string;
   let messageDateTime: string;
 
-  const contactUsData: MessageData = new MessageData({
-    firstName: Customers.johnDoe.firstName,
-    lastName: Customers.johnDoe.lastName,
+  const contactUsData: FakerContactMessage = new FakerContactMessage({
+    firstName: dataCustomers.johnDoe.firstName,
+    lastName: dataCustomers.johnDoe.lastName,
     subject: 'Customer service',
-    emailAddress: Customers.johnDoe.email,
-    reference: Orders.firstOrder.reference,
+    emailAddress: dataCustomers.johnDoe.email,
+    reference: dataOrders.order_1.reference,
   });
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
-    await files.createFile('.', `${contactUsData.fileName}.csv`, 'new filename');
-    await files.createFile('.', `${contactUsData.fileName}.png`, 'new filename');
+    await utilsFile.createFile('.', `${contactUsData.fileName}.csv`, 'new filename');
+    await utilsFile.createFile('.', `${contactUsData.fileName}.png`, 'new filename');
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
-    await files.deleteFile(`${contactUsData.fileName}.csv`);
-    await files.deleteFile(`${contactUsData.fileName}.png`);
+    await utilsFile.deleteFile(`${contactUsData.fileName}.csv`);
+    await utilsFile.deleteFile(`${contactUsData.fileName}.png`);
   });
 
   it('should open the shop page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openShop', baseContext);
 
-    await foHomePage.goTo(page, global.FO.URL);
+    await foClassicHomePage.goTo(page, global.FO.URL);
 
-    const isHomePage = await foHomePage.isHomePage(page);
-    await expect(isHomePage).to.be.true;
+    const isHomePage = await foClassicHomePage.isHomePage(page);
+    expect(isHomePage).to.eq(true);
   });
 
   it('should go to login page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFo', baseContext);
 
-    await foHomePage.goToLoginPage(page);
+    await foClassicHomePage.goToLoginPage(page);
 
-    const pageTitle = await foLoginPage.getPageTitle(page);
-    await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+    const pageTitle = await foClassicLoginPage.getPageTitle(page);
+    expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
   });
 
   it('should sign in with default customer', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'sighInFo', baseContext);
 
-    await foLoginPage.customerLogin(page, Customers.johnDoe);
+    await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-    const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-    await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+    const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
+    expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
   });
 
   it('should go to contact us page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goOnContactPage', baseContext);
 
     // Go to contact us page
-    await foLoginPage.goToFooterLink(page, 'Contact us');
+    await foClassicLoginPage.goToFooterLink(page, 'Contact us');
 
-    const pageTitle = await contactUsPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(contactUsPage.pageTitle);
+    const pageTitle = await foClassicContactUsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicContactUsPage.pageTitle);
   });
 
   it('should try to send message with csv file to customer service and check error message', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'sendCSVFile', baseContext);
 
-    await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.csv`);
+    await foClassicContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.csv`);
 
-    const validationMessage = await contactUsPage.getAlertError(page);
-    await expect(validationMessage).to.equal(contactUsPage.badFileExtensionErrorMessage);
+    const validationMessage = await foClassicContactUsPage.getAlertError(page);
+    expect(validationMessage).to.equal(foClassicContactUsPage.badFileExtensionErrorMessage);
   });
 
   it('should send message with PNG file to customer service and check validation message', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'sendPNGFile', baseContext);
 
-    await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.png`);
+    await foClassicContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.png`);
 
-    const validationMessage = await contactUsPage.getAlertSuccess(page);
-    await expect(validationMessage).to.equal(contactUsPage.validationMessage);
+    const validationMessage = await foClassicContactUsPage.getAlertSuccess(page);
+    expect(validationMessage).to.equal(foClassicContactUsPage.validationMessage);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to customer service page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrderMessagesPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.customerServiceParentLink,
-      dashboardPage.customerServiceLink,
+      boDashboardPage.customerServiceParentLink,
+      boDashboardPage.customerServiceLink,
     );
 
-    const pageTitle = await customerServicePage.getPageTitle(page);
-    await expect(pageTitle).to.contains(customerServicePage.pageTitle);
+    const pageTitle = await boCustomerServicePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCustomerServicePage.pageTitle);
   });
 
   it('should check customer name', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerName', baseContext);
 
-    const email = await customerServicePage.getTextColumn(page, 1, 'customer');
-    await expect(email).to.contain(`${contactUsData.firstName} ${contactUsData.lastName}`);
+    const email = await boCustomerServicePage.getTextColumn(page, 1, 'customer');
+    expect(email).to.contain(`${contactUsData.firstName} ${contactUsData.lastName}`);
   });
 
   it('should check customer email', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerEmail', baseContext);
 
-    const email = await customerServicePage.getTextColumn(page, 1, 'a!email');
-    await expect(email).to.contain(contactUsData.emailAddress);
+    const email = await boCustomerServicePage.getTextColumn(page, 1, 'a!email');
+    expect(email).to.contain(contactUsData.emailAddress);
   });
 
   it('should get the customer service id and the date', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'getMessageID', baseContext);
 
-    idCustomer = await customerServicePage.getTextColumn(page, 1, 'id_customer_thread');
-    await expect(parseInt(idCustomer, 10)).to.be.at.least(0);
+    idCustomer = await boCustomerServicePage.getTextColumn(page, 1, 'id_customer_thread');
+    expect(parseInt(idCustomer, 10)).to.be.at.least(0);
 
-    messageDateTime = await customerServicePage.getTextColumn(page, 1, 'date');
+    messageDateTime = await boCustomerServicePage.getTextColumn(page, 1, 'date');
   });
 
   it('should go to view message page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToViewMessagePage', baseContext);
 
-    await customerServicePage.goToViewMessagePage(page);
+    await boCustomerServicePage.goToViewMessagePage(page);
 
-    const pageTitle = await viewPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(viewPage.pageTitle);
+    const pageTitle = await boCustomerServiceViewPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCustomerServiceViewPage.pageTitle);
   });
 
   it('should check the thread form', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkThreadForm', baseContext);
 
-    const text = await viewPage.getCustomerMessage(page);
+    const text = await boCustomerServiceViewPage.getCustomerMessage(page);
     expect(text)
       .to.contains(contactUsData.emailAddress)
       .and.to.contains(contactUsData.subject)
@@ -182,27 +182,27 @@ describe('FO - Contact us : Add attachment', async () => {
   it('should check the file attached', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkFileAttached', baseContext);
 
-    const fileExtension = await viewPage.getAttachedFileHref(page);
-    await expect(fileExtension).to.contains('.png');
+    const fileExtension = await boCustomerServiceViewPage.getAttachedFileHref(page);
+    expect(fileExtension).to.contains('.png');
   });
 
   it('should go back to customer service page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goBackToOrderMessagesPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.customerServiceParentLink,
-      dashboardPage.customerServiceLink,
+      boDashboardPage.customerServiceParentLink,
+      boDashboardPage.customerServiceLink,
     );
 
-    const pageTitle = await customerServicePage.getPageTitle(page);
-    await expect(pageTitle).to.contains(customerServicePage.pageTitle);
+    const pageTitle = await boCustomerServicePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCustomerServicePage.pageTitle);
   });
 
   it('should delete the message', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'deleteMessage', baseContext);
 
-    const textResult = await customerServicePage.deleteMessage(page, 1);
-    await expect(textResult).to.contains(customerServicePage.successfulDeleteMessage);
+    const textResult = await boCustomerServicePage.deleteMessage(page, 1);
+    expect(textResult).to.contains(boCustomerServicePage.successfulDeleteMessage);
   });
 });

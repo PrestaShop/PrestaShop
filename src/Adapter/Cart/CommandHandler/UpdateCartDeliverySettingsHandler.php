@@ -92,7 +92,7 @@ final class UpdateCartDeliverySettingsHandler extends AbstractCartHandler implem
                 if (false === $cart->update()) {
                     throw new CartException('Failed to update cart delivery settings');
                 }
-            } catch (PrestaShopException $e) {
+            } catch (PrestaShopException) {
                 throw new CartException(sprintf('An error occurred while trying to update delivery settings for cart with id "%d"', $cart->id));
             }
         }
@@ -191,7 +191,7 @@ final class UpdateCartDeliverySettingsHandler extends AbstractCartHandler implem
             if (false === $freeShippingCartRule->delete()) {
                 throw new CannotDeleteCartRuleException(sprintf('Failed deleting cart rule #%s', $freeShippingCartRule->id));
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new CartRuleException(sprintf('An error occurred when trying to delete cart rule #%s', $freeShippingCartRule->id));
         }
     }

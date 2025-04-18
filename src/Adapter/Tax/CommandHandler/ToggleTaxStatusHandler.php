@@ -53,7 +53,7 @@ final class ToggleTaxStatusHandler extends AbstractTaxHandler implements ToggleT
             if (!$tax->save()) {
                 throw new UpdateTaxException(sprintf('Unable to toggle Tax with id "%s"', $taxIdValue), UpdateTaxException::FAILED_UPDATE_STATUS);
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new TaxException(sprintf('An error occurred when enabling ETax with id "%s"', $taxIdValue));
         }
     }

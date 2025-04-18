@@ -76,10 +76,10 @@ class AdminFilterRepository extends EntityRepository
      * @param string $controller
      * @param string $action
      *
+     * @return bool Returns false if entity was not found
+     *
      * @throws ORMInvalidArgumentException
      * @throws OptimisticLockException
-     *
-     * @return bool Returns false if entity was not found
      */
     public function removeByEmployeeAndRouteParams($employeeId, $shopId, $controller, $action)
     {

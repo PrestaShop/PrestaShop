@@ -118,18 +118,18 @@ class TreeBuilder
         if (is_string($search)) {
             $search = strtolower($search);
 
-            return str_contains(strtolower($data['default']), $search) ||
-                str_contains(strtolower($data['xlf']), $search) ||
-                str_contains(strtolower($data['db']), $search);
+            return str_contains(strtolower($data['default']), $search)
+                || str_contains(strtolower($data['xlf']), $search)
+                || str_contains(strtolower($data['db']), $search);
         }
 
         if (is_array($search)) {
             $contains = true;
             foreach ($search as $s) {
                 $s = strtolower($s);
-                $contains &= str_contains(strtolower($data['default']), $s) ||
-                    str_contains(strtolower($data['xlf']), $s) ||
-                    str_contains(strtolower($data['db']), $s);
+                $contains &= str_contains(strtolower($data['default']), $s)
+                    || str_contains(strtolower($data['xlf']), $s)
+                    || str_contains(strtolower($data['db']), $s);
             }
 
             return $contains;

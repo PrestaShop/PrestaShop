@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\RedirectOption;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -79,11 +80,6 @@ class EditRootCategoryCommand
     private $localizedMetaDescriptions;
 
     /**
-     * @var string[]
-     */
-    private $localizedMetaKeywords;
-
-    /**
      * @var int[]
      */
     private $associatedGroupIds;
@@ -103,10 +99,7 @@ class EditRootCategoryCommand
      */
     private $thumbnailImage;
 
-    /**
-     * @var array
-     */
-    private $menuThumbnailImages;
+    private ?RedirectOption $redirectOption = null;
 
     /**
      * @param int $categoryId
@@ -114,7 +107,6 @@ class EditRootCategoryCommand
     public function __construct($categoryId)
     {
         $this->categoryId = new CategoryId($categoryId);
-        $this->menuThumbnailImages = [];
     }
 
     /**
@@ -284,26 +276,6 @@ class EditRootCategoryCommand
     }
 
     /**
-     * @return string[]
-     */
-    public function getLocalizedMetaKeywords()
-    {
-        return $this->localizedMetaKeywords;
-    }
-
-    /**
-     * @param string[] $localizedMetaKeywords
-     *
-     * @return $this
-     */
-    public function setLocalizedMetaKeywords(array $localizedMetaKeywords)
-    {
-        $this->localizedMetaKeywords = $localizedMetaKeywords;
-
-        return $this;
-    }
-
-    /**
      * @return int[]
      */
     public function getAssociatedGroupIds()
@@ -375,19 +347,13 @@ class EditRootCategoryCommand
         $this->thumbnailImage = $thumbnailImage;
     }
 
-    /**
-     * @return array
-     */
-    public function getMenuThumbnailImages(): array
+    public function getRedirectOption(): ?RedirectOption
     {
-        return $this->menuThumbnailImages;
+        return $this->redirectOption;
     }
 
-    /**
-     * @param array $menuThumbnailImages
-     */
-    public function setMenuThumbnailImages(array $menuThumbnailImages): void
+    public function setRedirectOption(?RedirectOption $redirectOption): void
     {
-        $this->menuThumbnailImages = $menuThumbnailImages;
+        $this->redirectOption = $redirectOption;
     }
 }

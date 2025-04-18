@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProduct
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -60,6 +61,18 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
     public function assignToCategoriesForSpecificShop(string $productReference, TableNode $table, string $shopReference)
     {
         $this->assignToCategories($productReference, $table, ShopConstraint::shop($this->referenceToId($shopReference)));
+    }
+
+    /**
+     * @When I assign product :productReference to following categories for shops :shopReferences:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     * @param string $shopReferences
+     */
+    public function assignToCategoriesForSpecificShopCollection(string $productReference, TableNode $table, string $shopReferences)
+    {
+        $this->assignToCategories($productReference, $table, ShopCollection::shops($this->referencesToIds($shopReferences)));
     }
 
     /**

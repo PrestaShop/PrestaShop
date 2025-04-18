@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\EntityTranslation\Exception;
 
-class DataLangClassNameNotFoundException extends \RuntimeException
+use RuntimeException;
+
+class DataLangClassNameNotFoundException extends RuntimeException
 {
 }

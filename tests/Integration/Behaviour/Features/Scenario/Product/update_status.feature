@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-status
 @restore-products-before-feature
+@restore-languages-after-feature
 @clear-cache-before-feature
 @update-status
 Feature: Update product status from BO (Back Office)
@@ -97,7 +98,7 @@ Feature: Update product status from BO (Back Office)
       | Size  | [S,M]         |
       | Color | [White,Black] |
     Then product "product300" should have following combinations:
-      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | id reference     | combination name        | reference | attributes           | impact on price | quantity | is default |
       | product300SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
       | product300SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
       | product300MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
@@ -181,3 +182,44 @@ Feature: Update product status from BO (Back Office)
       | en-US  | photo of funny mug |
     When I enable product "product400"
     And product "product400" should be enabled
+
+  Scenario: I update product status along with names at the same time
+    Given language "fr" with locale "fr-FR" exists
+    Given I add product "product5" with following information:
+      | type | standard |
+    And product "product5" should be disabled
+    And product "product5" type should be standard
+    And product "product5" localized "name" should be:
+      | locale | value |
+      | en-US  |       |
+      | fr-FR  |       |
+    And product "product5" localized "description" should be:
+      | locale | value |
+      | en-US  |       |
+      | fr-FR  |       |
+    When I update product "product5" with following values:
+      | name[en-US] | english name  |
+      | name[fr-FR] | nom de france |
+    Then product "product5" should be disabled
+    And product "product5" localized "name" should be:
+      | locale | value         |
+      | en-US  | english name  |
+      | fr-FR  | nom de france |
+    And product "product5" localized "description" should be:
+      | locale | value |
+      | en-US  |       |
+      | fr-FR  |       |
+    # Partially update product without name value for default language, but product already has one in DB so the product should be turned online regardless
+    When I update product "product5" with following values:
+      | name[fr-FR]        | nom de la france    |
+      | description[en-US] | product description |
+      | active             | true                |
+    Then product "product5" should be enabled
+    And product "product5" localized "name" should be:
+      | locale | value            |
+      | en-US  | english name     |
+      | fr-FR  | nom de la france |
+    And product "product5" localized "description" should be:
+      | locale | value               |
+      | en-US  | product description |
+      | fr-FR  |                     |

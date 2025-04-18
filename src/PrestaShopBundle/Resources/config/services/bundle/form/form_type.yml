@@ -25,7 +25,7 @@ services:
       $defaultShopLanguageId: "@=service('prestashop.adapter.legacy.configuration').getInt('PS_LANG_DEFAULT')"
       $saveFormLocaleChoice: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_BO_ALLOW_EMPLOYEE_FORM_LANG')"
       $defaultFormLanguageId: "@=service('prestashop.adapter.legacy.context').getContext().cookie.employee_form_lang"
-      $isDebug: '@=service("prestashop.adapter.environment").isDebug()'
+      $isDebug: '%kernel.debug%'
       $multiStoreFeature: '@prestashop.adapter.feature.multistore'
       $contextShopId: '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
       $contextLangId: '@=service("prestashop.adapter.legacy.context").getContext().language.id'
@@ -44,10 +44,10 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\CartRule\:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Sell/CartRule/*"
+  PrestaShopBundle\Form\Admin\Sell\Discount\:
+    resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Sell/Discount/*"
   PrestaShopBundle\Form\Admin\Sell\Product\:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Sell/Product/*"
-  PrestaShopBundle\Form\Admin\Category\:
-    resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Category/*"
   PrestaShopBundle\Form\Admin\Type\:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Type/*"
   PrestaShopBundle\Form\Admin\AdvancedParameters\:
@@ -60,12 +60,17 @@ services:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Improve/International/Localization/*"
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/*"
+  PrestaShopBundle\Form\Admin\Login\:
+    resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Login/*"
+  PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\:
+    resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/*"
 
   PrestaShopBundle\Form\Admin\Type\DatePickerType:
     arguments:
       - '@PrestaShopBundle\Form\DataTransformer\ArabicToLatinDigitDataTransformer'
 
   PrestaShopBundle\Form\Admin\Type\EmailType:
+    autowire: true
     arguments:
       - '@prestashop.bundle.form.data_transformer.idn_converter'
 
@@ -73,92 +78,13 @@ services:
 
   PrestaShopBundle\Form\Admin\Type\LocaleChoiceType:
   PrestaShopBundle\Form\Admin\Type\DateRangeType:
-  PrestaShopBundle\Form\Admin\Category\SimpleCategory:
-    deprecated: ~
   PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType:
   PrestaShopBundle\Form\Admin\Type\TranslateType:
-  PrestaShopBundle\Form\Admin\Feature\ProductFeature:
-    arguments:
-      - "@translator"
-      - "@prestashop.adapter.legacy.context"
-      - "@router"
-      - "@prestashop.adapter.data_provider.feature"
-    deprecated: ~
 
-  PrestaShopBundle\Form\Admin\Product\ProductAttachement:
-    deprecated: ~
-  PrestaShopBundle\Form\Admin\Product\ProductCombination:
-    deprecated: ~
-  PrestaShopBundle\Form\Admin\Product\ProductCustomField:
-    deprecated: ~
-
-  PrestaShopBundle\Form\Admin\Product\ProductInformation:
-    arguments:
-      - "@translator"
-      - "@prestashop.adapter.legacy.context"
-      - "@router"
-      - "@prestashop.adapter.data_provider.category"
-      - "@prestashop.adapter.data_provider.product"
-      - "@prestashop.adapter.data_provider.feature"
-      - "@prestashop.adapter.data_provider.manufacturer"
-    deprecated: ~
-
-  PrestaShopBundle\Form\Admin\Product\ProductOptions:
-    arguments:
-      - "@translator"
-      - "@prestashop.adapter.legacy.context"
-      - "@prestashop.adapter.data_provider.supplier"
-      - "@prestashop.adapter.data_provider.attachment"
-      - "@router"
-
-  PrestaShopBundle\Form\Admin\Product\ProductPrice:
-    arguments:
-      - "@translator"
-      - "@prestashop.adapter.data_provider.tax"
-      - "@router"
-      - "@prestashop.adapter.shop.context"
-      - "@prestashop.adapter.data_provider.country"
-      - "@prestashop.adapter.data_provider.currency"
-      - "@prestashop.adapter.data_provider.group"
-      - "@prestashop.adapter.legacy.context"
-    deprecated: ~
-
-  PrestaShopBundle\Form\Admin\Product\ProductQuantity:
-    deprecated: ~
-  PrestaShopBundle\Form\Admin\Product\ProductSeo:
-    deprecated: ~
-  PrestaShopBundle\Form\Admin\Product\ProductShipping:
-    arguments:
-      $carrierDataProvider: "@prestashop.adapter.data_provider.carrier"
-    deprecated: ~
-  PrestaShopBundle\Form\Admin\Product\ProductSpecificPrice:
-    arguments:
-      - "@router"
-      - "@translator"
-      - "@prestashop.adapter.shop.context"
-      - "@prestashop.adapter.data_provider.country"
-      - "@prestashop.adapter.data_provider.currency"
-      - "@prestashop.adapter.data_provider.group"
-      - "@prestashop.adapter.legacy.context"
-      - "@prestashop.adapter.data_provider.customer"
-    deprecated: ~
-
-  PrestaShopBundle\Form\Admin\Product\ProductSupplierCombination:
-    deprecated: ~
-  PrestaShopBundle\Form\Admin\Product\ProductVirtual:
-    deprecated: ~
-  PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType:
-    arguments:
-      - "@prestashop.adapter.data_provider.product"
-      - "@prestashop.adapter.data_provider.category"
   PrestaShopBundle\Form\Admin\Type\TypeaheadCustomerCollectionType:
     arguments:
       - "@prestashop.adapter.data_provider.customer"
 
-  PrestaShopBundle\Form\Admin\Product\ProductCombinationBulk:
-    deprecated: ~
-  PrestaShopBundle\Form\Admin\Product\ProductCategories:
-    deprecated: ~
   PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByDateType:
 
   PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByStatusType:
@@ -188,7 +114,7 @@ services:
 
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences\GiftOptionsType:
     arguments:
-      $taxChoices: '@=service("prestashop.adapter.data_provider.tax").getTaxRulesGroupChoices()'
+      $taxChoices: '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider").getChoices()'
 
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportType:
     arguments:
@@ -303,7 +229,7 @@ services:
 
   PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType:
     arguments:
-      $stringArrayToIntegerArrayDataTransformer: '@PrestaShopBundle\Form\DataTransformer\DefaultLanguageToFilledArrayDataTransformer'
+      $stringArrayToIntegerArrayDataTransformer: '@PrestaShopBundle\Form\DataTransformer\StringArrayToIntegerArrayDataTransformer'
       $shopTreeChoiceProvider: '@PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ShopTreeChoiceProvider'
 
   PrestaShopBundle\Form\Admin\Type\ShopSelectorType:
@@ -359,7 +285,6 @@ services:
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee\EmployeeType:
     arguments:
       $languagesChoices: '@=service("prestashop.core.form.choice_provider.all_languages").getChoices()'
-      $tabChoices: '@=service("prestashop.core.form.choice_provider.accessible_tab").getChoices()'
       $profilesChoices: '@=service("prestashop.core.form.choice_provider.profile").getChoices()'
       $superAdminProfileId: !php/const _PS_ADMIN_PROFILE_
 
@@ -432,6 +357,18 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\Catalog\FeatureType: ~
   PrestaShopBundle\Form\Admin\Sell\Catalog\FeatureValueType: ~
+  PrestaShopBundle\Form\Admin\Sell\Catalog\AttributeGroupType:
+    arguments:
+      $multistoreFeature: '@prestashop.adapter.multistore_feature'
+
+  PrestaShopBundle\Form\Admin\Sell\Catalog\AttributeType:
+    public: true
+    arguments:
+      $attributeGroupRepository: '@PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository'
+      $multistoreFeature: '@prestashop.adapter.multistore_feature'
+    tags:
+      - { name: form.type }
+
   PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType:
     arguments:
       $currencyChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider'
@@ -503,8 +440,6 @@ services:
       $isFeatureEnabled: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_FEATURE_FEATURE_ACTIVE')"
 
   PrestaShopBundle\Form\Admin\Sell\Product\Details\FeatureValueType:
-    arguments:
-      $featureValueListener: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\FeatureValueListener'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockType:
     arguments:
@@ -514,8 +449,6 @@ services:
     arguments:
       $maxFileSizeInMegabytes: "@=service('prestashop.adapter.legacy.configuration').getInt('PS_ATTACHMENT_MAXIMUM_SIZE')"
       $virtualProductFileListener: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\VirtualProductFileListener'
-
-  PrestaShopBundle\Form\Admin\Sell\Product\EventListener\VirtualProductFileListener:
 
   PrestaShopBundle\Form\Admin\Sell\Product\Stock\AvailabilityType:
     arguments:
@@ -557,6 +490,12 @@ services:
     arguments:
       $targetTransformer: '@PrestaShopBundle\Form\Admin\Sell\Product\DataTransformer\RedirectionTargetTransformer'
       $eventSubscriber: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\RedirectOptionListener'
+      $homeCategoryId: "@=service('prestashop.adapter.legacy.configuration').getInt('PS_HOME_CATEGORY')"
+
+  PrestaShopBundle\Form\Admin\Sell\Category\SEO\RedirectOptionType:
+    arguments:
+      $targetTransformer: '@PrestaShopBundle\Form\Admin\Sell\Product\DataTransformer\RedirectionTargetTransformer'
+      $eventSubscriber: '@PrestaShopBundle\Form\Admin\Sell\Category\EventListener\RedirectOptionListener'
       $homeCategoryId: "@=service('prestashop.adapter.legacy.configuration').getInt('PS_HOME_CATEGORY')"
 
   PrestaShopBundle\Form\Admin\Sell\Product\Options\VisibilityType:
@@ -622,6 +561,14 @@ services:
     arguments:
       $zonesChoiceProvider: '@prestashop.core.form.choice_provider.zone_by_id'
 
+  PrestaShopBundle\Form\Admin\Type\MultipleZoneChoiceType:
+    arguments:
+      $zonesChoiceProvider: '@prestashop.core.form.choice_provider.zone_by_id'
+
+  PrestaShopBundle\Form\Admin\Type\TaxGroupChoiceType:
+    arguments:
+      $taxGroupChoiceProvider: '@PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\TaxRuleGroupChoiceProvider'
+
   PrestaShopBundle\Form\Admin\Type\ConfigurableCountryChoiceType:
     arguments:
       - '@prestashop.core.form.choice_provider.configurable_country_by_id'
@@ -630,10 +577,6 @@ services:
     arguments:
       $countriesChoiceProvider: '@prestashop.core.form.choice_provider.configurable_country_by_id'
       $zonesChoiceProvider: '@prestashop.core.form.choice_provider.zone_by_id'
-
-  PrestaShopBundle\Form\Admin\Sell\Product\EventListener\FeatureValueListener:
-    arguments:
-      $featureValuesChoiceProvider: '@prestashop.adapter.form.choice_provider.feature_values_choice_provider'
 
   PrestaShopBundle\Form\Admin\Sell\Product\EventListener\SpecificPriceCombinationListener:
     arguments:
@@ -660,43 +603,79 @@ services:
     arguments:
       $featureChoiceProvider: '@PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider'
 
-  # Deprecated in 9.0.0
   form.type.sell.product.event_listener.categories_listener:
     alias: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CategoriesListener'
     public: true
-    deprecated: ~
-  # Deprecated in 9.0.0
-  form.type.sell.product.event_listener.feature_value_listener:
-    alias: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\FeatureValueListener'
-    public: true
-    deprecated: ~
-  # Deprecated in 9.0.0
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+
   form.event_listener.add_disabling_switch_listener:
     alias: 'PrestaShopBundle\Form\Admin\Type\EventListener\AddDisablingSwitchListener'
     public: true
-    deprecated: ~
-  # Deprecated in 9.0.0
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+
   form.type.sell.product.event_listener.product_type_listener:
     alias: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener'
     public: true
-    deprecated: ~
-  # Deprecated in 9.0.0
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+
   form.event_listener.price_reduction:
     alias: 'PrestaShopBundle\Form\Admin\Type\EventListener\PriceReductionListener'
     public: true
-    deprecated: ~
-  # Deprecated in 9.0.0
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+
   form.type.sell.product.toolbar_buttons_provider:
     alias: 'PrestaShopBundle\Form\Toolbar\ToolbarButtonsProviderInterface'
     public: true
-    deprecated: ~
-  # Deprecated in 9.0.0
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+
   form.type.sell.product.event_listener.redirect_option_listener:
     alias: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\RedirectOptionListener'
     public: true
-    deprecated: ~
-  # Deprecated in 9.0.0
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+
   form.type.sell.product.event_listener.combination_listener:
     alias: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CombinationListener'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+
+  PrestaShopBundle\Form\Admin\Sell\Category\EventListener\RedirectOptionListener:
+    autowire: true
+
+  PrestaShopBundle\Form\Admin\Sell\Product\EventListener\VirtualProductFileListener:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  PrestaShopBundle\Form\Admin\Type\ReorderPositionsButtonType:
+    autowire: true
+    autoconfigure: true
+    public: false
+    arguments:
+      $locales: "@=service('prestashop.adapter.legacy.context').getLanguages()"
+
+  PrestaShopBundle\Form\Admin\Type\ApeType:
+    public: false
+    autowire: true
+    calls:
+      - { method: setTranslator, arguments: [ '@translator' ] }
+    tags:
+      - { name: form.type }
+
+  PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\ImageTypeType: ~
+  PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\DeleteImageTypeType: ~
+  PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\ImageSettingsType: ~
+  PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\RegenerateThumbnailsType: ~

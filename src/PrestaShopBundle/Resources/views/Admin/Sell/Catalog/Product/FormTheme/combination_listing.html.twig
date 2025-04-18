@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 {% extends '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {%- block combination_item_row -%}
@@ -44,8 +44,8 @@
 
 {%- block combination_list_row -%}
   {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
-  {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
-  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' combinations-table grid-table table grid-ordering-column')|trim }) -%}
+  {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name}) -%}
+  {%- set attr = attr|merge({class: (attr.class|default('') ~ ' combinations-table grid-table table grid-ordering-column')|trim}) -%}
   <table {{ block('widget_attributes') }}>
     {# Early render of the _token so that it is not included in the tbody which will be emptied by the JS #}
     {% if form._token %}
@@ -72,7 +72,7 @@
             <label
               class="md-checkbox dropdown-item"
               for="bulk-select-all-in-page"
-              data-label="{{'Select results on this page (%combinations_number%)'|trans({}, 'Admin.Actions')}}"
+              data-label="{{ 'Select results on this page (%combinations_number%)'|trans({}, 'Admin.Actions') }}"
             >
               <span></span>
               <input type="checkbox" id="bulk-select-all-in-page" class="bulk-select-all">
@@ -82,7 +82,7 @@
             <label
               class="md-checkbox dropdown-item"
               for="bulk-select-all"
-              data-label="{{'Select all results (%combinations_number%)'|trans({}, 'Admin.Actions')}}"
+              data-label="{{ 'Select all results (%combinations_number%)'|trans({}, 'Admin.Actions') }}"
             >
               <span></span>
               <input type="checkbox" id="bulk-select-all" class="bulk-select-all">

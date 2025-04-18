@@ -110,7 +110,7 @@ export default class CombinationSelector {
     };
 
     const shopIdSelect = <HTMLSelectElement> this.container.querySelector(SpecificPriceMap.shopIdSelect);
-    let shopId = null;
+    let shopId: number | null = null;
 
     // This check is here for when the multishop is not enabled.
     // The selector shopIdSelect does not exist when multishop is not enabled.

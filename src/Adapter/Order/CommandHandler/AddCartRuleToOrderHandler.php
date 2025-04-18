@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\AddCartRuleToOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderDiscountType;
+use PrestaShopDatabaseException;
 use PrestaShopException;
 use Shop;
 use Validate;
@@ -83,7 +84,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         $this->contextStateManager
             ->setCurrency(new Currency($order->id_currency))
             ->setCustomer(new Customer($order->id_customer))
-            ->setLanguage((new Language($order->id_lang)))
+            ->setLanguage(new Language($order->id_lang))
             ->setShop(new Shop($order->id_shop))
         ;
 
@@ -103,7 +104,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
      * @throws InvalidCartRuleDiscountValueException
      * @throws OrderException
      * @throws PrestaShopException
-     * @throws \PrestaShopDatabaseException
+     * @throws PrestaShopDatabaseException
      */
     private function addCartRuleAndUpdateOrder(AddCartRuleToOrderCommand $command, Order $order): void
     {

@@ -33,6 +33,7 @@ use Cache;
 use CartRule;
 use Context;
 use Db;
+use Exception;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
@@ -138,7 +139,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $restrictedProduct = $this->productFeatureContext->getProductWithName($productName);
         $cartRule = new CartRule($cartRuleId);
         $cartRule->product_restriction = true;
-        //@todo: product restriction and reduction_product are 2 different features. Should they really be mixed in here to one?
+        // @todo: product restriction and reduction_product are 2 different features. Should they really be mixed in here to one?
         $cartRule->reduction_product = $restrictedProduct->id;
         $cartRule->save();
         $this->cartRules[$cartRuleName] = $cartRule;
@@ -176,10 +177,10 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     public function cartRuleNamedCanBeAppliedToMyCart($cartRuleName)
     {
         $cartRule = $this->loadCartRule($cartRuleName);
-        $result = $cartRule->checkValidity(\Context::getContext(), false, false);
+        $result = $cartRule->checkValidity(Context::getContext(), false, false);
 
         if (!$result) {
-            throw new \RuntimeException(sprintf('Expects true, got %s instead', $result));
+            throw new RuntimeException(sprintf('Expects true, got %s instead', $result));
         }
     }
 
@@ -287,7 +288,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $result = count($this->getCurrentCart()->getCartRules());
         if ($result != $cartRuleCount) {
-            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $cartRuleCount, $result));
+            throw new RuntimeException(sprintf('Expects %s, got %s instead', $cartRuleCount, $result));
         }
     }
 
@@ -308,7 +309,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $customer = $this->customerFeatureContext->getCustomerWithName($customerName);
         $cartRules = CartRule::getCustomerCartRules($customer->id_lang, $customer->id, true, false);
         if ($expectedCount != count($cartRules)) {
-            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedCount, count($cartRules)));
+            throw new RuntimeException(sprintf('Expects %s, got %s instead', $expectedCount, count($cartRules)));
         }
     }
 
@@ -321,11 +322,11 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $customer = $this->customerFeatureContext->getCustomerWithName($customerName);
         $cartRules = CartRule::getCustomerCartRules($customer->id_lang, $customer->id, true, false);
         if (!isset($cartRules[$position - 1]['id_cart_rule'])) {
-            throw new \Exception(sprintf('Undefined cartRule on position #%s', $position - 1));
+            throw new Exception(sprintf('Undefined cartRule on position #%s', $position - 1));
         }
         $cartRule = new CartRule($cartRules[$position - 1]['id_cart_rule']);
         if ($expectedValue != $cartRule->reduction_amount) {
-            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedValue, $cartRule->reduction_amount));
+            throw new RuntimeException(sprintf('Expects %s, got %s instead', $expectedValue, $cartRule->reduction_amount));
         }
     }
 
@@ -380,7 +381,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $cartRule = new CartRule($cartRuleId);
         $result = $cartRule->checkValidity(Context::getContext(), true);
         if ($result != $expectedErrorMessage) {
-            throw new \RuntimeException(sprintf('Expects "usage limit reached" error message, got %s instead', $result));
+            throw new RuntimeException(sprintf('Expects "usage limit reached" error message, got %s instead', $result));
         }
     }
 

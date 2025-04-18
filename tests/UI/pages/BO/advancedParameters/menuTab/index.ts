@@ -1,6 +1,8 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type {Page} from 'playwright';
+import {
+  type Page,
+} from '@prestashop-core/ui-testing';
 
 /**
  * MenuTab page, should not be displayed on BO

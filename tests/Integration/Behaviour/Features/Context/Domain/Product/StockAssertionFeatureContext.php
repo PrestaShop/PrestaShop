@@ -99,7 +99,7 @@ class StockAssertionFeatureContext extends AbstractProductFeatureContext
      */
     public function assertNoStockMovementForSpecificShop(string $productReference, string $shopReferences): void
     {
-        foreach ($this->getShopIdsFromReferences($shopReferences) as $shopId) {
+        foreach ($this->referencesToIds($shopReferences) as $shopId) {
             $this->assertNoStockMovementForProduct(
                 $productReference,
                 $shopId
@@ -127,7 +127,7 @@ class StockAssertionFeatureContext extends AbstractProductFeatureContext
         string $shopReferences,
         TableNode $table
     ): void {
-        foreach ($this->getShopIdsFromReferences($shopReferences) as $shopId) {
+        foreach ($this->referencesToIds($shopReferences) as $shopId) {
             $this->assertLastStockMovementsForProduct(
                 $productReference,
                 $shopId,

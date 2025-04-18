@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
 <div id="combination-list-actions">
   <div class="btn-group">
@@ -39,7 +39,7 @@
       <button
         id="combination-bulk-form-btn" class="dropdown-item bulk-action-btn" type="button"
         data-btn-label="{{ 'Edit %combinations_number% combinations'|trans({}, 'Admin.Catalog.Feature') }}"
-        data-form-url="{{ url('admin_products_combinations_bulk_combination_form', { 'productId': productId }) }}"
+        data-form-url="{{ url('admin_products_combinations_bulk_combination_form', {productId: productId}) }}"
         data-modal-confirm-label="{{ 'Apply to %combinations_number% combinations'|trans({}, 'Admin.Catalog.Feature') }}"
         data-modal-cancel-label="{{ 'Cancel'|trans({}, 'Admin.Actions') }}"
       >
@@ -55,7 +55,7 @@
       <button
         id="combination-bulk-delete-btn" class="dropdown-item bulk-action-btn bulk-delete-btn" type="button"
         data-btn-label="{{ deleteLabel }}"
-        data-form-url="{{ url('admin_products_combinations_bulk_delete', { 'productId': productId }) }}"
+        data-form-url="{{ url('admin_products_combinations_bulk_delete', {productId: productId}) }}"
         data-modal-message="{{ modalMessage }}"
         data-modal-confirm-label="{{ 'Delete %combinations_number% combinations'|trans({}, 'Admin.Catalog.Feature') }}"
         data-modal-cancel-label="{{ 'Cancel'|trans({}, 'Admin.Actions') }}"
@@ -77,7 +77,7 @@
         <button
           id="combination-bulk-delete-btn-all-shops" class="dropdown-item bulk-action-btn bulk-delete-btn" type="button"
           data-btn-label="{{ 'Delete %combinations_number% combinations from all stores'|trans({}, 'Admin.Catalog.Feature') }}"
-          data-form-url="{{ url('admin_products_combinations_bulk_delete', { 'productId': productId }) }}"
+          data-form-url="{{ url('admin_products_combinations_bulk_delete', {productId: productId}) }}"
           data-modal-message="{{ 'Are you sure you want to delete selected combinations from all stores?'|trans({}, 'Admin.Catalog.Notification') }}"
           data-modal-confirm-label="{{ 'Delete %combinations_number% combinations'|trans({}, 'Admin.Catalog.Feature') }}"
           data-modal-cancel-label="{{ 'Cancel'|trans({}, 'Admin.Actions') }}"
@@ -111,7 +111,7 @@
   }|json_encode }}"
 ></div>
 <div id="combination-edit-modal"
-     data-empty-image="{{ asset('themes/new-theme/img/empty_state/combinations_history.png') }}"
+     data-empty-image="{{ asset('themes/new-theme/img/empty_state/combinations_history.svg') }}"
      data-translations="{{ {
        'modal.save': 'Save'|trans({}, 'Admin.Actions'),
        'modal.close': 'Close'|trans({}, 'Admin.Actions'),

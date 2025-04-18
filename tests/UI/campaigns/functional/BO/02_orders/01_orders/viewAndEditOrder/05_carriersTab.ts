@@ -1,27 +1,27 @@
 // Import utils
-import date from '@utils/date';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderByCustomerTest} from '@commonTests/FO/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
-// Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
-import ordersPage from '@pages/BO/orders';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
-
-// Import data
-import Carriers from '@data/demo/carriers';
-import Customers from '@data/demo/customers';
-import PaymentMethods from '@data/demo/paymentMethods';
-import Products from '@data/demo/products';
-import OrderData from '@data/faker/order';
-import OrderShippingData from '@data/faker/orderShipping';
+import {
+  boDashboardPage,
+  boLoginPage,
+  boOrdersPage,
+  boOrdersViewBlockTabListPage,
+  type BrowserContext,
+  dataCarriers,
+  dataCustomers,
+  dataPaymentMethods,
+  dataProducts,
+  FakerOrder,
+  FakerOrderShipping,
+  type Page,
+  utilsDate,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_orders_orders_viewAndEditOrder_carriersTab';
 
@@ -38,23 +38,23 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
   let browserContext: BrowserContext;
   let page: Page;
 
-  const today: string = date.getDateFormat('mm/dd/yyyy');
-  const shippingDetailsData: OrderShippingData = new OrderShippingData({
+  const today: string = utilsDate.getDateFormat('mm/dd/yyyy');
+  const shippingDetailsData: FakerOrderShipping = new FakerOrderShipping({
     trackingNumber: '0523698',
-    carrier: Carriers.myCarrier.name,
-    carrierID: Carriers.myCarrier.id,
+    carrier: dataCarriers.myCarrier.name,
+    carrierID: dataCarriers.myCarrier.id,
   });
   const shippingDetailsCost: string = '€8.40';
   // New order by customer data
-  const orderByCustomerData: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+  const orderByCustomerData: FakerOrder = new FakerOrder({
+    customer: dataCustomers.johnDoe,
     products: [
       {
-        product: Products.demo_1,
+        product: dataProducts.demo_1,
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // Pre-condition - Create order by default customer
@@ -62,57 +62,63 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   // 1 - Go to view order page
   describe('Go to view order page', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage1', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
-      await ordersPage.closeSfToolBar(page);
+      await boOrdersPage.closeSfToolBar(page);
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters1', baseContext);
 
-      const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfOrders).to.be.above(0);
+      const numberOfOrders = await boOrdersPage.resetAndGetNumberOfLines(page);
+      expect(numberOfOrders).to.be.above(0);
     });
 
-    it(`should filter the Orders table by 'Customer: ${Customers.johnDoe.lastName}'`, async function () {
+    it(`should filter the Orders table by 'Customer: ${dataCustomers.johnDoe.lastName}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer1', baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
+      await boOrdersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
 
-      const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      await expect(textColumn).to.contains(Customers.johnDoe.lastName);
+      const textColumn = await boOrdersPage.getTextColumn(page, 'customer', 1);
+      expect(textColumn).to.contains(dataCustomers.johnDoe.lastName);
     });
 
     it('should view the order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'orderPageTabListBlock1', baseContext);
 
-      await ordersPage.goToOrder(page, 1);
+      await boOrdersPage.goToOrder(page, 1);
 
-      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      const pageTitle = await boOrdersViewBlockTabListPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);
     });
   });
 
@@ -121,25 +127,25 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
     it('should click on \'Carriers\' tab', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'displayCarriersTab', baseContext);
 
-      const isTabOpened = await orderPageTabListBlock.goToCarriersTab(page);
-      await expect(isTabOpened).to.be.true;
+      const isTabOpened = await boOrdersViewBlockTabListPage.goToCarriersTab(page);
+      expect(isTabOpened).to.eq(true);
     });
 
     it('should check that the carriers number is equal to 1', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersNumber', baseContext);
 
-      const carriersNumber = await orderPageTabListBlock.getCarriersNumber(page);
-      await expect(carriersNumber).to.be.equal(1);
+      const carriersNumber = await boOrdersViewBlockTabListPage.getCarriersNumber(page);
+      expect(carriersNumber).to.be.equal(1);
     });
 
     it('should check the carrier details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCarrierDetails', baseContext);
 
-      const result = await orderPageTabListBlock.getCarrierDetails(page);
+      const result = await boOrdersViewBlockTabListPage.getCarrierDetails(page);
       await Promise.all([
         expect(result.date).to.equal(today),
-        expect(result.carrier).to.equal(Carriers.default.name),
-        expect(result.weight).to.equal(`${Products.demo_1.weight}00 kg`),
+        expect(result.carrier).to.equal(dataCarriers.clickAndCollect.name),
+        expect(result.weight).to.equal(`${dataProducts.demo_1.packageDimensionWeight}00 kg`),
         expect(result.shippingCost).to.equal('€0.00'),
         expect(result.trackingNumber).to.equal(''),
       ]);
@@ -148,27 +154,27 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
     it('should click on \'Edit\' link and check the modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnEditLink', baseContext);
 
-      const isModalVisible = await orderPageTabListBlock.clickOnEditLink(page);
-      await expect(isModalVisible, 'Edit shipping modal is not visible!').to.be.true;
+      const isModalVisible = await boOrdersViewBlockTabListPage.clickOnEditLink(page);
+      expect(isModalVisible, 'Edit shipping modal is not visible!').to.eq(true);
     });
 
     it('should update the carrier and add a tracking number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateTrackingNumber', baseContext);
 
-      const textResult = await orderPageTabListBlock.setShippingDetails(page, shippingDetailsData);
-      await expect(textResult).to.equal(orderPageTabListBlock.successfulUpdateMessage);
+      const textResult = await boOrdersViewBlockTabListPage.setShippingDetails(page, shippingDetailsData);
+      expect(textResult).to.equal(boOrdersViewBlockTabListPage.successfulUpdateMessage);
     });
 
     it('should check the updated carrier details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedCarrierDetails', baseContext);
 
-      await orderPageTabListBlock.goToCarriersTab(page);
+      await boOrdersViewBlockTabListPage.goToCarriersTab(page);
 
-      const result = await orderPageTabListBlock.getCarrierDetails(page);
+      const result = await boOrdersViewBlockTabListPage.getCarrierDetails(page);
       await Promise.all([
         expect(result.date).to.equal(today),
         expect(result.carrier).to.equal(shippingDetailsData.carrier),
-        expect(result.weight).to.equal(`${Products.demo_1.weight}00 kg`),
+        expect(result.weight).to.equal(`${dataProducts.demo_1.packageDimensionWeight}00 kg`),
         expect(result.shippingCost).to.equal(shippingDetailsCost),
         expect(result.trackingNumber).to.equal(shippingDetailsData.trackingNumber),
       ]);

@@ -1,41 +1,28 @@
 #right-sidebar {
   position: fixed;
-  top: 136px;
-  right: -3em;
+  top: 0;
+  right: 0;
   bottom: 0;
-  z-index: 1000;
+  z-index: 9999;
   display: block;
   float: right;
-  padding: 0 3em 0 0;
+  padding: 0;
   overflow: auto;
-  background: $white;
+  background: var(--#{$cdk}white);
 
   &.sidebar-open {
-    box-shadow: 0 0 12px rgba(0, 0, 0, 0.8);
+    box-shadow: var(--#{$cdk}box-shadow-lg);
+  }
+
+  .quicknav-header {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: space-between;
   }
 
   .quicknav-container {
     height: 100%;
-  }
-}
-
-@include media-breakpoint-down(md) {
-  #right-sidebar {
-    top: 62px;
-    right: 0;
-    padding: 0;
-
-    .quicknav-header {
-      display: flex;
-      flex-direction: row-reverse;
-      align-items: center;
-      justify-content: space-between;
-
-      a {
-        font-size: 2rem;
-        color: $white;
-      }
-    }
   }
 }
 
@@ -98,14 +85,28 @@
   }
 
   .quicknav-header {
-    height: 50px;
-    padding: 1.2em;
-    color: $white;
-    background: $gray-700;
+    padding: var(--#{$cdk}size-16);
+    color: var(--#{$cdk}white);
+    background: var(--#{$cdk}primary-800);
+
+    a {
+      display: block;
+      width: var(--#{$cdk}size-24);
+      height: var(--#{$cdk}size-24);
+      font-size: var(--#{$cdk}size-24);
+      line-height: 0.9;
+      color: var(--#{$cdk}white);
+      transition: var(--#{$cdk}default-transition);
+
+      &:hover {
+        color: var(--#{$cdk}blue-300);
+        text-decoration: none;
+      }
+    }
 
     h2{
       margin-bottom: 0;
-      color: $white;
+      color: var(--#{$cdk}white);
     }
   }
 

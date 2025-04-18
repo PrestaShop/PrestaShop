@@ -37,6 +37,8 @@ use OrderDetail;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\StockManager;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 use Product;
 use Shop;
 use StockAvailable;
@@ -117,8 +119,8 @@ abstract class AbstractOrderCommandHandler extends AbstractOrderHandler
      *
      * @return Country
      *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     protected function getCartTaxCountry(Cart $cart): Country
     {

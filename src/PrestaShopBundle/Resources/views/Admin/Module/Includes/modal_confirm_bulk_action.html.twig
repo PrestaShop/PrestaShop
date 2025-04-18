@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 <div id="module-modal-bulk-confirm" class="modal  modal-vcenter fade" role="dialog">
   <div class="modal-dialog">
     <!-- Modal content-->
@@ -32,7 +32,7 @@
       </div>
       <div class="modal-body">
         <p>
-          {{ "You are about to [1] the following modules:"|trans({}, 'Admin.Modules.Notification')|replace({'[1]' : '<span id="module-modal-bulk-confirm-action-name">[Module Action]</span>'})|raw }}
+          {{ 'You are about to [1] the following modules:'|trans({}, 'Admin.Modules.Notification')|replace({'[1]': '<span id="module-modal-bulk-confirm-action-name">[Module Action]</span>'})|raw }}
         </p>
         <p id="module-modal-bulk-confirm-list">
           [Module List Up To 10 Max]
@@ -41,7 +41,7 @@
         <div id="module-modal-bulk-checkbox">
           <label>
             <input type="checkbox" id="force_bulk_deletion" name="force_bulk_deletion">
-            {{ "Optional: delete module folder after uninstall."|trans({}, 'Admin.Modules.Feature') }}
+            {{ 'Optional: delete module folder after uninstall.'|trans({}, 'Admin.Modules.Feature') }}
           </label>
         </div>
       </div>

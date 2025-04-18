@@ -101,7 +101,7 @@ final class GridFilterFormFactory implements GridFilterFormFactoryInterface
                 $column = $definition->getColumnById($filter->getAssociatedColumn());
                 $filterLabel = !empty($column->getName()) ? $column->getName() : $filterLabel;
             }
-        } catch (ColumnNotFoundException $e) {
+        } catch (ColumnNotFoundException) {
         }
 
         return $filterLabel;

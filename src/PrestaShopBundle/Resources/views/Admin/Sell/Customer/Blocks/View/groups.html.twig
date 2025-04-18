@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
 <div class="card customer-groups-card">
   <h3 class="card-header">
@@ -29,7 +29,7 @@
     {{ 'Groups'|trans({}, 'Admin.Global') }}
     <span class="badge badge-primary rounded">{{ customerInformation.groupsInformation|length }}</span>
 
-    <a href="{{ getAdminLink('AdminCustomers', true, {'id_customer': customerInformation.customerId.value, 'updatecustomer': 1}) }}"
+    <a href="{{ getAdminLink('AdminCustomers', true, {id_customer: customerInformation.customerId.value, updatecustomer: 1}) }}"
        class="tooltip-link float-right"
        data-toggle="pstooltip"
        data-placement="top"
@@ -52,7 +52,7 @@
           <tr class="customer-group">
             <td class="customer-group-id">{{ group.groupId }}</td>
             <td class="customer-group-name">
-              <a href="{{ getAdminLink('AdminGroups', true, {'id_group': group.groupId, 'viewgroup': 1}) }}">
+              <a href="{{ getAdminLink('AdminGroups', true, {id_group: group.groupId, viewgroup: 1}) }}">
                 {{ group.name }}
               </a>
               {% if group.isDefault %} ({{ 'default'|trans({}, 'Admin.Orderscustomers.Feature') }}){% endif %}

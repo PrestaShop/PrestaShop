@@ -173,6 +173,7 @@ class TaxRulesGroupQueryBuilderTest extends TestCase
             'having' => null,
             'orderBy' => [],
             'values' => [],
+            'for_update' => null,
         ];
         $defaultParameters = [
             'contextShopIds' => [],

@@ -95,7 +95,7 @@ final class HookDispatcher implements HookDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function dispatch(object $event, string $eventName = null): object
+    public function dispatch(object $event, ?string $eventName = null): object
     {
         return $this->hookDispatcherAdapter->dispatch($event, $eventName);
     }

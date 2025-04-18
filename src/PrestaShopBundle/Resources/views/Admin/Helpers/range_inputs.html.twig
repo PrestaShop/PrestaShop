@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 {# Display a range input with min/max controls #}
 <script>
     $(function() {
@@ -119,9 +119,9 @@
 <div id="{{ input_name }}_div">
     <input type="hidden" id="{{ input_name }}" name="{{ input_name }}" value="" sql="{{ value }}" />
     <div>
-        <input class="form-control form-min-max" type="text" id="{{ input_name }}_min" value="" placeholder="{{ minLabel|default('Min') }}" {% if disabled|default(false) %}disabled{% endif %} aria-label="{{ "%inputId% Minimum Input"|trans({'%inputId%': input_name}, 'Admin.Global') }}" />
+        <input class="form-control form-min-max" type="text" id="{{ input_name }}_min" value="" placeholder="{{ minLabel|default('Min') }}" {% if disabled|default(false) %}disabled{% endif %} aria-label="{{ '%inputId% Minimum Input'|trans({'%inputId%': input_name}, 'Admin.Global') }}" />
     </div>
     <div>
-        <input class="form-control form-min-max" type="text" id="{{ input_name }}_max" value="" placeholder="{{ maxLabel|default('Max') }}" {% if disabled|default(false) %}disabled{% endif %} aria-label="{{ "%inputId% Maximum Input"|trans({'%inputId%': input_name}, 'Admin.Global') }}" />
+        <input class="form-control form-min-max" type="text" id="{{ input_name }}_max" value="" placeholder="{{ maxLabel|default('Max') }}" {% if disabled|default(false) %}disabled{% endif %} aria-label="{{ '%inputId% Maximum Input'|trans({'%inputId%': input_name}, 'Admin.Global') }}" />
     </div>
 </div>

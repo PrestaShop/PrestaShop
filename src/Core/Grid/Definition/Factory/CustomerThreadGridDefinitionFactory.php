@@ -77,7 +77,7 @@ class CustomerThreadGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $customerThreadStatusesChoiceProvider;
 
     public function __construct(
-        HookDispatcherInterface $hookDispatcher = null,
+        HookDispatcherInterface $hookDispatcher,
         FormChoiceProviderInterface $contactTypeProvider,
         FormChoiceProviderInterface $shopNameByIdChoiceProvider,
         ConfigurableFormChoiceProviderInterface $customerThreadStatusesChoiceProvider
@@ -346,12 +346,12 @@ class CustomerThreadGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
-            $this->buildDeleteAction(
-                'admin_customer_threads_delete',
-                'customerThreadId',
-                'id_customer_thread'
-            )
-        );
+                $this->buildDeleteAction(
+                    'admin_customer_threads_delete',
+                    'customerThreadId',
+                    'id_customer_thread'
+                )
+            );
 
         return $rowActionCollection;
     }

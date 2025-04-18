@@ -129,7 +129,7 @@ class DebugProfiling
         }
 
         if (function_exists('opcache_invalidate')) {
-            opcache_invalidate($filename);
+            @opcache_invalidate($filename);
         }
 
         return self::DEBUG_PROFILING_SUCCEEDED;
@@ -158,7 +158,7 @@ class DebugProfiling
         }
 
         if (function_exists('opcache_invalidate')) {
-            opcache_invalidate($customFileName);
+            @opcache_invalidate($customFileName);
         }
 
         return self::DEBUG_PROFILING_SUCCEEDED;

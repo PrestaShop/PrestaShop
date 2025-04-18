@@ -74,7 +74,7 @@ final class CustomizationFieldsCommandsBuilder implements ProductCommandsBuilder
                 'type' => (int) $customization['type'],
                 'localized_names' => $customization['name'],
                 'is_required' => (bool) $customization['required'],
-                'added_by_module' => false,
+                'added_by_module' => isset($customization['addedByModule']) ? (bool) $customization['addedByModule'] : false,
                 'id' => isset($customization['id']) ? (int) $customization['id'] : null,
             ];
         }

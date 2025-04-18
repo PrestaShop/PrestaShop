@@ -5,8 +5,14 @@ services:
   prestashop.adapter.contact.repository:
     class: 'PrestaShop\PrestaShop\Adapter\Support\ContactRepository'
 
+  PrestaShop\PrestaShop\Adapter\Support\ContactDeleter:
+    public: false
+
   prestashop.adapter.contact.deleter:
-    class: 'PrestaShop\PrestaShop\Adapter\Support\ContactDeleter'
+    alias: 'PrestaShop\PrestaShop\Adapter\Support\ContactDeleter'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.adapter.contact.query_handler.get_contact_for_editing:
     class: 'PrestaShop\PrestaShop\Adapter\Contact\QueryHandler\GetContactForEditingHandler'

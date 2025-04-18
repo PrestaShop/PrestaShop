@@ -113,6 +113,7 @@ class SpecificPricePrioritiesFeatureContext extends AbstractProductFeatureContex
      * @see transformPriorityList
      *
      * @Given default specific price priorities are set to following:
+     *
      * @Then default specific price priorities should be the following:
      *
      * @param PriorityList $priorityList

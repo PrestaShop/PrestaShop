@@ -16,7 +16,7 @@ Feature: Attribute Group
     And attribute "m" named "M" in en language exists
     And attribute "l" named "L" in en language exists
     And attribute "xl" named "XL" in en language exists
-    And attribute "grey" named "Grey" in en language exists
+    And attribute "gray" named "Gray" in en language exists
     And attribute "taupe" named "Taupe" in en language exists
     And attribute "beige" named "Beige" in en language exists
     And attribute "white" named "White" in en language exists
@@ -47,7 +47,7 @@ Feature: Attribute Group
       | XL          |       | 3        | xl        |
     And the attribute group "color" should have the following attributes:
       | name[en-US] | color   | position | reference |
-      | Grey        | #AAB2BD | 0        | grey      |
+      | Gray        | #AAB2BD | 0        | gray      |
       | Taupe       | #CFC4A6 | 1        | taupe     |
       | Beige       | #f5f5dc | 2        | beige     |
       | White       | #ffffff | 3        | white     |
@@ -61,3 +61,10 @@ Feature: Attribute Group
       | Yellow      | #F1C40F | 11       | yellow    |
       | Brown       | #964B00 | 12       | brown     |
       | Pink        | #FCCACD | 13       | pink      |
+    When I switch positions of attributes "s" and "xl"
+    Then the attribute group "size" should have the following attributes:
+      | name[en-US] | color | position | reference |
+      | XL          |       | 0        | xl        |
+      | M           |       | 1        | m         |
+      | L           |       | 2        | l         |
+      | S           |       | 3        | s         |

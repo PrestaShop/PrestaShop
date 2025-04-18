@@ -47,10 +47,15 @@ parameters:
     - '#constructor expects Symfony\\Contracts\\Translation\\TranslatorInterface\|null, Symfony\\Component\\Translation\\TranslatorInterface given\.$#'
     - '#^Method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface\:\:dispatch\(\) invoked with 2 parameters, 1 required\.$#'
     - '~^Access to an undefined property PrestaShop\\PrestaShop\\Core\\Module\\ModuleInterface::\$(attributes|disk|database)\.$~'
+    - message: "#^Dead catch \\- Symfony\\\\Component\\\\HttpFoundation\\\\File\\\\Exception\\\\FileNotFoundException is never thrown in the try block\\.$#"
+      count: 1
+      path: src/PrestaShopBundle/Controller/Admin/SecuredFileReaderController.php
     ## Smarty functions
     - '#^Function smartyRegisterFunction not found\.$#'
-    ## Doctrine Entities
-    - '#Property PrestaShopBundle\\Entity\\[A-Za-z]+\:\:\$[A-Za-z]+ is never written, only read.#'
+    ## CQRS API Platform operations
+    -
+      message: '#Constructor of class [a-zA-Z0-9\\_]+ has an unused parameter \$[a-zA-Z0-9_]+.$#'
+      path: src/PrestaShopBundle/ApiPlatform/Metadata/
   reportUnmatchedIgnoredErrors: false
   universalObjectCratesClasses:
     - Cookie
@@ -64,7 +69,6 @@ parameters:
     - _PS_DEBUG_PROFILING_
     - _PS_DEBUG_SQL_
     - _PS_DISPLAY_COMPATIBILITY_WARNING_
-    - _PS_DO_NOT_LOAD_CONFIGURATION_
     - _PS_IN_TEST_
     - _PS_INSTALL_MINIMUM_PHP_VERSION_ID_
     - _PS_INSTALL_MAXIMUM_PHP_VERSION_ID_
@@ -79,3 +83,4 @@ parameters:
     - _PS_API_IN_USE_
     - _PS_ALLOW_MULTI_STATEMENTS_QUERIES_
     - _PS_DISPLAY_ONLY_ERRORS_
+  treatPhpDocTypesAsCertain: false

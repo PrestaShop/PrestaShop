@@ -1,5 +1,7 @@
-import ImportData from '@data/faker/import';
-import type {ImportCombination} from '@data/types/import';
+import {
+  FakerImport,
+  type ImportCombination,
+} from '@prestashop-core/ui-testing';
 
 const records: ImportCombination[] = [
   {
@@ -70,7 +72,7 @@ const records: ImportCombination[] = [
   },
 ];
 
-export default new ImportData({
+export default new FakerImport({
   entity: 'Combinations',
   header: [
     {id: 'id', title: 'Product ID*'},

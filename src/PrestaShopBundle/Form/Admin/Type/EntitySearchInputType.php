@@ -193,7 +193,7 @@ class EntitySearchInputType extends CollectionType
      *
      * @return string The prefix name
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'entity_search_input';
     }

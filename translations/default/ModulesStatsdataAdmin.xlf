@@ -7,10 +7,10 @@
         <target>Data mining for statistics</target>
         <note>Line: 43</note>
       </trans-unit>
-      <trans-unit id="c77dfd683d0d76940e5e04cb24e8bce1">
-        <source>This module must be enabled if you want to use statistics.</source>
-        <target>This module must be enabled if you want to use statistics.</target>
-        <note>Line: 39</note>
+      <trans-unit id="070fc892bd27fadef449598b9f7f3f9b">
+        <source>Collect as much information as possible to enrich your stats and run your business further.</source>
+        <target>Collect as much information as possible to enrich your stats and run your business further.</target>
+        <note>Line: 44</note>
       </trans-unit>
       <trans-unit id="1a5b75c4be3c0100c99764b21e844cc8">
         <source>Save page views for each customer</source>
@@ -41,11 +41,6 @@
         <source>Plugins detection loads an extra 20 kb JavaScript file once for new visitors.</source>
         <target>Plugins detection loads an extra 20 kb JavaScript file once for new visitors.</target>
         <note>Line: 230</note>
-      </trans-unit>
-      <trans-unit id="070fc892bd27fadef449598b9f7f3f9b">
-        <source>Collect as much information as possible to enrich your stats and run your business further.</source>
-        <target>Collect as much information as possible to enrich your stats and run your business further.</target>
-        <note>Line: 44</note>
       </trans-unit>
     </body>
   </file>

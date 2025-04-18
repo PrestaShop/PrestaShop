@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShopBundle\Entity\Repository\ShopRepository;
 use PrestaShopBundle\Entity\Shop;
 use PrestaShopBundle\Entity\ShopGroup;
@@ -44,29 +45,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ShopSelectorType extends AbstractType
 {
-    /**
-     * @var ShopRepository
-     */
-    private $shopRepository;
-
-    /**
-     * @var ShopGroup[]
-     */
-    private $shopGroups;
-
-    /**
-     * @var int|null
-     */
-    private $contextShopId;
-
     public function __construct(
-        ShopRepository $shopRepository,
-        array $shopGroups,
-        ?int $contextShopId
+        private readonly ShopRepository $shopRepository,
+        /**
+         * @var ShopGroup[]
+         */
+        private readonly array $shopGroups,
+        private readonly ShopContext $shopContext,
     ) {
-        $this->shopRepository = $shopRepository;
-        $this->shopGroups = $shopGroups;
-        $this->contextShopId = $contextShopId;
     }
 
     public function getParent(): string
@@ -94,7 +80,7 @@ class ShopSelectorType extends AbstractType
     public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         parent::buildView($view, $form, $options);
-        $view->vars['contextShopId'] = $this->contextShopId;
+        $view->vars['contextShopId'] = $this->shopContext->getShopConstraint()->getShopId()?->getValue();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void

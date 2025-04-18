@@ -70,96 +70,96 @@ class StoreGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new ColumnCollection())
             ->add((new BulkActionColumn('bulk'))
-            ->setOptions([
-                'bulk_field' => 'id_store',
-            ])
+                ->setOptions([
+                    'bulk_field' => 'id_store',
+                ])
             )
             ->add((new DataColumn('id_store'))
-            ->setName($this->trans('ID', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'id_store',
-            ])
+                ->setName($this->trans('ID', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'id_store',
+                ])
             )
             ->add((new DataColumn('name'))
-            ->setName($this->trans('Name', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'name',
-            ])
+                ->setName($this->trans('Name', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'name',
+                ])
             )
             ->add((new DataColumn('address'))
-            ->setName($this->trans('Address', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'address',
-            ])
+                ->setName($this->trans('Address', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'address',
+                ])
             )
             ->add((new DataColumn('city'))
-            ->setName($this->trans('City', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'city',
-            ])
+                ->setName($this->trans('City', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'city',
+                ])
             )
             ->add((new DataColumn('postcode'))
-            ->setName($this->trans('Zip/Postal code', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'postcode',
-            ])
+                ->setName($this->trans('Zip/Postal code', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'postcode',
+                ])
             )
             ->add((new DataColumn('state'))
-            ->setName($this->trans('State', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'state',
-            ])
+                ->setName($this->trans('State', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'state',
+                ])
             )
             ->add((new DataColumn('country'))
-            ->setName($this->trans('Country', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'country',
-            ])
+                ->setName($this->trans('Country', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'country',
+                ])
             )
             ->add((new DataColumn('phone'))
-            ->setName($this->trans('Phone', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'phone',
-            ])
+                ->setName($this->trans('Phone', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'phone',
+                ])
             )
             ->add((new DataColumn('fax'))
-            ->setName($this->trans('Fax', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'fax',
-            ])
+                ->setName($this->trans('Fax', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'fax',
+                ])
             )
             ->add((new ToggleColumn('active'))
-            ->setName($this->trans('Enabled', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'active',
-                'primary_field' => 'id_store',
-                'route' => 'admin_stores_toggle_status',
-                'route_param_name' => 'storeId',
-            ])
+                ->setName($this->trans('Enabled', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'active',
+                    'primary_field' => 'id_store',
+                    'route' => 'admin_stores_toggle_status',
+                    'route_param_name' => 'storeId',
+                ])
             )
             ->add((new ActionColumn('actions'))
-            ->setName($this->trans('Actions', [], 'Admin.Global'))
-            ->setOptions([
-                'actions' => (new RowActionCollection())
-                    //@todo: uncomment when edit action is implemented
-                    //->add((new LinkRowAction('edit'))
-                    //->setName($this->trans('Edit', [], 'Admin.Actions'))
-                    //->setIcon('edit')
-                    //->setOptions([
-                        //'route' => 'admin_stores_edit',
-                        //'route_param_name' => 'storeId',
-                        //'route_param_field' => 'id_store',
-                    //])
-                    //)
-                    ->add(
-                        $this->buildDeleteAction(
-                            'admin_stores_delete',
-                            'storeId',
-                            'id_store',
-                            Request::METHOD_DELETE
-                        )
-                    ),
-            ])
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
+                ->setOptions([
+                    'actions' => (new RowActionCollection())
+                        // @todo: uncomment when edit action is implemented
+                        // ->add((new LinkRowAction('edit'))
+                        // ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                        // ->setIcon('edit')
+                        // ->setOptions([
+                            // 'route' => 'admin_stores_edit',
+                            // 'route_param_name' => 'storeId',
+                            // 'route_param_field' => 'id_store',
+                        // ])
+                        // )
+                        ->add(
+                            $this->buildDeleteAction(
+                                'admin_stores_delete',
+                                'storeId',
+                                'id_store',
+                                Request::METHOD_DELETE
+                            )
+                        ),
+                ])
             );
     }
 
@@ -167,26 +167,26 @@ class StoreGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new GridActionCollection())
             ->add((new LinkGridAction('import'))
-            ->setName($this->trans('Import', [], 'Admin.Actions'))
-            ->setIcon('cloud_upload')
-            ->setOptions([
-                'route' => 'admin_import',
-                'route_params' => [
-                    'import_type' => 'stores',
-                ],
-            ])
+                ->setName($this->trans('Import', [], 'Admin.Actions'))
+                ->setIcon('cloud_upload')
+                ->setOptions([
+                    'route' => 'admin_import',
+                    'route_params' => [
+                        'import_type' => 'stores',
+                    ],
+                ])
             )
             ->add((new SimpleGridAction('common_refresh_list'))
-            ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
-            ->setIcon('refresh')
+                ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
+                ->setIcon('refresh')
             )
             ->add((new SimpleGridAction('common_show_query'))
-            ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
-            ->setIcon('code')
+                ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
+                ->setIcon('code')
             )
             ->add((new SimpleGridAction('common_export_sql_manager'))
-            ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
-            ->setIcon('storage')
+                ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
+                ->setIcon('storage')
             );
     }
 
@@ -194,16 +194,16 @@ class StoreGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new BulkActionCollection())
             ->add((new SubmitBulkAction('store_bulk_enable'))
-            ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
-            ->setOptions([
-                'submit_route' => 'admin_stores_bulk_enable',
-            ])
+                ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
+                ->setOptions([
+                    'submit_route' => 'admin_stores_bulk_enable',
+                ])
             )
             ->add((new SubmitBulkAction('store_bulk_disable'))
-            ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
-            ->setOptions([
-                'submit_route' => 'admin_stores_bulk_disable',
-            ])
+                ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
+                ->setOptions([
+                    'submit_route' => 'admin_stores_bulk_disable',
+                ])
             )
             ->add($this->buildBulkDeleteAction('admin_stores_bulk_delete'))
         ;
@@ -216,99 +216,99 @@ class StoreGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new FilterCollection())
             ->add((new Filter('id_store', TextType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'attr' => [
-                    'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
-                ],
-            ])
-            ->setAssociatedColumn('id_store')
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                    ],
+                ])
+                ->setAssociatedColumn('id_store')
             )
             ->add((new Filter('name', TextType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'attr' => [
-                    'placeholder' => $this->trans('Search name', [], 'Admin.Actions'),
-                ],
-            ])
-            ->setAssociatedColumn('name')
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search name', [], 'Admin.Actions'),
+                    ],
+                ])
+                ->setAssociatedColumn('name')
             )
             ->add((new Filter('address', TextType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'attr' => [
-                    'placeholder' => $this->trans('Search address', [], 'Admin.Actions'),
-                ],
-            ])
-            ->setAssociatedColumn('address')
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search address', [], 'Admin.Actions'),
+                    ],
+                ])
+                ->setAssociatedColumn('address')
             )
             ->add((new Filter('city', TextType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'attr' => [
-                    'placeholder' => $this->trans('Search city', [], 'Admin.Actions'),
-                ],
-            ])
-            ->setAssociatedColumn('city')
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search city', [], 'Admin.Actions'),
+                    ],
+                ])
+                ->setAssociatedColumn('city')
             )
             ->add((new Filter('postcode', TextType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'attr' => [
-                    'placeholder' => $this->trans('Search zip/postal code', [], 'Admin.Actions'),
-                ],
-            ])
-            ->setAssociatedColumn('postcode')
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search zip/postal code', [], 'Admin.Actions'),
+                    ],
+                ])
+                ->setAssociatedColumn('postcode')
             )
             ->add((new Filter('state', TextType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'attr' => [
-                    'placeholder' => $this->trans('Search state', [], 'Admin.Actions'),
-                ],
-            ])
-            ->setAssociatedColumn('state')
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search state', [], 'Admin.Actions'),
+                    ],
+                ])
+                ->setAssociatedColumn('state')
             )
             ->add((new Filter('country', TextType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'attr' => [
-                    'placeholder' => $this->trans('Search country', [], 'Admin.Actions'),
-                ],
-            ])
-            ->setAssociatedColumn('country')
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search country', [], 'Admin.Actions'),
+                    ],
+                ])
+                ->setAssociatedColumn('country')
             )
             ->add((new Filter('phone', TextType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'attr' => [
-                    'placeholder' => $this->trans('Search phone', [], 'Admin.Actions'),
-                ],
-            ])
-            ->setAssociatedColumn('phone')
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search phone', [], 'Admin.Actions'),
+                    ],
+                ])
+                ->setAssociatedColumn('phone')
             )
             ->add((new Filter('fax', TextType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'attr' => [
-                    'placeholder' => $this->trans('Search fax', [], 'Admin.Actions'),
-                ],
-            ])
-            ->setAssociatedColumn('fax')
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search fax', [], 'Admin.Actions'),
+                    ],
+                ])
+                ->setAssociatedColumn('fax')
             )
             ->add((new Filter('active', YesAndNoChoiceType::class))
-            ->setAssociatedColumn('active')
+                ->setAssociatedColumn('active')
             )
             ->add((new Filter('actions', SearchAndResetType::class))
-            ->setAssociatedColumn('actions')
-            ->setTypeOptions([
-                'reset_route' => 'admin_common_reset_search_by_filter_id',
-                'reset_route_params' => [
-                    'filterId' => self::GRID_ID,
-                ],
-                'redirect_route' => 'admin_stores_index',
-            ])
-            ->setAssociatedColumn('actions')
+                ->setAssociatedColumn('actions')
+                ->setTypeOptions([
+                    'reset_route' => 'admin_common_reset_search_by_filter_id',
+                    'reset_route_params' => [
+                        'filterId' => self::GRID_ID,
+                    ],
+                    'redirect_route' => 'admin_stores_index',
+                ])
+                ->setAssociatedColumn('actions')
             );
     }
 }

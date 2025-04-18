@@ -21,7 +21,6 @@ Feature: Supplier management
       | description[fr-FR]      | la supplier :D     |
       | meta title[en-US]       | my supplier nr one |
       | meta description[en-US] |                    |
-      | meta keywords[en-US]    | sup,1              |
       | shops                   | [shop1]            |
     Then supplier supplier1 should have following properties:
       | name                    | my supplier 1      |
@@ -35,8 +34,6 @@ Feature: Supplier management
       | meta title[fr-FR]       |                    |
       | meta description[en-US] |                    |
       | meta description[fr-FR] |                    |
-      | meta keywords[en-US]    | sup,1              |
-      | meta keywords[fr-FR]    |                    |
       | shops                   | [shop1]            |
 #@todo: finish up create with optional params too, different cases + update and delete scenarios.
 
@@ -53,8 +50,6 @@ Feature: Supplier management
       | meta title[fr-FR]       |                    |
       | meta description[en-US] |                    |
       | meta description[fr-FR] |                    |
-      | meta keywords[en-US]    | sup,1              |
-      | meta keywords[fr-FR]    |                    |
       | shops                   | [shop1]            |
       | logo image              | logo.jpg           |
     And the supplier "supplier1" has a logo image
@@ -68,7 +63,7 @@ Feature: Supplier management
       | attribute name        | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
       | Paper Type - Ruled    | demo_8_85          | $5.49           | demo_8            |       |     | 300      |
       | Paper Type - Plain    | demo_8_86          | $5.49           | demo_8            |       |     | 300      |
-      | Paper Type - Squarred | demo_8_87          | $5.49           | demo_8            |       |     | 300      |
+      | Paper Type - Squared  | demo_8_87          | $5.49           | demo_8            |       |     | 300      |
       | Paper Type - Doted    | demo_8_88          | $5.49           | demo_8            |       |     | 300      |
     And supplier "acc1" should have following details for product "Mug The best is yet to come":
       | attribute name | supplier reference | wholesale price | product reference | ean13 | upc | quantity |

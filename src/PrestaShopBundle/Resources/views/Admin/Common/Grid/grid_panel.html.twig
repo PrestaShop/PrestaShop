@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 {% set displayName = true %}
 {% if (grid.view_options.display_name is defined) %}
     {% set displayName = grid.view_options.display_name %}
@@ -38,7 +38,7 @@
       {% endif %}
       {% block grid_actions_block %}
         <div class="d-inline-block float-right">
-          {{ include('@PrestaShop/Admin/Common/Grid/Blocks/grid_actions.html.twig', {'grid': grid}) }}
+          {{ include('@PrestaShop/Admin/Common/Grid/Blocks/grid_actions.html.twig', {grid: grid}) }}
         </div>
       {% endblock %}
     </div>
@@ -48,7 +48,7 @@
   {% block grid_panel_body %}
     <div class="card-body">
       {% block grid_view_block %}
-        {{ include('@PrestaShop/Admin/Common/Grid/grid.html.twig', {'grid': grid }) }}
+        {{ include('@PrestaShop/Admin/Common/Grid/grid.html.twig', {grid: grid}) }}
       {% endblock %}
     </div>
   {% endblock %}

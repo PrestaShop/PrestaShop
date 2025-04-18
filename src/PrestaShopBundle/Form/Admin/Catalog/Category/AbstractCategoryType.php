@@ -32,10 +32,9 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShop\PrestaShop\Core\Domain\Category\CategorySettings;
-use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\SeoSettings;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShopBundle\Form\Admin\Sell\Category\SEO\RedirectOptionType;
 use PrestaShopBundle\Form\Admin\Type\CategorySeoPreviewType;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use PrestaShopBundle\Form\Admin\Type\ImageWithPreviewType;
@@ -47,8 +46,6 @@ use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -74,32 +71,24 @@ abstract class AbstractCategoryType extends TranslatorAwareType
     protected $configuration;
 
     /**
-     * @var UrlGeneratorInterface
-     */
-    private $router;
-
-    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param array $customerGroupChoices
      * @param FeatureInterface $multiStoreFeature
      * @param ConfigurationInterface $configuration
-     * @param UrlGeneratorInterface $router
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         array $customerGroupChoices,
         FeatureInterface $multiStoreFeature,
-        ConfigurationInterface $configuration,
-        UrlGeneratorInterface $router
+        ConfigurationInterface $configuration
     ) {
         parent::__construct($translator, $locales);
 
         $this->customerGroupChoices = $customerGroupChoices;
         $this->multiStoreFeature = $multiStoreFeature;
         $this->configuration = $configuration;
-        $this->router = $router;
     }
 
     /**
@@ -144,6 +133,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 'type' => FormattedTextareaType::class,
                 'required' => false,
                 'options' => [
+                    'limit' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4,
                     'constraints' => [
                         new CleanHtml([
                             'message' => $this->trans('This field is invalid', 'Admin.Notifications.Error'),
@@ -153,10 +143,11 @@ abstract class AbstractCategoryType extends TranslatorAwareType
             ])
             ->add('additional_description', TranslatableType::class, [
                 'label' => $this->trans('Additional description', 'Admin.Catalog.Feature'),
-                'help' => $genericCharactersHint,
+                'help' => $this->trans('Text that is usually displayed after the product list on category page. It\'s a good place to put longer SEO related content.', 'Admin.Catalog.Help') . ' ' . $genericCharactersHint,
                 'type' => FormattedTextareaType::class,
                 'required' => false,
                 'options' => [
+                    'limit' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4,
                     'constraints' => [
                         new CleanHtml([
                             'message' => $this->trans('This field is invalid', 'Admin.Notifications.Error'),
@@ -166,45 +157,21 @@ abstract class AbstractCategoryType extends TranslatorAwareType
             ])
             ->add('active', SwitchType::class, [
                 'label' => $this->trans('Enabled', 'Admin.Global'),
-                'help' => $this->trans(
-                        'If you want a category to appear in your store\'s menu, configure your menu module in [1]Modules > Module Manager[/1].',
-                        'Admin.Catalog.Help',
-                        [
-                            '[1]' => '<a href="' . $this->router->generate('admin_module_manage') . '" target="_blank" rel="noopener noreferrer nofollow">',
-                            '[/1]' => '</a>',
-                        ]
-                    ),
                 'required' => false,
             ])
             ->add('cover_image', ImageWithPreviewType::class, [
                 'label' => $this->trans('Category cover image', 'Admin.Catalog.Feature'),
-                'help' => $this->trans('This is the cover image for your category: it will be displayed on the category\'s page. The description will appear in its top-left corner.', 'Admin.Catalog.Help'),
+                'help' => $this->trans('Category image that is usually displayed on the category page next to description, depending on your theme.', 'Admin.Catalog.Help'),
                 'required' => false,
                 'can_be_deleted' => true,
                 'show_size' => true,
-                'csrf_delete_token_id' => 'delete-cover-image',
             ])
             ->add('thumbnail_image', ImageWithPreviewType::class, [
                 'label' => $this->trans('Category thumbnail', 'Admin.Catalog.Feature'),
-                'help' => $this->trans('It will display a thumbnail on the parent category\'s page, if the theme allows it.', 'Admin.Catalog.Help'),
-                'required' => false,
-                'can_be_deleted' => false,
-                'show_size' => true,
-            ])
-            ->add('menu_thumbnail_images', ImageWithPreviewType::class, [
-                'label' => $this->trans('Menu thumbnails', 'Admin.Catalog.Feature'),
-                'help' => $this->trans('It will display a thumbnail representing the category in the menu, if the theme allows it.', 'Admin.Catalog.Help'),
-                'multiple' => true,
+                'help' => $this->trans('Miniature image that is used when displaying subcategories. Could be also used in menus and other places, depending on your theme.', 'Admin.Catalog.Help'),
                 'required' => false,
                 'can_be_deleted' => true,
-                'warning_message' => $this->trans(
-                    'You have reached the limit (%limit%) of files to upload, please remove files to continue uploading',
-                    'Admin.Catalog.Notification',
-                    [
-                        '%limit%' => count(MenuThumbnailId::ALLOWED_ID_VALUES),
-                    ]
-                ),
-                'csrf_delete_token_id' => 'delete-menu-thumbnail',
+                'show_size' => true,
             ])
             ->add('seo_preview', CategorySeoPreviewType::class,
                 [
@@ -277,35 +244,6 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                     ],
                 ],
             ])
-            ->add('meta_keyword', TranslatableType::class, [
-                'label' => $this->trans('Meta keywords', 'Admin.Global'),
-                'help' => $this->trans('To add tags, press the \'enter\' key. You can also use the \'comma\' key. Invalid characters: <>;=#{}', 'Admin.Shopparameters.Help')
-                    . '<br>' . $genericCharactersHint,
-                'required' => false,
-                'options' => [
-                    'constraints' => [
-                        new TypedRegex([
-                            'type' => TypedRegex::TYPE_GENERIC_NAME,
-                        ]),
-                        new Length([
-                            'max' => SeoSettings::MAX_KEYWORDS_LENGTH,
-                            'maxMessage' => $this->trans(
-                                'This field cannot be longer than %limit% characters.',
-                                'Admin.Notifications.Error',
-                                [
-                                    '%limit%' => SeoSettings::MAX_KEYWORDS_LENGTH,
-                                ]
-                            ),
-                        ]),
-                    ],
-                    'attr' => [
-                        'maxlength' => SeoSettings::MAX_KEYWORDS_LENGTH,
-                        'class' => 'js-taggable-field',
-                        'placeholder' => $this->trans('Add tag', 'Admin.Actions'),
-                    ],
-                    'required' => false,
-                ],
-            ])
             ->add('link_rewrite', TranslatableType::class, [
                 'label' => $this->trans('Friendly URL', 'Admin.Global'),
                 'help' => $this->trans('Allowed characters: letters, numbers, underscores (_) and hyphens (-). To allow more characters, enable the \'Accented URL\' feature in Shop Parameters > Traffic & SEO.', 'Admin.Catalog.Help'),
@@ -334,6 +272,11 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                     ],
                 ],
             ])
+            ->add('redirect_option', RedirectOptionType::class, [
+                'id_category' => $options['id_category'] ?? 0,
+                'isRootCategory' => $this instanceof RootCategoryType,
+                'alert_message' => $this->getRedirectionAlertMessages(),
+            ])
             ->add('group_association', MaterialChoiceTableType::class, [
                 'label' => $this->trans('Group access', 'Admin.Catalog.Feature'),
                 'help' => $this->trans('Select the customer groups which will have access to this category.', 'Admin.Catalog.Help'),
@@ -353,15 +296,26 @@ abstract class AbstractCategoryType extends TranslatorAwareType
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
+    private function getRedirectionAlertMessages(): array
     {
-        $resolver
-            ->setDefaults([
-                'disable_menu_thumbnails_upload' => null,
-            ])
-            ->setAllowedTypes('disable_menu_thumbnails_upload', ['bool', 'null']);
+        $formatParameters = [
+            '[1]' => '<strong>',
+            '[/1]' => '</strong>',
+            '[2]' => '<br>',
+        ];
+
+        $alertMessages = [
+            $this->trans('[1]No redirection (404), display error page[/1] [2] Do not redirect anywhere and display a 404 "Not Found" page.', 'Admin.Catalog.Help', $formatParameters),
+            $this->trans('[1]No redirection (410), display error page[/1] [2] Do not redirect anywhere and display a 410 "Gone" page.', 'Admin.Catalog.Help', $formatParameters),
+        ];
+
+        if (!$this instanceof RootCategoryType) {
+            $alertMessages = array_merge([
+                $this->trans('[1]Permanent redirection (301)[/1] [2] Permanently display another category instead.', 'Admin.Catalog.Help', $formatParameters),
+                $this->trans('[1]Temporary redirection (302)[/1] [2] Temporarily display another category instead.', 'Admin.Catalog.Help', $formatParameters),
+            ], $alertMessages);
+        }
+
+        return $alertMessages;
     }
 }

@@ -16,15 +16,15 @@ Feature: Update product price fields from Back Office (BO) when default country 
       | name[en-US] | magic staff |
       | type        | standard    |
     And product product1 should have following prices information:
-      | price              | 0     |
-      | price_tax_included | 0     |
-      | ecotax             | 0     |
-      | tax rules group    |       |
-      | on_sale            | false |
-      | wholesale_price    | 0     |
-      | unit_price         | 0     |
-      | unit_price_ratio   | 0     |
-      | unity              |       |
+      | price              | 0               |
+      | price_tax_included | 0               |
+      | ecotax             | 0               |
+      | tax rules group    | US-FL Rate (6%) |
+      | on_sale            | false           |
+      | wholesale_price    | 0               |
+      | unit_price         | 0               |
+      | unit_price_ratio   | 0               |
+      | unity              |                 |
     And I add new tax "fr-tax-6" with following properties:
       | name         | FR Tax (6%)   |
       | rate         | 6             |
@@ -106,12 +106,12 @@ Feature: Update product price fields from Back Office (BO) when default country 
       | price      | 20  |
       | unit_price | 500 |
     Then product product1 should have following prices information:
-      | price                   | 20   |
-      | price_tax_included      | 20   |
-      | unit_price              | 500  |
-      | unit_price_tax_included | 500  |
-      | unit_price_ratio        | 0.04 |
-      | tax rules group         |      |
+      | price                   | 20              |
+      | price_tax_included      | 20              |
+      | unit_price              | 500             |
+      | unit_price_tax_included | 500             |
+      | unit_price_ratio        | 0.04            |
+      | tax rules group         | US-FL Rate (6%) |
     When I update product "product1" with following values:
       | tax rules group | FR Tax (6%)     |
     Then product product1 should have following prices information:

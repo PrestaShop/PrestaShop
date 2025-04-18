@@ -13,7 +13,9 @@ jobs:
     uses: ./.github/workflows/cron_nightly_tests_reusable.yml
     with:
       BRANCH: 8.0.x
+      PHP_VERSION: '8.1'
+      NODE_VERSION: '14'
+      DB_SERVER: 'mysql'
     secrets:
       GC_PROJECT_ID: ${{ secrets.GC_PROJECT_ID }}
       GC_SERVICE_KEY: ${{ secrets.GC_SERVICE_KEY }}
-      API_NIGHTLY_IMPORT_TOKEN: ${{ secrets.NIGHTLY_TOKEN }}

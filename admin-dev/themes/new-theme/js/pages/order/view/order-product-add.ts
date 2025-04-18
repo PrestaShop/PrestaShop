@@ -322,11 +322,15 @@ export default class OrderProductAdd {
           orderProductId: params.product_id,
           newRow: response,
         });
+        this.totalPriceText.html('');
+        this.availableText.html('');
       },
       (response) => {
         this.productAddActionBtn.prop('disabled', false);
         this.invoiceSelect.prop('disabled', false);
         this.combinationsSelect.prop('disabled', false);
+        this.totalPriceText.html('');
+        this.availableText.html('');
 
         if (response.responseJSON && response.responseJSON.message) {
           $.growl.error({message: response.responseJSON.message});

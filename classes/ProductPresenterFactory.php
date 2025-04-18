@@ -45,9 +45,9 @@ class ProductPresenterFactoryCore
      * ProductPresenterFactoryCore constructor.
      *
      * @param Context $context
-     * @param \TaxConfiguration|null $taxConfiguration
+     * @param TaxConfiguration|null $taxConfiguration
      */
-    public function __construct(Context $context, TaxConfiguration $taxConfiguration = null)
+    public function __construct(Context $context, ?TaxConfiguration $taxConfiguration = null)
     {
         $this->context = $context;
         $this->taxConfiguration = (null === $taxConfiguration) ? new TaxConfiguration() : $taxConfiguration;

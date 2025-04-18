@@ -55,4 +55,9 @@ class EmployeeConstraintException extends EmployeeException
      * @var int Code is used when incorrect password is provided for employee
      */
     public const INCORRECT_PASSWORD = 5;
+
+    /**
+     * Code used when the default page is not accessible for the employee's profile.
+     */
+    public const INVALID_HOMEPAGE = 6;
 }

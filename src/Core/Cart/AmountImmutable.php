@@ -116,7 +116,7 @@ class AmountImmutable
     {
         return new static(
             $this->getTaxIncluded() - $amount->getTaxIncluded(),
-        $this->getTaxExcluded() - $amount->getTaxExcluded()
+            $this->getTaxExcluded() - $amount->getTaxExcluded()
         );
     }
 }

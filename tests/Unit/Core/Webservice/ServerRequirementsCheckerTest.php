@@ -65,7 +65,6 @@ class ServerRequirementsCheckerTest extends TestCase
 
         $this->mockedConfiguration = $this->createMock(Configuration::class);
         $this->mockedHostingInformation = $this->getMockBuilder(HostingInformation::class)
-            ->setMethods(null)
             ->getMock();
 
         $this->mockedPhpExtensionChecker = $this->createMock(PhpExtensionCheckerInterface::class);

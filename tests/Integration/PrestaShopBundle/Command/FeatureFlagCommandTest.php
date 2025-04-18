@@ -61,8 +61,10 @@ class FeatureFlagCommandTest extends KernelTestCase
     public function testList(): void
     {
         $kernel = self::bootKernel();
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $kernel->getContainer()->get('doctrine.orm.entity_manager');
         /** @var FeatureFlagRepository $featureFlagRepository */
-        $featureFlagRepository = $kernel->getContainer()->get(FeatureFlagRepository::class);
+        $featureFlagRepository = $entityManager->getRepository(FeatureFlag::class);
         $featureFlagStateChecker = $kernel->getContainer()->get(FeatureFlagStateCheckerInterface::class);
         $featureFlags = $featureFlagRepository->findAll();
         /** @var FeatureFlag $featureFlag */
@@ -105,6 +107,9 @@ class FeatureFlagCommandTest extends KernelTestCase
 
     private function getFeatureFlagState(KernelInterface $kernel, string $featureFlag): bool
     {
+        // The feature flag manager has internal cache, however it is also a resettable service, so if we reset the kernel so will the manager
+        $kernel->shutdown();
+        $kernel->boot();
         $application = new Application($kernel);
         $command = $application->find('prestashop:feature-flag');
         $commandTester = new CommandTester($command);

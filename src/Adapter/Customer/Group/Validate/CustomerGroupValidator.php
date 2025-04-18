@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -30,6 +30,7 @@ use Group as CustomerGroup;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 class CustomerGroupValidator extends AbstractObjectModelValidator
 {
@@ -46,9 +47,9 @@ class CustomerGroupValidator extends AbstractObjectModelValidator
     /**
      * @param CustomerGroup $customerGroup
      *
-     * @throws GroupConstraintException
-     *
      * @return void
+     *
+     * @throws GroupConstraintException
      */
     public function validate(CustomerGroup $customerGroup): void
     {
@@ -61,9 +62,9 @@ class CustomerGroupValidator extends AbstractObjectModelValidator
     /**
      * @param array $shopIds
      *
-     * @throws GroupConstraintException
-     *
      * @return void
+     *
+     * @throws GroupConstraintException
      */
     private function validateThereIsAtLeastOneShop(array $shopIds): void
     {
@@ -83,16 +84,16 @@ class CustomerGroupValidator extends AbstractObjectModelValidator
     private function validateShopsExists(array $shopIds): void
     {
         foreach ($shopIds as $shopId) {
-            $this->shopRepository->assertShopExists($shopId);
+            $this->shopRepository->assertShopExists(new ShopId($shopId));
         }
     }
 
     /**
      * @param int $priceDisplayMethod
      *
-     * @throws GroupConstraintException
-     *
      * @return void
+     *
+     * @throws GroupConstraintException
      */
     private function validatePriceDisplayMethod(int $priceDisplayMethod): void
     {
@@ -111,9 +112,9 @@ class CustomerGroupValidator extends AbstractObjectModelValidator
     /**
      * @param string[] $names
      *
-     * @throws GroupConstraintException
-     *
      * @return void
+     *
+     * @throws GroupConstraintException
      */
     private function validateGroupNames(array $names): void
     {
@@ -131,9 +132,9 @@ class CustomerGroupValidator extends AbstractObjectModelValidator
     /**
      * @param string $name
      *
-     * @throws GroupConstraintException
-     *
      * @return void
+     *
+     * @throws GroupConstraintException
      */
     private function validateGroupName(string $name): void
     {

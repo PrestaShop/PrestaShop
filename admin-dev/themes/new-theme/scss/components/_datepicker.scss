@@ -5,7 +5,7 @@
   .down::before,
   .date::before,
   .time::before {
-    font-family: "Material Icons", Arial, Helvetica, sans-serif;
+    font-family: var(--#{$cdk}font-family-material-icons);
   }
 
   .prev span::before {
@@ -30,5 +30,29 @@
 
   .time::before {
     content: "\E192";
+  }
+
+  table {
+    td {
+      &.today {
+        &::before {
+          border-bottom-color: var(--#{$cdk}blue-500);
+        }
+      }
+
+      &.active {
+        background-color: var(--#{$cdk}blue-500);
+
+        &:hover {
+          background-color: var(--#{$cdk}blue-500);
+        }
+      }
+
+      span {
+        &.active {
+          background-color: var(--#{$cdk}blue-300);
+        }
+      }
+    }
   }
 }

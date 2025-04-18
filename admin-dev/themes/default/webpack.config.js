@@ -25,17 +25,19 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FontPreloadPlugin = require('webpack-font-preload-plugin');
 const CssoWebpackPlugin = require('csso-webpack-plugin').default;
 const LicensePlugin = require('webpack-license-plugin');
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
+const bourbon = require('bourbon');
 
 module.exports = (env, argv) => {
   const devMode = argv.mode === 'development';
 
   const config = {
+    mode: argv.mode || 'production',
     entry: {
       theme: './js/theme.js',
       rtl: './scss/rtl.scss',
@@ -72,6 +74,12 @@ module.exports = (env, argv) => {
             },
             {
               loader: 'sass-loader',
+              options: {
+                sourceMap: true,
+                sassOptions: {
+                  includePaths: bourbon.includePaths,
+                },
+              },
             },
           ],
         },
@@ -115,8 +123,7 @@ module.exports = (env, argv) => {
         extensions: ['woff2'],
         filter: /preload/,
         // eslint-disable-next-line
-        replaceCallback: ({indexSource, linksAsString}) =>
-          indexSource.replace('{{{preloadLinks}}}', linksAsString.replace(/href="/g, 'href="{$admin_dir}')),
+        replaceCallback: ({indexSource, linksAsString}) => indexSource.replace('{{{preloadLinks}}}', linksAsString.replace(/href="/g, 'href="{$admin_dir}')),
       }),
       new CssoWebpackPlugin({
         forceMediaMerge: true,

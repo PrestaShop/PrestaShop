@@ -53,7 +53,7 @@ class TranslationFinder
      *
      * @throws FileNotFoundException
      */
-    public function getCatalogueFromPaths(array $paths, string $locale, string $pattern = null): MessageCatalogue
+    public function getCatalogueFromPaths(array $paths, string $locale, ?string $pattern = null): MessageCatalogue
     {
         $translationFiles = $this->getTranslationFilesFromPath($paths, $pattern);
 

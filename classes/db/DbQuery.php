@@ -289,7 +289,7 @@ class DbQueryCore
     public function build()
     {
         if ($this->query['type'] == 'SELECT') {
-            $sql = 'SELECT ' . ((($this->query['select'])) ? implode(",\n", $this->query['select']) : '*') . "\n";
+            $sql = 'SELECT ' . (($this->query['select']) ? implode(",\n", $this->query['select']) : '*') . "\n";
         } else {
             $sql = $this->query['type'] . ' ';
         }

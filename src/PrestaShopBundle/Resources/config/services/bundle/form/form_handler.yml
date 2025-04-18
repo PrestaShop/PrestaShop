@@ -163,7 +163,7 @@ services:
     calls:
       - method: setTabRepository
         arguments:
-          - '@prestashop.core.admin.tab.repository'
+          - '@PrestaShopBundle\Entity\Repository\TabRepository'
 
   prestashop.admin.order_preferences.general.form_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\Handler'
@@ -570,3 +570,52 @@ services:
       - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Security\PasswordPolicyType'
       - 'SecurityPagePasswordPolicy'
       - 'password_policy'
+
+  prestashop.admin.image_settings.form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+    arguments:
+      - '@form.factory'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.admin.improve.design.image_settings.form_data_provider'
+      - 'PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\ImageSettingsType'
+      - 'ImageSettingsPage'
+      - 'image_settings'
+
+  prestashop.adapter.admin_api.form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+    arguments:
+      - '@form.factory'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.adapter.admin_api.form_provider'
+      - 'PrestaShopBundle\Form\Admin\AdvancedParameters\AdminAPI\ConfigurationType'
+      - 'AdminAPI'
+
+  prestashop.admin.login.form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+    arguments:
+      - '@form.factory'
+      - '@prestashop.core.hook.dispatcher'
+      - '@PrestaShopBundle\Form\Admin\Login\LoginFormDataProvider'
+      - 'PrestaShopBundle\Form\Admin\Login\LoginType'
+      - 'BackOfficeLogin'
+      - ''
+
+  prestashop.admin.request_password_reset.form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+    arguments:
+      - '@form.factory'
+      - '@prestashop.core.hook.dispatcher'
+      - '@PrestaShopBundle\Form\Admin\Login\RequestPasswordResetFormDataProvider'
+      - 'PrestaShopBundle\Form\Admin\Login\RequestPasswordResetType'
+      - 'EmployeeRequestPasswordReset'
+      - 'request_password_reset'
+
+  prestashop.admin.reset_password.form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+    arguments:
+      - '@form.factory'
+      - '@prestashop.core.hook.dispatcher'
+      - '@PrestaShopBundle\Form\Admin\Login\ResetPasswordFormDataProvider'
+      - 'PrestaShopBundle\Form\Admin\Login\ResetPasswordType'
+      - 'EmployeeResetPassword'
+      - 'reset_password'

@@ -53,7 +53,7 @@ final class BulkDeleteTaxHandler extends AbstractTaxHandler implements BulkDelet
                 if (!$tax->delete()) {
                     throw new DeleteTaxException(sprintf('Cannot delete Tax object with id "%s"', $taxIdValue), DeleteTaxException::FAILED_BULK_DELETE);
                 }
-            } catch (PrestaShopException $e) {
+            } catch (PrestaShopException) {
                 throw new TaxException(sprintf('An error occurred when deleting Tax object with id "%s"', $taxIdValue));
             }
         }

@@ -78,7 +78,6 @@ class GeneralType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $configuration = $this->configuration;
-        $isMultishippingEnabled = (bool) $configuration->get('PS_ALLOW_MULTISHIPPING');
         $currencyIsoCode = $this->currencyDataProvider->getDefaultCurrencyIsoCode();
 
         $builder
@@ -114,15 +113,6 @@ class GeneralType extends TranslatorAwareType
                 'help' => $this->trans('Automatically updates the shipping costs when you edit an order.', 'Admin.Shopparameters.Help'),
                 'multistore_configuration_key' => 'PS_ORDER_RECALCULATE_SHIPPING',
             ]);
-
-        if ($isMultishippingEnabled) {
-            $builder->add('allow_multishipping', SwitchType::class, [
-                'required' => false,
-                'label' => $this->trans('Allow multishipping', 'Admin.Shopparameters.Feature'),
-                'help' => $this->trans('Allow the customer to ship orders to multiple addresses. This option will convert the customer\'s cart into one or more orders.', 'Admin.Shopparameters.Help'),
-                'multistore_configuration_key' => 'PS_ALLOW_MULTISHIPPING',
-            ]);
-        }
 
         $builder
             ->add('allow_delayed_shipping', SwitchType::class, [

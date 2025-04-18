@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 {% if payments.amountToPay and payments.paidAmount %}
     <div class="alert alert-danger mb-0 js-view-order-payments-alert" role="alert">
         <p class="alert-text">
@@ -38,7 +38,7 @@
                 {% endif %}
 
                 {% for linkedOrder in linkedOrders.linkedOrders %}
-                    <a target="_blank" rel="noopener noreferrer" href="{{ path('admin_orders_view', {'orderId': linkedOrder.orderId}) }}">
+                    <a target="_blank" rel="noopener noreferrer" href="{{ path('admin_orders_view', {orderId: linkedOrder.orderId}) }}">
                         #{{ linkedOrder.orderId }}
                     </a>
                 {% endfor %}

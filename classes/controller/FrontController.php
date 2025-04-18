@@ -30,7 +30,9 @@ use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\IpUtils;
 
@@ -152,7 +154,7 @@ class FrontControllerCore extends Controller
 
         parent::__construct();
 
-        if (Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE')) {
+        if (Configuration::get('PS_SSL_ENABLED')) {
             $this->ssl = true;
         }
 
@@ -162,8 +164,10 @@ class FrontControllerCore extends Controller
             $useSSL = $this->ssl;
         }
 
+        // Prepare presenters that we will require on every page
         $this->objectPresenter = new ObjectPresenter();
         $this->cart_presenter = new CartPresenter();
+
         $this->templateFinder = new TemplateFinder($this->context->smarty->getTemplateDir(), '.tpl');
         $this->stylesheetManager = new StylesheetManager(
             [_PS_THEME_URI_, _PS_PARENT_THEME_URI_, __PS_BASE_URI__],
@@ -242,8 +246,10 @@ class FrontControllerCore extends Controller
             $useSSL = true;
         }
 
-        // Redirect to SSL variant of the page if required and visited in non-ssl mode
-        $this->sslRedirection();
+        // Redirect to SSL variant of the page if required and visited in non-ssl mode and not in cli context
+        if (!Tools::isPHPCLI()) {
+            $this->sslRedirection();
+        }
 
         if ($this->ajax) {
             $this->display_header = false;
@@ -270,7 +276,12 @@ class FrontControllerCore extends Controller
 
         // Redirect user to login page, if the controller requires authentication
         if ($this->auth && !$this->context->customer->isLogged()) {
-            Tools::redirect('index.php?controller=authentication' . ($this->authRedirection ? '&back=' . $this->authRedirection : ''));
+            Tools::redirect($this->context->link->getPageLink(
+                'authentication',
+                null,
+                null,
+                $this->authRedirection ? ['back' => $this->authRedirection] : null
+            ));
         }
 
         // If the theme is missing, we need to throw an Exception
@@ -313,7 +324,14 @@ class FrontControllerCore extends Controller
             }
         }
 
+        /*
+         * Get proper currency from the cookie and $_GET parameters. It will provide us with a requested currency
+         * or a default currency, if the requested one is not valid anymore.
+         */
         $currency = Tools::setCurrency($this->context->cookie);
+
+        // Assign that currency to the context, so we can immediately use it for calculations.
+        $this->context->currency = $currency;
 
         if (isset($_GET['logout']) || ($this->context->customer->logged && Customer::isBanned($this->context->customer->id))) {
             $this->context->customer->logout();
@@ -324,27 +342,43 @@ class FrontControllerCore extends Controller
             Tools::redirect(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null);
         }
 
-        /* Cart already exists */
+        /*
+         * If we have an information about some cart in the cookie, we will try to use it, but we need to properly validate it.
+         * It can be deleted, order already placed for it and other edge scenarios.
+         */
         if ((int) $this->context->cookie->id_cart) {
             if (!isset($cart)) {
                 $cart = new Cart((int) $this->context->cookie->id_cart);
             }
 
+            /*
+             * Check if cart object is valid and not deleted.
+             * Check if there is not an order already placed on a different device or different tab.
+             */
             if (!Validate::isLoadedObject($cart) || $cart->orderExists()) {
                 PrestaShopLogger::addLog('Frontcontroller::init - Cart cannot be loaded or an order has already been placed using this cart', 1, null, 'Cart', (int) $this->context->cookie->id_cart, true);
                 unset($this->context->cookie->id_cart, $cart, $this->context->cookie->checkedTOS);
                 $this->context->cookie->check_cgv = false;
+
+            /*
+             * If geolocation is enabled and we are not allowed to order from our country, we will delete the cart.
+             */
             } elseif (
-                (int) (Configuration::get('PS_GEOLOCATION_ENABLED'))
+                (int) Configuration::get('PS_GEOLOCATION_ENABLED')
                 && !in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES')))
                 && $cart->nbProducts()
-                && (int) (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR')) != -1
+                && (int) Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') != -1
                 && !FrontController::isInWhitelistForGeolocation()
                 && !in_array($_SERVER['SERVER_NAME'], ['localhost', '127.0.0.1', '::1'])
             ) {
                 /* Delete product of cart, if user can't make an order from his country */
                 PrestaShopLogger::addLog('Frontcontroller::init - GEOLOCATION is deleting a cart', 1, null, 'Cart', (int) $this->context->cookie->id_cart, true);
                 unset($this->context->cookie->id_cart, $cart);
+
+            /*
+             * Check if cart data is still matching to what is set in our cookie - currency, language and customer.
+             * If not, update it on the cart.
+             */
             } elseif (
                 $this->context->cookie->id_customer != $cart->id_customer
                 || $this->context->cookie->id_lang != $cart->id_lang
@@ -358,7 +392,13 @@ class FrontControllerCore extends Controller
                 $cart->id_currency = (int) $currency->id;
                 $cart->update();
             }
-            /* Select an address if not set */
+
+            /*
+             * If we don't have any addresses set on the cart and we have a valid customer ID, we will try to automatically
+             * assign addresses to that cart. We will do it by taking the first valid address of the customer.
+             *
+             * If that customer exists but don't have any addresses, it will assign zero and we go on.
+             */
             if (
                 isset($cart)
                 && (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0 || !isset($cart->id_address_invoice) || $cart->id_address_invoice == 0)
@@ -379,6 +419,13 @@ class FrontControllerCore extends Controller
             }
         }
 
+        /*
+         * If the previous logic didn't resolve into any valid cart we can use, we will create a new empty one.
+         *
+         * It does not have any ID yet. It's just an empty cart object, but modules can use it and ask for it's data
+         * without checking a cart exists in a context and all that boring stuff. It will get assigned an ID after
+         * first save or update.
+         */
         if (!isset($cart) || !$cart->id) {
             $cart = new Cart();
             $cart->id_lang = (int) $this->context->cookie->id_lang;
@@ -394,19 +441,24 @@ class FrontControllerCore extends Controller
                 $cart->id_address_delivery = 0;
                 $cart->id_address_invoice = 0;
             }
-
-            // Needed if the merchant want to give a free product to every visitors
             $this->context->cart = $cart;
-            CartRule::autoAddToCart($this->context);
         } else {
             $this->context->cart = $cart;
             $this->context->cart->checkAndUpdateAddresses();
         }
 
+        /*
+         * We also need to run automatic cart rule actions.
+         * autoAddToCart is required to automatically assigning newly created cart rules with no code (automatic).
+         * autoRemoveFromCart is needed to verify, if the cart rules already in a cart are still valid.
+         */
+        CartRule::autoRemoveFromCart($this->context);
+        CartRule::autoAddToCart($this->context);
+
         $this->context->smarty->assign('request_uri', Tools::safeOutput(urldecode($_SERVER['REQUEST_URI'])));
 
         // Automatically redirect to the canonical URL if needed
-        if (!empty($this->php_self) && !Tools::getValue('ajax')) {
+        if (!empty($this->php_self) && !Tools::getValue('ajax') && !Tools::isPHPCLI()) {
             $this->canonicalRedirection($this->context->link->getPageLink($this->php_self, $this->ssl, $this->context->language->id));
         }
 
@@ -418,14 +470,13 @@ class FrontControllerCore extends Controller
             $this->context->country = $country;
         }
 
-        $this->displayMaintenancePage();
-
-        if (Country::GEOLOC_FORBIDDEN == $this->restrictedCountry) {
-            $this->displayRestrictedCountryPage();
+        if (!Tools::isPHPCLI()) {
+            $this->displayMaintenancePage();
         }
 
-        $this->context->cart = $cart;
-        $this->context->currency = $currency;
+        if (!Tools::isPHPCLI() && Country::GEOLOC_FORBIDDEN == $this->restrictedCountry) {
+            $this->displayRestrictedCountryPage();
+        }
 
         Hook::exec(
             'actionFrontControllerInitAfter',
@@ -450,14 +501,19 @@ class FrontControllerCore extends Controller
      */
     protected function assignGeneralPurposeVariables()
     {
-        if (Validate::isLoadedObject($this->context->cart)) {
-            $cart = $this->context->cart;
-        } else {
-            $cart = new Cart();
-        }
+        $templateVars = [];
+        $cart = $this->context->cart;
+
+        Hook::exec(
+            'actionFrontControllerSetVariablesBefore',
+            [
+                'templateVars' => &$templateVars,
+                'cart' => $cart,
+            ]
+        );
 
         $templateVars = [
-            'cart' => $this->cart_presenter->present($cart),
+            'cart' => $this->cart_presenter->present($cart, true),
             'currency' => $this->getTemplateVarCurrency(),
             'customer' => $this->getTemplateVarCustomer(),
             'country' => $this->objectPresenter->present($this->context->country),
@@ -476,6 +532,7 @@ class FrontControllerCore extends Controller
             'debug' => _PS_MODE_DEV_,
         ];
 
+        // An array [module_name => module_output] will be returned
         $modulesVariables = Hook::exec(
             'actionFrontControllerSetVariables',
             [
@@ -505,7 +562,7 @@ class FrontControllerCore extends Controller
      *
      * @return array Variables to be inserted in the "prestashop" javascript object
      *
-     * @throws \PrestaShop\PrestaShop\Core\Filter\FilterException
+     * @throws PrestaShop\PrestaShop\Core\Filter\FilterException
      * @throws PrestaShopException
      */
     protected function buildFrontEndObject($object)
@@ -527,10 +584,6 @@ class FrontControllerCore extends Controller
     {
         $this->assignGeneralPurposeVariables();
         $this->process();
-
-        if (!isset($this->context->cart)) {
-            $this->context->cart = new Cart();
-        }
 
         $this->context->smarty->assign([
             'HOOK_HEADER' => Hook::exec('displayHeader'),
@@ -638,7 +691,7 @@ class FrontControllerCore extends Controller
     /**
      * Compiles and outputs full page content.
      *
-     * @return bool
+     * @return void
      *
      * @throws Exception
      * @throws SmartyException
@@ -654,8 +707,6 @@ class FrontControllerCore extends Controller
         ]);
 
         $this->smartyOutputContent($this->template);
-
-        return true;
     }
 
     protected function smartyOutputContent($content)
@@ -710,9 +761,7 @@ class FrontControllerCore extends Controller
         if ($this->maintenance == true || !(int) Configuration::get('PS_SHOP_ENABLE')) {
             $this->maintenance = true;
 
-            $is_admin = (int) (new Cookie('psAdmin'))->id_employee;
-            $maintenance_allow_admins = (bool) Configuration::get('PS_MAINTENANCE_ALLOW_ADMINS');
-            if ($is_admin && $maintenance_allow_admins) {
+            if (Tools::isAllowedToBypassMaintenance()) {
                 return;
             }
 
@@ -721,6 +770,7 @@ class FrontControllerCore extends Controller
                 header('HTTP/1.1 503 Service Unavailable');
                 header('Retry-After: 3600');
 
+                $this->setMedia();
                 $this->registerStylesheet('theme-error', '/assets/css/error.css', ['media' => 'all', 'priority' => 50]);
                 $this->context->smarty->assign([
                     'urls' => $this->getTemplateVarUrls(),
@@ -769,7 +819,7 @@ class FrontControllerCore extends Controller
             } else {
                 header('Location: ' . Tools::getShopDomain(true) . $_SERVER['REQUEST_URI']);
             }
-            exit();
+            exit;
         }
     }
 
@@ -812,7 +862,7 @@ class FrontControllerCore extends Controller
      */
     protected function geolocationManagement($defaultCountry)
     {
-        if (!in_array(Tools::getRemoteAddr(), ['127.0.0.1', '::1'])) {
+        if (!in_array(Tools::getRemoteAddr(), ['127.0.0.1', '::1']) && !Tools::isPHPCLI()) {
             /* Check if Maxmind Database exists */
             if (@filemtime(_PS_GEOIP_DIR_ . _PS_GEOIP_CITY_FILE_)) {
                 if (!isset($this->context->cookie->iso_code_country) || (isset($this->context->cookie->iso_code_country) && !in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))))) {
@@ -820,7 +870,7 @@ class FrontControllerCore extends Controller
 
                     try {
                         $record = $reader->city(Tools::getRemoteAddr());
-                    } catch (\GeoIp2\Exception\AddressNotFoundException $e) {
+                    } catch (GeoIp2\Exception\AddressNotFoundException $e) {
                         $record = null;
                     }
 
@@ -1148,16 +1198,16 @@ class FrontControllerCore extends Controller
      */
     public function addJqueryUI($component, $theme = 'base', $check_dependencies = true)
     {
-        // If the component does not start with ui. prefix, we need to add it
-        if (substr($component, 0, 3) !== 'ui.') {
-            $component = 'ui.' . $component;
-        }
-
         if (!is_array($component)) {
             $component = [$component];
         }
 
         foreach ($component as $ui) {
+            // If the component does not start with ui. prefix, we need to add it
+            if (!str_starts_with($ui, 'ui.')) {
+                $ui = 'ui.' . $ui;
+            }
+
             $ui_path = Media::getJqueryUIPath($ui, $theme, $check_dependencies);
             foreach ($ui_path['css'] as $uiPathCss => $uiMediaCss) {
                 $this->registerStylesheet(
@@ -1444,7 +1494,7 @@ class FrontControllerCore extends Controller
                 'js_url' => _THEME_JS_DIR_,
                 'pic_url' => _THEME_PROD_PIC_DIR_,
                 'theme_assets' => _THEME_DIR_ . 'assets/',
-                'theme_dir' => $this->getThemeDir(),
+                'theme_dir' => _THEME_DIR_,
             ];
 
             $themeAssetsConfig = $this->context->shop->theme->get('assets', false);
@@ -1474,17 +1524,17 @@ class FrontControllerCore extends Controller
             ];
             foreach ($p as $page_name) {
                 $index = str_replace('-', '_', $page_name);
-                $pages[$index] = $this->context->link->getPageLink($page_name, $this->ssl);
+                $pages[$index] = $this->context->link->getPageLink($page_name);
             }
             $pages['brands'] = $pages['manufacturer'];
-            $pages['register'] = $this->context->link->getPageLink('registration', true);
-            $pages['order_login'] = $this->context->link->getPageLink('order', true, null, ['login' => '1']);
+            $pages['register'] = $this->context->link->getPageLink('registration');
+            $pages['order_login'] = $this->context->link->getPageLink('order', null, null, ['login' => '1']);
             $urls['pages'] = $pages;
 
             $urls['alternative_langs'] = $this->getAlternativeLangsUrl();
 
             $urls['actions'] = [
-                'logout' => $this->context->link->getPageLink('index', true, null, 'mylogout'),
+                'logout' => $this->context->link->getPageLink('index', null, null, 'mylogout'),
             ];
 
             $imageRetriever = new ImageRetriever($this->context->link);
@@ -1645,6 +1695,7 @@ class FrontControllerCore extends Controller
 
         $shop = [
             'id' => $this->context->shop->id,
+            'group_id' => $this->context->shop->id_shop_group,
             'name' => Configuration::get('PS_SHOP_NAME'),
             'email' => Configuration::get('PS_SHOP_EMAIL'),
             'registration_number' => Configuration::get('PS_SHOP_DETAILS'),
@@ -1722,7 +1773,6 @@ class FrontControllerCore extends Controller
             'meta' => [
                 'title' => $meta_tags['meta_title'],
                 'description' => $meta_tags['meta_description'],
-                'keywords' => $meta_tags['meta_keywords'],
                 'robots' => 'index',
             ],
             'page_name' => $page_name,
@@ -1798,7 +1848,7 @@ class FrontControllerCore extends Controller
 
         $breadcrumb['links'][] = [
             'title' => $this->getTranslator()->trans('Home', [], 'Shop.Theme.Global'),
-            'url' => $this->context->link->getPageLink('index', true),
+            'url' => $this->context->link->getPageLink('index'),
         ];
 
         return $breadcrumb;
@@ -1823,7 +1873,7 @@ class FrontControllerCore extends Controller
     {
         return [
             'title' => $this->getTranslator()->trans('Your account', [], 'Shop.Theme.Customeraccount'),
-            'url' => $this->context->link->getPageLink('my-account', true),
+            'url' => $this->context->link->getPageLink('my-account'),
         ];
     }
 
@@ -1840,48 +1890,11 @@ class FrontControllerCore extends Controller
     }
 
     /**
-     * Generate a URL corresponding to the current page but
-     * with the query string altered.
-     *
-     * If $extraParams is set to NULL, then all query params are stripped.
-     *
-     * Otherwise, params from $extraParams that have a null value are stripped,
-     * and other params are added. Params not in $extraParams are unchanged.
+     * @deprecated Since 9.0 and will be removed in the next major.
      */
-    protected function updateQueryString(array $extraParams = null)
+    protected function updateQueryString(?array $extraParams = null)
     {
-        $uriWithoutParams = explode('?', $_SERVER['REQUEST_URI'])[0];
-        $url = Tools::getCurrentUrlProtocolPrefix() . $_SERVER['HTTP_HOST'] . $uriWithoutParams;
-        $params = [];
-        $paramsFromUri = '';
-        if (strpos($_SERVER['REQUEST_URI'], '?') !== false) {
-            $paramsFromUri = explode('?', $_SERVER['REQUEST_URI'])[1];
-        }
-        parse_str($paramsFromUri, $params);
-
-        if (null !== $extraParams) {
-            foreach ($extraParams as $key => $value) {
-                if (null === $value) {
-                    unset($params[$key]);
-                } else {
-                    $params[$key] = $value;
-                }
-            }
-        }
-
-        if (null !== $extraParams) {
-            foreach ($params as $key => $param) {
-                if ('' === $param) {
-                    unset($params[$key]);
-                }
-            }
-        } else {
-            $params = [];
-        }
-
-        $queryString = str_replace('%2F', '/', http_build_query($params, '', '&'));
-
-        return $url . ($queryString ? "?$queryString" : '');
+        return Tools::updateCurrentQueryString($extraParams);
     }
 
     protected function getCurrentURL()
@@ -2076,9 +2089,13 @@ class FrontControllerCore extends Controller
     /**
      * {@inheritdoc}
      */
-    protected function buildContainer()
+    protected function buildContainer(): ContainerInterface
     {
-        return ContainerBuilder::getContainer('front', _PS_MODE_DEV_);
+        if (!defined('FRONT_LEGACY_CONTEXT') || FRONT_LEGACY_CONTEXT) {
+            return ContainerBuilder::getContainer('front', _PS_MODE_DEV_);
+        }
+
+        return SymfonyContainer::getInstance();
     }
 
     /**
@@ -2112,18 +2129,24 @@ class FrontControllerCore extends Controller
     protected function sanitizeUrl(string $url): string
     {
         $params = [];
-        $url_details = parse_url($url);
 
+        // Extract all parts of the URL
+        $url_details = parse_url($url);
         if (!empty($url_details['query'])) {
             parse_str($url_details['query'], $query);
             $params = $this->sanitizeQueryOutput($query);
         }
 
-        $excluded_key = ['isolang', 'id_lang', 'controller', 'fc', 'id_product', 'id_category', 'id_manufacturer', 'id_supplier', 'id_cms'];
-        $excluded_key = array_merge($excluded_key, $this->redirectionExtraExcludedKeys);
-        foreach ($_GET as $key => $value) {
+        // Build a list of parameters we won't be sanitizing
+        $excludedKeys = array_merge(
+            ['isolang', 'id_lang', 'controller', 'fc', 'id_product', 'id_category', 'id_manufacturer', 'id_supplier', 'id_cms'],
+            $this->redirectionExtraExcludedKeys
+        );
+
+        // Go through each parameter we got from dispatcher and sanitize it
+        foreach ($params as $key => $value) {
             if (
-                in_array($key, $excluded_key)
+                in_array($key, $excludedKeys)
                 || !Validate::isUrl($key)
                 || !$this->validateInputAsUrl($value)
             ) {
@@ -2133,6 +2156,7 @@ class FrontControllerCore extends Controller
             $params[Tools::safeOutput($key)] = is_array($value) ? array_walk_recursive($value, 'Tools::safeOutput') : Tools::safeOutput($value);
         }
 
+        // Build back the query
         $str_params = http_build_query($params, '', '&');
         $sanitizedUrl = preg_replace('/^([^?]*)?.*$/', '$1', $url) . (!empty($str_params) ? '?' . $str_params : '');
 

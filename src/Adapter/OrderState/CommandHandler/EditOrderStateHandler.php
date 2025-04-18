@@ -90,8 +90,8 @@ final class EditOrderStateHandler extends AbstractOrderStateHandler implements E
     {
         // Check that we have templates for all languages when send_email is on
         $haveMissingTemplates = (
-            !is_array($orderState->template) ||
-            count($orderState->template) != count(array_filter($orderState->template, function ($v) {
+            !is_array($orderState->template)
+            || count($orderState->template) != count(array_filter($orderState->template, function ($v) {
                 return (bool) strlen($v);
             }))
         );
@@ -127,6 +127,10 @@ final class EditOrderStateHandler extends AbstractOrderStateHandler implements E
 
         if (null !== $command->isSendEmailEnabled()) {
             $orderState->send_email = $command->isSendEmailEnabled();
+
+            if ($orderState->send_email && null !== $command->getTemplate()) {
+                $orderState->template = $command->getTemplate();
+            }
         }
 
         if (null !== $command->isPdfInvoice()) {
@@ -147,10 +151,6 @@ final class EditOrderStateHandler extends AbstractOrderStateHandler implements E
 
         if (null !== $command->isDelivery()) {
             $orderState->delivery = $command->isDelivery();
-        }
-
-        if (null !== $command->getTemplate()) {
-            $orderState->template = $command->getTemplate();
         }
     }
 }

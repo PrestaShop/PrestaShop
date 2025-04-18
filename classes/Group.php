@@ -330,7 +330,7 @@ class GroupCore extends ObjectModel
             'DELETE FROM `' . _DB_PREFIX_ . 'module_group`
             WHERE `id_group` = ' . (int) $id_group . '
             AND `id_shop` IN ('
-              . (implode(',', array_map('intval', $shops)))
+              . implode(',', array_map('intval', $shops))
             . ')'
         );
 

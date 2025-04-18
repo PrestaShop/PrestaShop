@@ -29,13 +29,13 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Module\CommandHandler;
 
 use Module;
-use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkToggleModuleStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\CommandHandler\BulkToggleModuleStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotInstalledException;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
+use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use Psr\Log\LoggerInterface;
-use Validate;
 
 /**
  * Bulk toggles Module status
@@ -44,31 +44,14 @@ use Validate;
 class BulkToggleModuleStatusHandler implements BulkToggleModuleStatusHandlerInterface
 {
     /**
-     * @return ModuleManager
-     */
-    protected $moduleManager;
-    /**
-     * @return LoggerInterface
-     */
-    protected $logger;
-    /**
-     * @return CacheClearerInterface
-     */
-    protected $cacheClearer;
-
-    /**
      * @param ModuleManager $moduleManager
      * @param LoggerInterface $logger
-     * @param CacheClearerInterface $cacheClearer
      */
     public function __construct(
-        ModuleManager $moduleManager,
-        LoggerInterface $logger,
-        CacheClearerInterface $cacheClearer
+        private readonly ModuleManager $moduleManager,
+        private readonly ModuleRepository $moduleRepository,
+        private readonly LoggerInterface $logger,
     ) {
-        $this->moduleManager = $moduleManager;
-        $this->logger = $logger;
-        $this->cacheClearer = $cacheClearer;
     }
 
     /**
@@ -76,11 +59,23 @@ class BulkToggleModuleStatusHandler implements BulkToggleModuleStatusHandlerInte
      */
     public function handle(BulkToggleModuleStatusCommand $command): void
     {
+        $modulesToUpdate = [];
+        // First loop checks that the provided modules exist and don't need some update
+        // If one module is not found the whole bulk is cancelled because an exception is thrown
         foreach ($command->getModules() as $moduleName) {
-            if ($this->isDisablingAlreadyDisabledModule($command->getExpectedStatus(), $moduleName) || !Validate::isLoadedObject(Module::getInstanceByName($moduleName))) {
-                continue;
+            $module = $this->moduleRepository->getPresentModule($moduleName);
+            if (!$module->isInstalled()) {
+                throw new ModuleNotInstalledException('Cannot toggle status for module ' . $moduleName . ' since it is not installed');
             }
 
+            if ($this->isDisablingAlreadyDisabledModule($command->getExpectedStatus(), $moduleName)) {
+                continue;
+            }
+            $modulesToUpdate[] = $moduleName;
+        }
+
+        // Now we can perform the toggle
+        foreach ($modulesToUpdate as $moduleName) {
             if ($command->getExpectedStatus()) {
                 if ($this->moduleManager->enable($moduleName)) {
                     $this->logger->warning(
@@ -101,13 +96,6 @@ class BulkToggleModuleStatusHandler implements BulkToggleModuleStatusHandlerInte
                 }
             }
         }
-
-        // Clear cache
-        // Why ?
-        //    It seems that in prod environment the kernel caches the list of activated modules.
-        //    So after this loop we clear the caches (especially Symfony one but it's safer to clear them all).
-        //    If you don't the modification of the status will be ignored even if the state of the DB has changed.
-        $this->cacheClearer->clear();
     }
 
     private function isDisablingAlreadyDisabledModule(bool $expectedStatus, string $moduleName): bool

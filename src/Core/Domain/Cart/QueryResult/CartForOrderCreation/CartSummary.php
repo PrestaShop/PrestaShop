@@ -32,51 +32,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreatio
 class CartSummary
 {
     /**
-     * @var string
-     */
-    private $totalProductsPrice;
-
-    /**
-     * @var string
-     */
-    private $totalDiscount;
-
-    /**
-     * @var string
-     */
-    private $totalShippingPrice;
-
-    /**
-     * @var string
-     */
-    private $totalShippingWithoutTaxes;
-
-    /**
-     * @var string
-     */
-    private $totalTaxes;
-
-    /**
-     * @var string
-     */
-    private $totalPriceWithTaxes;
-
-    /**
-     * @var string
-     */
-    private $totalPriceWithoutTaxes;
-
-    /**
-     * @var string
-     */
-    private $orderMessage;
-
-    /**
-     * @var string
-     */
-    private $processOrderLink;
-
-    /**
      * @param string $totalProductsPrice
      * @param string $totalDiscount
      * @param string $totalShippingPrice
@@ -88,25 +43,16 @@ class CartSummary
      * @param string $processOrderLink
      */
     public function __construct(
-        string $totalProductsPrice,
-        string $totalDiscount,
-        string $totalShippingPrice,
-        string $totalShippingWithoutTaxes,
-        string $totalTaxes,
-        string $totalPriceWithTaxes,
-        string $totalPriceWithoutTaxes,
-        string $orderMessage,
-        string $processOrderLink
+        private string $totalProductsPrice,
+        private string $totalDiscount,
+        private string $totalShippingPrice,
+        private string $totalShippingWithoutTaxes,
+        private string $totalTaxes,
+        private string $totalPriceWithTaxes,
+        private string $totalPriceWithoutTaxes,
+        private string $orderMessage,
+        private string $processOrderLink,
     ) {
-        $this->totalProductsPrice = $totalProductsPrice;
-        $this->totalDiscount = $totalDiscount;
-        $this->totalShippingPrice = $totalShippingPrice;
-        $this->totalShippingWithoutTaxes = $totalShippingWithoutTaxes;
-        $this->totalTaxes = $totalTaxes;
-        $this->totalPriceWithTaxes = $totalPriceWithTaxes;
-        $this->totalPriceWithoutTaxes = $totalPriceWithoutTaxes;
-        $this->processOrderLink = $processOrderLink;
-        $this->orderMessage = $orderMessage;
     }
 
     /**
@@ -117,65 +63,41 @@ class CartSummary
         return $this->totalProductsPrice;
     }
 
-    /**
-     * @return string
-     */
     public function getTotalDiscount(): string
     {
         return $this->totalDiscount;
     }
 
-    /**
-     * @return string
-     */
     public function getTotalShippingPrice(): string
     {
         return $this->totalShippingPrice;
     }
 
-    /**
-     * @return string
-     */
     public function getTotalShippingWithoutTaxes(): string
     {
         return $this->totalShippingWithoutTaxes;
     }
 
-    /**
-     * @return string
-     */
     public function getTotalTaxes(): string
     {
         return $this->totalTaxes;
     }
 
-    /**
-     * @return string
-     */
     public function getTotalPriceWithTaxes(): string
     {
         return $this->totalPriceWithTaxes;
     }
 
-    /**
-     * @return string
-     */
     public function getTotalPriceWithoutTaxes(): string
     {
         return $this->totalPriceWithoutTaxes;
     }
 
-    /**
-     * @return string
-     */
     public function getProcessOrderLink(): string
     {
         return $this->processOrderLink;
     }
 
-    /**
-     * @return string
-     */
     public function getOrderMessage(): string
     {
         return $this->orderMessage;

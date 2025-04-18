@@ -62,7 +62,7 @@ class DoctrineQueryParserTest extends TestCase
     }
 
     /**
-     * @throws \PrestaShop\PrestaShop\Core\Grid\Exception\UnsupportedParameterException
+     * @throws UnsupportedParameterException
      */
     public function testParseWithParametersMustThrowAnException()
     {
@@ -94,7 +94,7 @@ class DoctrineQueryParserTest extends TestCase
     }
 
     /**
-     * @throws \PrestaShop\PrestaShop\Core\Grid\Exception\UnsupportedParameterException
+     * @throws UnsupportedParameterException
      */
     public function testParseWithArrayParametersMustThrowAnException()
     {

@@ -273,84 +273,6 @@ class SupplyOrderDetailCore extends ObjectModel
     }
 
     /**
-     * @see ObjectModel::validateController()
-     *
-     * @param bool $htmlentities Optional
-     *
-     * @return array Errors, if any..
-     */
-    public function validateController($htmlentities = true)
-    {
-        $errors = [];
-
-        /* required fields */
-        $fields_required = $this->fieldsRequired;
-
-        $objectName = $this->getObjectName();
-        if (isset(self::$fieldsRequiredDatabase[$objectName])) {
-            $fields_required = array_merge(
-                $this->fieldsRequired,
-                self::$fieldsRequiredDatabase[$objectName]
-            );
-        }
-
-        foreach ($fields_required as $field) {
-            if (($value = $this->{$field}) == false && (string) $value != '0') {
-                if (!$this->id || $field != 'passwd') {
-                    $errors[] = $this->trans(
-                        '%s is required.',
-                        [
-                            '<b>' . SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities) . '</b>',
-                        ],
-                        'Shop.Notifications.Error'
-                    );
-                }
-            }
-        }
-
-        /* Checks maximum fields sizes */
-        foreach ($this->fieldsSize as $field => $max_length) {
-            $value = $this->{$field};
-            if ($value && Tools::strlen($value) > $max_length) {
-                $errors[] = $this->trans(
-                    'The %1$s field is too long (%2$d chars max).',
-                    [SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities), $max_length],
-                    'Shop.Notifications.Error'
-                );
-            }
-        }
-
-        /* Checks fields validity */
-        foreach ($this->fieldsValidate as $field => $function) {
-            if ($value = $this->{$field}) {
-                if (!Validate::$function($value)) {
-                    $errors[] = '<b>' . SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities) . '</b> ' . $this->trans('is invalid.', [], 'Shop.Notifications.Error');
-                } elseif ($field == 'passwd') {
-                    if ($value = Tools::getValue($field)) {
-                        $this->{$field} = Tools::hash($value);
-                    } else {
-                        $this->{$field} = $value;
-                    }
-                }
-            }
-        }
-
-        if ($this->quantity_expected <= 0) {
-            $errors[] = '<b>' . SupplyOrderDetail::displayFieldName('quantity_expected', get_class($this)) . '</b> ' . $this->trans('is invalid.', [], 'Shop.Notifications.Error');
-        }
-
-        if ($this->tax_rate < 0 || $this->tax_rate > 100) {
-            $errors[] = '<b>' . SupplyOrderDetail::displayFieldName('tax_rate', get_class($this)) . '</b> ' . $this->trans('is invalid.', [], 'Shop.Notifications.Error');
-        }
-
-        if ($this->discount_rate < 0 || $this->discount_rate > 100) {
-            $errors[] = '<b>' . SupplyOrderDetail::displayFieldName('discount_rate', get_class($this)) . '</b> ' . $this->trans('is invalid.', [], 'Shop.Notifications.Error');
-        }
-
-        return $errors;
-    }
-
-    /**
      * @see ObjectModel::hydrate()
      */
     public function hydrate(array $data, $id_lang = null)
@@ -362,8 +284,8 @@ class SupplyOrderDetailCore extends ObjectModel
         foreach ($data as $key => $value) {
             if (array_key_exists($key, get_object_vars($this))) {
                 // formats prices and floats
-                if ($this->def['fields'][$key]['validate'] == 'isFloat' ||
-                    $this->def['fields'][$key]['validate'] == 'isPrice') {
+                if ($this->def['fields'][$key]['validate'] == 'isFloat'
+                    || $this->def['fields'][$key]['validate'] == 'isPrice') {
                     $value = Tools::ps_round($value, 6);
                 }
                 $this->$key = $value;

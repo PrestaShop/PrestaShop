@@ -38,12 +38,14 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinition;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Factory\FeatureValueGridFactory;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
+use PrestaShopBundle\Form\Admin\Type\ReorderPositionsButtonType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -94,49 +96,62 @@ class FeatureValueGridDefinitionFactory extends AbstractFilterableGridDefinition
     {
         return (new ColumnCollection())
             ->add((new BulkActionColumn('bulk'))
-            ->setOptions([
-                'bulk_field' => 'id_feature_value',
-            ])
+                ->setOptions([
+                    'bulk_field' => 'id_feature_value',
+                ])
             )
             ->add((new DataColumn('id_feature_value'))
-            ->setName($this->trans('ID', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'id_feature_value',
-            ])
+                ->setName($this->trans('ID', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'id_feature_value',
+                ])
             )
             ->add((new DataColumn('value'))
-            ->setName($this->trans('Value', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'value',
-            ])
+                ->setName($this->trans('Value', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'value',
+                ])
+            )
+            ->add((new PositionColumn('position'))
+                ->setName($this->trans('Position', [], 'Admin.Global'))
+                ->setOptions([
+                    'id_field' => 'id_feature_value',
+                    'position_field' => 'position',
+                    'update_method' => 'POST',
+                    'update_route' => 'admin_feature_values_update_position',
+                    'record_route_params' => [
+                        'id_feature' => 'featureId',
+                    ],
+                ])
             )
             ->add((new ActionColumn('actions'))
-            ->setName($this->trans('Actions', [], 'Admin.Global'))
-            ->setOptions([
-                'actions' => (new RowActionCollection())
-                    ->add(
-                        (new LinkRowAction('edit'))
-                            ->setName($this->trans('Edit', [], 'Admin.Actions'))
-                            ->setIcon('edit')
-                            ->setOptions([
-                                'route' => 'admin_feature_values_edit',
-                                'route_param_name' => 'featureValueId',
-                                'route_param_field' => 'id_feature_value',
-                                'extra_route_params' => [
-                                    'featureId' => 'id_feature',
-                                ],
-                            ])
-                    )
-                    ->add(
-                        $this->buildDeleteAction(
-                            'admin_feature_values_delete',
-                            'featureValueId',
-                            'id_feature_value',
-                            Request::METHOD_DELETE,
-                            ['featureId' => 'id_feature'],
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
+                ->setOptions([
+                    'actions' => (new RowActionCollection())
+                        ->add(
+                            (new LinkRowAction('edit'))
+                                ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                                ->setIcon('edit')
+                                ->setOptions([
+                                    'route' => 'admin_feature_values_edit',
+                                    'route_param_name' => 'featureValueId',
+                                    'route_param_field' => 'id_feature_value',
+                                    'extra_route_params' => [
+                                        'featureId' => 'id_feature',
+                                    ],
+                                    'clickable_row' => true,
+                                ])
                         )
-                    ),
-            ])
+                        ->add(
+                            $this->buildDeleteAction(
+                                'admin_feature_values_delete',
+                                'featureValueId',
+                                'id_feature_value',
+                                Request::METHOD_DELETE,
+                                ['featureId' => 'id_feature'],
+                            )
+                        ),
+                ])
             )
         ;
     }
@@ -158,22 +173,25 @@ class FeatureValueGridDefinitionFactory extends AbstractFilterableGridDefinition
         // some filters (which depends on request filters) are added inside FeatureValueGridFactory
         return (new FilterCollection())
             ->add((new Filter('id_feature_value', NumberType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'attr' => [
-                    'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
-                ],
-            ])
-            ->setAssociatedColumn('id_feature_value')
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                    ],
+                ])
+                ->setAssociatedColumn('id_feature_value')
             )
             ->add((new Filter('value', TextType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'attr' => [
-                    'placeholder' => $this->trans('Search value', [], 'Admin.Actions'),
-                ],
-            ])
-            ->setAssociatedColumn('value')
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search value', [], 'Admin.Actions'),
+                    ],
+                ])
+                ->setAssociatedColumn('value')
+            )
+            ->add((new Filter('position', ReorderPositionsButtonType::class))
+                ->setAssociatedColumn('position')
             );
     }
 

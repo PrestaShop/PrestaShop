@@ -1,43 +1,42 @@
-// Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
-import mailHelper from '@utils/mailHelper';
 import testContext from '@utils/testContext';
-import loginCommon from '@commonTests/BO/loginBO';
+import {expect} from 'chai';
 
 // Import commonTests
 import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 import {createAddressTest} from '@commonTests/BO/customers/address';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import {createAccountTest} from '@commonTests/FO/account';
-import {createOrderByCustomerTest} from '@commonTests/FO/order';
+import {createAccountTest} from '@commonTests/FO/classic/account';
+import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import pages
-// Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
-import {myAccountPage} from '@pages/FO/myAccount';
-import creditSlipsPage from '@pages/FO/myAccount/creditSlips';
-import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
-import ordersPage from '@pages/BO/orders';
-import viewOrderProductsBlockPage from '@pages/BO/orders/view/productsBlock';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
-import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
-import {homePage} from '@pages/FO/home';
-import {loginPage} from '@pages/FO/login';
+import {creditSlipPage} from '@pages/FO/classic/myAccount/creditSlips';
 
-// Import data
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
-import Products from '@data/demo/products';
-import AddressData from '@data/faker/address';
-import CustomerData from '@data/faker/customer';
-import OrderData from '@data/faker/order';
-import type MailDevEmail from '@data/types/maildevEmail';
-
-import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
-import type MailDev from 'maildev';
+import {
+  boDashboardPage,
+  boLoginPage,
+  boOrdersPage,
+  boOrdersViewBasePage,
+  boOrdersViewBlockProductsPage,
+  boOrdersViewBlockTabListPage,
+  type BrowserContext,
+  dataOrderStatuses,
+  dataPaymentMethods,
+  dataProducts,
+  FakerAddress,
+  FakerCustomer,
+  FakerOrder,
+  foClassicHomePage,
+  foClassicLoginPage,
+  foClassicMyAccountPage,
+  foClassicMyOrderDetailsPage,
+  type MailDev,
+  type MailDevEmail,
+  type Page,
+  utilsFile,
+  utilsMail,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_userAccount_creditSlips_consultCreditSlip';
 
@@ -63,20 +62,20 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
   let newMail: MailDevEmail;
   let mailListener: MailDev;
 
-  const customerData: CustomerData = new CustomerData();
-  const addressData: AddressData = new AddressData({
+  const customerData: FakerCustomer = new FakerCustomer();
+  const addressData: FakerAddress = new FakerAddress({
     email: customerData.email,
     country: 'France',
   });
-  const orderData: OrderData = new OrderData({
+  const orderData: FakerOrder = new FakerOrder({
     customer: customerData,
     products: [
       {
-        product: Products.demo_1,
+        product: dataProducts.demo_1,
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // Pre-condition: Create new account on FO
@@ -90,12 +89,12 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
     // Start listening to maildev server
-    mailListener = mailHelper.createMailListener();
-    mailHelper.startListener(mailListener);
+    mailListener = utilsMail.createMailListener();
+    utilsMail.startListener(mailListener);
 
     // Handle every new email
     mailListener.on('new', (email: MailDevEmail) => {
@@ -104,11 +103,11 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
   });
 
   after(async () => {
-    await files.deleteFile(filePath);
-    await helper.closeBrowserContext(browserContext);
+    await utilsFile.deleteFile(filePath);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
     // Stop listening to maildev server
-    mailHelper.stopListener(mailListener);
+    utilsMail.stopListener(mailListener);
   });
 
   describe('Consult Credit slip list in FO', async () => {
@@ -116,140 +115,146 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
       it('should go to FO home page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-        await homePage.goTo(page, global.FO.URL);
+        await foClassicHomePage.goTo(page, global.FO.URL);
 
-        const result = await homePage.isHomePage(page);
-        await expect(result).to.be.true;
+        const result = await foClassicHomePage.isHomePage(page);
+        expect(result).to.eq(true);
       });
 
       it('should go to login page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPage', baseContext);
 
-        await homePage.goToLoginPage(page);
+        await foClassicHomePage.goToLoginPage(page);
 
-        const pageTitle = await loginPage.getPageTitle(page);
-        await expect(pageTitle).to.equal(loginPage.pageTitle);
+        const pageTitle = await foClassicLoginPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foClassicLoginPage.pageTitle);
       });
 
       it('should login', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'loginFO', baseContext);
 
-        await loginPage.customerLogin(page, customerData);
+        await foClassicLoginPage.customerLogin(page, customerData);
 
-        const isCustomerConnected = await loginPage.isCustomerConnected(page);
-        await expect(isCustomerConnected, 'Customer is not connected!').to.be.true;
+        const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
+        expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
       });
 
       it('should go to my account page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccountPage1', baseContext);
 
-        await homePage.goToMyAccountPage(page);
+        await foClassicHomePage.goToMyAccountPage(page);
 
-        const pageTitle = await myAccountPage.getPageTitle(page);
-        await expect(pageTitle).to.equal(myAccountPage.pageTitle);
+        const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);
       });
 
       it('should go credit slips page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToCreditSlipsPage1', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goTocreditSlipPage1', baseContext);
 
-        await myAccountPage.goToCreditSlipsPage(page);
+        await foClassicMyAccountPage.goToCreditSlipsPage(page);
 
-        const pageTitle = await creditSlipsPage.getPageTitle(page);
-        await expect(pageTitle).to.equal(creditSlipsPage.pageTitle);
+        const pageTitle = await creditSlipPage.getPageTitle(page);
+        expect(pageTitle).to.equal(creditSlipPage.pageTitle);
       });
 
       it('should check there no credit slips', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkNoCreditSlips', baseContext);
 
-        const alertInfoMessage = await creditSlipsPage.getAlertInfoMessage(page);
-        await expect(alertInfoMessage).to.equal(creditSlipsPage.noCreditSlipsInfoMessage);
+        const alertInfoMessage = await creditSlipPage.getAlertInfoMessage(page);
+        expect(alertInfoMessage).to.equal(creditSlipPage.noCreditSlipsInfoMessage);
       });
     });
 
     describe('Create a partial refund from the BO', async () => {
       it('should login in BO', async function () {
-        await loginCommon.loginBO(this, page);
+        await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+        await boLoginPage.goTo(page, global.BO.URL);
+        await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+        const pageTitle = await boDashboardPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boDashboardPage.pageTitle);
       });
 
       it('should go to \'Orders > Orders\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.ordersParentLink,
-          dashboardPage.ordersLink,
+          boDashboardPage.ordersParentLink,
+          boDashboardPage.ordersLink,
         );
 
-        const pageTitle = await ordersPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(ordersPage.pageTitle);
+        const pageTitle = await boOrdersPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersPage.pageTitle);
       });
 
       it('should go to the first order page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrderPage', baseContext);
 
         // View order
-        await ordersPage.goToOrder(page, 1);
+        await boOrdersPage.goToOrder(page, 1);
 
-        const pageTitle = await viewOrderBasePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
+        const pageTitle = await boOrdersViewBasePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersViewBasePage.pageTitle);
       });
 
-      it(`should change the order status to '${OrderStatuses.paymentAccepted.name}' and check it`, async function () {
+      it(`should change the order status to '${dataOrderStatuses.paymentAccepted.name}' and check it`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-        const result = await viewOrderBasePage.modifyOrderStatus(page, OrderStatuses.paymentAccepted.name);
-        await expect(result).to.equal(OrderStatuses.paymentAccepted.name);
+        const result = await boOrdersViewBasePage.modifyOrderStatus(page, dataOrderStatuses.paymentAccepted.name);
+        expect(result).to.equal(dataOrderStatuses.paymentAccepted.name);
       });
 
       it('should check if the button \'Partial Refund\' is visible', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkPartialRefundButton', baseContext);
 
-        const result = await viewOrderBasePage.isPartialRefundButtonVisible(page);
-        await expect(result).to.be.true;
+        const result = await boOrdersViewBasePage.isPartialRefundButtonVisible(page);
+        expect(result).to.eq(true);
       });
 
       it('should create \'Partial refund\'', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'createPartialRefund', baseContext);
 
-        await viewOrderBasePage.clickOnPartialRefund(page);
+        await boOrdersViewBasePage.clickOnPartialRefund(page);
 
-        const textMessage = await viewOrderProductsBlockPage.addPartialRefundProduct(page, 1, 1);
-        await expect(textMessage).to.contains(viewOrderProductsBlockPage.partialRefundValidationMessage);
+        const textMessage = await boOrdersViewBlockProductsPage.addPartialRefundProduct(page, 1, 1);
+        expect(textMessage).to.contains(boOrdersViewBlockProductsPage.partialRefundValidationMessage);
       });
 
       it('should check if the mail is in mailbox', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkIfMailIsInMailbox', baseContext);
 
-        await expect(newMail.subject).to.eq(`[${global.INSTALL.SHOP_NAME}] New credit slip regarding your order`);
-        await expect(newMail.text).to.contains('A credit slip has been generated in your name for order with the reference');
+        expect(newMail.subject).to.eq(`[${global.INSTALL.SHOP_NAME}] New credit slip regarding your order`);
+        expect(newMail.text).to.contains('A credit slip has been generated in your name for order with the reference');
       });
 
       it('should check if \'Credit slip\' document is created', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkCreditSlipDocument', baseContext);
 
         // Get document name
-        const documentType = await orderPageTabListBlock.getDocumentType(page, 3);
-        await expect(documentType).to.be.equal('Credit slip');
+        const documentType = await boOrdersViewBlockTabListPage.getDocumentType(page, 3);
+        expect(documentType).to.be.equal('Credit slip');
       });
 
       it('should get the order reference', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getOrderReference', baseContext);
 
         // Get document name
-        orderReference = await viewOrderBasePage.getOrderReference(page);
-        await expect(orderReference).is.not.equal('');
+        orderReference = await boOrdersViewBasePage.getOrderReference(page);
+        expect(orderReference).is.not.equal('');
       });
 
       it('should get the identifier and the date issued of the credit slip', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getIdentifierDateIssued', baseContext);
 
         // Get Credit Slip ID
-        creditSlipID = await orderPageTabListBlock.getFileName(page, 3);
-        await expect(creditSlipID).is.not.equal('');
+        creditSlipID = await boOrdersViewBlockTabListPage.getFileName(page, 3);
+        expect(creditSlipID).is.not.equal('');
 
         // Get Date Issued
-        dateIssued = await orderPageTabListBlock.getDocumentDate(page, 3);
-        await expect(dateIssued).is.not.equal('');
+        dateIssued = await boOrdersViewBlockTabListPage.getDocumentDate(page, 3);
+        expect(dateIssued).is.not.equal('');
       });
     });
 
@@ -258,139 +263,139 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
         await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop_1', baseContext);
 
         // View my shop and init pages
-        page = await viewOrderBasePage.viewMyShop(page);
-        await homePage.changeLanguage(page, 'en');
+        page = await boOrdersViewBasePage.viewMyShop(page);
+        await foClassicHomePage.changeLanguage(page, 'en');
 
-        const isHomePage = await homePage.isHomePage(page);
-        await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+        const isHomePage = await foClassicHomePage.isHomePage(page);
+        expect(isHomePage, 'Fail to open FO home page').to.eq(true);
       });
 
       it('should go to my account page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccountPage2', baseContext);
 
-        await homePage.goToMyAccountPage(page);
+        await foClassicHomePage.goToMyAccountPage(page);
 
-        const pageTitle = await myAccountPage.getPageTitle(page);
-        await expect(pageTitle).to.equal(myAccountPage.pageTitle);
+        const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);
       });
 
       it('should go credit slips page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToCreditSlipsPage2', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goTocreditSlipPage2', baseContext);
 
-        await myAccountPage.goToCreditSlipsPage(page);
+        await foClassicMyAccountPage.goToCreditSlipsPage(page);
 
-        const pageTitle = await creditSlipsPage.getPageTitle(page);
-        await expect(pageTitle).to.equal(creditSlipsPage.pageTitle);
+        const pageTitle = await creditSlipPage.getPageTitle(page);
+        expect(pageTitle).to.equal(creditSlipPage.pageTitle);
       });
 
       it('should check the number of credit slips', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkNumberCreditSlips', baseContext);
 
-        const numberCreditSlips = await creditSlipsPage.getNumberOfCreditSlips(page);
-        await expect(numberCreditSlips).to.equal(1);
+        const numberCreditSlips = await creditSlipPage.getNumberOfCreditSlips(page);
+        expect(numberCreditSlips).to.equal(1);
       });
 
       it('should check that the \'Order reference, Credit Slip ID, Date Issued\' are correct', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkCreditSlipInfo', baseContext);
 
-        const creditSlipOrderReference = await creditSlipsPage.getOrderReference(page, 1);
-        await expect(creditSlipOrderReference).to.equal(orderReference);
+        const creditSlipOrderReference = await creditSlipPage.getOrderReference(page, 1);
+        expect(creditSlipOrderReference).to.equal(orderReference);
 
-        const creditSlipOrderIdentifier = await creditSlipsPage.getCreditSlipID(page, 1);
-        await expect(parseInt(creditSlipOrderIdentifier.replace('#', ''), 10)).to.equal(parseInt(creditSlipID, 10));
+        const creditSlipOrderIdentifier = await creditSlipPage.getCreditSlipID(page, 1);
+        expect(parseInt(creditSlipOrderIdentifier.replace('#', ''), 10)).to.equal(parseInt(creditSlipID, 10));
 
-        const creditSlipDateIssued = await creditSlipsPage.getDateIssued(page, 1);
-        await expect(creditSlipDateIssued).to.equal(dateIssued);
+        const creditSlipDateIssued = await creditSlipPage.getDateIssued(page, 1);
+        expect(creditSlipDateIssued).to.equal(dateIssued);
       });
 
       it('should click on the PDF Icon on the "View credit slip" column', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnViewCreditSlip', baseContext);
 
-        filePath = await creditSlipsPage.downloadCreditSlip(page, 1);
+        filePath = await creditSlipPage.downloadCreditSlip(page, 1);
 
-        const found = await files.doesFileExist(filePath);
-        await expect(found, 'PDF file was not downloaded').to.be.true;
+        const found = await utilsFile.doesFileExist(filePath);
+        expect(found, 'PDF file was not downloaded').to.eq(true);
       });
 
       it('should check credit slip pdf file', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkCreditSlip', baseContext);
 
         // Check Name in pdf
-        const isCreditSlip = await files.isTextInPDF(filePath, 'CREDIT SLIP');
-        await expect(isCreditSlip, 'Name of the PDF \'CREDIT SLIP\' does not exist in credit slip')
-          .to.be.true;
+        const isCreditSlip = await utilsFile.isTextInPDF(filePath, 'CREDIT SLIP');
+        expect(isCreditSlip, 'Name of the PDF \'CREDIT SLIP\' does not exist in credit slip')
+          .to.eq(true);
 
         // Check Credit Slip ID in pdf
-        const creditSlipIDExist = await files.isTextInPDF(filePath, creditSlipID);
-        await expect(creditSlipIDExist, `Credit Slip ID ${creditSlipID}' does not exist in credit slip`)
-          .to.be.true;
+        const creditSlipIDExist = await utilsFile.isTextInPDF(filePath, creditSlipID);
+        expect(creditSlipIDExist, `Credit Slip ID ${creditSlipID}' does not exist in credit slip`)
+          .to.eq(true);
 
         // Check DateIssued in pdf
-        const dateIssuedExist = await files.isTextInPDF(filePath, dateIssued);
-        await expect(dateIssuedExist, `Date Issued '${dateIssued}' does not exist in credit slip`)
-          .to.be.true;
+        const dateIssuedExist = await utilsFile.isTextInPDF(filePath, dateIssued);
+        expect(dateIssuedExist, `Date Issued '${dateIssued}' does not exist in credit slip`)
+          .to.eq(true);
 
         // Check Order Reference in pdf
-        const orderReferenceExist = await files.isTextInPDF(filePath, orderReference);
-        await expect(orderReferenceExist, `Order Reference '${orderReference}' does not exist in credit slip`)
-          .to.be.true;
+        const orderReferenceExist = await utilsFile.isTextInPDF(filePath, orderReference);
+        expect(orderReferenceExist, `Order Reference '${orderReference}' does not exist in credit slip`)
+          .to.eq(true);
 
         // Check payment method in pdf
-        const paymentMethodExist = await files.isTextInPDF(filePath, PaymentMethods.wirePayment.displayName);
-        await expect(
+        const paymentMethodExist = await utilsFile.isTextInPDF(filePath, dataPaymentMethods.wirePayment.displayName);
+        expect(
           paymentMethodExist,
-          `Payment Method '${PaymentMethods.wirePayment.displayName}' does not exist in credit slip`,
-        ).to.be.true;
+          `Payment Method '${dataPaymentMethods.wirePayment.displayName}' does not exist in credit slip`,
+        ).to.eq(true);
       });
 
       it('should click on the order Reference link', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOrderReferenceLink', baseContext);
 
-        await creditSlipsPage.clickOrderReference(page, 1);
+        await creditSlipPage.clickOrderReference(page, 1);
 
-        const pageTitle = await orderDetailsPage.getPageTitle(page);
-        await expect(pageTitle).to.equal(orderDetailsPage.pageTitle);
+        const pageTitle = await foClassicMyOrderDetailsPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foClassicMyOrderDetailsPage.pageTitle);
       });
 
       it('should go to credit slips page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToCreditSlipsPage3', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goTocreditSlipPage3', baseContext);
 
-        await homePage.goToMyAccountPage(page);
+        await foClassicHomePage.goToMyAccountPage(page);
 
-        const myAccountPageTitle = await myAccountPage.getPageTitle(page);
-        await expect(myAccountPageTitle).to.equal(myAccountPage.pageTitle);
+        const myAccountPageTitle = await foClassicMyAccountPage.getPageTitle(page);
+        expect(myAccountPageTitle).to.equal(foClassicMyAccountPage.pageTitle);
 
-        await myAccountPage.goToCreditSlipsPage(page);
+        await foClassicMyAccountPage.goToCreditSlipsPage(page);
 
-        const creditSlipsPageTitle = await creditSlipsPage.getPageTitle(page);
-        await expect(creditSlipsPageTitle).to.equal(creditSlipsPage.pageTitle);
+        const creditSlipPageTitle = await creditSlipPage.getPageTitle(page);
+        expect(creditSlipPageTitle).to.equal(creditSlipPage.pageTitle);
       });
 
       it('should click on the "Back to your account" link', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickBackToYourAccountLink', baseContext);
 
-        await creditSlipsPage.clickBackToYourAccountLink(page);
+        await creditSlipPage.clickBackToYourAccountLink(page);
 
-        const myAccountPageTitle = await myAccountPage.getPageTitle(page);
-        await expect(myAccountPageTitle).to.equal(myAccountPage.pageTitle);
+        const myAccountPageTitle = await foClassicMyAccountPage.getPageTitle(page);
+        expect(myAccountPageTitle).to.equal(foClassicMyAccountPage.pageTitle);
       });
 
       it('should go to credit slips page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToCreditSlipsPage4', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goTocreditSlipPage4', baseContext);
 
-        await myAccountPage.goToCreditSlipsPage(page);
+        await foClassicMyAccountPage.goToCreditSlipsPage(page);
 
-        const creditSlipsPageTitle = await creditSlipsPage.getPageTitle(page);
-        await expect(creditSlipsPageTitle).to.equal(creditSlipsPage.pageTitle);
+        const creditSlipPageTitle = await creditSlipPage.getPageTitle(page);
+        expect(creditSlipPageTitle).to.equal(creditSlipPage.pageTitle);
       });
 
       it('should click on the "Home" link', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickHomeLink', baseContext);
 
-        await creditSlipsPage.clickHomeLink(page);
+        await creditSlipPage.clickHomeLink(page);
 
-        const homePageTitle = await homePage.getPageTitle(page);
-        await expect(homePageTitle).to.equal(homePage.pageTitle);
+        const homePageTitle = await foClassicHomePage.getPageTitle(page);
+        expect(homePageTitle).to.equal(foClassicHomePage.pageTitle);
       });
     });
   });

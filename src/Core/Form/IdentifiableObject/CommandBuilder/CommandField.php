@@ -58,7 +58,7 @@ class CommandField
             if (!$dataField instanceof DataField) {
                 throw new InvalidArgumentException(sprintf(
                     'Invalid data field type "%s", expected "%s"',
-                    is_object($dataField) ? $dataField::class : gettype($dataField),
+                    get_debug_type($dataField),
                     DataField::class
                 ));
             }

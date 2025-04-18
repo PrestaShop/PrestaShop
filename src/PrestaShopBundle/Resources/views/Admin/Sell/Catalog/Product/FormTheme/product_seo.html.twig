@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,12 +21,19 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
 {# This form theme is the root one for all the product form so we define here which base theme is used for all the children #}
 {% use '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
 
 {% block _product_seo_link_rewrite_widget %}
   {{ form_widget(form) }}
-  <button type="button" class="reset-link-rewrite btn btn-outline-secondary">{{ 'Reset URL'|trans({}, 'Admin.Catalog.Feature') }}</button>
+  {% set firstChildAttr = form.children|first.vars.attr %}
+  <button
+    type="button"
+    class="reset-link-rewrite btn btn-outline-secondary mt-1"
+    data-automatic-change="{{ firstChildAttr['data-automatic-update']|default(0) }}"
+  >
+    {{ 'Generate URL from name'|trans({}, 'Admin.Catalog.Feature') }}
+  </button>
 {% endblock %}

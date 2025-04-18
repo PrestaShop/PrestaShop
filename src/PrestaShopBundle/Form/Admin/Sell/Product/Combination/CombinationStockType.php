@@ -80,11 +80,12 @@ class CombinationStockType extends TranslatorAwareType
                     ],
                 ],
                 'modify_all_shops' => true,
+                'help' => $this->trans('This will be the displayed availability of the combination, if there is at least 1 in stock. If you don\'t enter anything, the base value set on the product will be used.', 'Admin.Catalog.Help'),
             ])
             ->add('available_later_label', TranslatableType::class, [
                 'type' => TextType::class,
                 'label' => $this->trans(
-                    'Label when out of stock (and backorders allowed)',
+                    'Label when out of stock',
                     'Admin.Catalog.Feature'
                 ),
                 'required' => false,
@@ -102,6 +103,7 @@ class CombinationStockType extends TranslatorAwareType
                     ],
                 ],
                 'modify_all_shops' => true,
+                'help' => $this->trans('This will be the displayed availability of the combination, if it\'s not in stock. If you don\'t enter anything, the base value set on the product will be used.', 'Admin.Catalog.Help'),
             ])
         ;
     }

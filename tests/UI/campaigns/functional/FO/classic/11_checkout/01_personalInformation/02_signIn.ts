@@ -1,19 +1,19 @@
 // Import utils
 import testContext from '@utils/testContext';
-import helper from '@utils/helpers';
 
-// Import pages
-import {homePage} from '@pages/FO/home';
-import productPage from '@pages/FO/product';
-import {cartPage} from '@pages/FO/cart';
-import checkoutPage from '@pages/FO/checkout';
-
-// Import data
-import Customers from '@data/demo/customers';
-import CustomerData from '@data/faker/customer';
+import {
+  type BrowserContext,
+  dataCustomers,
+  FakerCustomer,
+  foClassicCartPage,
+  foClassicCheckoutPage,
+  foClassicHomePage,
+  foClassicProductPage,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_classic_checkout_personalInformation_signIn';
 
@@ -30,93 +30,93 @@ describe('FO - Checkout - Personal information : Sign in', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const credentialsData: CustomerData = new CustomerData();
+  const credentialsData: FakerCustomer = new FakerCustomer();
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should open FO page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openFO', baseContext);
 
-    await homePage.goToFo(page);
-    await homePage.changeLanguage(page, 'en');
+    await foClassicHomePage.goToFo(page);
+    await foClassicHomePage.changeLanguage(page, 'en');
 
-    const isHomePage = await homePage.isHomePage(page);
-    await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+    const isHomePage = await foClassicHomePage.isHomePage(page);
+    expect(isHomePage, 'Fail to open FO home page').to.eq(true);
   });
 
   it('should add product to cart', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-    await homePage.goToProductPage(page, 1);
-    await productPage.addProductToTheCart(page, 1);
+    await foClassicHomePage.goToProductPage(page, 1);
+    await foClassicProductPage.addProductToTheCart(page, 1);
 
-    const pageTitle = await cartPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(cartPage.pageTitle);
+    const pageTitle = await foClassicCartPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicCartPage.pageTitle);
   });
 
   it('should proceed to checkout validate the cart', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'validateCart', baseContext);
 
-    await cartPage.clickOnProceedToCheckout(page);
+    await foClassicCartPage.clickOnProceedToCheckout(page);
 
-    const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
-    await expect(isCheckoutPage).to.be.true;
+    const isCheckoutPage = await foClassicCheckoutPage.isCheckoutPage(page);
+    expect(isCheckoutPage).to.eq(true);
   });
 
   it('should enter an invalid credentials', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enterInvalidCredentials', baseContext);
 
-    await checkoutPage.clickOnSignIn(page);
+    await foClassicCheckoutPage.clickOnSignIn(page);
 
-    const isCustomerConnected = await checkoutPage.customerLogin(page, credentialsData);
-    await expect(isCustomerConnected, 'Customer is connected').to.be.false;
+    const isCustomerConnected = await foClassicCheckoutPage.customerLogin(page, credentialsData);
+    expect(isCustomerConnected, 'Customer is connected').to.eq(false);
 
-    const loginError = await checkoutPage.getLoginError(page);
-    await expect(loginError).to.contains(checkoutPage.authenticationErrorMessage);
+    const loginError = await foClassicCheckoutPage.getLoginError(page);
+    expect(loginError).to.contains(foClassicCheckoutPage.authenticationErrorMessage);
   });
 
   it('should sign in with customer credentials', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'signIn', baseContext);
 
-    const isCustomerConnected = await checkoutPage.customerLogin(page, Customers.johnDoe);
-    await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+    const isCustomerConnected = await foClassicCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
+    expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
   });
 
   it('should click on edit Personal information step and get the identity of the customer', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerIdentity', baseContext);
 
-    await checkoutPage.clickOnEditPersonalInformationStep(page);
+    await foClassicCheckoutPage.clickOnEditPersonalInformationStep(page);
 
-    const customerIdentity = await checkoutPage.getCustomerIdentity(page);
-    await expect(customerIdentity).to.equal(`Connected as ${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}.`);
+    const customerIdentity = await foClassicCheckoutPage.getCustomerIdentity(page);
+    expect(customerIdentity).to.equal(`Connected as ${dataCustomers.johnDoe.firstName} ${dataCustomers.johnDoe.lastName}.`);
   });
 
   it('should check the existence of the text message \'If you sign out now, your cart will be emptied.\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkMessage', baseContext);
 
-    const message = await checkoutPage.getLogoutMessage(page);
-    await expect(message).to.equal(checkoutPage.messageIfYouSignOut);
+    const message = await foClassicCheckoutPage.getLogoutMessage(page);
+    expect(message).to.equal(foClassicCheckoutPage.messageIfYouSignOut);
   });
 
   it('should logout and check that the customer is no longer connected', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'logout', baseContext);
 
-    const isCustomerConnected = await checkoutPage.logOutCustomer(page);
-    await expect(isCustomerConnected, 'Customer is still connected').to.be.false;
+    const isCustomerConnected = await foClassicCheckoutPage.logOutCustomer(page);
+    expect(isCustomerConnected, 'Customer is still connected').to.eq(false);
   });
 
   it('should check the message \'There are no more items in your cart\' in shopping cart page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkNoItemsNumber', baseContext);
 
-    const message = await cartPage.getNoItemsInYourCartMessage(page);
-    await expect(message).to.equal(cartPage.noItemsInYourCartMessage);
+    const message = await foClassicCartPage.getNoItemsInYourCartMessage(page);
+    expect(message).to.equal(foClassicCartPage.noItemsInYourCartMessage);
   });
 });

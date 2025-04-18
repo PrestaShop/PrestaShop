@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain 'Admin.International.Feature' %}
 
@@ -36,16 +36,16 @@
 
   {% endif %}
 
-  {{ form_start(geolocationByIpAddressForm, {'action': path('admin_geolocation_by_ip_address_save')}) }}
-  {% include '@PrestaShop/Admin/Improve/International/Geolocation/Blocks/geolocation_by_ip_address.html.twig' %}
+  {{ form_start(geolocationByIpAddressForm, {action: path('admin_geolocation_by_ip_address_save')}) }}
+  {{ include('@PrestaShop/Admin/Improve/International/Geolocation/Blocks/geolocation_by_ip_address.html.twig') }}
   {{ form_end(geolocationByIpAddressForm) }}
 
-  {{ form_start(geolocationOptionsForm, {'action': path('admin_geolocation_options_save')}) }}
-  {% include '@PrestaShop/Admin/Improve/International/Geolocation/Blocks/geolocation_options.html.twig' %}
+  {{ form_start(geolocationOptionsForm, {action: path('admin_geolocation_options_save')}) }}
+  {{ include('@PrestaShop/Admin/Improve/International/Geolocation/Blocks/geolocation_options.html.twig') }}
   {{ form_end(geolocationOptionsForm) }}
 
-  {{ form_start(geolocationIpAddressWhitelistForm, {'action': path('admin_geolocation_whitelist_save')}) }}
-  {% include '@PrestaShop/Admin/Improve/International/Geolocation/Blocks/geolocation_ip_address_whitelist.html.twig' %}
+  {{ form_start(geolocationIpAddressWhitelistForm, {action: path('admin_geolocation_whitelist_save')}) }}
+  {{ include('@PrestaShop/Admin/Improve/International/Geolocation/Blocks/geolocation_ip_address_whitelist.html.twig') }}
   {{ form_end(geolocationIpAddressWhitelistForm) }}
 
 {% endblock %}

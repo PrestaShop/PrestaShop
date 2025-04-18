@@ -64,11 +64,6 @@ class EditableCmsPage
     /**
      * @var string[]
      */
-    private $localizedMetaKeyword;
-
-    /**
-     * @var string[]
-     */
     private $localizedFriendlyUrl;
 
     /**
@@ -104,7 +99,6 @@ class EditableCmsPage
      * @param string[] $localizedTitle
      * @param string[] $localizedMetaTitle
      * @param string[] $localizedMetaDescription
-     * @param string[] $localizedMetaKeyword
      * @param string[] $localizedFriendlyUrl
      * @param string[] $localizedContent
      * @param bool $indexedForSearch
@@ -121,7 +115,6 @@ class EditableCmsPage
         array $localizedTitle,
         array $localizedMetaTitle,
         array $localizedMetaDescription,
-        array $localizedMetaKeyword,
         array $localizedFriendlyUrl,
         array $localizedContent,
         $indexedForSearch,
@@ -134,7 +127,6 @@ class EditableCmsPage
         $this->localizedTitle = $localizedTitle;
         $this->localizedMetaTitle = $localizedMetaTitle;
         $this->localizedMetaDescription = $localizedMetaDescription;
-        $this->localizedMetaKeyword = $localizedMetaKeyword;
         $this->localizedFriendlyUrl = $localizedFriendlyUrl;
         $this->localizedContent = $localizedContent;
         $this->indexedForSearch = $indexedForSearch;
@@ -181,14 +173,6 @@ class EditableCmsPage
     public function getLocalizedMetaDescription()
     {
         return $this->localizedMetaDescription;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getLocalizedMetaKeyword()
-    {
-        return $this->localizedMetaKeyword;
     }
 
     /**

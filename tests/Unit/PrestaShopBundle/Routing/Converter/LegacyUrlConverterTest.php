@@ -69,19 +69,6 @@ class LegacyUrlConverterTest extends TestCase
         $this->assertEquals('/products', $url);
     }
 
-    public function testBasicTab()
-    {
-        $router = $this->buildRouterMock('admin_products_index', '/products', 'AdminProducts');
-        $converter = new LegacyUrlConverter($router, new RouterProvider($router, new LegacyRouteFactory($this->createMock(FeatureFlagManager::class))));
-        $url = $converter->convertByParameters([
-            'tab' => 'AdminProducts',
-        ]);
-        $this->assertEquals('/products', $url);
-
-        $url = $converter->convertByUrl('?tab=AdminProducts');
-        $this->assertEquals('/products', $url);
-    }
-
     public function testIndexAlias()
     {
         $router = $this->buildRouterMock('admin_products_index', '/products', 'AdminProducts');
@@ -93,20 +80,6 @@ class LegacyUrlConverterTest extends TestCase
         $this->assertEquals('/products', $url);
 
         $url = $converter->convertByUrl('?controller=AdminProducts&action=index');
-        $this->assertEquals('/products', $url);
-    }
-
-    public function testTabIndexAlias()
-    {
-        $router = $this->buildRouterMock('admin_products_index', '/products', 'AdminProducts');
-        $converter = new LegacyUrlConverter($router, new RouterProvider($router, new LegacyRouteFactory($this->createMock(FeatureFlagManager::class))));
-        $url = $converter->convertByParameters([
-            'tab' => 'AdminProducts',
-            'action' => 'index',
-        ]);
-        $this->assertEquals('/products', $url);
-
-        $url = $converter->convertByUrl('?tab=AdminProducts&action=index');
         $this->assertEquals('/products', $url);
     }
 
@@ -135,20 +108,6 @@ class LegacyUrlConverterTest extends TestCase
         $this->assertEquals('/products/create', $url);
 
         $url = $converter->convertByUrl('?controller=AdminProducts&action=create');
-        $this->assertEquals('/products/create', $url);
-    }
-
-    public function testTabAction()
-    {
-        $router = $this->buildRouterMock('admin_products_create', '/products/create', 'AdminProducts:create');
-        $converter = new LegacyUrlConverter($router, new RouterProvider($router, new LegacyRouteFactory($this->createMock(FeatureFlagManager::class))));
-        $url = $converter->convertByParameters([
-            'tab' => 'AdminProducts',
-            'action' => 'create',
-        ]);
-        $this->assertEquals('/products/create', $url);
-
-        $url = $converter->convertByUrl('?tab=AdminProducts&action=create');
         $this->assertEquals('/products/create', $url);
     }
 
@@ -188,7 +147,7 @@ class LegacyUrlConverterTest extends TestCase
         ]);
         $converter = new LegacyUrlConverter($router, new RouterProvider($router, new LegacyRouteFactory($this->createMock(FeatureFlagManager::class))));
 
-        //First controller
+        // First controller
         $url = $converter->convertByParameters([
             'controller' => 'AdminModulesManage',
         ]);
@@ -197,7 +156,7 @@ class LegacyUrlConverterTest extends TestCase
         $url = $converter->convertByUrl('?controller=AdminModulesManage');
         $this->assertEquals('/manage/{category}/{keyword}', $url);
 
-        //Second controller
+        // Second controller
         $url = $converter->convertByParameters([
             'controller' => 'AdminModulesSf',
         ]);
@@ -311,14 +270,14 @@ class LegacyUrlConverterTest extends TestCase
             'action' => 'edit',
             'id_product' => 2,
         ]);
-        //Mock returns the original path but the parameters are checked
+        // Mock returns the original path but the parameters are checked
         $this->assertEquals('/products/edit/{id}', $url);
 
-        //Mock returns the original path but the parameters are checked
+        // Mock returns the original path but the parameters are checked
         $url = $converter->convertByUrl('?controller=AdminProducts&action=edit&id_product=2');
         $this->assertEquals('/products/edit/{id}', $url);
 
-        //Try with id parameter like in route
+        // Try with id parameter like in route
         $url = $converter->convertByUrl('?controller=AdminProducts&action=edit&id=2');
         $this->assertEquals('/products/edit/{id}', $url);
     }
@@ -329,7 +288,7 @@ class LegacyUrlConverterTest extends TestCase
             'admin_products_edit',
             '/products/edit/{id}',
             'AdminProducts:edit',
-            null, //No parameters matching rules defined
+            null, // No parameters matching rules defined
             ['id' => 42]
         );
 
@@ -339,10 +298,10 @@ class LegacyUrlConverterTest extends TestCase
             'action' => 'edit',
             'id' => '42',
         ]);
-        //Mock returns the original path but the parameters are checked
+        // Mock returns the original path but the parameters are checked
         $this->assertEquals('/products/edit/{id}', $url);
 
-        //Mock returns the original path but the parameters are checked
+        // Mock returns the original path but the parameters are checked
         $url = $converter->convertByUrl('?controller=AdminProducts&action=edit&id=42');
         $this->assertEquals('/products/edit/{id}', $url);
     }
@@ -454,35 +413,35 @@ class LegacyUrlConverterTest extends TestCase
         ]);
         $converter = new LegacyUrlConverter($router, new RouterProvider($router, new LegacyRouteFactory($this->createMock(FeatureFlagManager::class))));
 
-        //Test index by parameter
+        // Test index by parameter
         $url = $converter->convertByParameters([
             'controller' => 'AdminProducts',
         ]);
         $this->assertEquals('/products', $url);
 
-        //Test index by url
+        // Test index by url
         $url = $converter->convertByUrl('?controller=AdminProducts');
         $this->assertEquals('/products', $url);
 
-        //Test create by parameter action
+        // Test create by parameter action
         $url = $converter->convertByParameters([
             'controller' => 'AdminProducts',
             'action' => 'add',
         ]);
         $this->assertEquals('/products/create', $url);
 
-        //Test create by boolean value
+        // Test create by boolean value
         $url = $converter->convertByParameters([
             'controller' => 'AdminProducts',
             'add' => true,
         ]);
         $this->assertEquals('/products/create', $url);
 
-        //Test url create by parameter action
+        // Test url create by parameter action
         $url = $converter->convertByUrl('?controller=AdminProducts&action=add');
         $this->assertEquals('/products/create', $url);
 
-        //Test url create by boolean value
+        // Test url create by boolean value
         $url = $converter->convertByUrl('?controller=AdminProducts&add');
         $this->assertEquals('/products/create', $url);
     }
@@ -496,7 +455,7 @@ class LegacyUrlConverterTest extends TestCase
      *
      * @return MockObject|RouterInterface
      */
-    private function buildRouterMock($routeName, $routePath, $legacyLink, array $legacyParameters = null, array $expectedParameters = null)
+    private function buildRouterMock($routeName, $routePath, $legacyLink, ?array $legacyParameters = null, ?array $expectedParameters = null)
     {
         $routeCollection = new RouteCollection();
 

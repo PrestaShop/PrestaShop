@@ -28,7 +28,7 @@ namespace Tests\Integration\PrestaShopBundle\EventListener;
 
 use LogicException;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
-use PrestaShopBundle\EventListener\MultishopCommandListener;
+use PrestaShopBundle\EventListener\Console\MultishopCommandListener;
 use Shop;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Command\Command;
@@ -54,8 +54,8 @@ class MultishopCommandListenerTest extends KernelTestCase
 
         self::bootKernel();
 
-        $this->commandListener = self::$kernel->getContainer()->get('prestashop.multishop_command_listener');
         $this->multishopContext = self::$kernel->getContainer()->get('prestashop.adapter.shop.context');
+        $this->commandListener = new MultishopCommandListener($this->multishopContext, self::$kernel->getProjectDir());
     }
 
     public function testDefaultMultishopContext(): void

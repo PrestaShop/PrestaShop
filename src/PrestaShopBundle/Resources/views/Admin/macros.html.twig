@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,9 +21,9 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 {% macro form_label_tooltip(name, tooltip, placement) %}
-    {{ form_label(name, null, {'label_attr': {'tooltip': tooltip, 'tooltip_placement': placement|default('top')}}) }}
+    {{ form_label(name, null, {label_attr: {tooltip: tooltip, tooltip_placement: placement|default('top')}}) }}
 {% endmacro %}
 
 {% macro check(variable) %}
@@ -36,11 +36,11 @@
   </span>
 {% endmacro %}
 
-{% macro infotip(text, use_raw = false)%}
+{% macro infotip(text, use_raw = false) %}
 <div class="alert alert-info" role="alert">
   <p class="alert-text">
-    {%  if use_raw %}
-      {{ text|raw}}
+    {% if use_raw %}
+      {{ text|raw }}
     {% else %}
       {{ text }}
     {% endif %}
@@ -48,7 +48,7 @@
 </div>
 {% endmacro %}
 
-{% macro warningtip(text)%}
+{% macro warningtip(text) %}
 <div class="alert alert-warning" role="alert">
   <p class="alert-text">
     {{ text }}
@@ -63,7 +63,7 @@
   {% endif %}
 
   {{ label }}
-  {{ include('@Common/HelpBox/helpbox.html.twig', {'content': help}) }}
+  {{ include('@Common/HelpBox/helpbox.html.twig', {content: help}) }}
 </label>
 
 <p class="sr-only">{{ help }}</p>
@@ -89,7 +89,7 @@
 {# Show link to import file sample #}
 {% macro import_file_sample(label, filename) %}
     <a id="download-sample-{{ filename }}-file-link" class="list-group-item list-group-item-action"
-       href="{{ path('admin_import_sample_download', {'sampleName': filename}) }}">
+       href="{{ path('admin_import_sample_download', {sampleName: filename}) }}">
         {{ label|trans({}, 'Admin.Advparameters.Feature') }}
     </a>
 {% endmacro %}
@@ -109,12 +109,12 @@
   {% set vars = vars|default({}) %}
   {% set extraVars = extraVars|default({}) %}
   {% set attr = vars.attr|default({}) %}
-  {% set attr = attr|merge({'class': (attr.class is defined ? attr.class : '')} ) %}
-  {% set vars = vars|merge({'attr': attr}) %}
+  {% set attr = attr|merge({class: (attr.class is defined ? attr.class : '')}) %}
+  {% set vars = vars|merge({attr: attr}) %}
 
   {{ form_widget(form, vars) }}
 
-  {% if extraVars.help is defined and extraVars.help%}
+  {% if extraVars.help is defined and extraVars.help %}
       <small class="form-text">{{ extraVars.help }}</small>
     {% elseif form.vars.help is defined and form.vars.help %}
       <small class="form-text">{{ form.vars.help }}</small>
@@ -136,12 +136,12 @@
 {% macro form_error_with_popover(form) %}
   {% set errors = [] %}
 
-  {% if form.vars.valid is defined and not form.vars.valid  %}
+  {% if form.vars.valid is defined and not form.vars.valid %}
     {% for parentError in form.vars.errors %}
       {% set errors = errors|merge([parentError.message]) %}
     {% endfor %}
 
-    {#iterating over child errors because errors can be nested#}
+    {# iterating over child errors because errors can be nested #}
   {% endif %}
 
   {% if errors|length > 0 %}
@@ -149,9 +149,8 @@
     {% set errorPopover = null %}
 
     {% if errors|length > 1 %}
-      {% set popoverContainer = 'popover-error-container-'~form.vars.id %}
+      {% set popoverContainer = 'popover-error-container-' ~ form.vars.id %}
       <div class="{{ popoverContainer }}"></div>
-
 
       {% if form.vars.errors_by_locale is defined %}
           {% set popoverErrors = form.vars.errors_by_locale %}
@@ -275,7 +274,7 @@
         {{ extraVars.label }}
 
         {% if form.vars.label_attr is defined and form.vars.label_attr and form.vars.label_attr['popover'] is defined %}
-          {{ include('@Common/HelpBox/helpbox.html.twig', {'content': form.vars.label_attr['popover']}) }}
+          {{ include('@Common/HelpBox/helpbox.html.twig', {content: form.vars.label_attr['popover']}) }}
         {% endif %}
       </label>
     {% endif %}
@@ -296,10 +295,10 @@
     {% endset %}
 
     {% if extraVars.help is not defined %}
-      {% set extraVars = extraVars|merge({'help': defaultLabel}) %}
+      {% set extraVars = extraVars|merge({help: defaultLabel}) %}
     {% endif %}
 
-    {% set vars = { 'attr': { 'class': 'js-multi-store-restriction-switch'}} %}
+    {% set vars = {attr: {class: 'js-multi-store-restriction-switch'}} %}
 
     {{ self.form_group_row(form.shop_restriction_switch, vars, extraVars) }}
   {% endif %}
@@ -339,11 +338,11 @@
   {% endif %}
 
   <div class="{{ 'col-sm-5' }}">
-    {{ self.form_widget_with_error(form, { 'attr': attr }, extraVars) }}
+    {{ self.form_widget_with_error(form, {attr: attr}, extraVars) }}
   </div>
   {% if extraVars.languages is defined and extraVars.languages is not empty %}
   <div class="{{ 'col-sm-3' }}">
-    <select name="{{ form.vars.id ~'_language' }}" class="custom-select language_dependant_select_language">
+    <select name="{{ form.vars.id ~ '_language' }}" class="custom-select language_dependant_select_language">
     {% if extraVars.languages is iterable %}
       {% for language in extraVars.languages %}
         <option value="{{ language.id }}">{{ language.value|raw }}</option>

@@ -100,7 +100,7 @@ class FeatureCore extends ObjectModel
      *
      * @return bool Deletion result
      */
-    public function deleteSelection($selection)
+    public function deleteSelection(array $selection)
     {
         /* Also delete Attributes */
         foreach ($selection as $value) {
@@ -155,7 +155,7 @@ class FeatureCore extends ObjectModel
         foreach ($fields as $field) {
             foreach (array_keys($field) as $key) {
                 if (!Validate::isTableOrIdentifier($key)) {
-                    die(Tools::displayError());
+                    throw new PrestaShopException('Invalid column name in feature_lang table.');
                 }
             }
 
@@ -163,8 +163,8 @@ class FeatureCore extends ObjectModel
 					WHERE `' . $this->def['primary'] . '` = ' . (int) $this->id . '
 						AND `id_lang` = ' . (int) $field['id_lang'];
             $mode = Db::getInstance()->getRow($sql);
-            $result = $result &&
-                (!$mode
+            $result = $result
+                && (!$mode
                     ? Db::getInstance()->insert($this->def['table'] . '_lang', $field)
                     : Db::getInstance()->update(
                         $this->def['table'] . '_lang',
@@ -231,7 +231,7 @@ class FeatureCore extends ObjectModel
      *
      * @param int $idLang Language id
      *
-     *@return int Number of feature
+     * @return int Number of feature
      */
     public static function nbFeatures($idLang)
     {

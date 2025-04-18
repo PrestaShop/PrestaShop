@@ -1,33 +1,24 @@
-// Import utils
-import basicHelper from '@utils/basicHelper';
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Common commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-import dashboardPage from '@pages/BO/dashboard';
-import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
-import statusesPage from '@pages/BO/shopParameters/orderSettings/statuses';
-import addOrderStatusPage from '@pages/BO/shopParameters/orderSettings/statuses/add';
-
-// Import data
-import OrderStatuses from '@data/demo/orderStatuses';
-import OrderStatusData from '@data/faker/orderStatus';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+
+import {
+  boDashboardPage,
+  boLoginPage,
+  boOrderSettingsPage,
+  boOrderStatusesPage,
+  type BrowserContext,
+  dataOrderStatuses,
+  type Page,
+  utilsCore,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_orderSettings_statuses_statuses_filterSortAndPagination';
 
 /*
 Filter order status by : Id, Name, Send email to customer, Delivery, Invoice, email template
 Sort order status by : Id, Name, Email template
-Create 8 order statuses
 Pagination next and previous
-Delete by bulk actions
  */
 describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pagination order status', async () => {
   let browserContext: BrowserContext;
@@ -38,50 +29,51 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
-
-    /* Delete the generated images */
-    for (let i = 0; i <= 2; i++) {
-      await files.deleteFile(`todelete${i}.jpg`);
-    }
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'Shop Parameters > Order Settings\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrderSettingsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.shopParametersParentLink,
-      dashboardPage.orderSettingsLink,
+      boDashboardPage.shopParametersParentLink,
+      boDashboardPage.orderSettingsLink,
     );
 
-    const pageTitle = await orderSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+    const pageTitle = await boOrderSettingsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boOrderSettingsPage.pageTitle);
   });
 
   it('should go to \'Statuses\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToStatusesPage', baseContext);
 
-    await orderSettingsPage.goToStatusesPage(page);
+    await boOrderSettingsPage.goToStatusesPage(page);
 
-    const pageTitle = await statusesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(statusesPage.pageTitle);
+    const pageTitle = await boOrderStatusesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boOrderStatusesPage.pageTitle);
   });
 
   it('should reset all filters and get number of order statuses', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfOrderStatuses = await statusesPage.resetAndGetNumberOfLines(page, tableName);
-    await expect(numberOfOrderStatuses).to.be.above(0);
+    numberOfOrderStatuses = await boOrderStatusesPage.resetAndGetNumberOfLines(page, tableName);
+    expect(numberOfOrderStatuses).to.be.above(0);
   });
 
   // 1 - Filter order statuses
@@ -93,7 +85,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
             testIdentifier: 'filterById',
             filterType: 'input',
             filterBy: 'id_order_state',
-            filterValue: OrderStatuses.paymentAccepted.id.toString(),
+            filterValue: dataOrderStatuses.paymentAccepted.id.toString(),
             filterTypeOf: 'numeric',
           },
       },
@@ -103,7 +95,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
             testIdentifier: 'filterByName',
             filterType: 'input',
             filterBy: 'name',
-            filterValue: OrderStatuses.shipped.name,
+            filterValue: dataOrderStatuses.shipped.name,
             filterTypeOf: 'string',
           },
       },
@@ -143,7 +135,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
             testIdentifier: 'filterByEmailTemplate',
             filterType: 'input',
             filterBy: 'template',
-            filterValue: OrderStatuses.canceled.emailTemplate,
+            filterValue: dataOrderStatuses.canceled.emailTemplate,
             filterTypeOf: 'string',
           },
       },
@@ -153,7 +145,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        await statusesPage.filterTable(
+        await boOrderStatusesPage.filterTable(
           page,
           tableName,
           test.args.filterType,
@@ -161,21 +153,21 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
           test.args.filterValue,
         );
 
-        const numberOfLinesAfterFilter = await statusesPage.getNumberOfElementInGrid(page, tableName);
-        await expect(numberOfLinesAfterFilter).to.be.at.most(numberOfOrderStatuses);
+        const numberOfLinesAfterFilter = await boOrderStatusesPage.getNumberOfElementInGrid(page, tableName);
+        expect(numberOfLinesAfterFilter).to.be.at.most(numberOfOrderStatuses);
 
         for (let row = 1; row <= numberOfLinesAfterFilter; row++) {
           if (test.args.filterTypeOf === 'boolean') {
-            const columnStatus = await statusesPage.getStatus(page, row, test.args.filterBy);
-            await expect(columnStatus).to.equal(test.args.filterValue === '1');
+            const columnStatus = await boOrderStatusesPage.getStatus(page, tableName, row, test.args.filterBy);
+            expect(columnStatus).to.equal(test.args.filterValue === '1');
           } else {
-            const textColumn = await statusesPage.getTextColumn(
+            const textColumn = await boOrderStatusesPage.getTextColumn(
               page,
               tableName,
               row,
               test.args.filterBy,
             );
-            await expect(textColumn).to.contains(test.args.filterValue);
+            expect(textColumn).to.contains(test.args.filterValue);
           }
         }
       });
@@ -183,43 +175,50 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfLinesAfterReset = await statusesPage.resetAndGetNumberOfLines(page, tableName);
-        await expect(numberOfLinesAfterReset).to.equal(numberOfOrderStatuses);
+        const numberOfLinesAfterReset = await boOrderStatusesPage.resetAndGetNumberOfLines(page, tableName);
+        expect(numberOfLinesAfterReset).to.equal(numberOfOrderStatuses);
       });
     });
   });
 
   // 2 - Sort order statuses table
   describe('Sort order statuses table', async () => {
+    it('should change the items number to 20 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo2001', baseContext);
+
+      const paginationNumber = await boOrderStatusesPage.selectPaginationLimit(page, tableName, 20);
+      expect(paginationNumber).to.contains('(page 1 / 1)');
+    });
+
     const sortTests = [
       {
         args: {
-          testIdentifier: 'sortByIdDesc', sortBy: 'id_order_state', columnID: 1, sortDirection: 'down', isFloat: true,
+          testIdentifier: 'sortByIdDesc', sortBy: 'id_order_state', columnID: 2, sortDirection: 'desc', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByNameAsc', sortBy: 'name', columnID: 2, sortDirection: 'up',
+          testIdentifier: 'sortByNameAsc', sortBy: 'name', columnID: 3, sortDirection: 'asc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByNameDesc', sortBy: 'name', columnID: 2, sortDirection: 'down',
+          testIdentifier: 'sortByNameDesc', sortBy: 'name', columnID: 3, sortDirection: 'desc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByTemplateAsc', sortBy: 'template', columnID: 7, sortDirection: 'up',
+          testIdentifier: 'sortByTemplateAsc', sortBy: 'template', columnID: 7, sortDirection: 'asc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByTemplateDesc', sortBy: 'template', columnID: 7, sortDirection: 'down',
+          testIdentifier: 'sortByTemplateDesc', sortBy: 'template', columnID: 7, sortDirection: 'desc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByIdAsc', sortBy: 'id_order_state', columnID: 1, sortDirection: 'up', isFloat: true,
+          testIdentifier: 'sortByIdAsc', sortBy: 'id_order_state', columnID: 2, sortDirection: 'asc', isFloat: true,
         },
       },
     ];
@@ -228,15 +227,15 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await statusesPage.getAllRowsColumnContent(
+        const nonSortedTable = await boOrderStatusesPage.getAllRowsColumnContent(
           page,
           tableName,
           test.args.sortBy,
         );
 
-        await statusesPage.sortTable(page, tableName, test.args.sortBy, test.args.columnID, test.args.sortDirection);
+        await boOrderStatusesPage.sortTable(page, tableName, test.args.sortBy, test.args.columnID, test.args.sortDirection);
 
-        const sortedTable = await statusesPage.getAllRowsColumnContent(
+        const sortedTable = await boOrderStatusesPage.getAllRowsColumnContent(
           page,
           tableName,
           test.args.sortBy,
@@ -246,122 +245,54 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
           const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-          const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+          const expectedResult = await utilsCore.sortArrayNumber(nonSortedTableFloat);
 
-          if (test.args.sortDirection === 'up') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+          if (test.args.sortDirection === 'asc') {
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
-          const expectedResult = await basicHelper.sortArray(nonSortedTable);
+          const expectedResult = await utilsCore.sortArray(nonSortedTable);
 
-          if (test.args.sortDirection === 'up') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+          if (test.args.sortDirection === 'asc') {
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });
     });
   });
 
-  // 3 - Create 8 order statuses
-  const creationTests: number[] = new Array(8).fill(0, 0, 8);
-
-  creationTests.forEach((test: number, index: number) => {
-    describe(`Create order status n°${index + 1} in BO`, async () => {
-      before(() => files.generateImage(`todelete${index}.jpg`));
-
-      const orderStatusData: OrderStatusData = new OrderStatusData({name: `todelete${index}`});
-
-      it('should go to add new order status group page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToAddOrderStatusPage${index}`, baseContext);
-
-        await statusesPage.goToNewOrderStatusPage(page);
-
-        const pageTitle = await addOrderStatusPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addOrderStatusPage.pageTitleCreate);
-      });
-
-      it('should create order status and check result', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `createOrderStatus${index}`, baseContext);
-
-        const textResult = await addOrderStatusPage.setOrderStatus(page, orderStatusData);
-        await expect(textResult).to.contains(statusesPage.successfulCreationMessage);
-
-        const numberOfLinesAfterCreation = await statusesPage.getNumberOfElementInGrid(page, tableName);
-        await expect(numberOfLinesAfterCreation).to.be.equal(numberOfOrderStatuses + index + 1);
-      });
-
-      after(() => files.deleteFile(`todelete${index}.jpg`));
-    });
-  });
-
-  // 4 - Pagination
+  // 3 - Pagination
   describe('Pagination next and previous', async () => {
-    it('should change the items number to 20 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
+    it('should change the items number to 10 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
-      const paginationNumber = await statusesPage.selectPaginationLimit(page, tableName, 20);
-      expect(paginationNumber).to.equal('1');
+      const paginationNumber = await boOrderStatusesPage.selectPaginationLimit(page, tableName, 10);
+      expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await statusesPage.paginationNext(page, tableName);
-      expect(paginationNumber).to.equal('2');
+      const paginationNumber = await boOrderStatusesPage.paginationNext(page, tableName);
+      expect(paginationNumber).to.contains('(page 2 / 2)');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await statusesPage.paginationPrevious(page, tableName);
-      expect(paginationNumber).to.equal('1');
+      const paginationNumber = await boOrderStatusesPage.paginationPrevious(page, tableName);
+      expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
-    it('should change the items number to 50 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+    it('should change the items number to 20 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
-      const paginationNumber = await statusesPage.selectPaginationLimit(page, tableName, 50);
-      expect(paginationNumber).to.equal('1');
-    });
-  });
-
-  // 5 : Delete order statuses created with bulk actions
-  describe('Delete order statuses with Bulk Actions', async () => {
-    it('should filter list by name', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
-
-      await statusesPage.filterTable(
-        page,
-        tableName,
-        'input',
-        'name',
-        'todelete',
-      );
-
-      const numberOfLinesAfterFilter = await statusesPage.getNumberOfElementInGrid(page, tableName);
-
-      for (let i = 1; i <= numberOfLinesAfterFilter; i++) {
-        const textColumn = await statusesPage.getTextColumn(page, tableName, i, 'name');
-        await expect(textColumn).to.contains('todelete');
-      }
-    });
-
-    it('should delete order statuses with Bulk Actions and check result', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteStatus', baseContext);
-
-      const deleteTextResult = await statusesPage.bulkDeleteOrderStatuses(page, tableName);
-      await expect(deleteTextResult).to.be.contains(statusesPage.successfulMultiDeleteMessage);
-    });
-
-    it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
-
-      const numberOfLinesAfterReset = await statusesPage.resetAndGetNumberOfLines(page, tableName);
-      await expect(numberOfLinesAfterReset).to.be.equal(numberOfOrderStatuses);
+      const paginationNumber = await boOrderStatusesPage.selectPaginationLimit(page, tableName, 20);
+      expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
 });

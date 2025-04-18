@@ -68,7 +68,7 @@ final class BulkDeleteLanguagesHandler extends AbstractLanguageHandler implement
 
             try {
                 $this->assertLanguageIsNotDefault($language);
-            } catch (DefaultLanguageException $e) {
+            } catch (DefaultLanguageException) {
                 throw new DefaultLanguageException(
                     sprintf(
                         'Default language "%s" cannot be deleted',

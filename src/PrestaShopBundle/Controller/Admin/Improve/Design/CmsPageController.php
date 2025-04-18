@@ -27,6 +27,8 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Shop\Url\CmsProvider;
+use PrestaShop\PrestaShop\Core\CMS\CmsPageViewDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkDeleteCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkDisableCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkEnableCmsPageCommand;
@@ -59,17 +61,17 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterf
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageCategoryDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionDataException;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
-use PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdaterInterface;
-use PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactoryInterface;
+use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition;
 use PrestaShop\PrestaShop\Core\Search\Filters\CmsPageCategoryFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\CmsPageFilters;
 use PrestaShop\PrestaShop\Core\Util\HelperCard\DocumentationLinkProviderInterface;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use PrestaShopBundle\Service\Grid\ResponseBuilder;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -77,12 +79,18 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Class CmsPageController is responsible for handling the logic in "Improve -> Design -> pages" page.
  */
-class CmsPageController extends FrameworkBundleAdminController
+class CmsPageController extends PrestaShopAdminController
 {
+    public static function getSubscribedServices(): array
+    {
+        return parent::getSubscribedServices() + [
+            CmsPageCategoryDefinitionFactory::GRID_ID => CmsPageCategoryDefinitionFactory::class,
+            CmsPageDefinitionFactory::GRID_ID => CmsPageDefinitionFactory::class,
+        ];
+    }
+
     /**
      * Responsible for displaying page content.
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param CmsPageCategoryFilters $categoryFilters
      * @param CmsPageFilters $cmsFilters
@@ -90,41 +98,31 @@ class CmsPageController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function indexAction(CmsPageCategoryFilters $categoryFilters, CmsPageFilters $cmsFilters, Request $request)
-    {
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function indexAction(
+        CmsPageCategoryFilters $categoryFilters,
+        CmsPageFilters $cmsFilters,
+        Request $request,
+        DocumentationLinkProviderInterface $helperBlockLinkProvider,
+        #[Autowire(service: 'prestashop.core.cms_page.data_provider.cms_page_view')]
+        CmsPageViewDataProviderInterface $cmsPageViewDataProvider,
+        #[Autowire(service: 'prestashop.core.grid.factory.cms_page_category')]
+        GridFactoryInterface $cmsCategoryGridFactory,
+        #[Autowire(service: 'prestashop.core.grid.factory.cms_page')]
+        GridFactoryInterface $cmsGridFactory,
+    ): Response {
         $cmsCategoryParentId = (int) $categoryFilters->getFilters()['id_cms_category_parent'];
-        $viewData = [];
-
-        try {
-            $viewData = $this
-                ->get('prestashop.core.cms_page.data_provider.cms_page_view')
-                ->getView($cmsCategoryParentId)
-            ;
-        } catch (Exception $exception) {
-            $this->addFlash(
-                'error',
-                $this->getErrorMessageForException($exception, $this->getErrorMessages())
-            );
-
-            if ($exception instanceof CmsPageCategoryNotFoundException) {
-                return $this->redirectToRoute('admin_cms_pages_index');
-            }
-        }
-
-        $cmsCategoryGridFactory = $this->get('prestashop.core.grid.factory.cms_page_category');
+        $viewData = $cmsPageViewDataProvider->getView($cmsCategoryParentId);
         $cmsCategoryGrid = $cmsCategoryGridFactory->getGrid($categoryFilters);
 
-        $cmsGridFactory = $this->get('prestashop.core.grid.factory.cms_page');
         $cmsGrid = $cmsGridFactory->getGrid($cmsFilters);
 
-        $showcaseCardIsClosed = $this->getQueryBus()->handle(
+        $showcaseCardIsClosed = $this->dispatchQuery(
             new GetShowcaseCardIsClosed(
-                (int) $this->getContext()->employee->id,
+                (int) $this->getEmployeeContext()->getEmployee()->getId(),
                 ShowcaseCard::CMS_PAGES_CARD
             )
         );
-
-        $helperBlockLinkProvider = $this->get(DocumentationLinkProviderInterface::class);
 
         return $this->render(
             '@PrestaShop/Admin/Improve/Design/Cms/index.html.twig',
@@ -145,26 +143,20 @@ class CmsPageController extends FrameworkBundleAdminController
     /**
      * @deprecated since 1.7.8 and will be removed in next major. Use CommonController:searchGridAction instead
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
-    public function searchAction(Request $request)
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function searchAction(Request $request): RedirectResponse
     {
-        $gridDefinitionFactory = 'prestashop.core.grid.definition.factory.cms_page_category';
         $filterId = CmsPageCategoryDefinitionFactory::GRID_ID;
         if ($request->request->has(CmsPageDefinitionFactory::GRID_ID)) {
-            $gridDefinitionFactory = 'prestashop.core.grid.definition.factory.cms_page';
             $filterId = CmsPageDefinitionFactory::GRID_ID;
         }
 
-        /** @var ResponseBuilder $responseBuilder */
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
-
-        return $responseBuilder->buildSearchResponse(
-            $this->get($gridDefinitionFactory),
+        return $this->buildSearchResponse(
+            $this->container->get($filterId),
             $request,
             $filterId,
             'admin_cms_pages_index',
@@ -177,38 +169,38 @@ class CmsPageController extends FrameworkBundleAdminController
     /**
      * Creates cms page
      *
-     * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_cms_pages_index",
-     *     redirectQueryParamsToKeep={"id_cms_category"},
-     *     message="You do not have permission to add this."
-     * )
-     *
      * @param Request $request
      *
      * @return Response
      */
-    public function createAction(Request $request)
-    {
-        $formBuilder = $this->getCmsPageFormBuilder();
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'], message: 'You do not have permission to add this.')]
+    public function createAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.adapter.shop.url.cms_provider')]
+        CmsProvider $urlProvider,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cms_page_form_builder')]
+        FormBuilderInterface $cmsPageFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.cms_page_form_handler')]
+        FormHandlerInterface $cmsPageFormHandler,
+    ): Response {
         $categoryParentId = $request->query->get('id_cms_category');
         $formData = [];
         if ($categoryParentId) {
             $formData['page_category_id'] = $categoryParentId;
         }
-        $form = $formBuilder->getForm($formData, [
-            'cms_preview_url' => $this->get('prestashop.adapter.shop.url.cms_provider')->getUrl(0, '{friendly-url}'),
+        $form = $cmsPageFormBuilder->getForm($formData, [
+            'cms_preview_url' => $urlProvider->getUrl(0, '{friendly-url}'),
         ]);
         $form->handleRequest($request);
 
         try {
-            $result = $this->getCmsPageFormHandler()->handle($form);
+            $result = $cmsPageFormHandler->handle($form);
             $cmsPageId = $result->getIdentifiableObjectId();
 
             if (null !== $cmsPageId) {
                 $this->addFlash(
                     'success',
-                    $this->trans('Successful creation', 'Admin.Notifications.Success')
+                    $this->trans('Successful creation', [], 'Admin.Notifications.Success')
                 );
                 if (!$request->request->has('save-and-preview')) {
                     return $this->redirectToParentIndexPageByCmsPageId($cmsPageId);
@@ -233,39 +225,40 @@ class CmsPageController extends FrameworkBundleAdminController
                 'cmsCategoryParentId' => $categoryParentId,
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-                'layoutTitle' => $this->trans('New page', 'Admin.Navigation.Menu'),
+                'layoutTitle' => $this->trans('New page', [], 'Admin.Navigation.Menu'),
             ]
         );
     }
 
     /**
-     *  @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_cms_pages_index",
-     *     redirectQueryParamsToKeep={"id_cms_category"},
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param Request $request
      * @param int $cmsPageId
      *
      * @return Response
      */
-    public function editAction(Request $request, $cmsPageId)
-    {
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'], message: 'You do not have permission to edit this.')]
+    public function editAction(
+        Request $request,
+        int $cmsPageId,
+        #[Autowire(service: 'prestashop.adapter.shop.url.cms_provider')]
+        CmsProvider $urlProvider,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cms_page_form_builder')]
+        FormBuilderInterface $cmsPageFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.cms_page_form_handler')]
+        FormHandlerInterface $cmsPageFormHandler,
+    ): Response {
         $cmsPageId = (int) $cmsPageId;
 
         try {
             /** @var EditableCmsPage $editableCmsPage */
-            $editableCmsPage = $this->getQueryBus()->handle(new GetCmsPageForEditing($cmsPageId));
+            $editableCmsPage = $this->dispatchQuery(new GetCmsPageForEditing($cmsPageId));
             $previewUrl = $editableCmsPage->getPreviewUrl();
 
-            $form = $this->getCmsPageFormBuilder()->getFormFor($cmsPageId, [], [
+            $form = $cmsPageFormBuilder->getFormFor($cmsPageId, [], [
                 'action' => $this->generateUrl('admin_cms_pages_edit', [
                     'cmsPageId' => $cmsPageId,
                 ]),
-                'cms_preview_url' => $this->get('prestashop.adapter.shop.url.cms_provider')
-                    ->getUrl($cmsPageId, '{friendly-url}'),
+                'cms_preview_url' => $urlProvider->getUrl($cmsPageId, '{friendly-url}'),
             ]);
             $form->handleRequest($request);
         } catch (Exception $e) {
@@ -278,12 +271,12 @@ class CmsPageController extends FrameworkBundleAdminController
         }
 
         try {
-            $result = $this->getCmsPageFormHandler()->handleFor($cmsPageId, $form);
+            $result = $cmsPageFormHandler->handleFor($cmsPageId, $form);
 
             if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash(
                     'success',
-                    $this->trans('Successful update', 'Admin.Notifications.Success')
+                    $this->trans('Successful update', [], 'Admin.Notifications.Success')
                 );
 
                 if ($request->request->has('save-and-preview')) {
@@ -313,10 +306,10 @@ class CmsPageController extends FrameworkBundleAdminController
                 'previewUrl' => $previewUrl,
                 'layoutTitle' => $this->trans(
                     'Editing page %name%',
-                    'Admin.Navigation.Menu',
                     [
-                        '%name%' => $editableCmsPage->getLocalizedTitle()[$this->getContextLangId()],
-                    ]
+                        '%name%' => $editableCmsPage->getLocalizedTitle()[$this->getLanguageContext()->getId()],
+                    ],
+                    'Admin.Navigation.Menu'
                 ),
             ]
         );
@@ -325,31 +318,29 @@ class CmsPageController extends FrameworkBundleAdminController
     /**
      * Displays cms category page form and handles create new cms page category logic.
      *
-     * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_cms_pages_index",
-     *     redirectQueryParamsToKeep={"id_cms_category"},
-     *     message="You do not have permission to add this."
-     * )
-     *
      * @param Request $request
      *
      * @return Response
      */
-    public function createCmsCategoryAction(Request $request)
-    {
-        $cmsPageCategoryFormBuilder = $this->getCmsPageCategoryFormBuilder();
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'], message: 'You do not have permission to add this.')]
+    public function createCmsCategoryAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cms_page_category_form_builder')]
+        FormBuilderInterface $cmsPageCategoryFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.cms_page_category_form_handler')]
+        FormHandlerInterface $cmsPageCategoryFormHandler,
+    ): Response {
         $cmsPageCategoryForm = $cmsPageCategoryFormBuilder->getForm();
 
         $cmsPageCategoryForm->handleRequest($request);
 
         try {
-            $result = $this->getCmsPageCategoryFormHandler()->handle($cmsPageCategoryForm);
+            $result = $cmsPageCategoryFormHandler->handle($cmsPageCategoryForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
                 $this->addFlash(
                     'success',
-                    $this->trans('Successful creation', 'Admin.Notifications.Success')
+                    $this->trans('Successful creation', [], 'Admin.Notifications.Success')
                 );
 
                 return $this->redirectToIndexPageById($result->getIdentifiableObjectId());
@@ -367,7 +358,7 @@ class CmsPageController extends FrameworkBundleAdminController
                 'cmsPageCategoryForm' => $cmsPageCategoryForm->createView(),
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-                'layoutTitle' => $this->trans('New category', 'Admin.Navigation.Menu'),
+                'layoutTitle' => $this->trans('New category', [], 'Admin.Navigation.Menu'),
             ]
         );
     }
@@ -375,22 +366,20 @@ class CmsPageController extends FrameworkBundleAdminController
     /**
      * Displays cms category page form and handles update cms page category logic.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_cms_pages_index",
-     *     redirectQueryParamsToKeep={"id_cms_category"},
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param int $cmsCategoryId
      * @param Request $request
      *
      * @return Response
      */
-    public function editCmsCategoryAction($cmsCategoryId, Request $request)
-    {
-        $cmsPageCategoryFormBuilder = $this->getCmsPageCategoryFormBuilder();
-
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'], message: 'You do not have permission to edit this.')]
+    public function editCmsCategoryAction(
+        int $cmsCategoryId,
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cms_page_category_form_builder')]
+        FormBuilderInterface $cmsPageCategoryFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.cms_page_category_form_handler')]
+        FormHandlerInterface $cmsPageCategoryFormHandler,
+    ): Response {
         try {
             $cmsPageCategoryForm = $cmsPageCategoryFormBuilder->getFormFor((int) $cmsCategoryId);
             $cmsCategoryParentId = $this->getParentCategoryId((int) $cmsCategoryId)->getValue();
@@ -405,12 +394,12 @@ class CmsPageController extends FrameworkBundleAdminController
 
         try {
             $cmsPageCategoryForm->handleRequest($request);
-            $result = $this->getCmsPageCategoryFormHandler()->handleFor((int) $cmsCategoryId, $cmsPageCategoryForm);
+            $result = $cmsPageCategoryFormHandler->handleFor((int) $cmsCategoryId, $cmsPageCategoryForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash(
                     'success',
-                    $this->trans('Successful update', 'Admin.Notifications.Success')
+                    $this->trans('Successful update', [], 'Admin.Notifications.Success')
                 );
 
                 return $this->redirectToIndexPageById($result->getIdentifiableObjectId());
@@ -435,10 +424,10 @@ class CmsPageController extends FrameworkBundleAdminController
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'layoutTitle' => $this->trans(
                     'Editing category %name%',
-                    'Admin.Navigation.Menu',
                     [
-                        '%name%' => $cmsPageCategoryForm->getData()['name'][$this->getContextLangId()],
-                    ]
+                        '%name%' => $cmsPageCategoryForm->getData()['name'][$this->getLanguageContext()->getId()],
+                    ],
+                    'Admin.Navigation.Menu'
                 ),
             ]
         );
@@ -447,28 +436,22 @@ class CmsPageController extends FrameworkBundleAdminController
     /**
      * Deletes cms page category and all its children categories.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_cms_pages_index",
-     *     redirectQueryParamsToKeep={"id_cms_category"},
-     *     message="You do not have permission to delete this."
-     * )
-     *
      * @param int $cmsCategoryId
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'])]
-    public function deleteCmsCategoryAction($cmsCategoryId)
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'], message: 'You do not have permission to delete this.')]
+    public function deleteCmsCategoryAction(int $cmsCategoryId): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(
+            $this->dispatchCommand(
                 new DeleteCmsPageCategoryCommand((int) $cmsCategoryId)
             );
 
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
             );
         } catch (Exception $exception) {
             $this->addFlash(
@@ -483,32 +466,26 @@ class CmsPageController extends FrameworkBundleAdminController
     /**
      * Deletes multiple cms page categories.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_cms_pages_index",
-     *     redirectQueryParamsToKeep={"id_cms_category"},
-     *     message="You do not have permission to delete this."
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'])]
-    public function deleteBulkCmsCategoryAction(Request $request)
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'], message: 'You do not have permission to delete this.')]
+    public function deleteBulkCmsCategoryAction(Request $request): RedirectResponse
     {
         $cmsCategoriesToDelete = $request->request->all('cms_page_category_bulk');
 
         try {
             $cmsCategoriesToDelete = array_map(function ($item) { return (int) $item; }, $cmsCategoriesToDelete);
 
-            $this->getCommandBus()->handle(
+            $this->dispatchCommand(
                 new BulkDeleteCmsPageCategoryCommand($cmsCategoriesToDelete)
             );
 
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted.', [], 'Admin.Notifications.Success')
             );
         } catch (Exception $exception) {
             $this->addFlash(
@@ -523,50 +500,37 @@ class CmsPageController extends FrameworkBundleAdminController
     /**
      * Updates cms page category position.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_cms_pages_index",
-     *     redirectQueryParamsToKeep={"id_cms_category"},
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'])]
-    public function updateCmsCategoryPositionAction(Request $request)
-    {
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'], message: 'You do not have permission to edit this.')]
+    public function updateCmsCategoryPositionAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.grid.cms_page_category.position_definition')]
+        PositionDefinition $positionDefinition
+    ): RedirectResponse {
         $cmsCategoryParentId = $request->query->getInt('id_cms_category') ?:
             CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID
         ;
 
         $positionsData = [
-            'positions' => $request->request->get('positions'),
+            'positions' => $request->request->all('positions'),
             'parentId' => $cmsCategoryParentId,
         ];
 
-        $positionDefinition = $this->get('prestashop.core.grid.cms_page_category.position_definition');
-
-        $positionUpdateFactory = $this->get(PositionUpdateFactoryInterface::class);
-
         try {
-            $positionUpdate = $positionUpdateFactory->buildPositionUpdate($positionsData, $positionDefinition);
+            $this->updateGridPosition($positionDefinition, $positionsData);
+            $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
         } catch (PositionDataException $e) {
             $errors = [$e->toArray()];
-            $this->flashErrors($errors);
+            $this->addFlashErrors($errors);
 
             return $this->redirectToIndexPageById($cmsCategoryParentId);
-        }
-
-        $updater = $this->get(GridPositionUpdaterInterface::class);
-
-        try {
-            $updater->update($positionUpdate);
-            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
         } catch (PositionUpdateException $e) {
             $errors = [$e->toArray()];
-            $this->flashErrors($errors);
+            $this->addFlashErrors($errors);
         }
 
         return $this->redirectToIndexPageById($cmsCategoryParentId);
@@ -575,47 +539,35 @@ class CmsPageController extends FrameworkBundleAdminController
     /**
      * Updates cms page listing position.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *      redirectRoute="admin_cms_pages_index",
-     *      redirectQueryParamsToKeep={"id_cms_category"},
-     *      message="You do not have permission to edit this."
-     * )
-     *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'])]
-    public function updateCmsPositionAction(Request $request)
-    {
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'], message: 'You do not have permission to edit this.')]
+    public function updateCmsPositionAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.grid.cms_page.position_definition')]
+        PositionDefinition $positionDefinition
+    ): RedirectResponse {
         $cmsCategoryParentId = $request->query->getInt('id_cms_category') ?:
             CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID
         ;
 
         $positionsData = [
-            'positions' => $request->request->get('positions'),
+            'positions' => $request->request->all('positions'),
             'parentId' => $cmsCategoryParentId,
         ];
 
-        $positionDefinition = $this->get('prestashop.core.grid.cms_page.position_definition');
-        $positionUpdateFactory = $this->get(PositionUpdateFactoryInterface::class);
-
         try {
-            $positionUpdate = $positionUpdateFactory->buildPositionUpdate($positionsData, $positionDefinition);
+            $this->updateGridPosition($positionDefinition, $positionsData);
+            $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
         } catch (PositionDataException $e) {
             $errors = [$e->toArray()];
-            $this->flashErrors($errors);
+            $this->addFlashErrors($errors);
 
             return $this->redirectToParentIndexPage($cmsCategoryParentId);
-        }
-
-        $updater = $this->get(GridPositionUpdaterInterface::class);
-
-        try {
-            $updater->update($positionUpdate);
-            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
         } catch (PositionUpdateException $e) {
             $errors = [$e->toArray()];
-            $this->flashErrors($errors);
+            $this->addFlashErrors($errors);
         }
 
         return $this->redirectToIndexPageById($cmsCategoryParentId);
@@ -624,28 +576,22 @@ class CmsPageController extends FrameworkBundleAdminController
     /**
      * Toggles cms page category status.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *      redirectRoute="admin_cms_pages_index",
-     *      redirectQueryParamsToKeep={"id_cms_category"},
-     *      message="You do not have permission to edit this."
-     * )
-     *
      * @param int $cmsCategoryId
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'])]
-    public function toggleCmsCategoryAction($cmsCategoryId)
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'], message: 'You do not have permission to edit this.')]
+    public function toggleCmsCategoryAction($cmsCategoryId): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(
+            $this->dispatchCommand(
                 new ToggleCmsPageCategoryStatusCommand((int) $cmsCategoryId)
             );
 
             $this->addFlash(
                 'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
             );
         } catch (Exception $exception) {
             $this->addFlash(
@@ -660,31 +606,25 @@ class CmsPageController extends FrameworkBundleAdminController
     /**
      * Changes multiple cms page category statuses to enabled.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_cms_pages_index",
-     *     redirectQueryParamsToKeep={"id_cms_category"},
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'])]
-    public function bulkCmsPageCategoryStatusEnableAction(Request $request)
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'], message: 'You do not have permission to edit this.')]
+    public function bulkCmsPageCategoryStatusEnableAction(Request $request): RedirectResponse
     {
         $cmsCategoriesToEnable = $request->request->all('cms_page_category_bulk');
         try {
             $cmsCategoriesToEnable = array_map(function ($item) { return (int) $item; }, $cmsCategoriesToEnable);
 
-            $this->getCommandBus()->handle(
+            $this->dispatchCommand(
                 new BulkEnableCmsPageCategoryCommand($cmsCategoriesToEnable)
             );
 
             $this->addFlash(
                 'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
             );
         } catch (Exception $exception) {
             $this->addFlash(
@@ -699,19 +639,13 @@ class CmsPageController extends FrameworkBundleAdminController
     /**
      * Changes multiple cms page category statuses to disabled.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_cms_pages_index",
-     *     redirectQueryParamsToKeep={"id_cms_category"},
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'])]
-    public function bulkCmsPageCategoryStatusDisableAction(Request $request)
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'], message: 'You do not have permission to edit this.')]
+    public function bulkCmsPageCategoryStatusDisableAction(Request $request): RedirectResponse
     {
         $cmsCategoriesToDisable = $request->request->all('cms_page_category_bulk');
         try {
@@ -721,13 +655,13 @@ class CmsPageController extends FrameworkBundleAdminController
                 },
                 $cmsCategoriesToDisable
             );
-            $this->getCommandBus()->handle(
+            $this->dispatchCommand(
                 new BulkDisableCmsPageCategoryCommand($cmsCategoriesToDisable)
             );
 
             $this->addFlash(
                 'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
             );
         } catch (Exception $exception) {
             $this->addFlash(
@@ -742,26 +676,20 @@ class CmsPageController extends FrameworkBundleAdminController
     /**
      * Toggles cms page listing status.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_cms_pages_index",
-     *     redirectQueryParamsToKeep={"id_cms_category"},
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param int $cmsId
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'])]
-    public function toggleCmsAction($cmsId)
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'], message: 'You do not have permission to edit this.')]
+    public function toggleCmsAction($cmsId): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(new ToggleCmsPageStatusCommand((int) $cmsId));
+            $this->dispatchCommand(new ToggleCmsPageStatusCommand((int) $cmsId));
 
             $this->addFlash(
                 'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
             );
         } catch (Exception $exception) {
             $this->addFlash(
@@ -776,32 +704,26 @@ class CmsPageController extends FrameworkBundleAdminController
     /**
      * Disables multiple cms pages.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_cms_pages_index",
-     *     redirectQueryParamsToKeep={"id_cms_category"},
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'])]
-    public function bulkDisableCmsPageStatusAction(Request $request)
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'], message: 'You do not have permission to edit this.')]
+    public function bulkDisableCmsPageStatusAction(Request $request): RedirectResponse
     {
         $cmsPagesToDisable = $request->request->all('cms_page_bulk');
 
         try {
             $cmsPagesToDisable = array_map(function ($item) { return (int) $item; }, $cmsPagesToDisable);
 
-            $this->getCommandBus()->handle(
+            $this->dispatchCommand(
                 new BulkDisableCmsPageCommand($cmsPagesToDisable)
             );
 
             $this->addFlash(
                 'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
             );
         } catch (Exception $exception) {
             $this->addFlash(
@@ -816,19 +738,13 @@ class CmsPageController extends FrameworkBundleAdminController
     /**
      * Enables multiple cms pages.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_cms_pages_index",
-     *     redirectQueryParamsToKeep={"id_cms_category"},
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'])]
-    public function bulkEnableCmsPageStatusAction(Request $request)
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'], message: 'You do not have permission to edit this.')]
+    public function bulkEnableCmsPageStatusAction(Request $request): RedirectResponse
     {
         $cmsPagesToDisable = $request->request->all('cms_page_bulk');
 
@@ -840,13 +756,13 @@ class CmsPageController extends FrameworkBundleAdminController
                 $cmsPagesToDisable
             );
 
-            $this->getCommandBus()->handle(
+            $this->dispatchCommand(
                 new BulkEnableCmsPageCommand($cmsPagesToDisable)
             );
 
             $this->addFlash(
                 'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
             );
         } catch (Exception $exception) {
             $this->addFlash(
@@ -861,19 +777,13 @@ class CmsPageController extends FrameworkBundleAdminController
     /**
      * Deletes multiple cms pages.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_cms_pages_index",
-     *     redirectQueryParamsToKeep={"id_cms_category"},
-     *     message="You do not have permission to delete this."
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'])]
-    public function bulkDeleteCmsPageAction(Request $request)
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'], message: 'You do not have permission to delete this.')]
+    public function bulkDeleteCmsPageAction(Request $request): RedirectResponse
     {
         $cmsPagesToDisable = $request->request->all('cms_page_bulk');
 
@@ -887,13 +797,13 @@ class CmsPageController extends FrameworkBundleAdminController
                 $cmsPagesToDisable
             );
 
-            $this->getCommandBus()->handle(
+            $this->dispatchCommand(
                 new BulkDeleteCmsPageCommand($cmsPagesToDisable)
             );
 
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted.', [], 'Admin.Notifications.Success')
             );
         } catch (Exception $exception) {
             $this->addFlash(
@@ -908,28 +818,22 @@ class CmsPageController extends FrameworkBundleAdminController
     /**
      * Deletes cms page by given id.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_cms_pages_index",
-     *     redirectQueryParamsToKeep={"id_cms_category"},
-     *     message="You do not have permission to delete this."
-     * )
-     *
      * @param int $cmsId
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'])]
-    public function deleteCmsAction($cmsId)
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'], message: 'You do not have permission to delete this.')]
+    public function deleteCmsAction($cmsId): RedirectResponse
     {
         $redirectResponse = $this->redirectToParentIndexPageByCmsPageId($cmsId);
 
         try {
-            $this->getCommandBus()->handle(new DeleteCmsPageCommand((int) $cmsId));
+            $this->dispatchCommand(new DeleteCmsPageCommand((int) $cmsId));
 
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
             );
         } catch (Exception $exception) {
             $this->addFlash(
@@ -942,21 +846,21 @@ class CmsPageController extends FrameworkBundleAdminController
     }
 
     /**
-     * Gets cms page category form builder.
+     * The redirection URL is generation thanks to the ProductPreviewProvider however it can't be used in the grid
+     * since the LinkRowAction expects a symfony route, so this action is merely used as a proxy for symfony routing
+     * and redirects to the appropriate product preview url.
      *
-     * @return FormBuilderInterface
+     * @return RedirectResponse
      */
-    private function getCmsPageCategoryFormBuilder()
-    {
-        return $this->get('prestashop.core.form.identifiable_object.builder.cms_page_category_form_builder');
-    }
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function previewAction(
+        int $cmsPageId,
+        #[Autowire(service: 'prestashop.adapter.shop.url.cms_provider')]
+        CmsProvider $previewUrlProvider,
+    ): RedirectResponse {
+        $previewUrl = $previewUrlProvider->getUrl($cmsPageId);
 
-    /**
-     * @return FormHandlerInterface
-     */
-    private function getCmsPageCategoryFormHandler()
-    {
-        return $this->get('prestashop.core.form.identifiable_object.handler.cms_page_category_form_handler');
+        return $this->redirect($previewUrl);
     }
 
     /**
@@ -967,7 +871,7 @@ class CmsPageController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    private function redirectToParentIndexPageByCategoryBulkIds(array $cmsPageCategoryIds)
+    private function redirectToParentIndexPageByCategoryBulkIds(array $cmsPageCategoryIds): RedirectResponse
     {
         if (empty($cmsPageCategoryIds)) {
             return $this->redirectToRoute('admin_cms_pages_index');
@@ -983,7 +887,7 @@ class CmsPageController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    private function redirectToParentIndexPageByBulkIds(array $cmsPageIds)
+    private function redirectToParentIndexPageByBulkIds(array $cmsPageIds): RedirectResponse
     {
         if (empty($cmsPageIds)) {
             return $this->redirectToRoute('admin_cms_pages_index');
@@ -999,11 +903,11 @@ class CmsPageController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    private function redirectToParentIndexPage($cmsPageCategoryId)
+    private function redirectToParentIndexPage($cmsPageCategoryId): RedirectResponse
     {
         try {
             $cmsPageCategoryParentId = $this->getParentCategoryId($cmsPageCategoryId)->getValue();
-        } catch (CmsPageCategoryException $e) {
+        } catch (CmsPageCategoryException) {
             $cmsPageCategoryParentId = CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID;
         }
 
@@ -1015,11 +919,11 @@ class CmsPageController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    private function redirectToParentIndexPageByCmsPageId($cmsPageId)
+    private function redirectToParentIndexPageByCmsPageId($cmsPageId): RedirectResponse
     {
         try {
-            $cmsCategoryId = $this->getQueryBus()->handle(new GetCmsCategoryIdForRedirection((int) $cmsPageId))->getValue();
-        } catch (CmsPageException $e) {
+            $cmsCategoryId = $this->dispatchQuery(new GetCmsCategoryIdForRedirection((int) $cmsPageId))->getValue();
+        } catch (CmsPageException) {
             $cmsCategoryId = CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID;
         }
 
@@ -1033,7 +937,7 @@ class CmsPageController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    private function redirectToIndexPageById($cmsPageCategoryId)
+    private function redirectToIndexPageById($cmsPageCategoryId): RedirectResponse
     {
         $routeParameters = [];
 
@@ -1055,30 +959,14 @@ class CmsPageController extends FrameworkBundleAdminController
      *
      * @throws CmsPageCategoryException
      */
-    private function getParentCategoryId($cmsPageCategoryChildId)
+    private function getParentCategoryId($cmsPageCategoryChildId): CmsPageCategoryId
     {
         /** @var CmsPageCategoryId $cmsPageCategoryParentId */
-        $cmsPageCategoryParentId = $this->getQueryBus()->handle(
+        $cmsPageCategoryParentId = $this->dispatchQuery(
             new GetCmsPageParentCategoryIdForRedirection($cmsPageCategoryChildId)
         );
 
         return $cmsPageCategoryParentId;
-    }
-
-    /**
-     * @return FormBuilderInterface
-     */
-    private function getCmsPageFormBuilder()
-    {
-        return $this->get('prestashop.core.form.identifiable_object.builder.cms_page_form_builder');
-    }
-
-    /**
-     * @return FormHandlerInterface
-     */
-    private function getCmsPageFormHandler()
-    {
-        return $this->get('prestashop.core.form.identifiable_object.handler.cms_page_form_handler');
     }
 
     /**
@@ -1091,108 +979,112 @@ class CmsPageController extends FrameworkBundleAdminController
         return [
             CmsPageNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found).',
+                [],
                 'Admin.Notifications.Error'
             ),
             CannotToggleCmsPageException::class => $this->trans(
                 'An error occurred while updating the status.',
+                [],
                 'Admin.Notifications.Error'
             ),
             CannotDisableCmsPageException::class => $this->trans(
                 'An error occurred while updating the status.',
+                [],
                 'Admin.Notifications.Error'
             ),
             CannotEnableCmsPageException::class => $this->trans(
                 'An error occurred while updating the status.',
+                [],
                 'Admin.Notifications.Error'
             ),
             CannotDeleteCmsPageException::class => [
                 CannotDeleteCmsPageException::FAILED_BULK_DELETE => $this->trans(
                     'An error occurred while deleting this selection.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
                 CannotDeleteCmsPageException::FAILED_DELETE => $this->trans(
                     'An error occurred while deleting the object.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
             ],
             CmsPageCategoryConstraintException::class => [
                 CmsPageCategoryConstraintException::INVALID_BULK_DATA => $this->trans(
                     'You must select at least one element to delete.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
-                CmsPageCategoryConstraintException::CANNOT_MOVE_CATEGORY_TO_PARENT => $this->trans('The page Category cannot be moved here.', 'Admin.Design.Notification'),
+                CmsPageCategoryConstraintException::CANNOT_MOVE_CATEGORY_TO_PARENT => $this->trans('The page Category cannot be moved here.', [], 'Admin.Design.Notification'),
                 CmsPageCategoryConstraintException::MISSING_DEFAULT_LANGUAGE_FOR_NAME => $this->trans(
                     'The %s field is not valid',
-                    'Admin.Notifications.Error',
                     [
-                        sprintf('"%s"', $this->trans('Name', 'Admin.Global')),
-                    ]
+                        sprintf('"%s"', $this->trans('Name', [], 'Admin.Global')),
+                    ],
+                    'Admin.Notifications.Error'
                 ),
                 CmsPageCategoryConstraintException::MISSING_DEFAULT_LANGUAGE_FOR_FRIENDLY_URL => $this->trans(
                     'The %s field is not valid',
-                    'Admin.Notifications.Error',
                     [
-                        sprintf('"%s"', $this->trans('Friendly URL', 'Admin.Global')),
-                    ]
+                        sprintf('"%s"', $this->trans('Friendly URL', [], 'Admin.Global')),
+                    ],
+                    'Admin.Notifications.Error'
                 ),
                 CmsPageCategoryConstraintException::INVALID_CATEGORY_NAME => $this->trans(
                     'The %s field is not valid',
-                    'Admin.Notifications.Error',
                     [
-                        sprintf('"%s"', $this->trans('Name', 'Admin.Global')),
-                    ]
+                        sprintf('"%s"', $this->trans('Name', [], 'Admin.Global')),
+                    ],
+                    'Admin.Notifications.Error'
                 ),
                 CmsPageCategoryConstraintException::INVALID_LINK_REWRITE => $this->trans(
                     'The %s field is not valid',
-                    'Admin.Notifications.Error',
                     [
-                        sprintf('"%s"', $this->trans('Friendly URL', 'Admin.Global')),
-                    ]
+                        sprintf('"%s"', $this->trans('Friendly URL', [], 'Admin.Global')),
+                    ],
+                    'Admin.Notifications.Error'
                 ),
                 CmsPageCategoryConstraintException::INVALID_META_TITLE => $this->trans(
                     'The %s field is not valid',
-                    'Admin.Notifications.Error',
                     [
-                        sprintf('"%s"', $this->trans('Meta title', 'Admin.Global')),
-                    ]
+                        sprintf('"%s"', $this->trans('Meta title', [], 'Admin.Global')),
+                    ],
+                    'Admin.Notifications.Error'
                 ),
                 CmsPageCategoryConstraintException::INVALID_DESCRIPTION => $this->trans(
                     'The %s field is not valid',
-                    'Admin.Notifications.Error',
                     [
-                        sprintf('"%s"', $this->trans('Description', 'Admin.Global')),
-                    ]
+                        sprintf('"%s"', $this->trans('Description', [], 'Admin.Global')),
+                    ],
+                    'Admin.Notifications.Error'
                 ),
                 CmsPageCategoryConstraintException::INVALID_META_DESCRIPTION => $this->trans(
                     'The %s field is not valid',
-                    'Admin.Notifications.Error',
                     [
-                        sprintf('"%s"', $this->trans('Meta description', 'Admin.Global')),
-                    ]
-                ),
-                CmsPageCategoryConstraintException::INVALID_META_KEYWORDS => $this->trans(
-                    'The %s field is not valid',
-                    'Admin.Notifications.Error',
-                    [
-                        sprintf('"%s"', $this->trans('Meta keywords', 'Admin.Global')),
-                    ]
+                        sprintf('"%s"', $this->trans('Meta description', [], 'Admin.Global')),
+                    ],
+                    'Admin.Notifications.Error'
                 ),
             ],
             CmsPageCategoryNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found).',
+                [],
                 'Admin.Notifications.Error'
             ),
             CannotToggleCmsPageCategoryStatusException::class => $this->trans(
                 'An error occurred while updating the status.',
+                [],
                 'Admin.Notifications.Error'
             ),
             CannotDeleteCmsPageCategoryException::class => [
                 CannotDeleteCmsPageCategoryException::FAILED_BULK_DELETE => $this->trans(
                     'An error occurred while deleting this selection.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
                 CannotDeleteCmsPageCategoryException::FAILED_DELETE => $this->trans(
                     'An error occurred while deleting the object.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
             ],
@@ -1211,20 +1103,20 @@ class CmsPageController extends FrameworkBundleAdminController
         if ($cmsCategoryId !== CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID) {
             $toolbarButtons['edit_cms_category'] = [
                 'href' => $this->generateUrl('admin_cms_pages_category_edit', ['cmsCategoryId' => $cmsCategoryId]),
-                'desc' => $this->trans('Edit page category', 'Admin.Design.Help'),
+                'desc' => $this->trans('Edit page category', [], 'Admin.Design.Help'),
                 'icon' => 'mode_edit',
             ];
         }
 
         $toolbarButtons['add_cms_category'] = [
             'href' => $this->generateUrl('admin_cms_pages_category_create', ['id_cms_category' => $cmsCategoryId]),
-            'desc' => $this->trans('Add new page category', 'Admin.Design.Help'),
+            'desc' => $this->trans('Add new page category', [], 'Admin.Design.Help'),
             'icon' => 'add_circle_outline',
         ];
 
         $toolbarButtons['add_cms_page'] = [
             'href' => $this->generateUrl('admin_cms_pages_create', ['id_cms_category' => $cmsCategoryId]),
-            'desc' => $this->trans('Add new page', 'Admin.Design.Help'),
+            'desc' => $this->trans('Add new page', [], 'Admin.Design.Help'),
             'icon' => 'add_circle_outline',
         ];
 

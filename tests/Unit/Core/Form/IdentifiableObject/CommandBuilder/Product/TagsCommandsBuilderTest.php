@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\TagsCommandsBuilder;
 
-class TagsCommandsBuilderTest extends AbstractProductCommandBuilderTest
+class TagsCommandsBuilderTest extends AbstractProductCommandBuilderTestCase
 {
     /**
      * @dataProvider getExpectedCommands

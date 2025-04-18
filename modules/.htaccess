@@ -1,4 +1,4 @@
-<FilesMatch "(\.tpl|\.twig|config\.xml|config_([a-z]+)\.xml)$">
+<FilesMatch "(\.php|\.log|\.txt|\.lock|\.json|\.yml|\.yaml|\.tpl|\.twig|config\.xml|config_([a-z]+)\.xml)$">
     # Apache 2.2
     <IfModule !mod_authz_core.c>
         Order deny,allow

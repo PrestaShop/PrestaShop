@@ -443,7 +443,7 @@ class FakePackItemsManager4759 extends PackItemsManager
         return $this->items[$item->id][$item_attribute_id];
     }
 
-    public function getStockAvailableByProduct($product, int $id_product_attribute = null, $id_shop = null)
+    public function getStockAvailableByProduct($product, ?int $id_product_attribute = null, $id_shop = null)
     {
         $id_product_attribute = $id_product_attribute ? $id_product_attribute : 0;
 

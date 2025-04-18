@@ -80,7 +80,7 @@ final class CustomerOrderQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
 
         $qb->select(
-                'o.`id_order`,
+            'o.`id_order`,
                 o.`date_add`,
                 o.`payment`,
                 o.`total_paid_tax_incl`,

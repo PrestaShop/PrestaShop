@@ -1,4 +1,6 @@
-import xmlHelper from '@utils/xml';
+import {
+  utilsXML,
+} from '@prestashop-core/ui-testing';
 
 export default class BaseXml {
   protected static prestashopPath = '/prestashop/*';
@@ -10,7 +12,7 @@ export default class BaseXml {
   public static getRootNodeName(
     xml: string,
   ): string {
-    return xmlHelper.getRootNodeName(xml);
+    return utilsXML.getRootNodeName(xml);
   }
 
   /**
@@ -20,6 +22,6 @@ export default class BaseXml {
   public static getPrestaShopNodes(
     xml: string,
   ): Element[] {
-    return xmlHelper.getNodes(xml, this.prestashopPath);
+    return utilsXML.getNodes(xml, this.prestashopPath);
   }
 }

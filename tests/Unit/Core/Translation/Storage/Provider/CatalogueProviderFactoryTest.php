@@ -70,7 +70,7 @@ class CatalogueProviderFactoryTest extends TestCase
             ->willReturn(new Theme([
                 'name' => 'classic',
                 'directory' => '',
-            ])); //doesn't really matter
+            ])); // doesn't really matter
 
         $this->factory = new CatalogueProviderFactory(
             $databaseTranslationLoader,

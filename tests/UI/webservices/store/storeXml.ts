@@ -1,5 +1,7 @@
 import BaseXml from '@webservices/baseXml';
-import xmlHelper from '@utils/xml';
+import {
+  utilsXML,
+} from '@prestashop-core/ui-testing';
 
 export default class StoreXml extends BaseXml {
   private static storesBasicPath = '/prestashop/stores';
@@ -24,7 +26,7 @@ export default class StoreXml extends BaseXml {
   public static getAllStores(
     xml: string,
   ): Element[] {
-    return xmlHelper.getNodes(xml, this.storesPath);
+    return utilsXML.getNodes(xml, this.storesPath);
   }
 
   /**
@@ -34,7 +36,7 @@ export default class StoreXml extends BaseXml {
   public static getStoreNodes(
     xml: string,
   ): Element[] {
-    return xmlHelper.getNodes(xml, this.storePath);
+    return utilsXML.getNodes(xml, this.storePath);
   }
 
   /**
@@ -45,8 +47,8 @@ export default class StoreXml extends BaseXml {
   public static getEltTextContent(
     xml: string,
     eltName: string,
-  ): string {
-    return xmlHelper.getNodeValue(xml, this.eltPath(eltName));
+  ): string|null {
+    return utilsXML.getNodeValue(xml, this.eltPath(eltName));
   }
 
   /**
@@ -59,7 +61,7 @@ export default class StoreXml extends BaseXml {
     xml: string,
     eltName: string,
     lang: string,
-  ): string {
-    return xmlHelper.getNodeValue(xml, this.eltLangPath(eltName, lang));
+  ): string|null {
+    return utilsXML.getNodeValue(xml, this.eltLangPath(eltName, lang));
   }
 }

@@ -194,7 +194,7 @@ class XmlLoader
                 $xml = $this->fileLoader->load($entity);
 
                 // Store entities dependencies (with field type="relation")
-                if ($xml instanceof \SimpleXMLElement && isset($xml->fields, $xml->fields->field)) {
+                if ($xml instanceof SimpleXMLElement && isset($xml->fields, $xml->fields->field)) {
                     foreach ($xml->fields->field as $field) {
                         if ($field['relation'] && $field['relation'] != $entity) {
                             if (!isset($dependencies[(string) $field['relation']])) {
@@ -273,7 +273,7 @@ class XmlLoader
         $xml = $this->fileLoader->load($entity);
 
         // Read list of fields
-        if (!$xml instanceof \SimpleXMLElement && !empty($xml->fields)) {
+        if (!$xml instanceof SimpleXMLElement) {
             throw new PrestashopInstallerException('List of fields not found for entity ' . $entity);
         }
 
@@ -290,7 +290,7 @@ class XmlLoader
 
                 try {
                     $xml_langs[$id_lang] = $this->fileLoader->load($entity, $iso);
-                } catch (PrestashopInstallerException $e) {
+                } catch (PrestashopInstallerException) {
                     $xml_langs[$id_lang] = null;
                 }
             }
@@ -789,6 +789,22 @@ class XmlLoader
                     );
                 }
             }
+
+            // Special cas for categories that now have two different images for cover and thumbnail,
+            // we use the source to generate a thumbnail by default
+            if ($entity === 'category') {
+                $sourceCategoryImage = $from_path . $identifier . '.' . $extension;
+                if (file_exists($sourceCategoryImage)) {
+                    $categoryThumbnailPath = _PS_IMG_DIR_ . $p . DIRECTORY_SEPARATOR . $entity_id . '_thumb.jpg';
+                    // Same way to generate as in CategoryThumbnailImageUploader
+                    ImageManager::resize(
+                        $sourceCategoryImage,
+                        $categoryThumbnailPath,
+                        null,
+                        null
+                    );
+                }
+            }
         }
         Image::moveToNewFileSystem();
     }
@@ -803,7 +819,7 @@ class XmlLoader
         $from_path = $this->img_path . 't/';
         $dst_path = _PS_IMG_DIR_ . 't/';
         if (file_exists($from_path . $data['class_name'] . '.gif') && !file_exists($dst_path . $data['class_name'] . '.gif')) {
-            //test if file exist in install dir and if do not exist in dest folder.
+            // test if file exist in install dir and if do not exist in dest folder.
             if (!@copy($from_path . $data['class_name'] . '.gif', $dst_path . $data['class_name'] . '.gif')) {
                 $this->setError($this->translator->trans('Cannot create image "%identifier%" for entity "%entity%"', ['%identifier%' => $identifier, '%tab%' => 'tab'], 'Install'));
 
@@ -961,7 +977,7 @@ class XmlLoader
         }
 
         if (preg_match('#^varchar\(([0-9]+)\)$#i', $type, $m)) {
-            return (int) ($m[1]) >= 64 ? true : false;
+            return (int) $m[1] >= 64 ? true : false;
         }
 
         return false;
@@ -1063,7 +1079,7 @@ class XmlLoader
 
         $dependencies = [];
         foreach ($entities as $entity => $info) {
-            foreach ($info['fields'] as $field => $info_field) {
+            foreach ($info['fields'] as $info_field) {
                 if (isset($info_field['relation']) && $info_field['relation'] != $entity) {
                     if (!isset($dependencies[$info_field['relation']])) {
                         $dependencies[$info_field['relation']] = [];
@@ -1081,7 +1097,7 @@ class XmlLoader
         if ($this->entityExists($entity)) {
             $xml = $this->fileLoader->load($entity);
         } else {
-            $xml = new SimplexmlElement('<entity_' . $entity . ' />');
+            $xml = new SimpleXMLElement('<entity_' . $entity . ' />');
         }
         unset($xml->fields);
 
@@ -1184,7 +1200,7 @@ class XmlLoader
                     mkdir($this->lang_path . $this->getFallBackToDefaultLanguage($iso) . '/data');
                 }
 
-                $xml_node = new SimplexmlElement('<entity_' . $entity . ' />');
+                $xml_node = new SimpleXMLElement('<entity_' . $entity . ' />');
                 $this->createXmlEntityNodes($entity, $nodes, $xml_node);
                 $xml_node->asXML($this->lang_path . $this->getFallBackToDefaultEntityLanguage($iso, $entity) . '/data/' . $entity . '.xml');
             }

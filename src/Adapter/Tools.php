@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShop\PrestaShop\Adapter\File\HtaccessFileGenerator;
+use PrestaShopException;
 use Tools as LegacyTools;
 
 /**
@@ -112,9 +113,9 @@ class Tools
     }
 
     /**
-     * returns the rounded value of $value to specified precision, according to your configuration;.
+     * Returns the rounded value of $value to specified precision, according to your configuration.
      *
-     * @note : PHP 5.3.0 introduce a 3rd parameter mode in round function
+     * Warning - this method accepts our own PS rounding constants with different integer values.
      *
      * @param float $value
      * @param int $precision
@@ -194,7 +195,7 @@ class Tools
      *
      * @return string
      *
-     * @throws \PrestaShopException
+     * @throws PrestaShopException
      */
     public function displayDate($date, $full = false)
     {

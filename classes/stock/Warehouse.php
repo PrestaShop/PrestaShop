@@ -308,21 +308,25 @@ class WarehouseCore extends ObjectModel
     public static function getProductWarehouseList($id_product, $id_product_attribute = 0, $id_shop = null)
     {
         $share_stock = false;
+        $shop_group_id = false;
         if ($id_shop === null) {
             if (Shop::getContext() == Shop::CONTEXT_GROUP) {
                 $shop_group = Shop::getContextShopGroup();
+                $shop_group_id = (int) $shop_group->id;
             } else {
                 $shop_group = Context::getContext()->shop->getGroup();
+                $shop_group_id = (int) $shop_group->id;
                 $id_shop = (int) Context::getContext()->shop->id;
             }
             $share_stock = $shop_group->share_stock;
         } else {
-            $shop_group = Shop::getGroupFromShop($id_shop);
+            $shop_group = Shop::getGroupFromShop($id_shop, false);
             $share_stock = $shop_group['share_stock'];
+            $shop_group_id = (int) $shop_group['id'];
         }
 
-        if ($share_stock) {
-            $ids_shop = Shop::getShops(true, (int) $shop_group->id, true);
+        if ($share_stock && $shop_group_id) {
+            $ids_shop = Shop::getShops(true, (int) $shop_group_id, true);
         } else {
             $ids_shop = [(int) $id_shop];
         }

@@ -39,10 +39,9 @@ class CacheTest extends TestCase
         parent::setUp();
 
         $memcachedMock = $this->getMockBuilder(CacheMemcache::class)
-            ->setMethods(['_set', '_get', 'isConnected', '_delete', '_deleteMulti'])
+            ->onlyMethods(['_set', '_get', '_delete', '_deleteMulti'])
             ->getMock();
 
-        $memcachedMock->method('isConnected')->willReturn(true);
         $memcachedMock->method('_get')->willReturnCallback([$this, 'getFromArray']);
         $memcachedMock->method('_set')->willReturnCallback([$this, 'setIntoArray']);
         $memcachedMock->method('_delete')->willReturnCallback([$this, 'deleteFromArray']);

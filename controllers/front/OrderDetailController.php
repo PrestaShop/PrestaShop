@@ -45,7 +45,7 @@ class OrderDetailControllerCore extends FrontController
      *
      * @see FrontController::postProcess()
      */
-    public function postProcess()
+    public function postProcess(): void
     {
         if (Tools::isSubmit('submitMessage')) {
             $idOrder = (int) Tools::getValue('id_order');
@@ -60,7 +60,7 @@ class OrderDetailControllerCore extends FrontController
             if (!count($this->errors)) {
                 $order = new Order($idOrder);
                 if (Validate::isLoadedObject($order) && $order->id_customer == $this->context->customer->id) {
-                    //check if a thread already exist
+                    // check if a thread already exist
                     $id_customer_thread = CustomerThread::getIdCustomerThreadByEmailAndIdOrder($this->context->customer->email, $order->id);
                     $id_product = (int) Tools::getValue('id_product');
                     $cm = new CustomerMessage();
@@ -86,6 +86,7 @@ class OrderDetailControllerCore extends FrontController
 
                     $cm->id_customer_thread = $ct->id;
                     $cm->message = $msgText;
+                    $cm->id_product = $id_product;
                     $client_ip_address = Tools::getRemoteAddr();
                     $cm->ip_address = (string) ip2long($client_ip_address);
                     $cm->add();
@@ -137,7 +138,15 @@ class OrderDetailControllerCore extends FrontController
                         );
                     }
 
-                    Tools::redirect('index.php?controller=order-detail&id_order=' . $idOrder . '&messagesent');
+                    Tools::redirect($this->context->link->getPageLink(
+                        'order-detail',
+                        null,
+                        null,
+                        [
+                            'id_order' => $idOrder,
+                            'messagesent' => 1,
+                        ]
+                    ));
                 } else {
                     $this->redirect_after = '404';
                     $this->redirect();
@@ -151,7 +160,7 @@ class OrderDetailControllerCore extends FrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         parent::initContent();
         if (Configuration::isCatalogMode()) {
@@ -214,7 +223,7 @@ class OrderDetailControllerCore extends FrontController
         $this->setTemplate('customer/order-detail');
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 

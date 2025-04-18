@@ -27,16 +27,12 @@
 namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use Category;
-use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
-use PrestaShop\PrestaShop\Adapter\Image\Uploader\CategoryImageUploader;
-use PrestaShop\PrestaShop\Core\Category\Provider\MenuThumbnailAvailableKeyProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\EditCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditRootCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\MenuThumbnailsLimitException;
 
 /**
  * Class EditCategoryHandler.
@@ -44,26 +40,8 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\MenuThumbnailsLimitExce
  * @internal
  */
 #[AsCommandHandler]
-final class EditCategoryHandler extends AbstractObjectModelHandler implements EditCategoryHandlerInterface
+final class EditCategoryHandler extends AbstractEditCategoryHandler implements EditCategoryHandlerInterface
 {
-    /**
-     * @var CategoryImageUploader
-     */
-    private $categoryImageUploader;
-
-    /**
-     * @var MenuThumbnailAvailableKeyProvider
-     */
-    private $menuThumbnailAvailableKeyProvider;
-
-    public function __construct(
-        CategoryImageUploader $categoryImageUploader,
-        MenuThumbnailAvailableKeyProvider $menuThumbnailAvailableKeyProvider
-    ) {
-        $this->categoryImageUploader = $categoryImageUploader;
-        $this->menuThumbnailAvailableKeyProvider = $menuThumbnailAvailableKeyProvider;
-    }
-
     /**
      * {@inheritdoc}
      *
@@ -72,11 +50,6 @@ final class EditCategoryHandler extends AbstractObjectModelHandler implements Ed
      */
     public function handle(EditCategoryCommand $command)
     {
-        $availableKeys = $this->menuThumbnailAvailableKeyProvider->getAvailableKeys($command->getCategoryId()->getValue());
-
-        if (count($command->getMenuThumbnailImages()) > count($availableKeys)) {
-            throw new MenuThumbnailsLimitException('Maximum number of menu thumbnails exceeded for new category');
-        }
         $category = new Category($command->getCategoryId()->getValue());
 
         if (!$category->id) {
@@ -92,8 +65,7 @@ final class EditCategoryHandler extends AbstractObjectModelHandler implements Ed
         $this->categoryImageUploader->uploadImages(
             $command->getCategoryId(),
             $command->getCoverImage(),
-            $command->getThumbnailImage(),
-            $command->getMenuThumbnailImages()
+            $command->getThumbnailImage()
         );
     }
 
@@ -139,10 +111,6 @@ final class EditCategoryHandler extends AbstractObjectModelHandler implements Ed
             $category->meta_description = $command->getLocalizedMetaDescriptions();
         }
 
-        if (null !== $command->getLocalizedMetaKeywords()) {
-            $category->meta_keywords = $command->getLocalizedMetaKeywords();
-        }
-
         if (null !== $command->getAssociatedGroupIds()) {
             $category->groupBox = $command->getAssociatedGroupIds();
         }
@@ -153,6 +121,10 @@ final class EditCategoryHandler extends AbstractObjectModelHandler implements Ed
 
         if (false === $category->validateFieldsLang(false)) {
             throw new CannotEditCategoryException('Invalid language data for updating category.');
+        }
+
+        if (null !== $command->getRedirectOption()) {
+            $this->fillWithRedirectOption($category, $command->getRedirectOption());
         }
 
         if (false === $category->update()) {

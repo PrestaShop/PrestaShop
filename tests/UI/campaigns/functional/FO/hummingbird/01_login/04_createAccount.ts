@@ -1,21 +1,18 @@
-// Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Import commonTests
-import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
-
-// Import FO pages
-import homePage from '@pages/FO/hummingbird/home';
-import loginPage from '@pages/FO/hummingbird/login';
-import createAccountPage from '@pages/FO/hummingbird/myAccount/add';
-
-// Import data
-import CustomerData from '@data/faker/customer';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+
+import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
+import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+
+import {
+  type BrowserContext,
+  FakerCustomer,
+  foHummingbirdCreateAccountPage,
+  foHummingbirdHomePage,
+  foHummingbirdLoginPage,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_hummingbird_login_createAccount';
 
@@ -23,72 +20,72 @@ describe('FO - Login : Create account', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const customerData: CustomerData = new CustomerData();
+  const customerData: FakerCustomer = new FakerCustomer();
 
   // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}_preTest_1`);
+  enableHummingbird(`${baseContext}_preTest_1`);
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('Create account', () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-      await homePage.goTo(page, global.FO.URL);
+      await foHummingbirdHomePage.goTo(page, global.FO.URL);
 
-      const result = await homePage.isHomePage(page);
-      await expect(result).to.be.true;
+      const result = await foHummingbirdHomePage.isHomePage(page);
+      expect(result).to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPage', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foHummingbirdHomePage.goToLoginPage(page);
 
-      const pageTitle = await loginPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(loginPage.pageTitle);
+      const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdLoginPage.pageTitle);
     });
 
     it('should go to create account page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreateAccountPage', baseContext);
 
-      await loginPage.goToCreateAccountPage(page);
+      await foHummingbirdLoginPage.goToCreateAccountPage(page);
 
-      const pageHeaderTitle = await createAccountPage.getHeaderTitle(page);
-      await expect(pageHeaderTitle).to.equal(createAccountPage.formTitle);
+      const pageHeaderTitle = await foHummingbirdCreateAccountPage.getHeaderTitle(page);
+      expect(pageHeaderTitle).to.equal(foHummingbirdCreateAccountPage.formTitle);
     });
 
     it('should create new account', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createAccount', baseContext);
 
-      await createAccountPage.createAccount(page, customerData);
+      await foHummingbirdCreateAccountPage.createAccount(page, customerData);
 
-      const isCustomerConnected = await homePage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Created customer is not connected!').to.be.true;
+      const isCustomerConnected = await foHummingbirdHomePage.isCustomerConnected(page);
+      expect(isCustomerConnected, 'Created customer is not connected!').to.eq(true);
     });
 
     it('should check if the page is redirected to home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'isHomePage', baseContext);
 
-      const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to redirect to FO home page!').to.be.true;
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
+      expect(isHomePage, 'Fail to redirect to FO home page!').to.eq(true);
     });
 
     it('should sign out from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFO', baseContext);
 
-      await homePage.logout(page);
+      await foHummingbirdHomePage.logout(page);
 
-      const isCustomerConnected = await homePage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is connected!').to.be.false;
+      const isCustomerConnected = await foHummingbirdHomePage.isCustomerConnected(page);
+      expect(isCustomerConnected, 'Customer is connected!').to.eq(false);
     });
   });
 
@@ -96,5 +93,5 @@ describe('FO - Login : Create account', async () => {
   deleteCustomerTest(customerData, `${baseContext}_postTest_1`);
 
   // Post-condition : Uninstall Hummingbird
-  uninstallHummingbird(`${baseContext}_postTest_2`);
+  disableHummingbird(`${baseContext}_postTest_2`);
 });

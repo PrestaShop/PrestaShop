@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
+use PrestaShop\PrestaShop\Core\Form\FormChoiceFormatter;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Profile;
 
@@ -52,13 +53,11 @@ final class ProfileByIdChoiceProvider implements FormChoiceProviderInterface
      */
     public function getChoices()
     {
-        $profiles = Profile::getProfiles($this->contextLangId);
-        $choices = [];
-
-        foreach ($profiles as $profile) {
-            $choices[$profile['name']] = $profile['id_profile'];
-        }
-
-        return $choices;
+        return FormChoiceFormatter::formatFormChoices(
+            Profile::getProfiles($this->contextLangId),
+            'id_profile',
+            'name',
+            false
+        );
     }
 }

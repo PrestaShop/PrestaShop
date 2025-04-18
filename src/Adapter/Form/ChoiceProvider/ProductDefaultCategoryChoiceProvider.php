@@ -97,6 +97,7 @@ class ProductDefaultCategoryChoiceProvider implements ConfigurableFormChoiceProv
                 $this->defaultCategoryId,
                 $category->getName($this->languageId->getValue())
             );
+
             // if no product is provided, then default category can only be home
             return [$displayName => $this->defaultCategoryId->getValue()];
         }

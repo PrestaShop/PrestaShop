@@ -29,6 +29,7 @@ namespace Tests\Integration\Behaviour\Features\Context;
 use Access;
 use Address;
 use AddressFormat;
+use AdminKernel;
 use Alias;
 use AppKernel;
 use Attachment;
@@ -73,6 +74,7 @@ use Mail;
 use Manufacturer;
 use Message;
 use Meta;
+use Module;
 use ObjectModel;
 use OrderCartRule;
 use OrderHistory;
@@ -87,6 +89,8 @@ use Pack;
 use Page;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Context\ContextBuilderPreparer;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use Product;
 use ProductAttribute;
 use ProductDownload;
@@ -159,11 +163,11 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @BeforeSuite
      */
-    public static function prepare(BeforeSuiteScope $scope)
+    public static function prepare(BeforeSuiteScope $scope): void
     {
         require_once __DIR__ . '/../../bootstrap.php';
 
-        self::$kernel = new AppKernel('test', true);
+        self::$kernel = new AdminKernel('test', true);
         self::$kernel->boot();
 
         global $kernel;
@@ -174,6 +178,9 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
 
         // Disable legacy object model cache to prevent conflicts between scenarios.
         ObjectModel::disableCache();
+        /** @var ContextBuilderPreparer $preparer */
+        $preparer = static::getContainer()->get(ContextBuilderPreparer::class);
+        $preparer->prepareFromLegacyContext(Context::getContext());
     }
 
     /**
@@ -181,7 +188,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
      *
      * @BeforeFeature @restore-all-tables-before-feature
      */
-    public static function restoreAllTablesBeforeFeature()
+    public static function restoreAllTablesBeforeFeature(): void
     {
         DatabaseDump::restoreAllTables();
         SharedStorage::getStorage()->clean();
@@ -193,7 +200,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
      *
      * @BeforeFeature @restore-all-tables-after-feature
      */
-    public static function restoreAllTablesAfterFeature()
+    public static function restoreAllTablesAfterFeature(): void
     {
         DatabaseDump::restoreAllTables();
         SharedStorage::getStorage()->clean();
@@ -205,7 +212,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
      *
      * @BeforeFeature @reboot-kernel-before-feature
      */
-    public static function rebootKernelBeforeFeature()
+    public static function rebootKernelBeforeFeature(): void
     {
         self::rebootKernel();
     }
@@ -215,7 +222,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
      *
      * @AfterFeature @reboot-kernel-after-feature
      */
-    public static function rebootKernelAfterFeature()
+    public static function rebootKernelAfterFeature(): void
     {
         self::rebootKernel();
     }
@@ -225,7 +232,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
      *
      * @BeforeScenario @reboot-kernel-before-scenario
      */
-    public static function rebootKernelBeforeScenario()
+    public static function rebootKernelBeforeScenario(): void
     {
         self::rebootKernel();
     }
@@ -257,9 +264,25 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @AfterFeature @reset-test-modules-after-feature
+     */
+    public static function resetTestModulesAfterFeature(): void
+    {
+        (new ResourceResetter())->resetTestModules();
+    }
+
+    /**
+     * @AfterFeature @reset-test-modules-before-feature
+     */
+    public static function resetTestModulesBeforeFeature(): void
+    {
+        (new ResourceResetter())->resetTestModules();
+    }
+
+    /**
      * @AfterFeature @clear-cache-after-feature
      */
-    public static function clearCacheAfterFeature()
+    public static function clearCacheAfterFeature(): void
     {
         self::clearCache();
     }
@@ -267,7 +290,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @BeforeFeature @clear-cache-before-feature
      */
-    public static function clearCacheBeforeFeature()
+    public static function clearCacheBeforeFeature(): void
     {
         self::clearCache();
     }
@@ -275,7 +298,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @BeforeScenario @mock-context-on-scenario
      */
-    public static function mockContextBeforeScenario()
+    public static function mockContextBeforeScenario(): void
     {
         self::mockContext();
     }
@@ -283,7 +306,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @AfterScenario @mock-context-on-scenario
      */
-    public static function resetContextAfterScenario()
+    public static function resetContextAfterScenario(): void
     {
         self::resetContext();
     }
@@ -291,7 +314,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @BeforeFeature @mock-context-on-feature
      */
-    public static function mockContextBeforeFeature()
+    public static function mockContextBeforeFeature(): void
     {
         self::mockContext();
     }
@@ -299,7 +322,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @AfterFeature @mock-context-on-feature
      */
-    public static function resetContextAfterFeature()
+    public static function resetContextAfterFeature(): void
     {
         self::resetContext();
     }
@@ -307,7 +330,15 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @BeforeScenario @clear-cache-before-scenario
      */
-    public static function clearCacheBeforeScenario()
+    public static function clearCacheBeforeScenario(): void
+    {
+        self::clearCache();
+    }
+
+    /**
+     * @AfterScenario @clear-cache-after-scenario
+     */
+    public static function clearCacheAfterScenario(): void
     {
         self::clearCache();
     }
@@ -315,11 +346,24 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * This hook can be used to flag a scenario for database hard reset
      *
-     * @BeforeScenario @reset-database-before-scenario
+     * @BeforeScenario @reset-all-tables-before-scenario
      */
-    public static function cleanDatabaseHardPrepareScenario()
+    public static function resetAllTablesBeforeScenario(): void
     {
-        self::restoreTestDB();
+        DatabaseDump::restoreAllTables();
+        SharedStorage::getStorage()->clean();
+        require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
+    }
+
+    /**
+     * This hook can be used to flag a scenario for database hard reset
+     *
+     * @AfterScenario @reset-all-tables-after-scenario
+     */
+    public static function resetAllTablesAfterScenario(): void
+    {
+        DatabaseDump::restoreAllTables();
+        SharedStorage::getStorage()->clean();
         require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
     }
 
@@ -328,7 +372,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
      *
      * Clear Doctrine entity manager at each step in order to get fresh data
      */
-    public function clearEntityManager()
+    public function clearEntityManager(): void
     {
         $this::getContainer()->get('doctrine.orm.entity_manager')->clear();
     }
@@ -336,7 +380,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Given I reboot kernel
      */
-    public function rebootKernelOnDemand()
+    public function rebootKernelOnDemand(): void
     {
         self::rebootKernel();
     }
@@ -569,7 +613,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         return $steps[count($steps) - 1];
     }
 
-    private static function mockContext()
+    private static function mockContext(): void
     {
         /** @var LegacyContext $legacyContext */
         $legacyContext = self::getContainer()->get('prestashop.adapter.legacy.context');
@@ -583,10 +627,10 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         self::$contextMocker->mockContext();
     }
 
-    private static function resetContext()
+    private static function resetContext(): void
     {
         if (empty(self::$contextMocker)) {
-            throw new \Exception('Context was not mocked');
+            throw new Exception('Context was not mocked');
         }
         self::$contextMocker->resetContext();
     }
@@ -601,11 +645,6 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         $realCacheDir = self::$kernel->getContainer()->getParameter('kernel.cache_dir');
         $warmupDir = substr($realCacheDir, 0, -1) . ('_' === substr($realCacheDir, -1) ? '-' : '_');
         self::$kernel->reboot($warmupDir);
-    }
-
-    private static function restoreTestDB(): void
-    {
-        DatabaseDump::restoreDb();
     }
 
     /**
@@ -645,6 +684,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         DateRange::resetStaticCache();
         EmployeeSession::resetStaticCache();
         Feature::resetStaticCache();
+        self::getContainer()->get(FeatureFlagStateCheckerInterface::class)->reset();
         FeatureValue::resetStaticCache();
         Gender::resetStaticCache();
         GroupReduction::resetStaticCache();
@@ -655,6 +695,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         Manufacturer::resetStaticCache();
         Message::resetStaticCache();
         Meta::resetStaticCache();
+        Module::resetStaticCache();
         Page::resetStaticCache();
         ProductDownload::resetStaticCache();
         ProductSupplier::resetStaticCache();

@@ -73,7 +73,7 @@ class InvoiceOptionsConfigurationTest extends AbstractConfigurationTestCase
         $this->mockMultistoreFeature = $this->createMultistoreFeatureMock();
 
         $this->invoiceModelChoiceProvider = $this->getMockBuilder(FormChoiceProviderInterface::class)
-            ->setMethods(['getChoices'])
+            ->onlyMethods(['getChoices'])
             ->getMock()
         ;
 

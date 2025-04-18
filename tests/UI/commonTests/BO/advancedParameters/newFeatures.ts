@@ -1,50 +1,24 @@
-// Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import BO pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
-import dashboardPage from '@pages/BO/dashboard';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+
+import {
+  boDashboardPage,
+  boFeatureFlagPage,
+  boLoginPage,
+  type BrowserContext,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 let browserContext: BrowserContext;
 let page: Page;
-
-/**
- * Indicate the default state of new page with feature flags, depending on its initial value we need to
- * adapt the tests behaviour especially the part that enables/disables the page. We keep this value editable
- * here in case the default value changes the tests will be easy to adapt.
- */
-function isNewProductPageEnabledByDefault(): boolean {
-  return true;
-}
-
-/**
- * Reset the new product page to its initial state.
- *
- * @param baseContext {string}
- */
-function resetNewProductPageAsDefault(baseContext: string = 'commonTests-resetNewProductPage'): void {
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, isNewProductPageEnabledByDefault(), baseContext);
-}
 
 function setFeatureFlag(featureFlag: string, expectedStatus: boolean, baseContext: string = 'commonTests-setFeatureFlag'): void {
   let title: string;
 
   switch (featureFlag) {
-    case featureFlagPage.featureFlagAuthorizationServer:
+    case boFeatureFlagPage.featureFlagAdminAPI:
       title = 'Authorization server';
-      break;
-    case featureFlagPage.featureFlagMultipleImageFormats:
-      title = 'Multiple image formats';
-      break;
-    case featureFlagPage.featureFlagProductPageV2:
-      title = 'New product page';
       break;
     default:
       throw new Error(`The feature flag ${featureFlag} is not defined`);
@@ -53,43 +27,45 @@ function setFeatureFlag(featureFlag: string, expectedStatus: boolean, baseContex
   describe(`${expectedStatus ? 'Enable' : 'Disable'} the feature flag "${title}"`, async () => {
     // before and after functions
     before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
     });
 
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
+      await utilsPlaywright.closeBrowserContext(browserContext);
     });
 
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Advanced Parameters > New & Experimental Features\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFeatureFlagPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.featureFlagLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.featureFlagLink,
       );
-      await featureFlagPage.closeSfToolBar(page);
+      await boFeatureFlagPage.closeSfToolBar(page);
 
-      const pageTitle = await featureFlagPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(featureFlagPage.pageTitle);
+      const pageTitle = await boFeatureFlagPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boFeatureFlagPage.pageTitle);
     });
 
     it(`should ${expectedStatus ? 'enable' : 'disable'} "${title}"`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setFeatureFlag', baseContext);
 
-      const successMessage = await featureFlagPage.setFeatureFlag(page, featureFlag, expectedStatus);
-      await expect(successMessage).to.be.contain(featureFlagPage.successfulUpdateMessage);
+      const successMessage = await boFeatureFlagPage.setFeatureFlag(page, featureFlag, expectedStatus);
+      expect(successMessage).to.be.contain(boFeatureFlagPage.successfulUpdateMessage);
     });
   });
 }
 
-export {
-  isNewProductPageEnabledByDefault,
-  resetNewProductPageAsDefault,
-  setFeatureFlag,
-};
+export default setFeatureFlag;

@@ -107,7 +107,7 @@ class MultistoreUrlExtension extends AbstractExtension
      *
      * @return string
      */
-    public function generateShopUrl(Shop $shop = null): string
+    public function generateShopUrl(?Shop $shop = null): string
     {
         return $this->generateUrl($shop->getId(), 's-');
     }

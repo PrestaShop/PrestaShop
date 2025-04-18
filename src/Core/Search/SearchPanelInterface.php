@@ -33,4 +33,6 @@ interface SearchPanelInterface
     public function getButtonLabel(): string;
 
     public function getLink(): string;
+
+    public function isExternalLink(): bool;
 }

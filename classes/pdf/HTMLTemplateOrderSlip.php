@@ -124,7 +124,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
             }
             unset($product);
         } else {
-            $this->order->products = null;
+            $this->order->products = [];
         }
 
         if ($this->order_slip->shipping_cost == 0) {

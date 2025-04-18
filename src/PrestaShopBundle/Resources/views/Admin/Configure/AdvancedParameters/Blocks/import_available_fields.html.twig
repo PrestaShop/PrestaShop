@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
@@ -31,7 +31,7 @@
   </h3>
   <div class="card-body">
     <div class="js-available-field-template d-none"></div>
-    {% include '@Common/HelpBox/helpbox.html.twig' with { "classes" : "js-available-field-popover-template d-none" } %}
+    {{ include('@Common/HelpBox/helpbox.html.twig', {classes: 'js-available-field-popover-template d-none'}) }}
     <div
       class="alert alert-info js-available-fields"
       role="alert"

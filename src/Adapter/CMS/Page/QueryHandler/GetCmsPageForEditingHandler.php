@@ -84,15 +84,14 @@ final class GetCmsPageForEditingHandler extends AbstractCmsPageHandler implement
                 $cms->meta_title,
                 $cms->head_seo_title,
                 $cms->meta_description,
-                $cms->meta_keywords,
                 $cms->link_rewrite,
                 $cms->content,
                 $cms->indexation,
                 $cms->active,
                 $cms->getAssociatedShops(),
                 $this->link->getCMSLink($cms, null, null, $this->langId)
-        );
-        } catch (PrestaShopException $e) {
+            );
+        } catch (PrestaShopException) {
             throw new CmsPageException(sprintf('An error occurred when getting cms page for editing with id "%s"', $cmsPageId));
         }
     }

@@ -157,7 +157,7 @@ class CountryQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ($filterName === 'zone_name') {
-                $builder->andWhere('z.name' . ' LIKE :' . $filterName);
+                $builder->andWhere('z.name LIKE :' . $filterName);
                 $builder->setParameter($filterName, '%' . $filterValue . '%');
                 continue;
             }

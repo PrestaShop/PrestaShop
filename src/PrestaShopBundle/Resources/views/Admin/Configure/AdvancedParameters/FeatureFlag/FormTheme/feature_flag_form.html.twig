@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
 {% block feature_flag_row %}
   <div class="form-group row feature_flag-widget">
@@ -48,6 +48,6 @@
 {% block feature_flag_widget %}
   {{ block('switch_widget') }}
   {% if forced_by_env %}
-    <div class="small form-text font-weight-bold">{{ "This FeatureFlag is forced by Env."|trans({}, 'Admin.Advparameters.Help') }}</div>
+    <div class="small form-text font-weight-bold">{{ 'This FeatureFlag is forced by Env.'|trans({}, 'Admin.Advparameters.Help') }}</div>
   {% endif %}
 {% endblock feature_flag_widget %}

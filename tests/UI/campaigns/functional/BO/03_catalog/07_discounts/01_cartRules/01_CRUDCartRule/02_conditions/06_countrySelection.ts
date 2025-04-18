@@ -1,33 +1,28 @@
-// Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Import commonTests
-import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-// Import BO pages
-import cartRulesPage from '@pages/BO/catalog/discounts';
-import addCartRulePage from '@pages/BO/catalog/discounts/add';
-import dashboardPage from '@pages/BO/dashboard';
-import zonesPage from '@pages/BO/international/locations';
-import countriesPage from '@pages/BO/international/locations/countries';
-// Import FO pages
-import {cartPage} from '@pages/FO/cart';
-import checkoutPage from '@pages/FO/checkout';
-import {homePage as foHomePage} from '@pages/FO/home';
-import foProductPage from '@pages/FO/product';
-
-// Import data
-import Countries from '@data/demo/countries';
-import Customers from '@data/demo/customers';
-import Products from '@data/demo/products';
-import Carriers from '@data/demo/carriers';
-import CartRuleData from '@data/faker/cartRule';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+
+import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
+
+import {
+  boCartRulesPage,
+  boCartRulesCreatePage,
+  boCountriesPage,
+  boDashboardPage,
+  boLoginPage,
+  boZonesPage,
+  type BrowserContext,
+  dataCarriers,
+  dataCountries,
+  dataCustomers,
+  dataProducts,
+  FakerCartRule,
+  foClassicCartPage,
+  foClassicCheckoutPage,
+  foClassicHomePage,
+  foClassicProductPage,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_conditions_countrySelection';
 
@@ -49,11 +44,11 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const cartRule: CartRuleData = new CartRuleData({
+  const cartRule: FakerCartRule = new FakerCartRule({
     name: 'Cart rule country selection',
     code: '4QABV6L3',
     countrySelection: true,
-    countryIDToRemove: Countries.france.id,
+    countryIDToRemove: dataCountries.france.id,
     discountType: 'Amount',
     discountAmount: {
       value: 15,
@@ -64,77 +59,83 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
-  describe(`BO : Enable the country '${Countries.unitedStates.name}'`, async () => {
+  describe(`BO : Enable the country '${dataCountries.unitedStates.name}'`, async () => {
     it('should go to \'International > Locations\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLocationsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.internationalParentLink,
-        dashboardPage.locationsLink,
+        boDashboardPage.internationalParentLink,
+        boDashboardPage.locationsLink,
       );
-      await zonesPage.closeSfToolBar(page);
+      await boZonesPage.closeSfToolBar(page);
 
-      const pageTitle = await zonesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(zonesPage.pageTitle);
+      const pageTitle = await boZonesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boZonesPage.pageTitle);
     });
 
     it('should go to \'Countries\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCountriesPage', baseContext);
 
-      await zonesPage.goToSubTabCountries(page);
+      await boZonesPage.goToSubTabCountries(page);
 
-      const pageTitle = await countriesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(countriesPage.pageTitle);
+      const pageTitle = await boCountriesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCountriesPage.pageTitle);
     });
 
     it('should reset all filters and get number of countries in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-      const numberOfCountries = await countriesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCountries).to.be.above(0);
+      const numberOfCountries = await boCountriesPage.resetAndGetNumberOfLines(page);
+      expect(numberOfCountries).to.be.above(0);
     });
 
-    it(`should search for the country '${Countries.unitedStates.name}'`, async function () {
+    it(`should search for the country '${dataCountries.unitedStates.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByNameToEnable', baseContext);
 
-      await countriesPage.filterTable(page, 'input', 'b!name', Countries.unitedStates.name);
+      await boCountriesPage.filterTable(page, 'input', 'b!name', dataCountries.unitedStates.name);
 
-      const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
-      await expect(numberOfCountriesAfterFilter).to.be.equal(1);
+      const numberOfCountriesAfterFilter = await boCountriesPage.getNumberOfElementInGrid(page);
+      expect(numberOfCountriesAfterFilter).to.be.equal(1);
 
-      const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 'b!name');
-      await expect(textColumn).to.equal(Countries.unitedStates.name);
+      const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'b!name');
+      expect(textColumn).to.equal(dataCountries.unitedStates.name);
     });
 
     it('should enable the country', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'verifyTheCountryStatus', baseContext);
 
-      await countriesPage.setCountryStatus(page, 1, true);
+      await boCountriesPage.setCountryStatus(page, 1, true);
 
-      const currentStatus = await countriesPage.getCountryStatus(page, 1);
-      await expect(currentStatus).to.be.true;
+      const currentStatus = await boCountriesPage.getCountryStatus(page, 1);
+      expect(currentStatus).to.eq(true);
     });
 
     it('should reset filter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterCountry', baseContext);
 
-      await countriesPage.resetFilter(page);
+      await boCountriesPage.resetFilter(page);
 
-      const numberOfCountriesAfterReset = await countriesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCountriesAfterReset).to.be.at.least(1);
+      const numberOfCountriesAfterReset = await boCountriesPage.resetAndGetNumberOfLines(page);
+      expect(numberOfCountriesAfterReset).to.be.at.least(1);
     });
   });
 
@@ -142,30 +143,30 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
     it('should go to \'Catalog > Discounts\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.discountsLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.discountsLink,
       );
 
-      const pageTitle = await cartRulesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+      const pageTitle = await boCartRulesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCartRulesPage.pageTitle);
     });
 
     it('should go to new cart rule page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewCartRulePage', baseContext);
 
-      await cartRulesPage.goToAddNewCartRulesPage(page);
+      await boCartRulesPage.goToAddNewCartRulesPage(page);
 
-      const pageTitle = await addCartRulePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addCartRulePage.pageTitle);
+      const pageTitle = await boCartRulesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCartRulesCreatePage.pageTitle);
     });
 
     it('should create cart rule', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCartRule', baseContext);
 
-      const validationMessage = await addCartRulePage.createEditCartRules(page, cartRule);
-      await expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
+      const validationMessage = await boCartRulesCreatePage.createEditCartRules(page, cartRule);
+      expect(validationMessage).to.contains(boCartRulesCreatePage.successfulCreationMessage);
     });
   });
 
@@ -173,108 +174,108 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop1', baseContext);
 
-      page = await addCartRulePage.viewMyShop(page);
-      await foHomePage.changeLanguage(page, 'en');
+      page = await boCartRulesCreatePage.viewMyShop(page);
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foHomePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      const isHomePage = await foClassicHomePage.isHomePage(page);
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to the third product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFirstProductPage', baseContext);
 
-      await foHomePage.goToProductPage(page, 3);
+      await foClassicHomePage.goToProductPage(page, 3);
 
-      const pageTitle = await foProductPage.getPageTitle(page);
-      await expect(pageTitle.toUpperCase()).to.contains(Products.demo_6.name.toUpperCase());
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
+      expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_6.name.toUpperCase());
     });
 
     it('should add product to cart and proceed to checkout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await foProductPage.addProductToTheCart(page);
+      await foClassicProductPage.addProductToTheCart(page);
 
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.equal(1);
+      const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
+      expect(notificationsNumber).to.be.equal(1);
     });
 
     it('should set the promo code and verify the error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addPromoCode1', baseContext);
 
-      await cartPage.addPromoCode(page, cartRule.code);
+      await foClassicCartPage.addPromoCode(page, cartRule.code);
 
-      const chooseDeliveryAddressNotification = await cartPage.getAlertWarningForPromoCode(page);
-      await expect(chooseDeliveryAddressNotification).to.equal(cartPage.alertChooseDeliveryAddressWarningText);
+      const chooseDeliveryAddressNotification = await foClassicCartPage.getAlertWarningForPromoCode(page);
+      expect(chooseDeliveryAddressNotification).to.equal(foClassicCartPage.alertChooseDeliveryAddressWarningText);
     });
 
     it('should proceed to checkout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckoutAndSignIn', baseContext);
 
       // Proceed to checkout the shopping cart
-      await cartPage.clickOnProceedToCheckout(page);
+      await foClassicCartPage.clickOnProceedToCheckout(page);
 
-      const isCheckout = await checkoutPage.isCheckoutPage(page);
-      await expect(isCheckout).to.be.true;
+      const isCheckout = await foClassicCheckoutPage.isCheckoutPage(page);
+      expect(isCheckout).to.eq(true);
     });
 
     it('should sign in by the default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
-      await checkoutPage.clickOnSignIn(page);
+      await foClassicCheckoutPage.clickOnSignIn(page);
 
-      const isCustomerConnected = await checkoutPage.customerLogin(page, Customers.johnDoe);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      const isCustomerConnected = await foClassicCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should choose the delivery address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseAndConfirmAddressStep', baseContext);
 
-      await checkoutPage.chooseDeliveryAddress(page, 2);
+      await foClassicCheckoutPage.chooseDeliveryAddress(page, 2);
 
-      const isDeliveryStep = await checkoutPage.goToDeliveryStep(page);
-      await expect(isDeliveryStep, 'Delivery Step block is not displayed').to.be.true;
+      const isDeliveryStep = await foClassicCheckoutPage.goToDeliveryStep(page);
+      expect(isDeliveryStep, 'Delivery Step block is not displayed').to.eq(true);
     });
 
     it('should set the promo code', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addPromoCode2', baseContext);
 
-      await checkoutPage.addPromoCode(page, cartRule.code);
+      await foClassicCheckoutPage.addPromoCode(page, cartRule.code);
 
-      const cartRuleName = await checkoutPage.getCartRuleName(page, 1);
-      await expect(cartRuleName).to.equal(cartRule.name);
+      const cartRuleName = await foClassicCheckoutPage.getCartRuleName(page, 1);
+      expect(cartRuleName).to.equal(cartRule.name);
     });
 
     it('should check the total after discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTotalAfterDiscount', baseContext);
 
-      const totalAfterDiscount = await checkoutPage.getATIPrice(page);
-      await expect(totalAfterDiscount).to.eq(Products.demo_6.price - cartRule.discountAmount!.value + Carriers.myCarrier.price);
+      const totalAfterDiscount = await foClassicCheckoutPage.getATIPrice(page);
+      expect(totalAfterDiscount).to.eq(dataProducts.demo_6.price - cartRule.discountAmount!.value + dataCarriers.myCarrier.price);
     });
 
     it('should remove the discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removeTheDiscount', baseContext);
 
-      const isDeleteIconNotVisible = await checkoutPage.removePromoCode(page);
-      await expect(isDeleteIconNotVisible, 'The discount is not removed').to.be.true;
+      const isDeleteIconNotVisible = await foClassicCheckoutPage.removePromoCode(page);
+      expect(isDeleteIconNotVisible, 'The discount is not removed').to.eq(true);
     });
 
     it('should go to Home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkLogoLink', baseContext);
 
-      await foHomePage.clickOnHeaderLink(page, 'Logo');
+      await foClassicHomePage.clickOnHeaderLink(page, 'Logo');
 
-      const pageTitle = await foHomePage.getPageTitle(page);
-      await expect(pageTitle).to.equal(foHomePage.pageTitle);
+      const pageTitle = await foClassicHomePage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicHomePage.pageTitle);
     });
 
     it('should go to cart page and remove product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removeProduct1', baseContext);
 
-      await foHomePage.goToCartPage(page);
-      await cartPage.deleteProduct(page, 1);
+      await foClassicHomePage.goToCartPage(page);
+      await foClassicCartPage.deleteProduct(page, 1);
 
-      const notificationNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationNumber).to.be.equal(0);
+      const notificationNumber = await foClassicCartPage.getCartNotificationsNumber(page);
+      expect(notificationNumber).to.be.equal(0);
     });
   });
 

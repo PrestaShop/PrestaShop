@@ -1,18 +1,32 @@
 .notification-center {
+  height: 100%;
+
   > .notification {
-    padding: 9px 5px;
-    color: $medium-gray;
+    height: 100%;
+    padding: var(--#{$cdk}size-8);
+    color: var(--#{$cdk}header-text-color);
     background: transparent;
     border: none;
 
+    &:hover {
+      color: var(--#{$cdk}header-text-color-hover);
+    }
+
     > .material-icons {
-      font-size: 1.375rem;
-      line-height: 1.375rem;
-      vertical-align: middle;
+      font-size: var(--#{$cdk}size-24);
     }
 
     > .count {
       @include notification_counter();
+      top: var(--#{$cdk}size-2);
+      right: var(--#{$cdk}size-2);
+      min-width: var(--#{$cdk}size-18);
+      height: var(--#{$cdk}size-18);
+
+      > span {
+        font-size: inherit;
+        color: inherit;
+      }
 
       @include media-breakpoint-down("sm") {
         top: 0.7rem;
@@ -37,73 +51,27 @@
   }
 
   .notifications {
-    top: 42px;
-    // stylelint-disable-next-line
-    right: 5px !important;
-    min-width: 25rem;
-    padding: 0;
-    margin: 0;
-    font-size: $font-size-base;
-    @include border-radius(0);
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
+    .nav-pills {
+      display: flex;
+      border-bottom: var(--#{$cdk}size-1) solid var(--#{$cdk}primary-400);
 
-    &::before,
-    &::after {
-      position: absolute;
-      right: 9px;
-      bottom: 100%;
-      width: 0;
-      height: 0;
-      pointer-events: none;
-      content: " ";
-      border: solid transparent;
-    }
-
-    &::after {
-      margin-right: 1px;
-      border-color: transparent;
-      border-width: 7px;
-      border-bottom-color: $white;
-    }
-
-    &::before {
-      margin-left: -8px;
-      border-color: transparent;
-      border-width: 8px;
-      border-bottom-color: $gray-300;
-    }
-
-    .nav {
       .nav-item {
-        width: 33%;
-        margin-left: 0;
+        //width: 33.33333%;
+        flex-grow: 1;
         text-align: center;
-      }
 
-      .nav-link {
-        padding: 0.9375rem 0.9375rem 0.625rem;
-        font-weight: $font-weight-normal;
-        color: $gray-medium;
-
-        &.active {
-          color: $gray-dark;
-          border-top: 0;
-          border-bottom: 2px solid $brand-primary;
-        }
-
-        &:hover {
-          color: $link-color;
+        .nav-link {
+          margin: 0;
+          white-space: nowrap;
         }
       }
     }
 
     .tab-content {
-      padding: 0;
-      margin-top: -0.0625rem;
-      border-top: 0.125rem solid $gray-light;
+      padding: var(--#{$cdk}size-16);
 
-      > .tab-pane {
-        height: 11.88rem;
+      .tab-pane {
+        height: var(--#{$cdk}size-160);
         overflow-y: auto;
 
         .no-notification {
@@ -111,80 +79,52 @@
         }
 
         &.empty {
-          color: $gray-medium;
+          color: var(--#{$cdk}primary-800);
           text-align: center;
 
-          &::after {
-            font-family: "Material Icons", Arial, Helvetica, sans-serif;
-            font-size: 5.625rem;
-            color: $gray-light;
+          &::before {
+            font-family: var(--#{$cdk}font-family-material-icons);
+            font-size: var(--#{$cdk}size-56);
+            color: var(--#{$cdk}primary-400);
             content: "\E7F5";
-            opacity: 0.7;
-
-            @include media-breakpoint-down("sm") {
-              display: block;
-              margin-top: 1rem;
-              font-size: 1.625rem;
-              // To be changed to var when UIKit sources are imported
-              color: $gray-700;
-              opacity: 1;
-            }
           }
 
           > .no-notification {
-            position: absolute;
-            bottom: 0;
             display: block;
-            width: 100%;
-
-            @include media-breakpoint-down("sm") {
-              top: 7.75rem;
-            }
-          }
-
-          @include media-breakpoint-down("sm") {
-            // To be changed to var when UIKit sources are imported
-            color: $gray-700;
           }
         }
       }
 
       .notif {
-        display: block;
-        padding: 0.625rem 0.9375rem;
-        color: $gray-medium;
+        display: flex;
+        gap: var(--#{$cdk}size-4);
+        align-items: center;
+        width: 100%;
+        padding: var(--#{$cdk}size-8);
 
         .material-icons {
-          vertical-align: top;
+          font-size: var(--#{$cdk}size-16);
+          line-height: var(--#{$cdk}size-16);
         }
 
         .message-notification-status {
           &.open {
-            color: $brand-success;
+            color: var(--#{$cdk}green-500);
           }
 
           &.closed {
-            color: $brand-danger;
+            color: var(--#{$cdk}red-500);
           }
 
           &.pending1,
           &.pending2 {
-            color: $brand-secondary;
+            color: var(--#{$cdk}yellow-500);
           }
-        }
-
-        strong {
-          color: $gray-dark;
         }
 
         &:hover {
-          color: $dropdown-link-hover-color;
           text-decoration: none;
-          background-color: $dropdown-link-hover-bg;
-
-          strong {
-            color: $dropdown-link-hover-color;
-          }
+          background-color: var(--#{$cdk}blue-50);
         }
       }
     }
@@ -193,7 +133,7 @@
   .mobile & {
     .nav-link::before {
       display: none;
-      font-family: "Material Icons", Arial, Helvetica, sans-serif;
+      font-family: var(--#{$cdk}font-family-material-icons);
       font-size: 30px;
       color: $gray-dark;
     }

@@ -100,7 +100,7 @@ class TranslatableInput {
     const localeButton = form.find(this.localeButtonSelector);
     const changeLanguageUrl = localeButton.data('change-language-url');
 
-    localeButton.text(this.selectedLocale);
+    localeButton.text(this.selectedLocale.toUpperCase());
     form.find(this.localeInputSelector).addClass('d-none');
     form
       .find(`${this.localeInputSelector}.js-locale-${this.selectedLocale}`)

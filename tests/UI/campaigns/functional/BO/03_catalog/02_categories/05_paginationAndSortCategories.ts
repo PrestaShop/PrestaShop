@@ -1,24 +1,24 @@
-// Import utils
-import basicHelper from '@utils/basicHelper';
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
 // Import commonTests
 import importFileTest from '@commonTests/BO/advancedParameters/importFile';
 import bulkDeleteCategoriesTest from '@commonTests/BO/catalog/category';
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-import categoriesPage from '@pages/BO/catalog/categories';
-import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
 import ImportCategories from '@data/import/categories';
-import type {CategoryFilter} from '@data/types/category';
 
-import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  boCategoriesPage,
+  boDashboardPage,
+  boLoginPage,
+  type BrowserContext,
+  type CategoryFilter,
+  type Page,
+  utilsCore,
+  utilsFile,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_categories_paginationAndSortCategories';
 
@@ -46,43 +46,49 @@ describe('BO - Catalog - Categories : Pagination and sort categories table', asy
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
     // Create csv file with all categories data
-    await files.createCSVFile('.', fileName, ImportCategories);
+    await utilsFile.createCSVFile('.', fileName, ImportCategories);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
     // Delete created csv file
-    await files.deleteFile(fileName);
+    await utilsFile.deleteFile(fileName);
   });
 
   // 1 : Go to the categories page
   describe('Go to \'Catalog > Categories\' page', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Catalog > Categories\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.categoriesLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.categoriesLink,
       );
-      await dashboardPage.closeSfToolBar(page);
+      await boDashboardPage.closeSfToolBar(page);
 
-      const pageTitle = await categoriesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(categoriesPage.pageTitle);
+      const pageTitle = await boCategoriesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCategoriesPage.pageTitle);
     });
 
     it('should reset all filters and get number of categories in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
-      numberOfCategories = await categoriesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCategories).to.be.above(0);
+      numberOfCategories = await boCategoriesPage.resetAndGetNumberOfLines(page);
+      expect(numberOfCategories).to.be.above(0);
     });
   });
 
@@ -91,28 +97,28 @@ describe('BO - Catalog - Categories : Pagination and sort categories table', asy
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
-      const paginationNumber = await categoriesPage.selectPaginationLimit(page, 10);
+      const paginationNumber = await boCategoriesPage.selectPaginationLimit(page, 10);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await categoriesPage.paginationNext(page);
+      const paginationNumber = await boCategoriesPage.paginationNext(page);
       expect(paginationNumber).to.contains('(page 2 / 2)');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await categoriesPage.paginationPrevious(page);
+      const paginationNumber = await boCategoriesPage.paginationPrevious(page);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
-      const paginationNumber = await categoriesPage.selectPaginationLimit(page, 50);
+      const paginationNumber = await boCategoriesPage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
@@ -162,29 +168,29 @@ describe('BO - Catalog - Categories : Pagination and sort categories table', asy
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await categoriesPage.getAllRowsColumnContent(page, test.args.sortBy);
-        await categoriesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+        const nonSortedTable = await boCategoriesPage.getAllRowsColumnContent(page, test.args.sortBy);
+        await boCategoriesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        const sortedTable = await categoriesPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await boCategoriesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
           const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-          const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+          const expectedResult: number[] = await utilsCore.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
-          const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
+          const expectedResult: string[] = await utilsCore.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });

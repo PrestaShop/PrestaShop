@@ -275,10 +275,14 @@ class HelperCore
      */
     public function renderRequiredFields($class_name, $identifier, $table_fields)
     {
-        $rules = call_user_func_array([$class_name, 'getValidationRules'], [$class_name]);
         $required_class_fields = [$identifier];
-        foreach ($rules['required'] as $required) {
-            $required_class_fields[] = $required;
+        $definition = ObjectModel::getDefinition($class_name);
+        if (!empty($definition['fields'])) {
+            foreach ($definition['fields'] as $fieldName => $data) {
+                if (!empty($data['required'])) {
+                    $required_class_fields[] = $fieldName;
+                }
+            }
         }
 
         /** @var ObjectModel $object */

@@ -84,10 +84,13 @@ npm-debug.log.*
 tests/Resources/img/*
 tests/Resources/img/tmp/*
 tests/Resources/img/tmp/.gitkeep
+tests/Resources/img/s/.gitkeep
 !tests/Resources/download/.gitkeep
 tests/Resources/download/*
+tests/UI/tsconfig.tsbuildinfo
 tests/Unit/.phpunit.result.cache
 .phpunit.result.cache
+.twig-cs-fixer.cache
 tests/Integration/.phpunit.result.cache
 tests-legacy/.phpunit.result.cache
 
@@ -122,9 +125,6 @@ tests-legacy/.phpunit.result.cache
 !/admin-dev/themes/new-theme/public/theme.rtlfix
 !/admin-dev/themes/default/public/theme.rtlfix
 
-# Api platform assets
-/admin-dev/bundles
-
 themes/*/cache/*
 themes/core.js.map
 themes/core.js
@@ -137,6 +137,10 @@ themes/*-chunk.js.map
 
 # Config
 
+/.env
+/.env.local
+/.env.local.php
+/.env.*.local
 config/defines_custom.inc.php
 config/settings.inc.php
 config/settings.old.php
@@ -217,8 +221,13 @@ tools/build/releases/*
 # Docker configuration
 install.lock
 docker-compose.override.yml
+.docker/ssl.crt
+.docker/ssl.key
 
 # DotEnv files
 /.env.local
 /.env.local.php
 /.env.*.local
+
+# config vscode
+.hintrc

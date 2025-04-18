@@ -81,6 +81,10 @@ class CustomizationFieldType extends TranslatorAwareType
             ])
             ->add('required', SwitchType::class, [
                 'label' => $this->trans('Required', 'Admin.Global'),
+                'choices' => [
+                    $this->trans('Not Required', 'Admin.Global') => false,
+                    $this->trans('Required', 'Admin.Global') => true,
+                ],
                 'default_empty_data' => false,
             ])
             ->add('remove', IconButtonType::class, [

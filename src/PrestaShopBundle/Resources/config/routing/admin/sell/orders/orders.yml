@@ -63,6 +63,7 @@ admin_orders_export:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::exportAction
     _legacy_controller: AdminOrders
+    _legacy_link: AdminOrders:exportorder
 
 admin_orders_view:
   path: /{orderId}/view

@@ -6,6 +6,7 @@ doctrine:
     connections:
       default:
         driver: pdo_mysql
+        wrapper_class: PrestaShopBundle\Doctrine\DatabaseConnection
         host: "%database_host%"
         port: "%database_port%"
         dbname: "%database_name%"
@@ -16,9 +17,9 @@ doctrine:
           enum: string
         options:
           # PDO::MYSQL_ATTR_INIT_COMMAND
-          1002: "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))"
+          !php/const PDO::MYSQL_ATTR_INIT_COMMAND: "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))"
           # PDO::MYSQL_ATTR_MULTI_STATEMENTS
-          1013: '%env(const:runtime:_PS_ALLOW_MULTI_STATEMENTS_QUERIES_)%'
+          !php/const PDO::MYSQL_ATTR_MULTI_STATEMENTS: '%env(const:runtime:_PS_ALLOW_MULTI_STATEMENTS_QUERIES_)%'
 
   orm:
     auto_generate_proxy_classes: "%kernel.debug%"
@@ -27,3 +28,4 @@ doctrine:
     dql:
       string_functions:
         regexp: DoctrineExtensions\Query\Mysql\Regexp
+        binary: DoctrineExtensions\Query\Mysql\Binary

@@ -5,12 +5,12 @@
       <trans-unit id="3e15057a39314e679d553bd9b6522ec8">
         <source>Customer currency</source>
         <target>Customer currency</target>
-        <note>Line: 258</note>
+        <note>Line: 255</note>
       </trans-unit>
       <trans-unit id="cdf4c2da827655c1ea74209dd683c903">
         <source>Shop default currency</source>
         <target>Shop default currency</target>
-        <note>Line: 259</note>
+        <note>Line: 256</note>
       </trans-unit>
     </body>
   </file>

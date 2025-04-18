@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
 {% block order_preview %}
   <div class="row order-preview-content mt-2" data-role="preview-row">
@@ -65,7 +65,7 @@
               </p>
 
               {% if not orderPreview.virtual %}
-                {% for line in orderPreview.shippingAddressFormatted|split("\n") %}
+                {% for line in orderPreview.shippingAddressFormatted|split('\n') %}
                   <p{% if not loop.last %} class="mb-0"{% endif %}>{{ line }}</p>
                 {% endfor %}
               {% endif %}
@@ -98,8 +98,7 @@
                 <strong>{{ 'Invoice details'|trans({}, 'Admin.Orderscustomers.Feature') }}:</strong>
               </p>
 
-
-              {% for line in orderPreview.invoiceAddressFormatted|split("\n") %}
+              {% for line in orderPreview.invoiceAddressFormatted|split('\n') %}
                 <p{% if not loop.last %} class="mb-0"{% endif %}>{{ line }}</p>
               {% endfor %}
             </div>
@@ -141,7 +140,7 @@
             <tr class="{% if loop.index > productsPreviewLimit %}js-product-preview-more d-none{% endif %}">
               <td class="p-1">
                 {% if productDetail.id %}
-                  <a class="px-0 external-link" href="{{ path('admin_product_form', {'id': productDetail.id}) }}" target="_blank">{{ productDetail.name }}</a>
+                  <a class="px-0 external-link" href="{{ path('admin_products_edit', {productId: productDetail.id}) }}" target="_blank">{{ productDetail.name }}</a>
                 {% else %}
                   {{ productDetail.name }} ({{ 'Product deleted'|trans({}, 'Admin.Catalog.Feature') }})
                 {% endif %}
@@ -175,12 +174,12 @@
       </div>
 
       <div class="text-right">
-        <a href="{{ path('admin_orders_view', {'orderId': orderId}) }}" class="btn btn-primary btn-sm mb-3">
+        <a href="{{ path('admin_orders_view', {orderId: orderId}) }}" class="btn btn-primary btn-sm mb-3">
           {{ 'Open details'|trans({}, 'Admin.Orderscustomers.Feature') }}
           <i class="material-icons rtl-flip">arrow_right_alt</i>
         </a>
       </div>
     </div>
   </div>
-  {{ renderhook('displayOrderPreview', {'order_id': orderId}) }}
+  {{ renderhook('displayOrderPreview', {order_id: orderId}) }}
 {% endblock %}

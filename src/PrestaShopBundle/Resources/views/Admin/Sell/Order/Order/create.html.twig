@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block stylesheets %}
@@ -31,13 +31,13 @@
 
 {% block content %}
   <div id="order-creation-container">
-    {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/Create/customer.html.twig' %}
+    {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/Create/customer.html.twig') }}
     <div id="js-cart-info-wrapper">
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/Create/cart.html.twig' %}
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/Create/cart_rules.html.twig' %}
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/Create/addresses.html.twig' %}
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/Create/shipping.html.twig' %}
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/Create/summary.html.twig' %}
+      {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/Create/cart.html.twig') }}
+      {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/Create/cart_rules.html.twig') }}
+      {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/Create/addresses.html.twig') }}
+      {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/Create/shipping.html.twig') }}
+      {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/Create/summary.html.twig') }}
     </div>
   </div>
 {% endblock %}
@@ -49,8 +49,8 @@
 {% endblock %}
 
 {% set js_translatable = {
-  "Customer search - group default": 'default'|trans({}, 'Admin.Orderscustomers.Feature'),
-  "Customer search - group label single": 'Group'|trans({}, 'Admin.Orderscustomers.Feature'),
-  "Customer search - group label multiple": 'Groups'|trans({}, 'Admin.Orderscustomers.Feature'),
+  'Customer search - group default': 'default'|trans({}, 'Admin.Orderscustomers.Feature'),
+  'Customer search - group label single': 'Group'|trans({}, 'Admin.Orderscustomers.Feature'),
+  'Customer search - group label multiple': 'Groups'|trans({}, 'Admin.Orderscustomers.Feature'),
 }|merge(js_translatable)
 %}

@@ -33,7 +33,7 @@ interface TypeLayerInterface
     /**
      * Get type name of this handler.
      */
-    public function getTypeName(): string;
+    public static function getTypeName(): string;
 
     /**
      * Define is this handler can change feature flag status.

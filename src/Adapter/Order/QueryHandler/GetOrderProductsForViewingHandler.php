@@ -230,7 +230,10 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                     null,
                     '',
                     $packItemType,
-                    (bool) Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($pack_item['id_product']))
+                    (bool) Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($pack_item['id_product'])),
+                    [],
+                    null,
+                    $pack_item['mpn']
                 );
             }
 
@@ -261,14 +264,15 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                 $productType,
                 (bool) Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($product['product_id'])),
                 $packItems,
-                $product['customizations']
+                $product['customizations'],
+                $product['product_mpn']
             );
         }
 
         $offset = $query->getOffset();
         $limit = $query->getLimit();
 
-        //@todo: its not really paginated, as all products are retrieved from legacy Order::getProducts(). But could be improved in future.
+        // @todo: its not really paginated, as all products are retrieved from legacy Order::getProducts(). But could be improved in future.
         if (null !== $offset && $limit) {
             $productsForViewing = array_slice($products, (int) $offset, (int) $limit);
         }

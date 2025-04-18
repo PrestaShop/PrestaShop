@@ -64,11 +64,6 @@ class TabCore extends ObjectModel
     public $wording_domain;
 
     /**
-     * @deprecated Since 1.7.7
-     */
-    public const TAB_MODULE_LIST_URL = '';
-
-    /**
      * @see ObjectModel::$definition
      */
     public static $definition = [
@@ -87,7 +82,7 @@ class TabCore extends ObjectModel
             'wording' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'allow_null' => true, 'size' => 255],
             'wording_domain' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'allow_null' => true, 'size' => 255],
             /* Lang fields */
-            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'required' => true, 'validate' => 'isTabName', 'size' => 64],
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'required' => true, 'validate' => 'isTabName', 'size' => 128],
         ],
     ];
 
@@ -113,7 +108,7 @@ class TabCore extends ObjectModel
 
         // Add tab
         if (parent::add($autoDate, $nullValues)) {
-            //forces cache to be reloaded
+            // forces cache to be reloaded
             self::$_getIdFromClassName = null;
 
             return Tab::initAccess($this->id);
@@ -144,7 +139,7 @@ class TabCore extends ObjectModel
      *
      * @return bool true if succeed
      */
-    public static function initAccess($idTab, Context $context = null)
+    public static function initAccess($idTab, ?Context $context = null)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -638,34 +633,6 @@ class TabCore extends ObjectModel
         self::$_cache_tabs = [];
 
         return parent::update($nullValues);
-    }
-
-    /**
-     * Get Tab by Profile ID.
-     *
-     * @param int $idParent
-     * @param int $idProfile
-     *
-     * @return array|false|mysqli_result|PDOStatement|resource|null
-     */
-    public static function getTabByIdProfile($idParent, $idProfile)
-    {
-        return Db::getInstance()->executeS('
-			SELECT t.`id_tab`, t.`id_parent`, tl.`name`, a.`id_profile`
-			FROM `' . _DB_PREFIX_ . 'tab` t
-			LEFT JOIN `' . _DB_PREFIX_ . 'access` a
-				ON (a.`id_tab` = t.`id_tab`)
-			LEFT JOIN `' . _DB_PREFIX_ . 'tab_lang` tl
-				ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = ' . (int) Context::getContext()->language->id . ')
-			WHERE a.`id_profile` = ' . (int) $idProfile . '
-			AND t.`id_parent` = ' . (int) $idParent . '
-			AND a.`view` = 1
-			AND a.`edit` = 1
-			AND a.`delete` = 1
-			AND a.`add` = 1
-			AND t.`id_parent` != 0 AND t.`id_parent` != -1
-			ORDER BY t.`id_parent` ASC
-		');
     }
 
     /**

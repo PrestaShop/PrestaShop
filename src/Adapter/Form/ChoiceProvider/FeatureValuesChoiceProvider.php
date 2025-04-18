@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureValueRepository;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceFormatter;
 
 class FeatureValuesChoiceProvider implements ConfigurableFormChoiceProviderInterface
 {
@@ -45,18 +46,18 @@ class FeatureValuesChoiceProvider implements ConfigurableFormChoiceProviderInter
     private $contextLanguageId;
 
     /**
-     * @var int
+     * Cache value to avoid performing the same request multiple times as the value should remain the same inside a request.
+     *
+     * @var array
      */
-    private $defaultLanguageId;
+    private $cacheFeatureValueChoices;
 
     public function __construct(
         FeatureValueRepository $featureValueRepository,
-        LegacyContext $legacyContext,
-        int $defaultLanguageId
+        LegacyContext $legacyContext
     ) {
         $this->featureValueRepository = $featureValueRepository;
         $this->contextLanguageId = (int) $legacyContext->getLanguage()->getId();
-        $this->defaultLanguageId = $defaultLanguageId;
     }
 
     /**
@@ -75,19 +76,17 @@ class FeatureValuesChoiceProvider implements ConfigurableFormChoiceProviderInter
             $filters['custom'] = $options['custom'];
         }
 
-        $featureValues = $this->featureValueRepository->getFeatureValues(null, null, $filters);
-        $choices = [];
-        foreach ($featureValues as $feature) {
-            if (!empty($feature['localized_values'][$this->contextLanguageId])) {
-                $featureValueName = $feature['localized_values'][$this->contextLanguageId];
-            } elseif (!empty($feature['localized_values'][$this->defaultLanguageId])) {
-                $featureValueName = $feature['localized_values'][$this->defaultLanguageId];
-            } else {
-                $featureValueName = reset($feature['localized_values']);
-            }
-            $choices[$featureValueName] = (int) $feature['id_feature_value'];
+        // Get cache key and if this is the first time we are accessing it,
+        // we build the options
+        $cacheKey = md5(serialize($filters));
+        if (empty($this->cacheFeatureValueChoices[$cacheKey])) {
+            $this->cacheFeatureValueChoices[$cacheKey] = FormChoiceFormatter::formatFormChoices(
+                $this->featureValueRepository->getFeatureValuesByLang($this->contextLanguageId, $filters),
+                'id_feature_value',
+                'value'
+            );
         }
 
-        return $choices;
+        return $this->cacheFeatureValueChoices[$cacheKey];
     }
 }

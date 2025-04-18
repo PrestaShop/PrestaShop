@@ -8,43 +8,39 @@ Feature: Delete aliases from Back Office (BO)
   I need to be able to delete alias and multiple aliases at once from BO
 
   Scenario: I delete alias
-    Given following aliases should exist:
-      | id reference | alias  | search |
-      | alias1       | bloose | blouse |
-      | alias2       | blues  | blouse |
-    When I add alias with following information:
-      | alias  | large |
-      | search | big   |
+    When I add a search term "big" with following aliases:
+      | alias | active |
+      | large | true   |
+      | small | false  |
     Then following aliases should exist:
-      | id reference | alias  | search |
-      | alias1       | bloose | blouse |
-      | alias2       | blues  | blouse |
-      | alias3       | large  | big    |
-    And I delete alias "alias3"
-    Then following aliases should exist:
-      | id reference | alias  | search |
-      | alias1       | bloose | blouse |
-      | alias2       | blues  | blouse |
+      | search | alias | active |
+      | big    | large | true   |
+      | big    | small | false  |
+    And I delete search term "big"
+    Then following aliases shouldn't exist:
+      | search | alias | active |
+      | big    | large | true   |
+      | big    | small | false  |
 
   Scenario: I bulk delete aliases
-    Given following aliases should exist:
-      | id reference | alias  | search |
-      | alias1       | bloose | blouse |
-      | alias2       | blues  | blouse |
-    When I add alias with following information:
-      | alias  | large |
-      | search | big   |
-    And I add alias with following information:
-      | alias  | huge |
-      | search | big  |
+    When I add a search term "toDelete1" with following aliases:
+      | alias   | active |
+      | delete1 | true   |
+      | delete2 | true   |
+    And I add a search term "toDelete2" with following aliases:
+      | alias   | active |
+      | delete3 | true   |
+      | delete4 | true   |
     Then following aliases should exist:
-      | id reference | alias  | search |
-      | alias1       | bloose | blouse |
-      | alias2       | blues  | blouse |
-      | alias3       | large  | big    |
-      | alias4       | huge   | big    |
-    And I bulk delete aliases "alias3,alias4"
-    Given following aliases should exist:
-      | id reference | alias  | search |
-      | alias1       | bloose | blouse |
-      | alias2       | blues  | blouse |
+      | search    | alias   | active |
+      | toDelete1 | delete1 | true   |
+      | toDelete1 | delete2 | true   |
+      | toDelete2 | delete3 | true   |
+      | toDelete2 | delete4 | true   |
+    And I bulk delete search terms "toDelete1,toDelete2"
+    Then following aliases shouldn't exist:
+      | search    | alias   | active |
+      | toDelete1 | delete1 | true   |
+      | toDelete1 | delete2 | true   |
+      | toDelete2 | delete3 | true   |
+      | toDelete2 | delete4 | true   |

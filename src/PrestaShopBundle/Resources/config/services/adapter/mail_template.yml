@@ -2,8 +2,7 @@ services:
   _defaults:
     public: true
 
-  prestashop.adapter.mail_template.twig_renderer:
-    class: 'PrestaShop\PrestaShop\Adapter\MailTemplate\MailTemplateTwigRenderer'
+  PrestaShop\PrestaShop\Adapter\MailTemplate\MailTemplateTwigRenderer:
     arguments:
       - '@twig'
       - '@prestashop.core.mail_template.variables_builder'
@@ -17,13 +16,18 @@ services:
         arguments:
           - '@prestashop.core.mail_template.transformation.html_textify'
 
+  prestashop.adapter.mail_template.twig_renderer:
+    alias: 'PrestaShop\PrestaShop\Adapter\MailTemplate\MailTemplateTwigRenderer'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+
   prestashop.adapter.mail_template.partial_template_renderer:
     class: 'PrestaShop\PrestaShop\Adapter\MailTemplate\MailPartialTemplateRenderer'
     arguments:
       - "@=service('prestashop.adapter.legacy.context').getSmarty()"
 
-  prestashop.adapter.mail_template.preview_variables_builder:
-    class: 'PrestaShop\PrestaShop\Adapter\MailTemplate\MailPreviewVariablesBuilder'
+  PrestaShop\PrestaShop\Adapter\MailTemplate\MailPreviewVariablesBuilder:
     arguments:
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.adapter.legacy.context'
@@ -31,3 +35,9 @@ services:
       - "@prestashop.adapter.mail_template.partial_template_renderer"
       - "@prestashop.core.localization.locale.context_locale"
       - "@translator"
+
+  prestashop.adapter.mail_template.preview_variables_builder:
+    alias: 'PrestaShop\PrestaShop\Adapter\MailTemplate\MailPreviewVariablesBuilder'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0

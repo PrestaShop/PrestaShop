@@ -36,6 +36,8 @@ use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundExcepti
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Translation\EntityTranslatorInterface;
 use PrestaShopBundle\Translation\TranslatorInterface;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 
 /**
  * Translates an entity in database using DataLang classes
@@ -83,7 +85,7 @@ class EntityTranslator implements EntityTranslatorInterface
         $this->db = $db;
         $this->dbPrefix = $dbPrefix;
         $this->translator = $translator;
-        $this->tableName = $this->buildTableNameFromDataLang($dataLang);
+        $this->tableName = $this->buildTableNameFromDataLang();
     }
 
     /**
@@ -93,8 +95,8 @@ class EntityTranslator implements EntityTranslatorInterface
      * @param int $shopId
      *
      * @throws LanguageNotFoundException
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     public function translate(int $languageId, int $shopId): void
     {
@@ -166,7 +168,7 @@ class EntityTranslator implements EntityTranslatorInterface
      *
      * @return bool
      *
-     * @throws \PrestaShopDatabaseException
+     * @throws PrestaShopDatabaseException
      */
     protected function shopFieldExists(string $tableNameSql): bool
     {
@@ -223,11 +225,9 @@ class EntityTranslator implements EntityTranslatorInterface
     /**
      * Builds the table name using the DataLang class as source
      *
-     * @param DataLangCore $dataLang
-     *
      * @return string The table name, including prefix
      */
-    private function buildTableNameFromDataLang(DataLangCore $dataLang): string
+    private function buildTableNameFromDataLang(): string
     {
         $tableName = $this->dataLang->getTableName();
         if (!str_starts_with($tableName, $this->dbPrefix)) {

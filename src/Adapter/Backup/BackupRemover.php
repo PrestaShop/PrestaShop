@@ -40,7 +40,7 @@ final class BackupRemover implements BackupRemoverInterface
     /**
      * {@inheritdoc}
      */
-    public function remove(BackupInterface $backup)
+    public function remove(BackupInterface $backup): bool
     {
         $legacyBackup = new PrestaShopBackup($backup->getFileName());
 

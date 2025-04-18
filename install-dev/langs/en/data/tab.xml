@@ -6,6 +6,7 @@
     <tab id="DEFAULT" name="More" />
     <tab id="Addresses" name="Addresses" />
     <tab id="Administration" name="Administration" />
+    <tab id="Aliases" name="Aliases" />
     <tab id="Module_Catalog" name="Module Catalog" />
     <tab id="Module_Page" name="Module Manager" />
     <tab id="Module_Page_Catalog" name="Module Catalog" />
@@ -131,7 +132,7 @@
     <tab id="Traffic" name="Traffic &amp; SEO" />
     <tab id="Translations" name="Translations" />
     <tab id="Webservice" name="Webservice" />
-    <tab id="AuthorizationServer" name="Authorization Server" />
+    <tab id="AdminAPI" name="Admin API" />
     <tab id="Zones" name="Zones" />
     <tab id="Marketing_tools" name="Module Selections" />
     <tab id="FeatureFlag" name="New &amp; Experimental Features" />

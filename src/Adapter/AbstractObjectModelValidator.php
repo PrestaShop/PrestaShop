@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter;
 
+use Configuration;
 use ObjectModel;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
@@ -78,9 +79,15 @@ abstract class AbstractObjectModelValidator
      */
     protected function validateObjectModelLocalizedProperty(ObjectModel $objectModel, string $propertyName, string $exceptionClass, int $errorCode = 0)
     {
-        $localizedValues = $objectModel->{$propertyName};
+        $localizedValues = $objectModel->{$propertyName} ?? [];
 
         try {
+            $defaultLang = (int) Configuration::get('PS_LANG_DEFAULT');
+            if (!isset($localizedValues[$defaultLang])) {
+                // The value for the default must always be set, so we put an empty string if it does not exist
+                $localizedValues[$defaultLang] = '';
+            }
+
             foreach ($localizedValues as $langId => $value) {
                 if (true !== $objectModel->validateField($propertyName, $value, $langId)) {
                     throw new $exceptionClass(

@@ -26,23 +26,23 @@
 
 namespace PrestaShopBundle\Service\DataProvider;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use PrestaShopBundle\Entity\Employee\Employee;
+use PrestaShopBundle\Security\Admin\SessionEmployeeProvider;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\User\User;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
- * Convenient way to access User, if exists.
+ * Old convenient way to access User, if exists. Prefer using the Security service to get the connected user.
+ * This service is only used in legacy context now.
  */
 class UserProvider
 {
-    public const ANONYMOUS_USER = 'ANONYMOUS_USER';
-
     public function __construct(
-        private readonly TokenStorageInterface $tokenStorage,
-        private readonly UserProviderInterface $userProvider,
-        private readonly LegacyContext $legacyContext
+        private readonly Security $security,
+        private readonly SessionEmployeeProvider $sessionEmployeeProvider,
+        private readonly RequestStack $requestStack,
     ) {
     }
 
@@ -51,27 +51,26 @@ class UserProvider
      */
     public function getUser(): ?UserInterface
     {
-        if ($this->tokenStorage->getToken()) {
-            $user = $this->tokenStorage->getToken()->getUser();
-            if ($user instanceof UserInterface) {
-                return $user;
-            }
+        $user = $this->security->getUser();
+        if ($user instanceof Employee) {
+            return $user;
         }
 
-        if ($this->legacyContext->getContext()->employee && !empty($this->legacyContext->getContext()->employee->email)) {
-            return $this->userProvider->loadUserByIdentifier($this->legacyContext->getContext()->employee->email);
+        // Since this service is used in legacy context it may be called early in the process when the FirewallListener has not been
+        // executed yet, therefore the Security::getUser still returns null, so we use this fallback to unserialize an Employee
+        // entity from the session token for backward compatibility
+        if ($this->requestStack->getCurrentRequest()) {
+            $sessionEmployee = $this->sessionEmployeeProvider->getEmployeeFromSession($this->requestStack->getCurrentRequest());
+            if ($sessionEmployee instanceof Employee) {
+                return $sessionEmployee;
+            }
         }
 
         return null;
     }
 
-    public function getUsername(): string
+    public function logout(): void
     {
-        $user = $this->getUser();
-        if ($user instanceof UserInterface) {
-            return $user->getUserIdentifier();
-        }
-
-        return self::ANONYMOUS_USER;
+        $this->security->logout(false);
     }
 }

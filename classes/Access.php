@@ -135,6 +135,7 @@ class AccessCore extends ObjectModel
      * @param string $authSlug Slug
      *
      * @return string Tab ID
+     *
      * @todo: Find out if we should return an int instead. (breaking change)
      */
     public static function findIdTabByAuthSlug($authSlug)
@@ -375,7 +376,7 @@ class AccessCore extends ObjectModel
         ');
 
         if (empty($roles)) {
-            throw new \Exception('Cannot find role slug');
+            throw new Exception('Cannot find role slug');
         }
 
         $res = [];

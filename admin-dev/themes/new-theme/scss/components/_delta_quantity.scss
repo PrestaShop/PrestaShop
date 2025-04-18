@@ -6,11 +6,15 @@ $component-name: delta-quantity;
   flex-direction: row;
 
   &-quantity {
-    min-width: 120px;
+    min-width: 40px;
     font-weight: $font-weight-semibold;
 
+    @media screen and (min-width: 768px) {
+      min-width: 120px;
+    }
+
     .quantity-update {
-      color: $brand-primary;
+      color: var(--#{$cdk}blue-300);
       visibility: hidden;
 
       .material-icons {
@@ -38,12 +42,17 @@ $component-name: delta-quantity;
   }
 
   label {
-    min-width: 240px;
+    min-width: 150px;
     margin: 0 0.3125rem;
     overflow: hidden;
     line-height: 39px;
     text-overflow: ellipsis;
     white-space: nowrap;
+
+    @media screen and (min-width: 768px) {
+      min-width: 240px;
+    }
+
   }
 
   .modify-all-shops {

@@ -45,7 +45,7 @@ interface FormHandlerInterface
     /**
      * Handles form for given object.
      *
-     * @param int $id
+     * @param int|string $id
      * @param FormInterface $form
      *
      * @return FormHandlerResultInterface

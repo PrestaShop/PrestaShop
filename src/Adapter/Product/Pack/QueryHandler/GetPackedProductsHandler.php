@@ -185,7 +185,7 @@ class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
     {
         try {
             return $this->productImageProvider->getProductCoverUrl($packedItemId, $shopId);
-        } catch (ShopAssociationNotFound $e) {
+        } catch (ShopAssociationNotFound) {
             return $this->productImageProvider->getProductCoverUrl(
                 $packedItemId,
                 $this->productRepository->getProductDefaultShopId($packedItemId)
@@ -197,7 +197,7 @@ class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
     {
         try {
             return $this->productImageProvider->getCombinationCoverUrl($packedCombinationId, $shopId);
-        } catch (ShopAssociationNotFound $e) {
+        } catch (ShopAssociationNotFound) {
             return $this->productImageProvider->getCombinationCoverUrl(
                 $packedCombinationId,
                 $this->combinationRepository->getDefaultShopIdForCombination($packedCombinationId)

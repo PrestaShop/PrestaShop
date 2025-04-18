@@ -184,6 +184,6 @@ class CustomerGroupsGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
                     ->setAssociatedColumn('actions')
             )
-            ;
+        ;
     }
 }

@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
 {% set isColumnLocationDisplayed = false %}
 {% set isColumnRefundedDisplayed = false %}
@@ -47,7 +47,7 @@
     </div>
 
     {% set formOptions = {
-          'attr': {
+          attr: {
             'data-order-id': orderForViewing.id,
             'data-is-delivered': orderForViewing.isDelivered,
             'data-is-tax-included': orderForViewing.isTaxIncluded,
@@ -101,18 +101,17 @@
         </tr>
       </thead>
       <tbody>
-        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product_list.html.twig' %}
-        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/add_product_row.html.twig' %}
-        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/edit_product_row.html.twig' %}
+        {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product_list.html.twig') }}
+        {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/add_product_row.html.twig') }}
+        {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/edit_product_row.html.twig') }}
       </tbody>
     </table>
-
 
     {# PAGINATION AND ADD NEW PRODUCT/DISCOUNT #}
     <div class="row mb-3">
       <div class="col-xl-6 d-print-none order-product-pagination">
         <div class="form-group">
-          <label for="paginator_select_page_limit" class="col-form-label ml-3">{{ "Items per page:"|trans({}, 'Admin.Catalog.Feature') }}</label>
+          <label for="paginator_select_page_limit" class="col-form-label ml-3">{{ 'Items per page:'|trans({}, 'Admin.Catalog.Feature') }}</label>
           <select id="orderProductsTablePaginationNumberSelector" class="pagination-link custom-select">
             {% for numPageOption in paginationNumOptions %}
               <option value="{{ numPageOption }}" {% if numPageOption == paginationNum %} selected {% endif %}>{{ numPageOption }}</option>
@@ -130,7 +129,7 @@
               </a>
             </li>
             {% for numPage in 1..numPages %}
-              <li class="page-item{% if numPage==1 %} active{% endif %}">
+              <li class="page-item{% if numPage == 1 %} active{% endif %}">
                 <span class="page-link" data-order-id="{{ orderForViewing.id }}" data-page="{{ numPage }}">{{ numPage }}</span>
               </li>
             {% endfor %}
@@ -163,11 +162,10 @@
     </div>
 
     {# DISCOUNT LIST #}
-    {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/discount_list.html.twig' with {
-        'discounts': orderForViewing.discounts.discounts,
-        'orderId': orderForViewing.id
-    } %}
-
+    {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/discount_list.html.twig', {
+        discounts: orderForViewing.discounts.discounts,
+        orderId: orderForViewing.id
+    }) }}
 
     {# ORDER TOTALS #}
 

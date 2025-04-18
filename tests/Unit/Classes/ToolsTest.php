@@ -441,11 +441,13 @@ class ToolsTest extends TestCase
         $this->assertSame($expectedResult, Tools::round_helper($value, $mode));
     }
 
-    public function providerMathRound(): array
+    public function providerPsRound(): array
     {
         return [
             // 0 precision
-            [25, 25.32, 0, self::PS_ROUND_UP],
+            [25, 25.32, 0, self::PS_ROUND_DOWN],
+            [25, 25.52, 0, self::PS_ROUND_DOWN],
+            [26, 25.32, 0, self::PS_ROUND_UP],
             [26, 25.52, 0, self::PS_ROUND_UP],
             [25, 25.32, 0, self::PS_ROUND_HALF_DOWN],
             [25, 25.50, 0, self::PS_ROUND_HALF_DOWN],
@@ -456,7 +458,9 @@ class ToolsTest extends TestCase
             [26, 25.51, 0, self::PS_ROUND_HALF_ODD],
             [25, 25.49, 0, self::PS_ROUND_HALF_ODD],
             // 2 precision
-            [25.32, 25.321, 2, self::PS_ROUND_UP],
+            [25.32, 25.321, 2, self::PS_ROUND_DOWN],
+            [25.52, 25.525, 2, self::PS_ROUND_DOWN],
+            [25.33, 25.321, 2, self::PS_ROUND_UP],
             [25.53, 25.525, 2, self::PS_ROUND_UP],
             [25.32, 25.325, 2, self::PS_ROUND_HALF_DOWN],
             [25.5, 25.505, 2, self::PS_ROUND_HALF_DOWN],
@@ -470,10 +474,13 @@ class ToolsTest extends TestCase
     }
 
     /**
-     * @dataProvider providerMathRound
+     * @dataProvider providerPsRound
      */
-    public function testMathRound(float $expectedResult, float $value, int $precision, int $mode): void
+    public function testPsRound(float $expectedResult, float $value, int $precision, int $mode): void
     {
+        $this->assertSame($expectedResult, Tools::ps_round($value, $precision, $mode));
+
+        // This method is deprecated and will be removed in 10.0.0, we just keep the tests to avoid regressions
         $this->assertSame($expectedResult, Tools::math_round($value, $precision, $mode));
     }
 
@@ -522,11 +529,7 @@ class ToolsTest extends TestCase
     {
         $message = 'The password generated ' . $passwordGenerated . ' no match with ' . $expectedPassword;
 
-        if (method_exists($this, 'assertMatchesRegularExpression')) {
-            $this->assertMatchesRegularExpression($expectedPassword, $passwordGenerated, $message);
-        } else {
-            $this->assertRegExp($expectedPassword, $passwordGenerated, $message);
-        }
+        $this->assertMatchesRegularExpression($expectedPassword, $passwordGenerated, $message);
     }
 
     public function passwordGenProvider(): array
@@ -838,17 +841,9 @@ class ToolsTest extends TestCase
         $rule = "~$rule~";
         foreach ($testCases as $setName => $case) {
             if ($case['shouldMatch']) {
-                if (method_exists($this, 'assertMatchesRegularExpression')) {
-                    $this->assertMatchesRegularExpression($rule, $case['uri'], "The uri segment is expected to match the pattern, but it doesn't");
-                } else {
-                    $this->assertRegExp($rule, $case['uri'], "The uri segment is expected to match the pattern, but it doesn't");
-                }
+                $this->assertMatchesRegularExpression($rule, $case['uri'], "The uri segment is expected to match the pattern, but it doesn't");
             } else {
-                if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
-                    $this->assertDoesNotMatchRegularExpression($rule, $case['uri'], 'The uri segment is expected NOT to match the pattern, but it does');
-                } else {
-                    $this->assertNotRegExp($rule, $case['uri'], 'The uri segment is expected NOT to match the pattern, but it does');
-                }
+                $this->assertDoesNotMatchRegularExpression($rule, $case['uri'], 'The uri segment is expected NOT to match the pattern, but it does');
             }
 
             if ($case['shouldMatch']) {

@@ -31,6 +31,7 @@ namespace Tests\Integration\Classes;
 use Db;
 use Language;
 use PHPUnit\Framework\TestCase;
+use PrestaShopDatabaseException;
 use Tab;
 
 class TabTest extends TestCase
@@ -212,7 +213,7 @@ class TabTest extends TestCase
     /**
      * @param array $expectedRoles
      *
-     * @throws \PrestaShopDatabaseException
+     * @throws PrestaShopDatabaseException
      */
     private function assertExpectedRoles(array $expectedRoles): void
     {
@@ -242,7 +243,7 @@ class TabTest extends TestCase
     /**
      * @param array $unexpectedRoles
      *
-     * @throws \PrestaShopDatabaseException
+     * @throws PrestaShopDatabaseException
      */
     private function assertUnexpectedRoles(array $unexpectedRoles): void
     {

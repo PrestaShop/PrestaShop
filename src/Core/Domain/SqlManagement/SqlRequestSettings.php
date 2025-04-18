@@ -37,31 +37,40 @@ class SqlRequestSettings
     public const FILE_ENCODING = 'PS_ENCODING_FILE_MANAGER_SQL';
 
     /**
+     * Name of the setting for SqlRequest SQL query result file separator in configuration.
+     */
+    public const FILE_SEPARATOR = 'PS_SEPARATOR_FILE_MANAGER_SQL';
+
+    /**
      * @var string Encoding in which downloaded SqlRequest SQL query result files will be encoded
      */
-    private $fileEncoding;
+    private string $fileEncoding;
+
+    /**
+     * @var string Separator used in downloaded SqlRequest SQL query result files
+     */
+    private string $fileSeparator;
 
     /**
      * @param string $fileEncoding
+     * @param string $fileSeparator
      */
-    public function __construct($fileEncoding)
+    public function __construct(string $fileEncoding, string $fileSeparator)
     {
-        $this->setFileEncoding($fileEncoding);
+        $this->fileEncoding = $fileEncoding;
+        $this->fileSeparator = $fileSeparator;
     }
 
     /**
      * @return string
      */
-    public function getFileEncoding()
+    public function getFileEncoding(): string
     {
         return $this->fileEncoding;
     }
 
-    /**
-     * @param string $fileEncoding
-     */
-    private function setFileEncoding($fileEncoding)
+    public function getFileSeparator(): string
     {
-        $this->fileEncoding = $fileEncoding;
+        return $this->fileSeparator;
     }
 }

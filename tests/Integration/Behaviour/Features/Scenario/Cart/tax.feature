@@ -1,14 +1,20 @@
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s cart --tags fo-cart-tax
 @restore-all-tables-before-feature
+@fo-cart-tax
 Feature: Cart calculation with tax
   As a customer
   I must be able to have correct cart total when using taxes
 
+  Background:
+    Given I add new zone "zone1" with following properties:
+      | name    | zone1 |
+      | enabled | true  |
+    And there is a country named "country1" and iso code "FR" in zone "zone1"
+    And there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
+    And there is an address named "address1" with postcode "1" in state "state1"
+
   Scenario: empty cart
     Given I have an empty default cart
-    Given there is a zone named "zone1"
-    Given there is a country named "country1" and iso code "FR" in zone "zone1"
-    Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
-    Given there is an address named "address1" with postcode "1" in state "state1"
     When I select address "address1" in my cart
     Then my cart total should be 0.0 tax included
     Then my cart total using previous calculation method should be 0.0 tax included
@@ -23,10 +29,6 @@ Feature: Cart calculation with tax
   Scenario: tax #1: one product in cart, quantity 1
     Given I have an empty default cart
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
-    Given there is a zone named "zone1"
-    Given there is a country named "country1" and iso code "FR" in zone "zone1"
-    Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
-    Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 4.0%
     Given there is a tax rule named "taxrule1" in country "country1" and state "state1" where tax "tax1" is applied
     Given product "product1" belongs to tax group "taxrule1"
@@ -45,10 +47,6 @@ Feature: Cart calculation with tax
   Scenario: tax #2: one product in cart, quantity 1
     Given I have an empty default cart
     Given there is a product in the catalog named "product5" with a price of 19.812 and 1000 items in stock
-    Given there is a zone named "zone1"
-    Given there is a country named "country1" and iso code "FR" in zone "zone1"
-    Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
-    Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 6.0%
     Given there is a tax rule named "taxrule1" in country "country1" and state "state1" where tax "tax1" is applied
     Given product "product5" belongs to tax group "taxrule1"
@@ -67,10 +65,6 @@ Feature: Cart calculation with tax
   Scenario: tax #3: one product in cart, quantity 1
     Given I have an empty default cart
     Given there is a product in the catalog named "product5" with a price of 19.812 and 1000 items in stock
-    Given there is a zone named "zone1"
-    Given there is a country named "country1" and iso code "FR" in zone "zone1"
-    Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
-    Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 0.0%
     Given there is a tax rule named "taxrule1" in country "country1" and state "state1" where tax "tax1" is applied
     Given product "product5" belongs to tax group "taxrule1"
@@ -89,10 +83,6 @@ Feature: Cart calculation with tax
   Scenario: tax #1: one product in cart, quantity 3
     Given I have an empty default cart
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
-    Given there is a zone named "zone1"
-    Given there is a country named "country1" and iso code "FR" in zone "zone1"
-    Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
-    Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 4.0%
     Given there is a tax rule named "taxrule1" in country "country1" and state "state1" where tax "tax1" is applied
     Given product "product1" belongs to tax group "taxrule1"
@@ -113,10 +103,6 @@ Feature: Cart calculation with tax
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     Given there is a product in the catalog named "product2" with a price of 32.388 and 1000 items in stock
     Given there is a product in the catalog named "product3" with a price of 31.188 and 1000 items in stock
-    Given there is a zone named "zone1"
-    Given there is a country named "country1" and iso code "FR" in zone "zone1"
-    Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
-    Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 4.0%
     Given there is a tax rule named "taxrule1" in country "country1" and state "state1" where tax "tax1" is applied
     Given product "product1" belongs to tax group "taxrule1"
@@ -145,10 +131,6 @@ Feature: Cart calculation with tax
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     Given there is a product in the catalog named "product2" with a price of 32.388 and 1000 items in stock
     Given there is a product in the catalog named "product3" with a price of 31.188 and 1000 items in stock
-    Given there is a zone named "zone1"
-    Given there is a country named "country1" and iso code "FR" in zone "zone1"
-    Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
-    Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 4.0%
     Given there is a tax rule named "taxrule1" in country "country1" and state "state1" where tax "tax1" is applied
     Given product "product1" belongs to tax group "taxrule1"

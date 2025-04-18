@@ -252,9 +252,9 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
     /**
      * Handles attachment file download
      *
-     * @throws WebserviceException if attachment is not existing or file not available
-     *
      * @return array<string, string> File details
+     *
+     * @throws WebserviceException if attachment is not existing or file not available
      */
     public function executeFileGetAndHead(): array
     {

@@ -17,6 +17,38 @@ cd tests/UI/
 npm ci
 ```
 
+## How to run tests locally (linux distribution)
+
+We must first install the dependencies necessary for the execution of the tests.
+
+```bash
+# Install dependencies in UI folder
+cd tests/UI/
+npm ci
+npx playwright install --with-deps
+```
+
+Subsequently, we can use the envFile to define the test environment variables,
+to do this we copy the .env.ci file renaming it .env, and we edit the values we want.
+Another option is to pass the variables directly via command line.
+The list of parameters is visible in the section [Available command line parameters](#available-command-line-parameters)
+
+```bash
+cp .env.ci .env
+```
+
+We can then launch our tests.
+
+```bash
+npm run test:all
+```
+
+We can launch a particular scenario, for this we can see the list in the script part of the package.json.
+
+```bash
+npm run test:functional:BO:orders
+```
+
 ## Available command line parameters
 
 ### PrestaShop parameters
@@ -44,17 +76,18 @@ npm ci
 | Parameter   | Description                                                       |
 |-------------|-------------------------------------------------------------------|
 | SMTP_SERVER | The smtp server address for maildev (default to **`172.20.0.4`**) |
-| SMTP_PORT   | The smtp port for maildev (default to **`1025`**)                 |
+| SMTP_PORT   | The smtp port for maildev (default to **`1026`**)                 |
 
 ### Keycloak parameters
 
-| Parameter             | Description                                                                              |
-|-----------------------|------------------------------------------------------------------------------------------|
-| KEYCLOAK_URL_EXTERNAL | The external URL for Keycloak (default to **`http://127.0.0.1:8003`**) (outside Docker)  |
-| KEYCLOAK_URL_INTERNAL | The internal URL for Keycloak (default to **`http://keycloak:8080`**) (inside Docker)    |
-| KEYCLOAK_ADMIN_USER   | The admin user for connecting to Keycloak (default to **`admin`**)                       |
-| KEYCLOAK_ADMIN_PASS   | The admin password for connecting to Keycloak (default to **`admin`**)                   |
-| KEYCLOAK_CLIENT_ID    | The Client ID for using in PrestaShop & Keycloak (default to **`prestashop_client_id`**) |
+| Parameter               | Description                                                                                              |
+|-------------------------|----------------------------------------------------------------------------------------------------------|
+| KEYCLOAK_URL_EXTERNAL   | The external URL for Keycloak (default to **`http://localhost:8003`**) (outside Docker)                  |
+| KEYCLOAK_URL_INTERNAL   | The internal URL for Keycloak (default to **`http://keycloak:8080`**) (inside Docker)                    |
+| KEYCLOAK_ADMIN_USER     | The admin user for connecting to Keycloak (default to **`admin`**)                                       |
+| KEYCLOAK_ADMIN_PASS     | The admin password for connecting to Keycloak (default to **`admin`**)                                   |
+| KEYCLOAK_CLIENT_ID      | The Client ID for using in PrestaShop & Keycloak (default to **`prestashop-keycloak`**)                  |
+| KKEYCLOAK_CLIENT_SECRET | The Client Secret for using in PrestaShop & Keycloak (default to **`O2kKN0fprCK2HWP6PS6reVbZThWf5LFw`**) |
 
 ### Playwright parameters
 
@@ -143,35 +176,6 @@ SetEnv _TOKEN_ disabled
 
 ```bash
 npm run check:links
-```
-
-## Documentation
-
-To help contributors find more documentation about UI tests, [JS-DOC](https://jsdoc.app/) was added on these
-directories:
-
-- `pages`
-- `campaigns/data/faker`
-- `campaigns/utils`
-
-### Before generating documentation
-
-[jsdoc-to-markdown](https://github.com/jsdoc2md/jsdoc-to-markdown) is the library used, it will create `.md` files using
-js files from the above directories.
-
-To install `jsdoc-to-markdown` :
-
-```shell
-cd tests/UI
-npm ci
-```
-
-### Generate documentation
-
-By running the command below, it will generate jsdoc on `.doc` directory.
-
-```shell
-bash scripts/generate-jsdoc.sh
 ```
 
 Enjoy :wink: :v:

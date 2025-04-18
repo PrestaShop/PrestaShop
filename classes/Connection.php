@@ -60,7 +60,7 @@ class ConnectionCore extends ObjectModel
             'id_guest' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'id_page' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'ip_address' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
-            'http_referer' => ['type' => self::TYPE_STRING, 'validate' => 'isAbsoluteUrl'],
+            'http_referer' => ['type' => self::TYPE_STRING, 'validate' => 'isAbsoluteUrl', 'size' => 255],
             'id_shop' => ['type' => self::TYPE_INT, 'required' => true],
             'id_shop_group' => ['type' => self::TYPE_INT, 'required' => true],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],

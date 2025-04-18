@@ -66,7 +66,7 @@ class OrderDetailRefund
     {
         try {
             $decimalRefundedAmount = new DecimalNumber($refundedAmount);
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException) {
             throw new InvalidAmountException();
         }
 

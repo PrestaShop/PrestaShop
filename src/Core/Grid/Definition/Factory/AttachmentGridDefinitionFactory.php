@@ -124,37 +124,37 @@ final class AttachmentGridDefinitionFactory extends AbstractFilterableGridDefini
                     ])
             )
             ->add((new ActionColumn('actions'))
-            ->setName($this->trans('Actions', [], 'Admin.Global'))
-            ->setOptions([
-                'actions' => (new RowActionCollection())
-                    ->add(
-                        (new LinkRowAction('edit'))
-                            ->setName($this->trans('Edit', [], 'Admin.Actions'))
-                            ->setIcon('edit')
-                            ->setOptions([
-                                'route' => 'admin_attachments_edit',
-                                'route_param_name' => 'attachmentId',
-                                'route_param_field' => 'id_attachment',
-                            ])
-                    )
-                    ->add(
-                        (new LinkRowAction('view'))
-                            ->setName($this->trans('View', [], 'Admin.Actions'))
-                            ->setIcon('zoom_in')
-                            ->setOptions([
-                                'route' => 'admin_attachments_view',
-                                'route_param_name' => 'attachmentId',
-                                'route_param_field' => 'id_attachment',
-                            ])
-                    )
-                    ->add(
-                        $this->buildDeleteAction(
-                            'admin_attachments_delete',
-                            'attachmentId',
-                            'id_attachment'
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
+                ->setOptions([
+                    'actions' => (new RowActionCollection())
+                        ->add(
+                            (new LinkRowAction('edit'))
+                                ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                                ->setIcon('edit')
+                                ->setOptions([
+                                    'route' => 'admin_attachments_edit',
+                                    'route_param_name' => 'attachmentId',
+                                    'route_param_field' => 'id_attachment',
+                                ])
                         )
-                    ),
-            ])
+                        ->add(
+                            (new LinkRowAction('view'))
+                                ->setName($this->trans('View', [], 'Admin.Actions'))
+                                ->setIcon('zoom_in')
+                                ->setOptions([
+                                    'route' => 'admin_attachments_view',
+                                    'route_param_name' => 'attachmentId',
+                                    'route_param_field' => 'id_attachment',
+                                ])
+                        )
+                        ->add(
+                            $this->buildDeleteAction(
+                                'admin_attachments_delete',
+                                'attachmentId',
+                                'id_attachment'
+                            )
+                        ),
+                ])
             );
 
         return $columns;

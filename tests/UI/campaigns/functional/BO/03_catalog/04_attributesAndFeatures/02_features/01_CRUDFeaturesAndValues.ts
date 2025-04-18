@@ -1,25 +1,20 @@
-// Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-import dashboardPage from '@pages/BO/dashboard';
-import attributesPage from '@pages/BO/catalog/attributes';
-import featuresPage from '@pages/BO/catalog/features';
-import addFeaturePage from '@pages/BO/catalog/features/addFeature';
-import viewFeaturePage from '@pages/BO/catalog/features/view';
-import editFeaturePage from '@pages/BO/catalog/features/editFeature';
-import addValuePage from '@pages/BO/catalog/features/addValue';
-
-// Import data
-import FeatureData from '@data/faker/feature';
-import FeatureValueData from '@data/faker/featureValue';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+
+import {
+  boAttributesPage,
+  boDashboardPage,
+  boFeaturesPage,
+  boFeaturesCreatePage,
+  boFeaturesValueCreatePage,
+  boFeaturesViewPage,
+  boLoginPage,
+  type BrowserContext,
+  FakerFeature,
+  FakerFeatureValue,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_attributesAndFeatures_features_CRUDFeaturesAndValues';
 
@@ -38,80 +33,86 @@ describe('BO - Catalog - Attributes & Features : CRUD features and values', asyn
   let page: Page;
   let numberOfFeatures: number = 0;
   const numberOfValues: number = 0;
-  const createFeatureData: FeatureData = new FeatureData({name: 'Texture'});
-  const editFeatureData: FeatureData = new FeatureData({name: 'Texture', metaTitle: 'Feature texture'});
-  const createFeatureValueData: FeatureValueData = new FeatureValueData({
+  const createFeatureData: FakerFeature = new FakerFeature({name: 'Texture'});
+  const editFeatureData: FakerFeature = new FakerFeature({name: 'TextureEdit', metaTitle: 'Feature texture'});
+  const createFeatureValueData: FakerFeatureValue = new FakerFeatureValue({
     featureName: createFeatureData.name,
     value: 'Smooth',
   });
-  const createSecondFeatureValueData: FeatureValueData = new FeatureValueData({
+  const createSecondFeatureValueData: FakerFeatureValue = new FakerFeatureValue({
     featureName: createFeatureData.name,
     value: 'Rough',
   });
-  const editSecondFeatureValueData: FeatureValueData = new FeatureValueData({
+  const editSecondFeatureValueData: FakerFeatureValue = new FakerFeatureValue({
     featureName: createFeatureData.name,
     value: 'Feature value smooth',
   });
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'Catalog > Attributes & features\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAttributesPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.attributesAndFeaturesLink,
+      boDashboardPage.catalogParentLink,
+      boDashboardPage.attributesAndFeaturesLink,
     );
-    await attributesPage.closeSfToolBar(page);
+    await boAttributesPage.closeSfToolBar(page);
 
-    const pageTitle = await attributesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(attributesPage.pageTitle);
+    const pageTitle = await boAttributesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boAttributesPage.pageTitle);
   });
 
-  it('should go to features page', async function () {
+  it('should go to Features page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFeaturesPage', baseContext);
 
-    await attributesPage.goToFeaturesPage(page);
+    await boAttributesPage.goToFeaturesPage(page);
 
-    const pageTitle = await featuresPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(featuresPage.pageTitle);
+    const pageTitle = await boFeaturesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boFeaturesPage.pageTitle);
   });
 
   it('should reset all filters and get number of features in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfFeatures = await featuresPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfFeatures).to.be.above(0);
+    numberOfFeatures = await boFeaturesPage.resetAndGetNumberOfLines(page);
+    expect(numberOfFeatures).to.be.above(0);
   });
 
   describe('Create feature', async () => {
     it('should go to add new feature page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewFeaturePage', baseContext);
 
-      await featuresPage.goToAddFeaturePage(page);
+      await boFeaturesPage.goToAddFeaturePage(page);
 
-      const pageTitle = await addFeaturePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addFeaturePage.createPageTitle);
+      const pageTitle = await boFeaturesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.eq(boFeaturesCreatePage.createPageTitle);
     });
 
     it('should create feature', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createNewFeature', baseContext);
 
-      const textResult = await addFeaturePage.setFeature(page, createFeatureData);
-      await expect(textResult).to.contains(featuresPage.successfulCreationMessage);
+      const textResult = await boFeaturesCreatePage.setFeature(page, createFeatureData);
+      expect(textResult).to.contains(boFeaturesPage.successfulCreationMessage);
     });
   });
 
@@ -119,19 +120,19 @@ describe('BO - Catalog - Attributes & Features : CRUD features and values', asyn
     it('should filter list of features by the created feature', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterFeature', baseContext);
 
-      await featuresPage.filterTable(page, 'b!name', createFeatureData.name);
+      await boFeaturesPage.filterTable(page, 'name', createFeatureData.name);
 
-      const textColumn = await featuresPage.getTextColumn(page, 1, 'b!name');
-      await expect(textColumn).to.contains(createFeatureData.name);
+      const textColumn = await boFeaturesPage.getTextColumn(page, 1, 'name');
+      expect(textColumn).to.contains(createFeatureData.name);
     });
 
     it('should view feature', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewFeature', baseContext);
 
-      await featuresPage.viewFeature(page, 1);
+      await boFeaturesPage.viewFeature(page, 1);
 
-      const pageTitle = await viewFeaturePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(`${viewFeaturePage.pageTitle} ${createFeatureData.name}`);
+      const pageTitle = await boFeaturesViewPage.getPageTitle(page);
+      expect(pageTitle).to.contains(`${createFeatureData.name} • ${global.INSTALL.SHOP_NAME}`);
     });
   });
 
@@ -139,24 +140,24 @@ describe('BO - Catalog - Attributes & Features : CRUD features and values', asyn
     it('should go to add new value page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewValuePage', baseContext);
 
-      await viewFeaturePage.goToAddNewValuePage(page);
+      await boFeaturesViewPage.goToAddNewValuePage(page);
 
-      const pageTitle = await addValuePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addValuePage.createPageTitle);
+      const pageTitle = await boFeaturesValueCreatePage.getPageTitle(page);
+      expect(pageTitle).to.eq(boFeaturesValueCreatePage.createPageTitle);
     });
 
     it('should create value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createNewValue', baseContext);
 
-      const textResult = await addValuePage.addEditValue(page, createFeatureValueData, true);
-      await expect(textResult).to.contains(addValuePage.successfulCreationMessage);
+      const textResult = await boFeaturesValueCreatePage.addEditValue(page, createFeatureValueData, true);
+      expect(textResult).to.contains(boFeaturesValueCreatePage.successfulCreationMessage);
     });
 
     it('should create a second value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createSecondValue', baseContext);
 
-      const textResult = await addValuePage.addEditValue(page, createSecondFeatureValueData, false);
-      await expect(textResult).to.contains(viewFeaturePage.successfulCreationMessage);
+      const textResult = await boFeaturesValueCreatePage.addEditValue(page, createSecondFeatureValueData, false);
+      expect(textResult).to.contains(boFeaturesViewPage.successfulCreationMessage);
     });
   });
 
@@ -164,13 +165,11 @@ describe('BO - Catalog - Attributes & Features : CRUD features and values', asyn
     it('should view feature and check number of values after creation', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewFeature1', baseContext);
 
-      await featuresPage.viewFeature(page, 1);
+      const pageTitle = await boFeaturesViewPage.getPageTitle(page);
+      expect(pageTitle).to.contains(`${createFeatureData.name} • ${global.INSTALL.SHOP_NAME}`);
 
-      const pageTitle = await viewFeaturePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(`${viewFeaturePage.pageTitle} ${createFeatureData.name}`);
-
-      const numberOfValuesAfterCreation = await viewFeaturePage.resetAndGetNumberOfLines(page);
-      await expect(numberOfValuesAfterCreation).to.equal(numberOfValues + 2);
+      const numberOfValuesAfterCreation = await boFeaturesViewPage.resetAndGetNumberOfLines(page);
+      expect(numberOfValuesAfterCreation).to.equal(numberOfValues + 2);
     });
   });
 
@@ -178,17 +177,17 @@ describe('BO - Catalog - Attributes & Features : CRUD features and values', asyn
     it('should go to edit the second value page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditValuePage', baseContext);
 
-      await viewFeaturePage.goToEditValuePage(page, 2);
+      await boFeaturesViewPage.goToEditValuePage(page, 2);
 
-      const pageTitle = await addValuePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addValuePage.editPageTitle);
+      const pageTitle = await boFeaturesValueCreatePage.getPageTitle(page);
+      expect(pageTitle).to.eq(boFeaturesValueCreatePage.editPageTitle);
     });
 
     it('should update the second value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editValue', baseContext);
 
-      const textResult = await addValuePage.addEditValue(page, editSecondFeatureValueData, false);
-      await expect(textResult).to.contains(viewFeaturePage.successfulUpdateMessage);
+      const textResult = await boFeaturesValueCreatePage.addEditValue(page, editSecondFeatureValueData, false);
+      expect(textResult).to.contains(boFeaturesViewPage.successfulUpdateMessage);
     });
   });
 
@@ -196,28 +195,28 @@ describe('BO - Catalog - Attributes & Features : CRUD features and values', asyn
     it('should click on \'Back to the list\' button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'backToTheListForUpdate', baseContext);
 
-      await viewFeaturePage.clickOnBackToTheListButton(page);
+      await boFeaturesViewPage.clickOnBackToTheListButton(page);
 
-      const pageTitle = await featuresPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(featuresPage.pageTitle);
+      const pageTitle = await boFeaturesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boFeaturesPage.pageTitle);
     });
 
     it('should filter list of features by the created feature', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterFeatureForUpdate', baseContext);
 
-      await featuresPage.filterTable(page, 'b!name', createFeatureData.name);
+      await boFeaturesPage.filterTable(page, 'name', createFeatureData.name);
 
-      const textColumn = await featuresPage.getTextColumn(page, 1, 'b!name');
-      await expect(textColumn).to.contains(createFeatureData.name);
+      const textColumn = await boFeaturesPage.getTextColumn(page, 1, 'name');
+      expect(textColumn).to.contains(createFeatureData.name);
     });
 
     it('should edit the created feature', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editFeature', baseContext);
 
-      await featuresPage.clickOnEditFeature(page, 1);
+      await boFeaturesPage.clickOnEditFeature(page, 1);
 
-      const textResult = await editFeaturePage.editFeature(page, editFeatureData);
-      await expect(textResult).to.contains(editFeaturePage.successfulUpdateMessage);
+      const textResult = await boFeaturesCreatePage.setFeature(page, editFeatureData);
+      expect(textResult).to.contains(boFeaturesCreatePage.successfulUpdateMessage);
     });
   });
 
@@ -225,17 +224,17 @@ describe('BO - Catalog - Attributes & Features : CRUD features and values', asyn
     it('should view feature', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewFeature2', baseContext);
 
-      await featuresPage.viewFeature(page, 1);
+      await boFeaturesPage.viewFeature(page, 1);
 
-      const pageTitle = await viewFeaturePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(`${viewFeaturePage.pageTitle} ${createFeatureData.name}`);
+      const pageTitle = await boFeaturesViewPage.getPageTitle(page);
+      expect(pageTitle).to.contains(`${editFeatureData.name} • ${global.INSTALL.SHOP_NAME}`);
     });
 
     it('should delete the second value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteValue', baseContext);
 
-      const textResult = await viewFeaturePage.deleteValue(page, 2);
-      await expect(textResult).to.contains(viewFeaturePage.successfulDeleteMessage);
+      const textResult = await boFeaturesViewPage.deleteValue(page, 2);
+      expect(textResult).to.contains(boFeaturesViewPage.successfulDeleteMessage);
     });
   });
 
@@ -243,26 +242,26 @@ describe('BO - Catalog - Attributes & Features : CRUD features and values', asyn
     it('should click on \'Back to the list\' button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'backToTheListForDelete', baseContext);
 
-      await viewFeaturePage.clickOnBackToTheListButton(page);
+      await boFeaturesViewPage.clickOnBackToTheListButton(page);
 
-      const pageTitle = await featuresPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(featuresPage.pageTitle);
+      const pageTitle = await boFeaturesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boFeaturesPage.pageTitle);
     });
 
     it('should filter list of features by the created feature', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterFeatureForDelete', baseContext);
 
-      await featuresPage.filterTable(page, 'b!name', createFeatureData.name);
+      await boFeaturesPage.filterTable(page, 'name', editFeatureData.name);
 
-      const textColumn = await featuresPage.getTextColumn(page, 1, 'b!name');
-      await expect(textColumn).to.contains(createFeatureData.name);
+      const textColumn = await boFeaturesPage.getTextColumn(page, 1, 'name');
+      expect(textColumn).to.contains(editFeatureData.name);
     });
 
     it('should delete the created feature', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteFeature', baseContext);
 
-      const textResult = await featuresPage.deleteFeature(page, 1);
-      await expect(textResult).to.contains(featuresPage.successfulDeleteMessage);
+      const textResult = await boFeaturesPage.deleteFeature(page, 1);
+      expect(textResult).to.contains(boFeaturesPage.successfulDeleteMessage);
     });
   });
 });

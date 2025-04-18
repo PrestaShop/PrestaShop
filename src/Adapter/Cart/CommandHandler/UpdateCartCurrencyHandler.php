@@ -60,7 +60,7 @@ final class UpdateCartCurrencyHandler extends AbstractCartHandler implements Upd
             if (false === $cart->update()) {
                 throw new CartException('Failed to update cart currency.');
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new CartException(sprintf('An error occurred while trying to update currency for cart with id "%s"', $cart->id));
         }
     }

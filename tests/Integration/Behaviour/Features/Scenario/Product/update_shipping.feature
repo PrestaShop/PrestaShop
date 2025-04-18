@@ -6,7 +6,7 @@ Feature: Update product shipping options from Back Office (BO)
   As a BO user I must be able to update product shipping options from BO
 
   Scenario: I update product shipping
-    Given I add product "product1" with following information:
+    And I add product "product1" with following information:
       | name[en-US] | Last samurai dvd |
       | type        | standard         |
     And product product1 should have following shipping information:
@@ -19,8 +19,10 @@ Feature: Update product shipping options from Back Office (BO)
       | delivery time in stock notes[en-US]     |         |
       | delivery time out of stock notes[en-US] |         |
       | carriers                                | []      |
-    Given carrier carrier1 named "ecoCarrier" exists
-    And carrier carrier2 named "Fast carry" exists
+    And I create carrier "carrier1" with specified properties:
+      | name        | ecoCarrier |
+    And I create carrier "carrier2" with specified properties:
+      | name        | Fast carry |
     When I update product "product1" with following values:
       | width                                   | 10.5                 |
       | height                                  | 6                    |

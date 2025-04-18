@@ -29,6 +29,7 @@ namespace PrestaShopBundle\DataCollector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
+use Throwable;
 
 /**
  * Collect all information about Legacy hooks and make it available
@@ -49,7 +50,7 @@ final class HookDataCollector extends DataCollector
     /**
      * {@inheritdoc}
      */
-    public function collect(Request $request, Response $response, \Throwable $exception = null)
+    public function collect(Request $request, Response $response, ?Throwable $exception = null)
     {
         $hooks = $this->registry->getHooks();
         $calledHooks = $this->registry->getCalledHooks();

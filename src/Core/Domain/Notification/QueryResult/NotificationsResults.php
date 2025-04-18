@@ -77,7 +77,7 @@ class NotificationsResults
                     'order_view_url' => $notification->getOrderViewUrl(),
                 ];
             }
-            $response[($element->getType()->getValue())] = [
+            $response[$element->getType()->getValue()] = [
                 'total' => $element->getTotal(),
                 'results' => $notifications,
             ];

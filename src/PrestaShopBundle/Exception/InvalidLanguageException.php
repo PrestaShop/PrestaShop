@@ -26,7 +26,9 @@
 
 namespace PrestaShopBundle\Exception;
 
-class InvalidLanguageException extends \RuntimeException
+use RuntimeException;
+
+class InvalidLanguageException extends RuntimeException
 {
     public const LOCALE_NOT_FOUND = 1;
 

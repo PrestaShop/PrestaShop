@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCu
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\CustomizationFieldsCommandsBuilder;
 
-class CustomizationFieldsCommandsBuilderTest extends AbstractProductCommandBuilderTest
+class CustomizationFieldsCommandsBuilderTest extends AbstractProductCommandBuilderTestCase
 {
     /**
      * @var CustomizationFieldsCommandsBuilder

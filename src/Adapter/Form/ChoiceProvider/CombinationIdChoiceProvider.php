@@ -86,7 +86,7 @@ class CombinationIdChoiceProvider implements ConfigurableFormChoiceProviderInter
         $options = $this->resolveOptions($options);
         $combinationIds = $this->combinationRepository->getCombinationIds(
             new ProductId($options['product_id']),
-            //@todo: shopConstraint should probably be passed to options instead of always loading combinations from all shops
+            // @todo: shopConstraint should probably be passed to options instead of always loading combinations from all shops
             ShopConstraint::allShops()
         );
         $attributesInfo = $this->attributeRepository->getAttributesInfoByCombinationIds($combinationIds, $this->languageId);

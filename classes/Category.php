@@ -26,6 +26,7 @@
 
 use PrestaShop\PrestaShop\Core\Domain\Category\CategorySettings;
 use PrestaShop\PrestaShop\Core\Domain\Category\SeoSettings;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\RedirectType;
 
 /**
  * Class CategoryCore.
@@ -73,11 +74,20 @@ class CategoryCore extends ObjectModel
     /** @var mixed string or array of Meta title */
     public $meta_title;
 
-    /** @var mixed string or array of Meta keywords */
-    public $meta_keywords;
-
     /** @var mixed string or array of Meta description */
     public $meta_description;
+
+    /**
+     * @var string Redirection type
+     *
+     * @see RedirectType
+     */
+    public $redirect_type = RedirectType::TYPE_PERMANENT;
+
+    /**
+     * @var int Product identifier or Category identifier depends on redirect_type
+     */
+    public $id_type_redirected = 0;
 
     /** @var string Object creation date */
     public $date_add;
@@ -115,6 +125,8 @@ class CategoryCore extends ObjectModel
             'id_shop_default' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'is_root_category' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'position' => ['type' => self::TYPE_INT],
+            'redirect_type' => ['type' => self::TYPE_STRING, 'validate' => 'isString'],
+            'id_type_redirected' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             /* Lang fields */
@@ -134,7 +146,6 @@ class CategoryCore extends ObjectModel
             'additional_description' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'],
             'meta_title' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => SeoSettings::MAX_TITLE_LENGTH],
             'meta_description' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => SeoSettings::MAX_DESCRIPTION_LENGTH],
-            'meta_keywords' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => SeoSettings::MAX_KEYWORDS_LENGTH],
         ],
     ];
 
@@ -348,10 +359,10 @@ class CategoryCore extends ObjectModel
      * @param array $toDelete Array reference where categories ID will be saved
      * @param int $idCategory Parent category ID
      */
-    protected function recursiveDelete(&$toDelete, $idCategory)
+    protected function recursiveDelete(array &$toDelete, $idCategory)
     {
-        if (!is_array($toDelete) || !$idCategory) {
-            die(Tools::displayError());
+        if (!$idCategory) {
+            throw new PrestaShopException('Parameter "idCategory" is invalid.');
         }
 
         $sql = new DbQuery();
@@ -431,7 +442,7 @@ class CategoryCore extends ObjectModel
      *
      * @return bool Deletion result
      */
-    public function deleteSelection($idCategories)
+    public function deleteSelection(array $idCategories)
     {
         $return = 1;
         foreach ($idCategories as $idCategory) {
@@ -611,11 +622,8 @@ class CategoryCore extends ObjectModel
      *
      * @return array Categories
      */
-    public static function getCategories($idLang = false, $active = true, $order = true, $sqlFilter = '', $orderBy = '', $limit = '')
+    public static function getCategories($idLang = false, bool $active = true, $order = true, $sqlFilter = '', $orderBy = '', $limit = '')
     {
-        if (!Validate::isBool($active)) {
-            die(Tools::displayError());
-        }
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             '
 			SELECT *
@@ -676,7 +684,7 @@ class CategoryCore extends ObjectModel
     public static function getAllCategoriesName(
         $idRootCategory = null,
         $idLang = false,
-        $active = true,
+        bool $active = true,
         $groups = null,
         $useShopRestriction = true,
         $sqlFilter = '',
@@ -684,11 +692,7 @@ class CategoryCore extends ObjectModel
         $limit = ''
     ) {
         if (isset($idRootCategory) && !Validate::isInt($idRootCategory)) {
-            die(Tools::displayError());
-        }
-
-        if (!Validate::isBool($active)) {
-            die(Tools::displayError());
+            throw new PrestaShopException('Parameter "idRootCategory" was provided, but it\'s not a valid integer.');
         }
 
         if (isset($groups) && Group::isFeatureActive() && !is_array($groups)) {
@@ -751,7 +755,7 @@ class CategoryCore extends ObjectModel
     public static function getNestedCategories(
         $idRootCategory = null,
         $idLang = false,
-        $active = true,
+        bool $active = true,
         $groups = null,
         $useShopRestriction = true,
         $sqlFilter = '',
@@ -759,11 +763,7 @@ class CategoryCore extends ObjectModel
         $limit = ''
     ) {
         if (isset($idRootCategory) && !Validate::isInt($idRootCategory)) {
-            die(Tools::displayError());
-        }
-
-        if (!Validate::isBool($active)) {
-            die(Tools::displayError());
+            throw new PrestaShopException('Parameter "idRootCategory" was provided, but it\'s not a valid integer.');
         }
 
         if (isset($groups) && Group::isFeatureActive() && !is_array($groups)) {
@@ -771,15 +771,15 @@ class CategoryCore extends ObjectModel
         }
 
         $cacheId = 'Category::getNestedCategories_' . md5(
-                (int) $idRootCategory .
-                (int) $idLang .
-                (int) $active .
-                (int) $useShopRestriction .
-                (isset($groups) && Group::isFeatureActive() ? implode('', $groups) : '') .
-                $sqlFilter .
-                $orderBy .
-                $limit
-            );
+            (int) $idRootCategory .
+            (int) $idLang .
+            (int) $active .
+            (int) $useShopRestriction .
+            (isset($groups) && Group::isFeatureActive() ? implode('', $groups) : '') .
+            $sqlFilter .
+            $orderBy .
+            $limit
+        );
 
         if (!Cache::isStored($cacheId)) {
             $result = Db::getInstance()->executeS(
@@ -914,7 +914,7 @@ class CategoryCore extends ObjectModel
         }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT c.*, cl.`id_lang`, cl.`name`, cl.`description`, cl.`additional_description`, cl.`link_rewrite`, cl.`meta_title`, cl.`meta_keywords`, cl.`meta_description`
+		SELECT c.*, cl.`id_lang`, cl.`name`, cl.`description`, cl.`additional_description`, cl.`link_rewrite`, cl.`meta_title`, cl.`meta_description`
 		FROM `' . _DB_PREFIX_ . 'category` c
 		' . Shop::addSqlAssociation('category', 'c') . '
 		LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON (c.`id_category` = cl.`id_category` AND `id_lang` = ' . (int) $idLang . ' ' . Shop::addSqlRestrictionOnLang('cl') . ')
@@ -964,7 +964,7 @@ class CategoryCore extends ObjectModel
         $random = false,
         $randomNumberProducts = 1,
         $checkAccess = true,
-        Context $context = null
+        ?Context $context = null
     ) {
         if (!$context) {
             $context = Context::getContext();
@@ -1022,10 +1022,10 @@ class CategoryCore extends ObjectModel
 
         $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) AS quantity' . (Combination::isFeatureActive() ? ', IFNULL(product_attribute_shop.id_product_attribute, 0) AS id_product_attribute,
 					product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity' : '') . ', pl.`description`, pl.`description_short`, pl.`available_now`,
-					pl.`available_later`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, image_shop.`id_image` id_image,
+					pl.`available_later`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_title`, pl.`name`, image_shop.`id_image` id_image,
 					il.`legend` as legend, m.`name` AS manufacturer_name, cl.`name` AS category_default,
 					DATEDIFF(product_shop.`date_add`, DATE_SUB("' . date('Y-m-d') . ' 00:00:00",
-					INTERVAL ' . (int) $nbDaysNewProduct . ' DAY)) > 0 AS new, product_shop.price AS orderprice
+					INTERVAL ' . (int) $nbDaysNewProduct . ' DAY)) > 0 AS new, product_shop.price AS orderprice, psales.`quantity` as sales
 				FROM `' . _DB_PREFIX_ . 'category_product` cp
 				LEFT JOIN `' . _DB_PREFIX_ . 'product` p
 					ON p.`id_product` = cp.`id_product`
@@ -1046,6 +1046,8 @@ class CategoryCore extends ObjectModel
 					AND il.`id_lang` = ' . (int) $idLang . ')
 				LEFT JOIN `' . _DB_PREFIX_ . 'manufacturer` m
 					ON m.`id_manufacturer` = p.`id_manufacturer`
+                LEFT JOIN `' . _DB_PREFIX_ . 'product_sale` psales
+					ON psales.`id_product` = p.`id_product`
 				WHERE product_shop.`id_shop` = ' . (int) $context->shop->id . '
 					AND cp.`id_category` = ' . (int) $this->id
                     . ($active ? ' AND product_shop.`active` = 1' : '')
@@ -1070,8 +1072,7 @@ class CategoryCore extends ObjectModel
             $result = array_slice($result, (int) (($pageNumber - 1) * $productPerPage), (int) $productPerPage);
         }
 
-        // Modify SQL result
-        return Product::getProductsProperties($idLang, $result);
+        return $result;
     }
 
     /**
@@ -1096,7 +1097,7 @@ class CategoryCore extends ObjectModel
      *
      * @return Category object
      */
-    public static function getRootCategory($idLang = null, Shop $shop = null)
+    public static function getRootCategory($idLang = null, ?Shop $shop = null)
     {
         $context = Context::getContext();
         if (null === $idLang) {
@@ -1131,12 +1132,8 @@ class CategoryCore extends ObjectModel
      *
      * @return array Children of given Category
      */
-    public static function getChildren($idParent, $idLang, $active = true, $idShop = false)
+    public static function getChildren($idParent, $idLang, bool $active = true, $idShop = false)
     {
-        if (!Validate::isBool($active)) {
-            die(Tools::displayError());
-        }
-
         $cacheId = 'Category::getChildren_' . (int) $idParent . '-' . (int) $idLang . '-' . (bool) $active . '-' . (int) $idShop;
         if (!Cache::isStored($cacheId)) {
             $query = 'SELECT c.`id_category`, cl.`name`, cl.`link_rewrite`, category_shop.`id_shop`
@@ -1167,12 +1164,8 @@ class CategoryCore extends ObjectModel
      *
      * @return bool Indicates whether the given Category has children
      */
-    public static function hasChildren($idParent, $idLang, $active = true, $idShop = false)
+    public static function hasChildren($idParent, $idLang, bool $active = true, $idShop = false)
     {
-        if (!Validate::isBool($active)) {
-            die(Tools::displayError());
-        }
-
         $cacheId = 'Category::hasChildren_' . (int) $idParent . '-' . (int) $idLang . '-' . (bool) $active . '-' . (int) $idShop;
         if (!Cache::isStored($cacheId)) {
             $query = 'SELECT c.id_category, "" as name
@@ -1245,7 +1238,7 @@ class CategoryCore extends ObjectModel
      *
      * @internal param int $id_product Product ID
      */
-    public static function getChildrenWithNbSelectedSubCat($idParent, $selectedCategory, $idLang, Shop $shop = null, $useShopContext = true)
+    public static function getChildrenWithNbSelectedSubCat($idParent, $selectedCategory, $idLang, ?Shop $shop = null, $useShopContext = true)
     {
         if (!$shop) {
             $shop = Context::getContext()->shop;
@@ -1389,7 +1382,7 @@ class CategoryCore extends ObjectModel
      *
      * @return string FO URL to this Category
      */
-    public function getLink(Link $link = null, $idLang = null)
+    public function getLink(?Link $link = null, $idLang = null)
     {
         if (!$link) {
             $link = Context::getContext()->link;
@@ -1555,7 +1548,7 @@ class CategoryCore extends ObjectModel
         if (!$context->shop->id) {
             $context->shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
         }
-        if (count(Category::getCategoriesWithoutParent()) > 1) {
+        if (Shop::getContext() !== Shop::CONTEXT_SHOP && count(Category::getCategoriesWithoutParent()) > 1) {
             $context->shop->id_category = (int) Configuration::get('PS_ROOT_CATEGORY');
         }
         $idShop = $context->shop->id;
@@ -1821,7 +1814,7 @@ class CategoryCore extends ObjectModel
             ' . Shop::addSqlAssociation('category', 'cp') . '
             WHERE cp.`id_parent` = ' . (int) $this->id_parent . '
             ORDER BY category_shop.`position` ASC')
-            ) {
+        ) {
             return false;
         }
 
@@ -1889,8 +1882,8 @@ class CategoryCore extends ObjectModel
             $return = $return
                 && Db::getInstance()->execute(
                     'UPDATE `' . _DB_PREFIX_ . 'category` c ' . Shop::addSqlAssociation('category', 'c') . '
-                    SET c.`position` = ' . (int) ($i) . ',
-                    category_shop.`position` = ' . (int) ($i) . ',
+                    SET c.`position` = ' . (int) $i . ',
+                    category_shop.`position` = ' . (int) $i . ',
                     c.`date_upd` = "' . date('Y-m-d H:i:s') . '"
                     WHERE c.`id_parent` = ' . (int) $idCategoryParent . ' AND c.`id_category` = ' . (int) $result[$i]['id_category']
                 );
@@ -1968,7 +1961,7 @@ class CategoryCore extends ObjectModel
      *
      * @since 1.5.0
      */
-    public function inShop(Shop $shop = null)
+    public function inShop(?Shop $shop = null)
     {
         if (!$shop) {
             $shop = Context::getContext()->shop;
@@ -1991,7 +1984,7 @@ class CategoryCore extends ObjectModel
      *
      * @since 1.5.0
      */
-    public static function inShopStatic($idCategory, Shop $shop = null)
+    public static function inShopStatic($idCategory, ?Shop $shop = null)
     {
         if (!$shop || !is_object($shop)) {
             $shop = Context::getContext()->shop;

@@ -91,6 +91,8 @@ final class AddOrderStateHandler extends AbstractOrderStateHandler implements Ad
         $orderState->shipped = $command->isShipped();
         $orderState->paid = $command->isPaid();
         $orderState->delivery = $command->isDelivery();
-        $orderState->template = $command->getLocalizedTemplates();
+        if ($command->isSendEmailEnabled()) {
+            $orderState->template = $command->getLocalizedTemplates();
+        }
     }
 }

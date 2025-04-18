@@ -26,12 +26,14 @@
 
 namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
+use IteratorAggregate;
+
 /**
  * Interface ThemeCollectionInterface contains a list of themes to
  * generate mail templates. Modules can add/remove their own through the hook:
  *  ThemeCatalogInterface::LIST_MAIL_THEMES_HOOK = actionListMailThemes
  */
-interface ThemeCollectionInterface extends \IteratorAggregate, \Countable
+interface ThemeCollectionInterface extends IteratorAggregate, \Countable
 {
     /**
      * @param ThemeInterface $theme

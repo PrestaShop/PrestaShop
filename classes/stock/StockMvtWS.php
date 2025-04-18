@@ -162,8 +162,8 @@ class StockMvtWSCore extends ObjectModelCore
         'primary' => 'id_stock_mvt',
         'fields' => [
             'id_employee' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
-            'employee_firstname' => ['type' => self::TYPE_STRING, 'validate' => 'isName'],
-            'employee_lastname' => ['type' => self::TYPE_STRING, 'validate' => 'isName'],
+            'employee_firstname' => ['type' => self::TYPE_STRING, 'validate' => 'isName', 'size' => 255],
+            'employee_lastname' => ['type' => self::TYPE_STRING, 'validate' => 'isName', 'size' => 255],
             'id_stock' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'physical_quantity' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true],
             'id_stock_mvt_reason' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
@@ -232,7 +232,7 @@ class StockMvtWSCore extends ObjectModelCore
         parent::__construct($id, $id_lang, $id_shop);
 
         if ((int) $this->id != 0) {
-            $res = $this->getWebserviceObjectList('', (' AND ' . $this->def['primary'] . ' = ' . (int) $this->id), '', '', true);
+            $res = $this->getWebserviceObjectList('', ' AND ' . $this->def['primary'] . ' = ' . (int) $this->id, '', '', true);
             if (isset($res[0])) {
                 foreach ($this->tables_assoc as $key => $param) {
                     $this->{$key} = $res[0][$key];

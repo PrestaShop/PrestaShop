@@ -26,14 +26,14 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
-use AppKernel;
+use AdminKernel;
 use Behat\Gherkin\Node\TableNode;
 use Configuration;
 use Exception;
 use Order;
 use OrderCarrier;
 use OrderCartRule;
-use PHPUnit\Framework\Assert as Assert;
+use PHPUnit\Framework\Assert;
 use RuntimeException;
 use Tests\Integration\Utility\PaymentModuleFake;
 use Tests\Resources\TestCase\ExtendedTestCaseMethodsTrait;
@@ -64,7 +64,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         // need to boot kernel for usage in $paymentModule->validateOrder()
         global $kernel;
         $previousKernel = $kernel;
-        $kernel = new AppKernel('test', true);
+        $kernel = new AdminKernel('test', true);
         $kernel->boot();
 
         // need to update secret_key in order to get payment working
@@ -305,6 +305,20 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
             $order->delete();
         }
         $this->orders = [];
+    }
+
+    /**
+     * @Then I reference order :orderReference delivery address as :addressReference
+     *
+     * @param string $orderReference
+     * @param string $addressReference
+     */
+    public function saveAddressIdFromOrder(string $orderReference, string $addressReference)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $order = new Order($orderId);
+
+        SharedStorage::getStorage()->set($addressReference, $order->id_address_delivery);
     }
 
     /**

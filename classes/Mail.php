@@ -160,6 +160,7 @@ class MailCore extends ObjectModel
             $idShop = Context::getContext()->shop->id;
         }
 
+        // An array [module_name => module_output] will be returned
         $hookBeforeEmailResult = Hook::exec(
             'actionEmailSendBefore',
             [
@@ -178,6 +179,7 @@ class MailCore extends ObjectModel
                 'idShop' => &$idShop,
                 'bcc' => &$bcc,
                 'replyTo' => &$replyTo,
+                'replyToName' => &$replyToName,
             ],
             null,
             true
@@ -244,8 +246,8 @@ class MailCore extends ObjectModel
             ]
         );
 
-        if (!isset($configuration['PS_MAIL_SMTP_ENCRYPTION']) ||
-            Tools::strtolower($configuration['PS_MAIL_SMTP_ENCRYPTION']) === 'off'
+        if (!isset($configuration['PS_MAIL_SMTP_ENCRYPTION'])
+            || Tools::strtolower($configuration['PS_MAIL_SMTP_ENCRYPTION']) === 'off'
         ) {
             $isTls = false;
         } else {
@@ -400,8 +402,8 @@ class MailCore extends ObjectModel
             $moduleName = false;
 
             // get templatePath
-            if (preg_match('#' . $shop->physical_uri . 'modules/#', str_replace(DIRECTORY_SEPARATOR, '/', $templatePath)) &&
-                preg_match('#modules/([a-z0-9_-]+)/#ui', str_replace(DIRECTORY_SEPARATOR, '/', $templatePath), $res)
+            if (preg_match('#' . $shop->physical_uri . 'modules/#', str_replace(DIRECTORY_SEPARATOR, '/', $templatePath))
+                && preg_match('#modules/([a-z0-9_-]+)/#ui', str_replace(DIRECTORY_SEPARATOR, '/', $templatePath), $res)
             ) {
                 $moduleName = $res[1];
             }
@@ -411,10 +413,10 @@ class MailCore extends ObjectModel
                 $isoTemplate = $isoCode . '/' . $template;
                 $templatePath = self::getTemplateBasePath($isoTemplate, $moduleName, $shop->theme);
 
-                if (!file_exists($templatePath . $isoTemplate . '.txt') &&
-                    (
-                        $configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH ||
-                        $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT
+                if (!file_exists($templatePath . $isoTemplate . '.txt')
+                    && (
+                        $configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH
+                        || $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT
                     )
                 ) {
                     PrestaShopLogger::addLog(
@@ -424,10 +426,10 @@ class MailCore extends ObjectModel
                             'Admin.Advparameters.Notification'
                         )
                     );
-                } elseif (!file_exists($templatePath . $isoTemplate . '.html') &&
-                          (
-                              $configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH ||
-                              $configuration['PS_MAIL_TYPE'] == Mail::TYPE_HTML
+                } elseif (!file_exists($templatePath . $isoTemplate . '.html')
+                          && (
+                              $configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH
+                              || $configuration['PS_MAIL_TYPE'] == Mail::TYPE_HTML
                           )
                 ) {
                     PrestaShopLogger::addLog(
@@ -452,6 +454,8 @@ class MailCore extends ObjectModel
 
             $templateHtml = '';
             $templateTxt = '';
+
+            // An array [module_name => module_output] will be returned (no effect)
             Hook::exec(
                 'actionEmailAddBeforeContent',
                 [
@@ -471,6 +475,8 @@ class MailCore extends ObjectModel
                     'utf-8'
                 )
             );
+
+            // An array [module_name => module_output] will be returned (no effect)
             Hook::exec(
                 'actionEmailAddAfterContent',
                 [
@@ -499,12 +505,12 @@ class MailCore extends ObjectModel
                 $replyTo = $from;
             }
 
-            if (isset($replyTo) && $replyTo) {
+            if (!empty($replyTo) && $replyTo != $toPlugin) {
                 $email->replyTo(new Address($replyTo, (string) $replyToName));
             }
 
-            if (false !== Configuration::get('PS_LOGO_MAIL', null, null, $idShop) &&
-                file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO_MAIL', null, null, $idShop))
+            if (false !== Configuration::get('PS_LOGO_MAIL', null, null, $idShop)
+                && file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO_MAIL', null, null, $idShop))
             ) {
                 $logo = _PS_IMG_DIR_ . Configuration::get('PS_LOGO_MAIL', null, null, $idShop);
             } else {
@@ -528,7 +534,7 @@ class MailCore extends ObjectModel
             $templateVars['{shop_name}'] = Tools::safeOutput($configuration['PS_SHOP_NAME']);
             $templateVars['{shop_url}'] = Context::getContext()->link->getPageLink(
                 'index',
-                true,
+                null,
                 $idLang,
                 null,
                 false,
@@ -536,7 +542,7 @@ class MailCore extends ObjectModel
             );
             $templateVars['{my_account_url}'] = Context::getContext()->link->getPageLink(
                 'my-account',
-                true,
+                null,
                 $idLang,
                 null,
                 false,
@@ -544,7 +550,7 @@ class MailCore extends ObjectModel
             );
             $templateVars['{guest_tracking_url}'] = Context::getContext()->link->getPageLink(
                 'guest-tracking',
-                true,
+                null,
                 $idLang,
                 null,
                 false,
@@ -552,7 +558,7 @@ class MailCore extends ObjectModel
             );
             $templateVars['{history_url}'] = Context::getContext()->link->getPageLink(
                 'history',
-                true,
+                null,
                 $idLang,
                 null,
                 false,
@@ -560,7 +566,7 @@ class MailCore extends ObjectModel
             );
             $templateVars['{order_slip_url}'] = Context::getContext()->link->getPageLink(
                 'order-slip',
-                true,
+                null,
                 $idLang,
                 null,
                 false,
@@ -569,6 +575,8 @@ class MailCore extends ObjectModel
             $templateVars['{color}'] = Tools::safeOutput(Configuration::get('PS_MAIL_COLOR', null, null, $idShop));
             // Get extra template_vars
             $extraTemplateVars = [];
+
+            // An array [module_name => module_output] will be returned (no effect)
             Hook::exec(
                 'actionGetExtraMailTemplateVars',
                 [
@@ -582,8 +590,8 @@ class MailCore extends ObjectModel
             );
             $templateVars = array_merge($templateVars, $extraTemplateVars);
 
-            if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH ||
-                $configuration['PS_MAIL_TYPE'] == Mail::TYPE_HTML
+            if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH
+                || $configuration['PS_MAIL_TYPE'] == Mail::TYPE_HTML
             ) {
                 $templateHtml = strtr($templateHtml, $templateVars);
                 $email->html($templateHtml);
@@ -812,7 +820,7 @@ class MailCore extends ObjectModel
      *
      * @return mixed
      */
-    public static function l($string, $idLang = null, Context $context = null)
+    public static function l($string, $idLang = null, ?Context $context = null)
     {
         global $_LANGMAIL;
 
@@ -875,7 +883,7 @@ class MailCore extends ObjectModel
     {
         $length = Tools::strlen($data);
         for ($i = 0; $i < $length; ++$i) {
-            if (ord(($data[$i])) > 128) {
+            if (ord($data[$i]) > 128) {
                 return true;
             }
         }

@@ -29,13 +29,16 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Alias\Repository;
 
 use Alias;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\Alias\Validate\AliasValidator;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\BulkAliasException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\CannotAddAliasException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\CannotDeleteAliasException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
+use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\SearchTerm;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\BulkFeatureException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
@@ -58,27 +61,47 @@ class AliasRepository extends AbstractObjectModelRepository
      * Creates new Alias entity and saves to the database
      *
      * @param string $searchTerm
-     * @param string[] $aliases
-     * @param bool $active
+     * @param array{
+     *   array{
+     *     alias: string,
+     *     active: bool,
+     *   }
+     * } $aliases
      *
      * @return AliasId[]
      *
      * @throws CoreException
      */
-    public function create(string $searchTerm, array $aliases, bool $active = true): array
+    public function addAliases(string $searchTerm, array $aliases): array
     {
+        // Get all aliases already in use for other search terms
+        $aliasesToAdd = array_column($aliases, 'alias');
+        $aliasesAlreadyUsed = $this->getAliasesAlreadyInUseNotForSearchTerm($searchTerm, $aliasesToAdd);
+
+        // If we have aliases already in use, we need to throw an exception
+        if (count($aliasesAlreadyUsed) > 0) {
+            throw new AliasConstraintException(
+                implode(', ', $aliasesAlreadyUsed),
+                AliasConstraintException::ALIAS_ALREADY_USED
+            );
+        }
+
         $aliasIds = [];
 
         foreach ($aliases as $searchAlias) {
             // As search term is not a primary key, we need make sure that alias and search combination does not exist
-            if ($this->aliasExists($searchAlias, $searchTerm)) {
+            // if alias exists for search term, we need to apply new active if needed
+            $aliasIfExists = $this->getAliasIfExists($searchAlias['alias'], $searchTerm);
+            if ($aliasIfExists) {
+                $aliasIfExists->active = $searchAlias['active'];
+                $this->partialUpdate($aliasIfExists, ['active'], CannotAddAliasException::class);
                 continue;
             }
 
             $alias = new Alias();
             $alias->search = $searchTerm;
-            $alias->alias = $searchAlias;
-            $alias->active = $active;
+            $alias->alias = $searchAlias['alias'];
+            $alias->active = $searchAlias['active'];
             $this->aliasValidator->validate($alias);
 
             $this->addObjectModel($alias, CannotAddAliasException::class);
@@ -110,9 +133,9 @@ class AliasRepository extends AbstractObjectModelRepository
      * @param string $alias
      * @param string $searchTerm
      *
-     * @return bool
+     * @return Alias|null
      */
-    public function aliasExists(string $alias, string $searchTerm): bool
+    public function getAliasIfExists(string $alias, string $searchTerm): ?Alias
     {
         $qb = $this->connection->createQueryBuilder()
             ->select('a.id_alias')
@@ -122,25 +145,36 @@ class AliasRepository extends AbstractObjectModelRepository
             ->setParameter('search', $searchTerm)
             ->setParameter('alias', $alias)
         ;
+        $alias = $qb->executeQuery()->fetchOne();
 
-        return (bool) $qb->execute()->fetchOne();
+        if ($alias) {
+            return $this->get(new AliasId((int) $alias));
+        }
+
+        return null;
     }
 
     /**
      * @param string $searchTerm
      *
-     * @return string[]
+     * @return array{
+     *   array{
+     *     alias: string,
+     *     active: bool,
+     *   }
+     * }
      */
     public function getAliasesBySearchTerm(string $searchTerm): array
     {
         $qb = $this->connection->createQueryBuilder()
-            ->addSelect('a.alias')
+            ->addSelect('a.alias, a.active')
             ->from($this->dbPrefix . 'alias', 'a')
             ->where('a.search = :search')
             ->setParameter('search', $searchTerm)
+            ->addOrderBy('a.alias', 'ASC')
         ;
 
-        return $qb->execute()->fetchFirstColumn();
+        return $qb->executeQuery()->fetchAllAssociative();
     }
 
     public function delete(AliasId $aliasId): void
@@ -164,9 +198,9 @@ class AliasRepository extends AbstractObjectModelRepository
     /**
      * Deletes all related aliases
      *
-     * @param string $searchTerm
+     * @param SearchTerm $searchTerm
      */
-    public function deleteAliasesBySearchTerm(string $searchTerm): void
+    public function deleteAliasesBySearchTerm(SearchTerm $searchTerm): void
     {
         $exceptions = [];
 
@@ -174,8 +208,8 @@ class AliasRepository extends AbstractObjectModelRepository
             ->addSelect('a.id_alias')
             ->from($this->dbPrefix . 'alias', 'a')
             ->where('a.search = :searchTerm')
-            ->setParameter('searchTerm', $searchTerm)
-            ->execute()
+            ->setParameter('searchTerm', $searchTerm->getValue())
+            ->executeQuery()
             ->fetchFirstColumn()
         ;
 
@@ -216,7 +250,54 @@ class AliasRepository extends AbstractObjectModelRepository
             ->setMaxResults($limit)
             ->where('a.search LIKE :searchPhrase')
             ->setParameter('searchPhrase', '%' . $searchPhrase . '%')
-            ->execute()
+            ->executeQuery()
             ->fetchAllAssociative();
+    }
+
+    /**
+     * @param array $searchTerms
+     *
+     * @return array{
+     *   array{
+     *     id_alias: int,
+     *     search: string,
+     *     alias: string,
+     *     active: bool,
+     *   }
+     * }
+     */
+    public function getAliasesBySearchTerms(array $searchTerms): array
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->addSelect('a.id_alias, a.search, a.alias, a.active')
+            ->from($this->dbPrefix . 'alias', 'a')
+            ->where('a.search IN (:searchTerms)')
+            ->setParameter('searchTerms', $searchTerms, ArrayParameterType::STRING)
+            ->addOrderBy('a.search', 'ASC')
+            ->addOrderBy('a.alias', 'ASC')
+        ;
+
+        return $qb->executeQuery()->fetchAllAssociative();
+    }
+
+    /**
+     * @param string $searchTerm
+     * @param string[] $aliases
+     *
+     * @return string[]
+     */
+    private function getAliasesAlreadyInUseNotForSearchTerm(string $searchTerm, array $aliases): array
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->addSelect('DISTINCT a.alias')
+            ->from($this->dbPrefix . 'alias', 'a')
+            ->addOrderBy('a.alias', 'ASC')
+            ->where('a.search != :searchTerm')
+            ->andWhere('a.alias IN (:aliases)')
+            ->setParameter('searchTerm', $searchTerm)
+            ->setParameter('aliases', $aliases, ArrayParameterType::STRING)
+        ;
+
+        return $qb->executeQuery()->fetchFirstColumn();
     }
 }

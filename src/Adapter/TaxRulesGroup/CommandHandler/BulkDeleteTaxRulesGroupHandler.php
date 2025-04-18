@@ -55,7 +55,7 @@ final class BulkDeleteTaxRulesGroupHandler extends AbstractTaxRulesGroupHandler 
                 if (!$this->deleteTaxRulesGroup($taxRulesGroup)) {
                     $errors[] = $taxRulesGroup->id;
                 }
-            } catch (TaxRulesGroupException $e) {
+            } catch (TaxRulesGroupException) {
                 $errors[] = $taxRulesGroupId->getValue();
             }
         }

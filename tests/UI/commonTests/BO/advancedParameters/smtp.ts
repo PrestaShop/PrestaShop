@@ -1,19 +1,17 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-import emailPage from '@pages/BO/advancedParameters/email';
-import dashboardPage from '@pages/BO/dashboard';
-
-// Import data
-import Customers from '@data/demo/customers';
+import {
+  boDashboardPage,
+  boEmailPage,
+  boLoginPage,
+  type BrowserContext,
+  dataCustomers,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 let browserContext: BrowserContext;
 let page: Page;
@@ -28,43 +26,49 @@ function setupSmtpConfigTest(baseContext: string = 'commonTests-configSMTP'): vo
   describe('PRE-TEST: Setup SMTP config', async () => {
     // before and after functions
     before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
     });
 
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
+      await utilsPlaywright.closeBrowserContext(browserContext);
     });
 
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Advanced Parameters > E-mail\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEmailSetupPageForSetupSmtpParams', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.emailLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.emailLink,
       );
-      await emailPage.closeSfToolBar(page);
+      await boEmailPage.closeSfToolBar(page);
 
-      const pageTitle = await emailPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(emailPage.pageTitle);
+      const pageTitle = await boEmailPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boEmailPage.pageTitle);
     });
 
     it('should fill the smtp parameters form fields', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'fillSmtpParametersFormField', baseContext);
 
-      const alertSuccessMessage = await emailPage.setupSmtpParameters(
+      const alertSuccessMessage = await boEmailPage.setupSmtpParameters(
         page,
         smtpServer,
-        Customers.johnDoe.email,
-        Customers.johnDoe.password,
+        dataCustomers.johnDoe.email,
+        dataCustomers.johnDoe.password,
         smtpPort.toString(),
       );
-      await expect(alertSuccessMessage).to.contains(emailPage.successfulUpdateMessage);
+      expect(alertSuccessMessage).to.contains(boEmailPage.successfulUpdateMessage);
     });
   });
 }
@@ -77,37 +81,43 @@ function resetSmtpConfigTest(baseContext: string = 'commonTests-configSMTP'): vo
   describe('POST-TEST: Reset SMTP config', async () => {
     // before and after functions
     before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
     });
 
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
+      await utilsPlaywright.closeBrowserContext(browserContext);
     });
 
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Advanced Parameters > E-mail\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEmailSetupPageForResetSmtpParams', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.emailLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.emailLink,
       );
-      await emailPage.closeSfToolBar(page);
+      await boEmailPage.closeSfToolBar(page);
 
-      const pageTitle = await emailPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(emailPage.pageTitle);
+      const pageTitle = await boEmailPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boEmailPage.pageTitle);
     });
 
     it('should reset parameters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetMailParameters', baseContext);
 
-      const successParametersReset = await emailPage.resetDefaultParameters(page);
-      await expect(successParametersReset).to.contains(emailPage.successfulUpdateMessage);
+      const successParametersReset = await boEmailPage.resetDefaultParameters(page);
+      expect(successParametersReset).to.contains(boEmailPage.successfulUpdateMessage);
     });
   });
 }

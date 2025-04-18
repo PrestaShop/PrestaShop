@@ -32,10 +32,13 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Tests\Integration\Utility\LoginTrait;
 use WebserviceKey;
 
 class WebserviceControllerTest extends WebTestCase
 {
+    use LoginTrait;
+
     /**
      * @var KernelBrowser
      */
@@ -44,10 +47,6 @@ class WebserviceControllerTest extends WebTestCase
      * @var Router
      */
     protected $router;
-    /**
-     * @var Session
-     */
-    protected $session;
     /**
      * @var WebserviceKey
      */
@@ -58,8 +57,8 @@ class WebserviceControllerTest extends WebTestCase
         parent::setUp();
 
         $this->client = self::createClient();
+        $this->loginUser($this->client);
         $this->router = self::$kernel->getContainer()->get('router');
-        $this->session = self::$kernel->getContainer()->get('session');
 
         $this->webserviceKey = new WebserviceKey();
         $this->webserviceKey->key = 'DFS51LTKBBMBAF5QQRG523JMQYEHA4X7';
@@ -98,11 +97,13 @@ class WebserviceControllerTest extends WebTestCase
         $this->webserviceKey->active = $actual;
         $this->webserviceKey->save();
 
+        $route = $this->router->generate(
+            'admin_webservice_keys_bulk_enable'
+        );
+
         $this->client->request(
             'POST',
-            $this->router->generate(
-                'admin_webservice_keys_bulk_enable'
-            ),
+            $route,
             [
                 'webservice_key_bulk_action' => [
                     $this->webserviceKey->id,
@@ -113,7 +114,9 @@ class WebserviceControllerTest extends WebTestCase
         $this->assertTrue($response->isRedirection());
 
         // Check session
-        $all = $this->session->getFlashBag()->all();
+        /** @var Session $session */
+        $session = $this->client->getRequest()->getSession();
+        $all = $session->getFlashBag()->all();
         $this->assertArrayHasKey('success', $all);
         $this->assertSame('The status has been successfully updated.', $all['success'][0]);
 
@@ -145,7 +148,9 @@ class WebserviceControllerTest extends WebTestCase
         $this->assertTrue($response->isRedirection());
 
         // Check session
-        $all = $this->session->getFlashBag()->all();
+        /** @var Session $session */
+        $session = $this->client->getRequest()->getSession();
+        $all = $session->getFlashBag()->all();
         $this->assertArrayHasKey('success', $all);
         $this->assertSame('The status has been successfully updated.', $all['success'][0]);
 

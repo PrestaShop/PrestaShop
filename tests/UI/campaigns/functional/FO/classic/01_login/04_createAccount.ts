@@ -1,24 +1,21 @@
-// Import utils
-import helper from '@utils/helpers';
-import mailHelper from '@utils/mailHelper';
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
-// Import commonTests
 import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 
-// Import FO pages
-import {homePage} from '@pages/FO/home';
-import {loginPage} from '@pages/FO/login';
-import {createAccountPage} from '@pages/FO/myAccount/add';
-
-// Import data
-import CustomerData from '@data/faker/customer';
-import type MailDevEmail from '@data/types/maildevEmail';
-
-import {expect} from 'chai';
-import type MailDev from 'maildev';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  type BrowserContext,
+  FakerCustomer,
+  foClassicCreateAccountPage,
+  foClassicHomePage,
+  foClassicLoginPage,
+  type MailDev,
+  type MailDevEmail,
+  type Page,
+  utilsMail,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_login_createAccount';
 
@@ -28,15 +25,16 @@ describe('FO - Login : Create account', async () => {
   let newMail: MailDevEmail;
   let mailListener: MailDev;
 
-  const customerData: CustomerData = new CustomerData();
+  const customerData: FakerCustomer = new FakerCustomer();
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
-    mailListener = mailHelper.createMailListener();
-    mailHelper.startListener(mailListener);
+    mailListener = utilsMail.createMailListener();
+    utilsMail.startListener(mailListener);
+
     // Handle every new email
     mailListener.on('new', (email: MailDevEmail) => {
       newMail = email;
@@ -44,70 +42,78 @@ describe('FO - Login : Create account', async () => {
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
-    mailHelper.stopListener(mailListener);
+    await utilsPlaywright.closeBrowserContext(browserContext);
+    utilsMail.stopListener(mailListener);
   });
 
   // Pre-Condition : Setup config SMTP
-  setupSmtpConfigTest(`${baseContext}_preTest_1`);
+  setupSmtpConfigTest(`${baseContext}_preTest`);
 
   describe('FO - Login : Create account', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-      await homePage.goTo(page, global.FO.URL);
+      await foClassicHomePage.goTo(page, global.FO.URL);
 
-      const result = await homePage.isHomePage(page);
-      await expect(result).to.be.true;
+      const result = await foClassicHomePage.isHomePage(page);
+      expect(result).to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPage', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
 
-      const pageTitle = await loginPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(loginPage.pageTitle);
+      const pageTitle = await foClassicLoginPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicLoginPage.pageTitle);
     });
 
     it('should go to create account page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreateAccountPage', baseContext);
 
-      await loginPage.goToCreateAccountPage(page);
+      await foClassicLoginPage.goToCreateAccountPage(page);
 
-      const pageHeaderTitle = await createAccountPage.getHeaderTitle(page);
-      await expect(pageHeaderTitle).to.equal(createAccountPage.formTitle);
+      const pageHeaderTitle = await foClassicCreateAccountPage.getHeaderTitle(page);
+      expect(pageHeaderTitle).to.equal(foClassicCreateAccountPage.formTitle);
     });
 
     it('should create new account', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createAccount', baseContext);
 
-      await createAccountPage.createAccount(page, customerData);
+      await foClassicCreateAccountPage.createAccount(page, customerData);
 
-      const isCustomerConnected = await homePage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Created customer is not connected!').to.be.true;
+      const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);
+      expect(isCustomerConnected, 'Created customer is not connected!').to.eq(true);
     });
 
     it('should check if the page is redirected to home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'isHomePage', baseContext);
 
-      const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to redirect to FO home page!').to.be.true;
+      const isHomePage = await foClassicHomePage.isHomePage(page);
+      expect(isHomePage, 'Fail to redirect to FO home page!').to.eq(true);
     });
 
     it('should check if welcome mail is in mailbox', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkWelcomeMail', baseContext);
 
-      await expect(newMail.subject).to.contains('Welcome!');
+      expect(newMail.subject).to.equal(`[${global.INSTALL.SHOP_NAME}] Welcome!`);
+    });
+
+    it('should check the content of the email', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkEmailText', baseContext);
+
+      expect(newMail.text).to.contains(`Hi ${customerData.firstName} ${customerData.lastName}`)
+        .and.to.contains(`Thank you for creating a customer account at ${global.INSTALL.SHOP_NAME}.`)
+        .and.to.contains(`Email address: ${customerData.email}`);
     });
 
     it('should sign out from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFO', baseContext);
 
-      await homePage.logout(page);
+      await foClassicHomePage.logout(page);
 
-      const isCustomerConnected = await homePage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is connected!').to.be.false;
+      const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);
+      expect(isCustomerConnected, 'Customer is connected!').to.eq(false);
     });
   });
 

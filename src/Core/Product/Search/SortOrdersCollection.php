@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Product\Search;
 
+use Exception;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -48,7 +49,7 @@ final class SortOrdersCollection
      *
      * @return array
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function getDefaults()
     {

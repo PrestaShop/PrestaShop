@@ -44,11 +44,11 @@ class TaxRuleCore extends ObjectModel
             'id_tax_rules_group' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'id_country' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'id_state' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
-            'zipcode_from' => ['type' => self::TYPE_STRING, 'validate' => 'isPostCode'],
-            'zipcode_to' => ['type' => self::TYPE_STRING, 'validate' => 'isPostCode'],
+            'zipcode_from' => ['type' => self::TYPE_STRING, 'validate' => 'isPostCode', 'size' => 12],
+            'zipcode_to' => ['type' => self::TYPE_STRING, 'validate' => 'isPostCode', 'size' => 12],
             'id_tax' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'behavior' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
-            'description' => ['type' => self::TYPE_STRING, 'validate' => 'isString'],
+            'description' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 100],
         ],
     ];
 
@@ -63,7 +63,7 @@ class TaxRuleCore extends ObjectModel
     public static function deleteByGroupId($id_group)
     {
         if (empty($id_group)) {
-            die(Tools::displayError());
+            throw new PrestaShopException('Parameter "id_group" (id_tax_rules_group you want to delete) is invalid.');
         }
 
         return Db::getInstance()->execute(

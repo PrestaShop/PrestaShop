@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
@@ -40,7 +40,7 @@
       </div>
       <p>
         {{ 'Backup files should automatically start downloading.'|trans({}, 'Admin.Advparameters.Notification') }}
-        {{ 'If not,[1][2] please click here[/1]!'|trans({'[1]': ' <a href="'~ downloadFile.url ~'" class="btn btn-outline-primary btn-sm">', '[/1]': '</a> ', '[2]': '<i class="icon-download"></i>'}, 'Admin.Advparameters.Notification')|raw }}
+        {{ 'If not,[1][2] please click here[/1]!'|trans({'[1]': ' <a href="' ~ downloadFile.url ~ '" class="btn btn-outline-primary btn-sm">', '[/1]': '</a> ', '[2]': '<i class="icon-download"></i>'}, 'Admin.Advparameters.Notification')|raw }}
       </p>
       <p class="mb-0">
         <a class="btn btn-outline-primary btn-sm" href="{{ path('admin_backups_index') }}">

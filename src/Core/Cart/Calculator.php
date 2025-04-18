@@ -28,6 +28,8 @@ namespace PrestaShop\PrestaShop\Core\Cart;
 
 use CartCore;
 use Currency;
+use Exception;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use Tools;
 
@@ -89,7 +91,7 @@ class Calculator
      * @param int|null $computePrecision
      * @param int|null $orderId
      */
-    public function __construct(CartCore $cart, $carrierId, ?int $computePrecision = null, ?int $orderId = null)
+    public function __construct(CartCore $cart, $carrierId, ?FeatureFlagStateCheckerInterface $featureFlagManager = null, ?int $computePrecision = null, ?int $orderId = null)
     {
         $this->setCart($cart);
         $this->setCarrierId($carrierId);
@@ -97,7 +99,7 @@ class Calculator
         $this->cartRows = new CartRowCollection();
         $this->fees = new Fees($this->orderId);
         $this->cartRules = new CartRuleCollection();
-        $this->cartRuleCalculator = new CartRuleCalculator();
+        $this->cartRuleCalculator = new CartRuleCalculator($featureFlagManager);
 
         if (null === $computePrecision) {
             $currency = new Currency((int) $cart->id_currency);
@@ -126,7 +128,7 @@ class Calculator
     /**
      * insert a new cart rule in the calculator.
      *
-     * @param \PrestaShop\PrestaShop\Core\Cart\CartRuleData $cartRule
+     * @param CartRuleData $cartRule
      *
      * @return $this
      */
@@ -166,15 +168,15 @@ class Calculator
      *
      * @return AmountImmutable
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function getTotal($ignoreProcessedFlag = false)
     {
         if (!$this->isProcessed && !$ignoreProcessedFlag) {
-            throw new \Exception('Cart must be processed before getting its total');
+            throw new Exception('Cart must be processed before getting its total');
         }
 
-        $amount = $this->getRowTotalWithoutDiscount();
+        $amount = $this->rounded($this->getRowTotalWithoutDiscount(), $this->computePrecision);
         $amount = $amount->sub($this->rounded($this->getDiscountTotal(), $this->computePrecision));
         $shippingFees = $this->fees->getInitialShippingFees();
         if (null !== $shippingFees) {
@@ -191,7 +193,7 @@ class Calculator
     /**
      * @return AmountImmutable
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function getRowTotal()
     {
@@ -206,7 +208,7 @@ class Calculator
     /**
      * @return AmountImmutable
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function getRowTotalWithoutDiscount()
     {
@@ -221,7 +223,7 @@ class Calculator
     /**
      * @return AmountImmutable
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function getDiscountTotal()
     {
@@ -286,7 +288,7 @@ class Calculator
     }
 
     /**
-     * @return \PrestaShop\PrestaShop\Core\Cart\Fees
+     * @return Fees
      */
     public function getFees()
     {

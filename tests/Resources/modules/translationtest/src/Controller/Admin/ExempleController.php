@@ -26,14 +26,15 @@
 
 namespace PrestaShop\Module\TranslationTest\Controller\Admin;
 
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
+use Symfony\Component\HttpFoundation\Response;
 
-class ExempleController extends FrameworkBundleAdminController
+class ExempleController extends PrestaShopAdminController
 {
-    public function indexAction()
+    public function indexAction(): Response
     {
         return $this->render('@Modules/translationtest/views/templates/admin/index.html.twig', [
-            'layoutTitle' => $this->trans('Modern controller', 'Modules.Translationtest.Admin'),
+            'layoutTitle' => $this->trans('Modern controller', [], 'Modules.Translationtest.Admin'),
             'help_link' => false,
         ]);
     }

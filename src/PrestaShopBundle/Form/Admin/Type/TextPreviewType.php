@@ -60,7 +60,7 @@ class TextPreviewType extends TextType
     /**
      * {@inheritDoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'text_preview';
     }

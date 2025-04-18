@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
+
 /**
  * Class AttachmentCore.
  */
@@ -49,12 +51,12 @@ class AttachmentCore extends ObjectModel
         'fields' => [
             'file' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 40],
             'mime' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 128],
-            'file_name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 128],
+            'file_name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 255],
             'file_size' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
 
             /* Lang fields */
-            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32],
-            'description' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml'],
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255],
+            'description' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4],
         ],
         'associations' => [
             'products' => ['type' => self::HAS_MANY, 'field' => 'id_product', 'object' => 'Product', 'association' => 'product_attachment'],
@@ -138,9 +140,10 @@ class AttachmentCore extends ObjectModel
      * @param array $attachments Attachments
      *
      * @return bool|int Whether the selection has been successfully deleted
+     *
      * @todo: Find out if $return can be initialized with true. (breaking change)
      */
-    public function deleteSelection($attachments)
+    public function deleteSelection(array $attachments)
     {
         $return = 1;
         foreach ($attachments as $idAttachment) {

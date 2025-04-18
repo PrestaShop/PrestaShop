@@ -63,7 +63,7 @@ final class AddSearchEngineHandler extends AbstractSearchEngineHandler implement
             if (false === $searchEngine->add()) {
                 throw new SearchEngineException(sprintf('Failed to add new search engine "%s"', $command->getServer()));
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new SearchEngineException(sprintf('Failed to add new search engine "%s"', $command->getServer()));
         }
 

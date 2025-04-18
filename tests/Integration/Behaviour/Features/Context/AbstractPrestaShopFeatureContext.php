@@ -27,6 +27,8 @@
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use Behat\Behat\Context\Context as BehatContext;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use RuntimeException;
 
 /**
  * PrestaShopFeatureContext provides behat hooks to perform necessary operations for testing:
@@ -39,8 +41,6 @@ abstract class AbstractPrestaShopFeatureContext implements BehatContext
 {
     use SharedStorageTrait;
 
-    public const MODULES_DIRECTORY = __DIR__ . '/../../../../Resources/modules';
-
     protected function checkFixtureExists(array $fixtures, $fixtureName, $fixtureIndex)
     {
         $searchLength = 10;
@@ -49,7 +49,7 @@ abstract class AbstractPrestaShopFeatureContext implements BehatContext
             $fixtureNames = array_keys($fixtures);
             $firstFixtureNames = array_splice($fixtureNames, 0, $searchLength);
             $firstFixtureNamesStr = implode(',', $firstFixtureNames);
-            throw new \RuntimeException(sprintf(
+            throw new RuntimeException(sprintf(
                 '%s named "%s" was not added in fixtures. First %d added are: %s',
                 $fixtureName,
                 $fixtureIndex,
@@ -57,5 +57,26 @@ abstract class AbstractPrestaShopFeatureContext implements BehatContext
                 $firstFixtureNamesStr
             ));
         }
+    }
+
+    /**
+     * @return int
+     */
+    protected function getDefaultLangId(): int
+    {
+        return (int) $this->getConfiguration()->get('PS_LANG_DEFAULT');
+    }
+
+    /**
+     * @return int
+     */
+    protected function getDefaultShopId(): int
+    {
+        return (int) $this->getConfiguration()->get('PS_SHOP_DEFAULT');
+    }
+
+    protected function getConfiguration(): ConfigurationInterface
+    {
+        return CommonFeatureContext::getContainer()->get(ConfigurationInterface::class);
     }
 }

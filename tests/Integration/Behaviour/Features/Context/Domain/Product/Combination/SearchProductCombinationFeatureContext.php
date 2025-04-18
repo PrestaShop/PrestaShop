@@ -120,6 +120,36 @@ class SearchProductCombinationFeatureContext extends AbstractCombinationFeatureC
     }
 
     /**
+     * @When I list product ":productReference" combinations in language ":langIso" for shop ":shopReference" limited to ":limit" results I should see following results:
+     *
+     * @param string $productReference
+     * @param string $langIso
+     * @param string $shopReference
+     * @param int $limit
+     * @param ProductCombinationsCollection $expectedResults
+     *
+     * @return void
+     *
+     * @see transformProductCombinationsResult for $expectedResults type transformation
+     */
+    public function listProductCombinationsForShop(
+        string $productReference,
+        string $langIso,
+        string $shopReference,
+        int $limit,
+        ProductCombinationsCollection $expectedResults
+    ): void {
+        $this->searchProductCombinations(
+            $productReference,
+            '',
+            $langIso,
+            ShopConstraint::shop($this->getSharedStorage()->get($shopReference)),
+            $limit,
+            $expectedResults
+        );
+    }
+
+    /**
      * @param string $productReference
      * @param string $searchPhrase
      * @param string $langIso

@@ -23,31 +23,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Grid from '@components/grid/grid';
-import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
-import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
-import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
-import SortingExtension from '@components/grid/extension/sorting-extension';
-import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
-import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
-import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
-import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
-import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
-import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
-
-const {$} = window;
-
 $(() => {
-  const customerGroups = new Grid('customer_groups');
+  const customerGroups = new window.prestashop.component.Grid('customer_groups');
 
-  customerGroups.addExtension(new BulkActionCheckboxExtension());
-  customerGroups.addExtension(new SubmitBulkExtension());
-  customerGroups.addExtension(new ExportToSqlManagerExtension());
-  customerGroups.addExtension(new SortingExtension());
-  customerGroups.addExtension(new FiltersResetExtension());
-  customerGroups.addExtension(new ReloadListActionExtension());
-  customerGroups.addExtension(new ColumnTogglingExtension());
-  customerGroups.addExtension(new SubmitRowActionExtension());
-  customerGroups.addExtension(new FiltersSubmitButtonEnablerExtension());
-  customerGroups.addExtension(new LinkRowActionExtension());
+  customerGroups.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
+  customerGroups.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
+  customerGroups.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
+  customerGroups.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  customerGroups.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+  customerGroups.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
+  customerGroups.addExtension(new window.prestashop.component.GridExtensions.ColumnTogglingExtension());
+  customerGroups.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
+  customerGroups.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
+  customerGroups.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
 });

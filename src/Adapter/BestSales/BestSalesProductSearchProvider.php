@@ -93,12 +93,12 @@ class BestSalesProductSearchProvider implements ProductSearchProviderInterface
             // We use default set of sort orders + option to sort by sales
             $result->setAvailableSortOrders(
                 array_merge(
-                [
-                    (new SortOrder('product', 'sales', 'desc'))->setLabel(
-                        $this->translator->trans('Sales, highest to lowest', [], 'Shop.Theme.Catalog')
-                    ),
-                ],
-                $this->sortOrdersCollection->getDefaults())
+                    [
+                        (new SortOrder('product', 'sales', 'desc'))->setLabel(
+                            $this->translator->trans('Sales, highest to lowest', [], 'Shop.Theme.Catalog')
+                        ),
+                    ],
+                    $this->sortOrdersCollection->getDefaults())
             );
         }
 

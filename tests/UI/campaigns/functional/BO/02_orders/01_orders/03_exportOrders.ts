@@ -1,17 +1,16 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-import dashboardPage from '@pages/BO/dashboard';
-import ordersPage from '@pages/BO/orders';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  boDashboardPage,
+  boLoginPage,
+  boOrdersPage,
+  type BrowserContext,
+  type Page,
+  utilsFile,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_orders_orders_exportOrders';
 
@@ -23,52 +22,58 @@ describe('BO - Orders : Export orders', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'Orders > Orders\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.ordersParentLink,
-      dashboardPage.ordersLink,
+      boDashboardPage.ordersParentLink,
+      boDashboardPage.ordersLink,
     );
-    await ordersPage.closeSfToolBar(page);
+    await boOrdersPage.closeSfToolBar(page);
 
-    const pageTitle = await ordersPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(ordersPage.pageTitle);
+    const pageTitle = await boOrdersPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boOrdersPage.pageTitle);
   });
 
   it('should export orders to a csv file', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'exportOrders', baseContext);
 
-    filePath = await ordersPage.exportDataToCsv(page);
+    filePath = await boOrdersPage.exportDataToCsv(page);
 
-    const doesFileExist = await files.doesFileExist(filePath, 5000);
-    await expect(doesFileExist, 'Export of data has failed').to.be.true;
+    const doesFileExist = await utilsFile.doesFileExist(filePath, 5000);
+    expect(doesFileExist, 'Export of data has failed').to.eq(true);
   });
 
   it('should check existence of orders data in csv file', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkAllOrdersInCsvFile', baseContext);
 
     // Get number of orders
-    const numberOfOrders = await ordersPage.getNumberOfElementInGrid(page);
+    const numberOfOrders = await boOrdersPage.getNumberOfElementInGrid(page);
 
     // Check each order in file
     for (let row = 1; row <= numberOfOrders; row++) {
-      const orderInCsvFormat = await ordersPage.getOrderInCsvFormat(page, row);
-      const textExist = await files.isTextInFile(filePath, orderInCsvFormat, true, true);
-      await expect(textExist, `${orderInCsvFormat} was not found in the file`).to.be.true;
+      const orderInCsvFormat = await boOrdersPage.getOrderInCsvFormat(page, row);
+      const textExist = await utilsFile.isTextInFile(filePath, orderInCsvFormat, true, true);
+      expect(textExist, `${orderInCsvFormat} was not found in the file`).to.eq(true);
     }
   });
 });

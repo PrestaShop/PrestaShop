@@ -30,6 +30,7 @@ use Configuration;
 use Country;
 use Db;
 use DbQuery;
+use PrestaShopDatabaseException;
 
 /**
  * This class will provide data from DB / ORM about Country
@@ -74,7 +75,7 @@ class CountryDataProvider
      *
      * @return array
      *
-     * @throws \PrestaShopDatabaseException
+     * @throws PrestaShopDatabaseException
      */
     public function getCountriesIdWhichNeedPostcode()
     {
@@ -94,7 +95,7 @@ class CountryDataProvider
      *
      * @return array
      *
-     * @throws \PrestaShopDatabaseException
+     * @throws PrestaShopDatabaseException
      */
     public function getCountriesIdWhichNeedState()
     {

@@ -23,7 +23,7 @@ function SmartWizard(target, options) {
     this.buttons = {
         next : $('<a>'+options.labelNext+'</a>').attr("href","#").addClass("buttonNext").addClass("btn btn-default"),
         previous : $('<a>'+options.labelPrevious+'</a>').attr("href","#").addClass("buttonPrevious").addClass("btn btn-default"),
-        finish  : $('<a>'+options.labelFinish+'</a>').attr("href","#").addClass("buttonFinish").addClass("btn btn-success")
+        finish  : $('<a>'+options.labelFinish+'</a>').attr("href","#").addClass("buttonFinish").addClass("btn btn-primary")
     };
 
     /*

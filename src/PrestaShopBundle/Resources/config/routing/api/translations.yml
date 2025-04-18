@@ -2,7 +2,7 @@ api_translation_domains_tree:
   path: /tree/{lang}/{type}/{selected}
   methods: [ GET ]
   defaults:
-    _controller: prestashop.core.api.translation.controller:listTreeAction
+    _controller: PrestaShopBundle\Controller\Api\TranslationController::listTreeAction
     _legacy_controller: AdminTranslations
     selected: null
 
@@ -10,7 +10,7 @@ api_translation_domain_catalog:
   path: /{locale}/{domain}/{theme}
   methods: [ GET ]
   defaults:
-    _controller: prestashop.core.api.translation.controller:listDomainTranslationAction
+    _controller: PrestaShopBundle\Controller\Api\TranslationController::listDomainTranslationAction
     _legacy_controller: AdminTranslations
     theme: null
     module: null
@@ -19,12 +19,12 @@ api_translation_value_edit:
   path: /edit
   methods: [ POST ]
   defaults:
-    _controller: prestashop.core.api.translation.controller:translationEditAction
+    _controller: PrestaShopBundle\Controller\Api\TranslationController::translationEditAction
     _legacy_controller: AdminTranslations
 
 api_translation_value_reset:
   path: /reset
   methods: [ POST ]
   defaults:
-    _controller: prestashop.core.api.translation.controller:translationResetAction
+    _controller: PrestaShopBundle\Controller\Api\TranslationController::translationResetAction
     _legacy_controller: AdminTranslations

@@ -392,7 +392,7 @@ class AdminCountriesControllerCore extends AdminController
 
                 if (count($ids)) {
                     $res = Db::getInstance()->execute(
-                            'UPDATE `' . _DB_PREFIX_ . 'state`
+                        'UPDATE `' . _DB_PREFIX_ . 'state`
 							SET `id_zone` = ' . (int) Tools::getValue('id_zone') . '
 							WHERE `id_state` IN (' . implode(',', $ids) . ')'
                     );

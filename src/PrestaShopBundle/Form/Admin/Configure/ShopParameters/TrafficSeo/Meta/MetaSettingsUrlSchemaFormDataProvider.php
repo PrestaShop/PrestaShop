@@ -109,11 +109,11 @@ final class MetaSettingsUrlSchemaFormDataProvider implements FormDataProviderInt
         foreach ($data as $routeId => $rule) {
             if (!$this->routeValidator->isRoutePattern($rule)) {
                 $patternErrors[] = $this->translator->trans(
-                  'The route %routeRule% is not valid',
-                  [
-                      '%routeRule%' => htmlspecialchars($rule),
-                  ],
-                  'Admin.Shopparameters.Feature'
+                    'The route %routeRule% is not valid',
+                    [
+                        '%routeRule%' => htmlspecialchars($rule),
+                    ],
+                    'Admin.Shopparameters.Feature'
                 );
             }
 

@@ -25,12 +25,8 @@
 __webpack_public_path__ = window.prestashop.core_js_public_path;
 
 import $ from 'jquery';
-
 import './migrate-mute';
 import 'jquery-migrate';
-import 'jquery.browser';
-import '@prestashop-core/jquery.live-polyfill';
-
 import './selectors';
 import './cart';
 import './checkout';

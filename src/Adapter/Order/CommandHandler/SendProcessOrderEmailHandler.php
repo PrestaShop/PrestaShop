@@ -97,7 +97,7 @@ class SendProcessOrderEmailHandler implements SendProcessOrderEmailHandlerInterf
             )) {
                 throw new OrderEmailSendException('Failed to send order process email to customer', OrderEmailSendException::FAILED_SEND_PROCESS_ORDER);
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new OrderException('An error occurred when trying to get info for order processing');
         }
     }

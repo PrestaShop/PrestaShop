@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,14 +21,14 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 <div class="mt-2 info-block">
   <div class="row">
     {% set isNoteOpen = not orderForViewing.note is empty %}
 
     <div class="col-md-6">
-      <h3 class="mb-0{{ not isNoteOpen ? ' d-print-none': '' }}">
-        {{ 'Order note'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      <h3 class="mb-0{{ not isNoteOpen ? ' d-print-none' : '' }}">
+        {{ 'Order private note'|trans({}, 'Admin.Orderscustomers.Feature') }}
       </h3>
     </div>
 
@@ -42,7 +42,7 @@
 
     <div class="col-md-12 mt-3 js-order-notes-block{% if not isNoteOpen %} d-none{% endif %}">
       {{ form_start(internalNoteForm, {
-        'action': path('admin_orders_set_internal_note', {'orderId': orderForViewing.getId()})
+        action: path('admin_orders_set_internal_note', {orderId: orderForViewing.getId()})
       }) }}
       {{ form_widget(internalNoteForm.note) }}
       <div class="d-none">
@@ -57,7 +57,7 @@
           {{ 'Save'|trans({}, 'Admin.Actions') }}
         </button>
       </div>
-      {{ form_end(internalNoteForm)}}
+      {{ form_end(internalNoteForm) }}
     </div>
   </div>
 </div>

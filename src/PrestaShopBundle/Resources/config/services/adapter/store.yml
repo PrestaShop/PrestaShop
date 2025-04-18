@@ -42,4 +42,6 @@ services:
   # deprecated
   prestashop.core.domain.store.repository.store_repository:
     alias: PrestaShop\PrestaShop\Core\Domain\Store\Repository\StoreRepository
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0

@@ -172,7 +172,7 @@ class SerpApp {
     }
 
     const desc1 = watchedDescription.length ? watchedDescription.val().innerText || watchedDescription.val() : '';
-    const desc2 = defaultDescription.length ? $(defaultDescription.val()).text() || defaultDescription.val() : '';
+    const desc2 = defaultDescription.length ? defaultDescription.text() : '';
 
     this.setDescription(desc1 === '' ? desc2 : desc1);
     this.updateComponent();

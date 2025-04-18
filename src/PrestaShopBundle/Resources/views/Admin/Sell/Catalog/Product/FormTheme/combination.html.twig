@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,11 +21,11 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 {% extends '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
 
 {% block combination_images_choice_widget %}
-  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' combination-images-selector')|trim }) -%}
+  {%- set attr = attr|merge({class: (attr.class|default('') ~ ' combination-images-selector')|trim}) -%}
   <div {{ block('widget_container_attributes') }}>
     {%- for child in form %}
       <label class="combination-image-choice{% if child.vars.checked %} selected{% endif %}">
@@ -62,8 +62,8 @@
          }|json_encode }}"
     ></div>
 
-    {{ render(controller('PrestaShopBundle\\Controller\\Admin\\Sell\\Catalog\\Product\\CombinationController:paginatedListAction', {
-      'productId': productId,
+    {{ render(controller('PrestaShopBundle\\Controller\\Admin\\Sell\\Catalog\\Product\\CombinationController::paginatedListAction', {
+      productId: productId,
     })) }}
   </div>
 {% endblock %}

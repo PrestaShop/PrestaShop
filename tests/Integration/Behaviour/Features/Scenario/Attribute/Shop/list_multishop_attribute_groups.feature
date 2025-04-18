@@ -11,7 +11,7 @@ Feature: Attribute Group
     And attribute group "color" named "Color" in en language exists
     And attribute group "dimension" named "Dimension" in en language exists
     And attribute group "paper_type" named "Paper Type" in en language exists
-    And attribute "grey" named "Grey" in en language exists
+    And attribute "gray" named "Gray" in en language exists
     And attribute "taupe" named "Taupe" in en language exists
     And attribute "beige" named "Beige" in en language exists
     And attribute "white" named "White" in en language exists
@@ -41,7 +41,7 @@ Feature: Attribute Group
     And attribute group "color" is not associated to shops "shop2"
     And attribute group "dimension" is not associated to shops "shop2"
     And attribute group "paper_type" is not associated to shops "shop2"
-    And attribute "grey" is not associated to shops "shop2"
+    And attribute "gray" is not associated to shops "shop2"
     And attribute "taupe" is not associated to shops "shop2"
     And attribute "beige" is not associated to shops "shop2"
     And attribute "white" is not associated to shops "shop2"
@@ -85,7 +85,7 @@ Feature: Attribute Group
       | XL          |       | 3        | xl        |
     And the attribute group "color" should have the following attributes for shops "shop1":
       | name[en-US] | color   | position | reference |
-      | Grey        | #AAB2BD | 0        | grey      |
+      | Gray        | #AAB2BD | 0        | gray      |
       | Taupe       | #CFC4A6 | 1        | taupe     |
       | Beige       | #f5f5dc | 2        | beige     |
       | White       | #ffffff | 3        | white     |

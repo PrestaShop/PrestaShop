@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Repository;
 
 use ObjectModel;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Exception\ExceptionBuilder;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShopException;
 
@@ -280,7 +281,7 @@ abstract class AbstractObjectModelRepository
         try {
             $objectModel = $this->constructObjectModel($id, $objectModelClass, $shopId);
             if ((int) $objectModel->id !== $id) {
-                throw new $exceptionClass(sprintf('%s #%d was not found', $objectModelClass, $id));
+                throw ExceptionBuilder::buildException($exceptionClass, sprintf('%s #%d was not found', $objectModelClass, $id), 0, null, $id);
             }
         } catch (PrestaShopException $e) {
             throw new CoreException(

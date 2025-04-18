@@ -5,52 +5,52 @@
       <trans-unit id="b8a4e75e91526add8051444041526556">
         <source>This mode displays sample data so you can try your dashboard without real numbers.</source>
         <target>This mode displays sample data so you can try your dashboard without real numbers.</target>
-        <note>Line: 59</note>
+        <note>Line: 61</note>
       </trans-unit>
       <trans-unit id="d43cfeee72c309dbca7926165582b977">
         <source>Choose a fixed fee for each order placed in %currency% with %module%.</source>
         <target>Choose a fixed fee for each order placed in %currency% with %module%.</target>
-        <note>Line: 95</note>
+        <note>Line: 97</note>
       </trans-unit>
       <trans-unit id="1ebae23c433fa585b32d472c98edcbb4">
         <source>Choose a variable fee for each order placed in %currency% with %module%. It will be applied on the total paid with taxes.</source>
         <target>Choose a variable fee for each order placed in %currency% with %module%. It will be applied on the total paid with taxes.</target>
-        <note>Line: 111</note>
+        <note>Line: 113</note>
       </trans-unit>
       <trans-unit id="cfaf4c36f59bdda6dec70aaee4f99fa5">
         <source>Choose a fixed fee for each order placed with a foreign currency with %module%.</source>
         <target>Choose a fixed fee for each order placed with a foreign currency with %module%.</target>
-        <note>Line: 129</note>
+        <note>Line: 131</note>
       </trans-unit>
       <trans-unit id="963e569356ae2068f6b0c5a98428332a">
         <source>Choose a variable fee for each order placed with a foreign currency with %module%. It will be applied on the total paid with taxes.</source>
         <target>Choose a variable fee for each order placed with a foreign currency with %module%. It will be applied on the total paid with taxes.</target>
-        <note>Line: 144</note>
+        <note>Line: 146</note>
       </trans-unit>
       <trans-unit id="e8ae5ad5beb4830ebe9a1a2fde5bb0cc">
         <source>For the carrier named %s, indicate the domestic delivery costs  in percentage of the price charged to customers.</source>
         <target>For the carrier named %s, indicate the domestic delivery costs  in percentage of the price charged to customers.</target>
-        <note>Line: 162</note>
+        <note>Line: 164</note>
       </trans-unit>
       <trans-unit id="d2db76b1301441d2171ebc13b2533b95">
         <source>For the carrier named %s, indicate the overseas delivery costs in percentage of the price charged to customers.</source>
         <target>For the carrier named %s, indicate the overseas delivery costs in percentage of the price charged to customers.</target>
-        <note>Line: 177</note>
+        <note>Line: 179</note>
       </trans-unit>
       <trans-unit id="3ca719d0b01232ba8c9a7109d8295917">
         <source>Method: Indicate the percentage of your carrier margin. For example, if you charge $10 of shipping fees to your customer for each shipment, but you really pay $4 to this carrier, then you should indicate "40" in the percentage field.</source>
         <target>Method: Indicate the percentage of your carrier margin. For example, if you charge $10 of shipping fees to your customer for each shipment, but you really pay $4 to this carrier, then you should indicate "40" in the percentage field.</target>
-        <note>Line: 191</note>
+        <note>Line: 193</note>
       </trans-unit>
       <trans-unit id="8c7cf68cbd01d91e537b6055adf0967f">
         <source>You should calculate this percentage as follows: ((total sales revenue) - (cost of goods sold)) / (total sales revenue) * 100. This value is only used to calculate the Dashboard approximate gross margin, if you do not specify the wholesale price for each product.</source>
         <target>You should calculate this percentage as follows: ((total sales revenue) - (cost of goods sold)) / (total sales revenue) * 100. This value is only used to calculate the Dashboard approximate gross margin, if you do not specify the wholesale price for each product.</target>
-        <note>Line: 195</note>
+        <note>Line: 197</note>
       </trans-unit>
       <trans-unit id="1b511dcde043e7a3609a669e2c34f63d">
         <source>You should calculate this value by making the sum of all of your additional costs per order.</source>
         <target>You should calculate this value by making the sum of all of your additional costs per order.</target>
-        <note>Line: 205</note>
+        <note>Line: 207</note>
       </trans-unit>
     </body>
   </file>

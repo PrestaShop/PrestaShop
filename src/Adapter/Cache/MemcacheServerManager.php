@@ -60,7 +60,7 @@ class MemcacheServerManager
      */
     public function addServer($serverIp, $serverPort, $serverWeight)
     {
-        $this->connection->executeUpdate('INSERT INTO ' . $this->tableName . ' (ip, port, weight) VALUES(:serverIp, :serverPort, :serverWeight)', [
+        $this->connection->executeStatement('INSERT INTO ' . $this->tableName . ' (ip, port, weight) VALUES(:serverIp, :serverPort, :serverWeight)', [
             'serverIp' => $serverIp,
             'serverPort' => (int) $serverPort,
             'serverWeight' => (int) $serverWeight,
@@ -118,6 +118,6 @@ class MemcacheServerManager
      */
     public function getServers()
     {
-        return $this->connection->fetchAll('SELECT * FROM ' . $this->tableName, []);
+        return $this->connection->fetchAllAssociative('SELECT * FROM ' . $this->tableName);
     }
 }

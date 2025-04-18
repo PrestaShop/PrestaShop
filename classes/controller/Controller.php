@@ -24,8 +24,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Translation\TranslatorComponent;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @TODO Move undeclared variables and methods to this (base) class: $errors, $layout, checkLiveEditAccess, etc.
@@ -155,7 +156,7 @@ abstract class ControllerCore
     /**
      * Dependency container.
      *
-     * @var ContainerBuilder
+     * @var ContainerInterface
      */
     protected $container;
 
@@ -198,7 +199,7 @@ abstract class ControllerCore
             ]
         );
 
-        if (_PS_MODE_DEV_ && $this->controller_type == 'admin' && !($this instanceof AdminLegacyLayoutControllerCore)) {
+        if (_PS_MODE_DEV_ && $this->controller_type == 'admin') {
             set_error_handler([__CLASS__, 'myErrorHandler']);
         }
 
@@ -273,10 +274,10 @@ abstract class ControllerCore
         $this->ajax = $this->isAjax();
 
         if (
-            !headers_sent() &&
-            isset($_SERVER['HTTP_USER_AGENT']) &&
-            (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false ||
-            strpos($_SERVER['HTTP_USER_AGENT'], 'Trident') !== false)
+            !headers_sent()
+            && isset($_SERVER['HTTP_USER_AGENT'])
+            && (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false
+            || strpos($_SERVER['HTTP_USER_AGENT'], 'Trident') !== false)
         ) {
             header('X-UA-Compatible: IE=edge,chrome=1');
         }
@@ -430,6 +431,11 @@ abstract class ControllerCore
     public function setRedirectAfter($url)
     {
         $this->redirect_after = $url;
+    }
+
+    public function getRedirectAfter(): ?string
+    {
+        return $this->redirect_after;
     }
 
     /**
@@ -644,7 +650,7 @@ abstract class ControllerCore
         $this->context->cookie->write();
 
         $js_tag = 'js_def';
-        $this->context->smarty->assign($js_tag, \Media::getJsDef());
+        $this->context->smarty->assign($js_tag, Media::getJsDef());
 
         if (!is_array($templates)) {
             $templates = [$templates];
@@ -731,22 +737,6 @@ abstract class ControllerCore
     }
 
     /**
-     * @deprecated deprecated since 1.7.5.0, use ajaxRender instead
-     * Dies and echoes output value
-     *
-     * @param string|null $value
-     * @param string|null $controller
-     * @param string|null $method
-     *
-     * @throws PrestaShopException
-     */
-    protected function ajaxDie($value = null, $controller = null, $method = null)
-    {
-        $this->ajaxRender($value, $controller, $method);
-        exit;
-    }
-
-    /**
      * @param string|null $value
      * @param string|null $controller
      * @param string|null $method
@@ -764,14 +754,6 @@ abstract class ControllerCore
             $method = $bt[1]['function'];
         }
 
-        /* @deprecated deprecated since 1.6.1.1 */
-        Hook::exec('actionAjaxDieBefore', ['controller' => $controller, 'method' => $method, 'value' => $value]);
-
-        /*
-         * @deprecated deprecated since 1.6.1.1
-         * use 'actionAjaxDie'.$controller.$method.'Before' instead
-         */
-        Hook::exec('actionBeforeAjaxDie' . $controller . $method, ['value' => $value]);
         Hook::exec('actionAjaxDie' . $controller . $method . 'Before', ['value' => &$value]);
         header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
 
@@ -781,9 +763,12 @@ abstract class ControllerCore
     /**
      * Construct the dependency container.
      *
-     * @return ContainerBuilder
+     * @return ContainerInterface
      */
-    abstract protected function buildContainer();
+    protected function buildContainer(): ContainerInterface
+    {
+        return SymfonyContainer::getInstance();
+    }
 
     /**
      * Gets a service from the service container.
@@ -816,7 +801,7 @@ abstract class ControllerCore
     /**
      * Gets the dependency container.
      *
-     * @return ContainerBuilder|null
+     * @return ContainerInterface|null
      */
     public function getContainer()
     {

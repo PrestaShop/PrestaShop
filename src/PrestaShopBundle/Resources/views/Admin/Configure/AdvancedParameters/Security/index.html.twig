@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,15 +21,15 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
-{% trans_default_domain "Admin.Advparameters.Feature" %}
+{% trans_default_domain 'Admin.Advparameters.Feature' %}
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {% block content %}
-  {% include '@PrestaShop/Admin/Common/multistore-infotip.html.twig' %}
+  {{ include('@PrestaShop/Admin/Common/multistore-infotip.html.twig') }}
 
-  {{ form_start(generalForm, {attr : {class: 'form'}, action: path('admin_security_general_save') }) }}
+  {{ form_start(generalForm, {attr: {class: 'form'}, action: path('admin_security_general_save')}) }}
     {% block administration_form_general %}
       <div class="card" id="configuration_fieldset_general">
         <h3 class="card-header">
@@ -50,7 +50,7 @@
     {% endblock %}
   {{ form_end(generalForm) }}
 
-  {{ form_start(passwordPolicyForm, {attr : {class: 'form'}, action: path('admin_security_password_policy_save') }) }}
+  {{ form_start(passwordPolicyForm, {attr: {class: 'form'}, action: path('admin_security_password_policy_save')}) }}
     {% block administration_form_password_policy %}
       <div class="card" id="configuration_fieldset_password_policy">
         <h3 class="card-header">

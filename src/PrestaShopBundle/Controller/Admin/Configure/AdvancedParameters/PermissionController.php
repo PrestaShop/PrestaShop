@@ -33,8 +33,9 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateModulePer
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateTabPermissionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsForConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryResult\ConfigurablePermissions;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
+use PrestaShopBundle\Controller\Attribute\AllShopContext;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,21 +43,21 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Allows permissions configuration for employee profiles in "Configure > Advanced Parameters > Team > Permissions"
  */
-class PermissionController extends FrameworkBundleAdminController
+#[AllShopContext]
+class PermissionController extends PrestaShopAdminController
 {
     /**
      * Show permissions configuration page
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(): Response
     {
         /** @var ConfigurablePermissions $configurablePermissions */
-        $configurablePermissions = $this->getQueryBus()->handle(
+        $configurablePermissions = $this->dispatchQuery(
             new GetPermissionsForConfiguration(
-                (int) $this->getContext()->employee->id_profile
+                $this->getEmployeeContext()->getEmployee()->getProfileId()
             )
         );
 
@@ -65,14 +66,14 @@ class PermissionController extends FrameworkBundleAdminController
             [
                 'help_link' => $this->generateSidebarLink('AdminAccess'),
                 'enableSidebar' => true,
-                'layoutTitle' => $this->trans('Permissions', 'Admin.Navigation.Menu'),
+                'layoutTitle' => $this->trans('Permissions', [], 'Admin.Navigation.Menu'),
                 'configurablePermissions' => $configurablePermissions,
                 'multistoreInfoTip' => $this->trans(
                     'Note that this page is available in all shops context only, this is why your context has just switched.',
+                    [],
                     'Admin.Notifications.Info'
                 ),
-                'multistoreIsUsed' => ($this->get('prestashop.adapter.multistore_feature')->isUsed()
-                                       && $this->get('prestashop.adapter.shop.context')->isShopContext()),
+                'multistoreIsUsed' => $this->getShopContext()->isMultiShopUsed() && $this->getShopContext()->getShopConstraint()->getShopId() !== null,
             ]
         );
     }
@@ -80,12 +81,11 @@ class PermissionController extends FrameworkBundleAdminController
     /**
      * Update tab permissions for profile
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))")]
     public function updateTabPermissionsAction(Request $request): JsonResponse
     {
         if ($this->isDemoModeEnabled()) {
@@ -93,7 +93,7 @@ class PermissionController extends FrameworkBundleAdminController
         }
 
         try {
-            $this->getQueryBus()->handle(
+            $this->dispatchCommand(
                 new UpdateTabPermissionsCommand(
                     $request->request->getInt('profile_id'),
                     $request->request->getInt('tab_id'),
@@ -104,7 +104,7 @@ class PermissionController extends FrameworkBundleAdminController
 
             $response['success'] = true;
             $responseCode = Response::HTTP_OK;
-        } catch (ProfileException $e) {
+        } catch (ProfileException) {
             $response['success'] = false;
             $responseCode = Response::HTTP_BAD_REQUEST;
         }
@@ -115,12 +115,11 @@ class PermissionController extends FrameworkBundleAdminController
     /**
      * Updates module permissions for profile
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))")]
     public function updateModulePermissionsAction(Request $request): JsonResponse
     {
         if ($this->isDemoModeEnabled()) {
@@ -128,7 +127,7 @@ class PermissionController extends FrameworkBundleAdminController
         }
 
         try {
-            $this->getQueryBus()->handle(
+            $this->dispatchCommand(
                 new UpdateModulePermissionsCommand(
                     $request->request->getInt('profile_id'),
                     $request->request->getInt('id_module'),
@@ -139,7 +138,7 @@ class PermissionController extends FrameworkBundleAdminController
 
             $response['success'] = true;
             $responseCode = Response::HTTP_OK;
-        } catch (ProfileException $e) {
+        } catch (ProfileException) {
             $response['success'] = false;
             $responseCode = Response::HTTP_BAD_REQUEST;
         }

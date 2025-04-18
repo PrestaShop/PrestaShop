@@ -1,17 +1,16 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import FO pages
-import {homePage} from '@pages/FO/home';
-import productPage from '@pages/FO/product';
-import searchResultsPage from '@pages/FO/searchResults';
-
-// Import data
-import Products from '@data/demo/products';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  type BrowserContext,
+  dataProducts,
+  foClassicHomePage,
+  foClassicProductPage,
+  foClassicSearchResultsPage,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_search_searchProduct';
 
@@ -28,63 +27,64 @@ describe('FO - Search Page : Search a product and validate', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should go to FO home page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
-    await homePage.goToFo(page);
+    await foClassicHomePage.goToFo(page);
 
-    const isHomePage = await homePage.isHomePage(page);
-    await expect(isHomePage).to.be.true;
+    const isHomePage = await foClassicHomePage.isHomePage(page);
+    expect(isHomePage).to.eq(true);
   });
 
   it('should check autocomplete', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkAutocomplete', baseContext);
 
-    const numResults = await homePage.countAutocompleteSearchResult(page, Products.demo_8.name);
-    await expect(numResults).equal(3);
+    const numResults = await foClassicHomePage.countAutocompleteSearchResult(page, dataProducts.demo_8.name);
+    expect(numResults).equal(3);
 
-    const results = await homePage.getAutocompleteSearchResult(page, Products.demo_8.name);
-    await expect(results).contains('notebook');
+    const results = await foClassicHomePage.getAutocompleteSearchResult(page, dataProducts.demo_8.name);
+    expect(results).contains('notebook');
   });
 
   it('should choose product on the autocomplete list', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'chooseProductOnList', baseContext);
 
-    await homePage.clickAutocompleteSearchResult(page, Products.demo_8.name, 1);
+    await foClassicHomePage.setProductNameInSearchInput(page, dataProducts.demo_8.name);
+    await foClassicHomePage.clickAutocompleteSearchResult(page, 1);
 
-    const pageTitle = await productPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(Products.demo_8.name);
+    const pageTitle = await foClassicProductPage.getPageTitle(page);
+    expect(pageTitle).to.contains(dataProducts.demo_8.name);
 
-    const inputValue = await homePage.getSearchValue(page);
-    await expect(inputValue).is.empty;
+    const inputValue = await foClassicHomePage.getSearchValue(page);
+    expect(inputValue).to.have.lengthOf(0);
   });
 
   it('should click on logo link and go to home page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'clickLogoLinkAndGoHomePage', baseContext);
 
-    await homePage.clickOnHeaderLink(page, 'Logo');
+    await foClassicHomePage.clickOnHeaderLink(page, 'Logo');
 
-    const isHomePage = await homePage.isHomePage(page);
-    await expect(isHomePage).to.be.true;
+    const isHomePage = await foClassicHomePage.isHomePage(page);
+    expect(isHomePage).to.eq(true);
   });
 
   it('should click on Enter in autocomplete list', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchProduct', baseContext);
 
-    await homePage.searchProduct(page, Products.demo_8.name);
+    await foClassicHomePage.searchProduct(page, dataProducts.demo_8.name);
 
-    const pageTitle = await searchResultsPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+    const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
 
-    const inputValue = await searchResultsPage.getSearchValue(page);
-    await expect(inputValue).is.equal(Products.demo_8.name);
+    const inputValue = await foClassicSearchResultsPage.getSearchValue(page);
+    expect(inputValue).is.equal(dataProducts.demo_8.name);
   });
 });

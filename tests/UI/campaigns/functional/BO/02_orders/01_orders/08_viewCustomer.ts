@@ -1,20 +1,16 @@
-// Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-import viewCustomerPage from '@pages/BO/customers/view';
-import dashboardPage from '@pages/BO/dashboard';
-import ordersPage from '@pages/BO/orders';
-
-// Import data
-import Customers from '@data/demo/customers';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+
+import {
+  boCustomersViewPage,
+  boDashboardPage,
+  boLoginPage,
+  boOrdersPage,
+  type BrowserContext,
+  dataCustomers,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_orders_orders_viewCustomer';
 
@@ -29,81 +25,87 @@ describe('BO - Orders : View customer from orders page', async () => {
   let page: Page;
 
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'Orders > Orders\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.ordersParentLink,
-      dashboardPage.ordersLink,
+      boDashboardPage.ordersParentLink,
+      boDashboardPage.ordersLink,
     );
-    await ordersPage.closeSfToolBar(page);
+    await boOrdersPage.closeSfToolBar(page);
 
-    const pageTitle = await ordersPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(ordersPage.pageTitle);
+    const pageTitle = await boOrdersPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boOrdersPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
 
-    const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfOrders).to.be.above(0);
+    const numberOfOrders = await boOrdersPage.resetAndGetNumberOfLines(page);
+    expect(numberOfOrders).to.be.above(0);
   });
 
   it('should filter order by customer name', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer', baseContext);
 
-    await ordersPage.filterOrders(
+    await boOrdersPage.filterOrders(
       page,
       'input',
       'customer',
-      Customers.johnDoe.lastName,
+      dataCustomers.johnDoe.lastName,
     );
 
-    const numberOfOrders = await ordersPage.getNumberOfElementInGrid(page);
-    await expect(numberOfOrders).to.be.at.least(1);
+    const numberOfOrders = await boOrdersPage.getNumberOfElementInGrid(page);
+    expect(numberOfOrders).to.be.at.least(1);
   });
 
   it('should check customer link', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'viewCustomer', baseContext);
 
     // Click on customer link first row
-    page = await ordersPage.viewCustomer(page, 1);
+    page = await boOrdersPage.viewCustomer(page, 1);
 
-    const pageTitle = await viewCustomerPage.getPageTitle(page);
-    await expect(pageTitle).to
-      .eq(viewCustomerPage.pageTitle(`${Customers.johnDoe.firstName[0]}. ${Customers.johnDoe.lastName}`));
+    const pageTitle = await boCustomersViewPage.getPageTitle(page);
+    expect(pageTitle).to
+      .eq(boCustomersViewPage.pageTitle(`${dataCustomers.johnDoe.firstName[0]}. ${dataCustomers.johnDoe.lastName}`));
   });
 
   it('should go back to \'Orders > Orders\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goBackToOrdersPageToResetFilter', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.ordersParentLink,
-      dashboardPage.ordersLink,
+      boDashboardPage.ordersParentLink,
+      boDashboardPage.ordersLink,
     );
 
-    const pageTitle = await ordersPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(ordersPage.pageTitle);
+    const pageTitle = await boOrdersPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boOrdersPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersAfterCheck', baseContext);
 
-    const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfOrders).to.be.above(0);
+    const numberOfOrders = await boOrdersPage.resetAndGetNumberOfLines(page);
+    expect(numberOfOrders).to.be.above(0);
   });
 });

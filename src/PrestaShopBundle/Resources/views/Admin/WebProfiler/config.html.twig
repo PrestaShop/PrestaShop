@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 {% extends '@WebProfiler/Profiler/layout.html.twig' %}
 
 {% block toolbar %}
@@ -108,7 +108,7 @@
         </div>
     {% endset %}
 
-    {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', { link: true, name: 'config', status: block_status, additional_classes: 'sf-toolbar-block-right', block_attrs: 'title="' ~ symfony_version_status ~ '"' }) }}
+    {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', {link: true, name: 'config', status: block_status, additional_classes: 'sf-toolbar-block-right', block_attrs: 'title="' ~ symfony_version_status ~ '"'}) }}
 {% endblock %}
 
 {% block menu %}
@@ -169,8 +169,8 @@
             {% endif %}
         </div>
 
-        {% set symfony_status = { dev: 'Unstable Version', stable: 'Stable Version', eom: 'Maintenance Ended', eol: 'Version Expired' } %}
-        {% set symfony_status_class = { dev: 'warning', stable: 'success', eom: 'warning', eol: 'error' } %}
+        {% set symfony_status = {dev: 'Unstable Version', stable: 'Stable Version', eom: 'Maintenance Ended', eol: 'Version Expired'} %}
+        {% set symfony_status_class = {dev: 'warning', stable: 'success', eom: 'warning', eol: 'error'} %}
         <table>
             <thead class="small">
                 <tr>

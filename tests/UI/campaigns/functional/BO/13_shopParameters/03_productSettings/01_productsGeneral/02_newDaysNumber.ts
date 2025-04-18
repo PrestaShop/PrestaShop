@@ -1,19 +1,16 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-// Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
-import productSettingsPage from '@pages/BO/shopParameters/productSettings';
-// Import FO pages
-import {homePage} from '@pages/FO/home';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  boDashboardPage,
+  boLoginPage,
+  boProductSettingsPage,
+  type BrowserContext,
+  foClassicHomePage,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_productSettings_productsGeneral_newDaysNumber';
 
@@ -30,30 +27,36 @@ describe('BO - Shop Parameters - Product Settings : Update Number of days for wh
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'Shop parameters > Product Settings\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.shopParametersParentLink,
-      dashboardPage.productSettingsLink,
+      boDashboardPage.shopParametersParentLink,
+      boDashboardPage.productSettingsLink,
     );
-    await productSettingsPage.closeSfToolBar(page);
+    await boProductSettingsPage.closeSfToolBar(page);
 
-    const pageTitle = await productSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+    const pageTitle = await boProductSettingsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
   });
 
   const tests = [
@@ -65,26 +68,34 @@ describe('BO - Shop Parameters - Product Settings : Update Number of days for wh
     it(`should update Number of days to ${test.args.value}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `updateNumberOfDaysTo${test.args.value}`, baseContext);
 
-      const result = await productSettingsPage.updateNumberOfDays(page, test.args.value);
-      await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      const result = await boProductSettingsPage.updateNumberOfDays(page, test.args.value);
+      expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
+    });
+
+    it('should view my shop', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${test.args.state}`, baseContext);
+
+      page = await boProductSettingsPage.viewMyShop(page);
+      await foClassicHomePage.changeLanguage(page, 'en');
+
+      const isHomePage = await foClassicHomePage.isHomePage(page);
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should check the new flag in the product miniature in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkIfNewFlagIs${test.args.state}`, baseContext);
 
-      page = await productSettingsPage.viewMyShop(page);
-
-      const isNewFlagVisible = await homePage.isNewFlagVisible(page, 1);
-      await expect(isNewFlagVisible).to.be.equal(test.args.exist);
+      const isNewFlagVisible = await foClassicHomePage.isNewFlagVisible(page, 1);
+      expect(isNewFlagVisible).to.be.equal(test.args.exist);
     });
 
     it('should close the page and go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `closePageAndBackToBO${test.args.state}`, baseContext);
 
-      page = await homePage.closePage(browserContext, page, 0);
+      page = await foClassicHomePage.closePage(browserContext, page, 0);
 
-      const pageTitle = await productSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      const pageTitle = await boProductSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
     });
   });
 });

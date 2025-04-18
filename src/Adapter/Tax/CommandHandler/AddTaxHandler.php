@@ -62,7 +62,7 @@ final class AddTaxHandler extends AbstractTaxHandler implements AddTaxHandlerInt
             if (!$tax->save()) {
                 throw new TaxException(sprintf('Cannot create tax with id "%s"', $tax->id));
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new TaxException(sprintf('Cannot create tax with id "%s"', $tax->id));
         }
 

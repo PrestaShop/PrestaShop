@@ -28,12 +28,13 @@ use Detection\MobileDetect;
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
 use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
-use PrestaShop\PrestaShop\Core\Localization\Locale;
-use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeInterface;
+use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShopBundle\Install\Language as InstallLanguage;
 use PrestaShopBundle\Translation\TranslatorComponent as Translator;
+use PrestaShopBundle\Translation\TranslatorInterface;
 use PrestaShopBundle\Translation\TranslatorLanguageLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -76,7 +77,7 @@ class ContextCore
     /** @var Employee|null */
     public $employee;
 
-    /** @var AdminController|FrontController|LegacyControllerBridgeInterface|null */
+    /** @var AdminController|FrontController|LegacyControllerContext|null */
     public $controller;
 
     /** @var string */
@@ -91,7 +92,7 @@ class ContextCore
     /**
      * Current locale instance.
      *
-     * @var Locale|null
+     * @var LocaleInterface|null
      */
     public $currentLocale;
 
@@ -225,7 +226,7 @@ class ContextCore
     }
 
     /**
-     * @return Locale|null
+     * @return LocaleInterface|null
      */
     public function getCurrentLocale()
     {
@@ -322,9 +323,9 @@ class ContextCore
          *
          * We don't want to flush his cart, if he made it when logged out.
          */
-        if (Configuration::get('PS_CART_FOLLOWING') &&
-            (empty($this->cookie->id_cart) || Cart::getNbProducts((int) $this->cookie->id_cart) == 0) &&
-            $idCart = (int) Cart::lastNoneOrderedCart($this->customer->id)
+        if (Configuration::get('PS_CART_FOLLOWING')
+            && (empty($this->cookie->id_cart) || Cart::getNbProducts((int) $this->cookie->id_cart) == 0)
+            && $idCart = (int) Cart::lastNoneOrderedCart($this->customer->id)
         ) {
             $this->cart = new Cart($idCart);
             $this->cart->secure_key = $customer->secure_key;
@@ -357,16 +358,15 @@ class ContextCore
 
                 // Set proper customer ID and assign addresses to the cart
                 $this->cart->id_customer = (int) $customer->id;
-                $this->cart->updateAddressId($this->cart->id_address_delivery, (int) Address::getFirstCustomerAddressId((int) ($customer->id)));
-                $this->cart->id_address_delivery = (int) Address::getFirstCustomerAddressId((int) ($customer->id));
-                $this->cart->id_address_invoice = (int) Address::getFirstCustomerAddressId((int) ($customer->id));
+                $this->cart->updateAddressId($this->cart->id_address_delivery, (int) Address::getFirstCustomerAddressId((int) $customer->id));
+                $this->cart->id_address_delivery = (int) Address::getFirstCustomerAddressId((int) $customer->id);
+                $this->cart->id_address_invoice = (int) Address::getFirstCustomerAddressId((int) $customer->id);
             }
         }
 
         // If previous logic resolved to some cart to be used, save it and put this information to cookie
         if (Validate::isLoadedObject($this->cart)) {
             $this->cart->save();
-            $this->cart->autosetProductAddress();
             $this->cookie->id_cart = (int) $this->cart->id;
         }
 
@@ -397,7 +397,7 @@ class ContextCore
             // symfony's container isn't available in front office, so we load and configure the translator component
             $this->translator = $this->getTranslatorFromLocale($this->language->locale);
         } else {
-            $this->translator = $sfContainer->get('translator');
+            $this->translator = $sfContainer->get(TranslatorInterface::class);
             // We need to set the locale here because in legacy BO pages, the translator is used
             // before the TranslatorListener does its job of setting the locale according to the Request object
             $this->translator->setLocale($this->language->locale);

@@ -30,7 +30,10 @@
 
 $rootDirectory = __DIR__ . '/../../../';
 
-define('_PS_IN_TEST_', true);
+const _PS_IN_TEST_ = true;
+define('_PS_ROOT_DIR_', dirname(__DIR__, 3));
+const _PS_MODULE_DIR_ = _PS_ROOT_DIR_ . '/tests/Resources/modules/';
+const _PS_ALL_THEMES_DIR_ = _PS_ROOT_DIR_ . '/tests/Resources/themes/';
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }

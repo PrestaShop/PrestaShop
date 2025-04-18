@@ -25,14 +25,17 @@
 
 import initColorPickers from '@app/utils/colorpicker';
 import TranslatableChoice from '@components/form/translatable-choice';
-import TranslatableInput from '@components/translatable-input';
 import FormMap from '@pages/order-states/form-map';
 
 const {$} = window;
 
 $(() => {
   initColorPickers();
-  new TranslatableInput();
+  window.prestashop.component.initComponents(
+    [
+      'TranslatableInput',
+    ],
+  );
   new TranslatableChoice();
 
   let templatePreviewWindow: null | Record<string, any> = null;

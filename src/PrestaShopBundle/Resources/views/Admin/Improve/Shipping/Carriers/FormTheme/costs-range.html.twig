@@ -1,0 +1,75 @@
+{# **
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * #}
+
+{% block carrier_ranges_costs_zone_row %}
+<div class="card shadow-none mb-2 js-carrier-zone-row">
+  {{ form_widget(form.zoneId) }}
+  <div class="card-body p-4">
+    <div class="d-flex mb-2 justify-content-between">
+      <h2 class="card-title">{{ form_widget(form.zoneName) }}</h2>
+      {{ form_widget(form.deleteZone) }}
+    </div>
+    <div class="container-fluid">
+      <div class="row">
+        {{ form_widget(form.ranges) }}
+        {{ form_rest(form) }}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block carrier_ranges_costs_zone_ranges_collection_widget %}
+  {% if prototype is defined and not prototype.rendered %}
+    {%- set attr = attr|merge({'data-prototype': form_row(prototype), class: ('js-carrier-range-container ' ~ form.vars.attr.class|default(''))|trim}) -%}
+  {% endif %}
+  {%- if form is rootform -%}
+    {{ form_errors(form) }}
+  {%- endif -%}
+  <table {{ block('widget_container_attributes') }}>
+    <thead>
+    <tr>
+      <th>{{ form.vars.prototype.range.vars.label }}</th>
+      <th>{{ form.vars.prototype.price.vars.label }}</th>
+    </tr>
+    </thead>
+    <tbody class="js-carrier-range-container-body">
+      {{- block('form_rows') -}}
+    </tbody>
+    {{- form_rest(form) -}}
+  </table>
+{% endblock %}
+
+{% block carrier_ranges_costs_zone_range_row %}
+  <tr class="js-carrier-range-row">
+    <td class="js-carrier-range-name">
+      {{ form_widget(form.range) }}
+    </td>
+    <td>
+      {{ form_widget(form.price) }}
+    </td>
+    {{ form_rest(form) }}
+  </tr>
+{% endblock %}

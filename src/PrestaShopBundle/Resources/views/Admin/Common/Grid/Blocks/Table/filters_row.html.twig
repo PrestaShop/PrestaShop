@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
 <tr class="column-filters{% if grid.attributes.is_empty_state %} d-none{% endif %}">
   {% for column in grid.columns %}
@@ -30,7 +30,7 @@
       data-column-id="{{ column.id }}"
     >
       {% if loop.first and grid.actions.bulk|length > 0 %}
-        {{ include('@PrestaShop/Admin/Common/Grid/Blocks/bulk_actions_select_all.html.twig', {'grid': grid}) }}
+        {{ include('@PrestaShop/Admin/Common/Grid/Blocks/bulk_actions_select_all.html.twig', {grid: grid}) }}
       {% endif %}
 
       {% if grid.filter_form|length > 1 %}

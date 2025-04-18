@@ -31,15 +31,18 @@
   <?php if (count($this->themes) === 1): ?>
     <input type="hidden" value="<?php echo current($this->themes)->get('name'); ?>" name="theme" />
   <?php else: ?>
-    <div class="field clearfix">
-      <label class="aligned"><?php echo $this->translator->trans('Installation of theme', [], 'Install'); ?></label>
+    <div class="field clearfix theme-selection">
+      <label class="aligned">
+        <?php echo $this->translator->trans('Installation of theme', [], 'Install'); ?>
+        <p class="theme-infos userInfos aligned"><?php echo $this->translator->trans('Select the theme to install', [], 'Install'); ?></p>
+      </label>
 
       <div class="contentinput">
         <div class="themes-container">
           <?php foreach ($this->themes as $theme): ?>
             <div class="theme-card">
               <label>
-                <input value="<?php echo $theme->get('name'); ?>" type="radio" name="theme" style="vertical-align: middle;" <?php if ($this->session->content_theme === $theme->get('name')): ?>checked="checked"<?php endif ?> autocomplete="off" />
+                <input value="<?php echo $theme->get('name'); ?>" type="radio" name="theme" style="vertical-align: top;" <?php if ($this->session->content_theme === $theme->get('name')): ?>checked="checked"<?php endif ?> autocomplete="off" />
                 <?php echo $theme->get('display_name'); ?>
                 <div class="image-block">
                   <img src="../<?php echo $theme->get('preview'); ?>" alt="<?php echo $theme->get('display_name'); ?>">
@@ -53,14 +56,12 @@
           <?php endforeach; ?>
         </div>
       </div>
-
-      <p class="userInfos aligned"><?php echo $this->translator->trans('Select the theme to install', [], 'Install'); ?></p>
     </div>
   <?php endif; ?>
 
   <div class="field clearfix">
     <label class="aligned"><?php echo $this->translator->trans('Installation of demo products', [], 'Install'); ?></label>
-    <div class="contentinput">
+    <div class="contentinput radio-inline">
       <label>
         <input value="1" type="radio" name="install-fixtures" style="vertical-align: middle;" <?php if ($this->session->content_install_fixtures): ?>checked="checked"<?php endif; ?> autocomplete="off" />
         <?php echo $this->translator->trans('Yes', [], 'Install'); ?>
@@ -79,13 +80,13 @@
       <ul class="modules-select-type">
         <li>
           <label>
-            <input value="<?php echo static::MODULES_ALL; ?>" name="module-action" type="radio" autocomplete="off"<?php if ($this->moduleAction === static::MODULES_ALL): ?> checked="checked"<?php endif; ?>/>
+            <input style="vertical-align: top;" value="<?php echo static::MODULES_ALL; ?>" name="module-action" type="radio" autocomplete="off"<?php if ($this->moduleAction === static::MODULES_ALL): ?> checked="checked"<?php endif; ?>/>
             <?php echo $this->translator->trans('Install all modules (recommended)', [], 'Install') ?>
           </label>
         </li>
         <li>
           <label>
-            <input value="<?php echo static::MODULES_SELECTED; ?>" name="module-action" type="radio" autocomplete="off" <?php if ($this->moduleAction === static::MODULES_SELECTED): ?> checked="checked"<?php endif; ?>/>
+            <input style="vertical-align: top;" value="<?php echo static::MODULES_SELECTED; ?>" name="module-action" type="radio" autocomplete="off" <?php if ($this->moduleAction === static::MODULES_SELECTED): ?> checked="checked"<?php endif; ?>/>
             <?php echo $this->translator->trans('Select the modules to install', [], 'Install') ?>
           </label>
         </li>

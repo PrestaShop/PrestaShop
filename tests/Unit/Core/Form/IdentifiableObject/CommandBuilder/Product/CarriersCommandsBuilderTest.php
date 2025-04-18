@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetCarriersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\CarriersCommandsBuilder;
 
-class CarriersCommandsBuilderTest extends AbstractProductCommandBuilderTest
+class CarriersCommandsBuilderTest extends AbstractProductCommandBuilderTestCase
 {
     /**
      * @dataProvider getExpectedSingleShopCommands

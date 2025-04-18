@@ -33,12 +33,20 @@ class IndexControllerCore extends FrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         parent::initContent();
         $this->context->smarty->assign([
             'HOOK_HOME' => Hook::exec('displayHome'),
         ]);
         $this->setTemplate('index');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCanonicalURL(): string
+    {
+        return $this->context->link->getPageLink('index');
     }
 }

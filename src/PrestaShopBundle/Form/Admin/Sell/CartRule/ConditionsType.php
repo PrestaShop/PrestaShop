@@ -63,7 +63,7 @@ class ConditionsType extends TranslatorAwareType
                     'Admin.Catalog.Help'
                 ),
             ])
-            //@todo: Restrictions not handled. Will be in separate PR.
+            // @todo: Restrictions not handled. Will be in separate PR.
         ;
     }
 }

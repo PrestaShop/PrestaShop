@@ -19,14 +19,21 @@ function build {
     echo "Parameter is empty"
     exit 1
   fi
+  if [[ ! -d $1 ]]; then
+     echo $1 folder not found
+     exit 1
+  fi
 
   pushd $1
   if [[ -d "node_modules" ]]; then
     rm -rf node_modules
   fi
 
+  touch buildLock
+  chmod 664 buildLock
   npm ci
   npm run build
+  rm buildLock
   popd
 }
 
@@ -48,8 +55,12 @@ build_asset() {
       echo ">>> Building classic theme assets..."
       build "$PROJECT_PATH/themes/classic/_dev"
     ;;
+    front-hummingbird)
+      echo ">>> Building hummingbird theme assets..."
+      build "$PROJECT_PATH/themes/hummingbird"
+    ;;
     all)
-      build_asset admin-default & build_asset admin-new-theme & build_asset front-core & build_asset front-classic
+      build_asset admin-default & build_asset admin-new-theme & build_asset front-core & build_asset front-classic & build_asset front-hummingbird
     ;;
     *)
       echo "Unknown asset to build $1"

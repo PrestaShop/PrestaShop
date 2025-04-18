@@ -99,7 +99,7 @@ class AddProductRowType extends TranslatorAwareType
                 'label' => false,
                 'unit' => sprintf('%s %s',
                     $options['symbol'],
-                        $this->trans('tax excl.', 'Admin.Global')
+                    $this->trans('tax excl.', 'Admin.Global')
                 ),
             ])
             ->add('price_tax_included', NumberType::class, [

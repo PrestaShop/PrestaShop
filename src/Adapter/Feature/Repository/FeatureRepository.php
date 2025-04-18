@@ -121,6 +121,23 @@ class FeatureRepository extends AbstractMultiShopObjectModelRepository
     }
 
     /**
+     * @param int $langId
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function getFeaturesByLang(int $langId): array
+    {
+        $qb = $this->getFeaturesQueryBuilder()
+            ->leftJoin('f', $this->dbPrefix . 'feature_lang', 'fl', 'fl.id_feature = f.id_feature AND fl.id_lang = :languageId')
+            ->setParameter('languageId', $langId)
+            ->select('f.*, fl.*')
+            ->addOrderBy('fl.name', 'ASC')
+        ;
+
+        return $this->formatResult($qb->executeQuery()->fetchAllAssociative());
+    }
+
+    /**
      * @param FeatureId $featureId
      * @param LanguageId $languageId
      *
@@ -146,7 +163,7 @@ class FeatureRepository extends AbstractMultiShopObjectModelRepository
                 'featureId' => $featureIdValue,
                 'languageId' => $languageId->getValue(),
             ])
-            ->execute()
+            ->executeQuery()
             ->fetchAssociative()
         ;
 
@@ -166,13 +183,33 @@ class FeatureRepository extends AbstractMultiShopObjectModelRepository
      */
     public function getFeatures(?int $limit = null, ?int $offset = null, ?array $filters = []): array
     {
-        $qb = $this->getFeaturesQueryBuilder($filters)
+        $qb = $this->getFeaturesQueryBuilder()
             ->select('f.*, fl.*')
-            ->setFirstResult($offset)
+            ->setFirstResult($offset ?? 0)
+            ->addOrderBy('f.position', 'ASC')
             ->setMaxResults($limit)
         ;
 
-        $results = $qb->execute()->fetchAll();
+        return $this->formatResult($qb->executeQuery()->fetchAllAssociative());
+    }
+
+    /**
+     * @param array|null $filters
+     *
+     * @return int
+     */
+    public function getFeaturesCount(?array $filters = []): int
+    {
+        $qb = $this->getFeaturesQueryBuilder()
+            ->select('COUNT(f.id_feature_value) AS total_feature_values')
+            ->addGroupBy('f.id_feature_value')
+        ;
+
+        return (int) $qb->executeQuery()->fetch()['total_feature_values'];
+    }
+
+    private function formatResult(array $results): array
+    {
         $localizedNames = [];
         $featuresById = [];
         foreach ($results as $result) {
@@ -213,7 +250,7 @@ class FeatureRepository extends AbstractMultiShopObjectModelRepository
             }, $this->connection->createQueryBuilder()
                 ->select('id_shop')
                 ->from($this->dbPrefix . 'feature_shop', 'fs')
-                ->execute()
+                ->executeQuery()
                 ->fetchAllAssociative()
             );
         }
@@ -245,22 +282,17 @@ class FeatureRepository extends AbstractMultiShopObjectModelRepository
 
         return array_map(static function (array $result): ShopId {
             return new ShopId((int) $result['id_shop']);
-        }, $qb->execute()->fetchAllAssociative());
+        }, $qb->executeQuery()->fetchAllAssociative());
     }
 
     /**
-     * @param array|null $filters
-     *
      * @return QueryBuilder
      */
-    private function getFeaturesQueryBuilder(?array $filters): QueryBuilder
+    private function getFeaturesQueryBuilder(): QueryBuilder
     {
-        //@todo: filters are not handled.
+        // Filters not handled yet
         $qb = $this->connection->createQueryBuilder();
-        $qb->from($this->dbPrefix . 'feature', 'f')
-            ->leftJoin('f', $this->dbPrefix . 'feature_lang', 'fl', 'fl.id_feature = f.id_feature')
-            ->addOrderBy('f.position', 'ASC')
-        ;
+        $qb->from($this->dbPrefix . 'feature', 'f');
 
         return $qb;
     }

@@ -1,17 +1,15 @@
-// Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-import dashboardPage from '@pages/BO/dashboard';
-import employeesPage from '@pages/BO/advancedParameters/team';
-import permissionsPage from '@pages/BO/advancedParameters/team/permissions';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+
+import {
+  boDashboardPage,
+  boEmployeesPage,
+  boLoginPage,
+  boPermissionsPage,
+  type BrowserContext,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_team_permission_editModules';
 
@@ -21,45 +19,51 @@ describe('BO - Advanced Parameters - Team - Permission : Edit modules', async ()
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('Go to \'Logistician\' profile', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Advanced Parameters > Team\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAdvancedParamsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.teamLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.teamLink,
       );
-      await employeesPage.closeSfToolBar(page);
+      await boEmployeesPage.closeSfToolBar(page);
 
-      const pageTitle = await employeesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(employeesPage.pageTitle);
+      const pageTitle = await boEmployeesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boEmployeesPage.pageTitle);
     });
 
     it('should go to \'Permissions\' tab', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToPermissionsTab', baseContext);
 
-      const isTabOpened = await employeesPage.goToPermissionsTab(page);
-      await expect(isTabOpened, 'Permissions tab is not opened!').to.be.true;
+      const isTabOpened = await boEmployeesPage.goToPermissionsTab(page);
+      expect(isTabOpened, 'Permissions tab is not opened!').to.eq(true);
     });
 
     it('should click on \'Logistician\' profile', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProfileSubTab', baseContext);
 
-      const isSubTabOpened = await permissionsPage.goToProfileSubTab(page, 'logistician');
-      await expect(isSubTabOpened, 'Profile sub-tab is not opened!').to.be.true;
+      const isSubTabOpened = await boPermissionsPage.goToProfileSubTab(page, 'logistician');
+      expect(isSubTabOpened, 'Profile sub-tab is not opened!').to.eq(true);
     });
   });
 
@@ -72,15 +76,15 @@ describe('BO - Advanced Parameters - Team - Permission : Edit modules', async ()
       it(`should check '${test.args.action}' checkbox from the header`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkAllCheckbox_${index}`, baseContext);
 
-        const isPermissionDefined = await permissionsPage.setPermissionOnAllModules(page, test.args.action);
-        await expect(isPermissionDefined, 'Permission is not updated').to.be.true;
+        const isPermissionDefined = await boPermissionsPage.setPermissionOnAllModules(page, test.args.action);
+        expect(isPermissionDefined, 'Permission is not updated').to.eq(true);
       });
 
       it(`should check that everything in '${test.args.action}' permission is checked`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkAllCheckboxForBlock${index}`, baseContext);
 
-        const isBulkPermissionPerformed = await permissionsPage.isAllPermissionPerformed(page, test.args.action);
-        await expect(isBulkPermissionPerformed).to.be.true;
+        const isBulkPermissionPerformed = await boPermissionsPage.isAllPermissionPerformed(page, test.args.action);
+        expect(isBulkPermissionPerformed).to.eq(true);
       });
     });
   });
@@ -89,10 +93,10 @@ describe('BO - Advanced Parameters - Team - Permission : Edit modules', async ()
     it('should refresh the page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'refreshPage', baseContext);
 
-      await permissionsPage.reloadPage(page);
+      await boPermissionsPage.reloadPage(page);
 
-      const isSubTabOpened = await permissionsPage.goToProfileSubTab(page, 'logistician');
-      await expect(isSubTabOpened, 'Profile sub-tab is not opened!').to.be.true;
+      const isSubTabOpened = await boPermissionsPage.goToProfileSubTab(page, 'logistician');
+      expect(isSubTabOpened, 'Profile sub-tab is not opened!').to.eq(true);
     });
 
     [
@@ -103,8 +107,8 @@ describe('BO - Advanced Parameters - Team - Permission : Edit modules', async ()
       it(`should check that '${test.args.action}' permission is checked for all menu`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkAfterRefreshPage${index}`, baseContext);
 
-        const numberOfModulesUnchecked = await permissionsPage.getNumberOfModulesUnChecked(page, test.args.action);
-        await expect(numberOfModulesUnchecked).to.eq(0);
+        const numberOfModulesUnchecked = await boPermissionsPage.getNumberOfModulesUnChecked(page, test.args.action);
+        expect(numberOfModulesUnchecked).to.eq(0);
       });
     });
   });

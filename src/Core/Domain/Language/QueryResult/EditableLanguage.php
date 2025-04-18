@@ -26,161 +26,71 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Language\QueryResult;
 
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\TagIETF;
-
 /**
  * Transfers editable language's data
  */
 class EditableLanguage
 {
-    /**
-     * @var LanguageId
-     */
-    private $languageId;
-
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var IsoCode
-     */
-    private $isoCode;
-
-    /**
-     * @var TagIETF
-     */
-    private $tagIETF;
-
-    /**
-     * @var string
-     */
-    private $shortDateFormat;
-
-    /**
-     * @var string
-     */
-    private $fullDateFormat;
-
-    /**
-     * @var bool
-     */
-    private $isRtl;
-
-    /**
-     * @var bool
-     */
-    private $isActive;
-
-    /**
-     * @var array
-     */
-    private $shopAssociation;
-
-    /**
-     * @param LanguageId $languageId
-     * @param string $name
-     * @param IsoCode $isoCode
-     * @param TagIETF $tagIETF
-     * @param string $shortDateFormat
-     * @param string $fullDateFormat
-     * @param bool $isRtl
-     * @param bool $isActive
-     * @param array $shopAssociation
-     */
     public function __construct(
-        LanguageId $languageId,
-        $name,
-        IsoCode $isoCode,
-        TagIETF $tagIETF,
-        $shortDateFormat,
-        $fullDateFormat,
-        $isRtl,
-        $isActive,
-        array $shopAssociation
+        private readonly int $languageId,
+        private readonly string $name,
+        private readonly string $isoCode,
+        private readonly string $tagIETF,
+        private readonly string $locale,
+        private readonly string $shortDateFormat,
+        private readonly string $fullDateFormat,
+        private readonly bool $isRtl,
+        private readonly bool $isActive,
+        private readonly array $shopAssociation,
     ) {
-        $this->languageId = $languageId;
-        $this->name = $name;
-        $this->isoCode = $isoCode;
-        $this->tagIETF = $tagIETF;
-        $this->shortDateFormat = $shortDateFormat;
-        $this->fullDateFormat = $fullDateFormat;
-        $this->isRtl = $isRtl;
-        $this->isActive = $isActive;
-        $this->shopAssociation = $shopAssociation;
     }
 
-    /**
-     * @return LanguageId
-     */
-    public function getLanguageId()
+    public function getLanguageId(): int
     {
         return $this->languageId;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return IsoCode
-     */
-    public function getIsoCode()
+    public function getIsoCode(): string
     {
         return $this->isoCode;
     }
 
-    /**
-     * @return TagIETF
-     */
-    public function getTagIETF()
+    public function getTagIETF(): string
     {
         return $this->tagIETF;
     }
 
-    /**
-     * @return string
-     */
-    public function getShortDateFormat()
+    public function getLocale(): string
+    {
+        return $this->locale;
+    }
+
+    public function getShortDateFormat(): string
     {
         return $this->shortDateFormat;
     }
 
-    /**
-     * @return string
-     */
-    public function getFullDateFormat()
+    public function getFullDateFormat(): string
     {
         return $this->fullDateFormat;
     }
 
-    /**
-     * @return bool
-     */
-    public function isRtl()
+    public function isRtl(): bool
     {
         return $this->isRtl;
     }
 
-    /**
-     * @return bool
-     */
-    public function isActive()
+    public function isActive(): bool
     {
         return $this->isActive;
     }
 
-    /**
-     * @return array
-     */
-    public function getShopAssociation()
+    public function getShopAssociation(): array
     {
         return $this->shopAssociation;
     }

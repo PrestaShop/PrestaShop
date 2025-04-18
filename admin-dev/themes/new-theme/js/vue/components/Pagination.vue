@@ -152,11 +152,11 @@
     list-style-type: none;
 
     button {
-      font-size: 1rem;
-      padding: 0.5rem;
+      font-size: var(--#{$cdk}size-16);
+      padding: var(--#{$cdk}size-8);
       transition: 0.25s ease-out;
       cursor: pointer;
-      color: #6c868e;
+      color: var(--#{$cdk}primary-600);
       border: 0;
       background-color: inherit;
 
@@ -166,20 +166,20 @@
       }
 
       &:hover:not(:disabled) {
-        color: $primary;
+        color: var(--#{$cdk}primary-800);
       }
     }
 
     &.active {
       button {
-        color: $primary;
+        color: var(--#{$cdk}primary-800);
       }
     }
   }
 
   &-previous,
   &-next {
-    font-size: 1.25rem;
+    font-size: var(--#{$cdk}size-20);
   }
 }
 </style>

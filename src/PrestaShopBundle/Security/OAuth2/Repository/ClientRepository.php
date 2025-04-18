@@ -29,6 +29,8 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Security\OAuth2\Repository;
 
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
+use LogicException;
+use PrestaShopBundle\Entity\ApiClient;
 use PrestaShopBundle\Security\OAuth2\Entity\Client;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
@@ -43,20 +45,10 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  */
 class ClientRepository implements ClientRepositoryInterface
 {
-    /**
-     * @var UserProviderInterface
-     */
-    private $userProvider;
-
-    /**
-     * @var UserPasswordHasherInterface
-     */
-    private $passwordEncoder;
-
-    public function __construct(UserProviderInterface $userProvider, UserPasswordHasherInterface $passwordEncoder)
-    {
-        $this->userProvider = $userProvider;
-        $this->passwordEncoder = $passwordEncoder;
+    public function __construct(
+        private readonly UserProviderInterface $userProvider,
+        private readonly UserPasswordHasherInterface $passwordEncoder
+    ) {
     }
 
     public function getClientEntity($clientIdentifier): ?Client
@@ -69,6 +61,9 @@ class ClientRepository implements ClientRepositoryInterface
 
         $client = new Client();
         $client->setIdentifier($user->getUserIdentifier());
+        if ($user instanceof ApiClient) {
+            $client->setLifetime($user->getLifetime());
+        }
 
         return $client;
     }
@@ -86,7 +81,7 @@ class ClientRepository implements ClientRepositoryInterface
         }
 
         if (!$client instanceof PasswordAuthenticatedUserInterface) {
-            throw new \LogicException(sprintf('The class %s should implement %s.', $client::class, PasswordAuthenticatedUserInterface::class));
+            throw new LogicException(sprintf('The class %s should implement %s.', $client::class, PasswordAuthenticatedUserInterface::class));
         }
 
         return $this->passwordEncoder->isPasswordValid($client, $clientSecret);
@@ -96,7 +91,7 @@ class ClientRepository implements ClientRepositoryInterface
     {
         try {
             return $this->userProvider->loadUserByIdentifier($clientIdentifier);
-        } catch (UserNotFoundException $exception) {
+        } catch (UserNotFoundException) {
             return null;
         }
     }

@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
 use Doctrine\DBAL\Query\QueryBuilder;
-use PDO;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Query\QueryParserInterface;
@@ -39,28 +38,8 @@ use Symfony\Component\DependencyInjection\Container;
 /**
  * Class DoctrineGridDataFactory is responsible for returning grid data using Doctrine query builders.
  */
-final class DoctrineGridDataFactory implements GridDataFactoryInterface
+class DoctrineGridDataFactory implements GridDataFactoryInterface
 {
-    /**
-     * @var DoctrineQueryBuilderInterface
-     */
-    private $gridQueryBuilder;
-
-    /**
-     * @var HookDispatcherInterface
-     */
-    private $hookDispatcher;
-
-    /**
-     * @var QueryParserInterface
-     */
-    private $queryParser;
-
-    /**
-     * @var string
-     */
-    private $gridId;
-
     /**
      * @param DoctrineQueryBuilderInterface $gridQueryBuilder
      * @param HookDispatcherInterface $hookDispatcher
@@ -68,15 +47,11 @@ final class DoctrineGridDataFactory implements GridDataFactoryInterface
      * @param string $gridId
      */
     public function __construct(
-        DoctrineQueryBuilderInterface $gridQueryBuilder,
-        HookDispatcherInterface $hookDispatcher,
-        QueryParserInterface $queryParser,
-        $gridId
+        protected DoctrineQueryBuilderInterface $gridQueryBuilder,
+        protected HookDispatcherInterface $hookDispatcher,
+        protected QueryParserInterface $queryParser,
+        protected string $gridId
     ) {
-        $this->gridQueryBuilder = $gridQueryBuilder;
-        $this->hookDispatcher = $hookDispatcher;
-        $this->queryParser = $queryParser;
-        $this->gridId = $gridId;
     }
 
     /**
@@ -93,8 +68,8 @@ final class DoctrineGridDataFactory implements GridDataFactoryInterface
             'search_criteria' => $searchCriteria,
         ]);
 
-        $records = $searchQueryBuilder->execute()->fetchAll();
-        $recordsTotal = (int) $countQueryBuilder->execute()->fetch(PDO::FETCH_COLUMN);
+        $records = $searchQueryBuilder->executeQuery()->fetchAllAssociative();
+        $recordsTotal = (int) $countQueryBuilder->executeQuery()->fetchOne();
 
         $records = new RecordCollection($records);
 

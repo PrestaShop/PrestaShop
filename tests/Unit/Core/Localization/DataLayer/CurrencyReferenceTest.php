@@ -67,7 +67,7 @@ class CurrencyReferenceTest extends TestCase
 
         $cldrLocaleRepo = $this->getMockBuilder(CldrLocaleRepository::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getLocale'])
+            ->onlyMethods(['getLocale'])
             ->getMock();
         $cldrLocaleRepo->method('getLocale')
             ->willReturnMap([

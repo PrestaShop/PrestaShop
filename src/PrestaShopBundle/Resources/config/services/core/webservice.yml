@@ -1,11 +1,19 @@
 services:
   _defaults:
-    public: true
+    public: false
 
-  prestashop.core.webservice.server_requirements_checker:
-    class: 'PrestaShop\PrestaShop\Core\Webservice\ServerRequirementsChecker'
+  PrestaShop\PrestaShop\Core\Webservice\ServerRequirementsChecker:
     arguments:
       - '@translator'
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.adapter.hosting_information'
       - '@prestashop.core.configuration.php_extension_checker'
+
+  PrestaShop\PrestaShop\Core\Webservice\ServerRequirementsCheckerInterface: '@PrestaShop\PrestaShop\Core\Webservice\ServerRequirementsChecker'
+
+  prestashop.core.webservice.server_requirements_checker:
+    public: true
+    alias: 'PrestaShop\PrestaShop\Core\Webservice\ServerRequirementsChecker'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0

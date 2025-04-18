@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\AddEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\EditEmployeeCommand;
@@ -35,7 +36,12 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Employee\Access\EmployeeFormAccessCheckerInterface;
 use PrestaShop\PrestaShop\Core\Employee\EmployeeDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
+use PrestaShopBundle\Entity\Repository\EmployeeRepository;
+use PrestaShopBundle\Security\Admin\UserTokenManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\User\EquatableInterface;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * Handles submitted employee form's data.
@@ -92,18 +98,6 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
      */
     private $maxLength;
 
-    /**
-     * @param CommandBusInterface $bus
-     * @param array $defaultShopAssociation
-     * @param int $superAdminProfileId
-     * @param EmployeeFormAccessCheckerInterface $employeeFormAccessChecker
-     * @param EmployeeDataProviderInterface $employeeDataProvider
-     * @param Hashing $hashing
-     * @param ImageUploaderInterface $imageUploader
-     * @param int $minLength
-     * @param int $maxLength
-     * @param int $minScore
-     */
     public function __construct(
         CommandBusInterface $bus,
         array $defaultShopAssociation,
@@ -114,7 +108,12 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
         ImageUploaderInterface $imageUploader,
         int $minLength,
         int $maxLength,
-        int $minScore
+        int $minScore,
+        private readonly EmployeeContext $employeeContext,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly EmployeeRepository $employeeRepository,
+        private readonly UserTokenManager $userTokenManager,
+        private readonly CsrfTokenManagerInterface $csrfTokenManager,
     ) {
         $this->bus = $bus;
         $this->defaultShopAssociation = $defaultShopAssociation;
@@ -202,6 +201,24 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
 
         $this->bus->handle($command);
 
+        // When the employee updates themselves we need to update the token storage to avoid being disconnected on the next request
+        if ($this->employeeContext->getEmployee()?->getId() === $command->getEmployeeId()->getValue()) {
+            // Get the new update employee data
+            $freshEmployee = $this->employeeRepository->loadEmployeeByIdentifier($command->getEmail()->getValue(), true);
+
+            // Update the token user so that it is serialized and its data match the updated DB employee
+            $token = $this->tokenStorage->getToken();
+            $tokenUser = $token->getUser();
+            if ($tokenUser instanceof EquatableInterface && !$tokenUser->isEqualTo($freshEmployee)) {
+                $token->setUser($freshEmployee);
+                $this->tokenStorage->setToken($token);
+
+                // Generate new CSRF token and clear UserTokenManager cache so that generated URLs use a valid new token
+                $this->csrfTokenManager->refreshToken($command->getEmail()->getValue());
+                $this->userTokenManager->clear();
+            }
+        }
+
         /**
          * IMPORTANT : Apply all validations before file upload
          *
@@ -257,8 +274,8 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
         }
 
         return
-            null !== $formData['change_password']['old_password'] &&
-            null !== $formData['change_password']['new_password']
+            null !== $formData['change_password']['old_password']
+            && null !== $formData['change_password']['new_password']
         ;
     }
 }

@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Entity\Repository;
 
-use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Connection;
 use Employee;
 use PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
@@ -125,9 +125,9 @@ class CategoryRepository
         $statement->bindValue('language_id', $this->languageId);
         $statement->bindValue('shop_id', $this->shopId);
 
-        $statement->execute();
+        $result = $statement->executeQuery();
 
-        $rows = $statement->fetchAll();
+        $rows = $result->fetchAllAssociative();
         $rows = $this->castNumericToInt($rows);
 
         if (true === $tree && !empty($rows)) {

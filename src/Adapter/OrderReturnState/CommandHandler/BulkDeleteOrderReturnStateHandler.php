@@ -56,7 +56,7 @@ class BulkDeleteOrderReturnStateHandler extends AbstractOrderReturnStateHandler 
                 if (!$this->deleteOrderReturnState($orderReturnState)) {
                     $errors[] = $orderReturnState->id;
                 }
-            } catch (OrderReturnStateException $e) {
+            } catch (OrderReturnStateException) {
                 $errors[] = $orderReturnStateId->getValue();
             }
         }

@@ -1697,40 +1697,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/helpers/dataviz/graph.tpl" source-language="en" target-language="fr" datatype="plaintext">
-    <body>
-      <trans-unit id="e6d0e1c8fc6a4fcf47869df87e04cd88" approved="yes">
-        <source>Customers</source>
-        <target state="final">Clients</target>
-        <note>Line: 31</note>
-      </trans-unit>
-      <trans-unit id="7442e29d7d53e549b78d93c46b8cdcfc" approved="yes">
-        <source>Orders</source>
-        <target state="final">Commandes</target>
-        <note>Line: 39</note>
-      </trans-unit>
-      <trans-unit id="1f08d08fd864b99cbeebd88b9a0784a7" approved="yes">
-        <source>Income</source>
-        <target state="final">Revenus</target>
-        <note>Line: 45</note>
-      </trans-unit>
-      <trans-unit id="4c2a8fe7eaf24721cc7a9f0175115bd4" approved="yes">
-        <source>Message</source>
-        <target state="final">Message</target>
-        <note>Line: 51</note>
-      </trans-unit>
-      <trans-unit id="e7935ae6c516d89405ec532359d2d75a" approved="yes">
-        <source>Traffic</source>
-        <target state="final">Trafic</target>
-        <note>Line: 61</note>
-      </trans-unit>
-      <trans-unit id="3bb1503332637805beddb73a2dd1fe1b" approved="yes">
-        <source>Conversion</source>
-        <target state="final">Transformation</target>
-        <note>Line: 69</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/default/template/helpers/form/assoshop.tpl" source-language="en" target-language="fr" datatype="plaintext">
     <body>
       <trans-unit id="1aa4c641d6920ddb97a2562f8ec53853" approved="yes">

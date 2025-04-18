@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,12 +21,17 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% set layoutHeaderToolbarBtn = {
   add: {
     href: path('admin_attribute_groups_create'),
     desc: 'Add new attribute'|trans({}, 'Admin.Catalog.Feature'),
+    icon: 'add_circle_outline',
+  },
+  add_value: {
+    href: path('admin_attributes_create'),
+    desc: 'Add new value'|trans({}, 'Admin.Catalog.Feature'),
     icon: 'add_circle_outline',
   }
 }
@@ -35,11 +40,11 @@
 {% block content %}
 
   {% block attribute_group_showcase_card %}
-    {% include '@PrestaShop/Admin/Sell/Catalog/AttributeGroup/Blocks/showcase_card.html.twig' %}
+    {{ include('@PrestaShop/Admin/Sell/Catalog/AttributeGroup/Blocks/showcase_card.html.twig') }}
   {% endblock %}
 
   {% block attributes_listing %}
-    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': attributeGroupGrid} %}
+    {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: attributeGroupGrid}) }}
   {% endblock %}
 {% endblock %}
 

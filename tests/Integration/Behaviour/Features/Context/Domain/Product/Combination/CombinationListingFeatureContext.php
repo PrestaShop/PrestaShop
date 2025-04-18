@@ -30,6 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combinatio
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CombinationAttributeInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\EditableCombinationForListing;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
@@ -287,9 +288,8 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
                 $editableCombinationForListing->isDefault(),
                 'Unexpected default combination'
             );
-            Assert::assertEquals(
-                $expectedCombination['impact on price'],
-                (string) $editableCombinationForListing->getImpactOnPrice(),
+            Assert::assertTrue(
+                $editableCombinationForListing->getImpactOnPrice()->equals(new DecimalNumber($expectedCombination['impact on price'])),
                 'Unexpected combination impact on price'
             );
             Assert::assertSame(

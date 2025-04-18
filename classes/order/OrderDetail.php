@@ -23,6 +23,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
+
 class OrderDetailCore extends ObjectModel
 {
     /** @var int */
@@ -69,7 +72,7 @@ class OrderDetailCore extends ObjectModel
      *
      * @var float Without taxes, includes ecotax
      */
-    public $product_price;
+    public $product_price = 0;
 
     /** @var float */
     public $original_product_price;
@@ -148,7 +151,7 @@ class OrderDetailCore extends ObjectModel
      *
      * @deprecated Order Detail Tax is saved in order_detail_tax table now
      */
-    public $tax_name;
+    public $tax_name = 'deprecated';
 
     /**
      * @var float
@@ -201,7 +204,7 @@ class OrderDetailCore extends ObjectModel
             'product_id' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'product_attribute_id' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'id_customization' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
-            'product_name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true],
+            'product_name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4],
             'product_quantity' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true],
             'product_quantity_in_stock' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
             'product_quantity_return' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
@@ -214,21 +217,21 @@ class OrderDetailCore extends ObjectModel
             'reduction_amount_tax_excl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
             'group_reduction' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
             'product_quantity_discount' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
-            'product_ean13' => ['type' => self::TYPE_STRING, 'validate' => 'isEan13'],
-            'product_isbn' => ['type' => self::TYPE_STRING, 'validate' => 'isIsbn'],
-            'product_upc' => ['type' => self::TYPE_STRING, 'validate' => 'isUpc'],
-            'product_mpn' => ['type' => self::TYPE_STRING, 'validate' => 'isMpn'],
-            'product_reference' => ['type' => self::TYPE_STRING, 'validate' => 'isReference'],
-            'product_supplier_reference' => ['type' => self::TYPE_STRING, 'validate' => 'isReference'],
+            'product_ean13' => ['type' => self::TYPE_STRING, 'validate' => 'isEan13', 'size' => 13],
+            'product_isbn' => ['type' => self::TYPE_STRING, 'validate' => 'isIsbn', 'size' => 32],
+            'product_upc' => ['type' => self::TYPE_STRING, 'validate' => 'isUpc', 'size' => 12],
+            'product_mpn' => ['type' => self::TYPE_STRING, 'validate' => 'isMpn', 'size' => 40],
+            'product_reference' => ['type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 64],
+            'product_supplier_reference' => ['type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 64],
             'product_weight' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
-            'tax_name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName'],
+            'tax_name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 16],
             'tax_rate' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
             'tax_computation_method' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'id_tax_rules_group' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
             'ecotax' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
             'ecotax_tax_rate' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
             'discount_quantity_applied' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
-            'download_hash' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName'],
+            'download_hash' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 255],
             'download_nb' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
             'download_deadline' => ['type' => self::TYPE_DATE, 'validate' => 'isDateFormat'],
             'unit_price_tax_incl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
@@ -581,10 +584,10 @@ class OrderDetailCore extends ObjectModel
      */
     protected function setProductTax(Order $order, $product)
     {
-        $this->ecotax = Tools::convertPrice((float) ($product['ecotax']), (int) ($order->id_currency));
+        $this->ecotax = Tools::convertPrice((float) $product['ecotax'], (int) $order->id_currency);
 
-        // Exclude VAT
-        if (!Tax::excludeTaxeOption()) {
+        // Include VAT
+        if (Configuration::get('PS_TAX')) {
             $this->setContext((int) $product['id_shop']);
             $this->id_tax_rules_group = (int) Product::getIdTaxRulesGroupByIdProduct((int) $product['id_product'], $this->context);
 
@@ -592,7 +595,6 @@ class OrderDetailCore extends ObjectModel
             $this->tax_calculator = $tax_manager->getTaxCalculator();
             $this->tax_computation_method = (int) $this->tax_calculator->computation_method;
             $this->tax_rate = (float) $this->tax_calculator->getTotalRate();
-            $this->tax_name = $this->tax_calculator->getTaxesName();
         }
 
         $this->ecotax_tax_rate = 0;
@@ -708,7 +710,7 @@ class OrderDetailCore extends ObjectModel
         $unit_price = Product::getPriceStatic(
             (int) $product['id_product'],
             true,
-            ($product['id_product_attribute'] ? (int) ($product['id_product_attribute']) : null),
+            $product['id_product_attribute'] ? (int) ($product['id_product_attribute']) : null,
             6,
             null,
             false,
@@ -945,7 +947,7 @@ class OrderDetailCore extends ObjectModel
                     }
                 }
 
-                return Product::getProductsProperties($id_lang, $order_products);
+                return $order_products;
             }
         }
     }
@@ -966,7 +968,7 @@ class OrderDetailCore extends ObjectModel
         return parent::add($autodate = true, $null_values = false);
     }
 
-    //return the product OR product attribute whole sale price
+    // return the product OR product attribute whole sale price
     public function getWholeSalePrice()
     {
         $product = new Product($this->product_id);

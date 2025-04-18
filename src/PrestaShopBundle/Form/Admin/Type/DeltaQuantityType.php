@@ -72,7 +72,7 @@ class DeltaQuantityType extends TranslatorAwareType
                     new Type(['type' => 'numeric']),
                     new NotBlank(),
                     new Range([
-                        'min' => StockSettings::INT_32_MAX_NEGATIVE - StockSettings::INT_32_MAX_POSITIVE, //because stock_mvt doesn't use negative numbers it can save 2x the size.
+                        'min' => StockSettings::INT_32_MAX_NEGATIVE - StockSettings::INT_32_MAX_POSITIVE, // because stock_mvt doesn't use negative numbers it can save 2x the size.
                         'max' => StockSettings::INT_32_MAX_POSITIVE + StockSettings::INT_32_MAX_POSITIVE,
                     ]),
                 ],

@@ -1,17 +1,16 @@
 // Import utils
-import basicHelper from '@utils/basicHelper';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-import dashboardPage from '@pages/BO/dashboard';
-import ordersPage from '@pages/BO/orders';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  boDashboardPage,
+  boLoginPage,
+  boOrdersPage,
+  type BrowserContext,
+  type Page,
+  utilsCore,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_orders_orders_sortOrders';
 
@@ -25,30 +24,36 @@ describe('BO - Orders : Sort orders', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'Orders > Orders\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.ordersParentLink,
-      dashboardPage.ordersLink,
+      boDashboardPage.ordersParentLink,
+      boDashboardPage.ordersLink,
     );
-    await ordersPage.closeSfToolBar(page);
+    await boOrdersPage.closeSfToolBar(page);
 
-    const pageTitle = await ordersPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(ordersPage.pageTitle);
+    const pageTitle = await boOrdersPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boOrdersPage.pageTitle);
   });
 
   const tests = [
@@ -100,29 +105,29 @@ describe('BO - Orders : Sort orders', async () => {
     it(`should sort by ${test.args.sortBy} ${test.args.sortDirection}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-      const nonSortedTable = await ordersPage.getAllRowsColumnContent(page, test.args.sortBy);
+      const nonSortedTable = await boOrdersPage.getAllRowsColumnContent(page, test.args.sortBy);
 
-      await ordersPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
-      const sortedTable = await ordersPage.getAllRowsColumnContent(page, test.args.sortBy);
+      await boOrdersPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+      const sortedTable = await boOrdersPage.getAllRowsColumnContent(page, test.args.sortBy);
 
       if (test.args.isFloat) {
         const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
         const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-        const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+        const expectedResult = await utilsCore.sortArrayNumber(nonSortedTableFloat);
 
         if (test.args.sortDirection === 'asc') {
-          await expect(sortedTableFloat).to.deep.equal(expectedResult);
+          expect(sortedTableFloat).to.deep.equal(expectedResult);
         } else {
-          await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+          expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
         }
       } else {
-        const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
+        const expectedResult: string[] = await utilsCore.sortArray(nonSortedTable);
 
         if (test.args.sortDirection === 'asc') {
-          await expect(sortedTable).to.deep.equal(expectedResult);
+          expect(sortedTable).to.deep.equal(expectedResult);
         } else {
-          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+          expect(sortedTable).to.deep.equal(expectedResult.reverse());
         }
       }
     });

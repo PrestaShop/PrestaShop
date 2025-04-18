@@ -9,15 +9,15 @@ Feature: Update product price fields from Back Office (BO).
       | name[en-US] | washing machine |
       | type        | standard        |
     And product ecoProduct should have following prices information:
-      | price              | 0     |
-      | price_tax_included | 0     |
-      | ecotax             | 0     |
-      | tax rules group    |       |
-      | on_sale            | false |
-      | wholesale_price    | 0     |
-      | unit_price         | 0     |
-      | unit_price_ratio   | 0     |
-      | unity              |       |
+      | price              | 0               |
+      | price_tax_included | 0               |
+      | ecotax             | 0               |
+      | tax rules group    | US-FL Rate (6%) |
+      | on_sale            | false           |
+      | wholesale_price    | 0               |
+      | unit_price         | 0               |
+      | unit_price_ratio   | 0               |
+      | unity              |                 |
     And shop configuration for "PS_USE_ECOTAX" is set to 1
     And I identify tax rules group named "US-AL Rate (4%)" as "us-al-tax-rate"
     And I identify tax rules group named "US-KS Rate (5.3%)" as "us-ks-tax-rate"

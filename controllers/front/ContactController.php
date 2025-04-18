@@ -35,22 +35,30 @@ class ContactControllerCore extends FrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         parent::initContent();
 
         $this->setTemplate('contact');
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 
         $breadcrumb['links'][] = [
             'title' => $this->getTranslator()->trans('Contact us', [], 'Shop.Theme.Global'),
-            'url' => $this->context->link->getPageLink('contact', true),
+            'url' => $this->context->link->getPageLink('contact'),
         ];
 
         return $breadcrumb;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCanonicalURL(): string
+    {
+        return $this->context->link->getPageLink('contact');
     }
 }

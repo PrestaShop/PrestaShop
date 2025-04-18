@@ -23,3 +23,12 @@ services:
 
   theme_validator:
     alias: prestashop.core.addon.theme.theme_validator
+
+  PrestaShopBundle\Translation\TranslatorInterface:
+    alias: translator
+
+  Symfony\Component\Security\Csrf\CsrfTokenManagerInterface:
+    alias: security.csrf.token_manager
+
+  Psr\Container\ContainerInterface:
+    alias: service_container

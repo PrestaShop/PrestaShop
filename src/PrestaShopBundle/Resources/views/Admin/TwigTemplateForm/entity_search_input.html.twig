@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
 {% block entity_search_input_widget %}
   {# We cannot use the escape filter for remote_url or it breaks the url and it is not callable any more #}
@@ -38,7 +38,7 @@
     'data-allow-delete': form.vars.allow_delete ? 1 : 0,
     'data-suggestion-field': form.vars.suggestion_field
   }) -%}
-  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' entity-search-widget')|trim }) -%}
+  {%- set attr = attr|merge({class: (attr.class|default('') ~ ' entity-search-widget')|trim}) -%}
 
   {# We use widget_container_attributes in this widget because we do not want the name property #}
   <div {{ block('widget_container_attributes') }}>
@@ -46,10 +46,10 @@
     {% if form.vars.allow_search %}
       <div class="search search-with-icon">
         {%- set attr = search_attr|merge({
-          'class': (search_attr.class|default('') ~ ' entity-search-input form-control')|trim,
-          'autocomplete': 'off',
-          'placeholder': placeholder,
-          'type': 'text'
+          class: (search_attr.class|default('') ~ ' entity-search-input form-control')|trim,
+          autocomplete: 'off',
+          placeholder: placeholder,
+          type: 'text'
         }) -%}
         {%- set id = form.vars.id ~ '_search_input' -%}
         <input {{ block('widget_container_attributes') }} />
@@ -74,14 +74,14 @@
 {% endblock %}
 
 {% block entity_search_list_layout %}
-  {%- set attr = list_attr|merge({'class': (list_attr.class|default('') ~ ' entities-list entities-list-container')|trim }) -%}
+  {%- set attr = list_attr|merge({class: (list_attr.class|default('') ~ ' entities-list entities-list-container')|trim}) -%}
   <ul {{ block('widget_container_attributes') }}>
     {{- block('form_rows') -}}
   </ul>
 {% endblock %}
 
 {% block entity_search_table_layout %}
-  {%- set attr = list_attr|merge({'class': (list_attr.class|default('') ~ ' entities-list-container')|trim }) -%}
+  {%- set attr = list_attr|merge({class: (list_attr.class|default('') ~ ' entities-list-container')|trim}) -%}
   <div {{ block('widget_container_attributes') }}>
     <div class="row">
       <div class="col-sm">
@@ -119,7 +119,7 @@
 {% endblock %}
 
 {% block entity_item_list_row %}
-  {% set attr = attr|merge({'class': (attr.class|default('') ~ ' media entity-item')|trim}) %}
+  {% set attr = attr|merge({class: (attr.class|default('') ~ ' media entity-item')|trim}) %}
   <li {{ block('widget_container_attributes') }}>
     <div class="media-left">
       {{ form_widget(form.image) }}
@@ -133,11 +133,11 @@
 {% endblock %}
 
 {%- block entity_item_table_row -%}
-  {% set attr = attr|merge({'class': (attr.class|default('') ~ ' entity-item')|trim}) %}
+  {% set attr = attr|merge({class: (attr.class|default('') ~ ' entity-item')|trim}) %}
   <tr {{ block('widget_container_attributes') }}>
   {% for child in form.children %}
     {% set childType = child.vars.block_prefixes.1 %}
-    {% if childType == 'hidden'%}
+    {% if childType == 'hidden' %}
       {{ form_widget(child) }}
     {% else %}
     <td>
@@ -156,7 +156,7 @@
 {%- endblock -%}
 
 {% block searched_customer_row %}
-  {% set attr = attr|merge({'class': (attr.class|default('') ~ ' media entity-item')|trim}) %}
+  {% set attr = attr|merge({class: (attr.class|default('') ~ ' media entity-item')|trim}) %}
   <li {{ block('widget_container_attributes') }}>
     <div class="media-body media-middle">
       {{ form_widget(form.fullname_and_email) }}

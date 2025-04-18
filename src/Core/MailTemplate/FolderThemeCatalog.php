@@ -67,10 +67,10 @@ final class FolderThemeCatalog implements ThemeCatalogInterface
      * Returns the list of found themes (non empty folders, in the mail themes
      * folder).
      *
+     * @return ThemeCollectionInterface
+     *
      * @throws FileNotFoundException
      * @throws TypeException
-     *
-     * @return ThemeCollectionInterface
      */
     public function listThemes()
     {
@@ -88,7 +88,7 @@ final class FolderThemeCatalog implements ThemeCatalogInterface
             }
         }
 
-        //This hook allows you to add/remove a mail theme
+        // This hook allows you to add/remove a mail theme
         $this->hookDispatcher->dispatchWithParameters(
             ThemeCatalogInterface::LIST_MAIL_THEMES_HOOK,
             ['mailThemes' => $mailThemes]
@@ -100,11 +100,11 @@ final class FolderThemeCatalog implements ThemeCatalogInterface
     /**
      * @param string $theme
      *
+     * @return ThemeInterface
+     *
      * @throws FileNotFoundException
      * @throws InvalidArgumentException
      * @throws TypeException
-     *
-     * @return ThemeInterface
      */
     public function getByName($theme)
     {

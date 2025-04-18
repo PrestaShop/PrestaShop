@@ -313,7 +313,7 @@ class AdminShopGroupControllerCore extends AdminController
         ];
 
         $this->fields_value = [
-            'active' => true,
+            'active' => $obj->id ? (bool) $obj->active : true,
         ];
 
         return parent::renderForm();
@@ -368,7 +368,7 @@ class AdminShopGroupControllerCore extends AdminController
      */
     protected function afterAdd($new_shop_group)
     {
-        //Reset available quantitites
+        // Reset available quantitites
         StockAvailable::resetProductFromStockAvailableByShopGroup($new_shop_group);
     }
 
@@ -379,7 +379,7 @@ class AdminShopGroupControllerCore extends AdminController
      */
     protected function afterUpdate($new_shop_group)
     {
-        //Reset available quantitites
+        // Reset available quantitites
         StockAvailable::resetProductFromStockAvailableByShopGroup($new_shop_group);
     }
 

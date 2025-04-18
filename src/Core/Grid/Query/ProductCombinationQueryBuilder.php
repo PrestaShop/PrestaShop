@@ -228,7 +228,7 @@ final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
             ->setParameter('attributes', $allAttributes, Connection::PARAM_INT_ARRAY)
             ->setParameter('productId', $productId)
         ;
-        $results = $qb->execute()->fetchAll();
+        $results = $qb->executeQuery()->fetchAllAssociative();
         if (!$results) {
             return [];
         }

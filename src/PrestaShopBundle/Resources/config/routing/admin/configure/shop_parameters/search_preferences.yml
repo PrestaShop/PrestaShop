@@ -1,27 +1,55 @@
-# @TODO uncomment legacy links when page is done
-admin_search_index:
+admin_search_alias_index:
   path: /
   methods: [ GET ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchController::indexAction
-    _legacy_controller: AdminSearchConf
-    # _legacy_link: AdminSearchConf
-    # _legacy_feature_flag: search
+    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchAliasController::indexAction
+    _legacy_controller: AdminAliases
+    _legacy_link: AdminAliases
 
-admin_alias_search:
+admin_search_alias_search:
   path: /
   methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
-    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.alias
-    redirectRoute: admin_search_index
-#    _legacy_controller: AdminSearchConf
-#    _legacy_link: AdminSearchConf:submitFilteralias
+    gridDefinitionFactoryServiceId: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AliasGridDefinitionFactory
+    redirectRoute: admin_search_alias_index
+    _legacy_link: AdminAliases:submitFilteralias
+    _legacy_controller: AdminAliases
 
-admin_alias_search_search_term_action:
-  path: /
+admin_search_alias_delete:
+  path: /{searchTerm}/delete
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchAliasController::deleteAction
+    _legacy_link: AdminAliases:deletealias
+    _legacy_controller: AdminAliases
+  requirements:
+    searchTerm: "[^\/]+"
+
+admin_search_alias_bulk_delete:
+  path: /bulk-delete
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchAliasController::bulkDeleteAction
+    _legacy_link: AdminAliases:submitBulkdeletealias
+    _legacy_controller: AdminAliases
+
+admin_search_alias_create:
+  path: /new
   methods: [ GET, POST ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchController::searchAliasesForAssociationAction
-#    _legacy_controller: AdminSearchConf
-#    _legacy_link: AdminSearchConf
+    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchAliasController::createAction
+    _legacy_link: AdminAliases:addalias
+    _legacy_controller: AdminAliases
+
+admin_search_alias_edit:
+  path: /{searchTerm}/edit
+  methods: [ GET, POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchAliasController::editAction
+    _legacy_link: AdminAliases:updatealias
+    _legacy_parameters:
+      searchTerm: searchTerm
+    _legacy_controller: AdminAliases
+  requirements:
+    searchTerm: "[^\/]+"

@@ -1,0 +1,29 @@
+.dropdown-menu {
+  min-width: var(--#{$cdk}size-176);
+  padding: var(--#{$cdk}size-8);
+  margin: var(--#{$cdk}size-6) 0 0 0;
+  box-shadow: var(--#{$cdk}box-shadow-md);
+
+  > li > a {
+    display: flex;
+    gap: var(--#{$cdk}size-8);
+    align-items: center;
+    padding: var(--#{$cdk}size-6) var(--#{$cdk}size-16);
+
+    i {
+      font-size: var(--#{$cdk}size-18);
+      color: var(--#{$cdk}primary-500);
+    }
+
+    &:hover,
+    &:focus {
+      color: $dropdown-link-hover-color;
+      text-decoration: none;
+      background-color: $dropdown-link-hover-bg;
+
+      i {
+        color: currentcolor;
+      }
+    }
+  }
+}

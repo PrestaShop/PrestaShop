@@ -53,7 +53,7 @@ final class GetEmployeeForEditingHandler extends AbstractObjectModelHandler impl
     /**
      * @param ImageTagSourceParserInterface|null $imageTagSourceParser
      */
-    public function __construct(ImageTagSourceParserInterface $imageTagSourceParser = null)
+    public function __construct(?ImageTagSourceParserInterface $imageTagSourceParser = null)
     {
         $this->imageTagSourceParser = $imageTagSourceParser ?? new ImageTagSourceParser();
     }

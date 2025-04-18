@@ -27,6 +27,7 @@ use PrestaShop\PrestaShop\Adapter\CoreException;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 
 /***
  * Class CustomerCore
@@ -178,7 +179,7 @@ class CustomerCore extends ObjectModel
         'table' => 'customer',
         'primary' => 'id_customer',
         'fields' => [
-            'secure_key' => ['type' => self::TYPE_STRING, 'validate' => 'isMd5', 'copy_post' => false],
+            'secure_key' => ['type' => self::TYPE_STRING, 'validate' => 'isMd5', 'copy_post' => false, 'size' => 32],
             'lastname' => ['type' => self::TYPE_STRING, 'validate' => 'isCustomerName', 'required' => true, 'size' => 255],
             'firstname' => ['type' => self::TYPE_STRING, 'validate' => 'isCustomerName', 'required' => true, 'size' => 255],
             'email' => ['type' => self::TYPE_STRING, 'validate' => 'isEmail', 'required' => true, 'size' => 255],
@@ -188,19 +189,19 @@ class CustomerCore extends ObjectModel
             'birthday' => ['type' => self::TYPE_DATE, 'validate' => 'isBirthDate'],
             'newsletter' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'newsletter_date_add' => ['type' => self::TYPE_DATE, 'copy_post' => false],
-            'ip_registration_newsletter' => ['type' => self::TYPE_STRING, 'copy_post' => false],
+            'ip_registration_newsletter' => ['type' => self::TYPE_STRING, 'copy_post' => false, 'size' => 15],
             'optin' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
-            'website' => ['type' => self::TYPE_STRING, 'validate' => 'isUrl'],
-            'company' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName'],
-            'siret' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName'],
-            'ape' => ['type' => self::TYPE_STRING, 'validate' => 'isApe'],
+            'website' => ['type' => self::TYPE_STRING, 'validate' => 'isUrl', 'size' => 128],
+            'company' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 255],
+            'siret' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 14],
+            'ape' => ['type' => self::TYPE_STRING, 'validate' => 'isApe', 'size' => 6],
             'outstanding_allow_amount' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'copy_post' => false],
             'show_public_prices' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'copy_post' => false],
             'id_risk' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'copy_post' => false],
             'max_payment_days' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'copy_post' => false],
             'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'copy_post' => false],
             'deleted' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'copy_post' => false],
-            'note' => ['type' => self::TYPE_HTML, 'size' => 65000, 'copy_post' => false],
+            'note' => ['type' => self::TYPE_HTML, 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4, 'copy_post' => false],
             'is_guest' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'copy_post' => false],
             'id_shop' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'copy_post' => false],
             'id_shop_group' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'copy_post' => false],
@@ -293,7 +294,7 @@ class CustomerCore extends ObjectModel
                 500,
                 $this->trans(
                     'The email is already used, please choose another one',
-                     [],
+                    [],
                     'Admin.Notifications.Error'
                 ),
                 140
@@ -322,9 +323,6 @@ class CustomerCore extends ObjectModel
         if ($this->newsletter && !Validate::isDate($this->newsletter_date_add)) {
             $this->newsletter_date_add = date('Y-m-d H:i:s');
         }
-        if (isset(Context::getContext()->controller) && Context::getContext()->controller->controller_type == 'admin') {
-            $this->updateGroup($this->groupBox);
-        }
 
         if ($this->deleted) {
             $addresses = $this->getAddresses((int) Configuration::get('PS_LANG_DEFAULT'));
@@ -335,14 +333,7 @@ class CustomerCore extends ObjectModel
             }
         }
 
-        try {
-            return parent::update(true);
-        } catch (\PrestaShopException $exception) {
-            $message = $exception->getMessage();
-            error_log($message);
-
-            return false;
-        }
+        return parent::update(true);
     }
 
     /**
@@ -446,12 +437,12 @@ class CustomerCore extends ObjectModel
      *
      * @return bool|Customer|CustomerCore Customer instance
      *
-     * @throws \InvalidArgumentException if given input is not valid
+     * @throws InvalidArgumentException if given input is not valid
      */
     public function getByEmail($email, $plaintextPassword = null, $ignoreGuest = true)
     {
         if (!Validate::isEmail($email)) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'Cannot get customer by email as %s is not a valid email',
                 $email
             ));
@@ -477,7 +468,7 @@ class CustomerCore extends ObjectModel
         $passwordHash = Db::getInstance()->getValue($sql);
 
         try {
-            /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
+            /** @var PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
             $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
         } catch (CoreException $e) {
             return false;
@@ -831,7 +822,7 @@ class CustomerCore extends ObjectModel
     public static function checkPassword($idCustomer, $passwordHash)
     {
         if (!Validate::isUnsignedId($idCustomer)) {
-            die(Tools::displayError());
+            throw new PrestaShopException('Customer ID is invalid.');
         }
 
         // Check that customers password hasn't changed since last login
@@ -1168,7 +1159,7 @@ class CustomerCore extends ObjectModel
      *
      * @return int Country ID
      */
-    public static function getCurrentCountry($idCustomer, Cart $cart = null)
+    public static function getCurrentCountry($idCustomer, ?Cart $cart = null)
     {
         if (!$cart) {
             $cart = Context::getContext()->cart;
@@ -1212,9 +1203,14 @@ class CustomerCore extends ObjectModel
             return false;
         }
 
+        // If a customer with the same email already exists, wrong call
+        if (Customer::customerExists($this->email)) {
+            return false;
+        }
+
         $this->is_guest = false;
 
-        /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
+        /** @var PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
         $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
 
         /*
@@ -1302,7 +1298,7 @@ class CustomerCore extends ObjectModel
             );
             $vars['{url}'] = Context::getContext()->link->getPageLink(
                 'password',
-                true,
+                null,
                 null,
                 sprintf(
                     'token=%s&id_customer=%s&reset_token=%s',
@@ -1340,7 +1336,7 @@ class CustomerCore extends ObjectModel
      */
     public function setWsPasswd($passwd)
     {
-        /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
+        /** @var PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
         $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
         if ($this->id == 0 || $this->passwd != $passwd) {
             $this->passwd = $crypto->hash($passwd);
@@ -1430,27 +1426,6 @@ class CustomerCore extends ObjectModel
         $cart = new Cart((int) $cart['id_cart']);
 
         return $cart->nbProducts() === 0 ? (int) $cart->id : false;
-    }
-
-    /**
-     * Validate controller and check password
-     *
-     * @param bool $htmlentities
-     *
-     * @return array
-     *
-     * @deprecated 8.1.0 The password check has been moved in controllers and this method is not called anywhere since 1.7.0
-     */
-    public function validateController($htmlentities = true)
-    {
-        $errors = parent::validateController($htmlentities);
-        /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
-        $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
-        if ($value = Tools::getValue('passwd')) {
-            $this->passwd = $crypto->hash($value);
-        }
-
-        return $errors;
     }
 
     /**

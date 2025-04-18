@@ -25,8 +25,6 @@
  */
 global $smarty;
 
-use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
-
 $template_dirs = array(_PS_THEME_DIR_.'templates');
 $plugin_dirs = array(_PS_THEME_DIR_.'plugins');
 if (_PS_PARENT_THEME_DIR_ !== '') {
@@ -126,9 +124,26 @@ function smartyWidget($params, &$smarty)
 
 function smartyRender($params, &$smarty)
 {
+    // Check if proper object was passed
+    if (empty($params['ui']) || !method_exists($params['ui'], 'render')) {
+        if (_PS_MODE_DEV_) {
+            trigger_error(
+                sprintf(
+                    'When using {render}, you must provide proper `ui` parameter with the form. Template - %1$s',
+                    $smarty->source->filepath
+                ),
+                E_USER_NOTICE
+            );
+        }
+        return;
+    }
+
     $ui = $params['ui'];
 
-    if (array_key_exists('file', $params)) {
+    // If specific template file was provided, we pass it along
+    if (!empty($params['file'])) {
+        // Ignoring the next line because PHPStan is not aware of the object passed
+        /** @phpstan-ignore-next-line */
         $ui->setTemplate($params['file']);
     }
 

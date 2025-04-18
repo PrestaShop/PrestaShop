@@ -72,6 +72,7 @@ class GeneralConfiguration implements DataConfigurationInterface
             'short_description_limit' => $this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT'),
             'quantity_discount' => $this->configuration->get('PS_QTY_DISCOUNT_ON_COMBINATION'),
             'force_friendly_url' => $this->configuration->getBoolean('PS_FORCE_FRIENDLY_PRODUCT'),
+            'product_breadcrumb_category' => $this->configuration->get('PS_PRODUCT_BREADCRUMB_CATEGORY'),
             'default_status' => $this->configuration->getBoolean('PS_PRODUCT_ACTIVATION_DEFAULT'),
             'specific_price_priorities' => $this->getPrioritiesData(),
             'disabled_products_behavior' => $this->configuration->get('PS_PRODUCT_REDIRECTION_DEFAULT'),
@@ -93,6 +94,7 @@ class GeneralConfiguration implements DataConfigurationInterface
             $this->configuration->set('PS_PRODUCT_SHORT_DESC_LIMIT', (int) $config['short_description_limit']);
             $this->configuration->set('PS_QTY_DISCOUNT_ON_COMBINATION', (int) $config['quantity_discount']);
             $this->configuration->set('PS_FORCE_FRIENDLY_PRODUCT', (int) $config['force_friendly_url']);
+            $this->configuration->set('PS_PRODUCT_BREADCRUMB_CATEGORY', (string) $config['product_breadcrumb_category']);
             $this->configuration->set('PS_PRODUCT_ACTIVATION_DEFAULT', (int) $config['default_status']);
             $this->configuration->set('PS_PRODUCT_REDIRECTION_DEFAULT', (string) $config['disabled_products_behavior']);
             try {
@@ -126,6 +128,7 @@ class GeneralConfiguration implements DataConfigurationInterface
             'short_description_limit',
             'quantity_discount',
             'force_friendly_url',
+            'product_breadcrumb_category',
             'default_status',
             'specific_price_priorities',
             'disabled_products_behavior',

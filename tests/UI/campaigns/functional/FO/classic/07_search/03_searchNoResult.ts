@@ -1,13 +1,14 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import pages
-import {homePage} from '@pages/FO/home';
-import searchResultsPage from '@pages/FO/searchResults';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  type BrowserContext,
+  foClassicHomePage,
+  foClassicSearchResultsPage,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_search_searchNoResult';
 
@@ -22,53 +23,53 @@ describe('FO - Search Page : Search product', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should go to FO home page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
-    await homePage.goToFo(page);
+    await foClassicHomePage.goToFo(page);
 
-    const isHomePage = await homePage.isHomePage(page);
-    await expect(isHomePage).to.be.true;
+    const isHomePage = await foClassicHomePage.isHomePage(page);
+    expect(isHomePage).to.eq(true);
   });
 
   it('should search a string with less than 3 characters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchSmallString', baseContext);
 
-    const hasSearchResult = await homePage.hasAutocompleteSearchResult(page, 'te');
-    await expect(hasSearchResult, 'There are results in autocomplete search').to.be.false;
+    const hasSearchResult = await foClassicHomePage.hasAutocompleteSearchResult(page, 'te');
+    expect(hasSearchResult, 'There are results in autocomplete search').to.eq(false);
 
-    await homePage.searchProduct(page, 'te');
+    await foClassicHomePage.searchProduct(page, 'te');
 
-    const pageTitle = await searchResultsPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+    const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
 
-    const hasResults = await searchResultsPage.hasResults(page);
-    await expect(hasResults, 'There are results!').to.be.false;
+    const hasResults = await foClassicSearchResultsPage.hasResults(page);
+    expect(hasResults, 'There are results!').to.eq(false);
 
-    const searchInputValue = await searchResultsPage.getSearchValue(page);
-    await expect(searchInputValue, 'A search value exists').to.be.equal('te');
+    const searchInputValue = await foClassicSearchResultsPage.getSearchValue(page);
+    expect(searchInputValue, 'A search value exists').to.be.equal('te');
   });
 
   it('should search an empty string', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchEmptyString', baseContext);
 
-    await homePage.searchProduct(page, '');
+    await foClassicHomePage.searchProduct(page, '');
 
-    const pageTitle = await searchResultsPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+    const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
 
-    const hasResults = await searchResultsPage.hasResults(page);
-    await expect(hasResults, 'There are results!').to.be.false;
+    const hasResults = await foClassicSearchResultsPage.hasResults(page);
+    expect(hasResults, 'There are results!').to.eq(false);
 
-    const searchInputValue = await searchResultsPage.getSearchValue(page);
-    await expect(searchInputValue, 'A search value exists').to.be.equal('');
+    const searchInputValue = await foClassicSearchResultsPage.getSearchValue(page);
+    expect(searchInputValue, 'A search value exists').to.be.equal('');
   });
 });

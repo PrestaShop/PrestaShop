@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
 {% set class = 'btn tooltip-link js-link-row-action' %}
 
@@ -30,7 +30,7 @@
 {% endif %}
 
 <a class="{{ class }} grid-{{ action.name|lower|replace({' ': '-'}) }}-row-link"
-   href="{{ getAdminLink('AdminCartRules', true, {'id_cart_rule': record[action.options.id_cart_rule], 'addcart_rule': 1, 'back': app.request.uri}) }}"
+   href="{{ getAdminLink('AdminCartRules', true, {id_cart_rule: record[action.options.id_cart_rule], updatecart_rule: 1, back: app.request.uri}) }}"
   {% if attributes.tooltip_name %}
     data-toggle="pstooltip"
     data-placement="top"

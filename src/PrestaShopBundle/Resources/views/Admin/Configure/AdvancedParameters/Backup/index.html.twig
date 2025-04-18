@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,29 +21,29 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
 {% block content %}
   {% block backup_download_file %}
     {% if hasDownloadFile %}
-      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/download_file.html.twig' %}
+      {{ include('@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/download_file.html.twig') }}
     {% endif %}
   {% endblock %}
 
   {% block backup_alerts %}
-    {% include '@PrestaShop/Admin/Common/multistore-infotip.html.twig' %}
-    {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/backup_warning.html.twig' %}
-    {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/backup_info.html.twig' %}
+    {{ include('@PrestaShop/Admin/Common/multistore-infotip.html.twig') }}
+    {{ include('@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/backup_warning.html.twig') }}
+    {{ include('@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/backup_info.html.twig') }}
   {% endblock %}
 
   {% block backup_listing %}
-    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': backupGrid} %}
+    {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: backupGrid}) }}
   {% endblock %}
 
   {% block backup_options %}
-    {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/options.html.twig' %}
+    {{ include('@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/options.html.twig') }}
   {% endblock %}
 {% endblock %}
 

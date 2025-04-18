@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Security\Voter;
 
 use PrestaShop\PrestaShop\Core\Security\AccessCheckerInterface;
 use PrestaShop\PrestaShop\Core\Security\Permission;
-use PrestaShopBundle\Security\Admin\Employee;
+use PrestaShopBundle\Entity\Employee\Employee;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -116,7 +116,7 @@ class PageVoter extends Voter
     {
         /** @var Employee $user */
         $user = $token->getUser();
-        $employeeProfileId = $user->getData()->id_profile;
+        $employeeProfileId = $user->getProfile()->getId();
         $action = $this->buildAction((string) $subject, (string) $attribute);
 
         return $this->accessChecker->isEmployeeGranted($action, (int) $employeeProfileId);

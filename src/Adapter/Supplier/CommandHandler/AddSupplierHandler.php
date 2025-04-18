@@ -69,7 +69,7 @@ final class AddSupplierHandler extends AbstractSupplierHandler implements AddSup
             $this->addShopAssociation($supplier, $command);
             $address->id_supplier = $supplier->id;
             $address->update();
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new SupplierException(sprintf('Failed to add new supplier "%s"', $command->getName()));
         }
 
@@ -104,7 +104,6 @@ final class AddSupplierHandler extends AbstractSupplierHandler implements AddSup
         $supplier->description = $command->getLocalizedDescriptions();
         $supplier->meta_description = $command->getLocalizedMetaDescriptions();
         $supplier->meta_title = $command->getLocalizedMetaTitles();
-        $supplier->meta_keywords = $command->getLocalizedMetaKeywords();
         $supplier->date_add = $currentDateTime;
         $supplier->date_upd = $currentDateTime;
         $supplier->active = $command->isEnabled();

@@ -1,0 +1,57 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.filter.front_end_object.main:
+    class: PrestaShop\PrestaShop\Core\Filter\FrontEndObject\MainFilter
+    autoconfigure: true
+    arguments:
+      - cart: '@prestashop.core.filter.front_end_object.cart'
+        customer: '@prestashop.core.filter.front_end_object.customer'
+        shop: '@prestashop.core.filter.front_end_object.shop'
+        configuration: '@prestashop.core.filter.front_end_object.configuration'
+
+  prestashop.core.filter.front_end_object.product:
+    class: PrestaShop\PrestaShop\Core\Filter\FrontEndObject\ProductFilter
+
+  prestashop.core.filter.front_end_object.cart:
+    class: PrestaShop\PrestaShop\Core\Filter\FrontEndObject\CartFilter
+    arguments:
+      - '@prestashop.core.filter.front_end_object.product_collection'
+
+  prestashop.core.filter.front_end_object.search_result_product:
+    class: PrestaShop\PrestaShop\Core\Filter\FrontEndObject\SearchResultProductFilter
+
+  prestashop.core.filter.front_end_object.customer:
+    class: PrestaShop\PrestaShop\Core\Filter\FrontEndObject\CustomerFilter
+
+  prestashop.core.filter.front_end_object.shop:
+    class: PrestaShop\PrestaShop\Core\Filter\FrontEndObject\ShopFilter
+
+  prestashop.core.filter.front_end_object.configuration:
+    class: PrestaShop\PrestaShop\Core\Filter\FrontEndObject\ConfigurationFilter
+
+  prestashop.core.filter.front_end_object.product_collection:
+    class: PrestaShop\PrestaShop\Core\Filter\CollectionFilter
+    calls:
+      - method: queue
+        arguments:
+          - [ '@prestashop.core.filter.front_end_object.product' ]
+
+  prestashop.core.filter.front_end_object.search_result_product_collection:
+    class: PrestaShop\PrestaShop\Core\Filter\CollectionFilter
+    calls:
+      - method: queue
+        arguments:
+          - [ '@prestashop.core.filter.front_end_object.search_result_product' ]
+
+  prestashop.adapter.module.repository.module_repository:
+    class: 'PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository'
+    arguments:
+      - !php/const _PS_ROOT_DIR_
+      - !php/const _PS_MODULE_DIR_
+
+  prestashop.translation.translator_language_loader:
+    class: PrestaShopBundle\Translation\TranslatorLanguageLoader
+    arguments:
+      - '@prestashop.adapter.module.repository.module_repository'

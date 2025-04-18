@@ -44,14 +44,14 @@ class ConnectionsSourceCore extends ObjectModel
         'primary' => 'id_connections_source',
         'fields' => [
             'id_connections' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
-            'http_referer' => ['type' => self::TYPE_STRING, 'validate' => 'isAbsoluteUrl'],
-            'request_uri' => ['type' => self::TYPE_STRING, 'validate' => 'isUrl'],
-            'keywords' => ['type' => self::TYPE_STRING, 'validate' => 'isMessage'],
+            'http_referer' => ['type' => self::TYPE_STRING, 'validate' => 'isAbsoluteUrl', 'size' => 255],
+            'request_uri' => ['type' => self::TYPE_STRING, 'validate' => 'isUrl', 'size' => 255],
+            'keywords' => ['type' => self::TYPE_STRING, 'validate' => 'isMessage', 'size' => 255],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true],
         ],
     ];
 
-    public static function logHttpReferer(Cookie $cookie = null)
+    public static function logHttpReferer(?Cookie $cookie = null)
     {
         if (!$cookie) {
             $cookie = Context::getContext()->cookie;
@@ -120,7 +120,7 @@ class ConnectionsSourceCore extends ObjectModel
 		INNER JOIN ' . _DB_PREFIX_ . 'guest g ON g.id_customer = o.id_customer
 		INNER JOIN ' . _DB_PREFIX_ . 'connections co  ON co.id_guest = g.id_guest
 		INNER JOIN ' . _DB_PREFIX_ . 'connections_source cos ON cos.id_connections = co.id_connections
-		WHERE id_order = ' . (int) ($idOrder) . '
+		WHERE id_order = ' . (int) $idOrder . '
 		ORDER BY cos.date_add DESC');
     }
 }

@@ -13,3 +13,7 @@ _cms_page:
 _mail_theme:
   resource: "mail_theme.yml"
   prefix: /mail_theme/
+
+_image_settings:
+  resource: "image_settings.yml"
+  prefix: /image-settings

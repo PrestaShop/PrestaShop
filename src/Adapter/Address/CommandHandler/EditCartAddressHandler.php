@@ -94,7 +94,7 @@ class EditCartAddressHandler implements EditCartAddressHandlerInterface
             if (!$cart->update()) {
                 throw new CannotUpdateCartAddressException(sprintf('An error occurred when updating address for cart "%d"', $command->getCartId()->getValue()));
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new CannotUpdateCartAddressException(sprintf('An error occurred when updating address for cart "%d"', $command->getCartId()->getValue()));
         }
 

@@ -52,10 +52,10 @@ class OrderPaymentCore extends ObjectModel
         'table' => 'order_payment',
         'primary' => 'id_order_payment',
         'fields' => [
-            'order_reference' => ['type' => self::TYPE_STRING, 'size' => 9],
+            'order_reference' => ['type' => self::TYPE_STRING, 'size' => 255],
             'id_currency' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'amount' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true],
-            'payment_method' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName'],
+            'payment_method' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 255],
             'conversion_rate' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
             'transaction_id' => ['type' => self::TYPE_STRING, 'size' => 254],
             'card_number' => ['type' => self::TYPE_STRING, 'size' => 254],

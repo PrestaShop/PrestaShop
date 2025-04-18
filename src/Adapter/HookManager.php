@@ -47,9 +47,9 @@ class HookManager
      * @param bool $use_push Force change to be refreshed on Dashboard widgets
      * @param int $id_shop If specified, hook will be execute the shop with this ID
      *
-     * @throws CoreException
-     *
      * @return string|array|void|null modules output
+     *
+     * @throws CoreException
      */
     public function exec(
         $hook_name,

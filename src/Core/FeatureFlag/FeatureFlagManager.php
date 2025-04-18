@@ -28,35 +28,24 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\FeatureFlag;
 
-use PrestaShop\PrestaShop\Core\FeatureFlag\Layer\DbLayer;
-use PrestaShop\PrestaShop\Core\FeatureFlag\Layer\DotEnvLayer;
-use PrestaShop\PrestaShop\Core\FeatureFlag\Layer\EnvLayer;
-use PrestaShop\PrestaShop\Core\FeatureFlag\Layer\QueryLayer;
 use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use Psr\Container\ContainerInterface;
-use Symfony\Contracts\Service\ServiceSubscriberInterface;
+use RuntimeException;
+use Symfony\Component\DependencyInjection\Attribute\TaggedLocator;
+use Symfony\Contracts\Service\ResetInterface;
 
-class FeatureFlagManager implements ServiceSubscriberInterface, FeatureFlagStateCheckerInterface
+class FeatureFlagManager implements FeatureFlagStateCheckerInterface, ResetInterface
 {
-    public function __construct(
-        private readonly ContainerInterface $locator,
-        private readonly FeatureFlagRepository $featureFlagRepository
-    ) {
-    }
-
     /**
-     * Subscribe all handlers in this service container.
-     *
-     * @return string[]
+     * @var array<string, bool>
      */
-    public static function getSubscribedServices(): array
-    {
-        return [
-            FeatureFlagSettings::TYPE_ENV => EnvLayer::class,
-            FeatureFlagSettings::TYPE_QUERY => QueryLayer::class,
-            FeatureFlagSettings::TYPE_DOTENV => DotEnvLayer::class,
-            FeatureFlagSettings::TYPE_DB => DbLayer::class,
-        ];
+    private array $featureFlagStates = [];
+
+    public function __construct(
+        #[TaggedLocator(TypeLayerInterface::class, defaultIndexMethod: 'getTypeName')]
+        private readonly ContainerInterface $locator,
+        private readonly FeatureFlagRepository $featureFlagRepository,
+    ) {
     }
 
     /**
@@ -74,9 +63,9 @@ class FeatureFlagManager implements ServiceSubscriberInterface, FeatureFlagState
                     }
                 }
             }
-            throw new \RuntimeException(sprintf('No handler can be used for feature flag %s.', $featureFlagName));
+            throw new RuntimeException(sprintf('No handler can be used for feature flag %s.', $featureFlagName));
         }
-        throw new \RuntimeException(sprintf('The feature flag %s doesn\'t exist.', $featureFlagName));
+        throw new RuntimeException(sprintf('The feature flag %s doesn\'t exist.', $featureFlagName));
     }
 
     /**
@@ -100,7 +89,7 @@ class FeatureFlagManager implements ServiceSubscriberInterface, FeatureFlagState
      */
     public function isEnabled(string $featureFlagName): bool
     {
-        return $this->getLayer($featureFlagName)->isEnabled($featureFlagName);
+        return $this->getFeatureFlagState($featureFlagName);
     }
 
     /**
@@ -125,5 +114,27 @@ class FeatureFlagManager implements ServiceSubscriberInterface, FeatureFlagState
     public function disable(string $featureFlagName): void
     {
         $this->getLayer($featureFlagName)->disable($featureFlagName);
+    }
+
+    public function reset()
+    {
+        $this->featureFlagStates = [];
+    }
+
+    /**
+     * Cache each feature flag state to avoid useless multiple queries per request, maybe one day it would be worth
+     * adding an actual cache layer over this, which would cache values in filesystem cache.
+     *
+     * @param string $featureFlagName
+     *
+     * @return bool
+     */
+    private function getFeatureFlagState(string $featureFlagName): bool
+    {
+        if (!isset($this->featureFlagStates[$featureFlagName])) {
+            $this->featureFlagStates[$featureFlagName] = $this->getLayer($featureFlagName)->isEnabled($featureFlagName);
+        }
+
+        return $this->featureFlagStates[$featureFlagName];
     }
 }

@@ -72,7 +72,7 @@ class FeatureFlagCommand extends Command
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $action = $input->getArgument('action');
         if (!in_array($action, $this->allowedActions)) {

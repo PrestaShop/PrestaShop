@@ -81,7 +81,7 @@ class OrderRefundCalculator
         $numberZero = new DecimalNumber('0');
 
         $refundedAmount = $numberZero;
-        foreach ($productRefunds as $orderDetailId => $productRefund) {
+        foreach ($productRefunds as $productRefund) {
             $refundedAmount = $refundedAmount->plus(new DecimalNumber((string) $productRefund['amount']));
         }
 

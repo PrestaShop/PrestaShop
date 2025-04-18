@@ -38,6 +38,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MenuBuilder
 {
+    private ?Tab $currentTab = null;
+    /** @var array<int, Tab[]> */
+    private array $ancestorsTab = [];
+
     public function __construct(
         private readonly LegacyContext $context,
         private readonly RequestStack $requestStack,
@@ -50,17 +54,50 @@ class MenuBuilder
 
     public function getCurrentTab(): ?Tab
     {
-        $className = $this->getLegacyControllerClassName();
-        if (null === $className) {
-            return null;
+        if ($this->currentTab) {
+            return $this->currentTab;
         }
 
-        return $this->tabRepository->findOneByClassName($className);
+        $tab = null;
+        $routeName = $this->getRouteName();
+        if (!empty($routeName)) {
+            $tab = $this->tabRepository->findOneByRouteName($routeName);
+        }
+
+        if (!$tab) {
+            $className = $this->getLegacyControllerClassName();
+            if (!empty($className)) {
+                $tab = $this->tabRepository->findOneByClassName($className);
+            }
+        }
+
+        $this->currentTab = $tab;
+
+        return $tab;
     }
 
+    public function getCurrentTabLevel(): int
+    {
+        $currentTab = $this->getCurrentTab();
+        if ($currentTab) {
+            $ancestorsTab = $this->getAncestorsTab($currentTab->getId());
+            if (!empty($ancestorsTab)) {
+                return count($ancestorsTab);
+            }
+        }
+
+        return 0;
+    }
+
+    /* @return Tab[] */
     public function getAncestorsTab(int $currentTabId): array
     {
-        return $this->tabRepository->getAncestors($currentTabId);
+        if (isset($this->ancestorsTab[$currentTabId])) {
+            return $this->ancestorsTab[$currentTabId];
+        }
+        $this->ancestorsTab[$currentTabId] = $this->tabRepository->getAncestors($currentTabId);
+
+        return $this->ancestorsTab[$currentTabId];
     }
 
     /**
@@ -101,17 +138,38 @@ class MenuBuilder
 
     private function convertTabToMenuLink(Tab $tab): MenuLink
     {
-        if (!empty($tab->getRouteName())) {
-            $href = $this->urlGenerator->generate($tab->getRouteName());
-        } else {
-            $href = $this->context->getAdminLink($tab->getClassName());
-        }
-
         return new MenuLink(
             name: $this->getBreadcrumbLabel($tab),
-            href: $href,
-            icon: 'icon-' . $tab->getClassName(),
+            href: $this->getLinkFromTab($tab),
+            icon: $tab->getIcon() ?? '',
         );
+    }
+
+    /**
+     * @return array<int, MenuLink>
+     */
+    public function buildNavigationTabs(Tab $tab): array
+    {
+        $currentLevelTabs = $this->tabRepository->findByParentId($tab->getIdParent());
+        $navigationTabs = [];
+
+        /* @var $currentLevelTab Tab */
+        foreach ($currentLevelTabs as $currentLevelTab) {
+            $tabLang = $currentLevelTab->getTabLangByLanguageId($this->getContextLanguageId());
+            $menuLink = new MenuLink(
+                name: $tabLang ? $tabLang->getName() : $currentLevelTab->getWording(),
+                href: $this->getLinkFromTab($currentLevelTab),
+                attributes: [
+                    'id_tab' => $currentLevelTab->getId(),
+                    'class_name' => $currentLevelTab->getClassName(),
+                    'current' => $currentLevelTab->getId() == $tab->getId(),
+                    'active' => $currentLevelTab->getActive(),
+                ]
+            );
+            $navigationTabs[] = $menuLink;
+        }
+
+        return $navigationTabs;
     }
 
     private function getBreadcrumbLabel(Tab $tab): string
@@ -152,6 +210,7 @@ class MenuBuilder
                 );
 
             case str_starts_with($action, 'add'):
+            case str_starts_with($action, 'new'):
                 return new MenuLink(
                     name: $this->translator->trans('Add', [], 'Admin.Actions'),
                     icon: 'icon-plus'
@@ -186,16 +245,77 @@ class MenuBuilder
 
     private function getLegacyAction(): ?string
     {
+        // Get action from legacy parameters set on the route when we are in a Symfony page
         $legacyParameters = $this->legacyParametersConverter->getParameters(
             $this->requestStack->getMainRequest()->attributes->all(),
             $this->requestStack->getMainRequest()->query->all()
         );
 
-        return $legacyParameters['action'] ?? null;
+        return $legacyParameters['action'] ?? $this->getLegacyActionFromQuery();
     }
 
-    private function getLegacyControllerClassName(): ?string
+    private function getLegacyActionFromQuery(): ?string
     {
-        return $this->requestStack->getMainRequest()->attributes->get('_legacy_controller');
+        $request = $this->requestStack->getMainRequest();
+        $controllerTable = $this->context->getContext()->controller->table;
+        $objectIdentifier = 'id_' . $controllerTable;
+        $objectId = $request->query->get($objectIdentifier);
+
+        if ($request->query->has('deleteImage')) {
+            return 'delete_image';
+        } elseif ($request->query->has('delete' . $controllerTable)) {
+            return 'delete';
+        } elseif ($request->query->has('status' . $controllerTable) || $request->query->has('status')) {
+            return 'status';
+        } elseif ($request->query->has('position')) {
+            return 'position';
+        } elseif ($request->query->has('add' . $controllerTable)) {
+            return 'new';
+        } elseif ($request->query->has('update' . $controllerTable) && $objectId) {
+            return 'edit';
+        } elseif ($request->query->has('view' . $controllerTable)) {
+            return 'view';
+        } elseif ($request->query->has('details' . $controllerTable)) {
+            return 'details';
+        } elseif ($request->query->has('export' . $controllerTable)) {
+            return 'export';
+        } elseif ($request->query->has('action') && !empty($request->query->get('action'))) {
+            return $request->query->get('action');
+        }
+
+        return null;
+    }
+
+    public function getLegacyControllerClassName(): ?string
+    {
+        $request = $this->requestStack->getMainRequest();
+        if ($request->attributes->has('_legacy_controller')) {
+            return $request->attributes->get('_legacy_controller');
+        } elseif ($request->query->has('controller')) {
+            return $request->query->get('controller');
+        }
+
+        return null;
+    }
+
+    private function getRouteName(): ?string
+    {
+        $request = $this->requestStack->getMainRequest();
+        if ($request->attributes->has('_route')) {
+            return $request->attributes->get('_route');
+        }
+
+        return null;
+    }
+
+    private function getLinkFromTab(Tab $tab): string
+    {
+        if (!empty($tab->getRouteName())) {
+            $href = $this->urlGenerator->generate($tab->getRouteName());
+        } else {
+            $href = $this->context->getAdminLink($tab->getClassName());
+        }
+
+        return $href;
     }
 }

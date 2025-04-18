@@ -27,8 +27,7 @@
 namespace PrestaShopBundle\Twig\Extension;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use PrestaShop\PrestaShop\Core\Security\Hashing;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -38,8 +37,9 @@ use Twig\TwigFunction;
 class PathExtension extends AbstractExtension
 {
     public function __construct(
-        private readonly UrlGeneratorInterface $urlGenerator,
-        private readonly LegacyContext $context
+        private readonly LegacyContext $context,
+        private readonly Hashing $hashing,
+        private readonly string $cookieKey
     ) {
     }
 
@@ -50,33 +50,40 @@ class PathExtension extends AbstractExtension
     {
         return [
             new TwigFunction(
-                'path',
-                [$this, 'getPath']
+                'legacy_path',
+                [$this, 'getLegacyPath'],
+                ['is_safe' => ['html']]
+            ),
+            new TwigFunction(
+                'legacy_admin_token',
+                [$this, 'getLegacyAdminToken'],
+                ['is_safe' => ['html']]
             ),
         ];
     }
 
     /**
-     * Get path for legacy or symfony link.
+     * Get path for legacy link.
      *
-     * @param string $routeName
+     * @param string $controllerName
      * @param array $parameters
-     * @param bool $relative (only for symfony links)
      *
      * @return string
      */
-    public function getPath(string $routeName, array $parameters = [], bool $relative = false): string
+    public function getLegacyPath(string $controllerName, array $parameters = []): string
     {
-        try {
-            $url = $this->urlGenerator->generate(
-                $routeName,
-                $parameters,
-                $relative ? UrlGeneratorInterface::RELATIVE_PATH : UrlGeneratorInterface::ABSOLUTE_PATH
-            );
-        } catch (RouteNotFoundException $ex) {
-            $url = $this->context->getAdminLink(controller: $routeName, extraParams: $parameters);
-        }
+        return $this->context->getAdminLink($controllerName, extraParams: $parameters);
+    }
 
-        return $url;
+    /**
+     * Get token for legacy controller, this method mimics the same behaviour as Tools::getAdminToken.
+     *
+     * @param string $controllerName
+     *
+     * @return string
+     */
+    public function getLegacyAdminToken(string $controllerName): string
+    {
+        return $this->hashing->hash($controllerName, $this->cookieKey);
     }
 }

@@ -31,6 +31,7 @@ use Carrier;
 use Cart;
 use Customer;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceFormatter;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -49,16 +50,11 @@ final class CarrierForOrderChoiceProvider implements ConfigurableFormChoiceProvi
         $groups = Customer::getGroupsStatic((int) $cart->id_customer);
         $address = new Address((int) $cart->id_address_delivery);
 
-        $carriers = Carrier::getCarriersForOrder(Address::getZoneById((int) $address->id), $groups, $cart);
-        $choices = [];
-
-        foreach ($carriers as $carrier) {
-            $delay = $carrier['delay'] ? sprintf(' (%s)', $carrier['delay']) : '';
-
-            $choices[$carrier['name'] . $delay] = (int) $carrier['id_carrier'];
-        }
-
-        return $choices;
+        return FormChoiceFormatter::formatFormChoices(
+            Carrier::getCarriersForOrder(Address::getZoneById((int) $address->id), $groups, $cart),
+            'id_carrier',
+            'name'
+        );
     }
 
     /**

@@ -41,7 +41,7 @@ class IdentityControllerCore extends FrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         $should_redirect = false;
 
@@ -80,7 +80,7 @@ class IdentityControllerCore extends FrontController
         $this->setTemplate('customer/identity');
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 

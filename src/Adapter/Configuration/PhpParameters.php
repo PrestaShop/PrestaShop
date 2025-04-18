@@ -88,9 +88,9 @@ class PhpParameters
             $filesystem->dumpFile($this->filename, '<?php return ' . var_export($this->configuration->get(), true) . ';' . "\n");
 
             if (function_exists('opcache_invalidate')) {
-                opcache_invalidate($this->filename);
+                @opcache_invalidate($this->filename);
             }
-        } catch (IOException $e) {
+        } catch (IOException) {
             return false;
         }
 

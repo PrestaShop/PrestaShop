@@ -55,7 +55,7 @@ final class BulkDeleteCartRuleHandler extends AbstractCartRuleHandler implements
                 if (!$this->deleteCartRule($cartRule)) {
                     $errors[] = $cartRuleId->getValue();
                 }
-            } catch (CartRuleException $e) {
+            } catch (CartRuleException) {
                 $errors[] = $cartRuleId->getValue();
             }
         }

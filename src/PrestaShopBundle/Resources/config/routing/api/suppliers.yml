@@ -2,4 +2,4 @@ api_stock_list_suppliers:
   path: /
   methods: [ GET ]
   defaults:
-    _controller: prestashop.core.api.supplier.controller:listSuppliersAction
+    _controller: PrestaShopBundle\Controller\Api\SupplierController::listSuppliersAction

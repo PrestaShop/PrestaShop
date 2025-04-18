@@ -151,6 +151,7 @@ class SupplierType extends TranslatorAwareType
                 'required' => false,
                 'type' => FormattedTextareaType::class,
                 'options' => [
+                    'limit' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4,
                     'constraints' => [
                         new CleanHtml([
                             'message' => $this->trans(
@@ -310,31 +311,6 @@ class SupplierType extends TranslatorAwareType
                                 'This field cannot be longer than %limit% characters',
                                 'Admin.Notifications.Error',
                                 ['%limit%' => SupplierSettings::MAX_META_DESCRIPTION_LENGTH]
-                            ),
-                        ]),
-                    ],
-                ],
-            ])
-            ->add('meta_keyword', TranslatableType::class, [
-                'label' => $this->trans('Meta keywords', 'Admin.Global'),
-                'help' => $keywordHint,
-                'type' => TextType::class,
-                'required' => false,
-                'options' => [
-                    'attr' => [
-                        'class' => 'js-taggable-field',
-                        'placeholder' => $this->trans('Add tag', 'Admin.Actions'),
-                    ],
-                    'constraints' => [
-                        new TypedRegex([
-                            'type' => TypedRegex::TYPE_GENERIC_NAME,
-                        ]),
-                        new Length([
-                            'max' => SupplierSettings::MAX_META_KEYWORD_LENGTH,
-                            'maxMessage' => $this->trans(
-                                'This field cannot be longer than %limit% characters',
-                                'Admin.Notifications.Error',
-                                ['%limit%' => SupplierSettings::MAX_META_KEYWORD_LENGTH]
                             ),
                         ]),
                     ],

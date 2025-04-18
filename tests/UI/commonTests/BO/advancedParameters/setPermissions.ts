@@ -1,18 +1,16 @@
-// Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
-import employeesPage from '@pages/BO/advancedParameters/team';
-import permissionsPage from '@pages/BO/advancedParameters/team/permissions';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
-import {EmployeePermission} from '@data/types/employee';
+
+import {
+  boDashboardPage,
+  boEmployeesPage,
+  boLoginPage,
+  boPermissionsPage,
+  type BrowserContext,
+  type EmployeePermission,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 let browserContext: BrowserContext;
 let page: Page;
@@ -31,43 +29,49 @@ function setPermissions(
   describe('PRE-TEST: Set permissions to a profile', async () => {
     // before and after functions
     before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
     });
 
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
+      await utilsPlaywright.closeBrowserContext(browserContext);
     });
 
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Advanced Parameters > Team\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToTeamPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.teamLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.teamLink,
       );
 
-      const pageTitle = await employeesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(employeesPage.pageTitle);
+      const pageTitle = await boEmployeesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boEmployeesPage.pageTitle);
     });
 
     it('should go to \'Permissions\' tab', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToPermissionsTab', baseContext);
 
-      const isTabOpened = await employeesPage.goToPermissionsTab(page);
-      await expect(isTabOpened, 'Permissions tab is not opened!').to.be.true;
+      const isTabOpened = await boEmployeesPage.goToPermissionsTab(page);
+      expect(isTabOpened, 'Permissions tab is not opened!').to.eq(true);
     });
 
     it('should click on the defined profile', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProfileSubTab', baseContext);
 
-      const isSubTabOpened = await permissionsPage.goToProfileSubTab(page, profileName);
-      await expect(isSubTabOpened, 'Profile sub-tab is not opened!').to.be.true;
+      const isSubTabOpened = await boPermissionsPage.goToProfileSubTab(page, profileName);
+      expect(isSubTabOpened, 'Profile sub-tab is not opened!').to.eq(true);
     });
 
     permissionsData.forEach((permission: EmployeePermission) => {
@@ -80,8 +84,8 @@ function setPermissions(
             baseContext,
           );
 
-          const isPermissionDefined = await permissionsPage.setPermission(page, permission.className, access);
-          await expect(isPermissionDefined, 'Permission is not updated').to.be.true;
+          const isPermissionDefined = await boPermissionsPage.setPermission(page, permission.className, access);
+          expect(isPermissionDefined, 'Permission is not updated').to.eq(true);
         });
       });
     });

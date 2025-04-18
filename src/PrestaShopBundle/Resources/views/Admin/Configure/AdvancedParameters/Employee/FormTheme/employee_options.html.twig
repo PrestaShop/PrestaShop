@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
 {# Extend form_row template to move the form_alert behind the label #}
 {%- block employee_options_row -%}
@@ -49,12 +49,12 @@
       {% endif %}
       <div class="{{ block('form_group_class') }}{% if disabledField %} disabled{% endif %}">
         {{ form_widget(form) }}
-        {#  #}
-        {{ form_errors(form, {'attr': {'fieldError': true}}) }}
+        {# #}
+        {{ form_errors(form, {attr: {fieldError: true}}) }}
         {{- block('form_alert') -}}
       </div>
       {% if attribute(form.parent, form.vars.name) is defined and attribute(form.parent, form.vars.name).vars.multistore_dropdown != false %}
-        {{ attribute(form.parent, form.vars.name).vars.multistore_dropdown | raw }}
+        {{ attribute(form.parent, form.vars.name).vars.multistore_dropdown|raw }}
       {% endif %}
 
       {{- block('form_external_link') -}}
@@ -83,7 +83,7 @@
       {% endif %}
 
       {% if alert_title is defined %}
-        <div class="alert-more collapse" id="expandable_{{form.vars.id}}" style="">
+        <div class="alert-more collapse" id="expandable_{{ form.vars.id }}" style="">
           {% for message in alert_message %}
             <p>
               {{ message|raw }}
@@ -91,7 +91,7 @@
           {% endfor %}
         </div>
         <div class="read-more-container">
-          <button type="button" class="read-more btn-link" data-toggle="collapse" data-target="#expandable_{{form.vars.id}}" aria-expanded="true" aria-controls="collapseDanger">
+          <button type="button" class="read-more btn-link" data-toggle="collapse" data-target="#expandable_{{ form.vars.id }}" aria-expanded="true" aria-controls="collapseDanger">
             {{ 'Read more'|trans({}, 'Admin.Actions') }}
           </button>
         </div>
@@ -99,4 +99,3 @@
     </div>
   {% endif %}
 {%- endblock form_alert -%}
-

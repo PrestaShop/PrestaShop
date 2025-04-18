@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupNotFo
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
+use Product;
 use TaxRulesGroup;
 
 /**
@@ -99,7 +100,7 @@ class TaxRulesGroupRepository extends AbstractMultiShopObjectModelRepository
             ])
         ;
 
-        $rawData = $qb->execute()->fetchAll();
+        $rawData = $qb->executeQuery()->fetchAllAssociative();
         if (empty($rawData)) {
             return 0;
         }
@@ -196,5 +197,15 @@ class TaxRulesGroupRepository extends AbstractMultiShopObjectModelRepository
             CannotUpdateStoreException::class,
             $errorCode
         );
+    }
+
+    /**
+     * Get most used Tax.
+     *
+     * @return int
+     */
+    public function getIdTaxRulesGroupMostUsed()
+    {
+        return (int) Product::getIdTaxRulesGroupMostUsed();
     }
 }

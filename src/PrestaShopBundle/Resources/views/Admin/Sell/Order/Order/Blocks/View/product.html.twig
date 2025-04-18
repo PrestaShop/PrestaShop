@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,9 +21,9 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
-{% set rowIsDisplayed =  (productIndex is defined and paginationNum is defined and productIndex > paginationNum) %}
+{% set rowIsDisplayed = (productIndex is defined and paginationNum is defined and productIndex > paginationNum) %}
 <tr id="orderProduct_{{ product.orderDetailId }}" class="cellProduct{% if rowIsDisplayed %} d-none d-print-table-row{% endif %}">
   <td class="cellProductImg">
     {% if product.imagePath %}
@@ -31,12 +31,18 @@
     {% endif %}
   </td>
   <td class="cellProductName">
-    <a href="{{ path('admin_product_form', {'id': product.id}) }}">
+    <a href="{{ path('admin_products_edit', {productId: product.id}) }}">
       <p class="mb-0 productName">{{ product.name }}</p>
       {% if product.reference %}
         <p class="mb-0 productReference">
           {{ 'Reference number:'|trans({}, 'Admin.Orderscustomers.Feature') }}
           {{ product.reference }}
+        </p>
+      {% endif %}
+      {% if product.mpn is not empty %}
+        <p class="mb-0 productSupplierReference">
+          {{ 'MPN:'|trans({}, 'Admin.Orderscustomers.Feature') }}
+          {{ product.mpn }}
         </p>
       {% endif %}
       {% if product.supplierReference is not empty %}
@@ -66,9 +72,9 @@
   </td>
   <td class="cellProductLocation{% if not isColumnLocationDisplayed %} d-none{% endif %}">{{ product.location }}</td>
   <td class="cellProductRefunded{% if not isColumnRefundedDisplayed %} d-none{% endif %}">
-    {% if product.quantityRefunded > 0 %}
+    {%- if product.quantityRefunded > 0 -%}
       {{ product.quantityRefunded }} ({{ product.amountRefunded }} {{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }})
-    {% endif %}
+    {%- endif -%}
   </td>
   <td class="cellProductAvailableQuantity text-center{% if not isAvailableQuantityDisplayed %} d-none{% endif %}">{{ product.availableQuantity }}</td>
   <td class="cellProductTotalPrice">{{ product.totalPrice }}</td>
@@ -120,7 +126,7 @@
           {{ form_label(cancelProductForm['quantity_' ~ product.orderDetailId]) }}
           <div class="input-group">
             {% set quantityInputOptions = {
-              'attr': {
+              attr: {
                 'data-product-price-tax-incl': product.unitPriceTaxInclRaw,
                 'data-product-price-tax-excl': product.unitPriceTaxExclRaw,
                 'data-amount-refundable': product.amountRefundableRaw,
@@ -160,7 +166,7 @@
               <div class="mr-4">
                 <p><strong>{{ customization.name }}</strong></p>
                 <p>
-                  <a href="{{ path('admin_orders_display_customization_image', {'orderId': orderForViewing.id, "value": customization.value})}}" download>
+                  <a href="{{ path('admin_orders_display_customization_image', {orderId: orderForViewing.id, value: customization.value}) }}" download>
                     <img src="{{ customization.image }}" alt="{{ customization.name }}">
                   </a>
                 </p>

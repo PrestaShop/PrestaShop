@@ -29,59 +29,66 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Module;
 
 use Exception;
+use Language as LegacyLanguage;
 use Module as LegacyModule;
 use PrestaShop\PrestaShop\Adapter\HookManager;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory;
+use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Translation\Loader\XliffFileLoader;
+use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Throwable;
+use Validate as LegacyValidate;
 
+/**
+ * Responsible for handling all actions with modules.
+ *
+ * If you want to refactor this in the future and searching for usage of some methods,
+ * beware that they are called magically from ModuleController::moduleAction method.
+ */
 class ModuleManager implements ModuleManagerInterface
 {
-    /** @var ModuleRepository */
-    private $moduleRepository;
-
-    /** @var ModuleDataProvider */
-    private $moduleDataProvider;
-
-    /** @var AdminModuleDataProvider */
-    private $adminModuleDataProvider;
-
-    /** @var SourceHandlerFactory */
-    private $sourceFactory;
-
-    /** @var TranslatorInterface */
-    private $translator;
-
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-
-    /** @var HookManager */
-    private $hookManager;
-
     /** @var Filesystem */
     private $filesystem;
 
     public function __construct(
-        ModuleRepository $moduleRepository,
-        ModuleDataProvider $moduleDataProvider,
-        AdminModuleDataProvider $adminModuleDataProvider,
-        SourceHandlerFactory $sourceFactory,
-        TranslatorInterface $translator,
-        EventDispatcherInterface $eventDispatcher,
-        HookManager $hookManager
+        private readonly ModuleRepository $moduleRepository,
+        private readonly ModuleDataProvider $moduleDataProvider,
+        private readonly AdminModuleDataProvider $adminModuleDataProvider,
+        private readonly SourceHandlerFactory $sourceFactory,
+        private readonly TranslatorInterface $translator,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly HookManager $hookManager,
+        private readonly string $modulesDir,
+        private readonly XliffFileLoader $xliffFileLoader,
+        private readonly ?LangRepository $languageRepository = null,
     ) {
         $this->filesystem = new Filesystem();
-        $this->moduleRepository = $moduleRepository;
-        $this->moduleDataProvider = $moduleDataProvider;
-        $this->adminModuleDataProvider = $adminModuleDataProvider;
-        $this->sourceFactory = $sourceFactory;
-        $this->translator = $translator;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->hookManager = $hookManager;
+    }
+
+    public function upload(string $source): string
+    {
+        if (!$this->adminModuleDataProvider->isAllowedAccess(__FUNCTION__)) {
+            throw new Exception($this->translator->trans(
+                'You are not allowed to upload modules.',
+                [],
+                'Admin.Modules.Notification'
+            ));
+        }
+
+        $handler = $this->sourceFactory->getHandler($source);
+        $handler->handle($source);
+        $moduleName = $handler->getModuleName($source);
+        $module = $this->moduleRepository->getModule($moduleName);
+        $this->dispatch(ModuleManagementEvent::UPLOAD, $module);
+
+        return $moduleName;
     }
 
     public function install(string $name, $source = null): bool
@@ -102,6 +109,8 @@ class ModuleManager implements ModuleManagerInterface
             $handler = $this->sourceFactory->getHandler($source);
             $handler->handle($source);
         }
+
+        $this->updateTranslatorCatalogues($name);
 
         $this->hookManager->exec('actionBeforeInstallModule', ['moduleName' => $name, 'source' => $source]);
 
@@ -155,6 +164,7 @@ class ModuleManager implements ModuleManagerInterface
 
         if ($deleteFiles && $path = $this->moduleRepository->getModulePath($name)) {
             $this->filesystem->remove($path);
+            $this->dispatch(ModuleManagementEvent::DELETE, $module);
         }
 
         $this->dispatch(ModuleManagementEvent::UNINSTALL, $module);
@@ -256,8 +266,8 @@ class ModuleManager implements ModuleManagerInterface
     public function reset(string $name, bool $keepData = false): bool
     {
         if (
-            !$this->adminModuleDataProvider->isAllowedAccess('install') ||
-            !$this->adminModuleDataProvider->isAllowedAccess('uninstall', $name)
+            !$this->adminModuleDataProvider->isAllowedAccess('install')
+            || !$this->adminModuleDataProvider->isAllowedAccess('uninstall', $name)
         ) {
             throw new Exception($this->translator->trans(
                 'You are not allowed to reset the module %module%.',
@@ -272,7 +282,7 @@ class ModuleManager implements ModuleManagerInterface
 
         $module = $this->moduleRepository->getModule($name);
 
-        if ($keepData && method_exists($module, 'reset')) {
+        if ($keepData && method_exists($module->getInstance(), 'reset')) {
             $reset = $module->onReset();
             $this->dispatch(ModuleManagementEvent::RESET, $module);
         } else {
@@ -302,23 +312,85 @@ class ModuleManager implements ModuleManagerInterface
         $module = $this->moduleRepository->getModule($name);
         if ($module->hasValidInstance()) {
             $errors = array_filter($module->getInstance()->getErrors());
-            $error = array_pop($errors);
-            if (empty($error)) {
+            if (empty($errors)) {
                 $error = $this->translator->trans(
-                    'Unfortunately, the module did not return additional details.',
-                    [],
+                    'Unfortunately, the module %module% did not return additional details.',
+                    ['%module%' => $name],
                     'Admin.Modules.Notification'
                 );
+            } else {
+                $error = implode(', ', $errors);
             }
         } else {
             $error = $this->translator->trans(
-                'The module is invalid and cannot be loaded.',
-                [],
+                'The module %module% is invalid and cannot be loaded.',
+                ['%module%' => $name],
                 'Admin.Modules.Notification'
             );
+
+            $validityErrors = [];
+            if (!LegacyValidate::isModuleName($name)) {
+                $validityErrors[] = $name . ' module name is invalid';
+            } else {
+                try {
+                    LegacyModule::getInstanceByName($name);
+                } catch (Throwable $e) {
+                    $validityErrors[] = $e->getMessage();
+                }
+            }
+
+            if (!empty($validityErrors)) {
+                $error .= ' Errors details: ' . implode(', ', $validityErrors);
+            }
         }
 
         return $error;
+    }
+
+    /**
+     * Load the module catalog in the translator (initial load only includes modules present at the beginning of the process,
+     * so we manually add it in case the module has just been uploaded)
+     *
+     * @param string $moduleName
+     *
+     * @return void
+     */
+    protected function updateTranslatorCatalogues(string $moduleName): void
+    {
+        if ($this->translator instanceof TranslatorBagInterface) {
+            $translationFolder = $this->modulesDir . DIRECTORY_SEPARATOR . $moduleName . DIRECTORY_SEPARATOR . 'translations';
+            if (is_dir($translationFolder)) {
+                foreach ($this->getInstalledLocales() as $locale) {
+                    $catalogue = $this->translator->getCatalogue($locale);
+                    $languageFolder = $translationFolder . DIRECTORY_SEPARATOR . $locale;
+                    if (!is_dir($languageFolder)) {
+                        continue;
+                    }
+
+                    $finder = new Finder();
+                    foreach ($finder->files()->in($languageFolder) as $xlfFile) {
+                        $fileParts = explode('.', $xlfFile->getFilename());
+                        if (count($fileParts) === 3 && $fileParts[count($fileParts) - 1] === 'xlf') {
+                            $catalogueDomain = $fileParts[0];
+                            $catalogue->addCatalogue($this->xliffFileLoader->load($xlfFile->getRealPath(), $locale, $catalogueDomain));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private function getInstalledLocales(): array
+    {
+        if ($this->languageRepository) {
+            $languages = $this->languageRepository->getMapping();
+        } else {
+            $languages = LegacyLanguage::getLanguages(false);
+        }
+
+        return array_map(function (array $language) {
+            return $language['locale'];
+        }, $languages);
     }
 
     protected function upgradeMigration(string $name): bool

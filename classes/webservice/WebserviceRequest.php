@@ -60,13 +60,6 @@ class WebserviceRequestCore
     public $wsUrl;
 
     /**
-     * PrestaShop Webservice Documentation URL.
-     *
-     * @var string
-     */
-    protected $_docUrl = 'https://devdocs.prestashop-project.org/8/webservice';
-
-    /**
      * Set if the authentication key was checked.
      *
      * @var bool
@@ -222,11 +215,9 @@ class WebserviceRequestCore
         return $this->_outputEnabled;
     }
 
-    public function setOutputEnabled($bool)
+    public function setOutputEnabled(bool $bool)
     {
-        if (Validate::isBool($bool)) {
-            $this->_outputEnabled = $bool;
-        }
+        $this->_outputEnabled = $bool;
 
         return $this;
     }
@@ -348,6 +339,9 @@ class WebserviceRequestCore
             'product_customization_fields' => ['description' => 'Customization Field', 'class' => 'CustomizationField'],
             'customizations' => ['description' => 'Customization values', 'class' => 'Customization'],
         ];
+
+        // An array [module_name => module_output] will be returned
+        // Hook call is ignoring exceptions set in the backoffice
         $extra_resources = Hook::exec('addWebserviceResources', ['resources' => $resources], null, true, false);
         if (is_countable($extra_resources) && count($extra_resources)) {
             foreach ($extra_resources as $new_resources) {
@@ -519,7 +513,7 @@ class WebserviceRequestCore
                 // Method below set a particular fonction to use on the price field for products entity
                 // @see WebserviceRequest::getPriceForProduct() method
                 // @see WebserviceOutputBuilder::setSpecificField() method
-                //$this->objOutput->setSpecificField($this, 'getPriceForProduct', 'price', 'products');
+                // $this->objOutput->setSpecificField($this, 'getPriceForProduct', 'price', 'products');
                 if (isset($this->urlFragments['price'])) {
                     $this->objOutput->setVirtualField($this, 'specificPriceForCombination', 'combinations', $this->urlFragments['price']);
                     $this->objOutput->setVirtualField($this, 'specificPriceForProduct', 'products', $this->urlFragments['price']);
@@ -728,11 +722,10 @@ class WebserviceRequestCore
             E_USER_ERROR => 'Error',
             E_USER_WARNING => 'User warning',
             E_USER_NOTICE => 'User notice',
-            E_STRICT => 'Runtime Notice',
             E_RECOVERABLE_ERROR => 'Recoverable error',
         ];
         $type = $errortype[$errno] ?? 'Unknown error';
-        Tools::error_log('[PHP ' . $type . ' #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')');
+        error_log('[PHP ' . $type . ' #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')');
 
         switch ($errno) {
             case E_ERROR:
@@ -944,6 +937,7 @@ class WebserviceRequestCore
                 return false;
             }
         }
+
         // id_shop_group isn't mandatory
         return true;
     }
@@ -1049,7 +1043,7 @@ class WebserviceRequestCore
         }
         $fields = [];
         foreach ($part as $str) {
-            $field_name = trim(substr($str, 0, (strpos($str, '[') === false ? strlen($str) : strpos($str, '['))));
+            $field_name = trim(substr($str, 0, strpos($str, '[') === false ? strlen($str) : strpos($str, '[')));
             if (!isset($fields[$field_name])) {
                 $fields[$field_name] = null;
             }
@@ -1122,9 +1116,9 @@ class WebserviceRequestCore
         // filtered i18n fields which can use filters
         $i18n_available_filters = [];
         foreach ($this->resourceConfiguration['fields'] as $fieldName => $field) {
-            if ((!isset($this->resourceConfiguration['hidden_fields']) ||
-                (!in_array($fieldName, $this->resourceConfiguration['hidden_fields'])))) {
-                if ((!isset($field['i18n']) || (isset($field['i18n']) && !$field['i18n']))) {
+            if (!isset($this->resourceConfiguration['hidden_fields'])
+                || (!in_array($fieldName, $this->resourceConfiguration['hidden_fields']))) {
+                if (!isset($field['i18n']) || (isset($field['i18n']) && !$field['i18n'])) {
                     $available_filters[] = $fieldName;
                 } else {
                     $i18n_available_filters[] = $fieldName;
@@ -1154,7 +1148,7 @@ class WebserviceRequestCore
             }
         }
 
-        //construct SQL filter
+        // construct SQL filter
         $sql_filter = '';
         $sql_join = '';
         if ($this->urlFragments) {
@@ -1292,7 +1286,7 @@ class WebserviceRequestCore
             $sql_sort = rtrim($sql_sort, ', ') . "\n";
         }
 
-        //construct SQL Limit
+        // construct SQL Limit
         $sql_limit = '';
         if (isset($this->urlFragments['limit'])) {
             $limitArgs = explode(',', $this->urlFragments['limit']);
@@ -1301,7 +1295,7 @@ class WebserviceRequestCore
 
                 return false;
             } else {
-                $sql_limit .= ' LIMIT ' . (int) ($limitArgs[0]) . (isset($limitArgs[1]) ? ', ' . (int) ($limitArgs[1]) : '') . "\n"; // LIMIT X|X, Y
+                $sql_limit .= ' LIMIT ' . (int) $limitArgs[0] . (isset($limitArgs[1]) ? ', ' . (int) ($limitArgs[1]) : '') . "\n"; // LIMIT X|X, Y
             }
         }
         $filters['sql_join'] = $sql_join;
@@ -1326,7 +1320,7 @@ class WebserviceRequestCore
         $this->resourceConfiguration['retrieveData']['params'][] = $filters['sql_filter'];
         $this->resourceConfiguration['retrieveData']['params'][] = $filters['sql_sort'];
         $this->resourceConfiguration['retrieveData']['params'][] = $filters['sql_limit'];
-        //list entities
+        // list entities
 
         $tmp = new $this->resourceConfiguration['retrieveData']['className']();
         $sqlObjects = call_user_func_array([$tmp, $this->resourceConfiguration['retrieveData']['retrieveMethod']], $this->resourceConfiguration['retrieveData']['params']);
@@ -1356,7 +1350,7 @@ class WebserviceRequestCore
             $this->fieldsToDisplay = 'full';
         }
 
-        //get entity details
+        // get entity details
         $object = new $this->resourceConfiguration['retrieveData']['className']((int) $this->urlSegment[1]);
         if ($object->id) {
             $objects[] = $object;
@@ -1906,7 +1900,7 @@ class WebserviceRequestCore
         } else {
             $headers = array_merge($_ENV, $_SERVER);
             foreach ($headers as $key => $val) {
-                //we need this header
+                // we need this header
                 if (strpos(strtolower($key), 'content-type') !== false) {
                     continue;
                 }
@@ -1915,7 +1909,7 @@ class WebserviceRequestCore
                 }
             }
         }
-        //Normalize this array to Cased-Like-This structure.
+        // Normalize this array to Cased-Like-This structure.
         foreach ($headers as $key => $value) {
             $key = preg_replace('/^HTTP_/i', '', $key);
             $key = str_replace(' ', '-', ucwords(strtolower(str_replace(['-', '_'], ' ', $key))));

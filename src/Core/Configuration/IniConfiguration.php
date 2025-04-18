@@ -69,10 +69,10 @@ class IniConfiguration
         switch ($last) {
             case 'g':
                 $bytes *= 1024;
-            // no break to fall-through
+                // no break to fall-through
             case 'm':
                 $bytes *= 1024;
-            // no break to fall-through
+                // no break to fall-through
             case 'k':
                 $bytes *= 1024;
         }

@@ -47,30 +47,12 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\ViewableManufactu
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use RuntimeException;
 use stdClass;
-use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class ManufacturerFeatureContext extends AbstractDomainFeatureContext
 {
-    /**
-     * @var int default language id from configs
-     */
-    private $defaultLangId;
-
-    /**
-     * @var int default shop id from configs
-     */
-    private $defaultShopId;
-
-    public function __construct()
-    {
-        $configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
-        $this->defaultLangId = $configuration->get('PS_LANG_DEFAULT');
-        $this->defaultShopId = $configuration->get('PS_SHOP_DEFAULT');
-    }
-
     /**
      * Needed for getting Viewable objects from handlers, for example ViewableManufacturer
      *
@@ -115,19 +97,16 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
             $command->setEnabled(PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']));
         }
         if (isset($data['short_description'])) {
-            [$this->defaultLangId => $command->setLocalizedShortDescriptions($data['short_description'])];
+            [$this->getDefaultLangId() => $command->setLocalizedShortDescriptions($data['short_description'])];
         }
         if (isset($data['description'])) {
-            [$this->defaultLangId => $command->setLocalizedDescriptions($data['description'])];
+            [$this->getDefaultLangId() => $command->setLocalizedDescriptions($data['description'])];
         }
         if (isset($data['meta_title'])) {
-            [$this->defaultLangId => $command->setLocalizedMetaTitles($data['meta_title'])];
+            [$this->getDefaultLangId() => $command->setLocalizedMetaTitles($data['meta_title'])];
         }
         if (isset($data['meta_description'])) {
-            [$this->defaultLangId => $command->setLocalizedMetaDescriptions($data['meta_description'])];
-        }
-        if (isset($data['meta_keywords'])) {
-            [$this->defaultLangId => $command->setLocalizedMetaKeywords($data['meta_keywords'])];
+            [$this->getDefaultLangId() => $command->setLocalizedMetaDescriptions($data['meta_description'])];
         }
         if (isset($data['logo image'])) {
             $this->pretendImageUploaded(_PS_MANU_IMG_DIR_, $data['logo image'], $manufacturerId);
@@ -192,8 +171,8 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
         /** @var Manufacturer $manufacturer */
         $manufacturer = SharedStorage::getStorage()->get($reference);
 
-        if ($manufacturer->$field[$this->defaultLangId] !== $value) {
-            throw new RuntimeException(sprintf('Manufacturer "%s" has "%s" %s, but "%s" was expected.', $reference, $manufacturer->$field[$this->defaultLangId], $field, $value));
+        if ($manufacturer->$field[$this->getDefaultLangId()] !== $value) {
+            throw new RuntimeException(sprintf('Manufacturer "%s" has "%s" %s, but "%s" was expected.', $reference, $manufacturer->$field[$this->getDefaultLangId()], $field, $value));
         }
     }
 
@@ -204,8 +183,8 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     {
         $manufacturer = SharedStorage::getStorage()->get($reference);
 
-        if ($manufacturer->$field[$this->defaultLangId] !== '') {
-            throw new RuntimeException(sprintf('Manufacturer "%s" has "%s" %s, but it was expected to be empty', $reference, $manufacturer->$field[$this->defaultLangId], $field));
+        if ($manufacturer->$field[$this->getDefaultLangId()] !== '') {
+            throw new RuntimeException(sprintf('Manufacturer "%s" has "%s" %s, but it was expected to be empty', $reference, $manufacturer->$field[$this->getDefaultLangId()], $field));
         }
     }
 
@@ -260,6 +239,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Given /^manufacturer "(.*)" is (enabled|disabled)?$/
+     *
      * @Then /^manufacturer "(.*)" should be (enabled|disabled)?$/
      */
     public function assertStatus(string $manufacturerReference, string $expectedStatus)
@@ -365,12 +345,11 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
         $command = new AddManufacturerCommand(
             $data['name'],
             PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']),
-            [$this->defaultLangId => $data['short_description']],
-            [$this->defaultLangId => $data['description']],
-            [$this->defaultLangId => $data['meta_title']],
-            [$this->defaultLangId => $data['meta_description']],
-            [$this->defaultLangId => $data['meta_keywords']],
-            [$this->defaultShopId]
+            [$this->getDefaultLangId() => $data['short_description']],
+            [$this->getDefaultLangId() => $data['description']],
+            [$this->getDefaultLangId() => $data['meta_title']],
+            [$this->getDefaultLangId() => $data['meta_description']],
+            [$this->getDefaultShopId()]
         );
 
         /**

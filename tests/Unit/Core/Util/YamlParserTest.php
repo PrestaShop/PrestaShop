@@ -68,11 +68,7 @@ class YamlParserTest extends TestCase
         // no cache file
         $config = $yamlParser->parse($yamlFiles);
         $this->assertArrayHasKey('parameters', $config);
-        if (method_exists($this, 'assertFileDoesNotExist')) {
-            $this->assertFileDoesNotExist($cacheFile);
-        } else {
-            $this->assertFileNotExists($cacheFile);
-        }
+        $this->assertFileDoesNotExist($cacheFile);
     }
 
     /**

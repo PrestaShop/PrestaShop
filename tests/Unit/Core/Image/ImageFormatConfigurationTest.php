@@ -36,6 +36,8 @@ use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 class ImageFormatConfigurationTest extends TestCase
 {
     /**
+     * Checks if format list given from configuration will be properly processed
+     *
      * @dataProvider dataProviderGetGenerationFormats
      *
      * @param string $confData
@@ -49,7 +51,6 @@ class ImageFormatConfigurationTest extends TestCase
             ->getMock();
 
         $configuration->method('get')->willReturn($confData);
-
         $imageFormatConfiguration = new ImageFormatConfiguration($configuration);
 
         $result = $imageFormatConfiguration->getGenerationFormats();
@@ -96,6 +97,8 @@ class ImageFormatConfigurationTest extends TestCase
     }
 
     /**
+     * Checks if single provided format will be in the final list of formats returned.
+     *
      * @dataProvider isGenerationFormatSetProvider
      *
      * @param string $input
@@ -122,7 +125,7 @@ class ImageFormatConfigurationTest extends TestCase
         return [
             ['jpg,png,webp', ['jpg', 'png', 'webp']],
             ['jpg', ['jpg']],
-            ['png,avif', ['png', 'avif']],
+            ['png,avif', ['jpg', 'png', 'avif']], // JPG fallback will be always added
         ];
     }
 
@@ -143,10 +146,11 @@ class ImageFormatConfigurationTest extends TestCase
     public function isGenerationFormatSetProvider()
     {
         return [
-            ['jpg', 'png,avif,webp', false],
+            ['jpg', 'png,avif,webp', true], // JPG is always added as a base format
             ['jpg', 'jpg,avif,webp', true],
-            ['jpg', '', false],
+            ['jpg', '', true], // JPG is always added even if configuration is corrupted
             ['png', 'webp', false],
+            ['mp4', 'jpg,avif,webp', false], // MP4 format is not supported
         ];
     }
 }

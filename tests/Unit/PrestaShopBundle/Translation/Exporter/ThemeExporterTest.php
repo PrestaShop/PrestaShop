@@ -194,9 +194,6 @@ class ThemeExporterTest extends TestCase
         $finderMock->method('in')
             ->willReturn($finderMock);
 
-        $finderMock->method('files')
-            ->willReturn([]);
-
         Flattenizer::$finder = $finderMock;
     }
 

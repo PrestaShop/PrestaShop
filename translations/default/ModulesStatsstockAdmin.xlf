@@ -7,10 +7,10 @@
         <target>Available quantities</target>
         <note>Line: 44</note>
       </trans-unit>
-      <trans-unit id="7782fb19c81ec8a47e39f9c073b7da59">
-        <source>Adds a tab showing the quantity of available products for sale to the Stats dashboard.</source>
-        <target>Adds a tab showing the quantity of available products for sale to the Stats dashboard.</target>
-        <note>Line: 46</note>
+      <trans-unit id="90a2eb47dc36c8a2cf034f24454cd87a">
+        <source>Enrich your stats, add a tab showing the available quantities of products left for sale.</source>
+        <target>Enrich your stats, add a tab showing the available quantities of products left for sale.</target>
+        <note>Line: 45</note>
       </trans-unit>
       <trans-unit id="c49b42f642c62f20a3640f20ca132840">
         <source>Evaluation of available quantities for sale</source>
@@ -46,11 +46,6 @@
         <source>This section corresponds to the default wholesale price according to the default supplier for the product. An average price is used when the product has attributes.</source>
         <target>This section corresponds to the default wholesale price according to the default supplier for the product. An average price is used when the product has attributes.</target>
         <note>Line: 167</note>
-      </trans-unit>
-      <trans-unit id="90a2eb47dc36c8a2cf034f24454cd87a">
-        <source>Enrich your stats, add a tab showing the available quantities of products left for sale.</source>
-        <target>Enrich your stats, add a tab showing the available quantities of products left for sale.</target>
-        <note>Line: 45</note>
       </trans-unit>
     </body>
   </file>

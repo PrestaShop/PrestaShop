@@ -51,7 +51,7 @@ final class GetCmsPageParentCategoryIdForRedirectionHandler implements GetCmsPag
         try {
             $entity = new CMSCategory($query->getCmsPageCategoryId()->getValue());
             $parentId = (int) $entity->id_parent;
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             $parentId = CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID;
         }
 

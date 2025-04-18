@@ -99,7 +99,6 @@
             {if isset($help_link)}
               <li>
                 <a class="toolbar_btn btn-help" href="{$help_link|escape}" title="{l s='Help' d='Admin.Global'}">
-                  <i class="process-icon-help"></i>
                   <div>{l s='Help' d='Admin.Global'}</div>
                 </a>
               </li>

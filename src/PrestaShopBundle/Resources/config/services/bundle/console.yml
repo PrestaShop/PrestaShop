@@ -1,0 +1,10 @@
+services:
+  _defaults:
+    public: false
+
+  PrestaShopBundle\EventListener\Console\MultishopCommandListener:
+    arguments:
+      - "@prestashop.adapter.shop.context"
+      - "@=service('kernel').getRootDir()"
+    tags:
+      - { name: kernel.event_listener, event: console.command, method: onConsoleCommand }

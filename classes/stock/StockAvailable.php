@@ -201,7 +201,7 @@ class StockAvailableCore extends ObjectModel
     {
         if (
             false === Validate::isUnsignedId($id_product)
-            || (((false === Validate::isUnsignedId($id_shop)) && (null !== $id_shop)))
+            || ((false === Validate::isUnsignedId($id_shop)) && (null !== $id_shop))
             || (false === Validate::isUnsignedId($id_product_attribute))
             || (false === Validate::isString($location))
         ) {
@@ -212,7 +212,7 @@ class StockAvailableCore extends ObjectModel
                 'location' => $location,
             ];
 
-            throw new \InvalidArgumentException(sprintf('Could not update location as input data is not valid: %s', json_encode($serializedInputData)));
+            throw new InvalidArgumentException(sprintf('Could not update location as input data is not valid: %s', json_encode($serializedInputData)));
         }
 
         $existing_id = StockAvailable::getStockAvailableIdByProductId($id_product, $id_product_attribute, $id_shop);
@@ -396,7 +396,7 @@ class StockAvailableCore extends ObjectModel
             $id_shop = (int) $context->shop->id;
         }
 
-        //Try to set available quantity if product does not depend on physical stock
+        // Try to set available quantity if product does not depend on physical stock
         $stockManager = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Stock\\StockManager');
 
         $id_stock_available = (int) StockAvailable::getStockAvailableIdByProductId($id_product, $id_product_attribute, $id_shop);

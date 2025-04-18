@@ -39,7 +39,6 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DescriptionType extends TranslatorAwareType
@@ -118,18 +117,6 @@ class DescriptionType extends TranslatorAwareType
                 'type' => FormattedTextareaType::class,
                 'options' => [
                     'limit' => ProductSettings::MAX_DESCRIPTION_LENGTH,
-                    'constraints' => [
-                        new Length([
-                            'max' => ProductSettings::MAX_DESCRIPTION_LENGTH,
-                            'maxMessage' => $this->trans(
-                                'This field cannot be longer than %limit% characters.',
-                                'Admin.Notifications.Error',
-                                [
-                                    '%limit%' => ProductSettings::MAX_DESCRIPTION_LENGTH,
-                                ]
-                            ),
-                        ]),
-                    ],
                 ],
                 'label_tag_name' => 'h3',
                 'modify_all_shops' => true,

@@ -34,17 +34,6 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 class StoreFeatureContext extends AbstractPrestaShopFeatureContext
 {
     /**
-     * @var int default lang id from configs
-     */
-    private $defaultLangId;
-
-    public function __construct()
-    {
-        $configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
-        $this->defaultLangId = (int) $configuration->get('PS_LANG_DEFAULT');
-    }
-
-    /**
      * @When I add new store :storeReference with following properties:
      *
      * @param string $storeReference
@@ -55,13 +44,13 @@ class StoreFeatureContext extends AbstractPrestaShopFeatureContext
         $data = $table->getRowsHash();
 
         $store = new Store();
-        $store->name = [$this->defaultLangId => (string) $data['name']];
+        $store->name = [$this->getDefaultLangId() => (string) $data['name']];
         $store->active = PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']);
-        $store->address1 = [$this->defaultLangId => (string) $data['address1']];
+        $store->address1 = [$this->getDefaultLangId() => (string) $data['address1']];
         $store->city = $data['city'];
         $store->latitude = (float) $data['latitude'];
         $store->longitude = (float) $data['longitude'];
-        $store->id_country = (int) Country::getIdByName($this->defaultLangId, $data['country']);
+        $store->id_country = (int) Country::getIdByName($this->getDefaultLangId(), $data['country']);
         $store->add();
 
         SharedStorage::getStorage()->set($storeReference, new Store($store->id));

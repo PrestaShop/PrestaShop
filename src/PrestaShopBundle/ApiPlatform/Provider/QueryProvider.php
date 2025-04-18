@@ -28,105 +28,56 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Provider;
 
-use ApiPlatform\Metadata\CollectionOperationInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShopBundle\ApiPlatform\Converters\ConverterInterface;
-use PrestaShopBundle\ApiPlatform\Exception\NoExtraPropertiesFoundException;
+use PrestaShopBundle\ApiPlatform\ContextParametersProvider;
+use PrestaShopBundle\ApiPlatform\Exception\CQRSQueryNotFoundException;
+use PrestaShopBundle\ApiPlatform\NormalizationMapper;
+use PrestaShopBundle\ApiPlatform\QueryResultSerializerTrait;
+use PrestaShopBundle\ApiPlatform\Serializer\CQRSApiSerializer;
+use ReflectionException;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
-use Symfony\Component\Serializer\Serializer;
 
 class QueryProvider implements ProviderInterface
 {
+    use QueryResultSerializerTrait;
+
     public function __construct(
-        private readonly CommandBusInterface $queryBus,
-        private readonly iterable $converters,
-        private readonly Serializer $apiPlatformSerializer
+        protected readonly CommandBusInterface $queryBus,
+        protected readonly CQRSApiSerializer $domainSerializer,
+        protected readonly ContextParametersProvider $contextParametersProvider,
     ) {
     }
 
     /**
-     * @throws \ReflectionException
-     * @throws \Exception
+     * @param Operation $operation
+     * @param array $uriVariables
+     * @param array $context
+     *
+     * @return array|object|null
+     *
      * @throws ExceptionInterface
+     * @throws CQRSQueryNotFoundException
+     * @throws ReflectionException
      */
-    public function provide(Operation $operation, array $uriVariables = [], array $context = [])
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): array|object|null
     {
-        $queryClass = $operation->getExtraProperties()['query'] ?? null;
+        $CQRSQueryClass = $this->getCQRSQueryClass($operation);
+        if (null === $CQRSQueryClass) {
+            throw new CQRSQueryNotFoundException(sprintf('Resource %s has no CQRS query defined.', $operation->getClass()));
+        }
+
         $filters = $context['filters'] ?? [];
-        $queryParameters = array_merge($uriVariables, $filters);
+        $queryParameters = array_merge($uriVariables, $filters, $this->contextParametersProvider->getContextParameters());
 
-        if (null === $queryClass) {
-            throw new NoExtraPropertiesFoundException();
+        $CQRSQuery = $this->domainSerializer->denormalize($queryParameters, $CQRSQueryClass, null, [NormalizationMapper::NORMALIZATION_MAPPING => $this->getCQRSQueryMapping($operation)]);
+        $CQRSQueryResult = $this->queryBus->handle($CQRSQuery);
+        // The result may be null (for DELETE action for example)
+        if (null === $CQRSQueryResult) {
+            return new ($operation->getClass())();
         }
 
-        $query = $this->apiPlatformSerializer->denormalize($queryParameters, $queryClass);
-
-        //Try to call setter on additional query params
-        if (count($queryParameters)) {
-            foreach ($queryParameters as $param => $value) {
-                if ($reflectionMethod = $this->findSetterMethod($param, $queryClass)) {
-                    $methodParameter = $reflectionMethod->getParameters()[0];
-                    if ($methodParameter->getType() instanceof \ReflectionNamedType && $methodParameter->getType()->getName() !== gettype($value)) {
-                        $value = $this->findConverter($methodParameter->getType()->getName())->convert($value);
-                    }
-                    $reflectionMethod->invoke($query, $value);
-                }
-            }
-        }
-
-        $queryResult = $this->queryBus->handle($query);
-        $normalizedQueryResult = $this->apiPlatformSerializer->normalize($queryResult);
-
-        if ($operation instanceof CollectionOperationInterface) {
-            foreach ($normalizedQueryResult as $key => $result) {
-                $normalizedQueryResult[$key] = $this->apiPlatformSerializer->denormalize($result, $operation->getClass());
-            }
-
-            return $normalizedQueryResult;
-        }
-
-        return $this->apiPlatformSerializer->denormalize($normalizedQueryResult, $operation->getClass());
-    }
-
-    /**
-     * @param $type
-     *
-     * @return ConverterInterface
-     *
-     * @throws \Exception
-     */
-    private function findConverter($type): ConverterInterface
-    {
-        foreach ($this->converters as $converter) {
-            if ($converter->supports($type)) {
-                return $converter;
-            }
-        }
-
-        throw new \Exception(sprintf('Converter for type %s not found', $type));
-    }
-
-    /**
-     * @param $propertyName
-     * @param $queryClass
-     *
-     * @return false|\ReflectionMethod
-     */
-    private function findSetterMethod($propertyName, $queryClass): bool|\ReflectionMethod
-    {
-        $reflectionClass = new \ReflectionClass($queryClass);
-
-        foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
-            if (str_starts_with($method->getName(), 'set')) {
-                $methodName = lcfirst(substr($method->getName(), 3));
-                if ($methodName === $propertyName) {
-                    return $method;
-                }
-            }
-        }
-
-        return false;
+        return $this->denormalizeQueryResult($CQRSQueryResult, $operation);
     }
 }

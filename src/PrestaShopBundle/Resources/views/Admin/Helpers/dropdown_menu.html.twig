@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,16 +21,16 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 {% set buttonType = buttonType|default('primary') %}
 {% set right = right|default(false) %}
 
-<div class="{{ div_style|default("btn-group dropdown") }}">
+<div class="{{ div_style|default('btn-group dropdown') }}">
 
   {% if default_item is defined %}
     <a
-      href="{{ default_item.href|default("#") }}"
-      title="{{ default_item.title|default(default_item.label|default("")) }}"
+      href="{{ default_item.href|default('#') }}"
+      title="{{ default_item.title|default(default_item.label|default('')) }}"
       class="btn btn-{{ buttonType }}"
       {% if disabled is defined and disabled == true %}disabled="disabled"{% endif %}
     >
@@ -48,16 +48,16 @@
     data-toggle="dropdown"
   >
     {{ menu_label|default('') }}
-    <i class="{{ menu_icon|default("icon-caret-down") }}"></i>
+    <i class="{{ menu_icon|default('icon-caret-down') }}"></i>
   </button>
 
   <div class="dropdown-menu{% if right %} dropdown-menu-right{% endif %}">
     {% for entry in items %}
-      {% if entry.divider is defined and entry.divider==true %}
+      {% if entry.divider is defined and entry.divider == true %}
         <div class="dropdown-divider"></div>
       {% else %}
         <a
-          class="dropdown-item" href="{{ entry.href|default("#") }}"
+          class="dropdown-item" href="{{ entry.href|default('#') }}"
           {% if entry.onclick is defined %}onclick="{{ entry.onclick }}"{% endif %}
           {% if entry.target is defined %}target="{{ entry.target }}"{% endif %}
         >

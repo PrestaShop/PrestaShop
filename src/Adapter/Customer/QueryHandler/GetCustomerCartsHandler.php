@@ -80,7 +80,7 @@ final class GetCustomerCartsHandler extends AbstractCustomerHandler implements G
         $carts = Cart::getCustomerCarts($customerId, false);
         $summarizedCarts = [];
 
-        foreach ($carts as $key => $customerCart) {
+        foreach ($carts as $customerCart) {
             $cartId = (int) $customerCart['id_cart'];
             $currency = new Currency((int) $customerCart['id_currency']);
             $cart = new Cart($cartId);

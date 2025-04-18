@@ -110,6 +110,6 @@ class PasswordPolicyConfiguration implements DataConfigurationInterface
             && $configuration['maximum_length'] >= 1 && $configuration['maximum_length'] <= 100
             && isset($configuration['minimum_length'])
             && $configuration['minimum_length'] >= 1 && $configuration['minimum_length'] <= 100
-;
+        ;
     }
 }

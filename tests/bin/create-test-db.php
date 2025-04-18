@@ -25,42 +25,51 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShopBundle\Install\Database;
 use PrestaShopBundle\Install\Install;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Tests\Resources\DatabaseDump;
 use Tests\Resources\ResourceResetter;
 
+function checkInstallationErrors(Install $install, SymfonyConsoleLogger $logger)
+{
+    if (!empty($install->getErrors())) {
+        $logger->logError('Some errors were found during install:');
+        foreach ($install->getErrors() as $error) {
+            $logger->logError($error);
+        }
+        exit(1);
+    }
+}
+
 define('_PS_ROOT_DIR_', dirname(__DIR__, 2));
 const _PS_IN_TEST_ = true;
 const __PS_BASE_URI__ = '/';
-const _PS_MODULE_DIR_ = _PS_ROOT_DIR_ . '/modules/';
-
+const _PS_MODULE_DIR_ = _PS_ROOT_DIR_ . '/tests/Resources/modules/';
+const _PS_ALL_THEMES_DIR_ = _PS_ROOT_DIR_ . '/tests/Resources/themes/';
 require_once _PS_ROOT_DIR_ . '/install-dev/init.php';
 
 $output = new ConsoleOutput();
 $logger = new SymfonyConsoleLogger($output, PrestaShopLoggerInterface::DEBUG);
 
+$translator = Context::getContext()->getTranslatorFromLocale('en');
 $install = new Install(null, null, $logger);
-$install->setTranslator(Context::getContext()->getTranslatorFromLocale('en'));
-$logger->log(sprintf('Creating database %s', _DB_NAME_));
-DbPDOCore::createDatabase(_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_);
-$logger->log('Clearing database');
+$install->setTranslator($translator);
+
+$modelDatabase = new Database($logger);
+$modelDatabase->setTranslator($translator);
+$modelDatabase->testDatabaseSettings(_DB_SERVER_, _DB_NAME_, _DB_USER_, _DB_PASSWD_, _DB_PREFIX_);
+$modelDatabase->createDatabase(_DB_SERVER_, _DB_NAME_, _DB_USER_, _DB_PASSWD_);
+
 $install->clearDatabase(false);
-$logger->log('Installing database');
+checkInstallationErrors($install, $logger);
 if (!$install->installDatabase(true)) {
-    // Something went wrong during installation
-    $logger->logError('Database installation failed');
     exit(1);
 }
 
-$logger->log('Initializing test context');
 $install->initializeTestContext();
-$logger->log('Installing default data');
 $install->installDefaultData('test_shop', false, false, false);
-$logger->log('Populating database');
 $install->populateDatabase();
-
-$logger->log('Configuring shop');
 $install->configureShop([
     'admin_firstname' => 'puff',
     'admin_lastname' => 'daddy',
@@ -68,6 +77,7 @@ $install->configureShop([
     'admin_email' => 'test@prestashop.com',
     'configuration_agrement' => true,
 ]);
+checkInstallationErrors($install, $logger);
 
 $logger->log('Installing language');
 // Default language is forced as en, we need french translation package as well, we only need the catalog to
@@ -76,18 +86,26 @@ if (!Language::translationPackIsInCache('fr-FR')) {
     Language::downloadXLFLanguagePack('fr-FR');
 }
 Language::installSfLanguagePack('fr-FR');
+checkInstallationErrors($install, $logger);
 
-$logger->log('Installing fixtures');
 $install->installFixtures();
-
 Category::regenerateEntireNtree();
 Tab::resetStaticCache();
+checkInstallationErrors($install, $logger);
 
-$logger->log('Installing default theme');
 $install->installTheme();
-
-$logger->log('Installing modules on disk');
+checkInstallationErrors($install, $logger);
 $install->installModules(array_keys($install->getModulesOnDisk()));
+if (isset($install->getErrors()['ganalytics']) && $install->getErrors()['ganalytics'][0] === 'Cannot install module "ganalytics"') {
+    $logger->log('One expected error from test module not installable');
+    $install->resetErrors();
+}
+checkInstallationErrors($install, $logger);
+
+$logger->log('Configure SMTP server for maildev');
+Configuration::updateGlobalValue('PS_MAIL_METHOD', Mail::METHOD_SMTP);
+Configuration::updateGlobalValue('PS_MAIL_SERVER', 'localhost');
+Configuration::updateGlobalValue('PS_MAIL_SMTP_PORT', '1025');
 
 $logger->log('Creating database dump');
 DatabaseDump::create();

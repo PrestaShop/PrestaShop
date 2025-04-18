@@ -23,36 +23,24 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import FiltersSubmitButtonEnablerExtension
-  from '@components/grid/extension/filters-submit-button-enabler-extension';
-import Grid from '@components/grid/grid';
-import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
-import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
-import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
-import SortingExtension from '@components/grid/extension/sorting-extension';
-import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
-import SubmitBulkActionExtension from '@components/grid/extension/submit-bulk-action-extension';
-import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
-import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
 import ShowcaseCard from '@components/showcase-card/showcase-card';
 import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
-import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 
 const {$} = window;
 
 $(() => {
-  const employeeGrid = new Grid('employee');
+  const employeeGrid = new window.prestashop.component.Grid('employee');
 
-  employeeGrid.addExtension(new ReloadListActionExtension());
-  employeeGrid.addExtension(new ExportToSqlManagerExtension());
-  employeeGrid.addExtension(new FiltersResetExtension());
-  employeeGrid.addExtension(new SortingExtension());
-  employeeGrid.addExtension(new BulkActionCheckboxExtension());
-  employeeGrid.addExtension(new SubmitBulkActionExtension());
-  employeeGrid.addExtension(new SubmitRowActionExtension());
-  employeeGrid.addExtension(new ColumnTogglingExtension());
-  employeeGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
-  employeeGrid.addExtension(new LinkRowActionExtension());
+  employeeGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
+  employeeGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
+  employeeGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+  employeeGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  employeeGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
+  employeeGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
+  employeeGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
+  employeeGrid.addExtension(new window.prestashop.component.GridExtensions.ColumnTogglingExtension());
+  employeeGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
+  employeeGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
 
   const showcaseCard = new ShowcaseCard('employeesShowcaseCard');
   showcaseCard.addExtension(new ShowcaseCardCloseExtension());

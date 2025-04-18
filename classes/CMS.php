@@ -35,7 +35,6 @@ class CMSCore extends ObjectModel
     public $head_seo_title;
     public $meta_title;
     public $meta_description;
-    public $meta_keywords;
     public $content;
     public $link_rewrite;
     public $id_cms_category;
@@ -59,11 +58,10 @@ class CMSCore extends ObjectModel
 
             /* Lang fields */
             'meta_description' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 512],
-            'meta_keywords' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
             'meta_title' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255],
             'head_seo_title' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
             'link_rewrite' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 128],
-            'content' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 3999999999999],
+            'content' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 1073741823],
         ],
     ];
 
@@ -135,7 +133,7 @@ class CMSCore extends ObjectModel
      *
      * @return array
      */
-    public static function getLinks($idLang, $selection = null, $active = true, Link $link = null)
+    public static function getLinks($idLang, $selection = null, $active = true, ?Link $link = null)
     {
         if (!$link) {
             $link = Context::getContext()->link;

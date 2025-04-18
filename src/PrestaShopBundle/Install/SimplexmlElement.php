@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Install;
 
 use DOMDocument;
+use ReturnTypeWillChange;
 
 class SimplexmlElement extends \SimpleXMLElement
 {
@@ -65,7 +66,7 @@ class SimplexmlElement extends \SimpleXMLElement
      *
      * @see SimpleXMLElement::asXML()
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function asXML($filename = null)
     {
         $dom = new DOMDocument('1.0');

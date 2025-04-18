@@ -200,7 +200,7 @@ class AdminAccessControllerCore extends AdminController
      *
      * @return int
      */
-    protected function sortModuleByName($a, $b)
+    protected function sortModuleByName(array $a, array $b)
     {
         $moduleAName = isset($a['name']) ? $a['name'] : null;
         $moduleBName = isset($b['name']) ? $b['name'] : null;
@@ -218,7 +218,7 @@ class AdminAccessControllerCore extends AdminController
         return $tabsTree;
     }
 
-    protected function getChildrenTab(array &$tabs, $id_parent = 0)
+    protected function getChildrenTab(array &$tabs, int $id_parent = 0)
     {
         $children = [];
         foreach ($tabs as $tab) {

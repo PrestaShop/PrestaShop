@@ -7,46 +7,39 @@ Feature: Update alias status from Back Office (BO)
   As a BO user
   I need to be able to enable or disable alias from the BO
 
-  Scenario: I disable multiple aliases
-    Given following aliases should exist:
-      | id reference | alias  | search | active |
-      | alias1       | bloose | blouse | 1      |
-      | alias2       | blues  | blouse | 1      |
-    When I disable alias with reference "alias1"
-    And I disable alias with reference "alias2"
+  Scenario: I disable aliases
+    When I add a search term "big" with following aliases:
+      | alias | active |
+      | large | true   |
+      | small | true   |
     Then following aliases should exist:
-      | id reference | alias  | search | active |
-      | alias1       | bloose | blouse | 0      |
-      | alias2       | blues  | blouse | 0      |
+      | search | alias  | active |
+      | big    | large  | true   |
+      | big    | small  | true   |
+    When I update search term "big" with following aliases:
+      | alias | active |
+      | large | true   |
+      | small | false  |
+    Then following aliases should exist:
+      | search | alias  | active |
+      | big    | large  | true   |
+      | big    | small  | false  |
 
-  Scenario: I enable multiple aliases
-    When I enable alias with reference "alias1"
-    And I enable alias with reference "alias2"
+  Scenario: I enable aliases
+    When I add a search term "geant" with following aliases:
+      | alias | active |
+      | biig  | false  |
+      | megaa | false  |
     Then following aliases should exist:
-      | id reference | alias  | search | active |
-      | alias1       | bloose | blouse | 1      |
-      | alias2       | blues  | blouse | 1      |
+      | search | alias  | active |
+      | geant  | biig   | false  |
+      | geant  | megaa  | false  |
+    When I update search term "geant" with following aliases:
+      | alias | active |
+      | biig  | true   |
+      | megaa | true   |
+    Then following aliases should exist:
+      | search | alias  | active |
+      | geant  | biig   | true   |
+      | geant  | megaa  | true   |
 
-  Scenario: I enable single alias
-    And I disable alias with reference "alias2"
-    Then following aliases should exist:
-      | id reference | alias  | search | active |
-      | alias1       | bloose | blouse | 1      |
-      | alias2       | blues  | blouse | 0      |
-
-  Scenario: I bulk update alias statuses
-    When I bulk enable the following aliases "alias1,alias2"
-    Then following aliases should exist:
-      | id reference | alias  | search | active |
-      | alias1       | bloose | blouse | 1      |
-      | alias2       | blues  | blouse | 1      |
-    When I bulk disable the following aliases "alias1,alias2"
-    Then following aliases should exist:
-      | id reference | alias  | search | active |
-      | alias1       | bloose | blouse | 0      |
-      | alias2       | blues  | blouse | 0      |
-    When I bulk enable the following aliases "alias1,alias2"
-    Then following aliases should exist:
-      | id reference | alias  | search | active |
-      | alias1       | bloose | blouse | 1      |
-      | alias2       | blues  | blouse | 1      |

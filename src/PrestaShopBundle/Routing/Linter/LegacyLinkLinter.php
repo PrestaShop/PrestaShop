@@ -41,7 +41,13 @@ final class LegacyLinkLinter implements RouteLinterInterface
      */
     public function lint($routeName, Route $route)
     {
-        if ($route->hasDefault($routeName)) {
+        // Legacy link already configured
+        if ($route->hasDefault('_legacy_link')) {
+            return true;
+        }
+
+        // Route is not related to a legacy controller so legacy link is not relevant
+        if (!$route->hasDefault('_legacy_controller')) {
             return true;
         }
 

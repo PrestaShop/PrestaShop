@@ -158,36 +158,36 @@
 
   .translationTree {
     .tree-name {
-      margin-bottom: .9375rem;
+      margin-bottom: var(--#{$cdk}size-16);
 
       &.active {
         font-weight: bold;
       }
 
       &.extra {
-        color: $danger;
+        color: var(--#{$cdk}red-500);
       }
     }
 
     .tree-extra-label {
-      color: $danger;
+      color: var(--#{$cdk}red-500);
       text-transform: uppercase;
-      font-size: .65rem;
+      font-size: var(--#{$cdk}size-10);
       margin-left: auto;
     }
     .tree-extra-label-mini {
-      background-color: $danger;
-      color: #ffffff;
-      padding: 0 0.5rem;
-      border-radius: 0.75rem;
+      background-color: var(--#{$cdk}red-500);
+      color: var(--#{$cdk}white);
+      padding: 0 var(--#{$cdk}size-8);
+      border-radius: var(--#{$cdk}size-12);
       display: inline-block;
-      font-size: .75rem;
-      height: 1.5rem;
+      font-size: var(--#{$cdk}size-12);
+      height: var(--#{$cdk}size-24);
       margin-left: auto;
     }
     .tree-label {
       &:hover {
-        color: $primary;
+        text-decoration: underline;
       }
     }
   }

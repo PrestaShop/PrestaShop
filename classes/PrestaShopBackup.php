@@ -121,7 +121,7 @@ class PrestaShopBackupCore
         $backupdir = realpath(_PS_ADMIN_DIR_ . self::$backupDir);
 
         if ($backupdir === false) {
-            die(Tools::displayError(Context::getContext()->getTranslator()->trans('"Backup" directory does not exist.', [], 'Admin.Advparameters.Notification')));
+            throw new PrestaShopException(Context::getContext()->getTranslator()->trans('"Backup" directory does not exist.', [], 'Admin.Advparameters.Notification'));
         }
 
         // Check the realpath so we can validate the backup file is under the backup directory
@@ -132,7 +132,7 @@ class PrestaShopBackupCore
         }
 
         if ($backupfile === false || strncmp($backupdir, $backupfile, strlen($backupdir)) != 0) {
-            die(Tools::displayError());
+            throw new PrestaShopException('Invalid backup file.');
         }
 
         return $backupfile;
@@ -150,7 +150,7 @@ class PrestaShopBackupCore
         $backupdir = realpath(_PS_ADMIN_DIR_ . self::$backupDir);
 
         if ($backupdir === false) {
-            die(Tools::displayError(Context::getContext()->getTranslator()->trans('"Backup" directory does not exist.', [], 'Admin.Advparameters.Notification')));
+            throw new PrestaShopException(Context::getContext()->getTranslator()->trans('"Backup" directory does not exist.', [], 'Admin.Advparameters.Notification'));
         }
 
         return @filemtime($backupdir . DIRECTORY_SEPARATOR . $filename);
@@ -167,18 +167,18 @@ class PrestaShopBackupCore
     {
         // Additionnal parameters (action, filename, ajax) are kept for backward compatibility, in case we disable the new controller
         return Context::getContext()->link->getAdminLink(
-                'AdminBackup',
-                true,
-                [
-                    'route' => 'admin_backup_download',
-                    'downloadFileName' => basename($this->id),
-                ],
-                [
-                    'action' => 'backupContent',
-                    'ajax' => 1,
-                    'filename' => basename($this->id),
-                ]
-            );
+            'AdminBackup',
+            true,
+            [
+                'route' => 'admin_backup_download',
+                'downloadFileName' => basename($this->id),
+            ],
+            [
+                'action' => 'backupContent',
+                'ajax' => 1,
+                'filename' => basename($this->id),
+            ]
+        );
     }
 
     /**
@@ -203,7 +203,7 @@ class PrestaShopBackupCore
      *
      * @return bool True on success
      */
-    public function deleteSelection($list)
+    public function deleteSelection(array $list)
     {
         foreach ($list as $file) {
             $backup = new PrestaShopBackup($file);
@@ -294,31 +294,21 @@ class PrestaShopBackupCore
             if (!in_array($schema[0]['Table'], $ignoreInsertTable)) {
                 $data = Db::getInstance()->query('SELECT * FROM `' . $schema[0]['Table'] . '`');
                 $sizeof = Db::getInstance()->numRows();
-                $lines = explode("\n", $schema[0]['Create Table']);
 
                 if ($data && $sizeof > 0) {
-                    // Export the table data
+                    // First we write the beginning of an insert query
                     fwrite($fp, 'INSERT INTO `' . $schema[0]['Table'] . "` VALUES\n");
+
+                    // We start a counter, because we want to separate the queries by batches of 200 lines
                     $i = 1;
                     while ($row = Db::getInstance()->nextRow($data)) {
                         $s = '(';
 
-                        foreach ($row as $field => $value) {
-                            $tmp = "'" . pSQL($value, true) . "',";
-                            if ($tmp != "'',") {
-                                $s .= $tmp;
+                        foreach ($row as $value) {
+                            if ($value === null) {
+                                $s .= 'NULL,';
                             } else {
-                                foreach ($lines as $line) {
-                                    if (strpos($line, '`' . $field . '`') !== false) {
-                                        if (preg_match('/(.*NOT NULL.*)/Ui', $line)) {
-                                            $s .= "'',";
-                                        } else {
-                                            $s .= 'NULL,';
-                                        }
-
-                                        break;
-                                    }
-                                }
+                                $s .= "'" . pSQL($value, true) . "',";
                             }
                         }
                         $s = rtrim($s, ',');

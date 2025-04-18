@@ -117,6 +117,6 @@
     overflow: hidden;
   }
   .missing {
-    border: 1px solid $danger;
+    border: 1px solid var(--#{$cdk}red-500);
   }
 </style>

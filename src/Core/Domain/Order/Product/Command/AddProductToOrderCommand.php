@@ -186,7 +186,7 @@ class AddProductToOrderCommand
         try {
             $this->productPriceTaxIncluded = new DecimalNumber($productPriceTaxIncluded);
             $this->productPriceTaxExcluded = new DecimalNumber($productPriceTaxExcluded);
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException) {
             throw new InvalidAmountException();
         }
         $this->setProductQuantity($productQuantity);

@@ -43,7 +43,6 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryN
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use RuntimeException;
-use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -51,29 +50,12 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 class CmsPageFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @var int
-     */
-    private $defaultLangId;
-
-    /**
-     * @var int
-     */
-    private $defaultShopId;
-
-    /**
      * "When" steps perform actions, and some of them store the latest exception
      * in this variable so that "Then" action can check it
      *
      * @var mixed
      */
     private $latestException;
-
-    public function __construct()
-    {
-        $configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
-        $this->defaultLangId = $configuration->get('PS_LANG_DEFAULT');
-        $this->defaultShopId = $configuration->get('PS_SHOP_DEFAULT');
-    }
 
     /**
      * @When I add new CMS page :cmsPageReference with following properties:
@@ -109,22 +91,19 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
         $data = $node->getRowsHash();
 
         if (isset($data['meta_title'])) {
-            $command->setLocalizedTitle([$this->defaultLangId => $data['meta_title']]);
+            $command->setLocalizedTitle([$this->getDefaultLangId() => $data['meta_title']]);
         }
         if (isset($data['head_seo_title'])) {
-            $command->setLocalizedMetaTitle([$this->defaultLangId => $data['head_seo_title']]);
+            $command->setLocalizedMetaTitle([$this->getDefaultLangId() => $data['head_seo_title']]);
         }
         if (isset($data['meta_description'])) {
-            $command->setLocalizedMetaDescription([$this->defaultLangId => $data['meta_description']]);
-        }
-        if (isset($data['meta_keywords'])) {
-            $command->setLocalizedMetaKeyword([$this->defaultLangId => $data['meta_keywords']]);
+            $command->setLocalizedMetaDescription([$this->getDefaultLangId() => $data['meta_description']]);
         }
         if (isset($data['link_rewrite'])) {
-            $command->setLocalizedFriendlyUrl([$this->defaultLangId => $data['link_rewrite']]);
+            $command->setLocalizedFriendlyUrl([$this->getDefaultLangId() => $data['link_rewrite']]);
         }
         if (isset($data['content'])) {
-            $command->setLocalizedContent([$this->defaultLangId => $data['content']]);
+            $command->setLocalizedContent([$this->getDefaultLangId() => $data['content']]);
         }
         if (isset($data['indexation'])) {
             $command->setIsIndexedForSearch(PrimitiveUtils::castStringBooleanIntoBoolean($data['indexation']));
@@ -286,8 +265,8 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     {
         /** @var CMS $cmsPage */
         $cmsPage = SharedStorage::getStorage()->get($cmsPageReference);
-        if ($cmsPage->$field[$this->defaultLangId] !== $value) {
-            throw new RuntimeException(sprintf('Cms page "%s" has "%s" %s, but "%s" was expected.', $cmsPageReference, $cmsPage->$field[$this->defaultLangId], $field, $value));
+        if ($cmsPage->$field[$this->getDefaultLangId()] !== $value) {
+            throw new RuntimeException(sprintf('Cms page "%s" has "%s" %s, but "%s" was expected.', $cmsPageReference, $cmsPage->$field[$this->getDefaultLangId()], $field, $value));
         }
     }
 
@@ -298,8 +277,8 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     {
         /** @var CMS $cmsPage */
         $cmsPage = SharedStorage::getStorage()->get($cmsPageReference);
-        if ($cmsPage->$field[$this->defaultLangId] !== '') {
-            throw new RuntimeException(sprintf('Cms page "%s" has "%s" %s, but it was expected to be empty', $cmsPageReference, $cmsPage->$field[$this->defaultLangId], $field));
+        if ($cmsPage->$field[$this->getDefaultLangId()] !== '') {
+            throw new RuntimeException(sprintf('Cms page "%s" has "%s" %s, but it was expected to be empty', $cmsPageReference, $cmsPage->$field[$this->getDefaultLangId()], $field));
         }
     }
 
@@ -341,21 +320,20 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     {
         $command = new AddCmsPageCommand(
             (int) $data['id_cms_category'],
-            [$this->defaultLangId => $data['meta_title']],
-            [$this->defaultLangId => $data['head_seo_title']],
-            [$this->defaultLangId => $data['meta_description']],
-            [$this->defaultLangId => $data['meta_keywords']],
-            [$this->defaultLangId => $data['link_rewrite']],
-            [$this->defaultLangId => $data['content']],
+            [$this->getDefaultLangId() => $data['meta_title']],
+            [$this->getDefaultLangId() => $data['head_seo_title']],
+            [$this->getDefaultLangId() => $data['meta_description']],
+            [$this->getDefaultLangId() => $data['link_rewrite']],
+            [$this->getDefaultLangId() => $data['content']],
             PrimitiveUtils::castStringBooleanIntoBoolean($data['indexation']),
             PrimitiveUtils::castStringBooleanIntoBoolean($data['active']),
-            [$this->defaultShopId]
+            [$this->getDefaultShopId()]
         );
 
         /** @var CmsPageId $cmsPageId */
         $cmsPageId = $this->getCommandBus()->handle($command);
 
-        SharedStorage::getStorage()->set($cmsPageReference, new \CMS($cmsPageId->getValue()));
+        SharedStorage::getStorage()->set($cmsPageReference, new CMS($cmsPageId->getValue()));
     }
 
     /**
@@ -370,7 +348,6 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
             'meta_title' => 'Special delivery options',
             'head_seo_title' => 'delivery options',
             'meta_description' => 'Our special delivery options',
-            'meta_keywords' => 'delivery,configure,special',
             'link_rewrite' => 'delivery-options',
             'content' => '<div> <h5> Delivery <img src="../delivery/options.jpg" alt="" /></h5> </div>',
             'indexation' => true,

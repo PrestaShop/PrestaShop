@@ -1,17 +1,15 @@
-// Import utils
-import basicHelper from '@utils/basicHelper';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-import dashboardPage from '@pages/BO/dashboard';
-import pagesPage from '@pages/BO/design/pages';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+
+import {
+  boCMSPagesPage,
+  boDashboardPage,
+  boLoginPage,
+  type BrowserContext,
+  type Page,
+  utilsCore,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_pages_pages_sortPages';
 
@@ -24,30 +22,36 @@ describe('BO - design - Pages : Sort Pages table', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'Design > Pages\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCmsPagesPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.designParentLink,
-      dashboardPage.pagesLink,
+      boDashboardPage.designParentLink,
+      boDashboardPage.pagesLink,
     );
-    await pagesPage.closeSfToolBar(page);
+    await boCMSPagesPage.closeSfToolBar(page);
 
-    const pageTitle = await pagesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(pagesPage.pageTitle);
+    const pageTitle = await boCMSPagesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCMSPagesPage.pageTitle);
   });
 
   // Sort pages table
@@ -89,29 +93,29 @@ describe('BO - design - Pages : Sort Pages table', async () => {
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await pagesPage.getAllRowsColumnContentTableCmsPage(page, test.args.sortBy);
-        await pagesPage.sortTableCmsPage(page, test.args.sortBy, test.args.sortDirection);
+        const nonSortedTable = await boCMSPagesPage.getAllRowsColumnContentTableCmsPage(page, test.args.sortBy);
+        await boCMSPagesPage.sortTableCmsPage(page, test.args.sortBy, test.args.sortDirection);
 
-        const sortedTable = await pagesPage.getAllRowsColumnContentTableCmsPage(page, test.args.sortBy);
+        const sortedTable = await boCMSPagesPage.getAllRowsColumnContentTableCmsPage(page, test.args.sortBy);
 
         if (test.args.isFloat) {
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
           const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-          const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+          const expectedResult: number[] = await utilsCore.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
-          const expectedResult = await basicHelper.sortArray(nonSortedTable);
+          const expectedResult = await utilsCore.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });

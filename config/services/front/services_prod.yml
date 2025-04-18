@@ -57,3 +57,19 @@ services:
       class: PrestaShopBundle\Translation\TranslatorLanguageLoader
       arguments:
         - '@prestashop.adapter.module.repository.module_repository'
+
+   # Special definition for legacy environments since they don't initialize the request stack, which is a dependency for the feature flag checker
+    Symfony\Component\HttpFoundation\RequestStack:
+      factory: [ 'PrestaShopBundle\Http\RequestStackFactory', 'buildRequestStack' ]
+      lazy: true
+
+    request_stack:
+      alias: Symfony\Component\HttpFoundation\RequestStack
+
+    # Special validator to validate tokens from admin in the front environment
+    PrestaShopBundle\Security\Admin\LegacyAdminTokenValidator:
+      public: true
+      lazy: true
+      arguments:
+        $employeeRepository: '@PrestaShop\PrestaShop\Adapter\Employee\EmployeeRepository'
+        $requestStack: '@request_stack'

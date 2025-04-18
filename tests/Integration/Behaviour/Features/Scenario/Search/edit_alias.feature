@@ -10,63 +10,70 @@ Feature: Edit alias from Back Office (BO)
 
   Scenario: I edit existing alias with same search term
     Given following aliases should exist:
-      | id reference | alias  | search |
-      | alias1       | bloose | blouse |
-      | alias2       | blues  | blouse |
-    When I update alias "alias1" with following values:
-      | aliases | bluse  |
-      | search  | blouse |
+      | search | alias  | active  |
+      | blouse | bloose | true    |
+      | blouse | blues  | true    |
+    When I add a search term "big" with following aliases:
+      | alias | active |
+      | large | true   |
+      | small | false  |
+    Then I should have the following aliases for search term "big":
+      | alias   | active |
+      | large   | true   |
+      | small   | false  |
+    When I update search term "big" with following aliases:
+      | alias | active |
+      | large | true   |
+      | biig  | true   |
+    Then I should have the following aliases for search term "big":
+      | alias   | active |
+      | biig    | true   |
+      | large   | true   |
     Then following aliases should exist:
-      | id reference | alias | search |
-      | alias3       | bluse | blouse |
-    When I update alias "alias3" with following values:
-      | aliases | bluse,dress |
-      | search  | blouse      |
-    Then following aliases should exist:
-      | id reference | alias | search |
-      | alias4       | bluse | blouse |
-      | alias5       | dress | blouse |
+      | search | alias  | active |
+      | big    | large  | true   |
+      | big    | biig   | true   |
+    Then following aliases shouldn't exist:
+      | search | alias  | active |
+      | big    | small  | false  |
 
-  Scenario: I edit existing alias with different search term that does not exist
+  Scenario: I edit with an alias already used by another search term
     Given following aliases should exist:
-      | id reference | alias | search |
-      | alias4       | bluse | blouse |
-      | alias5       | dress | blouse |
-    When I update alias "alias4" with following values:
-      | aliases | black |
-      | search  | dark  |
+      | search | alias  | active  |
+      | big    | large  | true   |
+    When I add a search term "geant" with following aliases:
+      | alias  | active |
+      | biiig  | true   |
+    Then I should have the following aliases for search term "geant":
+      | alias | active |
+      | biiig | true   |
     Then following aliases should exist:
-      | id reference | alias | search |
-      | alias6       | black | dark   |
+      | search | alias  | active |
+      | big    | large  | true   |
+      | geant  | biiig  | true   |
+    When I update search term "geant" with following aliases:
+      | alias | active |
+      | large | true   |
+    Then I should get error that alias is already used by another search term
 
-  Scenario: I edit existing alias with different search term that does exist
-    Given I add alias with following information:
-      | alias  | dress  |
-      | search | blouse |
-    And following aliases should exist:
-      | id reference | alias | search |
-      | alias6       | black | dark   |
-      | alias7       | dress | blouse |
-    When I update alias "alias6" with following values:
-      | aliases | bluse  |
-      | search  | blouse |
+  Scenario: I edit the search term for a search term already exist.
+    When I add a search term "tshirt" with following aliases:
+      | alias     | active |
+      | shirt     | true   |
+      | tee shirt | true   |
     Then following aliases should exist:
-      | id reference | alias | search |
-      | alias7       | dress | blouse |
-      | alias8       | bluse | blouse |
-    Given I add alias with following information:
-      | alias  | white  |
-      | search | bright |
+      | search | alias     | active |
+      | tshirt | shirt     | true   |
+      | tshirt | tee shirt | true   |
+    When I update search term "tshirt" by "t-shirt" with following aliases:
+      | alias     | active |
+      | shirt     | true   |
+      | tee shirt | true   |
     Then following aliases should exist:
-      | id reference | alias | search |
-      | alias7       | dress | blouse |
-      | alias8       | bluse | blouse |
-      | alias9       | white | bright |
-    When I update alias "alias7" with following values:
-      | aliases | cyan,yellow |
-      | search  | bright      |
-    Then following aliases should exist:
-      | id reference | alias  | search |
-      | alias9       | white  | bright |
-      | alias10      | cyan   | bright |
-      | alias11      | yellow | bright |
+      | search  | alias     | active |
+      | t-shirt | shirt     | true   |
+      | t-shirt | tee shirt | true   |
+    Then following aliases shouldn't exist:
+      | search | alias     | active |
+      | tshirt | shirt     | true   |
+      | tshirt | tee shirt | true   |

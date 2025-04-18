@@ -77,8 +77,7 @@ class FeatureQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria);
         $qb
-            ->select('f.id_feature, fl.name')
-            ->addSelect('(f.position +1) AS position')
+            ->select('f.id_feature, fl.name, f.position')
             ->addSelect('COUNT(fv.id_feature_value) AS values_count')
             ->leftJoin(
                 'f',
@@ -158,7 +157,7 @@ class FeatureQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('position' === $filterName) {
-                $qb->andWhere('position LIKE :' . $filterName)
+                $qb->andWhere('f.position LIKE :' . $filterName)
                     // position value starts from 0 in database, but in list view they are incremented by +1,
                     // so if it is a position filter, then we decrement the value to return expected results
                     ->setParameter($filterName, '%' . ((int) $value - 1) . '%');

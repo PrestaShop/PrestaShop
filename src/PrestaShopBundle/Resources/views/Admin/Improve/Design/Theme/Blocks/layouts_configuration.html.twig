@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
 {% block layouts_configuration %}
   <div class="col-12 layout-configuration">
@@ -45,7 +45,7 @@
         {% if isDevModeOn %}
           <button class="btn btn-tertiary-outline js-reset-theme-layouts-btn"
             type="button"
-            data-submit-url="{{ path('admin_themes_reset_layouts', {'themeName': currentlyUsedTheme.name}) }}"
+            data-submit-url="{{ path('admin_themes_reset_layouts', {themeName: currentlyUsedTheme.name}) }}"
             data-csrf-token="{{ csrf_token('reset-theme-layouts') }}"
           >
             <i class="material-icons">settings_backup_restore</i>

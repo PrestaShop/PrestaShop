@@ -162,7 +162,7 @@ class UploadLogosCommand
                 'Not supported "%s" image logo extension. Supported extensions are "%s"',
                 $extension,
                 implode(',', ShopLogoSettings::AVAILABLE_LOGO_IMAGE_EXTENSIONS
-            )));
+                )));
         }
     }
 
@@ -179,7 +179,7 @@ class UploadLogosCommand
                 'Not supported "%s" image logo extension. Supported extensions are "%s"',
                 $extension,
                 implode(',', ShopLogoSettings::AVAILABLE_MAIL_AND_INVOICE_LOGO_IMAGE_EXTENSIONS
-            )));
+                )));
         }
     }
 

@@ -26,11 +26,12 @@
 
 namespace PsTest\Controller\Admin;
 
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
+use Symfony\Component\HttpFoundation\Response;
 
-class DemoController extends FrameworkBundleAdminController
+class DemoController extends PrestaShopAdminController
 {
-    public function demoAction()
+    public function demoAction(): Response
     {
         return $this->render('@Modules/demo/templates/admin/demo.html.twig');
     }

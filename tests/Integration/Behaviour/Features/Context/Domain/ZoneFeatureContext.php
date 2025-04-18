@@ -37,7 +37,6 @@ use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneException;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Query\GetZoneForEditing;
 use RuntimeException;
-use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -45,17 +44,6 @@ use Zone;
 
 class ZoneFeatureContext extends AbstractDomainFeatureContext
 {
-    /**
-     * @var int default shop id from configs
-     */
-    private $defaultShopId;
-
-    public function __construct()
-    {
-        $configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
-        $this->defaultShopId = $configuration->get('PS_SHOP_DEFAULT');
-    }
-
     /**
      * @When I add new zone :zoneReference with following properties:
      *
@@ -70,7 +58,7 @@ class ZoneFeatureContext extends AbstractDomainFeatureContext
             $zoneId = $this->getCommandBus()->handle(new AddZoneCommand(
                 $data['name'],
                 PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']),
-                [$this->defaultShopId]
+                [$this->getDefaultShopId()]
             ));
             $this->getSharedStorage()->set($zoneReference, new Zone($zoneId->getValue()));
         } catch (ZoneException $e) {
@@ -190,6 +178,7 @@ class ZoneFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Given /^zone "(.*)" is (enabled|disabled)?$/
+     *
      * @Then /^zone "(.*)" should be (enabled|disabled)?$/
      *
      * @param string $zoneReference

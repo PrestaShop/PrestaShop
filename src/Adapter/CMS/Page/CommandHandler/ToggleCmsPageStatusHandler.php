@@ -52,7 +52,7 @@ final class ToggleCmsPageStatusHandler extends AbstractCmsPageHandler implements
             if (false === $cms->toggleStatus()) {
                 throw new CannotToggleCmsPageException(sprintf('Failed to toggle cms page with id %s status', $command->getCmsPageId()->getValue()));
             }
-        } catch (PrestaShopException $exception) {
+        } catch (PrestaShopException) {
             throw new CmsPageException(sprintf('An unexpected error occurred when toggling cms page with id %s status', $command->getCmsPageId()->getValue()));
         }
     }

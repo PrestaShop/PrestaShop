@@ -1,28 +1,24 @@
-// Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
-
-// Import test context
 import testContext from '@utils/testContext';
 
 // Import BO commons tests
 import {createEmployeeTest, deleteEmployeeTest} from '@commonTests/BO/advancedParameters/employee';
 import setPermissions from '@commonTests/BO/advancedParameters/setPermissions';
-import loginCommon from '@commonTests/BO/loginBO';
 
-// Import pages
-import loginPage from '@pages/BO/login';
-import dashboardPage from '@pages/BO/dashboard';
-import productsPage from '@pages/BO/catalog/products';
-import creditSlipsPage from '@pages/BO/orders/creditSlips';
-import employeesPage from '@pages/BO/advancedParameters/team';
-import myProfilePage from '@pages/BO/advancedParameters/team/myProfile';
-
-// Import data
-import EmployeeData from '@data/faker/employee';
-import type {EmployeePermission} from '@data/types/employee';
+import {
+  boCreditSlipsPage,
+  boDashboardPage,
+  boEmployeesPage,
+  boLoginPage,
+  boMyProfilePage,
+  boProductsPage,
+  type BrowserContext,
+  type EmployeePermission,
+  FakerEmployee,
+  type Page,
+  utilsFile,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_header_myProfile';
 
@@ -30,7 +26,7 @@ describe('BO - Header : My profile', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const employeeData = new EmployeeData({
+  const employeeData: FakerEmployee = new FakerEmployee({
     defaultPage: 'Products',
     language: 'English (English)',
     permissionProfile: 'Salesman',
@@ -58,33 +54,33 @@ describe('BO - Header : My profile', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('Go to employee page', async () => {
     it('should login by new employee account', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'loginWithNewEmployee', baseContext);
 
-      await loginPage.goTo(page, global.BO.URL);
-      await loginPage.successLogin(page, employeeData.email, employeeData.password);
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, employeeData.email, employeeData.password);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it('should go to \'Your profile\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMyProfilePage', baseContext);
 
-      await dashboardPage.goToMyProfile(page);
-      await myProfilePage.closeSfToolBar(page);
+      await boDashboardPage.goToMyProfile(page);
+      await boMyProfilePage.closeSfToolBar(page);
 
-      const pageTitle = await myProfilePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(myProfilePage.pageTitleEdit(employeeData.lastName, employeeData.firstName));
+      const pageTitle = await boMyProfilePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boMyProfilePage.pageTitleEdit(employeeData.lastName, employeeData.firstName));
     });
   });
 
@@ -95,16 +91,16 @@ describe('BO - Header : My profile', async () => {
       employeeData.firstName = 'Hello222';
       employeeData.lastName = 'World333';
 
-      await myProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
+      await boMyProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
 
-      const textResult = await myProfilePage.getAlertError(page);
-      await expect(textResult).to.equal(myProfilePage.errorInvalidFirstNameMessage);
+      const textResult = await boMyProfilePage.getAlertError(page);
+      expect(textResult).to.equal(boMyProfilePage.errorInvalidFirstNameMessage);
 
-      const lastNameResult = await myProfilePage.getInputValue(page, 'lastname');
-      await expect(lastNameResult).to.equal(employeeData.lastName);
+      const lastNameResult = await boMyProfilePage.getInputValue(page, 'lastname');
+      expect(lastNameResult).to.equal(employeeData.lastName);
 
-      const firstNameResult = await myProfilePage.getInputValue(page, 'firstname');
-      await expect(firstNameResult).to.equal(employeeData.firstName);
+      const firstNameResult = await boMyProfilePage.getInputValue(page, 'firstname');
+      expect(firstNameResult).to.equal(employeeData.firstName);
     });
 
     it('should update with valid firstname and invalid lastname and check error message', async function () {
@@ -112,16 +108,16 @@ describe('BO - Header : My profile', async () => {
 
       employeeData.firstName = 'Hello man';
 
-      await myProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
+      await boMyProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
 
-      const textResult = await myProfilePage.getAlertError(page);
-      await expect(textResult).to.equal(myProfilePage.errorInvalidLastNameMessage);
+      const textResult = await boMyProfilePage.getAlertError(page);
+      expect(textResult).to.equal(boMyProfilePage.errorInvalidLastNameMessage);
 
-      const lastNameResult = await myProfilePage.getInputValue(page, 'lastname');
-      await expect(lastNameResult).to.equal(employeeData.lastName);
+      const lastNameResult = await boMyProfilePage.getInputValue(page, 'lastname');
+      expect(lastNameResult).to.equal(employeeData.lastName);
 
-      const firstNameResult = await myProfilePage.getInputValue(page, 'firstname');
-      await expect(firstNameResult).to.equal(employeeData.firstName);
+      const firstNameResult = await boMyProfilePage.getInputValue(page, 'firstname');
+      expect(firstNameResult).to.equal(employeeData.firstName);
     });
 
     it('should update firstname and lastname with valid values', async function () {
@@ -130,49 +126,49 @@ describe('BO - Header : My profile', async () => {
       employeeData.firstName = 'Hello';
       employeeData.lastName = 'World';
 
-      await myProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
+      await boMyProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
 
-      const textResult = await myProfilePage.getAlertSuccess(page);
-      await expect(textResult).to.equal(myProfilePage.successfulUpdateMessage);
+      const textResult = await boMyProfilePage.getAlertSuccess(page);
+      expect(textResult).to.equal(boMyProfilePage.successfulUpdateMessage);
 
-      const lastNameResult = await myProfilePage.getInputValue(page, 'lastname');
-      await expect(lastNameResult).to.equal(employeeData.lastName);
+      const lastNameResult = await boMyProfilePage.getInputValue(page, 'lastname');
+      expect(lastNameResult).to.equal(employeeData.lastName);
 
-      const firstNameResult = await myProfilePage.getInputValue(page, 'firstname');
-      await expect(firstNameResult).to.equal(employeeData.firstName);
+      const firstNameResult = await boMyProfilePage.getInputValue(page, 'firstname');
+      expect(firstNameResult).to.equal(employeeData.firstName);
 
-      const pageTitle = await myProfilePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(myProfilePage.pageTitleEdit(employeeData.lastName, employeeData.firstName));
+      const pageTitle = await boMyProfilePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boMyProfilePage.pageTitleEdit(employeeData.lastName, employeeData.firstName));
     });
 
     it('should upload an invalid format image and check error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkInvalidFormatImage', baseContext);
-      await files.createSVGFile('.', 'image.svg');
+      await utilsFile.createSVGFile('.', 'image.svg');
 
       employeeData.avatarFile = 'image.svg';
 
-      await myProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
+      await boMyProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
 
-      const textResult = await myProfilePage.getAlertError(page);
-      await expect(textResult).to.contains(myProfilePage.errorInvalidFormatImageMessage);
+      const textResult = await boMyProfilePage.getAlertError(page);
+      expect(textResult).to.contains(boMyProfilePage.errorInvalidFormatImageMessage);
 
       // Delete created file
-      await files.deleteFile('image.svg');
+      await utilsFile.deleteFile('image.svg');
     });
 
     it('should upload a valid format image', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkValidFormatImage', baseContext);
-      await files.generateImage('image.jpg');
+      await utilsFile.generateImage('image.jpg');
 
       employeeData.avatarFile = 'image.jpg';
 
-      await myProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
+      await boMyProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
 
-      const textResult = await myProfilePage.getAlertSuccess(page);
-      await expect(textResult).to.equal(myProfilePage.successfulUpdateMessage);
+      const textResult = await boMyProfilePage.getAlertSuccess(page);
+      expect(textResult).to.equal(boMyProfilePage.successfulUpdateMessage);
 
       // Delete created file
-      await files.deleteFile('image.jpg');
+      await utilsFile.deleteFile('image.jpg');
       // Reset value
       employeeData.avatarFile = null;
     });
@@ -181,16 +177,16 @@ describe('BO - Header : My profile', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkGravatar', baseContext);
       employeeData.enableGravatar = true;
 
-      await myProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
+      await boMyProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
 
-      const textResult = await myProfilePage.getAlertSuccess(page);
-      await expect(textResult).to.equal(myProfilePage.successfulUpdateMessage);
+      const textResult = await boMyProfilePage.getAlertSuccess(page);
+      expect(textResult).to.equal(boMyProfilePage.successfulUpdateMessage);
 
-      const isChecked = await myProfilePage.isGravatarEnabled(page);
-      await expect(isChecked).to.be.true;
+      const isChecked = await boMyProfilePage.isGravatarEnabled(page);
+      expect(isChecked).to.eq(true);
 
-      const avatarURL = await myProfilePage.getCurrentEmployeeAvatar(page);
-      await expect(avatarURL).to.contains('https://www.gravatar.com/avatar/');
+      const avatarURL = await boMyProfilePage.getCurrentEmployeeAvatar(page);
+      expect(avatarURL).to.contains('https://www.gravatar.com/avatar/');
 
       // Reset value
       employeeData.enableGravatar = false;
@@ -203,37 +199,42 @@ describe('BO - Header : My profile', async () => {
       employeeData.language = 'English (English)';
       employeeData.defaultPage = 'Credit Slips';
 
-      await myProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
+      await boMyProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
 
-      const textResult = await myProfilePage.getAlertSuccess(page);
-      await expect(textResult).to.equal(myProfilePage.successfulUpdateMessage);
+      const textResult = await boMyProfilePage.getAlertSuccess(page);
+      expect(textResult).to.equal(boMyProfilePage.successfulUpdateMessage);
     });
 
     it('should logout from BO', async function () {
-      await loginCommon.logoutBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'logoutBO', baseContext);
+
+      await boDashboardPage.logoutBO(page);
+
+      const pageTitle = await boLoginPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boLoginPage.pageTitle);
     });
 
     it('should check the password and the default page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPasswordAndDefaultPageAndLanguage', baseContext);
 
-      await loginPage.goTo(page, global.BO.URL);
-      await loginPage.successLogin(page, employeeData.email, employeeData.password);
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, employeeData.email, employeeData.password);
 
-      const pageTitle = await creditSlipsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(creditSlipsPage.pageTitle);
+      const pageTitle = await boCreditSlipsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCreditSlipsPage.pageTitle);
     });
 
     it('should reset the language', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetLanguage', baseContext);
 
-      await dashboardPage.goToMyProfile(page);
+      await boDashboardPage.goToMyProfile(page);
 
       employeeData.language = 'English (English)';
 
-      await myProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
+      await boMyProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
 
-      const textResult = await myProfilePage.getAlertSuccess(page);
-      await expect(textResult).to.equal(myProfilePage.successfulUpdateMessage);
+      const textResult = await boMyProfilePage.getAlertSuccess(page);
+      expect(textResult).to.equal(boMyProfilePage.successfulUpdateMessage);
     });
   });
 
@@ -241,30 +242,30 @@ describe('BO - Header : My profile', async () => {
     it('should go to \'Advanced Parameters > Team\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToTeamPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.teamLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.teamLink,
       );
 
-      const pageTitle = await employeesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(employeesPage.pageTitle);
+      const pageTitle = await boEmployeesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boEmployeesPage.pageTitle);
     });
 
     it('should filter list by email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterEmployeesToDelete', baseContext);
 
-      await employeesPage.filterEmployees(page, 'input', 'email', employeeData.email);
+      await boEmployeesPage.filterEmployees(page, 'input', 'email', employeeData.email);
 
-      const textEmail = await employeesPage.getTextColumnFromTable(page, 1, 'email');
-      await expect(textEmail).to.contains(employeeData.email);
+      const textEmail = await boEmployeesPage.getTextColumnFromTable(page, 1, 'email');
+      expect(textEmail).to.contains(employeeData.email);
     });
 
     it('should delete employee and check error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteEmployee', baseContext);
 
-      const textResult = await employeesPage.deleteEmployeeAndFail(page, 1);
-      await expect(textResult).to.equal(employeesPage.errorDeleteOwnAccountMessage);
+      const textResult = await boEmployeesPage.deleteEmployeeAndFail(page, 1);
+      expect(textResult).to.equal(boEmployeesPage.errorDeleteOwnAccountMessage);
     });
   });
 

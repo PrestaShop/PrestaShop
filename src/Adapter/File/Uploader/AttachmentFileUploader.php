@@ -78,7 +78,7 @@ class AttachmentFileUploader implements AttachmentFileUploaderInterface
         string $filePath,
         string $uniqueFileName,
         int $fileSize,
-        int $id = null,
+        ?int $id = null,
         bool $throwExceptionOnFailure = true
     ): void {
         $this->checkFileAllowedForUpload($fileSize);
@@ -108,7 +108,7 @@ class AttachmentFileUploader implements AttachmentFileUploaderInterface
                     throw new CannotUnlinkAttachmentException($e->getMessage(), 0, null, $fileLink);
                 }
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new AttachmentNotFoundException(sprintf('Attachment with id "%s" was not found.', $attachmentId));
         }
     }
@@ -128,7 +128,7 @@ class AttachmentFileUploader implements AttachmentFileUploaderInterface
                 sprintf(
                     'Max file size allowed is "%s" bytes. Uploaded file size is "%s".',
                     (string) ($this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024),
-                    number_format(($fileSize / 1024), 2, '.', '')
+                    number_format($fileSize / 1024, 2, '.', '')
                 ),
                 AttachmentConstraintException::INVALID_FILE_SIZE
             );
@@ -136,7 +136,7 @@ class AttachmentFileUploader implements AttachmentFileUploaderInterface
 
         try {
             move_uploaded_file($filePath, _PS_DOWNLOAD_DIR_ . $uniqid);
-        } catch (FileException $e) {
+        } catch (FileException) {
             throw new AttachmentUploadFailedException(sprintf('Failed to copy the file %s.', $filePath));
         }
     }

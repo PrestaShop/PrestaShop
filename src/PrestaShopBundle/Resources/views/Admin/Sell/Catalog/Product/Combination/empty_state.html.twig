@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,17 +21,17 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
 <div id="combinations-empty-state" class="d-none">
   <div class="text-center showcase-list-card">
-    <img alt="{{ 'Generate product combinations'|trans({}, 'Admin.Catalog.Feature') }}" title="{{ 'Generate product combinations'|trans({}, 'Admin.Catalog.Feature') }}" class="img-responsive mt-3 img-rtl" src="{{ asset('themes/new-theme/img/empty_state/combinations.svg') }}">
+    <img alt="{{ 'Generate product combinations'|trans({}, 'Admin.Catalog.Feature') }}" title="{{ 'Generate product combinations'|trans({}, 'Admin.Catalog.Feature') }}" class="img-responsive mt-3" src="{{ asset('themes/new-theme/img/empty_state/combinations.svg') }}" width="320" height="auto">
 
     <p class="mt-4 showcase-list-card__header">{{ 'Generate product combinations'|trans({}, 'Admin.Catalog.Feature') }}</p>
 
     <p class="mx-auto showcase-list-card__message">
       {{ 'Combinations are the different variations of a product, with attributes like its size, weight or color taking different values.'|trans({}, 'Admin.Catalog.Feature') }}
-      {{ 'To add combinations, you first need to create proper attributes and values in [1]%attributes_and_features_label%[/1].'|trans({'%attributes_and_features_label%': 'Attributes & Features'|trans({}, 'Admin.Navigation.Menu'), '[1]': '<a class="alert-link" href=' ~ getAdminLink("AdminAttributesGroups") ~ ' target="_blank">', '[/1]': '</a>'}, 'Admin.Catalog.Help')|raw }}
+      {{ 'To add combinations, you first need to create proper attributes and values in [1]%attributes_and_features_label%[/1].'|trans({'%attributes_and_features_label%': 'Attributes & Features'|trans({}, 'Admin.Navigation.Menu'), '[1]': '<a class="alert-link" href=' ~ path('admin_attribute_groups_index') ~ ' target="_blank">', '[/1]': '</a>'}, 'Admin.Catalog.Help')|raw }}
     </p>
 
     <div class="mt-4">

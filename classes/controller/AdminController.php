@@ -27,6 +27,7 @@ use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButton;
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonInterface;
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonsCollection;
+use PrestaShop\PrestaShop\Core\Domain\Cart\CartStatus;
 use PrestaShop\PrestaShop\Core\Exception\TypeException;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
@@ -35,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecific
 use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
+use PrestaShopBundle\Security\Admin\UserTokenManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
@@ -594,24 +596,6 @@ class AdminControllerCore extends Controller
     }
 
     /**
-     * Gets the multistore header and assigns its html content to a smarty variable
-     *
-     * @see PrestaShopBundle\Controller\Admin\MultistoreController
-     *
-     * (the decision to display it or not is taken by the MultistoreController)
-     */
-    public function initMultistoreHeader(): void
-    {
-        if (!isset($this->lockedToAllShopContext)) {
-            return;
-        }
-
-        $this->context->smarty->assign([
-            'multistore_header' => $this->get('prestashop.core.admin.multistore')->header($this->lockedToAllShopContext)->getContent(),
-        ]);
-    }
-
-    /**
      * Set breadcrumbs array for the controller page.
      *
      * @param int|null $tab_id
@@ -685,6 +669,7 @@ class AdminControllerCore extends Controller
                 break;
         }
 
+        // An array [module_name => module_output] will be returned (no effect)
         Hook::exec('actionAdminBreadcrumbModifier', ['tabs' => $tabs, 'breadcrumb' => &$breadcrumbs2], null, true);
 
         $this->context->smarty->assign([
@@ -751,6 +736,7 @@ class AdminControllerCore extends Controller
                         /** @var bool|string $val */
                         $filter_value = '';
                         if (isset($t['type']) && $t['type'] == 'bool') {
+                            // @phpstan-ignore-next-line
                             $filter_value = ((bool) $val) ? $this->trans('Yes', [], 'Admin.Global') : $this->trans('No', [], 'Admin.Global');
                         } elseif (isset($t['type']) && $t['type'] == 'date' || isset($t['type']) && $t['type'] == 'datetime') {
                             $date = json_decode($val, true);
@@ -834,6 +820,15 @@ class AdminControllerCore extends Controller
 
         $token = Tools::getValue('token');
         if ($token === $this->token) {
+            return true;
+        }
+
+        // Check token via manager (checks both legacy and CSRF symfony tokens)
+        if (null === $this->getContainer()) {
+            $this->container = $this->buildContainer();
+        }
+        $tokenManager = $this->getContainer()->get(UserTokenManager::class);
+        if ($tokenManager !== null && $tokenManager->isTokenValid()) {
             return true;
         }
 
@@ -1052,7 +1047,7 @@ class AdminControllerCore extends Controller
     public function processDeleteImage()
     {
         if (Validate::isLoadedObject($object = $this->loadObject())) {
-            if (($object->deleteImage())) {
+            if ($object->deleteImage()) {
                 $redirect = self::$currentIndex . '&update' . $this->table . '&' . $this->identifier . '=' . (int) Tools::getValue($this->identifier) . '&conf=7&token=' . $this->token;
                 if (!$this->ajax) {
                     $this->redirect_after = $redirect;
@@ -1100,7 +1095,7 @@ class AdminControllerCore extends Controller
                 }
             }
         }
-        fputcsv($fd, $headers, ';', $text_delimiter);
+        fputcsv($fd, $headers, ';', $text_delimiter, '');
 
         foreach ($this->_list as $i => $row) {
             $content = [];
@@ -1122,7 +1117,7 @@ class AdminControllerCore extends Controller
                 }
                 $content[] = $field_value;
             }
-            fputcsv($fd, $content, ';', $text_delimiter);
+            fputcsv($fd, $content, ';', $text_delimiter, '');
         }
         @fclose($fd);
         die;
@@ -1144,7 +1139,7 @@ class AdminControllerCore extends Controller
                 $this->errors[] = $this->trans('You need at least one object.', [], 'Admin.Notifications.Error') .
                     ' <b>' . $this->table . '</b><br />' .
                     $this->trans('You cannot delete all of the items.', [], 'Admin.Notifications.Error');
-            } elseif (array_key_exists('delete', $this->list_skip_actions) && in_array($object->id, $this->list_skip_actions['delete'])) { //check if some ids are in list_skip_actions and forbid deletion
+            } elseif (array_key_exists('delete', $this->list_skip_actions) && in_array($object->id, $this->list_skip_actions['delete'])) { // check if some ids are in list_skip_actions and forbid deletion
                 $this->errors[] = $this->trans('You cannot delete this item.', [], 'Admin.Notifications.Error');
             } else {
                 if ($this->deleted) {
@@ -1632,7 +1627,7 @@ class AdminControllerCore extends Controller
                     $back = self::$currentIndex . '&token=' . $this->token;
                 }
                 if (!Validate::isCleanHtml($back)) {
-                    die(Tools::displayError());
+                    throw new PrestaShopException('Provided "back" parameter is invalid.');
                 }
                 if (!$this->lite_display) {
                     $this->page_header_toolbar_btn['back'] = [
@@ -1705,7 +1700,7 @@ class AdminControllerCore extends Controller
                     $back = self::$currentIndex . '&token=' . $this->token;
                 }
                 if (!Validate::isCleanHtml($back)) {
-                    die(Tools::displayError());
+                    throw new PrestaShopException('Provided "back" parameter is invalid.');
                 }
                 if (!$this->lite_display) {
                     $this->toolbar_btn['cancel'] = [
@@ -1722,7 +1717,7 @@ class AdminControllerCore extends Controller
                     $back = self::$currentIndex . '&token=' . $this->token;
                 }
                 if (!Validate::isCleanHtml($back)) {
-                    die(Tools::displayError());
+                    throw new PrestaShopException('Provided "back" parameter is invalid.');
                 }
                 if (!$this->lite_display) {
                     $this->toolbar_btn['back'] = [
@@ -1857,7 +1852,7 @@ class AdminControllerCore extends Controller
         $this->display_header_javascript = false;
         $this->display_footer = false;
 
-        return $this->display();
+        $this->display();
     }
 
     protected function redirect()
@@ -2003,6 +1998,8 @@ class AdminControllerCore extends Controller
 
         // Fetch Employee Menu
         $menuLinksCollections = new ActionsBarButtonsCollection();
+
+        // An array [module_name => module_output] will be returned (no effect)
         Hook::exec(
             'displayBackOfficeEmployeeMenu',
             [
@@ -2027,6 +2024,8 @@ class AdminControllerCore extends Controller
         }
 
         $tabs = $this->getTabs();
+
+        // An array [module_name => module_output] will be returned (no effect)
         Hook::exec('actionAdminMenuTabsModifier', ['tabs' => &$tabs], null, true);
 
         $currentTabLevel = 0;
@@ -2051,7 +2050,7 @@ class AdminControllerCore extends Controller
                 'employee' => $this->context->employee,
                 'search_type' => Tools::getValue('bo_search_type'),
                 'bo_query' => Tools::safeOutput(Tools::getValue('bo_query')),
-                'quick_access' => empty($quick_access) ? false : $quick_access,
+                'quick_access' => empty($quick_access) ? [] : $quick_access,
                 'multi_shop' => Shop::isFeatureActive(),
                 'shop_list' => $helperShop->getRenderedShopList(),
                 'current_shop_name' => $helperShop->getCurrentShopName(),
@@ -2060,8 +2059,8 @@ class AdminControllerCore extends Controller
                 'is_multishop' => $is_multishop,
                 'multishop_context' => $this->multishop_context,
                 'default_tab_link' => $this->context->link->getAdminLink(Tab::getClassNameById((int) Context::getContext()->employee->default_tab)),
-                'login_link' => $this->context->link->getAdminLink('AdminLogin'),
-                'logout_link' => $this->context->link->getAdminLink('AdminLogin', true, [], ['logout' => 1]),
+                'login_link' => $this->context->link->getAdminLink('AdminLogin', true, ['route' => 'admin_login']),
+                'logout_link' => $this->context->link->getAdminLink('AdminLogin', true, ['route' => 'admin_logout'], ['logout' => 1]),
                 'collapse_menu' => isset($this->context->cookie->collapse_menu) ? (int) $this->context->cookie->collapse_menu : 0,
             ]);
         } else {
@@ -2103,15 +2102,20 @@ class AdminControllerCore extends Controller
             'order' => [
                 $this->trans(
                     'Have you checked your [1][2]abandoned carts[/2][/1]?[3]Your next order could be hiding there!',
-                        [
-                            '_raw' => true,
-                            '[1]' => '<strong>',
-                            '[/1]' => '</strong>',
-                            '[2]' => '<a href="' . $this->context->link->getAdminLink('AdminCarts', true, [], ['action' => 'filterOnlyAbandonedCarts']) . '">',
-                            '[/2]' => '</a>',
-                            '[3]' => '<br>',
-                        ],
-                        'Admin.Navigation.Notification'
+                    [
+                        '_raw' => true,
+                        '[1]' => '<strong>',
+                        '[/1]' => '</strong>',
+                        '[2]' => '<a href="' . $this->context->link->getAdminLink('AdminCarts', true,
+                            [
+                                'route' => 'admin_carts_index',
+                                'cart[filters][status]' => CartStatus::ABANDONED_CART,
+                            ],
+                            ['action' => 'filterOnlyAbandonedCarts']) . '">',
+                        '[/2]' => '</a>',
+                        '[3]' => '<br>',
+                    ],
+                    'Admin.Navigation.Notification'
                 ),
             ],
             'customer' => [
@@ -2416,6 +2420,21 @@ class AdminControllerCore extends Controller
         return $this->tpl_list_vars;
     }
 
+    public function getMetaTitle()
+    {
+        return $this->meta_title;
+    }
+
+    public function getToolbarTitle(): array
+    {
+        return $this->toolbar_title;
+    }
+
+    public function getDisplay(): ?string
+    {
+        return $this->display;
+    }
+
     /**
      * Override to render the view page.
      *
@@ -2497,7 +2516,7 @@ class AdminControllerCore extends Controller
                 $back = self::$currentIndex . '&token=' . $this->token;
             }
             if (!Validate::isCleanHtml($back)) {
-                die(Tools::displayError());
+                throw new PrestaShopException('Provided "back" parameter is invalid.');
             }
 
             $helper->back_url = $back;
@@ -2646,18 +2665,15 @@ class AdminControllerCore extends Controller
                 $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/public/rtl.css?v=' . _PS_VERSION_, 'all', 0);
             }
 
-            //Bootstrap
+            // Bootstrap
             $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/css/' . $this->bo_css . '?v=' . _PS_VERSION_, 'all', 0);
             $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/css/vendor/titatoggle-min.css', 'all', 0);
             $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/public/theme.css?v=' . _PS_VERSION_, 'all', 0);
 
             // add Jquery 3 and its migration script
-            $this->addJs(_PS_JS_DIR_ . 'jquery/jquery-3.5.1.min.js');
+            $this->addJs(_PS_JS_DIR_ . 'jquery/jquery-3.7.1.min.js');
             $this->addJs(_PS_JS_DIR_ . 'jquery/bo-migrate-mute.min.js');
-            $this->addJs(_PS_JS_DIR_ . 'jquery/jquery-migrate-3.1.0.min.js');
-            // implement $.browser object and live method, that has been removed since jquery 1.9
-            $this->addJs(_PS_JS_DIR_ . 'jquery/jquery.browser-0.1.0.min.js');
-            $this->addJs(_PS_JS_DIR_ . 'jquery/jquery.live-polyfill-1.1.2.min.js');
+            $this->addJs(_PS_JS_DIR_ . 'jquery/jquery-migrate-3.4.0.min.js');
 
             $this->addJqueryPlugin(['scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox']);
             $this->addJqueryPlugin('growl', null, false);
@@ -2679,15 +2695,10 @@ class AdminControllerCore extends Controller
                 $this->addJS(_PS_JS_DIR_ . 'admin/notifications.js?v=' . _PS_VERSION_);
             }
 
-            $username = $this->get('prestashop.user_provider')->getUsername();
-            $token = $this->get('security.csrf.token_manager')
-                ->getToken($username)
-                ->getValue();
-
             $this->context->smarty->assign([
                 'js_router_metadata' => [
                     'base_url' => __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_),
-                    'token' => $token,
+                    'token' => $this->get(UserTokenManager::class)->getSymfonyToken(),
                 ],
             ]);
         }
@@ -2762,37 +2773,6 @@ class AdminControllerCore extends Controller
             $this->context->link = new Link($protocol_link, $protocol_content);
         }
 
-        if (isset($_GET['logout'])) {
-            $this->context->employee->logout();
-        }
-        if (isset(Context::getContext()->cookie->last_activity)) {
-            if (((int) $this->context->cookie->last_activity) + self::AUTH_COOKIE_LIFETIME < time()) {
-                $this->context->employee->logout();
-            } else {
-                $this->context->cookie->last_activity = time();
-            }
-        }
-
-        if (
-            !$this->isAnonymousAllowed()
-            && (
-                $this->controller_name != 'AdminLogin'
-                && (
-                    !isset($this->context->employee)
-                    || !$this->context->employee->isLoggedBack()
-                )
-            )
-        ) {
-            if (isset($this->context->employee)) {
-                $this->context->employee->logout();
-            }
-            $email = false;
-            if (Tools::getValue('email') && Validate::isEmail(Tools::getValue('email'))) {
-                $email = Tools::getValue('email');
-            }
-            Tools::redirectAdmin($this->context->link->getAdminLink('AdminLogin') . ((!isset($_GET['logout']) && $this->controller_name != 'AdminNotFound' && Tools::getValue('controller')) ? '&redirect=' . $this->controller_name : '') . ($email ? '&email=' . $email : ''));
-        }
-
         // Set current index
         $current_index = 'index.php' . (($controller = Tools::getValue('controller')) ? '?controller=' . $controller : '');
         if ($back = Tools::getValue('back')) {
@@ -2815,7 +2795,6 @@ class AdminControllerCore extends Controller
         Employee::setLastConnectionDate($this->context->employee->id);
 
         $this->initProcess();
-        $this->initMultistoreHeader();
         $this->initBreadcrumbs();
         $this->initModal();
         $this->initToolbarFlags();
@@ -3466,8 +3445,8 @@ class AdminControllerCore extends Controller
     {
         if (empty($limit)) {
             if (
-                isset($this->context->cookie->{$this->list_id . '_pagination'}) &&
-                $this->context->cookie->{$this->list_id . '_pagination'}
+                isset($this->context->cookie->{$this->list_id . '_pagination'})
+                && $this->context->cookie->{$this->list_id . '_pagination'}
             ) {
                 $limit = $this->context->cookie->{$this->list_id . '_pagination'};
             } else {
@@ -3603,6 +3582,11 @@ class AdminControllerCore extends Controller
         /** @var ObjectModel $object */
         $object = new $class_name();
 
+        /*
+         * If a specific getValidationRules method is implemented on the controller,
+         * it will be used to validate the data. Otherwise, we will use the ObjectModel
+         * definition of the object.
+         */
         if (method_exists($this, 'getValidationRules')) {
             $definition = $this->getValidationRules();
         } else {
@@ -3741,10 +3725,9 @@ class AdminControllerCore extends Controller
         }
 
         /* Multilingual fields */
-        $class_vars = get_class_vars(get_class($object));
         $fields = [];
-        if (isset($class_vars['definition']['fields'])) {
-            $fields = $class_vars['definition']['fields'];
+        if (isset($object::$definition['fields'])) {
+            $fields = $object::$definition['fields'];
         }
 
         foreach ($fields as $field => $params) {
@@ -3923,7 +3906,7 @@ class AdminControllerCore extends Controller
             }
 
             // Copy new image
-            if (empty($this->errors) && !ImageManager::resize($tmp_name, _PS_IMG_DIR_ . $dir . $id . '.' . $this->imageType, (int) $width, (int) $height, ($ext ? $ext : $this->imageType))) {
+            if (empty($this->errors) && !ImageManager::resize($tmp_name, _PS_IMG_DIR_ . $dir . $id . '.' . $this->imageType, (int) $width, (int) $height, $ext ? $ext : $this->imageType)) {
                 $this->errors[] = $this->trans('An error occurred while uploading the image.', [], 'Admin.Notifications.Error');
             }
 
@@ -4018,7 +4001,7 @@ class AdminControllerCore extends Controller
                 <title>PrestaShop Help</title>
                 <link href='//help.prestashop.com/css/help.css' rel='stylesheet'>
                 <link href='//fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet'>
-                <script src='" . _PS_JS_DIR_ . "jquery/jquery-1.11.0.min.js'></script>
+                <script src='" . _PS_JS_DIR_ . "jquery/jquery-3.7.1.min.js'></script>
                 <script src='" . _PS_JS_DIR_ . "admin.js'></script>
                 <script src='" . _PS_JS_DIR_ . "tools.js'></script>
                 <script>
@@ -4245,7 +4228,7 @@ class AdminControllerCore extends Controller
     /**
      * @return ContainerInterface
      */
-    protected function buildContainer()
+    protected function buildContainer(): ContainerInterface
     {
         return SymfonyContainer::getInstance();
     }
@@ -4361,7 +4344,7 @@ class AdminControllerCore extends Controller
      *
      * @return bool
      */
-    protected function isAnonymousAllowed()
+    public function isAnonymousAllowed()
     {
         return $this->allowAnonymous;
     }

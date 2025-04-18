@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
 <div class="card" id="linkedOrdersPanel">
   <div class="card-header">
@@ -52,7 +52,7 @@
       {% for linkedOrder in orderForViewing.linkedOrders.linkedOrders %}
       <tr>
         <td>
-          <a class="_blank" href="{{ path('admin_orders_view', {'orderId': linkedOrder.orderId}) }}">
+          <a class="_blank" href="{{ path('admin_orders_view', {orderId: linkedOrder.orderId}) }}">
             {{ linkedOrder.orderId }}
           </a>
         </td>
@@ -63,7 +63,7 @@
           {{ linkedOrder.amount }}
         </td>
         <td>
-          <a class="_blank" href="{{ path('admin_orders_view', {'orderId': linkedOrder.orderId}) }}">
+          <a class="_blank" href="{{ path('admin_orders_view', {orderId: linkedOrder.orderId}) }}">
             <i class="material-icons">remove_red_eye</i>
             {{ 'View order'|trans({}, 'Admin.Orderscustomers.Feature') }}
           </a>

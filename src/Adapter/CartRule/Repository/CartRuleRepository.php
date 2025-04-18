@@ -43,6 +43,10 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
+/**
+ * @deprecated in favor of DiscountRepository this one is kept until we probably migrate all to the new Discount domain
+ *  and clean this namespace
+ */
 class CartRuleRepository extends AbstractObjectModelRepository
 {
     public function __construct(
@@ -73,7 +77,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
             ->from($this->dbPrefix . 'cart_rule')
             ->where($qb->expr()->in('id_cart_rule', ':cartRuleIds'))
             ->setParameter('cartRuleIds', $cartRuleIds, Connection::PARAM_INT_ARRAY)
-            ->execute()
+            ->executeQuery()
             ->fetchAssociative()
         ;
 
@@ -112,7 +116,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
                     'id_cart_rule' => $cartRuleId->getValue(),
                     'quantity' => $restrictionRuleGroup->getRequiredQuantityInCart(),
                 ])
-                ->execute()
+                ->executeStatement()
             ;
 
             $productRuleGroupId = $this->connection->lastInsertId();
@@ -126,7 +130,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
                     ])
                     ->setParameter('productRuleGroupId', $productRuleGroupId)
                     ->setParameter('type', $restrictionRule->getType())
-                    ->execute()
+                    ->executeStatement()
                 ;
 
                 $productRuleId = $this->connection->lastInsertId();
@@ -174,7 +178,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
             )
             ->where('crprg.id_cart_rule = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleId->getValue())
-            ->execute()
+            ->executeQuery()
             ->fetchAllAssociative()
         ;
 
@@ -190,7 +194,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
             )
             ->where('crprg.id_cart_rule = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleId->getValue())
-            ->execute()
+            ->executeQuery()
             ->fetchAllAssociative()
         ;
 
@@ -200,7 +204,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
             ->from($this->dbPrefix . 'cart_rule_product_rule_group')
             ->where('id_cart_rule = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleId->getValue())
-            ->execute()
+            ->executeQuery()
             ->fetchAllAssociative()
         ;
 
@@ -279,7 +283,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
             ->from($this->dbPrefix . 'cart_rule_combination', 'crc')
             ->where('crc.id_cart_rule_1 = :cartRuleId OR crc.id_cart_rule_2 = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleIdValue)
-            ->execute()
+            ->executeQuery()
             ->fetchAllAssociative()
         ;
 
@@ -377,7 +381,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
             ->from($this->dbPrefix . 'cart_rule_carrier', 'crc')
             ->where('crc.id_cart_rule = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleIdValue)
-            ->execute()
+            ->executeQuery()
             ->fetchAllAssociative();
 
         if (empty($results)) {
@@ -395,7 +399,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
             ->from($this->dbPrefix . 'cart_rule_group', 'crc')
             ->where('crc.id_cart_rule = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleIdValue)
-            ->execute()
+            ->executeQuery()
             ->fetchAllAssociative()
         ;
 
@@ -419,7 +423,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
             ->from($this->dbPrefix . 'cart_rule_country', 'crc')
             ->where('crc.id_cart_rule = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleIdValue)
-            ->execute()
+            ->executeQuery()
             ->fetchAllAssociative()
         ;
 
@@ -433,16 +437,16 @@ class CartRuleRepository extends AbstractObjectModelRepository
     private function removeRestrictedCartRules(CartRuleId $cartRuleId): void
     {
         $this->connection->createQueryBuilder()
-            ->delete($this->dbPrefix . 'cart_rule_combination', 'crc')
-            ->where('crc.id_cart_rule_1 = :cartRuleId OR crc.id_cart_rule_2 = :cartRuleId')
+            ->delete($this->dbPrefix . 'cart_rule_combination')
+            ->where('id_cart_rule_1 = :cartRuleId OR id_cart_rule_2 = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleId->getValue())
-            ->execute()
+            ->executeStatement()
         ;
     }
 
     private function removeProductRestrictions(CartRuleId $cartRuleId): void
     {
-        //delete records from cart_rule_product_rule_value for this cart rule
+        // delete records from cart_rule_product_rule_value for this cart rule
         $this->connection->prepare('
             DELETE crprv
             FROM ' . $this->dbPrefix . 'cart_rule_product_rule_value AS crprv
@@ -468,7 +472,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
             ->delete($this->dbPrefix . 'cart_rule_product_rule_group')
             ->where('id_cart_rule = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleId->getValue())
-            ->execute()
+            ->executeStatement()
         ;
     }
 
@@ -516,10 +520,10 @@ class CartRuleRepository extends AbstractObjectModelRepository
     private function removeRestrictionsByName(CartRuleId $cartRuleId, string $entityName)
     {
         $this->connection->createQueryBuilder()
-            ->delete($this->dbPrefix . 'cart_rule_' . $entityName, 'crc')
-            ->where('crc.id_cart_rule = :cartRuleId')
+            ->delete($this->dbPrefix . 'cart_rule_' . $entityName)
+            ->where('id_cart_rule = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleId->getValue())
-            ->execute()
+            ->executeStatement()
         ;
     }
 }

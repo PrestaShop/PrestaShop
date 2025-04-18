@@ -55,7 +55,7 @@ final class DeleteSearchEngineHandler extends AbstractSearchEngineHandler implem
             if (!$searchEngine->delete()) {
                 throw new DeleteSearchEngineException(sprintf('Cannot delete Search Engine object with id "%d"', $command->getSearchEngineId()->getValue()), DeleteSearchEngineException::FAILED_DELETE);
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new SearchEngineException(sprintf('An error occurred when deleting Search Engine object with id "%d"', $command->getSearchEngineId()->getValue()));
         }
     }

@@ -1,33 +1,7 @@
 <!DOCTYPE html>
 <html lang="{$iso}">
 <head>
-  {render_template
-      smarty_template="header.tpl"
-      twig_template="@PrestaShop/Admin/Layout/header.html.twig"
-      link=$link
-      viewport_scale=(isset($viewport_scale)) ? $viewport_scale : null
-      img_dir=$img_dir
-      meta_title=$meta_title
-      shop_name=$shop_name
-      display_header_javascript=(isset($display_header_javascript)) ? $display_header_javascript : false
-      controller_name=$controller_name
-      iso_user=$iso_user
-      lang_is_rtl=$lang_is_rtl
-      full_language_code=$full_language_code
-      full_cldr_language_code=$full_cldr_language_code
-      country_iso_code=$country_iso_code
-      ps_version=$smarty.const._PS_VERSION_
-      round_mode=$round_mode
-      shop_context=(isset($shop_context)) ? $shop_context : null
-      token=$token
-      currentIndex=$currentIndex
-      default_language=$default_language
-      css_files=(isset($css_files)) ? $css_files : []
-      js_def=(isset($js_def) && is_array($js_def)) ? $js_def : []
-      js_files=(isset($js_files)) ? $js_files : []
-      js_inline=(isset($js_inline)) ? $js_inline : []
-      displayBackOfficeHeader=(isset($displayBackOfficeHeader)) ? $displayBackOfficeHeader : null
-  }
+    {$header}
 </head>
 
 <body
@@ -48,29 +22,16 @@
       <span id="shop_version">{$ps_version}</span>
 
       <div class="component" id="quick-access-container">
-        {render_template
-          smarty_template="components/layout/quick_access.tpl"
-          twig_template="@PrestaShop/Admin/Layout/quick_access.html.twig"
-        }
+          {include file="components/layout/quick_access.tpl"}
       </div>
       <div class="component component-search" id="header-search-container">
         <div class="component-search-body">
           <div class="component-search-top">
-
-              {render_template
-                smarty_template="components/layout/search_form.tpl"
-                twig_template="@PrestaShop/Admin/Layout/search_form.html.twig"
-              }
+              {include file="components/layout/search_form.tpl"}
             <button class="component-search-cancel d-none">{l|escape s='Cancel' d='Admin.Actions'}</button>
           </div>
-            {render_template
-              smarty_template="components/layout/mobile_quickaccess.tpl"
-              twig_template="@PrestaShop/Admin/Layout/mobile_quick_access.html.twig"
-              quick_access=$quick_access
-              link=$link
-              quick_access_current_link_icon=$quick_access_current_link_icon
-              quick_access_current_link_name=$quick_access_current_link_name
-            }
+
+            {include file="components/layout/mobile_quickaccess.tpl"}
         </div>
 
         <div class="component-search-background d-none"></div>
@@ -118,9 +79,7 @@
              title="{$smarty.capture.title|htmlspecialchars}"
              href="{$link->getAdminLink('AdminMaintenance')|escape:'html':'UTF-8'}"
           >
-            <i class="material-icons"
-              style="{if isset($maintenance_allow_admins) && $maintenance_allow_admins}color: var(--green);{/if}"
-            >build</i>
+            <i class="material-icons">build</i>
             <span>{l|escape s='Maintenance mode' d='Admin.Navigation.Header'}</span>
           </a>
         </div>
@@ -129,31 +88,17 @@
       <div class="header-right">
         {if !isset($hideLegacyStoreContextSelector) || !$hideLegacyStoreContextSelector}
           <div class="component" id="header-shop-list-container">
-            {render_template
-              smarty_template="components/layout/shop_list.tpl"
-              twig_template="@PrestaShop/Admin/Layout/shop_list.html.twig"
-              base_url=$base_url
-              is_multishop= $is_multishop|default:null
-              shop_list= $shop_list|default:null
-              multishop_context= $multishop_context|default:null
-              current_shop_name= $current_shop_name|default:null
-            }
+              {include file="components/layout/shop_list.tpl"}
           </div>
         {/if}
         {if $show_new_orders || $show_new_customers || $show_new_messages}
           <div class="component header-right-component" id="header-notifications-container">
-              {render_template
-                smarty_template="components/layout/notifications_center.tpl"
-                twig_template="@PrestaShop/Admin/Layout/notifications_center.html.twig"
-              }
+              {include file="components/layout/notifications_center.tpl"}
           </div>
         {/if}
 
         <div class="component" id="header-employee-container">
-            {render_template
-              smarty_template="components/layout/employee_dropdown.tpl"
-              twig_template="@PrestaShop/Admin/Layout/employee_dropdown.html.twig"
-            }
+            {include file="components/layout/employee_dropdown.tpl"}
         </div>
         {if isset($displayBackOfficeTop)}{$displayBackOfficeTop}{/if}
       </div>
@@ -162,26 +107,11 @@
 {/if}
 
 {if $display_header}
-    {render_template
-      smarty_template="components/layout/nav_bar.tpl"
-      twig_template="@PrestaShop/Admin/Layout/nav_bar.html.twig"
-    }
+    {include file='components/layout/nav_bar.tpl'}
 {/if}
 
-{if isset($page_header_toolbar_template)}
-    {render_template
-      smarty_template=$page_header_toolbar_template
-      twig_template="@PrestaShop/Admin/Layout/toolbar.html.twig"
-      locked_to_all_shop_context=$locked_to_all_shop_context
-      title=$title
-      toolbar_btn=$toolbar_btn
-      table=$table
-      help_link=$help_link
-      enableSidebar=$enableSidebar
-      current_tab_level=$current_tab_level
-      tabs=$tabs
-      use_regular_h1_structure=$use_regular_h1_structure
-    }
+{if isset($page_header_toolbar)}
+    {$page_header_toolbar}
 {/if}
 
 <div id="main-div">
@@ -214,10 +144,7 @@
   <div class="mobile-layer"></div>
 
   {if $display_footer}
-      {render_template
-        smarty_template="footer.tpl"
-        twig_template="@PrestaShop/Admin/Layout/footer.html.twig"
-      }
+      {include file='footer.tpl'}
   {/if}
 {/if}
 

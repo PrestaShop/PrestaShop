@@ -32,7 +32,7 @@
   <meta charset="utf-8">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <link rel="icon" type="image/x-icon" href="{$img_dir}favicon.ico" />
   <link rel="apple-touch-icon" href="{$img_dir}app_icon.png" />
 
@@ -125,7 +125,7 @@
 
       {* Quick access *}
       <div id="header_quick" class="component">
-        <div class="dropdown">
+        <div class="dropdown" id="quick-access-container">
           <button
             id="quick_select"
             class="btn btn-link dropdown-toggle"
@@ -135,9 +135,10 @@
             {if !empty($quick_access)}
               {foreach $quick_access as $quick}
                 <li class="quick-row-link{if $link->matchQuickLink({$quick.link})}{assign "matchQuickLink" $quick.id_quick_access} active{/if}">
-                  <a {if isset($quick.class)}class="{$quick.class}"{/if} href="{$quick.link|escape:'html':'UTF-8'}" {if $quick.new_window}target="_blank"{/if}>
-                      {$quick.name}
-                  </a>
+                  <a {if isset($quick.class)}class="{$quick.class}"{/if}
+                     href="{$quick.link|escape:'html':'UTF-8'}" {if $quick.new_window}target="_blank"{/if}
+                     data-item="{$quick.name}"
+                  >{$quick.name}</a>
                 </li>
               {/foreach}
             {/if}
@@ -261,9 +262,7 @@
              data-html="true"
              title="{$smarty.capture.title|htmlspecialchars}"
           >
-            <i class="material-icons"
-               style="{if isset($maintenance_allow_admins)}color: #72c279;{/if}"
-            >build</i>
+            <i class="material-icons">build</i>
             <span>{l|escape s='Maintenance mode' d='Admin.Navigation.Header'}</span>
           </a>
         </div>
@@ -281,7 +280,6 @@
             )}
               <ul id="header_shop" class="shop-state">
                 <li class="dropdown">
-                  <i class="material-icons">visibility</i>
                   <span>{$shop_list}</span>
                 </li>
               </ul>
@@ -391,7 +389,7 @@
             {foreach from=$displayBackOfficeEmployeeMenu item=$menuItem}
               {assign var=menuItemProperties value=$menuItem->getProperties()}
               <li class="{$menuItem->getClass()}">
-                <a class="dropdown-item" href="{$menuItemProperties.link}" target="_blank" rel="noopener noreferrer nofollow">
+                <a class="dropdown-item" href="{$menuItemProperties.link}" {if !isset($menuItemProperties.isExternalLink) || true === $menuItemProperties.isExternalLink} target="_blank"{/if} rel="noopener noreferrer nofollow">
                   {if isset($menuItemProperties.icon)}<i class="material-icons">{$menuItemProperties.icon}</i> {/if}{$menuItem->getContent()}
                 </a>
               </li>

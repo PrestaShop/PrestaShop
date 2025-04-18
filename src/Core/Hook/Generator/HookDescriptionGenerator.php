@@ -70,12 +70,12 @@ final class HookDescriptionGenerator implements HookDescriptionGeneratorInterfac
      */
     public function generate($hookName)
     {
-        foreach ($this->hookDescriptions as $hookPlaceholder => $hookDescription) {
+        foreach ($this->hookDescriptions as $hookDescription) {
             $prefix = isset($hookDescription['prefix']) ? $hookDescription['prefix'] : '';
             $suffix = isset($hookDescription['suffix']) ? $hookDescription['suffix'] : '';
 
-            if ($this->stringValidator->startsWithAndEndsWith($hookName, $prefix, $suffix) &&
-                !$this->stringValidator->doesContainsWhiteSpaces($hookName)
+            if ($this->stringValidator->startsWithAndEndsWith($hookName, $prefix, $suffix)
+                && !$this->stringValidator->doesContainsWhiteSpaces($hookName)
             ) {
                 $hookId = $this->extractHookId($hookName, $prefix, $suffix);
 

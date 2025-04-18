@@ -1,19 +1,16 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-import attributesPage from '@pages/BO/catalog/attributes';
-import dashboardPage from '@pages/BO/dashboard';
-
-// Import data
-import Attributes from '@data/demo/attributes';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  boAttributesPage,
+  boDashboardPage,
+  boLoginPage,
+  type BrowserContext,
+  dataAttributes,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_attributesAndFeatures_attributes_attributes_filterAttributes';
 
@@ -28,54 +25,55 @@ describe('BO - Catalog - Attributes & Features : Filter attributes table', async
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'Catalog > Attributes & Features\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAttributesPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.attributesAndFeaturesLink,
+      boDashboardPage.catalogParentLink,
+      boDashboardPage.attributesAndFeaturesLink,
     );
-    await attributesPage.closeSfToolBar(page);
+    await boAttributesPage.closeSfToolBar(page);
 
-    const pageTitle = await attributesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(attributesPage.pageTitle);
+    const pageTitle = await boAttributesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boAttributesPage.pageTitle);
   });
 
   it('should reset all filters and get number of attributes in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfAttributes = await attributesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfAttributes).to.be.above(0);
+    numberOfAttributes = await boAttributesPage.resetAndGetNumberOfLines(page);
+    expect(numberOfAttributes).to.be.above(0);
   });
 
   describe('Filter attributes', async () => {
     const tests = [
       {
         args: {
-          testIdentifier: 'filterId', filterBy: 'id_attribute_group', filterValue: Attributes.size.id.toString(),
+          testIdentifier: 'filterId', filterBy: 'id_attribute_group', filterValue: dataAttributes.size.id.toString(),
         },
       },
       {
         args: {
-          testIdentifier: 'filterName', filterBy: 'b!name', filterValue: Attributes.color.name,
-        },
-      },
-      {
-        args: {
-          testIdentifier: 'filterPosition', filterBy: 'a!position', filterValue: (Attributes.paperType.position - 1),
+          testIdentifier: 'filterName', filterBy: 'name', filterValue: dataAttributes.color.name,
         },
       },
     ];
@@ -84,29 +82,24 @@ describe('BO - Catalog - Attributes & Features : Filter attributes table', async
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        await attributesPage.filterTable(
+        await boAttributesPage.filterTable(
           page,
           test.args.filterBy,
-          typeof test.args.filterValue === 'number' ? test.args.filterValue.toString() : test.args.filterValue,
+          test.args.filterValue,
         );
 
-        const numberOfAttributesAfterFilter = await attributesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfAttributesAfterFilter).to.be.at.most(numberOfAttributes);
+        const numberOfAttributesAfterFilter = await boAttributesPage.getNumberOfElementInGrid(page);
+        expect(numberOfAttributesAfterFilter).to.be.at.most(numberOfAttributes);
 
-        const textColumn = await attributesPage.getTextColumn(page, 1, test.args.filterBy);
-
-        if (typeof test.args.filterValue === 'number') {
-          await expect(textColumn).to.contains(test.args.filterValue + 1);
-        } else {
-          await expect(textColumn).to.contains(test.args.filterValue);
-        }
+        const textColumn = await boAttributesPage.getTextColumn(page, 1, test.args.filterBy);
+        expect(textColumn).to.contains(test.args.filterValue);
       });
 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfAttributesAfterReset = await attributesPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfAttributesAfterReset).to.equal(numberOfAttributes);
+        const numberOfAttributesAfterReset = await boAttributesPage.resetAndGetNumberOfLines(page);
+        expect(numberOfAttributesAfterReset).to.equal(numberOfAttributes);
       });
     });
   });

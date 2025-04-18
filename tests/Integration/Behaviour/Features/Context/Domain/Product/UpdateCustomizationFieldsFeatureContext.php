@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\Customiz
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -59,11 +60,24 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
      * @When I update product :productReference with following customization fields for shop :shopReference:
      *
      * @param string $productReference
+     * @param string $shopReference
      * @param TableNode $table
      */
     public function updateCustomizationFieldsForShop(string $productReference, TableNode $table, string $shopReference): void
     {
         $this->updateCustomizationFields($productReference, $table, ShopConstraint::shop((int) $this->getSharedStorage()->get($shopReference)));
+    }
+
+    /**
+     * @When I update product :productReference with following customization fields for shops :shopReferences:
+     *
+     * @param string $productReference
+     * @param string $shopReferences
+     * @param TableNode $table
+     */
+    public function updateCustomizationFieldsForShopCollection(string $productReference, TableNode $table, string $shopReferences): void
+    {
+        $this->updateCustomizationFields($productReference, $table, ShopCollection::shops($this->referencesToIds($shopReferences)));
     }
 
     /**
@@ -314,7 +328,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
                             );
                         }
                     }
-                    //unset this asserted customization field so we can check if there any left after loop
+                    // unset this asserted customization field so we can check if there any left after loop
                     unset($actualFields[$key]);
 
                     continue;
@@ -330,7 +344,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
             throw new RuntimeException(sprintf(
                 'Following customization fields were not found for product %s: %s',
                 $productReference,
-                var_export($notFoundExpectedFields)
+                var_export($notFoundExpectedFields, true)
             ));
         }
 
@@ -338,7 +352,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
             throw new RuntimeException(sprintf(
                 'Product "%s" contains unexpected customization fields: %s',
                 $productReference,
-                var_export($actualFields)
+                var_export($actualFields, true)
             ));
         }
     }

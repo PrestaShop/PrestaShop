@@ -32,10 +32,13 @@ use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Localization\Currency\PatternTransformer;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\Number\LocaleNumberTransformer;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price;
 use PrestaShopBundle\Form\FormHelper;
 use Symfony\Component\Form\AbstractTypeExtension;
+use Symfony\Component\Form\Extension\Core\DataTransformer\MoneyToLocalizedStringTransformer;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -43,33 +46,17 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class CustomMoneyTypeExtension extends AbstractTypeExtension
 {
     /**
-     * @var Locale
-     */
-    private $locale;
-
-    /**
-     * @var int
-     */
-    private $defaultCurrencyId;
-
-    /**
-     * @var CurrencyRepository
-     */
-    private $currencyRepository;
-
-    /**
      * @param Locale $locale
      * @param int $defaultCurrencyId
      * @param CurrencyRepository $currencyRepository
+     * @param LocaleNumberTransformer $localeNumberTransformer
      */
     public function __construct(
-        Locale $locale,
-        int $defaultCurrencyId,
-        CurrencyRepository $currencyRepository
+        private Locale $locale,
+        private int $defaultCurrencyId,
+        private CurrencyRepository $currencyRepository,
+        private LocaleNumberTransformer $localeNumberTransformer
     ) {
-        $this->locale = $locale;
-        $this->defaultCurrencyId = $defaultCurrencyId;
-        $this->currencyRepository = $currencyRepository;
     }
 
     public static function getExtendedTypes(): iterable
@@ -102,6 +89,33 @@ class CustomMoneyTypeExtension extends AbstractTypeExtension
         parent::buildView($view, $form, $options);
 
         $view->vars['money_pattern'] = $this->getFrameworkPattern($options['currency']);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        // We only want to adapt the MoneyToLocalizedStringTransformer, so we save the current transformers
+        // to restore them after replacing the new MoneyToLocalizedStringTransformer.
+        $viewTransformers = $builder->getViewTransformers();
+        $builder->resetViewTransformers();
+
+        foreach ($viewTransformers as $viewTransformer) {
+            if ($viewTransformer instanceof MoneyToLocalizedStringTransformer) {
+                $builder
+                    ->addViewTransformer(new MoneyToLocalizedStringTransformer(
+                        $options['scale'],
+                        $options['grouping'],
+                        $options['rounding_mode'],
+                        $options['divisor'],
+                        $this->localeNumberTransformer->getLocaleForNumberInputs()
+                    ))
+                ;
+            } else {
+                $builder->addViewTransformer($viewTransformer);
+            }
+        }
     }
 
     /**

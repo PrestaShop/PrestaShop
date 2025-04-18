@@ -59,7 +59,7 @@ final class UpdateCartLanguageHandler extends AbstractCartHandler implements Upd
             if (false === $cart->update()) {
                 throw new CartException('Failed to update cart language');
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new CartException(sprintf('An error occurred while trying to update language for cart with id "%s"', $cart->id));
         }
     }
@@ -76,7 +76,7 @@ final class UpdateCartLanguageHandler extends AbstractCartHandler implements Upd
     {
         try {
             $lang = new Language($languageId->getValue());
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new LanguageException(
                 sprintf('An error occurred when fetching language object with id %d', $languageId->getValue()),
                 $languageId->getValue()

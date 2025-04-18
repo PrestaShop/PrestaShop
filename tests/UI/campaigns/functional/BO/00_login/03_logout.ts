@@ -1,15 +1,14 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-import loginPage from '@pages/BO/login';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  boDashboardPage,
+  boLoginPage,
+  type BrowserContext,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_login_logout';
 
@@ -26,24 +25,30 @@ describe('BO - logout : log out from BO', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should logout from BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'logoutFromBOPage', baseContext);
 
-    await loginCommon.logoutBO(this, page);
+    await boDashboardPage.logoutBO(page);
 
-    const pageTitle = await loginPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(loginPage.pageTitle);
+    const pageTitle = await boLoginPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boLoginPage.pageTitle);
   });
 });

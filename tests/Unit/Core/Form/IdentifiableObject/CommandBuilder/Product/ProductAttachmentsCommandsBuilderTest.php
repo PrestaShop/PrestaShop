@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Command\SetAssociatedPr
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductAttachmentsCommandsBuilder;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandsBuilderInterface;
 
-class ProductAttachmentsCommandsBuilderTest extends AbstractProductCommandBuilderTest
+class ProductAttachmentsCommandsBuilderTest extends AbstractProductCommandBuilderTestCase
 {
     /**
      * @var ProductCommandsBuilderInterface

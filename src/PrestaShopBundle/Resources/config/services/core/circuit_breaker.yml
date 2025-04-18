@@ -11,7 +11,8 @@ services:
       - '@=service("prestashop.adapter.environment").getCacheDir() ~ "/circuit_breaker"'
 
   prestashop.core.circuit_breaker.doctrine_cache:
-    class: Symfony\Component\Cache\DoctrineProvider
+    class: Doctrine\Common\Cache\Psr6\DoctrineProvider
+    factory: [ Doctrine\Common\Cache\Psr6\DoctrineProvider, wrap ]
     arguments:
       - '@prestashop.core.circuit_breaker.cache'
 

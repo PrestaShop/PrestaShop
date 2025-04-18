@@ -73,8 +73,11 @@ export const saveImageInformations = async (
   data[`${formName}[apply_to_all_stores]`] = selectedFile.applyToAllStores;
 
   return $.ajax(saveUrl, {
-    method: 'PATCH',
-    data,
+    method: 'POST',
+    data: {
+      ...data,
+      _method: 'PATCH',
+    },
   });
 };
 
@@ -113,8 +116,11 @@ export const saveImagePosition = async (
   data[`${formName}[shop_id]`] = shopId || 0;
 
   return $.ajax(sortUrl, {
-    method: 'PATCH',
-    data,
+    method: 'POST',
+    data: {
+      ...data,
+      _method: 'PATCH',
+    },
   });
 };
 

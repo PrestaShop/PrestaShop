@@ -94,7 +94,7 @@
 		</div>
 		<div class="panel-footer">
 			<button type="button" class="btn btn-default" onclick="window.history.back();">
-				<i class="process-icon-cancel text-danger"></i>
+				<i class="process-icon-cancel"></i>
 				{l s='Cancel' d='Admin.Actions'}
 			</button>
 			{if $edit_graft}

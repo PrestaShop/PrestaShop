@@ -287,7 +287,7 @@ class CheckoutProcessCore implements RenderableInterface
     /**
      * @return CheckoutStepInterface
      *
-     * @throws \RuntimeException if no current step is found
+     * @throws RuntimeException if no current step is found
      */
     public function getCurrentStep()
     {
@@ -297,6 +297,6 @@ class CheckoutProcessCore implements RenderableInterface
             }
         }
 
-        throw new \RuntimeException('There should be at least one current step');
+        throw new RuntimeException('There should be at least one current step');
     }
 }

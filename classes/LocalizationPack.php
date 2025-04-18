@@ -141,16 +141,16 @@ class LocalizationPackCore
             foreach ($xml->states->state as $data) {
                 /** @var SimpleXMLElement $data */
                 $attributes = $data->attributes();
-                $id_country = ($attributes['country']) ? (int) Country::getByIso((string) ($attributes['country'])) : false;
+                $id_country = ($attributes['country']) ? (int) Country::getByIso((string) $attributes['country']) : false;
                 $id_state = ($id_country) ? State::getIdByIso($attributes['iso_code'], $id_country) : State::getIdByName($attributes['name']);
 
                 if (!$id_state) {
                     $state = new State();
-                    $state->name = (string) ($attributes['name']);
-                    $state->iso_code = (string) ($attributes['iso_code']);
+                    $state->name = (string) $attributes['name'];
+                    $state->iso_code = (string) $attributes['iso_code'];
                     $state->id_country = $id_country;
 
-                    $id_zone = (int) Zone::getIdByName((string) ($attributes['zone']));
+                    $id_zone = (int) Zone::getIdByName((string) $attributes['zone']);
                     if (!$id_zone) {
                         $zone = new Zone();
                         $zone->name = (string) $attributes['zone'];
@@ -214,7 +214,7 @@ class LocalizationPackCore
             foreach ($xml->taxes->tax as $taxData) {
                 /** @var SimpleXMLElement $taxData */
                 $attributes = $taxData->attributes();
-                if (($id_tax = Tax::getTaxIdByName($attributes['name']))) {
+                if ($id_tax = Tax::getTaxIdByName($attributes['name'])) {
                     $assoc_taxes[(int) $attributes['id']] = $id_tax;
 
                     continue;
@@ -345,7 +345,7 @@ class LocalizationPackCore
                     $this->_errors[] = null;
                     Context::getContext()->getTranslator()->trans(
                         'An error occurred while importing the currency: %s',
-                        [(string) ($attributes['name'])],
+                        [(string) $attributes['name']],
                         'Admin.International.Notification'
                     );
 
@@ -433,7 +433,7 @@ class LocalizationPackCore
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
-     * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
+     * @throws PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      */
     protected function refreshLocalizedCurrenciesData()
     {
@@ -459,12 +459,12 @@ class LocalizationPackCore
             foreach ($xml->units->unit as $data) {
                 /** @var SimpleXMLElement $data */
                 $attributes = $data->attributes();
-                if (!isset($varNames[(string) ($attributes['type'])])) {
+                if (!isset($varNames[(string) $attributes['type']])) {
                     $this->_errors[] = Context::getContext()->getTranslator()->trans('Localization pack corrupted: wrong unit type.', [], 'Admin.International.Notification');
 
                     return false;
                 }
-                if (!Configuration::updateValue($varNames[(string) ($attributes['type'])], (string) ($attributes['value']))) {
+                if (!Configuration::updateValue($varNames[(string) $attributes['type']], (string) $attributes['value'])) {
                     $this->_errors[] = Context::getContext()->getTranslator()->trans('An error occurred while setting the units.', [], 'Admin.International.Notification');
 
                     return false;

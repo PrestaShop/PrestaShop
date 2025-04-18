@@ -57,7 +57,7 @@ final class AddManufacturerAddressHandler extends AbstractAddressHandler impleme
             if (false === $address->add()) {
                 throw new AddressException(sprintf('Failed to add new address "%s"', $command->getAddress()));
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new AddressException(sprintf('An error occurred when adding new address "%s"', $command->getAddress()));
         }
 

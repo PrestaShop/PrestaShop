@@ -38,11 +38,7 @@ services:
       - 'console.command'
 
   PrestaShopBundle\Command\ModuleCommand:
-    arguments:
-      - '@translator'
-      - '@prestashop.adapter.legacy.context'
-      - '@prestashop.adapter.module.self_configurator'
-      - '@PrestaShop\PrestaShop\Core\Module\ModuleManager'
+    autowire: true
     tags:
       - 'console.command'
 
@@ -62,5 +58,17 @@ services:
 
   PrestaShopBundle\Command\FeatureFlagCommand:
     autowire: true
+    tags:
+      - 'console.command'
+
+  PrestaShopBundle\Command\GenerateAPIDocCommand:
+    autowire: true
+    tags:
+      - 'console.command'
+
+  PrestaShopBundle\Command\GenerateHooksDocumentationCommand:
+    arguments:
+      - '@prestashop.core.hook.extractor.hook_extractor'
+      - '%kernel.project_dir%/install-dev/data/xml/hook.xml'
     tags:
       - 'console.command'

@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Co
 use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 use PrestaShopBundle\Form\Extension\DisablingSwitchExtension;
 
-class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBuilderTest
+class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBuilderTestCase
 {
     /**
      * @dataProvider getExpectedCommands
@@ -100,7 +100,7 @@ class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBui
 
         $command = $this->getSingleShopCommand();
         $command->setIsbn('0-8044-2957-X');
-        $command->setEan13('12345678910');
+        $command->setGtin('12345678910');
         yield [
             [
                 'references' => [
@@ -285,7 +285,7 @@ class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBui
             ->setUpc('123456')
             ->setMpn('mpn')
             ->setIsbn('0-8044-2957-X')
-            ->setEan13('12345678910')
+            ->setGtin('12345678910')
         ;
         yield [
             [

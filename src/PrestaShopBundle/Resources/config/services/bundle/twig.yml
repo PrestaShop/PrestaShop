@@ -5,15 +5,15 @@ services:
     autoconfigure: true
     bind:
       $psVersion: !php/const _PS_VERSION_
+      $debugMode: !php/const _PS_MODE_DEV_
+      $controllersLockedToAllShopContext: '%prestashop.controllers_all_shop_context%'
+      $defaultLanguageContext: '@prestashop.default.language.context'
+      $cookieKey: '%cookie_key%'
 
   Twig\Extension\StringLoaderExtension: ~
 
   PrestaShopBundle\Twig\:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Twig/*"
-
-  PrestaShopBundle\Twig\LocaleExtension:
-    arguments:
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_lite'
 
   PrestaShopBundle\Twig\Locator\ModuleTemplateLoader:
     arguments:
@@ -29,11 +29,8 @@ services:
   # Extensions
 
   PrestaShopBundle\Twig\LayoutExtension:
-    arguments:
-      $environment: "%kernel.environment%"
 
   PrestaShopBundle\Twig\TranslationsExtension:
-    arguments: [ "@service_container", "@router" ]
     properties:
       logger: "@logger"
       translator: "@translator"
@@ -55,94 +52,116 @@ services:
       - { name: twig.extension }
 
   PrestaShopBundle\Twig\Extension\LocalizationExtension:
-    arguments:
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_lite'
-      - "@prestashop.core.localization.locale.repository"
-      - '@=service("prestashop.adapter.legacy.context").getContext().language'
-      - '@=service("prestashop.adapter.legacy.context").getContext().currency'
+    autowire: true
 
-  PrestaShopBundle\Twig\Extension\MultistoreComponentsExtension:
-    arguments:
-      - '@prestashop.core.admin.multistore'
+  PrestaShopBundle\Twig\Layout\TemplateVariablesBuilder: ~
+  PrestaShopBundle\Twig\Layout\TemplateVariables:
+    lazy: true
+    factory: [ '@PrestaShopBundle\Twig\Layout\TemplateVariablesBuilder', 'build' ]
 
-  # Deprecated since 9.0
+  PrestaShopBundle\Twig\Layout\SmartyVariablesFiller: ~
+
   prestashop.twig.modules.loader:
     alias: PrestaShopBundle\Twig\Locator\ModuleTemplateLoader
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.twig.extension.stringloader:
     alias: Twig\Extension\StringLoaderExtension
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.twig.extension.layout:
     alias: PrestaShopBundle\Twig\LayoutExtension
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.twig.extension.translation:
     alias: PrestaShopBundle\Twig\TranslationsExtension
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.twig.extension.data_formatter:
     alias: PrestaShopBundle\Twig\DataFormatterExtension
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.twig.extension.hook:
     alias: PrestaShopBundle\Twig\HookExtension
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.bundle.twig.extension.column:
     alias: 'PrestaShopBundle\Twig\Extension\GridExtension'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.bundle.twig.extension.documentation_link_provider_extension:
     alias: 'PrestaShopBundle\Twig\Extension\DocumentationLinkExtension'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.twig.extension.context_iso_code_provider_extension:
     alias: PrestaShopBundle\Twig\ContextIsoCodeProviderExtension
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.twig.extension.path_with_back_url_extension:
     alias: PrestaShopBundle\Twig\Extension\PathWithBackUrlExtension
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.bundle.twig.extension.js_router_metadata_extension:
     alias: PrestaShopBundle\Twig\Extension\JsRouterMetadataExtension
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.bundle.twig.extension.localization_extension:
     alias: 'PrestaShopBundle\Twig\Extension\LocalizationExtension'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.bundle.twig.extension.number_extension:
     alias: 'PrestaShopBundle\Twig\Extension\NumberExtension'
     public: true
-    deprecated: ~
-
-  prestashop.twig.extension.multistore_components_extension:
-    alias: 'PrestaShopBundle\Twig\Extension\MultistoreComponentsExtension'
-    public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.bundle.twig.extension.multistore_url:
     alias: 'PrestaShopBundle\Twig\Extension\MultistoreUrlExtension'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.bundle.twig.extension.entity_search_extension:
     alias: 'PrestaShopBundle\Twig\Extension\EntitySearchExtension'
     public: true
-    deprecated: ~
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0

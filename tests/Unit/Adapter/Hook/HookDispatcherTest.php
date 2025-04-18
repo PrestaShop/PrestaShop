@@ -55,7 +55,7 @@ class HookDispatcherTest extends TestCase
 
         $this->hookDispatcherMock = $this
             ->getMockBuilder(HookDispatcher::class)
-            ->setMethods(['getListeners', 'doDispatch'])
+            ->onlyMethods(['getListeners', 'doDispatch'])
             ->disableOriginalConstructor()
             ->getMock()
         ;

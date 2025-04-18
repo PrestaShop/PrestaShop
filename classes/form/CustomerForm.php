@@ -105,7 +105,7 @@ class CustomerFormCore extends AbstractForm
     }
 
     /**
-     * @return \Customer
+     * @return Customer
      */
     public function getCustomer()
     {
@@ -125,9 +125,9 @@ class CustomerFormCore extends AbstractForm
     {
         // check birthdayField against null case is mandatory.
         $birthdayField = $this->getField('birthday');
-        if (!empty($birthdayField) &&
-            !empty($birthdayField->getValue()) &&
-            Validate::isBirthDate($birthdayField->getValue(), $this->context->language->date_format_lite)
+        if (!empty($birthdayField)
+            && !empty($birthdayField->getValue())
+            && Validate::isBirthDate($birthdayField->getValue(), $this->context->language->date_format_lite)
         ) {
             $dateBuilt = DateTime::createFromFormat(
                 $this->context->language->date_format_lite,
@@ -206,9 +206,9 @@ class CustomerFormCore extends AbstractForm
      */
     protected function validateFieldLength($fieldName, $maximumLength, $violationMessage)
     {
-        $emailField = $this->getField($fieldName);
-        if (strlen($emailField->getValue()) > $maximumLength) {
-            $emailField->addError($violationMessage);
+        $field = $this->getField($fieldName);
+        if (strlen($field->getValue()) > $maximumLength) {
+            $field->addError($violationMessage);
         }
     }
 
@@ -304,6 +304,8 @@ class CustomerFormCore extends AbstractForm
         foreach ($formFieldsAssociated as $moduleName => $formFields) {
             if ($moduleId = Module::getModuleIdByName($moduleName)) {
                 // ToDo : replace Hook::exec with HookFinder, because we expect a specific class here
+                // Hook called only for the module concerned
+                // An array [module_name => module_output] will be returned
                 $validatedCustomerFormFields = Hook::exec('validateCustomerFormFields', ['fields' => $formFields], $moduleId, true);
 
                 if (!is_array($validatedCustomerFormFields)) {

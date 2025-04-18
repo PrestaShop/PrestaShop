@@ -56,7 +56,7 @@ class BulkDeleteOrderStateHandler extends AbstractOrderStateHandler implements B
                 if (!$this->deleteOrderState($orderState)) {
                     $errors[] = $orderState->id;
                 }
-            } catch (OrderStateException $e) {
+            } catch (OrderStateException) {
                 $errors[] = $orderStateId->getValue();
             }
         }

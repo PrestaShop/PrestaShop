@@ -4,7 +4,7 @@
 
     .desktop-buttons {
       #desc-cart_rule-save-and-stay {
-        margin-right: 0.5rem;
+        margin-right: var(--#{$cdk}size-8);
       }
     }
   }

@@ -1,20 +1,19 @@
 // Import utils
-import date from '@utils/date';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-import customersPage from '@pages/BO/customers';
-import dashboardPage from '@pages/BO/dashboard';
-
-// Import data
-import Customers from '@data/demo/customers';
+import {
+  boCustomersPage,
+  boDashboardPage,
+  boLoginPage,
+  type BrowserContext,
+  dataCustomers,
+  dataGroups,
+  type Page,
+  utilsDate,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_customers_customers_filterAndQuickEditCustomers';
 
@@ -22,174 +21,159 @@ const baseContext: string = 'functional_BO_customers_customers_filterAndQuickEdi
 Filter customers table by Id, social title, first name, last name, email, active, newsletter and optin
 Quick edit customer enable/disable - status, newsletter and partner offers
  */
-describe('BO - Customers - Customers : Filter and quick edit Customers table', async () => {
+describe('BO - Customers - Customers : Filter and quick edit', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfCustomers: number = 0;
 
-  const today: string = date.getDateFormat('mm/dd/yyyy');
+  const today: string = utilsDate.getDateFormat('mm/dd/yyyy');
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'Customers > Customers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.customersParentLink,
-      dashboardPage.customersLink,
+      boDashboardPage.customersParentLink,
+      boDashboardPage.customersLink,
     );
-    await customersPage.closeSfToolBar(page);
+    await boCustomersPage.closeSfToolBar(page);
 
-    const pageTitle = await customersPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(customersPage.pageTitle);
+    const pageTitle = await boCustomersPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCustomersPage.pageTitle);
   });
 
   it('should reset all filters and get number of customers in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
-    numberOfCustomers = await customersPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfCustomers).to.be.above(0);
+    numberOfCustomers = await boCustomersPage.resetAndGetNumberOfLines(page);
+    expect(numberOfCustomers).to.be.above(0);
   });
 
   // 1 : Filter Customers with all inputs and selects in grid table
   describe('Filter customers table', async () => {
-    const tests = [
+    [
       {
-        args:
-          {
-            testIdentifier: 'filterId',
-            filterType: 'input',
-            filterBy: 'id_customer',
-            filterValue: Customers.johnDoe.id.toString(),
-          },
+        testIdentifier: 'filterId',
+        filterType: 'input',
+        filterBy: 'id_customer',
+        filterValue: dataCustomers.johnDoe.id.toString(),
       },
       {
-        args:
-          {
-            testIdentifier: 'filterSocialTitle',
-            filterType: 'select',
-            filterBy: 'social_title',
-            filterValue: Customers.johnDoe.socialTitle,
-          },
+        testIdentifier: 'filterSocialTitle',
+        filterType: 'select',
+        filterBy: 'social_title',
+        filterValue: dataCustomers.johnDoe.socialTitle,
       },
       {
-        args:
-          {
-            testIdentifier: 'filterFirstName',
-            filterType: 'input',
-            filterBy: 'firstname',
-            filterValue: Customers.johnDoe.firstName,
-          },
+        testIdentifier: 'filterFirstName',
+        filterType: 'input',
+        filterBy: 'firstname',
+        filterValue: dataCustomers.johnDoe.firstName,
       },
       {
-        args:
-          {
-            testIdentifier: 'filterLastName',
-            filterType: 'input',
-            filterBy: 'lastname',
-            filterValue: Customers.johnDoe.lastName,
-          },
+        testIdentifier: 'filterLastName',
+        filterType: 'input',
+        filterBy: 'lastname',
+        filterValue: dataCustomers.johnDoe.lastName,
       },
       {
-        args:
-          {
-            testIdentifier: 'filterEmail',
-            filterType: 'input',
-            filterBy: 'email',
-            filterValue: Customers.johnDoe.email,
-          },
+        testIdentifier: 'filterEmail',
+        filterType: 'input',
+        filterBy: 'email',
+        filterValue: dataCustomers.johnDoe.email,
       },
       {
-        args:
-          {
-            testIdentifier: 'filterActive',
-            filterType: 'select',
-            filterBy: 'active',
-            filterValue: Customers.johnDoe.enabled ? '1' : '0',
-          },
+        testIdentifier: 'filterGroup',
+        filterType: 'select',
+        filterBy: 'default_group',
+        filterValue: dataGroups.guest.name,
       },
       {
-        args:
-          {
-            testIdentifier: 'filterNewsletter',
-            filterType: 'select',
-            filterBy: 'newsletter',
-            filterValue: Customers.johnDoe.newsletter ? '1' : '0',
-          },
+        testIdentifier: 'filterActive',
+        filterType: 'select',
+        filterBy: 'active',
+        filterValue: dataCustomers.johnDoe.enabled ? '1' : '0',
       },
       {
-        args:
-          {
-            testIdentifier: 'filterOptin',
-            filterType: 'select',
-            filterBy: 'optin',
-            filterValue: '0',
-          },
+        testIdentifier: 'filterNewsletter',
+        filterType: 'select',
+        filterBy: 'newsletter',
+        filterValue: dataCustomers.johnDoe.newsletter ? '1' : '0',
       },
-    ];
+      {
+        testIdentifier: 'filterPartnerOffers',
+        filterType: 'select',
+        filterBy: 'optin',
+        filterValue: dataCustomers.johnDoe.partnerOffers ? '1' : '0',
+      },
+    ].forEach((arg: {testIdentifier: string, filterType: string, filterBy: string, filterValue: string}) => {
+      it(`should filter by ${arg.filterBy} '${arg.filterValue}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${arg.testIdentifier}`, baseContext);
 
-    tests.forEach((test) => {
-      it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}`, baseContext);
-
-        if (['filterActive', 'filterNewsletter', 'filterOptin'].includes(test.args.testIdentifier)) {
-          await customersPage.filterCustomersSwitch(
+        if (['filterActive', 'filterNewsletter', 'filterPartnerOffers'].includes(arg.testIdentifier)) {
+          await boCustomersPage.filterCustomersSwitch(
             page,
-            test.args.filterBy,
-            test.args.filterValue,
+            arg.filterBy,
+            arg.filterValue,
           );
         } else {
-          await customersPage.filterCustomers(
+          await boCustomersPage.filterCustomers(
             page,
-            test.args.filterType,
-            test.args.filterBy,
-            test.args.filterValue,
+            arg.filterType,
+            arg.filterBy,
+            arg.filterValue,
           );
         }
-        const numberOfCustomersAfterFilter = await customersPage.getNumberOfElementInGrid(page);
-
-        await expect(numberOfCustomersAfterFilter).to.be.at.most(numberOfCustomers);
+        const numberOfCustomersAfterFilter = await boCustomersPage.getNumberOfElementInGrid(page);
+        expect(numberOfCustomersAfterFilter).to.be.at.most(numberOfCustomers);
 
         for (let i = 1; i <= numberOfCustomersAfterFilter; i++) {
-          switch (test.args.filterBy) {
+          switch (arg.filterBy) {
             case 'active': {
-              const customerStatus = await customersPage.getCustomerStatus(page, i);
-              await expect(customerStatus).to.equal(test.args.filterValue === '1');
+              const customerStatus = await boCustomersPage.getCustomerStatus(page, i);
+              expect(customerStatus).to.equals(arg.filterValue === '1');
               break;
             }
 
             case 'newsletter': {
-              const newsletterStatus = await customersPage.getNewsletterStatus(page, i);
-              await expect(newsletterStatus).to.equal(test.args.filterValue === '1');
+              const newsletterStatus = await boCustomersPage.getNewsletterStatus(page, i);
+              expect(newsletterStatus).to.equals(arg.filterValue === '1');
               break;
             }
 
             case 'optin': {
-              const partnerOffersStatus = await customersPage.getPartnerOffersStatus(page, i);
-              await expect(partnerOffersStatus).to.equal(test.args.filterValue === '1');
+              const partnerOffersStatus = await boCustomersPage.getPartnerOffersStatus(page, i);
+              expect(partnerOffersStatus).to.equals(arg.filterValue === '1');
               break;
             }
 
             default: {
-              const textColumn = await customersPage.getTextColumnFromTableCustomers(
+              const textColumn = await boCustomersPage.getTextColumnFromTableCustomers(
                 page,
                 i,
-                test.args.filterBy,
+                arg.filterBy,
               );
-              await expect(textColumn).to.contains(test.args.filterValue);
+              expect(textColumn).to.contains(arg.filterValue);
               break;
             }
           }
@@ -197,10 +181,10 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
       });
 
       it('should reset all filters', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `${arg.testIdentifier}Reset`, baseContext);
 
-        const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
+        const numberOfCustomersAfterReset = await boCustomersPage.resetAndGetNumberOfLines(page);
+        expect(numberOfCustomersAfterReset).to.equals(numberOfCustomers);
       });
     });
 
@@ -208,38 +192,38 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
       await testContext.addContextItem(this, 'testIdentifier', 'filterByDate', baseContext);
 
       // Filter orders
-      await customersPage.filterCustomersByRegistration(page, today, today);
+      await boCustomersPage.filterCustomersByRegistration(page, today, today);
       // Get number of elements
-      const numberOfCustomersAfterFilter = await customersPage.getNumberOfElementInGrid(page);
+      const numberOfCustomersAfterFilter = await boCustomersPage.getNumberOfElementInGrid(page);
 
       for (let i = 1; i <= numberOfCustomersAfterFilter; i++) {
-        const textColumn = await customersPage.getTextColumnFromTableCustomers(page, i, 'date_add');
-        await expect(textColumn).to.contains(today);
+        const textColumn = await boCustomersPage.getTextColumnFromTableCustomers(page, i, 'date_add');
+        expect(textColumn).to.contains(today);
       }
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
-      const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
+      const numberOfCustomersAfterReset = await boCustomersPage.resetAndGetNumberOfLines(page);
+      expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
     });
   });
 
   // 2 : Editing customers from grid table
   describe('Quick edit customers', async () => {
-    it(`should filter by email '${Customers.johnDoe.email}'`, async function () {
+    it(`should filter by email '${dataCustomers.johnDoe.email}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
-      await customersPage.filterCustomers(
+      await boCustomersPage.filterCustomers(
         page,
         'input',
         'email',
-        Customers.johnDoe.email,
+        dataCustomers.johnDoe.email,
       );
 
-      const numberOfCustomersAfterFilter = await customersPage.getNumberOfElementInGrid(page);
-      await expect(numberOfCustomersAfterFilter).to.be.at.above(0);
+      const numberOfCustomersAfterFilter = await boCustomersPage.getNumberOfElementInGrid(page);
+      expect(numberOfCustomersAfterFilter).to.be.at.above(0);
     });
 
     describe('Quick edit customer status', async () => {
@@ -250,14 +234,14 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
         it(`should ${test.args.action} customer status`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `quickEditStatus${index}`, baseContext);
 
-          const resultMessage = await customersPage.setCustomerStatus(page, 1, test.args.value);
+          const resultMessage = await boCustomersPage.setCustomerStatus(page, 1, test.args.value);
 
           if (resultMessage) {
-            await expect(resultMessage).to.contains(customersPage.successfulUpdateStatusMessage);
+            expect(resultMessage).to.contains(boCustomersPage.successfulUpdateStatusMessage);
           }
 
-          const customerStatus = await customersPage.getCustomerStatus(page, 1);
-          await expect(customerStatus).to.be.equal(test.args.value);
+          const customerStatus = await boCustomersPage.getCustomerStatus(page, 1);
+          expect(customerStatus).to.equals(test.args.value);
         });
       });
     });
@@ -270,14 +254,14 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
         it(`should ${test.args.action} customer newsletter status`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `quickEditNewsletter${index}`, baseContext);
 
-          const resultMessage = await customersPage.setNewsletterStatus(page, 1, test.args.value);
+          const resultMessage = await boCustomersPage.setNewsletterStatus(page, 1, test.args.value);
 
           if (resultMessage) {
-            await expect(resultMessage).to.contains(customersPage.successfulUpdateStatusMessage);
+            expect(resultMessage).to.contains(boCustomersPage.successfulUpdateStatusMessage);
           }
 
-          const customerStatus = await customersPage.getNewsletterStatus(page, 1);
-          await expect(customerStatus).to.be.equal(test.args.value);
+          const customerStatus = await boCustomersPage.getNewsletterStatus(page, 1);
+          expect(customerStatus).to.equals(test.args.value);
         });
       });
     });
@@ -290,20 +274,20 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
         it(`should ${test.args.action} customer partner offers status`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `quickEditOptin${index}`, baseContext);
 
-          const resultMessage = await customersPage.setPartnerOffersStatus(page, 1, test.args.value);
+          const resultMessage = await boCustomersPage.setPartnerOffersStatus(page, 1, test.args.value);
 
           if (resultMessage) {
-            await expect(resultMessage).to.contains(customersPage.successfulUpdateStatusMessage);
+            expect(resultMessage).to.contains(boCustomersPage.successfulUpdateStatusMessage);
           }
 
-          const customerStatus = await customersPage.getPartnerOffersStatus(page, 1);
-          await expect(customerStatus).to.be.equal(test.args.value);
+          const customerStatus = await boCustomersPage.getPartnerOffersStatus(page, 1);
+          expect(customerStatus).to.be.equal(test.args.value);
         });
       });
     });
 
     after(async () => {
-      await customersPage.resetAndGetNumberOfLines(page);
+      await boCustomersPage.resetAndGetNumberOfLines(page);
     });
   });
 });

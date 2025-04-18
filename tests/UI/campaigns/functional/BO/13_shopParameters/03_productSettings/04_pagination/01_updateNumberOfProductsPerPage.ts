@@ -1,20 +1,17 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-// Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
-import productSettingsPage from '@pages/BO/shopParameters/productSettings';
-// Import FO pages
-import {homePage as homePageFO} from '@pages/FO/home';
-import categoryPageFO from '@pages/FO/category';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  boDashboardPage,
+  boLoginPage,
+  boProductSettingsPage,
+  type BrowserContext,
+  foClassicCategoryPage,
+  foClassicHomePage,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_productSettings_pagination_updateNumberOfProductsPerPage';
 
@@ -33,16 +30,22 @@ describe('BO - Shop Parameters - Product Settings : Update number of product dis
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   const tests = [
@@ -56,15 +59,15 @@ describe('BO - Shop Parameters - Product Settings : Update number of product dis
         it('should go to \'Shop parameters > Product Settings\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToProductSettingsPage${index + 1}`, baseContext);
 
-          await dashboardPage.goToSubMenu(
+          await boDashboardPage.goToSubMenu(
             page,
-            dashboardPage.shopParametersParentLink,
-            dashboardPage.productSettingsLink,
+            boDashboardPage.shopParametersParentLink,
+            boDashboardPage.productSettingsLink,
           );
-          await productSettingsPage.closeSfToolBar(page);
+          await boProductSettingsPage.closeSfToolBar(page);
 
-          const pageTitle = await productSettingsPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+          const pageTitle = await boProductSettingsPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
         });
       }
 
@@ -73,39 +76,39 @@ describe('BO - Shop Parameters - Product Settings : Update number of product dis
         async function () {
           await testContext.addContextItem(this, 'testIdentifier', `updateProductsPerPage${index + 1}`, baseContext);
 
-          const result = await productSettingsPage.setProductsDisplayedPerPage(
+          const result = await boProductSettingsPage.setProductsDisplayedPerPage(
             page,
             test.args.numberOfProductsPerPage,
           );
-          await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+          expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
         },
       );
 
       it('should view my shop', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index + 1}`, baseContext);
 
-        page = await productSettingsPage.viewMyShop(page);
+        page = await boProductSettingsPage.viewMyShop(page);
 
-        const isHomePage = await homePageFO.isHomePage(page);
-        await expect(isHomePage, 'Home page was not opened').to.be.true;
+        const isHomePage = await foClassicHomePage.isHomePage(page);
+        expect(isHomePage, 'Home page was not opened').to.eq(true);
       });
 
       it('should go to all products page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToHomeCategory${index + 1}`, baseContext);
 
-        await homePageFO.changeLanguage(page, 'en');
-        await homePageFO.goToAllProductsPage(page);
+        await foClassicHomePage.changeLanguage(page, 'en');
+        await foClassicHomePage.goToAllProductsPage(page);
 
-        const isCategoryPage = await categoryPageFO.isCategoryPage(page);
-        await expect(isCategoryPage, 'Home category page was not opened');
+        const isCategoryPage = await foClassicCategoryPage.isCategoryPage(page);
+        expect(isCategoryPage, 'Home category page was not opened');
       });
 
       it(`should check that number of products is equal to '${test.args.numberOfProductsPerPage}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkNumberOfProduct${index + 1}`, baseContext);
 
-        const numberOfProducts = await categoryPageFO.getNumberOfProductsDisplayed(page);
+        const numberOfProducts = await foClassicCategoryPage.getNumberOfProductsDisplayed(page);
 
-        await expect(
+        expect(
           numberOfProducts,
           'Number of product displayed is incorrect',
         ).to.equal(test.args.numberOfProductsPerPage);
@@ -114,10 +117,10 @@ describe('BO - Shop Parameters - Product Settings : Update number of product dis
       it('should close the page and go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index + 1}`, baseContext);
 
-        page = await homePageFO.closePage(browserContext, page, 0);
+        page = await foClassicHomePage.closePage(browserContext, page, 0);
 
-        const pageTitle = await productSettingsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+        const pageTitle = await boProductSettingsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
       });
     });
   });

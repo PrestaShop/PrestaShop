@@ -38,12 +38,12 @@ interface EmailLogEraserInterface
      *
      * @return array
      */
-    public function erase(array $mailLogIds);
+    public function erase(array $mailLogIds): array;
 
     /**
      * Erase all email logs.
      *
      * @return bool TRUE if email logs where erased successfully or FALSE otherwise
      */
-    public function eraseAll();
+    public function eraseAll(): bool;
 }

@@ -26,7 +26,6 @@ import Serp from '@app/utils/serp';
 import {EventEmitter} from 'events';
 import RedirectOptionManager from '@pages/product/edit/manager/redirect-option-manager';
 import ProductMap from '@pages/product/product-map';
-import TaggableField from '@components/taggable-field';
 import TranslatableInput from '@components/translatable-input';
 
 const {$} = window;
@@ -80,7 +79,7 @@ export default class ProductSEOManager {
       previewUrl,
     );
 
-    new TaggableField({
+    new window.prestashop.component.TaggableField({
       tokenFieldSelector: ProductMap.seo.tagFields,
       options: {
         createTokensOnBlur: true,
@@ -90,8 +89,43 @@ export default class ProductSEOManager {
       },
     });
 
+    // On reset button click we regenerate the friendly url for currently selected locale
     const resetLinkRewriteBtn = document.querySelector<HTMLButtonElement>(ProductMap.seo.resetLinkRewriteBtn)!;
     resetLinkRewriteBtn.addEventListener('click', () => this.resetLinkRewrite());
+
+    // Disable or enable reset button depending on the name input value at init, on language change and on keyup inputs (on name and url inputs)
+    this.linkRewriteStateRefresh();
+    this.eventEmitter.on('languageSelected', () => this.linkRewriteStateRefresh());
+    this.initCallbackOnInputChange(ProductMap.productLocalizedNameInput, () => this.linkRewriteStateRefresh());
+    this.initCallbackOnInputChange(ProductMap.productLocalizedLinkRewriteInput, () => this.linkRewriteStateRefresh());
+
+    if (resetLinkRewriteBtn.dataset.automaticChange === '1') {
+      this.initCallbackOnInputChange(ProductMap.productLocalizedNameInput, () => this.resetAllLinkRewrites());
+    }
+  }
+
+  private initCallbackOnInputChange(inputSelector: string, callback: EventListenerOrEventListenerObject): void {
+    const inputs = document.querySelectorAll(inputSelector);
+
+    if (inputs) {
+      for (let i = 0; i < inputs.length; i += 1) {
+        inputs[i].addEventListener('keyup', callback);
+      }
+    }
+  }
+
+  private linkRewriteStateRefresh(): void {
+    const resetLinkRewriteBtn = document.querySelector<HTMLButtonElement>(ProductMap.seo.resetLinkRewriteBtn)!;
+    // eslint-disable-next-line max-len
+    const nameInput = document.querySelector<HTMLInputElement>(`${this.translatableInput.localeInputSelector}:not(.d-none) ${ProductMap.productLocalizedNameInput}`);
+    // eslint-disable-next-line max-len
+    const linkRewriteInput = document.querySelector<HTMLInputElement>(`${this.translatableInput.localeInputSelector}:not(.d-none) ${ProductMap.productLocalizedLinkRewriteInput}`);
+
+    if (!nameInput || !linkRewriteInput || !resetLinkRewriteBtn) {
+      return;
+    }
+
+    resetLinkRewriteBtn.disabled = linkRewriteInput.value === window.str2url(nameInput.value);
   }
 
   private resetLinkRewrite(): void {
@@ -99,8 +133,9 @@ export default class ProductSEOManager {
     const nameInput = document.querySelector<HTMLInputElement>(`${this.translatableInput.localeInputSelector}:not(.d-none) ${ProductMap.productLocalizedNameInput}`);
     // eslint-disable-next-line max-len
     const linkRewriteInput = document.querySelector<HTMLInputElement>(`${this.translatableInput.localeInputSelector}:not(.d-none) ${ProductMap.productLocalizedLinkRewriteInput}`);
+    const resetLinkRewriteBtn = document.querySelector<HTMLButtonElement>(ProductMap.seo.resetLinkRewriteBtn)!;
 
-    if (!nameInput || !linkRewriteInput) {
+    if (!nameInput || !linkRewriteInput || !resetLinkRewriteBtn) {
       console.error('Couldn\'t find product name or link rewrite input');
       return;
     }
@@ -111,7 +146,32 @@ export default class ProductSEOManager {
       return;
     }
 
+    this.updateUrlInput(linkRewriteInput, nameValue);
+    resetLinkRewriteBtn.disabled = true;
+  }
+
+  private updateUrlInput(linkRewriteInput: HTMLInputElement, nameValue: string): void {
+    // eslint-disable-next-line no-param-reassign
     linkRewriteInput.value = window.str2url(nameValue);
     linkRewriteInput.dispatchEvent(new Event('change', {bubbles: true}));
+  }
+
+  private resetAllLinkRewrites(): void {
+    const nameInputs = document.querySelectorAll<HTMLInputElement>(ProductMap.productLocalizedNameInput);
+    nameInputs.forEach((nameInput: HTMLInputElement) => {
+      nameInput.parentElement?.classList?.forEach((parentClass:string) => {
+        // Search for class mapping js-locale-en, js-locale-fr, ...
+        if (parentClass.match(/^js-locale-[a-zA-Z]{2}$/)) {
+          const linkRewriteSelector = `.${parentClass} ${ProductMap.productLocalizedLinkRewriteInput}`;
+          const linkRewriteInput = document.querySelector<HTMLInputElement>(linkRewriteSelector);
+
+          if (linkRewriteInput) {
+            this.updateUrlInput(linkRewriteInput, nameInput.value);
+          }
+        }
+      });
+    });
+
+    this.linkRewriteStateRefresh();
   }
 }

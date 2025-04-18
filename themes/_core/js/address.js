@@ -8,13 +8,14 @@ import prestashop from 'prestashop';
  * @param selectors
  */
 function handleCountryChange(selectors) {
-  $('body').on('change', selectors.country, () => {
+  $('body').on('change', selectors.country, (event) => {
     const requestData = {
       id_country: $(selectors.country).val(),
       id_address: $(`${selectors.address} form`).data('id-address'),
     };
     const getFormViewUrl = $(`${selectors.address} form`).data('refresh-url');
     const formFieldsSelector = `${selectors.address} input`;
+    const target = $(event.target);
 
     $.post(getFormViewUrl, requestData).then((resp) => {
       const inputs = [];
@@ -24,7 +25,7 @@ function handleCountryChange(selectors) {
         inputs[$(this).prop('name')] = $(this).val();
       });
 
-      $(selectors.address).replaceWith(resp.address_form);
+      $(target.closest(selectors.address)).replaceWith(resp.address_form);
 
       // Restore fields values
       $(formFieldsSelector).each(function () {

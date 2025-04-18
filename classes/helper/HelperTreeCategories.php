@@ -368,7 +368,7 @@ class HelperTreeCategoriesCore extends TreeCore
             $this->_getSelectedChildNumbers($data, $this->getSelectedCategories());
         }
 
-        //Default bootstrap style of search is push-right, so we add this button first
+        // Default bootstrap style of search is push-right, so we add this button first
         if ($this->useSearch()) {
             $this->addAction(new TreeToolbarSearchCategories(
                 'Find a category:',

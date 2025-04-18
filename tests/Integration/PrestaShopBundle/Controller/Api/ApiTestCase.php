@@ -32,10 +32,12 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Routing\RouterInterface;
 use Tests\Integration\Utility\ContextMockerTrait;
+use Tests\Integration\Utility\LoginTrait;
 
 abstract class ApiTestCase extends WebTestCase
 {
     use ContextMockerTrait;
+    use LoginTrait;
 
     /**
      * @var KernelBrowser|null
@@ -58,8 +60,8 @@ abstract class ApiTestCase extends WebTestCase
         parent::setUp();
         self::$kernel = static::bootKernel();
         self::$client = self::$kernel->getContainer()->get('test.client');
+        $this->loginUser(self::$client);
         self::$client->setServerParameters([]);
-        self::$container = self::$client->getContainer();
         $this->router = self::getContainer()->get('router');
     }
 

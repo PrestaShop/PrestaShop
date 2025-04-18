@@ -55,7 +55,7 @@ final class BulkDeleteAttachmentsHandler extends AbstractAttachmentHandler imple
                 if (!$this->deleteAttachment($attachment)) {
                     $errors[] = $attachment->id;
                 }
-            } catch (AttachmentException $e) {
+            } catch (AttachmentException) {
                 $errors[] = $attachmentId->getValue();
             }
         }

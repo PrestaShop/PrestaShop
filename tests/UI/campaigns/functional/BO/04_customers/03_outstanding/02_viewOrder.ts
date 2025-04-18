@@ -1,27 +1,24 @@
-// Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-import {disableB2BTest, enableB2BTest} from '@commonTests/BO/shopParameters/b2b';
-import {createOrderByCustomerTest} from '@commonTests/FO/order';
-
-// Import pages
-import outstandingPage from '@pages/BO/customers/outstanding';
-import dashboardPage from '@pages/BO/dashboard';
-import ordersPage from '@pages/BO/orders';
-import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
-
-// Import data
-import Customers from '@data/demo/customers';
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
-import Products from '@data/demo/products';
-import OrderData from '@data/faker/order';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+
+import {disableB2BTest, enableB2BTest} from '@commonTests/BO/shopParameters/b2b';
+import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
+
+import {
+  boDashboardPage,
+  boLoginPage,
+  boOrdersPage,
+  boOrdersViewBasePage,
+  boOutstandingPage,
+  type BrowserContext,
+  dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
+  dataProducts,
+  FakerOrder,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_customers_outstanding_viewOrder';
 
@@ -45,15 +42,15 @@ describe('BO - Customers - Outstanding : View order', async () => {
   let orderReference: string;
 
   // New order by customer data
-  const orderByCustomerData: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+  const orderByCustomerData: FakerOrder = new FakerOrder({
+    customer: dataCustomers.johnDoe,
     products: [
       {
-        product: Products.demo_1,
+        product: dataProducts.demo_1,
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // Pre-Condition : Enable B2B
@@ -64,60 +61,66 @@ describe('BO - Customers - Outstanding : View order', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   // Pre-condition: Update order status to payment accepted
   describe('PRE-TEST: Update order status to payment accepted', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should reset filter and get the last orderID and reference', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterOrder', baseContext);
 
-      await ordersPage.resetFilter(page);
+      await boOrdersPage.resetFilter(page);
 
       orderId = parseInt(
-        await ordersPage.getTextColumn(page, 'id_order', 1),
+        await boOrdersPage.getTextColumn(page, 'id_order', 1),
         10,
       );
-      await expect(orderId).to.be.at.least(1);
+      expect(orderId).to.be.at.least(1);
 
-      orderReference = await ordersPage.getTextColumn(page, 'reference', 1);
-      await expect(orderReference).to.not.equal('');
+      orderReference = await boOrdersPage.getTextColumn(page, 'reference', 1);
+      expect(orderReference).to.not.equal('');
     });
 
     it('should update order status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const textResult = await ordersPage.setOrderStatus(page, 1, OrderStatuses.paymentAccepted);
-      await expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
+      const textResult = await boOrdersPage.setOrderStatus(page, 1, dataOrderStatuses.paymentAccepted);
+      expect(textResult).to.equal(boOrdersPage.successfulUpdateMessage);
     });
 
     it('should check that the status is updated successfully', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkStatusBO', baseContext);
 
-      const orderStatus = await ordersPage.getTextColumn(page, 'osname', 1);
-      await expect(orderStatus, 'Order status was not updated').to.equal(OrderStatuses.paymentAccepted.name);
+      const orderStatus = await boOrdersPage.getTextColumn(page, 'osname', 1);
+      expect(orderStatus, 'Order status was not updated').to.equal(dataOrderStatuses.paymentAccepted.name);
     });
   });
 
@@ -126,36 +129,36 @@ describe('BO - Customers - Outstanding : View order', async () => {
     it('should go to \'Customers > Outstanding\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOutstandingPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.customersParentLink,
-        dashboardPage.outstandingLink,
+        boDashboardPage.customersParentLink,
+        boDashboardPage.outstandingLink,
       );
-      await outstandingPage.closeSfToolBar(page);
+      await boOutstandingPage.closeSfToolBar(page);
 
-      const pageTitle = await outstandingPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(outstandingPage.pageTitle);
+      const pageTitle = await boOutstandingPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOutstandingPage.pageTitle);
     });
 
     it('should reset filter and get the last outstanding ID', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterOutstanding', baseContext);
 
-      await outstandingPage.resetFilter(page);
+      await boOutstandingPage.resetFilter(page);
 
       const outstandingId = parseInt(
-        await outstandingPage.getTextColumn(page, 'id_invoice', 1),
+        await boOutstandingPage.getTextColumn(page, 'id_invoice', 1),
         10,
       );
-      await expect(outstandingId).to.be.at.least(1);
+      expect(outstandingId).to.be.at.least(1);
     });
 
     it('should view the Order and check the orderID and the reference', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewOrder', baseContext);
 
-      await outstandingPage.viewOrder(page, 'actions', 1);
+      await boOutstandingPage.viewOrder(page, 'actions', 1);
 
-      const outstandingOrderId = await viewOrderBasePage.getOrderID(page);
-      const outstandingOrderReference = await viewOrderBasePage.getOrderReference(page);
+      const outstandingOrderId = await boOrdersViewBasePage.getOrderID(page);
+      const outstandingOrderReference = await boOrdersViewBasePage.getOrderReference(page);
 
       [
         {args: {columnName: outstandingOrderId, result: orderId}},

@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,14 +21,14 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 <div class="card customer-orders-card">
   <h3 class="card-header">
     <i class="material-icons">shopping_basket</i>
     {{ 'Orders'|trans({}, 'Admin.Global') }}
     <span class="badge badge-primary rounded">{{ customerOrderGrid.data.records_total }}</span>
 
-    <a href="{{ path('admin_orders_create') }}" class="tooltip-link float-right" 
+    <a href="{{ path('admin_orders_create') }}" class="tooltip-link float-right"
     data-toggle="pstooltip" title="" data-placement="top" data-original-title="{{ 'Add'|trans({}, 'Admin.Actions') }}">
       <i class="material-icons">add_circle</i>
     </a>
@@ -41,7 +41,7 @@
             <div class="col">
               {{ 'Valid orders:'|trans({}, 'Admin.Orderscustomers.Feature') }}
               <span class="badge badge-success rounded">{{ customerInformation.ordersInformation.validOrders|length }}</span>
-              {% set totalAmount = '<span id="total-order-amount">'~customerInformation.ordersInformation.totalSpent~'</span>' %}
+              {% set totalAmount = '<span id="total-order-amount">' ~ customerInformation.ordersInformation.totalSpent ~ '</span>' %}
               {{ 'for a total amount of %s'|trans({}, 'Admin.Orderscustomers.Feature')|format(totalAmount)|raw }}
             </div>
             <div class="col">
@@ -53,12 +53,12 @@
       </div>
     {% endif %}
     {% if customerOrderGrid.data.records_total > 0 %}
-      {% include '@PrestaShop/Admin/Common/Grid/grid.html.twig' with {'grid': customerOrderGrid} %}
+      {{ include('@PrestaShop/Admin/Common/Grid/grid.html.twig', {grid: customerOrderGrid}) }}
     {% else %}
       <div class="text-center">
         <p class="text-muted mb-2">
           {{ '%firstname% %lastname% has not placed any orders yet'|trans({'%firstname%': customerInformation.personalInformation.firstName, '%lastname%': customerInformation.personalInformation.lastName}, 'Admin.Orderscustomers.Feature') }}
-        </p> 
+        </p>
         <a class="btn btn-primary" href="{{ path('admin_orders_create') }}">
           <i class="material-icons">add_circle</i>
           {{ 'Create manual order'|trans({}, 'Admin.Global') }}

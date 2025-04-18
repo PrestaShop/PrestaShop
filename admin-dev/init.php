@@ -24,32 +24,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+/**
+ * This file is currently only used for admin filemanager.
+ * Some things in this file are probably not needed to be initialized anymore.
+ */
 use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
 
 ob_start();
 $timerStart = microtime(true);
 
-//	$_GET['tab'] = $_GET['controller'];
-//	$_POST['tab'] = $_POST['controller'];
-//	$_REQUEST['tab'] = $_REQUEST['controller'];
 try {
     $context = Context::getContext();
-    if (isset($_GET['logout'])) {
-        $context->employee->logout();
-    }
-
-    if (!isset($context->employee) || !$context->employee->isLoggedBack()) {
-        Tools::redirectAdmin('index.php?controller=AdminLogin&redirect='.$_SERVER['REQUEST_URI']);
-    }
-
     $iso = $context->language->iso_code;
-    if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/fields.php')) {
-        @trigger_error(
-            'Translating ObjectModel fields using fields.php is deprecated since version 8.0.0.',
-            E_USER_DEPRECATED
-        );
-        include _PS_TRANSLATIONS_DIR_.$iso.'/fields.php';
-    }
 
     /* Server Params */
     $protocol_link = (Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';

@@ -1,0 +1,53 @@
+name: Verify 'Needs autoupgrade PR' label and approvals
+
+on:
+  pull_request_review:
+    types: [ submitted ]
+
+jobs:
+  check_label_and_appoval:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Check if comment already exist
+        id: check_comment
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_NUMBER=$(jq --raw-output .pull_request.number < $GITHUB_EVENT_PATH)
+          COMMENTS=$(gh api repos/${{ github.repository }}/issues/$PR_NUMBER/comments --jq '.[].body')
+          if echo "$COMMENTS" | grep -q "This means that the changes made in your PR must also be reported in the Autoupgrade module"; then
+            echo "comment_exists=true" >> $GITHUB_ENV
+          fi
+
+      - name: Verify approvals and label
+        id: check_approvals_and_labels
+        if: ${{ !env.comment_exists }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LABELS: Needs autoupgrade PR
+        run: |
+          PR_NUMBER=$(jq --raw-output .pull_request.number < $GITHUB_EVENT_PATH)
+
+          APPROVAL_COUNT=$(gh api repos/${{ github.repository }}/pulls/$PR_NUMBER/reviews \
+            --jq '[.[] | select(.state == "APPROVED")] | length')
+
+           PR_AUTHOR=$(gh api repos/${{ github.repository }}/pulls/$PR_NUMBER --jq '.user.login')
+
+          LABEL_PRESENT=$(gh api repos/${{ github.repository }}/issues/$PR_NUMBER/labels \
+            --jq '[.[] | select(.name == "${{ env.LABELS }}")] | length')
+
+          echo $APPROVAL_COUNT > ./approvals
+          echo $LABEL_PRESENT > ./label
+          echo $PR_NUMBER > ./pr_number
+          echo $PR_AUTHOR > ./author
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: approval_count
+          path: |
+            approvals
+            label
+            pr_number
+            author

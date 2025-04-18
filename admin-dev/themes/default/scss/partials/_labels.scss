@@ -1,0 +1,6 @@
+.label {
+  padding: var(--#{$cdk}size-4) var(--#{$cdk}size-8);
+  font-size: var(--#{$cdk}size-10);
+  font-weight: 500;
+  border-radius: var(--#{$cdk}size-0);
+}

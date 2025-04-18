@@ -40,7 +40,7 @@ class DeleteCustomerSessionHandlerTest extends TestCase
         $sessionId = new DeleteCustomerSessionCommand(1);
 
         $repo = $this->getMockBuilder(CustomerSessionRepository::class)
-            ->setMethods([
+            ->onlyMethods([
                 'delete',
             ])
             ->disableOriginalConstructor()

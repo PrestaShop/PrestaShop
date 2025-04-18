@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetSuppliersComma
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductSuppliersCommandsBuilder;
 
-class ProductSuppliersCommandsBuilderTest extends AbstractProductCommandBuilderTest
+class ProductSuppliersCommandsBuilderTest extends AbstractProductCommandBuilderTestCase
 {
     /**
      * @dataProvider getExpectedCommands

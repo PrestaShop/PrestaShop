@@ -52,8 +52,6 @@ class ShopResetter
             'cms_lang',
             'cms_role_lang',
             'customization_field_lang',
-            'info_lang',
-            'linksmenutop_lang',
             'meta_lang',
             'product_lang',
         ]);

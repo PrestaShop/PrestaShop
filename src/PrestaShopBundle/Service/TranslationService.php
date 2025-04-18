@@ -188,7 +188,9 @@ class TranslationService
      * @return array
      *
      * @throws Exception
+     *
      * @todo: we need module information here
+     *
      * @todo: we need to improve the Vuejs application to send the information
      */
     public function listDomainTranslation(

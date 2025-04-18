@@ -57,7 +57,7 @@ final class ToggleZoneStatusHandler implements ToggleZoneStatusHandlerInterface
             if (false === $zone->toggleStatus()) {
                 throw new CannotToggleZoneStatusException(sprintf('Unable to toggle status of zone with id "%d"', $command->getZoneId()->getValue()));
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new ZoneException(sprintf('An error occurred when toggling status for zone with id "%d"', $command->getZoneId()->getValue()));
         }
     }

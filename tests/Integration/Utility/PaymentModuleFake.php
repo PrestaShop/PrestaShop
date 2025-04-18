@@ -41,7 +41,7 @@ use PaymentModule;
  */
 class PaymentModuleFake extends PaymentModule
 {
-    public function __construct($name = null, Context $context = null)
+    public function __construct($name = null, ?Context $context = null)
     {
         parent::__construct($name, $context);
 

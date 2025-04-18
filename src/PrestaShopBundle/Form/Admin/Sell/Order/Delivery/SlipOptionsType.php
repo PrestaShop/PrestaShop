@@ -50,7 +50,7 @@ class SlipOptionsType extends TranslatorAwareType
                 [
                     'type' => TextType::class,
                     'label' => $this->trans('Delivery prefix', 'Admin.Orderscustomers.Feature'),
-                    'help' => $this->trans('Prefix used for delivery slips.', 'Admin.Orderscustomers.Help'),
+                    'label_help_box' => $this->trans('Prefix used for delivery slips.', 'Admin.Orderscustomers.Help'),
                 ]
             )
             ->add(
@@ -58,7 +58,7 @@ class SlipOptionsType extends TranslatorAwareType
                 NumberType::class,
                 [
                     'label' => $this->trans('Delivery number', 'Admin.Orderscustomers.Feature'),
-                    'help' => $this->trans(
+                    'label_help_box' => $this->trans(
                         'The next delivery slip will begin with this number and then increase with each additional slip.',
                         'Admin.Orderscustomers.Help'
                     ),
@@ -69,7 +69,7 @@ class SlipOptionsType extends TranslatorAwareType
                 SwitchType::class,
                 [
                     'label' => $this->trans('Enable product image', 'Admin.Orderscustomers.Feature'),
-                    'help' => $this->trans(
+                    'label_help_box' => $this->trans(
                         'Add an image before the product name on delivery slips.',
                         'Admin.Orderscustomers.Help'
                     ),

@@ -50,4 +50,9 @@ class AliasConstraintException extends AliasException
      * When alias visibility value is invalid
      */
     public const INVALID_VISIBILITY = 40;
+
+    /**
+     * When alias is already used
+     */
+    public const ALIAS_ALREADY_USED = 50;
 }

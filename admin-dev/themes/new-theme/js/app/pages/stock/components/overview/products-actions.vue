@@ -40,12 +40,14 @@
         <PSNumber
           class="bulk-qty"
           :danger="danger"
-          :value="bulkEditQty"
+          :value="bulkValue"
           :buttons="isFocused"
-          @focus="focusIn"
-          @blur="focusOut($event)"
-          @change="onChange"
-          @keyup="onKeyUp"
+          :hover-buttons="isFocused"
+          @keyup="onKeyup($event)"
+          @keydown="onKeydown($event)"
+          @change="onChange($event)"
+          @focus="focusIn($event)"
+          @blur="focusOut"
         />
       </div>
     </div>
@@ -72,14 +74,12 @@
   import {EventEmitter} from '@components/event-emitter';
   import {defineComponent} from 'vue';
   import TranslationMixin from '@app/pages/stock/mixins/translate';
+  import isNumber from 'lodash/isNumber';
 
   export default defineComponent({
     computed: {
       disabled(): boolean {
-        return !this.$store.state.hasQty;
-      },
-      bulkEditQty(): number {
-        return this.$store.state.bulkEditQty;
+        return !this.$store.state.hasQty || this.bulkValue === 0;
       },
       selectedProductsLng(): any {
         return this.$store.getters.selectedProductsLng;
@@ -87,6 +87,11 @@
     },
     mixins: [TranslationMixin],
     watch: {
+      bulkValue(val: number): void {
+        if (isNumber(val)) {
+          this.$store.dispatch('updateBulkEditQty', val);
+        }
+      },
       selectedProductsLng(value: number): void {
         if (value === 0 && this.$refs['bulk-action']) {
           (<HTMLInputElement> this.$refs['bulk-action']).checked = false;
@@ -98,6 +103,9 @@
       },
     },
     methods: {
+      isChecked(): boolean {
+        return (<HTMLInputElement> this.$refs['bulk-action']).checked;
+      },
       isIndeterminate(): boolean {
         const {selectedProductsLng} = this;
         const productsLng = this.$store.state.products.length;
@@ -108,20 +116,22 @@
         }
         return isIndeterminate;
       },
-      focusIn(): void {
+      focusIn(event: Event): void {
         this.danger = !this.selectedProductsLng;
         this.isFocused = !this.danger;
         if (this.danger) {
           EventEmitter.emit('displayBulkAlert', 'error');
+        } else {
+          (<HTMLInputElement>event.target).select();
         }
       },
-      focusOut(event: Event): void {
-        this.isFocused = $(<HTMLInputElement>event.target).hasClass('ps-number');
+      focusOut(): void {
+        this.isFocused = this.isChecked();
         this.danger = false;
       },
       bulkChecked(checkbox: HTMLInputElement): void {
         if (!checkbox.checked) {
-          this.$store.dispatch('updateBulkEditQty', null);
+          this.bulkValue = '';
         }
         if (!this.isIndeterminate()) {
           EventEmitter.emit('toggleProductsCheck', checkbox.checked);
@@ -132,19 +142,32 @@
         this.$store.dispatch('updateQtyByProductsId');
       },
       onChange(event: Event): void {
-        this.$store.dispatch('updateBulkEditQty', (<HTMLInputElement>event.target).value);
+        if (this.isChecked()) {
+          const value = (<HTMLInputElement>event.target).value !== ''
+            ? parseInt((<HTMLInputElement>event.target).value, 10)
+            : 0;
+          this.bulkValue = value;
+          this.disabled = !!value;
+        }
       },
-      onKeyUp(event: Event): void {
-        this.isFocused = true;
-        const inputValue = (<HTMLInputElement>event.target).value;
-        this.$store.dispatch(
-          'updateBulkEditQty',
-          inputValue.length ? parseInt(inputValue, 10) : inputValue,
-        );
+      onKeydown(event: KeyboardEvent): void {
+        if (event.key === '.' || event.key === ',') {
+          event.preventDefault();
+        }
+      },
+      onKeyup(event: KeyboardEvent): void {
+        if (this.isChecked() && event.key !== '-') {
+          const value = (<HTMLInputElement>event.target).value !== ''
+            ? parseInt((<HTMLInputElement>event.target).value, 10)
+            : 0;
+          this.bulkValue = value;
+          this.disabled = !!value;
+        }
       },
     },
     data() {
       return {
+        bulkValue: '' as string | number,
         isFocused: false,
         danger: false,
       };

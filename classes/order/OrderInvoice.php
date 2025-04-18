@@ -23,6 +23,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
+
 class OrderInvoiceCore extends ObjectModel
 {
     public const TAX_EXCL = 0;
@@ -117,8 +120,8 @@ class OrderInvoiceCore extends ObjectModel
             'shipping_tax_computation_method' => ['type' => self::TYPE_INT],
             'total_wrapping_tax_excl' => ['type' => self::TYPE_FLOAT],
             'total_wrapping_tax_incl' => ['type' => self::TYPE_FLOAT],
-            'shop_address' => ['type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => 1000],
-            'note' => ['type' => self::TYPE_HTML],
+            'shop_address' => ['type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4],
+            'note' => ['type' => self::TYPE_HTML, 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
         ],
     ];
@@ -144,24 +147,37 @@ class OrderInvoiceCore extends ObjectModel
         ' . ($this->id && $this->number ? ' AND od.`id_order_invoice` = ' . (int) $this->id : '') . ' ORDER BY od.`product_name`');
     }
 
-    public static function getInvoiceByNumber($id_invoice)
+    /**
+     * Returns OrderInvoice for a specific invoice number and order ID.
+     * It's highly recommended to also provide an order ID, because you
+     * may end up with a different invoice than you wanted.
+     *
+     * DO NOT CONFUSE the number with id_order_invoice, that's a different,
+     * unique identifier of the invoice.
+     *
+     * @param string|int $invoiceNumber
+     * @param int $orderId
+     *
+     * @return OrderInvoice|false
+     */
+    public static function getInvoiceByNumber($invoiceNumber, $orderId = null)
     {
-        if (is_numeric($id_invoice)) {
-            $id_invoice = (int) $id_invoice;
-        } elseif (is_string($id_invoice)) {
+        if (is_numeric($invoiceNumber)) {
+            $invoiceNumber = (int) $invoiceNumber;
+        } elseif (is_string($invoiceNumber)) {
             $matches = [];
-            if (preg_match('/^(?:' . Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id) . ')\s*([0-9]+)$/i', $id_invoice, $matches)) {
-                $id_invoice = $matches[1];
+            if (preg_match('/^(?:' . Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id) . ')\s*([0-9]+)$/i', $invoiceNumber, $matches)) {
+                $invoiceNumber = $matches[1];
             }
         }
-        if (!$id_invoice) {
+        if (!$invoiceNumber) {
             return false;
         }
 
         $id_order_invoice = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             'SELECT `id_order_invoice`
             FROM `' . _DB_PREFIX_ . 'order_invoice`
-            WHERE number = ' . (int) $id_invoice
+            WHERE `number` = ' . (int) $invoiceNumber . (!empty($orderId) ? ' AND `id_order` = ' . (int) $orderId : '')
         );
 
         return $id_order_invoice ? new OrderInvoice((int) $id_order_invoice) : false;
@@ -325,7 +341,7 @@ class OrderInvoiceCore extends ObjectModel
     		AND od.`tax_computation_method` = ' . (int) TaxCalculator::ONE_AFTER_ANOTHER_METHOD)
             || Configuration::get(
                 'PS_INVOICE_TAXES_BREAKDOWN'
-        );
+            );
     }
 
     public function displayTaxBasesInProductTaxesBreakdown()
@@ -727,7 +743,7 @@ class OrderInvoiceCore extends ObjectModel
             return 0;
         }
 
-        return round($this->total_paid_tax_incl + $this->getSiblingTotal() - $this->getTotalPaid(), 2);
+        return round($this->total_paid_tax_incl + (float) $this->getSiblingTotal() - $this->getTotalPaid(), 2);
     }
 
     /**

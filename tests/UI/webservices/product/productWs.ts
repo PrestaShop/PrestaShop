@@ -1,5 +1,8 @@
 import BaseWS from '@webservices/baseWs';
-import {APIRequestContext, APIResponse} from 'playwright';
+import {
+  type APIRequestContext,
+  type APIResponse,
+} from '@prestashop-core/ui-testing';
 
 export default class ProductWs extends BaseWS {
   public static endpoint = 'api/products';

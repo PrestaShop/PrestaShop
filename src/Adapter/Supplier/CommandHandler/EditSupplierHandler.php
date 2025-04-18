@@ -68,7 +68,7 @@ final class EditSupplierHandler extends AbstractSupplierHandler implements EditS
             if (null !== $command->getAssociatedShops()) {
                 $this->associateWithShops($supplier, $command->getAssociatedShops());
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new SupplierException(sprintf('Cannot update supplier with id "%s"', $supplier->id));
         }
     }
@@ -89,9 +89,6 @@ final class EditSupplierHandler extends AbstractSupplierHandler implements EditS
         }
         if (null !== $command->getLocalizedMetaDescriptions()) {
             $supplier->meta_description = $command->getLocalizedMetaDescriptions();
-        }
-        if (null !== $command->getLocalizedMetaKeywords()) {
-            $supplier->meta_keywords = $command->getLocalizedMetaKeywords();
         }
         if (null !== $command->getLocalizedMetaTitles()) {
             $supplier->meta_title = $command->getLocalizedMetaTitles();

@@ -47,7 +47,7 @@ class BulkAliasException extends AliasException implements BulkCommandExceptionI
         private readonly array $exceptions,
         string $message = 'Errors occurred during Alias bulk action',
         int $code = 0,
-        Throwable $previous = null
+        ?Throwable $previous = null
     ) {
         parent::__construct($message, $code, $previous);
     }

@@ -1,8 +1,10 @@
 import LocalizationBasePage from '@pages/BO/international/localization/localizationBasePage';
 
-import type LanguageData from '@data/faker/language';
+import {
+  type Page,
 
-import type {Page} from 'playwright';
+  type FakerLanguage,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Add language page, contains functions that can be used on the page
@@ -62,10 +64,10 @@ class AddLanguage extends LocalizationBasePage {
   /**
    * Create or edit language
    * @param page {Page} Browser tab
-   * @param languageData {LanguageData} Data to set on add/edit language form
+   * @param languageData {FakerLanguage} Data to set on add/edit language form
    * @return {Promise<string>}
    */
-  async createEditLanguage(page: Page, languageData: LanguageData): Promise<string> {
+  async createEditLanguage(page: Page, languageData: FakerLanguage): Promise<string> {
     // Set input text
     await this.setValue(page, this.nameInput, languageData.name);
     await this.setValue(page, this.isoCodeInput, languageData.isoCode);
@@ -85,6 +87,14 @@ class AddLanguage extends LocalizationBasePage {
     await this.clickAndWaitForURL(page, this.saveButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Return true if language is RTL
+   * @param page {Page}
+   */
+  async isRTL(page: Page): Promise<boolean> {
+    return this.isChecked(page, this.isRtlToggleInput(1));
   }
 }
 

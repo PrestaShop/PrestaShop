@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
+use PrestaShop\PrestaShop\Core\Form\FormChoiceFormatter;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Entity\Repository\TimezoneRepository;
 
@@ -54,13 +55,10 @@ final class TimezoneByNameChoiceProvider implements FormChoiceProviderInterface
      */
     public function getChoices()
     {
-        $timezones = $this->timezoneRepository->findAll();
-        $choices = [];
-
-        foreach ($timezones as $timezone) {
-            $choices[$timezone['name']] = $timezone['name'];
-        }
-
-        return $choices;
+        return FormChoiceFormatter::formatFormChoices(
+            $this->timezoneRepository->findAll(),
+            'name',
+            'name'
+        );
     }
 }

@@ -57,11 +57,6 @@ class CategoryConstraintException extends CategoryException
     public const INVALID_PARENT_ID = 6;
 
     /**
-     * Code is used when too many menu thumbnails is being set for category.
-     */
-    public const TOO_MANY_MENU_THUMBNAILS = 8;
-
-    /**
      * Code is used when invalid id is supplied.
      */
     public const INVALID_ID = 10;
@@ -70,4 +65,14 @@ class CategoryConstraintException extends CategoryException
      * Code is used when performing bulk delete of categories with empty data.
      */
     public const EMPTY_BULK_DELETE_DATA = 12;
+
+    /**
+     * When category redirect type is invalid
+     */
+    public const INVALID_REDIRECT_TYPE = 14;
+
+    /**
+     * When category redirect target is invalid
+     */
+    public const INVALID_REDIRECT_TARGET = 15;
 }

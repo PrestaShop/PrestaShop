@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -30,8 +30,11 @@ namespace PrestaShop\PrestaShop\Adapter\Customer\Group\Repository;
 use Group as CustomerGroup;
 use PrestaShop\PrestaShop\Adapter\CoreException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\CannotAddGroupException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\CannotDeleteGroupException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\CannotUpdateGroupException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
 
 /**
@@ -42,10 +45,10 @@ class GroupRepository extends AbstractMultiShopObjectModelRepository
     /**
      * @param GroupId $customerGroupId
      *
+     * @return CustomerGroup
+     *
      * @throws CoreException
      * @throws GroupNotFoundException
-     *
-     * @return CustomerGroup
      */
     public function get(GroupId $customerGroupId): CustomerGroup
     {
@@ -76,12 +79,44 @@ class GroupRepository extends AbstractMultiShopObjectModelRepository
     /**
      * @param CustomerGroup $customerGroup
      *
-     * @throws CoreException
-     *
      * @return GroupId
+     *
+     * @throws CoreException
      */
     public function create(CustomerGroup $customerGroup): GroupId
     {
-        return new GroupId($this->addObjectModelToShops($customerGroup, $customerGroup->id_shop_list, CannotAddGroupException::class));
+        $groupId = $this->addObjectModelToShops(
+            $customerGroup,
+            array_map(fn (int $shopId) => new ShopId($shopId), $customerGroup->id_shop_list),
+            CannotAddGroupException::class
+        );
+
+        return new GroupId($groupId);
+    }
+
+    /**
+     * @param int $customerGroupId
+     *
+     * @return int[]
+     */
+    public function getAssociatedShopIds(int $customerGroupId): array
+    {
+        return $this->getObjectModelAssociatedShopIds($customerGroupId, CustomerGroup::class);
+    }
+
+    /**
+     * @param CustomerGroup $customerGroup
+     */
+    public function partialUpdate(CustomerGroup $customerGroup, array $propertiesToUpdate): void
+    {
+        $this->partiallyUpdateObjectModel($customerGroup, $propertiesToUpdate, CannotUpdateGroupException::class);
+        $this->updateObjectModelShopAssociations((int) $customerGroup->id, CustomerGroup::class, $customerGroup->id_shop_list);
+    }
+
+    public function delete(GroupId $customerGroupId): void
+    {
+        $customerGroup = $this->get($customerGroupId);
+        $shopIds = $this->getAssociatedShopIds($customerGroupId->getValue());
+        $this->deleteObjectModelFromShops($customerGroup, array_map(fn (int $shopId) => new ShopId($shopId), $shopIds), CannotDeleteGroupException::class);
     }
 }

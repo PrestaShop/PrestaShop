@@ -62,7 +62,7 @@ class DatabaseTranslationLoader implements LoaderInterface
      *
      * @todo: this method doesn't match the interface
      */
-    public function load($resource, $locale, $domain = 'messages', $theme = null)
+    public function load($resource, $locale, $domain = 'messages', $theme = null): MessageCatalogue
     {
         static $langs = [];
         $catalogue = new MessageCatalogue($locale);

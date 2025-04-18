@@ -30,7 +30,7 @@ use Symfony\Component\OptionsResolver\Exception\NoSuchOptionException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class AbtractColumn implements reusable column methods.
+ * Class AbstractColumn implements reusable column methods.
  */
 abstract class AbstractColumn implements ColumnInterface
 {

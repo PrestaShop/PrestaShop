@@ -45,6 +45,7 @@ class MaterialChoiceTableType extends AbstractType
         $resolver->setDefaults([
             'expanded' => true,
             'multiple' => true,
+            'display_total_items' => false,
         ]);
     }
 
@@ -62,6 +63,7 @@ class MaterialChoiceTableType extends AbstractType
     public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $view->vars['isCheckSelectAll'] = count($form->getViewData()) === count($options['choices']);
+        $view->vars['displayTotalItems'] = (bool) $options['display_total_items'];
     }
 
     /**

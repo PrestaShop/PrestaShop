@@ -276,7 +276,7 @@ final class ImportEntityDeleter implements ImportEntityDeleterInterface
      *
      * @param array $tables
      *
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\Exception
      */
     private function truncateTables(array $tables)
     {
@@ -290,7 +290,7 @@ final class ImportEntityDeleter implements ImportEntityDeleterInterface
      *
      * @param array $tables
      *
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\Exception
      */
     private function truncateTablesIfExist(array $tables)
     {

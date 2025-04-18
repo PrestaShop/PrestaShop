@@ -76,6 +76,7 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
 
     /**
      * @Then product :productReference localized :fieldName should be:
+     *
      * @Given product :productReference localized :fieldName is:
      *
      * localizedValues transformation handled by @see LocalizedArrayTransformContext
@@ -91,7 +92,7 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then product :productReference localized :fieldName for shops :shopReferences should be:
+     * @Then product :productReference localized :fieldName for shop(s) :shopReferences should be:
      *
      * localizedValues transformation handled by @see LocalizedArrayTransformContext
      *

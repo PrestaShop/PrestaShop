@@ -1,4 +1,10 @@
 .locale-input-group {
+  .js-locale-input {
+    .form-control {
+      min-height: 42px;
+    }
+  }
+
   .dropdown {
     margin-left: 0.625em;
 

@@ -1,18 +1,17 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-import dashboardPage from '@pages/BO/dashboard';
-import sqlManagerPage from '@pages/BO/advancedParameters/database/sqlManager';
-import dbBackupPage from '@pages/BO/advancedParameters/database/dbBackup';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  boDashboardPage,
+  boDbBackupPage,
+  boLoginPage,
+  boSqlManagerPage,
+  type BrowserContext,
+  type Page,
+  utilsFile,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_database_dbBackup_createAndDeleteDbBackup';
 
@@ -30,59 +29,65 @@ describe('BO - Advanced Parameters - Database : Generate db backup and download 
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   // Go db backup page
   it('should go to \'Advanced Parameters > Database\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSqlManagerPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.advancedParametersLink,
-      dashboardPage.databaseLink,
+      boDashboardPage.advancedParametersLink,
+      boDashboardPage.databaseLink,
     );
 
-    await sqlManagerPage.closeSfToolBar(page);
+    await boSqlManagerPage.closeSfToolBar(page);
 
-    const pageTitle = await sqlManagerPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(sqlManagerPage.pageTitle);
+    const pageTitle = await boSqlManagerPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boSqlManagerPage.pageTitle);
   });
 
   it('should go to \'DB Backup\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToDbBackupPage', baseContext);
 
-    await sqlManagerPage.goToDbBackupPage(page);
+    await boSqlManagerPage.goToDbBackupPage(page);
 
-    const pageTitle = await dbBackupPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(dbBackupPage.pageTitle);
+    const pageTitle = await boDbBackupPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDbBackupPage.pageTitle);
   });
 
   describe('Generate new backup', async () => {
     it('should check number of db backups', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfDbBackups', baseContext);
 
-      numberOfBackups = await dbBackupPage.getNumberOfElementInGrid(page);
-      await expect(numberOfBackups).to.equal(0);
+      numberOfBackups = await boDbBackupPage.getNumberOfElementInGrid(page);
+      expect(numberOfBackups).to.equal(0);
     });
 
     it('should generate new db backup', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'generateNewDbBackup', baseContext);
 
-      const result = await dbBackupPage.createDbDbBackup(page);
-      await expect(result).to.equal(dbBackupPage.successfulBackupCreationMessage);
+      const result = await boDbBackupPage.createDbDbBackup(page);
+      expect(result).to.equal(boDbBackupPage.successfulBackupCreationMessage);
 
-      const numberOfBackupsAfterCreation = await dbBackupPage.getNumberOfElementInGrid(page);
-      await expect(numberOfBackupsAfterCreation).to.equal(numberOfBackups + 1);
+      const numberOfBackupsAfterCreation = await boDbBackupPage.getNumberOfElementInGrid(page);
+      expect(numberOfBackupsAfterCreation).to.equal(numberOfBackups + 1);
     });
   });
 
@@ -90,10 +95,10 @@ describe('BO - Advanced Parameters - Database : Generate db backup and download 
     it('should download db backup created and check file existence', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'DownloadDbBackup', baseContext);
 
-      filePath = await dbBackupPage.downloadDbBackup(page);
+      filePath = await boDbBackupPage.downloadDbBackup(page);
 
-      const found = await files.doesFileExist(filePath);
-      await expect(found, 'Download backup file failed').to.be.true;
+      const found = await utilsFile.doesFileExist(filePath);
+      expect(found, 'Download backup file failed').to.eq(true);
     });
   });
 
@@ -101,11 +106,11 @@ describe('BO - Advanced Parameters - Database : Generate db backup and download 
     it('should delete db backup created', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteDbBackup', baseContext);
 
-      const result = await dbBackupPage.deleteBackup(page, 1);
-      await expect(result).to.be.equal(dbBackupPage.successfulDeleteMessage);
+      const result = await boDbBackupPage.deleteBackup(page, 1);
+      expect(result).to.be.equal(boDbBackupPage.successfulDeleteMessage);
 
-      const numberOfBackupsAfterDelete = await dbBackupPage.getNumberOfElementInGrid(page);
-      await expect(numberOfBackupsAfterDelete).to.equal(numberOfBackups);
+      const numberOfBackupsAfterDelete = await boDbBackupPage.getNumberOfElementInGrid(page);
+      expect(numberOfBackupsAfterDelete).to.equal(numberOfBackups);
     });
   });
 });

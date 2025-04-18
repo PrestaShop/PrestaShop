@@ -51,9 +51,9 @@ class GetCustomerGroupForEditingHandler implements GetCustomerGroupForEditingHan
     /**
      * @param GetCustomerGroupForEditing $query
      *
-     * @throws GroupNotFoundException
-     *
      * @return EditableCustomerGroup
+     *
+     * @throws GroupNotFoundException
      */
     public function handle(GetCustomerGroupForEditing $query): EditableCustomerGroup
     {

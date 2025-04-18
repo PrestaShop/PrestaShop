@@ -109,7 +109,7 @@ class EditOrderAddressHandler implements EditOrderAddressHandlerInterface
                     ));
                     break;
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new CannotUpdateOrderAddressException(sprintf('An error occurred when updating address for order "%s"', $command->getOrderId()->getValue()));
         }
 

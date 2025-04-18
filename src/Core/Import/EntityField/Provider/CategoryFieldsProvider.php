@@ -65,7 +65,6 @@ final class CategoryFieldsProvider implements EntityFieldsProviderInterface
             ),
             new EntityField('description', $this->trans('Description', 'Admin.Global')),
             new EntityField('meta_title', $this->trans('Meta title', 'Admin.Global')),
-            new EntityField('meta_keywords', $this->trans('Meta keywords', 'Admin.Global')),
             new EntityField('meta_description', $this->trans('Meta description', 'Admin.Global')),
             new EntityField('link_rewrite', $this->trans('Rewritten URL', 'Admin.Shopparameters.Feature')),
             new EntityField('image', $this->trans('Image URL', 'Admin.Advparameters.Feature')),

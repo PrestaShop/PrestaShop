@@ -35,12 +35,14 @@ use Employee;
 use Hook;
 use Module;
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Core\Context\ContextBuilderPreparer;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as TestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
+use Tests\Integration\Utility\LoginTrait;
 
 /**
  * The controller installs and uninstalls modules so it needs to clear the cache, that's why it's better isolated
@@ -49,6 +51,7 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class PositionsControllerTest extends TestCase
 {
+    use LoginTrait;
     /**
      * @var int
      */
@@ -78,6 +81,7 @@ class PositionsControllerTest extends TestCase
         parent::setUp();
 
         $this->client = self::createClient();
+        $this->loginUser($this->client);
 
         // Unregister all modules hooked on displayHome
         Db::getInstance()->execute(sprintf(
@@ -90,7 +94,7 @@ class PositionsControllerTest extends TestCase
 
         // Mock Congiguration
         $configurationMock = $this->getMockBuilder(Configuration::class)
-            ->setMethods(['get'])
+            ->onlyMethods(['get'])
             ->disableOriginalConstructor()
             ->disableAutoload()
             ->getMock();
@@ -100,6 +104,11 @@ class PositionsControllerTest extends TestCase
         ]));
 
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
+
+        // Language context must be initialized because ModuleRepository depends on it
+        /** @var ContextBuilderPreparer $preparer */
+        $preparer = self::$kernel->getContainer()->get(ContextBuilderPreparer::class);
+        $preparer->prepareLanguageId(1);
 
         /** @var ModuleManager */
         $moduleManager = self::$kernel->getContainer()->get(ModuleManager::class);

@@ -1,16 +1,15 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
-import performancePage from '@pages/BO/advancedParameters/performance';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  boDashboardPage,
+  boLoginPage,
+  boPerformancePage,
+  type BrowserContext,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 let browserContext: BrowserContext;
 let page: Page;
@@ -23,37 +22,43 @@ function deleteCacheTest(baseContext: string = 'commonTests-deleteCache'): void 
   describe('PRE-TEST: Delete cache', async () => {
     // before and after functions
     before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
     });
 
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
+      await utilsPlaywright.closeBrowserContext(browserContext);
     });
 
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Advanced Parameters > Performance\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToPerformancePage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.performanceLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.performanceLink,
       );
-      await performancePage.closeSfToolBar(page);
+      await boPerformancePage.closeSfToolBar(page);
 
-      const pageTitle = await performancePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(performancePage.pageTitle);
+      const pageTitle = await boPerformancePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boPerformancePage.pageTitle);
     });
 
     it('should clear cache', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clearCache', baseContext);
 
-      const successMessage = await performancePage.clearCache(page);
-      await expect(successMessage).to.equal(performancePage.clearCacheSuccessMessage);
+      const successMessage = await boPerformancePage.clearCache(page);
+      expect(successMessage).to.equal(boPerformancePage.clearCacheSuccessMessage);
     });
   });
 }

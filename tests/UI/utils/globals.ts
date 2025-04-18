@@ -20,6 +20,10 @@ global.BO = {
   LASTNAME: process.env.LASTNAME || 'Beier',
 };
 
+global.API = {
+  URL: process.env.URL_API || `${global.FO.URL}admin-api/`,
+};
+
 global.PSConfig = {
   parametersFile: process.env.PS_PARAMETERS_FILE || path.resolve(__dirname, '../../../', 'app/config/parameters.php'),
 };
@@ -49,7 +53,7 @@ global.BROWSER = {
     timeout: 0,
     slowMo: process.env.SLOW_MO ? parseInt(process.env.SLOW_MO, 10) : 5,
   },
-  interceptErrors: process.env.INTERCEPT_ERRORS ? JSON.parse(process.env.INTERCEPT_ERRORS) : false,
+  captureErrors: process.env.INTERCEPT_ERRORS ? JSON.parse(process.env.INTERCEPT_ERRORS) : false,
 };
 
 global.GENERATE_FAILED_STEPS = process.env.GENERATE_FAILED_STEPS ? JSON.parse(process.env.GENERATE_FAILED_STEPS) : false;
@@ -57,18 +61,26 @@ global.GENERATE_FAILED_STEPS = process.env.GENERATE_FAILED_STEPS ? JSON.parse(pr
 global.SCREENSHOT = {
   FOLDER: process.env.SCREENSHOT_FOLDER || './screenshots',
   AFTER_FAIL: process.env.TAKE_SCREENSHOT_AFTER_FAIL ? JSON.parse(process.env.TAKE_SCREENSHOT_AFTER_FAIL) : false,
+  EACH_STEP: process.env.TAKE_SCREENSHOT_AFTER_EACH_STEP ? JSON.parse(process.env.TAKE_SCREENSHOT_AFTER_EACH_STEP) : false,
 };
 
 global.maildevConfig = {
-  smtpPort: parseInt(process.env.SMTP_PORT ?? '1025', 10),
+  smtpPort: parseInt(process.env.SMTP_PORT ?? '1026', 10),
   smtpServer: process.env.SMTP_SERVER || 'localhost',
   silent: true,
 };
 
 global.keycloakConfig = {
-  keycloakExternalUrl: process.env.KEYCLOAK_URL_EXTERNAL || 'http://127.0.0.1:8003',
+  keycloakExternalUrl: process.env.KEYCLOAK_URL_EXTERNAL || 'http://localhost:8003',
   keycloakInternalUrl: process.env.KEYCLOAK_URL_INTERNAL || 'http://keycloak:8080',
   keycloakAdminUser: process.env.KEYCLOAK_ADMIN_USER || 'admin',
   keycloakAdminPass: process.env.KEYCLOAK_ADMIN_PASS || 'admin',
-  keycloakClientId: process.env.KEYCLOAK_CLIENT_ID || 'KEYCLOAK_CLIENT_ID',
+  keycloakClientId: process.env.KEYCLOAK_CLIENT_ID || 'prestashop-keycloak',
+  keycloakClientSecret: process.env.KEYCLOAK_CLIENT_SECRET || 'O2kKN0fprCK2HWP6PS6reVbZThWf5LFw',
+};
+
+global.browserErrors = {
+  responses: [],
+  js: [],
+  console: [],
 };

@@ -24,30 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-// Product feature flag in 1.7.8
-trans('Experimental product page', 'Admin.Advparameters.Feature');
-trans(
-    'This page benefits from increased performance and includes new features such as a new combination management system. Please note this is a work in progress and some features are not available yet.',
-    'Admin.Advparameters.Help'
-);
-
-// Product feature flag in 8.0
-trans('New product page - Single store', 'Admin.Advparameters.Feature');
-// Product feature flag in 8.1
-trans('New product page', 'Admin.Advparameters.Feature');
-trans('This page benefits from increased performance and includes new features such as a new combination management system.', 'Admin.Advparameters.Help');
-
-// Product multi store feature flag in 8.0
-trans('New product page - Multistore', 'Admin.Advparameters.Feature');
-trans('Access the new product page, even in a multistore context. This is a work in progress and some features are not available.', 'Admin.Advparameters.Help');
-
 // Legacy link feature flags
 trans('Attribute groups', 'Admin.Advparameters.Feature');
 trans('Enable or disable the migrated attribute page.', 'Admin.Advparameters.Help');
 
-// Authorization server feature flag
-trans('Authorization server', 'Admin.Advparameters.Feature');
-trans('Enable or disable the authorization server page.', 'Admin.Advparameters.Help');
+// Admin API - Multistore feature flag
+trans('Admin API - Multistore', 'Admin.Advparameters.Feature');
+trans('Enable or disable the Admin API when multistore is enabled.', 'Admin.Advparameters.Help');
+
+// Admin Api - Enable experimental endpoints
+trans('Admin API - Enable experimental endpoints', 'Admin.Advparameters.Feature');
+trans('Experimental API endpoints are disabled by default in prod environment, this configuration allows to forcefully enable them.', 'Admin.Advparameters.Help');
 
 // Cart rules feature flag
 trans('Cart rules', 'Admin.Advparameters.Feature');
@@ -56,9 +43,6 @@ trans('Enable or disable the migrated cart rules page.', 'Admin.Advparameters.He
 // Catalog price rules feature flag
 trans('Catalog price rules', 'Admin.Advparameters.Feature');
 trans('Enable or disable the migrated catalog price rules page.', 'Admin.Advparameters.Help');
-
-// Multiple image formats feature flags
-trans('Enable / Disable having more than one image format (jpg, webp, avif, png, etc.)', 'Admin.Advparameters.Feature');
 
 // Countries feature flag
 trans('Countries', 'Admin.Advparameters.Feature');
@@ -92,8 +76,20 @@ trans('Enable or disable the migrated customer threads page.', 'Admin.Advparamet
 trans('Order states', 'Admin.Advparameters.Feature');
 trans('Enable or disable the migrated order states page.', 'Admin.Advparameters.Help');
 
-trans('Features', 'Admin.Advparameters.Feature');
-trans('Enable or disable the migrated features page.', 'Admin.Advparameters.Help');
+trans('New front container', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the new front container.', 'Admin.Advparameters.Help');
 
-trans('Symfony layout', 'Admin.Advparameters.Feature');
-trans('Enable / Disable symfony layout (in opposition to legacy layout).', 'Admin.Advparameters.Help');
+trans('Customer group', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the customer group page.', 'Admin.Advparameters.Help');
+
+trans('Store', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the store page.', 'Admin.Advparameters.Help');
+
+trans('Merchandise return', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the merchandise return page.', 'Admin.Advparameters.Help');
+
+trans('Improved shipment', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the newly improved shipment system.', 'Admin.Advparameters.Help');
+
+trans('Discount', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the new discount system.', 'Admin.Advparameters.Help');

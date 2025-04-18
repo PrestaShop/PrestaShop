@@ -109,7 +109,7 @@ Feature: Delete product when multishop feature is enabled
 
   Scenario: I can delete product from specific shop
     # delete from shop2
-    When I delete product "standardProduct" from shops "shop2"
+    When I delete product "standardProduct" from shop "shop2"
     And product standardProduct is not associated to shop shop2
     Then product standardProduct is associated to shops "shop1,shop3,shop4"
     And default shop for product standardProduct is shop1
@@ -120,7 +120,7 @@ Feature: Delete product when multishop feature is enabled
       | image1          | 1        | shop1, shop3, shop4 |
       | image2          | 2        | shop1, shop3, shop4 |
     # delete from shop3
-    When I delete product "productWithCombinations" from shops "shop3"
+    When I delete product "productWithCombinations" from shop "shop3"
     Then product productWithCombinations is not associated to shop shop3
     And product productWithCombinations is associated to shops "shop1,shop2,shop4"
     And default shop for product productWithCombinations is shop1

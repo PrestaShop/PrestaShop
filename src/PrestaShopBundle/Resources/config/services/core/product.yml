@@ -2,13 +2,6 @@ services:
   _defaults:
     public: true
 
-  # Product CSV Exporter
-  PrestaShop\PrestaShop\Core\Product\ProductCsvExporter:
-    arguments:
-      - '@translator'
-      - '@prestashop.core.admin.data_provider.product_interface'
-    deprecated: ~
-
   PrestaShop\PrestaShop\Core\Product\Combination\Generator\CombinationGenerator: ~
   PrestaShop\PrestaShop\Core\Product\Combination\Generator\CombinationGeneratorInterface: '@PrestaShop\PrestaShop\Core\Product\Combination\Generator\CombinationGenerator'
 

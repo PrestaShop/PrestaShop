@@ -74,7 +74,7 @@ final class EditZoneHandler extends AbstractObjectModelHandler implements EditZo
             if (null !== $command->getShopAssociation()) {
                 $this->associateWithShops($zone, $command->getShopAssociation());
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new CannotEditZoneException(sprintf('Cannot update zone with id "%d"', $zone->id));
         }
     }

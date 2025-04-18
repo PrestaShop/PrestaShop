@@ -1,5 +1,7 @@
-import Customers from '@data/demo/customers';
-import {Page} from 'playwright';
+import {
+  dataCustomers,
+  type Page,
+} from '@prestashop-core/ui-testing';
 
 /**
  * Login into BO to access BO Urls
@@ -9,20 +11,20 @@ import {Page} from 'playwright';
 const loginBO = async function (page: Page): Promise<void> {
   const currentUrl: string = page.url();
 
-  await page.type('#email', global.BO.EMAIL);
-  await page.type('#passwd', global.BO.PASSWD);
+  await page.locator('#email').fill(global.BO.EMAIL);
+  await page.locator('#passwd').fill(global.BO.PASSWD);
 
   await Promise.all([
-    page.click('#submit_login'),
+    page.locator('#submit_login').click(),
     page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
   ]);
 
   const block = await page.$('button.onboarding-button-shut-down');
 
   if (block !== null) {
-    await page.click('button.onboarding-button-shut-down');
+    await page.locator('button.onboarding-button-shut-down').click();
     await page.waitForSelector('a.onboarding-button-stop', {state: 'visible'});
-    await page.click('a.onboarding-button-stop');
+    await page.locator('a.onboarding-button-stop').click();
   }
 };
 
@@ -34,11 +36,11 @@ const loginBO = async function (page: Page): Promise<void> {
 const loginFO = async function (page: Page): Promise<void> {
   const currentUrl: string = page.url();
 
-  await page.type('#login-form input[name=email]', Customers.johnDoe.email);
-  await page.type('#login-form input[name=password]', Customers.johnDoe.password);
+  await page.locator('#login-form input[name=email]').fill(dataCustomers.johnDoe.email);
+  await page.locator('#login-form input[name=password]').fill(dataCustomers.johnDoe.password);
 
   await Promise.all([
-    page.click('#submit-login'),
+    page.locator('#submit-login').click(),
     page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
   ]);
 };
@@ -65,7 +67,7 @@ export default [
     urls: [
       {
         name: 'BO_login',
-        url: 'index.php?controller=AdminLogin',
+        url: 'index.php/login',
         async customAction(page: Page): Promise<void> {
           await loginBO(page);
         },

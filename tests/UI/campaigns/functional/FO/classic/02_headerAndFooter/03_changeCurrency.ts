@@ -1,27 +1,25 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
 import {createCurrencyTest, deleteCurrencyTest} from '@commonTests/BO/international/currency';
-import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-// Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
-import currenciesPage from '@pages/BO/international/currencies';
-import localizationPage from '@pages/BO/international/localization';
-// Import FO pages
-import {homePage} from '@pages/FO/home';
-import searchResultsPage from '@pages/FO/searchResults';
-
-// Import data
-import Currencies from '@data/demo/currencies';
-import Products from '@data/demo/products';
+import {
+  boDashboardPage,
+  boLocalizationPage,
+  boLoginPage,
+  boCurrenciesPage,
+  type BrowserContext,
+  dataCurrencies,
+  dataProducts,
+  foClassicHomePage,
+  foClassicSearchResultsPage,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_classic_headerAndFooter_changeCurrency';
 
@@ -41,17 +39,15 @@ Post-condition:
 describe('FO - Header and Footer : Change currency', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let filePath: string;
   let exchangeRateValue: number = 0;
 
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await files.deleteFile(filePath);
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   // Pre-condition: Check the block currencies is not displayed in header of FO
@@ -59,60 +55,66 @@ describe('FO - Header and Footer : Change currency', async () => {
     it('should go to FO home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
-      await homePage.goToFo(page);
+      await foClassicHomePage.goToFo(page);
 
-      const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage).to.be.true;
+      const isHomePage = await foClassicHomePage.isHomePage(page);
+      expect(isHomePage).to.eq(true);
     });
 
     it('should check that the currencies block is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCurrenciesLink', baseContext);
 
-      const isVisible = await homePage.isCurrencyVisible(page);
-      await expect(isVisible).to.be.false;
+      const isVisible = await foClassicHomePage.isCurrencyVisible(page);
+      expect(isVisible).to.eq(false);
     });
   });
 
   // Pre-condition: Create currency
-  createCurrencyTest(Currencies.mad, `${baseContext}_preTest_2`);
+  createCurrencyTest(dataCurrencies.mad, `${baseContext}_preTest_2`);
 
   describe('Filter by iso code of currency and get the exchange rate value ', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'International > Localization\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.internationalParentLink,
-        dashboardPage.localizationLink,
+        boDashboardPage.internationalParentLink,
+        boDashboardPage.localizationLink,
       );
-      await localizationPage.closeSfToolBar(page);
+      await boLocalizationPage.closeSfToolBar(page);
 
-      const pageTitle = await localizationPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(localizationPage.pageTitle);
+      const pageTitle = await boLocalizationPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boLocalizationPage.pageTitle);
     });
 
     it('should go to \'Currencies\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesPage', baseContext);
 
-      await localizationPage.goToSubTabCurrencies(page);
+      await boLocalizationPage.goToSubTabCurrencies(page);
 
-      const pageTitle = await currenciesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(currenciesPage.pageTitle);
+      const pageTitle = await boCurrenciesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCurrenciesPage.pageTitle);
     });
 
-    it(`should get the currency exchange rate value '${Currencies.mad.isoCode}'`, async function () {
+    it(`should get the currency exchange rate value '${dataCurrencies.mad.isoCode}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getExchangeRate', baseContext);
 
       // Filter
-      await currenciesPage.filterTable(page, 'input', 'iso_code', Currencies.mad.isoCode);
+      await boCurrenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.mad.isoCode);
 
       // Check exchange rate
-      exchangeRateValue = await currenciesPage.getExchangeRateValue(page, 1);
-      await expect(exchangeRateValue).to.be.above(0);
+      exchangeRateValue = await boCurrenciesPage.getExchangeRateValue(page, 1);
+      expect(exchangeRateValue).to.be.above(0);
     });
   });
 
@@ -120,38 +122,38 @@ describe('FO - Header and Footer : Change currency', async () => {
     it('should go to FO home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO2', baseContext);
 
-      await homePage.goToFo(page);
+      await foClassicHomePage.goToFo(page);
 
-      const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage).to.be.true;
+      const isHomePage = await foClassicHomePage.isHomePage(page);
+      expect(isHomePage).to.eq(true);
     });
 
     it('should change FO currency', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeFoCurrency', baseContext);
 
       // Check currency
-      await homePage.changeCurrency(page, Currencies.mad.isoCode, Currencies.mad.symbol);
+      await foClassicHomePage.changeCurrency(page, dataCurrencies.mad.isoCode, dataCurrencies.mad.symbol);
 
-      const shopCurrency = await homePage.getDefaultCurrency(page);
-      await expect(shopCurrency).to.contains(Currencies.mad.isoCode);
+      const shopCurrency = await foClassicHomePage.getDefaultCurrency(page);
+      expect(shopCurrency).to.contains(dataCurrencies.mad.isoCode);
     });
 
     it('should search product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchProduct', baseContext);
 
-      await homePage.searchProduct(page, Products.demo_11.name);
+      await foClassicHomePage.searchProduct(page, dataProducts.demo_11.name);
 
-      const pageTitle = await searchResultsPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+      const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
     });
 
     it('should check the product price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductPrice', baseContext);
 
-      const newExchangeRateValue = (exchangeRateValue * Products.demo_11.finalPrice).toFixed(Currencies.mad.decimals);
+      const newExchangeRateValue = (exchangeRateValue * dataProducts.demo_11.finalPrice).toFixed(dataCurrencies.mad.decimals);
 
-      const productPrice = await searchResultsPage.getProductPrice(page);
-      await expect(productPrice).to.contains(`${Currencies.mad.symbol}${newExchangeRateValue}`);
+      const productPrice = await foClassicSearchResultsPage.getProductPrice(page);
+      expect(productPrice).to.contains(`${dataCurrencies.mad.symbol}${newExchangeRateValue}`);
     });
 
     it('should switch back to the default currency', async function () {
@@ -163,22 +165,22 @@ describe('FO - Header and Footer : Change currency', async () => {
       );
 
       // Check currency
-      await homePage.changeCurrency(page, Currencies.euro.isoCode, Currencies.euro.symbol);
+      await foClassicHomePage.changeCurrency(page, dataCurrencies.euro.isoCode, dataCurrencies.euro.symbol);
 
-      const shopCurrency = await homePage.getDefaultCurrency(page);
-      await expect(shopCurrency).to.contains(Currencies.euro.isoCode);
+      const shopCurrency = await foClassicHomePage.getDefaultCurrency(page);
+      expect(shopCurrency).to.contains(dataCurrencies.euro.isoCode);
     });
 
     it('should check the product price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductPrice2', baseContext);
 
-      const exchangeRate = Math.round(Currencies.euro.exchangeRate * Products.demo_11.finalPrice);
+      const exchangeRate = Math.round(dataCurrencies.euro.exchangeRate * dataProducts.demo_11.finalPrice);
 
-      const productPrice = await searchResultsPage.getProductPrice(page);
-      await expect(productPrice).to.contains(`${Currencies.euro.symbol}${exchangeRate}`);
+      const productPrice = await foClassicSearchResultsPage.getProductPrice(page);
+      expect(productPrice).to.contains(`${dataCurrencies.euro.symbol}${exchangeRate}`);
     });
   });
 
   // Post-condition - Delete currency
-  deleteCurrencyTest(Currencies.mad, `${baseContext}_postTest_1`);
+  deleteCurrencyTest(dataCurrencies.mad, `${baseContext}_postTest_1`);
 });

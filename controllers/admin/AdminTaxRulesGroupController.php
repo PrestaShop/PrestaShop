@@ -515,7 +515,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
         $this->deleteTaxRule([Tools::getValue('id_tax_rule')]);
     }
 
-    protected function displayAjaxUpdateTaxRule()
+    public function displayAjaxUpdateTaxRule()
     {
         if ($this->access('view')) {
             $id_tax_rule = Tools::getValue('id_tax_rule');
@@ -568,7 +568,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
      *
      * @return TaxRulesGroup
      */
-    protected function updateTaxRulesGroup($object)
+    protected function updateTaxRulesGroup(TaxRulesGroup $object)
     {
         static $tax_rules_group = null;
         if ($tax_rules_group === null) {

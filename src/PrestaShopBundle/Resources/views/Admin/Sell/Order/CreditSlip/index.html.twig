@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,20 +21,20 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
   {% block credit_slips_listing %}
-    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': creditSlipGrid} %}
+    {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: creditSlipGrid}) }}
   {% endblock %}
 
   {% block credit_slips_print_pdf %}
-    {% include '@PrestaShop/Admin/Sell/Order/CreditSlip/Blocks/pdf_by_date.html.twig' %}
+    {{ include('@PrestaShop/Admin/Sell/Order/CreditSlip/Blocks/pdf_by_date.html.twig') }}
   {% endblock %}
 
   {% block credit_slips_options %}
-    {% include '@PrestaShop/Admin/Sell/Order/CreditSlip/Blocks/credit_slip_options.html.twig' %}
+    {{ include('@PrestaShop/Admin/Sell/Order/CreditSlip/Blocks/credit_slip_options.html.twig') }}
   {% endblock %}
 {% endblock %}
 

@@ -165,13 +165,13 @@ class GetFileControllerCore extends FrontController
      *
      * @see FrontController::init()
      */
-    public function init()
+    public function init(): void
     {
         if (isset($this->context->employee) && $this->context->employee->isLoggedBack() && Tools::getValue('file')) {
             // Admin can directly access to file
             $filename = Tools::getValue('file');
             if (!Validate::isSha1($filename)) {
-                die(Tools::displayError());
+                throw new PrestaShopException('Filename is not a valid SHA1 checksum.');
             }
             $file = _PS_DOWNLOAD_DIR_ . (string) preg_replace('/\.{2,}/', '.', $filename);
             $filename = ProductDownload::getFilenameFromFilename(Tools::getValue('file'));
@@ -244,8 +244,8 @@ class GetFileControllerCore extends FrontController
                 $this->displayCustomError('This file no longer exists.');
             }
 
-            if (isset($info['product_quantity_refunded'], $info['product_quantity_return']) &&
-                ($info['product_quantity_refunded'] > 0 || $info['product_quantity_return'] > 0)) {
+            if (isset($info['product_quantity_refunded'], $info['product_quantity_return'])
+                && ($info['product_quantity_refunded'] > 0 || $info['product_quantity_return'] > 0)) {
                 $this->displayCustomError('This product has been refunded.');
             }
 
@@ -288,7 +288,7 @@ class GetFileControllerCore extends FrontController
         if ($forceDownload) {
             header('Content-Disposition: attachment; filename="' . $filename . '"');
         }
-        //prevents max execution timeout, when reading large files
+        // prevents max execution timeout, when reading large files
         @set_time_limit(0);
         $fp = fopen($file, 'rb');
 
@@ -356,6 +356,6 @@ class GetFileControllerCore extends FrontController
         //]]>
         </script>
         <?php
-        exit();
+        exit;
     }
 }

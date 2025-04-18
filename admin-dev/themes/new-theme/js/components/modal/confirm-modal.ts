@@ -28,7 +28,7 @@
 import {
   ModalContainerType, ModalContainer, ModalType, ModalParams, Modal,
 } from '@components/modal/modal';
-import {isUndefined} from '@PSTypes/typeguard';
+import {isUndefined} from '@components/typeguard';
 
 export interface ConfirmModalContainerType extends ModalContainerType {
   message: HTMLElement;

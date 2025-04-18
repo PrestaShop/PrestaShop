@@ -21,3 +21,9 @@ There are number of ways to contribute, it is not only about coding! You can rea
 [osl]: https://opensource.org/licenses/OSL-3.0
 [afl]: https://opensource.org/licenses/AFL-3.0
 [get-involved]: https://www.prestashop-project.org/get-involved/
+
+### Branches
+
+The PrestaShop project adopts [our own flavor of git flow branching strategy](https://build.prestashop-project.org/news/2015/introducing-new-branching-model-prestashop/).
+
+tl;dr Put bug fixes in 8.x or [other supported branches](https://github.com/PrestaShop/PrestaShop/branches), put new compatible and incompatible features in [the develop branch](https://github.com/PrestaShop/PrestaShop).

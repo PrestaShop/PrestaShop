@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
 {#
 # This form theme is an implementation of PrestaShop UI kit, it based on the bootstrap4 layout and overrides a few
@@ -46,7 +46,6 @@
 
 {# Use bootstrap4 theme (from the Symfony framework) as default base #}
 {% use 'bootstrap_4_layout.html.twig' %}
-{% use '@PrestaShop/Admin/TwigTemplateForm/typeahead.html.twig' %}
 {% use '@PrestaShop/Admin/TwigTemplateForm/entity_search_input.html.twig' %}
 {% use '@PrestaShop/Admin/TwigTemplateForm/material.html.twig' %}
 {% use '@PrestaShop/Admin/TwigTemplateForm/multishop.html.twig' %}
@@ -75,7 +74,7 @@
 
 {%- block form_widget_simple -%}
   {{ parent() }}
-  {% include '@PrestaShop/Admin/TwigTemplateForm/form_max_length.html.twig' with {'attr': attr} %}
+  {{ include('@PrestaShop/Admin/TwigTemplateForm/form_max_length.html.twig', {attr: attr}) }}
 {%- endblock form_widget_simple -%}
 
 {% block ip_address_text_widget %}
@@ -136,7 +135,7 @@
 {% endblock %}
 
 {% block widget_type_class %}
-{% if not compound and form.vars.block_prefixes|length > 2 %}
+{% if not compound|default(false) and form.vars.block_prefixes|length > 2 %}
  {% apply spaceless %}
 
     {% set index = form.vars.block_prefixes|length - 2 %}
@@ -160,10 +159,10 @@
 {%- block form_label -%}
   {% if label is not same as(false) -%}
     {% if not compound -%}
-      {% set label_attr = label_attr|merge({'for': id}) %}
+      {% set label_attr = label_attr|merge({for: id}) %}
     {%- endif %}
     {% if required -%}
-      {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+      {% set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' required')|trim}) %}
     {%- endif %}
     {% if label is empty -%}
       {%- if label_format is not empty -%}
@@ -191,7 +190,7 @@
     {% if label_help_box is defined or label_attr['popover'] is defined %}
       {% set content = label_help_box is defined ? label_help_box : label_attr['popover'] %}
       {% set placement = label_attr['popover_placement'] is defined ? label_attr['popover_placement'] : 'top' %}
-      {% include '@Common/HelpBox/helpbox.html.twig' with { "placement" : placement, "content": content } %}
+      {{ include('@Common/HelpBox/helpbox.html.twig', {placement: placement, content: content}) }}
     {% endif %}
     {{- block('form_disabling_switch') -}}
     </{{ labelTag }}>
@@ -206,7 +205,7 @@
 {% block textarea_widget -%}
   {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-control')|trim}) %}
   {{- parent() -}}
-  {% include '@PrestaShop/Admin/TwigTemplateForm/form_max_length.html.twig' with {'attr': attr} %}
+  {{ include('@PrestaShop/Admin/TwigTemplateForm/form_max_length.html.twig', {attr: attr}) }}
   {{ block('form_help') }}
 {%- endblock textarea_widget %}
 
@@ -215,13 +214,13 @@
     {% set prepend = '{{' == money_pattern[0:2] %}
     {% if not prepend %}
       <div class="input-group-prepend">
-        <span class="input-group-text">{{ money_pattern|replace({ '{{ widget }}':''}) }}</span>
+        <span class="input-group-text">{{ money_pattern|replace({'{{ widget }}': ''}) }}</span>
       </div>
     {% endif %}
     {{- block('form_widget_simple') -}}
     {% if prepend %}
       <div class="input-group-append">
-        <span class="input-group-text">{{ money_pattern|replace({ '{{ widget }}':''}) }}</span>
+        <span class="input-group-text">{{ money_pattern|replace({'{{ widget }}': ''}) }}</span>
       </div>
     {% endif %}
   </div>
@@ -246,8 +245,8 @@
     <div {{ block('widget_container_attributes') }}>
       {{- form_errors(form.date) -}}
       {{- form_errors(form.time) -}}
-      {{- form_widget(form.date, { datetime: true } ) -}}
-      {{- form_widget(form.time, { datetime: true } ) -}}
+      {{- form_widget(form.date, {datetime: true}) -}}
+      {{- form_widget(form.time, {datetime: true}) -}}
     </div>
   {%- endif %}
 {%- endblock datetime_widget %}
@@ -359,7 +358,7 @@
 {% block choice_tree_widget -%}
   <div {{ block('widget_container_attributes') }} class="category-tree-overflow">
     <ul class="category-tree">
-      <li class="form-control-label text-right main-category">{{ "Main category"|trans({}, 'Admin.Catalog.Feature') }}</li>
+      <li class="form-control-label text-right main-category">{{ 'Main category'|trans({}, 'Admin.Catalog.Feature') }}</li>
       {%- for child in choices %}
         {{ block('choice_tree_item_widget') }}
       {% endfor -%}
@@ -414,7 +413,7 @@
         {% for translationsFields in form %}
           <li class="nav-item">
             <a href="#" data-locale="{{ translationsFields.vars.label }}" class="{% if defaultLocale.id_lang == translationsFields.vars.name %}active{% endif %} nav-link" data-toggle="tab" data-target=".translationsFields-{{ translationsFields.vars.id }}">
-              {{ translationsFields.vars.label|capitalize }}
+              {{ translationsFields.vars.label|upper }}
             </a>
           </li>
         {% endfor %}
@@ -443,7 +442,7 @@
   {{ form_errors(form) }}
   <div class="input-group locale-input-group js-locale-input-group">
     {% for translateField in form %}
-      {% set classes = translateField.vars.attr.class|default('') ~ ' js-locale-input'%}
+      {% set classes = translateField.vars.attr.class|default('') ~ ' js-locale-input' %}
       {% set classes = classes ~ ' js-locale-' ~ translateField.vars.label %}
 
       {% if default_locale.id_lang != translateField.vars.name %}
@@ -463,7 +462,7 @@
                 aria-expanded="false"
                 id="{{ form.vars.id }}"
         >
-          {{ form.vars.default_locale.iso_code }}
+          {{ form.vars.default_locale.iso_code|upper }}
         </button>
 
         <div class="dropdown-menu dropdown-menu-right locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
@@ -480,7 +479,7 @@
   {{ form_errors(form) }}
   <div class="input-group locale-input-group js-locale-input-group">
     {% for textarea in form %}
-      {% set classes = textarea.vars.attr.class|default('') ~ ' js-locale-input'%}
+      {% set classes = textarea.vars.attr.class|default('') ~ ' js-locale-input' %}
       {% set classes = classes ~ ' js-locale-' ~ textarea.vars.label %}
 
       {% if default_locale.id_lang != textarea.vars.name %}
@@ -488,7 +487,7 @@
       {% endif %}
 
       <div class="{{ classes }}">
-        {{ form_widget(textarea, {attr: {'class': classes|trim}}) }}
+        {{ form_widget(textarea, {attr: {class: classes|trim}}) }}
       </div>
     {% endfor %}
 
@@ -501,7 +500,7 @@
                 aria-expanded="false"
                 id="{{ form.vars.id }}"
         >
-          {{ form.vars.default_locale.iso_code }}
+          {{ form.vars.default_locale.iso_code|upper }}
         </button>
 
         <div class="dropdown-menu dropdown-menu-right locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
@@ -520,7 +519,7 @@
 
 {% block date_picker_widget %}
   {% apply spaceless %}
-    {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' form-control datepicker')|trim)}) %}
+    {% set attr = attr|merge({class: ((attr.class|default('') ~ ' form-control datepicker')|trim)}) %}
     <div class="input-group datepicker">
       <input type="text" data-format="{{ date_format }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
       <div class="input-group-append">
@@ -553,7 +552,7 @@
 {% block search_and_reset_widget %}
   {% apply spaceless %}
     <button type="submit"
-            class="btn btn-primary grid-search-button d-block"
+            class="btn btn-primary grid-search-button"
             title="{{ 'Search'|trans({}, 'Admin.Actions') }}"
             name="{{ full_name }}[search]"
     >
@@ -578,12 +577,12 @@
 
 {% block switch_widget %}
   {% apply spaceless %}
-  {% set rowAttributes  = row_attr|default({})%}
+  {% set rowAttributes = row_attr|default({}) %}
   <div class="input-group {{ rowAttributes.class|default('') }}" {% for key, rowAttr in rowAttributes %} {% if key != 'class' %}{{ key }}="{{ rowAttr }}"{% endif %}{% endfor %}>
     <span class="ps-switch" id="{{ form.vars.id }}">
         {% for choice in choices %}
-          {% set inputId = id ~'_' ~ choice.value %}
-          <input id="{{inputId}}"
+          {% set inputId = id ~ '_' ~ choice.value %}
+          <input id="{{ inputId }}"
             {{ block('attributes') }}
             name="{{ full_name }}"
             value="{{ choice.value }}"
@@ -591,7 +590,7 @@
             {% if disabled %}disabled=""{% endif %}
             type="radio"
           >
-          {% if show_choices %}<label for="{{inputId}}">{{ choice.label|trans({}, choice_translation_domain) }}</label>{% endif %}
+          {% if show_choices %}<label for="{{ inputId }}">{{ choice.label|trans({}, choice_translation_domain) }}</label>{% endif %}
         {% endfor %}
         <span class="slide-button"></span>
     </span>
@@ -601,9 +600,9 @@
 {% endblock switch_widget %}
 
 {%- block row_attributes -%}
-  {% set rowAttributes  = row_attr|default({})%}
+  {% set rowAttributes = row_attr|default({}) %}
   {%- for attrname, attrvalue in rowAttributes -%}
-    {{- " " -}}
+    {{- ' ' -}}
     {{- attrname }}="{{ attrvalue }}"
   {%- endfor -%}
 {%- endblock -%}
@@ -692,12 +691,12 @@
     {%- if 'radio-custom' in parent_label_class -%}
         {%- set attr = attr|merge({class: (attr.class|default('') ~ ' custom-control-input')|trim}) -%}
         <div class="custom-control custom-radio{{ 'radio-inline' in parent_label_class ? ' custom-control-inline' }}">
-            {{- form_label(form, null, { widget: block('base_radio_widget') }) -}}
+            {{- form_label(form, null, {widget: block('base_radio_widget')}) -}}
         </div>
     {%- else -%}
         {%- set attr = attr|merge({class: (attr.class|default('') ~ ' form-check-input')|trim}) -%}
         <div class="form-check form-check-radio form-radio{{ 'radio-inline' in parent_label_class ? ' form-check-inline' }}">
-            {{- form_label(form, null, { widget: block('base_radio_widget') }) -}}
+            {{- form_label(form, null, {widget: block('base_radio_widget')}) -}}
         </div>
     {%- endif -%}
 {%- endblock radio_widget %}
@@ -706,7 +705,7 @@
     {%- set parent_label_class = parent_label_class|default(label_attr.class|default('')) -%}
     {%- set attr = attr|merge({class: (attr.class|default('') ~ ' form-check-input')|trim}) -%}
     <div class="form-check form-check-radio form-checkbox{% if attr.container_class is defined %} {{ attr.container_class }}{% endif %}">
-        {{- form_label(form, null, { widget: block('base_checkbox_widget') }) -}}
+        {{- form_label(form, null, {widget: block('base_checkbox_widget')}) -}}
     </div>
 {%- endblock checkbox_widget %}
 
@@ -725,7 +724,7 @@
     {# If we got more then one error then we need to display popover instead of errors list #}
     {%- if errors|length > 1 -%}
 
-      {% set popoverContainer = 'popover-error-container-'~form.vars.id %}
+      {% set popoverContainer = 'popover-error-container-' ~ form.vars.id %}
       <div class="{{ popoverContainer }}"></div>
 
       {% set popoverErrorContent %}
@@ -814,7 +813,7 @@
                   {% endif %}
                 >
                 <i class="md-checkbox-control"></i>
-                {{ 'Select all'|trans({}, 'Admin.Actions') }}
+                {{ 'Select all'|trans({}, 'Admin.Actions') }} {% if form.vars.displayTotalItems %} ({{ form|length }}) {% endif %}
               </label>
             </div>
           </th>
@@ -824,7 +823,7 @@
         {% for child in form %}
           <tr>
             <td>
-              {{ form_widget(child, {'material_design': true}) }}
+              {{ form_widget(child, {material_design: true}) }}
             </td>
           </tr>
         {% endfor %}
@@ -832,6 +831,7 @@
       </table>
     </div>
   {% endapply %}
+  {{ block('form_help') }}
 {% endblock material_choice_table_widget %}
 
 {% block material_multiple_choice_table_widget %}
@@ -870,7 +870,7 @@
                   {% set entry_index = child_choice_entry_index_mapping[choice_value][child_choice_name] %}
 
                   {% if child_choice.vars.multiple %}
-                    {{ form_widget(child_choice[entry_index], {'material_design': true}) }}
+                    {{ form_widget(child_choice[entry_index], {material_design: true}) }}
                   {% else %}
                     {{ form_widget(child_choice[entry_index]) }}
                   {% endif %}
@@ -887,7 +887,7 @@
   {% endapply %}
 {% endblock material_multiple_choice_table_widget %}
 
-{# Copied translatablefields_widget made to be compatible with TranslatableType.php and to be used in translatable widget#}
+{# Copied translatablefields_widget made to be compatible with TranslatableType.php and to be used in translatable widget #}
 {% block translatable_fields_with_tabs %}
   <div class="translations tabbable" id="{{ form.vars.id }}" tabindex="1">
     {% if hide_locales == false and form|length > 1 %}
@@ -895,7 +895,7 @@
         {% for translationsFields in form %}
           <li class="nav-item">
             <a href="#" data-locale="{{ translationsFields.vars.label }}" class="{% if default_locale.id_lang == translationsFields.vars.name %}active{% endif %} nav-link" data-toggle="tab" data-target=".translationsFields-{{ translationsFields.vars.id }}">
-              {{ translationsFields.vars.label|capitalize }}
+              {{ translationsFields.vars.label|upper }}
             </a>
           </li>
         {% endfor %}
@@ -916,7 +916,7 @@
     {% set formClass = (form.vars.attr.class|default('') ~ ' input-group locale-input-group js-locale-input-group d-flex')|trim %}
     <div class="{{ formClass }}" id="{{ form.vars.id }}" tabindex="1">
       {% for translateField in form %}
-        {% set classes = translateField.vars.attr.class|default('') ~ ' js-locale-input'%}
+        {% set classes = translateField.vars.attr.class|default('') ~ ' js-locale-input' %}
         {% set classes = classes ~ ' js-locale-' ~ translateField.vars.label %}
         {% if default_locale.id_lang != translateField.vars.name %}
           {% set classes = classes ~ ' d-none' %}
@@ -937,7 +937,7 @@
                   aria-expanded="false"
                   id="{{ form.vars.id }}_dropdown"
           >
-            {{ form.vars.default_locale.iso_code }}
+            {{ form.vars.default_locale.iso_code|upper }}
           </button>
           <div class="dropdown-menu dropdown-menu-right locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}_dropdown">
             {% for locale in locales %}
@@ -986,7 +986,7 @@
 {% block file_widget %}
   <style>
     .custom-file-label:after {
-      content: "{{ "Browse"|trans({}, 'Admin.Actions')  }}";
+      content: "{{ 'Browse'|trans({}, 'Admin.Actions') }}";
     }
   </style>
   <div class="custom-file">
@@ -1005,7 +1005,7 @@
 
     <label class="custom-file-label" for="{{ form.vars.id }}">
       {% set attributes = form.vars.attr %}
-      {{ attributes.placeholder is defined ?  attributes.placeholder : 'Choose file(s)'|trans({}, 'Admin.Actions') }}
+      {{ attributes.placeholder is defined ? attributes.placeholder : 'Choose file(s)'|trans({}, 'Admin.Actions') }}
     </label>
   </div>
   {{- block('form_help') -}}
@@ -1056,7 +1056,7 @@
 {% block text_with_recommended_length_widget %}
   {% set attr = attr|merge({
     'data-recommended-length-counter': '#' ~ id ~ '_recommended_length_counter',
-    'class': 'js-recommended-length-input'
+    class: 'js-recommended-length-input'
   }) -%}
 
   {% if input_type == 'textarea' %}
@@ -1089,7 +1089,7 @@
       </div>
     {% endif %}
 
-    {% set attr = attr|merge({'data-max-length': form.vars.max_length, 'maxlength': form.vars.max_length, 'class': 'js-countable-input'}) -%}
+    {% set attr = attr|merge({'data-max-length': form.vars.max_length, maxlength: form.vars.max_length, class: 'js-countable-input'}) -%}
     {% set attr = attr|merge(input_attr) -%}
 
     {% if form.vars.input == 'input' %}
@@ -1109,13 +1109,13 @@
 {% endblock %}
 
 {% block integer_min_max_filter_widget %}
-  {{ form_widget(form['min_field'], { attr: {class: 'min-field'}}) }}
-  {{ form_widget(form['max_field'], { attr: {class: 'max-field'}}) }}
+  {{ form_widget(form['min_field'], {attr: {class: 'min-field'}}) }}
+  {{ form_widget(form['max_field'], {attr: {class: 'max-field'}}) }}
 {% endblock %}
 
 {% block number_min_max_filter_widget %}
-  {{ form_widget(form['min_field'], { attr: {class: 'min-field'}}) }}
-  {{ form_widget(form['max_field'], { attr: {class: 'max-field'}}) }}
+  {{ form_widget(form['min_field'], {attr: {class: 'min-field'}}) }}
+  {{ form_widget(form['max_field'], {attr: {class: 'max-field'}}) }}
 {% endblock %}
 
 {%- block number_widget -%}
@@ -1157,7 +1157,7 @@
 {% block form_help %}
   {% if help is not null %}
     {%- set help_attr = help_attr|merge({class: (help_attr.class|default('') ~ ' form-text')|trim}) -%}
-      <small id="{{ id }}_help"{% with { attr: help_attr } %}{{ block('attributes') }}{% endwith %}>{{ help|raw }}</small>
+      <small id="{{ id }}_help"{% with {attr: help_attr} %}{{ block('attributes') }}{% endwith %}>{{ help|raw }}</small>
   {% endif %}
   {% if warning is defined %}
     {{ warning }}
@@ -1180,11 +1180,16 @@
   {% if external_link is defined %}
     {%- set openingTag -%}
       <a {{ block('form_external_link_attributes') }}>
-        <i class="material-icons">open_in_new</i>
+        {% if external_link.open_in_new_tab %}<i class="material-icons">open_in_new</i>{% endif %}
     {%- endset -%}
 
-    <div class="small font-secondary{% if external_link.align is same as('right') %} text-right{% endif %}">
-      {{ external_link.text|replace({'[1]': openingTag, '[/1]': '</a>'})|raw }}
+    <div class="small font-secondary form-external-link{% if external_link.align is same as('right') %} text-right{% endif %}">
+      {# If placeholders are included in the text use it as is, else prepend and append them to the text #}
+      {% if '[1]' in external_link.text and '[/1]' in external_link.text %}
+        {{ external_link.text|replace({'[1]': openingTag, '[/1]': '</a>'})|raw }}
+      {% else %}
+        {{ ('[1]' ~ external_link.text ~ '[/1]')|replace({'[1]': openingTag, '[/1]': '</a>'})|raw }}
+      {% endif %}
     </div>
   {% endif %}
 {% endblock form_external_link %}
@@ -1198,28 +1203,28 @@
     {% endif %}
   {% endfor %}
 
-  target="_blank"
+  {% if external_link.open_in_new_tab %}target="_blank"{% endif %}
   href="{{ external_link.href }}"
   class="{{ external_link_attr.class }}"
 {%- endblock -%}
 
 {% block custom_content_widget %}
-  {% include template with data %}
+  {{ include(template, data) }}
 {% endblock %}
 
 {% block text_widget %}
   {%- set attr = attr|merge({'aria-label': '%inputId% input'|trans({'%inputId%': form.vars.id}, 'Admin.Global')}) -%}
   {% if data_list is not null %}
-    {%- set attr = attr|merge({'list': id ~ '_datalist'}) -%}
+    {%- set attr = attr|merge({list: id ~ '_datalist'}) -%}
   {% endif %}
 
-  {{ form_widget(form, {'attr': attr}) }}
+  {{ form_widget(form, {attr: attr}) }}
 
   {% if data_list is not null %}
     <datalist id="{{ id ~ '_datalist' }}">
       {% for item in data_list %}
         <option value="{{ item }}"></option>
-      {% endfor%}
+      {% endfor %}
     </datalist>
   {% endif %}
 {% endblock text_widget %}
@@ -1252,15 +1257,23 @@
     {% endif %}
 
     {% if alert_title is defined %}
-      <div class="alert-more collapse" id="expandable_{{form.vars.id}}" style="">
-        {% for message in alert_message %}
-          <p>
-            {{ message|raw }}
-          </p>
-        {% endfor %}
+      <div class="alert-more collapse" id="expandable_{{ form.vars.id }}" style="">
+        {% if alert_message|length > 1 %}
+          <ul class="p-0">
+            {% for message in alert_message %}
+              <li>{{ message|raw }}</li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          {% for message in alert_message %}
+            <p>
+              {{ message|raw }}
+            </p>
+          {% endfor %}
+        {% endif %}
       </div>
       <div class="read-more-container">
-         <button type="button" class="read-more btn-link" data-toggle="collapse" data-target="#expandable_{{form.vars.id}}" aria-expanded="true" aria-controls="collapseDanger">
+         <button type="button" class="read-more btn-link" data-toggle="collapse" data-target="#expandable_{{ form.vars.id }}" aria-expanded="true" aria-controls="collapseDanger">
             {{ 'Read more'|trans({}, 'Admin.Actions') }}
           </button>
        </div>
@@ -1289,7 +1302,7 @@
     {% endif %}
 
     <span class="text-preview-value">
-      {% if  form.vars.allow_html %}
+      {% if form.vars.allow_html %}
         {# This outputs raw value #}
         {{ value|raw }}
       {% else %}
@@ -1305,6 +1318,7 @@
     </span>
     {% endif %}
   </span>
+  {{- block('form_help') -}}
 {% endblock %}
 
 {% block link_preview_widget %}
@@ -1318,7 +1332,11 @@
 {% block image_preview_widget %}
   {# This is the hidden input #}
   {{- block('form_widget_simple') -}}
-  <img src="{{ value }}" alt="{{ ('Image preview for ' ~ form.vars.name)|trim }}" class="{{ form.vars.image_class }}" />
+  {% if value is not empty %}
+    <img src="{{ value }}" alt="{{ ('Image preview for ' ~ form.vars.name)|trim }}" class="{{ form.vars.image_class }}" />
+  {% else %}
+    {{ 'No picture'|trans({}, 'Admin.Global') }}
+  {% endif %}
 {% endblock %}
 
 {% block delta_quantity_widget %}
@@ -1372,15 +1390,15 @@
 {% endblock %}
 
 {% block submittable_input_widget %}
-  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' ps-submittable-input-wrapper')|trim}) -%}
+  {%- set attr = attr|merge({class: (attr.class|default('') ~ ' ps-submittable-input-wrapper')|trim}) -%}
   <div {{ block('widget_attributes') }}>
     {%- set typeAttr = form.vars.type_attr|merge({
-      'class': (form.vars.type_attr.class|default('') ~ ' submittable-input')|trim,
+      class: (form.vars.type_attr.class|default('') ~ ' submittable-input')|trim,
       'data-initial-value': form.value.vars.value,
-      'value': form.value.vars.value,
+      value: form.value.vars.value,
     }) -%}
 
-    {{ form_widget(form.value, {'attr': typeAttr}) }}
+    {{ form_widget(form.value, {attr: typeAttr}) }}
     {{- block('submittable_input_button_widget') -}}
   </div>
 {% endblock submittable_input_widget %}
@@ -1395,12 +1413,12 @@
   {%- set attr = attr|merge({class: (attr.class|default('') ~ ' delta-quantity-delta ps-submittable-input-wrapper')|trim}) -%}
   <div {{ block('widget_attributes') }}>
     {%- set attr = form.vars.attr|merge({
-      'class': (form.vars.attr.class|default('') ~ ' submittable-input')|trim,
+      class: (form.vars.attr.class|default('') ~ ' submittable-input')|trim,
       'data-initial-value': value,
-      'value': value,
+      value: value,
     }) -%}
 
-    {{ form_widget(form, {'attr': attr}) }}
+    {{ form_widget(form, {attr: attr}) }}
     {{- block('submittable_input_button_widget') -}}
   </div>
 {% endblock %}
@@ -1416,7 +1434,7 @@
     <ul class="nav nav-tabs js-nav-tabs" id="form-nav" role="tablist">
     {% set firstRenderedChild = true %}
     {% for child in form.children %}
-      {% if not child.rendered and child.vars.name != '_toolbar_buttons' and child.vars.name != '_token' %}
+      {% if not child.rendered and child.vars.name != '_toolbar_buttons' and child.vars.name != '_footer_buttons' and child.vars.name != '_token' %}
       <li id="{{ child.vars.id }}-tab-nav" class="nav-item{% if not child.vars.valid %} has-error{% endif %}">
         <a href="#{{ child.vars.id }}-tab" role="tab" data-toggle="tab" class="nav-link{% if firstRenderedChild %} active{% endif %}">
           {{ child.vars.label }}
@@ -1441,10 +1459,11 @@
   <div id="{{ form.vars.id }}-tabs-content" class="tab-content">
     {% set firstRenderedChild = true %}
     {% for child in form.children %}
-      {% if not child.rendered and child.vars.name != '_token' %}
+      {% if not child.rendered and child.vars.name != '_footer_buttons' and child.vars.name != '_token' %}
       <div role="tabpanel" class="form-contenttab tab-pane container-fluid{% if firstRenderedChild %} active{% endif %}" id="{{ child.vars.id }}-tab">
         {% if child.vars.label_tab is defined %}
-          {{ form_label(child, child.vars.label_tab) }}
+          {# We force required false here so that the required asterix is never shown on the tab title #}
+          {{ form_label(child, child.vars.label_tab, {required: false}) }}
         {% endif %}
         {{ form_errors(child) }}
         {{ form_widget(child) }}
@@ -1453,16 +1472,25 @@
       {% endif %}
     {% endfor %}
   </div>
+
+  {% if form.offsetExists('_footer_buttons') %}
+    <div class="navigation-tab-widget-footer">
+      {{ form_widget(form._footer_buttons) }}
+    </div>
+  {% endif %}
 </div>
 {% endblock %}
 
 {%- block accordion_widget -%}
-  <div class="accordion accordion-form" id="{{ form.vars.id }}">
+  {%- set attr = attr|merge({
+    class: (attr.class|default('') ~ ' accordion accordion-form')|trim,
+  }) -%}
+  <div {{ block('widget_attributes') }}>
     {% set firstChild = true %}
     {% for child in form %}
       {% if child.vars.compound %}
       {% set hasError = child.vars.valid != true %}
-      {% set isExpanded = firstChild and expand_first or (hasError and expand_on_error) %}
+      {% set isExpanded = firstChild and expand_first or (hasError and expand_on_error) or expand_all %}
       <div class="card">
         <div class="card-header" id="{{ child.vars.id }}_accordion_header">
           <h2 class="mb-0">
@@ -1473,7 +1501,10 @@
               data-target="#{{ child.vars.id }}_accordion"
               aria-expanded="{% if isExpanded %}true{% else %}false{% endif %}"
               aria-controls="{{ child.vars.id }}_accordion">
-              {{ child.vars.label }}
+              <span class="accordion-form-button-label">{{ child.vars.label }}</span>
+              {% if child.vars.label_subtitle is defined %}
+                <span class="accordion-form-button-sub-label">{{ child.vars.label_subtitle }}</span>
+              {% endif %}
               <i class="material-icons"></i>
             </button>
           </h2>
@@ -1481,7 +1512,7 @@
 
         <div id="{{ child.vars.id }}_accordion" class="collapse{% if isExpanded %} show{% endif %}" aria-labelledby="{{ child.vars.id }}_accordion_header" {% if display_one %}data-parent="#{{ form.vars.id }}"{% endif %}>
           <div class="card-body">
-            {% set childAttr = {'class': 'accordion-sub-form'} %}
+            {% set childAttr = {class: 'accordion-sub-form'} %}
             {{ form_widget(child, {attr: childAttr}) }}
             {{ form_errors(child) }}
           </div>
@@ -1507,7 +1538,8 @@
       <div class="{% if use_button_groups %}btn-group {% endif %}group-{{ group }}">
         {# Render inline actions #}
         {% set inlineButtonsLimit = form.vars.inline_buttons_limit %}
-        {% for action in form.children %}
+        {% for button in buttons %}
+          {% set action = attribute(form, button) %}
           {% if inlineButtonsLimit is same as(null) or loop.index <= inlineButtonsLimit %}
             {# Remove labels from inline elements if they are not forced #}
             {% if form.vars.use_inline_labels %}
@@ -1515,12 +1547,12 @@
             {% else %}
               {% set actionLabel = '' %}
             {% endif %}
-            {{ form_widget(action, {'label': actionLabel}) }}
+            {{ form_widget(action, {label: actionLabel}) }}
           {% endif %}
         {% endfor %}
 
         {# Render remaining actions in dropdown #}
-        {% if inlineButtonsLimit is not same as(null) and form.children|length > inlineButtonsLimit %}
+        {% if inlineButtonsLimit is not same as(null) and buttons|length > inlineButtonsLimit %}
           <a id="{{ form.vars.id }}_dropdown" class="btn btn-link dropdown-toggle dropdown-toggle-dots dropdown-toggle-split no-rotate"
              data-toggle="dropdown"
              aria-haspopup="true"
@@ -1528,9 +1560,11 @@
           >
           </a>
           <div class="dropdown-menu">
-            {% for action in form.children|slice(inlineButtonsLimit) %}
-              {{ form_widget(action, {'attr': {
-                'class': 'dropdown-item ' ~ action.vars.attr.class|default('')|trim
+            {% set remainingButtons = buttons|slice(inlineButtonsLimit) %}
+            {% for button in remainingButtons %}
+              {% set action = attribute(form, button) %}
+              {{ form_widget(action, {attr: {
+                class: 'dropdown-item ' ~ action.vars.attr.class|default('')|trim
               }}) }}
             {% endfor %}
           </div>
@@ -1541,7 +1575,7 @@
 {% endblock %}
 
 {% block avatar_url_row %}
-  {{ form_row(form, {'attr': attr}) }}
+  {{ form_row(form, {attr: attr}) }}
 
   <div class="form-group row">
     <label class="form-control-label"></label>
@@ -1609,8 +1643,8 @@
   {% if data is defined and data is not empty %}
     <div>
       {% for preview_image in data %}
-{#        Checking for is defined because they file might come from submitted form when thera are too many thumbnails and an errro#}
-{#        in that case data will be a file based on symfony and not a image array formatted for this form#}
+{# Checking for is defined because they file might come from submitted form when thera are too many thumbnails and an errro #}
+{# in that case data will be a file based on symfony and not a image array formatted for this form #}
         {% if preview_image.image_path is defined %}
           {% if can_be_deleted %}
             <figure class="figure">
@@ -1621,7 +1655,6 @@
                 {% endif %}
                 <button class="btn btn-outline-danger btn-sm js-form-submit-btn"
                         data-form-submit-url="{{ preview_image.delete_path }}"
-                        data-form-csrf-token="{{ csrf_token(csrf_delete_token_id) }}"
                 >
                   <i class="material-icons">
                     delete_forever
@@ -1644,17 +1677,5 @@
       {% endfor %}
     </div>
   {% endif %}
-  {% if form.parent.vars.data.disabled_menu_thumbnail_upload is defined and form.parent.vars.data.disabled_menu_thumbnail_upload and warning_message is not null %}
-    <div class="d-none">
-      {{ block('file_widget') }}
-    </div>
-
-    <div class="alert alert-warning" role="alert">
-      <p class="alert-text">
-        {{ warning_message }}
-      </p>
-    </div>
-  {% else %}
-    {{ block('file_widget') }}
-  {% endif %}
+  {{ block('file_widget') }}
 {% endblock image_with_preview_widget %}

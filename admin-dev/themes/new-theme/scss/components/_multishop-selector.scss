@@ -5,7 +5,7 @@ $component-name: shop-selector;
   ul.#{$component-name}-group-list {
     position: relative;
     max-height: 500px;
-    padding: 0 1rem 0 0;
+    padding: 0 var(--#{$cdk}size-16) 0 0;
     margin-left: 0;
     list-style-type: none;
   }
@@ -13,9 +13,9 @@ $component-name: shop-selector;
   &-group-item {
     &.#{$component-name}-item {
       justify-content: flex-start;
-      margin-bottom: 1rem;
+      margin-bottom: var(--#{$cdk}size-16);
       font-weight: 600;
-      color: $medium-gray;
+      color: var(--#{$cdk}primary-500);
     }
   }
 
@@ -26,7 +26,7 @@ $component-name: shop-selector;
     width: 100%;
 
     > .#{$component-name}-color-check .material-icons {
-      font-size: 1.25rem;
+      font-size: var(--#{$cdk}size-20);
     }
 
     .md-checkbox {
@@ -35,11 +35,11 @@ $component-name: shop-selector;
 
       label {
         width: 100%;
-        padding-left: 25px;
+        padding-left: var(--#{$cdk}size-24);
 
         .md-checkbox-control::before,
         .md-checkbox-control::after {
-          margin-top: 10px;
+          margin-top: var(--#{$cdk}size-10);
         }
       }
     }
@@ -48,22 +48,21 @@ $component-name: shop-selector;
       display: flex;
       align-items: start;
       width: 100%;
-      padding: 0.5rem;
+      padding: var(--#{$cdk}size-8);
       font-weight: 600;
       cursor: pointer;
-      @include border-radius(0.5rem);
 
       .material-icons {
         margin-left: auto;
-        font-size: 1.4rem;
-        color: $brand-primary;
+        font-size: var(--#{$cdk}size-24);
+        color: var(--#{$cdk}primary-800);
         opacity: 0;
       }
 
       .shop-selector-status {
         margin-right: 5px;
         margin-left: auto;
-        color: $brand-primary;
+        color: var(--#{$cdk}primary-800);
       }
 
       &:hover {
@@ -90,11 +89,10 @@ $component-name: shop-selector;
 
   &-color {
     display: block;
-    width: 1.5rem;
-    min-width: 1.5rem;
-    height: 1.5rem;
-    margin-right: 1rem;
+    width: var(--#{$cdk}size-24);
+    min-width: var(--#{$cdk}size-24);
+    height: var(--#{$cdk}size-24);
+    margin-right: var(--#{$cdk}size-16);
     background-color: $multishop-header-default-background;
-    @include border-radius(3px);
   }
 }

@@ -370,7 +370,8 @@ Feature: Multiple currencies for Order in Back Office (BO)
   Scenario: Carrier change for an order with secondary currency
     Given a carrier "default_carrier" with name "My carrier" exists
     And a carrier "price_carrier" with name "My cheap carrier" exists
-    And I enable carrier "price_carrier"
+    And I edit carrier "price_carrier" with specified properties:
+      | active | true |
     And order "bo_order1" should have "default_carrier" as a carrier
     And order "bo_order1" carrier should have following details:
       | weight                 | 0.600 |
@@ -401,10 +402,11 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | total_price_tax_incl   | 252.28 |
       | total_price_tax_excl   | 238.00 |
 
-  @reset-database-before-scenario
+  @reset-all-tables-before-scenario
     # We reset database before this scenario to be sure only default_carrier is enabled
   Scenario: I add the product with associated gift when the order already has the gift
-    Given there is a product in the catalog named "Test Product With Auto Gift" with a price of 12.0 and 100 items in stock
+    Given a carrier "default_carrier" with name "My carrier" exists
+    And there is a product in the catalog named "Test Product With Auto Gift" with a price of 12.0 and 100 items in stock
     And there is a product in the catalog named "Test Product Gifted" with a price of 15.0 and 100 items in stock
     And there is a cart rule MultiGiftAutoCartRule with following properties:
       | name[en-US]               | MultiGiftAutoCartRule       |

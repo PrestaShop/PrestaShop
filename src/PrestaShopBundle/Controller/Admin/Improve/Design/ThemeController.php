@@ -27,6 +27,10 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Language\RTL\InstalledLanguageChecker;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeExporter;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemePageLayoutsCustomizer;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeProvider;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization;
@@ -53,11 +57,13 @@ use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeImportSource;
 use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeName;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Security\Permission;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Form\Admin\Improve\Design\Theme\AdaptThemeToRTLLanguagesType;
 use PrestaShopBundle\Form\Admin\Improve\Design\Theme\ImportThemeType;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use PrestaShopBundle\Form\Admin\Improve\Design\Theme\PageLayoutCustomizationFormFactory;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -67,30 +73,29 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Class ThemeController manages "Improve > Design > Theme & Logo" pages.
  */
-class ThemeController extends AbstractAdminController
+class ThemeController extends PrestaShopAdminController
 {
     /**
      * Show main themes page.
-     *
-     * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller'))",
-     *     message="You do not have permission to edit this."
-     * )
      *
      * @param Request $request
      *
      * @return Response
      */
-    public function indexAction(Request $request)
-    {
-        $themeProvider = $this->get('prestashop.core.addon.theme.theme_provider');
-        $installedRtlLanguageChecker = $this->get('prestashop.adapter.language.rtl.installed_language_checker');
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.')]
+    public function indexAction(
+        Request $request,
+        ThemeProvider $themeProvider,
+        InstalledLanguageChecker $installedRtlLanguageChecker,
+        #[Autowire(service: 'prestashop.admin.shop_logos_settings.form_handler')]
+        FormHandlerInterface $logosUploadFormHandler,
+    ): Response {
         /** @var LogosPaths $logoProvider */
-        $logoProvider = $this->getQueryBus()->handle(new GetLogosPaths());
+        $logoProvider = $this->dispatchQuery(new GetLogosPaths());
 
         return $this->render('@PrestaShop/Admin/Improve/Design/Theme/index.html.twig', [
-            'baseShopUrl' => $this->get('prestashop.adapter.shop.url.base_url_provider')->getUrl(),
-            'shopLogosForm' => $this->getLogosUploadForm()->createView(),
+            'baseShopUrl' => $this->getShopContext()->getBaseURL(),
+            'shopLogosForm' => $logosUploadFormHandler->getForm()->createView(),
             'headerLogoPath' => $logoProvider->getHeaderLogoPath(),
             'mailLogoPath' => $logoProvider->getMailLogoPath(),
             'invoiceLogoPath' => $logoProvider->getInvoiceLogoPath(),
@@ -98,11 +103,11 @@ class ThemeController extends AbstractAdminController
             'currentlyUsedTheme' => $themeProvider->getCurrentlyUsedTheme(),
             'notUsedThemes' => $themeProvider->getNotUsedThemes(),
             'isDevModeOn' => $this->getConfiguration()->get('_PS_MODE_DEV_'),
-            'isSingleShopContext' => $this->get('prestashop.adapter.shop.context')->isSingleShopContext(),
-            'isMultiShopFeatureUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
+            'isSingleShopContext' => $this->getShopContext()->getShopConstraint()->isSingleShopContext(),
+            'isMultiShopFeatureUsed' => $this->getShopContext()->isMultiShopUsed(),
             'adaptThemeToRtlLanguagesForm' => $this->getAdaptThemeToRtlLanguageForm()->createView(),
             'isInstalledRtlLanguage' => $installedRtlLanguageChecker->isInstalledRtlLanguage(),
-            'shopName' => $this->get('prestashop.adapter.shop.context')->getShopName(),
+            'shopName' => $this->getShopContext()->getName(),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
@@ -111,33 +116,35 @@ class ThemeController extends AbstractAdminController
     /**
      * Upload shop logos.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_themes_index")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_themes_index')]
-    public function uploadLogosAction(Request $request)
-    {
-        $logosUploadForm = $this->getLogosUploadForm();
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_themes_index')]
+    public function uploadLogosAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.admin.shop_logos_settings.form_handler')]
+        FormHandlerInterface $logosUploadFormHandler,
+    ): RedirectResponse {
+        $logosUploadForm = $logosUploadFormHandler->getForm();
         $logosUploadForm->handleRequest($request);
 
         if ($logosUploadForm->isSubmitted()) {
             $data = $logosUploadForm->getData();
             try {
-                $this->getShopLogosFormHandler()->save($data);
+                $logosUploadFormHandler->save($data);
 
                 $this->addFlash(
                     'success',
-                    $this->trans('The settings have been successfully updated.', 'Admin.Notifications.Success')
+                    $this->trans('The settings have been successfully updated.', [], 'Admin.Notifications.Success')
                 );
             } catch (DomainException $e) {
                 $this->addFlash(
                     'error',
                     $this->getErrorMessageForException(
                         $e,
-                        $this->getLogoUploadErrorMessages($e)
+                        $this->getLogoUploadErrorMessages()
                     )
                 );
             }
@@ -149,28 +156,22 @@ class ThemeController extends AbstractAdminController
     /**
      * Export current theme.
      *
-     * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_themes_index",
-     *     message="You do not have permission to view this."
-     * )
-     *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_themes_index')]
-    public function exportAction()
-    {
-        $themeProvider = $this->get('prestashop.core.addon.theme.theme_provider');
-        $exporter = $this->get('prestashop.core.addon.theme.exporter');
-
-        $path = $exporter->export($themeProvider->getCurrentlyUsedTheme());
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_themes_index', message: 'You do not have permission to view this.')]
+    public function exportAction(
+        ThemeProvider $themeProvider,
+        ThemeExporter $themeExporter,
+    ): RedirectResponse {
+        $path = $themeExporter->export($themeProvider->getCurrentlyUsedTheme());
 
         $this->addFlash(
             'success',
             $this->trans(
                 'Your theme has been correctly exported: %path%',
+                ['%path%' => $path],
                 'Admin.Notifications.Success',
-                ['%path%' => $path]
             )
         );
 
@@ -180,18 +181,13 @@ class ThemeController extends AbstractAdminController
     /**
      * Import new theme.
      *
-     * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_themes_index",
-     *     message="You do not have permission to add this."
-     * )
-     *
      * @param Request $request
      *
      * @return Response
      */
     #[DemoRestricted(redirectRoute: 'admin_themes_index')]
-    public function importAction(Request $request)
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_themes_index', message: 'You do not have permission to add this.')]
+    public function importAction(Request $request): Response
     {
         $importThemeForm = $this->createForm(ImportThemeType::class);
         $importThemeForm->handleRequest($request);
@@ -212,13 +208,13 @@ class ThemeController extends AbstractAdminController
                 if (null === $importSource) {
                     $this->addFlash(
                         'warning',
-                        $this->trans('Please select theme\'s import source.', 'Admin.Notifications.Warning')
+                        $this->trans('Please select theme\'s import source.', [], 'Admin.Notifications.Warning')
                     );
 
                     return $this->redirectToRoute('admin_themes_import');
                 }
 
-                $this->getCommandBus()->handle(new ImportThemeCommand($importSource));
+                $this->dispatchCommand(new ImportThemeCommand($importSource));
 
                 return $this->redirectToRoute('admin_themes_index');
             } catch (ThemeException $e) {
@@ -236,29 +232,24 @@ class ThemeController extends AbstractAdminController
 
         return $this->render('@PrestaShop/Admin/Improve/Design/Theme/import.html.twig', [
             'importThemeForm' => $importThemeForm->createView(),
-            'layoutTitle' => $this->trans('Theme import', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Theme import', [], 'Admin.Navigation.Menu'),
         ]);
     }
 
     /**
      * Enable selected theme.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_themes_index",
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param string $themeName
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_themes_index')]
-    public function enableAction($themeName)
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_themes_index', message: 'You do not have permission to edit this.')]
+    public function enableAction(string $themeName): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(new EnableThemeCommand(new ThemeName($themeName)));
-            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+            $this->dispatchCommand(new EnableThemeCommand(new ThemeName($themeName)));
+            $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
         } catch (ThemeException $e) {
             $this->addFlash(
                 'error',
@@ -277,25 +268,20 @@ class ThemeController extends AbstractAdminController
     /**
      * Delete selected theme.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_themes_index",
-     *     message="You do not have permission to delete this."
-     * )
-     *
      * @param string $themeName
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_themes_index')]
-    public function deleteAction($themeName)
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_themes_index', message: 'You do not have permission to delete this.')]
+    public function deleteAction(string $themeName): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(new DeleteThemeCommand(new ThemeName($themeName)));
+            $this->dispatchCommand(new DeleteThemeCommand(new ThemeName($themeName)));
 
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
             );
         } catch (ThemeException $e) {
             $this->addFlash('error', $this->handleDeleteThemeException($e));
@@ -309,18 +295,13 @@ class ThemeController extends AbstractAdminController
     /**
      * Adapts selected theme to RTL languages.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_themes_index",
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_themes_index')]
-    public function adaptToRTLLanguagesAction(Request $request)
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_themes_index', message: 'You do not have permission to edit this.')]
+    public function adaptToRTLLanguagesAction(Request $request): RedirectResponse
     {
         $form = $this->getAdaptThemeToRtlLanguageForm();
         $form->handleRequest($request);
@@ -336,13 +317,13 @@ class ThemeController extends AbstractAdminController
         }
 
         try {
-            $this->getCommandBus()->handle(new AdaptThemeToRTLLanguagesCommand(
+            $this->dispatchCommand(new AdaptThemeToRTLLanguagesCommand(
                 new ThemeName($data['theme_to_adapt'])
             ));
 
             $this->addFlash(
                 'success',
-                $this->trans('Your RTL stylesheets has been generated successfully', 'Admin.Design.Notification')
+                $this->trans('Your RTL stylesheets has been generated successfully', [], 'Admin.Design.Notification')
             );
         } catch (ThemeException $e) {
             $this->addFlash('error', $this->handleAdaptThemeToRTLLanguagesException($e));
@@ -354,27 +335,22 @@ class ThemeController extends AbstractAdminController
     /**
      * Reset theme's page layouts.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_themes_index",
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param string $themeName
      *
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_themes_index')]
-    public function resetLayoutsAction($themeName)
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_themes_index', message: 'You do not have permission to edit this.')]
+    public function resetLayoutsAction(string $themeName): RedirectResponse
     {
-        $this->getCommandBus()->handle(new ResetThemeLayoutsCommand(new ThemeName($themeName)));
+        $this->dispatchCommand(new ResetThemeLayoutsCommand(new ThemeName($themeName)));
 
         $this->addFlash('success', $this->trans(
             'Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the \'%regenerate_label%\' button.',
-            'Admin.Design.Notification',
             [
-                '%regenerate_label%' => $this->trans('Regenerate thumbnails', 'Admin.Design.Feature'),
-            ]
+                '%regenerate_label%' => $this->trans('Regenerate thumbnails', [], 'Admin.Design.Feature'),
+            ],
+            'Admin.Design.Notification',
         ));
 
         return $this->redirectToRoute('admin_themes_index');
@@ -387,22 +363,23 @@ class ThemeController extends AbstractAdminController
      *
      * @return Response
      */
-    public function customizeLayoutsAction(Request $request)
-    {
+    public function customizeLayoutsAction(
+        Request $request,
+        PageLayoutCustomizationFormFactory $pageLayoutCustomizationFormFactory,
+        ThemePageLayoutsCustomizer $themePageLayoutsCustomizer,
+    ): Response {
         $canCustomizeLayout = $this->canCustomizePageLayouts($request);
 
         if (!$canCustomizeLayout) {
             $this->addFlash(
                 'error',
-                $this->trans('You do not have permission to edit this.', 'Admin.Notifications.Error')
+                $this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error')
             );
         }
 
         /** @var LayoutCustomizationPage[] $pages */
-        $pages = $this->getQueryBus()->handle(new GetPagesForLayoutCustomization());
+        $pages = $this->dispatchQuery(new GetPagesForLayoutCustomization());
 
-        $pageLayoutCustomizationFormFactory =
-            $this->get('prestashop.bundle.form.admin.improve.design.theme.page_layout_customization_form_factory');
         $pageLayoutCustomizationForm = $pageLayoutCustomizationFormFactory->create($pages);
         $pageLayoutCustomizationForm->handleRequest($request);
 
@@ -413,10 +390,9 @@ class ThemeController extends AbstractAdminController
                 return $this->redirectToRoute('admin_theme_customize_layouts');
             }
 
-            $themePageLayoutsCustomizer = $this->get('prestashop.core.addon.theme.theme.page_layouts_customizer');
             $themePageLayoutsCustomizer->customize($pageLayoutCustomizationForm->getData()['layouts']);
 
-            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
 
             return $this->redirectToRoute('admin_themes_index');
         }
@@ -424,7 +400,7 @@ class ThemeController extends AbstractAdminController
         return $this->render('@PrestaShop/Admin/Improve/Design/Theme/customize_page_layouts.html.twig', [
             'pageLayoutCustomizationForm' => $pageLayoutCustomizationForm->createView(),
             'pages' => $pages,
-            'layoutTitle' => $this->trans('Choose layouts', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Choose layouts', [], 'Admin.Navigation.Menu'),
         ]);
     }
 
@@ -433,20 +409,10 @@ class ThemeController extends AbstractAdminController
      *
      * @return bool
      */
-    protected function canCustomizePageLayouts(Request $request)
+    protected function canCustomizePageLayouts(Request $request): bool
     {
-        return !$this->isDemoModeEnabled() &&
-            $this->isGranted(Permission::UPDATE, $request->attributes->get('_legacy_controller'));
-    }
-
-    /**
-     * @return FormInterface
-     *
-     * @throws Exception
-     */
-    protected function getLogosUploadForm(): FormInterface
-    {
-        return $this->getShopLogosFormHandler()->getForm();
+        return !$this->isDemoModeEnabled()
+            && $this->isGranted(Permission::UPDATE, $request->attributes->get('_legacy_controller'));
     }
 
     /**
@@ -458,40 +424,32 @@ class ThemeController extends AbstractAdminController
     }
 
     /**
-     * @return FormHandlerInterface
-     */
-    private function getShopLogosFormHandler(): FormHandlerInterface
-    {
-        return $this->get('prestashop.admin.shop_logos_settings.form_handler');
-    }
-
-    /**
      * @param Exception $e
      *
      * @return array
      */
-    private function handleImportThemeException(Exception $e)
+    private function handleImportThemeException(Exception $e): array
     {
         return [
             ImportedThemeAlreadyExistsException::class => $this->trans(
                 'There is already a theme %theme_name% in your themes folder. Remove it if you want to continue.',
-                'Admin.Design.Notification',
                 [
                     '%theme_name%' => $e instanceof ImportedThemeAlreadyExistsException ? $e->getThemeName()->getValue() : '',
-                ]
+                ],
+                'Admin.Design.Notification',
             ),
             ThemeConstraintException::class => [
                 ThemeConstraintException::RESTRICTED_ONLY_FOR_SINGLE_SHOP => $this->trans(
-                        'Themes can only be changed in single store context.', 'Admin.Notifications.Error'
+                    'Themes can only be changed in single store context.', [], 'Admin.Notifications.Error'
                 ),
                 ThemeConstraintException::MISSING_CONFIGURATION_FILE => $this->trans(
-                        'Missing configuration file', 'Admin.Notifications.Error'
+                    'Missing configuration file', [], 'Admin.Notifications.Error'
                 ),
                 ThemeConstraintException::INVALID_CONFIGURATION => $this->trans(
-                        'Invalid configuration', 'Admin.Notifications.Error'
+                    'Invalid configuration', [], 'Admin.Notifications.Error'
                 ),
                 ThemeConstraintException::INVALID_DATA => $this->trans(
-                        'Invalid data', 'Admin.Notifications.Error'
+                    'Invalid data', [], 'Admin.Notifications.Error'
                 ),
             ],
         ];
@@ -502,25 +460,26 @@ class ThemeController extends AbstractAdminController
      *
      * @return array
      */
-    private function handleEnableThemeException(ThemeException $e)
+    private function handleEnableThemeException(ThemeException $e): array
     {
         return [
             CannotEnableThemeException::class => $e->getMessage(),
             ThemeConstraintException::class => [
                 ThemeConstraintException::RESTRICTED_ONLY_FOR_SINGLE_SHOP => $this->trans(
-                        'You must select a shop from the above list if you wish to choose a theme.',
-                        'Admin.Design.Help'
-                    ),
+                    'You must select a shop from the above list if you wish to choose a theme.',
+                    [],
+                    'Admin.Design.Help',
+                ),
             ],
             FailedToEnableThemeModuleException::class => $this->trans(
-                    'Cannot %action% module %module%. %error_details%',
-                    'Admin.Modules.Notification',
-                    [
-                        '%action%' => strtolower($this->trans('Install', 'Admin.Actions')),
-                        '%module%' => ($e instanceof FailedToEnableThemeModuleException) ? $e->getModuleName() : '',
-                        '%error_details%' => $e->getMessage(),
-                    ]
-                ),
+                'Cannot %action% module %module%. %error_details%',
+                [
+                    '%action%' => strtolower($this->trans('Install', [], 'Admin.Actions')),
+                    '%module%' => ($e instanceof FailedToEnableThemeModuleException) ? $e->getModuleName() : '',
+                    '%error_details%' => $e->getMessage(),
+                ],
+                'Admin.Modules.Notification',
+            ),
         ];
     }
 
@@ -529,22 +488,17 @@ class ThemeController extends AbstractAdminController
      *
      * @return string
      */
-    private function handleDeleteThemeException(ThemeException $e)
+    private function handleDeleteThemeException(ThemeException $e): string
     {
-        $type = $e::class;
-
         $errorMessages = [
             CannotDeleteThemeException::class => $this->trans(
                 'Failed to delete theme. Make sure you have permissions and theme is not used.',
+                [],
                 'Admin.Design.Notification'
             ),
         ];
 
-        if (isset($errorMessages[$type])) {
-            return $errorMessages[$type];
-        }
-
-        return $this->getFallbackErrorMessage($type, $e->getCode());
+        return $this->getErrorMessageForException($e, $errorMessages);
     }
 
     /**
@@ -552,50 +506,39 @@ class ThemeController extends AbstractAdminController
      *
      * @return string
      */
-    private function handleAdaptThemeToRTLLanguagesException(ThemeException $e)
+    private function handleAdaptThemeToRTLLanguagesException(ThemeException $e): string
     {
-        $type = $e::class;
-
         $errorMessages = [
-            CannotAdaptThemeToRTLLanguagesException::class => $this->trans('Cannot adapt theme to RTL languages.', 'Admin.Design.Notification'),
+            CannotAdaptThemeToRTLLanguagesException::class => $this->trans('Cannot adapt theme to RTL languages.', [], 'Admin.Design.Notification'),
         ];
 
-        if (isset($errorMessages[$type])) {
-            return $errorMessages[$type];
-        }
-
-        return $this->getFallbackErrorMessage($type, $e->getCode());
+        return $this->getErrorMessageForException($e, $errorMessages);
     }
 
     /**
      * Gets exception or exception and its code error mapping.
      *
-     * @param DomainException $exception
-     *
      * @return array
      */
-    private function getLogoUploadErrorMessages(DomainException $exception)
+    private function getLogoUploadErrorMessages(): array
     {
         $availableLogoFormatsImploded = implode(', .', ShopLogoSettings::AVAILABLE_LOGO_IMAGE_EXTENSIONS);
         $availableMailAndInvoiceFormatsImploded = implode(', .', ShopLogoSettings::AVAILABLE_MAIL_AND_INVOICE_LOGO_IMAGE_EXTENSIONS);
         $availableIconFormat = ShopLogoSettings::AVAILABLE_ICON_IMAGE_EXTENSION;
-
         $logoImageFormatError = $this->trans(
             'Image format not recognized, allowed format(s) is(are): .%s',
+            [$availableLogoFormatsImploded],
             'Admin.Notifications.Error',
-            [$availableLogoFormatsImploded]
         );
-
         $mailAndInvoiceImageFormatError = $this->trans(
             'Image format not recognized, allowed formats are: %s',
+            [$availableMailAndInvoiceFormatsImploded],
             'Admin.Notifications.Error',
-            [$availableMailAndInvoiceFormatsImploded]
         );
-
         $iconFormatError = $this->trans(
             'Image format not recognized, allowed format(s) is(are): .%s',
+            [$availableIconFormat],
             'Admin.Notifications.Error',
-            [$availableIconFormat]
         );
 
         return [
@@ -605,10 +548,10 @@ class ThemeController extends AbstractAdminController
             FileUploadException::class => [
                 UPLOAD_ERR_INI_SIZE => $this->trans(
                     'File too large (limit of %s bytes).',
-                    'Admin.Notifications.Error',
                     [
                         UploadedFile::getMaxFilesize(),
-                    ]
+                    ],
+                    'Admin.Notifications.Error',
                 ),
             ],
         ];

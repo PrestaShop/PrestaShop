@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilder;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilderInterface;
 
-class CombinationCommandsBuilderTest extends AbstractCombinationCommandBuilderTest
+class CombinationCommandsBuilderTest extends AbstractCombinationCommandBuilderTestCase
 {
     /**
      * @dataProvider getExpectedCommands

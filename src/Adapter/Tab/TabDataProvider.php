@@ -89,23 +89,38 @@ class TabDataProvider
 
         foreach (Tab::getTabs($languageId, 0) as $tab) {
             if ($this->canAccessTab($profileId, $tab['id_tab'])) {
-                $viewableTabs[$tab['id_tab']] = [
-                    'id_tab' => $tab['id_tab'],
-                    'name' => $tab['name'],
-                    'children' => [],
-                ];
-
-                foreach (Tab::getTabs($languageId, $tab['id_tab']) as $children) {
-                    if ($this->canAccessTab($profileId, $children['id_tab'])) {
-                        foreach (Tab::getTabs($languageId, $children['id_tab']) as $subchild) {
-                            if ($this->canAccessTab($profileId, $subchild['id_tab'])) {
-                                $viewableTabs[$tab['id_tab']]['children'][] = [
-                                    'id_tab' => $subchild['id_tab'],
-                                    'name' => $subchild['name'],
-                                ];
+                $children = Tab::getTabs($languageId, $tab['id_tab']);
+                $viewableChildren = [];
+                foreach ($children as $child) {
+                    if ($this->canAccessTab($profileId, $child['id_tab'])) {
+                        $subChildren = Tab::getTabs($languageId, $child['id_tab']);
+                        // If child has sub children (three level menu) we only add the sub children
+                        if (!empty($subChildren)) {
+                            foreach ($subChildren as $subChild) {
+                                if ($this->canAccessTab($profileId, $subChild['id_tab']) && $subChild['active']) {
+                                    $viewableChildren[] = [
+                                        'id_tab' => $subChild['id_tab'],
+                                        'name' => $subChild['name'],
+                                    ];
+                                }
                             }
+                        } elseif ($child['active']) {
+                            // If child is a direct page without children it can be added in the list
+                            $viewableChildren[] = [
+                                'id_tab' => $child['id_tab'],
+                                'name' => $child['name'],
+                            ];
                         }
                     }
+                }
+
+                // Tab not active are not shown unless they have active children
+                if (!empty($viewableChildren) || $tab['active']) {
+                    $viewableTabs[$tab['id_tab']] = [
+                        'id_tab' => $tab['id_tab'],
+                        'name' => $tab['name'],
+                        'children' => $viewableChildren,
+                    ];
                 }
             }
         }

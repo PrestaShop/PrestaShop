@@ -65,21 +65,19 @@ $(() => {
       }
     }
 
-    const modal = new ConfirmModal(
-      {
-        id: 'modal-confirm-submit-feature-flag',
-        confirmTitle: $submitButton.data('modal-title'),
-        confirmMessage: $submitButton.data('modal-message'),
-        confirmButtonLabel: $submitButton.data('modal-apply'),
-        closeButtonLabel: $submitButton.data('modal-cancel'),
-      },
-      () => {
-        $form.submit();
-      },
-    );
-
     if (oneFlagIsEnabled) {
-      modal.show();
+      new ConfirmModal(
+        {
+          id: 'modal-confirm-submit-feature-flag',
+          confirmTitle: $submitButton.data('modal-title'),
+          confirmMessage: $submitButton.data('modal-message'),
+          confirmButtonLabel: $submitButton.data('modal-apply'),
+          closeButtonLabel: $submitButton.data('modal-cancel'),
+        },
+        () => {
+          $form.submit();
+        },
+      );
     } else {
       $form.submit();
     }

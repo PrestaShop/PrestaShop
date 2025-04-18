@@ -84,13 +84,26 @@ class FormHandlerTest extends TestCase
 
     public function testGetForm()
     {
-        $this->formBuilderMock->expects($this->exactly(3))
+        $invokedCount = $this->exactly(3);
+        $this->formBuilderMock->expects($invokedCount)
             ->method('add')
-            ->withConsecutive(
-                ['a', 'a'],
-                ['b', 'b'],
-                ['c', 'c']
-            );
+            ->willReturnCallback(function (string|self $child, ?string $type = null) use ($invokedCount) {
+                if ($invokedCount->numberOfInvocations() === 1) {
+                    $this->assertEquals('a', $child);
+                    $this->assertEquals('a', $type);
+                }
+                if ($invokedCount->numberOfInvocations() === 2) {
+                    $this->assertEquals('b', $child);
+                    $this->assertEquals('b', $type);
+                }
+                if ($invokedCount->numberOfInvocations() === 3) {
+                    $this->assertEquals('c', $child);
+                    $this->assertEquals('c', $type);
+                }
+
+                return $this->formBuilderMock;
+            })
+        ;
 
         $this->dataProviderMock
             ->method('getData')

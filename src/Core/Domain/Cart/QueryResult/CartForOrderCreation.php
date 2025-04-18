@@ -95,7 +95,7 @@ class CartForOrderCreation
         array $cartRules,
         array $addresses,
         CartSummary $summary,
-        CartShipping $shipping = null
+        ?CartShipping $shipping = null
     ) {
         $this->cartId = $cartId;
         $this->products = $products;

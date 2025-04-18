@@ -196,7 +196,7 @@ class LanguageImageManager
      *
      * @return string
      */
-    private function getPlaceholderImageFilename(string $isoCode, string $imageTypeName = null): string
+    private function getPlaceholderImageFilename(string $isoCode, ?string $imageTypeName = null): string
     {
         if (null !== $imageTypeName) {
             return sprintf(static::PLACEHOLDER_IMAGE_NAME_PATTERNS[1], $isoCode, $imageTypeName);

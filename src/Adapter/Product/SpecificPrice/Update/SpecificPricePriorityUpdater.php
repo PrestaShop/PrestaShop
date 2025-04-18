@@ -85,7 +85,7 @@ class SpecificPricePriorityUpdater
                     $productId->getValue()
                 ));
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             throw new CoreException(sprintf(
                 'Error occurred when trying to set specific price priorities for product #%d',
                 $productId->getValue()
@@ -103,7 +103,7 @@ class SpecificPricePriorityUpdater
                 'PS_SPECIFIC_PRICE_PRIORITIES',
                 implode(';', $priorityList->getPriorities())
             );
-        } catch (Exception $e) {
+        } catch (Exception) {
             throw new CoreException('Error occurred when trying to update default specific price priorities');
         }
     }
@@ -118,7 +118,7 @@ class SpecificPricePriorityUpdater
                 $this->dbPrefix . 'specific_price_priority',
                 ['id_product' => $productId->getValue()]
             );
-        } catch (Exception $e) {
+        } catch (Exception) {
             throw new CoreException(sprintf(
                 'Error occurred when trying to remove specific price priorities for product #%d',
                 $productId->getValue()

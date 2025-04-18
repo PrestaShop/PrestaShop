@@ -68,7 +68,7 @@ final class CountryZipCodeRequirementsProvider implements CountryZipCodeRequirem
 
         try {
             $country = new Country($countryIdValue);
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new CountryNotFoundException(sprintf('Country with id "%s" was not found.', $countryIdValue));
         }
 

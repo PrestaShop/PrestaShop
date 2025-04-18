@@ -1,30 +1,30 @@
 // Import utils
-import basicHelper from '@utils/basicHelper';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
 import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
-import loginCommon from '@commonTests/BO/loginBO';
 
-// Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
-import ordersPage from '@pages/BO/orders';
-import addOrderPage from '@pages/BO/orders/add';
-import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
-import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
-
-// Import data
-import Carriers from '@data/demo/carriers';
-import Customers from '@data/demo/customers';
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
-import Products from '@data/demo/products';
-import OrderStatusData from '@data/faker/orderStatus';
+import {
+  boDashboardPage,
+  boLoginPage,
+  boOrdersPage,
+  boOrdersCreatePage,
+  boOrdersViewBlockProductsPage,
+  boOrdersViewBlockTabListPage,
+  boOrderSettingsPage,
+  type BrowserContext,
+  dataCarriers,
+  dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
+  dataProducts,
+  type FakerOrderStatus,
+  type Page,
+  utilsCore,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_orders_orders_createOrders_chooseShipping';
 
@@ -61,50 +61,56 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
     tax: 'None',
     isRecyclablePackage: false,
   };
-  const paymentMethodModuleName: string = PaymentMethods.checkPayment.moduleName;
-  const orderStatus: OrderStatusData = OrderStatuses.paymentAccepted;
+  const paymentMethodModuleName: string = dataPaymentMethods.checkPayment.moduleName;
+  const orderStatus: FakerOrderStatus = dataOrderStatuses.paymentAccepted;
   const giftMessage: string = 'Gift message to test';
 
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   // Pre-condition : configure gift options
   describe('PRE-TEST: Enable and configure gift options', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Shop Parameters > Order Settings\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderSettingsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.shopParametersParentLink,
-        dashboardPage.orderSettingsLink,
+        boDashboardPage.shopParametersParentLink,
+        boDashboardPage.orderSettingsLink,
       );
-      await orderSettingsPage.closeSfToolBar(page);
+      await boOrderSettingsPage.closeSfToolBar(page);
 
-      const pageTitle = await orderSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+      const pageTitle = await boOrderSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrderSettingsPage.pageTitle);
     });
 
     it(`should configure gift options: price '€${giftOptions.price}' and tax '${giftOptions.tax}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'configureGiftOptions', baseContext);
 
-      const result = await orderSettingsPage.setGiftOptions(
+      const result = await boOrderSettingsPage.setGiftOptions(
         page,
         giftOptions.wantedStatus,
         giftOptions.price,
         giftOptions.tax,
         giftOptions.isRecyclablePackage,
       );
-      await expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(boOrderSettingsPage.successfulUpdateMessage);
     });
   });
 
@@ -113,33 +119,33 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
-      await ordersPage.closeSfToolBar(page);
+      await boOrdersPage.closeSfToolBar(page);
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should go to create order page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreateOrderPage', baseContext);
 
-      await ordersPage.goToCreateOrderPage(page);
+      await boOrdersPage.goToCreateOrderPage(page);
 
-      const pageTitle = await addOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addOrderPage.pageTitle);
+      const pageTitle = await boOrdersCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersCreatePage.pageTitle);
     });
 
-    it(`should choose customer ${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}`, async function () {
+    it(`should choose customer ${dataCustomers.johnDoe.firstName} ${dataCustomers.johnDoe.lastName}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseDefaultCustomer', baseContext);
 
-      await addOrderPage.searchCustomer(page, Customers.johnDoe.email);
+      await boOrdersCreatePage.searchCustomer(page, dataCustomers.johnDoe.email);
 
-      const isCartsTableVisible = await addOrderPage.chooseCustomer(page);
-      await expect(isCartsTableVisible, 'History block is not visible!').to.be.true;
+      const isCartsTableVisible = await boOrdersCreatePage.chooseCustomer(page);
+      expect(isCartsTableVisible, 'History block is not visible!').to.eq(true);
     });
   });
 
@@ -148,48 +154,48 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
     it('should check that shipping block is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkThatShippingBlockNotVisible', baseContext);
 
-      const isVisible = await addOrderPage.isShippingBlockVisible(page);
-      await expect(isVisible, 'Shipping block is visible!').to.be.false;
+      const isVisible = await boOrdersCreatePage.isShippingBlockVisible(page);
+      expect(isVisible, 'Shipping block is visible!').to.eq(false);
     });
 
     it('should add product to cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      const productToSelect = `${Products.demo_11.name} - €${Products.demo_11.price.toFixed(2)}`;
-      await addOrderPage.addProductToCart(page, Products.demo_11, productToSelect);
+      const productToSelect = `${dataProducts.demo_11.name} - €${dataProducts.demo_11.price.toFixed(2)}`;
+      await boOrdersCreatePage.addProductToCart(page, dataProducts.demo_11, productToSelect);
 
-      const result = await addOrderPage.getProductDetailsFromTable(page);
+      const result = await boOrdersCreatePage.getProductDetailsFromTable(page);
       await Promise.all([
-        expect(result.image).to.contains(Products.demo_11.thumbImage),
-        expect(result.description).to.equal(Products.demo_11.name),
+        expect(result.image).to.contains(dataProducts.demo_11.thumbImage),
+        expect(result.description).to.equal(dataProducts.demo_11.name),
       ]);
     });
 
     it('should check that shipping block is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkThatShippingBlockVisible', baseContext);
 
-      const isVisible = await addOrderPage.isShippingBlockVisible(page);
-      await expect(isVisible, 'Shipping block is not visible!').to.be.true;
+      const isVisible = await boOrdersCreatePage.isShippingBlockVisible(page);
+      expect(isVisible, 'Shipping block is not visible!').to.eq(true);
     });
 
-    it(`should choose the carrier '${Carriers.myCarrier.name}' and check shipping price`, async function () {
+    it(`should choose the carrier '${dataCarriers.myCarrier.name}' and check shipping price`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkShippingBlockContent', baseContext);
 
-      const shippingPriceTTC = await addOrderPage.setDeliveryOption(
-        page, `${Carriers.myCarrier.name} - Delivery next day!`,
+      const shippingPriceTTC = await boOrdersCreatePage.setDeliveryOption(
+        page, `${dataCarriers.myCarrier.name} - Delivery next day!`,
       );
-      await expect(shippingPriceTTC).to.equal(`€${Carriers.myCarrier.priceTTC.toFixed(2)}`);
+      expect(shippingPriceTTC).to.equal(`€${dataCarriers.myCarrier.priceTTC.toFixed(2)}`);
     });
 
     it('should check summary block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock1', baseContext);
 
-      const totalTaxExc = (Products.demo_12.priceTaxExcluded + Carriers.myCarrier.price).toFixed(2);
-      const totalTaxInc = (Products.demo_12.price + Carriers.myCarrier.priceTTC).toFixed(2);
+      const totalTaxExc = (dataProducts.demo_12.priceTaxExcluded + dataCarriers.myCarrier.price).toFixed(2);
+      const totalTaxInc = (dataProducts.demo_12.price + dataCarriers.myCarrier.priceTTC).toFixed(2);
 
-      const result = await addOrderPage.getSummaryDetails(page);
+      const result = await boOrdersCreatePage.getSummaryDetails(page);
       await Promise.all([
-        expect(result.totalShipping).to.equal(`€${Carriers.myCarrier.price.toFixed(2)}`),
+        expect(result.totalShipping).to.equal(`€${dataCarriers.myCarrier.price.toFixed(2)}`),
         expect(result.totalTaxExcluded).to.equal(`€${totalTaxExc}`),
         expect(result.totalTaxIncluded).to.equal(`Total (Tax incl.) €${totalTaxInc}`),
       ]);
@@ -198,41 +204,41 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
     it('should enable free shipping', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableFreeShipping', baseContext);
 
-      await addOrderPage.setFreeShipping(page, true);
+      await boOrdersCreatePage.setFreeShipping(page, true);
 
-      const shippingPrice = await addOrderPage.getShippingCost(page);
-      await expect(shippingPrice).to.be.equal('€0.00');
+      const shippingPrice = await boOrdersCreatePage.getShippingCost(page);
+      expect(shippingPrice).to.be.equal('€0.00');
     });
 
     it('should re-check summary block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock2', baseContext);
 
-      const result = await addOrderPage.getSummaryDetails(page);
+      const result = await boOrdersCreatePage.getSummaryDetails(page);
       await Promise.all([
         expect(result.totalShipping).to.equal('€0.00'),
-        expect(result.totalTaxExcluded).to.equal(`€${Products.demo_12.priceTaxExcluded.toFixed(2)}`),
-        expect(result.totalTaxIncluded).to.equal(`Total (Tax incl.) €${Products.demo_12.price.toFixed(2)}`),
+        expect(result.totalTaxExcluded).to.equal(`€${dataProducts.demo_12.priceTaxExcluded.toFixed(2)}`),
+        expect(result.totalTaxIncluded).to.equal(`Total (Tax incl.) €${dataProducts.demo_12.price.toFixed(2)}`),
       ]);
     });
 
     it('should enable \'Recycled packaging\' and \'Gift\' and add a gift message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock3', baseContext);
 
-      await addOrderPage.setRecycledPackaging(page, true);
-      await addOrderPage.setGiftMessage(page, giftMessage);
-      await addOrderPage.setGift(page, true);
+      await boOrdersCreatePage.setRecycledPackaging(page, true);
+      await boOrdersCreatePage.setGiftMessage(page, giftMessage);
+      await boOrdersCreatePage.setGift(page, true);
     });
 
     it('should enable gift and re-check summary block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock4', baseContext);
 
-      await addOrderPage.setGift(page, true);
+      await boOrdersCreatePage.setGift(page, true);
 
-      const tax = await basicHelper.percentage(giftOptions.price, 10);
-      const totalTaxExc = (Products.demo_12.priceTaxExcluded + giftOptions.price).toFixed(2);
-      const totalTaxInc = (Products.demo_12.price + giftOptions.price + tax).toFixed(2);
+      const tax = await utilsCore.percentage(giftOptions.price, 10);
+      const totalTaxExc = (dataProducts.demo_12.priceTaxExcluded + giftOptions.price).toFixed(2);
+      const totalTaxInc = (dataProducts.demo_12.price + giftOptions.price + tax).toFixed(2);
 
-      const result = await addOrderPage.getSummaryDetails(page);
+      const result = await boOrdersCreatePage.getSummaryDetails(page);
       await Promise.all([
         expect(result.totalShipping).to.equal('€0.00'),
         expect(result.totalTaxExcluded).to.equal(`€${totalTaxExc}`),
@@ -243,25 +249,25 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
     it('should complete the order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'completeOrder', baseContext);
 
-      await addOrderPage.setSummaryAndCreateOrder(page, paymentMethodModuleName, orderStatus);
+      await boOrdersCreatePage.setSummaryAndCreateOrder(page, paymentMethodModuleName, orderStatus);
 
-      const pageTitle = await orderPageProductsBlock.getPageTitle(page);
-      await expect(pageTitle).to.contain(orderPageProductsBlock.pageTitle);
+      const pageTitle = await boOrdersViewBlockProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contain(boOrdersViewBlockProductsPage.pageTitle);
     });
 
     it('should check \'Recycled packaging\' and \'gift wrapping\' badges', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkBadges', baseContext);
 
-      const recyclePackagingBadge = await orderPageTabListBlock.getSuccessBadge(page, 2);
-      await expect(recyclePackagingBadge).to.contain('Recycled packaging')
+      const recyclePackagingBadge = await boOrdersViewBlockTabListPage.getSuccessBadge(page, 2);
+      expect(recyclePackagingBadge).to.contain('Recycled packaging')
         .and.to.contain('Gift wrapping');
     });
 
     it('should check the gift message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkGiftMessage', baseContext);
 
-      const giftMessageText = await orderPageTabListBlock.getGiftMessage(page);
-      await expect(giftMessageText).to.be.equal(giftMessage);
+      const giftMessageText = await boOrdersViewBlockTabListPage.getGiftMessage(page);
+      expect(giftMessageText).to.be.equal(giftMessage);
     });
   });
 
@@ -270,28 +276,28 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
     it('should go to \'Shop Parameters > Order Settings\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderSettingsPage2', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.shopParametersParentLink,
-        dashboardPage.orderSettingsLink,
+        boDashboardPage.shopParametersParentLink,
+        boDashboardPage.orderSettingsLink,
       );
-      await orderSettingsPage.closeSfToolBar(page);
+      await boOrderSettingsPage.closeSfToolBar(page);
 
-      const pageTitle = await orderSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+      const pageTitle = await boOrderSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrderSettingsPage.pageTitle);
     });
 
     it('should go back to default configuration', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackDefaultConfigureGiftOptions', baseContext);
 
-      const result = await orderSettingsPage.setGiftOptions(
+      const result = await boOrderSettingsPage.setGiftOptions(
         page,
         defaultGiftOptions.wantedStatus,
         defaultGiftOptions.price,
         defaultGiftOptions.tax,
         defaultGiftOptions.isRecyclablePackage,
       );
-      await expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
+      expect(result).to.contains(boOrderSettingsPage.successfulUpdateMessage);
     });
   });
 

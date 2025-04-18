@@ -5,22 +5,22 @@
       <trans-unit id="54e180b1dbafcab1e37fd7f8cf5411f6">
         <source>You are currently connected under the following domain name:</source>
         <target>You are currently connected under the following domain name:</target>
-        <note>Line: 358</note>
+        <note>Line: 360</note>
       </trans-unit>
       <trans-unit id="98f5fdb1bf05af7241b0eb9cf8afbafa">
         <source>This is different from the shop domain name set in the Multistore settings: "%s".</source>
         <target>This is different from the shop domain name set in the Multistore settings: "%s".</target>
-        <note>Line: 361</note>
+        <note>Line: 363</note>
       </trans-unit>
       <trans-unit id="d8d5ce732cf78334f18c47ce0892ab2e">
         <source>If this is your main domain, please {link}change it now{/link}.</source>
         <target>If this is your main domain, please {link}change it now{/link}.</target>
-        <note>Line: 377</note>
+        <note>Line: 379</note>
       </trans-unit>
       <trans-unit id="e3e7221b6b1d51f976fa58ec6131a2aa">
         <source><![CDATA[This is different from the domain name set in the "SEO & URLs" tab.]]></source>
         <target><![CDATA[This is different from the domain name set in the "SEO & URLs" tab.]]></target>
-        <note>Line: 375</note>
+        <note>Line: 377</note>
       </trans-unit>
     </body>
   </file>

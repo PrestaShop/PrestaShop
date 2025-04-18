@@ -33,7 +33,7 @@ class SitemapControllerCore extends FrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         $sitemapUrls = [
             'our_offers' => [
@@ -60,13 +60,7 @@ class SitemapControllerCore extends FrontController
          */
         Hook::exec(
             'actionModifyFrontendSitemap',
-            ['urls' => &$sitemapUrls],
-            null,
-            false,
-            true,
-            false,
-            null,
-            true
+            ['urls' => &$sitemapUrls]
         );
 
         /*
@@ -94,7 +88,7 @@ class SitemapControllerCore extends FrontController
         $this->setTemplate('cms/sitemap');
     }
 
-    public function getCategoriesLinks()
+    public function getCategoriesLinks(): array
     {
         return [Category::getRootCategory()->recurseLiteCategTree(0, 0, null, null, 'sitemap')];
     }
@@ -102,7 +96,7 @@ class SitemapControllerCore extends FrontController
     /**
      * @return array
      */
-    protected function getPagesLinks()
+    protected function getPagesLinks(): array
     {
         $cms = CMSCategory::getRecurseCategory($this->context->language->id, 1, 1, 1);
         $links = $this->getCmsTree($cms);
@@ -134,7 +128,7 @@ class SitemapControllerCore extends FrontController
     /**
      * @return array
      */
-    protected function getCmsTree($cms)
+    protected function getCmsTree($cms): array
     {
         $links = [];
 
@@ -163,7 +157,7 @@ class SitemapControllerCore extends FrontController
     /**
      * @return array
      */
-    protected function getUserAccountLinks()
+    protected function getUserAccountLinks(): array
     {
         $links = [];
 
@@ -185,7 +179,7 @@ class SitemapControllerCore extends FrontController
     /**
      * @return array
      */
-    protected function getOffersLinks()
+    protected function getOffersLinks(): array
     {
         $links = [
             [
@@ -234,15 +228,23 @@ class SitemapControllerCore extends FrontController
         return $links;
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 
         $breadcrumb['links'][] = [
             'title' => $this->trans('Sitemap', [], 'Shop.Theme.Global'),
-            'url' => $this->context->link->getPageLink('sitemap', true),
+            'url' => $this->context->link->getPageLink('sitemap'),
         ];
 
         return $breadcrumb;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCanonicalURL(): string
+    {
+        return $this->context->link->getPageLink('sitemap');
     }
 }

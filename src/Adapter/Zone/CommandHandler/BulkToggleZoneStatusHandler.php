@@ -61,7 +61,7 @@ final class BulkToggleZoneStatusHandler implements BulkToggleZoneStatusHandlerIn
                 if (!$zone->save()) {
                     throw new CannotToggleZoneStatusException(sprintf('Unable to toggle status for zone with id "%d"', $zoneId->getValue()));
                 }
-            } catch (PrestaShopException $e) {
+            } catch (PrestaShopException) {
                 throw new ZoneException(sprintf('An error occurred while updating zone status with id "%d"', $zoneId->getValue()));
             }
         }

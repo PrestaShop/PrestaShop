@@ -1,20 +1,17 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import login steps
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
-import themeAndLogoPage from '@pages/BO/design/themeAndLogo/themeAndLogo';
-import pagesConfigurationPage from '@pages/BO/design/themeAndLogo/pagesConfiguration';
-
-// Import data
-import Modules from '@data/demo/modules';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  boDashboardPage,
+  boLoginPage,
+  boThemeAndLogoPage,
+  boThemePagesConfigurationPage,
+  type BrowserContext,
+  dataModules,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_themeAndLogo_pagesConfiguration_enableDisableModule';
 
@@ -24,39 +21,45 @@ describe('BO - Design - Theme & Logo : Enable/disable module', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'Design > Theme & Logo\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToThemeAndLogoPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.designParentLink,
-      dashboardPage.themeAndLogoParentLink,
+      boDashboardPage.designParentLink,
+      boDashboardPage.themeAndLogoParentLink,
     );
-    await themeAndLogoPage.closeSfToolBar(page);
+    await boThemeAndLogoPage.closeSfToolBar(page);
 
-    const pageTitle = await themeAndLogoPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+    const pageTitle = await boThemeAndLogoPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boThemeAndLogoPage.pageTitle);
   });
 
   it('should go to \'Pages configuration\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToPagesConfigurationPage', baseContext);
 
-    await themeAndLogoPage.goToSubTabPagesConfiguration(page);
+    await boThemeAndLogoPage.goToSubTabPagesConfiguration(page);
 
-    const pageTitle = await pagesConfigurationPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(pagesConfigurationPage.pageTitle);
+    const pageTitle = await boThemePagesConfigurationPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boThemePagesConfigurationPage.pageTitle);
   });
 
   [
@@ -76,8 +79,12 @@ describe('BO - Design - Theme & Logo : Enable/disable module', async () => {
     it(`should ${test.args.title}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', test.args.action, baseContext);
 
-      const successMessage = await pagesConfigurationPage.setActionInModule(page, Modules.mainMenu, test.args.action);
-      await expect(successMessage).to.eq(pagesConfigurationPage.successMessage);
+      const successMessage = await boThemePagesConfigurationPage.setActionInModule(
+        page,
+        dataModules.psMainMenu,
+        test.args.action,
+      );
+      expect(successMessage).to.eq(boThemePagesConfigurationPage.successMessage);
     });
   });
 });

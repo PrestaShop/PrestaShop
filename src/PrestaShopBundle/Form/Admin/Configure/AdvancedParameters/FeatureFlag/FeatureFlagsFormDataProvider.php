@@ -29,12 +29,14 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag;
 
 use Doctrine\ORM\EntityManagerInterface;
+use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShopBundle\Entity\FeatureFlag;
-use PrestaShopBundle\Routing\Converter\CacheCleanerInterface;
 
 /**
  * Passes data between the application layer in charge of the feature flags form
@@ -42,16 +44,13 @@ use PrestaShopBundle\Routing\Converter\CacheCleanerInterface;
  */
 class FeatureFlagsFormDataProvider implements FormDataProviderInterface
 {
-    /**
-     * @param EntityManagerInterface $doctrineEntityManager
-     * @param string $stability
-     * @param CacheCleanerInterface $cacheCleaner
-     */
     public function __construct(
         protected EntityManagerInterface $doctrineEntityManager,
         protected readonly string $stability,
-        private CacheCleanerInterface $cacheCleaner,
-        private FeatureFlagManager $featureFlagManager
+        private CacheClearerInterface $cacheClearer,
+        private FeatureFlagManager $featureFlagManager,
+        private readonly FeatureInterface $multiStoreFeature,
+        private readonly ConfigurationInterface $configuration,
     ) {
     }
 
@@ -75,6 +74,8 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
                 'forced_by_env' => $this->featureFlagManager->getUsedType($flagName) === FeatureFlagSettings::TYPE_ENV,
             ];
         }
+
+        $featureFlagsData = $this->checkAdminAPIMultistore($featureFlagsData);
 
         return ['feature_flags' => $featureFlagsData];
     }
@@ -105,9 +106,9 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
             }
         }
 
-        // Clear cache of legacy routes since they can depend on an associated feature flag
-        // when the attribute _legacy_feature_flag is used
-        $this->cacheCleaner->clearCache();
+        // Clear cache (feature flags can have impact on routing, filtering services, resources, ...) so a full
+        // cache clear is safer when they are modified.
+        $this->cacheClearer->clear();
 
         return [];
     }
@@ -130,5 +131,21 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
     protected function getOneFeatureFlagByName(string $featureFlagName): ?FeatureFlag
     {
         return $this->doctrineEntityManager->getRepository(FeatureFlag::class)->findOneBy(['name' => $featureFlagName]);
+    }
+
+    // conditions the display of the AdminAPIMultistore feature fag only if Admin API is activated, regardless of its stability
+    private function checkAdminAPIMultistore(array $featureFlagsData): array
+    {
+        $adminApiEnabled = (bool) $this->configuration->get('PS_ENABLE_ADMIN_API');
+        $adminAPIMultistoreKey = FeatureFlagSettings::FEATURE_FLAG_ADMIN_API_MULTISTORE;
+        $isMultistoreActive = $this->multiStoreFeature->isActive();
+
+        if (array_key_exists($adminAPIMultistoreKey, $featureFlagsData)) {
+            if (!$isMultistoreActive || !$adminApiEnabled) {
+                unset($featureFlagsData[$adminAPIMultistoreKey]);
+            }
+        }
+
+        return $featureFlagsData;
     }
 }

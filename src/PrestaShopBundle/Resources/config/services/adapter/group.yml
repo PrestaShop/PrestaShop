@@ -10,8 +10,13 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Customer\Group\Repository\GroupRepository: ~
 
+  PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider: ~
+
   prestashop.adapter.group.group_data_provider:
-    class: 'PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider'
+    alias: 'PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.adapter.feature.group_feature:
     class: 'PrestaShop\PrestaShop\Adapter\Feature\GroupFeature'
@@ -19,6 +24,16 @@ services:
       - '@prestashop.adapter.legacy.configuration'
 
   PrestaShop\PrestaShop\Adapter\Customer\Group\CommandHandler\AddCustomerGroupHandler:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Customer\Group\CommandHandler\EditCustomerGroupHandler:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Customer\Group\CommandHandler\DeleteCustomerGroupHandler:
     public: false
     autowire: true
     autoconfigure: true

@@ -121,6 +121,14 @@ export default class ProductSuppliersCollection {
     this.$productsTable.on('change', ':input', () => {
       this.memorizeCurrentSuppliers();
     });
+    this.$productsTable.on('change', 'select[name$="[currency_id]"]', (e) => {
+      const symbol = $(e.target).find(':selected')?.attr('symbol');
+      $(e.target)
+        .parents(this.map.productsSupplierRowSelector)
+        .find('.money-type .input-group-prepend .input-group-text')
+        // @ts-ignore
+        .html(symbol);
+    });
   }
 
   private addSupplier(supplier: Supplier): void {
@@ -226,6 +234,13 @@ export default class ProductSuppliersCollection {
       $(rowMap.referenceInput(supplier.supplierId)).val(supplier.reference);
       $(rowMap.priceInput(supplier.supplierId)).val(supplier.price);
       $(rowMap.currencyIdInput(supplier.supplierId)).val(supplier.currencyId);
+
+      // Update currency symbol
+      const symbol = $(rowMap.currencyIdInput(supplier.supplierId)).find(':selected')?.attr('symbol');
+
+      if (symbol) {
+        $(rowMap.currencySymbol(supplier.supplierId)).html(symbol);
+      }
     });
   }
 

@@ -37,9 +37,11 @@ use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Tests\Integration\Utility\LoginTrait;
 
 class PositionsControllerTest extends WebTestCase
 {
+    use LoginTrait;
     /**
      * @var int
      */
@@ -56,10 +58,6 @@ class PositionsControllerTest extends WebTestCase
      * @var Router
      */
     protected $router;
-    /**
-     * @var Session
-     */
-    protected $session;
 
     protected function setUp(): void
     {
@@ -69,6 +67,7 @@ class PositionsControllerTest extends WebTestCase
         parent::setUp();
 
         $this->client = self::createClient();
+        $this->loginUser($this->client);
         /** @var ModuleManager */
         $moduleManager = self::$kernel->getContainer()->get(ModuleManager::class);
         if (!$moduleManager->isInstalled('ps_emailsubscription')) {
@@ -78,7 +77,6 @@ class PositionsControllerTest extends WebTestCase
         $this->moduleId = Module::getModuleIdByName('ps_emailsubscription');
         $this->hookId = Hook::getIdByName('displayFooterBefore');
         $this->router = self::$kernel->getContainer()->get('router');
-        $this->session = self::$kernel->getContainer()->get('session');
     }
 
     public function testUnhooksListAction(): void
@@ -110,7 +108,9 @@ class PositionsControllerTest extends WebTestCase
             $response->getStatusCode()
         );
 
-        $messages = $this->session->getFlashBag()->all();
+        /** @var Session $session */
+        $session = $this->client->getRequest()->getSession();
+        $messages = $session->getFlashBag()->all();
         $this->assertArrayHasKey(
             'error',
             $messages
@@ -142,14 +142,15 @@ class PositionsControllerTest extends WebTestCase
                 'hookId' => $this->hookId,
             ]
         );
-
         $response = $this->client->getResponse();
         $this->assertEquals(
             Response::HTTP_FOUND,
             $response->getStatusCode()
         );
 
-        $messages = $this->session->getFlashBag()->all();
+        /** @var Session $session */
+        $session = $this->client->getRequest()->getSession();
+        $messages = $session->getFlashBag()->all();
         $this->assertArrayNotHasKey(
             'error',
             $messages

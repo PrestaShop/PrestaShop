@@ -281,7 +281,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
     private function getStock(Combination $combination): CombinationStock
     {
         $stockAvailable = $this->stockAvailableRepository->getForCombination(
-            new Combinationid($combination->id),
+            new CombinationId($combination->id),
             new ShopId($combination->getShopId())
         );
 

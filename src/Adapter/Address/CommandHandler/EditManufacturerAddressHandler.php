@@ -55,7 +55,7 @@ final class EditManufacturerAddressHandler extends AbstractAddressHandler implem
             if (!$address->update()) {
                 throw new AddressException(sprintf('Cannot update address with id "%s"', $address->id));
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new AddressException(sprintf('Cannot update address with id "%s"', $address->id));
         }
     }

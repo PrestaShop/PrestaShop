@@ -84,12 +84,12 @@ final class CustomerBoughtProductGridDefinitionFactory extends AbstractGridDefin
     {
         return (new ColumnCollection())
             ->add((new DateTimeColumn('date_add'))
-            ->setName($this->trans('Date', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'date_add',
-                'format' => $this->contextDateFormat,
-                'clickable' => true,
-            ])
+                ->setName($this->trans('Date', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'date_add',
+                    'format' => $this->contextDateFormat,
+                    'clickable' => true,
+                ])
             )
             ->add(
                 (new LinkColumn('product_name'))
@@ -102,10 +102,10 @@ final class CustomerBoughtProductGridDefinitionFactory extends AbstractGridDefin
                     ])
             )
             ->add((new DataColumn('product_quantity'))
-            ->setName($this->trans('Quantity', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'product_quantity',
-            ])
+                ->setName($this->trans('Quantity', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'product_quantity',
+                ])
             )
             ->add(
                 (new LinkColumn('id_order'))

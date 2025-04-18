@@ -118,7 +118,7 @@ class SupplyOrderStateCore extends ObjectModel
             $is_delivery_note = false;
             $is_pending_receipt = false;
 
-            //check current state to see what state is available
+            // check current state to see what state is available
             $state = new SupplyOrderState((int) $id_state_referrer);
             if (Validate::isLoadedObject($state)) {
                 $is_receipt_state = $state->receipt_state;
@@ -129,14 +129,14 @@ class SupplyOrderStateCore extends ObjectModel
 
             $query->where('s.id_supply_order_state <> ' . (int) $id_state_referrer);
 
-            //check first if the order is editable
+            // check first if the order is editable
             if ($is_editable) {
                 $query->where('s.editable = 1 OR s.delivery_note = 1 OR s.enclosed = 1');
             } elseif ($is_delivery_note || $is_pending_receipt) {
-                //check if the delivery note is available or if the state correspond to a pending receipt state
+                // check if the delivery note is available or if the state correspond to a pending receipt state
                 $query->where('(s.delivery_note = 0 AND s.editable = 0) OR s.enclosed = 1');
             } elseif ($is_receipt_state) {
-                //check if the state correspond to a receipt state
+                // check if the state correspond to a receipt state
                 $query->where('s.receipt_state = 1');
             }
         }

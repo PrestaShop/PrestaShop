@@ -16,7 +16,6 @@ require_once _PS_ROOT_DIR_ . '/config/bootstrap.php';
 require_once _PS_ROOT_DIR_ . '/install-dev/classes/exception.php';
 require_once _PS_ROOT_DIR_ . '/install-dev/classes/session.php';
 require_once _PS_ROOT_DIR_ . '/var/SymfonyRequirements.php';
-require_once _PS_ROOT_DIR_ . '/admin-dev/functions.php';
 include_once _PS_TOOL_DIR_ . 'profiling/Profiler.php';
 include_once _PS_TOOL_DIR_ . 'profiling/Controller.php';
 include_once _PS_TOOL_DIR_ . 'profiling/ObjectModel.php';
@@ -82,8 +81,6 @@ $constantsToDefine = [
     '_PS_INSTALL_LANGS_PATH_' => 'string',
     '_PS_INSTALL_FIXTURES_PATH_' => 'string',
     '_PS_INSTALL_VERSION_' => 'string',
-    '_PS_PRICE_DISPLAY_PRECISION_' => 'int',
-    '_PS_PRICE_COMPUTE_PRECISION_' => 'int',
     '_PS_OS_CHEQUE_' => 'int',
     '_PS_OS_PAYMENT_' => 'int',
     '_PS_OS_PREPARATION_' => 'int',

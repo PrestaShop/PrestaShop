@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Feature\FeatureFeature;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\BulkDeleteFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\DeleteFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\BulkFeatureException;
@@ -38,31 +39,40 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\FeatureFilters;
 use PrestaShopBundle\Component\CsvResponse;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Controller\BulkActionsTrait;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Controller responsible for "Sell > Catalog > Attributes & Features > Features" page
  */
-class FeatureController extends FrameworkBundleAdminController
+class FeatureController extends PrestaShopAdminController
 {
     use BulkActionsTrait;
 
-    /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     */
-    public function indexAction(Request $request, FeatureFilters $filters): Response
-    {
-        $featureGridFactory = $this->get('prestashop.core.grid.grid_factory.feature');
+    public function __construct(
+        private readonly FeatureFeature $featureFeature
+    ) {
+    }
 
-        $showcaseCardIsClosed = $this->getQueryBus()->handle(
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function indexAction(
+        Request $request,
+        FeatureFilters $filters,
+        #[Autowire(service: 'prestashop.core.grid.grid_factory.feature')]
+        GridFactoryInterface $featureGridFactory,
+    ): Response {
+        $showcaseCardIsClosed = $this->dispatchQuery(
             new GetShowcaseCardIsClosed(
-                (int) $this->getContext()->employee->id,
+                $this->getEmployeeContext()->getEmployee()->getId(),
                 ShowcaseCard::FEATURES_CARD
             )
         );
@@ -77,7 +87,12 @@ class FeatureController extends FrameworkBundleAdminController
             'layoutHeaderToolbarBtn' => [
                 'add_feature' => [
                     'href' => $this->generateUrl('admin_features_add'),
-                    'desc' => $this->trans('Add new feature', 'Admin.Catalog.Feature'),
+                    'desc' => $this->trans('Add new feature', [], 'Admin.Catalog.Feature'),
+                    'icon' => 'add_circle_outline',
+                ],
+                'add_feature_value' => [
+                    'href' => $this->generateUrl('admin_feature_values_add'),
+                    'desc' => $this->trans('Add new feature value', [], 'Admin.Catalog.Feature'),
                     'icon' => 'add_circle_outline',
                 ],
             ],
@@ -87,23 +102,24 @@ class FeatureController extends FrameworkBundleAdminController
     /**
      * Create feature action.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return Response
      */
-    public function createAction(Request $request): Response
-    {
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
+    public function createAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.feature_form_builder')]
+        FormBuilderInterface $featureFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.feature_form_handler')]
+        FormHandlerInterface $featureFormHandler
+    ): Response {
         if (!$this->isFeatureEnabled()) {
             return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/create.html.twig', [
                 'showDisabledFeatureWarning' => true,
-                'layoutTitle' => $this->trans('New feature', 'Admin.Navigation.Menu'),
+                'layoutTitle' => $this->trans('New feature', [], 'Admin.Navigation.Menu'),
             ]);
         }
-
-        $featureFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.feature_form_builder');
-        $featureFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.feature_form_handler');
 
         $featureForm = $featureFormBuilder->getForm();
         $featureForm->handleRequest($request);
@@ -112,7 +128,7 @@ class FeatureController extends FrameworkBundleAdminController
             $handlerResult = $featureFormHandler->handle($featureForm);
 
             if (null !== $handlerResult->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_features_index');
             }
@@ -122,24 +138,29 @@ class FeatureController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/create.html.twig', [
             'featureForm' => $featureForm->createView(),
-            'layoutTitle' => $this->trans('New feature', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('New feature', [], 'Admin.Navigation.Menu'),
         ]);
     }
 
     /**
      * Edit feature action.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param int $featureId
      * @param Request $request
      *
      * @return Response
      */
-    public function editAction(int $featureId, Request $request): Response
-    {
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
+    public function editAction(
+        int $featureId,
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.feature_form_builder')]
+        FormBuilderInterface $featureFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.feature_form_handler')]
+        FormHandlerInterface $featureFormHandler
+    ): Response {
         try {
-            $editableFeature = $this->getQueryBus()->handle(new GetFeatureForEditing($featureId));
+            $editableFeature = $this->dispatchQuery(new GetFeatureForEditing($featureId));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
@@ -153,9 +174,6 @@ class FeatureController extends FrameworkBundleAdminController
             ]);
         }
 
-        $featureFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.feature_form_builder');
-        $featureFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.feature_form_handler');
-
         $featureForm = $featureFormBuilder->getFormFor($featureId);
         $featureForm->handleRequest($request);
 
@@ -163,11 +181,9 @@ class FeatureController extends FrameworkBundleAdminController
             $handlerResult = $featureFormHandler->handleFor((int) $featureId, $featureForm);
 
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_features_edit', [
-                    'featureId' => $featureId,
-                ]);
+                return $this->redirectToRoute('admin_features_index');
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -180,24 +196,25 @@ class FeatureController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param FeatureFilters $filters
      *
      * @return CsvResponse
      */
-    public function exportAction(FeatureFilters $filters): CsvResponse
-    {
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function exportAction(
+        FeatureFilters $filters,
+        #[Autowire(service: 'prestashop.core.grid.grid_factory.feature')]
+        GridFactoryInterface $featuresGridFactory
+    ): CsvResponse {
         $filters = new FeatureFilters($filters->getShopConstraint(), ['limit' => null] + $filters->all());
 
-        $featuresGridFactory = $this->get('prestashop.core.grid.grid_factory.feature');
         $featuresGrid = $featuresGridFactory->getGrid($filters);
 
         $headers = [
-            'id_feature' => $this->trans('ID', 'Admin.Global'),
-            'name' => $this->trans('Name', 'Admin.Global'),
-            'values_count' => $this->trans('values', 'Admin.Global'),
-            'position' => $this->trans('position', 'Admin.Global'),
+            'id_feature' => $this->trans('ID', [], 'Admin.Global'),
+            'name' => $this->trans('Name', [], 'Admin.Global'),
+            'values_count' => $this->trans('values', [], 'Admin.Global'),
+            'position' => $this->trans('position', [], 'Admin.Global'),
         ];
 
         $data = [];
@@ -218,41 +235,39 @@ class FeatureController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
-     *
      * @param int $featureId
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
     public function deleteAction(int $featureId): Response
     {
         try {
-            $this->getCommandBus()->handle(new DeleteFeatureCommand($featureId));
+            $this->dispatchCommand(new DeleteFeatureCommand($featureId));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+        $this->addFlash('success', $this->trans('Successful deletion', [], 'Admin.Notifications.Success'));
 
         return $this->redirectToRoute('admin_features_index');
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
     public function bulkDeleteAction(Request $request): Response
     {
         try {
-            $this->getCommandBus()->handle(new BulkDeleteFeatureCommand($this->getBulkActionIds($request, 'feature_bulk')));
+            $this->dispatchCommand(new BulkDeleteFeatureCommand($this->getBulkActionIds($request, 'feature_bulk')));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+        $this->addFlash('success', $this->trans('Successful deletion', [], 'Admin.Notifications.Success'));
 
         return $this->redirectToRoute('admin_features_index');
     }
@@ -268,10 +283,10 @@ class FeatureController extends FrameworkBundleAdminController
             'contextLangId' => $this->getConfiguration()->get('PS_LANG_DEFAULT'),
             'layoutTitle' => $this->trans(
                 'Editing feature %name%',
-                'Admin.Navigation.Menu',
                 [
                     '%name%' => $parameters['editableFeature']->getName()[$this->getConfiguration()->get('PS_LANG_DEFAULT')],
-                ]
+                ],
+                'Admin.Navigation.Menu'
             ),
         ]);
     }
@@ -286,23 +301,26 @@ class FeatureController extends FrameworkBundleAdminController
         return [
             FeatureNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found).',
+                [],
                 'Admin.Notifications.Error'
             ),
             FeatureConstraintException::class => [
                 FeatureConstraintException::INVALID_NAME => $this->trans(
                     'The %s field is invalid.',
-                    'Admin.Notifications.Error',
-                    [sprintf('"%s"', $this->trans('Name', 'Admin.Global'))]
+                    [sprintf('"%s"', $this->trans('Name', [], 'Admin.Global'))],
+                    'Admin.Notifications.Error'
                 ),
             ],
             BulkFeatureException::class => [
                 BulkFeatureException::FAILED_BULK_DELETE => $this->trans(
                     'An error occurred while deleting this selection.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
             ],
             CannotDeleteFeatureException::class => $this->trans(
                 'An error occurred while deleting the object.',
+                [],
                 'Admin.Notifications.Error'
             ),
         ];
@@ -315,29 +333,25 @@ class FeatureController extends FrameworkBundleAdminController
      */
     private function isFeatureEnabled(): bool
     {
-        return $this->get('prestashop.adapter.feature.feature')->isActive();
+        return $this->featureFeature->isActive();
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    private function getSettingsTipMessage(): string
+    private function getSettingsTipMessage()
     {
-        $urlOpening = sprintf('<a href="%s">', $this->get('router')->generate('admin_performance'));
-        $urlEnding = '</a>';
-
         if ($this->isFeatureEnabled()) {
-            return $this->trans(
-                'The features are enabled on your store. Go to %sAdvanced Parameters > Performance%s to edit settings.',
-                'Admin.Catalog.Notification',
-                [$urlOpening, $urlEnding]
-            );
+            return null;
         }
+
+        $urlOpening = sprintf('<a href="%s">', $this->generateUrl('admin_performance'));
+        $urlEnding = '</a>';
 
         return $this->trans(
             'The features are disabled on your store. Go to %sAdvanced Parameters > Performance%s to edit settings.',
-            'Admin.Catalog.Notification',
-            [$urlOpening, $urlEnding]
+            [$urlOpening, $urlEnding],
+            'Admin.Catalog.Notification'
         );
     }
 }

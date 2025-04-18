@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
 <div class="card customer-addresses-card">
   <h3 class="card-header">
@@ -29,7 +29,7 @@
     {{ 'Addresses'|trans({}, 'Admin.Global') }}
     <span class="badge badge-primary rounded">{{ customerAddressGrid.data.records_total }}</span>
 
-    <a href="{{ getAdminLink('AdminAddresses', true, {'id_customer': customerInformation.customerId.value, 'addaddress': 1, 'back': app.request.uri}) }}" class="tooltip-link float-right" 
+    <a href="{{ getAdminLink('AdminAddresses', true, {id_customer: customerInformation.customerId.value, addaddress: 1, back: app.request.uri}) }}" class="tooltip-link float-right"
     data-toggle="pstooltip" title="" data-placement="top" data-original-title="{{ 'Add'|trans({}, 'Admin.Actions') }}">
       <i class="material-icons">add_circle</i>
     </a>
@@ -37,13 +37,13 @@
 
   <div class="card-body">
     {% if customerAddressGrid.data.records_total > 0 %}
-      {% include '@PrestaShop/Admin/Common/Grid/grid.html.twig' with {'grid': customerAddressGrid} %}
+      {{ include('@PrestaShop/Admin/Common/Grid/grid.html.twig', {grid: customerAddressGrid}) }}
     {% else %}
       <div class="text-center">
         <p class="text-muted mb-2">
           {{ '%firstname% %lastname% has not registered any addresses yet'|trans({'%firstname%': customerInformation.personalInformation.firstName, '%lastname%': customerInformation.personalInformation.lastName}, 'Admin.Orderscustomers.Feature') }}
-        </p> 
-        <a class="btn btn-primary" href="{{ getAdminLink('AdminAddresses', true, {'id_customer': customerInformation.customerId.value, 'addaddress': 1, 'back': app.request.uri}) }}">
+        </p>
+        <a class="btn btn-primary" href="{{ getAdminLink('AdminAddresses', true, {id_customer: customerInformation.customerId.value, addaddress: 1, back: app.request.uri}) }}">
           <i class="material-icons">add_circle</i>
           {{ 'Create address'|trans({}, 'Admin.Global') }}
         </a>

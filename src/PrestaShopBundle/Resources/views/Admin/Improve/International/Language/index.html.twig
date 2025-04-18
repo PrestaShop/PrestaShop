@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,18 +21,18 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% set layoutHeaderToolbarBtn = {
-  'add' : {
-    'href': path('admin_languages_create'),
-    'desc': 'Add new language'|trans({}, 'Admin.International.Feature'),
-    'icon': 'add_circle_outline'
+  add: {
+    href: path('admin_languages_create'),
+    desc: 'Add new language'|trans({}, 'Admin.International.Feature'),
+    icon: 'add_circle_outline'
   }
 } %}
 
 {% block content %}
-  {% include '@PrestaShop/Admin/Common/multistore-infotip.html.twig' %}
+  {{ include('@PrestaShop/Admin/Common/multistore-infotip.html.twig') }}
 
   <div class="alert alert-warning" role="alert">
     <p class="alert-text">{{ 'When you delete a language, all related translations in the database will be deleted.'|trans({}, 'Admin.International.Notification') }}</p>
@@ -44,9 +44,8 @@
     </div>
   {% endif %}
 
-
   {% block language_listing %}
-    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with { 'grid': languageGrid } %}
+    {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: languageGrid}) }}
   {% endblock %}
 {% endblock %}
 

@@ -49,6 +49,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -57,19 +58,9 @@ use Tests\Resources\DummyFileUploader;
 class ProductImageFeatureContext extends AbstractProductFeatureContext
 {
     /**
-     * @var ProductImageRepository
-     */
-    private $productImageRepository;
-
-    /**
      * @var ShopProductImagesCollection
      */
     private $shopProductImagesCollection;
-
-    public function __construct()
-    {
-        $this->productImageRepository = $this->getContainer()->get(ProductImageRepository::class);
-    }
 
     /**
      * @Given following image types should be applicable to products:
@@ -77,7 +68,9 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     public function assertProductsImageTypesExists(TableNode $tableNode): void
     {
         $dataRows = $tableNode->getColumnsHash();
-        $imageTypes = $this->productImageRepository->getProductImageTypes();
+        /** @var ProductImageRepository $productImageRepository */
+        $productImageRepository = $this->getContainer()->get(ProductImageRepository::class);
+        $imageTypes = $productImageRepository->getProductImageTypes();
 
         Assert::assertEquals(
             count($dataRows),
@@ -127,6 +120,24 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @When /^I add new image "([^"]*)" named "([^"]*)" to product "([^"]*)" for shops "([^"]*)"$/
+     *
+     * @param string $imageReference
+     * @param string $fileName
+     * @param string $productReference
+     * @param string $shopReferences
+     *
+     * @return void
+     *
+     * @throws ShopException
+     */
+    public function uploadImageForSpecificShopCollection(string $imageReference, string $fileName, string $productReference, string $shopReferences): void
+    {
+        $shopConstraint = ShopCollection::shops($this->referencesToIds($shopReferences));
+        $this->uploadImageByShopConstraint($imageReference, $fileName, $productReference, $shopConstraint);
+    }
+
+    /**
      * @When /^I add new image "([^"]*)" named "([^"]*)" to product "([^"]*)" for all shops$/
      *
      * @param string $imageReference
@@ -153,13 +164,25 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @When I update image :imageReference with following information for shop :shop:
+     * @When I update image :imageReference with following information for shop :shopReference:
      */
     public function updateImageByShopReference(string $imageReference, string $shopReference, TableNode $tableNode): void
     {
         $this->updateImageByShopConstraint(
             $imageReference,
             ShopConstraint::shop((int) $this->getSharedStorage()->get($shopReference)),
+            $tableNode
+        );
+    }
+
+    /**
+     * @When I update image :imageReference with following information for shops :shopReferences:
+     */
+    public function updateImageByShopCollectionReferences(string $imageReference, string $shopReferences, TableNode $tableNode): void
+    {
+        $this->updateImageByShopConstraint(
+            $imageReference,
+            ShopCollection::shops($this->referencesToIds($shopReferences)),
             $tableNode
         );
     }
@@ -317,6 +340,23 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
             $this->getProductImages($productReference, ShopConstraint::shop($this->getDefaultShopId())),
             sprintf('No images expected for product "%s"', $productReference)
         );
+    }
+
+    /**
+     * @Then product :productReference should have no images for shop(s) :shopReferences
+     *
+     * @param string $productReference
+     * @param string $shopReferences
+     */
+    public function assertProductHasNoImagesForShops(string $productReference, string $shopReferences): void
+    {
+        $shopReferencesList = array_map(fn (string $shopReference) => trim($shopReference), explode(',', $shopReferences));
+        foreach ($shopReferencesList as $shopReference) {
+            Assert::assertEmpty(
+                $this->getProductImages($productReference, ShopConstraint::shop($this->referenceToId($shopReference))),
+                sprintf('No images expected for product "%s" on shop "%s"', $productReference, $shopReference)
+            );
+        }
     }
 
     /**

@@ -141,6 +141,7 @@ class HeaderType extends TranslatorAwareType
                     $this->trans('Online', 'Admin.Global') => true,
                 ],
                 'modify_all_shops' => true,
+                'default_empty_data' => $options['force_default_active'],
             ])
             ->add('mobile_toolbar', ButtonCollectionType::class, [
                 'buttons' => $this->toolbarButtonsProvider->getToolbarButtonsOptions(['productId' => $options['product_id']]),
@@ -163,6 +164,7 @@ class HeaderType extends TranslatorAwareType
         $resolver
             ->setDefaults([
                 'active' => false,
+                'force_default_active' => false,
                 'required' => false,
                 'label' => false,
                 'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/header.html.twig',

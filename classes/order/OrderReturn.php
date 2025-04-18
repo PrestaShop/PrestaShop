@@ -23,6 +23,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
+
 class OrderReturnCore extends ObjectModel
 {
     /** @var int */
@@ -55,7 +58,7 @@ class OrderReturnCore extends ObjectModel
         'fields' => [
             'id_customer' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'id_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
-            'question' => ['type' => self::TYPE_HTML, 'validate' => 'isCleanHtml'],
+            'question' => ['type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4],
             'state' => ['type' => self::TYPE_STRING],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
@@ -92,7 +95,7 @@ class OrderReturnCore extends ObjectModel
     {
         $order = new Order((int) $this->id_order);
         if (!Validate::isLoadedObject($order)) {
-            die(Tools::displayError());
+            throw new PrestaShopException(sprintf('Order with ID "%s" could not be loaded.', $this->id_order));
         }
         $products = $order->getProducts();
         /* Products already returned */
@@ -129,10 +132,10 @@ class OrderReturnCore extends ObjectModel
             return false;
         }
 
-        return (int) ($data['total']);
+        return (int) $data['total'];
     }
 
-    public static function getOrdersReturn($customer_id, $order_id = false, $no_denied = false, Context $context = null, int $idOrderReturn = null)
+    public static function getOrdersReturn($customer_id, $order_id = false, $no_denied = false, ?Context $context = null, ?int $idOrderReturn = null)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -197,7 +200,7 @@ class OrderReturnCore extends ObjectModel
         $returns = Customization::getReturnedCustomizations($id_order);
         $order = new Order((int) $id_order);
         if (!Validate::isLoadedObject($order)) {
-            die(Tools::displayError());
+            throw new PrestaShopException(sprintf('Order with ID "%s" could not be loaded.', $id_order));
         }
         $products = $order->getProducts();
 
@@ -207,7 +210,7 @@ class OrderReturnCore extends ObjectModel
             $return['product_attribute_id'] = (int) $products[(int) $return['id_order_detail']]['product_attribute_id'];
             $return['name'] = $products[(int) $return['id_order_detail']]['product_name'];
             $return['reference'] = $products[(int) $return['id_order_detail']]['product_reference'];
-            $return['id_address_delivery'] = $products[(int) $return['id_order_detail']]['id_address_delivery'];
+            $return['id_address_delivery'] = (int) $order->id_address_delivery;
         }
 
         return $returns;

@@ -280,6 +280,14 @@ services:
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'
 
+  prestashop.core.grid.grid_factory.discount:
+    class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+    arguments:
+      - '@prestashop.core.grid.definition.factory.discount'
+      - '@prestashop.core.grid.data.factory.discount'
+      - '@prestashop.core.grid.filter.form_factory'
+      - '@prestashop.core.hook.dispatcher'
+
   prestashop.core.grid.grid_factory.catalog_price_rule:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:
@@ -308,7 +316,7 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:
       - '@prestashop.core.grid.definition.factory.attribute'
-      - '@prestashop.core.grid.data.factory.attribute'
+      - '@prestashop.core.grid.data.factory.attribute_decorator'
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'
 
@@ -480,14 +488,6 @@ services:
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'
 
-  prestashop.core.grid.factory.authorized_application:
-    class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
-    arguments:
-      - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AuthorizedApplicationGridDefinitionFactory'
-      - '@prestashop.core.grid.data_factory.authorized_application'
-      - '@prestashop.core.grid.filter.form_factory'
-      - '@prestashop.core.hook.dispatcher'
-
   prestashop.core.grid.factory.customer_groups:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:
@@ -500,7 +500,7 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:
       - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AliasGridDefinitionFactory'
-      - '@prestashop.core.grid.data.factory.alias'
+      - '@prestashop.core.grid.data_provider.alias_decorator'
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'
 
@@ -527,10 +527,26 @@ services:
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'
 
-  prestashop.core.grid.factory.api_access:
+  prestashop.core.grid.factory.api_client:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:
-      - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ApiAccessGridDefinitionFactory'
-      - '@prestashop.core.grid.data_factory.api_access'
+      - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ApiClientGridDefinitionFactory'
+      - '@prestashop.core.grid.data_factory.api_client'
+      - '@prestashop.core.grid.filter.form_factory'
+      - '@prestashop.core.hook.dispatcher'
+
+  prestashop.core.grid.factory.cart:
+    class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartGridDefinitionFactory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Data\Factory\CartGridDataFactory'
+      - '@prestashop.core.grid.filter.form_factory'
+      - '@prestashop.core.hook.dispatcher'
+
+  prestashop.core.grid.factory.image_type:
+    class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ImageTypeGridDefinitionFactory'
+      - '@prestashop.core.grid.data_factory.image_type'
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'

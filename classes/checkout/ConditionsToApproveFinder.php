@@ -45,7 +45,7 @@ class ConditionsToApproveFinderCore
     private function getDefaultTermsAndConditions()
     {
         $cms = new CMS((int) Configuration::get('PS_CONDITIONS_CMS_ID'), $this->context->language->id);
-        $link = $this->context->link->getCMSLink($cms, $cms->link_rewrite, (bool) Configuration::get('PS_SSL_ENABLED'));
+        $link = $this->context->link->getCMSLink($cms, $cms->link_rewrite);
 
         $termsAndConditions = new TermsAndConditions();
         $termsAndConditions
@@ -61,6 +61,8 @@ class ConditionsToApproveFinderCore
     private function getConditionsToApprove()
     {
         $allConditions = [];
+
+        // An array [module_name => module_output] will be returned
         $hookedConditions = Hook::exec('termsAndConditions', [], null, true);
         if (!is_array($hookedConditions)) {
             $hookedConditions = [];

@@ -249,15 +249,12 @@ final class EditLanguageHandler extends AbstractLanguageHandler implements EditL
      */
     private function assertLanguageWithIsoCodeDoesNotExist(Language $language, EditLanguageCommand $command)
     {
-        if (null !== $command->getIsoCode()) {
+        if (null === $command->getIsoCode()) {
             return;
         }
 
-        /* @phpstan-ignore-next-line */
-        if ($language->iso_code === $command->getIsoCode()->getValue() && Language::getIdByIso($command->getIsoCode()->getValue())
-        ) {
-            /* @phpstan-ignore-next-line */
-            throw new LanguageConstraintException(sprintf('Language with ISO code "%s" already exists', $command->getIsoCode()->getValue()), LanguageConstraintException::INVALID_ISO_CODE);
+        if ($language->iso_code !== $command->getIsoCode()->getValue() && Language::getIdByIso($command->getIsoCode()->getValue())) {
+            throw new LanguageConstraintException(sprintf('Language with ISO code "%s" already exists', $command->getIsoCode()->getValue()), LanguageConstraintException::DUPLICATE_ISO_CODE);
         }
     }
 }

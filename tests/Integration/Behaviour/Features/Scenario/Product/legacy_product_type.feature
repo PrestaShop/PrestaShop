@@ -71,4 +71,3 @@ Feature: Legacy products have consistent product type through dynamic checking (
     And product "undefined_product" type should be standard
     And product "undefined_product" persisted type should be undefined
     And product "undefined_product" dynamic type should be standard
-    And product "Undefined Product" should be editable

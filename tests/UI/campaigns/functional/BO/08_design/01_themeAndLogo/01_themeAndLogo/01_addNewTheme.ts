@@ -1,18 +1,17 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import files from '@utils/files';
-
-// Import common tests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
-import themeAndLogoPage from '@pages/BO/design/themeAndLogo/themeAndLogo';
-import themeImportPage from '@pages/BO/design/themeAndLogo/themeAndLogo/import';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  boDashboardPage,
+  boLoginPage,
+  boThemeAndLogoPage,
+  boThemeAndLogoImportPage,
+  type BrowserContext,
+  type Page,
+  utilsFile,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_themeAndLogo_themeAndLogo_addNewTheme';
 
@@ -20,81 +19,87 @@ describe('BO - Design - Theme & Logo : Add new theme', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const urlTheme: string = 'https://github.com/PrestaShop/hummingbird/releases/download/v0.1.5/hummingbird.zip';
+  const urlTheme: string = 'https://github.com/prestarocket-agence/classic-rocket/releases/download/3.1.0/classic-rocket.zip';
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
     await Promise.all([
-      files.deleteFile('theme.zip'),
-      files.deleteFile('../../themes/theme.zip'),
-      files.deleteFile('../../admin-dev/hummingbird.zip'),
+      utilsFile.deleteFile('theme.zip'),
+      utilsFile.deleteFile('../../themes/theme.zip'),
+      utilsFile.deleteFile('../../admin-dev/classic-rocket.zip'),
     ]);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'Design > Theme & Logo\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToThemeAndLogoPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.designParentLink,
-      dashboardPage.themeAndLogoParentLink,
+      boDashboardPage.designParentLink,
+      boDashboardPage.themeAndLogoParentLink,
     );
-    await themeAndLogoPage.closeSfToolBar(page);
+    await boThemeAndLogoPage.closeSfToolBar(page);
 
-    const pageTitle = await themeAndLogoPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+    const pageTitle = await boThemeAndLogoPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boThemeAndLogoPage.pageTitle);
   });
 
   it('should go to \'Add new theme\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewTheme1', baseContext);
 
-    await themeAndLogoPage.goToNewThemePage(page);
+    await boThemeAndLogoPage.goToNewThemePage(page);
 
-    const pageTitle = await themeImportPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(themeImportPage.pageTitle);
+    const pageTitle = await boThemeAndLogoImportPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boThemeAndLogoImportPage.pageTitle);
   });
 
   describe('Import from your computer', async () => {
     it('should download theme from the web', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'downloadTheme', baseContext);
 
-      await files.downloadFile(urlTheme, 'theme.zip');
+      await utilsFile.downloadFile(urlTheme, 'theme.zip');
 
-      const found = await files.doesFileExist('theme.zip');
-      await expect(found).to.be.true;
+      const found = await utilsFile.doesFileExist('theme.zip');
+      expect(found).to.eq(true);
     });
 
     it('should import theme from your computer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'importThemeFromComputer', baseContext);
 
-      await themeImportPage.importFromYourComputer(page, 'theme.zip');
+      await boThemeAndLogoImportPage.importFromYourComputer(page, 'theme.zip');
 
-      const pageTitle = await themeAndLogoPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+      const pageTitle = await boThemeAndLogoPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boThemeAndLogoPage.pageTitle);
 
-      const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
-      await expect(numThemes).to.eq(2);
+      const numThemes = await boThemeAndLogoPage.getNumberOfThemes(page);
+      expect(numThemes).to.eq(3);
     });
 
-    it('should remove the theme Hummingbird', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'removeThemeHummingbird1', baseContext);
+    it('should remove the theme classic-rocket', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'removeThemeClassicrocket1', baseContext);
 
-      const result = await themeAndLogoPage.removeTheme(page, 'hummingbird');
-      await expect(result).to.eq(themeAndLogoPage.successfulDeleteMessage);
+      const result = await boThemeAndLogoPage.removeTheme(page, 'classic-rocket');
+      expect(result).to.eq(boThemeAndLogoPage.successfulDeleteMessage);
 
-      const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
-      await expect(numThemes).to.eq(1);
+      const numThemes = await boThemeAndLogoPage.getNumberOfThemes(page);
+      expect(numThemes).to.eq(2);
     });
   });
 
@@ -102,32 +107,32 @@ describe('BO - Design - Theme & Logo : Add new theme', async () => {
     it('should go to \'Add new theme\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewTheme2', baseContext);
 
-      await themeAndLogoPage.goToNewThemePage(page);
+      await boThemeAndLogoPage.goToNewThemePage(page);
 
-      const pageTitle = await themeImportPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(themeImportPage.pageTitle);
+      const pageTitle = await boThemeAndLogoImportPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boThemeAndLogoImportPage.pageTitle);
     });
 
-    it('should import from the web the Hummingbird theme', async function () {
+    it('should import from the web the classic-rocket theme', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'importThemeFromWeb', baseContext);
 
-      await themeImportPage.importFromWeb(page, urlTheme);
+      await boThemeAndLogoImportPage.importFromWeb(page, urlTheme);
 
-      const pageTitle = await themeAndLogoPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+      const pageTitle = await boThemeAndLogoPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boThemeAndLogoPage.pageTitle);
 
-      const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
-      await expect(numThemes).to.eq(2);
+      const numThemes = await boThemeAndLogoPage.getNumberOfThemes(page);
+      expect(numThemes).to.eq(3);
     });
 
-    it('should remove the theme Hummingbird', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'removeThemeHummingbird2', baseContext);
+    it('should remove the theme classic-rocket', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'removeThemeClassicrocket2', baseContext);
 
-      const result = await themeAndLogoPage.removeTheme(page, 'hummingbird');
-      await expect(result).to.eq(themeAndLogoPage.successfulDeleteMessage);
+      const result = await boThemeAndLogoPage.removeTheme(page, 'classic-rocket');
+      expect(result).to.eq(boThemeAndLogoPage.successfulDeleteMessage);
 
-      const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
-      await expect(numThemes).to.eq(1);
+      const numThemes = await boThemeAndLogoPage.getNumberOfThemes(page);
+      expect(numThemes).to.eq(2);
     });
   });
 
@@ -135,34 +140,34 @@ describe('BO - Design - Theme & Logo : Add new theme', async () => {
     it('should go to \'Add new theme\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewTheme3', baseContext);
 
-      await files.downloadFile(urlTheme, '../../themes/theme.zip');
+      await utilsFile.downloadFile(urlTheme, '../../themes/theme.zip');
 
-      await themeAndLogoPage.goToNewThemePage(page);
+      await boThemeAndLogoPage.goToNewThemePage(page);
 
-      const pageTitle = await themeImportPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(themeImportPage.pageTitle);
+      const pageTitle = await boThemeAndLogoImportPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boThemeAndLogoImportPage.pageTitle);
     });
 
     it('should import from FTP', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'importFromFTP', baseContext);
 
-      await themeImportPage.importFromFTP(page, 'theme.zip');
+      await boThemeAndLogoImportPage.importFromFTP(page, 'theme.zip');
 
-      const pageTitle = await themeAndLogoPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+      const pageTitle = await boThemeAndLogoPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boThemeAndLogoPage.pageTitle);
 
-      const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
-      await expect(numThemes).to.eq(2);
+      const numThemes = await boThemeAndLogoPage.getNumberOfThemes(page);
+      expect(numThemes).to.eq(3);
     });
 
-    it('should remove the theme Hummingbird', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'removeThemeHummingbird3', baseContext);
+    it('should remove the theme classic-rocket', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'removeThemeClassicrocket3', baseContext);
 
-      const result = await themeAndLogoPage.removeTheme(page, 'hummingbird');
-      await expect(result).to.eq(themeAndLogoPage.successfulDeleteMessage);
+      const result = await boThemeAndLogoPage.removeTheme(page, 'classic-rocket');
+      expect(result).to.eq(boThemeAndLogoPage.successfulDeleteMessage);
 
-      const numThemes = await themeAndLogoPage.getNumberOfThemes(page);
-      await expect(numThemes).to.eq(1);
+      const numThemes = await boThemeAndLogoPage.getNumberOfThemes(page);
+      expect(numThemes).to.eq(2);
     });
   });
 });

@@ -25,10 +25,15 @@ type GlobalBO = {
   LASTNAME: string
 }
 
+type GlobalAPI = {
+  URL: string
+}
+
 type GlobalBrowserConfig = {
   headless: any
   timeout: number
   slowMo: number
+  channel?: string
   args?: Array<string>
 }
 
@@ -40,7 +45,7 @@ type GlobalBrowser = {
   sandboxArgs: Array<string>
   acceptDownloads: boolean
   config: GlobalBrowserConfig
-  interceptErrors: any
+  captureErrors: boolean
 }
 
 type GlobalPSConfig = {
@@ -55,7 +60,8 @@ type GlobalBrowserErrors = {
 
 type GlobalScreenshot = {
   FOLDER: string
-  AFTER_FAIL: any
+  AFTER_FAIL: boolean
+  EACH_STEP: boolean
 }
 
 type GlobalMaildevConfig = {
@@ -70,6 +76,7 @@ type GlobalKeycloakConfig = {
   keycloakAdminUser: string
   keycloakAdminPass: string
   keycloakClientId: string
+  keycloakClientSecret: string
 }
 
 declare global {
@@ -77,6 +84,8 @@ declare global {
   var URLHasPort: boolean;
   var FO: GlobalFO;
   var BO: GlobalBO;
+
+  var API: GlobalAPI;
   var PSConfig: GlobalPSConfig;
   var BROWSER: GlobalBrowser;
   var GENERATE_FAILED_STEPS: any;

@@ -37,8 +37,10 @@ use PrestaShop\PrestaShop\Core\Domain\OrderState\ValueObject\OrderStateId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Stock\StockManager;
 use StockAvailable;
 
@@ -72,18 +74,25 @@ class CombinationStockUpdater
      */
     private $configuration;
 
+    /**
+     * @var HookDispatcherInterface
+     */
+    private $hookDispatcher;
+
     public function __construct(
         StockAvailableRepository $stockAvailableRepository,
         CombinationRepository $combinationRepository,
         MovementReasonRepository $movementReasonRepository,
         StockManager $stockManager,
-        ShopConfigurationInterface $configuration
+        ShopConfigurationInterface $configuration,
+        HookDispatcherInterface $hookDispatcher
     ) {
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->combinationRepository = $combinationRepository;
         $this->stockManager = $stockManager;
         $this->configuration = $configuration;
         $this->movementReasonRepository = $movementReasonRepository;
+        $this->hookDispatcher = $hookDispatcher;
     }
 
     /**
@@ -131,7 +140,6 @@ class CombinationStockUpdater
 
         $fallbackShopId = $this->stockAvailableRepository->getFallbackShopId($stockAvailable);
         $this->stockAvailableRepository->update($stockAvailable, $fallbackShopId);
-
         // save movement only after stockAvailable has been updated
         if ($stockModification) {
             $this->saveMovement($stockAvailable, $stockModification, $previousQuantity, $fallbackShopId->getValue());
@@ -165,6 +173,15 @@ class CombinationStockUpdater
                 'id_shop' => (int) $affectedShopId,
             ]
         );
+
+        $this->hookDispatcher->dispatchWithParameters('actionUpdateQuantity',
+            [
+                'id_product' => $stockAvailable->id_product,
+                'id_product_attribute' => $stockAvailable->id_product_attribute,
+                'quantity' => $stockAvailable->quantity,
+                'delta_quantity' => $deltaQuantity,
+                'id_shop' => $stockAvailable->id_shop,
+            ]);
     }
 
     private function updateStockByShopConstraint(
@@ -173,11 +190,16 @@ class CombinationStockUpdater
         ShopConstraint $shopConstraint
     ): void {
         $combinationId = new CombinationId((int) $combination->id);
-        if ($shopConstraint->forAllShops()) {
+        if ($shopConstraint->forAllShops() || ($shopConstraint instanceof ShopCollection && $shopConstraint->hasShopIds())) {
             // Since each stock has a distinct ID we can't use the ObjectModel multi shop feature based on id_shop_list,
             // so we manually loop to update each associated stocks
-            $shops = $this->combinationRepository->getAssociatedShopIds($combinationId);
-            foreach ($shops as $shopId) {
+            if ($shopConstraint instanceof ShopCollection) {
+                $shopIds = $shopConstraint->getShopIds();
+            } else {
+                $shopIds = $this->combinationRepository->getAssociatedShopIds($combinationId);
+            }
+
+            foreach ($shopIds as $shopId) {
                 $this->updateStockAvailable(
                     $this->stockAvailableRepository->getForCombination($combinationId, $shopId),
                     $properties

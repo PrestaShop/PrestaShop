@@ -40,14 +40,16 @@
           class="translations-catalog row p-0"
           v-else
         >
-          <PSAlert
-            v-if="searchActive"
-            class="col-sm-12"
-            alert-type="ALERT_TYPE_INFO"
-            :has-close="false"
-          >
-            {{ searchInfo }}
-          </PSAlert>
+          <div class="col-12">
+            <PSAlert
+              v-if="searchActive"
+              class="col-sm-12"
+              alert-type="ALERT_TYPE_INFO"
+              :has-close="false"
+            >
+              {{ searchInfo }}
+            </PSAlert>
+          </div>
           <div class="col-sm-8 pt-3">
             <h3 class="domain-info">
               <span>{{ currentDomain }}</span>

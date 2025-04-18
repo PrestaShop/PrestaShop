@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroupsProviderInterface;
 use PrestaShop\PrestaShop\Core\Security\OpenSsl\OpenSSL;
 use PrestaShop\PrestaShop\Core\Security\PasswordGenerator;
+use Symfony\Component\Serializer\SerializerInterface;
 use Tests\Integration\Behaviour\Features\Context\Util\DataComparator;
 use Tests\Integration\Behaviour\Features\Context\Util\DataTransfer;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
@@ -117,12 +118,12 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
             $password,
             $defaultGroupId,
             $groupIds,
-            (isset($data['shopId']) ? $data['shopId'] : 0),
-            (isset($data['genderId']) ? $data['genderId'] : null),
-            (isset($data['isEnabled']) ? $data['isEnabled'] : true),
-            (isset($data['isPartnerOffersSubscribed']) ? $data['isPartnerOffersSubscribed'] : false),
-            (isset($data['birthday']) ? $data['birthday'] : null),
-            (isset($data['isGuest']) ? $data['isGuest'] : false)
+            isset($data['shopId']) ? $data['shopId'] : 0,
+            isset($data['genderId']) ? $data['genderId'] : null,
+            isset($data['isEnabled']) ? $data['isEnabled'] : true,
+            isset($data['isPartnerOffersSubscribed']) ? $data['isPartnerOffersSubscribed'] : false,
+            isset($data['birthday']) ? $data['birthday'] : null,
+            isset($data['isGuest']) ? $data['isGuest'] : false
         );
 
         /** @var CustomerId $id */
@@ -142,7 +143,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
         try {
             $this->createACustomerUsingCommand($customerReference, $table);
             throw new NoExceptionAlthoughExpectedException();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             if ($e instanceof NoExceptionAlthoughExpectedException) {
                 throw $e;
             }
@@ -198,7 +199,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
         try {
             $this->editCustomerUsingCommand($customerReference, $table);
             throw new NoExceptionAlthoughExpectedException();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             if ($e instanceof NoExceptionAlthoughExpectedException) {
                 throw $e;
             }
@@ -240,7 +241,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
      * @param string $customerReference
      * @param string $methodName
      *
-     * @throws \Exception
+     * @throws Exception
      */
     private function deleteCustomer(string $customerReference, string $methodName): void
     {
@@ -270,7 +271,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
         /** @var EditableCustomer $result */
         $result = $queryBus->handle(new GetCustomerForEditing($this->customerRegistry[$customerReference]));
 
-        $serializer = CommonFeatureContext::getContainer()->get('serializer');
+        $serializer = CommonFeatureContext::getContainer()->get(SerializerInterface::class);
         $realData = $serializer->normalize($result);
 
         DataComparator::assertDataSetsAreIdentical($expectedData, $realData);
@@ -324,7 +325,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
             $result = $queryBus->handle(new GetCustomerForEditing($this->customerRegistry[$customerReference]));
 
             throw new NoExceptionAlthoughExpectedException();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             if ($e instanceof NoExceptionAlthoughExpectedException) {
                 throw $e;
             }
@@ -340,7 +341,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function assertGotErrorMessage($message)
     {
-        if (!$this->latestResult instanceof \Exception) {
+        if (!$this->latestResult instanceof Exception) {
             throw new Exception('Latest Command did not return an error');
         }
 
@@ -356,7 +357,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function assertAllErrorMessagesHaveBeenChecked()
     {
-        if ($this->latestResult instanceof \Exception) {
+        if ($this->latestResult instanceof Exception) {
             throw $this->latestResult;
         }
     }
@@ -406,7 +407,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
      *
      * @return int
      *
-     * @throws \Exception
+     * @throws Exception
      */
     protected function validateAndFormatCustomerGroupData($groupName)
     {
@@ -433,7 +434,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @param string $methodName
      *
-     * @throws \Exception
+     * @throws Exception
      */
     protected function validateDeleteCustomerMethod(string $methodName)
     {
@@ -449,7 +450,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
      *
      * @return int
      *
-     * @throws \Exception
+     * @throws Exception
      */
     protected function validateAndFormatCustomerGenderData($genderName)
     {
@@ -492,7 +493,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @param string $customerReference
      *
-     * @throws \Exception
+     * @throws Exception
      */
     protected function assertCustomerReferenceExistsInRegistry($customerReference)
     {

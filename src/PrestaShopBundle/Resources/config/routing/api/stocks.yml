@@ -2,21 +2,21 @@ api_stock_list_products:
   path: /
   methods: [ GET ]
   defaults:
-    _controller: prestashop.core.api.stock.controller:listProductsAction
+    _controller: PrestaShopBundle\Controller\Api\StockController::listProductsAction
     _legacy_controller: AdminStockManagement
 
 api_stock_list_products_export:
   path: /export
   methods: [ GET ]
   defaults:
-    _controller: prestashop.core.api.stock.controller:listProductsExportAction
+    _controller: PrestaShopBundle\Controller\Api\StockController::listProductsExportAction
     _legacy_controller: AdminStockManagement
 
 api_stock_list_product_combinations:
   path: /{productId}
   methods: [ GET ]
   defaults:
-    _controller: prestashop.core.api.stock.controller:listProductsAction
+    _controller: PrestaShopBundle\Controller\Api\StockController::listProductsAction
     _legacy_controller: AdminStockManagement
   requirements:
     productId: \d+
@@ -25,7 +25,7 @@ api_stock_edit_product:
   path: /product/{productId}
   methods: [ POST ]
   defaults:
-    _controller: prestashop.core.api.stock.controller:editProductAction
+    _controller: PrestaShopBundle\Controller\Api\StockController::editProductAction
     _legacy_controller: AdminStockManagement
   requirements:
     productId: \d+
@@ -34,7 +34,7 @@ api_stock_edit_product_combination:
   path: /product/{productId}/combination/{combinationId}
   methods: [ POST ]
   defaults:
-    _controller: prestashop.core.api.stock.controller:editProductAction
+    _controller: PrestaShopBundle\Controller\Api\StockController::editProductAction
     _legacy_controller: AdminStockManagement
   requirements:
     productId: \d+
@@ -44,5 +44,5 @@ api_stock_bulk_edit_products:
   path: /products
   methods: [ POST ]
   defaults:
-    _controller: prestashop.core.api.stock.controller:bulkEditProductsAction
+    _controller: PrestaShopBundle\Controller\Api\StockController::bulkEditProductsAction
     _legacy_controller: AdminStockManagement

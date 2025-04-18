@@ -23,36 +23,24 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Grid from '@components/grid/grid';
-import SortingExtension from '@components/grid/extension/sorting-extension';
-import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
-import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
-import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
-import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
-import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
-import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
-import FiltersSubmitButtonEnablerExtension
-  from '@components/grid/extension/filters-submit-button-enabler-extension';
-import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
 import ShowcaseCard from '@components/showcase-card/showcase-card';
-import PositionExtension from '@components/grid/extension/position-extension';
 
 const {$} = window;
 
 $(() => {
-  const grid = new Grid('feature');
+  const grid = new window.prestashop.component.Grid('feature');
 
-  grid.addExtension(new ExportToSqlManagerExtension());
-  grid.addExtension(new ReloadListActionExtension());
-  grid.addExtension(new SortingExtension());
-  grid.addExtension(new FiltersResetExtension());
-  grid.addExtension(new SubmitRowActionExtension());
-  grid.addExtension(new SubmitBulkExtension());
-  grid.addExtension(new BulkActionCheckboxExtension());
-  grid.addExtension(new FiltersSubmitButtonEnablerExtension());
-  grid.addExtension(new LinkRowActionExtension());
-  grid.addExtension(new PositionExtension(grid));
+  grid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.PositionExtension(grid));
 
   const showcaseCard = new ShowcaseCard('featuresShowcaseCard');
   showcaseCard.addExtension(new ShowcaseCardCloseExtension());

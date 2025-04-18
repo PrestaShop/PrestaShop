@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductComman
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class DuplicateProductFeatureContext extends AbstractProductFeatureContext
@@ -65,6 +66,23 @@ class DuplicateProductFeatureContext extends AbstractProductFeatureContext
         $newProductId = $this->getCommandBus()->handle(new DuplicateProductCommand(
             $this->getSharedStorage()->get($productReference),
             ShopConstraint::shop($this->referenceToId($shopReference))
+        ));
+
+        $this->getSharedStorage()->set($newProductReference, $newProductId->getValue());
+    }
+
+    /**
+     * @When I duplicate product :productReference to a :newProductReference for shops :shopReferences
+     *
+     * @param string $productReference
+     * @param string $newProductReference
+     * @param string $shopReferences
+     */
+    public function duplicateForShopCollection(string $productReference, string $newProductReference, string $shopReferences): void
+    {
+        $newProductId = $this->getCommandBus()->handle(new DuplicateProductCommand(
+            $this->getSharedStorage()->get($productReference),
+            ShopCollection::shops($this->referencesToIds($shopReferences))
         ));
 
         $this->getSharedStorage()->set($newProductReference, $newProductId->getValue());

@@ -66,7 +66,7 @@ final class EditSearchEngineHandler extends AbstractSearchEngineHandler implemen
             if (!$searchEngine->update()) {
                 throw new SearchEngineException(sprintf('Cannot update search engine with id "%d"', $searchEngine->id));
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new SearchEngineException(sprintf('Cannot update search engine with id "%d"', $searchEngine->id));
         }
     }

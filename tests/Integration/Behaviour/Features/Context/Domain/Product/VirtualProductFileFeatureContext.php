@@ -31,6 +31,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 use Behat\Gherkin\Node\TableNode;
 use DateTime;
 use DateTimeImmutable;
+use Exception;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand;
@@ -371,7 +372,7 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
      *
      * @return UpdateVirtualProductFileCommand
      *
-     * @throws \Exception
+     * @throws Exception
      */
     private function buildUpdateVirtualProductFileCommand(int $virtualProductFileId, array $data, ?string $newFileName): UpdateVirtualProductFileCommand
     {

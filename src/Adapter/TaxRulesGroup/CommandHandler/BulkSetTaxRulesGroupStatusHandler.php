@@ -55,7 +55,7 @@ final class BulkSetTaxRulesGroupStatusHandler extends AbstractTaxRulesGroupHandl
                 if (!$this->setTaxRulesGroupStatus($taxRuleGroup, $command->getExpectedStatus())) {
                     $errors[] = $taxRuleGroup->id;
                 }
-            } catch (TaxRulesGroupException $e) {
+            } catch (TaxRulesGroupException) {
                 $errors[] = $taxRuleGroupId->getValue();
             }
         }

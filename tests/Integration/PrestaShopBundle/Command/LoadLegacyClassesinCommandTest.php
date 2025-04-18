@@ -53,6 +53,8 @@ class LoadLegacyClassesinCommandTest extends KernelTestCase
     {
         parent::setUp();
         self::bootKernel();
+        global $kernel;
+        $kernel = self::$kernel;
         $this->previousErrorReportingLevel = error_reporting(E_WARNING);
     }
 
@@ -66,7 +68,7 @@ class LoadLegacyClassesinCommandTest extends KernelTestCase
             E_WARNING
         );
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Attempt to read property "precision" on null');
+        $this->expectExceptionMessage('Attempt to read property "controller_type" on null');
 
         $application = new Application(static::$kernel);
         $application->add(new class() extends Command {
@@ -89,7 +91,7 @@ class LoadLegacyClassesinCommandTest extends KernelTestCase
             }
         });
 
-        Context::getContext()->currency = null;
+        Context::getContext()->controller = null;
         $command = $application->find('prestashop-tests:load-legacy-classes');
         $this->assertNotNull($command);
         $commandTester = new CommandTester($command);
@@ -123,7 +125,7 @@ class LoadLegacyClassesinCommandTest extends KernelTestCase
             }
         });
 
-        Context::getContext()->currency = null;
+        Context::getContext()->controller = null;
         $command = $application->find('prestashop-tests:load-legacy-classes');
         $this->assertNotNull($command);
         $commandTester = new CommandTester($command);

@@ -64,7 +64,7 @@ final class DeleteLanguageHandler extends AbstractLanguageHandler implements Del
 
         try {
             $this->assertLanguageIsNotDefault($language);
-        } catch (DefaultLanguageException $e) {
+        } catch (DefaultLanguageException) {
             throw new DefaultLanguageException(
                 sprintf(
                     'Default language "%s" cannot be deleted',

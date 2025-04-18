@@ -28,54 +28,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/sorting.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="677b5abd7f9265257543a0f7258bc477">
-        <source>Customize your store with this selection of modules recommended for your shop, based on your country, language and version of PrestaShop. It includes the most popular modules from our Addons marketplace, and free partner modules.</source>
-        <target>Customize your store with this selection of modules recommended for your shop, based on your country, language and version of PrestaShop. It includes the most popular modules from our Addons marketplace, and free partner modules.</target>
-        <note>Line: 30</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/tab-module-line.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ba6b1bc4d8bfe5e6e835afa72f102a02">
-        <source>You bought this module on PrestaShop Addons. Thank You.</source>
-        <target>You bought this module on PrestaShop Addons. Thank You.</target>
-        <note>Line: 45</note>
-      </trans-unit>
-      <trans-unit id="fe5a7fc9d9c907efdf6a384a71cd53fc">
-        <source>Bought</source>
-        <target>Bought</target>
-        <note>Line: 45</note>
-      </trans-unit>
-      <trans-unit id="aaf8966ccff4445461fe8bcfab2d318d">
-        <source>This module is available on PrestaShop Addons.</source>
-        <target>This module is available on PrestaShop Addons.</target>
-        <note>Line: 47</note>
-      </trans-unit>
-      <trans-unit id="2cc1943d4c0b46bfcf503a75c44f988b">
-        <source>Popular</source>
-        <target>Popular</target>
-        <note>Line: 47</note>
-      </trans-unit>
-      <trans-unit id="f248df0d4d7e4ae98485c5df8af58945">
-        <source>This module is available for free thanks to our partner.</source>
-        <target>This module is available for free thanks to our partner.</target>
-        <note>Line: 49</note>
-      </trans-unit>
-      <trans-unit id="0008feba81a131902ece95d59f1b8f21">
-        <source>Official</source>
-        <target>Official</target>
-        <note>Line: 49</note>
-      </trans-unit>
-      <trans-unit id="28f60d4760851bab00345a3cb86871f7">
-        <source>Need update</source>
-        <target>Need update</target>
-        <note>Line: 52</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Module/alerts.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="5117b40edade2ab3a4f738db0542ca03">

@@ -7,9 +7,9 @@
         <target>New products block</target>
         <note>Line: 56</note>
       </trans-unit>
-      <trans-unit id="cf188b643edb3c32f238483ad68bfdc6">
-        <source>Displays a block featuring your store's newest products.</source>
-        <target>Displays a block featuring your store's newest products.</target>
+      <trans-unit id="96844da26fe7558a6fc20f340c16927c">
+        <source>Highlight your store's newest products, display a block on the homepage and let the visitors know about your latest news.</source>
+        <target>Highlight your store's newest products, display a block on the homepage and let the visitors know about your latest news.</target>
         <note>Line: 57</note>
       </trans-unit>
       <trans-unit id="1cd777247f2a6ed79534d4ace72d78ce">
@@ -36,11 +36,6 @@
         <source>Number of days for which the product is considered 'new'</source>
         <target>Number of days for which the product is considered 'new'</target>
         <note>Line: 153</note>
-      </trans-unit>
-      <trans-unit id="96844da26fe7558a6fc20f340c16927c">
-        <source>Highlight your store's newest products, display a block on the homepage and let the visitors know about your latest news.</source>
-        <target>Highlight your store's newest products, display a block on the homepage and let the visitors know about your latest news.</target>
-        <note>Line: 57</note>
       </trans-unit>
     </body>
   </file>

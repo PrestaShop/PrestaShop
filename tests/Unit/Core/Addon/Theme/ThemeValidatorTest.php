@@ -28,12 +28,15 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Addon\Theme;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeValidator;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use RuntimeException;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Throwable;
 
 class ThemeValidatorTest extends TestCase
 {
@@ -86,15 +89,15 @@ class ThemeValidatorTest extends TestCase
         $options = ['valid', 'missfiles', 'missconfig'];
 
         if (!in_array($name, $options)) {
-            throw new \InvalidArgumentException(self::NOTICE . 'getTheme($name) only accepts specified arguments');
+            throw new InvalidArgumentException(self::NOTICE . 'getTheme($name) only accepts specified arguments');
         }
         $themeDir = __DIR__ . '/../../../../Resources/themes/minimal-' . $name . '-theme/';
         $themeConfigFile = $themeDir . 'config/theme.yml';
 
         try {
             $themeConfigContent = file_get_contents($themeConfigFile);
-        } catch (\Throwable $exception) {
-            throw new \RuntimeException(sprintf('Unable to read theme config file %s', $themeConfigFile));
+        } catch (Throwable $exception) {
+            throw new RuntimeException(sprintf('Unable to read theme config file %s', $themeConfigFile));
         }
 
         $config = (new Parser())->parse(file_get_contents($themeConfigFile));

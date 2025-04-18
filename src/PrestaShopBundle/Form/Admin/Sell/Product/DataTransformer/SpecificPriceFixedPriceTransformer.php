@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\DataTransformer;
 
+use NumberFormatter;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\InitialPrice;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Extension\Core\DataTransformer\NumberToLocalizedStringTransformer;
@@ -44,7 +45,7 @@ class SpecificPriceFixedPriceTransformer implements DataTransformerInterface
      */
     private $numberTransformer;
 
-    public function __construct(int $scale = null, ?bool $grouping = false, ?int $roundingMode = NumberToLocalizedStringTransformer::ROUND_HALF_UP)
+    public function __construct(?int $scale = null, ?bool $grouping = false, ?int $roundingMode = NumberFormatter::ROUND_HALFUP)
     {
         $this->numberTransformer = new NumberToLocalizedStringTransformer($scale, $grouping, $roundingMode);
     }

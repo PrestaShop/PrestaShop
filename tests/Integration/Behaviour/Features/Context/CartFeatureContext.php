@@ -30,6 +30,7 @@ use Cart;
 use Context;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
+use RuntimeException;
 use Tests\Integration\Utility\CartOld;
 
 class CartFeatureContext extends AbstractPrestaShopFeatureContext
@@ -47,13 +48,13 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     public function noDeliveryOptions()
     {
         if ($this->getCurrentCart() === null) {
-            throw new \RuntimeException('No current cart, cannot check available delivery options');
+            throw new RuntimeException('No current cart, cannot check available delivery options');
         }
 
         $deliveryOptions = $this->getCurrentCart()->getDeliveryOptionList();
 
         if (!empty($deliveryOptions)) {
-            throw new \RuntimeException('Expected no available delivery options, but there are some !');
+            throw new RuntimeException('Expected no available delivery options, but there are some !');
         }
     }
 
@@ -65,13 +66,13 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     public function deliveryOptionsAreAvailable()
     {
         if ($this->getCurrentCart() === null) {
-            throw new \RuntimeException('No current cart, cannot check available delivery options');
+            throw new RuntimeException('No current cart, cannot check available delivery options');
         }
 
         $deliveryOptions = $this->getCurrentCart()->getDeliveryOptionList();
 
         if (empty($deliveryOptions)) {
-            throw new \RuntimeException('Expected available delivery options, but there are none !');
+            throw new RuntimeException('Expected available delivery options, but there are none !');
         }
     }
 
@@ -113,7 +114,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $currentCartProducts = $this->getCurrentCart()->getProducts(true);
         if ($productCount != count($currentCartProducts)) {
-            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $productCount, count($currentCartProducts)));
+            throw new RuntimeException(sprintf('Expects %s, got %s instead', $productCount, count($currentCartProducts)));
         }
     }
 
@@ -124,7 +125,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $currentCartProducts = Cart::getNbProducts($this->getCurrentCart()->id);
         if ($productCount != $currentCartProducts) {
-            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $productCount, $currentCartProducts));
+            throw new RuntimeException(sprintf('Expects %s, got %s instead', $productCount, $currentCartProducts));
         }
     }
 
@@ -178,7 +179,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
             $total = round($total, 1);
         }
         if ($expectedTotal != $total) {
-            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedTotal, $total));
+            throw new RuntimeException(sprintf('Expects %s, got %s instead', $expectedTotal, $total));
         }
     }
 
@@ -199,7 +200,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
         $expectedTotal = round($expectedShippingFees, 1);
         $shippingFees = round($this->getCurrentCart()->getPackageShippingCost($this->getCurrentCart()->id_carrier, $withTaxes), 1);
         if ($expectedTotal != $shippingFees) {
-            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedTotal, $shippingFees));
+            throw new RuntimeException(sprintf('Expects %s, got %s instead', $expectedTotal, $shippingFees));
         }
     }
 

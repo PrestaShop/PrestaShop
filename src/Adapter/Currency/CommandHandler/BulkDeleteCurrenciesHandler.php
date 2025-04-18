@@ -77,7 +77,7 @@ final class BulkDeleteCurrenciesHandler extends AbstractCurrencyHandler implemen
             try {
                 $this->assertDefaultCurrencyIsNotBeingRemovedOrDisabled($currencyId->getValue(), $this->defaultCurrencyId);
                 $this->assertDefaultCurrencyIsNotBeingRemovedOrDisabledFromAnyShop($entity);
-            } catch (CurrencyException $e) {
+            } catch (CurrencyException) {
                 $faileds[] = $currencyId->getValue();
                 continue;
             }
@@ -86,7 +86,7 @@ final class BulkDeleteCurrenciesHandler extends AbstractCurrencyHandler implemen
                 if (false === $entity->delete()) {
                     $faileds[] = $currencyId->getValue();
                 }
-            } catch (PrestaShopException $e) {
+            } catch (PrestaShopException) {
                 $faileds[] = $currencyId->getValue();
             }
         }

@@ -167,6 +167,7 @@ class RetailPriceType extends TranslatorAwareType
             ])
             ->add('tax_rules_group_id', ChoiceType::class, [
                 'choices' => $this->taxRuleGroupChoicesProvider->getChoices(),
+                'disabled' => !$this->isTaxEnabled,
                 'required' => false,
                 // placeholder false is important to avoid empty option in select input despite required being false
                 'placeholder' => false,
@@ -181,17 +182,12 @@ class RetailPriceType extends TranslatorAwareType
                 'label' => $this->trans('Tax rule', 'Admin.Catalog.Feature'),
                 'help' => !$this->isTaxEnabled ?
                     $this->trans('Tax feature is disabled, it will not affect price tax included.', 'Admin.Catalog.Feature')
-                    : '', //we replace help text in js on load when tax is enabled
+                    : '', // we replace help text in js on load when tax is enabled
                 'help_attr' => [
                     'class' => 'js-tax-rule-help',
                     'data-place-holder-without-state' => $taxRateHelpPlaceholderWithoutState,
                     'data-place-holder-with-state' => $taxRateHelpPlaceholderWithState,
                     'data-is-tax-enabled' => $this->isTaxEnabled,
-                ],
-                'external_link' => [
-                    'text' => $this->trans('[1]Manage tax rules[/1]', 'Admin.Catalog.Feature'),
-                    'href' => $this->router->generate('admin_taxes_index'),
-                    'align' => 'right',
                 ],
                 'modify_all_shops' => true,
             ]);
@@ -230,6 +226,11 @@ class RetailPriceType extends TranslatorAwareType
                     new NotBlank(),
                     new Type(['type' => 'float']),
                     new PositiveOrZero(),
+                ],
+                'external_link' => [
+                    'text' => $this->trans('[1]Manage tax rules[/1]', 'Admin.Catalog.Feature'),
+                    'href' => $this->router->generate('admin_taxes_index'),
+                    'align' => 'right',
                 ],
                 'default_empty_data' => 0.0,
                 'modify_all_shops' => true,

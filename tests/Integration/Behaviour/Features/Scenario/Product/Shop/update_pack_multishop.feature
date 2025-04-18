@@ -254,7 +254,7 @@ Feature: Add product to pack from Back Office (BO)
       | productSkirt1 | regular skirt: Size - M, Color - White | productSkirt1MWhite | 11       | http://myshop.com/img/p/{skirtWhiteM}.jpg              | Ref: productSkirtRef       |
       | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 12       | http://myshop.com/img/p/{skirtBlackM}.jpg              | Ref: productSkirtRef       |
       | product2      | shady sunglasses                       |                     | 2        | http://myshop.com/img/p/{no_picture}-small_default.jpg | Ref: ref1                  |
-    When I delete product product2 from shops "shop2"
+    When I delete product product2 from shop "shop2"
     # Product2 still exist in shop1
     Then pack productPack4 should contain products with following details for shops shop1,shop2:
       | product       | name                                   | combination         | quantity | image url                                              | reference                  |
@@ -262,7 +262,7 @@ Feature: Add product to pack from Back Office (BO)
       | productSkirt1 | regular skirt: Size - M, Color - White | productSkirt1MWhite | 11       | http://myshop.com/img/p/{skirtWhiteM}.jpg              | Ref: productSkirtRef       |
       | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 12       | http://myshop.com/img/p/{skirtBlackM}.jpg              | Ref: productSkirtRef       |
       | product2      | shady sunglasses                       |                     | 2        | http://myshop.com/img/p/{no_picture}-small_default.jpg | Ref: ref1                  |
-    When I delete product product2 from shops "shop1"
+    When I delete product product2 from shop "shop1"
     # Product2 is fully removed
     Then pack productPack4 should contain products with following details for shops shop1,shop2:
       | product       | name                                   | combination         | quantity | image url                                 | reference                  |

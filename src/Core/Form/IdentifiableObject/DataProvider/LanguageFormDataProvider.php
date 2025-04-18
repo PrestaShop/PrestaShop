@@ -35,48 +35,26 @@ use PrestaShop\PrestaShop\Core\Domain\Language\QueryResult\EditableLanguage;
  */
 final class LanguageFormDataProvider implements FormDataProviderInterface
 {
-    /**
-     * @var CommandBusInterface
-     */
-    private $bus;
-
-    /**
-     * @var bool
-     */
-    private $isMultistoreFeatureActive;
-
-    /**
-     * @var int[]
-     */
-    private $defaultShopAssociation;
-
-    /**
-     * @param CommandBusInterface $bus
-     * @param bool $isMultistoreFeatureActive
-     * @param int[] $defaultShopAssociation
-     */
     public function __construct(
-        CommandBusInterface $bus,
-        $isMultistoreFeatureActive,
-        array $defaultShopAssociation
+        private readonly CommandBusInterface $bus,
+        private readonly bool $isMultistoreFeatureActive,
+        private readonly array $defaultShopAssociation
     ) {
-        $this->bus = $bus;
-        $this->isMultistoreFeatureActive = $isMultistoreFeatureActive;
-        $this->defaultShopAssociation = $defaultShopAssociation;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getData($languageId)
+    public function getData($id)
     {
         /** @var EditableLanguage $editableLanguage */
-        $editableLanguage = $this->bus->handle(new GetLanguageForEditing($languageId));
+        $editableLanguage = $this->bus->handle(new GetLanguageForEditing($id));
 
         $data = [
             'name' => $editableLanguage->getName(),
-            'iso_code' => $editableLanguage->getIsoCode()->getValue(),
-            'tag_ietf' => $editableLanguage->getTagIETF()->getValue(),
+            'iso_code' => $editableLanguage->getIsoCode(),
+            'tag_ietf' => $editableLanguage->getTagIETF(),
+            'locale' => $editableLanguage->getLocale(),
             'short_date_format' => $editableLanguage->getShortDateFormat(),
             'full_date_format' => $editableLanguage->getFullDateFormat(),
             'is_rtl' => $editableLanguage->isRtl(),

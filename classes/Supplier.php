@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
+
 /**
  * Class SupplierCore.
  */
@@ -52,9 +54,6 @@ class SupplierCore extends ObjectModel
     /** @var string|array<int, string> Meta title */
     public $meta_title;
 
-    /** @var string|array<int, string> Meta keywords */
-    public $meta_keywords;
-
     /** @var string|array<int, string> Meta description */
     public $meta_description;
 
@@ -75,10 +74,9 @@ class SupplierCore extends ObjectModel
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
 
             /* Lang fields */
-            'description' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'],
+            'description' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4],
             'meta_title' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
             'meta_description' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 512],
-            'meta_keywords' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
         ],
     ];
 
@@ -164,7 +162,7 @@ class SupplierCore extends ObjectModel
 						WHERE cg.`id_group` ' . $sqlGroups . '
 					)') . '
 					GROUP BY ps.`id_supplier`'
-                );
+            );
 
             $counts = [];
             foreach ($results as $result) {
@@ -301,7 +299,7 @@ class SupplierCore extends ObjectModel
         }
 
         if (!Validate::isOrderBy($orderBy) || !Validate::isOrderWay($orderWay)) {
-            die(Tools::displayError());
+            throw new PrestaShopException('Invalid sorting parameters provided.');
         }
 
         $sqlGroups = '';
@@ -352,13 +350,12 @@ class SupplierCore extends ObjectModel
 					pl.`description_short`,
 					pl.`link_rewrite`,
 					pl.`meta_description`,
-					pl.`meta_keywords`,
 					pl.`meta_title`,
 					pl.`name`,
 					image_shop.`id_image` id_image,
 					il.`legend`,
 					s.`name` AS supplier_name,
-					DATEDIFF(p.`date_add`, DATE_SUB("' . date('Y-m-d') . ' 00:00:00", INTERVAL ' . ($nbDaysNewProduct) . ' DAY)) > 0 AS new,
+					DATEDIFF(p.`date_add`, DATE_SUB("' . date('Y-m-d') . ' 00:00:00", INTERVAL ' . $nbDaysNewProduct . ' DAY)) > 0 AS new,
 					m.`name` AS manufacturer_name' . (Combination::isFeatureActive() ? ', product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute' : '') . '
 				 FROM `' . _DB_PREFIX_ . 'product` p
 				' . Shop::addSqlAssociation('product', 'p') . '
@@ -408,7 +405,7 @@ class SupplierCore extends ObjectModel
             $result = array_slice($result, (int) (($p - 1) * $n), (int) $n);
         }
 
-        return Product::getProductsProperties($idLang, $result);
+        return $result;
     }
 
     /**

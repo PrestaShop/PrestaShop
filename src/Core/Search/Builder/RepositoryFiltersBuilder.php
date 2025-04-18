@@ -38,7 +38,7 @@ final class RepositoryFiltersBuilder extends AbstractRepositoryFiltersBuilder
     /**
      * {@inheritdoc}
      */
-    public function buildFilters(Filters $filters = null)
+    public function buildFilters(?Filters $filters = null)
     {
         if (!$this->employeeProvider->getId() || !$this->shopId) {
             return $filters;

@@ -43,7 +43,7 @@ trait DeleteActionTrait
         string $method = 'POST',
         array $extraRouteParams = [],
         array $options = [],
-        string $actionLabel = null
+        ?string $actionLabel = null
     ): RowActionInterface {
         $options = array_merge(
             [

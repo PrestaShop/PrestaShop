@@ -2,12 +2,30 @@
 @import '@scss/pages/partials/_order-navigation';
 
 #order-view-page {
+  .order-actions {
+    display: flex;
+    flex-wrap: wrap;
+
+    > * {
+      margin-bottom: var(--#{$cdk}size-16);
+
+      &:not(:last-child) {
+        margin-right: var(--#{$cdk}size-10);
+      }
+    }
+
+    .btn-action {
+      &[disabled] {
+        background-color: var(--#{$cdk}primary-300);
+        border-color: var(--#{$cdk}primary-400);
+      }
+    }
+  }
+
   #historyTabContent {
     .badge {
-      padding: 0 5px;
-      font-size: 0.875rem;
-      font-weight: 600;
-      line-height: 1.5;
+      font-size: var(--#{$cdk}size-12);
+      font-weight: 700;
     }
 
     .card-details-actions {
@@ -67,8 +85,8 @@
       z-index: 5;
       display: flex;
       flex-wrap: nowrap;
-      padding-left: 1px;
-      margin-bottom: -2px;
+      padding-left: 0;
+      margin-bottom: -1px;
       overflow: auto;
       overflow-y: hidden;
 
@@ -78,17 +96,34 @@
     }
 
     .tab-content {
-      border: 1px solid #dbe6e9;
-      @include border-radius(5px);
-      box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.06);
+      border: 1px solid var(--#{$cdk}primary-400);
     }
   }
 
   // Todo: Looks like we don't have any custom select without JS to add in a form
   // Please notice that you have two different select2 component inside order view
   .select2-container {
-    min-width: 36ch;
+    min-width: var(--#{$cdk}size-208);
+    max-width: 100%;
     height: 100%;
+
+    > .selection {
+      display: block;
+      height: 39px;
+
+      .select2-selection--single {
+        padding-block: 0;
+        line-height: 39px;
+      }
+
+      .select2-selection--single,
+      .select2-selection__rendered {
+        display: block;
+        line-height: 39px;
+        // stylelint-disable-next-line
+        height: 39px !important;
+      }
+    }
   }
 
   .select-status-colored,
@@ -100,16 +135,20 @@
 
   .select-status {
     position: relative;
-    max-width: 280px;
+    // max-width: 280px;
+    max-width: 100%;
     background: $white;
     border: none;
-    @include border-radius(4px);
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
     @include transition(0.2s ease-out);
 
+    .select2-container {
+      background-color: transparent;
+    }
+
     .select2-selection__rendered,
-    .select2-selection__arrow b::after {
-      color: $white;
+    .select2-selection__arrow b {
+      color: var(--#{$cdk}white);
+      border-top-color: var(--#{$cdk}white);
     }
 
     .select-status-colored,
@@ -125,8 +164,9 @@
     }
 
     &.is-bright .select2-selection__rendered,
-    &.is-bright .select2-selection__arrow b::after {
-      color: $bright-status-text;
+    &.is-bright .select2-selection__arrow b {
+      color: var(--#{$cdk}primary-800);
+      border-top-color: var(--#{$cdk}primary-800);
     }
   }
 
@@ -189,39 +229,10 @@
       margin: 0.1rem 0;
       font-size: 0.875rem;
       font-weight: 600;
-      color: #6c868e;
+      color: var(--#{$cdk}primary-600);
       white-space: normal;
       background: #fff;
       @include border-radius(1000px);
-    }
-  }
-
-  .order {
-    &-actions {
-      display: flex;
-      flex-wrap: wrap;
-
-      > * {
-        margin-bottom: 0.9375rem;
-
-        &:not(:last-child) {
-          margin-right: 0.625rem;
-        }
-
-        a,
-        button,
-        select {
-          @include transition(0.2s ease-out);
-
-          &:not(:disabled) {
-            cursor: pointer;
-
-            &:hover {
-              opacity: 0.7;
-            }
-          }
-        }
-      }
     }
   }
 
@@ -379,6 +390,22 @@
   }
 }
 
+@include media-breakpoint-down(lg) {
+  #order-view-page {
+    .right-column .tab-content,
+    #orderProductsPanel {
+      table {
+        display: block;
+        overflow: auto;
+
+        &.table-empty {
+          display: table;
+        }
+      }
+    }
+  }
+}
+
 @include media-breakpoint-down(sm) {
   .adminorders {
     .header-toolbar {
@@ -472,8 +499,14 @@
     .order-actions {
       justify-content: center;
 
+      #update_order_status_action_form {
+        .input-group {
+          gap: var(--#{$cdk}size-8);
+        }
+      }
+
       .select-status {
-        max-width: 206px;
+        max-width: var(--#{$cdk}size-208);
 
         .select-status-colored,
         .select2-selection {

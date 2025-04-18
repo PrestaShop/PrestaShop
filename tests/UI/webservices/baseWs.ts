@@ -1,4 +1,7 @@
-import type {APIRequestContext, APIResponse} from 'playwright';
+import {
+  type APIRequestContext,
+  type APIResponse,
+} from '@prestashop-core/ui-testing';
 
 export default class BaseWS {
   /**

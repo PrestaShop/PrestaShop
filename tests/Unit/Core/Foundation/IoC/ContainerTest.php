@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Foundation\IoC;
 
+use Exception;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use Tests\Unit\Core\Foundation\IoC\Fixtures\DepBuiltByClosure;
@@ -196,7 +197,7 @@ class ContainerTest extends TestCase
 
     public function testContainerDoesntBindStringsAsLiteralValues()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
 
         $this->container->bind('value', 'a string which is not a class name');
         $this->container->make('value');

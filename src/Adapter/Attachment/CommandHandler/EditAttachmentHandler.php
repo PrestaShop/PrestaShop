@@ -75,7 +75,7 @@ final class EditAttachmentHandler extends AbstractAttachmentHandler implements E
 
         try {
             $attachment = new Attachment($attachmentIdValue);
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new AttachmentNotFoundException(sprintf('Attachment with id "%s" was not found.', $attachmentIdValue));
         }
 

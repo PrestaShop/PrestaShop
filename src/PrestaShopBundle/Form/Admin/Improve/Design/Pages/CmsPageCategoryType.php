@@ -49,7 +49,6 @@ class CmsPageCategoryType extends TranslatorAwareType
 {
     public const NAME_MAX_LENGTH = 64;
     public const META_TITLE_MAX_LENGTH = 255;
-    public const META_KEYWORDS_MAX_LENGTH = 255;
     public const META_DESCRIPTION_MAX_LENGTH = 512;
 
     /**
@@ -162,29 +161,6 @@ class CmsPageCategoryType extends TranslatorAwareType
                                 ['%limit%' => self::META_DESCRIPTION_MAX_LENGTH]
                             ),
                         ]),
-                    ],
-                ],
-            ])
-            ->add('meta_keywords', TranslatableType::class, [
-                'label' => $this->trans('Meta keywords', 'Admin.Global'),
-                'help' => $invalidCharactersForNameLabel,
-                'required' => false,
-                'options' => [
-                    'constraints' => [
-                        new TypedRegex([
-                            'type' => 'generic_name',
-                        ]),
-                        new Length([
-                            'max' => self::META_KEYWORDS_MAX_LENGTH,
-                            'maxMessage' => $this->trans(
-                                'This field cannot be longer than %limit% characters',
-                                'Admin.Notifications.Error',
-                                ['%limit%' => self::META_KEYWORDS_MAX_LENGTH]
-                            ),
-                        ]),
-                    ],
-                    'attr' => [
-                        'placeholder' => $this->trans('Add tag', 'Admin.Actions'),
                     ],
                 ],
             ])

@@ -172,7 +172,7 @@ abstract class TreeToolbarButtonCore
         }
 
         if ($this->getContext()->controller instanceof ModuleAdminController && file_exists($this->_normalizeDirectory(
-                $this->getContext()->controller->getTemplatePath()
+            $this->getContext()->controller->getTemplatePath()
         ) . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath())
                 . $this->getTemplateDirectory() . $template;
