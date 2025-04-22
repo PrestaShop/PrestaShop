@@ -30,6 +30,10 @@ inputs:
     required: false
     description: true to disable Make
     default: 'false'
+  WARMUP_DISABLE:
+    required: false
+    description: true to disable cache warmup
+    default: 'false'
   PRESTASHOP_DIR:
     required: false
     description: Prestashop folder
@@ -73,6 +77,7 @@ runs:
       shell: bash
       env:
         DISABLE_MAKE: ${{ (inputs.DISABLE_MAKE == 'true') && '1' || '0' }}
+        WARMUP_DISABLE: ${{ (inputs.WARMUP_DISABLE == 'true') && '1' || '0' }}
         PS_ENABLE_SSL: ${{ (inputs.ENABLE_SSL == 'true') && '1' || '0' }}
         PS_INSTALL_AUTO: ${{ (inputs.INSTALL_AUTO == 'true') && '1' || '0' }}
         PS_USE_DOCKER_MAILDEV: 0

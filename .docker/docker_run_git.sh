@@ -173,6 +173,16 @@ if [ $BLACKFIRE_ENABLE -eq 1 ]; then
     fi
 fi
 
+if [ "${WARMUP_DISABLE}" != "1" ]; then
+  if [ $PS_DEV_MODE -ne 1 ]; then
+    echo "\n* Warmup Symfony cache for dev environment..."
+    runuser -g www-data -u www-data -- php -d memory_limit=-1 /var/www/html/bin/console cache:warmup --env=dev
+  else
+    echo "\n* Warmup Symfony cache for prod environment..."
+    runuser -g www-data -u www-data -- php -d memory_limit=-1 /var/www/html/bin/console cache:warmup --env=prod
+  fi
+fi
+
 echo "\n***"
 echo "**"
 echo "** Front-office: http://${PS_DOMAIN}/"

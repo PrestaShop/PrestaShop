@@ -36,6 +36,7 @@ services:
         - INSTALL_XDEBUG=${INSTALL_XDEBUG:-false}
     environment:
       DISABLE_MAKE: ${DISABLE_MAKE:-0}
+      WARMUP_DISABLE: ${WARMUP_DISABLE:-0}
       PS_INSTALL_AUTO: ${PS_INSTALL_AUTO:-1}
       DB_PASSWD: ${DB_PASSWD:-prestashop}
       DB_NAME: ${DB_NAME:-prestashop}
