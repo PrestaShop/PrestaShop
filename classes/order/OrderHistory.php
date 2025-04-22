@@ -378,9 +378,6 @@ class OrderHistoryCore extends ObjectModel
 
         // set orders as paid
         if ($new_os->paid == 1) {
-            if ($order->total_paid != 0) {
-                $payment_method = Module::getInstanceByName($order->module);
-            }
 
             // Are invoices managed by Prestashop?
             if (true === (bool) Configuration::get('PS_INVOICE')) {
@@ -607,21 +604,30 @@ class OrderHistoryCore extends ObjectModel
     /**
      * Creates a payment for an order and optionally associates it with an invoice.
      *
-     * @param Order $order The order object associated with the payment.
+     * @param OrderCore $order The order object associated with the payment.
      * @param float $restPaid The remaining amount to be paid.
      * @param int $invoiceId The ID of the invoice to associate the payment with.
      *
      * @return void
      */
-    protected function createOrderPayment(Order $order, float $restPaid, int $invoiceId = 0): void {
+    protected function createOrderPayment($order, float $restPaid, int $invoiceId = 0): void {
         if ($restPaid <= 0) {
             return;
         }
+
+        $displayName = null;
+        if ($order->total_paid != 0) {
+            $payment_method = Module::getInstanceByName($order->module);
+            if ($payment_method instanceof Module) {
+                $displayName = $payment_method->displayName;
+            }
+        }
+
         $payment = new OrderPayment();
         $payment->order_reference = Tools::substr($order->reference, 0, 9);
         $payment->id_currency = $order->id_currency;
         $payment->amount = $restPaid;
-        $payment->payment_method = isset($payment_method) && $payment_method instanceof Module ? $payment_method->displayName : null;
+        $payment->payment_method = $displayName;
         $payment->conversion_rate = $order->conversion_rate;
         $payment->save();
 
