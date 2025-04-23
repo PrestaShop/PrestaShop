@@ -76,6 +76,7 @@ final class CustomerFormDataProvider implements FormDataProviderInterface
             'group_ids' => $editableCustomer->getGroupIds(),
             'default_group_id' => $editableCustomer->getDefaultGroupId(),
             'is_guest' => $editableCustomer->isGuest(),
+            'language_id' => $editableCustomer->getLanguageId(),
         ];
 
         if ($this->isB2bFeatureEnabled) {

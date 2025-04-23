@@ -129,6 +129,7 @@ final class AddCustomerHandler extends AbstractCustomerHandler implements AddCus
         $customer->birthday = $command->getBirthday()->getValue();
         $customer->id_shop = $command->getShopId();
         $customer->is_guest = $command->isGuest();
+        $customer->id_lang = $command->getLanguageId();
 
         // Fill B2B customer fields
         $customer->company = $command->getCompanyName();

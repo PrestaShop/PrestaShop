@@ -125,7 +125,8 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
             $isEnabled,
             (bool) $data['is_partner_offers_subscribed'],
             $data['birthday'] ?: Birthday::EMPTY_BIRTHDAY,
-            (bool) $data['is_guest']
+            (bool) $data['is_guest'],
+            (int) $data['language_id']
         );
 
         // Optional data processed only if B2B mode is enabled
@@ -167,6 +168,7 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
             ->setDefaultGroupId((int) $data['default_group_id'])
             ->setGroupIds($groupIds)
             ->setBirthday($data['birthday'] ?: Birthday::EMPTY_BIRTHDAY)
+            ->setLanguageId($data['language_id'])
         ;
 
         if (null !== $data['password']) {

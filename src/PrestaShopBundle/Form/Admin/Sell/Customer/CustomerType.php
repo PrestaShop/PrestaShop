@@ -42,6 +42,11 @@ use Validate;
 class CustomerType extends TranslatorAwareType
 {
     /**
+     * @var array
+     */
+    private $languageChoices;
+
+    /**
      * @var bool
      */
     private $isB2bFeatureEnabled;
@@ -88,6 +93,7 @@ class CustomerType extends TranslatorAwareType
         $isB2bFeatureEnabled,
         $isPartnerOffersEnabled,
         ConfigurationInterface $configuration,
+        array $languageChoices,
         FormCloner $formCloner
     ) {
         parent::__construct($translator, $locales);
@@ -97,6 +103,7 @@ class CustomerType extends TranslatorAwareType
         $this->configuration = $configuration;
         $this->formCloner = $formCloner;
         $this->groupByIdChoiceProvider = $groupByIdChoiceProvider;
+        $this->languageChoices = $languageChoices;
     }
 
     /**
@@ -300,6 +307,16 @@ class CustomerType extends TranslatorAwareType
                 'required' => false,
                 'autocomplete' => true,
                 'placeholder' => null,
+            ])
+            ->add('language_id', ChoiceType::class, [
+                'label' => $this->trans('Language', 'Admin.Global'),
+                'required' => false,
+                'placeholder' => null,
+                'choices' => $this->languageChoices,
+                'attr' => [
+                    'data-toggle' => 'select2',
+                    'data-minimumResultsForSearch' => '7',
+                ],
             ])
         ;
 
