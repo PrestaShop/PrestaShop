@@ -2519,10 +2519,10 @@ class ToolsCore
                     $path_components = [];
                     for ($i = 1; $i <= 7; ++$i) {
                         $path_components[] = '$' . ($i + 1); // paths start on 2
-                        $path = implode('/', $path_components);
+                        $path_images = implode('/', $path_components);
                         fwrite($write_fd, $media_domains);
                         fwrite($write_fd, $domain_rewrite_cond);
-                        fwrite($write_fd, 'RewriteRule ^(' . str_repeat('([\d])', $i) . '(?:\-[\w-]*)?)/.+(\.(?:jpe?g|webp|png|avif))$ %{ENV:REWRITEBASE}img/p/' . $path . '/$1$' . ($i + 2) . " [L]\n");
+                        fwrite($write_fd, 'RewriteRule ^(' . str_repeat('([\d])', $i) . '(?:\-[\w-]*)?)/.+(\.(?:jpe?g|webp|png|avif))$ %{ENV:REWRITEBASE}img/p/' . $path_images . '/$1$' . ($i + 2) . " [L]\n");
                     }
                     fwrite($write_fd, $media_domains);
                     fwrite($write_fd, $domain_rewrite_cond);
@@ -2635,7 +2635,7 @@ FileETag none
         fclose($write_fd);
 
         if (!defined('PS_INSTALLATION_IN_PROGRESS')) {
-            Hook::exec('actionHtaccessCreate');
+            Hook::exec('actionHtaccessCreate', ['path' => $path]);
         }
 
         return true;
