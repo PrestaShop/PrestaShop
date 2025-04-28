@@ -29,11 +29,11 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration;
 
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShopBundle\Form\Exception\DataProviderException;
 use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
 use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
+use Tools;
 
 /**
  * This class is responsible of managing the data manipulated using Upload Quota form
@@ -45,14 +45,11 @@ final class UploadQuotaDataProvider implements FormDataProviderInterface
      * @var DataConfigurationInterface
      */
     private $dataConfiguration;
-    private UploadSizeConfigurationInterface $uploadSizeConfiguration;
 
     public function __construct(
-        DataConfigurationInterface $dataConfiguration,
-        UploadSizeConfigurationInterface $uploadSizeConfiguration
+        DataConfigurationInterface $dataConfiguration
     ) {
         $this->dataConfiguration = $dataConfiguration;
-        $this->uploadSizeConfiguration = $uploadSizeConfiguration;
     }
 
     /**
@@ -84,7 +81,7 @@ final class UploadQuotaDataProvider implements FormDataProviderInterface
 
         if (isset($data[UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES])) {
             $maxSizeAttachedFile = $data[UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES];
-            if (!is_numeric($maxSizeAttachedFile) || $maxSizeAttachedFile < 0 || $this->convertBytes($maxSizeAttachedFile . 'm') > $this->uploadSizeConfiguration->getMaxUploadSizeInBytes()) {
+            if (!is_numeric($maxSizeAttachedFile) || $maxSizeAttachedFile < 0 || Tools::convertBytes($maxSizeAttachedFile . 'm') > Tools::getMaxUploadSize()) {
                 $errors->add(new InvalidConfigurationDataError(FormDataProvider::ERROR_MAX_SIZE_ATTACHED_FILES, UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES));
             }
         }
@@ -106,33 +103,6 @@ final class UploadQuotaDataProvider implements FormDataProviderInterface
 
         if (!$errors->isEmpty()) {
             throw new DataProviderException('Upload quota data is invalid', 0, null, $errors);
-        }
-    }
-
-    private function convertBytes($value): int
-    {
-        if (is_numeric($value)) {
-            return $value;
-        } else {
-            $value_length = strlen($value);
-            $qty = (int) substr($value, 0, $value_length - 1);
-            $unit = strtolower(substr($value, $value_length - 1));
-            switch ($unit) {
-                case 'k':
-                    $qty *= 1024;
-
-                    break;
-                case 'm':
-                    $qty *= 1048576;
-
-                    break;
-                case 'g':
-                    $qty *= 1073741824;
-
-                    break;
-            }
-
-            return $qty;
         }
     }
 }

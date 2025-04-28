@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
-use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Http\CookieOptions;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
@@ -43,16 +42,13 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Tools;
 
 /**
  * Responsible for "Configure > Advanced Parameters > Administration" page display.
  */
 class AdministrationController extends PrestaShopAdminController
 {
-    public function __construct(private readonly UploadSizeConfigurationInterface $uploadSizeConfiguration)
-    {
-    }
-
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'Access denied.')]
     public function indexAction(
         #[Autowire(service: 'prestashop.adapter.administration.general.form_handler')]
@@ -217,12 +213,12 @@ class AdministrationController extends PrestaShopAdminController
             case FormDataProvider::ERROR_MAX_SIZE_ATTACHED_FILES:
                 return $this->trans(
                     '%s is invalid. Please enter an integer between %s and %s.',
+                    'Admin.Advparameters.Notification',
                     [
                         $this->getFieldLabel($error->getFieldName()),
                         0,
-                        $this->uploadSizeConfiguration->getMaxUploadSizeInBytes() / 1048576,
-                    ],
-                    'Admin.Advparameters.Notification'
+                        (Tools::getMaxUploadSize() / 1048576),
+                    ]
                 );
         }
 
