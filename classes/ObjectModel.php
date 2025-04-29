@@ -1057,6 +1057,12 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
         $this->cacheFieldsRequiredDatabase();
         $data = $this->def['fields'][$field];
 
+        $errorMessage = null;
+        Hook::exec('actionValidateField', ['object' => $this, 'definition' => &$data, 'field' => $field, 'value' => $value, 'id_lang' => $id_lang, 'skip' => &$skip, 'human_errors' => $human_errors, 'errorMessage' => &$errorMessage]);
+        if (empty($errorMessage) === false) {
+            return $errorMessage;
+        }
+
         // Check if field is required
         $required_fields = $this->getCachedFieldsRequiredDatabase();
         if (!$id_lang || $id_lang == $ps_lang_default) {
