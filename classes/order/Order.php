@@ -1374,6 +1374,7 @@ class OrderCore extends ObjectModel
         if (!$this->hasInvoice()) {
             if ($id = (int) $this->getOrderInvoiceIdIfHasDelivery()) {
                 $order_invoice = new OrderInvoice($id);
+                $order_invoice->date_add = date('Y-m-d H:i:s');
             } else {
                 $order_invoice = new OrderInvoice();
             }
