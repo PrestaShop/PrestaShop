@@ -1494,6 +1494,16 @@ class AdminTranslationsControllerCore extends AdminController
                         $content = htmlspecialchars_decode($content);
                         // replace correct end of line
                         $content = str_replace("\r\n", PHP_EOL, $content);
+
+                        // In the order confirmation email, products and discounts variables are removed from the table by TinyMCE, this hack corrects that move
+                        if ($mail_name == 'order_conf') {
+                            $content = str_replace("{products}", "", $content);
+                            $content = str_replace("{discounts}", "", $content);
+			                // classic theme
+                            $content = str_replace('<tr class="conf_body after_products">', '{products}{discounts}<tr class="conf_body after_products">', $content);
+			                // modern theme
+			                $content = str_replace('<tr class="order_summary after_products">', '{products}{discounts}<tr class="order_summary after_products">', $content);
+                        }
                     }
 
                     if (Validate::isCleanHTML($content)) {
