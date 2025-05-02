@@ -75,7 +75,7 @@
       <trans-unit id="3fa8c89ef63fbb7056fc1d8d1b67f97a">
         <source>Add new product</source>
         <target>Add new product</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1259]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1260]</note>
       </trans-unit>
       <trans-unit id="b1c94ca2fbc3e78fc30069c8d0f01680">
         <source>All</source>

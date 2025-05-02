@@ -390,7 +390,7 @@
       <trans-unit id="e91dd9bbca6e42bb85c0f2d94aaee995">
         <source>Check your configuration</source>
         <target>Check your configuration</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 200]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 201]</note>
       </trans-unit>
       <trans-unit id="657645fae83ad1673b25d3c027b77ed8">
         <source>Choose among product images by position (1,2,3...)</source>
@@ -500,7 +500,7 @@
       <trans-unit id="b5b3eed3efd6cfebfea270066a1e1f9b">
         <source>Current theme in use:</source>
         <target>Current theme in use:</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 140]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 141]</note>
       </trans-unit>
       <trans-unit id="d37c2bf1bd3143847fca087b354f920e">
         <source>Customer ID</source>
@@ -605,7 +605,7 @@
       <trans-unit id="c4e9522d7b3c8c652f7f0333ff436eec">
         <source>Defined</source>
         <target>Defined</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 172]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 173]</note>
       </trans-unit>
       <trans-unit id="6c0c2b9ec9a4188db4cfd4f8a0fee415">
         <source>Delete (DELETE)</source>
@@ -775,7 +775,7 @@
       <trans-unit id="8a7363b823dce00b3b1b7e62ca1d777d">
         <source>Encryption:</source>
         <target>Encryption:</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 178]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 179]</note>
       </trans-unit>
       <trans-unit id="b482b125161bc9e84d12df83251ebf2d">
         <source>Enter a password between %d and %d characters</source>
@@ -1005,7 +1005,7 @@
       <trans-unit id="d5c0bb5c1df152c6fe45bd07e303cb69">
         <source>List of changed files</source>
         <target>List of changed files</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 248]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 249]</note>
       </trans-unit>
       <trans-unit id="060925963c8da7da85dde6013ee4998b">
         <source>List of overrides</source>
@@ -1040,12 +1040,12 @@
       <trans-unit id="4e37aa2987c0876f7f7b2104927df1a1">
         <source>Mail configuration</source>
         <target>Mail configuration</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 147]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 148]</note>
       </trans-unit>
       <trans-unit id="aee55e0ed7a06f68ed5e13f235a8bfd8">
         <source>Mail method:</source>
         <target>Mail method:</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 156]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 157]</note>
       </trans-unit>
       <trans-unit id="0cb76cb9ab6f7b3a35122d6a3ef65da5">
         <source>Manage your team</source>
@@ -1320,7 +1320,7 @@
       <trans-unit id="f8b1369a8e9d90da0cae0b11049309af">
         <source>Not defined</source>
         <target>Not defined</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 174]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 175]</note>
       </trans-unit>
       <trans-unit id="3b0649c72650c313a357338dcdfb64ec">
         <source>Note</source>
@@ -1360,7 +1360,7 @@
       <trans-unit id="0297eee5a43818dda6ad1e1b36f08965">
         <source>Optional parameters:</source>
         <target>Optional parameters:</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 229]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 230]</note>
       </trans-unit>
       <trans-unit id="0133c7a0fa55069df27f8d9be2c6ab89">
         <source>Order states</source>
@@ -1550,7 +1550,7 @@
       <trans-unit id="a3810ddb5a67e550cb3ca9c1cffce800">
         <source>Required parameters:</source>
         <target>Required parameters:</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 210]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 211]</note>
       </trans-unit>
       <trans-unit id="fc51ea2f3761abe2201b06a33f75748e">
         <source>Reversed words aren't much harder to guess</source>
@@ -1585,12 +1585,12 @@
       <trans-unit id="037373672dd4a89426144d40f2e8ad91">
         <source>SMTP password:</source>
         <target>SMTP password:</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 170]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 171]</note>
       </trans-unit>
       <trans-unit id="599303a627bf19148eedd5fe29112729">
         <source>SMTP port:</source>
         <target>SMTP port:</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 181]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 182]</note>
       </trans-unit>
       <trans-unit id="bdd48fb41b9d0a4a1051fa22a87eb5a2">
         <source>SMTP server</source>
@@ -1600,7 +1600,7 @@
       <trans-unit id="33b3f142e242a624cb69a5f5f689039d">
         <source>SMTP server:</source>
         <target>SMTP server:</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 159]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 160]</note>
       </trans-unit>
       <trans-unit id="a7bfd8847270913b15396380c3627d76">
         <source>SMTP username</source>
@@ -1610,7 +1610,7 @@
       <trans-unit id="5489d25adfc42d3aadcb90b679405bda">
         <source>SMTP username:</source>
         <target>SMTP username:</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 162]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 163]</note>
       </trans-unit>
       <trans-unit id="dddc702fcffceb2ac77291954897d747">
         <source>SQL query</source>
@@ -1765,12 +1765,12 @@
       <trans-unit id="76c01eed328aa2411b18f007c77d2eeb">
         <source>Shop URL:</source>
         <target>Shop URL:</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 134]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 135]</note>
       </trans-unit>
       <trans-unit id="24c5ec8e15ae9467ee0f820610512d67">
         <source>Shop path:</source>
         <target>Shop path:</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 137]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 138]</note>
       </trans-unit>
       <trans-unit id="bed5e315d09dedac517831b95571a7f4">
         <source>Short keyboard patterns are easy to guess</source>
@@ -2182,12 +2182,12 @@
       <trans-unit id="0398efcdf22e008d4ab53cc6eeab7a71">
         <source>You are using /usr/sbin/sendmail</source>
         <target>You are using /usr/sbin/sendmail</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 152]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 153]</note>
       </trans-unit>
       <trans-unit id="cffa72aaebae1bd90bbe1b8d827ecb1c">
         <source>You are using your own SMTP parameters.</source>
         <target>You are using your own SMTP parameters.</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 156]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 157]</note>
       </trans-unit>
       <trans-unit id="2d29e91503465ed72170623f37458e32">
         <source>You must enter another domain, or subdomain, in order to use cookieless static content.</source>
@@ -2202,12 +2202,12 @@
       <trans-unit id="8746097684bc64be8b7eff424c4debdb">
         <source>Your information</source>
         <target>Your information</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 189]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 190]</note>
       </trans-unit>
       <trans-unit id="11eb3e792866d1433dd4ca9d7e49b5ac">
         <source>Your web browser:</source>
         <target>Your web browser:</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 193]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 194]</note>
       </trans-unit>
       <trans-unit id="2c111a587b8e6a65856ac7933d76bdce">
         <source>megabytes</source>

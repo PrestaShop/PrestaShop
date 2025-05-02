@@ -65,7 +65,7 @@
       <trans-unit id="63cca4f457cad586dc9495a2e671b745">
         <source>Successful duplication</source>
         <target>Successful duplication</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1202]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1203]</note>
       </trans-unit>
       <trans-unit id="d4eab6753f9f3d4b57580427264beaa6">
         <source>Successful update</source>

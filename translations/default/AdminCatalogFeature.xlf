@@ -1985,7 +1985,7 @@
       <trans-unit id="a4838f49c5701e128d7695c3dc45083c">
         <source>Select a store</source>
         <target>Select a store</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1493]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1494]</note>
       </trans-unit>
       <trans-unit id="ba7144e008dfcd7a273108647d7d5153">
         <source>Select all values ({valuesNb})</source>

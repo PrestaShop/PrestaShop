@@ -115,7 +115,7 @@
       <trans-unit id="b49b6a333fc4422d8fbfad546c47b97c">
         <source>Error for product %product_id%: %error_message%</source>
         <target>Error for product %product_id%: %error_message%</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1362]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1363]</note>
       </trans-unit>
       <trans-unit id="8a23b9ee3a4502a0de3fc32c5ba7aa65">
         <source>Failed to copy the file.</source>
@@ -400,7 +400,7 @@
       <trans-unit id="323970e84c7dc4bc7432a513f09959b6">
         <source>To put this product online, please enter a name.</source>
         <target>To put this product online, please enter a name.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1410]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1411]</note>
       </trans-unit>
       <trans-unit id="60df675f17670057ec657783db03d35e">
         <source>Unable to resize one or more of your pictures.</source>
@@ -420,7 +420,7 @@
       <trans-unit id="ee5c982526f2e7b8e72b282dc590aafd">
         <source>When redirecting towards a product you must select a target product.</source>
         <target>When redirecting towards a product you must select a target product.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1405]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1406]</note>
       </trans-unit>
       <trans-unit id="b50f440e3c9f14988bd0086683e77095">
         <source>You cannot remove this category because one of your shops uses it as a root category.</source>
@@ -430,12 +430,12 @@
       <trans-unit id="30a367ba686890c829937e768d588b8f">
         <source>You cannot set 0 or a negative position, the minimum is 1.</source>
         <target>You cannot set 0 or a negative position, the minimum is 1.</target>
-        <note>File: classes/Product.php [Line: 6849]</note>
+        <note>File: classes/Product.php [Line: 6860]</note>
       </trans-unit>
       <trans-unit id="cf99dad7d7306d9ac01ba5a2e2d2c715">
         <source>You cannot set a position greater than the total number of products in the category, starting at 1.</source>
         <target>You cannot set a position greater than the total number of products in the category, starting at 1.</target>
-        <note>File: classes/Product.php [Line: 6870]</note>
+        <note>File: classes/Product.php [Line: 6881]</note>
       </trans-unit>
       <trans-unit id="e602c06958cd934ccc238913f51282aa">
         <source>You must select some products before</source>

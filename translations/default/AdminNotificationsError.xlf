@@ -625,12 +625,12 @@
       <trans-unit id="95be38fc18a46111194e2cba0649504a">
         <source>Product price is invalid</source>
         <target>Product price is invalid</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1395]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1396]</note>
       </trans-unit>
       <trans-unit id="b64b49fceb6719b964e08084a3997eba">
         <source>Product price per unit is invalid</source>
         <target>Product price per unit is invalid</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1400]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1401]</note>
       </trans-unit>
       <trans-unit id="872d428c40b36bba9fc5fafaa76c6f22">
         <source>Property %1$s has a bad value (allowed values are: %2$s).</source>
@@ -870,7 +870,7 @@
       <trans-unit id="cc8f0fe2d629bd1810331b1a265914ec">
         <source>The selected condition must be different in each field to set an order of priority.</source>
         <target>The selected condition must be different in each field to set an order of priority.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1427]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1428]</note>
       </trans-unit>
       <trans-unit id="8f29c70fd66f50ce28b727cd40c6a3a3">
         <source>The selected date range is not valid.</source>
@@ -885,7 +885,7 @@
       <trans-unit id="1348633590e241b276cdbb7ceaeb8295">
         <source>The selected value belongs to another feature.</source>
         <target>The selected value belongs to another feature.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1421]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1422]</note>
       </trans-unit>
       <trans-unit id="ae8e757923a42d666e5c0fdf59fda545">
         <source>The uploaded file exceeds %s</source>
@@ -1040,7 +1040,7 @@
       <trans-unit id="9ddbf7ca8d42128f5a6875b6b90252f7">
         <source>This product cannot be changed into a pack because it is already associated to another pack.</source>
         <target>This product cannot be changed into a pack because it is already associated to another pack.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1434]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1435]</note>
       </trans-unit>
       <trans-unit id="5b5d79a83148583db9a987bc0dbb6265">
         <source>This product is already in the invoice [1], please edit the quantity instead.</source>
@@ -1115,7 +1115,7 @@
       <trans-unit id="cc360e6a888c0d7ff56efeff9e7dab9f">
         <source>You cannot associate the same feature value more than once.</source>
         <target>You cannot associate the same feature value more than once.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1416]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1417]</note>
       </trans-unit>
       <trans-unit id="d2de9e264ff4f0e711d809f00da76e45">
         <source>You cannot change a main URL to a non-main URL. You have to set another URL as your Main URL for the selected shop.</source>
