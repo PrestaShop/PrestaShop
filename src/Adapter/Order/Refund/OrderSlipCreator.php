@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 use PrestaShopDatabaseException;
 use PrestaShopException;
+use StockAvailable;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use TaxCalculator;
 use TaxManagerFactory;
@@ -61,11 +62,6 @@ class OrderSlipCreator
      * @var TranslatorInterface
      */
     private $translator;
-
-    /**
-     * @var OrderSlip
-     */
-    private $orderSlipCreated;
 
     /**
      * @param ConfigurationInterface $configuration
@@ -114,22 +110,21 @@ class OrderSlipCreator
                 'order' => $order,
                 'productList' => $orderRefundSummary->getProductRefunds(),
                 'qtyList' => $fullQuantityList,
-                'orderSlipCreated' => $this->orderSlipCreated,
             ], null, false, true, false, $order->id_shop);
 
             $customer = new Customer((int) $order->id_customer);
 
             if (!empty($customer->email)) {
-                // @todo: use private method to send mail
-                $params = [
+                    // @todo: use private method to send mail
+                    $params = [
                     '{lastname}' => $customer->lastname,
                     '{firstname}' => $customer->firstname,
                     '{id_order}' => $order->id,
                     '{order_name}' => $order->getUniqReference(),
                 ];
-
+                
                 $orderLanguage = $order->getAssociatedLanguage();
-
+                
                 // @todo: use a dedicated Mail class (see #13945)
                 // @todo: remove this @and have a proper error handling
                 @Mail::Send(
@@ -152,6 +147,13 @@ class OrderSlipCreator
                     true,
                     (int) $order->id_shop
                 );
+            }
+            
+            /** @var OrderDetail $orderDetail */
+            foreach ($orderRefundSummary->getOrderDetails() as $orderDetail) {
+                if ($this->configuration->get('PS_ADVANCED_STOCK_MANAGEMENT')) {
+                    StockAvailable::synchronize($orderDetail->product_id);
+                }
             }
         } else {
             throw new InvalidCancelProductException(InvalidCancelProductException::INVALID_AMOUNT);
@@ -336,8 +338,6 @@ class OrderSlipCreator
         }
 
         $res = true;
-
-        $this->orderSlipCreated = $orderSlip;
 
         foreach ($product_list as $product) {
             $res &= $this->addProductOrderSlip((int) $orderSlip->id, $product);
