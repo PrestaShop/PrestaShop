@@ -82,7 +82,7 @@ final class LogQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $queryBuilder = $this->getQueryBuilder()
-            ->select('COUNT(lg.id_log)')
+            ->select('COUNT(DISTINCT lg.id_log)')
             ->from($this->dbPrefix . 'log', 'lg');
         $this->applyAssociatedQueries($queryBuilder);
 

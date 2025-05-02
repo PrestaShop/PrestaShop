@@ -87,7 +87,7 @@ class CustomerGroupsQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
-        return $this->getCustomerGroupsQueryBuilder($searchCriteria)->select('COUNT(g.id_group)');
+        return $this->getCustomerGroupsQueryBuilder($searchCriteria)->select('COUNT(DISTINCT g.id_group)');
     }
 
     /**

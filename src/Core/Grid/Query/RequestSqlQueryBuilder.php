@@ -75,7 +75,7 @@ final class RequestSqlQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(?SearchCriteriaInterface $searchCriteria = null)
     {
         $countQueryBuilder = $this->buildQueryBySearchCriteria($searchCriteria);
-        $countQueryBuilder->select('COUNT(rs.id_request_sql)');
+        $countQueryBuilder->select('COUNT(DISTINCT rs.id_request_sql)');
 
         return $countQueryBuilder;
     }

@@ -93,7 +93,7 @@ final class MerchandiseReturnQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         return $this->getMerchandiseReturnQueryBuilder($searchCriteria)
-            ->select('COUNT(r.id_order_return)');
+            ->select('COUNT(DISTINCT r.id_order_return)');
     }
 
     /**

@@ -93,7 +93,7 @@ final class OrderReturnStatesQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $countQueryBuilder = $this->getOrderReturnStatesQueryBuilder($searchCriteria)
-            ->select('COUNT(*)');
+            ->select('COUNT(DISTINCT ors.`id_order_return_state`)');
 
         return $countQueryBuilder;
     }

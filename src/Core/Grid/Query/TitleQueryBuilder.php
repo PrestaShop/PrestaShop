@@ -85,7 +85,7 @@ class TitleQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        return $this->getTitleQueryBuilder($searchCriteria)->select('COUNT(g.id_gender)');
+        return $this->getTitleQueryBuilder($searchCriteria)->select('COUNT(DISTINCT g.id_gender)');
     }
 
     /**

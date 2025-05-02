@@ -96,7 +96,7 @@ class ImageTypeQueryBuilder extends AbstractDoctrineQueryBuilder
         }
 
         return $this->getQueryBuilder($searchCriteria)
-            ->select('COUNT(it.id_image_type)')
+            ->select('COUNT(DISTINCT it.id_image_type)')
             ->from($this->dbPrefix . 'image_type', 'it');
     }
 

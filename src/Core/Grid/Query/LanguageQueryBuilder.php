@@ -75,7 +75,7 @@ final class LanguageQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        return $this->getLanguageQueryBuilder($searchCriteria)->select('COUNT(id_lang)');
+        return $this->getLanguageQueryBuilder($searchCriteria)->select('COUNT(DISTINCT id_lang)');
     }
 
     /**

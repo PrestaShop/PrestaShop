@@ -135,7 +135,7 @@ class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria);
-        $qb->select('COUNT(p.`id_product`)');
+        $qb->select('COUNT(DISTINCT p.`id_product`)');
 
         return $qb;
     }

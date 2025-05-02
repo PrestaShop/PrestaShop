@@ -71,7 +71,7 @@ final class HookQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('COUNT(h.id_hook)');
+        $qb->select('COUNT(DISTINCT h.id_hook)');
 
         return $qb;
     }

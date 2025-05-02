@@ -92,7 +92,7 @@ final class MetaQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('COUNT(m.`id_meta`)');
+        $qb->select('COUNT(DISTINCT m.`id_meta`)');
 
         return $qb;
     }

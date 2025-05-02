@@ -105,7 +105,7 @@ final class OrderMessageQueryBuilder implements DoctrineQueryBuilderInterface
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->buildBaseQuery($searchCriteria);
-        $qb->select('COUNT(om.id_order_message)');
+        $qb->select('COUNT(DISTINCT om.id_order_message)');
 
         return $qb;
     }

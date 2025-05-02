@@ -104,7 +104,7 @@ final class OutstandingQueryBuilder implements DoctrineQueryBuilderInterface
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        return $this->getBaseQueryBuilder($searchCriteria)->select('COUNT(oi.id_order_invoice)');
+        return $this->getBaseQueryBuilder($searchCriteria)->select('COUNT(DISTINCT oi.id_order_invoice)');
     }
 
     /**

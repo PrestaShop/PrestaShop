@@ -105,7 +105,7 @@ final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
         }
 
         return $this->getCombinationsQueryBuilder($searchCriteria)
-            ->select('COUNT(pa.id_product_attribute)')
+            ->select('COUNT(DISTINCT pa.id_product_attribute)')
         ;
     }
 

@@ -117,7 +117,7 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
     {
         $qb = $this->getBaseQueryBuilder($searchCriteria->getFilters());
         $qb = $this->applyNewCustomerFilter($qb, $searchCriteria->getFilters());
-        $qb->select('count(o.id_order)');
+        $qb->select('count(DISTINCT o.id_order)');
 
         return $qb;
     }

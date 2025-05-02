@@ -127,7 +127,7 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('COUNT(c.id_category)');
+        $qb->select('COUNT(DISTINCT c.id_category)');
 
         return $qb;
     }
