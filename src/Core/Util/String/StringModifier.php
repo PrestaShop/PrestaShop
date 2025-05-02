@@ -80,6 +80,7 @@ final class StringModifier implements StringModifierInterface
 
         if (!$allow_accented_chars) {
             $return_str = $this->replaceAccentedChars($return_str);
+            $return_str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]\-]/', '', $return_str);
         }
         $return_str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]\-\p{L}]/u', '', $return_str);
         $return_str = preg_replace('/[\s\'\:\/\[\]\-]+/', ' ', $return_str);

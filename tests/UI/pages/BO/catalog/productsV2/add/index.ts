@@ -72,7 +72,7 @@ class CreateProduct extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Products';
+    this.pageTitle = 'Product';
     this.saveAndPublishButtonName = 'Save and publish';
     this.successfulDuplicateMessage = 'Successful duplication';
 

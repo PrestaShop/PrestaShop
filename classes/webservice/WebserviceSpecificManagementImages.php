@@ -676,7 +676,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 
     protected function manageCustomizationImages()
     {
-        $normal_image_sizes = ImageType::getImagesTypes($this->imageType);
+        $normal_image_sizes = ImageType::getImagesTypes();
         if (empty($this->wsObject->urlSegment[2])) {
             $results = Db::getInstance()->executeS('SELECT DISTINCT `id_cart` FROM `' . _DB_PREFIX_ . 'customization`');
             $ids = [];
