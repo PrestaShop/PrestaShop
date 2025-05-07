@@ -159,6 +159,7 @@ describe('BO - Orders - Credit slips: Credit slip options', async () => {
 
       // Get document name
       const documentType = await boOrdersViewBlockTabListPage.getDocumentType(page, 4);
+      console.log(documentType);
       expect(documentType).to.be.equal('Credit slip');
     });
 
