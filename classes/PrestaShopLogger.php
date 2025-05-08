@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -212,9 +213,28 @@ class PrestaShopLoggerCore extends ObjectModel
         return $this->hash;
     }
 
+    /**
+     * Truncate all logs.
+     *
+     * @return bool true if deletion succeeded
+     */
     public static function eraseAllLogs()
     {
         return Db::getInstance()->execute('TRUNCATE TABLE ' . _DB_PREFIX_ . 'log');
+    }
+
+    /**
+     * Delete log messages older than the given date.
+     *
+     * @param DateTime $date only logs before this timestamp will be deleted
+     *
+     * @return bool true if deletion succeeded
+     *
+     * @since 9.1.0
+     */
+    public static function eraseLogsBefore(DateTime $date)
+    {
+        return Db::getInstance()->delete('log', 'date_add < "' . pSQL($date->format('Y-m-d H:i:s')) . '"');
     }
 
     /**
