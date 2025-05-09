@@ -89,6 +89,12 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
             ->where('e.id_employee = es.id_employee')
             ->andWhere('es.id_shop IN (:context_shop_ids)');
 
+        // Subquery to identify employees not linked to any shop
+        $missingShopLinkSubquery = $this->connection->createQueryBuilder()
+            ->select('1')
+            ->from($this->dbPrefix . 'employee_shop', 'es')
+            ->where('e.id_employee = es.id_employee');
+
         $qb = $this->connection->createQueryBuilder()
             ->from($this->dbPrefix . 'employee', 'e')
             ->leftJoin(
@@ -98,6 +104,7 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
                 'e.id_profile = pl.id_profile AND pl.id_lang = ' . (int) $this->contextIdLang
             )
             ->andWhere('EXISTS (' . $sub->getSQL() . ')')
+            ->orWhere('NOT EXISTS (' . $missingShopLinkSubquery->getSQL() . ')')
             ->setParameter('context_shop_ids', $this->contextShopIds, Connection::PARAM_INT_ARRAY);
 
         $this->applyFilters($qb, $searchCriteria->getFilters());
