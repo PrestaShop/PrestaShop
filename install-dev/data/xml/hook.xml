@@ -5407,10 +5407,6 @@
       <name>actionBeforeEcoShippingCalculation</name>
       <title>Before eco-friendly shipping calculation</title>
       <description>This hook is called before calculating shipping costs, allowing to modify shipping parameters based on eco-friendly criteria</description>
-    <hook id="actionCartProductLineAdditionalContent">
-      <name>actionCartProductLineAdditionalContent</name>
-      <title>Enrich products with additional data via hook</title>
-      <description>This hook allows to add additional content and data to products in the shopping cart</description>
     </hook>
   </entities>
 </entity_hook>
