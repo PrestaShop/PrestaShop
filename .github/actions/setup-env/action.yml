@@ -41,7 +41,7 @@ inputs:
   PHP_FPM:
     required: false
     description: Use PHP FPM instead of apache (default false)
-    default: 'false'
+    default: 'true'
 
 runs:
   using: 'composite'
