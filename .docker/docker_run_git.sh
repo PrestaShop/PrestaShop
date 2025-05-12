@@ -198,4 +198,8 @@ echo "***\n"
 
 echo "\n* Starting web server now\n";
 
-exec apache2-foreground
+if [[ $BASE_VERSION = *"fpm"* ]]; then
+  exec php-fpm
+else
+  exec apache2-foreground
+fi

@@ -17,6 +17,7 @@ ARG TIMEZONE
 
 ENV TZ=$TIMEZONE
 ENV NODE_VERSION=$NODE_VERSION
+ENV BASE_VERSION=$VERSION
 
 RUN groupmod -g $GROUP_ID www-data \
   && usermod -u $USER_ID -g $GROUP_ID www-data
