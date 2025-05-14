@@ -28,16 +28,15 @@ namespace PrestaShop\PrestaShop\Core\Domain\Discount\Exception;
 
 class DiscountConstraintException extends DiscountException
 {
-    // @todo remove unused
-    public const MISSING_DISCOUNT_APPLICATION_PRODUCT = 1;
-    public const INVALID_DISCOUNT_APPLICATION_TYPE = 2;
+    public const INVALID_DISCOUNT_CANNOT_BE_AMOUNT_AND_PERCENT = 1;
+    public const INVALID_DISCOUNT_VALUE_CANNOT_BE_NEGATIVE = 2;
     public const INVALID_GIFT_PRODUCT_ATTRIBUTE = 3;
     public const INVALID_PRIORITY = 4;
     public const DATE_FROM_GREATER_THAN_DATE_TO = 5;
     public const INVALID_QUANTITY = 6;
     public const INVALID_QUANTITY_PER_USER = 7;
     public const INVALID_GIFT_PRODUCT = 8;
-    public const MISSING_ACTION = 9;
+    public const INVALID_PRODUCT_DISCOUNT_PROPERTIES = 9;
     public const INVALID_ID = 10;
     public const INVALID_NAME = 11;
     public const INVALID_STATUS = 12;
@@ -67,14 +66,9 @@ class DiscountConstraintException extends DiscountException
     public const INVALID_HIGHLIGHT = 36;
     public const INVALID_ACTIVE = 37;
     public const NON_UNIQUE_CODE = 38;
-    public const INVALID_PRICE_DISCOUNT = 39;
-    public const INVALID_RESTRICTION_RULE_TYPE = 40;
-    public const INVALID_RESTRICTION_RULE_ID = 41;
-    public const EMPTY_RESTRICTION_RULE_IDS = 42;
-    public const EMPTY_RESTRICTION_RULES = 43;
-    public const INVALID_PROPERTY_FOR_TYPE = 44;
+    public const INVALID_FREE_GIFT_DISCOUNT_PROPERTIES = 39;
+    public const INVALID_DISCOUNT_TYPE = 40;
+    public const INVALID_AMOUNT_DISCOUNT_ALREADY_SET = 41;
 
-    public const INVALID_AMOUNT_DISCOUNT_ALREADY_SET = 45;
-
-    public const INVALID_PERCENT_DISCOUNT_ALREADY_SET = 46;
+    public const INVALID_PERCENT_DISCOUNT_ALREADY_SET = 42;
 }

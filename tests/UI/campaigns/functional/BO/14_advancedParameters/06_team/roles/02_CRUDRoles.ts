@@ -1,15 +1,12 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import rolesPage from '@pages/BO/advancedParameters/team/roles';
-import addRolePage from '@pages/BO/advancedParameters/team/roles/add';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boEmployeesPage,
   boLoginPage,
+  boRolesPage,
+  boRolesCreatePage,
   type BrowserContext,
   FakerEmployeeRole,
   type Page,
@@ -67,14 +64,14 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete role
 
     await boEmployeesPage.goToRolesPage(page);
 
-    const pageTitle = await rolesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(rolesPage.pageTitle);
+    const pageTitle = await boRolesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boRolesPage.pageTitle);
   });
 
   it('should reset all filters and get number of roles', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfRoles = await rolesPage.resetAndGetNumberOfLines(page);
+    numberOfRoles = await boRolesPage.resetAndGetNumberOfLines(page);
     expect(numberOfRoles).to.be.above(0);
   });
 
@@ -83,19 +80,19 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete role
     it('should go to add new role page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewRolePage', baseContext);
 
-      await rolesPage.goToAddNewRolePage(page);
+      await boRolesPage.goToAddNewRolePage(page);
 
-      const pageTitle = await addRolePage.getPageTitle(page);
-      expect(pageTitle).to.contains(addRolePage.pageTitleCreate);
+      const pageTitle = await boRolesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boRolesCreatePage.pageTitleCreate);
     });
 
     it('should create role and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createRole', baseContext);
 
-      const textResult = await addRolePage.createEditRole(page, createRoleData);
-      expect(textResult).to.equal(rolesPage.successfulCreationMessage);
+      const textResult = await boRolesCreatePage.createEditRole(page, createRoleData);
+      expect(textResult).to.equal(boRolesPage.successfulCreationMessage);
 
-      const numberOfRolesAfterCreation = await rolesPage.getNumberOfElementInGrid(page);
+      const numberOfRolesAfterCreation = await boRolesPage.getNumberOfElementInGrid(page);
       expect(numberOfRolesAfterCreation).to.be.equal(numberOfRoles + 1);
     });
   });
@@ -105,26 +102,26 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete role
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdate', baseContext);
 
-      await rolesPage.filterRoles(page, 'input', 'name', createRoleData.name);
+      await boRolesPage.filterRoles(page, 'input', 'name', createRoleData.name);
 
-      const textName = await rolesPage.getTextColumnFromTable(page, 1, 'name');
+      const textName = await boRolesPage.getTextColumnFromTable(page, 1, 'name');
       expect(textName).to.contains(createRoleData.name);
     });
 
     it('should go to edit role page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditRole', baseContext);
 
-      await rolesPage.goToEditRolePage(page, 1);
+      await boRolesPage.goToEditRolePage(page, 1);
 
-      const pageTitle = await addRolePage.getPageTitle(page);
-      expect(pageTitle).to.contains(addRolePage.pageTitleEdit(createRoleData.name));
+      const pageTitle = await boRolesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boRolesCreatePage.pageTitleEdit(createRoleData.name));
     });
 
     it('should update the role', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateRole', baseContext);
 
-      const textResult = await addRolePage.createEditRole(page, editRoleData);
-      expect(textResult).to.equal(addRolePage.successfulUpdateMessage);
+      const textResult = await boRolesCreatePage.createEditRole(page, editRoleData);
+      expect(textResult).to.equal(boRolesCreatePage.successfulUpdateMessage);
     });
   });
 
@@ -133,23 +130,23 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete role
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForDelete', baseContext);
 
-      await rolesPage.filterRoles(page, 'input', 'name', editRoleData.name);
+      await boRolesPage.filterRoles(page, 'input', 'name', editRoleData.name);
 
-      const textName = await rolesPage.getTextColumnFromTable(page, 1, 'name');
+      const textName = await boRolesPage.getTextColumnFromTable(page, 1, 'name');
       expect(textName).to.contains(editRoleData.name);
     });
 
     it('should delete role', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteRole', baseContext);
 
-      const textResult = await rolesPage.deleteRole(page, 1);
-      expect(rolesPage.successfulDeleteMessage).to.contains(textResult);
+      const textResult = await boRolesPage.deleteRole(page, 1);
+      expect(boRolesPage.successfulDeleteMessage).to.contains(textResult);
     });
 
     it('should reset filter and check the number of roles', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
-      const numberOfRolesAfterDelete = await rolesPage.resetAndGetNumberOfLines(page);
+      const numberOfRolesAfterDelete = await boRolesPage.resetAndGetNumberOfLines(page);
       expect(numberOfRolesAfterDelete).to.be.equal(numberOfRoles);
     });
   });

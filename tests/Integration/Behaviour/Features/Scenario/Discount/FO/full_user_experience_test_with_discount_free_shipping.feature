@@ -17,7 +17,7 @@ Feature: Full UX discount test
   Scenario: Create a complete discount with free shipping using new CQRS
     Given I create an empty cart "dummy_cart" for customer "testCustomer"
     And there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
-    When I create a free shipping discount "complete_free_shipping_discount" with following properties:
+    When I create a "free_shipping" discount "complete_free_shipping_discount" with following properties:
       | name[en-US] | Promotion           |
       | active      | true                |
       | valid_from  | 2025-01-01 11:05:00 |

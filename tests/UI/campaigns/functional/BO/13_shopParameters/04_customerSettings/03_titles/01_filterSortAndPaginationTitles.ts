@@ -1,14 +1,12 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import titlesPage from '@pages/BO/shopParameters/customerSettings/titles';
-import addTitlePage from '@pages/BO/shopParameters/customerSettings/titles/add';
+import {expect} from 'chai';
 
 import {
   boCustomerSettingsPage,
   boDashboardPage,
   boLoginPage,
+  boTitlesPage,
+  boTitlesCreatePage,
   type BrowserContext,
   dataTitles,
   FakerTitle,
@@ -17,8 +15,6 @@ import {
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_shopParameters_customerSettings_titles_filterSortAndPaginationTitles';
 
@@ -70,14 +66,14 @@ describe('BO - Shop Parameters - Customer Settings : Filter, sort and pagination
 
     await boCustomerSettingsPage.goToTitlesPage(page);
 
-    const pageTitle = await titlesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(titlesPage.pageTitle);
+    const pageTitle = await boTitlesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boTitlesPage.pageTitle);
   });
 
   it('should reset all filters and get number of titles in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfTitles = await titlesPage.resetAndGetNumberOfLines(page);
+    numberOfTitles = await boTitlesPage.resetAndGetNumberOfLines(page);
     expect(numberOfTitles).to.be.above(0);
   });
 
@@ -105,24 +101,24 @@ describe('BO - Shop Parameters - Customer Settings : Filter, sort and pagination
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        await titlesPage.filterTitles(
+        await boTitlesPage.filterTitles(
           page,
           test.args.filterType,
           test.args.filterBy,
           test.args.filterValue,
         );
 
-        const numberOfTitlesAfterFilter = await titlesPage.getNumberOfElementInGrid(page);
+        const numberOfTitlesAfterFilter = await boTitlesPage.getNumberOfElementInGrid(page);
         expect(numberOfTitlesAfterFilter).to.be.at.most(numberOfTitles);
 
-        const textColumn = await titlesPage.getTextColumn(page, 1, test.args.filterBy);
+        const textColumn = await boTitlesPage.getTextColumn(page, 1, test.args.filterBy);
         expect(textColumn).to.contains(test.args.filterValue);
       });
 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfTitlesAfterReset = await titlesPage.resetAndGetNumberOfLines(page);
+        const numberOfTitlesAfterReset = await boTitlesPage.resetAndGetNumberOfLines(page);
         expect(numberOfTitlesAfterReset).to.equal(numberOfTitles);
       });
     });
@@ -159,10 +155,10 @@ describe('BO - Shop Parameters - Customer Settings : Filter, sort and pagination
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await titlesPage.getAllRowsColumnContent(page, test.args.sortBy);
-        await titlesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+        const nonSortedTable = await boTitlesPage.getAllRowsColumnContent(page, test.args.sortBy);
+        await boTitlesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        const sortedTable = await titlesPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await boTitlesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
           const nonSortedTableFloat = nonSortedTable.map((text: string): number => parseFloat(text));
@@ -197,19 +193,19 @@ describe('BO - Shop Parameters - Customer Settings : Filter, sort and pagination
       it('should go to add new title page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewTitle${index}`, baseContext);
 
-        await titlesPage.goToAddNewTitle(page);
+        await boTitlesPage.goToAddNewTitle(page);
 
-        const pageTitle = await addTitlePage.getPageTitle(page);
-        expect(pageTitle).to.eq(addTitlePage.pageTitleCreate);
+        const pageTitle = await boTitlesCreatePage.getPageTitle(page);
+        expect(pageTitle).to.eq(boTitlesCreatePage.pageTitleCreate);
       });
 
       it('should create title and check result', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createTitle${index}`, baseContext);
 
-        const textResult = await addTitlePage.createEditTitle(page, titleToCreate);
-        expect(textResult).to.contains(titlesPage.successfulCreationMessage);
+        const textResult = await boTitlesCreatePage.createEditTitle(page, titleToCreate);
+        expect(textResult).to.contains(boTitlesPage.successfulCreationMessage);
 
-        const numberOfTitlesAfterCreation = await titlesPage.getNumberOfElementInGrid(page);
+        const numberOfTitlesAfterCreation = await boTitlesPage.getNumberOfElementInGrid(page);
         expect(numberOfTitlesAfterCreation).to.be.equal(numberOfTitles + index + 1);
       });
     });
@@ -220,28 +216,28 @@ describe('BO - Shop Parameters - Customer Settings : Filter, sort and pagination
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
-      const paginationNumber = await titlesPage.selectPaginationLimit(page, 10);
+      const paginationNumber = await boTitlesPage.selectPaginationLimit(page, 10);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await titlesPage.paginationNext(page);
+      const paginationNumber = await boTitlesPage.paginationNext(page);
       expect(paginationNumber).to.contains('(page 2 / 2)');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await titlesPage.paginationPrevious(page);
+      const paginationNumber = await boTitlesPage.paginationPrevious(page);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
-      const paginationNumber = await titlesPage.selectPaginationLimit(page, 50);
+      const paginationNumber = await boTitlesPage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
@@ -251,13 +247,13 @@ describe('BO - Shop Parameters - Customer Settings : Filter, sort and pagination
     it('should filter list by title', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
 
-      await titlesPage.filterTitles(page, 'input', 'name', 'toSortAndPaginate');
+      await boTitlesPage.filterTitles(page, 'input', 'name', 'toSortAndPaginate');
 
-      const numberOfTitlesAfterFilter = await titlesPage.getNumberOfElementInGrid(page);
+      const numberOfTitlesAfterFilter = await boTitlesPage.getNumberOfElementInGrid(page);
       expect(numberOfTitlesAfterFilter).to.eq(9);
 
       for (let i = 1; i <= numberOfTitlesAfterFilter; i++) {
-        const textColumn = await titlesPage.getTextColumn(page, i, 'name');
+        const textColumn = await boTitlesPage.getTextColumn(page, i, 'name');
         expect(textColumn).to.contains('toSortAndPaginate');
       }
     });
@@ -265,14 +261,14 @@ describe('BO - Shop Parameters - Customer Settings : Filter, sort and pagination
     it('should delete titles with Bulk Actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteTitles', baseContext);
 
-      const deleteTextResult = await titlesPage.bulkDeleteTitles(page);
-      expect(deleteTextResult).to.be.contains(titlesPage.successfulMultiDeleteMessage);
+      const deleteTextResult = await boTitlesPage.bulkDeleteTitles(page);
+      expect(deleteTextResult).to.be.contains(boTitlesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
-      const numberOfTitlesAfterReset = await titlesPage.resetAndGetNumberOfLines(page);
+      const numberOfTitlesAfterReset = await boTitlesPage.resetAndGetNumberOfLines(page);
       expect(numberOfTitlesAfterReset).to.be.equal(numberOfTitles);
     });
   });

@@ -1,14 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import permissionsPage from '@pages/BO/advancedParameters/team/permissions';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boEmployeesPage,
   boLoginPage,
+  boPermissionsPage,
   type BrowserContext,
   type Page,
   utilsPlaywright,
@@ -65,7 +62,7 @@ describe('BO - Advanced Parameters - Team - Permission : Edit modules', async ()
     it('should click on \'Logistician\' profile', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProfileSubTab', baseContext);
 
-      const isSubTabOpened = await permissionsPage.goToProfileSubTab(page, 'logistician');
+      const isSubTabOpened = await boPermissionsPage.goToProfileSubTab(page, 'logistician');
       expect(isSubTabOpened, 'Profile sub-tab is not opened!').to.eq(true);
     });
   });
@@ -79,14 +76,14 @@ describe('BO - Advanced Parameters - Team - Permission : Edit modules', async ()
       it(`should check '${test.args.action}' checkbox from the header`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkAllCheckbox_${index}`, baseContext);
 
-        const isPermissionDefined = await permissionsPage.setPermissionOnAllModules(page, test.args.action);
+        const isPermissionDefined = await boPermissionsPage.setPermissionOnAllModules(page, test.args.action);
         expect(isPermissionDefined, 'Permission is not updated').to.eq(true);
       });
 
       it(`should check that everything in '${test.args.action}' permission is checked`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkAllCheckboxForBlock${index}`, baseContext);
 
-        const isBulkPermissionPerformed = await permissionsPage.isAllPermissionPerformed(page, test.args.action);
+        const isBulkPermissionPerformed = await boPermissionsPage.isAllPermissionPerformed(page, test.args.action);
         expect(isBulkPermissionPerformed).to.eq(true);
       });
     });
@@ -96,9 +93,9 @@ describe('BO - Advanced Parameters - Team - Permission : Edit modules', async ()
     it('should refresh the page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'refreshPage', baseContext);
 
-      await permissionsPage.reloadPage(page);
+      await boPermissionsPage.reloadPage(page);
 
-      const isSubTabOpened = await permissionsPage.goToProfileSubTab(page, 'logistician');
+      const isSubTabOpened = await boPermissionsPage.goToProfileSubTab(page, 'logistician');
       expect(isSubTabOpened, 'Profile sub-tab is not opened!').to.eq(true);
     });
 
@@ -110,7 +107,7 @@ describe('BO - Advanced Parameters - Team - Permission : Edit modules', async ()
       it(`should check that '${test.args.action}' permission is checked for all menu`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkAfterRefreshPage${index}`, baseContext);
 
-        const numberOfModulesUnchecked = await permissionsPage.getNumberOfModulesUnChecked(page, test.args.action);
+        const numberOfModulesUnchecked = await boPermissionsPage.getNumberOfModulesUnChecked(page, test.args.action);
         expect(numberOfModulesUnchecked).to.eq(0);
       });
     });

@@ -16,14 +16,8 @@ Feature: Add discount
     And language with iso code "en" is the default one
     And language "french" with locale "fr-FR" exists
 
-  Scenario: Create a simple product level discount
-    When I create a product level discount "basic_product_level_discount"
-    And discount "basic_product_level_discount" should have the following properties:
-      | active | false             |
-      | type   | products_discount |
-
   Scenario: Create a complete product level discount
-    When I create a product level discount "complete_percent_product_level_discount" with following properties:
+    When I create a "product_level" discount "complete_percent_product_level_discount" with following properties:
       | name[en-US]       | Promotion           |
       | active            | true                |
       | valid_from        | 2019-01-01 11:05:00 |
@@ -33,7 +27,7 @@ Feature: Add discount
       | reduction_product | product1            |
     And discount "complete_percent_product_level_discount" should have the following properties:
       | name[en-US]       | Promotion           |
-      | type              | products_discount   |
+      | type              | product_level       |
       | active            | true                |
       | valid_from        | 2019-01-01 11:05:00 |
       | valid_to          | 2019-12-01 00:00:00 |

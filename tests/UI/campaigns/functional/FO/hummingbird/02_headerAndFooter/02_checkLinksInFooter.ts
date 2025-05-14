@@ -8,7 +8,6 @@ import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/humm
 
 // Import pages
 // Import FO pages
-import bestSalesPage from '@pages/FO/hummingbird/bestSales';
 import deliveryPage from '@pages/FO/hummingbird/delivery';
 import legalNoticePage from '@pages/FO/hummingbird/legalNotice';
 import creditSlipsPage from '@pages/FO/hummingbird/myAccount/creditSlips';
@@ -24,6 +23,7 @@ import {
   dataCustomers,
   FakerCustomer,
   foHummingbirdAboutUsPage,
+  foHummingbirdBestSalesPage,
   foHummingbirdContactUsPage,
   foHummingbirdCreateAccountPage,
   foHummingbirdHomePage,
@@ -96,7 +96,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
     [
       {linkSelector: 'Prices drop', pageTitle: pricesDropPage.pageTitle},
       {linkSelector: 'New products', pageTitle: newProductsPage.pageTitle},
-      {linkSelector: 'Best sellers', pageTitle: bestSalesPage.pageTitle},
+      {linkSelector: 'Best sellers', pageTitle: foHummingbirdBestSalesPage.pageTitle},
     ].forEach((args, index: number) => {
       it(`should check '${args.linkSelector}' footer links`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkProductsFooterLinks${index}`, baseContext);

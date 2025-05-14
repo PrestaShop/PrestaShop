@@ -27,12 +27,20 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Discount\Command;
 
 use DateTimeImmutable;
+use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Exception\DiscountConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject\DiscountType;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationIdInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
 
-abstract class AddDiscountCommand
+class AddDiscountCommand
 {
     private array $localizedNames = [];
     private int $priority = 1;
@@ -47,11 +55,18 @@ abstract class AddDiscountCommand
     private bool $highlightInCart = false;
     private bool $allowPartialUse = true;
     private DiscountType $type;
+    private ?DecimalNumber $percentDiscount = null;
+    private ?Money $amountDiscount = null;
+    private ?ProductId $productId = null;
+    private ?CombinationIdInterface $combinationId = null;
+    private int $reductionProduct = 0;
 
     public function __construct(
         string $type,
+        array $localizedNames,
     ) {
         $this->type = new DiscountType($type);
+        $this->localizedNames = $localizedNames;
     }
 
     /**
@@ -227,6 +242,88 @@ abstract class AddDiscountCommand
     public function setCustomerId(int $customerId): self
     {
         $this->customerId = new CustomerId($customerId);
+
+        return $this;
+    }
+
+    public function getPercentDiscount(): ?DecimalNumber
+    {
+        return $this->percentDiscount;
+    }
+
+    public function setPercentDiscount(DecimalNumber $percentDiscount): self
+    {
+        $this->percentDiscount = $percentDiscount;
+
+        return $this;
+    }
+
+    public function getAmountDiscount(): ?Money
+    {
+        return $this->amountDiscount;
+    }
+
+    /**
+     * @throws DomainConstraintException
+     */
+    public function setAmountDiscount(DecimalNumber $amountDiscount, CurrencyId $currencyId, bool $taxIncluded): self
+    {
+        if ($amountDiscount->isLowerThanZero()) {
+            throw new DiscountConstraintException(sprintf('Money amount cannot be lower than zero, %s given', $amountDiscount), DiscountConstraintException::INVALID_DISCOUNT_VALUE_CANNOT_BE_NEGATIVE);
+        }
+
+        $this->amountDiscount = new Money($amountDiscount, $currencyId, $taxIncluded);
+
+        return $this;
+    }
+
+    public function getProductId(): ?ProductId
+    {
+        return $this->productId;
+    }
+
+    public function setProductId(int $productId): self
+    {
+        $this->productId = new ProductId($productId);
+
+        return $this;
+    }
+
+    public function getCombinationId(): ?CombinationIdInterface
+    {
+        return $this->combinationId;
+    }
+
+    public function setCombinationId(int $combinationId): self
+    {
+        if (NoCombinationId::NO_COMBINATION_ID === $combinationId) {
+            $this->combinationId = new NoCombinationId();
+        } else {
+            $this->combinationId = new CombinationId($combinationId);
+        }
+
+        return $this;
+    }
+
+    public function getReductionProduct(): int
+    {
+        return $this->reductionProduct;
+    }
+
+    /**
+     * @param int $reductionProduct
+     *
+     * @return $this
+     *
+     * This can have several values
+     *  0 => The discount is not a Product discount
+     * -1 => The discounted product is the cheapest of the cart
+     * -2 => The discount is applied on a selection of product // this case is not yet handled.
+     * >0 => The productId of the discounted product
+     */
+    public function setReductionProduct(int $reductionProduct): self
+    {
+        $this->reductionProduct = $reductionProduct;
 
         return $this;
     }

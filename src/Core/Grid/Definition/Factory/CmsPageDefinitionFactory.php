@@ -184,6 +184,17 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
                                 'id_cms',
                                 Request::METHOD_DELETE
                             )
+                        )
+                        ->add((new LinkRowAction('preview'))
+                            ->setName($this->trans('Preview', [], 'Admin.Actions'))
+                            ->setIcon('remove_red_eye')
+                            ->setOptions([
+                                'route' => 'admin_cms_pages_preview',
+                                'route_param_name' => 'cmsPageId',
+                                'route_param_field' => 'id_cms',
+                                'clickable_row' => true,
+                                'target' => '_blank',
+                            ])
                         ),
                 ])
             )

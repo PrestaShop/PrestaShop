@@ -7,6 +7,8 @@ services:
 
   prestashop.core.mail_template.theme_folder_scanner:
     class: 'PrestaShop\PrestaShop\Core\MailTemplate\FolderThemeScanner'
+    arguments:
+      $moduleDirectory: '%modules_dir%'
 
   PrestaShop\PrestaShop\Core\MailTemplate\FolderThemeCatalog:
     arguments:

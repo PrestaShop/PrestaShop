@@ -52,6 +52,9 @@ class ShopContext
         protected array $associatedShopIds,
         protected bool $isMultiShopEnabled,
         protected bool $isMultiShopUsed,
+        protected bool $groupSharingStocks,
+        protected bool $groupSharingCustomers,
+        protected bool $groupSharingOrders,
     ) {
     }
 
@@ -144,6 +147,21 @@ class ShopContext
         }
 
         return $url . $this->getBaseURI();
+    }
+
+    public function hasGroupSharingStocks(): bool
+    {
+        return $this->groupSharingStocks;
+    }
+
+    public function hasGroupSharingCustomers(): bool
+    {
+        return $this->groupSharingCustomers;
+    }
+
+    public function hasGroupSharingOrders(): bool
+    {
+        return $this->groupSharingOrders;
     }
 
     /**

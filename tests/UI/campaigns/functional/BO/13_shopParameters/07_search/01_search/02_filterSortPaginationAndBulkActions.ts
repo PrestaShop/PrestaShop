@@ -28,6 +28,7 @@ const baseContext: string = 'functional_BO_shopParameters_search_search_filterSo
  */
 describe('BO - Shop Parameters - Search : Filter, sort, pagination and bulk actions', async () => {
   const numAliases: number = 20;
+  const fakerWord: string = faker.lorem.word();
 
   let browserContext: BrowserContext;
   let page: Page;
@@ -84,13 +85,10 @@ describe('BO - Shop Parameters - Search : Filter, sort, pagination and bulk acti
   // 1 - Create 20 aliases
   const creationTests: number[] = new Array(numAliases).fill(0, 0, numAliases);
   describe(`Create ${numAliases} aliases in BO`, async () => {
-    const fakerWords = faker.lorem.words(numAliases)
-      .split(/(\s+)/)
-      .filter((value) => value.trim().length > 0);
     creationTests.forEach((test: number, index: number) => {
       const aliasData: FakerSearchAlias = new FakerSearchAlias({
         search: `todelete${index}`,
-        alias: `alias_${fakerWords[index]}`,
+        alias: `alias_${fakerWord}_${index}`,
       });
 
       it('should go to add new search page', async function () {

@@ -30,6 +30,7 @@ describe('API : PATCH /product/{productId}', async () => {
   let accessToken: string;
   let clientSecret: string;
   let idProduct: number;
+  let jsonResponse: any;
 
   const clientScope: string = 'product_write';
   const clientData: FakerAPIClient = new FakerAPIClient({
@@ -223,9 +224,70 @@ describe('API : PATCH /product/{productId}', async () => {
           expect(utilsAPI.hasResponseHeader(apiResponse, 'Content-Type')).to.eq(true);
           expect(utilsAPI.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
 
-          const jsonResponse = await apiResponse.json();
+          jsonResponse = await apiResponse.json();
           expect(jsonResponse).to.have.property(data.propertyName);
           expect(jsonResponse[data.propertyName]).to.deep.equal(data.propertyValue);
+        });
+
+        it('should check the JSON Response keys', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `checkResponseKeys${data.propertyName}`, baseContext);
+
+          expect(jsonResponse).to.have.all.keys(
+            'active',
+            'additionalShippingCost',
+            'availableForOrder',
+            'availableLaterLabels',
+            'availableNowLabels',
+            'carrierReferenceIds',
+            'condition',
+            'coverThumbnailUrl',
+            'deliveryTimeInStockNotes',
+            'deliveryTimeNoteType',
+            'deliveryTimeOutOfStockNotes',
+            'depth',
+            'descriptions',
+            'ecotaxTaxExcluded',
+            'ecotaxTaxIncluded',
+            'gtin',
+            'height',
+            'isbn',
+            'linkRewrites',
+            'location',
+            'lowStockAlertEnabled',
+            'lowStockThreshold',
+            'manufacturerId',
+            'metaDescriptions',
+            'metaTitles',
+            'minimalQuantity',
+            'mpn',
+            'names',
+            'onSale',
+            'onlineOnly',
+            'outOfStockType',
+            'packStockType',
+            'priceTaxExcluded',
+            'priceTaxIncluded',
+            'productId',
+            'quantity',
+            'redirectType',
+            'reference',
+            'shopIds',
+            'shortDescriptions',
+            'showCondition',
+            'showPrice',
+            'tags',
+            'taxRulesGroupId',
+            'type',
+            'unitPriceRatio',
+            'unitPriceTaxExcluded',
+            'unitPriceTaxIncluded',
+            'unity',
+            'upc',
+            'visibility',
+            'weight',
+            'wholesalePrice',
+            'width',
+          );
         });
 
         it(`should check that the property "${data.propertyName}"`, async function () {

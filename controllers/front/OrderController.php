@@ -406,7 +406,7 @@ class OrderControllerCore extends FrontController
                     !Product::getTaxCalculationMethod((int) $this->context->cart->id_customer)
                     && (int) Configuration::get('PS_TAX')
                 )
-                ->setDisplayTaxesLabel(Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC'))
+                ->setDisplayTaxesLabel(Configuration::get('PS_TAX'))
                 ->setGiftCost(
                     $this->context->cart->getGiftWrappingPrice(
                         $checkoutDeliveryStep->getIncludeTaxes()

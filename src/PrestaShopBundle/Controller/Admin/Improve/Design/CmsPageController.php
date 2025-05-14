@@ -846,6 +846,24 @@ class CmsPageController extends PrestaShopAdminController
     }
 
     /**
+     * The redirection URL is generation thanks to the ProductPreviewProvider however it can't be used in the grid
+     * since the LinkRowAction expects a symfony route, so this action is merely used as a proxy for symfony routing
+     * and redirects to the appropriate product preview url.
+     *
+     * @return RedirectResponse
+     */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function previewAction(
+        int $cmsPageId,
+        #[Autowire(service: 'prestashop.adapter.shop.url.cms_provider')]
+        CmsProvider $previewUrlProvider,
+    ): RedirectResponse {
+        $previewUrl = $previewUrlProvider->getUrl($cmsPageId);
+
+        return $this->redirect($previewUrl);
+    }
+
+    /**
      * This function is used for redirecting to the specific cms page category page. It uses bulk action ids which
      * share the same parent cms category in all cases.
      *

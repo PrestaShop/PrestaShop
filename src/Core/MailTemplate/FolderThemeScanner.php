@@ -45,6 +45,13 @@ final class FolderThemeScanner
      */
     private $baseThemeFolder;
 
+    private $themeTwigNamespace;
+
+    public function __construct(
+        private string $moduleDirectory = _PS_MODULE_DIR_,
+    ) {
+    }
+
     /**
      * @param string $mailThemeFolder
      *
@@ -59,6 +66,14 @@ final class FolderThemeScanner
 
         $mailTheme = new Theme(basename($mailThemeFolder));
         $this->baseThemeFolder = dirname($mailThemeFolder);
+
+        // If the scanned directory is in the modules folder we need to adapt the Twig namespace
+        if (str_starts_with($this->baseThemeFolder, $this->moduleDirectory)) {
+            $moduleRelativePath = str_replace($this->moduleDirectory, '', $this->baseThemeFolder);
+            $this->themeTwigNamespace = '@Modules/' . $moduleRelativePath;
+        } else {
+            $this->themeTwigNamespace = '@MailThemes';
+        }
 
         $finder = new Finder();
         $finder->files()->in($mailThemeFolder);
@@ -121,7 +136,7 @@ final class FolderThemeScanner
 
         /* @var SplFileInfo $moduleFolder */
         foreach ($moduleFinder as $moduleFolder) {
-            $this->addLayoutsFromFolder($collection, $moduleFolder->getRealPath(), $moduleFolder->getFilename());
+            $this->addLayoutsFromFolder($collection, $moduleFolder->getPathname(), $moduleFolder->getFilename());
         }
     }
 
@@ -190,6 +205,8 @@ final class FolderThemeScanner
 
     private function getTemplatePath(SplFileInfo $fileInfo): string
     {
-        return '@MailThemes' . substr($fileInfo->getRealPath(), strlen($this->baseThemeFolder));
+        $templateRelativePath = substr($fileInfo->getPathname(), strlen($this->baseThemeFolder));
+
+        return $this->themeTwigNamespace . $templateRelativePath;
     }
 }

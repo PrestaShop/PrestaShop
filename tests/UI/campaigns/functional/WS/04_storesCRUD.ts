@@ -8,9 +8,6 @@ import storeXml from '@webservices/store/storeXml';
 // Import commonTests
 import {addWebserviceKey, removeWebserviceKey, setWebserviceStatus} from '@commonTests/BO/advancedParameters/ws';
 
-// Import BO pages
-import webservicePage from '@pages/BO/advancedParameters/webservice';
-
 // Import data
 import {getStoreXml, getUpdateStoreXml} from '@data/xml/store';
 
@@ -22,6 +19,7 @@ import {
   boLoginPage,
   boStoresPage,
   boStoresCreatePage,
+  boWebservicesPage,
   type BrowserContext,
   type Page,
   utilsPlaywright,
@@ -92,27 +90,27 @@ describe('WS - Stores : CRUD', async () => {
           boDashboardPage.advancedParametersLink,
           boDashboardPage.webserviceLink,
         );
-        await webservicePage.closeSfToolBar(page);
+        await boWebservicesPage.closeSfToolBar(page);
 
-        const pageTitle = await webservicePage.getPageTitle(page);
-        expect(pageTitle).to.contains(webservicePage.pageTitle);
+        const pageTitle = await boWebservicesPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boWebservicesPage.pageTitle);
       });
 
       it('should filter list by key description', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterBeforeDelete', baseContext);
 
-        await webservicePage.resetAndGetNumberOfLines(page);
-        await webservicePage.filterWebserviceTable(
+        await boWebservicesPage.resetAndGetNumberOfLines(page);
+        await boWebservicesPage.filterWebserviceTable(
           page,
           'input',
           'description',
           wsKeyDescription,
         );
 
-        const description = await webservicePage.getTextColumnFromTable(page, 1, 'description');
+        const description = await boWebservicesPage.getTextColumnFromTable(page, 1, 'description');
         expect(description).to.contains(wsKeyDescription);
 
-        wsKey = await webservicePage.getTextColumnFromTable(page, 1, 'key');
+        wsKey = await boWebservicesPage.getTextColumnFromTable(page, 1, 'key');
         authorization = `Basic ${Buffer.from(`${wsKey}:`).toString('base64')}`;
         expect(wsKey).to.not.have.lengthOf(0);
       });

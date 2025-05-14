@@ -165,7 +165,8 @@ describe('API : GET /products', async () => {
           'active',
           'name',
           'quantity',
-          'price',
+          'priceTaxExcluded',
+          'priceTaxIncluded',
           'category',
         );
       }
@@ -214,7 +215,7 @@ describe('API : GET /products', async () => {
         expect(productQuantity).to.equal(jsonResponse.items[idxItem].quantity);
 
         const productPrice = await boProductsPage.getTextColumn(page, 'price', 1);
-        expect(productPrice).to.equal(parseFloat(jsonResponse.items[idxItem].price));
+        expect(productPrice).to.equal(parseFloat(jsonResponse.items[idxItem].priceTaxExcluded));
 
         const productCategory = await boProductsPage.getTextColumn(page, 'category', 1);
         expect(productCategory).to.equal(jsonResponse.items[idxItem].category);

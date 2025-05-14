@@ -39,7 +39,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
-use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -98,14 +98,14 @@ final class DiscountGridDefinitionFactory extends AbstractGridDefinitionFactory 
             )
             ->add(
                 (new DataColumn('name'))
-                    ->setName($this->trans('Name', [], 'Admin.Global'))
+                    ->setName($this->trans('Discount Name', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'name',
                     ])
             )
             ->add(
                 (new DataColumn('type'))
-                    ->setName($this->trans('Discount Type', [], 'Admin.Catalog.Feature'))
+                    ->setName($this->trans('Type', [], 'Admin.Catalog.Feature'))
                     ->setOptions([
                         'field' => 'type',
                     ])
@@ -172,8 +172,17 @@ final class DiscountGridDefinitionFactory extends AbstractGridDefinitionFactory 
                     ->setAssociatedColumn('name')
             )
             ->add(
-                (new Filter('active', YesAndNoChoiceType::class))
+                (new Filter('active', ChoiceType::class))
                     ->setAssociatedColumn('active')
+                    ->setTypeOptions([
+                        'choices' => [
+                            $this->trans('Enabled', [], 'Admin.Global') => 1,
+                            $this->trans('Disabled', [], 'Admin.Global') => 0,
+                        ],
+                        'required' => false,
+                        'placeholder' => $this->trans('All', [], 'Admin.Global'),
+                        'choice_translation_domain' => false,
+                    ])
             )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))

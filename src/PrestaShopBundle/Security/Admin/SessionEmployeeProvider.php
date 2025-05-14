@@ -33,7 +33,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * This service is able to get the logged in employee info from the Symfony sessions,
- * it is exactly doing the same thing as the internal ContextListener but "manually"
+ * it is exactly doing the same thing as the internal Symfony ContextListener but "manually"
  *
  * This is useful for listeners that are executed before the ContextListener, so they
  * can init some contexts based on employee data for example.
@@ -54,8 +54,8 @@ class SessionEmployeeProvider
     }
 
     /**
-     * Most of this code is inspired from the ContextListener, it's just that we need to get the employee
-     * before the firewall listener in order to preset the PrestaShop contexts.
+     * Most of this code is inspired from the Symfony ContextListener, it's just that we need
+     * to get the employee before the firewall listener in order to preset the PrestaShop contexts.
      */
     public function getEmployeeFromSession(?Request $request = null): ?SessionEmployeeInterface
     {

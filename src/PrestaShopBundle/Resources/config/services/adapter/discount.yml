@@ -1,34 +1,17 @@
 services:
   _defaults:
-    public: true
-
-  PrestaShop\PrestaShop\Adapter\Discount\CommandHandler\AddFreeShippingDiscountHandler:
     autowire: true
     public: false
-    autoconfigure: true
 
-  PrestaShop\PrestaShop\Adapter\Discount\CommandHandler\AddCartLevelDiscountHandler:
-    autowire: true
-    public: false
-    autoconfigure: true
-
-  PrestaShop\PrestaShop\Adapter\Discount\CommandHandler\AddProductLevelDiscountHandler:
-    autowire: true
-    public: false
+  PrestaShop\PrestaShop\Adapter\Discount\CommandHandler\AddDiscountHandler:
     autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Discount\QueryHandler\GetDiscountForEditingHandler:
-    autowire: true
-    public: false
     autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Discount\Validate\DiscountValidator:
-    autowire: true
-    public: false
 
   PrestaShop\PrestaShop\Adapter\Discount\Repository\DiscountRepository:
-    autowire: true
-    public: false
     arguments:
       $connection: '@doctrine.dbal.default_connection'
       $dbPrefix: '%database_prefix%'

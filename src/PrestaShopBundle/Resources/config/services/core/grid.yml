@@ -62,5 +62,14 @@ services:
 
   PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdaterInterface: '@PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdater'
 
+  PrestaShop\PrestaShop\Core\Grid\Query\Filter\DoctrineFilterApplicator:
+    public: false
+
+  PrestaShop\PrestaShop\Core\Grid\Query\Filter\DoctrineFilterApplicatorInterface: '@PrestaShop\PrestaShop\Core\Grid\Query\Filter\DoctrineFilterApplicator'
+
   prestashop.core.grid.query.filter.doctrine_filter_applicator:
-    class: 'PrestaShop\PrestaShop\Core\Grid\Query\Filter\DoctrineFilterApplicator'
+    public: true
+    alias: 'PrestaShop\PrestaShop\Core\Grid\Query\Filter\DoctrineFilterApplicator'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0

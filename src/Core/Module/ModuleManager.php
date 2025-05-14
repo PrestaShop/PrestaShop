@@ -41,9 +41,10 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
-use Symfony\Component\Translation\Translator;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Throwable;
+use Validate as LegacyValidate;
 
 /**
  * Responsible for handling all actions with modules.
@@ -311,13 +312,14 @@ class ModuleManager implements ModuleManagerInterface
         $module = $this->moduleRepository->getModule($name);
         if ($module->hasValidInstance()) {
             $errors = array_filter($module->getInstance()->getErrors());
-            $error = array_pop($errors);
-            if (empty($error)) {
+            if (empty($errors)) {
                 $error = $this->translator->trans(
                     'Unfortunately, the module %module% did not return additional details.',
                     ['%module%' => $name],
                     'Admin.Modules.Notification'
                 );
+            } else {
+                $error = implode(', ', $errors);
             }
         } else {
             $error = $this->translator->trans(
@@ -325,6 +327,21 @@ class ModuleManager implements ModuleManagerInterface
                 ['%module%' => $name],
                 'Admin.Modules.Notification'
             );
+
+            $validityErrors = [];
+            if (!LegacyValidate::isModuleName($name)) {
+                $validityErrors[] = $name . ' module name is invalid';
+            } else {
+                try {
+                    LegacyModule::getInstanceByName($name);
+                } catch (Throwable $e) {
+                    $validityErrors[] = $e->getMessage();
+                }
+            }
+
+            if (!empty($validityErrors)) {
+                $error .= ' Errors details: ' . implode(', ', $validityErrors);
+            }
         }
 
         return $error;

@@ -1,9 +1,6 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-// Import pages
-import addNewQuickAccessPage from '@pages/BO/quickAccess/add';
-
 import {
   boCartRulesCreatePage,
   boCategoriesCreatePage,
@@ -14,6 +11,7 @@ import {
   boModuleManagerPage,
   boProductsPage,
   boQuickAccessPage,
+  boQuickAccessCreatePage,
   boStatisticsPage,
   type BrowserContext,
   FakerQuickAccess,
@@ -113,15 +111,15 @@ describe('BO - Header : Quick access links', async () => {
 
       await boQuickAccessPage.goToAddNewQuickAccessPage(page);
 
-      const pageTitle = await addNewQuickAccessPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addNewQuickAccessPage.pageTitle);
+      const pageTitle = await boQuickAccessCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boQuickAccessCreatePage.pageTitle);
     });
 
     it('should create new quick access link', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createQuickAccessLink', baseContext);
 
-      const validationMessage = await addNewQuickAccessPage.setQuickAccessLink(page, quickAccessLinkData);
-      expect(validationMessage).to.contains(addNewQuickAccessPage.successfulCreationMessage);
+      const validationMessage = await boQuickAccessCreatePage.setQuickAccessLink(page, quickAccessLinkData);
+      expect(validationMessage).to.contains(boQuickAccessCreatePage.successfulCreationMessage);
     });
 
     it('should check the new link from Quick access', async function () {

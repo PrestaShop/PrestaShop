@@ -1,11 +1,9 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-// Import pages
-import addContactPage from '@pages/BO/shopParameters/contact/add';
-
 import {
   boContactsPage,
+  boContactsCreatePage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -73,14 +71,14 @@ describe('BO - Shop Parameters - Contact : Create, Update and Delete contact in 
 
       await boContactsPage.goToAddNewContactPage(page);
 
-      const pageTitle = await addContactPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addContactPage.pageTitleCreate);
+      const pageTitle = await boContactsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boContactsCreatePage.pageTitleCreate);
     });
 
     it('should create contact and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createContact', baseContext);
 
-      const textResult = await addContactPage.createEditContact(page, createContactData);
+      const textResult = await boContactsCreatePage.createEditContact(page, createContactData);
       expect(textResult).to.equal(boContactsPage.successfulCreationMessage);
 
       const numberOfContactsAfterCreation = await boContactsPage.getNumberOfElementInGrid(page);
@@ -105,14 +103,14 @@ describe('BO - Shop Parameters - Contact : Create, Update and Delete contact in 
 
       await boContactsPage.goToEditContactPage(page, 1);
 
-      const pageTitle = await addContactPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addContactPage.pageTitleEdit);
+      const pageTitle = await boContactsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boContactsCreatePage.pageTitleEdit);
     });
 
     it('should update contact', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateContact', baseContext);
 
-      const textResult = await addContactPage.createEditContact(page, editContactData);
+      const textResult = await boContactsCreatePage.createEditContact(page, editContactData);
       expect(textResult).to.equal(boContactsPage.successfulUpdateMessage);
 
       const numberOfContactsAfterUpdate = await boContactsPage.resetAndGetNumberOfLines(page);

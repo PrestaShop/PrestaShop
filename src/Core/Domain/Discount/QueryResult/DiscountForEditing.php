@@ -51,6 +51,8 @@ class DiscountForEditing
         private readonly ?int $currencyId,
         private readonly ?bool $taxIncluded,
         private readonly ?int $reductionProduct,
+        private readonly ?int $giftProductId,
+        private readonly ?int $giftProductAttributeId,
     ) {
     }
 
@@ -142,5 +144,15 @@ class DiscountForEditing
     public function getReductionProduct(): ?int
     {
         return $this->reductionProduct;
+    }
+
+    public function getGiftProductId(): ?int
+    {
+        return $this->giftProductId;
+    }
+
+    public function getGiftProductAttributeId(): ?int
+    {
+        return $this->giftProductAttributeId;
     }
 }

@@ -30,9 +30,8 @@ use DateTime;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
-use PrestaShop\PrestaShop\Core\Domain\Discount\Command\AddCartLevelDiscountCommand;
-use PrestaShop\PrestaShop\Core\Domain\Discount\Command\AddFreeShippingDiscountCommand;
-use PrestaShop\PrestaShop\Core\Domain\Discount\Command\AddProductLevelDiscountCommand;
+use PrestaShop\PrestaShop\Core\Domain\Discount\Command\AddDiscountCommand;
+use PrestaShop\PrestaShop\Core\Domain\Discount\Exception\DiscountConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject\DiscountId;
 use PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject\DiscountType;
 use RuntimeException;
@@ -41,6 +40,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DiscountFormDataHandler implements FormDataHandlerInterface
 {
+    public const PRODUCT_ID = 1;
+    public const COMBINATION_ID = 2;
+
     public function __construct(
         protected readonly CommandBusInterface $commandBus,
         #[Autowire(service: 'prestashop.default.language.context')]
@@ -49,32 +51,46 @@ class DiscountFormDataHandler implements FormDataHandlerInterface
     ) {
     }
 
+    /**
+     * @throws DiscountConstraintException
+     */
     public function create(array $data)
     {
-        $discountType = $data['type']->type;
-        switch ($discountType) {
+        // For the moment the names are not sent by the form so we continue to generate it as we did later in the method.
+        $command = new AddDiscountCommand($data['type']->type, $data['names']->value ?? []);
+        switch ($data['type']->type) {
             case DiscountType::FREE_SHIPPING:
-                $command = new AddFreeShippingDiscountCommand();
                 $name = $this->translator->trans('On free shipping', [], 'Admin.Catalog.Feature');
                 break;
-            case DiscountType::CART_DISCOUNT:
-                $command = new AddCartLevelDiscountCommand();
+            case DiscountType::CART_LEVEL:
                 $name = $this->translator->trans('On cart amount', [], 'Admin.Catalog.Feature');
                 $command->setPercentDiscount(new DecimalNumber('50'));
                 break;
-            case DiscountType::PRODUCTS_DISCOUNT:
-                $command = new AddProductLevelDiscountCommand();
+            case DiscountType::PRODUCT_LEVEL:
                 $name = $this->translator->trans('On products amount', [], 'Admin.Catalog.Feature');
+                $command->setPercentDiscount(new DecimalNumber('50'));
+                $command->setReductionProduct(1);
+                break;
+            case DiscountType::FREE_GIFT:
+                $name = $this->translator->trans('On free gift', [], 'Admin.Catalog.Feature');
+                $command->setProductId(self::PRODUCT_ID);
+                $command->setCombinationId(self::COMBINATION_ID);
+                break;
+            case DiscountType::ORDER_LEVEL:
+                $name = $this->translator->trans('On order amount', [], 'Admin.Catalog.Feature');
+                $command->setPercentDiscount(new DecimalNumber('50'));
                 break;
             default:
-                throw new RuntimeException('Unknown discount type ' . $discountType);
+                throw new RuntimeException('Unknown discount type ' . $data['type']->type);
         }
+
+        $command->setActive(true);
 
         // This part adds automatic values for the initial POC, this is only temporary and
         // should be removed before releasing this new page
 
         // Random code based on discount type
-        $command->setCode(strtoupper(uniqid($discountType . '_')));
+        $command->setCode(strtoupper(uniqid($data['type']->type . '_')));
         $now = new DateTime();
         // Default name in the default language only containing the creation date
         $command->setLocalizedNames([

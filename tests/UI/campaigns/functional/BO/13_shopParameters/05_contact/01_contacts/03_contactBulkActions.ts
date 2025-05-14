@@ -1,11 +1,9 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-// Import pages
-import addContactPage from '@pages/BO/shopParameters/contact/add';
-
 import {
   boContactsPage,
+  boContactsCreatePage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -79,14 +77,14 @@ describe('BO - Shop Parameters - Contact : Bulk delete contacts', async () => {
 
         await boContactsPage.goToAddNewContactPage(page);
 
-        const pageTitle = await addContactPage.getPageTitle(page);
-        expect(pageTitle).to.contains(addContactPage.pageTitleCreate);
+        const pageTitle = await boContactsCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boContactsCreatePage.pageTitleCreate);
       });
 
       it('should create contact and check result', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `CreateContact${index + 1}`, baseContext);
 
-        const textResult = await addContactPage.createEditContact(page, test.args.contactToCreate);
+        const textResult = await boContactsCreatePage.createEditContact(page, test.args.contactToCreate);
         expect(textResult).to.equal(boContactsPage.successfulCreationMessage);
 
         const numberOfContactsAfterCreation = await boContactsPage.getNumberOfElementInGrid(page);

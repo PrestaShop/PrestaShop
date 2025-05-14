@@ -154,6 +154,7 @@ class ThemeExporter
             'path' => $archiveParentDirectory,
             'default_locale' => $locale,
             'root_dir' => $rootDir,
+            'split_files' => false,
         ]);
 
         $this->renameCatalogues($locale, $archiveParentDirectory);

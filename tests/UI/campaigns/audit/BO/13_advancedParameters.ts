@@ -1,14 +1,6 @@
 import {expect} from 'chai';
 import testContext from '@utils/testContext';
 
-// Import pages
-import rolesPage from '@pages/BO/advancedParameters/team/roles';
-import addRolePage from '@pages/BO/advancedParameters/team/roles/add';
-import webservicePage from '@pages/BO/advancedParameters/webservice';
-import addWebservicePage from '@pages/BO/advancedParameters/webservice/add';
-import addShopGroupPage from '@pages/BO/advancedParameters/multistore/add';
-import shopUrlPage from '@pages/BO/advancedParameters/multistore/url';
-
 import {
   boDashboardPage,
   boLoginPage,
@@ -20,6 +12,7 @@ import {
   boEmployeesPage,
   boEmployeesCreatePage,
   boLogsPage,
+  boMultistoreGroupCreatePage,
   boSqlManagerPage,
   boSqlManagerCreatePage,
   boDbBackupPage,
@@ -27,8 +20,13 @@ import {
   boApiClientsPage,
   boMultistorePage,
   boMultistoreShopCreatePage,
+  boMultistoreShopUrlPage,
   boMultistoreShopUrlCreatePage,
+  boRolesPage,
+  boRolesCreatePage,
   boSecurityPage,
+  boWebservicesPage,
+  boWebservicesCreatePage,
   type BrowserContext,
   type Page,
   utilsPlaywright,
@@ -201,8 +199,8 @@ describe('BO - Advanced Parameters', async () => {
 
     await boEmployeesPage.goToRolesPage(page);
 
-    const pageTitle = await rolesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(rolesPage.pageTitle);
+    const pageTitle = await boRolesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boRolesPage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -211,10 +209,10 @@ describe('BO - Advanced Parameters', async () => {
   it('should go to \'Advanced Parameters > Team > Roles > Add new role page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToNewRolePage', baseContext);
 
-    await rolesPage.goToAddNewRolePage(page);
+    await boRolesPage.goToAddNewRolePage(page);
 
-    const pageTitle = await addRolePage.getPageTitle(page);
-    expect(pageTitle).to.contains(addRolePage.pageTitleCreate);
+    const pageTitle = await boRolesCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boRolesCreatePage.pageTitleCreate);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -224,10 +222,10 @@ describe('BO - Advanced Parameters', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEditRole', baseContext);
 
     await boEmployeesPage.goToRolesPage(page);
-    await rolesPage.goToEditRolePage(page, 1);
+    await boRolesPage.goToEditRolePage(page, 1);
 
-    const pageTitle = await addRolePage.getPageTitle(page);
-    expect(pageTitle).to.contains(addRolePage.pageTitleEdit('SuperAdmin'));
+    const pageTitle = await boRolesCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boRolesCreatePage.pageTitleEdit('SuperAdmin'));
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -305,10 +303,10 @@ describe('BO - Advanced Parameters', async () => {
       boDashboardPage.advancedParametersLink,
       boDashboardPage.webserviceLink,
     );
-    await webservicePage.closeSfToolBar(page);
+    await boWebservicesPage.closeSfToolBar(page);
 
-    const pageTitle = await webservicePage.getPageTitle(page);
-    expect(pageTitle).to.contains(webservicePage.pageTitle);
+    const pageTitle = await boWebservicesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boWebservicesPage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -317,10 +315,10 @@ describe('BO - Advanced Parameters', async () => {
   it('should go to \'Advanced Parameters > Webservice > Add new webservice key\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewWebserviceKeyPage', baseContext);
 
-    await webservicePage.goToAddNewWebserviceKeyPage(page);
+    await boWebservicesPage.goToAddNewWebserviceKeyPage(page);
 
-    const pageTitle = await addWebservicePage.getPageTitle(page);
-    expect(pageTitle).to.contains(addWebservicePage.pageTitleCreate);
+    const pageTitle = await boWebservicesCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boWebservicesCreatePage.pageTitleCreate);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -371,8 +369,8 @@ describe('BO - Advanced Parameters', async () => {
 
     await boMultistorePage.goToNewShopGroupPage(page);
 
-    const pageTitle = await addShopGroupPage.getPageTitle(page);
-    expect(pageTitle).to.contains(addShopGroupPage.pageTitleCreate);
+    const pageTitle = await boMultistoreGroupCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boMultistoreGroupCreatePage.pageTitleCreate);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -406,7 +404,7 @@ describe('BO - Advanced Parameters', async () => {
     );
 
     await boMultistorePage.goToShopURLPage(page, 1);
-    await shopUrlPage.goToEditShopURLPage(page, 1);
+    await boMultistoreShopUrlPage.goToEditShopURLPage(page, 1);
 
     const pageTitle = await boMultistoreShopUrlCreatePage.getPageTitle(page);
     expect(pageTitle).to.contains(boMultistoreShopUrlCreatePage.pageTitleEdit);

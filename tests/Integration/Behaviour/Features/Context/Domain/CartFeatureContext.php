@@ -64,12 +64,12 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\MinimalQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\PackOutOfStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductCustomizationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 use Product;
@@ -596,13 +596,16 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     {
         $cartId = $this->getSharedStorage()->get($cartReference);
         $cartRuleId = $this->getSharedStorage()->get($voucherCode);
-
-        $this->getCommandBus()->handle(
-            new AddCartRuleToCartCommand(
-                $cartId,
-                $cartRuleId
-            )
-        );
+        try {
+            $this->getCommandBus()->handle(
+                new AddCartRuleToCartCommand(
+                    $cartId,
+                    $cartRuleId
+                )
+            );
+        } catch (CartRuleValidityException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**

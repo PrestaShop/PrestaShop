@@ -1,16 +1,12 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
-// Import commonTests
 import setMultiStoreStatus from '@commonTests/BO/advancedParameters/multistore';
 
-// Import pages
-import addShopGroupPage from '@pages/BO/advancedParameters/multistore/add';
-
-import {expect} from 'chai';
 import {
   boDashboardPage,
   boLoginPage,
+  boMultistoreGroupCreatePage,
   boMultistorePage,
   type BrowserContext,
   FakerShopGroup,
@@ -92,15 +88,15 @@ describe('BO - Advanced Parameters - MultiStore : Filter, sort and pagination sh
 
         await boMultistorePage.goToNewShopGroupPage(page);
 
-        const pageTitle = await addShopGroupPage.getPageTitle(page);
-        expect(pageTitle).to.contains(addShopGroupPage.pageTitleCreate);
+        const pageTitle = await boMultistoreGroupCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boMultistoreGroupCreatePage.pageTitleCreate);
       });
 
       it(`should create shop group n°${index + 1} and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createShopGroup${index}`, baseContext);
 
-        const textResult = await addShopGroupPage.setShopGroup(page, shopGroupData);
-        expect(textResult).to.contains(addShopGroupPage.successfulCreationMessage);
+        const textResult = await boMultistoreGroupCreatePage.setShopGroup(page, shopGroupData);
+        expect(textResult).to.contains(boMultistoreGroupCreatePage.successfulCreationMessage);
 
         const numberOfShopGroupsAfterCreation = await boMultistorePage.getNumberOfElementInGrid(page);
         expect(numberOfShopGroupsAfterCreation).to.be.equal(numberOfShopGroups + 1 + index);

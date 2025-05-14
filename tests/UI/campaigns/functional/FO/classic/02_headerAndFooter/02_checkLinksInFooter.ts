@@ -8,7 +8,6 @@ import {createAccountTest} from '@commonTests/FO/classic/account';
 
 // Import pages
 // Import FO pages
-import {bestSalesPage} from '@pages/FO/classic/bestSales';
 import {deliveryPage} from '@pages/FO/classic/delivery';
 import {legalNoticePage} from '@pages/FO/classic/legalNotice';
 import {creditSlipPage} from '@pages/FO/classic/myAccount/creditSlips';
@@ -24,6 +23,7 @@ import {
   dataCustomers,
   FakerCustomer,
   foClassicAboutUsPage,
+  foClassicBestSalesPage,
   foClassicContactUsPage,
   foClassicCreateAccountPage,
   foClassicHomePage,
@@ -93,7 +93,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
     [
       {linkSelector: 'Prices drop', pageTitle: pricesDropPage.pageTitle},
       {linkSelector: 'New products', pageTitle: newProductsPage.pageTitle},
-      {linkSelector: 'Best sellers', pageTitle: bestSalesPage.pageTitle},
+      {linkSelector: 'Best sellers', pageTitle: foClassicBestSalesPage.pageTitle},
     ].forEach((args, index: number) => {
       it(`should check '${args.linkSelector}' footer links`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkProductsFooterLinks${index}`, baseContext);

@@ -63,7 +63,7 @@ abstract class ContextEventListenerTestCase extends KernelTestCase
         return $reflectionProperty->getValue($object);
     }
 
-    protected function mockLegacyContext(array $cookieValues): LegacyContext|MockObject
+    protected function mockLegacyContext(array $cookieValues = []): LegacyContext|MockObject
     {
         $cookie = new TestCookie();
         foreach ($cookieValues as $cookieKey => $cookieValue) {

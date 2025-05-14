@@ -15,14 +15,8 @@ Feature: Add discount
     And language with iso code "en" is the default one
     And language "french" with locale "fr-FR" exists
 
-  Scenario: Create a simple cart level discount
-    When I create a cart level discount "basic_cart_level_discount"
-    And discount "basic_cart_level_discount" should have the following properties:
-      | active | false         |
-      | type   | cart_discount |
-
   Scenario: Create a complete cart level discount
-    When I create a cart level discount "complete_percent_cart_level_discount" with following properties:
+    When I create a "cart_level" discount "complete_percent_cart_level_discount" with following properties:
       | name[en-US]       | Promotion           |
       | active            | true                |
       | valid_from        | 2019-01-01 11:05:00 |
@@ -31,13 +25,13 @@ Feature: Add discount
       | reduction_percent | 10.0                |
     And discount "complete_percent_cart_level_discount" should have the following properties:
       | name[en-US]       | Promotion           |
-      | type              | cart_discount       |
+      | type              | cart_level          |
       | active            | true                |
       | valid_from        | 2019-01-01 11:05:00 |
       | valid_to          | 2019-12-01 00:00:00 |
       | code              | PROMO_CART_2019     |
       | reduction_percent | 10.0                |
-    When I create a cart level discount "complete_amount_cart_level_discount" with following properties:
+    When I create a "cart_level" discount "complete_amount_cart_level_discount" with following properties:
       | name[en-US]        | Promotion           |
       | active             | true                |
       | valid_from         | 2019-01-01 11:05:00 |
@@ -48,7 +42,7 @@ Feature: Add discount
       | taxIncluded        | true                |
     And discount "complete_amount_cart_level_discount" should have the following properties:
       | name[en-US]        | Promotion           |
-      | type               | cart_discount       |
+      | type               | cart_level          |
       | active             | true                |
       | valid_from         | 2019-01-01 11:05:00 |
       | valid_to           | 2019-12-01 00:00:00 |
@@ -56,7 +50,7 @@ Feature: Add discount
       | reduction_amount   | 10.0                |
       | reduction_currency | usd                 |
       | taxIncluded        | true                |
-    When I create a cart level discount "complete_amount_cart_level_discount_tax_excluded" with following properties:
+    When I create a "cart_level" discount "complete_amount_cart_level_discount_tax_excluded" with following properties:
       | name[en-US]        | Promotion           |
       | active             | true                |
       | valid_from         | 2019-01-01 11:05:00 |
@@ -67,7 +61,7 @@ Feature: Add discount
       | taxIncluded        | false               |
     And discount "complete_amount_cart_level_discount_tax_excluded" should have the following properties:
       | name[en-US]        | Promotion           |
-      | type               | cart_discount       |
+      | type               | cart_level          |
       | active             | true                |
       | valid_from         | 2019-01-01 11:05:00 |
       | valid_to           | 2019-12-01 00:00:00 |
@@ -76,23 +70,8 @@ Feature: Add discount
       | reduction_currency | usd                 |
       | taxIncluded        | false               |
 
-  Scenario: Create an active cart level discount but without names should be forbidden
-    When I create a cart level discount "invalid_cart_level_discount" with following properties:
-      | active | true          |
-      | type   | cart_discount |
-    Then I should get error that discount field name is invalid
-    # Discount online with name only in default language is valid though
-    When I create a cart level discount "default_language_cart_level_discount" with following properties:
-      | active      | true      |
-      | name[en-US] | Promotion |
-      | name[fr-FR] |           |
-    Then discount "default_language_cart_level_discount" should have the following properties:
-      | active      | true      |
-      | name[en-US] | Promotion |
-      | name[fr-FR] |           |
-
   Scenario: Create an active cart level discount with wrong values
-    When I create a cart level discount "invalid_percent_cart_level_discount_1" with following properties:
+    When I create a "cart_level" discount "invalid_percent_cart_level_discount_1" with following properties:
       | name[en-US]       | Promotion           |
       | active            | true                |
       | valid_from        | 2019-01-01 11:05:00 |
@@ -100,7 +79,7 @@ Feature: Add discount
       | code              | PROMO_CART_2019_4   |
       | reduction_percent | -10.0               |
     Then I should get error that discount field reduction_percent is invalid
-    When I create a cart level discount "invalid_percent_cart_level_discount_2" with following properties:
+    When I create a "cart_level" discount "invalid_percent_cart_level_discount_2" with following properties:
       | name[en-US]       | Promotion           |
       | active            | true                |
       | valid_from        | 2019-01-01 11:05:00 |
@@ -108,7 +87,7 @@ Feature: Add discount
       | code              | PROMO_CART_2019_5   |
       | reduction_percent | 102.0               |
     Then I should get error that discount field reduction_percent is invalid
-    When I create a cart level discount "invalid_amount_cart_level_discount" with following properties:
+    When I create a "cart_level" discount "invalid_amount_cart_level_discount" with following properties:
       | name[en-US]        | Promotion           |
       | active             | true                |
       | valid_from         | 2019-01-01 11:05:00 |

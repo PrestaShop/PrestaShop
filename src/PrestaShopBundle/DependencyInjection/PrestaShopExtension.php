@@ -141,14 +141,17 @@ class PrestaShopExtension extends Extension implements PrependExtensionInterface
                 $paths[] = $moduleConfigPath;
             }
 
-            /**
-             * TODO: Understand why this crashes PrestaShop and redirects to Front Office - maybe duplicated/conflicts with ModulesDoctrineCompilerPass that could be removed in favor of this method
-             * // Load Doctrine entities that could be used as ApiPlatform DTO resources as well in the src/Entity folder
-             * $entitiesRessourcesPath = sprintf('%s/src/Entity', $modulePath);
-             * if (file_exists($entitiesRessourcesPath)) {
-             *   $paths[] = $entitiesRessourcesPath;
-             * }
-             */
+            // Load Doctrine entities that could be used as ApiPlatform DTO resources as well in the src/Entity folder
+            $entitiesRessourcesPath = sprintf('%s/src/Entity', $modulePath);
+            if (file_exists($entitiesRessourcesPath)) {
+                // APIPlatform is looping on included resources and doing a require_once on those resources in ReflectionClassRecursiveIterator::getReflectionClassesFromDirectories.
+                // This means that everything in those files is interpreted including the exit statement in some of those files ( especially in some index.php files used as an old way to make the directory read only ).
+                // Since we cannot override or decorate the reflection class itself we have no other choice but to delete those files.
+                if (file_exists($entitiesRessourcesPath . '/index.php')) {
+                    unlink($entitiesRessourcesPath . '/index.php');
+                }
+                $paths[] = $entitiesRessourcesPath;
+            }
 
             // Load ApiPlatform DTOs from the src/ApiPlatform/Resources folder
             $moduleRessourcesPath = sprintf('%s/src/ApiPlatform/Resources', $modulePath);

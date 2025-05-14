@@ -41,16 +41,21 @@ use PrestaShop\PrestaShop\Core\Domain\ApiClient\ValueObject\CreatedApiClient;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\EditCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\EditCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\QueryResult\EditableCustomerGroup;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\UploadModuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShopBundle\ApiPlatform\Metadata\LocalizedValue;
 use PrestaShopBundle\ApiPlatform\NormalizationMapper;
 use PrestaShopBundle\ApiPlatform\Serializer\CQRSApiSerializer;
@@ -147,6 +152,76 @@ class CQRSApiSerializerTest extends KernelTestCase
 
     public function getExpectedDenormalizedData(): iterable
     {
+        $addCustomerGroupCommand = new AddCustomerGroupCommand(
+            [
+                self::EN_LANG_ID => 'english name',
+                self::getFrenchId() => 'nom français',
+            ],
+            new DecimalNumber('12.87'),
+            false,
+            true,
+            [1, 3],
+        );
+
+        yield 'denormalize command with DecimalNumber in the constructor, and denormalized localized value' => [
+            [
+                'localizedNames' => [
+                    'en-US' => 'english name',
+                    'fr-FR' => 'nom français',
+                ],
+                'reductionPercent' => 12.87,
+                'displayPriceTaxExcluded' => false,
+                'showPrice' => true,
+                'shopIds' => [1, 3],
+            ],
+            $addCustomerGroupCommand,
+            [],
+            null,
+            // Extra context to handle localized values
+            [
+                LocalizedValue::LOCALIZED_VALUE_PARAMETERS => [
+                    'localizedNames' => [
+                        LocalizedValue::DENORMALIZED_KEY => LocalizedValue::ID_KEY,
+                    ],
+                ],
+            ],
+        ];
+
+        $editCustomerGroupCommand = new EditCustomerGroupCommand(42);
+        $editCustomerGroupCommand->setReductionPercent(new DecimalNumber('12.87'));
+
+        yield 'denormalize command with setter based on DecimalNumber' => [
+            [
+                'customerGroupId' => 42,
+                'reductionPercent' => 12.87,
+            ],
+            $editCustomerGroupCommand,
+        ];
+
+        $updateProductCommand = new UpdateProductCommand(42, ShopConstraint::shop(1));
+        $updateProductCommand->setWholesalePrice('12.34');
+        $updateProductCommand->setWeight('2.67');
+        $updateProductCommand->setRedirectOption(
+            RedirectType::TYPE_CATEGORY_PERMANENT,
+            1
+        );
+
+        yield 'denormalize command with shop constraint, decimal number and multi param setter' => [
+            [
+                'productId' => 42,
+                'wholeSalePrice' => 12.34,
+                'weight' => 2.67,
+                'redirectType' => RedirectType::TYPE_CATEGORY_PERMANENT,
+                'redirectTargetId' => 1,
+            ],
+            $updateProductCommand,
+            [
+                '[_context][shopConstraint]' => '[shopConstraint]',
+                '[redirectType]' => '[redirectOption][redirectType]',
+                '[redirectTargetId]' => '[redirectOption][redirectTarget]',
+            ],
+        ];
+
         $localizedResource = new LocalizedResource([
             'en-US' => 'english link',
             'fr-FR' => 'lien français',
@@ -456,6 +531,26 @@ class CQRSApiSerializerTest extends KernelTestCase
 
     public static function getNormalizationData(): iterable
     {
+        $virtualProduct = new VirtualProductFileForEditing(
+            42,
+            'virtual file',
+            'pretty virtual file',
+            23,
+            1,
+            DateTimeImmutable::createFromFormat(DateTimeUtil::DEFAULT_DATETIME_FORMAT, '1969-07-11 00:00:00'),
+        );
+        yield 'object with datetime' => [
+            $virtualProduct,
+            [
+                'id' => 42,
+                'fileName' => 'virtual file',
+                'displayName' => 'pretty virtual file',
+                'accessDays' => 23,
+                'downloadTimesLimit' => 1,
+                'expirationDate' => '1969-07-11 00:00:00',
+            ],
+        ];
+
         $createdApiClient = new CreatedApiClient(42, 'my_secret');
         yield 'test' => [
             $createdApiClient,

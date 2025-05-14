@@ -29,7 +29,6 @@ namespace PrestaShopBundle\ApiPlatform\OpenApi\Factory;
 use ApiPlatform\JsonSchema\DefinitionNameFactoryInterface;
 use ApiPlatform\JsonSchema\ResourceMetadataTrait;
 use ApiPlatform\JsonSchema\Schema;
-use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\HttpOperation;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
@@ -40,16 +39,27 @@ use ApiPlatform\OpenApi\Model\PathItem;
 use ApiPlatform\OpenApi\Model\Paths;
 use ApiPlatform\OpenApi\OpenApi;
 use ArrayObject;
+use DateTimeInterface;
+use PrestaShop\Decimal\DecimalNumber;
+use PrestaShopBundle\ApiPlatform\DomainObjectDetector;
 use PrestaShopBundle\ApiPlatform\Metadata\LocalizedValue;
+use ReflectionClass;
+use ReflectionMethod;
+use ReflectionNamedType;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactoryInterface;
 
 /**
  * This service decorates the main service that builds the Open API schema. It waits for the whole generation
- * to be done so that all types, schemas and example are correctly extracted. Then it applies the custom mapping,
- * when defined, so that the schema reflects the expected format for the API not the one in the domain logic from
- * CQRS commands.
+ * to be done so that all types, schemas and example are correctly extracted and then:
+ *
+ *   - it applies the custom mapping, when defined, so that the schema reflects the expected format for the API,
+ *     not the one in the domain logic from CQRS commands
+ * . - it groups endpoints by domain and
+ *   - it adapts some custom types like DecimalNumber and document them as numbers
+ *   - it handles multi parameters setters and split the parameters into a sub object like the Admin API expects
+ *   - it detects LocalizedValue fields and adapt their format and example
  */
 class CQRSOpenApiFactory implements OpenApiFactoryInterface
 {
@@ -62,6 +72,7 @@ class CQRSOpenApiFactory implements OpenApiFactoryInterface
         protected readonly ResourceNameCollectionFactoryInterface $resourceNameCollectionFactory,
         protected readonly DefinitionNameFactoryInterface $definitionNameFactory,
         protected readonly ClassMetadataFactoryInterface $classMetadataFactory,
+        protected readonly DomainObjectDetector $domainObjectDetector,
         // No property promotion for this one since it's already defined in the ResourceMetadataTrait
         ResourceMetadataCollectionFactoryInterface $resourceMetadataFactory,
     ) {
@@ -86,7 +97,8 @@ class CQRSOpenApiFactory implements OpenApiFactoryInterface
 
                 // Adapt localized value schema for API resource schema (mostly for read schema)
                 if ($parentOpenApi->getComponents()->getSchemas()->offsetExists($resourceDefinitionName)) {
-                    $this->adaptLocalizedValues($resourceMetadata, $parentOpenApi->getComponents()->getSchemas()->offsetGet($resourceDefinitionName));
+                    $this->adaptLocalizedValues($resourceMetadata->getClass(), $parentOpenApi->getComponents()->getSchemas()->offsetGet($resourceDefinitionName));
+                    $this->adaptDecimalNumbers($resourceMetadata->getClass(), $parentOpenApi->getComponents()->getSchemas()->offsetGet($resourceDefinitionName));
                 }
 
                 /** @var Operation $operation */
@@ -99,36 +111,23 @@ class CQRSOpenApiFactory implements OpenApiFactoryInterface
                         }
                     }
 
-                    if (empty($operation->getExtraProperties()['CQRSCommand'])) {
+                    $definition = $this->getSchemaDefinition($parentOpenApi, $operation);
+                    if (!$definition) {
                         continue;
                     }
 
-                    $inputClass = $this->findOutputClass($operation->getClass(), Schema::TYPE_INPUT, $operation, []);
-                    if (null === $inputClass) {
-                        continue;
-                    }
-
-                    // Build the operation name like SchemaFactory does so that we have the proper definition in the schema matching this operation
-                    $operationSchemaDefinitionName = $this->definitionNameFactory->create($operation->getClass(), 'json', $inputClass, $operation, []);
-                    if (!$parentOpenApi->getComponents()->getSchemas()->offsetExists($operationSchemaDefinitionName)) {
-                        continue;
-                    }
-
-                    /** @var ArrayObject $definition */
-                    $definition = $parentOpenApi->getComponents()->getSchemas()->offsetGet($operationSchemaDefinitionName);
-                    if (empty($definition['properties'])) {
-                        continue;
-                    }
-
+                    $this->adaptMultiParametersSetters($operation, $definition);
                     $this->applyCommandMapping($operation, $definition);
-                    if ($resourceMetadata instanceof ApiResource) {
-                        // Adapt localized value schema for operation definition (for valid input example)
-                        $this->adaptLocalizedValues($resourceMetadata, $definition);
-                    }
+
+                    // Adapt localized value schema for operation definition (for valid input example)
+                    $this->adaptLocalizedValues($operation->getClass(), $definition);
+                    $this->adaptDecimalNumbers($operation->getClass(), $definition);
                 }
             }
         }
 
+        // Rebuild all the paths so that they are grouped by domain, the tags must be updated but since the Object are immutable
+        // we have to loop through all the existing paths and create modified clones
         $updatedPaths = new Paths();
         /** @var PathItem $pathItem */
         foreach ($parentOpenApi->getPaths()->getPaths() as $path => $pathItem) {
@@ -167,6 +166,28 @@ class CQRSOpenApiFactory implements OpenApiFactoryInterface
         );
 
         return $updatedOpenApi;
+    }
+
+    protected function getSchemaDefinition(OpenApi $openApi, Operation $operation): ?ArrayObject
+    {
+        $inputClass = $this->findOutputClass($operation->getClass(), Schema::TYPE_INPUT, $operation, []);
+        if (null === $inputClass) {
+            return null;
+        }
+
+        // Build the operation name like SchemaFactory does so that we have the proper definition in the schema matching this operation
+        $operationSchemaDefinitionName = $this->definitionNameFactory->create($operation->getClass(), 'json', $inputClass, $operation, []);
+        if (!$openApi->getComponents()->getSchemas()->offsetExists($operationSchemaDefinitionName)) {
+            return null;
+        }
+
+        /** @var ArrayObject $definition */
+        $definition = $openApi->getComponents()->getSchemas()->offsetGet($operationSchemaDefinitionName);
+        if (empty($definition['properties'])) {
+            return null;
+        }
+
+        return $definition;
     }
 
     /**
@@ -208,13 +229,22 @@ class CQRSOpenApiFactory implements OpenApiFactoryInterface
         return $splitDomain[count($splitDomain) - 2];
     }
 
-    protected function adaptLocalizedValues(ApiResource $apiResource, ArrayObject $definition): void
+    /**
+     * Localized values are arrays indexed by locales (or objects with properties matching the locale in JSON), this
+     * method adapts the expected format along with an example to indicate the user that the key to use is the locale.
+     *
+     * @param string $class
+     * @param ArrayObject $definition
+     *
+     * @return void
+     */
+    protected function adaptLocalizedValues(string $class, ArrayObject $definition): void
     {
         if (empty($definition['properties'])) {
             return;
         }
 
-        $resourceClassMetadata = $this->classMetadataFactory->getMetadataFor($apiResource->getClass());
+        $resourceClassMetadata = $this->classMetadataFactory->getMetadataFor($class);
         $resourceReflectionClass = $resourceClassMetadata->getReflectionClass();
 
         foreach ($definition['properties'] as $propertyName => $propertySchema) {
@@ -237,6 +267,176 @@ class CQRSOpenApiFactory implements OpenApiFactoryInterface
         }
     }
 
+    /**
+     * Internally we rely on DecimalNumber for float values because they are more accurate, but in the JSON format
+     * they should be considered as float, so we update the schema for these types.
+     *
+     * @param string $class
+     * @param ArrayObject $definition
+     *
+     * @return void
+     */
+    protected function adaptDecimalNumbers(string $class, ArrayObject $definition): void
+    {
+        if (empty($definition['properties'])) {
+            return;
+        }
+
+        $resourceClassMetadata = $this->classMetadataFactory->getMetadataFor($class);
+        $resourceReflectionClass = $resourceClassMetadata->getReflectionClass();
+
+        foreach ($definition['properties'] as $propertyName => $propertySchema) {
+            if (!$resourceReflectionClass->hasProperty($propertyName)) {
+                continue;
+            }
+
+            $property = $resourceReflectionClass->getProperty($propertyName);
+            if ($property->hasType() && $property->getType() instanceof ReflectionNamedType) {
+                $propertyType = $property->getType()->getName();
+                if ($propertyType === DecimalNumber::class || is_subclass_of($propertyType, DecimalNumber::class)) {
+                    $definition['properties'][$propertyName]['type'] = 'number';
+                    $definition['properties'][$propertyName]['example'] = 42.99;
+                    unset($definition['properties'][$propertyName]['$ref']);
+                    unset($definition['properties'][$propertyName]['allOf']);
+                }
+            }
+        }
+    }
+
+    /**
+     * Some CQRS commands rely on multi-parameters setters, this is usually done to force specifying related parameters
+     * all together because only one is not enough. For such setters we expect the method parameters to be provided in
+     * a sub object, so this method transforms the schema to match this expected sib object.
+     *
+     * Example:
+     *   UpdateProductCommand::setRedirectOption(string $redirectType, int $redirectTarget)
+     *      => expected input ['redirectOption' => ['redirectType' => '301-category', 'redirectTarget' => 42]]
+     *
+     * @param Operation $operation
+     * @param ArrayObject $definition
+     *
+     * @return void
+     */
+    protected function adaptMultiParametersSetters(Operation $operation, ArrayObject $definition): void
+    {
+        $operationClass = ($operation->getInput()['class'] ?? null) ?: $operation->getClass();
+        // We only handle the special case of multi-parameters setters for classes that belong in our Domain
+        if (!class_exists($operationClass) || !$this->classMetadataFactory->hasMetadataFor($operationClass) || !$this->domainObjectDetector->isDomainObject($operationClass)) {
+            return;
+        }
+
+        $operationClassMetadata = $this->classMetadataFactory->getMetadataFor($operationClass);
+        $operationReflectionClass = $operationClassMetadata->getReflectionClass();
+        $methodsWithMultipleArguments = $this->findMethodsWithMultipleArguments($operationReflectionClass);
+        if (empty($methodsWithMultipleArguments)) {
+            return;
+        }
+
+        foreach ($methodsWithMultipleArguments as $methodPropertyName => $setterMethod) {
+            $methodSchema = new ArrayObject([
+                'type' => 'object',
+                'properties' => [
+                ],
+            ]);
+            foreach ($setterMethod->getParameters() as $methodParameter) {
+                // If one of the parameters cannot be handled we skip the whole method
+                if (!$methodParameter->getType() instanceof ReflectionNamedType) {
+                    continue 2;
+                }
+
+                // If one of the parameters is not a built-in value we skip it (too complex to handle, but could be improved someday)
+                if ($this->isDateTime($methodParameter->getType())) {
+                    $methodParameterSchema = new ArrayObject([
+                        'format' => 'date-time',
+                        'type' => 'string',
+                    ]);
+                } elseif ($methodParameter->getType()->isBuiltin()) {
+                    $methodParameterSchema = new ArrayObject([
+                        'type' => $this->getSchemaType($methodParameter->getType()->getName()),
+                    ]);
+                } else {
+                    continue 2;
+                }
+                $methodSchema['properties'][$methodParameter->getName()] = $methodParameterSchema;
+            }
+
+            // Method parameters are now in a sub-object, so they are removed from the top level
+            // They must be removed before we add the methodSchema in case one of the parameter name matches the method name
+            // (or it would unset it right after it was updated)
+            foreach (array_keys($methodSchema['properties']) as $propertyName) {
+                unset($definition['properties'][$propertyName]);
+            }
+            $definition['properties'][$methodPropertyName] = $methodSchema;
+        }
+    }
+
+    protected function getSchemaType(string $builtInType): string
+    {
+        return match ($builtInType) {
+            'int' => 'integer',
+            'float' => 'number',
+            'bool' => 'boolean',
+            default => $builtInType,
+        };
+    }
+
+    protected function isDateTime(ReflectionNamedType $methodParameter): bool
+    {
+        if (!class_exists($methodParameter->getName()) && !interface_exists($methodParameter->getName())) {
+            return false;
+        }
+
+        $implements = class_implements($methodParameter->getName());
+        if (empty($implements)) {
+            return false;
+        }
+
+        return in_array(DateTimeInterface::class, $implements);
+    }
+
+    /**
+     * @param ReflectionClass $reflectionClass
+     *
+     * @return array<string, ReflectionMethod>
+     */
+    protected function findMethodsWithMultipleArguments(ReflectionClass $reflectionClass): array
+    {
+        $methodsWithMultipleArguments = [];
+        foreach ($reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC) as $reflectionMethod) {
+            // We only look into public method that can be setters with multiple parameters
+            if (
+                $reflectionMethod->getNumberOfRequiredParameters() <= 1
+                || $reflectionMethod->isStatic()
+                || $reflectionMethod->isConstructor()
+                || $reflectionMethod->isDestructor()
+            ) {
+                continue;
+            }
+
+            // Remove set/with to get the potential matching property in data (use full method name by default)
+            if (str_starts_with($reflectionMethod->getName(), 'set')) {
+                $methodPropertyName = lcfirst(substr($reflectionMethod->getName(), 3));
+            } elseif (str_starts_with($reflectionMethod->getName(), 'with')) {
+                $methodPropertyName = lcfirst(substr($reflectionMethod->getName(), 4));
+            } else {
+                $methodPropertyName = $reflectionMethod->getName();
+            }
+            $methodsWithMultipleArguments[$methodPropertyName] = $reflectionMethod;
+        }
+
+        return $methodsWithMultipleArguments;
+    }
+
+    /**
+     * Updates the schema property names based on the mapping specified, if for example the CQRS commands has a localizedNames
+     * property that was renamed via the mapping into names then the schema won't use localizedNames but names for the final
+     * schema output so that it matches the actual expected format.
+     *
+     * @param Operation $operation
+     * @param ArrayObject $definition
+     *
+     * @return void
+     */
     protected function applyCommandMapping(Operation $operation, ArrayObject $definition): void
     {
         if (empty($operation->getExtraProperties()['CQRSCommandMapping'])) {

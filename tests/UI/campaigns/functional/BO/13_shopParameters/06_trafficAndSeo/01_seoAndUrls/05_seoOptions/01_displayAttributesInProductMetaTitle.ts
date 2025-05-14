@@ -1,14 +1,10 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-// Import BO pages
-import seoAndUrlsPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
+  boSeoUrlsPage,
   type BrowserContext,
   dataAttributes,
   dataProducts,
@@ -53,10 +49,10 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable display attribut
       boDashboardPage.shopParametersParentLink,
       boDashboardPage.trafficAndSeoLink,
     );
-    await seoAndUrlsPage.closeSfToolBar(page);
+    await boSeoUrlsPage.closeSfToolBar(page);
 
-    const pageTitle = await seoAndUrlsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(seoAndUrlsPage.pageTitle);
+    const pageTitle = await boSeoUrlsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boSeoUrlsPage.pageTitle);
   });
 
   const tests = [
@@ -80,15 +76,15 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable display attribut
     it(`should ${test.args.action} display attributes in product meta title`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}DisplayAttributes`, baseContext);
 
-      const result = await seoAndUrlsPage.setStatusAttributesInProductMetaTitle(page, test.args.enable);
-      expect(result).to.contains(seoAndUrlsPage.successfulSettingsUpdateMessage);
+      const result = await boSeoUrlsPage.setStatusAttributesInProductMetaTitle(page, test.args.enable);
+      expect(result).to.contains(boSeoUrlsPage.successfulSettingsUpdateMessage);
     });
 
     it('should go to FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToFO_${index}`, baseContext);
 
       // Go to FO
-      page = await seoAndUrlsPage.viewMyShop(page);
+      page = await boSeoUrlsPage.viewMyShop(page);
       // Change FO language
       await foClassicHomePage.changeLanguage(page, 'en');
 
@@ -112,8 +108,8 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable display attribut
       // Close page and init page objects
       page = await foClassicHomePage.closePage(browserContext, page, 0);
 
-      const pageTitle = await seoAndUrlsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(seoAndUrlsPage.pageTitle);
+      const pageTitle = await boSeoUrlsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boSeoUrlsPage.pageTitle);
     });
   });
 });

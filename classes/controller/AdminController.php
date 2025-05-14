@@ -3725,10 +3725,9 @@ class AdminControllerCore extends Controller
         }
 
         /* Multilingual fields */
-        $class_vars = get_class_vars(get_class($object));
         $fields = [];
-        if (isset($class_vars['definition']['fields'])) {
-            $fields = $class_vars['definition']['fields'];
+        if (isset($object::$definition['fields'])) {
+            $fields = $object::$definition['fields'];
         }
 
         foreach ($fields as $field => $params) {

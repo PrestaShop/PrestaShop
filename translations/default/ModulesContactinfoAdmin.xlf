@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_contactinfo/ps_contactinfo.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="Modules.Contactinfo.Admin.xlf" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="5e3d6d040d8a81befd75127d526646bc">
         <source>Contact information</source>
         <target>Contact information</target>
-        <note>Line: 49</note>
+        <note>File: modules/ps_contactinfo/ps_contactinfo.php [Line: 49]</note>
       </trans-unit>
       <trans-unit id="0d9dbffc83006542be2bab7419b6ad75">
         <source>Let your customers know how to reach you, display contact information on your store.</source>
         <target>Let your customers know how to reach you, display contact information on your store.</target>
-        <note>Line: 50</note>
+        <note>File: modules/ps_contactinfo/ps_contactinfo.php [Line: 50]</note>
       </trans-unit>
       <trans-unit id="fe460e42fcf313ca4da2d89767690fbc">
         <source>Your theme needs to be compatible with this feature</source>
         <target>Your theme needs to be compatible with this feature</target>
-        <note>Line: 151</note>
+        <note>File: modules/ps_contactinfo/ps_contactinfo.php [Line: 151]</note>
       </trans-unit>
     </body>
   </file>

@@ -25,13 +25,13 @@
     <name>White</name>
   </attribute>
   <attribute id="Off_White">
-    <name>Off White</name>
+    <name>Blanc cassé</name>
   </attribute>
   <attribute id="Red">
-    <name>Red</name>
+    <name>Rouge</name>
   </attribute>
   <attribute id="Black">
-    <name>Black</name>
+    <name>Noir</name>
   </attribute>
   <attribute id="Camel">
     <name>Camel</name>
@@ -40,19 +40,19 @@
     <name>Orange</name>
   </attribute>
   <attribute id="Blue">
-    <name>Blue</name>
+    <name>Bleu</name>
   </attribute>
   <attribute id="Green">
-    <name>Green</name>
+    <name>Vert</name>
   </attribute>
   <attribute id="Yellow">
-    <name>Yellow</name>
+    <name>Jaune</name>
   </attribute>
   <attribute id="Brown">
-    <name>Brown</name>
+    <name>Marron</name>
   </attribute>
   <attribute id="Pink">
-    <name>Pink</name>
+    <name>Rose</name>
   </attribute>
   <attribute id="40x60cm">
     <name>40x60cm</name>

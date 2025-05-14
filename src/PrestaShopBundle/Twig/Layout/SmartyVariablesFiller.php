@@ -106,6 +106,7 @@ class SmartyVariablesFiller
             'pic_dir' => $this->templateVariables->getBaseUrl() . 'upload/',
             'img_base_path' => $this->templateVariables->getBaseUrl() . basename(_PS_ADMIN_DIR_) . '/',
             'multishop_context' => $this->legacyControllerContext->multishop_context,
+            'bootstrap' => false,
         ];
 
         $smartyVariablesAlias = [

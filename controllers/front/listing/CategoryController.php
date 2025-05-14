@@ -72,7 +72,7 @@ class CategoryControllerCore extends ProductListingFrontController
     }
 
     /**
-     * Initializes controller.
+     * Initializes category controller.
      *
      * @see FrontController::init()
      *
@@ -80,21 +80,35 @@ class CategoryControllerCore extends ProductListingFrontController
      */
     public function init(): void
     {
-        $id_category = (int) Tools::getValue('id_category');
-        $this->category = new Category(
-            $id_category,
-            $this->context->language->id
-        );
-
         parent::init();
 
-        if (!Validate::isLoadedObject($this->category) || !$this->category->active || !$this->category->existsInShop($this->context->shop->id)) {
-            if (!$this->category->id_type_redirected) {
-                if (in_array($this->category->redirect_type, [RedirectType::TYPE_PERMANENT, RedirectType::TYPE_TEMPORARY])) {
-                    $this->category->id_type_redirected = $this->getCategoryToRedirectTo();
-                }
+        // Get proper IDs
+        $id_category = (int) Tools::getValue('id_category');
+
+        // Try to load category object
+        $this->category = new Category($id_category, $this->context->language->id);
+
+        // Otherwise immediately show 404
+        if (!Validate::isLoadedObject($this->category)) {
+            header('HTTP/1.1 404 Not Found');
+            header('Status: 404 Not Found');
+            $this->errors[] = $this->trans('This category is no longer available.', [], 'Shop.Notifications.Error');
+            $this->setTemplate('errors/404');
+            $this->notFound = true;
+
+            return;
+        }
+
+        // If this category is not active or not related to current shop in multistore context,
+        // we treat it as not available. We will either redirect away or show error, depending
+        // on settings of the category.
+        if (!$this->category->active || !$this->category->existsInShop($this->context->shop->id)) {
+            // If category should redirect and we don't know where, we take the closest parent
+            if (!$this->category->id_type_redirected && in_array($this->category->redirect_type, [RedirectType::TYPE_PERMANENT, RedirectType::TYPE_TEMPORARY])) {
+                $this->category->id_type_redirected = $this->getCategoryToRedirectTo();
             }
 
+            // Now, we do as configured in "Redirection when not displayed" field on the category
             switch ($this->category->redirect_type) {
                 case RedirectType::TYPE_PERMANENT:
                     header('HTTP/1.1 301 Moved Permanently');
@@ -125,7 +139,11 @@ class CategoryControllerCore extends ProductListingFrontController
             }
 
             return;
-        } elseif (!$this->category->checkAccess($this->context->customer->id)) {
+        }
+
+        // And one last check, we need to validate if current customer is a member
+        // of at least one group allowed to view this category.
+        if (!$this->category->checkAccess($this->context->customer->id)) {
             header('HTTP/1.1 403 Forbidden');
             header('Status: 403 Forbidden');
             $this->errors[] = $this->trans('You do not have access to this category.', [], 'Shop.Notifications.Error');

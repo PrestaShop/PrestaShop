@@ -1,14 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import seoAndUrlsPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls';
-import addSeoAndUrlPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls/add';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
+  boSeoUrlsPage,
+  boSeoUrlsCreatePage,
   type BrowserContext,
   dataSeoPages,
   FakerSeoPage,
@@ -56,16 +53,16 @@ describe('BO - Shop Parameters - Traffic & SEO : Bulk delete seo pages', async (
       boDashboardPage.shopParametersParentLink,
       boDashboardPage.trafficAndSeoLink,
     );
-    await seoAndUrlsPage.closeSfToolBar(page);
+    await boSeoUrlsPage.closeSfToolBar(page);
 
-    const pageTitle = await seoAndUrlsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(seoAndUrlsPage.pageTitle);
+    const pageTitle = await boSeoUrlsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boSeoUrlsPage.pageTitle);
   });
 
   it('should reset all filters and get number of SEO pages in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfSeoPages = await seoAndUrlsPage.resetAndGetNumberOfLines(page);
+    numberOfSeoPages = await boSeoUrlsPage.resetAndGetNumberOfLines(page);
     expect(numberOfSeoPages).to.be.above(0);
   });
 
@@ -74,19 +71,19 @@ describe('BO - Shop Parameters - Traffic & SEO : Bulk delete seo pages', async (
       it('should go to new seo page page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewSeoPage${index + 1}`, baseContext);
 
-        await seoAndUrlsPage.goToNewSeoUrlPage(page);
+        await boSeoUrlsPage.goToNewSeoUrlPage(page);
 
-        const pageTitle = await addSeoAndUrlPage.getPageTitle(page);
-        expect(pageTitle).to.contains(addSeoAndUrlPage.pageTitle);
+        const pageTitle = await boSeoUrlsCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boSeoUrlsCreatePage.pageTitle);
       });
 
       it('should create seo page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createSeoPage${index + 1}`, baseContext);
 
-        const result = await addSeoAndUrlPage.createEditSeoPage(page, seoPageData);
-        expect(result).to.equal(seoAndUrlsPage.successfulCreationMessage);
+        const result = await boSeoUrlsCreatePage.createEditSeoPage(page, seoPageData);
+        expect(result).to.equal(boSeoUrlsPage.successfulCreationMessage);
 
-        const numberOfSeoPagesAfterCreation = await seoAndUrlsPage.getNumberOfElementInGrid(page);
+        const numberOfSeoPagesAfterCreation = await boSeoUrlsPage.getNumberOfElementInGrid(page);
         expect(numberOfSeoPagesAfterCreation).to.equal(numberOfSeoPages + 1 + index);
       });
     });
@@ -96,9 +93,9 @@ describe('BO - Shop Parameters - Traffic & SEO : Bulk delete seo pages', async (
     it('should filter by seo page name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
-      await seoAndUrlsPage.filterTable(page, 'title', 'toDelete');
+      await boSeoUrlsPage.filterTable(page, 'title', 'toDelete');
 
-      const textColumn = await seoAndUrlsPage.getTextColumnFromTable(page, 1, 'title');
+      const textColumn = await boSeoUrlsPage.getTextColumnFromTable(page, 1, 'title');
       expect(textColumn).to.contains('ToDelete');
     });
 
@@ -106,14 +103,14 @@ describe('BO - Shop Parameters - Traffic & SEO : Bulk delete seo pages', async (
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteSeoPage', baseContext);
 
       // Delete seo page in first row
-      const result = await seoAndUrlsPage.bulkDeleteSeoUrlPage(page);
-      expect(result).to.be.equal(seoAndUrlsPage.successfulMultiDeleteMessage);
+      const result = await boSeoUrlsPage.bulkDeleteSeoUrlPage(page);
+      expect(result).to.be.equal(boSeoUrlsPage.successfulMultiDeleteMessage);
     });
 
     it('should reset filter and check number of seo pages', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
-      const numberOfSeoPagesAfterCreation = await seoAndUrlsPage.resetAndGetNumberOfLines(page);
+      const numberOfSeoPagesAfterCreation = await boSeoUrlsPage.resetAndGetNumberOfLines(page);
       expect(numberOfSeoPagesAfterCreation).to.equal(numberOfSeoPages);
     });
   });

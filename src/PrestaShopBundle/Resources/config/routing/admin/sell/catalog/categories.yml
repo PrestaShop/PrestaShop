@@ -66,12 +66,13 @@ admin_categories_delete:
     _legacy_link: AdminCategories:deletecategory
 
 admin_categories_export:
-  path: /export
+  path: /export/{categoryId}
   methods: [ GET ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\CategoryController::exportAction
     _legacy_controller: AdminCategories
     _legacy_link: AdminCategories:exportcategory
+    categoryId: null
 
 admin_categories_create:
   path: /new

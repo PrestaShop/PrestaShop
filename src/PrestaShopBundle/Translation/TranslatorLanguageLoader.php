@@ -32,7 +32,7 @@ use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
 use PrestaShopBundle\Translation\Loader\SqlTranslationLoader;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
-use Symfony\Component\Translation\Translator as BaseTranslatorComponent;
+use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TranslatorLanguageLoader
@@ -45,19 +45,12 @@ class TranslatorLanguageLoader
      */
     private $isAdminContext = false;
 
-    /**
-     * @var ModuleRepository
-     */
-    private $moduleRepository;
+    private XliffFileLoader $xliffFileLoader;
 
-    /**
-     * TranslatorLanguageLoader constructor.
-     *
-     * @param ModuleRepository $moduleRepository
-     */
-    public function __construct(ModuleRepository $moduleRepository)
-    {
-        $this->moduleRepository = $moduleRepository;
+    public function __construct(
+        private readonly ModuleRepository $moduleRepository,
+    ) {
+        $this->xliffFileLoader = new XliffFileLoader();
     }
 
     /**
@@ -85,20 +78,16 @@ class TranslatorLanguageLoader
         if (!method_exists($translator, 'isLanguageLoaded')) {
             return;
         }
-        if ($translator->isLanguageLoaded($locale)) {
-            return;
-        }
-        if (!($translator instanceof BaseTranslatorComponent)) {
-            return;
-        }
 
-        $translator->addLoader('xlf', new XliffFileLoader());
-        if ($withDB) {
-            $translator->addLoader('db', new SqlTranslationLoader());
-            if (null !== $theme) {
-                $sqlThemeTranslationLoader = new SqlTranslationLoader();
-                $sqlThemeTranslationLoader->setTheme($theme);
-                $translator->addLoader('db.theme', $sqlThemeTranslationLoader);
+        if (method_exists($translator, 'addLoader')) {
+            $translator->addLoader('xlf', $this->xliffFileLoader);
+            if ($withDB) {
+                $translator->addLoader('db', new SqlTranslationLoader());
+                if (null !== $theme) {
+                    $sqlThemeTranslationLoader = new SqlTranslationLoader();
+                    $sqlThemeTranslationLoader->setTheme($theme);
+                    $translator->addLoader('db.theme', $sqlThemeTranslationLoader);
+                }
             }
         }
 
@@ -113,22 +102,27 @@ class TranslatorLanguageLoader
 
             foreach ($finder as $file) {
                 [$domain, $locale, $format] = explode('.', $file->getBasename(), 3);
-                $translator->addResource($format, $file, $locale, $domain);
-                if ($withDB) {
-                    if ($type !== 'theme') {
-                        // Load core user-translated wordings
-                        $translator->addResource('db', $domain . '.' . $locale . '.db', $locale, $domain);
+                if (method_exists($translator, 'addResource')) {
+                    $translator->addResource($format, $file, $locale, $domain);
+                    if ($withDB) {
+                        if ($type !== 'theme') {
+                            // Load core user-translated wordings
+                            $translator->addResource('db', $domain . '.' . $locale . '.db', $locale, $domain);
+                        }
+                        if (!$this->isAdminContext && $theme !== null) {
+                            // Load theme user-translated wordings for core + theme wordings
+                            $translator->addResource('db.theme', $domain . '.' . $locale . '.db', $locale, $domain);
+                        }
                     }
-                    if (!$this->isAdminContext && $theme !== null) {
-                        // Load theme user-translated wordings for core + theme wordings
-                        $translator->addResource('db.theme', $domain . '.' . $locale . '.db', $locale, $domain);
-                    }
+                } elseif ($translator instanceof TranslatorBagInterface) {
+                    $catalogue = $translator->getCatalogue($locale);
+                    $catalogue->addCatalogue($this->xliffFileLoader->load($file->getRealPath(), $locale, $domain));
                 }
             }
         }
 
         // Load modules translation catalogues
-        $activeModulesPaths = $this->moduleRepository->getActiveModulesPaths();
+        $activeModulesPaths = $this->moduleRepository->getPresentModulesPaths();
         foreach ($activeModulesPaths as $activeModuleName => $activeModulePath) {
             $this->loadModuleTranslations($translator, $activeModuleName, $activeModulePath, $locale, $withDB);
         }
@@ -137,8 +131,8 @@ class TranslatorLanguageLoader
     /**
      * Loads translations for a single module
      */
-    private function loadModuleTranslations(
-        BaseTranslatorComponent $translator,
+    protected function loadModuleTranslations(
+        TranslatorInterface $translator,
         string $moduleName,
         string $modulePath,
         string $locale,
@@ -162,9 +156,14 @@ class TranslatorLanguageLoader
 
         foreach ($modulesCatalogueFinder as $file) {
             [$domain, $locale, $format] = explode('.', $file->getBasename(), 3);
-            $translator->addResource($format, $file, $locale, $domain);
-            if ($withDB) {
-                $translator->addResource('db', $domain . '.' . $locale . '.db', $locale, $domain);
+            if (method_exists($translator, 'addResource')) {
+                $translator->addResource($format, $file, $locale, $domain);
+                if ($withDB) {
+                    $translator->addResource('db', $domain . '.' . $locale . '.db', $locale, $domain);
+                }
+            } elseif ($translator instanceof TranslatorBagInterface) {
+                $catalogue = $translator->getCatalogue($locale);
+                $catalogue->addCatalogue($this->xliffFileLoader->load($file->getRealPath(), $locale, $domain));
             }
         }
     }

@@ -1,14 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import rolesPage from '@pages/BO/advancedParameters/team/roles';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boEmployeesPage,
   boLoginPage,
+  boRolesPage,
   type BrowserContext,
   type Page,
   utilsCore,
@@ -63,14 +60,14 @@ describe('BO - Advanced Parameters - Team : Sort Roles table', async () => {
 
     await boEmployeesPage.goToRolesPage(page);
 
-    const pageTitle = await rolesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(rolesPage.pageTitle);
+    const pageTitle = await boRolesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boRolesPage.pageTitle);
   });
 
   it('should reset all filters and get number of roles', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfRoles = await rolesPage.resetAndGetNumberOfLines(page);
+    numberOfRoles = await boRolesPage.resetAndGetNumberOfLines(page);
     expect(numberOfRoles).to.be.above(0);
   });
 
@@ -85,10 +82,10 @@ describe('BO - Advanced Parameters - Team : Sort Roles table', async () => {
     it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-      const nonSortedTable = await rolesPage.getAllRowsColumnContent(page, test.args.sortBy);
-      await rolesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+      const nonSortedTable = await boRolesPage.getAllRowsColumnContent(page, test.args.sortBy);
+      await boRolesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-      const sortedTable = await rolesPage.getAllRowsColumnContent(page, test.args.sortBy);
+      const sortedTable = await boRolesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
       const expectedResult = await utilsCore.sortArray(nonSortedTable);
 

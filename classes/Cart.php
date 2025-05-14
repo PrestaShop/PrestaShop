@@ -25,6 +25,7 @@
  */
 use PrestaShop\PrestaShop\Adapter\AddressFactory;
 use PrestaShop\PrestaShop\Adapter\Cache\CacheAdapter;
+use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Adapter\Database;
 use PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider;
@@ -33,6 +34,7 @@ use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Cart\Calculator;
 use PrestaShop\PrestaShop\Core\Cart\CartRow;
 use PrestaShop\PrestaShop\Core\Cart\CartRuleData;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 
@@ -2116,9 +2118,11 @@ class CartCore extends ObjectModel
             $orderId = Order::getIdByCartId($this->id);
             $orderId = (int) $orderId ?: null;
         }
+        $container = (new ContainerFinder(Context::getContext()))->getContainer();
         $calculator = new Calculator(
             $this,
             $id_carrier,
+            $container->get(FeatureFlagStateCheckerInterface::class),
             $computePrecision,
             $orderId
         );
@@ -2917,6 +2921,7 @@ class CartCore extends ObjectModel
             'actionFilterDeliveryOptionList',
             [
                 'delivery_option_list' => &$delivery_option_list,
+                'cart' => $this,
             ]
         );
 

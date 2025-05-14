@@ -1,14 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import webservicePage from '@pages/BO/advancedParameters/webservice';
-import addWebservicePage from '@pages/BO/advancedParameters/webservice/add';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
+  boWebservicesPage,
+  boWebservicesCreatePage,
   type BrowserContext,
   FakerWebservice,
   type Page,
@@ -59,16 +56,16 @@ describe('BO - Advanced Parameters - Webservice : Filter, Sort and pagination we
       boDashboardPage.advancedParametersLink,
       boDashboardPage.webserviceLink,
     );
-    await webservicePage.closeSfToolBar(page);
+    await boWebservicesPage.closeSfToolBar(page);
 
-    const pageTitle = await webservicePage.getPageTitle(page);
-    expect(pageTitle).to.contains(webservicePage.pageTitle);
+    const pageTitle = await boWebservicesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boWebservicesPage.pageTitle);
   });
 
   it('should reset all filters and get number of webservices', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'firstReset', baseContext);
 
-    numberOfWebserviceKeys = await webservicePage.resetAndGetNumberOfLines(page);
+    numberOfWebserviceKeys = await boWebservicesPage.resetAndGetNumberOfLines(page);
     if (numberOfWebserviceKeys !== 0) {
       expect(numberOfWebserviceKeys).to.be.above(0);
     }
@@ -86,19 +83,19 @@ describe('BO - Advanced Parameters - Webservice : Filter, Sort and pagination we
       it('should go to add new webservice key page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewWebserviceKeyPage_${index}`, baseContext);
 
-        await webservicePage.goToAddNewWebserviceKeyPage(page);
+        await boWebservicesPage.goToAddNewWebserviceKeyPage(page);
 
-        const pageTitle = await addWebservicePage.getPageTitle(page);
-        expect(pageTitle).to.contains(addWebservicePage.pageTitleCreate);
+        const pageTitle = await boWebservicesCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boWebservicesCreatePage.pageTitleCreate);
       });
 
       it(`should create webservice key n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createWebserviceKey_${index}`, baseContext);
 
-        const textResult = await addWebservicePage.createEditWebservice(page, webserviceData, true);
-        expect(textResult).to.equal(addWebservicePage.successfulCreationMessage);
+        const textResult = await boWebservicesCreatePage.createEditWebservice(page, webserviceData, true);
+        expect(textResult).to.equal(boWebservicesCreatePage.successfulCreationMessage);
 
-        const numberOfWebserviceKeysAfterCreation = await webservicePage.getNumberOfElementInGrid(page);
+        const numberOfWebserviceKeysAfterCreation = await boWebservicesPage.getNumberOfElementInGrid(page);
         expect(numberOfWebserviceKeysAfterCreation).to.be.equal(numberOfWebserviceKeys + 1 + index);
       });
     });
@@ -140,21 +137,21 @@ describe('BO - Advanced Parameters - Webservice : Filter, Sort and pagination we
       it(`should filter list by ${test.args.filterBy}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.identifier, baseContext);
 
-        await webservicePage.filterWebserviceTable(
+        await boWebservicesPage.filterWebserviceTable(
           page,
           test.args.filterType,
           test.args.filterBy,
           test.args.filterValue,
         );
 
-        const numberOfElementAfterFilter = await webservicePage.getNumberOfElementInGrid(page);
+        const numberOfElementAfterFilter = await boWebservicesPage.getNumberOfElementInGrid(page);
 
         for (let i = 1; i <= numberOfElementAfterFilter; i++) {
           if (test.args.filterBy === 'active') {
-            const wenServiceStatus = await webservicePage.getStatus(page, i);
+            const wenServiceStatus = await boWebservicesPage.getStatus(page, i);
             expect(wenServiceStatus).to.equal(test.args.filterValue === '1');
           } else {
-            const textColumn = await webservicePage.getTextColumnFromTable(page, i, test.args.filterBy);
+            const textColumn = await boWebservicesPage.getTextColumnFromTable(page, i, test.args.filterBy);
             expect(textColumn).to.contains(test.args.filterValue);
           }
         }
@@ -163,7 +160,7 @@ describe('BO - Advanced Parameters - Webservice : Filter, Sort and pagination we
       it('should reset filter and check the number of webservice keys', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `resetFilter_${index}`, baseContext);
 
-        const numberOfElement = await webservicePage.resetAndGetNumberOfLines(page);
+        const numberOfElement = await boWebservicesPage.resetAndGetNumberOfLines(page);
         expect(numberOfElement).to.be.equal(numberOfWebserviceKeys + 11);
       });
     });
@@ -174,28 +171,28 @@ describe('BO - Advanced Parameters - Webservice : Filter, Sort and pagination we
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
-      const paginationNumber = await webservicePage.selectPaginationLimit(page, 10);
+      const paginationNumber = await boWebservicesPage.selectPaginationLimit(page, 10);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await webservicePage.paginationNext(page);
+      const paginationNumber = await boWebservicesPage.paginationNext(page);
       expect(paginationNumber).to.contains('(page 2 / 2)');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await webservicePage.paginationPrevious(page);
+      const paginationNumber = await boWebservicesPage.paginationPrevious(page);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
-      const paginationNumber = await webservicePage.selectPaginationLimit(page, 50);
+      const paginationNumber = await boWebservicesPage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
@@ -213,10 +210,10 @@ describe('BO - Advanced Parameters - Webservice : Filter, Sort and pagination we
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await webservicePage.getAllRowsColumnContent(page, test.args.sortBy);
-        await webservicePage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+        const nonSortedTable = await boWebservicesPage.getAllRowsColumnContent(page, test.args.sortBy);
+        await boWebservicesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        const sortedTable = await webservicePage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await boWebservicesPage.getAllRowsColumnContent(page, test.args.sortBy);
         const expectedResult = await utilsCore.sortArray(nonSortedTable);
 
         if (test.args.sortDirection === 'asc') {
@@ -233,23 +230,23 @@ describe('BO - Advanced Parameters - Webservice : Filter, Sort and pagination we
     it('should filter list by key description', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterAfterEnableDisable', baseContext);
 
-      await webservicePage.filterWebserviceTable(page, 'input', 'description', 'todelete');
+      await boWebservicesPage.filterWebserviceTable(page, 'input', 'description', 'todelete');
 
-      const key = await webservicePage.getTextColumnFromTable(page, 1, 'description');
+      const key = await boWebservicesPage.getTextColumnFromTable(page, 1, 'description');
       expect(key).to.contains('todelete');
     });
 
     it('should delete webservice keys created', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteWebserviceKey', baseContext);
 
-      const textResult = await webservicePage.deleteWithBulkActions(page);
-      expect(textResult).to.equal(webservicePage.successfulMultiDeleteMessage);
+      const textResult = await boWebservicesPage.deleteWithBulkActions(page);
+      expect(textResult).to.equal(boWebservicesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset filter and check the number of webservice keys', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
-      const numberOfElement = await webservicePage.resetAndGetNumberOfLines(page);
+      const numberOfElement = await boWebservicesPage.resetAndGetNumberOfLines(page);
       expect(numberOfElement).to.be.equal(numberOfWebserviceKeys);
     });
   });

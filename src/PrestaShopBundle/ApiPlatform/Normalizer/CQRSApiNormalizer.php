@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Normalizer;
 
+use PrestaShopBundle\ApiPlatform\DomainObjectDetector;
 use PrestaShopBundle\ApiPlatform\LocalizedValueUpdater;
 use PrestaShopBundle\ApiPlatform\Metadata\LocalizedValue;
 use PrestaShopBundle\ApiPlatform\NormalizationMapper;
@@ -66,7 +67,7 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 class CQRSApiNormalizer extends ObjectNormalizer
 {
     public function __construct(
-        protected readonly array $commandsAndQueries,
+        protected readonly DomainObjectDetector $domainObjectDetector,
         protected readonly LocalizedValueUpdater $localizedValueUpdater,
         protected readonly CQRSApiValidator $CQRSApiValidator,
         ?ClassMetadataFactoryInterface $classMetadataFactory = null,
@@ -136,32 +137,12 @@ class CQRSApiNormalizer extends ObjectNormalizer
     protected function isDomainObject(mixed $objectOrType, array $context): bool
     {
         // Some API Resource operation can define another class as the input, which is defined in the context,
-        // if suc input class is a domain class then this normalizer should handle it
+        // if such input class is a domain class then this normalizer should handle it
         if (!empty($context['input']['class'])) {
             $objectOrType = $context['input']['class'];
         }
 
-        // Check the type if a string is provided
-        if (is_string($objectOrType) && class_exists($objectOrType)) {
-            $objectClass = $objectOrType;
-        } elseif (is_object($objectOrType) && class_exists(get_class($objectOrType))) {
-            $objectClass = get_class($objectOrType);
-        } else {
-            return false;
-        }
-
-        // CQRS classes are handled by our domain serializer
-        if (in_array($objectClass, $this->commandsAndQueries)) {
-            return true;
-        }
-
-        // Even if the class is not a command itself, but it is part of the domain namespace
-        // then this normalizer should support it
-        if (str_starts_with($objectClass, 'PrestaShop\PrestaShop\Core\Domain')) {
-            return true;
-        }
-
-        return false;
+        return $this->domainObjectDetector->isDomainObject($objectOrType);
     }
 
     /**

@@ -28,11 +28,11 @@ namespace PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject;
 
 class DiscountType
 {
-    public const CART_DISCOUNT = 'cart_discount';
-    public const PRODUCTS_DISCOUNT = 'products_discount';
+    public const CART_LEVEL = 'cart_level';
+    public const PRODUCT_LEVEL = 'product_level';
     public const FREE_GIFT = 'free_gift';
     public const FREE_SHIPPING = 'free_shipping';
-    public const ORDER_DISCOUNT = 'order_discount';
+    public const ORDER_LEVEL = 'order_level';
 
     public function __construct(private readonly string $value)
     {

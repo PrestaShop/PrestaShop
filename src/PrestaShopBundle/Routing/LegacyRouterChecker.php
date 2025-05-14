@@ -28,12 +28,15 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Routing;
 
+use AdminController;
 use Dispatcher;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use PrestaShopBundle\Routing\Converter\LegacyParametersConverter;
 use PrestaShopBundle\Security\Admin\RequestAttributes;
+use Shop as LegacyShop;
 use Symfony\Bundle\FrameworkBundle\Routing\Attribute\AsRoutingConditionService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -49,6 +52,7 @@ class LegacyRouterChecker
         protected readonly TabRepository $tabRepository,
         protected readonly HookDispatcherInterface $hookDispatcher,
         protected readonly LegacyParametersConverter $legacyParametersConverter,
+        protected readonly LegacyContext $legacyContext,
     ) {
     }
 
@@ -113,11 +117,19 @@ class LegacyRouterChecker
             }
             $controllerName = $queryController;
         }
+
+        // Init shop context from legacy cookie because the ShopContextSubscriber cannot rely on the session attribute yet
+        // since the router listener is executed before the FirewallListener This way we ensure retro compatibility and legacy
+        // controllers that are executed early and have multi-shop logic in their init, initProcess, preProcess, ... methods are
+        // up-to-date
+        $this->initLegacyShopContextFromCookie();
+
         // We load the controller early in the process (during router matching actually), because the controller
         // configuration has many impacts on the contexts, the security listeners, ... And the relevant data can
         // only be retrieved once the legacy class is instantiated to access its public configuration
         // But for performance issues we only instantiate (and init) the controller here once and then store it (along
         // with other related attributes) in the request attributes so they can be retrieved easily by the code depending on them
+        /** @var AdminController $adminController */
         $adminController = new $controllerClass();
         $adminController->init();
 
@@ -189,5 +201,30 @@ class LegacyRouterChecker
             $request->query->has('action') && !empty($request->query->get('action')) => $request->query->get('action'),
             default => 'view',
         };
+    }
+
+    private function initLegacyShopContextFromCookie(): void
+    {
+        $context = $this->legacyContext->getContext();
+        $cookie = $context->cookie;
+        if ($cookie->shopContext && $context->employee->isLoggedBack()) {
+            $split = explode('-', $cookie->shopContext);
+            if (count($split) == 2) {
+                if ($split[0] == 'g') {
+                    if ($context->employee->hasAuthOnShopGroup((int) $split[1])) {
+                        LegacyShop::setContext(LegacyShop::CONTEXT_GROUP, (int) $split[1]);
+                    } else {
+                        $shop_id = (int) $context->employee->getDefaultShopID();
+                        LegacyShop::setContext(LegacyShop::CONTEXT_SHOP, $shop_id);
+                    }
+                } elseif (LegacyShop::getShop((int) $split[1]) && $context->employee->hasAuthOnShop((int) $split[1])) {
+                    $shop_id = (int) $split[1];
+                    LegacyShop::setContext(LegacyShop::CONTEXT_SHOP, $shop_id);
+                } else {
+                    $shop_id = (int) $context->employee->getDefaultShopID();
+                    LegacyShop::setContext(LegacyShop::CONTEXT_SHOP, $shop_id);
+                }
+            }
+        }
     }
 }

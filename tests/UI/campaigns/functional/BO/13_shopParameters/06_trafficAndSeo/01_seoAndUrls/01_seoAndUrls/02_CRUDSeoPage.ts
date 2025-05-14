@@ -1,14 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import seoAndUrlsPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls';
-import addSeoAndUrlPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls/add';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
+  boSeoUrlsPage,
+  boSeoUrlsCreatePage,
   type BrowserContext,
   dataSeoPages,
   FakerSeoPage,
@@ -54,16 +51,16 @@ describe('BO - Shop Parameters - Traffic & SEO : Create, update and delete seo p
       boDashboardPage.shopParametersParentLink,
       boDashboardPage.trafficAndSeoLink,
     );
-    await seoAndUrlsPage.closeSfToolBar(page);
+    await boSeoUrlsPage.closeSfToolBar(page);
 
-    const pageTitle = await seoAndUrlsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(seoAndUrlsPage.pageTitle);
+    const pageTitle = await boSeoUrlsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boSeoUrlsPage.pageTitle);
   });
 
   it('should reset all filters and get number of SEO pages in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfSeoPages = await seoAndUrlsPage.resetAndGetNumberOfLines(page);
+    numberOfSeoPages = await boSeoUrlsPage.resetAndGetNumberOfLines(page);
     expect(numberOfSeoPages).to.be.above(0);
   });
 
@@ -71,19 +68,19 @@ describe('BO - Shop Parameters - Traffic & SEO : Create, update and delete seo p
     it('should go to new seo page page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewSeoPage', baseContext);
 
-      await seoAndUrlsPage.goToNewSeoUrlPage(page);
+      await boSeoUrlsPage.goToNewSeoUrlPage(page);
 
-      const pageTitle = await addSeoAndUrlPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addSeoAndUrlPage.pageTitle);
+      const pageTitle = await boSeoUrlsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boSeoUrlsCreatePage.pageTitle);
     });
 
     it('should create seo page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createSeoPage', baseContext);
 
-      const result = await addSeoAndUrlPage.createEditSeoPage(page, createSeoPageData);
-      expect(result).to.equal(seoAndUrlsPage.successfulCreationMessage);
+      const result = await boSeoUrlsCreatePage.createEditSeoPage(page, createSeoPageData);
+      expect(result).to.equal(boSeoUrlsPage.successfulCreationMessage);
 
-      const numberOfSeoPagesAfterCreation = await seoAndUrlsPage.getNumberOfElementInGrid(page);
+      const numberOfSeoPagesAfterCreation = await boSeoUrlsPage.getNumberOfElementInGrid(page);
       expect(numberOfSeoPagesAfterCreation).to.equal(numberOfSeoPages + 1);
     });
   });
@@ -92,35 +89,35 @@ describe('BO - Shop Parameters - Traffic & SEO : Create, update and delete seo p
     it('should filter by seo page name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdate', baseContext);
 
-      await seoAndUrlsPage.filterTable(page, 'page', createSeoPageData.page);
+      await boSeoUrlsPage.filterTable(page, 'page', createSeoPageData.page);
 
-      const numberOfSeoPagesAfterFilter = await seoAndUrlsPage.getNumberOfElementInGrid(page);
+      const numberOfSeoPagesAfterFilter = await boSeoUrlsPage.getNumberOfElementInGrid(page);
       expect(numberOfSeoPagesAfterFilter).to.be.at.least(1);
 
-      const textColumn = await seoAndUrlsPage.getTextColumnFromTable(page, 1, 'page');
+      const textColumn = await boSeoUrlsPage.getTextColumnFromTable(page, 1, 'page');
       expect(textColumn).to.contains(createSeoPageData.page);
     });
 
     it('should go to edit first seo page page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditSeoPage', baseContext);
 
-      await seoAndUrlsPage.goToEditSeoUrlPage(page, 1);
+      await boSeoUrlsPage.goToEditSeoUrlPage(page, 1);
 
-      const pageTitle = await addSeoAndUrlPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addSeoAndUrlPage.editPageTitle);
+      const pageTitle = await boSeoUrlsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boSeoUrlsCreatePage.editPageTitle);
     });
 
     it('should edit seo page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editSeoPage', baseContext);
 
-      const result = await addSeoAndUrlPage.createEditSeoPage(page, editSeoPageData);
-      expect(result).to.equal(seoAndUrlsPage.successfulUpdateMessage);
+      const result = await boSeoUrlsCreatePage.createEditSeoPage(page, editSeoPageData);
+      expect(result).to.equal(boSeoUrlsPage.successfulUpdateMessage);
     });
 
     it('should reset filter and check number of seo pages', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterUpdate', baseContext);
 
-      const numberOfSeoPagesAfterCreation = await seoAndUrlsPage.resetAndGetNumberOfLines(page);
+      const numberOfSeoPagesAfterCreation = await boSeoUrlsPage.resetAndGetNumberOfLines(page);
       expect(numberOfSeoPagesAfterCreation).to.equal(numberOfSeoPages + 1);
     });
   });
@@ -129,12 +126,12 @@ describe('BO - Shop Parameters - Traffic & SEO : Create, update and delete seo p
     it('should filter by seo page name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
-      await seoAndUrlsPage.filterTable(page, 'page', editSeoPageData.page);
+      await boSeoUrlsPage.filterTable(page, 'page', editSeoPageData.page);
 
-      const numberOfSeoPagesAfterFilter = await seoAndUrlsPage.getNumberOfElementInGrid(page);
+      const numberOfSeoPagesAfterFilter = await boSeoUrlsPage.getNumberOfElementInGrid(page);
       expect(numberOfSeoPagesAfterFilter).to.be.at.least(1);
 
-      const textColumn = await seoAndUrlsPage.getTextColumnFromTable(page, 1, 'page');
+      const textColumn = await boSeoUrlsPage.getTextColumnFromTable(page, 1, 'page');
       expect(textColumn).to.contains(editSeoPageData.page);
     });
 
@@ -142,14 +139,14 @@ describe('BO - Shop Parameters - Traffic & SEO : Create, update and delete seo p
       await testContext.addContextItem(this, 'testIdentifier', 'deleteSeoPage', baseContext);
 
       // delete seo page in first row
-      const result = await seoAndUrlsPage.deleteSeoUrlPage(page, 1);
-      expect(result).to.be.equal(seoAndUrlsPage.successfulDeleteMessage);
+      const result = await boSeoUrlsPage.deleteSeoUrlPage(page, 1);
+      expect(result).to.be.equal(boSeoUrlsPage.successfulDeleteMessage);
     });
 
     it('should reset filter and check number of seo pages', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
-      const numberOfSeoPagesAfterCreation = await seoAndUrlsPage.resetAndGetNumberOfLines(page);
+      const numberOfSeoPagesAfterCreation = await boSeoUrlsPage.resetAndGetNumberOfLines(page);
       expect(numberOfSeoPagesAfterCreation).to.equal(numberOfSeoPages);
     });
   });

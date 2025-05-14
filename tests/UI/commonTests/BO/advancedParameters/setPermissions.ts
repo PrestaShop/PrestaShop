@@ -1,14 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import BO pages
-import permissionsPage from '@pages/BO/advancedParameters/team/permissions';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boEmployeesPage,
   boLoginPage,
+  boPermissionsPage,
   type BrowserContext,
   type EmployeePermission,
   type Page,
@@ -73,7 +70,7 @@ function setPermissions(
     it('should click on the defined profile', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProfileSubTab', baseContext);
 
-      const isSubTabOpened = await permissionsPage.goToProfileSubTab(page, profileName);
+      const isSubTabOpened = await boPermissionsPage.goToProfileSubTab(page, profileName);
       expect(isSubTabOpened, 'Profile sub-tab is not opened!').to.eq(true);
     });
 
@@ -87,7 +84,7 @@ function setPermissions(
             baseContext,
           );
 
-          const isPermissionDefined = await permissionsPage.setPermission(page, permission.className, access);
+          const isPermissionDefined = await boPermissionsPage.setPermission(page, permission.className, access);
           expect(isPermissionDefined, 'Permission is not updated').to.eq(true);
         });
       });

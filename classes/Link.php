@@ -457,6 +457,19 @@ class LinkCore
             $category = $this->getCategoryObject($category, $idLang);
             $params['meta_title'] = Tools::str2url($category->getFieldByLang('meta_title'));
         }
+        if ($dispatcher->hasKeyword($rule, $idLang, 'categories', $idShop)) {
+            $category = $this->getCategoryObject($category, $idLang);
+            $cats = [];
+            foreach (array_reverse($category->getParentsCategories($idLang)) as $cat) {
+                if ($cat['id_category'] == $category->id) {
+                    continue;
+                }
+                if (!in_array($cat['id_category'], Link::$category_disable_rewrite)) {
+                    $cats[] = $cat['link_rewrite'];
+                }
+            }
+            $params['categories'] = implode('/', $cats);
+        }
 
         return $url . Dispatcher::getInstance()->createUrl($rule, $idLang, $params, $this->allow, '', $idShop);
     }

@@ -1,14 +1,11 @@
-// Import utils
 import {expect} from 'chai';
 import testContext from '@utils/testContext';
-
-// Import pages
-import webservicePage from '@pages/BO/advancedParameters/webservice';
-import addWebservicePage from '@pages/BO/advancedParameters/webservice/add';
 
 import {
   boDashboardPage,
   boLoginPage,
+  boWebservicesPage,
+  boWebservicesCreatePage,
   type BrowserContext,
   FakerWebservice,
   type Page,
@@ -55,16 +52,16 @@ describe('BO - Advanced Parameters - Webservice : Create, Read, Update and Delet
       boDashboardPage.advancedParametersLink,
       boDashboardPage.webserviceLink,
     );
-    await webservicePage.closeSfToolBar(page);
+    await boWebservicesPage.closeSfToolBar(page);
 
-    const pageTitle = await webservicePage.getPageTitle(page);
-    expect(pageTitle).to.contains(webservicePage.pageTitle);
+    const pageTitle = await boWebservicesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boWebservicesPage.pageTitle);
   });
 
   it('should reset all filters and get number of webservices', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'firstReset', baseContext);
 
-    numberOfWebserviceKeys = await webservicePage.resetAndGetNumberOfLines(page);
+    numberOfWebserviceKeys = await boWebservicesPage.resetAndGetNumberOfLines(page);
     if (numberOfWebserviceKeys !== 0) expect(numberOfWebserviceKeys).to.be.above(0);
   });
 
@@ -73,19 +70,19 @@ describe('BO - Advanced Parameters - Webservice : Create, Read, Update and Delet
     it('should go to add new webservice key page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewWebserviceKeyPage', baseContext);
 
-      await webservicePage.goToAddNewWebserviceKeyPage(page);
+      await boWebservicesPage.goToAddNewWebserviceKeyPage(page);
 
-      const pageTitle = await addWebservicePage.getPageTitle(page);
-      expect(pageTitle).to.contains(addWebservicePage.pageTitleCreate);
+      const pageTitle = await boWebservicesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boWebservicesCreatePage.pageTitleCreate);
     });
 
     it('should create webservice key and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createWebserviceKey', baseContext);
 
-      const textResult = await addWebservicePage.createEditWebservice(page, createWebserviceData);
-      expect(textResult).to.equal(addWebservicePage.successfulCreationMessage);
+      const textResult = await boWebservicesCreatePage.createEditWebservice(page, createWebserviceData);
+      expect(textResult).to.equal(boWebservicesCreatePage.successfulCreationMessage);
 
-      const numberOfWebserviceKeysAfterCreation = await webservicePage.getNumberOfElementInGrid(page);
+      const numberOfWebserviceKeysAfterCreation = await boWebservicesPage.getNumberOfElementInGrid(page);
       expect(numberOfWebserviceKeysAfterCreation).to.be.equal(numberOfWebserviceKeys + 1);
     });
   });
@@ -95,37 +92,37 @@ describe('BO - Advanced Parameters - Webservice : Create, Read, Update and Delet
     it('should filter list by key description', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterAfterUpdate', baseContext);
 
-      await webservicePage.filterWebserviceTable(
+      await boWebservicesPage.filterWebserviceTable(
         page,
         'input',
         'description',
         createWebserviceData.keyDescription,
       );
 
-      const key = await webservicePage.getTextColumnFromTable(page, 1, 'description');
+      const key = await boWebservicesPage.getTextColumnFromTable(page, 1, 'description');
       expect(key).to.contains(createWebserviceData.keyDescription);
     });
 
     it('should go to edit webservice page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditWebservicePage', baseContext);
 
-      await webservicePage.goToEditWebservicePage(page, 1);
+      await boWebservicesPage.goToEditWebservicePage(page, 1);
 
-      const pageTitle = await addWebservicePage.getPageTitle(page);
-      expect(pageTitle).to.contains(addWebservicePage.pageTitleEdit);
+      const pageTitle = await boWebservicesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boWebservicesCreatePage.pageTitleEdit);
     });
 
     it('should update the webservice key and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateWebserviceKey', baseContext);
 
-      const textResult = await addWebservicePage.createEditWebservice(page, editWebserviceData);
-      expect(textResult).to.equal(addWebservicePage.successfulUpdateMessage);
+      const textResult = await boWebservicesCreatePage.createEditWebservice(page, editWebserviceData);
+      expect(textResult).to.equal(boWebservicesCreatePage.successfulUpdateMessage);
     });
 
     it('should reset filter and check the number of webservice keys', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterUpdate', baseContext);
 
-      const numberOfWebserviceKeyAfterDelete = await webservicePage.resetAndGetNumberOfLines(page);
+      const numberOfWebserviceKeyAfterDelete = await boWebservicesPage.resetAndGetNumberOfLines(page);
       expect(numberOfWebserviceKeyAfterDelete).to.be.equal(numberOfWebserviceKeys + 1);
     });
   });
@@ -135,28 +132,28 @@ describe('BO - Advanced Parameters - Webservice : Create, Read, Update and Delet
     it('should filter list by key description', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterBeforeDelete', baseContext);
 
-      await webservicePage.filterWebserviceTable(
+      await boWebservicesPage.filterWebserviceTable(
         page,
         'input',
         'description',
         editWebserviceData.keyDescription,
       );
 
-      const key = await webservicePage.getTextColumnFromTable(page, 1, 'description');
+      const key = await boWebservicesPage.getTextColumnFromTable(page, 1, 'description');
       expect(key).to.contains(editWebserviceData.keyDescription);
     });
 
     it('should delete webservice key', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteWebserviceKey', baseContext);
 
-      const textResult = await webservicePage.deleteWebserviceKey(page, 1);
-      expect(textResult).to.equal(webservicePage.successfulDeleteMessage);
+      const textResult = await boWebservicesPage.deleteWebserviceKey(page, 1);
+      expect(textResult).to.equal(boWebservicesPage.successfulDeleteMessage);
     });
 
     it('should reset filter and check the number of webservice keys', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
-      const numberOfWebserviceKeyAfterDelete = await webservicePage.resetAndGetNumberOfLines(page);
+      const numberOfWebserviceKeyAfterDelete = await boWebservicesPage.resetAndGetNumberOfLines(page);
       expect(numberOfWebserviceKeyAfterDelete).to.be.equal(numberOfWebserviceKeys);
     });
   });

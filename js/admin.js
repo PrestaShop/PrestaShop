@@ -715,6 +715,11 @@ $(function()
       clearTimeout(ajax_running_timeout);
     });
 
+  // Ensure the spinner is hidden if no AJAX requests are running when the page loads
+  if ($.active === 0) {
+    $('#ajax_running').hide();
+  }
+
   //Check filters value on submit filter
   $("[name='submitFilter']").on('click', function(event) {
     var list_id = $(this).data('list-id');

@@ -3,7 +3,6 @@ import productXml from '@webservices/product/productXml';
 import ProductWS from '@webservices/product/productWs';
 import {addWebserviceKey, removeWebserviceKey, setWebserviceStatus} from '@commonTests/BO/advancedParameters/ws';
 import {enableEcoTaxTest, disableEcoTaxTest} from '@commonTests/BO/international/ecoTax';
-import webservicePage from '@pages/BO/advancedParameters/webservice';
 import getProductXml from '@data/xml/product';
 import {expect} from 'chai';
 
@@ -21,6 +20,7 @@ import {
   boProductsCreateTabSEOPage,
   boProductsCreateTabShippingPage,
   boProductsCreateTabStocksPage,
+  boWebservicesPage,
   type BrowserContext,
   type Page,
   utilsPlaywright,
@@ -89,27 +89,27 @@ describe('WS - Products : CRUD', async () => {
           boDashboardPage.advancedParametersLink,
           boDashboardPage.webserviceLink,
         );
-        await webservicePage.closeSfToolBar(page);
+        await boWebservicesPage.closeSfToolBar(page);
 
-        const pageTitle = await webservicePage.getPageTitle(page);
-        expect(pageTitle).to.contains(webservicePage.pageTitle);
+        const pageTitle = await boWebservicesPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boWebservicesPage.pageTitle);
       });
 
       it('should filter list by key description', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterBeforeDelete', baseContext);
 
-        await webservicePage.resetAndGetNumberOfLines(page);
-        await webservicePage.filterWebserviceTable(
+        await boWebservicesPage.resetAndGetNumberOfLines(page);
+        await boWebservicesPage.filterWebserviceTable(
           page,
           'input',
           'description',
           wsKeyDescription,
         );
 
-        const description = await webservicePage.getTextColumnFromTable(page, 1, 'description');
+        const description = await boWebservicesPage.getTextColumnFromTable(page, 1, 'description');
         expect(description).to.contains(wsKeyDescription);
 
-        wsKey = await webservicePage.getTextColumnFromTable(page, 1, 'key');
+        wsKey = await boWebservicesPage.getTextColumnFromTable(page, 1, 'key');
         authorization = `Basic ${Buffer.from(`${wsKey}:`).toString('base64')}`;
         expect(wsKey).to.not.have.length(0);
       });

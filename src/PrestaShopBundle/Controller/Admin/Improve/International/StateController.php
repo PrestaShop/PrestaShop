@@ -68,6 +68,7 @@ class StateController extends PrestaShopAdminController
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', request.get('AdminCustomers')) || is_granted('update', request.get('AdminCustomers')) || is_granted('create', request.get('AdminManufacturers')) || is_granted('update', request.get('AdminManufacturers')) || is_granted('create', request.get('AdminSuppliers')) || is_granted('update', request.get('AdminSuppliers'))")]
     public function getStatesAction(
         Request $request,
         #[Autowire(service: 'prestashop.adapter.form.choice_provider.country_state_by_id')]
@@ -89,6 +90,50 @@ class StateController extends PrestaShopAdminController
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
+    }
+
+    /**
+     * Provides country states select input options for legacy pages
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', request.get('AdminTaxRulesGroup')) || is_granted('update', request.get('AdminTaxRulesGroup')) || is_granted('create', request.get('AdminStores')) || is_granted('update', request.get('AdminStores'))")]
+    public function getLegacyStatesOptionsAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.adapter.form.choice_provider.country_state_by_id')]
+        CountryStateByIdChoiceProvider $statesProvider
+    ): Response {
+        try {
+            $countryId = (int) $request->query->get('id_country');
+            $states = $statesProvider->getChoices([
+                'id_country' => $countryId,
+            ]);
+
+            if (!empty($states)) {
+                $htmlResponse = '';
+                if ($request->query->get('no_empty')) {
+                    $emptyValue = $request->get('empty_value') ?: '-';
+                    $htmlResponse = '<option value="0">' . htmlentities($emptyValue, ENT_QUOTES, 'utf-8') . '</option>' . "\n";
+                }
+
+                $queryStateId = (int) $request->query->get('id_state');
+                foreach ($states as $stateName => $stateId) {
+                    $htmlResponse .= '<option value="' . $stateId . '"' . ($queryStateId == $stateId ? ' selected="selected"' : '') . '>' . $stateName . '</option>' . "\n";
+                }
+
+                return new Response($htmlResponse);
+            }
+        } catch (Exception $e) {
+            return $this->json([
+                'message' => $this->getErrorMessageForException($e, []),
+            ],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+
+        return new Response('false');
     }
 
     /**

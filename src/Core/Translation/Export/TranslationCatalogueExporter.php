@@ -150,6 +150,7 @@ class TranslationCatalogueExporter
                     'path' => $workingFolder,
                     'default_locale' => $locale,
                     'root_dir' => _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR,
+                    'split_files' => false,
                 ]
             );
         }

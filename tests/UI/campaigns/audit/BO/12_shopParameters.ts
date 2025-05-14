@@ -1,19 +1,9 @@
 import {expect} from 'chai';
 import testContext from '@utils/testContext';
 
-// Import pages
-import titlesPage from '@pages/BO/shopParameters/customerSettings/titles';
-import addTitlePage from '@pages/BO/shopParameters/customerSettings/titles/add';
-import addContactPage from '@pages/BO/shopParameters/contact/add';
-import seoAndUrlsPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls';
-import addSeoAndUrlPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls/add';
-import searchEnginesPage from '@pages/BO/shopParameters/trafficAndSeo/searchEngines';
-import addSearchEnginePage from '@pages/BO/shopParameters/trafficAndSeo/searchEngines/add';
-import tagsPage from '@pages/BO/shopParameters/search/tags';
-import addTagPage from '@pages/BO/shopParameters/search/tags/add';
-
 import {
   boContactsPage,
+  boContactsCreatePage,
   boCustomerSettingsPage,
   boCustomerGroupsPage,
   boCustomerGroupsCreatePage,
@@ -29,8 +19,16 @@ import {
   boSearchPage,
   boSearchAliasPage,
   boSearchAliasCreatePage,
+  boSearchEnginesPage,
+  boSearchEnginesCreatePage,
+  boSeoUrlsPage,
+  boSeoUrlsCreatePage,
   boStoresPage,
   boStoresCreatePage,
+  boTagsPage,
+  boTagsCreatePage,
+  boTitlesPage,
+  boTitlesCreatePage,
   type BrowserContext,
   type Page,
   utilsPlaywright,
@@ -254,8 +252,8 @@ describe('BO - Shop Parameters', async () => {
 
     await boCustomerSettingsPage.goToTitlesPage(page);
 
-    const pageTitle = await titlesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(titlesPage.pageTitle);
+    const pageTitle = await boTitlesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boTitlesPage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -264,10 +262,10 @@ describe('BO - Shop Parameters', async () => {
   it('should go to \'Shop parameters > Customer Settings > Titles > New Title\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewTitle', baseContext);
 
-    await titlesPage.goToAddNewTitle(page);
+    await boTitlesPage.goToAddNewTitle(page);
 
-    const pageTitle = await addTitlePage.getPageTitle(page);
-    expect(pageTitle).to.eq(addTitlePage.pageTitleCreate);
+    const pageTitle = await boTitlesCreatePage.getPageTitle(page);
+    expect(pageTitle).to.eq(boTitlesCreatePage.pageTitleCreate);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -277,7 +275,7 @@ describe('BO - Shop Parameters', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEditTitlePage', baseContext);
 
     await boCustomerSettingsPage.goToTitlesPage(page);
-    await titlesPage.gotoEditTitlePage(page, 1);
+    await boTitlesPage.gotoEditTitlePage(page, 1);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -305,8 +303,8 @@ describe('BO - Shop Parameters', async () => {
 
     await boContactsPage.goToAddNewContactPage(page);
 
-    const pageTitle = await addContactPage.getPageTitle(page);
-    expect(pageTitle).to.contains(addContactPage.pageTitleCreate);
+    const pageTitle = await boContactsCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boContactsCreatePage.pageTitleCreate);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -323,8 +321,8 @@ describe('BO - Shop Parameters', async () => {
 
     await boContactsPage.goToEditContactPage(page, 1);
 
-    const pageTitle = await addContactPage.getPageTitle(page);
-    expect(pageTitle).to.contains(addContactPage.pageTitleEdit);
+    const pageTitle = await boContactsCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boContactsCreatePage.pageTitleEdit);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -375,10 +373,10 @@ describe('BO - Shop Parameters', async () => {
       boDashboardPage.shopParametersParentLink,
       boDashboardPage.trafficAndSeoLink,
     );
-    await seoAndUrlsPage.closeSfToolBar(page);
+    await boSeoUrlsPage.closeSfToolBar(page);
 
-    const pageTitle = await seoAndUrlsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(seoAndUrlsPage.pageTitle);
+    const pageTitle = await boSeoUrlsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boSeoUrlsPage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -387,10 +385,10 @@ describe('BO - Shop Parameters', async () => {
   it('should go to \'Shop Parameters > Traffic & SEO > New page\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToNewSeoPage', baseContext);
 
-    await seoAndUrlsPage.goToNewSeoUrlPage(page);
+    await boSeoUrlsPage.goToNewSeoUrlPage(page);
 
-    const pageTitle = await addSeoAndUrlPage.getPageTitle(page);
-    expect(pageTitle).to.contains(addSeoAndUrlPage.pageTitle);
+    const pageTitle = await boSeoUrlsCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boSeoUrlsCreatePage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -404,12 +402,12 @@ describe('BO - Shop Parameters', async () => {
       boDashboardPage.shopParametersParentLink,
       boDashboardPage.trafficAndSeoLink,
     );
-    await seoAndUrlsPage.closeSfToolBar(page);
+    await boSeoUrlsPage.closeSfToolBar(page);
 
-    await seoAndUrlsPage.goToEditSeoUrlPage(page, 1);
+    await boSeoUrlsPage.goToEditSeoUrlPage(page, 1);
 
-    const pageTitle = await addSeoAndUrlPage.getPageTitle(page);
-    expect(pageTitle).to.contains(addSeoAndUrlPage.editPageTitle);
+    const pageTitle = await boSeoUrlsCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boSeoUrlsCreatePage.editPageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -418,10 +416,10 @@ describe('BO - Shop Parameters', async () => {
   it('should go to \'Shop Parameters > Traffic & SEO > Search Engines\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSearchEnginesPage', baseContext);
 
-    await seoAndUrlsPage.goToSearchEnginesPage(page);
+    await boSeoUrlsPage.goToSearchEnginesPage(page);
 
-    const pageTitle = await searchEnginesPage.getPageTitle(page);
-    expect(pageTitle).to.contain(searchEnginesPage.pageTitle);
+    const pageTitle = await boSearchEnginesPage.getPageTitle(page);
+    expect(pageTitle).to.contain(boSearchEnginesPage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -430,10 +428,10 @@ describe('BO - Shop Parameters', async () => {
   it('should go to \'Shop Parameters > Traffic & SEO > Search Engines > New Search engine\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToNewSearchEnginePage', baseContext);
 
-    await searchEnginesPage.goToNewSearchEnginePage(page);
+    await boSearchEnginesPage.goToNewSearchEnginePage(page);
 
-    const pageTitle = await addSearchEnginePage.getPageTitle(page);
-    expect(pageTitle).to.contain(addSearchEnginePage.pageTitleCreate);
+    const pageTitle = await boSearchEnginesCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contain(boSearchEnginesCreatePage.pageTitleCreate);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -442,11 +440,11 @@ describe('BO - Shop Parameters', async () => {
   it('should go to \'Shop Parameters > Traffic & SEO > Search Engines > Edit Search engine\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEditSearchEngine', baseContext);
 
-    await seoAndUrlsPage.goToSearchEnginesPage(page);
-    await searchEnginesPage.goToEditSearchEnginePage(page, 1);
+    await boSeoUrlsPage.goToSearchEnginesPage(page);
+    await boSearchEnginesPage.goToEditSearchEnginePage(page, 1);
 
-    const pageTitle = await addSearchEnginePage.getPageTitle(page);
-    expect(pageTitle).to.contain(addSearchEnginePage.pageTitleEdit);
+    const pageTitle = await boSearchEnginesCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contain(boSearchEnginesCreatePage.pageTitleEdit);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -507,8 +505,8 @@ describe('BO - Shop Parameters', async () => {
 
     await boSearchPage.goToTagsPage(page);
 
-    const pageTitle = await tagsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(tagsPage.pageTitle);
+    const pageTitle = await boTagsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boTagsPage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -517,10 +515,10 @@ describe('BO - Shop Parameters', async () => {
   it('should go to \'Shop Parameters > Search > Tags > New Tag\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAddTagPage', baseContext);
 
-    await tagsPage.goToAddNewTagPage(page);
+    await boTagsPage.goToAddNewTagPage(page);
 
-    const pageTitle = await addTagPage.getPageTitle(page);
-    expect(pageTitle).to.contains(addTagPage.pageTitleCreate);
+    const pageTitle = await boTagsCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boTagsCreatePage.pageTitleCreate);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);

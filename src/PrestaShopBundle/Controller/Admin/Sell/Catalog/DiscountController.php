@@ -73,7 +73,7 @@ class DiscountController extends PrestaShopAdminController
             'layoutTitle' => $this->trans('Discounts', [], 'Admin.Navigation.Menu'),
             'layoutHeaderToolbarBtn' => [
                 'add_discount' => [
-                    'desc' => $this->trans('Add new discount', [], 'Admin.Catalog.Feature'),
+                    'desc' => $this->trans('Create discount', [], 'Admin.Catalog.Feature'),
                     'icon' => 'add_circle_outline',
                     'modal_target' => '#createDiscountModal',
                 ],

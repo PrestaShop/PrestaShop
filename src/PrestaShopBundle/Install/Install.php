@@ -1051,16 +1051,17 @@ class Install extends AbstractInstall
             }
 
             if (!$moduleActionIsExecuted) {
-                $moduleErrors = [
-                    str_replace(
-                        '%module%',
-                        $module_name,
-                        $errorMessage
-                    ),
+                $moduleErrors = [str_replace(
+                    '%module%',
+                    $module_name,
+                    $errorMessage
+                ),
                 ];
 
                 if (!empty($moduleException)) {
                     $moduleErrors[] = $moduleException;
+                } else {
+                    $moduleErrors[] = $moduleManager->getError($module_name);
                 }
 
                 $errors[$module_name] = $moduleErrors;

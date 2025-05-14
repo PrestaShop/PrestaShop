@@ -1,13 +1,10 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import seoAndUrlsPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
+  boSeoUrlsPage,
   type BrowserContext,
   dataSeoPages,
   type Page,
@@ -53,16 +50,16 @@ describe('BO - Shop Parameters - Traffic & SEO : Filter SEO pages with id, page,
       boDashboardPage.shopParametersParentLink,
       boDashboardPage.trafficAndSeoLink,
     );
-    await seoAndUrlsPage.closeSfToolBar(page);
+    await boSeoUrlsPage.closeSfToolBar(page);
 
-    const pageTitle = await seoAndUrlsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(seoAndUrlsPage.pageTitle);
+    const pageTitle = await boSeoUrlsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boSeoUrlsPage.pageTitle);
   });
 
   it('should reset all filters and get number of SEO pages in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfSeoPages = await seoAndUrlsPage.resetAndGetNumberOfLines(page);
+    numberOfSeoPages = await boSeoUrlsPage.resetAndGetNumberOfLines(page);
     expect(numberOfSeoPages).to.be.above(0);
   });
 
@@ -78,17 +75,17 @@ describe('BO - Shop Parameters - Traffic & SEO : Filter SEO pages with id, page,
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}`, baseContext);
 
-        await seoAndUrlsPage.filterTable(
+        await boSeoUrlsPage.filterTable(
           page,
           test.args.filterBy,
           test.args.filterValue,
         );
 
-        const numberOfSeoPagesAfterFilter = await seoAndUrlsPage.getNumberOfElementInGrid(page);
+        const numberOfSeoPagesAfterFilter = await boSeoUrlsPage.getNumberOfElementInGrid(page);
         expect(numberOfSeoPagesAfterFilter).to.be.at.most(numberOfSeoPages);
 
         for (let i = 1; i <= numberOfSeoPagesAfterFilter; i++) {
-          const textColumn = await seoAndUrlsPage.getTextColumnFromTable(page, i, test.args.filterBy);
+          const textColumn = await boSeoUrlsPage.getTextColumnFromTable(page, i, test.args.filterBy);
           expect(textColumn).to.contains(test.args.filterValue);
         }
       });
@@ -96,7 +93,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Filter SEO pages with id, page,
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfSeoPagesAfterReset = await seoAndUrlsPage.resetAndGetNumberOfLines(page);
+        const numberOfSeoPagesAfterReset = await boSeoUrlsPage.resetAndGetNumberOfLines(page);
         expect(numberOfSeoPagesAfterReset).to.equal(numberOfSeoPages);
       });
     });

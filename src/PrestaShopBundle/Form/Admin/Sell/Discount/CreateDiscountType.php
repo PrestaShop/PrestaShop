@@ -37,21 +37,21 @@ class CreateDiscountType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $discountTypes = [
-            DiscountType::CART_DISCOUNT => [
-                'type' => DiscountType::CART_DISCOUNT,
+            DiscountType::CART_LEVEL => [
+                'type' => DiscountType::CART_LEVEL,
                 'label' => $this->trans('On cart amount', 'Admin.Catalog.Feature'),
                 'icon' => 'shopping_cart',
                 'help' => $this->trans('Apply on total cart', 'Admin.Catalog.Feature'),
             ],
-            DiscountType::PRODUCTS_DISCOUNT => [
-                'type' => DiscountType::PRODUCTS_DISCOUNT,
+            DiscountType::PRODUCT_LEVEL => [
+                'type' => DiscountType::PRODUCT_LEVEL,
                 'label' => $this->trans('On catalog products', 'Admin.Catalog.Feature'),
                 'icon' => 'shoppingmode',
                 'help' => $this->trans('Apply on catalog products', 'Admin.Catalog.Feature'),
             ],
             DiscountType::FREE_GIFT => [
                 'type' => DiscountType::FREE_GIFT,
-                'label' => $this->trans('On cart amount', 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Free gift', 'Admin.Catalog.Feature'),
                 'icon' => 'card_giftcard',
                 'help' => $this->trans('Apply on free gift', 'Admin.Catalog.Feature'),
             ],
@@ -61,8 +61,8 @@ class CreateDiscountType extends TranslatorAwareType
                 'icon' => 'local_shipping',
                 'help' => $this->trans('Apply on shipping fees', 'Admin.Catalog.Feature'),
             ],
-            DiscountType::ORDER_DISCOUNT => [
-                'type' => DiscountType::ORDER_DISCOUNT,
+            DiscountType::ORDER_LEVEL => [
+                'type' => DiscountType::ORDER_LEVEL,
                 'label' => $this->trans('On total order', 'Admin.Catalog.Feature'),
                 'icon' => 'article',
                 'help' => $this->trans('Apply on cart and shipping fees', 'Admin.Catalog.Feature'),
@@ -83,6 +83,7 @@ class CreateDiscountType extends TranslatorAwareType
                 'choice_name' => 'type',
                 'expanded' => true,
                 'multiple' => false,
+                'data' => $transformedData[DiscountType::CART_LEVEL],
                 'block_prefix' => 'discount_type',
                 'attr' => [
                     'class' => 'discount-type',

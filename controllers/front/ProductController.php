@@ -144,10 +144,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             }
         }
 
-        // Try to load product object, otherwise immediately redirect to 404
+        // Try to load product object
         if ($this->id_product) {
             $this->product = new Product($this->id_product, true, $this->context->language->id, $this->context->shop->id);
         }
+
+        // Otherwise immediately show 404
         if (!Validate::isLoadedObject($this->product)) {
             header('HTTP/1.1 404 Not Found');
             header('Status: 404 Not Found');
@@ -587,7 +589,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         $this->context->smarty->assign([
             'no_tax' => !Configuration::get('PS_TAX') || !$tax,
-            'tax_enabled' => Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC'),
+            'tax_enabled' => Configuration::get('PS_TAX'),
             'customer_group_without_tax' => Group::getPriceDisplayMethod($this->context->customer->id_default_group),
         ]);
     }

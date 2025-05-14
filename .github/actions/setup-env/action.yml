@@ -22,11 +22,6 @@ inputs:
     required: false
     description: True To Auto Install
     default: 'true'
-  CP_API_CONFIG:
-    # Workaround until 8.1.x is supported
-    required: false
-    description: True To Copy API Config
-    default: 'false'
   DEV_MODE:
     required: false
     description: True to enable Developer mode
@@ -39,6 +34,10 @@ inputs:
     required: false
     description: Prestashop folder
     default: '.'
+  DOCKER_DAEMON:
+    required: false
+    description: true to launch docker as a daemon, by default, false to see the whole initialization logs but the rest of the workflow is blocked
+    default: 'true'
 
 runs:
   using: 'composite'
@@ -49,7 +48,7 @@ runs:
       shell: bash
       run: |
         ## Install MkCert
-          sudo apt-get update
+          sudo apt-get --allow-releaseinfo-change update
           sudo apt install libnss3-tools
           curl -JLO "https://dl.filippo.io/mkcert/latest?for=linux/amd64"
           chmod +x mkcert-v*-linux-amd64
@@ -92,6 +91,9 @@ runs:
         ADMIN_PASSWD: 'Correct Horse Battery Staple'
       run: |
         cd ${{ inputs.PRESTASHOP_DIR }}
-        USER_ID=$(id -u) GROUP_ID=$(id -g) \
-        docker compose -f ${{ (inputs.DB_SERVER == 'mysql') && 'docker-compose.yml' || 'docker-compose.mariadb.yml' }} up -d prestashop-git --build
-        bash -c 'while [[ "$(curl -L -s -o /dev/null -w %{http_code} ${{ env.URL_FO }}${{ env.URL_PING }})" != "200" ]]; do sleep 5; done'
+        if [[ "${{ inputs.DOCKER_DAEMON }}" = "true" ]]; then
+          USER_ID=$(id -u) GROUP_ID=$(id -g) docker compose -f ${{ (inputs.DB_SERVER == 'mysql') && 'docker-compose.yml' || 'docker-compose.mariadb.yml' }} up -d prestashop-git --build
+          bash -c 'while [[ "$(curl -L -s -o /dev/null -w %{http_code} ${{ env.URL_FO }}${{ env.URL_PING }})" != "200" ]]; do sleep 5; done'
+        else
+          USER_ID=$(id -u) GROUP_ID=$(id -g) docker compose -f ${{ (inputs.DB_SERVER == 'mysql') && 'docker-compose.yml' || 'docker-compose.mariadb.yml' }} up prestashop-git --build
+        fi

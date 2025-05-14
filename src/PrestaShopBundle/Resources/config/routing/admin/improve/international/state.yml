@@ -5,6 +5,14 @@ admin_country_states:
     _controller: PrestaShopBundle\Controller\Admin\Improve\International\StateController::getStatesAction
     _legacy_controller: AdminStates
 
+admin_country_states_options:
+  path: /country-states-options
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Improve\International\StateController::getLegacyStatesOptionsAction
+    _legacy_controller: AdminStates
+    _legacy_link: AdminStates:states
+
 admin_states_index:
   path: /
   methods: [ GET ]

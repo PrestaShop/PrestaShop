@@ -1,7 +1,6 @@
 import {expect} from 'chai';
 import {pricesDropPage} from '@pages/FO/classic/pricesDrop';
 import {newProductsPage} from '@pages/FO/classic/newProducts';
-import {bestSalesPage} from '@pages/FO/classic/bestSales';
 import {deliveryPage} from '@pages/FO/classic/delivery';
 import {legalNoticePage} from '@pages/FO/classic/legalNotice';
 import {guestOrderTrackingPage} from '@pages/FO/classic/orderTracking/guestOrderTracking';
@@ -14,6 +13,7 @@ import {
   dataCategories,
   dataProducts,
   foClassicAboutUsPage,
+  foClassicBestSalesPage,
   foClassicCategoryPage,
   foClassicContactUsPage,
   foClassicCreateAccountPage,
@@ -112,7 +112,7 @@ describe('Check FO public pages', async () => {
     [
       {linkSelector: 'Prices drop', pageTitle: pricesDropPage.pageTitle},
       {linkSelector: 'New products', pageTitle: newProductsPage.pageTitle},
-      {linkSelector: 'Best sellers', pageTitle: bestSalesPage.pageTitle},
+      {linkSelector: 'Best sellers', pageTitle: foClassicBestSalesPage.pageTitle},
     ].forEach((args, index: number) => {
       it(`should check '${args.linkSelector}' footer links`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkProductsFooterLinks${index}`, baseContext);

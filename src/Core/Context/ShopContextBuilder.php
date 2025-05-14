@@ -77,6 +77,9 @@ class ShopContextBuilder implements LegacyContextBuilderInterface
             associatedShopIds: $this->shopRepository->getAssociatedShopIds($this->shopConstraint),
             isMultiShopEnabled: $this->multistoreFeature->isActive(),
             isMultiShopUsed: $this->multistoreFeature->isUsed(),
+            groupSharingStocks: (bool) $legacyShop->getGroup()->share_stock,
+            groupSharingCustomers: (bool) $legacyShop->getGroup()->share_customer,
+            groupSharingOrders: (bool) $legacyShop->getGroup()->share_order,
         );
     }
 

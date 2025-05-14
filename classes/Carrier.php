@@ -258,14 +258,19 @@ class CarrierCore extends ObjectModel
      */
     public function delete()
     {
-        if (!parent::delete()) {
-            return false;
-        }
-        Carrier::cleanPositions();
+        if ($this->isUsed()) {
+            return parent::softDelete() && Carrier::cleanPositions();
+        } else {
+            if (!parent::delete()) {
+                return false;
+            }
 
-        return Db::getInstance()->delete('cart_rule_carrier', 'id_carrier = ' . (int) $this->id)
-                && Db::getInstance()->delete('module_carrier', 'id_reference = ' . (int) $this->id_reference)
-                && $this->deleteTaxRulesGroup(Shop::getShops(true, null, true));
+            Carrier::cleanPositions();
+
+            return Db::getInstance()->delete('cart_rule_carrier', 'id_carrier = ' . (int) $this->id)
+                    && Db::getInstance()->delete('module_carrier', 'id_reference = ' . (int) $this->id_reference)
+                    && $this->deleteTaxRulesGroup(Shop::getShops(true, null, true));
+        }
     }
 
     /**

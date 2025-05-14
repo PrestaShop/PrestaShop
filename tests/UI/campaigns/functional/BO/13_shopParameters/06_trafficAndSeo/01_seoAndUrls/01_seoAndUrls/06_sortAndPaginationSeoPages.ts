@@ -1,13 +1,10 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import seoAndUrlsPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
+  boSeoUrlsPage,
   type BrowserContext,
   type Page,
   utilsCore,
@@ -49,16 +46,16 @@ describe('BO - Shop Parameters - Traffic & SEO : Sort and pagination seo pages',
       boDashboardPage.shopParametersParentLink,
       boDashboardPage.trafficAndSeoLink,
     );
-    await seoAndUrlsPage.closeSfToolBar(page);
+    await boSeoUrlsPage.closeSfToolBar(page);
 
-    const pageTitle = await seoAndUrlsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(seoAndUrlsPage.pageTitle);
+    const pageTitle = await boSeoUrlsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boSeoUrlsPage.pageTitle);
   });
 
   it('should reset all filters and get number of SEO pages in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfSeoPages = await seoAndUrlsPage.resetAndGetNumberOfLines(page);
+    numberOfSeoPages = await boSeoUrlsPage.resetAndGetNumberOfLines(page);
     expect(numberOfSeoPages).to.be.above(0);
   });
 
@@ -86,11 +83,11 @@ describe('BO - Shop Parameters - Traffic & SEO : Sort and pagination seo pages',
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await seoAndUrlsPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const nonSortedTable = await boSeoUrlsPage.getAllRowsColumnContent(page, test.args.sortBy);
 
-        await seoAndUrlsPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+        await boSeoUrlsPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        const sortedTable = await seoAndUrlsPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await boSeoUrlsPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
@@ -120,28 +117,28 @@ describe('BO - Shop Parameters - Traffic & SEO : Sort and pagination seo pages',
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
-      const paginationNumber = await seoAndUrlsPage.selectPaginationLimit(page, 10);
+      const paginationNumber = await boSeoUrlsPage.selectPaginationLimit(page, 10);
       expect(paginationNumber).to.contains(`(page 1 / ${Math.ceil(numberOfSeoPages / 10)})`);
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await seoAndUrlsPage.paginationNext(page);
+      const paginationNumber = await boSeoUrlsPage.paginationNext(page);
       expect(paginationNumber).to.contains(`(page 2 / ${Math.ceil(numberOfSeoPages / 10)})`);
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await seoAndUrlsPage.paginationPrevious(page);
+      const paginationNumber = await boSeoUrlsPage.paginationPrevious(page);
       expect(paginationNumber).to.contains(`(page 1 / ${Math.ceil(numberOfSeoPages / 10)})`);
     });
 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
-      const paginationNumber = await seoAndUrlsPage.selectPaginationLimit(page, 50);
+      const paginationNumber = await boSeoUrlsPage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.contains(`(page 1 / ${Math.ceil(numberOfSeoPages / 50)})`);
     });
   });

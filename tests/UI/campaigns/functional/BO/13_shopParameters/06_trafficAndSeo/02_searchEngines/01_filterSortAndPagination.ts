@@ -1,14 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import seoAndUrlsPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls';
-import searchEnginesPage from '@pages/BO/shopParameters/trafficAndSeo/searchEngines';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
+  boSearchEnginesPage,
+  boSeoUrlsPage,
   type BrowserContext,
   dataSearchEngines,
   type Page,
@@ -57,23 +54,23 @@ describe('BO - Shop Parameters - Traffic & SEO : Filter, sort and pagination sea
       boDashboardPage.trafficAndSeoLink,
     );
 
-    const pageTitle = await seoAndUrlsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(seoAndUrlsPage.pageTitle);
+    const pageTitle = await boSeoUrlsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boSeoUrlsPage.pageTitle);
   });
 
   it('should go to \'Search Engines\' pge', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSearchEnginesPage', baseContext);
 
-    await seoAndUrlsPage.goToSearchEnginesPage(page);
+    await boSeoUrlsPage.goToSearchEnginesPage(page);
 
-    const pageTitle = await searchEnginesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(searchEnginesPage.pageTitle);
+    const pageTitle = await boSearchEnginesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boSearchEnginesPage.pageTitle);
   });
 
   it('should reset all filters and get number of search engines in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfSearchEngines = await searchEnginesPage.resetAndGetNumberOfLines(page);
+    numberOfSearchEngines = await boSearchEnginesPage.resetAndGetNumberOfLines(page);
     expect(numberOfSearchEngines).to.be.above(0);
   });
 
@@ -88,17 +85,17 @@ describe('BO - Shop Parameters - Traffic & SEO : Filter, sort and pagination sea
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}`, baseContext);
 
-        await searchEnginesPage.filterTable(
+        await boSearchEnginesPage.filterTable(
           page,
           test.args.filterBy,
           test.args.filterValue,
         );
 
-        const numberOfSearchEnginesAfterFilter = await searchEnginesPage.getNumberOfElementInGrid(page);
+        const numberOfSearchEnginesAfterFilter = await boSearchEnginesPage.getNumberOfElementInGrid(page);
         expect(numberOfSearchEnginesAfterFilter).to.be.at.most(numberOfSearchEngines);
 
         for (let i = 1; i <= numberOfSearchEnginesAfterFilter; i++) {
-          const textColumn = await searchEnginesPage.getTextColumn(
+          const textColumn = await boSearchEnginesPage.getTextColumn(
             page,
             i,
             test.args.filterBy,
@@ -110,7 +107,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Filter, sort and pagination sea
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfSearchEnginesAfterReset = await searchEnginesPage.resetAndGetNumberOfLines(page);
+        const numberOfSearchEnginesAfterReset = await boSearchEnginesPage.resetAndGetNumberOfLines(page);
         expect(numberOfSearchEnginesAfterReset).to.equal(numberOfSearchEngines);
       });
     });
@@ -154,11 +151,11 @@ describe('BO - Shop Parameters - Traffic & SEO : Filter, sort and pagination sea
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await searchEnginesPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const nonSortedTable = await boSearchEnginesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
-        await searchEnginesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+        await boSearchEnginesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        const sortedTable = await searchEnginesPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await boSearchEnginesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
@@ -188,28 +185,28 @@ describe('BO - Shop Parameters - Traffic & SEO : Filter, sort and pagination sea
     it('should select 20 items by page and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
-      const paginationNumber = await searchEnginesPage.selectPaginationLimit(page, 20);
+      const paginationNumber = await boSearchEnginesPage.selectPaginationLimit(page, 20);
       expect(paginationNumber).to.contain('(page 1 / 2)');
     });
 
     it('should go to next page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await searchEnginesPage.paginationNext(page);
+      const paginationNumber = await boSearchEnginesPage.paginationNext(page);
       expect(paginationNumber).to.contain('(page 2 / 2)');
     });
 
     it('should go to previous page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await searchEnginesPage.paginationPrevious(page);
+      const paginationNumber = await boSearchEnginesPage.paginationPrevious(page);
       expect(paginationNumber).to.contain('(page 1 / 2)');
     });
 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
-      const paginationNumber = await searchEnginesPage.selectPaginationLimit(page, 50);
+      const paginationNumber = await boSearchEnginesPage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.contain('(page 1 / 1)');
     });
   });

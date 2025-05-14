@@ -1,5 +1,4 @@
 import testContext from '@utils/testContext';
-import seoAndUrlsPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls';
 import {expect} from 'chai';
 
 import {
@@ -8,6 +7,7 @@ import {
   boProductsPage,
   boProductsCreatePage,
   boProductsCreateTabSEOPage,
+  boSeoUrlsPage,
   type BrowserContext,
   FakerProduct,
   foClassicHomePage,
@@ -110,24 +110,24 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', a
           boProductsCreatePage.trafficAndSeoLink,
         );
 
-        const pageTitle = await seoAndUrlsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(seoAndUrlsPage.pageTitle);
+        const pageTitle = await boSeoUrlsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boSeoUrlsPage.pageTitle);
       });
 
       it(`should ${test.args.action} accented URL`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}AccentedUrl`, baseContext);
 
-        const result = await seoAndUrlsPage.enableDisableAccentedURL(page, test.args.enable);
-        expect(result).to.contains(seoAndUrlsPage.successfulSettingsUpdateMessage);
+        const result = await boSeoUrlsPage.enableDisableAccentedURL(page, test.args.enable);
+        expect(result).to.contains(boSeoUrlsPage.successfulSettingsUpdateMessage);
       });
 
       it('should go to \'Catalog > Products\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToProductsPageAfter${test.args.action}`, baseContext);
 
-        await seoAndUrlsPage.goToSubMenu(
+        await boSeoUrlsPage.goToSubMenu(
           page,
-          seoAndUrlsPage.catalogParentLink,
-          seoAndUrlsPage.productsLink,
+          boSeoUrlsPage.catalogParentLink,
+          boSeoUrlsPage.productsLink,
         );
 
         const pageTitle = await boProductsPage.getPageTitle(page);

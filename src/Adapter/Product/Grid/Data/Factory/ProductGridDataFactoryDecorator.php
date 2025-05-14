@@ -228,11 +228,13 @@ class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
                 $priceTaxIncluded = $priceTaxIncluded->plus($ecotaxTaxIncluded);
             }
 
+            $products[$i]['price_tax_excluded_decimal_value'] = $priceTaxExcluded;
             $products[$i]['price_tax_excluded'] = $this->locale->formatPrice(
                 (string) $priceTaxExcluded,
                 $currency->iso_code
             );
 
+            $products[$i]['price_tax_included_decimal_value'] = $priceTaxIncluded;
             $products[$i]['price_tax_included'] = $this->locale->formatPrice(
                 (string) $priceTaxIncluded,
                 $currency->iso_code

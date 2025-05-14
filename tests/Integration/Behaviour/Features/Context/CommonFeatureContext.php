@@ -90,6 +90,7 @@ use Page;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Context\ContextBuilderPreparer;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use Product;
 use ProductAttribute;
 use ProductDownload;
@@ -683,6 +684,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         DateRange::resetStaticCache();
         EmployeeSession::resetStaticCache();
         Feature::resetStaticCache();
+        self::getContainer()->get(FeatureFlagStateCheckerInterface::class)->reset();
         FeatureValue::resetStaticCache();
         Gender::resetStaticCache();
         GroupReduction::resetStaticCache();

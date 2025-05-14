@@ -37,12 +37,19 @@ use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use Shop;
+use ShopGroup;
 
 class ShopContextBuilderTest extends TestCase
 {
     public function testBuild(): void
     {
         $shop = $this->mockShop();
+        $shopGroup = $this->createMock(ShopGroup::class);
+        $shopGroup->share_order = 1;
+        $shopGroup->share_customer = true;
+        $shopGroup->share_stock = '1';
+        $shop->expects(static::exactly(3))->method('getGroup')->willReturn($shopGroup);
+
         $builder = new ShopContextBuilder(
             $this->mockShopRepository($shop),
             $this->createMock(ContextStateManager::class),
@@ -68,6 +75,9 @@ class ShopContextBuilderTest extends TestCase
         $this->assertEquals([1, 3], $shopContext->getAssociatedShopIds());
         $this->assertFalse($shopContext->isMultiShopEnabled());
         $this->assertFalse($shopContext->isMultiShopUsed());
+        $this->assertTrue($shopContext->hasGroupSharingStocks());
+        $this->assertTrue($shopContext->hasGroupSharingCustomers());
+        $this->assertTrue($shopContext->hasGroupSharingOrders());
     }
 
     public function testNoShopId(): void

@@ -69,7 +69,6 @@ final class SecurityAttributeLinterCommand extends Command
         'admin_common_reset_search_by_filter_id',
         'admin_common_secured_file_image_reader',
         'admin_common_sidebar',
-        'admin_country_states',
         'admin_currencies_update_live_exchange_rates',
         'admin_emails_send_test',
         'admin_employees_change_form_language',

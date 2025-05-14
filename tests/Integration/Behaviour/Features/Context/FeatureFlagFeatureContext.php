@@ -115,22 +115,6 @@ class FeatureFlagFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @AfterScenario
-     */
-    public function cleanFixtures()
-    {
-        $doctrineEntityManager = $this->getDoctrineEntityManager();
-
-        /** @var array<int, FeatureFlag> $allFlags */
-        $allFlags = $doctrineEntityManager->getRepository(FeatureFlag::class)->findAll();
-        foreach ($allFlags as $flag) {
-            $doctrineEntityManager->remove($flag);
-        }
-
-        $doctrineEntityManager->flush();
-    }
-
-    /**
      * @AfterStep
      */
     public function clearEntityManager()

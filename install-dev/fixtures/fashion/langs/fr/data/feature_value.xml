@@ -4,13 +4,13 @@
     <value>Polyester</value>
   </feature_value>
   <feature_value id="Wool">
-    <value>Wool</value>
+    <value>Laine</value>
   </feature_value>
   <feature_value id="Ceramic">
     <value>Céramique</value>
   </feature_value>
   <feature_value id="Cotton">
-    <value>Cotton</value>
+    <value>Coton</value>
   </feature_value>
   <feature_value id="Recycled_Cardboard">
     <value>Carton recycl&#xE9;</value>

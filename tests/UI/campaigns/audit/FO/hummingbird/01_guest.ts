@@ -2,7 +2,6 @@ import {expect} from 'chai';
 import {disableHummingbird, enableHummingbird} from '@commonTests/BO/design/hummingbird';
 import pricesDropPage from '@pages/FO/hummingbird/pricesDrop';
 import newProductsPage from '@pages/FO/hummingbird/newProducts';
-import bestSalesPage from '@pages/FO/hummingbird/bestSales';
 import deliveryPage from '@pages/FO/hummingbird/delivery';
 import legalNoticePage from '@pages/FO/hummingbird/legalNotice';
 import guestOrderTrackingPage from '@pages/FO/hummingbird/orderTracking/guestOrderTracking';
@@ -15,6 +14,7 @@ import {
   dataCategories,
   dataProducts,
   foHummingbirdAboutUsPage,
+  foHummingbirdBestSalesPage,
   foHummingbirdCategoryPage,
   foHummingbirdContactUsPage,
   foHummingbirdCreateAccountPage,
@@ -117,7 +117,7 @@ describe('Check FO public pages', async () => {
       [
         {linkSelector: 'Prices drop', pageTitle: pricesDropPage.pageTitle},
         {linkSelector: 'New products', pageTitle: newProductsPage.pageTitle},
-        {linkSelector: 'Best sellers', pageTitle: bestSalesPage.pageTitle},
+        {linkSelector: 'Best sellers', pageTitle: foHummingbirdBestSalesPage.pageTitle},
       ].forEach((args, index: number) => {
         it(`should check '${args.linkSelector}' footer links`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkProductsFooterLinks${index}`, baseContext);

@@ -1,22 +1,18 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import titlesPage from '@pages/BO/shopParameters/customerSettings/titles';
-import addTitlePage from '@pages/BO/shopParameters/customerSettings/titles/add';
+import {expect} from 'chai';
 
 import {
   boCustomerSettingsPage,
   boDashboardPage,
   boLoginPage,
+  boTitlesPage,
+  boTitlesCreatePage,
   type BrowserContext,
   FakerTitle,
   type Page,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_shopParameters_customerSettings_titles_bulkActions';
 
@@ -74,14 +70,14 @@ describe('BO - Shop Parameters - Customer Settings : Bulk actions', async () => 
 
     await boCustomerSettingsPage.goToTitlesPage(page);
 
-    const pageTitle = await titlesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(titlesPage.pageTitle);
+    const pageTitle = await boTitlesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boTitlesPage.pageTitle);
   });
 
   it('should reset all filters and get number of titles in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfTitles = await titlesPage.resetAndGetNumberOfLines(page);
+    numberOfTitles = await boTitlesPage.resetAndGetNumberOfLines(page);
     expect(numberOfTitles).to.be.above(0);
   });
 
@@ -90,19 +86,19 @@ describe('BO - Shop Parameters - Customer Settings : Bulk actions', async () => 
       it('should go to add new title page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewTitlePage${index + 1}`, baseContext);
 
-        await titlesPage.goToAddNewTitle(page);
+        await boTitlesPage.goToAddNewTitle(page);
 
-        const pageTitle = await addTitlePage.getPageTitle(page);
-        expect(pageTitle).to.contains(addTitlePage.pageTitleCreate);
+        const pageTitle = await boTitlesCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boTitlesCreatePage.pageTitleCreate);
       });
 
       it('should create title and check result', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `CreateTitle${index + 1}`, baseContext);
 
-        const textResult = await addTitlePage.createEditTitle(page, titleToCreate);
-        expect(textResult).to.contains(titlesPage.successfulCreationMessage);
+        const textResult = await boTitlesCreatePage.createEditTitle(page, titleToCreate);
+        expect(textResult).to.contains(boTitlesPage.successfulCreationMessage);
 
-        const numberOfTitlesAfterCreation = await titlesPage.getNumberOfElementInGrid(page);
+        const numberOfTitlesAfterCreation = await boTitlesPage.getNumberOfElementInGrid(page);
         expect(numberOfTitlesAfterCreation).to.be.equal(numberOfTitles + index + 1);
       });
     });
@@ -112,13 +108,13 @@ describe('BO - Shop Parameters - Customer Settings : Bulk actions', async () => 
     it('should filter list by title', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
 
-      await titlesPage.filterTitles(page, 'input', 'name', 'todelete');
+      await boTitlesPage.filterTitles(page, 'input', 'name', 'todelete');
 
-      const numberOfTitlesAfterFilter = await titlesPage.getNumberOfElementInGrid(page);
+      const numberOfTitlesAfterFilter = await boTitlesPage.getNumberOfElementInGrid(page);
       expect(numberOfTitlesAfterFilter).to.be.at.most(numberOfTitles);
 
       for (let i = 1; i <= numberOfTitlesAfterFilter; i++) {
-        const textColumn = await titlesPage.getTextColumn(page, i, 'name');
+        const textColumn = await boTitlesPage.getTextColumn(page, i, 'name');
         expect(textColumn).to.contains('todelete');
       }
     });
@@ -126,14 +122,14 @@ describe('BO - Shop Parameters - Customer Settings : Bulk actions', async () => 
     it('should delete titles with Bulk Actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteTitles', baseContext);
 
-      const deleteTextResult = await titlesPage.bulkDeleteTitles(page);
-      expect(deleteTextResult).to.be.contains(titlesPage.successfulMultiDeleteMessage);
+      const deleteTextResult = await boTitlesPage.bulkDeleteTitles(page);
+      expect(deleteTextResult).to.be.contains(boTitlesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
-      const numberOfTitlesAfterReset = await titlesPage.resetAndGetNumberOfLines(page);
+      const numberOfTitlesAfterReset = await boTitlesPage.resetAndGetNumberOfLines(page);
       expect(numberOfTitlesAfterReset).to.be.equal(numberOfTitles);
     });
   });

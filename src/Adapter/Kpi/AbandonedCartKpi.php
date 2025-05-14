@@ -61,7 +61,7 @@ final class AbandonedCartKpi implements KpiInterface
         $helper->icon = 'remove_shopping_cart';
         $helper->color = 'color2';
         $helper->title = $this->translator->trans('Abandoned Carts', [], 'Admin.Global');
-        $helper->subtitle = $this->translator->trans('From %date1% to %date2%', [
+        $helper->subtitle = $this->translator->trans('From %date1% to %date2% per unique visitors', [
             '%date1%' => date($dateFormat, strtotime('-2 day')),
             '%date2%' => date($dateFormat, strtotime('-1 day')),
         ], 'Admin.Orderscustomers.Feature');

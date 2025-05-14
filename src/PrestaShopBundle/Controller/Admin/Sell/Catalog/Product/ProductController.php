@@ -1134,6 +1134,7 @@ class ProductController extends PrestaShopAdminController
             'taxEnabled' => (bool) $configuration->get('PS_TAX'),
             'stockEnabled' => (bool) $configuration->get('PS_STOCK_MANAGEMENT'),
             'isMultistoreActive' => $this->getShopContext()->isMultiShopEnabled(),
+            'layoutTitle' => $this->trans('Product', [], 'Admin.Global'),
         ]);
     }
 

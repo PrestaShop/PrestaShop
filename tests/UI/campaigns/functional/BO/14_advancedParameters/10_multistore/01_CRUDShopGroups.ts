@@ -1,18 +1,14 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
 // Import commonTests
 import setMultiStoreStatus from '@commonTests/BO/advancedParameters/multistore';
-
-// Import pages
-import addShopGroupPage from '@pages/BO/advancedParameters/multistore/add';
-
-import {expect} from 'chai';
 
 import {
   boDashboardPage,
   boLoginPage,
   boMultistorePage,
+  boMultistoreGroupCreatePage,
   boMultistoreShopPage,
   boMultistoreShopCreatePage,
   type BrowserContext,
@@ -87,15 +83,15 @@ describe('BO - Advanced Parameters - Multistore : Create, Read, Update and Delet
 
       await boMultistorePage.goToNewShopGroupPage(page);
 
-      const pageTitle = await addShopGroupPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addShopGroupPage.pageTitleCreate);
+      const pageTitle = await boMultistoreGroupCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boMultistoreGroupCreatePage.pageTitleCreate);
     });
 
     it('should create shop group and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createShopGroup', baseContext);
 
-      const textResult = await addShopGroupPage.setShopGroup(page, createShopGroupData);
-      expect(textResult).to.contains(addShopGroupPage.successfulCreationMessage);
+      const textResult = await boMultistoreGroupCreatePage.setShopGroup(page, createShopGroupData);
+      expect(textResult).to.contains(boMultistoreGroupCreatePage.successfulCreationMessage);
 
       const numberOfShopGroupsAfterCreation = await boMultistorePage.getNumberOfElementInGrid(page);
       expect(numberOfShopGroupsAfterCreation).to.be.equal(numberOfShopGroups + 1);
@@ -110,15 +106,15 @@ describe('BO - Advanced Parameters - Multistore : Create, Read, Update and Delet
       await boMultistorePage.filterTable(page, 'a!name', createShopGroupData.name);
       await boMultistorePage.gotoEditShopGroupPage(page, 1);
 
-      const pageTitle = await addShopGroupPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addShopGroupPage.pageTitleEdit);
+      const pageTitle = await boMultistoreGroupCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boMultistoreGroupCreatePage.pageTitleEdit);
     });
 
     it('should edit shop group and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateShopGroup', baseContext);
 
-      const textResult = await addShopGroupPage.setShopGroup(page, updateShopGroupData);
-      expect(textResult).to.contains(addShopGroupPage.successfulUpdateMessage);
+      const textResult = await boMultistoreGroupCreatePage.setShopGroup(page, updateShopGroupData);
+      expect(textResult).to.contains(boMultistoreGroupCreatePage.successfulUpdateMessage);
 
       const numberOfShopGroupsAfterUpdate = await boMultistorePage.resetAndGetNumberOfLines(page);
       expect(numberOfShopGroupsAfterUpdate).to.be.equal(numberOfShopGroups + 1);

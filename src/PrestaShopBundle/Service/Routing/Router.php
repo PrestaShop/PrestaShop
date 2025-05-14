@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Service\Routing;
 
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
-use PrestaShopBundle\Security\Admin\RequestAttributes;
+use PrestaShopBundle\Routing\AnonymousRouteProvider;
 use PrestaShopBundle\Security\Admin\UserTokenManager;
 use Symfony\Bundle\FrameworkBundle\Routing\Router as BaseRouter;
 
@@ -40,13 +40,15 @@ class Router extends BaseRouter
 {
     private UserTokenManager $userTokenManager;
 
+    private AnonymousRouteProvider $anonymousRouteProvider;
+
     /**
      * {@inheritdoc}
      */
     public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): string
     {
         $url = parent::generate($name, $parameters, $referenceType);
-        if (TokenInUrls::isDisabled() || $this->isRouteAnonymous($name)) {
+        if (TokenInUrls::isDisabled() || $this->anonymousRouteProvider->isRouteAnonymous($name)) {
             return $url;
         }
 
@@ -56,6 +58,11 @@ class Router extends BaseRouter
     public function setUserTokenManager(UserTokenManager $userTokenManager): void
     {
         $this->userTokenManager = $userTokenManager;
+    }
+
+    public function setAnonymousRouteProvider(AnonymousRouteProvider $anonymousRouteProvider): void
+    {
+        $this->anonymousRouteProvider = $anonymousRouteProvider;
     }
 
     public static function generateTokenizedUrl($url, $token)
@@ -87,15 +94,5 @@ class Router extends BaseRouter
         }
 
         return $url;
-    }
-
-    private function isRouteAnonymous(string $routeName): bool
-    {
-        $route = $this->getRouteCollection()->get($routeName);
-        if (!$route) {
-            return false;
-        }
-
-        return $route->getDefault(RequestAttributes::ANONYMOUS_CONTROLLER_ATTRIBUTE) === true;
     }
 }
