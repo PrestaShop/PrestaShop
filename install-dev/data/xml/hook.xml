@@ -5408,5 +5408,15 @@
       <title>Before eco-friendly shipping calculation</title>
       <description>This hook is called before calculating shipping costs, allowing to modify shipping parameters based on eco-friendly criteria</description>
     </hook>
+    <hook id="actionProductGetAttributesGroupsBefore">
+      <name>actionProductGetAttributesGroupsBefore</name>
+      <title>Triggers before getting product attributes groups</title>
+      <description>Allows to modify product attributes groups SQL query before they are retrieved from the database.</description>
+    </hook>
+    <hook id="actionProductGetAttributesGroupsAfter">
+      <name>actionProductGetAttributesGroupsAfter</name>
+      <title>Triggers after getting product attributes groups</title>
+      <description>Allows to modify product attributes groups after they are retrieved from the database.</description>
+    </hook>
   </entities>
 </entity_hook>
