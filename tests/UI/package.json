@@ -19,8 +19,8 @@
     "check:links": "ts-mocha tools/linkchecker.ts",
     "check:links:fast-fail": "ts-mocha --bail tools/linkchecker.ts",
     "// Specific test": "Script to run a specific test/folder",
-    "test:specific": "ts-mocha $EXTRA_TEST_PARAMS --file utils/globals.ts --file utils/setup.ts campaigns/$TEST_PATH",
-    "test:specific:fast-fail": "ts-mocha $EXTRA_TEST_PARAMS --bail --file utils/globals.ts --file utils/setup.ts campaigns/$TEST_PATH",
+    "test:specific": "ts-mocha $EXTRA_TEST_PARAMS --file utils/setup.ts campaigns/$TEST_PATH",
+    "test:specific:fast-fail": "ts-mocha $EXTRA_TEST_PARAMS --bail --file utils/setup.ts campaigns/$TEST_PATH",
     "// CLDR": "Scripts to run CLDR tests",
     "test:cldr": "TEST_PATH='cldr/**/*' npm run test:specific",
     "test:cldr:fast-fail": "TEST_PATH='cldr/' npm run test:specific:fast-fail",
@@ -92,7 +92,7 @@
     "// Audit": "Scripts to run audit tests",
     "test:audit": "TEST_PATH='audit/**/*' npm run test:specific",
     "// All tests": "Scripts to run all campaigns",
-    "test:all": "ts-mocha --file utils/globals.ts --file utils/setup.ts campaigns/audit/* campaigns/cldr/* campaigns/functional/* campaigns/modules/* campaigns/regression/* campaigns/sanity/*"
+    "test:all": "ts-mocha --file utils/setup.ts campaigns/audit/* campaigns/cldr/* campaigns/functional/* campaigns/modules/* campaigns/regression/* campaigns/sanity/*"
   },
   "repository": {
     "type": "git",
@@ -110,22 +110,21 @@
   },
   "homepage": "https://github.com/PrestaShop/PrestaShop/tree/develop/tests/UI#readme",
   "dependencies": {
-    "@faker-js/faker": "^9.8.0",
+    "@faker-js/faker": "^9.0.3",
     "@prestashop-core/ui-testing": "https://github.com/PrestaShop/ui-testing-library#main",
     "chai": "^4.5.0",
-    "chai-string": "^1.6.0",
-    "dotenv": "^16.5.0",
-    "mocha": "^11.2.2",
+    "chai-string": "^1.5.0",
+    "mocha": "^10.7.3",
     "mochawesome": "^7.1.3",
-    "mysql2": "^3.14.1"
+    "mysql2": "^3.11.3"
   },
   "devDependencies": {
     "@types/chai": "^4.3.11",
     "@types/chai-string": "^1.4.5",
-    "@types/mocha": "^10.0.10",
+    "@types/mocha": "^10.0.9",
     "@types/mochawesome": "^6.2.4",
-    "@typescript-eslint/eslint-plugin": "^8.32.1",
-    "@typescript-eslint/parser": "^8.32.0",
+    "@typescript-eslint/eslint-plugin": "^8.8.1",
+    "@typescript-eslint/parser": "^8.8.1",
     "babel-eslint": "^10.1.0",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
@@ -133,8 +132,8 @@
     "eslint-plugin-html": "^8.1.2",
     "eslint-plugin-import": "^2.31.0",
     "mochawesome-merge": "^4.3.0",
-    "ts-mocha": "^11.1.0",
+    "ts-mocha": "^10.0.0",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.6.3"
   }
 }
