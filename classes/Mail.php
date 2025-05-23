@@ -246,14 +246,6 @@ class MailCore extends ObjectModel
             ]
         );
 
-        if (!isset($configuration['PS_MAIL_SMTP_ENCRYPTION'])
-            || Tools::strtolower($configuration['PS_MAIL_SMTP_ENCRYPTION']) === 'off'
-        ) {
-            $isTls = false;
-        } else {
-            $isTls = true;
-        }
-
         if (!isset($configuration['PS_MAIL_SMTP_PORT'])) {
             $configuration['PS_MAIL_SMTP_PORT'] = 'default';
         }
@@ -760,11 +752,6 @@ class MailCore extends ObjectModel
 
         try {
             if ($smtpChecked) {
-                if (Tools::strtolower($smtpEncryption) === 'off') {
-                    $isTls = false;
-                } else {
-                    $isTls = true;
-                }
                 $transport = (new EsmtpTransport(
                     $smtpServer,
                     $smtpPort
