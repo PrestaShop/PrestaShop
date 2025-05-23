@@ -372,8 +372,7 @@ class MailCore extends ObjectModel
                 }
                 $transport = (new EsmtpTransport(
                     $configuration['PS_MAIL_SERVER'],
-                    $configuration['PS_MAIL_SMTP_PORT'],
-                    $isTls
+                    $configuration['PS_MAIL_SMTP_PORT']
                 ))
                     ->setUsername($configuration['PS_MAIL_USER'])
                     ->setPassword($configuration['PS_MAIL_PASSWD'])
@@ -768,8 +767,7 @@ class MailCore extends ObjectModel
                 }
                 $transport = (new EsmtpTransport(
                     $smtpServer,
-                    $smtpPort,
-                    $isTls
+                    $smtpPort
                 ))
                     ->setUsername($smtpLogin)
                     ->setPassword($smtpPassword)
