@@ -141,23 +141,6 @@ class PreferencesType extends TranslatorAwareType
                     'Admin.Shopparameters.Help'
                 ),
             ])
-            ->add(
-                'price_round_mode', ChoiceType::class, [
-                    'placeholder' => false,
-                    'choices' => [
-                        'Round up away from zero, when it is half way there (recommended)' => $configuration->get('PS_ROUND_HALF_UP'),
-                        'Round down towards zero, when it is half way there' => $configuration->get('PS_ROUND_HALF_DOWN'),
-                        'Round towards the next even value' => $configuration->get('PS_ROUND_HALF_EVEN'),
-                        'Round towards the next odd value' => $configuration->get('PS_ROUND_HALF_ODD'),
-                        'Round up to the nearest value' => $configuration->get('PS_ROUND_UP'),
-                        'Round down to the nearest value' => $configuration->get('PS_ROUND_DOWN'),
-                    ],
-                    'label' => $this->trans('Round mode', 'Admin.Shopparameters.Feature'),
-                    'help' => $this->trans(
-                        'You can choose among 6 different ways of rounding prices. "Round up away from zero ..." is the recommended behavior.',
-                        'Admin.Shopparameters.Help'
-                    ),
-                ])
             ->add('price_round_type', ChoiceType::class, [
                 'placeholder' => false,
                 'choices' => [
