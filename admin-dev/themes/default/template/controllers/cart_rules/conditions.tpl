@@ -144,7 +144,7 @@
 		{if ($countries.unselected|@count) + ($countries.selected|@count) > 1}
 			<p class="checkbox">
 				<label>
-					<input type="checkbox" id="country_restriction" name="country_restriction" value="1" {if $countries.unselected|@count}checked="checked"{/if} />
+					<input type="checkbox" id="country_restriction" name="country_restriction" value="1" {if $countries.selected|@count}checked="checked"{/if} />
 					{l s='Country selection' d='Admin.Catalog.Feature'}
 				</label>
 			</p>
@@ -179,7 +179,7 @@
 		{if ($carriers.unselected|@count) + ($carriers.selected|@count) > 1}
 			<p class="checkbox">
 				<label>
-					<input type="checkbox" id="carrier_restriction" name="carrier_restriction" value="1" {if $carriers.unselected|@count}checked="checked"{/if} />
+					<input type="checkbox" id="carrier_restriction" name="carrier_restriction" value="1" {if $carriers.selected|@count}checked="checked"{/if} />
 					{l s='Carrier selection' d='Admin.Catalog.Feature'}
 				</label>
 			</p>
@@ -213,7 +213,7 @@
 		{if ($groups.unselected|@count) + ($groups.selected|@count) > 1}
 			<p class="checkbox">
 				<label>
-					<input type="checkbox" id="group_restriction" name="group_restriction" value="1" {if $groups.unselected|@count}checked="checked"{/if} />
+					<input type="checkbox" id="group_restriction" name="group_restriction" value="1" {if $groups.selected|@count}checked="checked"{/if} />
 					{l s='Customer group selection' d='Admin.Catalog.Feature'}
 				</label>
 			</p>
@@ -247,7 +247,7 @@
 		{if ($cart_rules.unselected|@count) + ($cart_rules.selected|@count) > 0}
 			<p class="checkbox">
 				<label>
-					<input type="checkbox" id="cart_rule_restriction" name="cart_rule_restriction" value="1" {if $cart_rules.unselected|@count}checked="checked"{/if} />
+					<input type="checkbox" id="cart_rule_restriction" name="cart_rule_restriction" value="1" {if $cart_rules.selected|@count}checked="checked"{/if} />
 					{l s='Compatibility with other cart rules' d='Admin.Catalog.Feature'}
 				</label>
 			</p>
