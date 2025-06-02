@@ -126,8 +126,8 @@
 
     {% set attr = attr|merge(input_attr|merge({
       'data-max-length': form.vars.max_length,
-      'maxlength': form.vars.max_length,
-      'class': ('js-countable-input ' ~ (input_attr.class|default('')))|trim
+      maxlength: form.vars.max_length,
+      class: ('js-countable-input ' ~ (input_attr.class|default('')))|trim
     })) %}
 
     {% if form.vars.input == 'textarea' %}
