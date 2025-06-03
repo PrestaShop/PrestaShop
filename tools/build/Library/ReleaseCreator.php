@@ -200,6 +200,20 @@ class ReleaseCreator
     protected $destinationDir;
 
     /**
+     * Release distribution which user wants.
+     *
+     * @var string|null
+     */
+    protected ?string $distribution;
+
+    /**
+     * Release distribution version which user wants.
+     *
+     * @var string|null
+     */
+    protected ?string $distributionVersion;
+
+    /**
      * Set the release wanted version, and some options.
      *
      * @param string|null $version
@@ -207,8 +221,10 @@ class ReleaseCreator
      * @param bool $useZip
      * @param string $destinationDir
      * @param bool $keepTests
+     * @param string|null $distribution
+     * @param string|null $distributionVersion
      */
-    public function __construct(?string $version = null, bool $useInstaller = true, bool $useZip = true, string $destinationDir = '', bool $keepTests = false)
+    public function __construct(?string $version = null, bool $useInstaller = true, bool $useZip = true, string $destinationDir = '', bool $keepTests = false, ?string $distribution = null, ?string $distributionVersion = null)
     {
         $this->consoleWriter = new ConsoleWriter();
         $tmpDir = sys_get_temp_dir();
@@ -220,7 +236,14 @@ class ReleaseCreator
         );
         $this->projectPath = realpath(__DIR__ . '/../../..');
         $this->version = $version ? $version : $this->getCurrentVersion();
-        $this->zipFileName = "prestashop_$this->version.zip";
+        $this->distribution = $distribution;
+        $this->distributionVersion = $version;
+        if (!empty($this->dis)) {
+            $this->zipFileName = "prestashop_$this->version.zip";
+        } else {
+            $this->zipFileName = "prestashop_$this->version-.zip";
+        }
+
         // Keep files for tests (tests, git and docker folders)
         if (!$keepTests) {
             $this->patternsRemoveList[] = 'tests(\-legacy)?$';

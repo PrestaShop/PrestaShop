@@ -45,6 +45,16 @@ $releaseOptions = [
         'description' => 'Desired release version of PrestaShop',
         'longopt' => 'version:',
     ],
+    'distribution' => [
+        'required' => false,
+        'description' => 'Desired distribution of PrestaShop',
+        'longopt' => 'distribution:',
+    ],
+    'distribution-version' => [
+        'required' => false,
+        'description' => 'Desired distribution version of PrestaShop',
+        'longopt' => 'distribution-version:',
+    ],
     'no-zip' => [
         'description' => 'Do not zip the release directory. Default: false.',
         'longopt' => 'no-zip',
@@ -118,8 +128,11 @@ if (isset($userOptions['keep-tests'])) {
     $keepTests = true;
 }
 
+$distribution = $userOptions['distribution'] ?? null;
+$distributionVersion = $userOptions['distribution-version'] ?? null;
+
 try {
-    $releaseCreator = new ReleaseCreator($version, $useInstaller, $useZip, $destinationDir, $keepTests);
+    $releaseCreator = new ReleaseCreator($version, $useInstaller, $useZip, $destinationDir, $keepTests, $distribution, $distributionVersion);
     $releaseCreator->createRelease();
 } catch (Exception $e) {
     $consoleWrite->displayText(
