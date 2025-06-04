@@ -1752,7 +1752,7 @@ class CartRuleCore extends ObjectModel
         }
 
         if (!Validate::isLoadedObject($this) || $this->{$type . '_restriction'} == 0) {
-            $array['selected'] = Db::getInstance()->executeS('
+            $array['unselected'] = Db::getInstance()->executeS('
 			SELECT t.*' . ($i18n ? ', tl.*' : '') . ', 1 as selected
 			FROM `' . _DB_PREFIX_ . $type . '` t
 			' . ($i18n ? 'LEFT JOIN `' . _DB_PREFIX_ . $type . '_lang` tl ON (t.id_' . $type . ' = tl.id_' . $type . ' AND tl.id_lang = ' . (int) Context::getContext()->language->id . ')' : '') . '

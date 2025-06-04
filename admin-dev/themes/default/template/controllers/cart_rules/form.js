@@ -255,12 +255,17 @@ $('#cart_rule_form').on('submit', () => {
   if ($('#customerFilter').val() == '') $('#id_customer').val('0');
 
   for (i in restrictions) {
-    $(`#${restrictions[i]}_select_2 option`).each(function (i) {
-      $(this).prop('selected', true);
-    });
+    const select1Length = $(`#${restrictions[i]}_select_1 option`).length;
+    const select2Options = $(`#${restrictions[i]}_select_2 option`);
+
+    if (select1Length > 0 || select2Options.length > 0) {
+      select2Options.each(function () {
+        $(this).prop('selected', true);
+      });
+    }
   }
 
-  $('.product_rule_toselect option').each(function (i) {
+  $('.product_rule_toselect option').each(function () {
     $(this).prop('selected', true);
   });
 });
