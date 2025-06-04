@@ -492,6 +492,10 @@ abstract class PaymentModuleCore extends Module
             $product_list_txt = '';
             $product_list_html = '';
             if (count($product_var_tpl_list) > 0) {
+                Hook::exec('actionAlterTemplateVarsOrderConfirmationProductList', [
+                    'product_var_tpl_list' => &$product_var_tpl_list,
+                    'order' => $order,
+                ]);
                 $product_list_txt = $this->getEmailTemplateContent('order_conf_product_list.txt', Mail::TYPE_TEXT, $product_var_tpl_list);
                 $product_list_html = $this->getEmailTemplateContent('order_conf_product_list.tpl', Mail::TYPE_HTML, $product_var_tpl_list);
             }
