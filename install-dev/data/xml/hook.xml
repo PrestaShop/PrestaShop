@@ -4563,6 +4563,7 @@
       <name>actionAlterTemplateVarsOrderConfirmationProductList</name>
       <title>Alter template variables for product list html in order_conf email</title>
       <description>Allows alter/add template variables for product list html in order_conf email</description>
+    </hook>
     <hook id="actionProductGetAttributesGroupsBefore">
       <name>actionProductGetAttributesGroupsBefore</name>
       <title>Triggers before getting product attributes groups</title>
