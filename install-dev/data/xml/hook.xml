@@ -4539,5 +4539,10 @@
       <title>Triggers when returning AJAX response</title>
       <description>Allows to modify AJAX response of controllers using ajaxRender method.</description>
     </hook>
+    <hook id="actionAlterTemplateVarsOrderConfirmationProductList">
+      <name>actionAlterTemplateVarsOrderConfirmationProductList</name>
+      <title>Alter template variables for product list html in order_conf email</title>
+      <description>Allows alter/add template variables for product list html in order_conf email</description>
+    </hook>
   </entities>
 </entity_hook>
