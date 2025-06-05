@@ -753,6 +753,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         $object_duplicated = new $definition['classname']((int) $object_id);
         $object_duplicated->duplicateShops((int) $this->id);
 
+        Hook::exec('actionObjectDuplicateAfter', ['oldObject' => $this, 'newObject' => $object_duplicated]);
+        Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'DuplicateAfter', ['oldObject' => $this, 'newObject' => $object_duplicated]);
+
         return $object_duplicated;
     }
 

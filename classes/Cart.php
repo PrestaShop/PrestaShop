@@ -4482,10 +4482,8 @@ class CartCore extends ObjectModel
             return false;
         }
 
-        $cart = new Cart($this->id);
-        $cart->id = null;
-        $cart->id_shop = $this->id_shop;
-        $cart->id_shop_group = $this->id_shop_group;
+        /** @var Cart $cart */
+        $cart = $this->duplicateObject();
 
         if (!Customer::customerHasAddress((int) $cart->id_customer, (int) $cart->id_address_delivery)) {
             $cart->id_address_delivery = (int) Address::getFirstCustomerAddressId((int) $cart->id_customer);
@@ -4499,7 +4497,13 @@ class CartCore extends ObjectModel
             $cart->secure_key = Cart::$_customer->secure_key;
         }
 
-        $cart->add();
+        $cart->save();
+
+        // clear checkout session data so that the customer can start a new checkout
+        Db::getInstance()->execute(
+            'UPDATE ' . _DB_PREFIX_ . 'cart SET checkout_session_data = NULL
+                WHERE id_cart = ' . (int) $cart->id
+        );
 
         if (!Validate::isLoadedObject($cart)) {
             return false;
@@ -4610,6 +4614,8 @@ class CartCore extends ObjectModel
                 false
             );
         }
+
+        Hook::exec('actionDuplicateCartData', ['oldCardId' => $this->id, 'newCartId' => $cart->id]);
 
         return ['cart' => $cart, 'success' => $success];
     }

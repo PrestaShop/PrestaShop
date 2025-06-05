@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use PrestaShopBundle\Utils\Tree;
 
 /**
@@ -315,16 +316,43 @@ class AdminShopControllerCore extends AdminController
 
         // The root category should be at least imported
         $new_shop->copyShopData((int) Tools::getValue('importFromShop'), $import_data);
+        $useImportData = Tools::getValue('useImportData');
+        $db = Db::getInstance(_PS_USE_SQL_SLAVE_);
 
         // copy default data
-        if (!Tools::getValue('useImportData') || (is_array($import_data) && !isset($import_data['group']))) {
+        if (!$useImportData || (is_array($import_data) && !isset($import_data['group']))) {
             $sql = 'INSERT INTO `' . _DB_PREFIX_ . 'group_shop` (`id_shop`, `id_group`)
-					VALUES
-					(' . (int) $new_shop->id . ', ' . (int) Configuration::get('PS_UNIDENTIFIED_GROUP') . '),
-					(' . (int) $new_shop->id . ', ' . (int) Configuration::get('PS_GUEST_GROUP') . '),
-					(' . (int) $new_shop->id . ', ' . (int) Configuration::get('PS_CUSTOMER_GROUP') . ')
-				';
-            Db::getInstance()->execute($sql);
+                    VALUES
+                    (' . (int) $new_shop->id . ', ' . (int) Configuration::get('PS_UNIDENTIFIED_GROUP') . '),
+                    (' . (int) $new_shop->id . ', ' . (int) Configuration::get('PS_GUEST_GROUP') . '),
+                    (' . (int) $new_shop->id . ', ' . (int) Configuration::get('PS_CUSTOMER_GROUP') . ')
+                ';
+            $db->execute($sql);
+        }
+
+        if (!$useImportData || (is_array($import_data) && !isset($import_data['cms']))) {
+            $allLangs = Language::getLanguages(false);
+
+            $db->insert(
+                'cms_category_shop',
+                [
+                    'id_cms_category' => CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID,
+                    'id_shop' => (int) $new_shop->id,
+                ]
+            );
+
+            foreach ($allLangs as $lang) {
+                $db->insert(
+                    'cms_category_lang',
+                    [
+                        'id_cms_category' => CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID,
+                        'id_lang' => (int) $lang['id_lang'],
+                        'id_shop' => (int) $new_shop->id,
+                        'name' => 'Home',
+                        'link_rewrite' => 'home',
+                    ]
+                );
+            }
         }
 
         return parent::afterAdd($new_shop);

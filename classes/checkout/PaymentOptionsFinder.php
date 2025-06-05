@@ -57,7 +57,7 @@ class PaymentOptionsFinderCore extends HookFinder
 
         // Safety check
         foreach ($paymentOptions as $moduleName => $paymentOption) {
-            if (!is_array($paymentOption)) {
+            if (!is_array($paymentOption) || empty($paymentOption)) {
                 unset($paymentOptions[$moduleName]);
             }
         }
