@@ -229,7 +229,9 @@ abstract class DbCore
             $id_server = 0;
         } else {
             ++$id;
-            $id_server = ($total_servers > 2 && ($id % $total_servers) != 0) ? $id % $total_servers : 1;
+
+            $slave_count = $total_servers - 1;
+            $id_server = ($id % $slave_count) + 1;
         }
 
         if (!isset(self::$instance[$id_server])) {
