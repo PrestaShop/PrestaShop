@@ -40,7 +40,7 @@
       <trans-unit id="10e7889bf2e6fd95e25936d2c11e92be">
         <source>New credit slip regarding your order</source>
         <target>New credit slip regarding your order</target>
-        <note>File: src/Adapter/Order/Refund/OrderSlipCreator.php [Line: 132]</note>
+        <note>File: src/Adapter/Order/Refund/OrderSlipCreator.php [Line: 138]</note>
       </trans-unit>
       <trans-unit id="abe01af80b6bc9f1fa34feaa068336b2">
         <source>New message regarding your order</source>
