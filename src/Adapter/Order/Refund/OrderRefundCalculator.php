@@ -75,7 +75,8 @@ class OrderRefundCalculator
             $orderDetailRefunds,
             $isTaxIncluded,
             $orderDetailList,
-            $precision
+            $precision,
+            $order->round_type
         );
 
         $numberZero = new DecimalNumber('0');
@@ -165,7 +166,8 @@ class OrderRefundCalculator
         array $orderDetailRefunds,
         bool $isTaxIncluded,
         array $orderDetails,
-        int $precision
+        int $precision,
+        int $roundType
     ) {
         $productRefunds = [];
         /** @var OrderDetailRefund $orderDetailRefund */
@@ -186,7 +188,12 @@ class OrderRefundCalculator
 
             // Compute max refund by product (based on quantity left and already refunded amount)
             $productUnitPrice = $isTaxIncluded ? (float) $orderDetail->unit_price_tax_incl : (float) $orderDetail->unit_price_tax_excl;
-            $productMaxRefund = (int) $quantity * $productUnitPrice;
+
+            if ($roundType == Order::ROUND_ITEM) {
+                $productMaxRefund = (int) $quantity * Tools::ps_round($productUnitPrice, $precision);
+            } else {
+                $productMaxRefund = (int) $quantity * $productUnitPrice;
+            }
 
             // If refunded amount is null it means the whole product is refunded (used for standard refund, and return product)
             if (null === $orderDetailRefund->getRefundedAmount()) {
