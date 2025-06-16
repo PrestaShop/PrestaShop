@@ -482,6 +482,13 @@ abstract class PaymentModuleCore extends Module
                     }
                 }
 
+                Hook::exec('actionPaymentModuleProductVarTplAfter', [
+                    'product_var_tpl' => &$product_var_tpl,
+                    'product' => $product,
+                    'order' => $order,
+                    'context' => $this->context
+                ]);
+
                 $product_var_tpl_list[] = $product_var_tpl;
                 // Check if is not a virtual product for the displaying of shipping
                 if (!$product['is_virtual']) {

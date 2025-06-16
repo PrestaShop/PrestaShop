@@ -41,6 +41,11 @@
       <title>Payment confirmation</title>
       <description>This hook displays new elements after the payment is validated</description>
     </hook>
+    <hook id="actionPaymentModuleProductVarTplAfter">
+      <name>actionPaymentModuleProductVarTplAfter</name>
+      <title>Triggers after product data is prepared for e-mail template</title>
+      <description>Allows to modify product data in e-mail template.</description>
+    </hook>
     <hook id="displayPaymentReturn">
       <name>displayPaymentReturn</name>
       <title>Payment return</title>
@@ -280,6 +285,11 @@
       <name>displayCustomerAccount</name>
       <title>Customer account displayed in Front Office</title>
       <description>This hook displays new elements on the customer account page</description>
+    </hook>
+    <hook id="displayCustomerAccountTop">
+      <name>displayCustomerAccountTop</name>
+      <title>Customer account displayed in Front Office (Top part)</title>
+      <description>This hook displays new elements on the customer account page on Top</description>
     </hook>
     <hook id="actionOrderSlipAdd">
       <name>actionOrderSlipAdd</name>
@@ -635,6 +645,11 @@
       <name>sendMailAlterTemplateVars</name>
       <title>Alter template vars on the fly</title>
       <description>This hook is called when Mail::send() is called</description>
+    </hook>
+    <hook id="displayCartExtraProductInfo">
+      <name>displayCartExtraProductInfo</name>
+      <title>Extra information in shopping cart product line</title>
+      <description>This hook adds extra information to the product lines, in the shopping cart</description>
     </hook>
     <hook id="displayCartExtraProductActions">
       <name>displayCartExtraProductActions</name>
