@@ -1039,7 +1039,7 @@ class HookCore extends ObjectModel
             if ($registeredHookId === $id_hook) {
                 // The module is registered to the canonical (proper) hook name
                 $registeredHookName = $hook_name;
-            } else {
+            } elseif (_PS_MODE_DEV_) {
                 // The module is registered to an alias
                 $registeredHookName = static::getNameById(
                     $hookRegistration['id_hook']
