@@ -1039,22 +1039,24 @@ class HookCore extends ObjectModel
             if ($registeredHookId === $id_hook) {
                 // The module is registered to the canonical (proper) hook name
                 $registeredHookName = $hook_name;
-            } elseif (_PS_MODE_DEV_) {
+            } else {
                 // The module is registered to an alias
                 $registeredHookName = static::getNameById(
                     $hookRegistration['id_hook']
                 );
 
                 // We throw an error - aliases are deprecated.
-                trigger_error(
-                    sprintf(
-                        'The hook "%s" is deprecated, please use "%s" instead in module "%s".',
-                        $registeredHookName,
-                        $hook_name,
-                        $hookRegistration['module']
-                    ),
-                    E_USER_DEPRECATED
-                );
+                if (_PS_MODE_DEV_) {
+                    trigger_error(
+                        sprintf(
+                            'The hook "%s" is deprecated, please use "%s" instead in module "%s".',
+                            $registeredHookName,
+                            $hook_name,
+                            $hookRegistration['module']
+                        ),
+                        E_USER_DEPRECATED
+                    );
+                }
             }
 
             // Check conditions to execute the module
