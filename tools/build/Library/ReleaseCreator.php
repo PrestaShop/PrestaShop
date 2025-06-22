@@ -327,10 +327,7 @@ class ReleaseCreator
         if (file_exists("{$this->tempProjectPath}")) {
             exec("rm -rf $argTmpDestination");
         }
-        exec("mkdir $argTmpDestination && \
-            cd {$argProjectPath} && \
-            git archive HEAD | tar -xC {$argTmpDestination} && \
-            cd -");
+        exec("mkdir $argTmpDestination && cd {$argProjectPath} && git archive HEAD | tar -xC {$argTmpDestination} && cd -");
         $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
 
         return $this;
@@ -542,10 +539,7 @@ class ReleaseCreator
         $this->consoleWriter->displayText("Running composer install...", ConsoleWriter::COLOR_YELLOW);
         $argProjectPath = escapeshellarg($this->tempProjectPath);
         $autoloaderSuffix = md5($this->version);
-        $command = "cd {$argProjectPath} \
-            && export SYMFONY_ENV=prod \
-            && composer config autoloader-suffix {$autoloaderSuffix} \
-            && composer install --no-dev --optimize-autoloader --no-interaction 2>&1";
+        $command = "cd {$argProjectPath} && export SYMFONY_ENV=prod && composer config autoloader-suffix {$autoloaderSuffix} && composer install --no-dev --optimize-autoloader --no-interaction 2>&1";
         exec($command, $output, $returnCode);
         if (!empty($output)) {
             $logPath = __DIR__ . '/../../../var/logs/composer-install.log';
@@ -797,9 +791,7 @@ class ReleaseCreator
         $argTempProjectPath = escapeshellarg($this->tempProjectPath);
         $argInstallerZipFilename = escapeshellarg($installerZipFilename);
         $argProjectPath = escapeshellarg($this->projectPath);
-        $cmd = "cd {$argTempProjectPath} \
-            && zip --symlinks -rq {$argInstallerZipFilename} . \
-            && cd -";
+        $cmd = "cd {$argTempProjectPath} && zip --symlinks -rq {$argInstallerZipFilename} . && cd -";
         exec($cmd);
 
         if ($this->useInstaller) {
